@@ -2,10 +2,12 @@ import logging
 from smtplib import SMTPException
 
 from django.contrib import messages
+from django.db.models import Exists, OuterRef
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from participants.models import Adjudicator, Speaker
+from privateurls.models import PrivateUrlSentMailRecord
 from tournaments.mixins import TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import SuperuserRequiredMixin
@@ -21,12 +23,39 @@ logger = logging.getLogger(__name__)
 class RandomisedUrlsMixin(TournamentMixin):
 
     def get_context_data(self, **kwargs):
+        # These are used to choose the nav display
         tournament = self.get_tournament()
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
         kwargs['blank_exists'] = tournament.adjudicator_set.filter(url_key__isnull=True).exists() or \
             tournament.team_set.filter(url_key__isnull=True).exists()
         return super().get_context_data(**kwargs)
+
+    def get_adjudicators_to_email(self, url_type, already_sent=False):
+        subquery = PrivateUrlSentMailRecord.objects.filter(
+            url_key=OuterRef('url_key'), email=OuterRef('email'),
+            url_type=url_type, adjudicator_id=OuterRef('pk'),
+        )
+        adjudicators = Adjudicator.objects.filter(
+            tournament=self.get_tournament(),
+            url_key__isnull=False, email__isnull=False
+        ).annotate(
+            already_sent=Exists(subquery)
+        ).filter(already_sent=already_sent)
+        return adjudicators
+
+    def get_speakers_to_email(self, already_sent=False):
+        subquery = PrivateUrlSentMailRecord.objects.filter(
+            url_key=OuterRef('team__url_key'), email=OuterRef('email'),
+            url_type=PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK, speaker_id=OuterRef('pk'),
+        )
+        speakers = Speaker.objects.filter(
+            team__tournament=self.get_tournament(),
+            team__url_key__isnull=False, email__isnull=False
+        ).annotate(
+            already_sent=Exists(subquery)
+        ).filter(already_sent=already_sent)
+        return speakers
 
 
 class RandomisedUrlsView(RandomisedUrlsMixin, SuperuserRequiredMixin, VueTableTemplateView):
@@ -74,7 +103,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, SuperuserRequiredMixin, VueTableTe
 
 class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
 
-    tournament_redirect_pattern_name = 'randomised-urls-view'
+    tournament_redirect_pattern_name = 'privateurls-list'
 
     def post(self, request, *args, **kwargs):
         tournament = self.get_tournament()
@@ -117,22 +146,19 @@ class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     tables_orientation = 'rows'
 
     def get_context_data(self, **kwargs):
-        kwargs['url_type'] = self.url_type
-
         kwargs['adjudicators_no_email'] = self.get_tournament().adjudicator_set.filter(
             url_key__isnull=False, email__isnull=True
         ).values_list('name', flat=True)
         return super().get_context_data(**kwargs)
 
-    def get_adjudicators_table(self, url_name, url_header):
+    def get_adjudicators_table(self, url_type, url_name, url_header):
         tournament = self.get_tournament()
 
         def _build_url(adjudicator):
             path = reverse_tournament(url_name, tournament, kwargs={'url_key': adjudicator.url_key})
             return self.request.build_absolute_uri(path)
 
-        adjudicators = Adjudicator.objects.filter(tournament=tournament,
-                url_key__isnull=False, email__isnull=False)
+        adjudicators = self.get_adjudicators_to_email(url_type)
         title = _("Adjudicators who will be sent e-mails (%(n)s)") % {'n': adjudicators.count()}
         table = TabbycatTableBuilder(view=self, title=title, sort_key=_("Name"))
         table.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
@@ -145,20 +171,27 @@ class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 class EmailBallotUrlsView(BaseEmailRandomisedUrlsView):
 
     template_name = 'ballot_urls_email_list.html'
-    url_type = 'ballot'
+
+    def get_context_data(self, **kwargs):
+        kwargs['nadjudicators_already_sent'] = self.get_adjudicators_to_email(
+            PrivateUrlSentMailRecord.URL_TYPE_BALLOT, already_sent=True).count()
+        return super().get_context_data(**kwargs)
 
     def get_table(self):
-        return self.get_adjudicators_table('results-public-ballotset-new-randomised', _("Ballot URL"))
+        return self.get_adjudicators_table(PrivateUrlSentMailRecord.URL_TYPE_BALLOT,
+            'results-public-ballotset-new-randomised', _("Ballot URL"))
 
 
 class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
 
     template_name = 'feedback_urls_email_list.html'
-    url_type = 'feedback'
 
     def get_context_data(self, **kwargs):
         kwargs['speakers_no_email'] = Speaker.objects.filter(team__tournament=self.get_tournament(),
             team__url_key__isnull=False, email__isnull=True).values_list('name', flat=True)
+        kwargs['nadjudicators_already_sent'] = self.get_adjudicators_to_email(
+            PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK, already_sent=True).count()
+        kwargs['nspeakers_already_sent'] = self.get_speakers_to_email(already_sent=True).count()
         return super().get_context_data(**kwargs)
 
     def get_speakers_table(self):
@@ -169,8 +202,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
                 kwargs={'url_key': speaker.team.url_key})
             return self.request.build_absolute_uri(path)
 
-        speakers = Speaker.objects.filter(team__tournament=tournament,
-                team__url_key__isnull=False, email__isnull=False)
+        speakers = self.get_speakers_to_email()
         title = _("Speakers who will be sent e-mails (%(n)s)") % {'n': speakers.count()}
         table = TabbycatTableBuilder(view=self, title=title, sort_key=_("Team"))
         table.add_speaker_columns(speakers, categories=False)
@@ -183,13 +215,14 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
     def get_tables(self):
         speaker_table = self.get_speakers_table()
         adjudicator_table = self.get_adjudicators_table(
+                PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK,
                 'adjfeedback-public-add-from-adjudicator-randomised', _("Feedback URL"))
         return [speaker_table, adjudicator_table]
 
 
-class BaseConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class BaseConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, RandomisedUrlsMixin, PostOnlyRedirectView):
 
-    tournament_redirect_pattern_name = 'randomised-urls-view'
+    tournament_redirect_pattern_name = 'privateurls-list'
 
 
 class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
@@ -208,14 +241,13 @@ class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
             "Your personal private ballot submission URL is:\n"
             "%(url)s"
         )
-        adjudicators = tournament.adjudicator_set.filter(
-                url_key__isnull=False, email__isnull=False)
+        adjudicators = self.get_adjudicators_to_email(PrivateUrlSentMailRecord.URL_TYPE_BALLOT)
 
         try:
             nadjudicators = send_randomised_url_emails(
                 request, tournament, adjudicators,
                 'results-public-ballotset-new-randomised',
-                lambda adj: adj.url_key,
+                lambda adj: adj.url_key, 'adjudicator', PrivateUrlSentMailRecord.URL_TYPE_BALLOT,
                 subject, message
             )
         except SMTPException:
@@ -248,14 +280,13 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
             "Your team's private feedback submission URL is:\n"
             "%(url)s"
         )
-        speakers = Speaker.objects.filter(team__tournament=tournament,
-                team__url_key__isnull=False, email__isnull=False)
+        speakers = self.get_speakers_to_email()
 
         try:
             nspeakers = send_randomised_url_emails(
                 request, tournament, speakers,
                 'adjfeedback-public-add-from-team-randomised',
-                lambda speaker: speaker.team.url_key,
+                lambda speaker: speaker.team.url_key, 'speaker', PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK,
                 subject, message
             )
         except SMTPException:
@@ -272,14 +303,13 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
             "Your personal private feedback submission URL is:\n"
             "%(url)s"
         )
-        adjudicators = tournament.adjudicator_set.filter(
-                url_key__isnull=False, email__isnull=False)
+        adjudicators = self.get_adjudicators_to_email(PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK)
 
         try:
             nadjudicators = send_randomised_url_emails(
                 request, tournament, adjudicators,
                 'adjfeedback-public-add-from-adjudicator-randomised',
-                lambda adj: adj.url_key,
+                lambda adj: adj.url_key, 'adjudicator', PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK,
                 subject, message
             )
         except SMTPException:
@@ -294,7 +324,7 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
             adjudicators_phrase = ungettext("%(nadjudicators)d adjudicator",
                 "%(nadjudicators)d adjudicators", nadjudicators) % {'nadjudicators': nadjudicators}
             messages.success(request, _("E-mails with private feedback URLs were sent to "
-                "%(speakers_phrase)s and %(adjudicators_phrase)s") % {
+                "%(speakers_phrase)s and %(adjudicators_phrase)s.") % {
                 'speakers_phrase': speakers_phrase, 'adjudicators_phrase': adjudicators_phrase
             })
 

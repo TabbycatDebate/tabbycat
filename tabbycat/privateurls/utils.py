@@ -6,12 +6,16 @@ from django.conf import settings
 
 from utils.misc import reverse_tournament
 
+from .models import PrivateUrlSentMailRecord
+
 logger = logging.getLogger(__name__)
 
 
-def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_function, subject, message):
+def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_function,
+        record_attrname, url_type, subject, message):
 
     messages = []
+    records = []
 
     for instance in queryset:
         url_key = url_key_function(instance)
@@ -30,6 +34,10 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
 
         messages.append((formatted_subject, formatted_message, settings.DEFAULT_FROM_EMAIL, [email]))
 
+        record = PrivateUrlSentMailRecord(email=email, url_key=url_key, url_type=url_type)
+        setattr(record, record_attrname, instance)
+        records.append(record)
+
     try:
         send_mass_mail(messages, fail_silently=False)
     except SMTPException:
@@ -37,5 +45,6 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
         raise
     else:
         logger.info("Sent %d randomised URL e-mails", len(messages))
+        PrivateUrlSentMailRecord.objects.bulk_create(records)
 
     return len(messages)
