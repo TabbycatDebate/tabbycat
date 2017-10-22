@@ -13,4 +13,5 @@ class PrivateUrlSentMailRecordAdmin(admin.ModelAdmin):
     def get_team(self, obj):
         if obj.speaker:
             return obj.speaker.team
+        # else return None
     get_team.short_description = _("Team")
