@@ -34,7 +34,6 @@ $.fn.extend({
   loadButton: function(button, triggeredForm) {
     // Can't use disable attr as some submission button need to pass their value
     $('button').prop('disabled', true);
-    //$(triggeredForm).submit(); // Resubmit after disabled (to prevent recursion)
   },
   resetButton: function(button) {
     $('button').prop('disabled', false);
