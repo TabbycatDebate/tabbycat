@@ -31,6 +31,7 @@ Change Log
     - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
     - 'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration
     - Private URLs can now be incrementally regenerated
+    - Emails can be assigned to adjudicators and teams in the Simple Importer
     - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results
     - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions
 

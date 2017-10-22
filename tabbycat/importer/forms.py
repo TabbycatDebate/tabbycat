@@ -191,6 +191,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
     speakers = forms.CharField(required=True) # widget is set in form constructor
+    emails = forms.CharField(required=False) # widget is set in form constructor
     short_reference = forms.CharField(widget=forms.HiddenInput, required=False) # doesn't actually do anything, just placeholder to avoid validation failure
 
     class Meta:
@@ -210,15 +211,25 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
                 'placeholder': _("One speaker's name per line")})
         self.initial.setdefault('speakers', "\n".join(
                 _("Speaker %d") % i for i in range(1, nspeakers+1)))
+        self.fields['emails'].widget = forms.Textarea(attrs={'rows': nspeakers,
+                'placeholder': _("Optional; used for Private URLs. Format with one email address per line")})
+
+    def clean_details(self, field_name):
+        # Split into list of names or emails; removing blank lines.
+        items = self.cleaned_data[field_name].split('\n')
+        items = [item.strip() for item in items]
+        items = [item for item in items if item]
+        return items
 
     def clean_speakers(self):
-        # Split into list of names, removing blank lines.
-        names = self.cleaned_data['speakers'].split('\n')
-        names = [name.strip() for name in names]
-        names = [name for name in names if name]
+        names = self.clean_details('speakers')
         if len(names) == 0:
             self.add_error('speakers', _("There must be at least one speaker."))
         return names
+
+    def clean_emails(self):
+        emails = self.clean_details('emails')
+        return emails
 
     def clean_short_reference(self):
         # Ignore the actual field value, and replace with the (long) reference.
@@ -229,7 +240,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
 
     def _post_clean_speakers(self):
         """Validates the Speaker instances that would be created."""
-        for name in self.cleaned_data.get('speakers', []):
+        for i, name in enumerate(self.cleaned_data.get('speakers', [])):
             try:
                 speaker = Speaker(name=name)
                 speaker.full_clean(exclude=('team',))
@@ -248,8 +259,13 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
 
         if commit:
             team.save()
-            for name in self.cleaned_data['speakers']:
-                team.speaker_set.create(name=name)
+            emails = self.cleaned_data['emails']
+            for i, name in enumerate(self.cleaned_data['speakers']):
+                try:
+                    email = emails[i]
+                except IndexError:
+                    email = None
+                team.speaker_set.create(name=name, email=email)
             team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
 
         return team
@@ -270,7 +286,7 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
 
     class Meta:
         model = Adjudicator
-        fields = ('name', 'test_score', 'institution')
+        fields = ('name', 'test_score', 'institution', 'email')
         labels = {
             'test_score': _("Rating"),
         }

@@ -19,6 +19,7 @@
       <strong>{{ min }}</strong> and <strong>{{ max }}</strong>. Adjudicators marked as 'shared' will
       not be associated with any particular tournament but will be available to any tournament which
       has the "<a href="{{ options_league_url }}" class="alert-link">Share Adjudicators setting</a>" enabled.
+      Providing email addresses is optional but can be useful if using Private URLs for feedback or ballots.
     {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" p1=settings_info %}
 
@@ -49,7 +50,7 @@
 
             {% for form in forms.list %}
               {{ form.id }}
-              {% include "components/form-main.html" with triple=True %}
+              {% include "components/form-main.html" with quadruple=True %}
             {% endfor %}
 
           </div>
