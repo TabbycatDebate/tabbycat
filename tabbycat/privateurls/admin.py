@@ -6,7 +6,7 @@ from .models import PrivateUrlSentMailRecord
 
 @admin.register(PrivateUrlSentMailRecord)
 class PrivateUrlSentMailRecordAdmin(admin.ModelAdmin):
-    list_display = ('recipient', 'get_team', 'url_type', 'email', 'url_key', 'timestamp')
+    list_display = ('recipient_name', 'get_team', 'url_type', 'email', 'url_key', 'timestamp')
     list_filter = ('url_type',)
     ordering = ('timestamp',)
 
