@@ -221,9 +221,12 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
         # table.add_team_columns(teams, hide_institution=True, key="Team")
 
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
-        draw, teams = zip(*sorted(((debate, debate.get_team(side))
-            for debate, side in product(draw, tournament.sides)),
-            key=lambda x: unicodedata.normalize('NFKD', x[1].short_name)))
+        draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)]
+        draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', x[1].short_name))
+        if len(draw_by_team) == 0:
+            draw, teams = [], []  # next line can't unpack if draw_by_team is empty
+        else:
+            draw, teams = zip(*draw_by_team)
         super().populate_table(draw, table, round, tournament, highlight=teams)
 
 
