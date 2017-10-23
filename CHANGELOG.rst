@@ -36,6 +36,13 @@ Change Log
     - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions
 
 
+1.4.6
+-----
+*Release date: 23 October 2017*
+
+- Fixed issue where speaker standings with a large amount of non-ranking speakers would cause the page to load slowly or time-out.
+
+
 1.4.5
 -----
 *Release date: 14 October 2017*
