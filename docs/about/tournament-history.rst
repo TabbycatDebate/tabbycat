@@ -12,11 +12,14 @@ A partial list of major national and international tournaments (that we know of)
 - `Australasian Wom*ns Debating Championships <http://awdc2017.herokuapp.com/>`_
 - Asia World Schools Debating Championship
 - `Asia British Parliamentary Championships <http://abp2017.herokuapp.com/>`_
+- `Cambridge Asian Schools BP Championships <https://abc2017.herokuapp.com/>`_
 - Cambodia United Asian Debating Championship
 - `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
-- `UCD Law Society IV <https://ucdlawsociv.herokuapp.com>`_
+- `Swords Mini-Gong <https://minigong2017.herokuapp.com/>`_
+- `UCD Law Society IV + UCD Vice President's Cup <https://ucdlawsociv.herokuapp.com>`_
 - `UQ Australs <https://australs2017.herokuapp.com>`_
 - `Victoria Cup IV <https://viccup2017.herokuapp.com>`_
+- `Western Sydney BP Championship <https://wsbp2017.herokuapp.com>`_
 
 2016
 ----
