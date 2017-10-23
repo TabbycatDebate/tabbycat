@@ -2,12 +2,20 @@
 Change Log
 ==========
 
+1.4.6
+-----
+*Release date: 23 October 2017*
+
+- Fixed issue where speaker standings with a large amount of non-ranking speakers would cause the page to load slowly or time-out.
+
+
 1.4.5
 -----
 *Release date: 14 October 2017*
 
 - Added warning message when adjudicator scores are outside the expected range
 - Fixed handling of uniqueness failure in simple importer for teams
+
 
 1.4.4
 -----
@@ -16,6 +24,7 @@ Change Log
 - Fixed Vue dependency issue preventing Heroku installs after a dependency release
 - Fixed issue with formatting non-numeric standings metrics
 - Fixed behaviour of public tabs when all rounds are silent
+
 
 1.4.3
 -----
