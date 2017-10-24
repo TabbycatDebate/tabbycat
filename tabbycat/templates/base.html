@@ -8,14 +8,17 @@
 
   <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
-  {% trans " runs on Tabbycat — an open-source tab system that supports 2 and 4 team debating formats" as meta_info %}
   {% if tournament %}
-    {% trans "The tab for "|add:tournament.short_name as meta_prefix %}
+    {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
+      The tab for {{ tournament_name }} runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
+    {% endblocktrans %}
   {% else %}
-    {% trans "This tab" as meta_prefix %}
+    {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
+      This tab runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
+    {% endblocktrans %}
   {% endif %}
-  <meta name="description" content="{{ meta_prefix }}{{ meta_info }}" />
-  <meta property="og:description" content="{{ meta_prefix }}{{ meta_info }}" />
+  <meta name="description" content="{{ meta_description }}" />
+  <meta property="og:description" content="{{ meta_description }}" />
 
   <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32" />
   <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16" />
