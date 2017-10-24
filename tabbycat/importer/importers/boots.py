@@ -1,3 +1,4 @@
+import adjallocation.models as am
 import breakqual.models as bm
 import tournaments.models as tm
 import participants.models as pm
@@ -67,7 +68,16 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             gender=self.lookup_gender,
         )
-        self._import(f, pm.Adjudicator, interpreter)
+        adjudicators = self._import(f, pm.Adjudicator, interpreter)
+
+        def own_institution_conflict_interpreter(lineno, line):
+            adjudicator = adjudicators[lineno]
+            if adjudicator.institution is not None:
+                yield {
+                    'adjudicator': adjudicator,
+                    'institution': adjudicator.institution,
+                }
+        self._import(f, am.AdjudicatorInstitutionConflict, own_institution_conflict_interpreter)
 
     def import_teams(self, f):
         speaker_fields = ['name', 'email', 'category', 'gender']
