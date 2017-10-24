@@ -2,6 +2,7 @@ import adjallocation.models as am
 import breakqual.models as bm
 import tournaments.models as tm
 import participants.models as pm
+import venues.models as vm
 from participants.emoji import set_emoji
 
 from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
@@ -35,7 +36,8 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         'institutions',
         'speaker_categories',
         'adjudicators',
-        'teams'
+        'teams',
+        'venues',
     ]
 
     def import_rounds(self, f):
@@ -122,3 +124,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                             'speaker': speakers[(lineno, i)],
                         }
         self._import(f, pm.Speaker.categories.through, speaker_category_interpreter)
+
+    def import_venues(self, f):
+        interpreter = make_interpreter(tournament=self.tournament)
+        self._import(f, vm.Venue, interpreter)
