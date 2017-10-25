@@ -304,7 +304,7 @@ class TournamentDonationsView(TournamentMixin, TemplateView):
 
 
 class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
-    template_name = 'style_guide.html'
+    template_name = 'admin/style_guide.html'
     page_subtitle = 'Contextual sub title'
 
 
