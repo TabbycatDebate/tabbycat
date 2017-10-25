@@ -8,14 +8,14 @@
           <i data-feather="chevron-left"></i>Overview
         </a>
 
-        <div class="btn-group" v-for="bc in categories">
+        <div class="btn-group" v-for="(bc, index) in categories">
           <button class="btn btn-secondary">
             {{ bc.name }}
           </button>
-          <button @click="massSelect(true, bc.id)" class="btn btn-primary">
+          <button @click="massSelect(true, index)" class="btn btn-primary">
             <i data-feather="check-circle"></i> All
           </button>
-          <button @click="massSelect(false, bc.id)" class="btn btn-primary">
+          <button @click="massSelect(false, index)" class="btn btn-primary">
             <i data-feather="x-circle"></i> All
           </button>
         </div>
@@ -46,45 +46,33 @@ export default {
   props: { tablesData: Array, categories: Array, urls: Object },
   created: function () {
     // Watch for events on the global event hub
-    this.$eventHub.$on('toggle-availability', this.toggleAvailability)
+    this.$eventHub.$on('toggle-checked', this.toggleEligiblity)
   },
   computed: {
-    availabilities: function() {
-      var availabilities = {}
-      // Map availabilities in table to a dictionary keyed by id
+    eligibilties: function() {
+      var eligibilties = {}
+      // Map Eligibilties in table to a dictionary keyed by id
       _.forEach(this.tablesData[0].data, function(row) {
-        availabilities[row[0].id] = row[0].available;
+        eligibilties[row[0].id] = row[0].checked; // TODO hardcoded per row
       })
-      return availabilities
+      return eligibilties
     },
-    activeAvailabilities: function() {
-      var actives = []
-      _.forEach(this.availabilities, function(state, id) {
-        if (state === true) { actives.push(id) }
-      })
-      return actives
-    }
   },
   methods: {
-    saveAvailabilities: function() {
-      var payload = this.activeAvailabilities
-      var message = "availabilities as" + payload
+    saveEligibilties: function() {
+      var payload = this.eligibilties
+      var message = "Eligibilties as" + payload
       this.ajaxSave(this.urls.save, payload, message, null, null, null)
     },
-    toggleAvailability: function(id, status) {
-      this.saveAvailabilities()
+    toggleEligibilty: function(id, status) {
+      this.saveEligibilties()
     },
-    copyFromPrevious: function() {
+    massSelect: function(state, index) {
       _.forEach(this.tablesData[0].data, function(row) {
-        row[0].available = row[0].prev
+        // TODO: don't key off index (can show/hide institutions column)
+        row[1 + index].checked = state
       })
-      this.saveAvailabilities()
-    },
-    massSelect: function(state) {
-      _.forEach(this.tablesData[0].data, function(row) {
-        row[0].available = state
-      })
-      this.saveAvailabilities()
+      this.saveEligibilties()
     },
   }
 }

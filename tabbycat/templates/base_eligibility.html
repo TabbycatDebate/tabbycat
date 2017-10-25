@@ -11,45 +11,6 @@
     </eligibility-container>
   </div>
 
-{#   <form id="eligibilityForm" action="." method="POST">
-    {% csrf_token %}
-
-    <div class="card table-container">
-      <div class="card-body">
-        <table class="table table-responsive-md" id="eligibility-table">
-          <thead>
-            <tr>
-              {% block eligibility-table-headers %}
-              {% endblock %}
-              {% for category in form.get_category_queryset %}
-                <th>
-                  {{ category.name }}
-                  (<span id="count_{{ category.id }}"></span>)<br>
-                  <span class="small"> select
-                    <a class="select-all" href="#" category="{{ category.id }}">all</a> or
-                    <a class="select-none" href="#" category="{{ category.id }}">none</a>
-                  </span>
-                </th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for instance, eligibility in form.instance_iter %}
-              <tr>
-                {% block eligibility-table-cells %}
-                {% endblock %}
-                {% for checkbox in eligibility %}
-                  <td class="checkbox-target">{{ checkbox.tag }}</td>
-                {% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </form> #}
-
 {% endblock %}
 
 {% block js %}
@@ -59,8 +20,8 @@
       tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
       categories: {{ break_categories|safe }},
       urls: {
-        // 'back': '{% tournamenturl 'breakqual-index' %}',
-        // 'save': '{{ saveURL|safe }}'
+        'back': "{% tournamenturl 'breakqual-index' %}",
+        'save': '{{ saveURL|safe }}'
       },
       translations: {
       }

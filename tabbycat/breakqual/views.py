@@ -1,9 +1,11 @@
 import json
+import logging
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.utils.translation import ugettext as _
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, TemplateView, View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -18,6 +20,8 @@ from .utils import breakcategories_with_counts, get_breaking_teams
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
 from . import forms
+
+logger = logging.getLogger(__name__)
 
 
 class PublicBreakIndexView(PublicTournamentPageMixin, CacheMixin, TemplateView):
@@ -235,8 +239,24 @@ class EditEligibilityFormView(SuperuserRequiredMixin, TournamentMixin, VueTableT
         break_categories = self.get_tournament().breakcategory_set.all()
         json_categories = [bc.serialize for bc in break_categories]
         kwargs["break_categories"] = json.dumps(json_categories)
+        kwargs["save"] = reverse_tournament('breakqual-update-eligibility', self.get_tournament())
         return super().get_context_data(**kwargs)
 
 
-class SaveElibilityEditView(LogActionMixin):
+class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
+
+    def post(self, request, *args, **kwargs):
+        # body = self.request.body.decode('utf-8')
+        # posted_info = json.loads(body)
+
+        try:
+            # utils.set_availability_by_id(self.model, posted_info, self.get_round())
+            self.log_action()
+
+        except:
+            message = "Error handling eligiblity updates"
+            logger.exception(message)
+            return JsonResponse({'status': 'false', 'message': message}, status=500)
+
+        return JsonResponse(json.dumps(True), safe=False)
