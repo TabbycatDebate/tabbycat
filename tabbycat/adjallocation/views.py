@@ -20,6 +20,7 @@ from utils.mixins import SuperuserRequiredMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView
 
 from .allocator import allocate_adjudicators
+from .consensushungarian import ConsensusHungarianAllocator
 from .hungarian import HungarianAllocator
 from .models import DebateAdjudicator
 from .utils import get_clashes, get_histories
@@ -136,7 +137,12 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDa
             logger.warning(info)
             raise BadJsonRequestError(info)
 
-        allocate_adjudicators(self.get_round(), HungarianAllocator)
+        if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
+            allocator_class = HungarianAllocator
+        else:
+            allocator_class = ConsensusHungarianAllocator
+
+        allocate_adjudicators(self.get_round(), allocator_class)
         return {
             'debates': self.get_draw(),
             'unallocatedAdjudicators': self.get_unallocated_adjudicators()
