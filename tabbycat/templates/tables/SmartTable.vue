@@ -1,5 +1,5 @@
 <template>
-  <table class="table table-responsive" :class="tableClass">
+  <table class="table table-responsive-md" :class="tableClass">
 
     <thead>
       <tr>
