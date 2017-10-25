@@ -24,9 +24,9 @@
 
 <script>
 import DivisionDroppable from  './DivisionDroppable.vue'
-import UnallocatedItemsContainer from  '../../templates/js-vue/draganddrops/UnallocatedItemsContainer.vue'
-import DraggableTeam from  '../../templates/js-vue/draganddrops/DraggableTeam.vue'
-import AjaxMixin from '../../templates/js-vue/ajax/AjaxMixin.vue'
+import UnallocatedItemsContainer from  '../../templates/draganddrops/UnallocatedItemsContainer.vue'
+import DraggableTeam from  '../../templates/draganddrops/DraggableTeam.vue'
+import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 import _ from 'lodash'
 
 export default {

@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import SlideOverSubjectMixin from '../../info/SlideOverSubjectMixin.vue'
-import SlideOverTeamMixin from '../../info/SlideOverTeamMixin.vue'
+import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
+import SlideOverTeamMixin from '../info/SlideOverTeamMixin.vue'
 import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 

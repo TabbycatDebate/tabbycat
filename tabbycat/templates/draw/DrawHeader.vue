@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import SortableHeaderMixin from '../../tables/SortableHeaderMixin.vue'
+import SortableHeaderMixin from '../tables/SortableHeaderMixin.vue'
 
 export default {
   mixins: [SortableHeaderMixin],

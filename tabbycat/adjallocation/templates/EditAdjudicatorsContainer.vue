@@ -73,13 +73,13 @@
 
 <script>
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
-import AdjudicatorMovingMixin from '../../templates/js-vue/ajax/AdjudicatorMovingMixin.vue'
-import HighlightableContainerMixin from '../../templates/js-vue/allocations/HighlightableContainerMixin.vue'
-import AllocationActions from '../../templates/js-vue/allocations/AllocationActions.vue'
-import DebateImportance from '../../templates/js-vue/allocations/DebateImportance.vue'
-import DebatePanel from '../../templates/js-vue/allocations/DebatePanel.vue'
-import DraggableAdjudicator from '../../templates/js-vue/draganddrops/DraggableAdjudicator.vue'
-import AjaxMixin from '../../templates/js-vue/ajax/AjaxMixin.vue'
+import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
+import HighlightableContainerMixin from '../../templates/allocations/HighlightableContainerMixin.vue'
+import AllocationActions from '../../templates/allocations/AllocationActions.vue'
+import DebateImportance from '../../templates/allocations/DebateImportance.vue'
+import DebatePanel from '../../templates/allocations/DebatePanel.vue'
+import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
+import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 import percentile from 'stats-percentile'
 import _ from 'lodash'

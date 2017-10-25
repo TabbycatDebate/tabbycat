@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import DroppableGeneric from '../../templates/js-vue/draganddrops/DroppableGeneric.vue'
-import DraggableTeam from  '../../templates/js-vue/draganddrops/DraggableTeam.vue'
-import AjaxMixin from '../../templates/js-vue/ajax/AjaxMixin.vue'
+import DroppableGeneric from '../../templates/draganddrops/DroppableGeneric.vue'
+import DraggableTeam from  '../../templates/draganddrops/DraggableTeam.vue'
+import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],

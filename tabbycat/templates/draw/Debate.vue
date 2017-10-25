@@ -56,7 +56,7 @@
 import DrawTeam from '../draw/DrawTeam.vue'
 import DrawVenue from '../draw/DrawVenue.vue'
 import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
-import SlideOverSubjectMixin from '../../info/SlideOverSubjectMixin.vue'
+import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
 import FindDebateTeamMixin from '../draw/FindDebateTeamMixin.vue'
 import _ from 'lodash'
 

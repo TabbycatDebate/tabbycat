@@ -2,12 +2,12 @@
 // Note the data/props/computed setup as per https://vuejs.org/v2/guide/components.html
 // Props are passed down from root; but we need to cast them into data
 // so that it can then mutate them here in response to children
-import AjaxMixin from '../../templates/js-vue/ajax/AjaxMixin.vue'
-import UnallocatedItemsContainer from '../../templates/js-vue/draganddrops/UnallocatedItemsContainer.vue'
-import DrawHeader from '../../templates/js-vue/draw/DrawHeader.vue'
-import Debate from '../../templates/js-vue/draw/Debate.vue'
-import AutoSaveCounter from '../../templates/js-vue/draganddrops/AutoSaveCounter.vue'
-import DroppableGeneric from '../../templates/js-vue/draganddrops/DroppableGeneric.vue'
+import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
+import UnallocatedItemsContainer from '../../templates/draganddrops/UnallocatedItemsContainer.vue'
+import DrawHeader from '../../templates/draw/DrawHeader.vue'
+import Debate from '../../templates/draw/Debate.vue'
+import AutoSaveCounter from '../../templates/draganddrops/AutoSaveCounter.vue'
+import DroppableGeneric from '../../templates/draganddrops/DroppableGeneric.vue'
 import SlideOverContainerMixin from '../../templates/info/SlideOverContainerMixin.vue'
 import SlideOver from '../../templates/info/SlideOver.vue'
 import SortableTableMixin from '../../templates/tables/SortableTableMixin.vue'

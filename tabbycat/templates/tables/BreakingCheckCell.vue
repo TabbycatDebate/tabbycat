@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import AjaxMixin from '../js-vue/ajax/AjaxMixin.vue'
+import AjaxMixin from '../ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],

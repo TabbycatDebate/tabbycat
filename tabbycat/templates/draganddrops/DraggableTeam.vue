@@ -24,8 +24,8 @@
 
 <script>
 import DraggableMixin from '../draganddrops/DraggableMixin.vue'
-import SlideOverSubjectMixin from '../../info/SlideOverSubjectMixin.vue'
-import SlideOverTeamMixin from '../../info/SlideOverTeamMixin.vue'
+import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
+import SlideOverTeamMixin from '../info/SlideOverTeamMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverTeamMixin],

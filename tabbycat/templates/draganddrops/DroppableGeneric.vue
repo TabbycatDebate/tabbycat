@@ -13,7 +13,7 @@
 
 <script>
 import DroppableMixin from '../draganddrops/DroppableMixin.vue'
-import FeatherMixin from '../../tables/FeatherMixin.vue'
+import FeatherMixin from '../tables/FeatherMixin.vue'
 
 export default {
   mixins: [DroppableMixin, FeatherMixin],
