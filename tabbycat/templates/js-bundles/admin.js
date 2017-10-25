@@ -40,6 +40,9 @@ vueComponents['PrintableBallot'] = PrintableBallot
 import AvailabilityContainer from  '../../availability/templates/AvailabilityContainer.vue'
 vueComponents['AvailabilityContainer'] = AvailabilityContainer
 
+import EligibilityContainer from  '../../breakqual/templates/EligibilityContainer.vue'
+vueComponents['EligibilityContainer'] = EligibilityContainer
+
 //------------------------------------------------------------------------------
 // Draw Containers
 //------------------------------------------------------------------------------

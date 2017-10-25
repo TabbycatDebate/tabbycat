@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import ugettext as _
@@ -207,21 +209,38 @@ class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, CacheMixin, Base
 # Eligibility and categories
 # ==============================================================================
 
-class EditEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
+class EditEligibilityFormView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
+
+    template_name = 'base_eligibility.html'
+    page_title = _("Break Eligibility")
+    page_emoji = '🍯'
+
+    def get_table(self):
+        t = self.get_tournament()
+        table = TabbycatTableBuilder(view=self, sort_key='team')
+        teams = t.team_set.all()
+        table.add_team_columns(teams)
+        # break_categories = t.breakcategory_set.all()
+
+        return table
+    # def get_form_kwargs(self):
+    #     kwargs = super().get_form_kwargs()
+    #     kwargs['tournament'] = self.get_tournament()
+    #     return kwargs
+
+    # def form_valid(self, form):
+    #     form.save()
+    #     messages.success(self.request, _("Break eligibility saved."))
+    #     return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        break_categories = self.get_tournament().breakcategory_set.all()
+        json_categories = [bc.serialize for bc in break_categories]
+        kwargs["break_categories"] = json.dumps(json_categories)
+        return super().get_context_data(**kwargs)
+
+
+class SaveElibilityEditView(LogActionMixin):
+    pass
 
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
-    form_class = forms.BreakEligibilityForm
-    template_name = 'edit_eligibility.html'
-
-    def get_success_url(self):
-        return reverse_tournament('breakqual-index', self.get_tournament())
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['tournament'] = self.get_tournament()
-        return kwargs
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _("Break eligibility saved."))
-        return super().form_valid(form)
