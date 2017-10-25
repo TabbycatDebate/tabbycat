@@ -110,7 +110,7 @@ import TablesContainer from '../tables/TablesContainer.vue'
 vueComponents['TablesContainer'] = TablesContainer
 
 // Diversity Standings
-import DiversityContainer from  '../js-vue/containers/DiversityContainer.vue'
+import DiversityContainer from  '../../participants/templates/DiversityContainer.vue'
 vueComponents['DiversityContainer'] = DiversityContainer
 
 //------------------------------------------------------------------------------

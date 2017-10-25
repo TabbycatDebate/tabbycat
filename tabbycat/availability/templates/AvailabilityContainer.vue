@@ -45,9 +45,9 @@
 </template>
 
 <script>
-import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
-import TablesContainer from '../../tables/TablesContainer.vue'
-import AjaxMixin from '../ajax/AjaxMixin.vue'
+import AutoSaveCounter from '../../templates/js-vue/draganddrops/AutoSaveCounter.vue'
+import TablesContainer from '../../templates/tables/TablesContainer.vue'
+import AjaxMixin from '../../templates/js-vue/ajax/AjaxMixin.vue'
 import _ from 'lodash'
 
 export default {

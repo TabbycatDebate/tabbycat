@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import UpdatesList from  '../../graphs/UpdatesList.vue'
-import BallotsGraph from '../../graphs/BallotsGraph.vue'
+import UpdatesList from  '../../templates/graphs/UpdatesList.vue'
+import BallotsGraph from '../../templates/graphs/BallotsGraph.vue'
 
 export default {
   mixins: [],

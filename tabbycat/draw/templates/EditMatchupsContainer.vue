@@ -107,11 +107,11 @@
 </template>
 
 <script>
-import TeamMovingMixin from '../ajax/TeamMovingMixin.vue'
-import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
-import DraggableTeam from '../draganddrops/DraggableTeam.vue'
-import DrawSidesStatus from '../draw/DrawSidesStatus.vue'
-import FindDebateTeamMixin from '../draw/FindDebateTeamMixin.vue'
+import TeamMovingMixin from '../../templates/js-vue/ajax/TeamMovingMixin.vue'
+import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
+import DraggableTeam from '../../templates/js-vue/draganddrops/DraggableTeam.vue'
+import DrawSidesStatus from '../../templates/js-vue/draw/DrawSidesStatus.vue'
+import FindDebateTeamMixin from '../../templates/js-vue/draw/FindDebateTeamMixin.vue'
 import _ from 'lodash'
 
 export default {

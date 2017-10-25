@@ -101,8 +101,8 @@
 </template>
 
 <script>
-import DonutChart from  '../../graphs/DonutChart.vue'
-import TextDisplay from '../../graphs/TextDisplay.vue'
+import DonutChart from  '../../templates/graphs/DonutChart.vue'
+import TextDisplay from '../../templates/graphs/TextDisplay.vue'
 
 export default {
   components: { DonutChart, TextDisplay },

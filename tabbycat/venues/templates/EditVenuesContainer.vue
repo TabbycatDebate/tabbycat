@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import DrawContainerMixin from '../containers/DrawContainerMixin.vue'
-import VenueMovingMixin from '../ajax/VenueMovingMixin.vue'
-import DraggableVenue from '../draganddrops/DraggableVenue.vue'
+import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
+import VenueMovingMixin from '../../templates/js-vue/ajax/VenueMovingMixin.vue'
+import DraggableVenue from '../../templates/js-vue/draganddrops/DraggableVenue.vue'
 import _ from 'lodash'
 
 export default {
