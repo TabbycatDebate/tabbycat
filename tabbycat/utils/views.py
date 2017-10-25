@@ -98,7 +98,7 @@ class VueTableTemplateView(TemplateView):
     (emoji, links, etc). Functions below return blocks of content (ie not just
      a team name row, but also institution/category status as needed)."""
 
-    template_name = 'base_vue_table.html'
+    template_name = 'tables/base_vue_table.html'
     tables_orientation = 'columns' # Layout option: tables as rows or as columns
 
     def get_context_data(self, **kwargs):
