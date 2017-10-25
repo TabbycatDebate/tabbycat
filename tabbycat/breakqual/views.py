@@ -220,18 +220,16 @@ class EditEligibilityFormView(SuperuserRequiredMixin, TournamentMixin, VueTableT
         table = TabbycatTableBuilder(view=self, sort_key='team')
         teams = t.team_set.all()
         table.add_team_columns(teams)
-        # break_categories = t.breakcategory_set.all()
+        break_categories = t.breakcategory_set.all()
 
+        for bc in break_categories:
+            table.add_column(bc.name, [{
+                'component': 'check-cell',
+                'checked': True if bc in team.break_categories.all() else False,
+                'id': team.id,
+                'payload': bc.id
+            } for team in teams])
         return table
-    # def get_form_kwargs(self):
-    #     kwargs = super().get_form_kwargs()
-    #     kwargs['tournament'] = self.get_tournament()
-    #     return kwargs
-
-    # def form_valid(self, form):
-    #     form.save()
-    #     messages.success(self.request, _("Break eligibility saved."))
-    #     return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         break_categories = self.get_tournament().breakcategory_set.all()
@@ -241,6 +239,4 @@ class EditEligibilityFormView(SuperuserRequiredMixin, TournamentMixin, VueTableT
 
 
 class SaveElibilityEditView(LogActionMixin):
-    pass
-
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT

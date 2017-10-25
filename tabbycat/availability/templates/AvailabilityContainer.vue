@@ -57,14 +57,14 @@ export default {
            translations: Object, urls: Object },
   created: function () {
     // Watch for events on the global event hub
-    this.$eventHub.$on('toggle-availability', this.toggleAvailability)
+    this.$eventHub.$on('toggle-checked', this.toggleAvailability)
   },
   computed: {
     availabilities: function() {
       var availabilities = {}
       // Map availabilities in table to a dictionary keyed by id
       _.forEach(this.tablesData[0].data, function(row) {
-        availabilities[row[0].id] = row[0].available;
+        availabilities[row[0].id] = row[0].checked;
       })
       return availabilities
     },
@@ -87,13 +87,13 @@ export default {
     },
     copyFromPrevious: function() {
       _.forEach(this.tablesData[0].data, function(row) {
-        row[0].available = row[0].prev
+        row[0].checked = row[0].prev
       })
       this.saveAvailabilities()
     },
     massSelect: function(state) {
       _.forEach(this.tablesData[0].data, function(row) {
-        row[0].available = state
+        row[0].checked = state
       })
       this.saveAvailabilities()
     },

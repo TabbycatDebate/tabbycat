@@ -25,7 +25,6 @@ from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, SpeakerCategory, Team
-from . import forms
 
 
 class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
@@ -284,7 +283,7 @@ class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, Tourname
 class EditSpeakerCategoryEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
-    form_class = forms.SpeakerCategoryEligibilityForm
+    # form_class = forms.SpeakerCategoryEligibilityForm
     template_name = 'edit_speaker_eligibility.html'
 
     def get_success_url(self):

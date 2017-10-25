@@ -557,6 +557,7 @@ class SetAdjudicatorBreakingStatusView(SuperuserRequiredMixin, TournamentMixin, 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
+        print(posted_info)
         adjudicator = Adjudicator.objects.get(id=posted_info['id'])
         adjudicator.breaking = posted_info['breaking']
         adjudicator.save()
