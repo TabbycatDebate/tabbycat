@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 import adjallocation.models as am
 import breakqual.models as bm
 import tournaments.models as tm
@@ -38,6 +40,8 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         'adjudicators',
         'teams',
         'venues',
+        'team_conflicts',
+        'institution_conflicts',
     ]
 
     def import_rounds(self, f):
@@ -128,3 +132,19 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
     def import_venues(self, f):
         interpreter = make_interpreter(tournament=self.tournament)
         self._import(f, vm.Venue, interpreter)
+
+    def import_team_conflicts(self, f):
+        interpreter = make_interpreter(
+            team=lambda x: pm.Team.objects.lookup(name=x, tournament=self.tournament),
+            adjudicator=lambda x: pm.Adjudicator.objects.get(
+                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+        )
+        self._import(f, am.AdjudicatorConflict, interpreter)
+
+    def import_institution_conflicts(self, f):
+        interpreter = make_interpreter(
+            institution=pm.Institution.objects.lookup,
+            adjudicator=lambda x: pm.Adjudicator.objects.get(
+                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+        )
+        self._import(f, am.AdjudicatorInstitutionConflict, interpreter)
