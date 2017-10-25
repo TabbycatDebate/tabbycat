@@ -1,6 +1,7 @@
 from django.db.models import Q
 
 import adjallocation.models as am
+import adjfeedback.models as fm
 import breakqual.models as bm
 import tournaments.models as tm
 import participants.models as pm
@@ -38,6 +39,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         'institutions',
         'speaker_categories',
         'adjudicators',
+        'scores',
         'teams',
         'venues',
         'team_conflicts',
@@ -79,11 +81,26 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         def own_institution_conflict_interpreter(lineno, line):
             adjudicator = adjudicators[lineno]
             if adjudicator.institution is not None:
-                yield {
+                return {
                     'adjudicator': adjudicator,
                     'institution': adjudicator.institution,
                 }
         self._import(f, am.AdjudicatorInstitutionConflict, own_institution_conflict_interpreter)
+
+    def import_scores(self, f):
+        # The base class can only create instances, it can't update existing ones.
+        # To get around this, we create the histories first, and then set the scores
+        # on adjudicators.
+        interpreter = make_interpreter(
+            round=None,
+            adjudicator=lambda x: pm.Adjudicator.objects.get(
+                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+        )
+        histories = self._import(f, fm.AdjudicatorTestScoreHistory, interpreter)
+
+        for history in histories.values():
+            history.adjudicator.test_score = history.score
+            history.adjudicator.save()
 
     def import_teams(self, f):
         speaker_fields = ['name', 'email', 'category', 'gender']
