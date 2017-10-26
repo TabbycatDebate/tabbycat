@@ -32,7 +32,8 @@ export default {
     'cellData.checked': function (val, oldVal) {
       if (_.isUndefined(this.cellData.saveURL)) {
         this.$eventHub.$emit('toggle-checked', this.cellData.id,
-                                               this.cellData.checked)
+                                               this.cellData.checked,
+                                               this.cellData.type)
       } else {
         var cd = this.cellData
         var message = "adj " + cd.id + "'s " + cd.type + " status as " + cd.checked

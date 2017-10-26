@@ -52,6 +52,7 @@ export default {
   mixins: [AjaxMixin],
   components: { AutoSaveCounter, TablesContainer },
   props: { tablesData: Array, categories: Array, urls: Object },
+  data: function () { return { rejectSave: false } },
   created: function () {
     // Watch for events on the global event hub
     this.$eventHub.$on('toggle-checked', this.toggleEligiblity)
@@ -61,7 +62,8 @@ export default {
       var eligibilties = {}
       // Map Eligibilties in table to a dictionary keyed by id
       _.forEach(this.tablesData[0].data, function(row) {
-        eligibilties[row[0].id] = row[0].checked; // TODO hardcoded per row
+        // TODO hardcoded per row
+        eligibilties[row[0].id] = {'type': row[0].type, 'checked': row[0].checked};
       })
       return eligibilties
     },
@@ -76,11 +78,15 @@ export default {
       this.saveEligibilties()
     },
     massSelect: function(state, index) {
+      this.rejectSave = true
       _.forEach(this.tablesData[0].data, function(row) {
         // TODO: don't key off index (can show/hide institutions column)
         row[2 + index].checked = state
       })
       this.saveEligibilties()
+      this.$nextTick(function() {
+        this.rejectSave = false
+      })
     },
   }
 }

@@ -9,6 +9,7 @@ from django.views.generic import FormView, TemplateView, View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from participants.models import Team
 from utils.misc import reverse_tournament
 from utils.mixins import CacheMixin, SuperuserRequiredMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
@@ -232,7 +233,7 @@ class EditTeamEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableT
                 'component': 'check-cell',
                 'checked': True if bc in team.break_categories.all() else False,
                 'id': team.id,
-                'payload': bc.id
+                'type': bc.id
             } for team in teams])
         return table
 
@@ -240,21 +241,33 @@ class EditTeamEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableT
         break_categories = self.get_tournament().breakcategory_set.all()
         json_categories = [bc.serialize for bc in break_categories]
         kwargs["break_categories"] = json.dumps(json_categories)
-        kwargs["save"] = reverse_tournament('breakqual-update-eligibility', self.get_tournament())
         return super().get_context_data(**kwargs)
 
 
 class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
 
+    def set_break_elibility(self, team, sent_status):
+        category_id = sent_status['type']
+        marked_eligible = team.break_categories.filter(pk=category_id).exists()
+        if sent_status['checked'] and not marked_eligible:
+            team.break_categories.add(category_id)
+            team.save()
+        elif not sent_status['checked'] and marked_eligible:
+            team.break_categories.remove(category_id)
+            team.save()
+
     def post(self, request, *args, **kwargs):
-        # body = self.request.body.decode('utf-8')
-        # posted_info = json.loads(body)
+        body = self.request.body.decode('utf-8')
+        posted_info = json.loads(body)
+        print("posting")
 
         try:
-            # utils.set_availability_by_id(self.model, posted_info, self.get_round())
+            team_ids = [int(key) for key in posted_info.keys()]
+            teams = Team.objects.prefetch_related('break_categories').in_bulk(team_ids)
+            for team_id, team in teams.items():
+                self.set_break_elibility(team, posted_info[str(team_id)])
             self.log_action()
-
         except:
             message = "Error handling eligiblity updates"
             logger.exception(message)
