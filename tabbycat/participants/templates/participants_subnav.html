@@ -1,16 +1,16 @@
 {% load debate_tags i18n %}
 
-  <div class="btn-group btn-group">
-    <a class="btn btn-outline-primary {% if participants_nav %}active{% endif %}"
-       href="{% tournamenturl 'participants-list' %}">
-      {% trans "Participants List" %}
-    </a>
-    <a class="btn btn-outline-primary {% if speaker_cats_nav %}active{% endif %}"
-       href="{% tournamenturl 'participants-speaker-categories-edit' %}">
-      {% trans "Speaker Categories" %}
-    </a>
-    <a class="btn btn-outline-primary {% if speaker_eligibility_nav %}active{% endif %}"
-       href="{% tournamenturl 'participants-speaker-eligibility' %}">
-      {% trans "Speaker Eligibility" %}
-    </a>
-  </div>
+<div class="btn-group btn-group">
+  <a class="btn btn-outline-primary {% if participants_nav %}active{% endif %}"
+     href="{% tournamenturl 'participants-list' %}">
+    {% trans "Participants List" %}
+  </a>
+  <a class="btn btn-outline-primary {% if speaker_cats_nav %}active{% endif %}"
+     href="{% tournamenturl 'participants-speaker-categories-edit' %}">
+    {% trans "Speaker Categories" %}
+  </a>
+  <a class="btn btn-outline-primary {% if speaker_eligibility_nav %}active{% endif %}"
+     href="{% tournamenturl 'participants-speaker-eligibility' %}">
+    {% trans "Speaker Eligibility" %}
+  </a>
+</div>

@@ -1,45 +1,46 @@
-{% extends "base_eligibility.html" %}
+{% extends "base.html" %}
 {% load debate_tags static i18n %}
 
 {% block head-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
 {% block page-title %}{% trans "Speaker Category Eligibility" %}{% endblock %}
 
-{% block page-subnav-sections %}
-  {% include "participants_subnav.html" %}
-{% endblock %}
-
-{% block save-button-text %}
-  {% trans "Save Eligibility" %}
-{% endblock %}
-
-{% block eligibility-table-headers %}
-  <th>{% trans "Speaker" %}</th>
-  <th>{% trans "Team" %}</th>
-  {% if pref.show_emoji %}
-    <th class="team-emoji"></th>
-  {% endif %}
-  <th>{% trans "Institution" %}</th>
-{% endblock %}
-
-{% block eligibility-table-cells %}
-  <td>
-    {{ instance.name }}
-  </td>
-  <td>
-    {% include "tables/team.html" with team=instance.team %}
-  </td>
-  {% if pref.show_emoji %}
-    <td class="team-emoji">{{ instance.team.emoji }}</td>
-  {% endif %}
-  <td>{{ instance.team.institution.name }}</td>
-{% endblock %}
-
 {% block page-alerts %}
-  {% if not form.get_category_queryset.exists %}
+  {% if not speaker_categories.exists %}
     {% tournamenturl 'participants-speaker-categories-edit' as categories_url %}
     {% blocktrans trimmed asvar message %}
       It looks like there aren't any speaker categories are defined. If you'd like to produce category-specific speaker tabs, such as a novice or ESL tab, use the <a href="{{ categories_url }}" class="alert-link">Speaker Categories</a> page to define them, then return to this page to set speaker eligibility.
     {% endblocktrans %}
     {% include 'components/alert.html' with type='warning' %}
   {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <div id="vueMount">
+    <speaker-eligibility-container :tables-data=tablesData
+                           :categories=categories
+                           :urls=urls
+                           orientation={{ tables_orientation|safe }} >
+    </speaker-eligibility-container>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+
+  <script>
+    window.vueData = {
+      tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
+      categories: {{ speaker_categories|safe }},
+      urls: {
+        'list': "{% tournamenturl 'participants-list' %}",
+        'categories': "{% tournamenturl 'participants-speaker-categories-edit' %}",
+        'eligibility': "{% tournamenturl 'participants-speaker-eligibility' %}",
+        'save': '{{ saveURL|safe }}'
+      },
+      translations: {
+      }
+    }
+  </script>
+  {{ block.super }}
 {% endblock %}

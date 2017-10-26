@@ -213,16 +213,17 @@ class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, CacheMixin, Base
 # Eligibility and categories
 # ==============================================================================
 
-class EditEligibilityFormView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
+class EditTeamEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
 
-    template_name = 'base_eligibility.html'
+    template_name = 'edit_break_eligibility.html'
     page_title = _("Break Eligibility")
     page_emoji = '🍯'
 
     def get_table(self):
         t = self.get_tournament()
         table = TabbycatTableBuilder(view=self, sort_key='team')
-        teams = t.team_set.all()
+        teams = t.team_set.all().select_related(
+            'institution').prefetch_related('break_categories', 'speaker_set')
         table.add_team_columns(teams)
         break_categories = t.breakcategory_set.all()
 
