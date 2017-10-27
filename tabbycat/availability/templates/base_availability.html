@@ -4,12 +4,14 @@
 {% block content %}
 
   <div id="vueMount">
-    <availability-container :tables-data=tablesData
-                            :round-info=roundInfo
-                            :translations=translations
-                            :urls=urls
-                             orientation={{ tables_orientation|safe }} >
-    </availability-container>
+    <checkbox-tables-container  :tables-data=tablesData
+                                :categories=categories
+                                :round-info=roundInfo
+                                :translations=translations
+                                :urls=urls
+                                :navigation=navigation
+                                orientation={{ tables_orientation|safe }} >
+    </checkbox-tables-container>
   </div>
 
 {% endblock content %}
@@ -19,13 +21,13 @@
   <script>
     window.vueData = {
       tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
-      roundInfo: {
+       roundInfo: {
         'seq': {{ round.seq }},
         'break': '{{ round.is_break_round }}',
         'model': '{{ model }}'
       },
+      categories: [{id: 0, name: 'Availability'}],
       urls: {
-        'back': '{% roundurl "availability-index" round %}',
         'breakingAdjs': '{% roundurl "availability-checkin-breaking-adjudicators" %}',
         'save': '{{ saveURL|safe }}'
       },
@@ -36,7 +38,10 @@
         'Check In All Breaking': '{% trans "Check In All Breaking" %}',
         'Copy from Previous': '{% trans "Copy from Previous" %}',
         'Save Selected': '{% trans "Save Selected" %}'
-      }
+      },
+      navigation: [
+        { title: 'Overview', url: '{% roundurl "availability-index" round %}', back: true }
+      ]
     }
   </script>
   {{ block.super }}

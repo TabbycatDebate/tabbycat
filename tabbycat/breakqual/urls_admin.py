@@ -18,6 +18,9 @@ urlpatterns = [
         views.GenerateAllBreaksView.as_view(),
         name='breakqual-generate-all'),
     url(r'^eligibility/$',
-        views.EditEligibilityFormView.as_view(),
+        views.EditTeamEligibilityView.as_view(),
         name='breakqual-edit-eligibility'),
+    url(r'^eligibility/update$',
+        views.UpdateEligibilityEditView.as_view(),
+        name='breakqual-update-eligibility'),
 ]

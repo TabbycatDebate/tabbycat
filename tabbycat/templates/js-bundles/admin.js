@@ -37,8 +37,8 @@ vueComponents['PrintableBallot'] = PrintableBallot
 // Other
 //------------------------------------------------------------------------------
 
-import AvailabilityContainer from  '../../availability/templates/AvailabilityContainer.vue'
-vueComponents['AvailabilityContainer'] = AvailabilityContainer
+import CheckboxTablesContainer from  '../tables/CheckboxTablesContainer.vue'
+vueComponents['CheckboxTablesContainer'] = CheckboxTablesContainer
 
 //------------------------------------------------------------------------------
 // Draw Containers

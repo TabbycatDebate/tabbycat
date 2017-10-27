@@ -1,3 +1,6 @@
+import json
+import logging
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -7,7 +10,6 @@ from django.http import JsonResponse
 from django.utils.translation import ugettext_lazy, ungettext
 from django.utils.translation import ugettext as _
 from django.views.generic.base import View
-from django.views.generic import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -25,7 +27,8 @@ from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, SpeakerCategory, Team
-from . import forms
+
+logger = logging.getLogger(__name__)
 
 
 class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
@@ -281,24 +284,69 @@ class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, Tourname
         return reverse_tournament('participants-list', self.get_tournament())
 
 
-class EditSpeakerCategoryEligibilityFormView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, FormView):
+class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
-    form_class = forms.SpeakerCategoryEligibilityForm
+    # form_class = forms.SpeakerCategoryEligibilityForm
     template_name = 'edit_speaker_eligibility.html'
+    page_title = _("Speaker Category Eligibility")
+    page_emoji = '🍯'
 
-    def get_success_url(self):
-        return reverse_tournament('participants-list', self.get_tournament())
+    def get_table(self):
+        t = self.get_tournament()
+        table = TabbycatTableBuilder(view=self, sort_key='team')
+        speakers = Speaker.objects.filter(team__tournament=t).select_related(
+            'team', 'team__institution').prefetch_related('categories')
+        table.add_speaker_columns(speakers, categories=False)
+        table.add_team_columns([speaker.team for speaker in speakers])
+        speaker_categories = self.get_tournament().speakercategory_set.all()
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['tournament'] = self.get_tournament()
-        return kwargs
+        for sc in speaker_categories:
+            table.add_column(sc.name, [{
+                'component': 'check-cell',
+                'checked': True if sc in speaker.categories.all() else False,
+                'id': speaker.id,
+                'type': sc.id
+            } for speaker in speakers])
+        return table
 
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, _("Speaker category eligibility saved."))
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        speaker_categories = self.get_tournament().speakercategory_set.all()
+        json_categories = [bc.serialize for bc in speaker_categories]
+        kwargs["speaker_categories"] = json.dumps(json_categories)
+        kwargs["speaker_categories_length"] = speaker_categories.count()
+        kwargs["save"] = reverse_tournament('participants-speaker-update-eligibility', self.get_tournament())
+        return super().get_context_data(**kwargs)
+
+
+class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
+    action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+
+    def set_category_elibility(self, speaker, sent_status):
+        category_id = sent_status['type']
+        marked_eligible = speaker.categories.filter(pk=category_id).exists()
+        if sent_status['checked'] and not marked_eligible:
+            speaker.categories.add(category_id)
+            speaker.save()
+        elif not sent_status['checked'] and marked_eligible:
+            speaker.categories.remove(category_id)
+            speaker.save()
+
+    def post(self, request, *args, **kwargs):
+        body = self.request.body.decode('utf-8')
+        posted_info = json.loads(body)
+
+        try:
+            speaker_ids = [int(key) for key in posted_info.keys()]
+            speakers = Speaker.objects.prefetch_related('categories').in_bulk(speaker_ids)
+            for speaker_id, speaker in speakers.items():
+                self.set_category_elibility(speaker, posted_info[str(speaker_id)])
+            self.log_action()
+        except:
+            message = "Error handling eligiblity updates"
+            logger.exception(message)
+            return JsonResponse({'status': 'false', 'message': message}, status=500)
+
+        return JsonResponse(json.dumps(True), safe=False)
 
 
 # ==============================================================================

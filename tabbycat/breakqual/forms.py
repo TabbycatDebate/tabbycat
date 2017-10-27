@@ -1,28 +1,8 @@
 from django import forms
 
-from utils.forms import BaseEligibilityForm, OptionalChoiceField
+from utils.forms import OptionalChoiceField
 
 from .models import BreakingTeam
-
-# ==============================================================================
-# Break eligbility form
-# ==============================================================================
-
-
-class BreakEligibilityForm(BaseEligibilityForm):
-    """Sets which teams are eligible for the break."""
-
-    categories_field_name = 'break_categories'
-
-    def __init__(self, tournament, *args, **kwargs):
-        self.tournament = tournament
-        super().__init__(*args, **kwargs)
-
-    def get_instance_queryset(self):
-        return self.tournament.team_set.all()
-
-    def get_category_queryset(self):
-        return self.tournament.breakcategory_set.all()
 
 
 # ==============================================================================

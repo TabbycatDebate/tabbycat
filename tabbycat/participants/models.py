@@ -98,6 +98,10 @@ class SpeakerCategory(models.Model):
     def __str__(self):
         return "[{}] {}".format(self.tournament.slug, self.name)
 
+    @property
+    def serialize(self):
+        return {'id': self.id, 'name': self.name, 'seq': self.seq}
+
 
 class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,

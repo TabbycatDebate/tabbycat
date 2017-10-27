@@ -17,9 +17,10 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'tooltip': 'Whether the adj is marked as breaking (click to mark)',
         }
         breaking_data = [{
-            'component': 'breaking-check-cell',
-            'breaking':  adj.breaking ,
+            'component': 'check-cell',
+            'checked':  adj.breaking ,
             'sort': adj.breaking,
+            'type': 'breaking',
             'saveURL': reverse_tournament('adjfeedback-set-adj-breaking-status', self.tournament),
             'id': adj.pk,
         } for adj in adjudicators]

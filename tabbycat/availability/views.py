@@ -171,11 +171,12 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
         table.add_column(_("Active Now"), [{
-            'component': 'availability-check-cell',
-            'available': inst.available,
+            'component': 'check-cell',
+            'checked': inst.available,
             'sort': inst.available,
             'id': inst.id,
             'prev': inst.prev_available if round.prev else False,
+            'type': 0,
         } for inst in queryset])
 
         if round.prev:
@@ -289,12 +290,16 @@ class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
 class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, View):
 
     def post(self, request, *args, **kwargs):
-
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
 
+        active_ids = [] # Unlike other checks; we just pass IDs on not the bool
+        for key, value in posted_info.items():
+            if value['checked']:
+                active_ids.append(key)
+
         try:
-            utils.set_availability_by_id(self.model, posted_info, self.get_round())
+            utils.set_availability_by_id(self.model, active_ids, self.get_round())
             self.log_action()
 
         except:
