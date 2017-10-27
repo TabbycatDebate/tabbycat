@@ -48,12 +48,15 @@
               <div class="vue-sortable thead flex-cell flex-12"
                    v-for="position in teamPositions" @click="updateSorting(position)">
                 <span>{{ position }}</span>
-                <span :class="sortClasses(position)"></span>
+                <div :class="sortClasses(position)">
+                  <span class="sorting-placeholder-for-width"></span>
+                  <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+                </div>
               </div>
             </template>
 
             <div slot="hpanel"></div>
-            <div slot="hextra" class="vue-sortable thead flex-cell flex-8"
+            <div slot="hextra" class="thead flex-cell flex-8"
                  data-toggle="tooltip" title="Some types of draws (e.g.
                  out-rounds) do not specify the positions of each team at the
                  time of draw generation. Once a debate's sides have been

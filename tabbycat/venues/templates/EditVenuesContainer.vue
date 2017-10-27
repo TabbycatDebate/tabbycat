@@ -19,7 +19,10 @@
         <div @click="updateSorting('venue')" slot="hvenue"
              class="vue-sortable thead flex-cell flex-12 ">
           <span>Venue </span>
-          <span :class="sortClasses('venue')"></span>
+          <div :class="sortClasses('venue')">
+            <span class="sorting-placeholder-for-width"></span>
+            <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+          </div>
         </div>
       </draw-header>
       <debate v-for="debate in dataOrderedByKey"

@@ -12,27 +12,30 @@
       <draw-header :round-info="roundInfo" @resort="updateSorting"
                    :sort-key="sortKey" :sort-order="sortOrder">
 
-        <div slot="himportance" class="thead flex-cell flex-5 vue-sortable"
+        <div slot="himportance" class="thead flex-cell flex-6 vue-sortable"
              @click="updateSorting('importance')" data-toggle="tooltip"
              title="The debate's priority. Higher priorities will be allocated
               better adjudicators during auto-allocation." >
           <span class="tooltip-trigger">Priority</span>
-          <span :class="sortClasses('importance')"></span>
+          <div :class="sortClasses('importance')">
+            <span class="sorting-placeholder-for-width"></span>
+            <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+          </div>
         </div>
 
         <template slot="hvenue"><!-- Hide Venues --></template>
         <template slot="hpanel">
-          <div :class="['thead vue-sortable flex-cell text-center',
+          <div :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
             <span>Chair</span>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
-               :class="['thead vue-sortable flex-cell text-center',
+               :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 17: 16)]">
             <span>Panel</span>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
-               :class="['thead vue-sortable flex-cell text-center',
+               :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10: 16)]">
             <span>Trainees</span>
           </div>
@@ -42,7 +45,7 @@
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
 
-        <div class="draw-cell flex-5" slot="simportance">
+        <div class="draw-cell flex-6" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
         <template slot="svenue"><!-- Hide Venues --></template>

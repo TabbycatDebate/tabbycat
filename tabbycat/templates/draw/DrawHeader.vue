@@ -5,7 +5,10 @@
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('bracket')"
            data-toggle="tooltip" title="Debate's Bracket">
         <i data-feather="bar-chart-2" class="tooltip-trigger"></i>
-        <span :class="sortClasses('bracket')"></span>
+        <div :class="sortClasses('bracket')">
+          <span class="sorting-placeholder-for-width"></span>
+          <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+        </div>
       </div>
     </slot>
 
@@ -13,7 +16,10 @@
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('liveness')"
            data-toggle="tooltip" title="How many break categories are live in this room">
         <i data-feather="heart" class="tooltip-trigger"></i>
-        <span :class="sortClasses('liveness')"></span>
+        <div :class="sortClasses('liveness')">
+          <span class="sorting-placeholder-for-width"></span>
+          <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+        </div>
       </div>
     </slot>
 
@@ -21,7 +27,10 @@
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('importance')"
            data-toggle="tooltip" title="The assigned priority value of this debate">
         <i data-feather="thermometer" class="tooltip-trigger"></i>
-        <span :class="sortClasses('importance')"></span>
+        <div :class="sortClasses('importance')">
+          <span class="sorting-placeholder-for-width"></span>
+          <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+        </div>
       </div>
     </slot>
 
@@ -29,7 +38,10 @@
       <div class="vue-sortable thead flex-cell flex-6" @click="resort('venue')"
            data-toggle="tooltip" title="The venue of this debate">
         <i data-feather="map-pin" class="tooltip-trigger"></i>
-        <span :class="sortClasses('venue')"></span>
+        <div :class="sortClasses('venue')">
+          <span class="sorting-placeholder-for-width"></span>
+          <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+        </div>
       </div>
     </slot>
 
@@ -38,12 +50,15 @@
            v-for="position in roundInfo.teamPositions" @click="resort(position)"
            data-toggle="tooltip" :title="'The ' + position + ' team'">
         <span>{{ position }}</span>
-        <span :class="sortClasses(position)"></span>
+        <div :class="sortClasses(position)">
+          <span class="sorting-placeholder-for-width"></span>
+          <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+        </div>
       </div>
     </slot>
 
     <slot name="hpanel">
-      <div class="vue-sortable thead flex-cell flex-12">
+      <div class="thead flex-cell flex-12">
         Panel
       </div>
     </slot>
