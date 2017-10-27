@@ -16,11 +16,26 @@ export default {
     height: { type: Number, default: 55 },
     padding: { type: Number, default: 6 },
   },
-  mounted: function() {
-    if (typeof this.cellData.graphData !== 'undefined' && this.cellData.graphData.length > 0) {
-      InitChart(this); // Only init if we have some info
+  computed: {
+    graphData: function() {
+      return this.cellData.graphData
     }
   },
+  mounted: function() {
+    if (typeof this.graphData !== 'undefined' && this.graphData.length > 0) {
+      initChart(this); // Only init if we have some info
+    }
+  },
+  watch: {
+    graphData: function() {
+      if (typeof this.graphData !== 'undefined' && this.graphData.length > 0) {
+        // Just remove and remake it as I cbf figuring out the in place update
+        var element = $(this.$el).children(".d3-graph")[0]
+        $(element).children("svg").remove()
+        initChart(this)
+      }
+    }
+  }
 }
 
 // returns slope, intercept and r-square of the line
@@ -46,7 +61,7 @@ function leastSquares(xSeries, ySeries) {
   return [slope, intercept, rSquare];
 }
 
-function InitChart(vueContext){
+function initChart(vueContext){
 
   // Range is the pixel coordinates; domain is the axes range
   var xScale = d3.scale.linear()
@@ -97,9 +112,9 @@ function InitChart(vueContext){
       .call(yAxis)
 
   // Create series for regression
-  var xLabels = vueContext.cellData.graphData.map(function (d) { return d['x']; })
+  var xLabels = vueContext.graphData.map(function (d) { return d['x']; })
   var xSeries = d3.range(1, xLabels.length + 1);
-	var ySeries = vueContext.cellData.graphData.map(function(d) { return parseFloat(d['y']); });
+	var ySeries = vueContext.graphData.map(function(d) { return parseFloat(d['y']); });
 	var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
@@ -125,7 +140,7 @@ function InitChart(vueContext){
   }
 
 
-  var circles = svg.selectAll("circle").data(vueContext.cellData.graphData)
+  var circles = svg.selectAll("circle").data(vueContext.graphData)
   circles
     .enter().append('circle')
     .attr("cx", function (d) { return xScale (d.x); })

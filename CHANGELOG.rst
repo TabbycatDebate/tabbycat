@@ -27,6 +27,7 @@ Change Log
 - Quality of life improvements
     - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
     - Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side
+    - Fixed issue where the adjudicator feedback graphs would not sort along with their table
     - The Feedback Overview page now makes it more clear how the score is determined, the current distribution of scores, and how scores affect the distribution of chairs, panellists, and trainees.
     - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
     - 'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration
