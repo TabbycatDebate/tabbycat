@@ -217,9 +217,9 @@ class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateV
         kwargs['tournament_slug'] = tournament.slug
 
         if not tournament.pref('share_adjs'):
-            kwargs['adjs'] = tournament.adjudicator_set.filter(url_key__isnull=False).order_by('name')
+            kwargs['adjs'] = tournament.adjudicator_set.filter(url_key__isnull=False).order_by('institution__name', 'name')
         else:
-            kwargs['adjs'] = Adjudicator.objects.filter(url_key__isnull=False).order_by('name')
+            kwargs['adjs'] = Adjudicator.objects.filter(url_key__isnull=False).order_by('institution__name', 'name')
 
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
