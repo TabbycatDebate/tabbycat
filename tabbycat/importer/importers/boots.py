@@ -44,6 +44,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         'venues',
         'team_conflicts',
         'institution_conflicts',
+        'team_institution_conflicts',
     ]
 
     def import_rounds(self, f):
@@ -165,3 +166,19 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                 Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
         )
         self._import(f, am.AdjudicatorInstitutionConflict, interpreter)
+
+    def import_team_institution_conflicts(self, f):
+        """Adds team conflicts for all adjudicators for the listed institution.
+        For example: if "institution" is Hobbiton and "team" is Dorwinion AB,
+        this adds conflicts for Dorwinion AB against all adjudicators from
+        Hobbiton."""
+
+        def interpreter(lineno, line):
+            institution = pm.Institution.objects.lookup(line['institution'])
+            team = pm.Team.objects.lookup(line['team'])
+            for adj in institution.adjudicator_set.all():
+                yield {
+                    'team': team,
+                    'adjudicator': adj,
+                }
+        self._import(f, am.AdjudicatorConflict, interpreter)
