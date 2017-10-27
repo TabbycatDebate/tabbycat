@@ -58,7 +58,7 @@ Then, once you're in your tournament, click **Setup** in the left-hand menu, the
 You first need to add institutions. Once institutions are added, you can then add teams and adjudicators in the relevant sections. Each of these is a two-step process:
 
 - For **institutions** and **venues**, it will first ask you to copy-paste a list of names and properties in a comma-separated table format.  The second step is to confirm individual fiels.
-- For **teams** and **adjudicators**, it will first ask you how many teams/adjudicators to add for each institution.  The second step is to fill in their details, for example, names.
+- For **teams** and **adjudicators**, it will first ask you how many teams/adjudicators to add for each institution (or who lack an institutional affiliation). The second step is to fill in their details, for example, names.
 
 .. image:: images/add-institutions.png
 
@@ -100,6 +100,8 @@ This script has a number of options. They're worth taking a look at before you r
   $ ./manage.py importtournament --help
 
 4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-edit-database`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
+
+.. note:: Currently the ``importtournament`` command cannot add Adjudicators or Teams without an institutional affiliation. However, these can be imported with the Simpler Importer or edited in the Database area.
 
 ``importtournament`` on Heroku installs
 ========================================

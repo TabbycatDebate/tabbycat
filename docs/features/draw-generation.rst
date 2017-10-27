@@ -172,6 +172,8 @@ It's a bit more complicated than that, for two reasons:
 * History conflicts are prioritised over (*i.e.*, "worse than") institution conflicts. So it's fine to resolve a history conflict by creating an institution conflict, but not the vice versa.
 * Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could "one down" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps.
 
+.. note:: Teams imported without an institutional affiliation are (for conflict avoidance purposes) considered to all be from the same institution and will trigger conflicts as described above. If this is a concern it can be assigning 'fake' institutions (i.e. *Swing 1*) to each unaffiliated team.
+
 What do I do if the draw looks wrong?
 =====================================
 
