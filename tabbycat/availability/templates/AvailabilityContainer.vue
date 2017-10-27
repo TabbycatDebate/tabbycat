@@ -22,11 +22,14 @@
         </button>
 
         <div class="btn-group">
+          <button class="btn btn-secondary">
+            Active Now
+          </button>
           <button @click="massSelect(true)" class="btn btn-primary">
-            {{ translations['Select All'] }}
+            <i data-feather="check-circle"></i> All
           </button>
           <button @click="massSelect(false)" class="btn btn-primary">
-            {{ translations['Select None'] }}
+            <i data-feather="x-circle"></i> All
           </button>
         </div>
 
@@ -55,6 +58,7 @@ export default {
   components: { AutoSaveCounter, TablesContainer },
   props: { tablesData: Array, roundInfo: Object,
            translations: Object, urls: Object },
+  data: function () { return { rejectSave: false } },
   created: function () {
     // Watch for events on the global event hub
     this.$eventHub.$on('toggle-checked', this.toggleAvailability)
@@ -83,7 +87,9 @@ export default {
       this.ajaxSave(this.urls.save, payload, message, null, null, null)
     },
     toggleAvailability: function(id, status) {
-      this.saveAvailabilities()
+      if (this.rejectSave === false) {
+        this.saveAvailabilities()
+      }
     },
     copyFromPrevious: function() {
       _.forEach(this.tablesData[0].data, function(row) {
@@ -92,10 +98,14 @@ export default {
       this.saveAvailabilities()
     },
     massSelect: function(state) {
+      this.rejectSave = true
       _.forEach(this.tablesData[0].data, function(row) {
         row[0].checked = state
       })
       this.saveAvailabilities()
+      this.$nextTick(function() {
+        this.rejectSave = false
+      })
     },
   }
 }

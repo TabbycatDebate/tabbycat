@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.conf import settings
 from django.contrib import messages
@@ -26,6 +27,8 @@ from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, SpeakerCategory, Team
+
+logger = logging.getLogger(__name__)
 
 
 class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
@@ -302,7 +305,7 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,
-                'payload': sc.id
+                'type': sc.id
             } for speaker in speakers])
         return table
 
@@ -316,6 +319,34 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
 
 class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+
+    def set_category_elibility(self, speaker, sent_status):
+        print(sent_status)
+        category_id = sent_status['type']
+        marked_eligible = speaker.categories.filter(pk=category_id).exists()
+        if sent_status['checked'] and not marked_eligible:
+            speaker.categories.add(category_id)
+            speaker.save()
+        elif not sent_status['checked'] and marked_eligible:
+            speaker.categories.remove(category_id)
+            speaker.save()
+
+    def post(self, request, *args, **kwargs):
+        body = self.request.body.decode('utf-8')
+        posted_info = json.loads(body)
+
+        try:
+            speaker_ids = [int(key) for key in posted_info.keys()]
+            speakers = Speaker.objects.prefetch_related('categories').in_bulk(speaker_ids)
+            for speaker_id, speaker in speakers.items():
+                self.set_category_elibility(speaker, posted_info[str(speaker_id)])
+            self.log_action()
+        except:
+            message = "Error handling eligiblity updates"
+            logger.exception(message)
+            return JsonResponse({'status': 'false', 'message': message}, status=500)
+
+        return JsonResponse(json.dumps(True), safe=False)
 
 
 # ==============================================================================

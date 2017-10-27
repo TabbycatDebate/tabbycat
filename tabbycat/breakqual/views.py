@@ -260,7 +260,6 @@ class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
-        print("posting")
 
         try:
             team_ids = [int(key) for key in posted_info.keys()]

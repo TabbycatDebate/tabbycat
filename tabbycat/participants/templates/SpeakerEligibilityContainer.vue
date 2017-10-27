@@ -20,10 +20,10 @@
           <button class="btn btn-secondary">
             {{ bc.name }}
           </button>
-          <button @click="massSelect(true, index)" class="btn btn-primary">
+          <button @click="massSelect(true, bc.id)" class="btn btn-primary">
             <i data-feather="check-circle"></i> All
           </button>
-          <button @click="massSelect(false, index)" class="btn btn-primary">
+          <button @click="massSelect(false, bc.id)" class="btn btn-primary">
             <i data-feather="x-circle"></i> All
           </button>
         </div>
@@ -55,35 +55,49 @@ export default {
   data: function () { return { rejectSave: false } },
   created: function () {
     // Watch for events on the global event hub
-    this.$eventHub.$on('toggle-checked', this.toggleEligiblity)
+    this.$eventHub.$on('toggle-checked', this.toggleEligibilty)
   },
   computed: {
     eligibilties: function() {
       var eligibilties = {}
+      _.forEach(this.categories, function(category) {
+        eligibilties[category.id] = {}
+      })
       // Map Eligibilties in table to a dictionary keyed by id
       _.forEach(this.tablesData[0].data, function(row) {
-        // TODO hardcoded per row
-        eligibilties[row[0].id] = {'type': row[0].type, 'checked': row[0].checked};
+        _.forEach(row, function(column) {
+          if (!_.isUndefined(column.type)) {
+            var break_data = {'type': column.type, 'checked': column.checked }
+            eligibilties[column.type][column.id] = break_data;
+          }
+        })
       })
       return eligibilties
     },
   },
   methods: {
-    saveEligibilties: function() {
-      var payload = this.eligibilties
+    saveEligibilties: function(type) {
+      var payload = this.eligibilties[type]
       var message = "Eligibilties as" + payload
       this.ajaxSave(this.urls.save, payload, message, null, null, null)
     },
-    toggleEligibilty: function(id, status) {
-      this.saveEligibilties()
+    toggleEligibilty: function(id, checked, type) {
+      if (this.rejectSave === false) {
+        // We don't want massSelects to trigger individual updates; so just
+        // pass on saving those updates
+        this.saveEligibilties(type)
+      }
     },
-    massSelect: function(state, index) {
+    massSelect: function(state, type) {
       this.rejectSave = true
       _.forEach(this.tablesData[0].data, function(row) {
-        // TODO: don't key off index (can show/hide institutions column)
-        row[2 + index].checked = state
+        _.forEach(row, function(column) {
+          if (column.type === type) {
+            column.checked = state
+          }
+        })
       })
-      this.saveEligibilties()
+      this.saveEligibilties(type)
       this.$nextTick(function() {
         this.rejectSave = false
       })

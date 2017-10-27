@@ -30,13 +30,16 @@ export default {
   },
   watch: {
     'cellData.checked': function (val, oldVal) {
+      // Updates can be sent off individually via this component itself; or by
+      // communicating back up to the Coordinating Vue Container (where they
+      // can be handled in bulk or issue via a single bulk method)
       if (_.isUndefined(this.cellData.saveURL)) {
         this.$eventHub.$emit('toggle-checked', this.cellData.id,
                                                this.cellData.checked,
                                                this.cellData.type)
       } else {
         var cd = this.cellData
-        var message = "adj " + cd.id + "'s " + cd.type + " status as " + cd.checked
+        var message = cd.id + "'s " + cd.type + " status as " + cd.checked
         var payload = { id: cd.id }
         payload[cd.type] = cd.checked
         this.ajaxSave(cd.saveURL, payload, message, null, null, null)
