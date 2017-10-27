@@ -4,15 +4,9 @@
     <div class="row">
       <div class="col d-flex justify-content-between mb-4">
 
-        <div class="btn-group btn-group">
-          <a class="btn btn-outline-primary" :href="urls.list">
-            Participants List
-          </a>
-          <a class="btn btn-outline-primary" :href="urls.categories">
-            Speaker Categories
-          </a>
-          <a class="btn btn-outline-primary active" :href="urls.eligibility">
-            Speaker Eligibility
+        <div class="btn-group">
+          <a :href="item.url" class="btn btn-outline-primary" v-for="item in navigation">
+            <i data-feather="chevron-left" v-if="item.back"></i>{{ item.title }}
           </a>
         </div>
 
@@ -27,6 +21,20 @@
             <i data-feather="x-circle"></i> All
           </button>
         </div>
+
+        <template v-if="roundInfo">
+          <!-- Extensions just for availabilities -->
+          <form v-if="roundInfo.break === 'True' && roundInfo.model === 'participants.Adjudicator'"
+                :action="urls.breakingAdjs" method="post">
+            <button class="btn btn-primary" type="submit">
+              {{ translations["Check In All Breaking"] }}
+            </button>
+          </form>
+          <button v-if="roundInfo.seq > 1" @click="copyFromPrevious"
+                  class="btn btn-primary" type="button">
+            {{ translations["Copy from Previous"] }}
+          </button>
+        </template>
 
         <auto-save-counter :css="'btn-md'"></auto-save-counter>
 
@@ -43,50 +51,61 @@
 </template>
 
 <script>
-import AutoSaveCounter from '../../templates/draganddrops/AutoSaveCounter.vue'
-import TablesContainer from '../../templates/tables/TablesContainer.vue'
-import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
+import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
+import TablesContainer from './TablesContainer.vue'
+import AjaxMixin from '../ajax/AjaxMixin.vue'
 import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin],
   components: { AutoSaveCounter, TablesContainer },
-  props: { tablesData: Array, categories: Array, urls: Object },
+  props: { tablesData: Array, categories: Array, urls: Object,
+           navigation: Array, roundInfo: Object, translations: Object },
   data: function () { return { rejectSave: false } },
   created: function () {
     // Watch for events on the global event hub
-    this.$eventHub.$on('toggle-checked', this.toggleEligibilty)
+    this.$eventHub.$on('toggle-checked', this.toggleChecked)
   },
   computed: {
-    eligibilties: function() {
-      var eligibilties = {}
+    checked: function() {
+      var checked = {}
       _.forEach(this.categories, function(category) {
-        eligibilties[category.id] = {}
+        checked[category.id] = {}
       })
-      // Map Eligibilties in table to a dictionary keyed by id
+      // Map Checks in table to a dictionary keyed by id
       _.forEach(this.tablesData[0].data, function(row) {
         _.forEach(row, function(column) {
           if (!_.isUndefined(column.type)) {
             var break_data = {'type': column.type, 'checked': column.checked }
-            eligibilties[column.type][column.id] = break_data;
+            checked[column.type][column.id] = break_data;
           }
         })
       })
-      return eligibilties
+      return checked
     },
   },
   methods: {
-    saveEligibilties: function(type) {
-      var payload = this.eligibilties[type]
-      var message = "Eligibilties as" + payload
+    saveChecks: function(type) {
+      var payload = this.checked[type]
+      var message = "Checks as" + payload
       this.ajaxSave(this.urls.save, payload, message, null, null, null)
     },
-    toggleEligibilty: function(id, checked, type) {
+    toggleChecked: function(id, checked, type) {
       if (this.rejectSave === false) {
         // We don't want massSelects to trigger individual updates; so just
         // pass on saving those updates
-        this.saveEligibilties(type)
+        this.saveChecks(type)
       }
+    },
+    copyFromPrevious: function() {
+      this.rejectSave = true
+      _.forEach(this.tablesData[0].data, function(row) {
+        row[0].checked = row[0].prev
+      })
+      this.saveChecks(0)
+      this.$nextTick(function() {
+        this.rejectSave = false
+      })
     },
     massSelect: function(state, type) {
       this.rejectSave = true
@@ -97,7 +116,7 @@ export default {
           }
         })
       })
-      this.saveEligibilties(type)
+      this.saveChecks(type)
       this.$nextTick(function() {
         this.rejectSave = false
       })

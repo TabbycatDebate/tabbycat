@@ -241,6 +241,7 @@ class EditTeamEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableT
         break_categories = self.get_tournament().breakcategory_set.all()
         json_categories = [bc.serialize for bc in break_categories]
         kwargs["break_categories"] = json.dumps(json_categories)
+        kwargs["break_categories_length"] = break_categories.count()
         return super().get_context_data(**kwargs)
 
 

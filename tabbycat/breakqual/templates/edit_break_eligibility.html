@@ -1,14 +1,27 @@
 {% extends "base.html" %}
 {% load debate_tags static i18n %}
 
+{% block page-alerts %}
+  {% if break_categories_length == 0 %}
+    {% url 'admin:breakqual_breakcategory_changelist' as categories_url %}
+    {% blocktrans trimmed asvar message %}
+      It looks like there aren't any break categories are defined. If you'd like to create new
+      break categories you'll need to first <a href="{{ categories_url }}" class="alert-link">
+      add them in the Edit Database area</a>, then return to this page to set team's eligibility.
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='warning' %}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
   <div id="vueMount">
-    <break-eligibility-container :tables-data=tablesData
-                           :categories=categories
-                           :urls=urls
-                           orientation={{ tables_orientation|safe }} >
-    </break-eligibility-container>
+    <checkbox-tables-container :tables-data=tablesData
+                               :categories=categories
+                               :urls=urls
+                               :navigation=navigation
+                               orientation={{ tables_orientation|safe }} >
+    </checkbox-tables-container>
   </div>
 
 {% endblock %}
@@ -19,12 +32,10 @@
     window.vueData = {
       tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
       categories: {{ break_categories|safe }},
-      urls: {
-        'back': "{% tournamenturl 'breakqual-index' %}",
-        'save': "{% tournamenturl 'breakqual-update-eligibility' %}"
-      },
-      translations: {
-      }
+      urls: { 'save': "{% tournamenturl 'breakqual-update-eligibility' %}" },
+      navigation: [
+        { title: 'Overview', url: "{% tournamenturl 'breakqual-index' %}", back: true }
+      ]
     }
   </script>
   {{ block.super }}

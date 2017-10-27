@@ -176,7 +176,7 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
             'sort': inst.available,
             'id': inst.id,
             'prev': inst.prev_available if round.prev else False,
-            'payload': 'available',
+            'type': 0,
         } for inst in queryset])
 
         if round.prev:
@@ -293,8 +293,13 @@ class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMi
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
 
+        active_ids = [] # Unlike other checks; we just pass IDs on not the bool
+        for key, value in posted_info.items():
+            if value['checked']:
+                active_ids.append(key)
+
         try:
-            utils.set_availability_by_id(self.model, posted_info, self.get_round())
+            utils.set_availability_by_id(self.model, active_ids, self.get_round())
             self.log_action()
 
         except:

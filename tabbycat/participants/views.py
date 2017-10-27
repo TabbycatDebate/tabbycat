@@ -288,7 +288,7 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
 
     # form_class = forms.SpeakerCategoryEligibilityForm
     template_name = 'edit_speaker_eligibility.html'
-    page_title = _("Speaker Eligibility")
+    page_title = _("Speaker Category Eligibility")
     page_emoji = '🍯'
 
     def get_table(self):
@@ -313,6 +313,7 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
         speaker_categories = self.get_tournament().speakercategory_set.all()
         json_categories = [bc.serialize for bc in speaker_categories]
         kwargs["speaker_categories"] = json.dumps(json_categories)
+        kwargs["speaker_categories_length"] = speaker_categories.count()
         kwargs["save"] = reverse_tournament('participants-speaker-update-eligibility', self.get_tournament())
         return super().get_context_data(**kwargs)
 
@@ -321,7 +322,6 @@ class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
 
     def set_category_elibility(self, speaker, sent_status):
-        print(sent_status)
         category_id = sent_status['type']
         marked_eligible = speaker.categories.filter(pk=category_id).exists()
         if sent_status['checked'] and not marked_eligible:

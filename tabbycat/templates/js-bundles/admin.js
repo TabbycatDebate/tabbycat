@@ -37,14 +37,8 @@ vueComponents['PrintableBallot'] = PrintableBallot
 // Other
 //------------------------------------------------------------------------------
 
-import AvailabilityContainer from  '../../availability/templates/AvailabilityContainer.vue'
-vueComponents['AvailabilityContainer'] = AvailabilityContainer
-
-import SpeakerEligibilityContainer from  '../../participants/templates/SpeakerEligibilityContainer.vue'
-vueComponents['SpeakerEligibilityContainer'] = SpeakerEligibilityContainer
-
-import BreakEligibilityContainer from  '../../breakqual/templates/BreakEligibilityContainer.vue'
-vueComponents['BreakEligibilityContainer'] = BreakEligibilityContainer
+import CheckboxTablesContainer from  '../tables/CheckboxTablesContainer.vue'
+vueComponents['CheckboxTablesContainer'] = CheckboxTablesContainer
 
 //------------------------------------------------------------------------------
 // Draw Containers
