@@ -147,9 +147,25 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                         }
         self._import(f, pm.Speaker.categories.through, speaker_category_interpreter)
 
-    def import_venues(self, f):
-        interpreter = make_interpreter(tournament=self.tournament)
+    def import_venues(self, f, auto_create_categories=True):
+        interpreter = make_interpreter(tournament=self.tournament, DELETE=['category'])
         self._import(f, vm.Venue, interpreter)
+
+        if auto_create_categories:
+            def venue_category_interpreter(lineno, line):
+                if not line.get('category'):
+                    return None
+                return {'name': line['category']}
+            self._import(f, vm.VenueCategory, venue_category_interpreter, expect_unique=False)
+
+        def venue_category_venue_interpreter(lineno, line):
+            if line.get('category'):
+                return {
+                    'venuecategory': vm.VenueCategory.objects.get(name=line['category']),
+                    'venue': vm.Venue.objects.get(name=line['name'])
+                }
+
+        self._import(f, vm.VenueCategory.venues.through, venue_category_venue_interpreter)
 
     def import_team_conflicts(self, f):
         interpreter = make_interpreter(
