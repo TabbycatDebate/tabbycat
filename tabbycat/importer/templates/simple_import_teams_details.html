@@ -28,9 +28,15 @@
     <div class="card mt-3">
 
       <div class="list-group-item card-title pb-1">
-        <h4>{% blocktrans trimmed with institution_name=forms.grouper.name %}
-          Teams for {{ institution_name }}
-        {% endblocktrans %}</h4>
+        <h4>
+        {% if forms.grouper.name %}
+          {% blocktrans trimmed with institution_name=forms.grouper.name %}
+            Teams for {{ institution_name }}
+          {% endblocktrans %}
+        {% else %}
+          {% trans "Unaffiliated Teams" %}
+        {% endif %}
+        </h4>
       </div>
 
       {% for form in forms.list %}

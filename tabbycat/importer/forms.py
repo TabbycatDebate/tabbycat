@@ -40,6 +40,9 @@ class NumberForEachInstitutionForm(forms.Form):
     def _create_fields(self):
         """Dynamically generate one integer field for each institution, for the
         user to indicate how many teams are from that institution."""
+        self.fields['no_institution'] = forms.IntegerField(
+                    min_value=0, label=_("Unaffiliated (i.e. no Institution)"), required=False,
+                    widget=forms.NumberInput(attrs={'placeholder': 0}))
         for institution in self.institutions:
             label = _("%(name)s (%(code)s)") % {'name': institution.name, 'code': institution.code}
             self.fields['number_institution_%d' % institution.id] = forms.IntegerField(
@@ -172,7 +175,7 @@ class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
     # institution ID in a hidden field makes the client send it with the form,
     # keeping the information in a submission consistent.
     institution = forms.ModelChoiceField(queryset=Institution.objects.all(),
-            widget=forms.HiddenInput)
+                                         widget=forms.HiddenInput, required=False)
 
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(tournament, *args, **kwargs)
@@ -181,11 +184,12 @@ class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
         # not used anywhere in the form logic.
         institution_id = self.initial.get('institution')
         if institution_id is None:
-            institution_id = self.data.get(self.add_prefix('institution'))
-        try:
-            self.institution_for_display = Institution.objects.get(id=institution_id)
-        except Institution.DoesNotExist:
-            logger.error("Could not find institution from initial or data")
+            self.institution_for_display = None # Adding unaffiliated teams/adjs
+        else:
+            try:
+                self.institution_for_display = Institution.objects.get(id=institution_id)
+            except Institution.DoesNotExist:
+                logger.error("Could not find institution from initial or data")
 
 
 class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
@@ -205,6 +209,9 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
 
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(tournament, *args, **kwargs)
+
+        if self.institution_for_display is None:
+            self.fields.pop('use_institution_prefix') # For Instition-less teams
 
         # Set speaker widget to match tournament settings
         nspeakers = tournament.pref('substantive_speakers')

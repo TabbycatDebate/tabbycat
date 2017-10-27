@@ -41,9 +41,13 @@
       <div class="col">
         <div class="card mt-3">
 
-          {% blocktrans trimmed asvar title with institution_name=forms.grouper.name %}
-            Adjudicators for {{ institution_name }}
-          {% endblocktrans %}
+          {% if forms.grouper.name %}
+            {% blocktrans trimmed asvar title with institution_name=forms.grouper.name %}
+              Adjudicators for {{ institution_name }}
+            {% endblocktrans %}
+          {% else %}
+            {% trans "Unaffiliated Adjudicators" as title %}
+          {% endif %}
           {% include "components/form-title.html" %}
 
           <div class="list-group list-group-flush">
