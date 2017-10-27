@@ -145,11 +145,12 @@ class VenueConstraint(models.Model):
 
     def serialize(self):
         constraint = model_to_dict(self)
-        constraint['subject_type'] = self.subject_content_type.name
-        if self.subject_content_type.name == 'team':
-            constraint['subject_name'] = self.subject.short_name
-        elif self.subject_content_type.name == 'adjudicator':
-            constraint['subject_name'] = self.subject.name
-        elif self.subject_content_type.name == 'institution':
-            constraint['subject_name'] = self.subject.code
+        if hasattr(self, 'subject_content_type'):
+            constraint['subject_type'] = self.subject_content_type.name
+            if self.subject_content_type.name == 'team':
+                constraint['subject_name'] = self.subject.short_name
+            elif self.subject_content_type.name == 'adjudicator':
+                constraint['subject_name'] = self.subject.name
+            elif self.subject_content_type.name == 'institution':
+                constraint['subject_name'] = self.subject.code
         return constraint
