@@ -1,12 +1,13 @@
 <template>
 
-  <td :class="cellData['class'] ? cellData['class'] : null">
+  <td :class="cellData['class'] ? cellData['class'] : null" >
 
     <span v-if="cellData['sort']" hidden>
       {{ cellData.checked }}
     </span>
     <label class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" v-model="cellData.checked">
+      <input type="checkbox" class="custom-control-input" @click="checkUpdate"
+             v-model.lazy="cellData.checked">
       <span class="custom-control-indicator"></span>
     </label>
 
@@ -23,28 +24,24 @@ export default {
   props: {
     cellData: Object,
   },
-  computed: {
-    checked: function() {
-      return this.cellData.checked
-    }
-  },
-  watch: {
-    'cellData.checked': function (val, oldVal) {
-      // Updates can be sent off individually via this component itself; or by
-      // communicating back up to the Coordinating Vue Container (where they
-      // can be handled in bulk or issue via a single bulk method)
-      if (_.isUndefined(this.cellData.saveURL)) {
-        this.$eventHub.$emit('toggle-checked', this.cellData.id,
-                                               this.cellData.checked,
-                                               this.cellData.type)
-      } else {
+  methods: {
+    checkUpdate: function () {
+      this.$nextTick(function() { // Wait for model to update
         var cd = this.cellData
-        var message = cd.id + "'s " + cd.type + " status as " + cd.checked
-        var payload = { id: cd.id }
-        payload[cd.type] = cd.checked
-        this.ajaxSave(cd.saveURL, payload, message, null, null, null)
-      }
-    },
+        var checked = cd.checked // This is currently the pre-clicked value
+        // Updates can be sent off individually via this component itself; or by
+        // communicating back up to the Coordinating Vue Container (where they
+        // can be handled in bulk or issue via a single bulk method)
+        if (_.isUndefined(this.cellData.saveURL)) {
+          this.$eventHub.$emit('toggle-checked', cd.id, checked, cd.type)
+        } else {
+          var message = cd.id + "'s " + cd.type + " status as " + checked
+          var payload = { id: cd.id }
+          payload[cd.type] = checked
+          this.ajaxSave(cd.saveURL, payload, message, null, null, null)
+        }
+      })
+    }
   },
 }
 

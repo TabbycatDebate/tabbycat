@@ -61,7 +61,6 @@ export default {
   components: { AutoSaveCounter, TablesContainer },
   props: { tablesData: Array, categories: Array, urls: Object,
            navigation: Array, roundInfo: Object, translations: Object },
-  data: function () { return { rejectSave: false } },
   created: function () {
     // Watch for events on the global event hub
     this.$eventHub.$on('toggle-checked', this.toggleChecked)
@@ -87,28 +86,19 @@ export default {
   methods: {
     saveChecks: function(type) {
       var payload = this.checked[type]
-      var message = "Checks as" + payload
+      var message = "Checks for " + payload.id + " as " + payload.checked
       this.ajaxSave(this.urls.save, payload, message, null, null, null)
     },
     toggleChecked: function(id, checked, type) {
-      if (this.rejectSave === false) {
-        // We don't want massSelects to trigger individual updates; so just
-        // pass on saving those updates
-        this.saveChecks(type)
-      }
+      this.saveChecks(type)
     },
     copyFromPrevious: function() {
-      this.rejectSave = true
       _.forEach(this.tablesData[0].data, function(row) {
         row[0].checked = row[0].prev
       })
       this.saveChecks(0)
-      this.$nextTick(function() {
-        this.rejectSave = false
-      })
     },
     massSelect: function(state, type) {
-      this.rejectSave = true
       _.forEach(this.tablesData[0].data, function(row) {
         _.forEach(row, function(column) {
           if (column.type === type) {
@@ -117,9 +107,6 @@ export default {
         })
       })
       this.saveChecks(type)
-      this.$nextTick(function() {
-        this.rejectSave = false
-      })
     },
   }
 }
