@@ -32,13 +32,13 @@ args = parser.parse_args()
 
 R = args.rounds
 T = args.teams
-I = args.insts
+K = args.insts
 
 assert(T % 2 == 0)
 
 teams = list()
 for i in range(1, T+1):
-    team = TestTeam(i, random.choice(string.ascii_uppercase[:I]), 0, list(), side_history=[0, 0])
+    team = TestTeam(i, random.choice(string.ascii_uppercase[:K]), 0, list(), side_history=[0, 0])
     teams.append(team)
 
 brackets = dict()

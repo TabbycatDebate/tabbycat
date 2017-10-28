@@ -60,7 +60,7 @@ class OneUpOneDownSwapper(object):
                 state[i] = state[i-1]
 
         j = n
-        l = []
+        k = []
         # while j >= 0:
         #    L.insert(0, j)
         #    j -= (action[j] + 1)
@@ -71,9 +71,9 @@ class OneUpOneDownSwapper(object):
         # nullified).
         while j >= 2:
             if action[j]:
-                l.insert(0, j-2)  # Insert index corresponding to start of swap
+                k.insert(0, j-2)  # Insert index corresponding to start of swap
             j -= (action[j] + 1)
-        return state[n], l
+        return state[n], k
 
     def score_swap(self, debate1, debate2):
         """Returns an integer representing the improvement from swapping the
