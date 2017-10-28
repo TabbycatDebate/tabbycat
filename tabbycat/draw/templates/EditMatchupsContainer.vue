@@ -100,7 +100,7 @@
 
     <unallocated-items-container>
       <div v-for="unallocatedTeam in unallocatedTeamsByWins">
-        <draggable-team :team="unallocatedTeam"> </draggable-team>
+        <draggable-team :team="unallocatedTeam" :round-info="roundInfo"></draggable-team>
       </div>
     </unallocated-items-container>
 
