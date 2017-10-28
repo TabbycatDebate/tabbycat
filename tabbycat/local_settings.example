@@ -41,10 +41,6 @@ INTERNAL_IPS = (
 # Static Files & Compilation
 # ==============================================================================
 
-# collectstatic always runs GULP_PRODUCTION_COMMAND, even on debug
-GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
-GULP_DEVELOP_COMMAND = "npm run gulp watch -- --development"
-
 # When debug is enabled don't compress things
 if DEBUG:
     WHITENOISE_AUTOREFRESH = True
