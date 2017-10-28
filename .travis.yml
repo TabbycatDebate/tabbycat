@@ -16,6 +16,7 @@ services:
   - postgresql
 install:
   - pip install -r requirements_common.txt
+  - pip install -r requirements_development.txt
   - pip install coverage
   - npm install
 before_script:  # code coverage tool

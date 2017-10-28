@@ -30,6 +30,9 @@ Getting started with development
     - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
 
 - By default the development server's build process will broadcast livereload events; installing one of their `browser plugins <http://livereload.com/extensions/>`_ can make testing front-end changes easier.
+- A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
+
+    $ pip install -r 'requirements_development.txt'
 
 Style guide
 ===========
@@ -68,11 +71,7 @@ Documentation
 
 Documentation is created using `Sphinx <http://sphinx-doc.org/>`_ and hosted at `Read The Docs <https://readthedocs.org>`_. Pushes to ``develop`` will update the *latest* documentation set, while pushes to ``master`` will update the *stable* documentation set.
 
-To preview the documentation locally, install the docs-specific requirements (from the base folder)::
-
-    $ pip install -r 'docs/requirements.txt'
-
-Then start the server::
+To preview the documentation locally, install the development dependencies and then  start the server::
 
     $ sphinx-autobuild docs docs/_build/html --port 7999
 

@@ -14,10 +14,11 @@ django-ipware==1.1.6                    # IP Address logging
 django-jet==1.0.6                       # Admin Backend
 django-gfklookupwidget==1.0.5           # Replaces object_id field with a search link
 munkres==1.0.12                         # Algorithm for adjudicator allocation
+dj-cmd==1.0                             # Provides the dj command alias
 
 # Database
 
-psycopg2==2.7.3                         # For Django to talk to postgres
+psycopg2==2.7.3.2                       # For Django to talk to postgres
 sqlparse==0.2.4                         # Parsing SQL statements
 
 # Pipeline
@@ -25,16 +26,3 @@ sqlparse==0.2.4                         # Parsing SQL statements
 django-gulp==3.0.0                      # Run gulp tasks with dj r/collectstatic
 whitenoise==3.3.1                       # Static file serving
 waitress==1.1.0                         # For web serving
-
-# Development Aids
-
-dj-cmd==1.0                             # Provides the dj command alias
-django-debug-toolbar==1.8               # Debug Toolbar
-six==1.11                               # Python 2/3 compatibility library
-flake8==3.4.1                           # For testing/linting
-flake8-import-order==0.13               # Flake plugin for import order
-flake8-quotes==0.11.0                   # Flake plugin for quotes
-pep8-naming==0.4.1                      # Flake plugin for naming conventions
-selenium==3.6.0                         # Functional testing framework
-chromedriver_installer==0.0.6           # Functional testing Chrome interface
-raven==6.2.1                            # Client for Sentry error tracking
