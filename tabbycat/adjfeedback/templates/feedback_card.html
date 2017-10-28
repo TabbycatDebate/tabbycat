@@ -27,12 +27,12 @@
       From
       {% if feedback.source_adjudicator %}
         <span class="badge badge-secondary float-right">
-          {{ feedback.source_adjudicator.get_type_display }}
+          {{ feedback.source_adjudicator.get_type_display }} in {{ feedback.round.abbreviation }}
         </span>
         <strong>{{ feedback.source_adjudicator.adjudicator.name }}</strong>
       {% elif feedback.source_team %}
         <span class="badge badge-secondary float-right">
-          {{ feedback.source_team.get_result_display }}
+          {{ feedback.source_team.get_result_display }} in {{ feedback.round.abbreviation }}
         </span>
         <strong>{{ feedback.source_team.team.short_name }}</strong>
       {% else %}
