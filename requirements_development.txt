@@ -1,6 +1,4 @@
-# Dependencies useful just for development
-
-# Development Aids
+# Development Dependencies
 
 django-debug-toolbar==1.8               # Debug Toolbar
 six==1.11                               # Python 2/3 compatibility library
@@ -12,8 +10,6 @@ selenium==3.6.0                         # Functional testing framework
 chromedriver_installer==0.0.6           # Functional testing Chrome interface
 raven==6.2.1                            # Client for Sentry error tracking'
 
-# Documentation
+# Documentation Dependencies
 
-sphinx>=1.5,<1.6
-sphinx-autobuild>=0.6,<0.7
-sphinx_rtd_theme==0.1.9
+-r docs/requirements.txt                # Import Sphinx dependencies
