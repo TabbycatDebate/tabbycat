@@ -1,34 +1,77 @@
+# Globals
 language: python
 dist: trusty
 sudo: required
 group: edge
-python:
-  - "3.4"
-  - "3.5"
-  - "3.6"
 env:
   global:
     - CC_TEST_REPORTER_ID=e93289b66782f99213fec69659f0428021cf8cd284c79637e07323f15fd29461
 addons:
   postgresql: "9.6"
-  # chrome: stable # Re-enable for functional tests
+  # chrome: stable # Re-enable for functional tests if/when they work on Travis
 services:
   - postgresql
+# Build Specific
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode9.1 # OS X 10.12
+      language: generic # Override global
+      before_install: # Need to bootstrap dependencies on OS X
+        - brew update # Need to update ruby first else python3 fails
+        - brew install python3 # Install latest Python3
+        - virtualenv env -p python3
+        - source env/bin/activate
+        - brew upgrade node # Install latest Node
+      before_script:
+        - brew services start postgresql
+        # We are testing, in effect, the local install so use local settings:
+        - cp tabbycat/local_settings.example tabbycat/local_settings.py
+      script:
+        - npm run gulp build
+        - python tabbycat/manage.py collectstatic
+        # TODO: get working later; currently lacks a database connection
+        #- python tabbycat/manage.py test -v 2 --exclude-tag=selenium
+    - os: linux
+      python: 3.4
+    - os: linux
+      python: 3.5
+    - os: linux
+      python: 3.6
+      # Setup/run/report code coverage tool (Only one build needs to do so)
+      before_script:
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        - chmod +x ./cc-test-reporter
+        - ./cc-test-reporter before-build
+      script:
+        - pip install coverage
+        - flake8 tabbycat
+        - coverage run tabbycat/manage.py test -v 2 --exclude-tag=selenium
+      after_script:
+        - coverage xml
+        - if [[ "$TRAVIS_PULL_REQUEST" == "false"]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+    - os: linux # Test docker seperately (currently isn't supported on OS X)
+      language: generic
+      install:
+        - echo "Testing Docker" # Override default install steps
+      services:
+        - docker
+      script:
+        - docker-compose build
+        # TODO: get working later; currently lacks a database connection
+        # - docker-compose run web python tabbycat/manage.py test -v 2 --exclude-tag=selenium
+
 install:
+  - pip install --upgrade pip
   - pip install -r requirements_common.txt
-  - pip install -r requirements_development.txt
-  - pip install coverage
+  - pip install -r requirements_development.txt # Needed for flake8
+  - nvm install node # Update to latest node version
+  - nvm use node # Switch to latest
+  - npm install npm # Update to latest npm version
   - npm install
-before_script:  # code coverage tool
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
 script:
-  - flake8 tabbycat
-  - coverage run tabbycat/manage.py test -v 2 --exclude-tag=selenium
-after_script:
-  - coverage xml
-  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
+
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
 # Currently it runs and loads the view; but doesn't seem to resolve the asserts
