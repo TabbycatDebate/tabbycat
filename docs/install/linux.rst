@@ -49,6 +49,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   npm install
   cd tabbycat
   dj migrate
+  npm run gulp build
   dj collectstatic
   dj createsuperuser
   waitress-serve wsgi:application
@@ -194,6 +195,7 @@ Almost there!
 
     $ cd tabbycat
     $ dj migrate
+    $ npm run gulp build
     $ dj collectstatic
     $ dj createsuperuser
 

@@ -73,7 +73,6 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django_gulp',  # Asset compilation; must be before staticfiles
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
@@ -157,11 +156,6 @@ STATICFILES_FINDERS = (
 
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
-
-# When running server side always use build not watch
-GULP_PRODUCTION_COMMAND = "export NODE_ENV=production && npm run gulp build -- --production"
-GULP_DEVELOP_COMMAND = "npm run gulp build -- --development"
-
 
 # ==============================================================================
 # Logging
