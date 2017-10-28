@@ -339,6 +339,9 @@ if os.environ.get('TRAVIS', '') == 'true':
 # Hide league-related configuration options unless explicitly enabled
 LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
 
+# Must default to false; potentially overriden in local_settings
+ENABLE_DEBUG_TOOLBAR = False
+
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
     DEBUG = True # Just to be sure
     ALLOWED_HOSTS = ["*"]

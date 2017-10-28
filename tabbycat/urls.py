@@ -66,7 +66,7 @@ urlpatterns = [
         include('draw.urls_crosst'))
 ]
 
-if settings.DEBUG:  # Only serve debug toolbar when on DEBUG
+if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG
     import debug_toolbar
     urlpatterns.append(url(r'^__debug__/', include(debug_toolbar.urls)))
 
