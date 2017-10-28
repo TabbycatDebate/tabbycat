@@ -127,7 +127,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
         verbose_name=_("text"),
         help_text=_("The question displayed to participants, e.g., \"Did you agree with the decision?\""))
     name = models.CharField(max_length=30,
-        verbose_name=_("maximum length"),
+        verbose_name=_("name"),
         help_text=_("A short name for the question, e.g., \"Agree with decision\""))
     reference = models.SlugField(
         verbose_name=_("reference"),
