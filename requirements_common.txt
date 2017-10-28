@@ -15,6 +15,7 @@ django-jet==1.0.6                       # Admin Backend
 django-gfklookupwidget==1.0.5           # Replaces object_id field with a search link
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
+raven==6.2.1                            # Client for Sentry error tracking
 
 # Database
 
