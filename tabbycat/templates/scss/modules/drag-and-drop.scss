@@ -28,6 +28,7 @@
   // Adj scores; Team/Venue names
   .draggable-prefix {
     @extend .flex-vertical-center; // Vertically center score
+
     padding-right: 6px;
 
     h4 {
@@ -71,7 +72,8 @@
   @include hover-highlights(#000);
 }
 
-.vue-is-dragging, .vue-draggable:active { // :active is the 'ghost' drag element
+.vue-is-dragging,
+.vue-draggable:active { // :active is the 'ghost' drag element
   opacity: 0.66 !important;
   @include hover-highlights(#000);
 }

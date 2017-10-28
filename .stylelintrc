@@ -11,7 +11,7 @@
     }],
     "declaration-colon-space-after": "always",
     "declaration-colon-space-before": "never",
-    indentation: 2,
+    "at-rule-no-unknown": null,
     "max-nesting-depth": 3,
     "no-invalid-double-slash-comments": true,
     "rule-empty-line-before": ["always", {
