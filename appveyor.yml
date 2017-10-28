@@ -1,0 +1,81 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+# version format
+version: 1.0.{build}
+
+# you can use {branch} name in version format too
+# version: 1.0.{build}-{branch}
+
+# Build worker image (VM template)
+image: Visual Studio 2017
+
+# Don't expect a standard VS build project etc
+build: false
+
+# Set python version to not be the default (2.7.X)
+environment:
+  matrix:
+    - PYTHON: "C:\\Python36"
+      PYTHON_VERSION: "3.6.1"
+      PYTHON_ARCH: "32"
+  global:
+    POSTGRES_ENV_POSTGRES_USER: postgres
+    POSTGRES_ENV_POSTGRES_PASSWORD: postgres
+    PGUSER: postgres
+    PGPASSWORD: postgres
+    POSTGRES_PATH: C:\Program Files\PostgreSQL\9.6
+
+# scripts that are called at very beginning, before repo cloning
+# init:
+#   - git config --global core.autocrlf input
+
+clone_folder: c:\projects\tabbycat
+
+# environment variables
+# environment:
+#   my_var1: value1
+
+# enable service required for build/tests
+services:
+  - postgresql          # start PostgreSQL 9.5 service
+
+init:
+  - ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%
+  - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+
+# scripts that run after cloning repository
+install:
+  # by default, all script lines are interpreted as batch
+  # - echo This is batch
+  # to run script as a PowerShell command prepend it with ps:
+  # - ps: Write-Host 'This is PowerShell'
+  - choco install docker-compose
+
+# before_test:
+  # - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
+
+test_script:
+  - cd c:\projects\tabbycat
+  - copy tabbycat\local_settings.example tabbycat\local_settings.py # Need to use local build opt
+  # Update local connection settings
+  - python -m pip install -U pip
+  - pip install -r requirements_common.txt
+  - npm install
+   # Test gulp building
+  - npm run gulp build
+  - python tabbycat/manage.py collectstatic
+  # Test Docker Building
+  # This fails at apt-get; apparently something to do with
+  # http://www.sovsystems.com/powercli-core-on-mac-or-linux-made-easy-with-help/
+  #- docker-compose build
+  #- docker-compose run web python tabbycat/manage.py runserver
+  # Currently disabled; database connection isuses
+  # - ps: SET PGUSER=postgres
+  # - ps: SET PGPASSWORD=postgres
+  # - ps: python tabbycat/manage.py test -v 2
+
+# deploy_script:
+#   - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
+#   - docker push me/myfavoriteapp

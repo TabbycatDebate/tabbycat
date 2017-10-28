@@ -16,6 +16,7 @@ django-gfklookupwidget==1.0.5           # Replaces object_id field with a search
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 raven==6.2.1                            # Client for Sentry error tracking
+selenium==3.6.0                         # Functional testing (in here for CI tests)
 
 # Database
 
