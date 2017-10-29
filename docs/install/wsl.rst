@@ -40,7 +40,7 @@ First, install `PostgreSQL for Windows <https://www.postgresql.org/download/wind
 
 .. parsed-literal::
 
-  curl -sL https\:\/\/deb.nodesource.com/setup_5.x | sudo -E bash -    # add Node.js source repository
+  curl -sL https\:\/\/deb.nodesource.com/setup_6.x | sudo -E bash -    # add Node.js source repository
   sudo apt-get install python3-dev python3-venv libpq-dev postgresql-client-9.6 nodejs
 
   # either
