@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width=200 src="https://cdn.rawgit.com/czlee/tabbycat/develop/tabbycat/static/logo.svg">
+<img width=200 src="https://rawgit.com/czlee/tabbycat/develop/tabbycat/static/logo.svg">
 
 # Tabbycat
 
