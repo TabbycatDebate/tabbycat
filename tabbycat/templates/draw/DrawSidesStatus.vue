@@ -28,10 +28,12 @@ export default {
   },
   methods: {
     checkUpdate: function () {
-      var sidesStatus = this.debate.sidesConfirmed
-      var message = "debate " + this.debate.id + "'s sides as " + sidesStatus
-      var payload = { 'sidesStatus': sidesStatus, id: this.debate.id }
-      this.ajaxSave(this.saveUrl, payload, message, null, null, null)
+      this.$nextTick(function () { // Wait to model/DOM to catch up
+        var sidesStatus = this.debate.sidesConfirmed
+        var message = "debate " + this.debate.id + "'s sides as " + sidesStatus
+        var payload = { 'sidesStatus': sidesStatus, id: this.debate.id }
+        this.ajaxSave(this.saveUrl, payload, message, null, null, null)
+      })
     },
   },
 }
