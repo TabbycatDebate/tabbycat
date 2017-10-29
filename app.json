@@ -18,6 +18,10 @@
         "TAB_DIRECTOR_EMAIL": {
           "description": "Your email address. Tabbycat's developers may need to contact you to help diagnose any unexpected errors.",
           "value": ""
+        },
+        "DISABLE_COLLECTSTATIC": {
+          "description": "Leave this as-is.",
+          "value": 1
         }
     },
     "buildpacks": [

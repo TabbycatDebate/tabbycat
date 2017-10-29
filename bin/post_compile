@@ -16,4 +16,7 @@ python manage.py checkpreferences
 echo "-----> Running gulp compilation"
 npm run gulp build
 
+echo "-----> Running whitenoise static files compilation"
+python manage.py collectstatic --noinput
+
 echo "-----> Post-compile done"

@@ -148,6 +148,10 @@ heroku_url = match.group(2)
 run_heroku_command(["buildpacks:set", "heroku/python"])
 run_heroku_command(["buildpacks:add", "--index", "1", "heroku/nodejs"])
 
+# Disable automatic collectstatic; do so on post_compile after gulp
+command = ["config:add", "DISABLE_COLLECTSTATIC=1"]
+run_heroku_command(command)
+
 # Set config variables
 command = ["config:add"]
 command.append("DEBUG=1" if args.enable_debug else "DEBUG=0")
