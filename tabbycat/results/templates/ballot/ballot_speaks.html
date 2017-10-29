@@ -1,6 +1,6 @@
 {% load add_field_css debate_tags i18n %}
 
-<div class="list-group-item js-team-speakers s{{ position.pos }}">
+<div class="list-group-item js-team-speakers {{ team.side_code }} s{{ position.pos }}">
   <div class="row">
     <div class="col-2 pt-2 p-lg-2 pr-0 p-1 speaker-position-label">
       {{ position.name }}
