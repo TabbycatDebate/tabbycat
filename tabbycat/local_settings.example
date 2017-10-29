@@ -69,7 +69,23 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
-# Debug Toolbar
+# Django Gulp (development aid; helps live-reload front-end assets)
+# ==============================================================================
+
+ENABLE_DJANGO_GULP = False # True requires requirements_development install
+
+if ENABLE_DJANGO_GULP:
+    # Need to be before whitenoise/static etc so it can't be appended as usual
+    modified_apps = list(INSTALLED_APPS)
+    modified_apps.insert(5, 'django_gulp') # [5] is just before whitenoise
+    INSTALLED_APPS = tuple(modified_apps)
+
+    # collectstatic always runs GULP_PRODUCTION_COMMAND, even on debug
+    GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
+    GULP_DEVELOP_COMMAND = "npm run gulp watch -- --development"
+
+# ==============================================================================
+# Debug Toolbar (development aid; helps diagnose queries and performance)
 # ==============================================================================
 
 ENABLE_DEBUG_TOOLBAR = False # True requires requirements_development install
