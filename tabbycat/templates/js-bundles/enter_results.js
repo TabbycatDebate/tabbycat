@@ -20,7 +20,14 @@ function refresh_totals(scoresheet) {
   // Fix the branching logic here into something cleaner
   var allClasses = 'btn-dark btn-secondary btn-success btn-primary btn-warning btn-danger';
 
-  if ($('.position').length === 2) {
+  {% if pref.teams_in_debate == 'two' %}
+    var isBP = true;
+  {% else %}
+    var isBP = false;
+  {% endif %}
+
+  if (isBP) {
+    console.log('two team')
     // 2-team
     $aff_total = $('.aff_total', $scoresheet);
     $neg_total = $('.neg_total', $scoresheet);
@@ -58,6 +65,7 @@ function refresh_totals(scoresheet) {
       $neg_margin.text(Number(neg - aff));
     }
   } else {
+    console.log('four team')
     // BP
     var positions = ['og', 'oo', 'cg', 'co']
     var totals_elements = {}

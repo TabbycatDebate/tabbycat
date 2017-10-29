@@ -26,7 +26,7 @@ Short version
 =============
 .. parsed-literal::
 
-  curl -sL https\:\/\/deb.nodesource.com/setup_5.x | sudo -E bash -    # add Node.js source repository
+  curl -sL https\:\/\/deb.nodesource.com/setup_6.x | sudo -E bash -    # add Node.js source repository
   sudo apt-get install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs
 
   # either
@@ -49,6 +49,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   npm install
   cd tabbycat
   dj migrate
+  npm run gulp build
   dj collectstatic
   dj createsuperuser
   waitress-serve wsgi:application
@@ -103,7 +104,7 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
 .. parsed-literal::
 
   $ sudo apt-get install curl
-  $ curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+  $ curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
   $ sudo apt-get install -y nodejs
   $ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
@@ -194,6 +195,7 @@ Almost there!
 
     $ cd tabbycat
     $ dj migrate
+    $ npm run gulp build
     $ dj collectstatic
     $ dj createsuperuser
 

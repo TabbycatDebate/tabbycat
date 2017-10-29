@@ -41,8 +41,10 @@
       function preSubmit() {
         $('#resultsForm input').removeAttr('readonly');
         $('#resultsForm select').removeAttr('disabled');
+        $('#resultsForm input[type="checkbox"]').removeAttr('disabled');
       }
       $('#resultsForm input[type="number"]').attr('readonly', 'true');
+      $('#resultsForm input[type="checkbox"]').attr('disabled', 'true');
       $('#resultsForm select').attr('disabled', 'true');
       $('#incorrect').click(function() {
         {% if all_ballotsubs.count > 1 %}

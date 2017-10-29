@@ -8,7 +8,7 @@
 
       <div class="col-lg-6 col-md-5">
         <h6 class="d-inline-block">
-          <img src="{% static 'logo.svg' %}" width="16" height="16">
+          <img src="{% static 'logo.svg' %}" width="28" height="24" style="margin-top: -14px;">
           {% if tournament %}
             {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
           {% else %}
@@ -38,7 +38,7 @@
       </div>
 
       <div class="col-lg-4 col-md-4 mt-2 mt-md-0">
-        <h6>{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
+        <h6 class="d-inline-block">{% blocktrans trimmed %}Still timing debates with the stopwatch app?{% endblocktrans %}</h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
             Using an app designed for debate timekeeping makes speaking and adjudicating easier!
@@ -49,7 +49,7 @@
       </div>
 
       <div class="col-lg-2 col-md-3 mt-2 mt-md-0">
-        <h6>{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
+        <h6 class="d-inline-block">{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
             You can <a href="http://philipbelesky.github.io/ballots/" target="_blank"> customise and print</a> great ballots from your browser.

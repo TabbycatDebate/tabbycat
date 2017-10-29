@@ -27,4 +27,5 @@ RUN npm install
 
 # Compile all the static files
 RUN npm rebuild node-sass
+RUN npm run gulp build
 RUN python ./tabbycat/manage.py collectstatic --no-input

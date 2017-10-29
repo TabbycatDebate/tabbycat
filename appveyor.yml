@@ -16,9 +16,10 @@ build: false
 
 # Set python version to not be the default (2.7.X)
 environment:
+  nodejs_version: "6" # Match install instructions
   matrix:
-    - PYTHON: "C:\\Python36"
-      PYTHON_VERSION: "3.6.1"
+    - PYTHON: "C:\\Python35" # Match install instructions
+      PYTHON_VERSION: "3.5.3"
       PYTHON_ARCH: "32"
   global:
     POSTGRES_ENV_POSTGRES_USER: postgres
@@ -51,7 +52,15 @@ install:
   # - echo This is batch
   # to run script as a PowerShell command prepend it with ps:
   # - ps: Write-Host 'This is PowerShell'
-  - choco install docker-compose
+  # - choco install docker-compose
+  - ps: Install-Product node $env:nodejs_version
+  - node --version
+  - npm --version
+  - python --version
+  - cd c:\projects\tabbycat
+  - python -m pip install -U pip
+  - pip install -r requirements_common.txt
+  - npm install
 
 # before_test:
   # - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
@@ -60,9 +69,6 @@ test_script:
   - cd c:\projects\tabbycat
   - copy tabbycat\local_settings.example tabbycat\local_settings.py # Need to use local build opt
   # Update local connection settings
-  - python -m pip install -U pip
-  - pip install -r requirements_common.txt
-  - npm install
    # Test gulp building
   - npm run gulp build
   - python tabbycat/manage.py collectstatic
