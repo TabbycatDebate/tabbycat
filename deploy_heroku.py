@@ -20,10 +20,6 @@ parser.add_argument(
     help="Don't open the Heroku website in your browser at the end")
 
 parser.add_argument(
-    "--no-init-db", action="store_false", default=True, dest="init_db",
-    help="Don't run initial migrations on the database")
-
-parser.add_argument(
     "--git-remote", type=str, default=None,
     help="Name of Git remote to use. Use '-' to use the urlname. If omitted, reverts to default Heroku behaviour.")
 
@@ -173,33 +169,29 @@ else:
 push_spec = get_git_push_spec()
 run_command(["git", "push", remote_name, push_spec])
 
-if args.init_db:
-    print_yellow("Now creating a superuser for the Heroku site.")
-    print_yellow("You'll need to respond to the prompts:")
-    run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
+# Make secret key
+command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])
+secret_key = get_output_from_command(command)
+secret_key = secret_key.strip().split()[0].strip()  # turn command output into string of just the key
+print_yellow("Made secret key: \"%s\"" % secret_key)
+command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
+run_heroku_command(command)
 
-    command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])
-    secret_key = get_output_from_command(command)
-    # Turn command output into string of just the key
-    secret_key = secret_key.strip().split()[0].strip()
-    print_yellow("Made secret key: \"%s\"" % secret_key)
-    command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
+print_yellow("Now creating a superuser for the Heroku site.")
+print_yellow("You'll need to respond to the prompts:")
+run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
+
+# Import tournament, if provided
+if args.import_tournament:
+    command = ["run", "python", "tabbycat/manage.py", "importtournament", args.import_tournament]
+    if args.tournament_slug:
+        command += ["--slug", args.tournament_slug]
+    if args.tournament_name:
+        command += ["--name", args.tournament_name]
+    if args.tournament_short_name:
+        command += ["--short-name", args.tournament_short_name]
     run_heroku_command(command)
 
-    # Import tournament, if provided
-    if args.import_tournament:
-        command = ["run", "python", "tabbycat/manage.py", "importtournament", args.import_tournament]
-        if args.tournament_slug:
-            command += ["--slug", args.tournament_slug]
-        if args.tournament_name:
-            command += ["--name", args.tournament_name]
-        if args.tournament_short_name:
-            command += ["--short-name", args.tournament_short_name]
-        run_heroku_command(command)
-
-    # Open in browser
-    if args.open:
-        run_heroku_command(["open"])
-
-elif args.import_tournament:
-    print_yellow("Warning: You can't use --import-tournament when --no-init-db is used.")
+# Open in browser
+if args.open:
+    run_heroku_command(["open"])
