@@ -1,5 +1,10 @@
+
+.. raw:: html
+
+    <img id="logo" src="https://rawgit.com/czlee/tabbycat/develop/tabbycat/static/logo.svg">
+
 ======================
-😸 Tabbycat User Guide
+Tabbycat User Guide
 ======================
 
 Tabbycat is a draw tabulation system for two-team parliamentary debate

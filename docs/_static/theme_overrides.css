@@ -42,3 +42,17 @@ pre.literal-block, .rst-content .literal-block, .rst-content pre.literal-block {
 .rst-content .section ol ul.spaced-list, .rst-content .section ol ol.spaced-list {
   margin-top: 12px;
 }
+
+#logo {
+  max-width: 75px;
+  margin-right: 15px;
+  float: left;
+}
+
+@media (min-width:600px)  {
+  #logo {
+    max-width: 60px;
+    margin-right: 10px;
+    margin-top: -10px;
+  }
+}
