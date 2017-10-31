@@ -7,10 +7,11 @@
 Tabbycat User Guide
 ======================
 
-Tabbycat is a draw tabulation system for two-team parliamentary debate
-tournaments. It supports the Australs, NZ Easters, Australian Easters,
-Joynt Scroll, UADC and WSDC formats, and is highly configurable,
-supporting many custom variations of the above formats too.
+Tabbycat is a draw tabulation system for parliamentary debate tournaments. It
+supports two-team formats such as Australs, World Schools, Asians, Australian
+Easters and all New Zealand formats, as well as British Parliamentary (WUDC). It
+is also highly configurable, supporting many custom variations of the above
+formats too.
 
 .. _installation-docs:
 
