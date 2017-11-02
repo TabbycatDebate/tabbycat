@@ -125,6 +125,9 @@ class PublicTabMixin(PublicTournamentPageMixin):
     """Mixin for views that should only be allowed when the tab is released publicly."""
     cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
 
+    def get_page_subtitle(self):
+        return None
+
     def get_round(self):
         # Always show tabs with respect to current round on public tab pages,
         # or the last non-silent round if the current round is silent.
