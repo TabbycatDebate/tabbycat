@@ -114,11 +114,6 @@ class BallotSubmission(Submission):
                 "{0.timestamp:%Y-%m-%dT%H:%M:%S} (v{0.version})").format(self)
 
     @property
-    def ballot_set(self):
-        # Remove after 15/7/2017
-        raise RuntimeError("Debate.ballot_set is deprecated, use Debate.result instead.")
-
-    @property
     def result(self):
         if not hasattr(self, "_result"):
             self._result = DebateResult(self)
