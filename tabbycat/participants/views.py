@@ -16,7 +16,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
-from results.models import TeamScore
+from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
@@ -27,6 +27,7 @@ from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Speaker, SpeakerCategory, Team
+from .tables import TeamResultTableBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -128,8 +129,12 @@ class BaseTeamRecordView(BaseRecordView):
         ).select_related(
             'debate_team__debate__round'
         ).prefetch_related(
-            Prefetch('debate_team__debate__debateadjudicator_set', queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate_team__debate__debateteam_set'
+            Prefetch('debate_team__debate__debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
+            'debate_team__debate__debateteam_set',
+            Prefetch('debate_team__speakerscore_set',
+                queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).order_by('position'),
+                to_attr='speaker_scores'),
         )
         if not self.admin and not tournament.pref('all_results_released'):
             teamscores = teamscores.filter(
@@ -141,9 +146,12 @@ class BaseTeamRecordView(BaseRecordView):
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TabbycatTableBuilder(view=self, title="Results", sort_key="Round")
+        table = TeamResultTableBuilder(view=self, title="Results", sort_key="Round")
         table.add_round_column([debate.round for debate in debates])
-        table.add_debate_result_by_team_columns(teamscores)
+        table.add_debate_result_by_team_column(teamscores)
+        table.add_cumulative_team_points_column(teamscores)
+        table.add_speaker_scores_column(teamscores)
+        table.add_debate_side_by_team_column(teamscores)
         table.add_debate_adjudicators_column(debates, show_splits=True)
 
         if self.admin or tournament.pref('public_motions'):

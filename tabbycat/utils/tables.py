@@ -776,11 +776,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     })
             self.add_column(ballot_links_header, ballot_links_data)
 
-    def add_debate_result_by_team_columns(self, teamscores):
-        """Takes an iterable of TeamScore objects."""
-
+    def add_debate_result_by_team_column(self, teamscores):
         results_data = [self._result_cell(ts) for ts in teamscores]
         self.add_column(_("Result"), results_data)
+
+    def add_debate_side_by_team_column(self, teamscores):
         sides_data = [ts.debate_team.get_side_name().title()
             # Translators: "TBC" stands for "to be confirmed".
             if ts.debate_team.debate.sides_confirmed else _("TBC") for ts in teamscores]
