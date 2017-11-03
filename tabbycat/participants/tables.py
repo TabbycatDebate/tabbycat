@@ -16,16 +16,17 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
                 cumul += teamscore.points
                 data.append(cumul)
 
-        header = _("Points after") if self.tournament.pref('teams_in_debate') == 'bp' else _("Wins after")
+        if self.tournament.pref('teams_in_debate') == 'bp':
+            tooltip = _("Points after this debate")
+        else:
+            tooltip = _("Wins after this debate")
+        header = {'key': 'cumulative', 'tooltip': tooltip, 'icon': 'trending-up'}
         self.add_column(header, data)
 
     def add_speaker_scores_column(self, teamscores):
-        """The TeamScores query must have an attribute 'speaker_scores', probably
-        populated using:
-            Prefetch('debate_team__speakerscore_set',
-                queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).order_by('position'),
-                to_attr='speaker_scores')
-        """
-        data = [", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores]) or "—"
-                for ts in teamscores]
-        self.add_column(_("Speaker scores"), data)
+        data = [{
+            'text': ", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores]) or "—",
+            'tooltip': "<br>".join(["%s for %s" % (ss.score, ss.speaker) for ss in ts.debate_team.speaker_scores]) or "—",
+        } for ts in teamscores]
+        header = {'key': 'speaks', 'tooltip': _("Speaker scores"), 'text': _("Speaks")}
+        self.add_column(header, data)
