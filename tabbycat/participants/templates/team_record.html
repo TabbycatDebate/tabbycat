@@ -215,7 +215,9 @@
   {% endif %}
 
   {% if pref.public_results or admin_page %}
-    {{ block.super }} {# this is the Vue table, which is populated with previous results #}
+    <div class="mt-3">
+      {{ block.super }} {# this is the Vue table, which is populated with previous results #}
+    </div>
   {% endif %}
 
 {% endblock content %}

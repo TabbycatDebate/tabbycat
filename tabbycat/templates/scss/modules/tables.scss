@@ -6,7 +6,8 @@
   overflow-x: scroll;
 
   .card-title {
-    @extend .p-1;
+    padding-left: 12px;
+    margin-top: -8px;
   }
 
   .card-body {
