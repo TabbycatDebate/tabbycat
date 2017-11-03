@@ -133,7 +133,7 @@ class BaseTeamRecordView(BaseRecordView):
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             'debate_team__debate__debateteam_set',
             Prefetch('debate_team__speakerscore_set',
-                queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).order_by('position'),
+                queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
                 to_attr='speaker_scores'),
         )
         if not self.admin and not tournament.pref('all_results_released'):
