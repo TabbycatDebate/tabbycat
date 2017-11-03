@@ -28,5 +28,5 @@ class TeamResultTableBuilder(TabbycatTableBuilder):
             'text': ", ".join([metricformat(ss.score) for ss in ts.debate_team.speaker_scores]) or "—",
             'tooltip': "<br>".join(["%s for %s" % (ss.score, ss.speaker) for ss in ts.debate_team.speaker_scores]) or "—",
         } for ts in teamscores]
-        header = {'key': 'speaks', 'tooltip': _("Speaker scores"), 'text': _("Speaks")}
+        header = {'key': 'speaks', 'tooltip': _("Speaker scores<br>(in speaking order)"), 'text': _("Speaks")}
         self.add_column(header, data)

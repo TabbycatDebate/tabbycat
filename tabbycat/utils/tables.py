@@ -523,6 +523,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         self.add_column(key, da_data)
 
+    def add_debate_motion_column(self, debates):
+        """Shows the motions associated with the debates.
+        The mechanism depends on whether the 'enable_motions' preferences is enabled:
+        if it is, then the motion is attached to the debate's confirmed ballot; if
+        not, then it's just attached to the round."""
+        if self.tournament.pref('enable_motions'):
+            motions = [debate.confirmed_ballot.motion if debate.confirmed_ballot else None
+                       for debate in debates]
+        else:
+            motions = [debate.round.motion_set.first() for debate in debates]
+        self.add_motion_column(motions)
+
     def add_motion_column(self, motions, key=ugettext_lazy("Motion"), show_order=False):
         if show_order and self.tournament.pref('enable_motions'):
             self.add_column({

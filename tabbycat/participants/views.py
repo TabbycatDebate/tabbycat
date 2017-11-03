@@ -127,11 +127,12 @@ class BaseTeamRecordView(BaseRecordView):
             debate_team__team=self.object,
             ballot_submission__confirmed=True,
         ).select_related(
-            'debate_team__debate__round'
+            'debate_team__debate__round__tournament'
         ).prefetch_related(
             Prefetch('debate_team__debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate_team__debate__debateteam_set',
+            'debate_team__debate__debateteam_set__team',
+            'debate_team__debate__round__motion_set',
             Prefetch('debate_team__speakerscore_set',
                 queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
                 to_attr='speaker_scores'),
@@ -142,6 +143,7 @@ class BaseTeamRecordView(BaseRecordView):
                 debate_team__debate__round__silent=False,
                 debate_team__debate__round__seq__lt=tournament.current_round.seq
             )
+
         debates = [ts.debate_team.debate for ts in teamscores]
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
@@ -156,8 +158,7 @@ class BaseTeamRecordView(BaseRecordView):
         table.add_debate_adjudicators_column(debates, show_splits=True)
 
         if self.admin or tournament.pref('public_motions'):
-            table.add_motion_column([debate.confirmed_ballot.motion
-                if debate.confirmed_ballot else None for debate in debates])
+            table.add_debate_motion_column(debates)
 
         table.add_debate_ballot_link_column(debates)
 
@@ -201,7 +202,8 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         ).prefetch_related(
             Prefetch('debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate__debateteam_set__team__speaker_set'
+            'debate__debateteam_set__team__speaker_set',
+            'debate__round__motion_set',
         )
         if not self.admin and not tournament.pref('all_results_released'):
             debateadjs = debateadjs.filter(
@@ -219,8 +221,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
 
         if self.admin or tournament.pref('public_motions'):
-            table.add_motion_column([debate.confirmed_ballot.motion
-                if debate.confirmed_ballot else None for debate in debates])
+            table.add_debate_motion_column(debates)
 
         table.add_debate_ballot_link_column(debates)
         return table
