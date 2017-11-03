@@ -331,7 +331,7 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
 class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
 
-    def set_category_elibility(self, speaker, sent_status):
+    def set_category_eligibility(self, speaker, sent_status):
         category_id = sent_status['type']
         marked_eligible = speaker.categories.filter(pk=category_id).exists()
         if sent_status['checked'] and not marked_eligible:
@@ -349,7 +349,7 @@ class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
             speaker_ids = [int(key) for key in posted_info.keys()]
             speakers = Speaker.objects.prefetch_related('categories').in_bulk(speaker_ids)
             for speaker_id, speaker in speakers.items():
-                self.set_category_elibility(speaker, posted_info[str(speaker_id)])
+                self.set_category_eligibility(speaker, posted_info[str(speaker_id)])
             self.log_action()
         except:
             message = "Error handling eligiblity updates"
