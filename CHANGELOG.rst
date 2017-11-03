@@ -24,6 +24,7 @@ Change Log
 - You can now release an Adjudicators Tab showing test scores, final scores, and/or per-round feedback averages.
 - Information Slides can now be added to the system; either for showing to an auditorium within Tabbycat or for displaying alongside the public list of motions and/or the motions tab.
 - Teams and adjudicators are no longer required to have institutions
+- Private URLs can now be incrementally generated, and also records are kept of sent mail so that they can be incrementally sent to participants
 - Quality of life improvements
     - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
     - Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side
@@ -31,10 +32,10 @@ Change Log
     - The Feedback Overview page now makes it more clear how the score is determined, the current distribution of scores, and how scores affect the distribution of chairs, panellists, and trainees.
     - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
     - 'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration
-    - Private URLs can now be incrementally regenerated
     - Emails can be assigned to adjudicators and teams in the Simple Importer
     - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results
     - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions
+    - Team record pages now show cumulative team points, and if the speaker tab is fully released, speaker scores for that team in each debate
 
 
 1.4.6
