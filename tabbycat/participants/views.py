@@ -150,7 +150,8 @@ class BaseTeamRecordView(BaseRecordView):
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
-        table.add_speaker_scores_column(teamscores)
+        if self.admin or tournament.pref('all_results_released'):
+            table.add_speaker_scores_column(teamscores)
         table.add_debate_side_by_team_column(teamscores)
         table.add_debate_adjudicators_column(debates, show_splits=True)
 
