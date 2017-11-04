@@ -7,8 +7,8 @@
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/)](http://tabbycat.readthedocs.io/en/stable/)
 [![Build Status](https://travis-ci.org/TabbycatDebate/tabbycat.svg?branch=develop)](https://travis-ci.org/TabbycatDebate/tabbycat)
 [![Dependency Status](https://gemnasium.com/badges/github.com/TabbycatDebate/tabbycat.svg)](https://gemnasium.com/github.com/TabbycatDebate/tabbycat)
-[![Code Climate](https://codeclimate.com/github/TabbycatDebate/tabbycat/badges/gpa.svg)](https://codeclimate.com/github/TabbycatDebate/tabbycat)
-[![Test Coverage](https://codeclimate.com/github/TabbycatDebate/tabbycat/badges/coverage.svg)](https://codeclimate.com/github/TabbycatDebate/tabbycat/coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/33dc219dfb957ad658c2/maintainability)](https://codeclimate.com/github/TabbycatDebate/tabbycat/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/33dc219dfb957ad658c2/test_coverage)](https://codeclimate.com/github/TabbycatDebate/tabbycat/test_coverage)
 
 </div>
 
