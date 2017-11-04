@@ -5,7 +5,7 @@ sudo: required
 group: edge
 env:
   global:
-    - CC_TEST_REPORTER_ID=e93289b66782f99213fec69659f0428021cf8cd284c79637e07323f15fd29461
+    - CC_TEST_REPORTER_ID=c18003eb2d4d191e9ebd68d9c3cf8082ba690eccac12df6660a098a78fc8713b
 addons:
   postgresql: "9.6"
   # chrome: stable # Re-enable for functional tests if/when they work on Travis
