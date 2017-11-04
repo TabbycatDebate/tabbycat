@@ -101,7 +101,7 @@ Download and run the `node.js Windows Installer (.msi) <https://nodejs.org/en/do
 2. Get the source code
 ======================
 
-1. `Go to the page for our latest release <https://github.com/czlee/tabbycat/releases/latest>`_.
+1. `Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_.
 2. Download the zip file.
 3. Extract all files in it to a folder of your choice.
 

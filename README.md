@@ -1,14 +1,14 @@
 <div align="center">
 
-<img width=200 src="https://rawgit.com/czlee/tabbycat/develop/tabbycat/static/logo.svg">
+<img width=200 src="https://rawgit.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg">
 
 # Tabbycat
 
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/)](http://tabbycat.readthedocs.io/en/stable/)
-[![Build Status](https://travis-ci.org/czlee/tabbycat.svg?branch=develop)](https://travis-ci.org/czlee/tabbycat)
-[![Dependency Status](https://gemnasium.com/badges/github.com/czlee/tabbycat.svg)](https://gemnasium.com/github.com/czlee/tabbycat)
-[![Code Climate](https://codeclimate.com/github/czlee/tabbycat/badges/gpa.svg)](https://codeclimate.com/github/czlee/tabbycat)
-[![Test Coverage](https://codeclimate.com/github/czlee/tabbycat/badges/coverage.svg)](https://codeclimate.com/github/czlee/tabbycat/coverage)
+[![Build Status](https://travis-ci.org/TabbycatDebate/tabbycat.svg?branch=develop)](https://travis-ci.org/TabbycatDebate/tabbycat)
+[![Dependency Status](https://gemnasium.com/badges/github.com/TabbycatDebate/tabbycat.svg)](https://gemnasium.com/github.com/TabbycatDebate/tabbycat)
+[![Code Climate](https://codeclimate.com/github/TabbycatDebate/tabbycat/badges/gpa.svg)](https://codeclimate.com/github/TabbycatDebate/tabbycat)
+[![Test Coverage](https://codeclimate.com/github/TabbycatDebate/tabbycat/badges/coverage.svg)](https://codeclimate.com/github/TabbycatDebate/tabbycat/coverage)
 
 </div>
 
@@ -30,11 +30,11 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was use
 
 Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/). The fastest way to launch a Tabbycat site is to click this button:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/master)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master)
 
 During the installation process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it cannot send emails and cannot be upgraded with extra database capacity or to better handle large amounts of traffic (although you can perform these upgrades later if you verify your Heroku account). We reccomend using it only for small tournaments. [Use this link to set up a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/kitten).
+That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it cannot send emails and cannot be upgraded with extra database capacity or to better handle large amounts of traffic (although you can perform these upgrades later if you verify your Heroku account). We reccomend using it only for small tournaments. [Use this link to set up a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten).
 
 ## 💪 Support and Contributing
 

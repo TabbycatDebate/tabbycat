@@ -44,11 +44,11 @@ First, install `PostgreSQL for Windows <https://www.postgresql.org/download/wind
   sudo apt-get install python3-dev python3-venv libpq-dev postgresql-client-9.6 nodejs
 
   # either
-  wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
+  wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
   tar xf |vrelease|.tar.gz
   cd tabbycat-|release|
   # or
-  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   git checkout |vrelease|                                         # or master
 
 Then create local_settings.py as described in the :ref:`Linux instructions <local-settings-linux>`, then::

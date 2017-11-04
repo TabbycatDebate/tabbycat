@@ -11,7 +11,7 @@ Installation---the short way
 Click this button:
 
 .. image:: https://www.herokucdn.com/deploy/button.svg
-  :target: https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/master
+  :target: https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master
 
 This is the easiest way to deploy an instance of Tabbycat online. It requires no technical background.
 
@@ -19,7 +19,7 @@ If you don't already have a Heroku account, it'll prompt you to create one. Once
 
 .. note:: During the setup process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-  That said if you do not have access to a credit/debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it does not send error reports to the developers and can handle much less public traffic. We strongly recommend using it only as a last resort, and even then only for small tournaments. `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/czlee/tabbycat/tree/kitten>`_.
+  That said if you do not have access to a credit/debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it does not send error reports to the developers and can handle much less public traffic. We strongly recommend using it only as a last resort, and even then only for small tournaments. `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
 
 If you have a background in programming, you might prefer the method below.
 
@@ -45,7 +45,7 @@ Short version
 -------------
 .. parsed-literal::
 
-  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   git checkout |vrelease|                               # or master
   cd tabbycat
   python deploy_heroku.py <yourappname>
@@ -73,7 +73,7 @@ Open a command shell. Navigate to an appropriate directory on your computer usin
 
 .. parsed-literal::
 
-  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   git checkout |vrelease|                               # or master
 
 

@@ -1,7 +1,7 @@
 
 .. raw:: html
 
-    <img id="logo" src="https://rawgit.com/czlee/tabbycat/develop/tabbycat/static/logo.svg">
+    <img id="logo" src="https://rawgit.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg">
 
 ======================
 Tabbycat User Guide

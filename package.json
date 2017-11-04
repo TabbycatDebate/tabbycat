@@ -49,7 +49,7 @@
     "stylelint": "stylelint tabbycat/templates/scss/**/*.scss --cache || true",
     "eslint": "eslint --ext .js,.html,.vue --ignore-pattern tabbycat/staticfiles/ --ignore-pattern tabbycat/static/ --cache tabbycat/ || true"
   },
-  "repository": "https://github.com/czlee/tabbycat",
+  "repository": "https://github.com/TabbycatDebate/tabbycat",
   "license": "UNLICENSED",
   "devDependencies": {
     "eslint-config-airbnb-base": "^12.1.0",

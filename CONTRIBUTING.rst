@@ -9,12 +9,12 @@ Feel free to `join our Facebook group <https://www.facebook.com/groups/tabbycat.
 Feedback and ideas
 ==================
 
-These can be added as issues in the `GitHub repository <https://github.com/czlee/tabbycat/issues>`_; posts in our `Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_; or as an :ref:`email to the developers <authors>`.
+These can be added as issues in the `GitHub repository <https://github.com/TabbycatDebate/tabbycat/issues>`_; posts in our `Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_; or as an :ref:`email to the developers <authors>`.
 
 Bug reports
 ===========
 
-Please report bugs by opening a new issue in our `GitHub repository <https://github.com/czlee/tabbycat/issues>`_. It is most helpful if you can include:
+Please report bugs by opening a new issue in our `GitHub repository <https://github.com/TabbycatDebate/tabbycat/issues>`_. It is most helpful if you can include:
 
 - How Tabbycat was installed (on Heroku, locally on OS X, `etc.`)
 - Any details about your tournament and setup that might be helpful in troubleshooting

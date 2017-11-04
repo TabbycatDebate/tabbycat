@@ -5,7 +5,7 @@ from utils.management.base import TournamentCommand
 class Command(TournamentCommand):
 
     help = "Makes BallotSubmission versions unique per debate. " \
-           "See https://github.com/czlee/tabbycat/issues/38#issuecomment-44149213 for more information."
+           "See https://github.com/TabbycatDebate/tabbycat/issues/38#issuecomment-44149213 for more information."
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)

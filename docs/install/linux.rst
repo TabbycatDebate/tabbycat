@@ -30,11 +30,11 @@ Short version
   sudo apt-get install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs
 
   # either
-  wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
+  wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
   tar xf |vrelease|.tar.gz
   cd tabbycat-|release|
   # or
-  git clone https\:\/\/github.com/czlee/tabbycat.git
+  git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   git checkout |vrelease|                                         # or master
 
   sudo -u postgres createuser myusername --pwprompt           # skip if not first time
@@ -117,7 +117,7 @@ Download and extract:
 
 .. parsed-literal::
 
-    $ wget https\:\/\/github.com/czlee/tabbycat/archive/|vrelease|.tar.gz
+    $ wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
     $ tar xf |vrelease|.tar.gz
     $ cd tabbycat-|release|
 
@@ -125,7 +125,7 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 
 .. parsed-literal::
 
-    $ git clone https\:\/\/github.com/czlee/tabbycat.git
+    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
     $ git checkout |vrelease|                              # or master
 
 .. tip:: You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).

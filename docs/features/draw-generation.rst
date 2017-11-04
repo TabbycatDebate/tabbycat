@@ -136,7 +136,7 @@ There isn't currently any way to edit side allocations from the front end. To do
   #. Click on the name of the team you want to edit side allocations for.
   #. Add or edit the entry or entries in the **Team position allocations** table at the bottom.
 
-* You can also do this by writing a script that creates ``TeamPositionAllocation`` objects and saves them. Have a look at `draw/management/commands/generatesideallocations.py <https://github.com/czlee/tabbycat/blob/master/tabbycat/draw/management/commands/generatesideallocations.py>`_ for an example.
+* You can also do this by writing a script that creates ``TeamPositionAllocation`` objects and saves them. Have a look at `draw/management/commands/generatesideallocations.py <https://github.com/TabbycatDebate/tabbycat/blob/master/tabbycat/draw/management/commands/generatesideallocations.py>`_ for an example.
 
 .. _draw-pairing-method:
 
@@ -177,4 +177,4 @@ It's a bit more complicated than that, for two reasons:
 What do I do if the draw looks wrong?
 =====================================
 
-You can edit match-ups directly from the draw page. Functionally, you can do anything you want. Of course, operationally, you should only edit the draw when you *know* that the draw algorithm got something wrong. If you need to do this, even just once, please file a bug report by creating a new issue on `our issues page on GitHub <https://github.com/czlee/tabbycat/issues>`_.
+You can edit match-ups directly from the draw page. Functionally, you can do anything you want. Of course, operationally, you should only edit the draw when you *know* that the draw algorithm got something wrong. If you need to do this, even just once, please file a bug report by creating a new issue on `our issues page on GitHub <https://github.com/TabbycatDebate/tabbycat/issues>`_.
