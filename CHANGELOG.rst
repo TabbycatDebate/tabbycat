@@ -2,8 +2,8 @@
 Change Log
 ==========
 
-2.0.0
------
+2.0.0 (Iberian Lynx)
+--------------------
 *Release date: TBD*
 
 - British Parliamentary support
