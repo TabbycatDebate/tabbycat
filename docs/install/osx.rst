@@ -52,7 +52,7 @@ Download `postgres.app <http://postgresapp.com/>`_, move it to your Applications
 1(c). Node.js/NPM
 --------------------------------------------------------------------------------
 
-Download and run the `node.js Mac OS X Installer (.pkg) <https://nodejs.org/en/download//>`_
+Download and run the `node.js 6 OS X Installer (.pkg) <https://nodejs.org/dist/latest-v6.x/node-v6.11.5.pkg>`_
 
 2. Get the source code
 ================================================================================

@@ -22,7 +22,6 @@ matrix:
         - brew install python3 # Install latest Python3
         - virtualenv env -p python3
         - source env/bin/activate
-        - brew upgrade node # Install latest Node
       before_script:
         - brew services start postgresql
         # We are testing, in effect, the local install so use local settings:
@@ -62,12 +61,13 @@ matrix:
         # - docker-compose run web python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 
 install:
+  - python --version
+  - pip --version
   - pip install --upgrade pip
   - pip install -r requirements_common.txt
   - pip install -r requirements_development.txt # Needed for flake8
-  - nvm install node # Update to latest node version
-  - nvm use node # Switch to latest
-  - npm install npm # Update to latest npm version
+  - node --version
+  - npm --version
   - npm install
 script:
   - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
