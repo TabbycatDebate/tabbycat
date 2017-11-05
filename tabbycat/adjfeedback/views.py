@@ -161,7 +161,7 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
         for adj in tournament.adjudicator_set.all():
             count = adj.adjudicatorfeedback_set.count()
             feedback_data.append({
-                'text': "{:d} Feedbacks".format(count),
+                'text': "{:d} Feedbacks".format(count) if count != 1 else "{:d} Feedback".format(count),
                 'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
             })
         table.add_column("Feedbacks", feedback_data)
@@ -187,7 +187,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
                 source_team__team=team).select_related(
                 'source_team__team').count()
             team_feedback_data.append({
-                'text': "{:d} Feedbacks".format(count),
+                'text': "{:d} Feedbacks".format(count) if count != 1 else "{:d} Feedback".format(count),
                 'link': reverse_tournament('adjfeedback-view-from-team',
                                            tournament,
                                            kwargs={'pk': team.id}),
@@ -204,7 +204,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
                 source_adjudicator__adjudicator=adj).select_related(
                 'source_adjudicator__adjudicator').count()
             adj_feedback_data.append({
-                'text': "{:d} Feedbacks".format(count),
+                'text': "{:d} Feedbacks".format(count) if count != 1 else "{:d} Feedback".format(count),
                 'link': reverse_tournament('adjfeedback-view-from-adjudicator',
                                            tournament,
                                            kwargs={'pk': adj.id}),

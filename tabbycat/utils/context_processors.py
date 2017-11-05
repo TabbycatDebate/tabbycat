@@ -99,7 +99,7 @@ def get_menu_highlight(request):
             menu['break_nav'] = True
             if "adjudicators" in path:
                 menu['break_adjudicators_nav'] = True
-            if "teams" in path:
+            elif "teams" in path:
                 menu['break_teams_nav'] = True
             else:
                 menu['break_overview_nav'] = True

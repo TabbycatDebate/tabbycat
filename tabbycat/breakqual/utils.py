@@ -63,7 +63,7 @@ def breakcategories_with_counts(tournament):
         excluded=excluded
     )
     for category in categories:
-        category.nonbreaking = category.eligible - category.breaking - category.excluded
+        category.nonbreaking = category.eligible - category.breaking
     return categories
 
 
