@@ -11,7 +11,7 @@ Tabbycat is a draw tabulation system for parliamentary debate tournaments. It
 supports two-team formats such as Australs, World Schools, Asians, Australian
 Easters and all New Zealand formats, as well as British Parliamentary (WUDC). It
 is also highly configurable, supporting many custom variations of the above
-formats too.
+formats too. If you're looking for a general overview of the software, check out our `README on Github <https://github.com/TabbycatDebate/tabbycat>`_.
 
 .. _installation-docs:
 

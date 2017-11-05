@@ -12,7 +12,7 @@
 
 </div>
 
-Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was used at Australs in Auckland 2010, [Wellington 2012](https://www.facebook.com/Australs2012), [Dunedin 2014](http://australs2014.herokuapp.com), [Daejeon 2015](http://australs2015.herokuapp.com) and [Perth 2016](http://australs2016.herokuapp.com), as well as [many other tournaments of all sizes](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [WAustrals 2016 tab website](http://australs2016.herokuapp.com).
+Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debating tournaments. It was used at Australs in 2010, [2012](https://www.facebook.com/Australs2012), [2014](http://australs2014.herokuapp.com), [2015](http://australs2015.herokuapp.com) [2016](http://australs2016.herokuapp.com), and [2017](http://australs2016.herokuapp.com) as well as [many other tournaments of all sizes and formats](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [Australs 2017 tab website](https://australs2017.herokuapp.com/2017_australs/).
 
 **Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 
@@ -23,8 +23,8 @@ Tabbycat is a draw tabulation system for 3 vs 3 debating tournaments. It was use
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts/clashes
 - A drag and drop interface for adjudicator allocation that displays conflicts alongside gender and regional balance
 - A fully responsive interface that adapts to suit large screens, laptops, tablets, and phones
-- Support for Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
-- Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) with (optional) online submission
+- Support for British Parliamentary, Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
+- Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) with (optional) online submission options
 
 ## 📖 Installation and Usage
 
