@@ -48,7 +48,7 @@ matrix:
         - coverage run tabbycat/manage.py test -v 2 --exclude-tag=selenium
       after_script:
         - coverage xml
-        - if [[ "$TRAVIS_PULL_REQUEST" == "false"]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+        - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
     - os: linux # Test docker seperately (currently isn't supported on OS X)
       language: generic
       install:
