@@ -36,7 +36,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install Python 3.5 from the `Python website <https://www.python.org/>`_.
+Download and install the latest version of Python 3.5 from the `Python website <https://www.python.org/downloads/>`_.
 In the installer, check the box to add Python to your PATH (see box below).
 
 .. warning:: The 64-bit version of Python 3.6 currently doesn't work with PostgreSQL 9.6, because of a `bug in Python <http://bugs.python.org/issue28680>`_ affecting `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. If you're using 64-bit Python, you should use Python 3.5 until the Python 3.6.1 is released.
@@ -217,13 +217,13 @@ Almost there!
 
   ::
 
-    > waitress-serve wsgi:application
+    > dj runserver
 
   It should show something like this::
 
-    serving on http://0.0.0.0:8080
+    Starting development server on http://127.0.0.1:8000
 
-8. Open your browser and go to the URL printed above. (In the above example, it's http://0.0.0.0:8080/.) It should look something like this:
+8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/). It should look something like this:
 
   .. image:: images/tabbycat-bare-windows.png
 
@@ -239,4 +239,4 @@ To start your Tabbycat instance up again next time you use your computer, open a
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat # or wherever your installation is
     > .\venv\Scripts\activate
     > cd tabbycat
-    > waitress-serve wsgi:application
+    > dj runserver
