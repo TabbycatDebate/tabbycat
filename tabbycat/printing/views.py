@@ -105,7 +105,7 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
         source_n = source.name if hasattr(source, 'name') else source.short_name
         return {
             'venue': venue.serialize() if venue else '',
-            'authorInstitution': source.institution.code,
+            'authorInstitution': source.institution.code if source.institution else 'Unaffiliated',
             'author': source_n, 'authorPosition': source_p.upper(),
             'target': target.name, 'targetPosition': target_p.upper()
         }

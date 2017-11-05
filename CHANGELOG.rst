@@ -8,28 +8,28 @@ Change Log
 
 - British Parliamentary support
     - Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format.
-    - As part of the implementation of this format we've made significant improvements over existing tab software on how sides are allocated within BP draws that mean teams are less likely to have 'imbalanced' proportions of side allocations (for example having many more debates as Opening Government than Closing Opposition)
-    - New "Comparisons" page added to the documentation to outline some of the key differences between Tabbycat and other software in the context of BP tabbing.
+    - As part of the implementation of this format we've made significant improvements over existing tab software on how sides are allocated within BP draws. This means that teams are less likely to have 'imbalanced' proportions of side allocations (for example having many more debates as Opening Government than Closing Opposition)
+    - We've added a new "Comparisons" page added to the documentation to outline some of the key differences between Tabbycat and other software in the context of BP tabbing
 - Refreshed interface design
+    - The basic graphic elements of Tabbycat have had a their typography, icons,  colours, forms, and more redesign for a more distinctive and clear look. We also now have an official logo!
     - The "Motions" stage of the per-round workflow has now been rolled into the Display area to better accommodate BP formats and consolidate the Draw/Motion 'release' process
     - Sidebar menu items now display all sub-items within a section, such as for Feedback, Standings, and Breaks
     - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area that maximises the content area
     - More explicit and obvious calls-to-action for the key tasks necessary to running a round, with better interface alerts and text to help users understand when and why to perform crucial actions
     - Redesigned motions tab page that gives a better idea of the sample size and distribution of results in both two- and three- team formats
-    - Refreshed the typography, icon set, core colours, forms elements, and more!
 - Improved handling of Break Rounds ballots and sides allocation
-    - The positions of teams within a break round are created by the initial draw generation in an 'unset' state in recognition that most tournaments assign these manually (through say a coin toss). This should help clarify when showing break rounds draws when sides are or are not finalised
-    - Break rounds ballots for formats where scores are not typically entered (i.e. BP) will only specify that you nominate the teams advancing rather than enter in scores
+    - The positions of teams within a break round are now created by the initial draw generation in an 'unset' state in recognition that most tournaments assign these manually (through say a coin toss). This should help clarify when showing break rounds draws when sides are or are not finalised
+    - Break rounds ballots for formats where scores are not typically entered (i.e. BP) will only specify that you nominate the teams advancing rather than enter in all of the speakers' scores
 - Now, like Break Categories, you can define arbitrary Categories such as 'Novice' or 'ESL' to create custom Speaker tabs for groups of Speakers
-- You can now release an Adjudicators Tab showing test scores, final scores, and/or per-round feedback averages.
-- Information Slides can now be added to the system; either for showing to an auditorium within Tabbycat or for displaying alongside the public list of motions and/or the motions tab.
-- Teams and adjudicators are no longer required to have institutions
-- Private URLs can now be incrementally generated, and also records are kept of sent mail so that they can be incrementally sent to participants
+- You can now release an Adjudicators Tab showing test scores, final scores, and/or per-round feedback averages
+- Information Slides can now be added to the system; either for showing to an auditorium within Tabbycat or for displaying alongside the public list of motions and/or the motions tab
+- Teams and adjudicators are no longer required to have institutions; something that should be very useful when setting up small IVs and the like
+- Private URLs can now be incrementally generated. Records of sent mail are now also kept by Tabbycat, so that emails can be incrementally sent to participants as registration data changes
 - Quality of life improvements
     - After creating a new tournament you will now be prompted to apply a basic rules and public information preset
     - Better handling of errors that arise when a debate team is missing or where two teams have been assigned the same side
     - Fixed issue where the adjudicator feedback graphs would not sort along with their table
-    - The Feedback Overview page now makes it more clear how the score is determined, the current distribution of scores, and how scores affect the distribution of chairs, panellists, and trainees.
+    - The Feedback Overview page now makes it more clear how the score is determined, the current distribution of scores, and how scores affect the distribution of chairs, panellists, and trainees
     - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
     - 'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration
     - Emails can be assigned to adjudicators and teams in the Simple Importer

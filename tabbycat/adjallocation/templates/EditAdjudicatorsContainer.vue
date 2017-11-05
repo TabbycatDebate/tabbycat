@@ -23,7 +23,11 @@
           </div>
         </div>
 
-        <template slot="hvenue"><!-- Hide Venues --></template>
+        <template slot="hvenue">
+          <span></span> <!-- Hide Venues -->
+        </template>
+
+
         <template slot="hpanel">
           <div :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
@@ -42,13 +46,18 @@
         </template>
 
       </draw-header>
+
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
 
         <div class="draw-cell flex-6" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
         </div>
-        <template slot="svenue"><!-- Hide Venues --></template>
+
+        <template slot="svenue">
+          <span></span> <!-- Hide Venues -->
+        </template>
+
         <template slot="spanel">
           <debate-panel :panel-adjudicators="debate.debateAdjudicators" :debate-id="debate.id"
                         :panel-teams="debate.debateTeams"
