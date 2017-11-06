@@ -52,7 +52,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   npm run gulp build
   dj collectstatic
   dj createsuperuser
-  waitress-serve wsgi:application
+  dj runserver
 
 1. Install dependencies
 =======================
@@ -203,13 +203,13 @@ Almost there!
 
   ::
 
-    $ waitress-serve wsgi:application
+    $ dj runserver
 
   It should show something like this::
 
-    serving on http://0.0.0.0:8080
+    serving on http://127.0.0.1:8000
 
-8. Open your browser and go to the URL printed above. (In the above example, it's http://0.0.0.0:8080.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
+8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-linux.png
       :alt: Bare Tabbycat installation
@@ -222,5 +222,4 @@ To start your Tabbycat instance up again next time you use your computer::
 
     $ cd path/to/my/tabbycat/directory
     $ source venv/bin/activate
-    $ cd tabbycat
-    $ waitress-serve wsgi:application
+    $ dj runserver

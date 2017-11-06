@@ -58,11 +58,11 @@ Then create local_settings.py as described in the :ref:`Linux instructions <loca
   pip install --upgrade pip
   pip install -r requirements_common.txt
   npm install
-  cd tabbycat
   dj migrate
+  npm run gulp build
   dj collectstatic
   dj createsuperuser
-  waitress-serve wsgi:application
+  dj runserver
 
 1. Install dependencies
 =======================
@@ -94,5 +94,4 @@ To start your Tabbycat instance up again next time you use your computer::
 
     $ cd /mnt/c/path/to/my/tabbycat/directory
     $ source venv/bin/activate
-    $ cd tabbycat
-    $ waitress-serve wsgi:application
+    $ dj runserver
