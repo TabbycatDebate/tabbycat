@@ -1,15 +1,15 @@
 .. _install-osx:
 
-==========================
-Installing Locally on OS X
-==========================
+===========================
+Installing Locally on macOS
+===========================
 
 .. admonition:: Is this the best install method for you?
   :class: attention
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-  If you just want to quickly set up a copy of Tabbycat to run locally on OS X, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
+  If you just want to quickly set up a copy of Tabbycat to run locally on macOS, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
 
 Requisite technical knowledge
 ================================================================================
@@ -30,7 +30,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 --------------------------------------------------------------------------------
-Tabbycat requires Python 3.4 or later. OS X only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+Tabbycat requires Python 3.4 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 The executable will probably be called ``python3``, rather than ``python``. Check::
 
@@ -52,7 +52,7 @@ Download `postgres.app <http://postgresapp.com/>`_, move it to your Applications
 1(c). Node.js/NPM
 --------------------------------------------------------------------------------
 
-Download and run the `node.js 6 OS X Installer (.pkg) <https://nodejs.org/dist/latest-v6.x/node-v6.11.5.pkg>`_
+Download and run the `node.js 6 macOS Installer (.pkg) <https://nodejs.org/dist/latest-v6.x/node-v6.11.5.pkg>`_
 
 2. Get the source code
 ================================================================================

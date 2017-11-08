@@ -27,7 +27,7 @@ Docker is an application that makes it very easy to load and run a specific coll
 2. Install Docker
 =================
 
-If using OS X or Linux
+If using macOS or Linux
 ----------------------
 
 - Install the **Docker Community Edition (stable)** from the `Docker store page <https://store.docker.com/search?type=edition&offering=community>`_.
@@ -59,7 +59,7 @@ If using Windows 7, Windows 8, or Windows 10 Home Edition
 If using the Docker App
 -----------------------
 
-*These instructions apply if you installed the Docker App, i.e., if you are using Mac OS X, Linux or Windows Pro/Enterprise/Education.*
+*These instructions apply if you installed the Docker App, i.e., if you are using macOS, Linux or Windows Pro/Enterprise/Education.*
 
 .. rst-class:: spaced-list
 
@@ -67,7 +67,7 @@ If using the Docker App
 
 2. Browse to the location where you extracted Tabbycat to. Open up the **bin** folder there. Within that folder:
 
-    - If you're on OS X, press the Control key, click the icon for **osx_docker_start.command**, then choose Open from the shortcut menu.
+    - If you're on macOS, press the Control key, click the icon for **osx_docker_start.command**, then choose Open from the shortcut menu.
     - If you're on Windows, open **windows_docker_start.bat**.
     - If you're on Linux, open up a terminal in the Tabbycat folder (*i.e.* the folder containing ``README.md``) and run ``docker-compose up``.
 

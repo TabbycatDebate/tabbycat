@@ -27,14 +27,14 @@ Installation---the long way
 ===========================
 The long way sets you up with more control over your environment. Because you'll clone `our GitHub repository`_, it'll be easier for you to pull and contribute updates to the source code.  We recommend it if you have experience with Git.  It's also easier with this method to import CSV files using the command-line importer, so if you have a very large tournament, this might make importing initial data easier.
 
-We've tested these instructions successfully on Windows, Linux and Mac OS.
+We've tested these instructions successfully on Windows, Linux and macOS.
 
 Requisite technical background
 ------------------------------
 
 You need to have at least a passing familiarity with command-line interfaces to get through the longer traditional method. We'll talk you through the rest.
 
-When we say "command shell", on Windows we mean **Command Prompt**, and on Linux and OS X we mean **Terminal** (or your favourite command shell).
+When we say "command shell", on Windows we mean **Command Prompt**, and on Linux and macOS we mean **Terminal** (or your favourite command shell).
 
 .. admonition:: Advanced users
   :class: tip
@@ -65,7 +65,7 @@ If you want to :ref:`import tournament data <importing-initial-data>` from CSV f
 
 - If you don't already have **Git**, follow the `instructions on the GitHub website <https://help.github.com/articles/set-up-git>`_ to set up Git.
 
-.. note:: Linux and OS X users probably already have Python installed. There is no need to install Python 3 specifically. Although Tabbycat uses Python 3, installing it on Heroku relies only on the deployment script, which is compatible with both Python 2 and Python 3.
+.. note:: Linux and macOS users probably already have Python installed. There is no need to install Python 3 specifically. Although Tabbycat uses Python 3, installing it on Heroku relies only on the deployment script, which is compatible with both Python 2 and Python 3.
 
 2. Get the source code
 ----------------------
