@@ -43,6 +43,7 @@ formats too. If you're looking for a general overview of the software, check out
    :caption: Tabbing Guide
 
    guide/tournament-logistics
+   guide/comparisons
 
 .. _feature-docs:
 
@@ -69,7 +70,6 @@ formats too. If you're looking for a general overview of the software, check out
    :maxdepth: 1
    :caption: About
 
-   about/comparisons
    about/support
    about/authors
    about/changelog
