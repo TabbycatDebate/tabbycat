@@ -41,5 +41,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(rename_position_names_to_side_names,
-            reverse_code=rename_side_names_to_position_names),
+            reverse_code=rename_side_names_to_position_names,
+            elidable=True,
+        ),
     ]

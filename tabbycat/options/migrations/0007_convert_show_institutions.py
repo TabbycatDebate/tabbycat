@@ -46,5 +46,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_show_institutions),
+        migrations.RunPython(convert_show_institutions, elidable=True),
     ]

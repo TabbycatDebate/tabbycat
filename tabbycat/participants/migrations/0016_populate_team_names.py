@@ -42,5 +42,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(populate_team_names),
+        migrations.RunPython(populate_team_names, elidable=True),
     ]

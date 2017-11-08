@@ -30,5 +30,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_adjudicator_trainee, reverse_code=unconvert_adjudicator_trainee),
+        migrations.RunPython(convert_adjudicator_trainee, reverse_code=unconvert_adjudicator_trainee, elidable=True),
     ]

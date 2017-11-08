@@ -40,5 +40,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(update_breakcategory_priorities_and_rules),
+        migrations.RunPython(update_breakcategory_priorities_and_rules, elidable=True),
     ]

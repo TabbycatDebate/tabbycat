@@ -53,5 +53,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_availability),
+        migrations.RunPython(convert_availability, elidable=True),
     ]

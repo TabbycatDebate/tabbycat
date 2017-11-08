@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_elim_draw_types, reverse_code=convert_elim_draw_types_reverse),
+        migrations.RunPython(convert_elim_draw_types, reverse_code=convert_elim_draw_types_reverse, elidable=True),
     ]

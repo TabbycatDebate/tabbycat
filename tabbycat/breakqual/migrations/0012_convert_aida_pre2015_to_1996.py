@@ -28,5 +28,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(rename_aida_pre2015_to_1996, reverse_code=rename_aida_1996_to_pre2015),
+        migrations.RunPython(rename_aida_pre2015_to_1996, reverse_code=rename_aida_1996_to_pre2015, elidable=True),
     ]

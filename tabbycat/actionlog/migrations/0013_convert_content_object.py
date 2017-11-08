@@ -40,5 +40,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_content_objects, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(convert_content_objects, reverse_code=migrations.RunPython.noop, elidable=True),
     ]

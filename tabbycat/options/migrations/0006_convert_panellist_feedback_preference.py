@@ -51,5 +51,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_panellist_feedback_preference),
+        migrations.RunPython(convert_panellist_feedback_preference, elidable=True),
     ]

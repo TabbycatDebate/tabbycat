@@ -36,5 +36,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(convert_debateteam_positions, reverse_code=convert_debateteam_positions_reverse),
+        migrations.RunPython(convert_debateteam_positions, reverse_code=convert_debateteam_positions_reverse, elidable=True),
     ]

@@ -54,6 +54,7 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(
             convert_venueconstraintcategory_to_venuecategory,
+            elidable=True,
         ),
         migrations.RemoveField( # this step is not reversible
             model_name='venueconstraint',

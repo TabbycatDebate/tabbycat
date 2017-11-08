@@ -56,7 +56,8 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='venues.VenueConstraintCategory'),
         ),
         migrations.RunPython(
-            create_venue_constraint_categories
+            create_venue_constraint_categories,
+            elidable=True,
         ),
         migrations.RemoveField( # this step is not reversible
             model_name='venueconstraint',

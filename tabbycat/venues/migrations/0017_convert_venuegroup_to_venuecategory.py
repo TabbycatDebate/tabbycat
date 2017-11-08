@@ -40,5 +40,6 @@ class Migration(migrations.Migration):
         migrations.RunPython(
             convert_venuegroup_to_venuecategory,
             reverse_code=delete_all_venuecategories,
+            elidable=True,
         ),
     ]

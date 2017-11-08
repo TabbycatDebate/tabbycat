@@ -122,6 +122,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_speaker_categories, reverse_code=migrations.RunPython.noop),
-        migrations.RunPython(convert_speaker_categories, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(create_speaker_categories, reverse_code=migrations.RunPython.noop, elidable=True),
+        migrations.RunPython(convert_speaker_categories, reverse_code=migrations.RunPython.noop, elidable=True),
     ]
