@@ -111,4 +111,4 @@ Release Checklist
 11. Back-merge ``develop`` to the in-progress feature branches
 12. Push ``master`` to the release pipeline repository
 13. Issue a formal release with change notes on GitHub
-14. Post change notes on the Facebook group
+14. Post change notes on the Facebook page/group

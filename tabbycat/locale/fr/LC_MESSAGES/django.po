@@ -121,8 +121,8 @@ msgid "Support"
 msgstr "Aide"
 
 #: templates/footer.html:85
-msgid "Facebook Group"
-msgstr "Groupe sur Facebook"
+msgid "Facebook"
+msgstr "Facebook"
 
 #: templates/footer.html:91
 msgid "Set Up A Copy"
