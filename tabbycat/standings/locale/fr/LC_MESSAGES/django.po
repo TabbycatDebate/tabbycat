@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"POT-Creation-Date: 2017-11-10 18:46+1100\n"
 "PO-Revision-Date: 2017-08-21 23:19-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,6 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.3\n"
+
+#: standings/base.py:279
+msgid "The same metric would be added twice:"
+msgstr ""
+
+#: standings/base.py:280
+msgid "The same ranking would be added twice:"
+msgstr ""
+
+#: standings/base.py:348
+#, python-format
+msgid "Unrecognized metric code: \"%(code)s\""
+msgstr ""
 
 #: standings/speakers.py:68 standings/speakers.py:100
 msgid "total"
@@ -72,7 +85,7 @@ msgstr ""
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:124
+#: standings/teams.py:124 standings/views.py:542
 msgid "Wins"
 msgstr ""
 
@@ -168,6 +181,20 @@ msgstr ""
 msgid "who-beat-whom (in divisions)"
 msgstr ""
 
+#: standings/templates/current_standings.html:6
+msgid ""
+"This list is sorted by team points, then alphabetically by team name. It "
+"does not indicate each team's ranking within each bracket. It also excludes "
+"silent rounds (if any)."
+msgstr ""
+
+#: standings/templates/current_standings.html:12
+msgid ""
+"This list is sorted by number of wins, then alphabetically by team name. It "
+"does not indicate each team's ranking within each bracket. It also excludes "
+"silent rounds (if any)."
+msgstr ""
+
 #: standings/templates/speaker_standings.html:7
 msgid ""
 "Note that speakers are being sorted by their <strong>average score</strong>."
@@ -228,13 +255,17 @@ msgstr "Équilibre des motions"
 msgid "Diversity Overview"
 msgstr "Aperçu de la diversité"
 
-#: standings/views.py:91
+#: standings/templates/standings_motions.html:31
+msgid "View Info Slide"
+msgstr ""
+
+#: standings/views.py:92
 #, python-format
 msgid ""
 "<p>There was an error generating the standings: <em>%(message)s</em></p>"
 msgstr ""
 
-#: standings/views.py:96
+#: standings/views.py:97
 #, python-format
 msgid ""
 "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
@@ -243,54 +274,68 @@ msgid ""
 "developers.</p>"
 msgstr ""
 
+#: standings/views.py:105
+msgid "<p>The tab director will need to resolve this issue.</p>"
+msgstr ""
+
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:156
+#: standings/views.py:169
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s (seulement les %(limit)d en tête)"
 
-#: standings/views.py:237
+#: standings/views.py:196 standings/views.py:391
+msgid ""
+"The tab can't be displayed because all rounds so far in this tournament are "
+"silent."
+msgstr ""
+
+#: standings/views.py:253
 msgid "Speaker Standings"
 msgstr "Classement des orateurs"
 
-#: standings/views.py:273
+#: standings/views.py:289
 msgid "Speaker Tab"
 msgstr "Tab des orateurs"
 
-#: standings/views.py:291
+#: standings/views.py:307
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr "Classement des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:309
+#: standings/views.py:325
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr "Tab des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:323
+#: standings/views.py:339
 msgid "Reply Speaker Standings"
 msgstr "Classement des orateurs de réponse de la catégorie %(category_name)s"
 
-#: standings/views.py:355
+#: standings/views.py:371
 msgid "Reply Speaker Tab"
 msgstr "Tab des orateurs de réponse de la catégorie %(category_name)s"
 
-#: standings/views.py:367
+#: standings/views.py:383
 msgid "Team Standings"
 msgstr "Classement des équipes"
 
-#: standings/views.py:429
+#: standings/views.py:448
 msgid "Division Standings"
 msgstr "Classement par division"
 
-#: standings/views.py:439
+#: standings/views.py:458
 msgid "Team Tab"
 msgstr "Tab des équipes"
 
-#: standings/views.py:455
+#: standings/views.py:474
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: standings/views.py:497
+#: standings/views.py:517
 msgid "Current Team Standings"
 msgstr "Classement actuel des équipes"
+
+#: standings/views.py:542
+msgid "Points"
+msgstr ""

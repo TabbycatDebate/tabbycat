@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"POT-Creation-Date: 2017-11-10 18:46+1100\n"
 "PO-Revision-Date: 2017-08-27 21:58-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,6 +21,50 @@ msgstr ""
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
 msgstr "Vous devez d’abord supprimer les objets ci-dessus."
+
+#: templates/admin/style_guide.html:30
+msgid ""
+"This style of info card announces critical information. <a href=\"\">Link</"
+"a>."
+msgstr ""
+
+#: templates/admin/style_guide.html:33
+msgid "This style of info card announces general <a href=\"\">information</a>."
+msgstr ""
+
+#: templates/admin/style_guide.html:158
+msgctxt "page title"
+msgid "Form Title"
+msgstr ""
+
+#: templates/admin/style_guide.html:159
+msgid "Sub Title Title"
+msgstr ""
+
+#: templates/admin/style_guide.html:195 templates/registration/login.html:61
+msgctxt "button"
+msgid "Log In"
+msgstr "Connexion"
+
+#: templates/admin/style_guide.html:196 templates/registration/login.html:62
+#, fuzzy
+#| msgid "I forgot my password"
+msgctxt "button"
+msgid "I forgot my password"
+msgstr "J'ai oublié mon mot de passe"
+
+#: templates/base.html:12
+#, python-format
+msgid ""
+"The tab for %(tournament_name)s runs on Tabbycat, an open-source tab system "
+"for a variety of parliamentary debating formats"
+msgstr ""
+
+#: templates/base.html:16
+msgid ""
+"This tab runs on Tabbycat, an open-source tab system for a variety of "
+"parliamentary debating formats"
+msgstr ""
 
 #: templates/base_formset.html:26
 msgid "Save and Add More"
@@ -101,8 +145,8 @@ msgstr "Avez-vous besoin des bulletins&nbsp;?"
 #| "Use <a href=\"http://debatingballot.com\" target=\"_blank"
 #| "\">debatingBallot.com</a> to design and print great ballots online."
 msgid ""
-"Use <a href=\"http://philipbelesky.github.io/ballots/\" target=\"_blank"
-"\">debatingBallot.com</a> to design and print great ballots online."
+"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" target="
+"\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 "Utilisez <a href=\"http://debatingballot.com\" target=\"_blank"
 "\">DebatingBallot.com</a> pour dessiner et d'imprimer des bulletins beaux en "
@@ -128,101 +172,106 @@ msgstr "Facebook"
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
-#: templates/nav/admin_nav.html:39 templates/nav/admin_nav.html:98
-#: templates/nav/admin_nav.html:127 templates/nav/admin_nav.html:172
+#: templates/nav/admin_nav.html:42 templates/nav/admin_nav.html:110
+#: templates/nav/admin_nav.html:141 templates/nav/admin_nav.html:191
 msgid "Overview"
 msgstr "Aperçu"
 
-#: templates/nav/admin_nav.html:45
+#: templates/nav/admin_nav.html:50
 msgid "Setup"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:52
+#: templates/nav/admin_nav.html:57
 msgid "Configuration"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:56
+#: templates/nav/admin_nav.html:61
 msgid "Import Data"
 msgstr "Importation des données"
 
-#: templates/nav/admin_nav.html:60 templates/nav/public_nav.html:145
+#: templates/nav/admin_nav.html:65 templates/nav/public_nav.html:151
 msgid "Participants"
 msgstr "Participants"
 
-#: templates/nav/admin_nav.html:65
+#: templates/nav/admin_nav.html:70
 msgid "Private URLs"
 msgstr "URLs privées"
 
-#: templates/nav/admin_nav.html:68
+#: templates/nav/admin_nav.html:73
 msgid "Edit Database"
 msgstr "Modification de la base de données"
 
-#: templates/nav/admin_nav.html:76 templates/nav/public_nav.html:130
+#: templates/nav/admin_nav.html:83 templates/nav/public_nav.html:136
 msgid "Sides"
 msgstr "Côtés"
 
-#: templates/nav/admin_nav.html:86 templates/nav/admin_nav.html:134
-#: templates/nav/public_nav.html:120
+#: templates/nav/admin_nav.html:95 templates/nav/admin_nav.html:148
+#: templates/nav/public_nav.html:126
 msgid "Divisions"
 msgstr "Divisions"
 
-#: templates/nav/admin_nav.html:92
+#: templates/nav/admin_nav.html:104
 msgid "Feedback"
 msgstr "Commentaires"
 
-#: templates/nav/admin_nav.html:120 templates/nav/public_nav.html:135
+#: templates/nav/admin_nav.html:134 templates/nav/public_nav.html:141
 msgid "Standings"
 msgstr "Classement"
 
-#: templates/nav/admin_nav.html:130
+#: templates/nav/admin_nav.html:144
 #, fuzzy
 #| msgid "Team Tab"
 msgid "Teams"
 msgstr "Tab des équipes"
 
-#: templates/nav/admin_nav.html:138
+#: templates/nav/admin_nav.html:152
 #, fuzzy
 #| msgid "Speaker Tab"
 msgid "Speakers"
 msgstr "Tab des orateurs"
 
-#: templates/nav/admin_nav.html:143
+#: templates/nav/admin_nav.html:157
 #, fuzzy
 #| msgid "Replies Tab"
 msgid "Replies"
 msgstr "Tab des discours de résponse"
 
-#: templates/nav/admin_nav.html:148
+#: templates/nav/admin_nav.html:162
 #, fuzzy, python-format
 #| msgid "%(category_name)s Speaker Tab"
 msgid "%(category_name)s Speakers"
 msgstr "Tab des orateurs de la catégorie %(category_name)s"
 
-#: templates/nav/admin_nav.html:154 templates/nav/public_nav.html:125
-#: templates/nav/round_panel.html:59
+#: templates/nav/admin_nav.html:168 templates/nav/public_nav.html:131
 msgid "Motions"
 msgstr "Motions"
 
-#: templates/nav/admin_nav.html:157 templates/nav/public_nav.html:140
+#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:146
 msgid "Diversity"
 msgstr "Aperçu de la diversité"
 
-#: templates/nav/admin_nav.html:166
+#: templates/nav/admin_nav.html:184
 msgid "Breaks"
 msgstr "Qualifications"
 
-#: templates/nav/admin_nav.html:176
+#: templates/nav/admin_nav.html:195
 #, fuzzy, python-format
 #| msgid "%(category_name)s Speaker Tab"
 msgid "%(category_name)s"
 msgstr "Tab des orateurs de la catégorie %(category_name)s"
 
-#: templates/nav/admin_nav.html:193
+#: templates/nav/admin_nav.html:214
 #, fuzzy
 #| msgctxt "button"
 #| msgid "Log In"
 msgid "Log Out"
 msgstr "Connexion"
+
+#: templates/nav/assistant_nav.html:11
+#, fuzzy
+#| msgid "Check-Ins"
+msgid "Check In Ballots"
+msgstr "Enregistrements"
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
@@ -242,50 +291,56 @@ msgid "Replies Tab"
 msgstr "Tab des discours de résponse"
 
 #: templates/nav/public_nav.html:34
+#, fuzzy
+#| msgid "Adjudicators"
+msgid "Adjudicator Tab"
+msgstr "Juges"
+
+#: templates/nav/public_nav.html:39
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: templates/nav/public_nav.html:48
+#: templates/nav/public_nav.html:56
 msgid "Draws"
 msgstr "Tirages"
 
-#: templates/nav/public_nav.html:59
+#: templates/nav/public_nav.html:69
 msgid "View All"
 msgstr "Afficher tout"
 
-#: templates/nav/public_nav.html:73 templates/nav/round_panel.html:69
+#: templates/nav/public_nav.html:82 templates/nav/round_panel.html:61
 msgid "Results"
 msgstr "Résultats"
 
-#: templates/nav/public_nav.html:96
+#: templates/nav/public_nav.html:104
 msgid "Break"
 msgstr "Qualification"
 
-#: templates/nav/public_nav.html:110
+#: templates/nav/public_nav.html:116
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: templates/nav/public_nav.html:150
+#: templates/nav/public_nav.html:156
 msgid "Feedback Progress"
 msgstr "Progrès des commentaires"
 
-#: templates/nav/public_nav.html:155
+#: templates/nav/public_nav.html:161
 msgid "Enter Ballot"
 msgstr "Saisie d'un bulletin"
 
-#: templates/nav/public_nav.html:160
+#: templates/nav/public_nav.html:166
 msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
-#: templates/nav/round_panel.html:26
+#: templates/nav/round_panel.html:28
 msgid "Check-Ins"
 msgstr "Enregistrements"
 
-#: templates/nav/round_panel.html:37
+#: templates/nav/round_panel.html:39
 msgid "Draw"
 msgstr "Tirage"
 
-#: templates/nav/round_panel.html:49
+#: templates/nav/round_panel.html:51
 msgid "Display"
 msgstr "Affichage"
 
@@ -303,7 +358,7 @@ msgstr "Connexion à Tabbycat"
 msgid "Your username and password didn't match."
 msgstr "Votre nom d'utilisateur et votre mot de passe n'ont pas correspondu."
 
-#: templates/registration/login.html:44
+#: templates/registration/login.html:46
 msgid ""
 "Your account doesn't have access to this page. To proceed, please log in "
 "with an account that has access."
@@ -311,21 +366,9 @@ msgstr ""
 "Votre compte ne vous permet pas d'accéder cette page. Pour continuer, "
 "veuillez vous connecter."
 
-#: templates/registration/login.html:47
+#: templates/registration/login.html:49
 msgid "Please log in to see this page."
 msgstr "Veuillez vous connecter afin de voir ce page."
-
-#: templates/registration/login.html:59 templates/style_guide.html:153
-msgctxt "button"
-msgid "Log In"
-msgstr "Connexion"
-
-#: templates/registration/login.html:60 templates/style_guide.html:154
-#, fuzzy
-#| msgid "I forgot my password"
-msgctxt "button"
-msgid "I forgot my password"
-msgstr "J'ai oublié mon mot de passe"
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_done.html:5
@@ -333,11 +376,11 @@ msgctxt "page title"
 msgid "Password changed"
 msgstr "Mot de passe modifié avec succès"
 
-#: templates/registration/password_change_done.html:16
+#: templates/registration/password_change_done.html:11
 msgid "Your password has been changed."
 msgstr "Votre mot de passe a bien été modifié."
 
-#: templates/registration/password_change_done.html:22
+#: templates/registration/password_change_done.html:14
 msgid "Go to the home page"
 msgstr "Aller sur la page d’accueil"
 
@@ -492,42 +535,121 @@ msgstr "Retour à la page de connexion"
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
-#: templates/style_guide.html:19
-msgid ""
-"This style of info card announces critical information. <a href=\"\">Link</"
-"a>."
-msgstr ""
-
-#: templates/style_guide.html:22
-msgid "This style of info card announces general <a href=\"\">information</a>."
-msgstr ""
-
-#: templates/style_guide.html:116
-msgctxt "page title"
-msgid "Form Title"
-msgstr ""
-
-#: templates/style_guide.html:117
-msgid "Sub Title Title"
-msgstr ""
-
-#: urls.py:87
+#: urls.py:84
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
 msgstr ""
 
-#: urls.py:90
+#: urls.py:87
 msgid "Later! You were logged out!"
 msgstr ""
 
-#: urls.py:97
+#: urls.py:94
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr ""
 
-#: urls.py:100
+#: urls.py:97
 msgid "Welcome! You just logged in!"
 msgstr ""
+
+#: users/admin.py:19
+msgid ""
+"Users with Staff status can view and edit the Edit Database area. This is "
+"potentially dangerous and should be reserved for the actual Tab Director(s)."
+msgstr ""
+
+#: users/admin.py:22
+msgid ""
+"Superusers have full access all areas of Tabbycat necessary to run a "
+"tournament. Users who are not Superusers are still able to perform data-"
+"entry tasks such as adding results and feedback but can't access "
+"confidential areas such as the Breaks and Feedback sections. Members of the "
+"adjudication core are generally given Superuser status if they know what "
+"they are doing."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Team Tab"
+#~ msgid "Team"
+#~ msgstr "Tab des équipes"
+
+#, fuzzy
+#~| msgid "Private URLs"
+#~ msgid "Private URL Management"
+#~ msgstr "URLs privées"
+
+#, fuzzy
+#~| msgid "Need ballots?"
+#~ msgid "ballot"
+#~ msgstr "Avez-vous besoin des bulletins&nbsp;?"
+
+#, fuzzy
+#~| msgid "Feedback"
+#~ msgid "feedback"
+#~ msgstr "Commentaires"
+
+#, fuzzy
+#~| msgid "Adjudicators"
+#~ msgid "recipient adjudicator"
+#~ msgstr "Juges"
+
+#, fuzzy
+#~| msgid "E-mail address"
+#~ msgid "e-mail address"
+#~ msgstr "Adresse de courriel"
+
+#, fuzzy
+#~| msgid "Private URLs"
+#~ msgid "Email Private Ballot URLs"
+#~ msgstr "URLs privées"
+
+#, fuzzy
+#~| msgid "Private URLs"
+#~ msgid "Email Private Feedback URLs"
+#~ msgstr "URLs privées"
+
+#, fuzzy
+#~| msgid "Adjudicators"
+#~ msgid "%(nadjs)s adjudicator"
+#~ msgid_plural "%(nadjs)s adjudicators"
+#~ msgstr[0] "Juges"
+#~ msgstr[1] "Juges"
+
+#, fuzzy
+#~| msgid "Private URLs"
+#~ msgid "Generate Private URLs"
+#~ msgstr "URLs privées"
+
+#, fuzzy
+#~| msgid "Private URLs"
+#~ msgid "View URLs"
+#~ msgstr "URLs privées"
+
+#, fuzzy
+#~| msgid "Enter Feedback"
+#~ msgid "Print Feedback URLs"
+#~ msgstr "Saisie d'une commentaire"
+
+#, fuzzy
+#~| msgid "Private URLs"
+#~ msgid "Print Ballot URLs"
+#~ msgstr "URLs privées"
+
+#, fuzzy
+#~| msgid "Enter Feedback"
+#~ msgid "Email Feedback URLs"
+#~ msgstr "Saisie d'une commentaire"
+
+#, fuzzy
+#~| msgid "Feedback"
+#~ msgid "Feedback URL"
+#~ msgstr "Commentaires"
+
+#, fuzzy
+#~| msgid "Feedback Progress"
+#~ msgid "Feedback Forms"
+#~ msgstr "Progrès des commentaires"
 
 #~ msgid "Saving…"
 #~ msgstr "Enregistrement en cours…"

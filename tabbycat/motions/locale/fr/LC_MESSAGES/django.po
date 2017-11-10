@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"POT-Creation-Date: 2017-11-10 18:46+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,87 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: motions/apps.py:7 motions/templates/public_motions.html:4
+#: motions/templates/public_motions.html:5
+msgid "Motions"
+msgstr ""
+
+#: motions/models.py:9
+msgid "sequence number"
+msgstr ""
+
+#: motions/models.py:10
+msgid "The order in which motions are displayed"
+msgstr ""
+
+#: motions/models.py:12
+msgid "text"
+msgstr ""
+
+#: motions/models.py:13
+msgid "The full motion e.g., \"This House would straighten all bananas\""
+msgstr ""
+
+#: motions/models.py:15
+msgid "reference"
+msgstr ""
+
+#: motions/models.py:16
+msgid "Shortcode for the motion, e.g., \"Bananas\""
+msgstr ""
+
+#: motions/models.py:18
+msgid "info slide"
+msgstr ""
+
+#: motions/models.py:19
+msgid "The information slide for this topic; if it has one"
+msgstr ""
+
+#: motions/models.py:21
+msgid "flagged"
+msgstr ""
+
+#: motions/models.py:22
+msgid "For WADL: Allows for particular motions to be flagged as contentious"
+msgstr ""
+
+#: motions/models.py:24
+msgid "round"
+msgstr ""
+
+#: motions/models.py:26
+msgid "divisions"
+msgstr ""
+
+#: motions/models.py:30 motions/models.py:42
+msgid "motion"
+msgstr ""
+
+#: motions/models.py:31
+msgid "motions"
+msgstr ""
+
+#: motions/models.py:40
+msgid "debate team"
+msgstr ""
+
+#: motions/models.py:44
+msgid "preferences"
+msgstr ""
+
+#: motions/models.py:46
+msgid "ballot submission"
+msgstr ""
+
+#: motions/models.py:50
+msgid "debate team motion preference"
+msgstr ""
+
+#: motions/models.py:51
+msgid "debate team motion preferences"
+msgstr ""
 
 #: motions/templates/assign.html:4 motions/templates/assign.html:5
 msgid "Assign Motions"
@@ -30,7 +111,7 @@ msgstr ""
 msgid "Save Motion Assignments"
 msgstr ""
 
-#: motions/templates/balance_results_2vs2.html:42
+#: motions/templates/balance_results_2vs2.html:22
 msgid "No teams debated this topic"
 msgstr ""
 
@@ -46,80 +127,84 @@ msgstr ""
 msgid "No results for this topic"
 msgstr ""
 
-#: motions/templates/balance_vetoes.html:35
+#: motions/templates/balance_vetoes.html:22
 msgid "No teams vetoed this topic"
 msgstr ""
 
-#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:5
-msgid "Edit Motions"
-msgstr ""
+#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
+msgid "Edit Motion"
+msgid_plural "Edit Motions"
+msgstr[0] ""
+msgstr[1] ""
 
-#: motions/templates/motions_edit.html:9
+#: motions/templates/motions_edit.html:18
 msgid "Display Draw"
 msgstr ""
 
-#: motions/templates/motions_edit.html:15
-msgid "Unrelease Motions to Public"
-msgstr ""
-
 #: motions/templates/motions_edit.html:23
-msgid ""
-"Releasing motions makes them available the public-facing pages of this site. "
-"If your tournament is configured to display a running list of motions, or to "
-"allow adjudicators to submit ballots that require motion selection, you will "
-"need to release each round's motions before that can happen."
-msgstr ""
-
-#: motions/templates/motions_edit.html:30
-msgid "Release Motions to Public"
-msgstr ""
-
-#: motions/templates/motions_edit.html:36
 msgid "Assign Motions to Divisions"
 msgstr ""
 
-#: motions/templates/motions_edit.html:43
-msgid "Enter Results"
+#: motions/templates/motions_edit.html:61
+msgid "Save Motion"
+msgid_plural "Save Motions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/templates/public_motions.html:23
+msgid "View Info Slide"
 msgstr ""
 
-#: motions/templates/motions_edit.html:50
-msgid ""
-"Results cannot be entered without motions. Enter at least one motion below "
-"and then hit \\"
-msgstr ""
-
-#: motions/templates/motions_edit.html:56
-#, python-format
-msgid ""
-"You have released the motions, but they will not show to the public unless "
-"the 'public view of motions' setting is enabled in <a class=\"alert-link\" "
-"href=\"%(config_url)s\">this tournament's configuration</a>."
-msgstr ""
-
-#: motions/templates/public_motions.html:4
-#: motions/templates/public_motions.html:5
-msgid "Motions"
-msgstr ""
-
-#: motions/templates/public_motions.html:20
+#: motions/templates/public_motions.html:29
 msgid "There are no motions available for this round."
 msgstr ""
 
 #. Translators: Used when there are expected to be several motions per round (e.g. Australs)
-#: motions/templates/public_motions.html:24
+#: motions/templates/public_motions.html:33
 msgid "The motions for this round have not been released."
 msgstr ""
 
 #. Translators: Used when there is expected to be one motion per round (e.g. WUDC)
-#: motions/templates/public_motions.html:27
+#: motions/templates/public_motions.html:36
 msgid "The motion for this round has not been released."
 msgstr ""
 
-#: motions/templates/show.html:16
+#: motions/templates/show.html:15
 #, python-format
-msgid "Reveal Motions for %(round_name)s"
+msgid "Reveal Motion%(motions|pluralize)s for %(round_name)s"
 msgstr ""
 
-#: motions/templates/show.html:30
+#: motions/templates/show.html:21
+#, python-format
+msgid "Reveal Info Slide%(infos|pluralize)s for %(round_name)s"
+msgstr ""
+
+#: motions/templates/show.html:36
 msgid "There are no motions for this round entered into Tabbycat."
+msgstr ""
+
+#: motions/views.py:95
+msgid "The motion has been saved."
+msgstr ""
+
+#: motions/views.py:97
+#, python-format
+msgid "%(count)d motion has been saved."
+msgid_plural "%(count)d motions have been saved."
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/views.py:102
+#, python-format
+msgid "%(count)d motion has been deleted."
+msgid_plural "%(count)d motions have been deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/views.py:143
+msgid "Released the motion(s)."
+msgstr ""
+
+#: motions/views.py:150
+msgid "Unreleased the motion(s)."
 msgstr ""
