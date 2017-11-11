@@ -205,8 +205,8 @@ class RoundCommand(TournamentCommand):
             for r in rounds:
                 self.stdout.write(self.style.WARNING("  [{t}]: {r}".format(
                     t=r.tournament.name, r=r.name)))
-            response = input("Are you sure? ")
-            if response != "yes":
+            response = input("Are you sure? [y/N]").lower()
+            if response != "yes" and response != "y":
                 raise CommandError("Cancelled by user.")
 
         elif options["confirm"] != options["round_selection"]:
