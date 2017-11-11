@@ -202,12 +202,11 @@ class RoundCommand(TournamentCommand):
     def _confirm_rounds(self, rounds, **options):
         if not options["confirm"]:
             self.stdout.write(self.style.WARNING("WARNING! You are about to {} from the following rounds:".format(self.confirm_round_destruction)))
-
             for r in rounds:
                 self.stdout.write(self.style.WARNING("  [{t}]: {r}".format(
                     t=r.tournament.name, r=r.name)))
-
-            if input("Are you sure? [y/N]").lower() not in ["yes", "y"]:
+            response = input("Are you sure? ")
+            if response != "yes":
                 raise CommandError("Cancelled by user.")
 
         elif options["confirm"] != options["round_selection"]:
