@@ -16,6 +16,7 @@ A partial list of major national and international tournaments (that we know of)
 - `Cambridge Asian Schools BP Championships <https://abc2017.herokuapp.com/>`_
 - Cambodia United Asian Debating Championship
 - `Kings College London IV <http://kcliv2017.herokuapp.com>`_
+- `KPU Pro Ams <https://kduproams2017.herokuapp.com/kduproams2017/>`_
 - `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
 - `Swords Mini-Gong <https://minigong2017.herokuapp.com/>`_
 - `UCD Law Society IV <https://ucdlawsociv.herokuapp.com>`_
