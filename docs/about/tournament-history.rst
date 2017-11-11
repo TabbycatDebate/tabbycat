@@ -9,7 +9,7 @@ A partial list of major national and international tournaments (that we know of)
 
 - `APU Philosophy CHallenge <https://apuphil.herokuapp.com/>`_
 - `ANU Spring IV <https://anus2017.herokuapp.com>`_
-- `Australian Easters <https://easters2017.herokuapp.com>`_
+- `Wollongong Easters <https://easters2017.herokuapp.com>`_
 - `Australasian Wom*ns Debating Championships <http://awdc2017.herokuapp.com/>`_
 - Asia World Schools Debating Championship
 - `Asia British Parliamentary Championships <http://abp2017.herokuapp.com/>`_
@@ -30,10 +30,10 @@ A partial list of major national and international tournaments (that we know of)
 2016
 ----
 
-- `Australian Easters <http://easters2016.herokuapp.com>`_
-- `Joynt Scroll <https://joyntscroll2016.herokuapp.com>`_
-- `Malaysia Debate Open 2016 <http://tabs.altairtechlab.com/malaysiadebateopen2016/192.168.1.134_8080/t/mdo2016/index.html>`_
-- `New Zealand Easters <http://nzeasters2016.herokuapp.com>`_
+- `Sydney Easters <http://easters2016.herokuapp.com>`_
+- `Joynt Scroll 2016 <https://joyntscroll2016.herokuapp.com>`_
+- `Malaysia Debate Open <http://tabs.altairtechlab.com/malaysiadebateopen2016/192.168.1.134_8080/t/mdo2016/index.html>`_
+- `New Zealand Easters 2016 <http://nzeasters2016.herokuapp.com>`_
 - `Perth Australs <http://australs2016.herokuapp.com>`_
 - `Thailand United Asian Debating Championships <http://uadc2016.herokuapp.com>`_
 - The National Law School Debate
@@ -53,7 +53,7 @@ A partial list of major national and international tournaments (that we know of)
 2014
 ----
 
-- `Joynt Scroll <http://joyntscroll2014.herokuapp.com>`_
+- `Joynt Scroll 2014 <http://joyntscroll2014.herokuapp.com>`_
 - NTU United Asian Debating Championships
 - `Otago Australs <http://australs2014.herokuapp.com>`_
 
