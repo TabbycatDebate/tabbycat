@@ -5,6 +5,39 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
+def deduplicate_conflicts(apps, schema_editor):
+
+    m_adjudicatorconflict = apps.get_model("adjallocation", "AdjudicatorConflict")
+    adjconflicts = m_adjudicatorconflict.objects.all()
+    for adjconflict in adjconflicts:
+        # Check not already deleted in an earlier loop iteration
+        if m_adjudicatorconflict.objects.filter(id=adjconflict.id).exists():
+            adjconflicts.filter(
+                adjudicator=adjconflict.adjudicator,
+                team=adjconflict.team).exclude(
+                id=adjconflict.id).delete()
+
+    m_adjudicatoradjudicatorconflict = apps.get_model("adjallocation", "AdjudicatorAdjudicatorConflict")
+    adjadjconflicts = m_adjudicatoradjudicatorconflict.objects.all()
+    for adjadjconflict in adjadjconflicts:
+        # Check not already deleted in an earlier loop iteration
+        if m_adjudicatoradjudicatorconflict.objects.filter(id=adjadjconflict.id).exists():
+            adjadjconflicts.filter(
+                adjudicator=adjadjconflict.adjudicator,
+                conflict_adjudicator=adjadjconflict.conflict_adjudicator).exclude(
+                id=adjadjconflict.id).delete()
+
+    m_adjudicatorinstitutionconflict = apps.get_model("adjallocation", "AdjudicatorInstitutionConflict")
+    adjainstconflicts = m_adjudicatorinstitutionconflict.objects.all()
+    for adjainstconflict in adjainstconflicts:
+        # Check not already deleted in an earlier loop iteration
+        if m_adjudicatorinstitutionconflict.objects.filter(id=adjainstconflict.id).exists():
+            adjainstconflicts.filter(
+                adjudicator=adjainstconflict.adjudicator,
+                institution=adjainstconflict.institution).exclude(
+                id=adjainstconflict.id).delete()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -13,6 +46,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(deduplicate_conflicts), # No reverse code; 1-way
         migrations.AlterUniqueTogether(
             name='adjudicatoradjudicatorconflict',
             unique_together=set([('adjudicator', 'conflict_adjudicator')]),
