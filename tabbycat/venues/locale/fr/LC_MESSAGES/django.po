@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"POT-Creation-Date: 2017-11-10 18:46+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: venues/models.py:10 venues/models.py:73
+#: venues/apps.py:7
+msgid "Venues"
+msgstr ""
+
+#: venues/models.py:10 venues/models.py:74
 msgid "name"
 msgstr ""
 
-#: venues/models.py:12 venues/models.py:127
+#: venues/models.py:12 venues/models.py:128
 msgid "priority"
 msgstr ""
 
@@ -44,83 +48,83 @@ msgstr ""
 msgid "venue"
 msgstr ""
 
-#: venues/models.py:25 venues/models.py:83
+#: venues/models.py:25 venues/models.py:84
 msgid "venues"
 msgstr ""
 
-#: venues/models.py:68
+#: venues/models.py:69
 msgid "Don't display in venue name"
 msgstr ""
 
-#: venues/models.py:69
+#: venues/models.py:70
 msgid "Display as prefix"
 msgstr ""
 
-#: venues/models.py:70
+#: venues/models.py:71
 msgid "Display as suffix"
 msgstr ""
 
-#: venues/models.py:74
+#: venues/models.py:75
 msgid ""
 "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
 "\". This name is shown when the category is prefixed or suffixed to a venue "
 "name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 
-#: venues/models.py:78
+#: venues/models.py:79
 msgid "description"
 msgstr ""
 
-#: venues/models.py:79
+#: venues/models.py:80
 msgid ""
 "Description, as the predicate of a sentence, e.g. \"has step-free access\", "
 "\"is close to the briefing hall\". This description follows \"This venue\" "
 "when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
 msgstr ""
 
-#: venues/models.py:87
+#: venues/models.py:88
 msgid "display in venue name"
 msgstr ""
 
-#: venues/models.py:88
+#: venues/models.py:89
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
 msgstr ""
 
-#: venues/models.py:90
+#: venues/models.py:91
 msgid "display in public tooltip"
 msgstr ""
 
-#: venues/models.py:91
+#: venues/models.py:92
 msgid ""
 "Displays the description in the tooltip for the venue on public pages. The "
 "description, if not blank, will always show on admin pages."
 msgstr ""
 
-#: venues/models.py:95
+#: venues/models.py:96
 msgid "venue category"
 msgstr ""
 
-#: venues/models.py:96
+#: venues/models.py:97
 msgid "venue categories"
 msgstr ""
 
-#: venues/models.py:126
+#: venues/models.py:127
 msgid "category"
 msgstr ""
 
-#: venues/models.py:130
+#: venues/models.py:131
 msgid "subject content type"
 msgstr ""
 
-#: venues/models.py:133
+#: venues/models.py:134
 msgid "subject ID"
 msgstr ""
 
-#: venues/models.py:139
+#: venues/models.py:140
 msgid "venue constraint"
 msgstr ""
 
-#: venues/models.py:140
+#: venues/models.py:141
 msgid "venue constraints"
 msgstr ""
 
@@ -170,6 +174,29 @@ msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:44
 msgid "Save and Add More"
+msgstr ""
+
+#: venues/utils.py:38 venues/utils.py:50
+#, python-format
+msgid "Venue constraint of %(name)s met (%(category)s)"
+msgstr ""
+
+#: venues/utils.py:39 venues/utils.py:51
+#, python-format
+msgid "Venue does not meet any constraint of %(name)s"
+msgstr ""
+
+#: venues/utils.py:44
+#, python-format
+msgid ""
+"Venue constraint of %(team)s met (%(category)s, via institution "
+"%(institution)s)"
+msgstr ""
+
+#: venues/utils.py:45
+#, python-format
+msgid ""
+"Venue does not meet any constraint of institution %(institution)s (%(team)s)"
 msgstr ""
 
 #: venues/views.py:100

@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-18 05:26+1000\n"
+"POT-Creation-Date: 2017-11-10 18:46+1100\n"
 "PO-Revision-Date: 2017-09-17 10:54-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,6 +21,30 @@ msgstr ""
 #: availability/apps.py:7
 msgid "Availability"
 msgstr "Disponibilité"
+
+#: availability/models.py:15
+msgid "content type"
+msgstr ""
+
+#: availability/models.py:16
+msgid "object id"
+msgstr ""
+
+#: availability/models.py:20
+msgid "round"
+msgstr ""
+
+#: availability/models.py:24
+#, fuzzy
+#| msgid "Availability"
+msgid "round availability"
+msgstr "Disponibilité"
+
+#: availability/models.py:25
+#, fuzzy
+#| msgid "Venue Availability"
+msgid "round availabilities"
+msgstr "Disponibilité des lieux"
 
 #: availability/templates/availability_index.html:11
 msgid "Check In All Breaking Adjs"
@@ -126,45 +150,7 @@ msgstr[1] ""
 "\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de "
 "%(prev_round)s. </a>"
 
-#: availability/templates/availability_index.html:121
-msgid "There is an uneven number of teams checked in for this round."
-msgstr "Il y a un nombre impair d'équipes enregistrées pour ce tour."
-
-#: availability/templates/availability_index.html:128
-msgid "The number of teams checked in for this round is not a multiple of 4."
-msgstr ""
-"Le nombre d'équipes enregistrées pour ce tour n'est pas un multiple de 4."
-
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/availability_index.html:136
-#, python-format
-msgid ""
-"There needs to be at least one adjudicator checked in, given the number of "
-"debates."
-msgid_plural ""
-"There need to be at least %(required_count)s adjudicators checked in, given "
-"the number of debates."
-msgstr[0] ""
-"Il faut au moins un(e) juge enregistré(e) pour satisfier le nombre de débats."
-msgstr[1] ""
-"Il faut au moins %(required_count)s juges enregistrés pour satisfier le "
-"nombre de débats."
-
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/availability_index.html:150
-#, python-format
-msgid ""
-"There needs to be at least one venue checked in, given the number of debates."
-msgid_plural ""
-"There need to be at least %(required_count)s venues checked in, given the "
-"number of debates."
-msgstr[0] ""
-"Il faut au moins un lieu enregistré pour satisfier le nombre de débats."
-msgstr[1] ""
-"Il faut au moins %(required_count)s lieux enregistrés pour satisfier le "
-"nombre de débats."
-
-#: availability/templates/availability_index.html:164
+#: availability/templates/availability_index.html:122
 #, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, however the current "
@@ -177,7 +163,7 @@ msgstr ""
 "oublié <a href=\"%(advance_round_url)s\" class=\"alert-link\">d'avancer au "
 "prochain tour?</a>"
 
-#: availability/templates/availability_index.html:179
+#: availability/templates/availability_index.html:137
 #, python-format
 msgid ""
 "This is the first round, but its draw type is <strong>%(draw_type)s</"
@@ -191,7 +177,7 @@ msgstr ""
 "le type de tirage de ce tour dans la zone pour modifier la base de données.</"
 "a>"
 
-#: availability/templates/availability_index.html:192
+#: availability/templates/availability_index.html:150
 #, python-format
 msgid ""
 "This is an elimination round, but it doesn't have a break category. "
@@ -205,7 +191,7 @@ msgstr ""
 "class=\"alert-link\">définir la catégorie de qualification de ce tour dans "
 "la zone pour modifier la base de données.</a>"
 
-#: availability/templates/availability_index.html:204
+#: availability/templates/availability_index.html:162
 #, python-format
 msgid ""
 "This is an elimination round, but its draw type is <strong>%(draw_type)s</"
@@ -219,7 +205,7 @@ msgstr ""
 "class=\"alert-link\">modifier le type de tirage de ce tour dans la zone pour "
 "modifier la base de données.</a>"
 
-#: availability/templates/availability_index.html:217
+#: availability/templates/availability_index.html:175
 #, python-format
 msgid ""
 "There don't appear to be any teams breaking in the %(break_category)s Break. "
@@ -231,7 +217,7 @@ msgstr ""
 "\"alert-link\">générer la qualification pour la catégorie "
 "%(break_category)s</a>?"
 
-#: availability/templates/availability_index.html:229
+#: availability/templates/availability_index.html:187
 #, python-format
 msgid ""
 "There's only one team breaking in the %(break_category)s Break. You can't "
@@ -245,27 +231,27 @@ msgstr ""
 "\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la qualification "
 "pour la catégorie %(break_category)s</a>."
 
-#: availability/templates/base_availability.html:33
+#: availability/templates/base_availability.html:35
 msgid "Select All"
 msgstr "Sélectionner tout"
 
-#: availability/templates/base_availability.html:34
+#: availability/templates/base_availability.html:36
 msgid "Select None"
 msgstr "Sélectionner aucun"
 
-#: availability/templates/base_availability.html:35 availability/views.py:33
+#: availability/templates/base_availability.html:37 availability/views.py:34
 msgid "Check-Ins"
 msgstr "Enregistrements"
 
-#: availability/templates/base_availability.html:36
+#: availability/templates/base_availability.html:38
 msgid "Check In All Breaking"
 msgstr "Enregistrer tous les juges qualifiant"
 
-#: availability/templates/base_availability.html:37
+#: availability/templates/base_availability.html:39
 msgid "Copy from Previous"
 msgstr "Copier du tour précédent"
 
-#: availability/templates/base_availability.html:38
+#: availability/templates/base_availability.html:40
 msgid "Save Selected"
 msgstr "Enregistrer les sélectionnés"
 
@@ -281,24 +267,82 @@ msgstr "Juges"
 msgid "Venues"
 msgstr "Lieux"
 
-#: availability/templates/checkin_progress.html:42
+#: availability/templates/checkin_progress.html:43
 msgid "Check in teams"
 msgstr "Enregistrement des équipes"
 
-#: availability/templates/checkin_progress.html:45
+#: availability/templates/checkin_progress.html:46
+msgid "No need to check teams in"
+msgstr ""
+
+#: availability/templates/checkin_progress.html:49
+msgid "There is an uneven number of teams checked in for this round."
+msgstr "Il y a un nombre impair d'équipes enregistrées pour ce tour."
+
+#: availability/templates/checkin_progress.html:53
+msgid "The number of teams checked in for this round is not a multiple of 4."
+msgstr ""
+"Le nombre d'équipes enregistrées pour ce tour n'est pas un multiple de 4."
+
+#: availability/templates/checkin_progress.html:59
+#, fuzzy
+#| msgid "Team Check-Ins"
+msgid "Edit team check-ins"
+msgstr "Enregistrement des équipes"
+
+#: availability/templates/checkin_progress.html:66
 msgid "Check in adjudicators"
 msgstr "Enregistrement des juges"
 
-#: availability/templates/checkin_progress.html:48
+#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#: availability/templates/checkin_progress.html:70
+#, python-format
+msgid ""
+"There needs to be at least one adjudicator checked in, given the number of "
+"debates."
+msgid_plural ""
+"There need to be at least %(required_count)s adjudicators checked in, given "
+"the number of debates."
+msgstr[0] ""
+"Il faut au moins un(e) juge enregistré(e) pour satisfier le nombre de débats."
+msgstr[1] ""
+"Il faut au moins %(required_count)s juges enregistrés pour satisfier le "
+"nombre de débats."
+
+#: availability/templates/checkin_progress.html:80
+msgid "Edit adjudicator check-ins"
+msgstr ""
+
+#: availability/templates/checkin_progress.html:87
 msgid "Check in venues"
 msgstr "Enregistrement des lieux"
 
-#: availability/views.py:76
+#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#: availability/templates/checkin_progress.html:91
+#, python-format
+msgid ""
+"There needs to be at least one venue checked in, given the number of debates."
+msgid_plural ""
+"There need to be at least %(required_count)s venues checked in, given the "
+"number of debates."
+msgstr[0] ""
+"Il faut au moins un lieu enregistré pour satisfier le nombre de débats."
+msgstr[1] ""
+"Il faut au moins %(required_count)s lieux enregistrés pour satisfier le "
+"nombre de débats."
+
+#: availability/templates/checkin_progress.html:103
+#, fuzzy
+#| msgid "Venue Check-Ins"
+msgid "Edit venue check-ins"
+msgstr "Enregistrement des lieux"
+
+#: availability/views.py:77
 msgid "no teams are debating"
 msgstr "aucune équipe ne débattre"
 
 #. Translators: nteams in this string can only be 0 or 1
-#: availability/views.py:86
+#: availability/views.py:87
 #, python-format
 msgid "%(nteams)d breaking team — no debates can happen"
 msgid_plural "%(nteams)d breaking teams — no debates can happen"
@@ -306,7 +350,7 @@ msgstr[0] "%(nteams)d équipe qualifiante — aucun débat ne peut avoir lieu"
 msgstr[1] "%(nteams)d équipes qualifiantes — aucun débat ne peut avoir lieu"
 
 #. Translators: ndebating in this string is always at least 2
-#: availability/views.py:94
+#: availability/views.py:95
 #, python-format
 msgid "%(ndebating)d breaking team is debating this round"
 msgid_plural "%(ndebating)d breaking teams are debating this round"
@@ -316,7 +360,7 @@ msgstr[1] "%(ndebating)d équipes qualifiantes débattent dans ce tour"
 #. Translators: This gets appended to the previous string (the one with
 #. ndebating in it) if (and only if) nbypassing is greater than 0.
 #. "It" refers to this round.
-#: availability/views.py:102
+#: availability/views.py:103
 #, python-format
 msgid "; %(nbypassing)d team is bypassing it"
 msgid_plural "; %(nbypassing)d teams are bypassing it"
@@ -324,60 +368,60 @@ msgstr[0] "; %(nbypassing)d équipe le dépasse"
 msgstr[1] "; %(nbypassing)d équipes le dépassent"
 
 #. Translators: nadvancing in this string is always at least 2
-#: availability/views.py:120
+#: availability/views.py:122
 #, python-format
 msgid "%(nadvancing)s advancing team is debating this round"
 msgid_plural "%(nadvancing)s advancing teams are debating this round"
 msgstr[0] "%(nadvancing)s équipe avançante débat dans ce tour"
 msgstr[1] "%(nadvancing)s équipes avançantes débattent dans ce tour"
 
-#: availability/views.py:150
+#: availability/views.py:152
 msgid "Team Availability"
 msgstr "Disponibilité des équipes"
 
-#: availability/views.py:152
+#: availability/views.py:154
 msgid "Adjudicator Availability"
 msgstr "Disponibilité des juges"
 
-#: availability/views.py:154
+#: availability/views.py:156
 msgid "Venue Availability"
 msgstr "Disponibilité des lieux"
 
-#: availability/views.py:171
+#: availability/views.py:173
 msgid "Active Now"
 msgstr "Actif actuellement"
 
-#: availability/views.py:180
+#: availability/views.py:183
 #, python-format
 msgid "Active in %(prev_round)s"
 msgstr "Actif dans %(prev_round)s"
 
-#: availability/views.py:228
+#: availability/views.py:231
 msgid "Venue"
 msgstr "Lieu"
 
-#: availability/views.py:229
+#: availability/views.py:232
 msgid "Display Name (for the draw)"
 msgstr "Nom d'affichage (pour le tirage)"
 
-#: availability/views.py:230
+#: availability/views.py:233
 msgid "Categories"
 msgstr "Catégories"
 
-#: availability/views.py:231
+#: availability/views.py:234
 msgid "Priority"
 msgstr "Priorité"
 
-#: availability/views.py:249
+#: availability/views.py:252
 msgid "Checked in all teams, adjudicators and venues."
 msgstr ""
 "Toutes les équipes, tous les juges et tous les lieux ont été enregistrés."
 
-#: availability/views.py:256
+#: availability/views.py:259
 msgid "Checked in all breaking adjudicators."
 msgstr "Tous les juges qualifiants ont été enregistrés."
 
-#: availability/views.py:264
+#: availability/views.py:267
 msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""
 "Toutes les équipes, tous les juges et tous les lieux du tour précédent ont "
@@ -405,12 +449,6 @@ msgstr ""
 
 #~ msgid "Overview"
 #~ msgstr "Aperçu"
-
-#~ msgid "Team Check-Ins"
-#~ msgstr "Enregistrement des équipes"
-
-#~ msgid "Venue Check-Ins"
-#~ msgstr "Enregistrement des lieux"
 
 #~ msgid ""
 #~ "Saved availabilities. <a href=\"%(index_url)s\" class=\"alert-link\"> "

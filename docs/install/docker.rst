@@ -9,7 +9,7 @@ Installing Locally using Docker
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-.. attention:: This installation method is newly available in version 1.2. As such, it hasn't been extensively tested. If you encounter any difficulties, `please report the issue on GitHub <https://github.com/TabbycatDebate/tabbycat/issues/new?labels=installation-docker&title=Docker%20installation%20problem&body=Please%20be%20sure%20to%20include%20your%20operating%20system%20and%20version,%20and%20please%20be%20as%20specific%20as%20you%20can%20about%20the%20problem%20you%20encountered%3A%0D%0D>`_ or (less preferably) :ref:`contact the developers <authors>`.
+.. attention:: If you need an offline copy of Tabbycat, installing using Docker should be simpler and quicker than using the "Install Locally on…" instructions for your operating system. However if a Docker installation doesn't work as outlined below, it's harder to address what isn't working. If you encounter any problems with Docker, we recommend using the "Install Locally on…" option as a fallback, but if you need to do so, `please also report the issue you're having on GitHub <https://github.com/TabbycatDebate/tabbycat/issues/new?labels=installation-docker&title=Docker%20installation%20problem&body=Please%20be%20sure%20to%20include%20your%20operating%20system%20and%20version,%20and%20please%20be%20as%20specific%20as%20you%20can%20about%20the%20problem%20you%20encountered%3A%0D%0D>`_ or :ref:`contact the developers <authors>`.
 
 Docker is an application that makes it very easy to load and run a specific collection of software. It allows us to bundle everything necessary to run Tabbycat into a single package rather than have users install everything needed step-by-step. Once set up, Docker will allow you to start and stop a webserver (that in turn runs Tabbycat) on your computer whenever you want and without the need for internet access.
 
@@ -27,8 +27,8 @@ Docker is an application that makes it very easy to load and run a specific coll
 2. Install Docker
 =================
 
-If using OS X or Linux
-----------------------
+If using macOS or Linux
+-----------------------
 
 - Install the **Docker Community Edition (stable)** from the `Docker store page <https://store.docker.com/search?type=edition&offering=community>`_.
 
@@ -59,7 +59,7 @@ If using Windows 7, Windows 8, or Windows 10 Home Edition
 If using the Docker App
 -----------------------
 
-*These instructions apply if you installed the Docker App, i.e., if you are using Mac OS X, Linux or Windows Pro/Enterprise/Education.*
+*These instructions apply if you installed the Docker App, i.e., if you are using macOS, Linux or Windows Pro/Enterprise/Education.*
 
 .. rst-class:: spaced-list
 
@@ -67,7 +67,7 @@ If using the Docker App
 
 2. Browse to the location where you extracted Tabbycat to. Open up the **bin** folder there. Within that folder:
 
-    - If you're on OS X, press the Control key, click the icon for **osx_docker_start.command**, then choose Open from the shortcut menu.
+    - If you're on macOS, press the Control key, click the icon for **osx_docker_start.command**, then choose Open from the shortcut menu.
     - If you're on Windows, open **windows_docker_start.bat**.
     - If you're on Linux, open up a terminal in the Tabbycat folder (*i.e.* the folder containing ``README.md``) and run ``docker-compose up``.
 

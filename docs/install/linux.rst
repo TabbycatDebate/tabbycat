@@ -4,18 +4,18 @@
 Installing Locally on Linux
 ===========================
 
-.. admonition:: Is this the best install method for you?
+.. admonition:: Is this the best installation method for you?
   :class: attention
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-  If you just want to quickly set up a copy of Tabbycat to run locally on Linux, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
+  If you just want to quickly set up a copy of Tabbycat to run locally on Linux, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below.
 
 
 Requisite technical background
 ==============================
 
-You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
+You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest.
 
 .. admonition:: Advanced users
   :class: tip
@@ -52,7 +52,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   npm run gulp build
   dj collectstatic
   dj createsuperuser
-  waitress-serve wsgi:application
+  dj runserver
 
 1. Install dependencies
 =======================
@@ -203,13 +203,13 @@ Almost there!
 
   ::
 
-    $ waitress-serve wsgi:application
+    $ dj runserver
 
   It should show something like this::
 
-    serving on http://0.0.0.0:8080
+    serving on http://127.0.0.1:8000
 
-8. Open your browser and go to the URL printed above. (In the above example, it's http://0.0.0.0:8080.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
+8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-linux.png
       :alt: Bare Tabbycat installation
@@ -222,5 +222,4 @@ To start your Tabbycat instance up again next time you use your computer::
 
     $ cd path/to/my/tabbycat/directory
     $ source venv/bin/activate
-    $ cd tabbycat
-    $ waitress-serve wsgi:application
+    $ dj runserver

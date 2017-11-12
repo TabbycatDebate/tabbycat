@@ -8,24 +8,25 @@ class MotionStats:
         self.round = motion.round # Needed for regroup
         self.sides = t.sides
 
+        results_data_for_round = [r for r in results if r.ballot_submission.debate.round == self.round]
         if t.pref('enable_motions'):
-            results_data = [r for r in results if r.ballot_submission.motion == motion]
+            results_data_for_motion = [r for r in results_data_for_round if r.ballot_submission.motion == motion]
         else:
-            results_data = [r for r in results if r.ballot_submission.debate.round == self.round]
+            results_data_for_motion = results_data_for_round
 
         if all_vetoes and len(all_vetoes) > 0:
             vetoes_data = [v for v in all_vetoes if v.motion == motion]
 
         if t.pref('teams_in_debate') == 'two':
             self.isBP = False
-            self.debate_rooms = int(len(results_data) / 2)
-            self.round_rooms = int(len(results) / 4)
+            self.round_rooms = int(len(results_data_for_round) / 2)
+            self.debate_rooms = int(len(results_data_for_motion) / 2)
         else:
             self.isBP = True
-            self.debate_rooms = int(len(results_data) / 4)
-            self.round_rooms = int(self.debate_rooms)
+            self.round_rooms = int(len(results_data_for_round) / 4)
+            self.debate_rooms = int(len(results_data_for_motion) / 4)
 
-        self.placings = self.gather_placings(self.points_dict(), results_data)
+        self.placings = self.gather_placings(self.points_dict(), results_data_for_motion)
         self.result_balance = self.determine_balance()
 
         if all_vetoes and len(all_vetoes) > 0:
@@ -71,8 +72,9 @@ class MotionStats:
     def two_team_balance(self, for_vetoes):
         # Test and confidence levels contributed by Viran Weerasekera
         if for_vetoes:
-            affs = self.vetoes['aff']
-            negs = self.vetoes['neg']
+            # Swap keys as we assume vetos favour the opposite side
+            affs = self.vetoes['neg'][1]
+            negs = self.vetoes['aff'][1]
         else:
             affs = self.placings['aff'][1]
             negs = self.placings['neg'][1]
@@ -111,14 +113,27 @@ class MotionStats:
 
     # For a given point figure out what % of total results it was
     def points_rates(self, data_set, vetoes=False):
-        if self.debate_rooms == 0 or not data_set:
+        if self.round_rooms == 0 or self.debate_rooms == 0 or not data_set:
             return None
+
+        if vetoes:
+            print("%s\n\tround_rooms %s / debate_rooms %s" % (self.motion, self.round_rooms, self.debate_rooms))
 
         rates_for_side = dict(self.points_dict())
         for side in self.sides:
             for points, count in data_set[side].items():
-                percentage = data_set[side][points] / self.round_rooms * 100
+                # Measuring vetoes (per-team) not wins (per room)
+                if vetoes and self.isBP:
+                    denominator = self.round_rooms * 2
+                elif vetoes and not self.isBP:
+                    denominator = self.round_rooms * 4
+                else:
+                    denominator = self.round_rooms
+
+                percentage = (data_set[side][points] / denominator) * 100
                 rates_for_side[side][points] = round(percentage, 1)
+                if vetoes:
+                    print("\t%s percent for %s (%s / %s)" % (round(percentage, 1), side, data_set[side][points], denominator))
 
         return rates_for_side
 

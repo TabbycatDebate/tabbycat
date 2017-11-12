@@ -4,7 +4,7 @@
 
   {% if am.debate_rooms > 0 %}
 
-    <div class="col">
+    <div class="col text-left">
       {% for position, count in am.placings.items %}
         <span class="text-{{ position}} inline-block pr-3">
           {{ count.1 }} {{ position }} win{{ count.1|pluralize}}
@@ -31,13 +31,17 @@
 
     <div class="progress">
       <div class="progress-bar progress-bar-aff" style="width: {{ am.results_rates.aff.1 }}%">
-        {% if am.results_rates.aff.1|floatformat:"0" != "0" %}
-          {{ am.results_rates.aff.1|floatformat:"0" }}%
+        {% if am.debate_rooms > 0 %}
+          {% if am.results_rates.aff.1|floatformat:"0" != "0" %}
+            {{ am.results_rates.aff.1|floatformat:"0" }}%
+          {% endif %}
         {% endif %}
       </div>
       <div class="progress-bar progress-bar-neg" style="width: {{ am.results_rates.neg.1 }}%">
-        {% if am.results_rates.neg.1|floatformat:"0" != "0" %}
-          {{ am.results_rates.neg.1|floatformat:"0" }}%
+        {% if am.debate_rooms > 0 %}
+          {% if am.results_rates.neg.1|floatformat:"0" != "0" %}
+            {{ am.results_rates.neg.1|floatformat:"0" }}%
+          {% endif %}
         {% endif %}
       </div>
     </div>

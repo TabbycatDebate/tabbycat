@@ -162,7 +162,7 @@ The **position cost exponent** :math:`\beta` controls how different teams trade 
 
 - At the small extreme, as :math:`\beta\rightarrow 0`, it will do everything it can to minimise the number of teams with a non-optimal profile---but if it's impossible to protect a team from sub-optimality, it won't care *how* uneven the unlucky team gets.
 
-The "balanced" approach would be :math:`\beta = 1`, which just takes the cost function as-is. This doesn't mean that this is the best idea, however---you'd typically want to bias towards preventing very uneven histories a bit more. Most tournaments will probably what :math:`\beta` to be somewhere between 2 and 5.  (Note that :math:`\beta` need not be an integer.)
+The "balanced" approach would be :math:`\beta = 1`, which just takes the cost function as-is. This doesn't mean that this is the best idea, however---you'd typically want to bias towards preventing very uneven histories a bit more. Most tournaments will probably want :math:`\beta` to be somewhere between 2 and 5.  (Note that :math:`\beta` need not be an integer.)
 
 .. _draw-bp-position-cost:
 

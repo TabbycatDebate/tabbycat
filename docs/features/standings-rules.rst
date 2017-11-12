@@ -34,8 +34,9 @@ same rank.
     - How many debates the team has won.
 
   * - Points
-    - How many points the team has. Currently, this is just a synonym for wins,
-      and differs only in column labelling.
+    - How many points the team has. For two-team formats, this is just a synonym
+      for wins, and differs only in column labelling. For BP, this is 3 points
+      for a first, 2 for a second, 1 for a third and 0 for a fourth.
 
   * - Points (2/1/0)
     - How many points the team has, where teams earn 2 points for a win, 1 point

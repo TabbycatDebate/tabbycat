@@ -7,7 +7,7 @@ Change Log
 *Release date: TBD*
 
 - British Parliamentary support
-    - Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format.
+    - Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format
     - As part of the implementation of this format we've made significant improvements over existing tab software on how sides are allocated within BP draws. This means that teams are less likely to have 'imbalanced' proportions of side allocations (for example having many more debates as Opening Government than Closing Opposition)
     - We've added a new "Comparisons" page added to the documentation to outline some of the key differences between Tabbycat and other software in the context of BP tabbing
 - Refreshed interface design
@@ -33,7 +33,7 @@ Change Log
     - Speaker tabs now default to sorting by average, except for formats where we are certain that they must be sorted by total. The speaker tab page itself now prominently notes which setting is is currently using
     - 'Feedback paths' now default to a more permissive setting (rather than only allowing Chairs to submit feedback) and the Feedback Overview page will note that current configuration
     - Emails can be assigned to adjudicators and teams in the Simple Importer
-    - More of the tables that allow you to set or edit data (such as the check-in's tables for say Adjudicators) will now automatically save their results
+    - More of the tables that allow you to set or edit data (such as the check-in tables for adjudicators, teams and venues) now automatically save changes
     - When adding/editing users extraneous fields have been hidden and the "Staff" and "Superuser" roles have new sub-text clarifying what they mean for users with those permissions
     - Team record pages now show cumulative team points, and if the speaker tab is fully released, speaker scores for that team in each debate
 

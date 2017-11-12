@@ -16,7 +16,7 @@ Bug reports
 
 Please report bugs by opening a new issue in our `GitHub repository <https://github.com/TabbycatDebate/tabbycat/issues>`_. It is most helpful if you can include:
 
-- How Tabbycat was installed (on Heroku, locally on OS X, `etc.`)
+- How Tabbycat was installed (on Heroku, locally on macOS, `etc.`)
 - Any details about your tournament and setup that might be helpful in troubleshooting
 - Detailed steps for how to reproduce the bug
 
@@ -96,13 +96,13 @@ Release Checklist
 1. Check that all migrations have been generated and committed into Git
 2. Bump version number in ``docs/conf.py``
 3. Bump version number and (if applicable) codename in ``tabbycat/settings.py``
-4. Update the main ``CHANGELOG.rst`` file
+4. Update the main ``CHANGELOG.rst`` file (including release date)
 5. Check the major current deployment options, including:
     1. The ``deploy_heroku.py`` script
     2. The Tabbykitten version
-    3. Docker (OS X, Windows 10*) and Docker Toolbox (Windows 10 Home) methods
+    3. Docker (macOS, Windows 10*) and Docker Toolbox (Windows 10 Home) methods
     4. Using Bash and Powershell on Windows
-    5. Using Terminal on OS X (at least test out a fresh install of the npm/pip  dependencies)
+    5. Using Terminal on macOS (at least test out a fresh install of the npm/pip  dependencies)
 6. Check that the last Travis CI build passed and run the full local test suite (this will include the Selenium tests that are not on Travis)
 7. Shift remaining issues from the Github Milestone
 8. Create and finish the release branch as per git-flow
@@ -111,4 +111,4 @@ Release Checklist
 11. Back-merge ``develop`` to the in-progress feature branches
 12. Push ``master`` to the release pipeline repository
 13. Issue a formal release with change notes on GitHub
-14. Post change notes on the Facebook group
+14. Post change notes on the Facebook page/group
