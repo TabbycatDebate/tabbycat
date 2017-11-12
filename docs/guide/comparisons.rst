@@ -17,7 +17,7 @@ In the first draft of this document, we had a table that listed every feature we
 
 Firstly, the largest feature disparities are for relatively niche features. All of the software discussed can do the basics necessary to run a tournament: generate draws, allocate adjudicators, enter results, etc. As a result, we will — like a good whip speech — be comparative and note key feature disparities when discussing each alternative software directly.
 
-Secondly, we felt that the 'checklist' approach to comparing tab software would do a disservice to the reasons you would actually choose one software over another. Except where a niche capability is essential, raw technical specifications rarely define the experience of using a product such as a phone, a car, or indeed, tabbing software. With Tabbycat, we've spent eight years continuously refining the tabbing workflow and smoothing out rough edges, and we believe you'll find the result extremely user-friendly and robust. As always, the best way to check this out is by `setting up a demo site and taking it for a spin <install-heroku>`_!
+Secondly, we felt that the 'checklist' approach to comparing tab software would do a disservice to the reasons you would actually choose one software over another. Except where a niche capability is essential, raw technical specifications rarely define the experience of using a product such as a phone, a car, or indeed, tabbing software. With Tabbycat, we've spent eight years continuously refining the tabbing workflow and smoothing out rough edges, and we believe you'll find the result extremely user-friendly and robust. As always, the best way to check this out is by :ref:`setting up a demo site and taking it for a spin <install-heroku>`!
 
 Comparison with Tabbie2
 -----------------------
@@ -86,7 +86,7 @@ As discussed earlier in *User identification*; Tabbie2's e-ballots are tied to u
 - Setting up questions is painless on neither system. Tabbycat requires you to use the Edit Database area; Tabbie2 makes you click through a slightly more opaque maze of pages and forms.
 - Tabbycat allows for a richer range of types of questions than Tabbie2 does.
 - Tabbie2 allows you to specify different questionnaires for team-on-chair, chair-on-panellist and panellist-on-chair. Tabbycat only differentiates between team-on-adjudicator and adjudicator-on-adjudicator.
-- Tabbycat allows you more control over who is expected to submit feedback on whom; e.g. whether teams submit on panellists, and whether panellists submit on each other. In Tabbie2, you can effect this with blank questionnaires, but only for the three options listed above.
+- Tabbycat gives you more control over who is expected to submit feedback on whom; e.g. whether teams submit on panellists, and whether panellists submit on each other. In Tabbie2, you can effect this with blank questionnaires, but only for the three options listed above.
 - Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator test score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback.
 - Tabbycat produces a "shame list" of unsubmitted feedback, which you can optionally publish on the public-facing site to try to incentivise submission.
 
