@@ -7,7 +7,7 @@ Change Log
 *Release date: TBD*
 
 - British Parliamentary support
-    - Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format.
+    - Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format
     - As part of the implementation of this format we've made significant improvements over existing tab software on how sides are allocated within BP draws. This means that teams are less likely to have 'imbalanced' proportions of side allocations (for example having many more debates as Opening Government than Closing Opposition)
     - We've added a new "Comparisons" page added to the documentation to outline some of the key differences between Tabbycat and other software in the context of BP tabbing
 - Refreshed interface design
