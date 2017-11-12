@@ -20,6 +20,7 @@ matrix:
       before_install: # Need to bootstrap dependencies on macOS
         - brew update # Need to update ruby first else python3 fails
         - brew install python3 # Install latest Python3
+        - brew install libmemcached # Need for pylibmc to installs
         - virtualenv env -p python3
         - source env/bin/activate
       before_script:
