@@ -1,22 +1,28 @@
 .. _install-wsl:
 
-=====================================
-Installing Locally on Bash on Windows
-=====================================
+=================================================
+Installing Locally on Windows Subsystem for Linux
+=================================================
 
-.. admonition:: Is this the best install method for you?
+.. admonition:: Is this the best installation method for you?
   :class: attention
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-  If you just want to quickly set up a copy of Tabbycat to run locally on Windows, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
+  If you just want to quickly set up a copy of Tabbycat to run locally on Windows, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below.
+
+.. note::
+
+  Windows Subsystem for Linux was taken out of beta in the `Windows 10 Fall Creators Update <https://blogs.windows.com/windowsexperience/2017/10/17/whats-new-windows-10-fall-creators-update/>`_, which was released in October 2017. On Windows 10 computers, we now recommend this local installation method over :ref:`installing it directly on Windows <install-windows>`.
 
 Requisite technical background
 ==============================
 
-`Bash on Windows is in beta <https://msdn.microsoft.com/en-us/commandline/wsl/about>`_, so you should be confident with command-line interfaces, have at least some experience with Linux and, most importantly, **be willing to work with beta systems**. This means that Bash on Windows isn't yet fully stable and some features are incomplete. We've managed to get it going, but we haven't rigorously tested it, so if you're going to use this for a real tournament, you should either run an entire test tournament first or use a different installation method (like :ref:`Docker <install-docker>`).
+It will help a lot if you have some experience with Linux, but mainly you need to be familiar with command-line interfaces, and you should be willing to install and work with the `Windows Subsystem for Linux <https://msdn.microsoft.com/en-us/commandline/wsl/about>`_. You might need to be prepared to familiarise yourself with aspects of WSL not covered in these instructions. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest.
 
-If you're not already familiar with Bash on Windows, you should be willing to familiarise yourself with it, including potentially things not mentioned in these instructions. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
+You might need to `check that you have the Fall Creators Update (build 1709) first <https://support.microsoft.com/en-us/help/4028685/windows-10-get-the-fall-creators-update>`_.
+
+Windows Subsystem for Linux is only available on Windows 10. If you have an older version of Windows, :ref:`install Tabbycat locally on Windows <install-windows>` instead.
 
 .. admonition:: Advanced users
   :class: tip
@@ -26,7 +32,9 @@ If you're not already familiar with Bash on Windows, you should be willing to fa
 Differences from the Linux installation
 =======================================
 
-For the most part, these instructions mirror those for doing local installations on Linux. The only difference is that, rather than installing PostgreSQL on Linux, you'll install **PostgreSQL for Windows**. The reason for this is that `PostgreSQL doesn't yet work on the Windows Subsystem for Linux <https://github.com/Microsoft/BashOnWindows/issues/61>`_. As of February 2017, there is a fix on the Windows Insider Preview Build, but it's still making its way to general availability.
+For the most part, these instructions mirror those for doing local installations on Linux. The only difference is that, rather than installing PostgreSQL on Linux, you'll install **PostgreSQL for Windows**.
+
+The reason for this is that, when these instructions were first written, the `PostgreSQL server didn't work on the Windows Subsystem for Linux <https://github.com/Microsoft/BashOnWindows/issues/61>`_. A fix for this is reportedly in the Fall Creators Update, but we haven't tried it yet. (Of course, you're welcome to, and we'd love to hear from you if you succeed.)
 
 This has a number of consequences:
 
@@ -36,7 +44,7 @@ This has a number of consequences:
 
 Short version
 =============
-First, install `PostgreSQL for Windows <https://www.postgresql.org/download/windows/>`_ (on Windows, not on the subsystem for Linux). Once you've set it up, create a new role and database as instructed in the Windows instructions in section :ref:`install-windows-database`. Then, in a Bash on Windows shell:
+First, install `PostgreSQL for Windows <https://www.postgresql.org/download/windows/>`_ (on Windows, not on the subsystem for Linux). Once you've set it up, create a new role and database as instructed in the Windows instructions in section :ref:`install-windows-database`. Then, in a Bash shell:
 
 .. parsed-literal::
 
@@ -67,16 +75,22 @@ Then create local_settings.py as described in the :ref:`Linux instructions <loca
 1. Install dependencies
 =======================
 
-Follow these instructions:
+If you don't already have it, `install the Windows Subsystem for Linux <https://msdn.microsoft.com/en-us/commandline/wsl/install-win10>`_.
 
-- :ref:`install-linux-python` in the Linux instructions, on the Bash subsystem
+Then, follow these instructions:
+
+- :ref:`install-linux-python` in the Linux instructions, on the Linux subsystem
 - :ref:`install-windows-postgresql` in the Windows instructions (in Windows)
-- :ref:`install-linux-nodejs` in the Linux instructions, on the Bash subsystem
+- :ref:`install-linux-nodejs` in the Linux instructions, on the Linux subsystem
 
 2. Get the source code
 ======================
 
-Follow section ":ref:`install-linux-source-code`" in the Linux instructions, on the Bash subsystem.
+Follow section ":ref:`install-linux-source-code`" in the Linux instructions, on the Linux subsystem.
+
+.. attention::
+
+  You should put the source code somewhere in your Windows file system, not your Linux file system. See `this page on the Microsoft Developers blog <https://blogs.msdn.microsoft.com/commandline/2016/11/17/do-not-change-linux-files-using-windows-apps-and-tools/>`_ for why.
 
 3. Set up a new database
 ========================
@@ -86,7 +100,7 @@ Follow section ":ref:`install-windows-database`" in the Windows instructions (in
 4. Install Tabbycat
 ===================
 
-Follow section ":ref:`install-linux-tabbycat`" in the Linux instructions, on the Bash subsystem.
+Follow section ":ref:`install-linux-tabbycat`" in the Linux instructions, on the Linux subsystem.
 
 Starting up an existing Tabbycat instance
 =========================================

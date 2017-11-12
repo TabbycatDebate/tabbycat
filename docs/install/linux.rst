@@ -4,18 +4,18 @@
 Installing Locally on Linux
 ===========================
 
-.. admonition:: Is this the best install method for you?
+.. admonition:: Is this the best installation method for you?
   :class: attention
 
   In most cases, we recommend doing an :ref:`internet-based installation on Heroku <install-heroku>` instead. If you decide to do a local installation, be sure to read our page on :ref:`local installations <install-local>` to help you understand what's going on, particularly this section: :ref:`install-decision`
 
-  If you just want to quickly set up a copy of Tabbycat to run locally on Linux, we recommend :ref:`installing using Docker<install-docker>`, which is much easier than the process below.
+  If you just want to quickly set up a copy of Tabbycat to run locally on Linux, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below.
 
 
 Requisite technical background
 ==============================
 
-You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools (Python, *etc.*) we use will make things easier for you, it's not necessary: we'll talk you through the rest.
+You need to be familiar with command-line interfaces to get through this comfortably. While a background in the specific tools Tabbycat uses (Python, PostgreSQL, *etc.*) will make things easier, it's not necessary: we'll talk you through the rest.
 
 .. admonition:: Advanced users
   :class: tip
