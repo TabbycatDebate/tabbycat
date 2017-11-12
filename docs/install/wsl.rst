@@ -1,8 +1,8 @@
 .. _install-wsl:
 
-=================================================
-Installing Locally on Windows Subsystem for Linux
-=================================================
+============================================
+Installing Locally on Linux on Windows (WSL)
+============================================
 
 .. admonition:: Is this the best installation method for you?
   :class: attention
@@ -13,7 +13,7 @@ Installing Locally on Windows Subsystem for Linux
 
 .. note::
 
-  Windows Subsystem for Linux was taken out of beta in the `Windows 10 Fall Creators Update <https://blogs.windows.com/windowsexperience/2017/10/17/whats-new-windows-10-fall-creators-update/>`_, which was released in October 2017. On Windows 10 computers, we now recommend this local installation method over :ref:`installing it directly on Windows <install-windows>`.
+  Windows Subsystem for Linux (WSL) was taken out of beta in the `Windows 10 Fall Creators Update <https://blogs.windows.com/windowsexperience/2017/10/17/whats-new-windows-10-fall-creators-update/>`_, which was released in October 2017. On Windows 10 computers, we now recommend this local installation method over :ref:`installing it directly on Windows <install-windows>`.
 
 Requisite technical background
 ==============================

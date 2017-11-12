@@ -11,7 +11,7 @@ Installing Locally on Windows
 
   If you just want to quickly set up a copy of Tabbycat to run locally on Windows, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below.
 
-  If you have Windows 10 and any experience with Linux, consider installing it on :ref:`the Windows Subsystem for Linux <install-wsl>` instead, which is much easier than the process below.
+  If you have Windows 10 and any experience with Linux, consider installing it on :ref:`Linux on Windows (WSL) <install-wsl>` instead, which is much easier than the process below.
 
 Requisite technical background
 ==============================
