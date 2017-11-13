@@ -21,7 +21,7 @@
         },
         "DISABLE_COLLECTSTATIC": {
           "description": "Leave this as-is.",
-          "value": 1
+          "value": "1"
         }
     },
     "buildpacks": [
