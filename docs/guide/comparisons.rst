@@ -103,7 +103,7 @@ Other considerations
 
 **Hosting location**. Tabbycat recommends using Heroku, an established cloud platform service for deploying web applications. Heroku is in turn hosted on Amazon Web Services (AWS). Both Heroku and AWS are highly reliable and widely used; downtime for both has historically been (at worst) less than 0.05% over an annual period.
 
-Tabbie2 is hosted on `Uberspace <https://uberspace.de/>`_; a pay-what-you-want web hosting service. To our best knowledge, uptime statistics are not available.
+Tabbie2 is hosted on `Uberspace <https://uberspace.de/>`_; a pay-what-you-want web hosting service. To the best of our knowledge, uptime statistics are not available.
 
 **Multi-format support**. If you are interested in tabbing both four- and two- team formats there may be some value in using and learning Tabbycat as it will let you use the same software in both settings.
 
