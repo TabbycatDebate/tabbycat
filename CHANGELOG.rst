@@ -4,7 +4,7 @@ Change Log
 
 2.0.0 (Iberian Lynx)
 --------------------
-*Release date: TBD*
+*Release date: 13 November 2017*
 
 - British Parliamentary support
     - Full support for British Parliamentary format has been added and we're incredibly excited to see Tabbycat's unique features and design (finally) available as an option for those tabbing in the predominant global format
