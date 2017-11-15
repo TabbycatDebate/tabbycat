@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:46+1100\n"
+"POT-Creation-Date: 2017-11-16 08:42+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -171,15 +171,19 @@ msgstr ""
 
 #: motions/templates/show.html:15
 #, python-format
-msgid "Reveal Motion%(motions|pluralize)s for %(round_name)s"
-msgstr ""
+msgid "Reveal Motion for %(round_name)s"
+msgid_plural "Reveal Motions for %(round_name)s"
+msgstr[0] ""
+msgstr[1] ""
 
-#: motions/templates/show.html:21
+#: motions/templates/show.html:23
 #, python-format
-msgid "Reveal Info Slide%(infos|pluralize)s for %(round_name)s"
-msgstr ""
+msgid "Reveal Info Slide for %(round_name)s"
+msgid_plural "Reveal Info Slides for %(round_name)s"
+msgstr[0] ""
+msgstr[1] ""
 
-#: motions/templates/show.html:36
+#: motions/templates/show.html:40
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
