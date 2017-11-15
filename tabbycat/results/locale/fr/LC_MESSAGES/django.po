@@ -1,6 +1,5 @@
-# Translations (French) for Tabbycat
-# Traductions (français) pour Tabbycat
-# Copyright (C) 2017 Chuan-Zheng Lee
+# Tabbycat French translations / traductions en français
+# Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 #
 msgid ""

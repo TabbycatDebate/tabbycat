@@ -1,0 +1,71 @@
+# Tabbycat Spanish translations / traducciones en español
+# Copyright (C) 2017 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-11-16 04:00+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: printing/templates/feedback_list.html:5
+msgid "Feedback Forms"
+msgstr ""
+
+#: printing/templates/feedback_list.html:7
+#, python-format
+msgid "Printable Feedback Forms for %(round_name)s"
+msgstr ""
+
+#: printing/templates/feedback_list.html:14
+msgid ""
+"No feedback questions have been added for either teams or adjudicators to "
+"answer."
+msgstr ""
+
+#: printing/templates/feedback_list.html:16
+msgid "No feedback questions have been added for teams to answer."
+msgstr ""
+
+#: printing/templates/feedback_list.html:18
+msgid "No feedback questions have been added for adjudicators to answer."
+msgstr ""
+
+#: printing/templates/feedback_list.html:20
+#, python-format
+msgid ""
+"%(first_sentence)s Check the <a href=\"http://tabbycat.readthedocs.io/en/"
+"stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</"
+"a> for information on how to add these (otherwise these forms will be quite "
+"bare)."
+msgstr ""
+
+#: printing/templates/printables_list.html:9
+msgid ""
+"Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
+"<strong>orientation</strong>, to turn off <strong>headers/footers</strong> "
+"and turn on <strong>background graphics</strong>. Works best in Safari or "
+"Firefox."
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:5
+msgid "Scoresheets"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:7
+#, python-format
+msgid "Printable Scoresheets for %(round_name)s"
+msgstr ""
+
+#: printing/views.py:121 printing/views.py:125
+msgid "Team"
+msgstr ""

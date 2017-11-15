@@ -1,0 +1,238 @@
+# Tabbycat Spanish translations / traducciones en español
+# Copyright (C) 2017 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-11-16 04:00+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: actionlog/apps.py:7
+msgid "Action Log"
+msgstr ""
+
+#: actionlog/models.py:64
+msgid "Discarded ballot set"
+msgstr ""
+
+#: actionlog/models.py:65
+msgid "Checked in ballot set"
+msgstr ""
+
+#: actionlog/models.py:66
+msgid "Created ballot set"
+msgstr ""
+
+#: actionlog/models.py:67
+msgid "Edited ballot set"
+msgstr ""
+
+#: actionlog/models.py:68
+msgid "Confirmed ballot set"
+msgstr ""
+
+#: actionlog/models.py:69
+msgid "Submitted ballot set from the public form"
+msgstr ""
+
+#: actionlog/models.py:70
+msgid "Submitted feedback from the public form"
+msgstr ""
+
+#: actionlog/models.py:71
+msgid "Saved feedback"
+msgstr ""
+
+#: actionlog/models.py:72
+msgid "Edited adjudicator test score"
+msgstr ""
+
+#: actionlog/models.py:73
+msgid "Set adjudicator note"
+msgstr ""
+
+#: actionlog/models.py:74
+msgid "Saved adjudicator allocation"
+msgstr ""
+
+#: actionlog/models.py:75
+msgid "Auto-allocated adjudicators"
+msgstr ""
+
+#: actionlog/models.py:76
+msgid "Saved a venue manual edit"
+msgstr ""
+
+#: actionlog/models.py:77
+msgid "Auto-allocated venues"
+msgstr ""
+
+#: actionlog/models.py:78
+msgid "Edited venue categories"
+msgstr ""
+
+#: actionlog/models.py:79
+msgid "Created draw"
+msgstr ""
+
+#: actionlog/models.py:80
+msgid "Confirmed draw"
+msgstr ""
+
+#: actionlog/models.py:81
+msgid "Regenerated draw"
+msgstr ""
+
+#: actionlog/models.py:82
+msgid "Released draw"
+msgstr ""
+
+#: actionlog/models.py:83
+msgid "Unreleased draw"
+msgstr ""
+
+#: actionlog/models.py:84
+msgid "Saved a matchup manual edit"
+msgstr ""
+
+#: actionlog/models.py:85
+msgid "Saved the sides status of a matchup"
+msgstr ""
+
+#: actionlog/models.py:86
+msgid "Saved divisions"
+msgstr ""
+
+#: actionlog/models.py:87
+msgid "Added/edited motion"
+msgstr ""
+
+#: actionlog/models.py:88
+msgid "Released motions"
+msgstr ""
+
+#: actionlog/models.py:89
+msgid "Unreleased motions"
+msgstr ""
+
+#: actionlog/models.py:90
+msgid "Edited debate importance"
+msgstr ""
+
+#: actionlog/models.py:91
+msgid "Changed adjudicator breaking status"
+msgstr ""
+
+#: actionlog/models.py:92
+msgid "Edited break eligibility"
+msgstr ""
+
+#: actionlog/models.py:93
+msgid "Edited break categories"
+msgstr ""
+
+#: actionlog/models.py:94
+msgid "Generated the team break for all categories"
+msgstr ""
+
+#: actionlog/models.py:95
+msgid "Edited breaking team remarks and updated all team breaks"
+msgstr ""
+
+#: actionlog/models.py:96
+msgid "Edited breaking team remarks and updated this team break"
+msgstr ""
+
+#: actionlog/models.py:97
+msgid "Edited breaking team remarks"
+msgstr ""
+
+#: actionlog/models.py:98
+msgid "Set start time"
+msgstr ""
+
+#: actionlog/models.py:99
+msgid "Advanced the current round to"
+msgstr ""
+
+#: actionlog/models.py:100
+msgid "Edited teams availability"
+msgstr ""
+
+#: actionlog/models.py:101
+msgid "Edited adjudicators availability"
+msgstr ""
+
+#: actionlog/models.py:102
+msgid "Edited venue availability"
+msgstr ""
+
+#: actionlog/models.py:103
+msgid "Edited tournament options"
+msgstr ""
+
+#: actionlog/models.py:104
+msgid "Edited speaker category eligibility"
+msgstr ""
+
+#: actionlog/models.py:105
+msgid "Edited speaker categories"
+msgstr ""
+
+#: actionlog/models.py:109
+msgid "type"
+msgstr ""
+
+#: actionlog/models.py:111
+msgid "timestamp"
+msgstr ""
+
+#: actionlog/models.py:114
+msgid "user"
+msgstr ""
+
+#: actionlog/models.py:116
+msgid "IP address"
+msgstr ""
+
+#: actionlog/models.py:120
+msgid "tournament"
+msgstr ""
+
+#: actionlog/models.py:122
+msgid "round"
+msgstr ""
+
+#: actionlog/models.py:126
+msgid "content type"
+msgstr ""
+
+#: actionlog/models.py:128
+msgid "object ID"
+msgstr ""
+
+#: actionlog/models.py:134
+msgid "action log"
+msgstr ""
+
+#: actionlog/models.py:135
+msgid "action log entries"
+msgstr ""
+
+#: actionlog/models.py:143
+msgid "All log entries require at least one of a user and an IP address."
+msgstr ""
+
+#: actionlog/views.py:18
+msgid "anonymous"
+msgstr ""

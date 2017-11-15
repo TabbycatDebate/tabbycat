@@ -1,0 +1,338 @@
+# Tabbycat Spanish translations / traducciones en español
+# Copyright (C) 2017 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-11-16 04:00+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: standings/base.py:279
+msgid "The same metric would be added twice:"
+msgstr ""
+
+#: standings/base.py:280
+msgid "The same ranking would be added twice:"
+msgstr ""
+
+#: standings/base.py:348
+#, python-format
+msgid "Unrecognized metric code: \"%(code)s\""
+msgstr ""
+
+#: standings/speakers.py:68 standings/speakers.py:100
+msgid "total"
+msgstr ""
+
+#: standings/speakers.py:69 standings/speakers.py:101
+msgid "Total"
+msgstr ""
+
+#: standings/speakers.py:76 standings/speakers.py:109
+msgid "average"
+msgstr ""
+
+#: standings/speakers.py:77 standings/speakers.py:110
+msgid "Avg"
+msgstr ""
+
+#: standings/speakers.py:84 standings/speakers.py:118
+msgid "standard deviation"
+msgstr ""
+
+#: standings/speakers.py:85 standings/speakers.py:119
+msgid "Stdev"
+msgstr ""
+
+#: standings/speakers.py:92
+msgid "speeches given"
+msgstr ""
+
+#: standings/speakers.py:93 standings/speakers.py:128
+msgid "Num"
+msgstr ""
+
+#: standings/speakers.py:127
+msgid "replies given"
+msgstr ""
+
+#: standings/teams.py:82 standings/teams.py:113
+msgid "points"
+msgstr ""
+
+#: standings/teams.py:83 standings/teams.py:114
+msgid "Pts"
+msgstr ""
+
+#: standings/teams.py:85
+msgid "Points (2/1/0)"
+msgstr ""
+
+#: standings/teams.py:123
+msgid "wins"
+msgstr ""
+
+#: standings/teams.py:124 standings/views.py:542
+msgid "Wins"
+msgstr ""
+
+#: standings/teams.py:134
+msgid "total speaker score"
+msgstr ""
+
+#: standings/teams.py:135
+msgid "Spk"
+msgstr ""
+
+#: standings/teams.py:144
+msgid "average speaker score"
+msgstr ""
+
+#: standings/teams.py:145
+msgid "ASS"
+msgstr ""
+
+#: standings/teams.py:155
+msgid "sum of margins"
+msgstr ""
+
+#: standings/teams.py:156
+msgid "Marg"
+msgstr ""
+
+#: standings/teams.py:165
+msgid "average margin"
+msgstr ""
+
+#: standings/teams.py:166
+msgid "AWM"
+msgstr ""
+
+#: standings/teams.py:176
+msgid "draw strength"
+msgstr ""
+
+#: standings/teams.py:177
+msgid "DS"
+msgstr ""
+
+#: standings/teams.py:216
+msgid "number of adjudicators who voted for this team"
+msgstr ""
+
+#: standings/teams.py:217
+msgid "Ballots"
+msgstr ""
+
+#: standings/teams.py:218
+msgid "votes/ballots carried"
+msgstr ""
+
+#: standings/teams.py:242
+msgid "number of firsts"
+msgstr ""
+
+#: standings/teams.py:243
+msgid "1sts"
+msgstr ""
+
+#: standings/teams.py:252
+msgid "number of seconds"
+msgstr ""
+
+#: standings/teams.py:253
+msgid "2nds"
+msgstr ""
+
+#: standings/teams.py:265
+msgid "Who-beat-whom"
+msgstr ""
+
+#: standings/teams.py:266
+msgid "WBW"
+msgstr ""
+
+#: standings/teams.py:267
+msgid "who-beat-whom"
+msgstr ""
+
+#: standings/teams.py:312
+msgid "Who-beat-whom (in division)"
+msgstr ""
+
+#: standings/teams.py:313
+msgid "WBWD"
+msgstr ""
+
+#: standings/teams.py:314
+msgid "who-beat-whom (in divisions)"
+msgstr ""
+
+#: standings/templates/current_standings.html:6
+msgid ""
+"This list is sorted by team points, then alphabetically by team name. It "
+"does not indicate each team's ranking within each bracket. It also excludes "
+"silent rounds (if any)."
+msgstr ""
+
+#: standings/templates/current_standings.html:12
+msgid ""
+"This list is sorted by number of wins, then alphabetically by team name. It "
+"does not indicate each team's ranking within each bracket. It also excludes "
+"silent rounds (if any)."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:7
+msgid ""
+"Note that speakers are being sorted by their <strong>average score</strong>."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:9
+msgid ""
+"Note that speakers are being sorted by their <strong>total score</strong>. "
+"Any speaker who misses a single debate will be severely punished in these "
+"rankings."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:14
+#, python-format
+msgid ""
+"Also, speakers can miss up to %(count)s debates before they are omitted from "
+"the speaker tab."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:19
+#, python-format
+msgid ""
+"These settings can be changed in the <a href=\"%(standings_config_url)s\" "
+"class=\"alert-link\">Standings section of this tournament's configuration</"
+"a>."
+msgstr ""
+
+#: standings/templates/standings_menu.html:7
+msgid "Overview"
+msgstr ""
+
+#: standings/templates/standings_menu.html:11
+msgid "Teams"
+msgstr ""
+
+#: standings/templates/standings_menu.html:16
+msgid "Divisions"
+msgstr ""
+
+#: standings/templates/standings_menu.html:21
+msgid "Speakers"
+msgstr ""
+
+#: standings/templates/standings_menu.html:26
+msgid "Replies"
+msgstr ""
+
+#: standings/templates/standings_menu.html:32
+#, python-format
+msgid "%(category_name)s Speakers"
+msgstr ""
+
+#: standings/templates/standings_menu.html:44
+msgid "Motions Balance"
+msgstr ""
+
+#: standings/templates/standings_menu.html:48
+msgid "Diversity Overview"
+msgstr ""
+
+#: standings/templates/standings_motions.html:31
+msgid "View Info Slide"
+msgstr ""
+
+#: standings/views.py:92
+#, python-format
+msgid ""
+"<p>There was an error generating the standings: <em>%(message)s</em></p>"
+msgstr ""
+
+#: standings/views.py:97
+#, python-format
+msgid ""
+"<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
+"class=\"alert-link\">standings configuration under the Setup section</a>. If "
+"this issue persists and you're not sure how to fix it, please contact the "
+"developers.</p>"
+msgstr ""
+
+#: standings/views.py:105
+msgid "<p>The tab director will need to resolve this issue.</p>"
+msgstr ""
+
+#. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
+#: standings/views.py:169
+#, python-format
+msgid "%(title)s (Top %(limit)d Only)"
+msgstr ""
+
+#: standings/views.py:196 standings/views.py:391
+msgid ""
+"The tab can't be displayed because all rounds so far in this tournament are "
+"silent."
+msgstr ""
+
+#: standings/views.py:253
+msgid "Speaker Standings"
+msgstr ""
+
+#: standings/views.py:289
+msgid "Speaker Tab"
+msgstr ""
+
+#: standings/views.py:307
+#, python-format
+msgid "%(category)s Speaker Standings"
+msgstr ""
+
+#: standings/views.py:325
+#, python-format
+msgid "%(category)s Speaker Tab"
+msgstr ""
+
+#: standings/views.py:339
+msgid "Reply Speaker Standings"
+msgstr ""
+
+#: standings/views.py:371
+msgid "Reply Speaker Tab"
+msgstr ""
+
+#: standings/views.py:383
+msgid "Team Standings"
+msgstr ""
+
+#: standings/views.py:448
+msgid "Division Standings"
+msgstr ""
+
+#: standings/views.py:458
+msgid "Team Tab"
+msgstr ""
+
+#: standings/views.py:474
+msgid "Motions Tab"
+msgstr ""
+
+#: standings/views.py:517
+msgid "Current Team Standings"
+msgstr ""
+
+#: standings/views.py:542
+msgid "Points"
+msgstr ""
