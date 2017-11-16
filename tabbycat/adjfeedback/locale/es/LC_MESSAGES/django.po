@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 04:00+1100\n"
+"POT-Creation-Date: 2017-11-16 12:49+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,25 +26,26 @@ msgstr ""
 #, python-format
 msgid ""
 "1 feedback submission was marked as confirmed. Note that this may have "
-"caused other feedback to be marked as unconfirmed."
+"caused other feedback submissions to be marked as unconfirmed."
 msgid_plural ""
 "%(count)d feedback submissions were marked as confirmed. Note that this may "
-"have caused other feedback to be marked as unconfirmed."
+"have caused other feedback submissions to be marked as unconfirmed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/admin.py:112
+#: adjfeedback/admin.py:113
 #, python-format
 msgid ""
 "1 feedback submission was not marked as confirmed, probably because other "
-"feedback that conflicts with it was also marked as confirmed."
+"feedback submissions that conflict with it were also marked as confirmed."
 msgid_plural ""
 "%(count)d feedback submissions were not marked as confirmed, probably "
-"because other feedback that conflicts with it was also marked as confirmed."
+"because other feedback submissions that conflict with them were also marked "
+"as confirmed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/admin.py:125
+#: adjfeedback/admin.py:126
 #, python-format
 msgid "1 feedback submission was marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as unconfirmed."

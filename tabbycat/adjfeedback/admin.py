@@ -99,9 +99,10 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
         message = ungettext(
             "1 feedback submission was marked as confirmed. Note that this may "
-            "have caused other feedback to be marked as unconfirmed.",
+            "have caused other feedback submissions to be marked as unconfirmed.",
             "%(count)d feedback submissions were marked as confirmed. Note that "
-            "this may have caused other feedback to be marked as unconfirmed.",
+            "this may have caused other feedback submissions to be marked as "
+            "unconfirmed.",
             final_count
         ) % {'count': final_count}
         self.message_user(request, message)
@@ -110,11 +111,11 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         if difference > 0:
             message = ungettext(
                 "1 feedback submission was not marked as confirmed, probably "
-                "because other feedback that conflicts with it was also marked "
-                "as confirmed.",
-                "%(count)d feedback submissions were not marked as confirmed, "
-                "probably because other feedback that conflicts with it was "
+                "because other feedback submissions that conflict with it were "
                 "also marked as confirmed.",
+                "%(count)d feedback submissions were not marked as confirmed, "
+                "probably because other feedback submissions that conflict "
+                "with them were also marked as confirmed.",
                 difference
             ) % {'count': difference}
             self.message_user(request, message, level=messages.WARNING)
