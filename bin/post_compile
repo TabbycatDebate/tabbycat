@@ -19,4 +19,7 @@ npm run gulp build
 echo "-----> Running whitenoise static files compilation"
 python manage.py collectstatic --noinput
 
+echo "-----> Running translations compilation"
+python manage.py compilemessages
+
 echo "-----> Post-compile done"
