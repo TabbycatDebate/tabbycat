@@ -1,21 +1,20 @@
-# Tabbycat French translations / traductions en français
+# Tabbycat translations, venues module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:46+1100\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: venues/apps.py:7
@@ -41,7 +40,8 @@ msgid "tournament"
 msgstr ""
 
 #: venues/models.py:17
-msgid "Venues not assigned to any tournament can be shared between tournaments"
+msgid ""
+"Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
 
 #: venues/models.py:24
@@ -66,9 +66,9 @@ msgstr ""
 
 #: venues/models.py:75
 msgid ""
-"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
-"\". This name is shown when the category is prefixed or suffixed to a venue "
-"name in the draw, e.g., \"Purple – G05\"."
+"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab "
+"room\". This name is shown when the category is prefixed or suffixed to a "
+"venue name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 
 #: venues/models.py:79
@@ -140,10 +140,10 @@ msgstr ""
 #: venues/templates/venue_categories_edit.html:11
 msgid ""
 "Venue categories allow you to <ul> <li>group venues together into \"zones\" "
-"to display in the draw and make navigation easier for participants, and/or</"
-"li> <li>specify constraints on venue allocation that require teams, "
-"adjudicators or institutions to be put in a venue in a particular category.</"
-"li> </ul>"
+"to display in the draw and make navigation easier for participants, "
+"and/or</li> <li>specify constraints on venue allocation that require teams, "
+"adjudicators or institutions to be put in a venue in a particular "
+"category.</li> </ul>"
 msgstr ""
 
 #: venues/templates/venue_categories_edit.html:20
@@ -160,12 +160,12 @@ msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:9
 msgid ""
-"Venue constraints tell the venue allocator to try to keep the specified team "
-"or adjudicator, or all teams (but not adjudicators) from the specified "
+"Venue constraints tell the venue allocator to try to keep the specified team"
+" or adjudicator, or all teams (but not adjudicators) from the specified "
 "institution, in a venue in the given category. The \"priority\" field "
 "resolves conflicting constraints: the higher priority takes precedence. You "
-"can also use the priority field to specify \"lower-preference\" constraints, "
-"which are taken if a higher-priority constraint couldn't be met."
+"can also use the priority field to specify \"lower-preference\" constraints,"
+" which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:41

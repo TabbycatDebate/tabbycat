@@ -1,22 +1,22 @@
-# Tabbycat Spanish translations / traducciones en español
+# Tabbycat translations, standings module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 04:00+1100\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: standings/base.py:279
 msgid "The same metric would be added twice:"
 msgstr ""
@@ -207,16 +207,16 @@ msgstr ""
 #: standings/templates/speaker_standings.html:14
 #, python-format
 msgid ""
-"Also, speakers can miss up to %(count)s debates before they are omitted from "
-"the speaker tab."
+"Also, speakers can miss up to %(count)s debates before they are omitted from"
+" the speaker tab."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:19
 #, python-format
 msgid ""
 "These settings can be changed in the <a href=\"%(standings_config_url)s\" "
-"class=\"alert-link\">Standings section of this tournament's configuration</"
-"a>."
+"class=\"alert-link\">Standings section of this tournament's "
+"configuration</a>."
 msgstr ""
 
 #: standings/templates/standings_menu.html:7
@@ -266,8 +266,8 @@ msgstr ""
 #, python-format
 msgid ""
 "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
-"class=\"alert-link\">standings configuration under the Setup section</a>. If "
-"this issue persists and you're not sure how to fix it, please contact the "
+"class=\"alert-link\">standings configuration under the Setup section</a>. If"
+" this issue persists and you're not sure how to fix it, please contact the "
 "developers.</p>"
 msgstr ""
 

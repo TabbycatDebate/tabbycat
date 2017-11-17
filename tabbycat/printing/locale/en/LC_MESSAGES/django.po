@@ -1,4 +1,4 @@
-# Tabbycat English source file (no translations in this file)
+# Tabbycat translations, printing module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017

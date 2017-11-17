@@ -1,21 +1,22 @@
-# Tabbycat French translations / traductions en français
+# Tabbycat translations, results module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
-#
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:46+1100\n"
-"PO-Revision-Date: 2017-09-17 12:25-0700\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: fr\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
+"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: results/apps.py:7 results/views.py:96
 msgid "Results"
@@ -72,41 +73,24 @@ msgstr "Forfait déclaré par l'équipe %(side)s"
 #: results/forms.py:457
 #, python-format
 msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
-msgstr "Il semble que l'orateur %(speaker)s ne soit pas sur l'équipe %(team)s."
+msgstr ""
+"Il semble que l'orateur %(speaker)s ne soit pas sur l'équipe %(team)s."
 
 #: results/forms.py:471
-#, fuzzy, python-format
-#| msgid ""
-#| "The speaker %(speaker)s appears to have given multiple (%(count)d) "
-#| "substantive speeches for the %(side)s team."
+#, python-format
 msgid "%(speaker)s appears to have given %(count)d substantive speech."
 msgid_plural ""
 "%(speaker)s appears to have given %(count)d substantive speeches."
 msgstr[0] ""
-"Il semble que l'orateur %(speaker)s ait fait plusieurs (%(count)d) discours "
-"substantif pour l'équipe %(side)s."
 msgstr[1] ""
-"Il semble que l'orateur %(speaker)s ait fait plusieurs (%(count)d) discours "
-"substantif pour l'équipe %(side)s."
 
 #: results/forms.py:487
-#, fuzzy
-#| msgid ""
-#| "The last substantive speaker and reply speaker for the %(side)s team "
-#| "can't be the same."
 msgid "The last substantive speaker and reply speaker can't be the same."
 msgstr ""
-"Le dernier orateur et l'orateur de réponse pour l'équipe %(side)s ne peuvent "
-"pas être la même personne."
 
 #: results/forms.py:494
-#, fuzzy
-#| msgid ""
-#| "The reply speaker for the %(side)s team did not give a substantive speech."
 msgid "The reply speaker for this team did not give a substantive speech."
 msgstr ""
-"L'orateur de réponse pour l'équipe %(side)s n'a pas prononcé un discours "
-"substantif."
 
 #: results/forms.py:653
 msgid "The total scores for the teams are the same (i.e. a draw)."
@@ -139,17 +123,16 @@ msgstr ""
 #: results/forms.py:757
 #, python-format
 msgid ""
-"The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) "
-"exceeds the maximum allowable margin (%(max_margin).1f)."
+"The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s)"
+" exceeds the maximum allowable margin (%(max_margin).1f)."
 msgstr ""
 "La marge (%(margin).1f) dans le bulletin de l'adjudicateur %(adj)s "
 "(%(adj_ins)s) excède la marge maximale admissable (%(max_margin).1f)."
 
 #: results/forms.py:789
-#, fuzzy, python-format
-#| msgid "%(timestamp)s (%(timeago)s ago),"
+#, python-format
 msgid "%(team)s (%(side)s)"
-msgstr "%(timestamp)s (il y a %(timeago)s),"
+msgstr ""
 
 #: results/forms.py:803
 msgid "There must be exactly two teams advancing."
@@ -271,8 +254,8 @@ msgstr "scores d'orateur par adjudicateur"
 
 #: results/models.py:169
 msgid ""
-"The debate team, debate adjudicator and ballot submission must all relate to "
-"the same debate."
+"The debate team, debate adjudicator and ballot submission must all relate to"
+" the same debate."
 msgstr ""
 "La débat-équipe, le débat-adjudicateur et la soumission de bulletin doivent "
 "tous concerner le même débat."
@@ -320,10 +303,10 @@ msgid ""
 "absent teammate (sometimes known as \"iron-person\" or \"iron-man\" "
 "speeches)."
 msgstr ""
-"Si c'est coché, cette score ne comptera pas pour le tab d'orateurs. Ce champ "
-"est typiquement coché pour les discours où un orateur a parlé plus d'une "
-"fois afin de compenser le discours d'un coéquipier absent (parfois appelé un "
-"discours « iron-person » ou « iron-man »)."
+"Si c'est coché, cette score ne comptera pas pour le tab d'orateurs. Ce champ"
+" est typiquement coché pour les discours où un orateur a parlé plus d'une "
+"fois afin de compenser le discours d'un coéquipier absent (parfois appelé un"
+" discours « iron-person » ou « iron-man »)."
 
 #: results/models.py:244
 msgid "speaker score"
@@ -340,37 +323,28 @@ msgstr "La débat-équipe et l'orateur doivent être de la même équipe."
 #: results/models.py:257
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr ""
-"La soumission de bulletin et la débat-équipe doivent concerner le même débat."
+"La soumission de bulletin et la débat-équipe doivent concerner le même "
+"débat."
 
 #: results/tables.py:15
-#, fuzzy
-#| msgid "debate"
 msgid "Bye Debate"
-msgstr "débat"
+msgstr ""
 
 #: results/tables.py:17
-#, fuzzy
-#| msgid "Save Ballot"
 msgid "No Ballot"
-msgstr "Enregistrer Bulletin"
+msgstr ""
 
 #: results/tables.py:19
-#, fuzzy
-#| msgid "Ballot Status"
 msgid "Ballot is In"
-msgstr "État de bulletin"
+msgstr ""
 
 #: results/tables.py:21
-#, fuzzy
-#| msgid "unconfirmed"
 msgid "Ballot is Unconfirmed"
-msgstr "non confirmé"
+msgstr ""
 
 #: results/tables.py:23
-#, fuzzy
-#| msgid "This ballot is discarded"
 msgid "Ballot is Confirmed"
-msgstr "Ce bulletin est rejeté"
+msgstr ""
 
 #: results/tables.py:25
 msgid "Debate was Postponed"
@@ -395,12 +369,11 @@ msgstr ""
 msgid "Review v%(version)d"
 msgstr ""
 
-#. Translators: This comes after a link to edit the ballot and before the line indicating its author. Please mind the leading and trailing spaces.
+#. Translators: This comes after a link to edit the ballot and before the line
+#. indicating its author. Please mind the leading and trailing spaces.
 #: results/tables.py:74
-#, fuzzy
-#| msgid "discarded"
 msgid " discarded; "
-msgstr "rejeté"
+msgstr ""
 
 #: results/tables.py:79
 #, python-format
@@ -408,16 +381,13 @@ msgid " added by %(user)s"
 msgstr ""
 
 #: results/tables.py:81
-#, fuzzy, python-format
-#| msgid "submitted from the public form on %(ip_address)s,"
+#, python-format
 msgid " a public submission from %(ip_address)s"
-msgstr "soumis de la formulaire publique de %(ip_address)s,"
+msgstr ""
 
 #: results/tables.py:89
-#, fuzzy
-#| msgid "Save Ballot"
 msgid "Enter Ballot"
-msgstr "Enregistrer Bulletin"
+msgstr ""
 
 #: results/tables.py:100 results/tables.py:106
 msgid "Postpone"
@@ -450,21 +420,16 @@ msgid "Sides"
 msgstr "Côtés"
 
 #: results/templates/ballot/ballot_debate_info.html:49
-#, fuzzy
-#| msgid "No, there were no speakers who spoke multiple times"
 msgid ""
 "There were no speakers who spoke multiple times (i.e. no 'Iron' person "
 "speeches)"
-msgstr "Non, il n'y avait pas d'orateur qui a fait plusieurs discours"
+msgstr ""
 
 #: results/templates/ballot/ballot_debate_info.html:52
-#, fuzzy
-#| msgid "Yes, there were speakers who spoke multiple times"
 msgid ""
-"There were speakers who spoke multiple times (i.e. one or more 'Iron' person "
-"speeches)"
+"There were speakers who spoke multiple times (i.e. one or more 'Iron' person"
+" speeches)"
 msgstr ""
-"Oui, il y avait un ou plusieurs orateurs qui ont fait plusieurs discours"
 
 #: results/templates/ballot/ballot_speaks.html:19
 msgid ""
@@ -479,7 +444,8 @@ msgstr ""
 #: results/templates/ballot/bp_elimination_ballot.html:6
 #: results/templates/ballot/standard_ballot_set.html:6
 msgid ""
-"There are some problems with this scoresheet. Please review and correct them."
+"There are some problems with this scoresheet. Please review and correct "
+"them."
 msgstr ""
 "Cette feuille de débat a des problèmes. Veuillez les examiner et les "
 "corriger."
@@ -576,8 +542,8 @@ msgstr "Forfaits"
 
 #: results/templates/ballot_checkin.html:13
 msgid ""
-"To check-in a ballot start to type the ballot's <strong>venue</strong>. Then "
-"hit enter to select the correct venue, then enter again to search for the "
+"To check-in a ballot start to type the ballot's <strong>venue</strong>. Then"
+" hit enter to select the correct venue, then enter again to search for the "
 "ballot."
 msgstr ""
 
@@ -624,10 +590,8 @@ msgid "only the confirmed ballot set will affect this debate's result"
 msgstr ""
 
 #: results/templates/enter_results.html:79
-#, fuzzy
-#| msgid "Ballot Status"
 msgid "Debate Status"
-msgstr "État de bulletin"
+msgstr ""
 
 #: results/templates/enter_results.html:82
 msgid "all debates must be confirmed to advance to the next round"
@@ -660,16 +624,14 @@ msgstr ""
 
 #: results/templates/public_ballot_set.html:5
 #: results/templates/public_ballot_set.html:8
-#, fuzzy, python-format
-#| msgid "New Ballot Set for %(matchup)s"
+#, python-format
 msgid "Ballot for %(matchup)s"
-msgstr "Nouveau ensemble de bulletins pour %(matchup)s"
+msgstr ""
 
 #: results/templates/public_ballot_set.html:22
-#, fuzzy, python-format
-#| msgid "Enter Results for %(matchup)s"
+#, python-format
 msgid "Return to Results for %(round_name)s"
-msgstr "Modifier résultat pour %(matchup)s"
+msgstr ""
 
 #: results/templates/public_ballot_set.html:46
 #, python-format
@@ -688,14 +650,14 @@ msgid ""
 "%(adj_name)s, note that you must enter <strong>all of the ballots</strong> "
 "from your panel, not just your own!"
 msgstr ""
-"%(adj_name)s, notez que vous devez saisir <strong>tous les bulletins</"
-"strong> de votre jury, non seulement votre propre bulletin !"
+"%(adj_name)s, notez que vous devez saisir <strong>tous les "
+"bulletins</strong> de votre jury, non seulement votre propre bulletin !"
 
 #: results/templates/public_enter_results.html:30
 #, python-format
 msgid ""
-"This form has already been submitted <strong>once</strong>. Please contact a "
-"tab official after submitting your form."
+"This form has already been submitted <strong>once</strong>. Please contact a"
+" tab official after submitting your form."
 msgid_plural ""
 "This form has already been submitted <strong>%(nsubmissions)s</strong> "
 "times. Please contact a tab official after submitting your form."
@@ -707,10 +669,8 @@ msgstr[1] ""
 "Veuillez contacter un officiel de tab après avoir soumis votre formulaire."
 
 #: results/templates/results.html:4 results/templates/results.html:5
-#, fuzzy
-#| msgid "Results"
 msgid "Enter Results"
-msgstr "Résultats"
+msgstr ""
 
 #: results/templates/results.html:10
 msgid "Display Draw"
@@ -735,8 +695,8 @@ msgstr ""
 #: results/templates/results.html:41
 #, python-format
 msgid ""
-"One debate does not have its sides confirmed. Results for this debate cannot "
-"be entered until its side allocations are marked as confirmed."
+"One debate does not have its sides confirmed. Results for this debate cannot"
+" be entered until its side allocations are marked as confirmed."
 msgid_plural ""
 "%(ndebates)s debate do not have their sides confirmed. Results for these "
 "debates cannot be entered until their side allocations are marked as "
@@ -745,11 +705,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: results/templates/results.html:52
-#, fuzzy, python-format
-#| msgid ""
-#| "This debate has a panel with an even number of voting adjudicators. If "
-#| "the adjudicators split evenly, the debate will be awarded to the team for "
-#| "which the chair voted."
+#, python-format
 msgid ""
 "One debate has a panel with an even number of voting adjudicators. If the "
 "adjudicators split evenly, the debate will be awarded to the team for which "
@@ -759,46 +715,31 @@ msgid_plural ""
 "adjudicators. If the adjudicators split evenly, the debate will be awarded "
 "to the team for which the chair voted."
 msgstr[0] ""
-"Ce débat a un jury avec un nombre pair de juges avec droit de vote. Si les "
-"juges sont divisés de manière égale entre les équipes, la victoire sera "
-"attribuée à l'équipe pour laquelle le/la président(e) a voté."
 msgstr[1] ""
-"Ce débat a un jury avec un nombre pair de juges avec droit de vote. Si les "
-"juges sont divisés de manière égale entre les équipes, la victoire sera "
-"attribuée à l'équipe pour laquelle le/la président(e) a voté."
 
 #: results/templates/results.html:70
 msgid "Unknown"
 msgstr ""
 
 #: results/templates/results.html:75
-#, fuzzy
-#| msgctxt "box title"
-#| msgid "Check"
 msgid "Checked In"
-msgstr "Vérification"
+msgstr ""
 
 #: results/templates/results.html:80
-#, fuzzy
-#| msgid "unconfirmed"
 msgid "Unconfirmed"
-msgstr "non confirmé"
+msgstr ""
 
 #: results/templates/results.html:85
-#, fuzzy
-#| msgid "confirmed"
 msgid "Confirmed"
-msgstr "vérifié"
+msgstr ""
 
 #: results/templates/results.html:91
 msgid "Postponed"
 msgstr ""
 
 #: results/templates/results.html:95
-#, fuzzy
-#| msgid "Ballot Status"
 msgid "Ballot Statuses"
-msgstr "État de bulletin"
+msgstr ""
 
 #: results/templates/results.html:123
 msgid "Postponing…"
@@ -885,10 +826,8 @@ msgid "Reply"
 msgstr "Sommaire"
 
 #: results/views.py:68
-#, fuzzy
-#| msgid "Ballot Status"
 msgid "Status"
-msgstr "État de bulletin"
+msgstr ""
 
 #: results/views.py:114
 msgid "Venue"
@@ -899,10 +838,9 @@ msgid "Team"
 msgstr ""
 
 #: results/views.py:298
-#, fuzzy, python-format
-#| msgid "New Ballot Set for %(matchup)s"
+#, python-format
 msgid "Ballot set for %(debate)s added."
-msgstr "Nouveau ensemble de bulletins pour %(matchup)s"
+msgstr ""
 
 #: results/views.py:310
 #, python-format
@@ -914,27 +852,24 @@ msgstr ""
 #: results/views.py:316
 #, python-format
 msgid ""
-"Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't "
-"enter results for it."
+"Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't"
+" enter results for it."
 msgstr ""
 
 #: results/views.py:337
-#, fuzzy, python-format
-#| msgid "New Ballot Set for %(matchup)s"
+#, python-format
 msgid "Ballot set for %(matchup)s discarded."
-msgstr "Nouveau ensemble de bulletins pour %(matchup)s"
+msgstr ""
 
 #: results/views.py:339
-#, fuzzy, python-format
-#| msgid "New Ballot Set for %(matchup)s"
+#, python-format
 msgid "Ballot set for %(matchup)s confirmed."
-msgstr "Nouveau ensemble de bulletins pour %(matchup)s"
+msgstr ""
 
 #: results/views.py:341
-#, fuzzy, python-format
-#| msgid "Edit Ballot Set for %(matchup)s"
+#, python-format
 msgid "Edits to ballot set for %(matchup)s saved."
-msgstr "Modifier l'ensemble de bulletins pour %(matchup)s"
+msgstr ""
 
 #: results/views.py:365
 #, python-format
@@ -995,10 +930,9 @@ msgstr ""
 "4ème : %(fourth_team)s"
 
 #: results/views.py:554
-#, fuzzy, python-format
-#| msgid "Enter Results for %(matchup)s"
+#, python-format
 msgid "Error with result for %(debate)s"
-msgstr "Modifier résultat pour %(matchup)s"
+msgstr ""
 
 #: results/views.py:593 results/views.py:606
 msgid "There aren't any venues with that name."
@@ -1011,44 +945,11 @@ msgstr ""
 
 #: results/views.py:614
 #, python-format
-msgid "There appear to be multiple debates in venue %(venue_name)s this round."
+msgid ""
+"There appear to be multiple debates in venue %(venue_name)s this round."
 msgstr ""
 
 #: results/views.py:618
 #, python-format
 msgid "The ballot for venue %(venue_name)s has already been checked in."
 msgstr ""
-
-#~ msgctxt "box title"
-#~ msgid "Save"
-#~ msgstr "Enregistrement"
-
-#~ msgctxt "box title"
-#~ msgid "Check"
-#~ msgstr "Vérification"
-
-#~ msgid "'Iron' speeches"
-#~ msgstr "Discours « iron »"
-
-#~ msgid ""
-#~ "Debate Status <small>(for the debate itself, not just this particular "
-#~ "ballot set)</small>"
-#~ msgstr ""
-#~ "État de débat <small>(le débat lui-même, pas cet ensemble de bulletins en "
-#~ "particulier)</small>"
-
-#~ msgctxt "box title"
-#~ msgid "Submit"
-#~ msgstr "Soumission"
-
-#~ msgid "This is the confirmed ballot"
-#~ msgstr "Ce bulletin est le confirmé"
-
-#~ msgid "General errors:"
-#~ msgstr "Erreurs généraux :"
-
-#~ msgid "Selected motion"
-#~ msgstr "Motion selectionée"
-
-#~ msgid "Total"
-#~ msgstr "Total"

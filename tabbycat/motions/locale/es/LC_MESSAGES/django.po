@@ -1,8 +1,8 @@
-# Tabbycat Spanish translations / traducciones en español
+# Tabbycat translations, motions module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -10,54 +10,54 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:42+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
+"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: motions/apps.py:7 motions/templates/public_motions.html:4
 #: motions/templates/public_motions.html:5
 msgid "Motions"
-msgstr ""
+msgstr "Mociones"
 
 #: motions/models.py:9
 msgid "sequence number"
-msgstr ""
+msgstr "número de sequencia"
 
 #: motions/models.py:10
 msgid "The order in which motions are displayed"
-msgstr ""
+msgstr "El orden en que se muestran las mociones"
 
 #: motions/models.py:12
 msgid "text"
-msgstr ""
+msgstr "texto"
 
 #: motions/models.py:13
 msgid "The full motion e.g., \"This House would straighten all bananas\""
-msgstr ""
+msgstr "La moción completa, ej: \"Esta Casa enderezaría todas las bananas\""
 
 #: motions/models.py:15
 msgid "reference"
-msgstr ""
+msgstr "referencia"
 
 #: motions/models.py:16
 msgid "Shortcode for the motion, e.g., \"Bananas\""
-msgstr ""
+msgstr "Palabra clave para la moción, ej: \"Bananas\""
 
 #: motions/models.py:18
 msgid "info slide"
-msgstr ""
+msgstr "diapositiva de info"
 
 #: motions/models.py:19
 msgid "The information slide for this topic; if it has one"
-msgstr ""
+msgstr "La diapositiva de información para este tema; si tiene una"
 
 #: motions/models.py:21
 msgid "flagged"
-msgstr ""
+msgstr "señalado"
 
 #: motions/models.py:22
 msgid "For WADL: Allows for particular motions to be flagged as contentious"
@@ -65,27 +65,27 @@ msgstr ""
 
 #: motions/models.py:24
 msgid "round"
-msgstr ""
+msgstr "ronda"
 
 #: motions/models.py:26
 msgid "divisions"
-msgstr ""
+msgstr "divisiones"
 
 #: motions/models.py:30 motions/models.py:42
 msgid "motion"
-msgstr ""
+msgstr "moción"
 
 #: motions/models.py:31
 msgid "motions"
-msgstr ""
+msgstr "mociones"
 
 #: motions/models.py:40
 msgid "debate team"
-msgstr ""
+msgstr "equipo de debate"
 
 #: motions/models.py:44
 msgid "preferences"
-msgstr ""
+msgstr "preferencia"
 
 #: motions/models.py:46
 msgid "ballot submission"
@@ -131,7 +131,8 @@ msgstr ""
 msgid "No teams vetoed this topic"
 msgstr ""
 
-#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
+#: motions/templates/motions_edit.html:4
+#: motions/templates/motions_edit.html:10
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
 msgstr[0] ""
@@ -159,12 +160,14 @@ msgstr ""
 msgid "There are no motions available for this round."
 msgstr ""
 
-#. Translators: Used when there are expected to be several motions per round (e.g. Australs)
+#. Translators: Used when there are expected to be several motions per round
+#. (e.g. Australs)
 #: motions/templates/public_motions.html:33
 msgid "The motions for this round have not been released."
 msgstr ""
 
-#. Translators: Used when there is expected to be one motion per round (e.g. WUDC)
+#. Translators: Used when there is expected to be one motion per round (e.g.
+#. WUDC)
 #: motions/templates/public_motions.html:36
 msgid "The motion for this round has not been released."
 msgstr ""

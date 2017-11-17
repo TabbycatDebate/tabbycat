@@ -1,22 +1,22 @@
-# Tabbycat French translations / traductions en français
+# Tabbycat translations, availability module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:46+1100\n"
-"PO-Revision-Date: 2017-09-17 10:54-0700\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: fr\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
+"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: availability/apps.py:7
 msgid "Availability"
@@ -35,16 +35,12 @@ msgid "round"
 msgstr ""
 
 #: availability/models.py:24
-#, fuzzy
-#| msgid "Availability"
 msgid "round availability"
-msgstr "Disponibilité"
+msgstr ""
 
 #: availability/models.py:25
-#, fuzzy
-#| msgid "Venue Availability"
 msgid "round availabilities"
-msgstr "Disponibilité des lieux"
+msgstr ""
 
 #: availability/templates/availability_index.html:11
 msgid "Check In All Breaking Adjs"
@@ -99,16 +95,16 @@ msgid ""
 "There aren't enough venues checked in for the number of debates — the draw "
 "may not generate properly."
 msgstr ""
-"Il n'y a pas assez de lieux enregistrés pour le nombre de débats — le tirage "
-"ne se générera peut-être pas correctement."
+"Il n'y a pas assez de lieux enregistrés pour le nombre de débats — le tirage"
+" ne se générera peut-être pas correctement."
 
 #: availability/templates/availability_index.html:72
 msgid ""
 "There aren't enough adjudicators checked in for the number of debates — the "
 "draw may not generate properly."
 msgstr ""
-"Il n'y a pas assez de juges enregistrés pour le nombre de débats — le tirage "
-"ne se générera peut-être pas correctement."
+"Il n'y a pas assez de juges enregistrés pour le nombre de débats — le tirage"
+" ne se générera peut-être pas correctement."
 
 #: availability/templates/availability_index.html:77
 msgid ""
@@ -129,34 +125,35 @@ msgstr ""
 #: availability/templates/availability_index.html:100
 #, python-format
 msgid ""
-"One debate from %(prev_round)s <strong>does not have a completed ballot</"
-"strong>. This may lead to a draw that fails or is incorrect, depending on "
-"your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link"
-"\"> Enter results from %(prev_round)s. </a>"
+"One debate from %(prev_round)s <strong>does not have a completed "
+"ballot</strong>. This may lead to a draw that fails or is incorrect, "
+"depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class"
+"=\"alert-link\"> Enter results from %(prev_round)s. </a>"
 msgid_plural ""
 "%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a "
 "completed ballot</strong>. This may lead to a draw that fails or is "
-"incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s"
-"\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+"incorrect, depending on your draw rules. <a "
+"href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from"
+" %(prev_round)s. </a>"
 msgstr[0] ""
 "Un débat de %(prev_round)s <strong>n'a pas de bulletin complet</strong>. Ce "
-"manque peut engendrer un tirage qui échoue ou qui est incorrect, en fonction "
-"de vos règles du tirage. <a href=\"%(prev_round_results_url)s\" class="
-"\"alert-link\"> Entrez les résultats de %(prev_round)s. </a>"
+"manque peut engendrer un tirage qui échoue ou qui est incorrect, en fonction"
+" de vos règles du tirage. <a href=\"%(prev_round_results_url)s\" class"
+"=\"alert-link\"> Entrez les résultats de %(prev_round)s. </a>"
 msgstr[1] ""
 "%(previous_unconfirmed)s débats de %(prev_round)s <strong>n'ont pas de "
 "bulletin complet</strong>. Ce manque peut engendrer un tirage qui échoue ou "
-"qui est incorrect, en fonction de vos règles du tirage. <a href="
-"\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de "
-"%(prev_round)s. </a>"
+"qui est incorrect, en fonction de vos règles du tirage. <a "
+"href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les "
+"résultats de %(prev_round)s. </a>"
 
 #: availability/templates/availability_index.html:122
 #, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, however the current "
 "round is still set to <strong>%(current_round_name)s</strong>. Did you "
-"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to "
-"the next round?</a>"
+"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to"
+" the next round?</a>"
 msgstr ""
 "Il s'agit de <strong>%(round_name)s</strong>, cependant le tour actuel est "
 "toujours configuré comme <strong>%(current_round_name)s</strong>. Avez-vous "
@@ -166,23 +163,24 @@ msgstr ""
 #: availability/templates/availability_index.html:137
 #, python-format
 msgid ""
-"This is the first round, but its draw type is <strong>%(draw_type)s</"
-"strong>. Did you intend for it to be <strong>Random</strong> instead? You "
-"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
-"draw type in the Edit Database area.</a>"
+"This is the first round, but its draw type is "
+"<strong>%(draw_type)s</strong>. Did you intend for it to be "
+"<strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" "
+"class=\"alert-link\"> edit this round's draw type in the Edit Database "
+"area.</a>"
 msgstr ""
-"Ce tour est le premier, mais son type de tirage est <strong>%(draw_type)s</"
-"strong>. Souhaitiez-vous pour qu’il soit plutôt <strong>aléatoire</strong> ? "
-"Vous pouvez <a href=\"%(change_round_url)s\" class=\"alert-link\">modifier "
-"le type de tirage de ce tour dans la zone pour modifier la base de données.</"
-"a>"
+"Ce tour est le premier, mais son type de tirage est "
+"<strong>%(draw_type)s</strong>. Souhaitiez-vous pour qu’il soit plutôt "
+"<strong>aléatoire</strong> ? Vous pouvez <a href=\"%(change_round_url)s\" "
+"class=\"alert-link\">modifier le type de tirage de ce tour dans la zone pour"
+" modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:150
 #, python-format
 msgid ""
 "This is an elimination round, but it doesn't have a break category. "
-"Elimination rounds must be associated with a break category. Please <a href="
-"\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
+"Elimination rounds must be associated with a break category. Please <a "
+"href=\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
 "category in the Edit Database area.</a>"
 msgstr ""
 "Il s’agit d’un tour éliminatoire, mais le tour n'a pas de catégorie de "
@@ -194,42 +192,42 @@ msgstr ""
 #: availability/templates/availability_index.html:162
 #, python-format
 msgid ""
-"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
-"strong>. The draw type of all elimination rounds must be \"Elimination\". "
-"Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this "
-"round's draw type in the Edit Database area.</a>"
+"This is an elimination round, but its draw type is "
+"<strong>%(draw_type)s</strong>. The draw type of all elimination rounds must"
+" be \"Elimination\". Please <a href=\"%(change_round_url)s\" class=\"alert-"
+"link\"> change this round's draw type in the Edit Database area.</a>"
 msgstr ""
-"Il s’agit d’un tour éliminatoire, mais son type de tirage est <strong>"
-"%(draw_type)s</strong>. Les types de tirage de tous les tours éliminatoires "
-"doivent être « Élimination ». Veuillez <a href=\"%(change_round_url)s\" "
-"class=\"alert-link\">modifier le type de tirage de ce tour dans la zone pour "
-"modifier la base de données.</a>"
+"Il s’agit d’un tour éliminatoire, mais son type de tirage est "
+"<strong>%(draw_type)s</strong>. Les types de tirage de tous les tours "
+"éliminatoires doivent être « Élimination ». Veuillez <a "
+"href=\"%(change_round_url)s\" class=\"alert-link\">modifier le type de "
+"tirage de ce tour dans la zone pour modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:175
 #, python-format
 msgid ""
-"There don't appear to be any teams breaking in the %(break_category)s Break. "
-"Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated "
-"the break for the %(break_category)s Break</a> yet?"
+"There don't appear to be any teams breaking in the %(break_category)s Break."
+" Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> "
+"generated the break for the %(break_category)s Break</a> yet?"
 msgstr ""
 "Il semble qu'il n'y ait aucune équipe qualifiante dans la catégorie "
-"%(break_category)s. Avez-vous <a href=\"%(breakqual_teams_url)s\" class="
-"\"alert-link\">générer la qualification pour la catégorie "
+"%(break_category)s. Avez-vous <a href=\"%(breakqual_teams_url)s\" class"
+"=\"alert-link\">générer la qualification pour la catégorie "
 "%(break_category)s</a>?"
 
 #: availability/templates/availability_index.html:187
 #, python-format
 msgid ""
 "There's only one team breaking in the %(break_category)s Break. You can't "
-"generate an elimination round draw with only one team — you might like to <a "
-"href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for "
-"the %(break_category)s Break</a>."
+"generate an elimination round draw with only one team — you might like to <a"
+" href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for"
+" the %(break_category)s Break</a>."
 msgstr ""
 "Il n'y a qu'une équipe qualifiante dans la catégorie %(break_category)s. "
 "Vous ne pouvez pas générer le tirage pour un tour éliminatoire avec "
-"seulement une équipe. Vous voudriez peut-être <a href="
-"\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la qualification "
-"pour la catégorie %(break_category)s</a>."
+"seulement une équipe. Vous voudriez peut-être <a "
+"href=\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la "
+"qualification pour la catégorie %(break_category)s</a>."
 
 #: availability/templates/base_availability.html:35
 msgid "Select All"
@@ -285,16 +283,15 @@ msgstr ""
 "Le nombre d'équipes enregistrées pour ce tour n'est pas un multiple de 4."
 
 #: availability/templates/checkin_progress.html:59
-#, fuzzy
-#| msgid "Team Check-Ins"
 msgid "Edit team check-ins"
-msgstr "Enregistrement des équipes"
+msgstr ""
 
 #: availability/templates/checkin_progress.html:66
 msgid "Check in adjudicators"
 msgstr "Enregistrement des juges"
 
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#. Translators: required_count is a word for a number (e.g. "two", "three",
+#. etc.)
 #: availability/templates/checkin_progress.html:70
 #, python-format
 msgid ""
@@ -304,7 +301,8 @@ msgid_plural ""
 "There need to be at least %(required_count)s adjudicators checked in, given "
 "the number of debates."
 msgstr[0] ""
-"Il faut au moins un(e) juge enregistré(e) pour satisfier le nombre de débats."
+"Il faut au moins un(e) juge enregistré(e) pour satisfier le nombre de "
+"débats."
 msgstr[1] ""
 "Il faut au moins %(required_count)s juges enregistrés pour satisfier le "
 "nombre de débats."
@@ -317,11 +315,13 @@ msgstr ""
 msgid "Check in venues"
 msgstr "Enregistrement des lieux"
 
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#. Translators: required_count is a word for a number (e.g. "two", "three",
+#. etc.)
 #: availability/templates/checkin_progress.html:91
 #, python-format
 msgid ""
-"There needs to be at least one venue checked in, given the number of debates."
+"There needs to be at least one venue checked in, given the number of "
+"debates."
 msgid_plural ""
 "There need to be at least %(required_count)s venues checked in, given the "
 "number of debates."
@@ -332,10 +332,8 @@ msgstr[1] ""
 "nombre de débats."
 
 #: availability/templates/checkin_progress.html:103
-#, fuzzy
-#| msgid "Venue Check-Ins"
 msgid "Edit venue check-ins"
-msgstr "Enregistrement des lieux"
+msgstr ""
 
 #: availability/views.py:77
 msgid "no teams are debating"
@@ -426,41 +424,3 @@ msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""
 "Toutes les équipes, tous les juges et tous les lieux du tour précédent ont "
 "été enregistrés."
-
-#~ msgid "Check In Adjs"
-#~ msgstr "Enregistrer les juges"
-
-#~ msgid ""
-#~ "This is an elimination round, but its draw type is <strong>%(draw_type)s</"
-#~ "strong>. This combination isn't allowed — the draw type of elimination "
-#~ "rounds must be either <strong>first elimination</strong> (if it's the "
-#~ "first elimination round in its break category) or <strong>subsequent "
-#~ "elimination</strong>. Please <a href=\"%(change_round_url)s\" class="
-#~ "\"alert-link\"> change this round's draw type in the Edit Database area.</"
-#~ "a>"
-#~ msgstr ""
-#~ "Ce tour est éliminatoire, mais son type de tirage est <strong>"
-#~ "%(draw_type)s</strong>. Cette combinaison n'est pas permise — le type de "
-#~ "tirage de tous les tours éliminatoires doit être soit <strong>premier "
-#~ "éliminatoire</strong> (s'il est le premier tour éliminatoire dans sa "
-#~ "catégorie soit <strong>éliminatoire subséquent</strong>. Veuillez <a href="
-#~ "\"%(change_round_url)s\" class=\"alert-link\">changer le type de tirage "
-#~ "de ce tour dans la zone pour modifier la base de données.</a>"
-
-#~ msgid "Overview"
-#~ msgstr "Aperçu"
-
-#~ msgid ""
-#~ "Saved availabilities. <a href=\"%(index_url)s\" class=\"alert-link\"> "
-#~ "Return to the check-ins overview page?</a>"
-#~ msgstr ""
-#~ "Les disponibilités sont enregistrées. <a href=\"%(index_url)s\" class="
-#~ "\"alert-link\">Retourner à l'aperçu des enregistrements ?</a>"
-
-#~ msgid ""
-#~ "Error saving availabilities. <a href=\"%(index_url)s\" class=\"alert-link"
-#~ "\"> Return to the check-ins overview page?</a>"
-#~ msgstr ""
-#~ "Une erreur s'est produite lors d'enregistrement des disponibilités. <a "
-#~ "href=\"%(index_url)s\" class=\"alert-link\">Retourner à l'aperçu des "
-#~ "enregistrements ?</a>"

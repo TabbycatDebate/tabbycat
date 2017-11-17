@@ -1,116 +1,121 @@
-# Tabbycat Spanish translations / traducciones en español
+# Tabbycat translations, adjallocation module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 04:00+1100\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
+"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
-msgstr ""
+msgstr "Asignación de Jueces"
 
 #: adjallocation/models.py:18
 msgid "chair"
-msgstr ""
+msgstr "principal"
 
 #: adjallocation/models.py:19
 msgid "panellist"
-msgstr ""
+msgstr "panelista"
 
 #: adjallocation/models.py:20
 msgid "trainee"
-msgstr ""
+msgstr "sombra"
 
 #: adjallocation/models.py:26
 msgid "debate"
-msgstr ""
+msgstr "debate"
 
 #: adjallocation/models.py:28 adjallocation/models.py:44
 #: adjallocation/models.py:68
 msgid "adjudicator"
-msgstr ""
+msgstr "juez"
 
 #: adjallocation/models.py:30
 msgid "type"
-msgstr ""
+msgstr "tipo"
 
 #: adjallocation/models.py:31
 msgid "available?"
-msgstr ""
+msgstr "disponible?"
 
 #: adjallocation/models.py:37
 msgid "debate adjudicator"
-msgstr ""
+msgstr "juez de debate"
 
 #: adjallocation/models.py:38
 msgid "debate adjudicators"
-msgstr ""
+msgstr "jueces de debate"
 
 #: adjallocation/models.py:46
 msgid "team"
-msgstr ""
+msgstr "equipo"
 
 #: adjallocation/models.py:49
 msgid "adjudicator-team conflict"
-msgstr ""
+msgstr "conflicto juez-equipo"
 
 #: adjallocation/models.py:50
 msgid "adjudicator-team conflicts"
-msgstr ""
+msgstr "conflictos juez-equipo"
 
 #: adjallocation/models.py:56
 msgid "adjudicator 1"
-msgstr ""
+msgstr "juez 1"
 
 #: adjallocation/models.py:58
 msgid "adjudicator 2"
-msgstr ""
+msgstr "juez 2"
 
 #: adjallocation/models.py:61
 msgid "adjudicator-adjudicator conflict"
-msgstr ""
+msgstr "conflicto juez-juez"
 
 #: adjallocation/models.py:62
 msgid "adjudicator-adjudicator conflicts"
-msgstr ""
+msgstr "conflictos juez-juez"
 
 #: adjallocation/models.py:70
 msgid "institution"
-msgstr ""
+msgstr "institución"
 
 #: adjallocation/models.py:73
 msgid "adjudicator-institution conflict"
-msgstr ""
+msgstr "conflicto juez-institución"
 
 #: adjallocation/models.py:74
 msgid "adjudicator-institution conflicts"
-msgstr ""
+msgstr "conflictos juez-institución"
 
 #: adjallocation/templates/edit_adjudicators.html:11
 #, python-format
 msgid "Edit Adjudicators for %(round_abbr)s"
-msgstr ""
+msgstr "Editar Jueces para %(round_abbr)s"
 
 #: adjallocation/views.py:132
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
+"El cuadro ya fue publicado, despubliquelo para rehacer la asignación "
+"automática."
 
 #: adjallocation/views.py:136
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
+"El cuadro no ha sido confirmado, confirma el cuadro para hacer la asignación"
+" automática."
 
 #: adjallocation/views.py:182
 msgid "Not all adjudicators specified are associated with the tournament."
-msgstr ""
+msgstr "No todos los jueces especificados están asociados con el torneo."

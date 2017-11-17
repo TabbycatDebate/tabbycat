@@ -1,22 +1,22 @@
-# Tabbycat Spanish translations / traducciones en español
+# Tabbycat translations, importer module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 04:00+1100\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: importer/forms.py:19
 #, python-format
 msgid "line %(lineno)d: %(message)s"
@@ -67,7 +67,8 @@ msgid "Speaker %d"
 msgstr ""
 
 #: importer/forms.py:223
-msgid "Optional; used for Private URLs. Format with one email address per line"
+msgid ""
+"Optional; used for Private URLs. Format with one email address per line"
 msgstr ""
 
 #: importer/forms.py:235
@@ -120,11 +121,11 @@ msgstr ""
 msgid ""
 "As per this tournament's configuration, an adjudicator's rating must be "
 "between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Adjudicators "
-"marked as 'shared' will not be associated with any particular tournament but "
-"will be available to any tournament which has the \"<a href="
-"\"%(options_league_url)s\" class=\"alert-link\">Share Adjudicators setting</"
-"a>\" enabled. Providing email addresses is optional but can be useful if "
-"using Private URLs for feedback or ballots."
+"marked as 'shared' will not be associated with any particular tournament but"
+" will be available to any tournament which has the \"<a "
+"href=\"%(options_league_url)s\" class=\"alert-link\">Share Adjudicators "
+"setting</a>\" enabled. Providing email addresses is optional but can be "
+"useful if using Private URLs for feedback or ballots."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:45
@@ -143,8 +144,8 @@ msgstr ""
 #: importer/templates/simple_import_adjudicators_numbers.html:14
 #, python-format
 msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
-"institutions</a> before adding adjudicators."
+"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add"
+" institutions</a> before adding adjudicators."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_numbers.html:23
@@ -172,10 +173,10 @@ msgstr ""
 #: importer/templates/simple_import_index.html:9
 msgid ""
 "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-"
-"data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. "
-"Which one is best depends on the size of your tournament and your technical "
-"background. This <strong>simple importer</strong> is the easiest to use and "
-"works well for small- and medium-sized tournaments."
+"data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>."
+" Which one is best depends on the size of your tournament and your technical"
+" background. This <strong>simple importer</strong> is the easiest to use and"
+" works well for small- and medium-sized tournaments."
 msgstr ""
 
 #: importer/templates/simple_import_index.html:16
@@ -243,14 +244,14 @@ msgstr ""
 #: importer/templates/simple_import_teams_numbers.html:15
 #, python-format
 msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
-"institutions</a> before adding teams."
+"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add"
+" institutions</a> before adding teams."
 msgstr ""
 
 #: importer/templates/simple_import_teams_numbers.html:24
 msgid ""
-"Specify the number of new teams to add per institution. In the next step you "
-"can specify team and speaker names."
+"Specify the number of new teams to add per institution. In the next step you"
+" can specify team and speaker names."
 msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:4

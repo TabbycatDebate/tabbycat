@@ -1,22 +1,22 @@
-# Tabbycat French translations / traductions en français
+# Tabbycat translations, utils module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:46+1100\n"
-"PO-Revision-Date: 2017-09-17 12:11-0700\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: fr\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
+"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: utils/forms.py:55
 msgid "E-mail address"
@@ -149,26 +149,20 @@ msgid "advancing"
 msgstr "avançant"
 
 #: utils/tables.py:370
-#, fuzzy
-#| msgid "advancing"
 msgid "Advancing"
-msgstr "avançant"
+msgstr ""
 
 #: utils/tables.py:372
 msgid "eliminated"
 msgstr "éliminé"
 
 #: utils/tables.py:373
-#, fuzzy
-#| msgid "eliminated"
 msgid "Eliminated"
-msgstr "éliminé"
+msgstr ""
 
 #: utils/tables.py:376 utils/tables.py:386
-#, fuzzy
-#| msgid "No result for debate from %(side)s"
 msgid "No result for debate"
-msgstr "Aucun résultat pour le débat, à %(side)s"
+msgstr ""
 
 #: utils/tables.py:379
 msgid "4th"
@@ -258,10 +252,8 @@ msgid "Redacted"
 msgstr ""
 
 #: utils/tables.py:616
-#, fuzzy
-#| msgid "Categories"
 msgid "Category"
-msgstr "Catégories"
+msgstr ""
 
 #: utils/tables.py:643
 #, python-format
@@ -341,15 +333,3 @@ msgstr "Côté"
 #, python-format
 msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
-
-#~ msgid "Advancing from %(side)s"
-#~ msgstr "Avançant de %(side)s"
-
-#~ msgid "%(place)s from %(side)s"
-#~ msgstr "%(place)s à %(side)s"
-
-#~ msgid "Adjudicators"
-#~ msgstr "Juges"
-
-#~ msgid "Room rank of this debate"
-#~ msgstr "Rang de salle de ce débat"

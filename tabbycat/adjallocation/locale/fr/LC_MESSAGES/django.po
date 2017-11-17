@@ -1,22 +1,22 @@
-# Tabbycat French translations / traductions en français
+# Tabbycat translations, adjallocation module
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:46+1100\n"
-"PO-Revision-Date: 2017-09-17 00:38-0700\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: fr\n"
+"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
+"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
@@ -102,7 +102,7 @@ msgstr "conflits entre juge et institution"
 #: adjallocation/templates/edit_adjudicators.html:11
 #, python-format
 msgid "Edit Adjudicators for %(round_abbr)s"
-msgstr ""
+msgstr "Modifier les juges dans %(round_abbr)s"
 
 #: adjallocation/views.py:132
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
@@ -113,8 +113,8 @@ msgstr ""
 #: adjallocation/views.py:136
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
-"Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire "
-"l'allocation automatique."
+"Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire"
+" l'allocation automatique."
 
 #: adjallocation/views.py:182
 msgid "Not all adjudicators specified are associated with the tournament."
