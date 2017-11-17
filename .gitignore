@@ -72,7 +72,8 @@ pip-log.txt
 nosetests.xml
 
 # Translations
-*.mo
+# Include these because they can't be compiled on Heroku
+# *.mo
 
 # Mr Developer
 .mr.developer.cfg
