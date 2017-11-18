@@ -178,7 +178,7 @@ LOGGING = {
     'filters': {
         'except_importer_base': {
             '()': 'utils.logging.ExceptFilter',
-            'name': 'importer.base',
+            'name': 'importer.importers.base',
         },
     },
     'handlers': {
