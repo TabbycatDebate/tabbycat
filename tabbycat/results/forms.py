@@ -798,6 +798,13 @@ class BPEliminationResultForm(BaseResultForm):
     def clean(self):
         cleaned_data = super().clean()
 
+        if not self.debate.sides_confirmed:
+            self.add_error(None, forms.ValidationError(
+                _("Sides for this debate are not confirmed. You can't save a result "
+                  "for this debate until the sides have been confirmed in the draw."),
+                code='sides_unconfirmed'
+            ))
+
         if 'advancing' in cleaned_data and len(cleaned_data['advancing']) != 2:
             self.add_error('advancing', forms.ValidationError(
                 _("There must be exactly two teams advancing."),

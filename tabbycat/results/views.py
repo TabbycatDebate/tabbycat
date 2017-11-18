@@ -371,7 +371,8 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
     def populate_objects(self):
         self.object = self.get_object() # must be populated before self.error_page() called
 
-        round = self.get_tournament().current_round
+        tournament = self.get_tournament()
+        round = tournament.current_round
         if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
             return self.error_page(_("The draw and/or motions for the round haven't been released yet."))
 
@@ -390,6 +391,11 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
         if not self.debate.adjudicators.has_chair:
             return self.error_page(_("Your debate doesn't have a chair, so you can't enter results for it. "
                     "Please contact a tab room official."))
+
+        if not (tournament.pref('draw_side_allocations') == 'manual-ballot' and
+                tournament.pref('teams_in_debate') == 'two') and not self.debate.sides_confirmed:
+            return self.error_page(_("It looks like the sides for this debate haven't yet been confirmed, "
+                    "so you can't enter results for it. Please contact a tab room official."))
 
     def error_page(self, message):
         # This bypasses the normal TemplateResponseMixin and ContextMixin
