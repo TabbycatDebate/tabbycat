@@ -53,11 +53,11 @@ msgstr "disponible?"
 
 #: adjallocation/models.py:37
 msgid "debate adjudicator"
-msgstr "juez de debate"
+msgstr "juez del debate"
 
 #: adjallocation/models.py:38
 msgid "debate adjudicators"
-msgstr "jueces de debate"
+msgstr "jueces de los debates"
 
 #: adjallocation/models.py:46
 msgid "team"

@@ -121,6 +121,9 @@ msgid ""
 "There's a problem with the data for the tournament %(tournament_name)s. "
 "Please contact a tab director and ask them to set its current round."
 msgstr ""
+"Les données du tournoi %(tournament_name)s ont un problème. Veuillez "
+"contacter un(e) directeur/directrice de tabulation et lui demander de "
+"définir le tour actuel."
 
 #: tournaments/mixins.py:106
 msgid ""
@@ -145,7 +148,7 @@ msgstr "Ce page n'est pas activé pour ce tournoi."
 
 #: tournaments/mixins.py:200
 msgid "That tournament no longer exists."
-msgstr ""
+msgstr "Ce tournoi n'existe plus"
 
 #: tournaments/models.py:25
 msgid ""
@@ -426,7 +429,7 @@ msgstr "Créer compte"
 
 #: tournaments/templates/configure_tournament.html:4
 msgid "Configure Tournament "
-msgstr ""
+msgstr "Configuration du tournoi"
 
 #: tournaments/templates/configure_tournament.html:16
 msgid ""
@@ -434,6 +437,9 @@ msgid ""
 "Note that these can always be changed later (and with more precise control) "
 "if needed."
 msgstr ""
+"Afin de finir de créer votre tournoi, sélectionnez une configuration de "
+"base. Notez que les paramètres peuvent toujours être changées plus tard (et "
+"à plus de la precision) si vous en avez besoin."
 
 #: tournaments/templates/configure_tournament.html:21
 msgid "Configure Tournament"
@@ -593,33 +599,33 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:37
 msgid "Team Tab"
-msgstr ""
+msgstr "Tab des équipes"
 
 #: tournaments/templates/public_tournament_index.html:43
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Tab des orateurs"
 
 #: tournaments/templates/public_tournament_index.html:51
 #, python-format
 msgid "%(category_name)s Speaker Tab"
-msgstr ""
+msgstr "Tab des orateurs %(category_name)s"
 
 #: tournaments/templates/public_tournament_index.html:61
 msgid "Replies Tab"
-msgstr ""
+msgstr "Tab des discours de résponse"
 
 #: tournaments/templates/public_tournament_index.html:67
 msgid "Adjudicator Tab"
-msgstr ""
+msgstr "Tab des juges"
 
 #: tournaments/templates/public_tournament_index.html:73
 msgid "Motions Tab"
-msgstr ""
+msgstr "Tab des motions"
 
 #: tournaments/templates/public_tournament_index.html:79
 #: tournaments/templates/public_tournament_index.html:108
 msgid "Sides"
-msgstr ""
+msgstr "Côtés"
 
 #: tournaments/templates/public_tournament_index.html:90
 msgid "Results"
@@ -627,7 +633,7 @@ msgstr "Résultats"
 
 #: tournaments/templates/public_tournament_index.html:96
 msgid "Divisions"
-msgstr ""
+msgstr "Divisions"
 
 #: tournaments/templates/public_tournament_index.html:102
 msgid "Motions"
@@ -635,45 +641,45 @@ msgstr "Motions"
 
 #: tournaments/templates/public_tournament_index.html:114
 msgid "Team Standings"
-msgstr ""
+msgstr "Classement des équipes"
 
 #: tournaments/templates/public_tournament_index.html:121
 #, python-format
 msgid "%(category_name)s Break"
-msgstr ""
+msgstr "Qualification %(category_name)s"
 
 #: tournaments/templates/public_tournament_index.html:130
 msgid "Breaking Adjudicators"
-msgstr ""
+msgstr "Qualification des juges"
 
 #: tournaments/templates/public_tournament_index.html:136
 msgid "Diversity Overview"
-msgstr ""
+msgstr "Aperçu de la diversité"
 
 #: tournaments/templates/public_tournament_index.html:142
 msgid "Participants"
-msgstr ""
+msgstr "Participants"
 
 #: tournaments/templates/public_tournament_index.html:148
 msgid "Feedback Progress"
-msgstr ""
+msgstr "Progrès des commentaires"
 
 #: tournaments/templates/public_tournament_index.html:154
 msgid "Enter Ballot"
-msgstr ""
+msgstr "Saisie d'un bulletin"
 
 #: tournaments/templates/public_tournament_index.html:160
 msgid "Enter Feedback"
-msgstr ""
+msgstr "Saisie d'une commentaire"
 
 #: tournaments/templates/public_tournament_index.html:168
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr ""
+msgstr "Tirage de %(round_name)s"
 
 #: tournaments/templates/public_tournament_index.html:176
 msgid "View All Draws"
-msgstr ""
+msgstr "Afficher le tirage"
 
 #: tournaments/templates/set_current_round.html:33
 #, python-format
@@ -709,18 +715,19 @@ msgstr "Bienvenue&nbsp;!"
 #: tournaments/templates/site_index.html:14
 #, python-format
 msgid "Admin area for <strong>%(tn)s</strong>"
-msgstr ""
+msgstr "Zone administrative de <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:18
 #, python-format
 msgid "Assistant area for <strong>%(tn)s</strong>"
-msgstr ""
+msgstr "Zone pour les assistants de <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:33
 msgid ""
 "It looks like there aren't any tournaments on this site. Would you like to "
 "create one?"
 msgstr ""
+"Il semble qu'il n'y ait aucun tournoi sur ce site. Voulez-vous en créer un ?"
 
 #: tournaments/templates/site_index.html:41
 msgid "There are currently no tournaments set up on this site."
@@ -749,7 +756,7 @@ msgstr "Zone pour modifier la base de données"
 #: tournaments/templates/site_index.html:84
 #, python-format
 msgid "Change Password (%(user)s)"
-msgstr ""
+msgstr "Modifier mot de passe (%(user)s)"
 
 #: tournaments/templates/site_index.html:88
 #, python-format
@@ -771,7 +778,7 @@ msgstr "Aperçu"
 #: tournaments/templates/tournament_index.html:10
 #, python-format
 msgid "current round: %(round_name)s, status: %(round_status)s"
-msgstr ""
+msgstr "tour actuel: %(round_name)s, status: %(round_status)s"
 
 #: tournaments/templates/tournament_index.html:19
 #, python-format
@@ -784,10 +791,17 @@ msgid ""
 "mandatory condition of Tabbycat's software license. <a "
 "href=\"%(url)s\">Learn more about donating.</a>"
 msgstr ""
+"Nous espérons que vous avez aimé utiliser Tabbycat pour votre tournoi. Nous "
+"apprécierions que vous fassiez une donation au projet afin de soutenir son "
+"développement et entretien continu. D'un tournoi de ce taille, nous "
+"suggérons une donation de <strong>%(amount)s</strong>. Notez que si votre "
+"tournoi est à but lucratif, ou est pour lever des fonds, ce paiement est une"
+" condition obligatoire de la licence de logiciel de Tabbycat. <a "
+"href=\"%(url)s\">Savoir plus des donations.</a>"
 
 #: tournaments/templates/tournament_index.html:35
 msgid "Welcome to your new tournament!"
-msgstr ""
+msgstr "Bienvenue à votre nouveau tournoi !"
 
 #: tournaments/templates/tournament_index.html:37
 msgid ""

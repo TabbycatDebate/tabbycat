@@ -28,7 +28,7 @@ msgstr "Manejo de URLs Privadas"
 
 #: privateurls/models.py:12
 msgid "ballot"
-msgstr "balota"
+msgstr "ballots"
 
 #: privateurls/models.py:13
 msgid "feedback"
@@ -81,7 +81,7 @@ msgstr ""
 #: privateurls/templates/ballot_urls_email_list.html:4
 #: privateurls/templates/ballot_urls_email_list.html:5
 msgid "Email Private Ballot URLs"
-msgstr "Enviar URLs de balotas privadas"
+msgstr "Enviar URLs de ballots privadas"
 
 #: privateurls/templates/ballot_urls_email_list.html:13
 msgid ""
@@ -215,7 +215,7 @@ msgstr "Imprimir URLs de Feedback"
 
 #: privateurls/templates/private_urls_nav.html:15
 msgid "Print Ballot URLs"
-msgstr "Imprimir URLs de Balotas"
+msgstr "Imprimir URLs de Ballots"
 
 #: privateurls/templates/private_urls_nav.html:21
 msgid "Email Feedback URLs"
@@ -223,7 +223,7 @@ msgstr "Enviar URLs de Feedback"
 
 #: privateurls/templates/private_urls_nav.html:25
 msgid "Email Ballot URLs"
-msgstr "Enviar URLs de Balotas"
+msgstr "Enviar URLs de Ballots"
 
 #: privateurls/templates/private_urls_nav.html:32
 msgid ""
@@ -258,7 +258,7 @@ msgstr "Nombre"
 
 #: privateurls/views.py:96 privateurls/views.py:182
 msgid "Ballot URL"
-msgstr "URL de Balota"
+msgstr "URL de Ballot"
 
 #: privateurls/views.py:119
 msgid ""

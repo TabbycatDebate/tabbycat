@@ -24,23 +24,23 @@ msgstr "Disponibilité"
 
 #: availability/models.py:15
 msgid "content type"
-msgstr ""
+msgstr "type de contenu"
 
 #: availability/models.py:16
 msgid "object id"
-msgstr ""
+msgstr "identifiant d'objet"
 
 #: availability/models.py:20
 msgid "round"
-msgstr ""
+msgstr "tour"
 
 #: availability/models.py:24
 msgid "round availability"
-msgstr ""
+msgstr "disponibilité dans un tour"
 
 #: availability/models.py:25
 msgid "round availabilities"
-msgstr ""
+msgstr "disponibilités dans un tour"
 
 #: availability/templates/availability_index.html:11
 msgid "Check In All Breaking Adjs"
@@ -271,7 +271,7 @@ msgstr "Enregistrement des équipes"
 
 #: availability/templates/checkin_progress.html:46
 msgid "No need to check teams in"
-msgstr ""
+msgstr "Pas de besoin d'enregistrer les équipes"
 
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams checked in for this round."
@@ -284,7 +284,7 @@ msgstr ""
 
 #: availability/templates/checkin_progress.html:59
 msgid "Edit team check-ins"
-msgstr ""
+msgstr "Modifier la disponibilité des équipes"
 
 #: availability/templates/checkin_progress.html:66
 msgid "Check in adjudicators"
@@ -309,7 +309,7 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html:80
 msgid "Edit adjudicator check-ins"
-msgstr ""
+msgstr "Modifier la disponibilité des juges"
 
 #: availability/templates/checkin_progress.html:87
 msgid "Check in venues"
@@ -333,7 +333,7 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html:103
 msgid "Edit venue check-ins"
-msgstr ""
+msgstr "Modifier la disponibilité des lieux"
 
 #: availability/views.py:77
 msgid "no teams are debating"

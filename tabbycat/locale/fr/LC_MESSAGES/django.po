@@ -27,19 +27,23 @@ msgid ""
 "This style of info card announces critical information. <a "
 "href=\"\">Link</a>."
 msgstr ""
+"Cette style de carte d'information annonce de l'information critique. <a "
+"href=\"\">Lien</a>."
 
 #: templates/admin/style_guide.html:33
 msgid "This style of info card announces general <a href=\"\">information</a>."
 msgstr ""
+"Cette style de carte d'information annonce de <a href=\"\">l'information "
+"générale</a>."
 
 #: templates/admin/style_guide.html:158
 msgctxt "page title"
 msgid "Form Title"
-msgstr ""
+msgstr "Titre de forme"
 
 #: templates/admin/style_guide.html:159
 msgid "Sub Title Title"
-msgstr ""
+msgstr "Sous-titre titre"
 
 #: templates/admin/style_guide.html:195 templates/registration/login.html:61
 msgctxt "button"
@@ -49,7 +53,7 @@ msgstr "Connexion"
 #: templates/admin/style_guide.html:196 templates/registration/login.html:62
 msgctxt "button"
 msgid "I forgot my password"
-msgstr ""
+msgstr "J'ai oublié mon mot de passe"
 
 #: templates/base.html:12
 #, python-format
@@ -57,12 +61,16 @@ msgid ""
 "The tab for %(tournament_name)s runs on Tabbycat, an open-source tab system "
 "for a variety of parliamentary debating formats"
 msgstr ""
+"La tabulation de %(tournament_name)s fonctionne sur Tabbycat, un système "
+"open-source pour tabuler une variété de formats de débat parlementaire."
 
 #: templates/base.html:16
 msgid ""
 "This tab runs on Tabbycat, an open-source tab system for a variety of "
 "parliamentary debating formats"
 msgstr ""
+"Cette tabulation fonctionne sur Tabbycat, un système open-source pour "
+"tabuler une variété de formats de débat parlementaire."
 
 #: templates/base_formset.html:26
 msgid "Save and Add More"
@@ -70,7 +78,7 @@ msgstr "Enregistrer et ajouter davantage"
 
 #: templates/components/form-errors.html:4
 msgid "Whoops! There was an error with one or more fields"
-msgstr ""
+msgstr "Oups ! Il y a une erreur dans un ou plusieurs champs."
 
 #: templates/footer.html:13
 #, python-format
@@ -86,7 +94,7 @@ msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
-"Tabbycat est un projet open source, développé par des bénévoles. Vous pouvez"
+"Tabbycat est un projet open-source, développé par des bénévoles. Vous pouvez"
 " l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
@@ -142,6 +150,9 @@ msgid ""
 "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
 "target=\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
+"Vous pouvez <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
+"target=\"_blank\">personnaliser et imprimer</a> des bulletins beaux de votre"
+" navigateur."
 
 #: templates/footer.html:67
 msgid "GitHub"
@@ -211,20 +222,20 @@ msgstr "Classement"
 
 #: templates/nav/admin_nav.html:144
 msgid "Teams"
-msgstr ""
+msgstr "Équipes"
 
 #: templates/nav/admin_nav.html:152
 msgid "Speakers"
-msgstr ""
+msgstr "Orateurs"
 
 #: templates/nav/admin_nav.html:157
 msgid "Replies"
-msgstr ""
+msgstr "Discours de résponse"
 
 #: templates/nav/admin_nav.html:162
 #, python-format
 msgid "%(category_name)s Speakers"
-msgstr ""
+msgstr "Orateurs %(category_name)s"
 
 #: templates/nav/admin_nav.html:168 templates/nav/public_nav.html:131
 msgid "Motions"
@@ -241,15 +252,15 @@ msgstr "Qualifications"
 #: templates/nav/admin_nav.html:195
 #, python-format
 msgid "%(category_name)s"
-msgstr ""
+msgstr "%(category_name)s"
 
 #: templates/nav/admin_nav.html:214
 msgid "Log Out"
-msgstr ""
+msgstr "Deconnexion"
 
 #: templates/nav/assistant_nav.html:11
 msgid "Check In Ballots"
-msgstr ""
+msgstr "Enregistrement de la présence des bulletins de vote"
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
@@ -270,7 +281,7 @@ msgstr "Tab des discours de résponse"
 
 #: templates/nav/public_nav.html:34
 msgid "Adjudicator Tab"
-msgstr ""
+msgstr "Tab des juges"
 
 #: templates/nav/public_nav.html:39
 msgid "Motions Tab"
@@ -368,7 +379,7 @@ msgstr "Modification du mot de passe"
 
 #: templates/registration/password_change_form.html:20
 msgid "Please enter your old password, then enter a new one."
-msgstr ""
+msgstr "Veuillez saisir votre ancien mot de passe, puis saisissez un nouveau."
 
 #: templates/registration/password_change_form.html:25
 #: templates/registration/password_reset_confirm.html:38
@@ -514,26 +525,29 @@ msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 #: urls.py:84
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
-msgstr ""
+msgstr "Salut, %(username)s — vous venez de vous déconnecter !"
 
 #: urls.py:87
 msgid "Later! You were logged out!"
-msgstr ""
+msgstr "Salut ! Vous venez de vous déconnecter !"
 
 #: urls.py:94
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
-msgstr ""
+msgstr "Salut, %(username)s — vous venez de vous connecter!"
 
 #: urls.py:97
 msgid "Welcome! You just logged in!"
-msgstr ""
+msgstr "Bienvenue ! Vous venez de vous connecter !"
 
 #: users/admin.py:19
 msgid ""
 "Users with Staff status can view and edit the Edit Database area. This is "
 "potentially dangerous and should be reserved for the actual Tab Director(s)."
 msgstr ""
+"Les utilisateurs ayant le status équipe peuvent voir et modifier la zone "
+"pour modifier la base de données. Ces droits sont potentiellement dangereux "
+"et devront être réservés aux directeurs de la tabulation."
 
 #: users/admin.py:22
 msgid ""
@@ -544,3 +558,10 @@ msgid ""
 "adjudication core are generally given Superuser status if they know what "
 "they are doing."
 msgstr ""
+"Les utilisateurs ayant le statut super-utilisateur ont l'accès plein à tous "
+"les zones de Tabbycat dont ils ont besoin pour diriger un tournoi. Ceux qui "
+"ne sont pas super-utilisateurs peuvent néanmoins accomplir des tâches, "
+"telles que l'ajout des résultats et des commentaires, mais ils ne peuvent "
+"pas accéder les zones confidentielles, par examples les sections de la "
+"qualification et pour voir les commentaires. Les membres de l'équipe "
+"d'adjudications reçoivent en général ce status s'ils savent ce qu'ils font."

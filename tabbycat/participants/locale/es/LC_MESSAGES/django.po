@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-15 19:36+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,20 +38,20 @@ msgstr[1] ""
 
 #: participants/apps.py:7 participants/views.py:50
 msgid "Participants"
-msgstr ""
+msgstr "Participantes"
 
 #: participants/models.py:21 participants/models.py:41
 #: participants/models.py:74 participants/models.py:108
 msgid "name"
-msgstr ""
+msgstr "nombre"
 
 #: participants/models.py:24 participants/models.py:49
 msgid "region"
-msgstr ""
+msgstr "región"
 
 #: participants/models.py:25
 msgid "regions"
-msgstr ""
+msgstr "regiones"
 
 #. Translators: Change the examples to institutions native to your language;
 #. keep consistent between strings
@@ -59,10 +60,12 @@ msgid ""
 "The institution's full name, e.g., \"University of Cambridge\", \"Victoria "
 "University of Wellington\""
 msgstr ""
+"El nombre completo de la institución, ej: \"Universidad del Rosario\", "
+"\"Universidad de Cambridge\""
 
 #: participants/models.py:45
 msgid "code"
-msgstr ""
+msgstr "código"
 
 #. Translators: Change the examples to institutions native to your language;
 #. keep consistent between strings
