@@ -136,7 +136,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 return None
             return {
                 'venuecategory': vm.VenueCategory.objects.get(name=line['category']),
-                'venue': vm.Venue.objects.get(name=line['name'])
+                'venue': self.tournament.venue_set.get(name=line['name'])
             }
 
         self._import(f, vm.VenueCategory.venues.through, venue_category_venue_interpreter)

@@ -3,11 +3,10 @@
   <div class="draw-cell">
     <div class="mt-1 ml-2">
 
-      <label class="custom-control custom-checkbox m-0">
-        <input type="checkbox" class="custom-control-input"
-               v-model="debate.sidesConfirmed" @click="checkUpdate">
-        <span class="custom-control-indicator"></span>
-        <span :class="['custom-control-description', debate.sidesConfirmed ? 'text-success' : 'text-danger']">
+      <label class="form-check-label m-0">
+        <input type="checkbox" class="form-check-input"
+               v-model.boolean.lazy="debate.sidesConfirmed" @change="checkUpdate">
+        <span :class="[debate.sidesConfirmed ? 'text-success' : 'text-danger']">
           <span v-if="!debate.sidesConfirmed">un</span>confirmed
         </span>
       </label>
@@ -28,12 +27,10 @@ export default {
   },
   methods: {
     checkUpdate: function () {
-      this.$nextTick(function () { // Wait to model/DOM to catch up
-        var sidesStatus = this.debate.sidesConfirmed
-        var message = "debate " + this.debate.id + "'s sides as " + sidesStatus
-        var payload = { 'sidesStatus': sidesStatus, id: this.debate.id }
-        this.ajaxSave(this.saveUrl, payload, message, null, null, null)
-      })
+      var sidesStatus = this.debate.sidesConfirmed
+      var message = "debate " + this.debate.id + "'s sides as " + sidesStatus
+      var payload = { 'sidesStatus': sidesStatus, id: this.debate.id }
+      this.ajaxSave(this.saveUrl, payload, message, null, null, null)
     },
   },
 }

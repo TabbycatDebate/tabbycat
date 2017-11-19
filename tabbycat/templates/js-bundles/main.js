@@ -47,14 +47,6 @@ $(document).ready(function(){
   $('[data-toggle=tooltip]').tooltip({
     'html': true
   });
-  // Make larger click targets for checkboxes in tables
-  $('.checkbox-target').on('click', function (e) {
-    if (e.target === this) { // Don't trigger when clicking the input itself
-      var checkBox = $("input[type=checkbox]", this).first();
-      checkBox.prop("checked", !checkBox.prop("checked"));
-      checkBox.trigger("change");
-    }
-  });
   // Feather shim for icons
   feather.replace();
   // Remove the pre-expanded sidebar states for mobile (they overlap)
