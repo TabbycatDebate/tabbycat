@@ -373,8 +373,12 @@ class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
 
         tournament = self.get_tournament()
         round = tournament.current_round
-        if round.draw_status != Round.STATUS_RELEASED or not round.motions_released:
-            return self.error_page(_("The draw and/or motions for the round haven't been released yet."))
+        if round.draw_status != Round.STATUS_RELEASED:
+            return self.error_page(_("The draw for this round hasn't been released yet."))
+
+        if (tournament.pref('enable_motions') or tournament.pref('motion_vetoes_enabled')) \
+                and not round.motions_released:
+            return self.error_page(_("The motions for this round haven't been released yet."))
 
         try:
             self.debateadj = DebateAdjudicator.objects.get(adjudicator=self.object, debate__round=round)
