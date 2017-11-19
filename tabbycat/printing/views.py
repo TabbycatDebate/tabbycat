@@ -169,7 +169,7 @@ class PrintScoresheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
     def add_ballot_data(self, adj, debate_info):
         ballot_data = {
             'author': adj['adjudicator']['name'],
-            'authorInstitution': adj['adjudicator']['institution']['code'],
+            'authorInstitution': adj['adjudicator']['institution']['code'] if adj['adjudicator']['institution'] else "Unaffiliated",
             'authorPosition': adj['position'],
         }
         ballot_data.update(debate_info)  # Extend with debateInfo keys

@@ -8,16 +8,16 @@
         <span v-for="(da, i) in panellistsExcludingSelf">
           <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ da.adjudicator.name }}</strong>
           <span v-if="da.position === 'C'">
-            (Chair, {{ da.adjudicator.institution.code }})
+            (Chair, {{ getAdjudicatorInstitution(da) }})
           </span>
           <span v-if="da.position === 'O'">
-            (Solo Chair, {{ da.adjudicator.institution.code }})
+            (Solo Chair, {{ getAdjudicatorInstitution(da) }})
           </span>
           <span v-if="da.position === 'P'">
-            (Panellist, {{ da.adjudicator.institution.code }})
+            (Panellist, {{ getAdjudicatorInstitution(da) }})
           </span>
           <span v-if="da.position === 'T'">
-            (Trainee, {{ da.adjudicator.institution.code }})
+            (Trainee, {{ getAdjudicatorInstitution(da) }})
           </span>
         </span>.
       </div>
@@ -118,6 +118,17 @@ import _ from 'lodash'
 export default {
   props: ['ballot', 'roundInfo'],
   components: {PrintableTeamScores},
+  methods: {
+    getAdjudicatorInstitution: function(debateAdjudicator) {
+      var institution = debateAdjudicator.adjudicator.institution
+      console.log(institution)
+      if (!_.isUndefined(institution) && institution !== null) {
+        return institution.code
+      } else {
+        return "Unaffiliated"
+      }
+    }
+  },
   computed: {
     panellistsExcludingSelf: function() {
       var ballotSource = this.ballot.author

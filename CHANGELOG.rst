@@ -7,6 +7,7 @@ Change Log
 *Release date: TBD*
 
 - Fixed issue where results submission would crash if sides are unconfirmed
+- Fixed issue where scoresheets would not display properly for adjudicators who lack institutions.
 
 
 2.0.0 (Iberian Lynx)
