@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2017-11-19 16:38+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -247,7 +247,7 @@ msgstr ""
 
 #: templates/nav/public_nav.html:19
 #, python-format
-msgid "%(category_name)s Speaker Tab"
+msgid "%(category_name)s Tab"
 msgstr ""
 
 #: templates/nav/public_nav.html:29

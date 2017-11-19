@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2017-11-19 16:38+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -125,6 +125,12 @@ msgid "%(team)s (%(side)s)"
 msgstr ""
 
 #: results/forms.py:803
+msgid ""
+"Sides for this debate are not confirmed. You can't save a result for this "
+"debate until the sides have been confirmed in the draw."
+msgstr ""
+
+#: results/forms.py:810
 msgid "There must be exactly two teams advancing."
 msgstr ""
 
@@ -513,7 +519,7 @@ msgstr ""
 
 #: results/templates/ballot_checkin.html:13
 msgid ""
-"To check-in a ballot start to type the ballot's <strong>venue</strong>. Then "
+"To check in a ballot start to type the ballot's <strong>venue</strong>. Then "
 "hit enter to select the correct venue, then enter again to search for the "
 "ballot."
 msgstr ""
@@ -838,45 +844,55 @@ msgstr ""
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
 msgstr ""
 
-#: results/views.py:376
-msgid "The draw and/or motions for the round haven't been released yet."
+#: results/views.py:377
+msgid "The draw for this round hasn't been released yet."
 msgstr ""
 
 #: results/views.py:381
+msgid "The motions for this round haven't been released yet."
+msgstr ""
+
+#: results/views.py:386
 msgid "It looks like you don't have a debate this round."
 msgstr ""
 
-#: results/views.py:383
+#: results/views.py:388
 msgid ""
 "It looks like you're assigned to two or more debates this round. Please "
 "contact a tab room official."
 msgstr ""
 
-#: results/views.py:391
+#: results/views.py:396
 msgid ""
 "Your debate doesn't have a chair, so you can't enter results for it. Please "
 "contact a tab room official."
 msgstr ""
 
+#: results/views.py:401
+msgid ""
+"It looks like the sides for this debate haven't yet been confirmed, so you "
+"can't enter results for it. Please contact a tab room official."
+msgstr ""
+
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-#: results/views.py:498
+#: results/views.py:508
 #, python-format
 msgid "%(team_name)s as %(side_abbr)s"
 msgstr ""
 
-#: results/views.py:512
+#: results/views.py:522
 #, python-format
 msgid "%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)"
 msgstr ""
 
-#: results/views.py:529
+#: results/views.py:539
 #, python-format
 msgid ""
 "Advancing: %(advancing_list)s<br>\n"
 "Eliminated: %(eliminated_list)s"
 msgstr ""
 
-#: results/views.py:541
+#: results/views.py:551
 #, python-format
 msgid ""
 "1st: %(first_team)s<br>\n"
@@ -885,26 +901,26 @@ msgid ""
 "4th: %(fourth_team)s"
 msgstr ""
 
-#: results/views.py:554
+#: results/views.py:564
 #, python-format
 msgid "Error with result for %(debate)s"
 msgstr ""
 
-#: results/views.py:593 results/views.py:606
+#: results/views.py:603 results/views.py:616
 msgid "There aren't any venues with that name."
 msgstr ""
 
-#: results/views.py:611
+#: results/views.py:621
 #, python-format
 msgid "There wasn't a debate in venue %(venue_name)s this round."
 msgstr ""
 
-#: results/views.py:614
+#: results/views.py:624
 #, python-format
 msgid "There appear to be multiple debates in venue %(venue_name)s this round."
 msgstr ""
 
-#: results/views.py:618
+#: results/views.py:628
 #, python-format
 msgid "The ballot for venue %(venue_name)s has already been checked in."
 msgstr ""
