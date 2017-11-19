@@ -72,10 +72,8 @@ def liveness(self, team, teams_count, prelims, current_round):
 
     # The actual calculation should be shifed to be a cached method on
     # the relevant break category
-
     highest_liveness = 3
     for bc in team.break_categories.all():
-        # print(bc.name, bc.break_size)
         import random
         status = random.choice([1,2,3])
         highest_liveness = 3
@@ -108,23 +106,31 @@ def determine_liveness(thresholds, wins):
         return 'live'
 
 
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+
 def calculate_live_thresholds(bc, tournament, round):
     """ Create array of binomial coefficients, then create arrays of raw decimal
     data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
     his work on the debatebreaker.blogspot.com.au blog and app"""
 
-    def factorial(n):
-        if n == 0:
-            return 1
-        else:
-            return n * factorial(n-1)
-
-    current_round = round.seq
-    break_spots = bc.break_size
     total_teams = bc.team_set.count()
     total_rounds = tournament.prelim_rounds(until=round).count()
     break_cat_scores = get_scores(bc) if not bc.is_general else None
+    if tournament.pref('teams_in_debate') == 'bp':
+        return calculate_bp(bc, round.seq, bc.break_size,
+            total_teams, total_rounds, break_cat_scores)
+    else:
+        return calculate_2vs2(bc, round.seq, bc.break_size,
+            total_teams, total_rounds, break_cat_scores)
 
+
+def calculate_2vs2(bc, current_round, break_spots, total_teams,
+                   total_rounds, break_cat_scores):
     # Create array of binomial coefficients, then create arrays of raw
     # decimal data, upper bounds, and lower bounds
     coefficients = []
@@ -195,3 +201,101 @@ def calculate_live_thresholds(bc, tournament, round):
         # 'catch' a team in the last breaking spot.
         dead = break_cat_scores[break_spots-1] - (total_rounds - current_round + 1) - 1
         return safe, dead
+
+
+def calculate_bp(bc, current_round, break_spots, total_teams,
+                 total_rounds, break_cat_scores):
+
+    a = []
+    i = 0
+    j = 0
+
+    while(i < total_teams):
+        a[i] = 0
+        i += 1
+
+    for i in range(0, total_rounds):
+        for j in range(0, total_teams, 4):
+            a[j + 1] += 1
+            a[j + 2] = a[j + 2] + 2
+            a[j + 3] = a[j + 3] + 3
+
+        # TODO a.sort(function(a, b) { return a-b }
+        sorted(a)
+
+    prev_val = total_teams - 1
+    cur_val = total_teams - 1
+    cur_count = 1
+    total_count = 1
+    not_found = 1
+    i = total_teams - 2
+
+    if break_spots == 1:
+        pass
+        # document.getElementById("result1").innerHTML = "All teams greater than "+a[cur_val]+" break";
+    elif break_spots == 0:
+        pass
+        # document.getElementById("result1").innerHTML = "No teams break";
+    elif break_spots == total_teams:
+        pass
+        # document.getElementById("result1").innerHTML = "All teams break";
+    else:
+        while i >= 0 and not_found:
+            cur_val = i
+            if a[prev_val] == a[cur_val]:
+                cur_count += 1
+            else:
+                cur_count = 1
+            total_count += 1
+            if total_count == break_spots:
+                not_found = 0
+            prev_val = cur_val
+            i -= 1
+        # document.getElementById("result1").innerHTML = "Case 1 : All teams on "+a[prev_val+cur_count]+" points and higher break and "+cur_count+" teams on "+a[cur_val]+" points will break";
+
+    i = 0
+    j = 0
+    while i < total_teams:
+        a[i] = 0
+        i += 1
+
+    for i in range(0, total_rounds):
+        for i in range(0, total_rounds, 4):
+            a[j] = a[j] + 3
+            a[j+1] = a[j+1] + 2
+            a[j+2] = a[j+2] + 1
+
+        # TODO a.sort(function(a, b){ return a-b });
+        sorted(a)
+
+    prev_val = total_teams - 1
+    cur_val = total_teams - 1
+    cur_count = 1
+    total_count = 1
+    not_found = 1
+    i = total_teams-2
+
+    if break_spots == 1:
+        pass
+        # document.getElementById("result2").innerHTML = "All teams greater than "+a[cur_val]+" break";
+    elif break_spots == 0:
+        pass
+        # document.getElementById("result2").innerHTML = "No teams break";
+    elif break_spots == total_teams:
+        pass
+        # document.getElementById("result2").innerHTML = "All teams break";
+    else:
+        while i >= 0 and not_found:
+            cur_val = i
+            if a[prev_val] == a[cur_val]:
+                cur_count += 1
+            else:
+                cur_count = 1
+            total_count += 1
+            if total_count == break_spots:
+                not_found = 0
+            prev_val = cur_val
+            i -= 1
+        # document.getElementById("result2").innerHTML = "Case 2 : All teams on "+a[prev_val+cur_count]+" points and higher break and "+cur_count+" teams on "+a[cur_val]+" points will break";
+
+    return None
