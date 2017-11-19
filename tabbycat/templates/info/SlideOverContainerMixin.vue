@@ -109,25 +109,49 @@ export default {
             var css = 'conflictable hover-histories-' + history.ago + '-ago'
             // Only show last 2 rounds for small screens
             if (history.ago > 2) { css += ' visible-lg-block' }
-            formattedHistories.push({'title': historyName, 'ago': history.ago, 'class': css})
+            formattedHistories.push({
+              'title': historyName, 'ago': history.ago,
+              'class': css, 'type': historiesType
+            })
           }
         })
       })
+
+      // Return if no histories
+      if (formattedHistories.length === 0) {
+        return formattedHistories
+      }
+
       // Order by rounds;
-      formattedHistories = _.sortBy(formattedHistories, [function(h) { return h.ago }])
-      // Add round counter
-      var countedRounds = []
-      _.forEach(formattedHistories, function(history, index) {
-        if (!_.includes(countedRounds, history.ago)) {
-          formattedHistories.splice(index, 0, {
-            'title': '-' + history.ago, 'icon': 'clock',
-            'class': history.ago > 2 ? ' visible-lg-block' : ' '
-          })
-          countedRounds.push(history.ago)
+      var histories = _.sortBy(formattedHistories, [function(h) {
+        return h.ago
+      }])
+
+      // Add initial and subsequent round counter
+      histories.splice(0, 0, {
+        'title': '-' + histories[0].ago, 'icon': 'clock',
+        'class': histories[0].ago > 2 ? ' visible-lg-block' : ' '
+      })
+
+      _.forEach(histories, function(history, i) {
+        if (_.isUndefined(history['icon'])) {
+          if (histories[i + 1].ago !== history.ago) {
+            histories.splice(i + 1, 0, {
+              'title': '-' + histories[i + 1].ago, 'icon': 'clock',
+              'class': histories[i + 1].ago > 2 ? ' visible-lg-block' : ' '
+            })
+          }
         }
       })
-      formattedHistories = formattedHistories.slice(0,15)
-      return formattedHistories
+
+      // Don't have too many items when they wont be shown anyway
+      histories = histories.slice(0, 15)
+
+      // Remove trailing round indicator if it's the last element
+      if (!_.isUndefined(_.last(histories)['icon'])) {
+        histories.pop()
+      }
+      return histories
     }
   }
 }
