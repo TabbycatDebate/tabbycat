@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-15 19:36+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:16
 #: options/templates/preferences_index.html:15
 msgid "Score Rules"
-msgstr ""
+msgstr "Règles des notes"
 
 #: options/dynamic_preferences_registry.py:22
 msgid "Minimum allowed score for substantive speeches"
@@ -94,7 +95,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:93
 #: options/templates/preferences_index.html:20
 msgid "Draw Rules"
-msgstr ""
+msgstr "Règles du tirage"
 
 #: options/dynamic_preferences_registry.py:99
 msgid ""
@@ -210,19 +211,19 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:185
 #: options/dynamic_preferences_registry.py:202
 msgid "Random"
-msgstr ""
+msgstr "Aléatoire"
 
 #: options/dynamic_preferences_registry.py:186
 msgid "Balance"
-msgstr ""
+msgstr "Équilibré"
 
 #: options/dynamic_preferences_registry.py:187
 msgid "Pre-allocated"
-msgstr ""
+msgstr "Pré-attribué"
 
 #: options/dynamic_preferences_registry.py:188
 msgid "Manually enter from ballot"
-msgstr ""
+msgstr "Saisir manuellement du bulletin"
 
 #: options/dynamic_preferences_registry.py:195
 msgid ""
