@@ -130,5 +130,12 @@
   </form>
 {% else %}
   <div id="vueMount"></div><!-- Prevent unfound item error for Vue -->
+  {% tournamenturl 'breakqual-edit-eligibility' as url %}
+  {% blocktrans trimmed asvar text with count=category.team_set.count %}
+    There are <strong>{{ count }} teams marked as eligible</strong> for this
+    category. Would you like to add more eligible teams?
+  {% endblocktrans %}
+  {% include "components/item-action.html" with type="primary" url=url to_complete=true %}
+
 {% endif %}
 {% endblock content %}
