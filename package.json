@@ -40,8 +40,8 @@
     "raven-js": "^3.19.1",
     "stats-percentile": "^2.0.0",
     "vinyl-source-stream": "1.1.0",
-    "vue": "2.5.3",
-    "vue-template-compiler": "2.5.3",
+    "vue": "2.5.6",
+    "vue-template-compiler": "2.5.6",
     "vueify": "9.4.1"
   },
   "scripts": {

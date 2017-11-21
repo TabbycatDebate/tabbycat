@@ -216,9 +216,8 @@ thead,
     border-left: 2px dotted $droppable-bg;
   }
 
-  &.checkbox-target:hover,
-  &.checkbox-target input:hover {
-    cursor: pointer;
+  .form-check-label input {
+    margin-top: -10px;
   }
 }
 
