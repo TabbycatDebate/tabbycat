@@ -114,25 +114,22 @@ def factorial(n):
 
 
 def calculate_live_thresholds(bc, tournament, round):
-    """ Create array of binomial coefficients, then create arrays of raw decimal
-    data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
-    his work on the debatebreaker.blogspot.com.au blog and app"""
-
     total_teams = bc.team_set.count()
     total_rounds = tournament.prelim_rounds(until=round).count()
     break_cat_scores = get_scores(bc) if not bc.is_general else None
     if tournament.pref('teams_in_debate') == 'bp':
-        return calculate_bp(bc, round.seq, bc.break_size,
+        return calculate_bp(bc.is_general, round.seq, bc.break_size,
             total_teams, total_rounds, break_cat_scores)
     else:
-        return calculate_2vs2(bc, round.seq, bc.break_size,
+        return calculate_2vs2(bc.is_general, round.seq, bc.break_size,
             total_teams, total_rounds, break_cat_scores)
 
 
-def calculate_2vs2(bc, current_round, break_spots, total_teams,
+def calculate_2vs2(is_general, current_round, break_spots, total_teams,
                    total_rounds, break_cat_scores):
-    # Create array of binomial coefficients, then create arrays of raw
-    # decimal data, upper bounds, and lower bounds
+    """ Create array of binomial coefficients, then create arrays of raw decimal
+    data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
+    his work on the debatebreaker.blogspot.com.au blog and app"""
     coefficients = []
     for i in range(0, total_rounds + 1):
         coeff = (factorial(total_rounds) / (factorial(i) * factorial(total_rounds - i)))
@@ -164,7 +161,7 @@ def calculate_2vs2(bc, current_round, break_spots, total_teams,
 
     # We now have complete data sets, and can compute the safe score and dead
     # scores for any category we want.
-    if bc.is_general:
+    if is_general:
         high_bound = 0
         for i in range(0, total_rounds + 1):
             if sum_u[i] <= break_spots:
@@ -190,7 +187,7 @@ def calculate_2vs2(bc, current_round, break_spots, total_teams,
             return 0, 0
 
         # Now, we improve upon our safe score using the actual data.
-        # Check if teams in breaking range can still be 'caught'by the team just
+        # Check if teams in breaking range can still be 'caught' by the team just
         # outside breaking range. This gives us the best possible safe score.
         for i in range(0, break_spots + 1):
             if break_cat_scores[i] - break_cat_scores[break_spots] > total_rounds - current_round + 1:
@@ -199,11 +196,11 @@ def calculate_2vs2(bc, current_round, break_spots, total_teams,
         # The dead score for the ESL category is easy to calculate.
         # This function just defines the score such that a team can no longer
         # 'catch' a team in the last breaking spot.
-        dead = break_cat_scores[break_spots-1] - (total_rounds - current_round + 1) - 1
+        dead = break_cat_scores[break_spots - 1] - (total_rounds - current_round + 1) - 1
         return safe, dead
 
 
-def calculate_bp(bc, current_round, break_spots, total_teams,
+def calculate_bp(is_general, current_round, break_spots, total_teams,
                  total_rounds, break_cat_scores):
 
     a = []
