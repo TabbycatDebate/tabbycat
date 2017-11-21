@@ -205,23 +205,9 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
     """Based on Tushar Kanakagiri's algorithm in
     https://github.com/tusharkanakagiri/BreakCalculator """
 
-    # Round up teams to nearest multiple of four
-    total_teams = int(4 * round(float(total_teams) / 4))
-    a = [0] * total_teams
-
-    for i in range(0, total_rounds):
-        for j in range(0, total_teams, 4):
-            a[j + 1] += 1
-            a[j + 2] += 2
-            a[j + 3] += 3
-
-        a.sort()
-
-    cur_val = total_teams - 1
-
+    # TODO: integrate below sanity checking into the 2vs2 method also
     if break_spots == 1:
-        print("All teams greater than ", a[cur_val], " break")
-        return a[cur_val + 1], a[cur_val]
+        print("bad input")
     elif break_spots == 0:
         print("No teams break")
         return 0, 0 # Fix
@@ -229,32 +215,63 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
         print("All teams break")
         return 0, 0  # Fix
 
-    prev_val = total_teams - 1
-    cur_count = 1
-    total_count = 1
-    i = total_teams - 2
-    while i >= 0:
-        cur_val = i
+    def get_high_ranges(scores):
+        for i in range(0, total_rounds):
+            for j in range(0, total_teams, 4):
+                scores[j + 1] += 1
+                scores[j + 2] += 2
+                scores[j + 3] += 3
+            scores.sort()
+        return scores
 
-        if a[prev_val] == a[cur_val]:
-            cur_count += 1
-        else:
-            cur_count = 1
+    def get_low_ranges(scores):
+        for i in range(0, total_rounds):
+            for j in range(0, total_teams, 4):
+                scores[j] += 3
+                scores[j + 1] += 2
+                scores[j + 2] += 1
+            scores.sort()
+        return scores
 
-        total_count += 1
-        if total_count == break_spots:
-            break
+    def get_thresholds(total_teams, break_spots, distribution_function):
+        # Round up teams to nearest multiple of four
+        floored_teams = int(math.ceil(total_teams / 4.0)) * 4
+        scores = distribution_function([0] * floored_teams)
 
-        prev_val = cur_val
-        i = i - 1
+        cur_val = total_teams - 1
+        prev_val = total_teams - 1
+        cur_count = 1
+        total_count = 1
+        i = total_teams - 2
+        not_found = True
 
-    safe_at_break = a[prev_val + cur_count]
-    marginal_at_break = a[cur_val]
-    print("All teams on ", safe_at_break, " points and higher break", cur_count, " teams on ", marginal_at_break, " points will break")
+        while i >= 0 and not_found:
+            cur_val = i
+
+            if scores[prev_val] == scores[cur_val]:
+                cur_count += 1
+            else:
+                cur_count = 1
+
+            total_count += 1
+            if total_count == break_spots:
+                not_found = False
+
+            prev_val = cur_val
+            i -= 1
+
+        safe_at_break = scores[prev_val + cur_count]
+        marginal_at_break = scores[cur_val]
+        return safe_at_break, marginal_at_break
+
+    high_safe, high_marginal = get_thresholds(total_teams, break_spots, get_high_ranges)
+    low_safe, low_marginal = get_thresholds(total_teams, break_spots, get_low_ranges)
+
+    safe = max(high_safe, low_safe) # Choose worst case
+    marginal = min(high_marginal, low_marginal) # Choose best case
 
     # These values presume the final round has already happened
     # So we need to extrapolate back to the current round and the maximum point
     # Gains into order to find the current live/dead scores
-
-    dead_at_round = marginal_at_break - (3 * (total_rounds - current_round + 1))
-    return safe_at_break, dead_at_round
+    dead_at_round = marginal - (3 * (total_rounds - current_round + 1)) - 1
+    return safe, dead_at_round
