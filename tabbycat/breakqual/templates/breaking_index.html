@@ -44,6 +44,11 @@
                 {% blocktrans trimmed with category_name=category.name %}
                   {{ category_name }} Break
                 {% endblocktrans %}
+              {% blocktrans trimmed with size=category.break_size %}
+              <span class="badge float-right badge-light">
+                {{ size }} Spots
+              </span>
+              {% endblocktrans %}
               </h4>
             </div>
 

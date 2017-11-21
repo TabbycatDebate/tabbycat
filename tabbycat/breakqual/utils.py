@@ -72,10 +72,8 @@ def liveness(self, team, teams_count, prelims, current_round):
 
     # The actual calculation should be shifed to be a cached method on
     # the relevant break category
-
     highest_liveness = 3
     for bc in team.break_categories.all():
-        # print(bc.name, bc.break_size)
         import random
         status = random.choice([1,2,3])
         highest_liveness = 3
@@ -100,7 +98,9 @@ def liveness(self, team, teams_count, prelims, current_round):
 def determine_liveness(thresholds, wins):
     """ Thresholds should be calculated using calculate_live_thresholds."""
     safe, dead = thresholds
-    if wins >= safe:
+    if safe is None and dead is None:
+        return '?'
+    elif wins >= safe:
         return 'safe'
     elif wins <= dead:
         return 'dead'
@@ -108,25 +108,35 @@ def determine_liveness(thresholds, wins):
         return 'live'
 
 
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+
 def calculate_live_thresholds(bc, tournament, round):
-    """ Create array of binomial coefficients, then create arrays of raw decimal
-    data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
-    his work on the debatebreaker.blogspot.com.au blog and app"""
-
-    def factorial(n):
-        if n == 0:
-            return 1
-        else:
-            return n * factorial(n-1)
-
-    current_round = round.seq
-    break_spots = bc.break_size
     total_teams = bc.team_set.count()
     total_rounds = tournament.prelim_rounds(until=round).count()
     break_cat_scores = get_scores(bc) if not bc.is_general else None
 
-    # Create array of binomial coefficients, then create arrays of raw
-    # decimal data, upper bounds, and lower bounds
+    if bc.break_size <= 1:
+        return None, None # Bad input
+    elif bc.break_size == total_teams:
+        return 0, 0 # All teams break
+    elif tournament.pref('teams_in_debate') == 'bp':
+        return calculate_bp(bc.is_general, round.seq, bc.break_size,
+                            total_teams, total_rounds, break_cat_scores)
+    else:
+        return calculate_2vs2(bc.is_general, round.seq, bc.break_size,
+                              total_teams, total_rounds, break_cat_scores)
+
+
+def calculate_2vs2(is_general, current_round, break_spots, total_teams,
+                   total_rounds, break_cat_scores):
+    """ Create array of binomial coefficients, then create arrays of raw decimal
+    data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
+    his work on the debatebreaker.blogspot.com.au blog and app"""
     coefficients = []
     for i in range(0, total_rounds + 1):
         coeff = (factorial(total_rounds) / (factorial(i) * factorial(total_rounds - i)))
@@ -158,7 +168,7 @@ def calculate_live_thresholds(bc, tournament, round):
 
     # We now have complete data sets, and can compute the safe score and dead
     # scores for any category we want.
-    if bc.is_general:
+    if is_general:
         high_bound = 0
         for i in range(0, total_rounds + 1):
             if sum_u[i] <= break_spots:
@@ -173,7 +183,7 @@ def calculate_live_thresholds(bc, tournament, round):
         dead = low_bound - (total_rounds - (current_round - 1)) - 1
         return safe, dead
     else:
-        # The safe score for the ESL/EFL category is trick. First, we get a best
+        # The safe score for the ESL/EFL category is tricky. First we get a best
         # possible apriori safe score using the  earlier binomial distribution.
         safe = 0
         for i in range(0, total_rounds + 1):
@@ -184,7 +194,7 @@ def calculate_live_thresholds(bc, tournament, round):
             return 0, 0
 
         # Now, we improve upon our safe score using the actual data.
-        # Check if teams in breaking range can still be 'caught'by the team just
+        # Check if teams in breaking range can still be 'caught' by the team just
         # outside breaking range. This gives us the best possible safe score.
         for i in range(0, break_spots + 1):
             if break_cat_scores[i] - break_cat_scores[break_spots] > total_rounds - current_round + 1:
@@ -193,5 +203,77 @@ def calculate_live_thresholds(bc, tournament, round):
         # The dead score for the ESL category is easy to calculate.
         # This function just defines the score such that a team can no longer
         # 'catch' a team in the last breaking spot.
-        dead = break_cat_scores[break_spots-1] - (total_rounds - current_round + 1) - 1
+        dead = break_cat_scores[break_spots - 1] - (total_rounds - current_round + 1) - 1
         return safe, dead
+
+
+def calculate_bp(is_general, current_round, break_spots, total_teams,
+                 total_rounds, break_cat_scores):
+    """Based on Tushar Kanakagiri's algorithm in
+    https://github.com/tusharkanakagiri/BreakCalculator """
+
+    # TODO: integrate below sanity checking into the 2vs2 method also
+    if is_general is False:
+        return 0, 0 # No ESL/EFL support
+
+    def get_high_ranges(scores):
+        for i in range(0, total_rounds):
+            for j in range(0, total_teams, 4):
+                scores[j + 1] += 1
+                scores[j + 2] += 2
+                scores[j + 3] += 3
+            scores.sort()
+        return scores
+
+    def get_low_ranges(scores):
+        for i in range(0, total_rounds):
+            for j in range(0, total_teams, 4):
+                scores[j] += 3
+                scores[j + 1] += 2
+                scores[j + 2] += 1
+            scores.sort()
+        return scores
+
+    def get_thresholds(total_teams, break_spots, distribution_function):
+        # Round up teams to nearest multiple of four
+        floored_teams = int(math.ceil(total_teams / 4.0)) * 4
+        scores = distribution_function([0] * floored_teams)
+
+        cur_val = total_teams - 1
+        prev_val = total_teams - 1
+        cur_count = 1
+        total_count = 1
+        i = total_teams - 2
+        not_found = True
+
+        while i >= 0 and not_found:
+            cur_val = i
+
+            if scores[prev_val] == scores[cur_val]:
+                cur_count += 1
+            else:
+                cur_count = 1
+
+            total_count += 1
+            if total_count == break_spots:
+                not_found = False
+
+            prev_val = cur_val
+            i -= 1
+
+        safe_at_break = scores[prev_val + cur_count]
+        marginal_at_break = scores[cur_val]
+        return safe_at_break, marginal_at_break
+
+    high_safe, high_marginal = get_thresholds(total_teams, break_spots, get_high_ranges)
+    low_safe, low_marginal = get_thresholds(total_teams, break_spots, get_low_ranges)
+
+    safe = max(high_safe, low_safe) # Choose worst case
+    marginal = min(high_marginal, low_marginal) # Choose best case
+
+    # These values presume the final round has already happened
+    # So we need to extrapolate back to the current round and the maximum point
+    # Gains into order to find the current live/dead scores
+    dead_at_round = marginal - (3 * (total_rounds - current_round + 1)) - 1
+    print("safe", safe, "dead_at_round", dead_at_round, "marginal", marginal)
+    return safe, dead_at_round
