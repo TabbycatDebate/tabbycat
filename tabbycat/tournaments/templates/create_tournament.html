@@ -30,11 +30,11 @@
       {% endblocktrans %}
 
       <div class="row mt-3">
-        <div class="col col-md-6">
+        <div class="col col-md-4">
           <form action="{% url 'load-demo' %}" method="POST">
             <input type="hidden" name="source" value="demo_simple">
             <button type="submit" class="btn btn-info btn-block">
-              {% trans "Load Demo (10-team tournament)" %}
+              {% trans "Load Demo (8-team tournament)" %}
             </button>
           </form>
           {% if preexisting_small_demo %}
@@ -46,11 +46,28 @@
             </div>
           {% endif %}
         </div>
-        <div class="col col-md-6 mt-md-0 mt-3">
+        <div class="col col-md-4 mt-md-0 mt-3">
           <form action="{% url 'load-demo' %}" method="POST">
             <input type="hidden" name="source" value="demo">
             <button type="submit" class="btn btn-info btn-block">
               {% trans "Load Demo (24-team tournament)" %}
+            </button>
+          </form>
+          {% if preexisting_large_demo %}
+            <div class="alert alert-warning mt-3 mb-0 small">
+              <i data-feather="alert-circle"></i>
+              {% blocktrans trimmed %}
+                You already have a tournament set up using this data set. Reloading
+                the data will delete <strong>all data</strong> from that tourament.
+              {% endblocktrans %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="col col-md-4 mt-md-0 mt-3">
+          <form action="{% url 'load-demo' %}" method="POST">
+            <input type="hidden" name="source" value="bp88team">
+            <button type="submit" class="btn btn-info btn-block">
+              {% trans "Load Demo (88-team tournament)" %}
             </button>
           </form>
           {% if preexisting_large_demo %}
