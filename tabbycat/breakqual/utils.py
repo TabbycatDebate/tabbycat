@@ -202,97 +202,59 @@ def calculate_2vs2(is_general, current_round, break_spots, total_teams,
 
 def calculate_bp(is_general, current_round, break_spots, total_teams,
                  total_rounds, break_cat_scores):
+    """Based on Tushar Kanakagiri's algorithm in
+    https://github.com/tusharkanakagiri/BreakCalculator """
 
-    a = []
-    i = 0
-    j = 0
-
-    while(i < total_teams):
-        a[i] = 0
-        i += 1
+    # Round up teams to nearest multiple of four
+    total_teams = int(4 * round(float(total_teams) / 4))
+    a = [0] * total_teams
 
     for i in range(0, total_rounds):
         for j in range(0, total_teams, 4):
             a[j + 1] += 1
-            a[j + 2] = a[j + 2] + 2
-            a[j + 3] = a[j + 3] + 3
+            a[j + 2] += 2
+            a[j + 3] += 3
 
-        # TODO a.sort(function(a, b) { return a-b }
-        sorted(a)
+        a.sort()
+
+    cur_val = total_teams - 1
+
+    if break_spots == 1:
+        print("All teams greater than ", a[cur_val], " break")
+        return a[cur_val + 1], a[cur_val]
+    elif break_spots == 0:
+        print("No teams break")
+        return 0, 0 # Fix
+    elif break_spots == total_teams:
+        print("All teams break")
+        return 0, 0  # Fix
 
     prev_val = total_teams - 1
-    cur_val = total_teams - 1
     cur_count = 1
     total_count = 1
-    not_found = 1
     i = total_teams - 2
+    while i >= 0:
+        cur_val = i
 
-    if break_spots == 1:
-        pass
-        # document.getElementById("result1").innerHTML = "All teams greater than "+a[cur_val]+" break";
-    elif break_spots == 0:
-        pass
-        # document.getElementById("result1").innerHTML = "No teams break";
-    elif break_spots == total_teams:
-        pass
-        # document.getElementById("result1").innerHTML = "All teams break";
-    else:
-        while i >= 0 and not_found:
-            cur_val = i
-            if a[prev_val] == a[cur_val]:
-                cur_count += 1
-            else:
-                cur_count = 1
-            total_count += 1
-            if total_count == break_spots:
-                not_found = 0
-            prev_val = cur_val
-            i -= 1
-        # document.getElementById("result1").innerHTML = "Case 1 : All teams on "+a[prev_val+cur_count]+" points and higher break and "+cur_count+" teams on "+a[cur_val]+" points will break";
+        if a[prev_val] == a[cur_val]:
+            cur_count += 1
+        else:
+            cur_count = 1
 
-    i = 0
-    j = 0
-    while i < total_teams:
-        a[i] = 0
-        i += 1
+        total_count += 1
+        if total_count == break_spots:
+            break
 
-    for i in range(0, total_rounds):
-        for i in range(0, total_rounds, 4):
-            a[j] = a[j] + 3
-            a[j+1] = a[j+1] + 2
-            a[j+2] = a[j+2] + 1
+        prev_val = cur_val
+        i = i - 1
 
-        # TODO a.sort(function(a, b){ return a-b });
-        sorted(a)
+    safe_at_break = a[prev_val + cur_count]
+    marginal_at_break = a[cur_val]
+    print("All teams on ", safe_at_break, " points and higher break", cur_count, " teams on ", marginal_at_break, " points will break")
 
-    prev_val = total_teams - 1
-    cur_val = total_teams - 1
-    cur_count = 1
-    total_count = 1
-    not_found = 1
-    i = total_teams-2
+    # These values presume the final round has already happened
+    # So we need to extrapolate back to the current round and the maximum point
+    # Gains into order to find the current live/dead scores
 
-    if break_spots == 1:
-        pass
-        # document.getElementById("result2").innerHTML = "All teams greater than "+a[cur_val]+" break";
-    elif break_spots == 0:
-        pass
-        # document.getElementById("result2").innerHTML = "No teams break";
-    elif break_spots == total_teams:
-        pass
-        # document.getElementById("result2").innerHTML = "All teams break";
-    else:
-        while i >= 0 and not_found:
-            cur_val = i
-            if a[prev_val] == a[cur_val]:
-                cur_count += 1
-            else:
-                cur_count = 1
-            total_count += 1
-            if total_count == break_spots:
-                not_found = 0
-            prev_val = cur_val
-            i -= 1
-        # document.getElementById("result2").innerHTML = "Case 2 : All teams on "+a[prev_val+cur_count]+" points and higher break and "+cur_count+" teams on "+a[cur_val]+" points will break";
-
-    return None
+    dead_at_round = marginal_at_break - (3 * (total_rounds - current_round + 1))
+    return safe_at_break, dead_at_round
