@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..utils import calculate_bp, calculate_2vs2
+from ..utils import calculate_2vs2, calculate_bp
 
 
 class TestFeedbackProgress(TestCase):

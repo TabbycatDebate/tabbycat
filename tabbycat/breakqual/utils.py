@@ -98,7 +98,9 @@ def liveness(self, team, teams_count, prelims, current_round):
 def determine_liveness(thresholds, wins):
     """ Thresholds should be calculated using calculate_live_thresholds."""
     safe, dead = thresholds
-    if wins >= safe:
+    if safe is None and dead is None:
+        return '?'
+    elif wins >= safe:
         return 'safe'
     elif wins <= dead:
         return 'dead'
@@ -117,12 +119,17 @@ def calculate_live_thresholds(bc, tournament, round):
     total_teams = bc.team_set.count()
     total_rounds = tournament.prelim_rounds(until=round).count()
     break_cat_scores = get_scores(bc) if not bc.is_general else None
-    if tournament.pref('teams_in_debate') == 'bp':
+
+    if bc.break_size <= 1:
+        return None, None # Bad input
+    elif bc.break_size == total_teams:
+        return 0, 0 # All teams break
+    elif tournament.pref('teams_in_debate') == 'bp':
         return calculate_bp(bc.is_general, round.seq, bc.break_size,
-            total_teams, total_rounds, break_cat_scores)
+                            total_teams, total_rounds, break_cat_scores)
     else:
         return calculate_2vs2(bc.is_general, round.seq, bc.break_size,
-            total_teams, total_rounds, break_cat_scores)
+                              total_teams, total_rounds, break_cat_scores)
 
 
 def calculate_2vs2(is_general, current_round, break_spots, total_teams,
@@ -176,7 +183,7 @@ def calculate_2vs2(is_general, current_round, break_spots, total_teams,
         dead = low_bound - (total_rounds - (current_round - 1)) - 1
         return safe, dead
     else:
-        # The safe score for the ESL/EFL category is trick. First, we get a best
+        # The safe score for the ESL/EFL category is tricky. First we get a best
         # possible apriori safe score using the  earlier binomial distribution.
         safe = 0
         for i in range(0, total_rounds + 1):
@@ -206,14 +213,8 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
     https://github.com/tusharkanakagiri/BreakCalculator """
 
     # TODO: integrate below sanity checking into the 2vs2 method also
-    if break_spots == 1:
-        print("bad input")
-    elif break_spots == 0:
-        print("No teams break")
-        return 0, 0 # Fix
-    elif break_spots == total_teams:
-        print("All teams break")
-        return 0, 0  # Fix
+    if is_general is False:
+        return 0, 0 # No ESL/EFL support
 
     def get_high_ranges(scores):
         for i in range(0, total_rounds):
@@ -274,4 +275,5 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
     # So we need to extrapolate back to the current round and the maximum point
     # Gains into order to find the current live/dead scores
     dead_at_round = marginal - (3 * (total_rounds - current_round + 1)) - 1
+    print("safe", safe, "dead_at_round", dead_at_round, "marginal", marginal)
     return safe, dead_at_round
