@@ -4,7 +4,7 @@ Change Log
 
 2.0.1
 -----
-*Release date: TBD*
+*Release date: 21 November 2017*
 
 - Fixed issue where results submission would crash if sides are unconfirmed
 - Fixed issue where scoresheets would not display properly for adjudicators who lack institutions
