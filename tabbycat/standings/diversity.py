@@ -1,4 +1,5 @@
-from django.db.models import Avg, Q
+from django.db.models import Aggregate, Avg, Case, CharField, Q, Value, When
+from django.utils.translation import ugettext as _
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
@@ -8,7 +9,73 @@ from results.models import SpeakerScore
 from tournaments.models import Round
 
 
-def compile_data(title, queryset, filter_source, filters, datum=False, **kwargs):
+class Percentile(Aggregate):
+    function = 'PERCENTILE_CONT'
+    name = "percentile"
+    template = "%(function)s(%(percentiles)s) WITHIN GROUP (ORDER BY %(expressions)s)"
+
+    # Make percentiles a positional argument
+    def __init__(self, expression, percentiles, **extra):
+        return super().__init__(expression, percentiles=percentiles, **extra)
+
+
+STATISTICS_MAP = {
+    'mean': Avg('score'),
+    'upperq': Percentile('score', 0.75),
+    'median': Percentile('score', 0.5),
+    'lowerq': Percentile('score', 0.25),
+}
+
+
+def _gender_group(gender_field):
+    return Case(
+        When(**{'%s__in' % gender_field: ['F', 'O'], 'then': Value('N')}),
+        default=gender_field,
+        output_field=CharField(),
+    )
+
+
+def compile_statistics_by_gender(titles, queryset, statistics, gender_field):
+    aggregates = {key: value for key, value in STATISTICS_MAP.items() if key in statistics}
+    overall_statistics = queryset.aggregate(**aggregates)
+    gender_statistics = queryset.values(gender=_gender_group(gender_field)).annotate(**aggregates)
+    gender_statistics = {d['gender']: d for d in gender_statistics}
+
+    results = []
+    for title, statistic in zip(titles, statistics):
+        result = {'title': title}
+        result['datum'] = overall_statistics[statistic]
+        result['data'] = [
+            {'count': gender_statistics['N'][statistic], 'label': 'NM'},
+            {'count': gender_statistics['M'][statistic], 'label': 'Male'},
+        ]
+        results.append(result)
+
+    return results
+
+def compile_grouped_means_by_gender(titles, queryset, gender_field, group_field, group_values):
+    overall_means = queryset.values(group_field).annotate(Avg('score'))
+    overall_means = {d[group_field]: d['score__avg'] for d in overall_means}
+    gender_means = queryset.values(group_field, gender=_gender_group(gender_field)).annotate(Avg('score'))
+    gender_means = {(d[group_field], d['gender']): d['score__avg'] for d in gender_means}
+
+    results = []
+    for title, group in zip(titles, group_values):
+        result = {'title': title}
+        try:
+            result['datum'] = overall_means[group]
+        except KeyError:
+            continue  # no data available, omit from table
+        result['data'] = [
+            {'count': gender_means[(group, 'N')], 'label': 'NM'},
+            {'count': gender_means[(group, 'M')], 'label': 'Male'},
+        ]
+        results.append(result)
+
+    return results
+
+
+def compile_data(title, queryset, filter_source, filters, **kwargs):
     """ Filter the queryset given filters and return a dictionary of results """
 
     data_set = []
@@ -24,55 +91,10 @@ def compile_data(title, queryset, filter_source, filters, datum=False, **kwargs)
         # Return a structure ready to fit the Vue template
         data_set.append({
             'label': key,
-            'count': calculate_result(filtered, kwargs),
+            'count': filtered.count(),
         })
 
-    if datum is not False:  # Get the overall number to use as baseline
-        datum = calculate_result(queryset, kwargs)
-
-    return {'title': title, 'data': data_set, 'datum': datum}
-
-
-def calculate_result(queryset, keywords):
-    if 'count' in keywords:
-        return queryset.count()
-    elif 'average' in keywords:
-        return queryset.aggregate(Avg('score'))['score__avg']
-    elif 'median' in keywords or 'lowerq' in keywords or 'upperq' in keywords:
-        ordered_values = sorted(queryset.values_list('score', flat=True))
-        if 'median' in keywords:
-            return median_value(ordered_values)
-        elif 'lowerq' in keywords:
-            return quartile(ordered_values, lower=True)
-        elif 'upperq' in keywords:
-            return quartile(ordered_values, upper=True)
-
-
-def median_value(ordered_values):
-    if len(ordered_values) is 0:
-        return None
-
-    mid = len(ordered_values) / 2
-
-    if (len(ordered_values) % 2 == 0):
-        return (ordered_values[int(mid)-1] + ordered_values[int(mid)]) / 2.0
-    else:
-        return ordered_values[int(mid)]
-
-
-def quartile(ordered_values, lower=False, upper=False):
-    mid = len(ordered_values) / 2
-
-    if (len(ordered_values) % 2 == 0):
-        if upper:
-            return median_value(ordered_values[int(mid):])
-        elif lower:
-            return median_value(ordered_values[:int(mid)])
-    else:
-        if upper:
-            return median_value(ordered_values[int(mid)+1:])
-        elif lower:
-            return median_value(ordered_values[:int(mid)])
+    return {'title': title, 'data': data_set}
 
 
 def get_diversity_data_sets(t, for_public):
@@ -102,10 +124,6 @@ def get_diversity_data_sets(t, for_public):
         {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
         {'Male':     Person.GENDER_MALE},
         {'Unknown':  None},
-    ]
-    subset_filters = [ # Remove unknown for small data sets
-        {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
-        {'Male':     Person.GENDER_MALE},
     ]
 
     if Speaker.objects.filter(team__tournament=t).count() > 0:
@@ -194,41 +212,30 @@ def get_diversity_data_sets(t, for_public):
         data_sets['feedbacks_count'] = adjfeedbacks.count()
 
         if data_sets['feedbacks_count'] > 0:
-            data_sets['adjudicators_results'].append(compile_data(
-                'Average Rating', adjfeedbacks, 'adjudicator__gender',
-                filters=subset_filters, average=True, datum=True))
 
-            data_sets['adjudicators_results'].append(compile_data(
-                'Median Rating', adjfeedbacks, 'adjudicator__gender',
-                filters=subset_filters, median=True, datum=True))
+            titles = [
+                _("Average Rating"),
+                _("Median Rating"),
+                _("Upper Quartile Rating"),
+                _("Lower Quartile Rating"),
+            ]
+            statistics = ['mean', 'median', 'upperq', 'lowerq']
+            data_sets['adjudicators_results'] = compile_statistics_by_gender(titles, adjfeedbacks, statistics, 'adjudicator__gender')
 
-            data_sets['adjudicators_results'].append(compile_data(
-                'Upper Quartile Rating', adjfeedbacks, 'adjudicator__gender',
-                filters=subset_filters, upperq=True, datum=True))
-
-            data_sets['adjudicators_results'].append(compile_data(
-                'Lower Quartile Rating', adjfeedbacks, 'adjudicator__gender',
-                filters=subset_filters, lowerq=True, datum=True))
-
-            if adjfeedbacks.filter(source_team__isnull=False).exists():
-                data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Teams', adjfeedbacks.filter(source_team__isnull=False),
-                    'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
-
-            if adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_CHAIR).exists():
-                data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Chairs', adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_CHAIR),
-                    'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
-
-            if adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_PANEL).exists():
-                data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Panellists', adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_PANEL),
-                    'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
-
-            if adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).exists():
-                data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Trainees', adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE),
-                    'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
+            titles = [
+                _("Average Rating Given by Teams"),
+                _("Average Rating Given by Chairs"),
+                _("Average Rating Given by Panellists"),
+                _("Average Rating Given by Trainees"),
+            ]
+            group_values = [
+                None,
+                DebateAdjudicator.TYPE_CHAIR,
+                DebateAdjudicator.TYPE_PANEL,
+                DebateAdjudicator.TYPE_TRAINEE
+            ]
+            data_sets['detailed_adjudicators_results'] = compile_grouped_means_by_gender(
+                    titles, adjfeedbacks, 'adjudicator__gender', 'source_adjudicator__type', group_values)
 
     # ==========================================================================
     # Speakers Results
@@ -242,35 +249,29 @@ def get_diversity_data_sets(t, for_public):
 
         data_sets['speaks_count'] = speakerscores.count()
         if data_sets['speaks_count'] > 0:
-            data_sets['speakers_results'].append(compile_data(
-                'Average Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
-                filters=subset_filters, average=True, datum=True))
 
-            data_sets['speakers_results'].append(compile_data(
-                'Median Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
-                filters=subset_filters, median=True, datum=True))
+            titles = [
+                _("Average Score"),
+                _("Median Score"),
+                _("Upper Quartile Score"),
+                _("Lower Quartile Score"),
+            ]
+            statistics = ['mean', 'median', 'upperq', 'lowerq']
+            data_sets['speaker_results'] = compile_statistics_by_gender(titles,
+                    speakerscores.exclude(position=t.reply_position), statistics, 'speaker__gender')
 
-            data_sets['speakers_results'].append(compile_data(
-                'Upper Quartile Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
-                filters=subset_filters, upperq=True, datum=True))
+            titles = [
+                _("Reply Speaker Average") if pos == t.reply_position else
+                _("Speaker %(num)d Average") % {'num': pos}
+                for pos in t.positions
+            ]
+            data_sets['detailed_speakers_results'] = compile_grouped_means_by_gender(
+                    titles, speakerscores, 'speaker__gender', 'position', t.positions)
 
-            data_sets['speakers_results'].append(compile_data(
-                'Lower Quartile Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
-                filters=subset_filters, lowerq=True, datum=True))
-            for i in range(1, t.pref('substantive_speakers') + 1):
-
-                data_sets['detailed_speakers_results'].append(compile_data(
-                    'Speaker ' + str(i) + ' Average', speakerscores.filter(position=i), 'speaker__gender',
-                    filters=subset_filters, average=True, datum=True))
-
-            if t.pref('reply_scores_enabled'):
-                data_sets['detailed_speakers_results'].append(compile_data(
-                    'Reply Speaker Average', speakerscores.filter(position=t.reply_position), 'speaker__gender',
-                    filters=subset_filters, average=True, datum=True))
-
-            if speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).count() > 0:
-                data_sets['detailed_speakers_results'].append(compile_data(
-                    'Average Finals Score', speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).exclude(position=t.reply_position), 'speaker__gender',
-                    filters=subset_filters, average=True, datum=True))
+            if speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).exists():
+                data_sets['detailed_speakers_results'].extend(compile_statistics_by_gender(
+                    [_("Average Finals Score")],
+                    speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).exclude(position=t.reply_position),
+                    ['mean'], 'speaker__gender'))
 
     return data_sets
