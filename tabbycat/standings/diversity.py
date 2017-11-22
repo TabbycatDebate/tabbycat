@@ -1,4 +1,4 @@
-from django.db.models import Aggregate, Avg, Case, CharField, Q, Value, When
+from django.db.models import Aggregate, Avg, Case, CharField, Count, F, Value, When
 from django.utils.translation import ugettext as _
 
 from adjallocation.models import DebateAdjudicator
@@ -29,10 +29,22 @@ STATISTICS_MAP = {
 
 def _gender_group(gender_field):
     return Case(
-        When(**{'%s__in' % gender_field: ['F', 'O'], 'then': Value('N')}),
-        default=gender_field,
+        When(**{'%s__in' % gender_field: [Person.GENDER_FEMALE, Person.GENDER_OTHER], 'then': Value('N')}),
+        When(**{gender_field: Person.GENDER_MALE, 'then': Value('M')}),
+        default=Value('-'),
         output_field=CharField(),
     )
+
+
+def _group_data(get_statistic, group_values, group_labels):
+    data = []
+    for value, label in zip(group_values, group_labels):
+        try:
+            count = get_statistic(value)
+        except KeyError:
+            continue
+        data.append({'count': count, 'label': label})
+    return data
 
 
 def compile_statistics_by_gender(titles, queryset, statistics, gender_field):
@@ -45,13 +57,11 @@ def compile_statistics_by_gender(titles, queryset, statistics, gender_field):
     for title, statistic in zip(titles, statistics):
         result = {'title': title}
         result['datum'] = overall_statistics[statistic]
-        result['data'] = [
-            {'count': gender_statistics['N'][statistic], 'label': 'NM'},
-            {'count': gender_statistics['M'][statistic], 'label': 'Male'},
-        ]
+        result['data'] = _group_data(lambda gender: gender_statistics[gender][statistic], ['N', 'M'], ['NM', 'Male'])
         results.append(result)
 
     return results
+
 
 def compile_grouped_means_by_gender(titles, queryset, gender_field, group_field, group_values):
     overall_means = queryset.values(group_field).annotate(Avg('score'))
@@ -66,41 +76,41 @@ def compile_grouped_means_by_gender(titles, queryset, gender_field, group_field,
             result['datum'] = overall_means[group]
         except KeyError:
             continue  # no data available, omit from table
-        result['data'] = [
-            {'count': gender_means[(group, 'N')], 'label': 'NM'},
-            {'count': gender_means[(group, 'M')], 'label': 'Male'},
-        ]
+        result['data'] = _group_data(lambda gender: gender_means[(group, gender)], ['N', 'M'], ['NM', 'Male'])
         results.append(result)
 
     return results
 
 
-def compile_data(title, queryset, filter_source, filters, **kwargs):
-    """ Filter the queryset given filters and return a dictionary of results """
+def compile_gender_counts(title, queryset, gender_field):
+    return compile_grouped_counts(title, queryset, _gender_group(gender_field), ['N', 'M', '-'], ['NM', 'Male', 'Unknown'])
 
-    data_set = []
-    for item in filters:
-        [(key, value)] = item.items()  # Get the key/value pairs
 
-        # Use keywords to filter data sets; using Q for OR conditions
-        if isinstance(value, list):
-            filtered = queryset.filter(Q(**{filter_source: value[0]}) | Q(**{filter_source: value[1]}))
-        else:
-            filtered = queryset.filter(**{filter_source: value})
+def compile_grouped_counts(title, queryset, group_field, group_values, group_labels):
+    counts = queryset.values(group=group_field).annotate(count=Count(group_field))
+    counts = {d['group']: d['count'] for d in counts}
+    result = {'title': title}
+    result['data'] = _group_data(lambda group: counts[group], group_values, group_labels)
+    return result
 
-        # Return a structure ready to fit the Vue template
-        data_set.append({
-            'label': key,
-            'count': filtered.count(),
-        })
 
-    return {'title': title, 'data': data_set}
+def compile_grouped_gender_counts(titles, queryset, gender_field, group_field, group_values):
+    counts = queryset.values(group_field, gender_group=_gender_group(gender_field)).annotate(count=Count(gender_field))
+    counts = {(d[group_field], d['gender_group']): d['count'] for d in counts}
+    results = []
+    for title, group in zip(titles, group_values):
+        result = {'title': title}
+        result['data'] = _group_data(lambda gender: counts[(group, gender)], ['N', 'M', '-'], ['NM', 'Male', 'Unknown'])
+        results.append(result)
+    return results
 
 
 def get_diversity_data_sets(t, for_public):
 
     all_regions = regions_ordered(t)
-    region_filters = [{r['seq']:r['name']} for r in all_regions]
+
+    region_values = [r['id'] for r in all_regions]
+    region_labels = [r['seq'] for r in all_regions]
 
     data_sets = {
         'speakers_gender': [],
@@ -120,84 +130,66 @@ def get_diversity_data_sets(t, for_public):
     # Speakers Demographics
     # ==========================================================================
 
-    gender_filters = [
-        {'NM':       [Person.GENDER_FEMALE, Person.GENDER_OTHER]},
-        {'Male':     Person.GENDER_MALE},
-        {'Unknown':  None},
-    ]
+    speakers = Speaker.objects.filter(team__tournament=t)
 
     if Speaker.objects.filter(team__tournament=t).count() > 0:
-        data_sets['speakers_gender'].append(compile_data(
-            'All', Speaker.objects.filter(team__tournament=t),
-            'gender', filters=gender_filters, count=True))
+        data_sets['speakers_gender'].append(compile_gender_counts(_("All"), speakers, 'gender'))
 
     if t.pref('public_breaking_teams') is True or for_public is False:
         if Speaker.objects.filter(team__tournament=t).filter(team__breakingteam__isnull=False).count() > 0:
-            data_sets['speakers_gender'].append(compile_data(
-                'Breaking', Speaker.objects.filter(team__tournament=t, team__breakingteam__isnull=False),
-                'gender', filters=gender_filters, count=True))
+            data_sets['speakers_gender'].append(compile_gender_counts(_("Breaking"),
+                    speakers.filter(team__breakingteam__isnull=False), 'gender'))
 
     for sc in SpeakerCategory.objects.filter(tournament=t).order_by('seq'):
         if Speaker.objects.filter(categories=sc).count() > 0:
-            data_sets['speakers_categories'].append(compile_data(
-                sc.name, Speaker.objects.filter(team__tournament=t, categories=sc),
-                'gender', filters=gender_filters, count=True))
-            data_sets['speakers_categories'].append(compile_data(
-                'Not ' + sc.name, Speaker.objects.filter(team__tournament=t).exclude(categories=sc),
-                'gender', filters=gender_filters, count=True))
+            data_sets['speakers_categories'].append(compile_gender_counts(sc.name,
+                    speakers.filter(categories=sc), 'gender'))
+            data_sets['speakers_categories'].append(compile_gender_counts(_("Not %(category)s") % {'category': sc.name},
+                    speakers.exclude(categories=sc), 'gender'))
 
-    if Team.objects.exclude(institution__region__isnull=True).count() > 0:
-        data_sets['speakers_region'].append(compile_data(
-            'All', Speaker.objects.filter(
-                team__tournament=t), 'team__institution__region__name', filters=region_filters, count=True))
+    if Team.objects.exclude(institution__region__isnull=True).exists():
+        data_sets['speakers_region'].append(compile_grouped_counts(_("All"), speakers,
+                F('team__institution__region__id'), region_values, region_labels))
+
         if t.pref('public_breaking_teams') is True or for_public is False:
-            data_sets['speakers_region'].append(compile_data(
-                'Breaking', Speaker.objects.filter(team__tournament=t, team__breakingteam__isnull=False), 'team__institution__region__name',
-                filters=region_filters, count=True))
+            data_sets['speakers_region'].append(compile_grouped_counts(_("Breaking"),
+                    speakers.filter(team__breakingteam__isnull=False),
+                    F('team__institution__region__id'), region_values, region_labels))
 
     # ==========================================================================
     # Adjudicators Demographics
     # ==========================================================================
 
-    if Adjudicator.objects.filter(tournament=t).count() > 0:
-        data_sets['adjudicators_gender'].append(compile_data(
-            'All', Adjudicator.objects.filter(tournament=t),
-            'gender', filters=gender_filters, count=True))
+    adjudicators = t.adjudicator_set.all()
 
-    if Adjudicator.objects.filter(tournament=t).filter(independent=True).count() > 0:
-        data_sets['adjudicators_gender'].append(compile_data(
-            'Indies', Adjudicator.objects.filter(tournament=t, independent=True), 'gender',
-            filters=gender_filters, count=True))
+    if adjudicators.count() > 0:
+        data_sets['adjudicators_gender'].append(compile_gender_counts(_("All"), adjudicators, 'gender'))
 
-    if t.pref('public_breaking_adjs') is True or for_public is False:
-        if Adjudicator.objects.filter(breaking=True).count() > 0:
-            data_sets['adjudicators_gender'].append(compile_data(
-                'Breaking', Adjudicator.objects.filter(tournament=t, breaking=True), 'gender',
-                filters=gender_filters, count=True))
+    if Adjudicator.objects.filter(tournament=t).filter(independent=True).exists():
+        data_sets['adjudicators_gender'].append(compile_gender_counts(_("Indies"),
+            adjudicators.filter(independent=True), 'gender'))
 
-    if DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_CHAIR).count() > 0:
-        data_sets['adjudicators_position'].append(compile_data(
-            'Chairs', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_CHAIR), 'adjudicator__gender',
-            filters=gender_filters, count=True))
+    if (t.pref('public_breaking_adjs') is True or for_public is False) and Adjudicator.objects.filter(breaking=True).exists():
+        data_sets['adjudicators_gender'].append(compile_gender_counts(_("Breaking"),
+            adjudicators.filter(breaking=True), 'gender'))
 
-    if DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_PANEL).count() > 0:
-        data_sets['adjudicators_position'].append(compile_data(
-            'Panellists', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_PANEL), 'adjudicator__gender',
-            filters=gender_filters, count=True))
+    debateadjs = DebateAdjudicator.objects.filter(adjudicator__tournament=t)
+    titles = [_("Chairs"), _("Panellists"), _("Trainees")]
+    adjtypes = [
+        DebateAdjudicator.TYPE_CHAIR,
+        DebateAdjudicator.TYPE_PANEL,
+        DebateAdjudicator.TYPE_TRAINEE
+    ]
+    data_sets['adjudicators_position'] = compile_grouped_gender_counts(titles, debateadjs,
+            'adjudicator__gender', 'type', adjtypes)
 
-    if DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_TRAINEE).count() > 0:
-        data_sets['adjudicators_position'].append(compile_data(
-            'Trainees', DebateAdjudicator.objects.filter(adjudicator__tournament=t, type=DebateAdjudicator.TYPE_TRAINEE), 'adjudicator__gender',
-            filters=gender_filters, count=True))
+    if Adjudicator.objects.exclude(institution__region__isnull=True).exists():
+        data_sets['adjudicators_region'].append(compile_grouped_counts(_("All"), adjudicators,
+                F('institution__region__id'), region_values, region_labels))
 
-    if DebateAdjudicator.objects.exclude(adjudicator__institution__region__isnull=True).count() > 0:
-        data_sets['adjudicators_region'].append(compile_data(
-            'All', Adjudicator.objects.filter(tournament=t), 'institution__region__name',
-            filters=region_filters, count=True))
         if t.pref('public_breaking_adjs') is True or for_public is False:
-            data_sets['adjudicators_region'].append(compile_data(
-                'Breaking', Adjudicator.objects.filter(tournament=t, breaking=True), 'institution__region__name',
-                filters=region_filters, count=True))
+            data_sets['adjudicators_region'].append(compile_grouped_counts(_("Breaking"), adjudicators.filter(breaking=True),
+                    F('institution__region__id'), region_values, region_labels))
 
     # ==========================================================================
     # Adjudicators Results
@@ -257,7 +249,7 @@ def get_diversity_data_sets(t, for_public):
                 _("Lower Quartile Score"),
             ]
             statistics = ['mean', 'median', 'upperq', 'lowerq']
-            data_sets['speaker_results'] = compile_statistics_by_gender(titles,
+            data_sets['speakers_results'] = compile_statistics_by_gender(titles,
                     speakerscores.exclude(position=t.reply_position), statistics, 'speaker__gender')
 
             titles = [
