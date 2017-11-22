@@ -18,6 +18,7 @@ A partial list of major national and international tournaments (that we know of)
 - `Kings College London IV <http://kcliv2017.herokuapp.com>`_
 - `KPU Pro Ams <https://kduproams2017.herokuapp.com/kduproams2017/>`_
 - `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
+- `North East Asia Open <https://neao2017.herokuapp.com/neao2017/>`_
 - `Swords Mini-Gong <https://minigong2017.herokuapp.com/>`_
 - `UCD Law Society IV <https://ucdlawsociv.herokuapp.com>`_
 - `UCD Vice President's Cup <https://ucdlawsociv.herokuapp.com>`_
