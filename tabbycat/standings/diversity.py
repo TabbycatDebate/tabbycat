@@ -189,46 +189,45 @@ def get_diversity_data_sets(t, for_public):
     data_sets['gendered_adjudicators'] = Adjudicator.objects.filter(gender="M").count() + Adjudicator.objects.filter(gender="F").count()
     if data_sets['gendered_adjudicators'] > 0:
 
-        data_sets['feedbacks_count'] = AdjudicatorFeedback.objects.filter(adjudicator__tournament=t).count()
+        adjfeedbacks = AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, confirmed=True)
+
+        data_sets['feedbacks_count'] = adjfeedbacks.count()
 
         if data_sets['feedbacks_count'] > 0:
             data_sets['adjudicators_results'].append(compile_data(
-                'Average Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender',
+                'Average Rating', adjfeedbacks, 'adjudicator__gender',
                 filters=subset_filters, average=True, datum=True))
 
             data_sets['adjudicators_results'].append(compile_data(
-                'Median Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender',
+                'Median Rating', adjfeedbacks, 'adjudicator__gender',
                 filters=subset_filters, median=True, datum=True))
 
             data_sets['adjudicators_results'].append(compile_data(
-                'Upper Quartile Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender',
+                'Upper Quartile Rating', adjfeedbacks, 'adjudicator__gender',
                 filters=subset_filters, upperq=True, datum=True))
 
             data_sets['adjudicators_results'].append(compile_data(
-                'Lower Quartile Rating', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t), 'adjudicator__gender',
+                'Lower Quartile Rating', adjfeedbacks, 'adjudicator__gender',
                 filters=subset_filters, lowerq=True, datum=True))
 
-            if AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__isnull=False).count() > 0:
+            if adjfeedbacks.filter(source_team__isnull=False).exists():
                 data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Teams', AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__isnull=False),
+                    'Average Rating Given by Teams', adjfeedbacks.filter(source_team__isnull=False),
                     'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
 
-            if AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_CHAIR).count() > 0:
+            if adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_CHAIR).exists():
                 data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Chairs', AdjudicatorFeedback.objects.filter(
-                        adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_CHAIR, source_adjudicator__isnull=False),
+                    'Average Rating Given by Chairs', adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_CHAIR),
                     'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
 
-            if AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_PANEL).count() > 0:
+            if adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_PANEL).exists():
                 data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Panellists', AdjudicatorFeedback.objects.filter(
-                        adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_PANEL, source_adjudicator__isnull=False),
+                    'Average Rating Given by Panellists', adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_PANEL),
                     'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
 
-            if AdjudicatorFeedback.objects.filter(adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).count() > 0:
+            if adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).exists():
                 data_sets['detailed_adjudicators_results'].append(compile_data(
-                    'Average Rating Given by Trainees', AdjudicatorFeedback.objects.filter(
-                        adjudicator__tournament=t, source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE, source_adjudicator__isnull=False),
+                    'Average Rating Given by Trainees', adjfeedbacks.filter(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE),
                     'source_adjudicator__adjudicator__gender', filters=subset_filters, average=True, datum=True))
 
     # ==========================================================================
