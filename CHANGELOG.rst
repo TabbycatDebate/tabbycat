@@ -11,6 +11,7 @@ Change Log
     - Gender splits for average feedback rating now go by target adjudicator; this was previously source adjudicator
     - Persons with unknown gender are now shown in counts (but not score/rating averages); a bug had previously caused them to be incorrectly counted as zero
     - Improved query efficiency of the page
+- Improved the BP motions tab for out-rounds by specifying advancing teams as "top/bottom ½" rather than as 1st/4th and removed the average-points-per-position graphs that were misleading.
 
 
 2.0.1
