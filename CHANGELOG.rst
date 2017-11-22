@@ -2,6 +2,17 @@
 Change Log
 ==========
 
+2.0.2
+-----
+*Release date: TBC*
+
+- Fixes and improvements to diversity overview
+    - Fixed average feedback rating from teams, it was previously (incorrectly) showing the average feedback rating from all adjudicators
+    - Gender splits for average feedback rating now go by target adjudicator; this was previously source adjudicator
+    - Persons with unknown gender are now shown in counts (but not score/rating averages); a bug had previously caused them to be incorrectly counted as zero
+    - Improved query efficiency of the page
+
+
 2.0.1
 -----
 *Release date: 21 November 2017*
