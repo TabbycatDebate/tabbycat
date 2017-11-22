@@ -215,10 +215,10 @@ def get_diversity_data_sets(t, for_public):
             data_sets['adjudicators_results'] = compile_statistics_by_gender(titles, adjfeedbacks, statistics, 'adjudicator__gender')
 
             titles = [
-                _("Average Rating Given by Teams"),
-                _("Average Rating Given by Chairs"),
-                _("Average Rating Given by Panellists"),
-                _("Average Rating Given by Trainees"),
+                _("Average Rating From Teams"),
+                _("Average Rating From Chairs"),
+                _("Average Rating From Panellists"),
+                _("Average Rating From Trainees"),
             ]
             group_values = [
                 None,
