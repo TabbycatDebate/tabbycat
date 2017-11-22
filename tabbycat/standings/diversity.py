@@ -238,37 +238,39 @@ def get_diversity_data_sets(t, for_public):
     data_sets['gendered_speakers'] = Speaker.objects.filter(gender="M").count() + Speaker.objects.filter(gender="F").count()
     if data_sets['gendered_speakers'] > 0:
 
-        data_sets['speaks_count'] = SpeakerScore.objects.filter(speaker__team__tournament=t).count()
+        speakerscores = SpeakerScore.objects.filter(speaker__team__tournament=t, ballot_submission__confirmed=True)
+
+        data_sets['speaks_count'] = speakerscores.count()
         if data_sets['speaks_count'] > 0:
             data_sets['speakers_results'].append(compile_data(
-                'Average Score', SpeakerScore.objects.filter(speaker__team__tournament=t).exclude(position=t.reply_position), 'speaker__gender',
+                'Average Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
                 filters=subset_filters, average=True, datum=True))
 
             data_sets['speakers_results'].append(compile_data(
-                'Median Score', SpeakerScore.objects.filter(speaker__team__tournament=t).exclude(position=t.reply_position), 'speaker__gender',
+                'Median Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
                 filters=subset_filters, median=True, datum=True))
 
             data_sets['speakers_results'].append(compile_data(
-                'Upper Quartile Score', SpeakerScore.objects.filter(speaker__team__tournament=t).exclude(position=t.reply_position), 'speaker__gender',
+                'Upper Quartile Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
                 filters=subset_filters, upperq=True, datum=True))
 
             data_sets['speakers_results'].append(compile_data(
-                'Lower Quartile Score', SpeakerScore.objects.filter(speaker__team__tournament=t).exclude(position=t.reply_position), 'speaker__gender',
+                'Lower Quartile Score', speakerscores.exclude(position=t.reply_position), 'speaker__gender',
                 filters=subset_filters, lowerq=True, datum=True))
             for i in range(1, t.pref('substantive_speakers') + 1):
 
                 data_sets['detailed_speakers_results'].append(compile_data(
-                    'Speaker ' + str(i) + ' Average', SpeakerScore.objects.filter(speaker__team__tournament=t, position=str(i)), 'speaker__gender',
+                    'Speaker ' + str(i) + ' Average', speakerscores.filter(position=i), 'speaker__gender',
                     filters=subset_filters, average=True, datum=True))
 
             if t.pref('reply_scores_enabled'):
                 data_sets['detailed_speakers_results'].append(compile_data(
-                    'Reply Speaker Average', SpeakerScore.objects.filter(speaker__team__tournament=t, position=t.reply_position), 'speaker__gender',
+                    'Reply Speaker Average', speakerscores.filter(position=t.reply_position), 'speaker__gender',
                     filters=subset_filters, average=True, datum=True))
 
-            if SpeakerScore.objects.filter(speaker__team__tournament=t, debate_team__debate__round__stage=Round.STAGE_ELIMINATION).count() > 0:
+            if speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).count() > 0:
                 data_sets['detailed_speakers_results'].append(compile_data(
-                    'Average Finals Score', SpeakerScore.objects.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).exclude(position=t.reply_position), 'speaker__gender',
+                    'Average Finals Score', speakerscores.filter(debate_team__debate__round__stage=Round.STAGE_ELIMINATION).exclude(position=t.reply_position), 'speaker__gender',
                     filters=subset_filters, average=True, datum=True))
 
     return data_sets
