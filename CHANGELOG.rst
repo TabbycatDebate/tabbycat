@@ -6,6 +6,7 @@ Change Log
 ------------------------
 
 - Quality of life improvements
+  - Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
 
 

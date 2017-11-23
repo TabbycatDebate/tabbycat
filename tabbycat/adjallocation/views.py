@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.db import transaction
 from django.db.models import Q
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
@@ -161,9 +162,12 @@ class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, V
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
-        debate = Debate.objects.get(pk=posted_info['debate_id'])
-        debate.importance = posted_info['importance']
-        debate.save()
+        priorities = posted_info['priorities']
+
+        with transaction.atomic(): # Speed up the saving by using a single query
+            for debate_id, priority in priorities.items():
+                Debate.objects.filter(pk=debate_id).update(importance=priority)
+
         self.log_action()
         return JsonResponse(json.dumps(posted_info), safe=False)
 

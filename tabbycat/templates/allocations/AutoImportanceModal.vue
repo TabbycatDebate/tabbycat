@@ -3,27 +3,20 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
-          <p class="lead">Using auto-allocate will <strong>remove all existing adjudicator
-          allocations</strong> and create new panels for all debates.</p>
-          <p>The allocator forms stronger panels for debates that have been assigned higher
-          importances. If importances have not been set, or are equivalent, it will give
-          stronger panels to debates in a higher bracket.</p>
-          <p>Adjudicators must have a feedback score over <strong>{{ roundInfo.scoreForVote }}</strong>
-          to panel. You can change this in the <em>Draw Rules</em> section of Configuration if needed.
-          Try modifying this value if you are seeing too few or too many panellists being allocated.</p>
-          <div v-if="roundInfo.scoreForVote > roundInfo.scoreMax" class="alert alert-warning">
-            The score required to panel ({{ roundInfo.scoreForVote }}) is higher than the maximum
-            adjudicator score ({{ roundInfo.scoreMax }}). You should probably lower the score required
-            to panel in settings.
-          </div>
-          <div v-if="roundInfo.scoreForVote < roundInfo.scoreMin" class="alert alert-warning">
-            The score required to panel ({{ roundInfo.scoreForVote }}) is lower than the minimum
-            adjudicator score ({{ roundInfo.scoreMin }}). You should probably raise the score
-            required to panel in settings.
-          </div>
+          <p class="lead">assigning will create new importances and remove other ones...</p>
+
+          <p>currently there are X live teams Y dead teams Z safe teams</p>
+
+          <p>this does not account for special break rules and (for BP doesn't account
+          for non-general categories. so be sure to check...</p>
+
           <button type="submit" class="btn btn-block btn-success"
                   @click="createAutoAllocation">
-            Create Automatic Allocation
+            Assign Automatic Priorities by Bracket
+          </button>
+          <button type="submit" class="btn btn-block btn-success"
+                  @click="createAutoAllocation">
+            Assign Automatic Priorities by Liveness
           </button>
         </div>
       </div>

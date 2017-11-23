@@ -168,7 +168,8 @@ export default {
       }
       var url = this.roundInfo.updateImportanceURL
       var message = 'debate ' + debate.id + '\'s importance'
-      var payload = { debate_id: debate.id, importance: importance }
+      var payload = { 'priorities': {}}
+      payload['priorities'][debate.id] = importance
       this.ajaxSave(url, payload, message, this.processImportanceSaveSuccess, null, null)
     },
     processImportanceSaveSuccess: function(dataResponse, payload, returnPayload) {
