@@ -61,9 +61,6 @@ class TournamentStartForm(ModelForm):
             open_break.full_clean()
             open_break.save()
 
-            num_break_rounds = math.ceil(math.log2(break_size))
-            auto_make_break_rounds(tournament, num_break_rounds, open_break)
-
         self.add_default_feedback_questions(tournament)
         tournament.current_round = tournament.round_set.first()
         tournament.save()
@@ -105,6 +102,15 @@ class TournamentConfigureForm(ModelForm):
             public_preferences = get_preferences_data(public_preset, t)
             for preference in public_preferences:
                 t.preferences[preference['key']] = preference['new_value']
+
+        # Create break rounds (need to do so after we know teams-per-room)
+        open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
+        if open_break:
+            if t.pref('teams_in_debate') == 'bp':
+                num_break_rounds = math.ceil(math.log2(open_break.break_size / 2))
+            else:
+                num_break_rounds = math.ceil(math.log2(open_break.break_size))
+            auto_make_break_rounds(t, num_break_rounds, open_break)
 
 
 class CurrentRoundField(ModelChoiceField):
