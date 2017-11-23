@@ -67,7 +67,7 @@ def set_availability_by_id(model, ids, round):
             # Delete existing availabilities that should no longer be set
             delete = existing.difference(ids)
             logger.debug("%s IDs to delete: %s", model._meta.verbose_name.title(), delete)
-            RoundAvailability.objects.select_for_update().filter(content_type=contenttype, round=round, object_id__in=delete).delete()
+            RoundAvailability.objects.filter(content_type=contenttype, round=round, object_id__in=delete).delete()
 
             # Add new availabilities
             new = ids.difference(existing)

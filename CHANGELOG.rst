@@ -5,6 +5,7 @@ Change Log
 2.1.0 (Japanese Bobtail)
 ------------------------
 
+- Added a 'liveness' calculator to BP formats to allow for the automatic identification of whether a team is safe, live, or dead for a given break category at any given point (currently only supports Open categories)
 - Quality of life improvements
   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
 
