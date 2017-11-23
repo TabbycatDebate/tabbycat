@@ -5,6 +5,7 @@
     <nav class="navbar navbar-default fixed-top allocation-actions navbar-light pt-3 pb-3 d-flex justify-content-between">
 
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+
         <div class="btn-group btn-group-sm">
           <a :href="roundInfo.backUrl" class="btn btn-outline-primary"
              data-toggle="tooltip" data-placement="bottom" title="Return to Draw">
@@ -15,17 +16,18 @@
 
         <div class="btn-group btn-group-sm ml-2">
           <a class="btn btn-success text-white"
-             @click="showModal('#confirmAutoPrioritiseModal')">
+             data-toggle="modal" data-target="#confirmAutoPrioritiseModal">
             Auto-Prioritise
           </a>
         </div>
 
         <div class="btn-group btn-group-sm ml-2">
           <a class="btn btn-success text-white"
-             @click="showModal('#confirmAutoAllocationModal')">
+             data-toggle="modal" data-target="#confirmAutoAllocationModal">
             Auto-Allocate
           </a>
         </div>
+
       </div>
 
       <div class="btn-group btn-group-sm">
@@ -113,8 +115,8 @@
 </template>
 
 <script>
-import AutoImportanceModal from '../allocations/AutoImportanceModal.vue'
 import AutoAllocationModal from '../allocations/AutoAllocationModal.vue'
+import AutoImportanceModal from '../allocations/AutoImportanceModal.vue'
 import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import _ from 'lodash'
 

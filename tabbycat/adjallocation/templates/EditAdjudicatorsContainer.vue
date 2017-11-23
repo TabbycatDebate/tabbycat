@@ -79,7 +79,8 @@
     </unallocated-items-container>
 
     <slide-over :subject="slideOverSubject"></slide-over>
-    <allocation-intro-modal :show-intro-modal="showIntroModal"></allocation-intro-modal>
+    <allocation-intro-modal :show-intro-modal="showIntroModal"
+                            :round-info="roundInfo"></allocation-intro-modal>
 
   </div>
 </template>

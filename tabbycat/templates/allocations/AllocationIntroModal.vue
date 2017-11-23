@@ -132,6 +132,21 @@
               <p>These toggles are typically use near the end of an allocation to check for obvious disparities in gender, regional, or judge ranking balance across debates. Because that they can obscure the colors used to identify conflicts, it's worth turning them off before doing a final check of the allocation.</p>
             </div>
 
+            <div class="tab-pane fade" id="pills-liveness" role="tabpanel">
+              <h2>Liveness</h2>
+              <p class="mt-4">Teams in the draw shown with a ☆ are those that have been calculated
+              as being 'live' for a category; i.e. that they can still break:</p>
+              <div class="mb-4 mt-4">
+                <div class="small btn btn-light mr-3">LIVE TEAM ☆</div>
+                <div class="small btn btn-light mr-3">TEAM LIVE IN TWO CATEGORIES ☆☆</div>
+                <div class="small btn btn-light mr-3">SAFE OR DEAD TEAM </div>
+              </div>
+              <p>Teams without a star are either 'safe' (definitely breaking) or 'dead' (unable to break). If you hover over a team the top-right will clarify which is the case and for which category.</p>
+              <p><strong class="text-danger">Important Note:</strong> liveness, as displayed here and calculated for auto-prioritisation, <em>does not take into account many edge cases</em> such as a team breaking into ESL but only participating in the general break, or special break rules such as 'caps'. Be cautious in trusting these figures, especially if you don't have a strictly mathematical break.</p>
+              <p v-if="roundInfo.teamsInDebate === 'bp'">Note: in BP formats we do not (yet) have a liveness
+              calculator for non-general breaks (i.e. Novice/ESL) so this is not taken into account when displaying stars or allocating priorities.</p>
+            </div>
+
           </div>
         </div>
         <div class="modal-footer justify-content-between">
@@ -173,6 +188,12 @@
                 Toggles
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link btn" id="pills-liveness-tab" data-toggle="pill"
+                 href="#pills-liveness" role="tab" aria-controls="pills-liveness" aria-selected="false">
+                Liveness
+              </a>
+            </li>
           </ul>
 
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -187,7 +208,7 @@
 
 <script>
 export default {
-  props: { showIntroModal: Boolean },
+  props: { roundInfo: Object, showIntroModal: Boolean },
   mounted: function () {
     if (this.showIntroModal) {
       $('#autoAllocationIntroAlert').modal()

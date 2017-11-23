@@ -4,16 +4,19 @@
        @mouseenter="showSlideOver(); showHoverConflicts()"
        @mouseleave="hideSlideOver(); hideHoverConflicts()">
 
-    <div class="small">
-      <span v-if="debugMode">
+    <div class="small d-flex justify-content-between">
+      <div v-if="debugMode">
         {{ team.id }} {{ team.short_name }}<br>
         <span class="text-muted">
           {{ team.institution.id }} {{ team.institution.code }}
         </span>
-      </span>
-      <span v-else>
+      </div>
+      <div v-else>
         {{ team.short_name }}
-      </span>
+      </div>
+      <div class="text-muted d-flex align-items-center">
+        <span>{{ liveness }}</span>
+      </div>
     </div>
 
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
@@ -47,6 +50,18 @@ export default {
   computed: {
     highlightableObject: function() {
       return this.team
+    },
+    liveness: function() {
+      if (this.team.break_categories === null) {
+        return ""
+      }
+      var short_code = ""
+      for (var i = 0; i < this.team.break_categories.length; i++) {
+        if (this.team.break_categories[i].will_break === "live") {
+          short_code += "☆"
+        }
+      }
+      return short_code
     }
   },
 }
