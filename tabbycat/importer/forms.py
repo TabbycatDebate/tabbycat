@@ -217,14 +217,20 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         nspeakers = tournament.pref('substantive_speakers')
         self.fields['speakers'].widget = forms.Textarea(attrs={'rows': nspeakers,
                 'placeholder': _("One speaker's name per line")})
+        self.fields['speakers'].help_text = _("Speaker's names (seperated by commas, tabs, or new-lines)")
         self.initial.setdefault('speakers', "\n".join(
                 _("Speaker %d") % i for i in range(1, nspeakers+1)))
+
         self.fields['emails'].widget = forms.Textarea(attrs={'rows': nspeakers,
-                'placeholder': _("Optional; used for Private URLs. Format with one email address per line")})
+                'placeholder': ""})
+        self.fields['emails'].help_text = _("Emails are optional but are useful to add for distributing Private URLs. Format as (seperated by commas, tabs, or new-lines)")
 
     def clean_details(self, field_name):
         # Split into list of names or emails; removing blank lines.
-        items = self.cleaned_data[field_name].split('\n')
+        items = self.cleaned_data[field_name]
+        # Allow comma/tab seperator to be used along with new lines
+        items = items.replace('\t', '\n').replace(',', '\n')
+        items = items.split('\n')
         items = [item.strip() for item in items]
         items = [item for item in items if item]
         return items

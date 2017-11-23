@@ -275,5 +275,5 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
     # So we need to extrapolate back to the current round and the maximum point
     # Gains into order to find the current live/dead scores
     dead_at_round = marginal - (3 * (total_rounds - current_round + 1)) - 1
-    print("safe", safe, "dead_at_round", dead_at_round, "marginal", marginal)
+    # print("safe", safe, "dead_at_round", dead_at_round, "marginal", marginal)
     return safe, dead_at_round
