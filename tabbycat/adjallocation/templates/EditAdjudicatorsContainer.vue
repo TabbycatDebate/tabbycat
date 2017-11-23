@@ -79,6 +79,7 @@
     </unallocated-items-container>
 
     <slide-over :subject="slideOverSubject"></slide-over>
+    <allocation-intro-modal :show-intro-modal="showIntroModal"></allocation-intro-modal>
 
   </div>
 </template>
@@ -88,6 +89,7 @@ import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
 import HighlightableContainerMixin from '../../templates/allocations/HighlightableContainerMixin.vue'
 import AllocationActions from '../../templates/allocations/AllocationActions.vue'
+import AllocationIntroModal from '../../templates/allocations/AllocationIntroModal.vue'
 import DebateImportance from '../../templates/allocations/DebateImportance.vue'
 import DebatePanel from '../../templates/allocations/DebatePanel.vue'
 import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
@@ -99,7 +101,9 @@ import _ from 'lodash'
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
            HighlightableContainerMixin],
-  components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
+  components: { AllocationActions, AllocationIntroModal, DebateImportance,
+                DebatePanel, DraggableAdjudicator },
+  props: { showIntroModal: Boolean },
   created: function() {
     this.$eventHub.$on('update-importance', this.updateImportance)
     // Watch for global conflict highlights

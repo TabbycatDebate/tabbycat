@@ -117,7 +117,13 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
         return round_info
 
     def get_context_data(self, **kwargs):
+        t = self.get_tournament()
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
+        kwargs['showAllocationIntro'] = t.pref('show_allocation_intro')
+        # This is meant to be shown once only; so we set false if true
+        if t.pref('show_allocation_intro'):
+            t.preferences['ui_options__show_allocation_intro'] = False
+
         return super().get_context_data(**kwargs)
 
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="confirmAutoAlert" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade" id="confirmAutoImportanceAlert" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
@@ -36,7 +36,7 @@ export default {
   props: { roundInfo: Object, },
   methods: {
     resetAutoAllocationModal: function(button) {
-      $('#confirmAutoAlert').modal('hide')
+      $('#confirmAutoAllocationAlert').modal('hide')
       $.fn.resetButton(button)
     },
     createAutoAllocation: function(event) {

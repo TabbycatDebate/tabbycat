@@ -14,13 +14,15 @@
         </div>
 
         <div class="btn-group btn-group-sm ml-2">
-          <a class="btn btn-success text-white" @click="showAutoAllocationModal">
-            Auto-Importance
+          <a class="btn btn-success text-white"
+             @click="showModal('#confirmAutoPrioritiseModal')">
+            Auto-Prioritise
           </a>
         </div>
 
         <div class="btn-group btn-group-sm ml-2">
-          <a class="btn btn-success text-white" @click="showAutoAllocationModal">
+          <a class="btn btn-success text-white"
+             @click="showModal('#confirmAutoAllocationModal')">
             Auto-Allocate
           </a>
         </div>
@@ -131,8 +133,8 @@ export default {
     }
   },
   methods: {
-    showAutoAllocationModal: function() {
-      $('#confirmAutoAlert').modal('show');
+    showModal: function(modalName) {
+      $(modalName).modal('show');
     },
     titleCase: function(title) {
       return title.charAt(0).toUpperCase() + title.substr(1)
