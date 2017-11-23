@@ -519,13 +519,14 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                             winner = teamscore.debate_team
                         else:
                             loser = teamscore.debate_team
-                    result = _("%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)")
-                    result = result % {
-                        'winner': winner.team.short_name,
-                        'winner_side': winner.get_side_name(t, 'abbr'),
-                        'loser': loser.team.short_name,
-                        'loser_side': loser.get_side_name(t, 'abbr'),
-                    }
+                    if winner is not None and loser is not None:
+                        result = _("%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)")
+                        result = result % {
+                            'winner': winner.team.short_name,
+                            'winner_side': winner.get_side_name(t, 'abbr'),
+                            'loser': loser.team.short_name,
+                            'loser_side': loser.get_side_name(t, 'abbr'),
+                        }
 
                 elif ballotsub.debate.round.is_break_round:
                     advancing = []
