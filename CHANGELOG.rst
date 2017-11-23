@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.1.0 (Japanese Bobtail)
+------------------------
+
+- Quality of life improvements
+  - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+
+
 2.0.1
 -----
 *Release date: 21 November 2017*
