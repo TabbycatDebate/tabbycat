@@ -7,7 +7,7 @@
       </div>
     </slot>
 
-    <slot name="sliveness" v-if="roundInfo.roundIsPrelim && roundInfo.teamsInDebate !== 'bp'">
+    <slot name="sliveness" v-if="roundInfo.roundIsPrelim">
       <div class="draw-cell flex-1 flex-horizontal-center">
         {{ debate.liveness }}
       </div>

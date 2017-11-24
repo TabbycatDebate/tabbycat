@@ -47,7 +47,14 @@ export default {
     'internalImportance': function() {
       if (this.internalImportance !== this.importance) {
         // Only update if an actual change has occured
-        this.$eventHub.$emit('update-importance', this.id, this.internalImportance)
+        this.$eventHub.$emit('update-importance', [this.id],
+                                                  [this.internalImportance])
+      }
+    },
+    'importance': function() {
+      if (this.internalImportance !== this.importance) {
+        // Only update if an actual change has occured
+        this.internalImportance = this.importance
       }
     }
   }

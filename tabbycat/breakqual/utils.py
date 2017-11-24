@@ -117,7 +117,7 @@ def factorial(n):
 
 def calculate_live_thresholds(bc, tournament, round):
     total_teams = bc.team_set.count()
-    total_rounds = tournament.prelim_rounds(until=round).count()
+    total_rounds = tournament.prelim_rounds().count()
     break_cat_scores = get_scores(bc) if not bc.is_general else None
 
     if bc.break_size <= 1:
@@ -214,7 +214,7 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
 
     # TODO: integrate below sanity checking into the 2vs2 method also
     if is_general is False:
-        return 0, 0 # No ESL/EFL support
+        return None, None # No ESL/EFL support yet
 
     def get_high_ranges(scores):
         for i in range(0, total_rounds):
@@ -269,11 +269,8 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
     low_safe, low_marginal = get_thresholds(total_teams, break_spots, get_low_ranges)
 
     safe = max(high_safe, low_safe) # Choose worst case
-    marginal = min(high_marginal, low_marginal) # Choose best case
+    final_dead = min(high_marginal, low_marginal) # Choose best case
+    possible_points_gain = (total_rounds - current_round + 1) * 3
+    dead = final_dead - possible_points_gain - 1
 
-    # These values presume the final round has already happened
-    # So we need to extrapolate back to the current round and the maximum point
-    # Gains into order to find the current live/dead scores
-    dead_at_round = marginal - (3 * (total_rounds - current_round + 1)) - 1
-    # print("safe", safe, "dead_at_round", dead_at_round, "marginal", marginal)
-    return safe, dead_at_round
+    return safe, dead

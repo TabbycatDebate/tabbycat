@@ -130,6 +130,7 @@
 
   .tooltip-inner {
     padding: 2px 3px;
+    margin-bottom: -4px;
   }
 }
 
@@ -159,6 +160,10 @@
     display: flex;
     padding: 0 5px;
     position: relative; // Needs to be for the hover history tooltip
+
+    > div.small {
+      width: 100%;
+    }
   }
 
   > .conflictable {

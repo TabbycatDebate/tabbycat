@@ -19,7 +19,8 @@ Edit Adjudicators for {{ round_abbr }}
                                :round-info="roundInfo"
                                :initial-unallocated-items="unallocatedItems"
                                :default-sort-key="'bracket'"
-                               :default-sort-order="'desc'">
+                               :default-sort-order="'desc'"
+                               :show-intro-modal="showIntroModal">
   </edit-adjudicators-container>
 
 </div>
@@ -31,6 +32,7 @@ Edit Adjudicators for {{ round_abbr }}
       debates: {{ vueDebates|safe }},
       roundInfo: {{ vueRoundInfo|safe }},
       unallocatedItems: {{ vueUnusedAdjudicators|safe }},
+      showIntroModal: {% if showAllocationIntro %}true{% else %}false{% endif %}
     }
   </script>
   {{ block.super }}

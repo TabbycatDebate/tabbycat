@@ -5,8 +5,11 @@ Change Log
 2.1.0 (Japanese Bobtail)
 ------------------------
 
-- Added a 'liveness' calculator to BP formats to allow for the automatic identification of whether a team is safe, live, or dead for a given break category at any given point (currently only supports Open categories)
+- Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
+- Added an automated method for assigning importances to debates using their bracket or 'liveness'
 - Quality of life improvements
+  - Added a 'liveness' calculator for Open categories in BP
+  - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
 
 
