@@ -124,6 +124,8 @@ def calculate_live_thresholds(bc, tournament, round):
         return None, None # Bad input
     elif bc.break_size == total_teams:
         return 0, 0 # All teams break
+    elif total_teams == 0:
+        return None, None
     elif tournament.pref('teams_in_debate') == 'bp':
         return calculate_bp(bc.is_general, round.seq, bc.break_size,
                             total_teams, total_rounds, break_cat_scores)
@@ -216,7 +218,7 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
     if is_general is False:
         return None, None # No ESL/EFL support yet
 
-    def get_high_ranges(scores):
+    def get_high_ranges(scores, total_rounds, total_teams):
         for i in range(0, total_rounds):
             for j in range(0, total_teams, 4):
                 scores[j + 1] += 1
@@ -225,7 +227,7 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
             scores.sort()
         return scores
 
-    def get_low_ranges(scores):
+    def get_low_ranges(scores, total_rounds, total_teams):
         for i in range(0, total_rounds):
             for j in range(0, total_teams, 4):
                 scores[j] += 3
@@ -234,11 +236,7 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
             scores.sort()
         return scores
 
-    def get_thresholds(total_teams, break_spots, distribution_function):
-        # Round up teams to nearest multiple of four
-        floored_teams = int(math.ceil(total_teams / 4.0)) * 4
-        scores = distribution_function([0] * floored_teams)
-
+    def get_thresholds(total_teams, break_spots, scores):
         cur_val = total_teams - 1
         prev_val = total_teams - 1
         cur_count = 1
@@ -265,8 +263,13 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
         marginal_at_break = scores[cur_val]
         return safe_at_break, marginal_at_break
 
-    high_safe, high_marginal = get_thresholds(total_teams, break_spots, get_high_ranges)
-    low_safe, low_marginal = get_thresholds(total_teams, break_spots, get_low_ranges)
+    # Round up teams to nearest multiple of four
+    floored_teams = int(math.ceil(total_teams / 4.0)) * 4
+    high_scores = get_high_ranges([0] * floored_teams, total_rounds, total_teams)
+    low_scores = get_low_ranges([0] * floored_teams, total_rounds, total_teams)
+
+    high_safe, high_marginal = get_thresholds(total_teams, break_spots, high_scores)
+    low_safe, low_marginal = get_thresholds(total_teams, break_spots, low_scores)
 
     safe = max(high_safe, low_safe) # Choose worst case
     final_dead = min(high_marginal, low_marginal) # Choose best case
