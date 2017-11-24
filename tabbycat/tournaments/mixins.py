@@ -398,6 +398,7 @@ class DrawForDragAndDropMixin(RoundMixin):
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,
             'roundName' : round.abbreviation,
+            'roundSeq' : round.seq,
             'roundIsPrelim' : not round.is_break_round,
         }
         round_info = self.annotate_round_info(round_info)

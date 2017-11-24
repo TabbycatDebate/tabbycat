@@ -57,7 +57,8 @@ export default {
       }
       var short_code = ""
       for (var i = 0; i < this.team.break_categories.length; i++) {
-        if (this.team.break_categories[i].will_break === "live") {
+        if ((this.team.break_categories[i].will_break === "live") ||
+            (this.team.break_categories[i].will_break === "?")) {
           short_code += "☆"
         }
       }

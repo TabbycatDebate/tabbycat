@@ -32,7 +32,7 @@ Edit Adjudicators for {{ round_abbr }}
       debates: {{ vueDebates|safe }},
       roundInfo: {{ vueRoundInfo|safe }},
       unallocatedItems: {{ vueUnusedAdjudicators|safe }},
-      showIntroModal: true
+      showIntroModal: {% if showAllocationIntro %}true{% else %}false{% endif %}
     }
   </script>
   {{ block.super }}

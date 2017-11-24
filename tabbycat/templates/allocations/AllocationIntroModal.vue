@@ -17,16 +17,16 @@
 
             <div class="tab-pane fade" id="pills-priorities" role="tabpanel">
               <h2>Assigning Priorities</h2>
-              <p class="mt-4">Debates with higher 'priority' values are given a higher-strength
-                panels when adjudicators are being automatically assigned (as described in
+              <p>Debates with higher 'priority' values are given a higher-strength
+                panels when adjudicators are automatically assigned (as described in
                 the next step). You can use the
                 <strong class="text-success">Auto-Prioritise</strong>
                 button to have Tabbycat automatically assign relative importances
-                (based on a room's bracket or 'liveness'). Similarly, you can skip
-                this step only only ever assign priorities manually.</p>
+                (based on either a room's bracket or 'liveness'). With either option the highest priority value is not used so that it is available as an override.</p>
+              <p>You can of course skip this step only only ever assign priorities manually, or use the automatic assignment just as a first pass.</p>
               <p>A debate's priority can be manually set using a slider. It looks like this:</p>
-              <input max="2" min="-2" step="1" type="range" class="mb-4 mt-3">
-              <p>If using the auto-prioritise feature it is generally a good idea to check
+              <input max="2" min="-2" step="1" type="range" class="mb-4 mt-3 mx-5">
+              <p>Even if using the auto-prioritise feature it is generally a good idea to check
                 over each debate's priority and check for any edge cases that mean
                 it should have a lower or higher value.
               </p>
@@ -138,13 +138,13 @@
               as being 'live' for a category; i.e. that they can still break:</p>
               <div class="mb-4 mt-4">
                 <div class="small btn btn-light mr-3">LIVE TEAM ☆</div>
-                <div class="small btn btn-light mr-3">TEAM LIVE IN TWO CATEGORIES ☆☆</div>
-                <div class="small btn btn-light mr-3">SAFE OR DEAD TEAM </div>
+                <div class="small btn btn-light mr-3">SAFE/DEAD TEAM </div>
+                <div class="small btn btn-light mr-3">LIVE TEAM (IN TWO CATEGORIES) ☆☆</div>
               </div>
               <p>Teams without a star are either 'safe' (definitely breaking) or 'dead' (unable to break). If you hover over a team the top-right will clarify which is the case and for which category.</p>
               <p><strong class="text-danger">Important Note:</strong> liveness, as displayed here and calculated for auto-prioritisation, <em>does not take into account many edge cases</em> such as a team breaking into ESL but only participating in the general break, or special break rules such as 'caps'. Be cautious in trusting these figures, especially if you don't have a strictly mathematical break.</p>
               <p v-if="roundInfo.teamsInDebate === 'bp'">Note: in BP formats we do not (yet) have a liveness
-              calculator for non-general breaks (i.e. Novice/ESL) so this is not taken into account when displaying stars or allocating priorities.</p>
+              calculator for non-general breaks (i.e. Novice/ESL) so teams are always assumed to be live in those categories when displaying stars or allocating priorities.</p>
             </div>
 
           </div>

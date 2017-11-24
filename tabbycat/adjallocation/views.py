@@ -169,7 +169,7 @@ class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, V
                 Debate.objects.filter(pk=debate_id).update(importance=priority)
 
         self.log_action()
-        return JsonResponse(json.dumps(posted_info), safe=False)
+        return JsonResponse(json.dumps(priorities), safe=False)
 
 
 class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
