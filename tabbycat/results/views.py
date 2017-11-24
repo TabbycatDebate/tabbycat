@@ -519,6 +519,7 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                             winner = teamscore.debate_team
                         else:
                             loser = teamscore.debate_team
+
                     result = _("%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)")
                     result = result % {
                         'winner': winner.team.short_name,
