@@ -105,7 +105,9 @@ class TournamentConfigureForm(ModelForm):
 
         # Create break rounds (need to do so after we know teams-per-room)
         open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
-        if open_break:
+        # Check there aren't already break rounds (i.e. when importing demos)
+        existing_break_rounds_count = t.break_rounds().count()
+        if open_break and existing_break_rounds_count == 0:
             if t.pref('teams_in_debate') == 'bp':
                 num_break_rounds = math.ceil(math.log2(open_break.break_size / 2))
             else:
