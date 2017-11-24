@@ -10,65 +10,63 @@ export default {
     this.$eventHub.$on('assign-all-importances', this.autoAssignImportance)
   },
   methods: {
-    autoAssignImportance: function(type) {
-      if (type === 'bracket') {
-        this.autoAssignImportanceByBracket()
-      }
-      if (type === 'liveness') {
-        this.autoAssignImportanceByLiveness()
-      }
-    },
-    autoAssignImportanceByBracket: function() {
-      var debatesByBracket = _.sortBy(this.debates, 'bracket')
-      // For the highest/lowest bracket we actually take the third-highest and
-      // third lowest bracket to even out the uneven distribution of brackets
-      var fakeHighestBracket = debatesByBracket[debatesByBracket.length - 3]
-      var highestBracket = fakeHighestBracket.bracket
-      var fakeLowestBracket = debatesByBracket[2]
-      var lowestBracket = fakeLowestBracket.bracket
+    autoAssignImportance: function(assignedType) {
+      var debatesByType = _.sortBy(this.debates, assignedType)
+      var length = debatesByType.length
 
-      // 15 difference; (20/5); quartile is thus 4
-      var bracketQuartilesSpan = (highestBracket - lowestBracket) / 4
+      // Assign quartile bounds
+      var quartile1Index = Math.floor(length * 0.25) - 1
+      var quartile1Upper = Math.ceil(debatesByType[quartile1Index][assignedType])
+      var quartile2Index = Math.floor(length * 0.50) - 1
+      var quartile2Upper = Math.ceil(debatesByType[quartile2Index][assignedType])
+      var quartile3Index = Math.floor(length * 0.75) - 1
+      var quartile3Upper = Math.ceil(debatesByType[quartile3Index][assignedType])
+      var quartile4Upper = debatesByType[length - 1][assignedType] + 1
+      var q = [{ 'start': 0,              'end': quartile1Upper},
+               { 'start': quartile1Upper, 'end': quartile2Upper},
+               { 'start': quartile2Upper, 'end': quartile3Upper},
+               { 'start': quartile3Upper, 'end': quartile4Upper}]
 
-      console.log(lowestBracket, highestBracket, 'span', bracketQuartilesSpan)
+      // Sometimes brackets can start and end at the same number which creates
+      // skewed distributions (no debates in that 1/4); this helps compensate
+      var increaser = 0
       for (var i = 0; i < 4; i += 1) {
-
-        if (i == 0) {
-          var bracketLowerThreshold = 0 // Ensure lowest quartile includes edges
-        } else {
-          var bracketLowerThreshold = lowestBracket + (bracketQuartilesSpan * i)
-        }
-        if (i == 3) {
-          var bracketUpperThreshold = 99 // Ensure top quartile includes edges
-        } else {
-          var bracketUpperThreshold = lowestBracket + (bracketQuartilesSpan * i) + bracketQuartilesSpan
-        }
-
-        console.log(bracketLowerThreshold, bracketUpperThreshold)
-
-        for (var j = 0; j < this.debates.length; j += 1) {
-          if ((this.debates[j].bracket < bracketUpperThreshold) &&
-              (this.debates[j].bracket >= bracketLowerThreshold)) {
-            this.debates[j].importance = i - 2
-            // console.log('bracket', this.debates[j].bracket, bracketUpperThreshold, bracketLowerThreshold, "quartile", i)
-          }
-
+        q[i]['start'] = q[i]['start'] + increaser
+        q[i]['end'] = q[i]['end'] + increaser
+        if (q[i]['start'] === q[i]['end']) {
+          increaser += 1
+          q[i]['end'] += increaser
         }
       }
 
-    },
-    autoAssignImportanceByLiveness: function() {
+      console.log(assignedType, q)
 
+      // Actually assign the importances
+      for (var j = 0; j < this.debates.length; j += 1) {
+        var debate = this.debates[j]
+        if (_.inRange(debate[assignedType], q[0].start, q[0].end)) {
+          debate.importance = -2
+        } else if (_.inRange(debate[assignedType], q[1].start, q[1].end)) {
+          debate.importance = -1
+        } else if (_.inRange(debate[assignedType], q[2].start, q[2].end)) {
+          debate.importance = 0
+        } else if (_.inRange(debate[assignedType], q[3].start, q[3].end)) {
+          debate.importance = 1
+        }
+      }
+
+      // Save the results
+      var debateIDs = _.map(this.debates, 'id')
+      var debateImportances = _.map(this.debates, 'importance')
+      this.updateImportance(debateIDs, debateImportances)
     },
-    updateImportance: function(debateID, importance) {
-      var debate = _.find(this.debates, { 'id': debateID })
-      if (_.isUndefined(debate)) {
-        this.ajaxError("Debate\'s importance", "", "Couldnt find debate to update")
+    updateImportance: function(debateIDs, importances) {
+      var payload = { 'priorities': {}}
+      for (var i = 0; i < debateIDs.length; i += 1) {
+        payload['priorities'][debateIDs[i]] = importances[i]
       }
       var url = this.roundInfo.updateImportanceURL
-      var message = 'debate ' + debate.id + '\'s importance'
-      var payload = { 'priorities': {}}
-      payload['priorities'][debate.id] = importance
+      var message = 'debate IDs ' + debateIDs + '\'s importance'
       this.ajaxSave(url, payload, message, this.processImportanceSaveSuccess, null, null)
     },
     processImportanceSaveSuccess: function(dataResponse, payload, returnPayload) {

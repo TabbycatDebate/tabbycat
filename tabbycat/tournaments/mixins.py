@@ -345,8 +345,10 @@ class DrawForDragAndDropMixin(RoundMixin):
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
                 if team['break_categories'] is not None:
-                    liveness += len([bc for bc in team['break_categories']
-                                     if bc['will_break'] == 'live'])
+                    for c in team['break_categories']:
+                        if c['will_break'] == 'live' or c['will_break'] == '?':
+                            liveness += 1
+
             for da in debate['debateAdjudicators']:
                 da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
 

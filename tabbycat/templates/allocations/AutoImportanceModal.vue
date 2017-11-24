@@ -37,7 +37,7 @@ export default {
       $.fn.loadButton("#aapl")
       self.$eventHub.$emit('assign-all-importances', type)
 
-      $.fn.showAlert('success', 'Successfully auto-assigned priorities', 10000)
+      $.fn.showAlert('success', 'Successfully auto-assigned priorities by ' + type,  10000)
       self.resetAutoPrioritiesModal()
 
     },

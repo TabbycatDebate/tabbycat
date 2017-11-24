@@ -12,7 +12,7 @@
       </div>
     </slot>
 
-    <slot name="hliveness" v-if="roundInfo.roundIsPrelim && roundInfo.roundSeq > 3">
+    <slot name="hliveness" v-if="roundInfo.roundIsPrelim">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('liveness')"
            data-toggle="tooltip" title="How many break categories are live in this room">
         <i data-feather="star" class="tooltip-trigger"></i>

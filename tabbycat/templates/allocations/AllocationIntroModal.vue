@@ -23,7 +23,7 @@
                 <strong class="text-success">Auto-Prioritise</strong>
                 button to have Tabbycat automatically assign relative importances
                 (based on either a room's bracket or 'liveness'). With either option the highest priority value is not used so that it is available as an override.</p>
-              <p>You can of course skip this step only only ever assign priorities manually, or use the automatic assignment just as a first pass.</p>
+              <p>You can of course skip this step only only ever assign priorities manually, or use the automatic assignment just as a first pass. Note that priorities are relative; no absolute: if half the debates are set to "5" and the rest to "1" it would be the same as if they were set to "4" and "2" respectively.</p>
               <p>A debate's priority can be manually set using a slider. It looks like this:</p>
               <input max="2" min="-2" step="1" type="range" class="mb-4 mt-3 mx-5">
               <p>Even if using the auto-prioritise feature it is generally a good idea to check
