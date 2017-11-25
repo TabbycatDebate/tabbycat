@@ -74,7 +74,7 @@ def set_availability_by_id(model, ids, round):
             logger.debug("%s IDs to create: %s", model._meta.verbose_name.title(), new)
             RoundAvailability.objects.bulk_create([RoundAvailability(content_type=contenttype, round=round, object_id=id) for id in new])
     except IntegrityError:
-        logger.warning("IntegrityError updating availabilities from %s to %s" % (ids, existing))
+        logger.exception("IntegrityError updating round availabilities")
 
 
 def activate_all(round):
