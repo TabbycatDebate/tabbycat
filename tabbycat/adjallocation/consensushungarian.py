@@ -119,7 +119,10 @@ class ConsensusHungarianAllocator(Allocator):
             panel_indices = indexes[0:njudges]
             panel = [voting[c] for r, c in panel_indices]
             panel.sort(key=lambda a: a._hungarian_score, reverse=True)
-            aa.chair = panel.pop(0)
+            try:
+                aa.chair = panel.pop(0)
+            except IndexError:
+                aa.chair = None
             aa.panellists = panel
             alloc.append(aa)
             del indexes[0:njudges]

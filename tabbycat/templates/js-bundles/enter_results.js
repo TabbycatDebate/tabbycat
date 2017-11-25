@@ -27,7 +27,6 @@ function refresh_totals(scoresheet) {
   {% endif %}
 
   if (isBP) {
-    console.log('two team')
     // 2-team
     $aff_total = $('.aff_total', $scoresheet);
     $neg_total = $('.neg_total', $scoresheet);
@@ -65,7 +64,6 @@ function refresh_totals(scoresheet) {
       $neg_margin.text(Number(neg - aff));
     }
   } else {
-    console.log('four team')
     // BP
     var positions = ['og', 'oo', 'cg', 'co']
     var totals_elements = {}
@@ -125,10 +123,11 @@ function refresh_totals(scoresheet) {
           rank_elements[team].addClass('btn-danger');
           rank_elements[team].text("4th");
         }
-      }
-      if (tie) {
+      } else if (tie) {
         rank_elements[team].addClass('btn-dark');
-          rank_elements[team].text("TIE");
+        rank_elements[team].text("TIE");
+      } else {
+        rank_elements[team].addClass('btn-secondary');
       }
 
       // Display margin
