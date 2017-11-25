@@ -14,6 +14,9 @@ Change Log
 - Improved the BP motions tab for out-rounds by specifying advancing teams as "top/bottom ½" rather than as 1st/4th and removed the average-points-per-position graphs that were misleading
 - Improved handling of long motions in the motion display interface
 - Fixed issue where creating BP tournaments using the wizard would create an extra break round given the size of the break specified
+- Fixed auto-allocation in consensus panels where there are fewer judges than debates in the round
+- Fixed reply speaker validity check when speeches are marked as duplicate
+- Prohibit assignment of teams to break categories of other tournaments in Edit Database area
 
 
 2.0.1
