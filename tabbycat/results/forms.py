@@ -305,7 +305,7 @@ class BaseBallotSetForm(BaseResultForm):
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
-                label=_("Mark as a duplicate speech"))
+                label=_("Mark as a duplicate speech"), label_suffix="")
 
         self.create_score_fields()
 
