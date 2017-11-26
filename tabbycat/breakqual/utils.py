@@ -120,6 +120,8 @@ def calculate_live_thresholds(bc, tournament, round):
     total_rounds = tournament.prelim_rounds().count()
     break_cat_scores = get_scores(bc) if not bc.is_general else None
 
+    logger.info("LIVENESS: Calculating for tournament %s round %s / %s with %s spots and %s teams" % (tournament.short_name, round.seq, total_rounds, bc.break_size, total_teams))
+
     if bc.break_size <= 1:
         return None, None # Bad input
     elif bc.break_size == total_teams:
@@ -183,6 +185,7 @@ def calculate_2vs2(is_general, current_round, break_spots, total_teams,
 
         safe = high_bound
         dead = low_bound - (total_rounds - (current_round - 1)) - 1
+        logger.info("\t(general): Safe is %s and dead is %s" % (safe, dead))
         return safe, dead
     else:
         # The safe score for the ESL/EFL category is tricky. First we get a best
@@ -206,6 +209,7 @@ def calculate_2vs2(is_general, current_round, break_spots, total_teams,
         # This function just defines the score such that a team can no longer
         # 'catch' a team in the last breaking spot.
         dead = break_cat_scores[break_spots - 1] - (total_rounds - current_round + 1) - 1
+        logger.info("\t(non-general): Safe is %s and dead is %s" % (safe, dead))
         return safe, dead
 
 
@@ -271,9 +275,14 @@ def calculate_bp(is_general, current_round, break_spots, total_teams,
     high_safe, high_marginal = get_thresholds(total_teams, break_spots, high_scores)
     low_safe, low_marginal = get_thresholds(total_teams, break_spots, low_scores)
 
+    logger.info("\tBest case calculated as safe %s marginal %s" % (high_safe, high_marginal))
+    logger.info("\tWorst case calculated as safe %s marginal %s" % (low_safe, low_marginal))
+
     safe = max(high_safe, low_safe) # Choose worst case
     final_dead = min(high_marginal, low_marginal) # Choose best case
     possible_points_gain = (total_rounds - current_round + 1) * 3
     dead = final_dead - possible_points_gain - 1
+
+    logger.info("\tSafe is %s and dead is %s" % (safe, dead))
 
     return safe, dead
