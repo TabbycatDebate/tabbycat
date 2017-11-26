@@ -23,7 +23,7 @@ class TestFeedbackProgress(TestCase):
         # Note 2 teams bypassed ESL break; 8 eligible
         safe, dead = calculate_2vs2(False, 7, 4, 8, 8, [5,4,3,3,1,1])
         self.assertEqual(safe, 4) # All on 4 broke
-        self.assertEqual(dead, 2) # Some (all?) on 3 broke
+        self.assertEqual(dead, 0) # Some (all?) on 3 broke
 
     def test_case_australs_2017_esl(self):
         # Note 2 teams bypassed ESL break; 8 eligible
@@ -34,7 +34,7 @@ class TestFeedbackProgress(TestCase):
     def test_case_easters_2017_open_penultimate(self):
         safe, dead = calculate_2vs2(True, 6, 16, 100, 6, None)
         self.assertEqual(safe, 5) # All on 5 broke
-        self.assertEqual(dead, 1) # Some on 4 broke
+        self.assertEqual(dead, 2) # Some on 4 broke
 
     def test_case_easters_2017_open(self):
         safe, dead = calculate_2vs2(True, 6, 16, 100, 6, None)
