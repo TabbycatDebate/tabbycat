@@ -54,6 +54,7 @@ export default {
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
       }).fail(function(response) {
         // Handle Failure
+        console.debug(response) // Help identify failures in sentry
         var info = response.responseJSON.message
         $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         self.resetAutoAllocationModal(event.target)

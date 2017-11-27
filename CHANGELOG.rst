@@ -15,7 +15,7 @@ Change Log
 
 2.0.2
 -----
-*Release date: TBC*
+*Release date: 27 November 2017*
 
 - Fixes and improvements to diversity overview
     - Fixed average feedback rating from teams, it was previously (incorrectly) showing the average feedback rating from all adjudicators
