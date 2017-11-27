@@ -17,9 +17,11 @@ A partial list of major national and international tournaments (that we know of)
 - Cambodia United Asian Debating Championship
 - `Kings College London IV <http://kcliv2017.herokuapp.com>`_
 - `KPU Pro Ams <https://kduproams2017.herokuapp.com/kduproams2017/>`_
+- `Malaysian National Intervarsity Debating Championship <https://masnationals2017.herokuapp.com/>`_
 - `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
 - `North East Asia Open <https://neao2017.herokuapp.com/neao2017/>`_
 - `Swords Mini-Gong <https://minigong2017.herokuapp.com/>`_
+- `Shanghai Asian Schools British Parliamentary Debate Championships <https://shanghai2017.herokuapp.com/>`_
 - `UCD Law Society IV <https://ucdlawsociv.herokuapp.com>`_
 - `UCD Vice President's Cup <https://ucdlawsociv.herokuapp.com>`_
 - `UQ Australs <https://australs2017.herokuapp.com>`_
