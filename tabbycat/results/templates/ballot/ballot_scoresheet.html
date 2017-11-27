@@ -23,7 +23,9 @@
 
         <div class="col-6 mr-0 col-mr-auto pl-md-2 pl-1 btn-group">
 
-          <button class="btn btn-outline-secondary btn-no-hover" readonly />Rank</button>
+          <button class="btn btn-outline-secondary btn-no-hover" readonly />
+            {% if pref.teams_in_debate != 'bp' %}{% trans "Result" %}{% else %}{% trans "Rank" %}{% endif %}
+          </button>
           <button name="{{ team.side_code }}_rank" type="text"
                   class="btn btn-secondary btn-no-hover {{ team.side_code }}_rank" readonly  />
             ?

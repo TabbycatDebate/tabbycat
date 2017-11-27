@@ -23,7 +23,7 @@
       </div>
     </section>
 
-    <section v-if="!roundInfo.hasMotions && roundInfo.motions[0]"
+    <section v-if="!roundInfo.hasMotions && roundInfo.motions.length > 0"
              class="db-margins-m db-bordered db-flex-row db-flex-item-fhs db-flex-static">
       <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
         <span>The motion is <em>{{ roundInfo.motions[0].text }}.</em></span>
@@ -36,7 +36,7 @@
         <div class="db-align-vertical-center db-flex-item db-flex-static db-vertical-center-text">
           Motion:
         </div>
-        <div class="db-flex-item db-align-vertical-center" v-if="roundInfo.motions[0]">
+        <div class="db-flex-item db-align-vertical-center" v-if="roundInfo.motions.length > 0">
           <em>{{ motions[0].text }}</em>
         </div>
         <div v-else class="db-flex-item db-padding-horizontal db-fill-in"></div>
@@ -121,7 +121,6 @@ export default {
   methods: {
     getAdjudicatorInstitution: function(debateAdjudicator) {
       var institution = debateAdjudicator.adjudicator.institution
-      console.log(institution)
       if (!_.isUndefined(institution) && institution !== null) {
         return institution.code
       } else {
