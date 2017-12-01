@@ -95,14 +95,17 @@ def liveness(self, team, teams_count, prelims, current_round):
     return live_info
 
 
-def determine_liveness(thresholds, wins):
+def determine_liveness(thresholds, points):
     """ Thresholds should be calculated using calculate_live_thresholds."""
     safe, dead = thresholds
+    if points is None:
+        points = 0 # For when a results-less team (i.e. swings) is subbing in
+
     if safe is None and dead is None:
         return '?'
-    elif wins >= safe:
+    elif points >= safe:
         return 'safe'
-    elif wins <= dead:
+    elif points <= dead:
         return 'dead'
     else:
         return 'live'
