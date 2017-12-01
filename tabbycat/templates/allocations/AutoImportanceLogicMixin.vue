@@ -13,44 +13,52 @@ export default {
     autoAssignImportance: function(assignedType) {
       var debatesByType = _.sortBy(this.debates, assignedType)
       var length = debatesByType.length
+      var chunkLimits = [0] // Floor value for start of lowest chunk
 
-      // Assign quartile bounds
-      var quartile1Index = Math.floor(length * 0.25) - 1
-      var quartile1Upper = Math.ceil(debatesByType[quartile1Index][assignedType])
-      var quartile2Index = Math.floor(length * 0.50) - 1
-      var quartile2Upper = Math.ceil(debatesByType[quartile2Index][assignedType])
-      var quartile3Index = Math.floor(length * 0.75) - 1
-      var quartile3Upper = Math.ceil(debatesByType[quartile3Index][assignedType])
-      var quartile4Upper = debatesByType[length - 1][assignedType] + 1
-      var q = [{ 'start': 0,              'end': quartile1Upper},
-               { 'start': quartile1Upper, 'end': quartile2Upper},
-               { 'start': quartile2Upper, 'end': quartile3Upper},
-               { 'start': quartile3Upper, 'end': quartile4Upper}]
+      // Assign proportions; account for cases where too few debates for 1/3rds
+      if (length <= 2) {
+        chunkLimits.push(debatesByType[1][assignedType])
+      } else if (length === 3) {
+        chunkLimits.push(debatesByType[1][assignedType], debatesByType[2][assignedType])
+      } else {
+        // Determine the values that define the upper and lower limit of each span
+        var chunks = [0.25, 0.5, 0.75]
+        for (var i = 0; i < chunks.length; i += 1) {
+          var splitIndex = Math.floor(length * chunks[i]) - 1
+          var splitThreshold = Math.ceil(debatesByType[splitIndex][assignedType])
+          chunkLimits.push(splitThreshold) // Brackets can be at 0; but already
+        }
+      }
+      chunkLimits.push(debatesByType[length - 1][assignedType] + 1) // ceiling
+
+      // Create a dictionary of upper/lower limits for each span used to group
+      var chunkSpans = []
+      for (var i = 0; i < chunkLimits.length - 1; i += 1) {
+        chunkSpans.push({ 'start': chunkLimits[i], 'end': chunkLimits[i + 1] })
+      }
 
       // Sometimes brackets can start and end at the same number which creates
       // skewed distributions (no debates in that 1/4); this helps compensate
       var increaser = 0
-      for (var i = 0; i < 4; i += 1) {
-        q[i]['start'] = q[i]['start'] + increaser
-        q[i]['end'] = q[i]['end'] + increaser
-        if (q[i]['start'] === q[i]['end']) {
+      for (var i = 0; i < chunkSpans.length; i += 1) {
+        chunkSpans[i]['start'] = chunkSpans[i]['start'] + increaser
+        chunkSpans[i]['end'] = chunkSpans[i]['end'] + increaser
+        if (chunkSpans[i]['start'] === chunkSpans[i]['end']) {
           increaser += 1
-          q[i]['end'] += increaser
+          chunkSpans[i]['end'] += increaser
         }
       }
-
-      console.log(assignedType, q)
 
       // Actually assign the importances
       for (var j = 0; j < this.debates.length; j += 1) {
         var debate = this.debates[j]
-        if (_.inRange(debate[assignedType], q[0].start, q[0].end)) {
+        if (_.inRange(debate[assignedType], chunkSpans[0].start, chunkSpans[0].end)) {
           debate.importance = -2
-        } else if (_.inRange(debate[assignedType], q[1].start, q[1].end)) {
+        } else if (_.inRange(debate[assignedType], chunkSpans[1].start, chunkSpans[1].end)) {
           debate.importance = -1
-        } else if (_.inRange(debate[assignedType], q[2].start, q[2].end)) {
+        } else if (_.inRange(debate[assignedType], chunkSpans[2].start, chunkSpans[2].end)) {
           debate.importance = 0
-        } else if (_.inRange(debate[assignedType], q[3].start, q[3].end)) {
+        } else if (_.inRange(debate[assignedType], chunkSpans[3].start, chunkSpans[3].end)) {
           debate.importance = 1
         }
       }
