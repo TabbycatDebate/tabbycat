@@ -4,9 +4,9 @@
 
   <div class="row">
     {% if am.veto_rates.aff.1 > 0 or am.veto_rates.neg.1 > 0 %}
-      <div class="col">
+      <div class="col text-left pr-0">
         {% for position, count in am.vetoes.items %}
-          <span class="text-{{ position}} inline-block pr-3">
+          <span class="text-{{ position}} d-block d-md-inline pr-md-3">
             {{ count.1 }} {{ position }} veto{{ count.1|pluralize:"es" }}
           </span>
         {% endfor %}
@@ -30,22 +30,22 @@
       <div class="progress">
         {% if am.veto_rates.aff.1 %}
           <div class="progress-bar progress-bar-aff" style="width: {{ am.veto_rates.aff.1 }}%">
-            {% if am.veto_rates.aff.1|floatformat:"0" != "0" %}
+            {% if am.veto_rates.aff.1 >= 4 %}
               {{ am.veto_rates.aff.1|floatformat:"0" }}
+              <small class="d-sm-inline {% if am.veto_rates.aff.1 < 10 %}d-none{% endif %}">
+                %
+              </small>
             {% endif %}
-            <small class="d-sm-inline {% if am.veto_rates.aff.1 < 10 %}d-none{% endif %}">
-              %
-            </small>
           </div>
         {% endif %}
         {% if am.veto_rates.neg.1 %}
           <div class="progress-bar progress-bar-neg" style="width: {{ am.veto_rates.neg.1 }}%">
-            {% if am.veto_rates.neg.1|floatformat:"0" != "0" %}
+            {% if am.veto_rates.neg.1 >= 4 %}
               {{ am.veto_rates.neg.1|floatformat:"0" }}
+              <small class="d-sm-inline {% if am.veto_rates.neg.1 < 10 %}d-none{% endif %}">
+                %
+              </small>
             {% endif %}
-            <small class="d-sm-inline {% if am.veto_rates.neg.1 < 10 %}d-none{% endif %}">
-              %
-            </small>
           </div>
         {% endif %}
       </div>

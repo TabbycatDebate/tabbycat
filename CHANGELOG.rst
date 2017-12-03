@@ -9,6 +9,7 @@ Change Log
 
 - Fixed issue where the 'prefix team name with institution name' checkbox would not be correctly saved when using the Simple Importer
 - Removed the scroll speed / text size buttons on mobile draw views that were making it difficult to view the table
+- Improved the display of the motions tab page on mobile devices and fixed an issue where it appeared as if only half the vetoes were made
 
 
 2.0.2

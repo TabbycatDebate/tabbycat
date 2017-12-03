@@ -116,24 +116,19 @@ class MotionStats:
         if self.round_rooms == 0 or self.debate_rooms == 0 or not data_set:
             return None
 
-        if vetoes:
-            print("%s\n\tround_rooms %s / debate_rooms %s" % (self.motion, self.round_rooms, self.debate_rooms))
-
         rates_for_side = dict(self.points_dict())
         for side in self.sides:
             for points, count in data_set[side].items():
                 # Measuring vetoes (per-team) not wins (per room)
                 if vetoes and self.isBP:
-                    denominator = self.round_rooms * 2
-                elif vetoes and not self.isBP:
                     denominator = self.round_rooms * 4
+                elif vetoes and not self.isBP:
+                    denominator = self.round_rooms * 2
                 else:
                     denominator = self.round_rooms
 
                 percentage = (data_set[side][points] / denominator) * 100
                 rates_for_side[side][points] = round(percentage, 1)
-                if vetoes:
-                    print("\t%s percent for %s (%s / %s)" % (round(percentage, 1), side, data_set[side][points], denominator))
 
         return rates_for_side
 

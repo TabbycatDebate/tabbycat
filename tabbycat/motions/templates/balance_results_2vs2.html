@@ -6,7 +6,7 @@
 
     <div class="col text-left">
       {% for position, count in am.placings.items %}
-        <span class="text-{{ position}} inline-block pr-3">
+        <span class="text-{{ position}} d-block d-md-inline pr-md-3">
           {{ count.1 }} {{ position }} win{{ count.1|pluralize}}
         </span>
       {% endfor %}
@@ -32,7 +32,7 @@
     <div class="progress">
       <div class="progress-bar progress-bar-aff" style="width: {{ am.results_rates.aff.1 }}%">
         {% if am.debate_rooms > 0 %}
-          {% if am.results_rates.aff.1|floatformat:"0" != "0" %}
+          {% if am.results_rates.aff.1 > 5 %}
             {{ am.results_rates.aff.1|floatformat:"0" }}
             <small class="d-sm-inline {% if am.results_rates.aff.1 < 10 %}d-none{% endif %}">
               %
@@ -42,7 +42,7 @@
       </div>
       <div class="progress-bar progress-bar-neg" style="width: {{ am.results_rates.neg.1 }}%">
         {% if am.debate_rooms > 0 %}
-          {% if am.results_rates.neg.1|floatformat:"0" != "0" %}
+          {% if am.results_rates.neg.1 > 5 %}
             {{ am.results_rates.neg.1|floatformat:"0" }}
             <small class="d-sm-inline {% if am.results_rates.neg.1 < 10 %}d-none{% endif %}">
               %
