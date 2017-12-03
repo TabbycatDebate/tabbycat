@@ -31,15 +31,21 @@
         {% if am.veto_rates.aff.1 %}
           <div class="progress-bar progress-bar-aff" style="width: {{ am.veto_rates.aff.1 }}%">
             {% if am.veto_rates.aff.1|floatformat:"0" != "0" %}
-              {{ am.veto_rates.aff.1|floatformat:"0" }}%
+              {{ am.veto_rates.aff.1|floatformat:"0" }}
             {% endif %}
+            <small class="d-sm-inline {% if am.veto_rates.aff.1 < 10 %}d-none{% endif %}">
+              %
+            </small>
           </div>
         {% endif %}
         {% if am.veto_rates.neg.1 %}
           <div class="progress-bar progress-bar-neg" style="width: {{ am.veto_rates.neg.1 }}%">
             {% if am.veto_rates.neg.1|floatformat:"0" != "0" %}
-              {{ am.veto_rates.neg.1|floatformat:"0" }}%
+              {{ am.veto_rates.neg.1|floatformat:"0" }}
             {% endif %}
+            <small class="d-sm-inline {% if am.veto_rates.neg.1 < 10 %}d-none{% endif %}">
+              %
+            </small>
           </div>
         {% endif %}
       </div>
