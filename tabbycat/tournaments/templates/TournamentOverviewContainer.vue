@@ -80,12 +80,22 @@ export default {
       xhr.open('GET', apiURL)
       xhr.onload = function () {
         console.debug('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText)
+        // We just catch all parsing errors below because these are often thrown
+        // by a 503 error being issues; typically due to unrelated factors
+        // (e.g. a round not being set). Errors in constructing the list
+        // should be flagged by the backend itself.
         if (resource === 'actions') {
-          self.latestActions = JSON.parse(xhr.responseText);
-          setTimeout(self.updateActions, self.pollFrequency);
+          try {
+            self.latestActions = JSON.parse(xhr.responseText);
+          } finally {
+            setTimeout(self.updateActions, self.pollFrequency);
+          }
         } else {
-          self.latestResults = JSON.parse(xhr.responseText);
-          setTimeout(self.updateResults, self.pollFrequency);
+          try {
+            self.latestResults = JSON.parse(xhr.responseText);
+          } finally {
+            setTimeout(self.updateResults, self.pollFrequency);
+          }
         }
       }
       xhr.send()

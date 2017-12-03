@@ -2,6 +2,7 @@
 Change Log
 ==========
 
+
 2.1.0 (Japanese Bobtail)
 ------------------------
 
@@ -11,6 +12,15 @@ Change Log
   - Added a 'liveness' calculator for Open categories in BP
   - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+
+
+2.0.3
+-----
+*Release date: Unknown*
+
+- Fixed issue where the 'prefix team name with institution name' checkbox would not be correctly saved when using the Simple Importer
+- Removed the scroll speed / text size buttons on mobile draw views that were making it difficult to view the table
+- Improved the display of the motions tab page on mobile devices and fixed an issue where it appeared as if only half the vetoes were made
 
 
 2.0.2

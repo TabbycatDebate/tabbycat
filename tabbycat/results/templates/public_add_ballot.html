@@ -11,7 +11,7 @@
     <table class="table table-responsive-md">
       <thead>
         <tr>
-          <th>Adj<span class="hidden-xs">udicator</span></th>
+          <th>Adjudicator</span></th>
           <th><i data-feather="map-pin" data-toggle="tooltip"title="Venue"></i></th>
           {% tournament_side_names tournament 'full' as side_names %}
           {% for name in side_names %}
@@ -24,7 +24,7 @@
         <tr>
         <td>
           <a href="{% tournamenturl 'results-public-ballotset-new-pk' da.adjudicator.id %}">
-          <span class="hidden-xs">Add result from </span>{{ da.adjudicator.name }}
+          <span>Add result from </span>{{ da.adjudicator.name }}
           </a>
         </td>
         <td>{{ da.debate.venue.display_name }}</td>
