@@ -109,7 +109,7 @@ export default {
         $.fn.resetButton(event.target)
       }).fail(function(response) {
         // Handle Failure (or at least log it so we can figure out failure mode)
-        console.debug(response)
+        console.debug(JSON.stringify(response))
         var info = response.responseJSON.message
         $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         $.fn.resetButton(event.target)
