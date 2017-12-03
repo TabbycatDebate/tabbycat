@@ -210,7 +210,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(tournament, *args, **kwargs)
 
-        if self.institution_for_display is None:
+        if self['institution'].value() is None:
             self.fields.pop('use_institution_prefix') # For Instition-less teams
 
         # Set speaker widget to match tournament settings

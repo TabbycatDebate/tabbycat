@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+
+2.0.3
+-----
+*Release date: Unknown*
+
+- Fixed issue where the 'prefix team name with institution name' checkbox would not be correctly saved when using the Simple Importer
+- Removed the scroll speed / text size buttons on mobile draw views that were making it difficult to view the table
+
+
 2.0.2
 -----
 *Release date: 27 November 2017*
