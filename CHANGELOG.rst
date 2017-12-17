@@ -3,6 +3,13 @@ Change Log
 ==========
 
 
+2.0.4
+-----
+*Release date: TBA*
+
+- Fixed issue where draws of the "manual" type would not generate correctly
+
+
 2.0.3
 -----
 *Release date: 3 December 2017*
