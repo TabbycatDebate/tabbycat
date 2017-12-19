@@ -181,15 +181,18 @@ class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
         super().__init__(tournament, *args, **kwargs)
 
         # Grab an `institution_for_display` to help render the form. This is
-        # not used anywhere in the form logic.
-        institution_id = self.initial.get('institution')
-        if institution_id is None:
-            self.institution_for_display = None # Adding unaffiliated teams/adjs
-        else:
+        # not used anywhere in the form logic. First try `initial` (for when
+        # the form is initially rendered), then try `data` (for when the form
+        # is rerendered after a validation error).
+        institution_id = self.initial.get('institution') or self.data.get(self.add_prefix('institution'))
+
+        if institution_id:
             try:
                 self.institution_for_display = Institution.objects.get(id=institution_id)
             except Institution.DoesNotExist:
-                logger.error("Could not find institution from initial or data")
+                logger.exception("Could not find institution from initial or data")
+        else:
+            self.institution_for_display = None
 
 
 class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
@@ -210,8 +213,8 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(tournament, *args, **kwargs)
 
-        if self['institution'].value() is None:
-            self.fields.pop('use_institution_prefix') # For Instition-less teams
+        if self.institution_for_display is None:
+            self.fields.pop('use_institution_prefix')  # institutionless teams can't use prefixes
 
         # Set speaker widget to match tournament settings
         nspeakers = tournament.pref('substantive_speakers')
