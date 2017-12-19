@@ -136,7 +136,8 @@ class BaseTeamRecordView(BaseRecordView):
             Prefetch('debate_team__speakerscore_set',
                 queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
                 to_attr='speaker_scores'),
-        )
+        ).order_by('debate_team__debate__round__seq')
+
         if not self.admin and not tournament.pref('all_results_released'):
             teamscores = teamscores.filter(
                 debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
