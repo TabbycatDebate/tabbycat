@@ -215,6 +215,14 @@ class EliminationDrawMixin:
 
 class ManualDrawGenerator(BaseDrawGenerator):
     """Returns an empty draw."""
+    DEFAULT_OPTIONS = {}
+    BASE_DEFAULT_OPTIONS = {
+        "side_allocations"   : "balance",
+        "avoid_history"      : False,
+        "avoid_institution"  : False,
+        "history_penalty"    : None,
+        "institution_penalty": 0
+    }
 
     requires_even_teams = False
     requires_prev_results = False

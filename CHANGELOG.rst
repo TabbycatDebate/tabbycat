@@ -5,6 +5,7 @@ Change Log
 
 2.1.0 (Japanese Bobtail)
 ------------------------
+*Release date: TBA*
 
 - Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
 - Added an automated method for assigning importances to debates using their bracket or 'liveness'
@@ -12,6 +13,13 @@ Change Log
   - Added a 'liveness' calculator for Open categories in BP
   - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+
+
+2.0.4
+-----
+*Release date: TBA*
+
+- Fixed issue where draws of the "manual" type would not generate correctly
 
 
 2.0.3
