@@ -1,5 +1,6 @@
 import csv
 import logging
+from itertools import zip_longest
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -32,18 +33,18 @@ class NumberForEachInstitutionForm(forms.Form):
     to indicate how many objects to create from that institution. This is used
     for importing teams and adjudicators."""
 
+    number_unaffiliated = forms.IntegerField(min_value=0, required=False,
+        label=_("Unaffiliated (no institution)"),
+        widget=forms.NumberInput(attrs={'placeholder': 0}))
+
     def __init__(self, institutions, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.institutions = institutions
-        self._create_fields()
+        self._create_fields(institutions)
 
-    def _create_fields(self):
+    def _create_fields(self, institutions):
         """Dynamically generate one integer field for each institution, for the
         user to indicate how many teams are from that institution."""
-        self.fields['no_institution'] = forms.IntegerField(
-                    min_value=0, label=_("Unaffiliated (i.e. no Institution)"), required=False,
-                    widget=forms.NumberInput(attrs={'placeholder': 0}))
-        for institution in self.institutions:
+        for institution in institutions:
             label = _("%(name)s (%(code)s)") % {'name': institution.name, 'code': institution.code}
             self.fields['number_institution_%d' % institution.id] = forms.IntegerField(
                     min_value=0, label=label, required=False,
@@ -198,8 +199,8 @@ class BaseInstitutionObjectDetailsForm(BaseTournamentObjectDetailsForm):
 class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
-    speakers = forms.CharField(required=True) # widget is set in form constructor
-    emails = forms.CharField(required=False) # widget is set in form constructor
+    speakers = forms.CharField(required=True, label=_("Speakers' names")) # widget is set in form constructor
+    emails = forms.CharField(required=False, label=_("Speakers' email addresses")) # widget is set in form constructor
     short_reference = forms.CharField(widget=forms.HiddenInput, required=False) # doesn't actually do anything, just placeholder to avoid validation failure
 
     class Meta:
@@ -209,42 +210,49 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
             'reference': _("Name (excluding institution name)"),
             'use_institution_prefix': _("Prefix team name with institution name?"),
         }
+        help_texts = {
+            'reference': _("Do not include institution name (check the \"Prefix team name with institution name?\" field instead)"),
+        }
 
     def __init__(self, tournament, *args, **kwargs):
         super().__init__(tournament, *args, **kwargs)
 
         if self.institution_for_display is None:
-            self.fields.pop('use_institution_prefix')  # institutionless teams can't use prefixes
+            self.initial['use_institution_prefix'] = False
+            self.fields['use_institution_prefix'].disabled = True
+            self.fields['use_institution_prefix'].help_text = _("(Not applicable to unaffiliated teams)")
 
-        # Set speaker widget to match tournament settings
+        # Set speaker and email widgets to match tournament settings
         nspeakers = tournament.pref('substantive_speakers')
         self.fields['speakers'].widget = forms.Textarea(attrs={'rows': nspeakers,
                 'placeholder': _("One speaker's name per line")})
         self.initial.setdefault('speakers', "\n".join(
                 _("Speaker %d") % i for i in range(1, nspeakers+1)))
         self.fields['emails'].widget = forms.Textarea(attrs={'rows': nspeakers,
-                'placeholder': _("Optional; used for Private URLs. Format with one email address per line")})
+                'placeholder': _("Optional, one email address per line in same order as speakers' names.\n"
+                    "Used for private URL distribution.")})
 
-    def clean_details(self, field_name):
-        # Split into list of names or emails; removing blank lines.
-        items = self.cleaned_data[field_name].split('\n')
+    @staticmethod
+    def _split_lines(data):
+        """Split into list of names or emails; removing blank lines."""
+        items = data.split('\n')
         items = [item.strip() for item in items]
         items = [item for item in items if item]
         return items
 
     def clean_speakers(self):
-        names = self.clean_details('speakers')
+        names = self._split_lines(self.cleaned_data['speakers'])
         if len(names) == 0:
             self.add_error('speakers', _("There must be at least one speaker."))
         return names
 
     def clean_emails(self):
-        emails = self.clean_details('emails')
+        emails = self._split_lines(self.cleaned_data['emails'])
         for email in emails:
             try:
                 validate_email(email)
             except ValidationError as e:
-                self.add_error('emails', _("An email address is invalid."))
+                self.add_error('emails', _("%(email)s is not a valid email address.") % {'email': email})
         return emails
 
     def clean_short_reference(self):
@@ -253,6 +261,11 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         # Team.clean() checks it, so it can't just be excluded using `exclude=`.
         reference = self.cleaned_data.get('reference', '')
         return reference[:TEAM_SHORT_REFERENCE_LENGTH]
+
+    def clean(self):
+        super().clean()
+        if len(self.cleaned_data.get('emails', [])) > len(self.cleaned_data.get('speakers', [])):
+            self.add_error('emails', _("There are more email addresses than speakers."))
 
     def _post_clean_speakers(self):
         """Validates the Speaker instances that would be created."""
@@ -275,12 +288,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
 
         if commit:
             team.save()
-            emails = self.cleaned_data['emails']
-            for i, name in enumerate(self.cleaned_data['speakers']):
-                try:
-                    email = emails[i]
-                except IndexError:
-                    email = None
+            for name, email in zip_longest(self.cleaned_data['speakers'], self.cleaned_data['emails']):
                 team.speaker_set.create(name=name, email=email)
             team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
 
