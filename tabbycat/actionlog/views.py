@@ -19,5 +19,6 @@ class LatestActionsView(LoginRequiredMixin, TournamentMixin, JsonDataResponseVie
                 'type': a.get_type_display(),
                 'param': a.get_content_object_display(),
                 'timestamp': naturaltime(a.timestamp),
+                'id': a.id
             })
         return action_objects

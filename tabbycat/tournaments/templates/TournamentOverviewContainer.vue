@@ -22,7 +22,7 @@
             <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="action in latestActions" :key="action.timestamp"
+            <updates-list v-for="action in latestActions" :key="action.id"
                           :item="action"></updates-list>
             <li class="list-group-item text-secondary" v-if="!latestActions">Loading...</li>
             <li class="list-group-item text-secondary" v-if="latestActions.length === 0">No Actions Yet</li>
@@ -36,7 +36,7 @@
             <h5 class="mb-0">Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="result in latestResults" :key="result.timestamp"
+            <updates-list v-for="result in latestResults" :key="result.id"
                           :item="result"></updates-list>
             <li class="list-group-item text-secondary" v-if="!latestResults">Loading...</li>
             <li class="list-group-item text-secondary" v-if="latestResults.length === 0">No Results Yet</li>
