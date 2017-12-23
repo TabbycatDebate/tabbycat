@@ -288,24 +288,24 @@ $("#hasIron").change(function() {
 
       // Take note of speaker positions
       current_speakers = {};
-      $(".aff-speaker").each(function(index) {
+      $(".aff .js-speaker").each(function(index) {
         current_speakers["aff" + index] = $(this).val();
       })
-      $(".neg-speaker").each(function(index) {
+      $(".neg .js-speaker").each(function(index) {
         current_speakers["neg" + index] = $(this).val();
       })
 
       // Copy speaker positions dropdowns
-      $(".aff-speaker option").remove();
-      $(".aff-speaker").each(function(index) {
+      $(".aff .js-speaker option").remove();
+      $(".aff .js-speaker").each(function(index) {
         $("#id_team_" + aff_team_id + " option").clone().appendTo(this);
         // HACK TODO check for values before assigning
         $(this).val(current_speakers["aff" + index]);
         if (!$(this).val())
           $(this).val(current_speakers["neg" + index]);
       })
-      $(".neg-speaker option").remove();
-      $(".neg-speaker").each(function(index) {
+      $(".neg .js-speaker option").remove();
+      $(".neg .js-speaker").each(function(index) {
         $("#id_team_" + neg_team_id + " option").clone().appendTo(this);
         // HACK TODO check for values before assigning
         $(this).val(current_speakers["neg" + index]);

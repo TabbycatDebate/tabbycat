@@ -8,6 +8,8 @@ Change Log
 *Release date: TBA*
 
 - Fixed issue where draws of the "manual" type would not generate correctly
+- Fixed issue where a ballot's speaker names dropdown would contain both team's speakers when using formats with side selection
+- Other minor fixes
 
 
 2.0.3
