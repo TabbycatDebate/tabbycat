@@ -31,14 +31,13 @@ if (isProduction === true) {
 
 // Tasks
 
-// DEPRECATED: no more custom fonts (until Interface is a package)
-// gulp.task('fonts-compile', function() {
-//   gulp.src([
-//       'node_modules/bootstrap/assets/fonts/**/*.woff2',
-//     ])
-//     .pipe(rename({dirname: ''})) // Remove folder structure
-//     .pipe(gulp.dest(outputDir + 'fonts/'));
-// });
+gulp.task('fonts-compile', function() {
+  gulp.src([
+      'node_modules/inter-ui/Inter UI (web)/*.woff',
+      'node_modules/inter-ui/Inter UI (web)/*.woff2',
+    ])
+    .pipe(gulp.dest(outputDir + 'fonts/'));
+});
 
 gulp.task('styles-compile', function() {
   gulp.src([
@@ -124,7 +123,7 @@ gulp.task("html-reload", function() {
 
 // Runs with --production if debug is false or there's no local settings
 gulp.task('build', [
-  // 'fonts-compile',
+  'fonts-compile',
   'styles-compile',
   'js-vendor-compile',
   'js-compile',
