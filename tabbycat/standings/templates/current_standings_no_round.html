@@ -3,9 +3,7 @@
 
 {% block page-alerts %}
 
-  {% blocktrans trimmed with round_name=round.name asvar message %}
-    The draw for {{ round_name }} has yet to be released.
-  {% endblocktrans %}
+  {% trans "There aren't any rounds for which results are available." as message %}
   {% include "components/alert.html" with type="info" icon="alert-circle" %}
 
 {% endblock %}
