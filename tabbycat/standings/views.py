@@ -341,6 +341,8 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
     def get_speakers(self):
         tournament = self.get_tournament()
+        if tournament.reply_position is None:
+            raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
         return Speaker.objects.filter(
             team__tournament=tournament,
             speakerscore__position=tournament.reply_position).select_related(
