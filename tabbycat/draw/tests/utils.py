@@ -4,7 +4,7 @@
 class TestTeam(object):
     """Basic implementation of team interface"""
 
-    def __init__(self, id, inst, points=None, hist=list(), **kwargs):
+    def __init__(self, id, inst, points=0, hist=list(), **kwargs):
         self.id = id
         self.institution = inst
         self.points = points

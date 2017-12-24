@@ -445,9 +445,11 @@ class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
 # JSON views for tournament overview page
 # ==============================================================================
 
-class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
+class BallotsStatusJsonView(TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
+        if not self.request.user.is_authenticated():
+            return {0:{'0': "", '1': 0, '2': 0, '3': 0}}
 
         rd = self.get_tournament().current_round
         ballots = BallotSubmission.objects.filter(debate__round=rd, discarded=False)
@@ -491,9 +493,15 @@ class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
         return stats
 
 
-class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
+class LatestResultsJsonView(TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
+        if not self.request.user.is_authenticated():
+            return [{
+                'user': "", 'type': "", 'timestamp': "", 'id': 0,
+                'param': "You have been logged out. Log In to resume updates."
+            }]
+
         t = self.get_tournament()
         ndebates = 8 if t.pref('teams_in_debate') == 'bp' else 15
 
@@ -565,7 +573,9 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                 result = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
 
             results_objects.append({
-                'user': result, 'timestamp': naturaltime(ballotsub.timestamp),
+                'user': result,
+                'timestamp': naturaltime(ballotsub.timestamp),
+                'id': ballotsub.id
             })
 
         return results_objects

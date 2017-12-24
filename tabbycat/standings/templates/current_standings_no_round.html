@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page-alerts %}
+
+  {% trans "There aren't any rounds for which results are available." as message %}
+  {% include "components/alert.html" with type="info" icon="alert-circle" %}
+
+{% endblock %}

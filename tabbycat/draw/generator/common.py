@@ -131,8 +131,10 @@ class BaseDrawGenerator:
 
         if not all(attribute_value_valid):
             offending_teams = attribute_value_valid.count(False)
-            raise DrawFatalError("{0} out of {1} teams has an invalid '{name}' attribute. Valid choices: ".format(
-                offending_teams, len(self.teams), name=name) + ", ".join(map(repr, choices)))
+            message = "{0} out of {1} teams have an invalid '{name}' attribute.".format(offending_teams, len(self.teams), name=name)
+            if choices:
+                message += " Valid choices: " + ", ".join(map(repr, choices))
+            raise DrawFatalError(message)
 
 
 class BasePairDrawGenerator(BaseDrawGenerator):

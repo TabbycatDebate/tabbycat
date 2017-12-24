@@ -516,18 +516,29 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
     public_page_preference = 'public_team_standings'
     page_title = ugettext_lazy("Current Team Standings")
     page_emoji = '🌟'
-    template_name = 'current_standings.html'
+
+    def get_round(self):
+        # Find the most recent non-silent preliminary round
+        tournament = self.get_tournament()
+        round = tournament.current_round if tournament.pref('all_results_released') else tournament.current_round.prev
+        while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
+            round = round.prev
+        if round is None or round.silent:
+            return None
+        return round
+
+    def get_template_names(self):
+        if self.get_round() is None:
+            return ['current_standings_no_round.html']
+        else:
+            return ['current_standings.html']
 
     def get_table(self):
         tournament = self.get_tournament()
 
-        # Find the most recent non-silent preliminary round
-        round = tournament.current_round if tournament.pref('all_results_released') else tournament.current_round.prev
-        while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
-            round = round.prev
-
+        round = self.get_round()
         if round is None or round.silent:
-            return TabbycatTableBuilder() # empty (as precaution)
+            return TabbycatTableBuilder(view=self) # empty (as precaution)
 
         teams = tournament.team_set.prefetch_related('speaker_set').order_by(
                 'institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
