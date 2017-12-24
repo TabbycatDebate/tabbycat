@@ -519,13 +519,14 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
     def get_round(self):
         # Find the most recent non-silent preliminary round
-        tournament = self.get_tournament()
-        round = tournament.current_round if tournament.pref('all_results_released') else tournament.current_round.prev
-        while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
-            round = round.prev
-        if round is None or round.silent:
-            return None
-        return round
+        if not hasattr(self, '_round'):
+            tournament = self.get_tournament()
+            if tournament.pref('all_results_released'):
+                self._round = tournament.prelim_rounds().order_by('seq').last()
+            else:
+                self._round = tournament.prelim_rounds(before=tournament.current_round).filter(
+                        silent=False).order_by('seq').last()
+        return self._round
 
     def get_template_names(self):
         if self.get_round() is None:
@@ -535,14 +536,15 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
     def get_table(self):
         tournament = self.get_tournament()
-
         round = self.get_round()
         if round is None or round.silent:
-            return TabbycatTableBuilder(view=self) # empty (as precaution)
+            return TabbycatTableBuilder(view=self) # empty
 
         teams = tournament.team_set.prefetch_related('speaker_set').order_by(
                 'institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
-        rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+        rounds = tournament.prelim_rounds(until=round).order_by('seq')
+        if not tournament.pref('all_results_released'):
+            rounds = rounds.filter(silent=False)
 
         # Can't use prefetch.populate_win_counts, since that doesn't exclude
         # silent rounds and future rounds appropriately
