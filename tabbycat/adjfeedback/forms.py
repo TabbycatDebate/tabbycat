@@ -245,8 +245,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
     for debateadj in debateadjs:
         targets = expected_feedback_targets(debateadj, tournament.pref('feedback_paths'))
         for target, pos in targets:
-            if target is not None:
-                choices.append(adj_choice(target, debateadj.debate, pos))
+            choices.append(adj_choice(target, debateadj.debate, pos))
 
     class FeedbackForm(BaseFeedbackForm):
         _tournament = tournament  # BaseFeedbackForm setting
@@ -311,8 +310,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             das = debate.adjudicators.voting_with_positions()
 
         for adj, pos in das:
-            if adj is not None:
-                choices.append(adj_choice(adj, debate, pos))
+            choices.append(adj_choice(adj, debate, pos))
 
     class FeedbackForm(BaseFeedbackForm):
         _tournament = tournament  # BaseFeedbackForm setting
