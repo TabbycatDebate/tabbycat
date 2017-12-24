@@ -57,7 +57,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.check_teams_for_attribute("points")
+        self.check_teams_for_attribute("points", checkfunc=lambda x: int(x) == x)
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
