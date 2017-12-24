@@ -13,6 +13,7 @@ Change Log
   - Added a 'liveness' calculator for Open categories in BP
   - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+- Current team standings page now shows silent round results if "Release all round results to public" is set
 
 
 2.0.4
