@@ -12,16 +12,20 @@ A partial list of major national and international tournaments (that we know of)
 - `Australian British Parliamentary Debating Championships <https://usutabs.herokuapp.com/>`_
 - `Australasian Wom*ns Debating Championships <http://awdc2017.herokuapp.com/>`_
 - Asia World Schools Debating Championship
-- `Asia British Parliamentary Championships <http://abp2017.herokuapp.com/>`_
-- `Cambridge Asian Schools BP Championships <https://abc2017.herokuapp.com/>`_
+- `Asia British Parliamentary Championship <http://abp2017.herokuapp.com/>`_
+- `Borneo British Parliamentary Championship <https://bbpc17.herokuapp.com/>`_
+- `Canadian British Parliamentary Championship <https://mcgilltab.herokuapp.com/>`_
+- `Cambridge Asian Schools BP Championship <https://abc2017.herokuapp.com/>`_
 - Cambodia United Asian Debating Championship
 - `China British Parliamentary Championships <https://cbp2017.herokuapp.com/cbp2017/>`_
 - `Japan British Parliamentary Championships <https://rabbittank.herokuapp.com/>`_
 - `Kings College London IV <http://kcliv2017.herokuapp.com>`_
 - `Kuala Lumpur Open Challenge <https://kloc2017.herokuapp.com/>`_
 - `KPU Pro Ams <https://kduproams2017.herokuapp.com/kduproams2017/>`_
-- `Malaysian National Intervarsity Debating Championship <https://masnationals2017.herokuapp.com/>`_
+- `Malaysian National Intervarsity Debating Championship <masnationals2017.herokuapp.com>`_
+- `Melbourne Mini <http://mudstabs.herokuapp.com>`_
 - `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
+- `New Zealand British Parliamentary Debating Championship <https://victabs.herokuapp.com/>`_
 - `North East Asia Open <https://neao2017.herokuapp.com/neao2017/>`_
 - `Swords Mini-Gong <https://minigong2017.herokuapp.com/>`_
 - `Shanghai Asian Schools British Parliamentary Debate Championships <https://shanghai2017.herokuapp.com/>`_
