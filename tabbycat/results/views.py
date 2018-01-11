@@ -445,11 +445,9 @@ class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
 # JSON views for tournament overview page
 # ==============================================================================
 
-class BallotsStatusJsonView(TournamentMixin, JsonDataResponseView):
+class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
-        if not self.request.user.is_authenticated():
-            return {0:{'0': "", '1': 0, '2': 0, '3': 0}}
 
         rd = self.get_tournament().current_round
         ballots = BallotSubmission.objects.filter(debate__round=rd, discarded=False)
@@ -493,15 +491,9 @@ class BallotsStatusJsonView(TournamentMixin, JsonDataResponseView):
         return stats
 
 
-class LatestResultsJsonView(TournamentMixin, JsonDataResponseView):
+class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
 
     def get_data(self):
-        if not self.request.user.is_authenticated():
-            return [{
-                'user': "", 'type': "", 'timestamp': "", 'id': 0,
-                'param': "You have been logged out. Log In to resume updates."
-            }]
-
         t = self.get_tournament()
         ndebates = 8 if t.pref('teams_in_debate') == 'bp' else 15
 
