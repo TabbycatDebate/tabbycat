@@ -79,22 +79,26 @@ export default {
       var self = this
       xhr.open('GET', apiURL)
       xhr.onload = function () {
-        console.debug('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText)
-        // We just catch all parsing errors below because these are often thrown
-        // by a 503 error being issues; typically due to unrelated factors
-        // (e.g. a round not being set). Errors in constructing the list
-        // should be flagged by the backend itself.
-        if (resource === 'actions') {
-          try {
-            self.latestActions = JSON.parse(xhr.responseText);
-          } finally {
-            setTimeout(self.updateActions, self.pollFrequency);
-          }
+        if (xhr.status == 403) {
+          console.debug('DEBUG: JSON TournamentOverview fetchData gave 403 error');
         } else {
-          try {
-            self.latestResults = JSON.parse(xhr.responseText);
-          } finally {
-            setTimeout(self.updateResults, self.pollFrequency);
+          console.debug('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText);
+          // We just catch all parsing errors below because these are often thrown
+          // by a 503 error being issues; typically due to unrelated factors
+          // (e.g. a round not being set). Errors in constructing the list
+          // should be flagged by the backend itself.
+          if (resource === 'actions') {
+            try {
+              self.latestActions = JSON.parse(xhr.responseText);
+            } finally {
+              setTimeout(self.updateActions, self.pollFrequency);
+            }
+          } else {
+            try {
+              self.latestResults = JSON.parse(xhr.responseText);
+            } finally {
+              setTimeout(self.updateResults, self.pollFrequency);
+            }
           }
         }
       }
