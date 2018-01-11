@@ -30,7 +30,7 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
-class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
     @cached_property
     def get_clashes(self):
@@ -83,7 +83,7 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
         return super().annotate_draw(draw, serialised_draw)
 
 
-class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
+class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
 
     template_name = 'edit_adjudicators.html'
     auto_url = "adjudicators-auto-allocate"
@@ -121,7 +121,7 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDataResponsePostView):
+class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 

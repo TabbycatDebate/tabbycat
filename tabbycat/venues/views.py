@@ -23,14 +23,14 @@ from .models import Venue, VenueCategory, VenueConstraint
 logger = logging.getLogger(__name__)
 
 
-class VenueAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+class VenueAllocationMixin(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
     def get_unallocated_venues(self):
         unused_venues = self.get_round().unused_venues().prefetch_related('venuecategory_set')
         return json.dumps([v.serialize() for v in unused_venues])
 
 
-class EditVenuesView(VenueAllocationViewBase, TemplateView):
+class EditVenuesView(VenueAllocationMixin, TemplateView):
 
     template_name = "edit_venues.html"
     auto_url = "venues-auto-allocate"
@@ -43,7 +43,7 @@ class EditVenuesView(VenueAllocationViewBase, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class AutoAllocateVenuesView(VenueAllocationViewBase, LogActionMixin, JsonDataResponsePostView):
+class AutoAllocateVenuesView(VenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
     round_redirect_pattern_name = 'venues-edit'
