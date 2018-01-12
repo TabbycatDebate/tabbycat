@@ -262,9 +262,10 @@ class LatestFeedbackView(FeedbackCardsView):
         t = self.get_tournament()
         return AdjudicatorFeedback.objects.filter(
             Q(adjudicator__tournament=t) |
-            Q(adjudicator__tournament__isnull=True)).order_by(
-            '-timestamp')[:30].select_related(
-            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+            Q(adjudicator__tournament__isnull=True)
+        ).order_by('-timestamp')[:30].select_related(
+            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team'
+        )
 
 
 class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView):
