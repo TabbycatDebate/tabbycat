@@ -59,7 +59,7 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 def get_feedback_overview(t, adjudicators):
 
     rounds = list(t.prelim_rounds(until=t.current_round))
-    debate_adjudicators = DebateAdjudicator.objects.filter(debate__round__tournament=t)
+    debate_adjudicators = DebateAdjudicator.objects.filter(debate__round__tournament=t).select_related('adjudicator')
     all_feedbacks = AdjudicatorFeedback.objects.filter(
                         Q(source_adjudicator__debate__round__in=rounds) |
                         Q(source_team__debate__round__in=rounds), confirmed=True).select_related(
