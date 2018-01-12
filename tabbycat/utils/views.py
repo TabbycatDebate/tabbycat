@@ -2,6 +2,7 @@ import json
 import logging
 
 from django.contrib import messages
+from django.contrib.auth.mixins import AccessMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse_lazy
 from django.forms.models import modelformset_factory
@@ -54,8 +55,11 @@ class PostOnlyRedirectView(View):
         return HttpResponseRedirect(self.get_redirect_url(*args, **kwargs))
 
 
-class JsonDataResponseView(View):
-    """View that returns a JSON response."""
+class JsonDataResponseView(AccessMixin, View):
+    """View that returns a JSON response. Assumed to be access-controlled; subclasses must also
+    use some subclass of AccessMixin."""
+
+    raise_exception = True
 
     def get_data(self):
         raise NotImplementedError
@@ -65,10 +69,11 @@ class JsonDataResponseView(View):
         return JsonResponse(self.get_data(), safe=False)
 
 
-class JsonDataResponsePostView(View):
+class JsonDataResponsePostView(AccessMixin, View):
     """Like JsonDataResponseView, but expects a POST rather than a GET."""
 
     schema = None
+    raise_exception = True
 
     def validate(self):
         # TODO

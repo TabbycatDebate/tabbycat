@@ -519,34 +519,31 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
     page_title = ugettext_lazy("Current Team Standings")
     page_emoji = '🌟'
 
-    def get_round(self):
-        # Find the most recent non-silent preliminary round
-        if not hasattr(self, '_round'):
+    def get_rounds(self):
+        if not hasattr(self, '_rounds'):
             tournament = self.get_tournament()
             if tournament.pref('all_results_released'):
-                self._round = tournament.prelim_rounds().order_by('seq').last()
+                self._rounds = tournament.prelim_rounds().order_by('seq')
             else:
-                self._round = tournament.prelim_rounds(before=tournament.current_round).filter(
-                        silent=False).order_by('seq').last()
-        return self._round
+                self._rounds = tournament.prelim_rounds(before=tournament.current_round).filter(
+                        silent=False).order_by('seq')
+        return self._rounds
 
     def get_template_names(self):
-        if self.get_round() is None:
+        if not self.get_rounds():
             return ['current_standings_no_round.html']
         else:
             return ['current_standings.html']
 
     def get_table(self):
         tournament = self.get_tournament()
-        round = self.get_round()
-        if round is None or round.silent:
-            return TabbycatTableBuilder(view=self) # empty
 
         teams = tournament.team_set.prefetch_related('speaker_set').order_by(
                 'institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
-        rounds = tournament.prelim_rounds(until=round).order_by('seq')
-        if not tournament.pref('all_results_released'):
-            rounds = rounds.filter(silent=False)
+        rounds = self.get_rounds()
+
+        if not rounds:
+            return TabbycatTableBuilder(view=self) # empty (as precaution)
 
         # Can't use prefetch.populate_win_counts, since that doesn't exclude
         # silent rounds and future rounds appropriately
