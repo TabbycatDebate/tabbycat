@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: draw/apps.py:7 draw/views.py:249 draw/views.py:252
+#: draw/apps.py:7 draw/views.py:246 draw/views.py:249
 msgid "Draw"
 msgstr ""
 
@@ -152,6 +152,14 @@ msgstr ""
 #: draw/generator/elimination.py:75
 #, python-format
 msgid "The number of teams (%d) in this round is not a power of two."
+msgstr ""
+
+#: draw/generator/powerpair.py:67
+#, python-format
+msgid ""
+"%(noninteger)d out of %(total)d teams have a noninteger first metric in the "
+"team standings. Intermediate brackets require the first team standings "
+"metric to be an integer (typically points or wins)."
 msgstr ""
 
 #: draw/generator/random.py:104
@@ -346,7 +354,7 @@ msgstr ""
 msgid "Team %(num)d"
 msgstr ""
 
-#: draw/tables.py:79 draw/views.py:273
+#: draw/tables.py:79 draw/views.py:270
 msgid "Room rank"
 msgstr ""
 
@@ -354,7 +362,7 @@ msgstr ""
 msgid "Room rank of this debate"
 msgstr ""
 
-#: draw/tables.py:87 draw/views.py:276
+#: draw/tables.py:87 draw/views.py:273
 msgid "Bracket"
 msgstr ""
 
@@ -781,35 +789,44 @@ msgid ""
 "href=\"%(alert_link)s\">this tournament's configuration</a>."
 msgstr ""
 
+#: draw/templates/draw_not_released.html:6
+#, python-format
+msgid "The draw for %(round_name)s has yet to be released."
+msgstr ""
+
 #: draw/templates/draw_status_confirmed.html:12
 msgid "Adjudicator Allocations"
 msgstr ""
 
-#: draw/templates/draw_status_confirmed.html:30
+#: draw/templates/draw_status_confirmed.html:20
+msgid "There are currently fewer checked-in adjudicators than there are rooms."
+msgstr ""
+
+#: draw/templates/draw_status_confirmed.html:31
 msgid "Allocate adjudicators"
 msgstr ""
 
-#: draw/templates/draw_status_confirmed.html:33
+#: draw/templates/draw_status_confirmed.html:34
 msgid "Edit adjudicator allocation"
 msgstr ""
 
-#: draw/templates/draw_status_confirmed.html:47
+#: draw/templates/draw_status_confirmed.html:48
 msgid "Venue Allocations"
 msgstr ""
 
-#: draw/templates/draw_status_confirmed.html:55
+#: draw/templates/draw_status_confirmed.html:56
 msgid "Allocate venues"
 msgstr ""
 
-#: draw/templates/draw_status_confirmed.html:58
+#: draw/templates/draw_status_confirmed.html:59
 msgid "Edit venue allocation"
 msgstr ""
 
-#: draw/templates/draw_status_confirmed.html:73
+#: draw/templates/draw_status_confirmed.html:74
 msgid "Side Allocations"
 msgstr ""
 
-#: draw/templates/draw_status_confirmed.html:78
+#: draw/templates/draw_status_confirmed.html:79
 #, python-format
 msgid "1 debate does not have its sides confirmed."
 msgid_plural "%(ndebates)s debates do not have their sides confirmed."
@@ -886,75 +903,70 @@ msgstr ""
 msgid "debates start at %(time)s"
 msgstr ""
 
-#: draw/views.py:121
-#, python-format
-msgid "The draw for %(round)s has yet to be released."
-msgstr ""
-
-#: draw/views.py:149
+#: draw/views.py:146
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
 msgstr ""
 
-#: draw/views.py:244
+#: draw/views.py:241
 msgid "No Draw"
 msgstr ""
 
-#: draw/views.py:246
+#: draw/views.py:243
 msgid "Draft Draw"
 msgstr ""
 
-#: draw/views.py:281
+#: draw/views.py:278
 msgid "No Debates for this Round"
 msgstr ""
 
 #. Translators: e.g. "Affirmative: Break rank"
-#: draw/views.py:331
+#: draw/views.py:328
 #, python-format
 msgid "%(side_name)s: Break rank"
 msgstr ""
 
 #. Translators: "BR" stands for "Break rank"
-#: draw/views.py:336
+#: draw/views.py:333
 msgid "BR"
 msgstr ""
 
-#: draw/views.py:362
+#: draw/views.py:359
 msgid "Draw with Details"
 msgstr ""
 
-#: draw/views.py:370
+#: draw/views.py:367
 msgid "Position Balance Report"
 msgstr ""
 
-#: draw/views.py:382
+#: draw/views.py:379
 #, python-format
 msgid "Rényi entropy of order %(order)s"
 msgstr ""
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
-#: draw/views.py:385
+#: draw/views.py:382
 msgid " (<i>i.e.</i>, Shannon entropy)"
 msgstr ""
 
-#: draw/views.py:416
+#: draw/views.py:413
 msgid "Teams with position imbalances"
 msgstr ""
 
-#: draw/views.py:417
+#: draw/views.py:414
 msgid "No teams with position imbalances! Hooray!"
 msgstr ""
 
-#: draw/views.py:420
+#: draw/views.py:417
 msgid "Annotated draw"
 msgstr ""
 
-#: draw/views.py:453
+#: draw/views.py:450
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr ""
 
-#: draw/views.py:461
+#: draw/views.py:458
 #, python-format
 msgid ""
 "<p>The draw could not be created, for the following reason: <em>%(message)s</"
@@ -962,7 +974,7 @@ msgid ""
 "<p>Please fix this issue before attempting to create the draw.</p>"
 msgstr ""
 
-#: draw/views.py:469
+#: draw/views.py:466
 #, python-format
 msgid ""
 "The draw could not be created, because the following error occurred: <em>"
@@ -971,7 +983,7 @@ msgid ""
 "contact the developers.</p>"
 msgstr ""
 
-#: draw/views.py:478
+#: draw/views.py:475
 #, python-format
 msgid ""
 "<p>The team standings could not be generated, because the following error "
@@ -980,56 +992,56 @@ msgid ""
 "prevents the draw from being generated.</p>"
 msgstr ""
 
-#: draw/views.py:494
+#: draw/views.py:491
 msgid ""
 "Venues were not auto-allocated because there are one or more adjudicator "
 "venue constraints. You should run venue allocations after allocating "
 "adjudicators."
 msgstr ""
 
-#: draw/views.py:523
+#: draw/views.py:520
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
-#: draw/views.py:543
+#: draw/views.py:540
 msgid "Released the draw."
 msgstr ""
 
-#: draw/views.py:559
+#: draw/views.py:556
 msgid "Unreleased the draw."
 msgstr ""
 
-#: draw/views.py:572
+#: draw/views.py:569
 #, python-format
 msgid ""
 "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
 "a colon, for example: \"13:57\"."
 msgstr ""
 
-#: draw/views.py:667
+#: draw/views.py:664
 msgid "Side Pre-Allocations"
 msgstr ""
 
-#: draw/views.py:805
+#: draw/views.py:802
 msgid "All Draws for All Teams"
 msgstr ""
 
-#: draw/views.py:820
+#: draw/views.py:817
 #, python-format
 msgid "All Debates for Teams from %(institution)s"
 msgstr ""
 
-#: draw/views.py:839
+#: draw/views.py:836
 msgid ""
 "This venue category does not exist or the URL for it might have changed. Try "
 "finding it again from the homepage."
 msgstr ""
 
-#: draw/views.py:846
+#: draw/views.py:843
 #, python-format
 msgid "All Debates at %(venue_category)s"
 msgstr ""
 
-#: draw/views.py:848
+#: draw/views.py:845
 msgid "Unknown Venue Category"
 msgstr ""

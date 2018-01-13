@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,31 +203,36 @@ msgstr ""
 msgid "%(category_name)s Break"
 msgstr ""
 
-#: breakqual/templates/breaking_index.html:54
+#: breakqual/templates/breaking_index.html:47
+#, python-format
+msgid "<span class=\"badge float-right badge-light\"> %(size)s Spots </span>"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:59
 msgid "Teams Eligible"
 msgstr ""
 
-#: breakqual/templates/breaking_index.html:66
+#: breakqual/templates/breaking_index.html:71
 msgid "Breaking"
 msgstr ""
 
-#: breakqual/templates/breaking_index.html:74
+#: breakqual/templates/breaking_index.html:79
 msgid "Excluded"
 msgstr ""
 
-#: breakqual/templates/breaking_index.html:82
-msgid "Not breaking"
-msgstr ""
-
-#: breakqual/templates/breaking_index.html:94
-msgid "Mark teams as eligible"
+#: breakqual/templates/breaking_index.html:87
+msgid "Eligible"
 msgstr ""
 
 #: breakqual/templates/breaking_index.html:99
+msgid "Mark teams as eligible"
+msgstr ""
+
+#: breakqual/templates/breaking_index.html:104
 msgid "Generate this break"
 msgstr ""
 
-#: breakqual/templates/breaking_index.html:102
+#: breakqual/templates/breaking_index.html:107
 msgid "View this break"
 msgstr ""
 
@@ -301,6 +306,13 @@ msgstr ""
 #: breakqual/templates/breaking_teams.html:122
 #, python-format
 msgid "Save Remarks and Update the %(category_name)s Break"
+msgstr ""
+
+#: breakqual/templates/breaking_teams.html:134
+#, python-format
+msgid ""
+"There are <strong>%(count)s teams marked as eligible</strong> for this "
+"category. Would you like to add more eligible teams?"
 msgstr ""
 
 #: breakqual/templates/breakqual_subnav.html:5

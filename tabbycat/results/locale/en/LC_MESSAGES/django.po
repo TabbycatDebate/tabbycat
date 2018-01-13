@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-19 16:38+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,56 +81,56 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: results/forms.py:487
+#: results/forms.py:488
 msgid "The last substantive speaker and reply speaker can't be the same."
 msgstr ""
 
-#: results/forms.py:494
+#: results/forms.py:495
 msgid "The reply speaker for this team did not give a substantive speech."
 msgstr ""
 
-#: results/forms.py:653
+#: results/forms.py:654
 msgid "The total scores for the teams are the same (i.e. a draw)."
 msgstr ""
 
-#: results/forms.py:662
+#: results/forms.py:663
 #, python-format
 msgid "The total scores for the following teams are the same: %(teams)s"
 msgstr ""
 
-#: results/forms.py:672
+#: results/forms.py:673
 #, python-format
 msgid ""
 "The margin (%(margin).1f) exceeds the maximum allowable margin "
 "(%(max_margin).1f)."
 msgstr ""
 
-#: results/forms.py:749
+#: results/forms.py:750
 #, python-format
 msgid ""
 "The total scores for the teams are the same (i.e. a draw) for adjudicator "
 "%(adj)s (%(adj_ins)s)."
 msgstr ""
 
-#: results/forms.py:757
+#: results/forms.py:758
 #, python-format
 msgid ""
 "The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) "
 "exceeds the maximum allowable margin (%(max_margin).1f)."
 msgstr ""
 
-#: results/forms.py:789
+#: results/forms.py:790
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr ""
 
-#: results/forms.py:803
+#: results/forms.py:804
 msgid ""
 "Sides for this debate are not confirmed. You can't save a result for this "
 "debate until the sides have been confirmed in the draw."
 msgstr ""
 
-#: results/forms.py:810
+#: results/forms.py:811
 msgid "There must be exactly two teams advancing."
 msgstr ""
 
@@ -398,20 +398,24 @@ msgstr ""
 msgid "Debate Information"
 msgstr ""
 
-#: results/templates/ballot/ballot_debate_info.html:13
-msgid "Sides"
-msgstr ""
-
-#: results/templates/ballot/ballot_debate_info.html:49
+#: results/templates/ballot/ballot_debate_info.html:41
 msgid ""
 "There were no speakers who spoke multiple times (i.e. no 'Iron' person "
 "speeches)"
 msgstr ""
 
-#: results/templates/ballot/ballot_debate_info.html:52
+#: results/templates/ballot/ballot_debate_info.html:44
 msgid ""
 "There were speakers who spoke multiple times (i.e. one or more 'Iron' person "
 "speeches)"
+msgstr ""
+
+#: results/templates/ballot/ballot_scoresheet.html:28
+msgid "Result"
+msgstr ""
+
+#: results/templates/ballot/ballot_scoresheet.html:28
+msgid "Rank"
 msgstr ""
 
 #: results/templates/ballot/ballot_speaks.html:19
@@ -880,19 +884,19 @@ msgstr ""
 msgid "%(team_name)s as %(side_abbr)s"
 msgstr ""
 
-#: results/views.py:522
+#: results/views.py:523
 #, python-format
 msgid "%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)"
 msgstr ""
 
-#: results/views.py:539
+#: results/views.py:540
 #, python-format
 msgid ""
 "Advancing: %(advancing_list)s<br>\n"
 "Eliminated: %(eliminated_list)s"
 msgstr ""
 
-#: results/views.py:551
+#: results/views.py:552
 #, python-format
 msgid ""
 "1st: %(first_team)s<br>\n"
@@ -901,26 +905,26 @@ msgid ""
 "4th: %(fourth_team)s"
 msgstr ""
 
-#: results/views.py:564
+#: results/views.py:565
 #, python-format
 msgid "Error with result for %(debate)s"
 msgstr ""
 
-#: results/views.py:603 results/views.py:616
+#: results/views.py:606 results/views.py:619
 msgid "There aren't any venues with that name."
-msgstr ""
-
-#: results/views.py:621
-#, python-format
-msgid "There wasn't a debate in venue %(venue_name)s this round."
 msgstr ""
 
 #: results/views.py:624
 #, python-format
+msgid "There wasn't a debate in venue %(venue_name)s this round."
+msgstr ""
+
+#: results/views.py:627
+#, python-format
 msgid "There appear to be multiple debates in venue %(venue_name)s this round."
 msgstr ""
 
-#: results/views.py:628
+#: results/views.py:631
 #, python-format
 msgid "The ballot for venue %(venue_name)s has already been checked in."
 msgstr ""

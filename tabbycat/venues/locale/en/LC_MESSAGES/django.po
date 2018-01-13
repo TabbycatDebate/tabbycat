@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,14 +139,13 @@ msgstr ""
 
 #: venues/templates/venue_categories_edit.html:11
 msgid ""
-"Venue categories allow you to <ul> <li>group venues together into \"zones\" "
-"to display in the draw and make navigation easier for participants, and/or</"
-"li> <li>specify constraints on venue allocation that require teams, "
-"adjudicators or institutions to be put in a venue in a particular category.</"
-"li> </ul>"
+"Venue categories allow you to group venues together into \"zones\" to "
+"display in the draw and make navigation easier for participants, and/or "
+"specify constraints on venue allocation that require teams, adjudicators or "
+"institutions to be put in a venue in a particular category."
 msgstr ""
 
-#: venues/templates/venue_categories_edit.html:20
+#: venues/templates/venue_categories_edit.html:16
 #, python-format
 msgid ""
 "If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "

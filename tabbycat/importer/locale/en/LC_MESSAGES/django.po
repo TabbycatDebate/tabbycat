@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,74 +17,108 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: importer/forms.py:19
+#: importer/forms.py:20
 #, python-format
 msgid "line %(lineno)d: %(message)s"
 msgstr ""
 
-#: importer/forms.py:44
-msgid "Unaffiliated (i.e. no Institution)"
+#: importer/forms.py:37
+msgid "Unaffiliated (no institution)"
 msgstr ""
 
-#: importer/forms.py:47
+#: importer/forms.py:48
 #, python-format
 msgid "%(name)s (%(code)s)"
 msgstr ""
 
-#: importer/forms.py:69
+#: importer/forms.py:70
 #, python-format
 msgid "This line (for %(institution)s) didn't have a code"
 msgstr ""
 
-#: importer/forms.py:74
+#: importer/forms.py:75
 #, python-format
 msgid "This line (for %(institution)s) had too many columns"
 msgstr ""
 
-#: importer/forms.py:84
+#: importer/forms.py:85
 msgid "There were no institutions to import."
 msgstr ""
 
-#: importer/forms.py:110
+#: importer/forms.py:111
 msgid "There were no venues to import."
 msgstr ""
 
-#: importer/forms.py:206
+#: importer/forms.py:202
+msgid "Speakers' names"
+msgstr ""
+
+#: importer/forms.py:203
+msgid "Speakers' email addresses"
+msgstr ""
+
+#: importer/forms.py:204
+msgid ""
+"Optional, useful to include if distributing private URLs, list in same order "
+"as speakers' names"
+msgstr ""
+
+#: importer/forms.py:211
 msgid "Name (excluding institution name)"
 msgstr ""
 
-#: importer/forms.py:207
+#: importer/forms.py:212
 msgid "Prefix team name with institution name?"
 msgstr ""
 
-#: importer/forms.py:219
+#: importer/forms.py:215
+msgid ""
+"Do not include institution name (check the \"Prefix team name with "
+"institution name?\" field instead)"
+msgstr ""
+
+#: importer/forms.py:224
+msgid "(Not applicable to unaffiliated teams)"
+msgstr ""
+
+#: importer/forms.py:229
 msgid "One speaker's name per line"
 msgstr ""
 
-#: importer/forms.py:221
+#: importer/forms.py:230
+msgid "Can be separated by newlines, tabs or commas"
+msgstr ""
+
+#: importer/forms.py:232
 #, python-format
 msgid "Speaker %d"
 msgstr ""
 
-#: importer/forms.py:223
-msgid "Optional; used for Private URLs. Format with one email address per line"
+#: importer/forms.py:234
+#, python-format
+msgid "speaker%d@example.edu"
 msgstr ""
 
-#: importer/forms.py:235
+#: importer/forms.py:248
 msgid "There must be at least one speaker."
 msgstr ""
 
-#: importer/forms.py:244
-msgid "An email address is invalid."
+#: importer/forms.py:257
+#, python-format
+msgid "%(email)s is not a valid email address."
 msgstr ""
 
-#: importer/forms.py:292
+#: importer/forms.py:270
+msgid "There are more email addresses than speakers."
+msgstr ""
+
+#: importer/forms.py:305
 msgid ""
 "Every team in a single tournament from the same institution must have a "
 "different name. Please correct the duplicate data."
 msgstr ""
 
-#: importer/forms.py:304
+#: importer/forms.py:317
 msgid "Rating"
 msgstr ""
 
@@ -286,7 +320,7 @@ msgstr ""
 msgid "Added %(count)d %(model_plural)s."
 msgstr ""
 
-#: importer/views.py:168
+#: importer/views.py:167
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr ""

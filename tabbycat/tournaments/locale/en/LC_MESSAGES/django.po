@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,19 +95,19 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: tournaments/forms.py:82
+#: tournaments/forms.py:79
 msgid "Format Configuration"
 msgstr ""
 
-#: tournaments/forms.py:83
+#: tournaments/forms.py:80
 msgid "Apply a standard set of settings to match a common debate format "
 msgstr ""
 
-#: tournaments/forms.py:87
+#: tournaments/forms.py:84
 msgid "Public Configuration"
 msgstr ""
 
-#: tournaments/forms.py:88
+#: tournaments/forms.py:85
 msgid ""
 "Show non-sensitive information of the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
@@ -440,7 +440,7 @@ msgid ""
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:37
-msgid "Load Demo (10-team tournament)"
+msgid "Load Demo (8-team tournament)"
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:42

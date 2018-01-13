@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,18 +18,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: participants/admin.py:113
+#: participants/admin.py:91
+#, python-format
+msgid ""
+"The team can't be in a break category of a different tournament. Please "
+"remove: %(category)s"
+msgstr ""
+
+#: participants/admin.py:127
 #, python-format
 msgid "%(count)d team had its URL key removed."
 msgid_plural "%(count)d teams had their URL keys removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/admin.py:118 participants/admin.py:177
+#: participants/admin.py:132 participants/admin.py:191
 msgid "Delete URL key"
 msgstr ""
 
-#: participants/admin.py:172
+#: participants/admin.py:186
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."
@@ -348,27 +355,27 @@ msgstr ""
 msgid "adjudication core"
 msgstr ""
 
-#: participants/models.py:426
+#: participants/models.py:425
 msgid "adjudicator"
 msgstr ""
 
-#: participants/models.py:427
+#: participants/models.py:426
 msgid "adjudicators"
 msgstr ""
 
-#: participants/tables.py:20
+#: participants/tables.py:22
 msgid "Points after this debate"
 msgstr ""
 
-#: participants/tables.py:22
+#: participants/tables.py:24
 msgid "Wins after this debate"
 msgstr ""
 
-#: participants/tables.py:31
+#: participants/tables.py:33
 msgid "Speaker scores<br>(in speaking order)"
 msgstr ""
 
-#: participants/tables.py:31
+#: participants/tables.py:33
 msgid "Speaks"
 msgstr ""
 
@@ -704,34 +711,34 @@ msgstr ""
 msgid "Team"
 msgstr ""
 
-#: participants/views.py:103 participants/views.py:175
+#: participants/views.py:103 participants/views.py:176
 #, python-format
 msgid "Record for %(name)s"
 msgstr ""
 
-#: participants/views.py:218
+#: participants/views.py:219
 msgid "Previous Rounds"
 msgstr ""
 
-#: participants/views.py:282
+#: participants/views.py:283
 #, python-format
 msgid "Saved speaker category: %(list)s"
 msgid_plural "Saved speaker categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/views.py:288
+#: participants/views.py:289
 msgid "No changes were made to the speaker categories."
 msgstr ""
 
-#: participants/views.py:301
+#: participants/views.py:302
 msgid "Speaker Category Eligibility"
 msgstr ""
 
-#: participants/views.py:390
+#: participants/views.py:391
 msgid "Your shift check-ins have been saved"
 msgstr ""
 
-#: participants/views.py:394
+#: participants/views.py:395
 msgid "Whoops! There was a problem with the form."
 msgstr ""

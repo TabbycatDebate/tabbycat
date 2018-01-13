@@ -2,20 +2,20 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:42+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: motions/apps.py:7 motions/templates/public_motions.html:4
@@ -115,15 +115,15 @@ msgstr ""
 msgid "No teams debated this topic"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:25
+#: motions/templates/balance_results_bp.html:29
 msgid "average points per position"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:55
+#: motions/templates/balance_results_bp.html:73
 msgid "results distribution"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:68
+#: motions/templates/balance_results_bp.html:86
 msgid "No results for this topic"
 msgstr ""
 
@@ -131,8 +131,7 @@ msgstr ""
 msgid "No teams vetoed this topic"
 msgstr ""
 
-#: motions/templates/motions_edit.html:4
-#: motions/templates/motions_edit.html:10
+#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
 msgstr[0] ""
@@ -160,14 +159,12 @@ msgstr ""
 msgid "There are no motions available for this round."
 msgstr ""
 
-#. Translators: Used when there are expected to be several motions per round
-#. (e.g. Australs)
+#. Translators: Used when there are expected to be several motions per round (e.g. Australs)
 #: motions/templates/public_motions.html:33
 msgid "The motions for this round have not been released."
 msgstr ""
 
-#. Translators: Used when there is expected to be one motion per round (e.g.
-#. WUDC)
+#. Translators: Used when there is expected to be one motion per round (e.g. WUDC)
 #: motions/templates/public_motions.html:36
 msgid "The motion for this round has not been released."
 msgstr ""

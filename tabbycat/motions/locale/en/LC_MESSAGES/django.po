@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:42+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,15 +115,15 @@ msgstr ""
 msgid "No teams debated this topic"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:25
+#: motions/templates/balance_results_bp.html:29
 msgid "average points per position"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:55
+#: motions/templates/balance_results_bp.html:73
 msgid "results distribution"
 msgstr ""
 
-#: motions/templates/balance_results_bp.html:68
+#: motions/templates/balance_results_bp.html:86
 msgid "No results for this topic"
 msgstr ""
 

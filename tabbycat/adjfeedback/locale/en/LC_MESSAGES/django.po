@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 12:49+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -492,7 +492,7 @@ msgstr[1] ""
 msgid "Auto-Allocate Distributions (%(min_voting_score)s to vote)"
 msgstr ""
 
-#: adjfeedback/views.py:165 adjfeedback/views.py:191 adjfeedback/views.py:208
+#: adjfeedback/views.py:167 adjfeedback/views.py:193 adjfeedback/views.py:210
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"

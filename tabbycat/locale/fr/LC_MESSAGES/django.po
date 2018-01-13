@@ -2,20 +2,20 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:36+1100\n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: templates/admin/delete_protected_message.html:4
@@ -24,8 +24,8 @@ msgstr "Vous devez d’abord supprimer les objets ci-dessus."
 
 #: templates/admin/style_guide.html:30
 msgid ""
-"This style of info card announces critical information. <a "
-"href=\"\">Link</a>."
+"This style of info card announces critical information. <a href=\"\">Link</"
+"a>."
 msgstr ""
 "Cette style de carte d'information annonce de l'information critique. <a "
 "href=\"\">Lien</a>."
@@ -94,18 +94,18 @@ msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
-"Tabbycat est un projet open-source, développé par des bénévoles. Vous pouvez"
-" l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
+"Tabbycat est un projet open-source, développé par des bénévoles. Vous pouvez "
+"l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
 #: templates/footer.html:25
 #, python-format
 msgid ""
-"For a tournament of this size, we suggest a donation of "
-"<strong>$%(amount)s</strong>."
+"For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
+"strong>."
 msgstr ""
-"Pour un tournoi de cette taille, nous suggérons une donation de "
-"<strong>%(amount)s $</strong>."
+"Pour un tournoi de cette taille, nous suggérons une donation de <strong>"
+"%(amount)s $</strong>."
 
 #: templates/footer.html:29
 msgid "Learn more about donating."
@@ -127,19 +127,19 @@ msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 #: templates/footer.html:43
 #, python-format
 msgid ""
-"Using an app designed for debate timekeeping makes speaking and adjudicating"
-" easier! Check out <a href=\"https://itunes.apple.com/app/apple-"
-"store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> "
-"(iPhone/iPad) or <a "
-"href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a>"
-" (Android)."
+"Using an app designed for debate timekeeping makes speaking and adjudicating "
+"easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/"
+"id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/"
+"iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper</a> (Android)."
 msgstr ""
 "Une application réelle de débat rend plus facile parler et juger&nbsp;! "
-"Découvrez <a href=\"https://itunes.apple.com/app/apple-"
-"store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept "
-"(iPhone/iPad)</a> ou <a "
-"href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper"
-" (Android)</a>."
+"Découvrez <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (iPhone/iPad)</a> ou <a "
+"href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper (Android)</a>."
 
 #: templates/footer.html:52
 msgid "Need ballots?"
@@ -147,12 +147,12 @@ msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
 #: templates/footer.html:54
 msgid ""
-"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
-"target=\"_blank\"> customise and print</a> great ballots from your browser."
+"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" target="
+"\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 "Vous pouvez <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
-"target=\"_blank\">personnaliser et imprimer</a> des bulletins beaux de votre"
-" navigateur."
+"target=\"_blank\">personnaliser et imprimer</a> des bulletins beaux de votre "
+"navigateur."
 
 #: templates/footer.html:67
 msgid "GitHub"
@@ -271,9 +271,10 @@ msgid "Speaker Tab"
 msgstr "Tab des orateurs"
 
 #: templates/nav/public_nav.html:19
-#, python-format
-msgid "%(category_name)s Speaker Tab"
-msgstr "Tab des orateurs de la catégorie %(category_name)s"
+#, fuzzy, python-format
+#| msgid "%(category_name)s"
+msgid "%(category_name)s Tab"
+msgstr "%(category_name)s"
 
 #: templates/nav/public_nav.html:29
 msgid "Replies Tab"
@@ -401,8 +402,7 @@ msgstr "Réinitialisation du mot de passe effectuée"
 msgid "Your password has been reset."
 msgstr "Votre mot de passe a été réinitialisé."
 
-#. Translators: This text appears on a button that takes the user to the login
-#. page after a password reset.
+#. Translators: This text appears on a button that takes the user to the login page after a password reset.
 #: templates/registration/password_reset_complete.html:23
 msgid "Go to the login page"
 msgstr "Aller à la page de connexion"
@@ -423,8 +423,8 @@ msgid ""
 "used.  Please request a new password reset."
 msgstr ""
 "Le lien de réinitialisation de mot de passe était invalide, peut-être parce "
-"qu'il a déjà été utilisé. Veuillez demander une nouvelle réinitialisation de"
-" mot de passe."
+"qu'il a déjà été utilisé. Veuillez demander une nouvelle réinitialisation de "
+"mot de passe."
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:5
@@ -437,8 +437,8 @@ msgid ""
 "We've e-mailed you instructions for setting your password, if an account "
 "exists with the e-mail address you entered. You should receive them shortly."
 msgstr ""
-"Un courriel contenant des instructions sur la manière de réinitialiser votre"
-" mot de passe a été envoyé à l'adresse électronique que vous avez fournie. "
+"Un courriel contenant des instructions sur la manière de réinitialiser votre "
+"mot de passe a été envoyé à l'adresse électronique que vous avez fournie. "
 "Vous devriez le recevoir rapidement."
 
 #: templates/registration/password_reset_done.html:19
@@ -447,11 +447,10 @@ msgid ""
 "you registered with, and check your spam folder."
 msgstr ""
 "Si vous ne recevez pas de courriel, assurez-vous d'avoir saisi la même "
-"adresse avec laquelle vous vous êtes enregistré et vérifiez votre dossier de"
-" courriers indésirables / spam."
+"adresse avec laquelle vous vous êtes enregistré et vérifiez votre dossier de "
+"courriers indésirables / spam."
 
-#. Translators: This text appears on a button that takes the user back to the
-#. login page from the password reset page.
+#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
 #: templates/registration/password_reset_done.html:26
 msgid "Return to the login page"
 msgstr "Retourner à la page de connexion"
@@ -480,8 +479,8 @@ msgstr ""
 #, python-format
 msgid ""
 "If this wasn't you, that probably means someone else typed your e-mail "
-"address into the password reset form on the Tabbycat site at "
-"%(protocol)s://%(domain)s."
+"address into the password reset form on the Tabbycat site at %(protocol)s://"
+"%(domain)s."
 msgstr ""
 "Si ce n’était pas vous, cela signifie probablement que quelqu'un d’autre a "
 "saisi votre adresse courriel dans le formulaire de réinitialisation de mot "
@@ -565,3 +564,6 @@ msgstr ""
 "pas accéder les zones confidentielles, par examples les sections de la "
 "qualification et pour voir les commentaires. Les membres de l'équipe "
 "d'adjudications reçoivent en général ce status s'ils savent ce qu'ils font."
+
+#~ msgid "%(category_name)s Speaker Tab"
+#~ msgstr "Tab des orateurs de la catégorie %(category_name)s"
