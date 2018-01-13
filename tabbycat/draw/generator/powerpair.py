@@ -1,7 +1,9 @@
 import random
 from collections import OrderedDict
 
-from .common import BasePairDrawGenerator, DrawFatalError
+from django.utils.translation import ugettext as _
+
+from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
 from .pairing import Pairing
 from .one_up_one_down import OneUpOneDownSwapper
 
@@ -58,6 +60,14 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.check_teams_for_attribute("points")
+
+        if self.options["odd_bracket"].startswith("intermediate"):
+            noninteger = [team.points == int(team.points) for team in self.teams].count(False)
+            if noninteger > 0:
+                raise DrawUserError(_("%(noninteger)d out of %(total)d teams have a noninteger "
+                    "first metric in the team standings. Intermediate brackets require the first "
+                    "team standings metric to be an integer (typically points or wins).") % {
+                    'noninteger': noninteger, 'total': len(self.teams)})
 
     def generate(self):
         self._brackets = self._make_raw_brackets()

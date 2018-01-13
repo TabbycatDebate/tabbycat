@@ -473,8 +473,10 @@ msgid ""
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:37
-msgid "Load Demo (10-team tournament)"
-msgstr ""
+#, fuzzy
+#| msgid "Load Demo Data (8-team tournament)"
+msgid "Load Demo (8-team tournament)"
+msgstr "Charger les démonstratives (tournoi avec 10 équipes)"
 
 #: tournaments/templates/create_tournament.html:42
 #: tournaments/templates/create_tournament.html:59

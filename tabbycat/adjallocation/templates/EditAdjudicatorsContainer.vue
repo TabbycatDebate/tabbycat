@@ -79,6 +79,8 @@
     </unallocated-items-container>
 
     <slide-over :subject="slideOverSubject"></slide-over>
+    <allocation-intro-modal :show-intro-modal="showIntroModal"
+                            :round-info="roundInfo"></allocation-intro-modal>
 
   </div>
 </template>
@@ -86,8 +88,10 @@
 <script>
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
+import AutoImportanceLogicMixin from '../../templates/allocations/AutoImportanceLogicMixin.vue'
 import HighlightableContainerMixin from '../../templates/allocations/HighlightableContainerMixin.vue'
 import AllocationActions from '../../templates/allocations/AllocationActions.vue'
+import AllocationIntroModal from '../../templates/allocations/AllocationIntroModal.vue'
 import DebateImportance from '../../templates/allocations/DebateImportance.vue'
 import DebatePanel from '../../templates/allocations/DebatePanel.vue'
 import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
@@ -98,10 +102,11 @@ import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           HighlightableContainerMixin],
-  components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
+           AutoImportanceLogicMixin, HighlightableContainerMixin],
+  components: { AllocationActions, AllocationIntroModal, DebateImportance,
+                DebatePanel, DraggableAdjudicator },
+  props: { showIntroModal: Boolean },
   created: function() {
-    this.$eventHub.$on('update-importance', this.updateImportance)
     // Watch for global conflict highlights
     this.$eventHub.$on('show-conflicts-for', this.setOrUnsetConflicts)
   },
@@ -157,22 +162,6 @@ export default {
       }
       this.saveMove(payload.adjudicator, payload.debate)
     },
-    updateImportance: function(debateID, importance) {
-      var debate = _.find(this.debates, { 'id': debateID })
-      if (_.isUndefined(debate)) {
-        this.ajaxError("Debate\'s importance", "", "Couldnt find debate to update")
-      }
-      var url = this.roundInfo.updateImportanceURL
-      var message = 'debate ' + debate.id + '\'s importance'
-      var payload = { debate_id: debate.id, importance: importance }
-      this.ajaxSave(url, payload, message, this.processImportanceSaveSuccess, null, null)
-    },
-    processImportanceSaveSuccess: function(dataResponse, payload, returnPayload) {
-      var debateIndex = _.findIndex(this.debates, { 'id': payload.debate_id})
-      if (debateIndex !== -1) {
-        this.debates[debateIndex].importance = payload.importance
-      }
-    }
   }
 }
 </script>

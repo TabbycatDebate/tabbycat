@@ -43,7 +43,7 @@
 
         {% elif motions|length == 1 %}
 
-          <div class="modal-body display-2 d-flex align-items-center justify-content-center text-center">
+          <div class="modal-body d-flex align-items-center justify-content-center text-center {% if motions.0.text|length > 220 %}display-4{% elif motions.0.text|length > 150 %}display-3{% else %}display-2{% endif %}">
             {{ motions.0.text }}
           </div>
 

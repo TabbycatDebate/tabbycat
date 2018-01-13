@@ -7,6 +7,8 @@ from utils.tables import TabbycatTableBuilder
 class TeamResultTableBuilder(TabbycatTableBuilder):
 
     def add_cumulative_team_points_column(self, teamscores):
+        """It is assumed that `teamscores` is ordered by round number; the
+        caller must ensure that this is the case."""
         cumul = 0
         data = []
         for teamscore in teamscores:

@@ -2,9 +2,58 @@
 Change Log
 ==========
 
+
+2.1.0 (Japanese Bobtail)
+------------------------
+*Release date: TBA*
+
+- Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
+- Added an automated method for assigning importances to debates using their bracket or 'liveness'
+- Quality of life improvements
+  - Added a 'liveness' calculator for Open categories in BP
+  - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
+  - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+- Current team standings page now shows silent round results if "Release all round results to public" is set
+
+
+2.0.4
+-----
+*Release date: TBA*
+
+- Fixed issue where draws of the "manual" type would not generate correctly
+- Fixed issue where a ballot's speaker names dropdown would contain both team's speakers when using formats with side selection
+- Other minor fixes
+
+
+2.0.3
+-----
+*Release date: 3 December 2017*
+
+- Fixed issue where the 'prefix team name with institution name' checkbox would not be correctly saved when using the Simple Importer
+- Removed the scroll speed / text size buttons on mobile draw views that were making it difficult to view the table
+- Improved the display of the motions tab page on mobile devices and fixed an issue where it appeared as if only half the vetoes were made
+
+
+2.0.2
+-----
+*Release date: 27 November 2017*
+
+- Fixes and improvements to diversity overview
+    - Fixed average feedback rating from teams, it was previously (incorrectly) showing the average feedback rating from all adjudicators
+    - Gender splits for average feedback rating now go by target adjudicator; this was previously source adjudicator
+    - Persons with unknown gender are now shown in counts (but not score/rating averages); a bug had previously caused them to be incorrectly counted as zero
+    - Improved query efficiency of the page
+- Improved the BP motions tab for out-rounds by specifying advancing teams as "top/bottom ½" rather than as 1st/4th and removed the average-points-per-position graphs that were misleading
+- Improved handling of long motions in the motion display interface
+- Fixed issue where creating BP tournaments using the wizard would create an extra break round given the size of the break specified
+- Fixed auto-allocation in consensus panels where there are fewer judges than debates in the round
+- Fixed reply speaker validity check when speeches are marked as duplicate
+- Prohibit assignment of teams to break categories of other tournaments in Edit Database area
+
+
 2.0.1
 -----
-*Release date: TBD*
+*Release date: 21 November 2017*
 
 - Fixed issue where results submission would crash if sides are unconfirmed
 - Fixed issue where scoresheets would not display properly for adjudicators who lack institutions

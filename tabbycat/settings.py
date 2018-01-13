@@ -23,9 +23,9 @@ TIME_ZONE = 'Australia/Melbourne'
 LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en')
 USE_I18N = True
 
-TABBYCAT_VERSION = '2.0.0'
+TABBYCAT_VERSION = '2.1.0-dev'
 TABBYCAT_CODENAME = 'Iberian Lynx'
-READTHEDOCS_VERSION = 'v2.0.0'
+READTHEDOCS_VERSION = 'latest'  # change to v2.1.0 for release
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -254,7 +254,7 @@ MESSAGE_TAGS = {messages.ERROR: 'danger', }
 
 # Get key from heroku config env else use a fall back
 SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY', '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
+    'DJANGO_SECRET_KEY', r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
 # Parse database configuration from $DATABASE_URL
 try:
@@ -333,7 +333,7 @@ if os.environ.get('TRAVIS', '') == 'true':
 # Hide league-related configuration options unless explicitly enabled
 LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
 
-# Must default to false; potentially overriden in local_settings
+# Must default to false; potentially overridden in local_settings
 ENABLE_DEBUG_TOOLBAR = False
 
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
@@ -346,7 +346,7 @@ if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
              'USER': 'tabbycat',
              'PASSWORD': 'tabbycat',
              'HOST': 'db',
-             'PORT': 5432, # Non-standard to prvent collisions
+             'PORT': 5432, # Non-standard to prevent collisions
         }
     }
 else:

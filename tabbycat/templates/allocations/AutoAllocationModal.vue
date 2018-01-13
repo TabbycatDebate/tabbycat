@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="confirmAutoAlert" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade" id="confirmAutoAllocationModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
@@ -36,7 +36,7 @@ export default {
   props: { roundInfo: Object, },
   methods: {
     resetAutoAllocationModal: function(button) {
-      $('#confirmAutoAlert').modal('hide')
+      $('#confirmAutoAllocationModal').modal('hide')
       $.fn.resetButton(button)
     },
     createAutoAllocation: function(event) {
@@ -54,6 +54,7 @@ export default {
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
       }).fail(function(response) {
         // Handle Failure
+        console.debug(JSON.stringify(response)) // Help identify failures in sentry
         var info = response.responseJSON.message
         $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         self.resetAutoAllocationModal(event.target)

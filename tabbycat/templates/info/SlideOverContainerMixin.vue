@@ -135,11 +135,13 @@ export default {
 
       _.forEach(histories, function(history, i) {
         if (_.isUndefined(history['icon'])) {
-          if (histories[i + 1].ago !== history.ago) {
-            histories.splice(i + 1, 0, {
-              'title': '-' + histories[i + 1].ago, 'icon': 'clock',
-              'class': histories[i + 1].ago > 2 ? ' visible-lg-block' : ' '
-            })
+          if (!_.isUndefined(histories[i + 1])) {
+            if (histories[i + 1].ago !== history.ago) {
+              histories.splice(i + 1, 0, {
+                'title': '-' + histories[i + 1].ago, 'icon': 'clock',
+                'class': histories[i + 1].ago > 2 ? ' visible-lg-block' : ' '
+              })
+            }
           }
         }
       })

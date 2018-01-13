@@ -1,5 +1,6 @@
-from django.contrib import admin
 from django import forms
+from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.utils.translation import ungettext
 from django.utils.translation import ugettext_lazy as _
 
@@ -78,6 +79,19 @@ class TeamForm(forms.ModelForm):
     def clean_url_key(self):
         # So that the url key can be unique and be blank
         return self.cleaned_data['url_key'] or None
+
+    def clean_break_categories(self):
+        categories = self.cleaned_data['break_categories']
+        tournament = self.cleaned_data.get('tournament')
+        if tournament is None:
+            return categories  # don't add more errors if there isn't even a tournament
+        for bc in categories:
+            if bc.tournament != tournament:
+                self.add_error('break_categories', ValidationError(
+                    _("The team can't be in a break category of a different tournament. Please remove: %(category)s"),
+                    code='invalid_break_category', params={'category': str(bc)}
+                ))
+        return categories
 
 
 @admin.register(Team)

@@ -59,11 +59,14 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
     """ Also inherited by the adjudicator's tab """
 
     def get_adjudicators(self):
-        t = self.get_tournament()
-        if t.pref('share_adjs'):
-            return Adjudicator.objects.filter(Q(tournament=t) | Q(tournament__isnull=True))
-        else:
-            return Adjudicator.objects.filter(tournament=t)
+        if not hasattr(self, '_adjudicators'):
+            t = self.get_tournament()
+            if t.pref('share_adjs'):
+                self._adjudicators = Adjudicator.objects.filter(Q(tournament=t) | Q(tournament__isnull=True))
+            else:
+                self._adjudicators = Adjudicator.objects.filter(tournament=t)
+            populate_feedback_scores(self._adjudicators)
+        return self._adjudicators
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
@@ -120,7 +123,6 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
     def get_table(self):
         t = self.get_tournament()
         adjudicators = self.get_adjudicators()
-        populate_feedback_scores(adjudicators)
         # Gather stats necessary to construct the graphs
         adjudicators = get_feedback_overview(t, adjudicators)
         table = FeedbackTableBuilder(view=self, sort_key=self.sort_key,
@@ -260,9 +262,10 @@ class LatestFeedbackView(FeedbackCardsView):
         t = self.get_tournament()
         return AdjudicatorFeedback.objects.filter(
             Q(adjudicator__tournament=t) |
-            Q(adjudicator__tournament__isnull=True)).order_by(
-            '-timestamp')[:30].select_related(
-            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+            Q(adjudicator__tournament__isnull=True)
+        ).order_by('-timestamp')[:30].select_related(
+            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team'
+        )
 
 
 class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView):

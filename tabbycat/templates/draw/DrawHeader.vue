@@ -12,10 +12,10 @@
       </div>
     </slot>
 
-    <slot name="hliveness" v-if="roundInfo.roundIsPrelim && roundInfo.teamsInDebate !== 'bp'">
+    <slot name="hliveness" v-if="roundInfo.roundIsPrelim">
       <div class="vue-sortable thead flex-cell flex-1 flex-horizontal-center" @click="resort('liveness')"
            data-toggle="tooltip" title="How many break categories are live in this room">
-        <i data-feather="heart" class="tooltip-trigger"></i>
+        <i data-feather="star" class="tooltip-trigger"></i>
         <div :class="sortClasses('liveness')">
           <span class="sorting-placeholder-for-width"></span>
           <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>

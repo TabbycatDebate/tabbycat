@@ -305,7 +305,7 @@ class BaseBallotSetForm(BaseResultForm):
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
-                label=_("Mark as a duplicate speech"))
+                label=_("Mark as a duplicate speech"), label_suffix="")
 
         self.create_score_fields()
 
@@ -446,7 +446,7 @@ class BaseBallotSetForm(BaseResultForm):
 
             speaker_positions = dict()
             for pos in range(1, self.last_substantive_position + 1):
-                speaker = self.cleaned_data.get(self._fieldname_speaker(side, pos))
+                speaker = cleaned_data.get(self._fieldname_speaker(side, pos))
                 if speaker is None:
                     logger.warning("Field '%s' not found", self._fieldname_speaker(side, pos))
                     continue
@@ -459,8 +459,8 @@ class BaseBallotSetForm(BaseResultForm):
                         code='speaker_wrongteam')
                     )
 
-                # Don't increment the speaker count if the speech is marked as a ghost
-                if not self.cleaned_data.get(self._fieldname_ghost(side, pos)):
+                # Don't count this speaker if the speech is marked as a ghost
+                if not cleaned_data.get(self._fieldname_ghost(side, pos)):
                     speaker_positions.setdefault(speaker, []).append(pos)
 
             # The substantive speakers must be unique.
@@ -477,7 +477,8 @@ class BaseBallotSetForm(BaseResultForm):
                         self.add_error(self._fieldname_speaker(side, pos), forms.ValidationError(
                             message, params=params, code='speaker_repeat'))
 
-            if self.using_replies:
+            # Check reply speaker only if not marked as a ghost
+            if self.using_replies and not cleaned_data.get(self._fieldname_ghost(side, self.reply_position)):
                 reply_speaker = cleaned_data.get(self._fieldname_speaker(side, self.reply_position))
                 last_speaker = cleaned_data.get(self._fieldname_speaker(side, self.last_substantive_position))
 
@@ -489,7 +490,7 @@ class BaseBallotSetForm(BaseResultForm):
                     ))
 
                 # The reply speaker must have given a substantive speech.
-                if len(speaker_positions[reply_speaker]) == 0:
+                if len(speaker_positions.get(reply_speaker, [])) == 0:
                     self.add_error(self._fieldname_speaker(side, self.reply_position), forms.ValidationError(
                         _("The reply speaker for this team did not give a substantive speech."),
                         code='reply_speaker_not_repeat'

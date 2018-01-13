@@ -9,14 +9,20 @@ export default {
   },
   methods: {
     setHighlights(highlights) {
+      // Highlights come in as more expansive dictionary;
+      // reduce them back to a simple key/state
+      var simpleHighlights = _.mapValues(highlights, function(highlight) {
+        return highlight.state;
+      });
+      console.log(simpleHighlights)
       _.forEach(this.teams, function(item) {
-        item.highlights = highlights
+        item.highlights = simpleHighlights
       })
       _.forEach(this.adjudicators, function(item) {
-        item.highlights = highlights
+        item.highlights = simpleHighlights
       })
       _.forEach(this.unallocatedItems, function(item) {
-        item.highlights = highlights
+        item.highlights = simpleHighlights
       })
     }
   }

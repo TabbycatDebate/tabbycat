@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.db import transaction
 from django.db.models import Q
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
@@ -30,7 +31,7 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
-class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, SuperuserRequiredMixin):
 
     @cached_property
     def get_clashes(self):
@@ -83,7 +84,7 @@ class AdjudicatorAllocationViewBase(DrawForDragAndDropMixin, SuperuserRequiredMi
         return super().annotate_draw(draw, serialised_draw)
 
 
-class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView):
+class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
 
     template_name = 'edit_adjudicators.html'
     auto_url = "adjudicators-auto-allocate"
@@ -117,11 +118,17 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationViewBase, TemplateView)
         return round_info
 
     def get_context_data(self, **kwargs):
+        t = self.get_tournament()
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
+        kwargs['showAllocationIntro'] = t.pref('show_allocation_intro')
+        # This is meant to be shown once only; so we set false if true
+        if t.pref('show_allocation_intro'):
+            t.preferences['ui_options__show_allocation_intro'] = False
+
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationViewBase, JsonDataResponsePostView):
+class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
@@ -155,11 +162,14 @@ class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, V
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
-        debate = Debate.objects.get(pk=posted_info['debate_id'])
-        debate.importance = posted_info['importance']
-        debate.save()
+        priorities = posted_info['priorities']
+
+        with transaction.atomic(): # Speed up the saving by using a single query
+            for debate_id, priority in priorities.items():
+                Debate.objects.filter(pk=debate_id).update(importance=priority)
+
         self.log_action()
-        return JsonResponse(json.dumps(posted_info), safe=False)
+        return JsonResponse(json.dumps(priorities), safe=False)
 
 
 class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):

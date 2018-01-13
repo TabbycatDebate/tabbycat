@@ -101,8 +101,6 @@ This script has a number of options. They're worth taking a look at before you r
 
 4. Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-edit-database`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly.
 
-.. note:: Currently the ``importtournament`` command cannot add Adjudicators or Teams without an institutional affiliation. However, these can be imported with the Simpler Importer or edited in the Database area.
-
 ``importtournament`` on Heroku installs
 ========================================
 

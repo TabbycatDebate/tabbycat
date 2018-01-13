@@ -304,11 +304,8 @@ class DrawForDragAndDropMixin(RoundMixin):
                 breaks_seq[r.id] = i
             for bc in serialised_team['break_categories']:
                 bc['class'] = breaks_seq[bc['id']]
-                if self.get_tournament().pref('teams_in_debate') != 'bp':
-                    wins = serialised_team['wins']
-                    bc['will_break'] = determine_liveness(thresholds[bc['id']], wins)
-                else:
-                    bc['will_break'] = None # Not Implemented
+                points = serialised_team['points']
+                bc['will_break'] = determine_liveness(thresholds[bc['id']], points)
 
         return serialised_team
 
@@ -348,8 +345,10 @@ class DrawForDragAndDropMixin(RoundMixin):
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
                 if team['break_categories'] is not None:
-                    liveness += len([bc for bc in team['break_categories']
-                                     if bc['will_break'] == 'live'])
+                    for c in team['break_categories']:
+                        if c['will_break'] == 'live' or c['will_break'] == '?':
+                            liveness += 1
+
             for da in debate['debateAdjudicators']:
                 da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
 
@@ -401,6 +400,7 @@ class DrawForDragAndDropMixin(RoundMixin):
             'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
             'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,
             'roundName' : round.abbreviation,
+            'roundSeq' : round.seq,
             'roundIsPrelim' : not round.is_break_round,
         }
         round_info = self.annotate_round_info(round_info)

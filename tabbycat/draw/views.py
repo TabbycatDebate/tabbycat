@@ -116,11 +116,8 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTabl
     public_page_preference = 'public_draw'
 
     def get_template_names(self):
-        round = self.get_round()
-        if round.draw_status != Round.STATUS_RELEASED:
-            messages.info(self.request, _("The draw for %(round)s "
-                "has yet to be released.") % {'round': round.name})
-            return ["base.html"]
+        if self.get_round().draw_status != Round.STATUS_RELEASED:
+            return ['draw_not_released.html']
         else:
             return super().get_template_names()
 

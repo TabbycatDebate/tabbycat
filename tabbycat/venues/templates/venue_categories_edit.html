@@ -9,11 +9,7 @@
 {% block content %}
 
   {% blocktrans trimmed asvar p1 %}
-    Venue categories allow you to
-    <ul>
-      <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
-      <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
-    </ul>
+    Venue categories allow you to group venues together into "zones" to display in the draw and make navigation easier for participants, and/or specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.
   {% endblocktrans %}
 
   {% url 'admin:venues_venuecategory_changelist' as edit_db_url %}

@@ -422,7 +422,6 @@ class Adjudicator(Person):
     objects = AdjudicatorManager()
 
     class Meta:
-        ordering = ['tournament', 'institution', 'name']
         verbose_name = _("adjudicator")
         verbose_name_plural = _("adjudicators")
 

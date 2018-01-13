@@ -2,31 +2,36 @@
 
 {% if am.debate_rooms > 0 %}
 
-  <div class="row mb-3">
-    <div class="col-md-12">
-      <div class="progress">
+  {% if round.stage != round.STAGE_ELIMINATION %}
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="progress">
 
-        {% for position, average in am.points_average.items %}
-          {% if am.results_rates.items > 1 %}
-            {% widthratio average 6 100 as average_width %}
-          {% else %}
-            {% widthratio average 3 100 as average_width %}
-          {% endif %}
-          {% if average > 0 %}
-            <div class="progress-bar progress-bar-{{ position }}"
-                 style="width: {{ average_width }}%">
-              {{ position.upper }} {{ average|floatformat }}
-            </div>
-          {% endif %}
-        {% endfor %}
+          {% for position, average in am.points_average.items %}
+            {% if am.results_rates.items > 1 %}
+              {% widthratio average 6 100 as average_width %}
+            {% else %}
+              {% widthratio average 3 100 as average_width %}
+            {% endif %}
+            {% if average > 0 %}
+              <div class="progress-bar progress-bar-{{ position }}"
+                   style="width: {{ average_width }}%">
+                <span class="d-sm-inline {% if average <= 0.8 %}d-none{% endif %}">
+                  {{ position.upper }}
+                </span>
+                &nbsp;{{ average|floatformat }}
+              </div>
+            {% endif %}
+          {% endfor %}
 
+        </div>
+        <h6 class="mt-2 text-center text-muted">
+          {% trans "average points per position" %}
+          from {{ am.debate_rooms }} debate{{ am.debate_rooms|pluralize }}
+        </h6>
       </div>
-      <h6 class="mt-2 text-center text-muted">
-        {% trans "average points per position" %}
-        from {{ am.debate_rooms }} debate{{ am.debate_rooms|pluralize }}
-      </h6>
     </div>
-  </div>
+  {% endif %}
 
   <div class="row">
 
@@ -41,10 +46,23 @@
                  style="width: {{ average }}%" data-toggle="tooltip"
                  title="{{ average }}% of {{ position }} results were for {{ points }} points">
               {% if average > 0 %}
-                {% if points == 3 %}1<small>st</small>
-                {% elif points == 2 %}2<small>nd</small>
-                {% elif points == 1 %}3<small>rd</small>
-                {% else %}4<small>th</small>{% endif %}
+                {% if round.stage == round.STAGE_ELIMINATION %}
+                  {% if points == 3 %}
+                    top ½
+                  {% else %}
+                    bottom ½
+                  {% endif %}
+                {% else %}
+                  {% if points == 3 %}
+                    1<small class="d-sm-inline {% if average <= 10 %}d-none{% endif %}">st</small>
+                  {% elif points == 2 %}
+                    2<small class="d-sm-inline {% if average <= 10 %}d-none{% endif %}">nd</small>
+                  {% elif points == 1 %}
+                    3<small class="d-sm-inline {% if average <= 10 %}d-none{% endif %}">rd</small>
+                  {% else %}
+                    4<small class="d-sm-inline {% if average <= 10 %}d-none{% endif %}">th</small>
+                  {% endif %}
+                {% endif %}
               {% endif %}
             </div>
 

@@ -1,13 +1,13 @@
 name,institution,team_name,use_institution_prefix,gender,pronoun,email
-Georgia Crawford,California Institute of Technology,Custom Team Name,0,F,she,georgiacrawford@fakemail.com
-Wanda Griffin,California Institute of Technology,Custom Team Name,0,F,she,wandagriffin@fakemail.com
-Helen Keller,California Institute of Technology,Custom Team Name,0,F,she,helenkeller@fakemail.com
+Georgia Crawford,,Hybrid Team,0,F,she,georgiacrawford@fakemail.com
+Wanda Griffin,,Hybrid Team,0,F,she,wandagriffin@fakemail.com
+Helen Keller,,Hybrid Team,0,F,she,helenkeller@fakemail.com
+Kyle Ruiz,California Institute of Technology,1,1,M,he,kyleruiz@fakemail.com
+Randolph Lambert,California Institute of Technology,1,1,M,,randolphlambert@fakemail.com
+Sergio Pittman,California Institute of Technology,1,1,M,he,sergiopittman@fakemail.com
 Russell Warren,California Institute of Technology,2,1,M,he,russellwarren@fakemail.com
 Angel Rhodes,California Institute of Technology,2,1,,they,angelrhodes@fakemail.com
 Terry Henderson,California Institute of Technology,2,1,M,he,terryhenderson@fakemail.com
-Kyle Ruiz,California Institute of Technology,3,1,M,he,kyleruiz@fakemail.com
-Randolph Lambert,California Institute of Technology,3,1,M,,randolphlambert@fakemail.com
-Sergio Pittman,California Institute of Technology,3,1,M,he,sergiopittman@fakemail.com
 Earnest Becker,Columbia University,1,1,M,he,earnestbecker@fakemail.com
 Ellis Rowe,Columbia University,1,1,M,he,ellisrowe@fakemail.com
 Robin Roberson,Columbia University,1,1,M,he,robinroberson@fakemail.com
@@ -62,9 +62,9 @@ Winston Castro,University of Pennsylvania,1,1,M,he,
 Emilio Simmons,University of Pennsylvania,2,1,M,he,emiliosimmons@fakemail.com
 Ron Delgado,University of Pennsylvania,2,1,,he,rondelgado@fakemail.com
 Nadine Barber,University of Pennsylvania,2,1,M,he,nadinebarber@fakemail.com
-Gail Adkins,Yale University,Special Name,,,he,gailadkins@fakemail.com
-Willard Walton,Yale University,Special Name,,M,,willardwalton@fakemail.com
-Jackie Peterson,Yale University,Special Name,,M,he,jackiepeterson@fakemail.com
+Gail Adkins,Yale University,That Team from Yale,,,he,gailadkins@fakemail.com
+Willard Walton,Yale University,That Team from Yale,,M,,willardwalton@fakemail.com
+Jackie Peterson,Yale University,That Team from Yale,,M,he,jackiepeterson@fakemail.com
 Terry Thornton,Yale University,2,1,,they,terrythornton@fakemail.com
 Norman Rodgers,Yale University,2,1,M,he,normanrodgers@fakemail.com
 Mattie Lee,Yale University,2,1,,they,mattielee@fakemail.com

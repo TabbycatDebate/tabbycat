@@ -341,6 +341,8 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
     def get_speakers(self):
         tournament = self.get_tournament()
+        if tournament.reply_position is None:
+            raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
         return Speaker.objects.filter(
             team__tournament=tournament,
             speakerscore__position=tournament.reply_position).select_related(
@@ -516,22 +518,32 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
     public_page_preference = 'public_team_standings'
     page_title = ugettext_lazy("Current Team Standings")
     page_emoji = '🌟'
-    template_name = 'current_standings.html'
+
+    def get_rounds(self):
+        if not hasattr(self, '_rounds'):
+            tournament = self.get_tournament()
+            if tournament.pref('all_results_released'):
+                self._rounds = tournament.prelim_rounds().order_by('seq')
+            else:
+                self._rounds = tournament.prelim_rounds(before=tournament.current_round).filter(
+                        silent=False).order_by('seq')
+        return self._rounds
+
+    def get_template_names(self):
+        if not self.get_rounds():
+            return ['current_standings_no_round.html']
+        else:
+            return ['current_standings.html']
 
     def get_table(self):
         tournament = self.get_tournament()
 
-        # Find the most recent non-silent preliminary round
-        round = tournament.current_round if tournament.pref('all_results_released') else tournament.current_round.prev
-        while round is not None and (round.silent or round.stage != Round.STAGE_PRELIMINARY):
-            round = round.prev
-
-        if round is None or round.silent:
-            return TabbycatTableBuilder() # empty (as precaution)
-
         teams = tournament.team_set.prefetch_related('speaker_set').order_by(
                 'institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
-        rounds = tournament.prelim_rounds(until=round).filter(silent=False).order_by('seq')
+        rounds = self.get_rounds()
+
+        if not rounds:
+            return TabbycatTableBuilder(view=self) # empty (as precaution)
 
         # Can't use prefetch.populate_win_counts, since that doesn't exclude
         # silent rounds and future rounds appropriately

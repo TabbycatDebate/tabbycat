@@ -108,6 +108,8 @@ export default {
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
         $.fn.resetButton(event.target)
       }).fail(function(response) {
+        // Handle Failure (or at least log it so we can figure out failure mode)
+        console.debug(JSON.stringify(response))
         var info = response.responseJSON.message
         $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         $.fn.resetButton(event.target)
