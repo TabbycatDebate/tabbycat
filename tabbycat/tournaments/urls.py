@@ -33,11 +33,11 @@ urlpatterns = [
         include('actionlog.urls')),
 
     # Allocations App
-    url(r'^admin/allocations/round/(?P<round_seq>\d+)/',
+    url(r'^admin/allocations/',
         include('adjallocation.urls')),
 
     # Availabilities App
-    url(r'^admin/availability/round/(?P<round_seq>\d+)/',
+    url(r'^admin/availability/',
         include('availability.urls')),
 
     # Breaks App
@@ -69,7 +69,7 @@ urlpatterns = [
     # Motions App
     url(r'^motions/',
         include('motions.urls_public')),
-    url(r'^admin/motions/round/(?P<round_seq>\d+)/',
+    url(r'^admin/motions/',
         include('motions.urls_admin')),
 
     # Options App
@@ -101,7 +101,7 @@ urlpatterns = [
         include('standings.urls_public')),
     url(r'^tab/',
         include('standings.urls_public')),
-    url(r'^admin/standings/round/(?P<round_seq>\d+)/',
+    url(r'^admin/standings/',
         include('standings.urls_admin')),
 
     # Venues App
