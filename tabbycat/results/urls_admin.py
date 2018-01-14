@@ -9,10 +9,10 @@ urlpatterns = [
         name='results-round-list'),
 
     # JSON updates
-    url(r'^ballots_status/$',
+    url(r'^json/status/$',
         views.BallotsStatusJsonView.as_view(),
         name='results-ballots-graph-data'),
-    url(r'^latest_results/$',
+    url(r'^json/latest/$',
         views.LatestResultsJsonView.as_view(),
         name='results-latest-json'),
 
