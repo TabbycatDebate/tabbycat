@@ -21,8 +21,8 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 
 from utils.misc import reverse_tournament
-from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
-                          SuperuserRequiredMixin)
+from utils.mixins import (AdministratorMixin, CacheMixin,
+                          SuperuserOrTabroomAssistantTemplateResponseMixin)
 from utils.views import JsonDataResponseView, PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -509,7 +509,7 @@ class AdjudicatorActionError(RuntimeError):
     pass
 
 
-class BaseAdjudicatorActionView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class BaseAdjudicatorActionView(LogActionMixin, AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'adjfeedback-overview'
     action_log_content_object_attr = 'adjudicator'
@@ -554,7 +554,7 @@ class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
         self.atsh = atsh
 
 
-class SetAdjudicatorBreakingStatusView(SuperuserRequiredMixin, TournamentMixin, LogActionMixin, View):
+class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATOR_BREAK_SET
 
@@ -615,7 +615,7 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         return [adjs_table, teams_table]
 
 
-class FeedbackProgress(SuperuserRequiredMixin, BaseFeedbackProgressView):
+class FeedbackProgress(AdministratorMixin, BaseFeedbackProgressView):
     template_name = 'feedback_base.html'
 
 

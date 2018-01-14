@@ -10,7 +10,7 @@ from django.views.generic.base import TemplateView, View
 
 from participants.models import Institution, Team
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin, CacheMixin
 from utils.views import PostOnlyRedirectView
 from venues.models import VenueCategory, VenueConstraint
 
@@ -41,7 +41,7 @@ class PublicDivisionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class DivisionsAllocatorView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class DivisionsAllocatorView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "division_allocations.html"
 
     def get_context_data(self, **kwargs):
@@ -81,7 +81,7 @@ class DivisionsAllocatorView(SuperuserRequiredMixin, TournamentMixin, TemplateVi
         return super().get_context_data(**kwargs)
 
 
-class CreateByesView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class CreateByesView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
@@ -105,7 +105,7 @@ class CreateByesView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectVi
         return super().post(request, *args, **kwargs)
 
 
-class CreateDivisionView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class CreateDivisionView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
@@ -117,7 +117,7 @@ class CreateDivisionView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedire
         return super().post(request, *args, **kwargs)
 
 
-class CreateDivisionAllocationView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class CreateDivisionAllocationView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
@@ -137,7 +137,7 @@ class CreateDivisionAllocationView(SuperuserRequiredMixin, TournamentMixin, Post
         return super().post(request, *args, **kwargs)
 
 
-class SetDivisionVenueCategoryView(TournamentMixin, SuperuserRequiredMixin, View):
+class SetDivisionVenueCategoryView(TournamentMixin, AdministratorMixin, View):
 
     def post(self, request, *args, **kwargs):
         posted_data = json.loads(self.request.body)
@@ -152,7 +152,7 @@ class SetDivisionVenueCategoryView(TournamentMixin, SuperuserRequiredMixin, View
         return JsonResponse(json.dumps(posted_data), safe=False)
 
 
-class SetTeamDivisionView(TournamentMixin, SuperuserRequiredMixin, View):
+class SetTeamDivisionView(TournamentMixin, AdministratorMixin, View):
 
     def post(self, request, *args, **kwargs):
         posted_data = json.loads(self.request.body)
@@ -167,7 +167,7 @@ class SetTeamDivisionView(TournamentMixin, SuperuserRequiredMixin, View):
         return JsonResponse(json.dumps(posted_data), safe=False)
 
 
-class SetDivisionTimeView(TournamentMixin, SuperuserRequiredMixin, View):
+class SetDivisionTimeView(TournamentMixin, AdministratorMixin, View):
 
     def post(self, request, *args, **kwargs):
         division = Division.objects.get(pk=int(self.request.POST['division']))

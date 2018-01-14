@@ -1,8 +1,8 @@
 {% load debate_tags i18n %}
 
 <li class="nav-item {% if results_nav %}active{% endif %}">
-  <a class="nav-link" href="{% roundurl 'results-round-list' current_round %}">
-    Enter Results
+  <a class="nav-link" href="{% roundurl 'results-assistant-round-list' current_round %}">
+    {% trans "Enter Results" %}
   </a>
 </li>
 
@@ -14,14 +14,14 @@
 
 <li class="nav-item {% if feedback_nav %}active{% endif %}">
   <a class="nav-link" href="{% tournamenturl 'adjfeedback-add-index' %}">
-    Enter Feedback
+    {% trans "Enter Feedback" %}
   </a>
 </li>
 
 {% if pref.assistant_access != "results_only" %}
   <li class="nav-item {% if draw_nav %}active{% endif %}">
     <a class="nav-link" href="{% roundurl 'draw-display' current_round %}">
-      Display/Print Draw
+      {% trans "Display/Print Draw" %}
     </a>
   </li>
 {% endif %}

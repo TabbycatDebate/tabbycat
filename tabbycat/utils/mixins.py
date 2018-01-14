@@ -47,6 +47,22 @@ class SuperuserRequiredMixin(UserPassesTestMixin):
         return self.request.user.is_superuser
 
 
+class AdministratorMixin(SuperuserRequiredMixin, ContextMixin):
+    """Mixin for views that are for administrators."""
+
+    def get_context_data(self, **kwargs):
+        kwargs["user_role"] = "admin"
+        return super().get_context_data(**kwargs)
+
+
+class AssistantMixin(LoginRequiredMixin, ContextMixin):
+    """Mixin for views that are for assistants."""
+
+    def get_context_data(self, **kwargs):
+        kwargs["user_role"] = "assistant"
+        return super().get_context_data(**kwargs)
+
+
 class SuperuserOrTabroomAssistantTemplateResponseMixin(LoginRequiredMixin, TemplateResponseMixin):
     """Mixin for views that choose either a superuser view or an assistant view,
     depending on the privileges of the user who is logged in.

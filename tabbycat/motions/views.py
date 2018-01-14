@@ -9,7 +9,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin
 from utils.misc import redirect_round
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
 from .models import Motion
@@ -45,7 +45,7 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelFormSetView):
+class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
     # See also: participants.views.PublicConfirmShiftView.
@@ -105,7 +105,7 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
         return redirect_round('draw-display', round)
 
 
-class AssignMotionsView(SuperuserRequiredMixin, RoundMixin, ModelFormSetView):
+class AssignMotionsView(AdministratorMixin, RoundMixin, ModelFormSetView):
 
     template_name = 'assign.html'
     formset_factory_kwargs = dict(extra=0, fields=['divisions'])
@@ -123,7 +123,7 @@ class AssignMotionsView(SuperuserRequiredMixin, RoundMixin, ModelFormSetView):
         return redirect_round('motions-edit', self.get_round())
 
 
-class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
+class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'draw-display'
 

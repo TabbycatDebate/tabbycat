@@ -6,7 +6,6 @@ from threading import Lock
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import management
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
@@ -26,7 +25,7 @@ from importer.importers import TournamentDataImporterError
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
@@ -64,8 +63,17 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
 
-class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView):
-    template_name = "tournament_index.html"
+class TournamentAssistantHomeView(AssistantMixin, TournamentMixin, TemplateView):
+    template_name = 'assistant_tournament_index.html'
+
+    def get_context_data(self, **kwargs):
+        tournament = self.get_tournament()
+        kwargs["round"] = tournament.current_round
+        return super().get_context_data(**kwargs)
+
+
+class TournamentAdminHomeView(AdministratorMixin, TournamentMixin, TemplateView):
+    template_name = 'tournament_index.html'
 
     def get_context_data(self, **kwargs):
         tournament = self.get_tournament()
@@ -75,7 +83,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         return super().get_context_data(**kwargs)
 
 
-class RoundAdvanceConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'round_advance_check.html'
 
     def get(self, request, *args, **kwargs):
@@ -96,7 +104,7 @@ class RoundAdvanceConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class RoundAdvanceView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostOnlyRedirectView):
+class RoundAdvanceView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE
     round_redirect_pattern_name = 'results-round-list' # standard redirect is only on error
@@ -167,7 +175,7 @@ class BlankSiteStartView(FormView):
         return super().form_valid(form)
 
 
-class CreateTournamentView(SuperuserRequiredMixin, CreateView):
+class CreateTournamentView(AdministratorMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
@@ -184,7 +192,7 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
         return reverse_tournament('tournament-configure', tournament=t)
 
 
-class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
+class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
         source = request.POST.get("source", "")
@@ -206,7 +214,7 @@ class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
         return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
 
 
-class ConfigureTournamentView(SuperuserRequiredMixin, UpdateView, TournamentMixin):
+class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
     model = Tournament
     form_class = TournamentConfigureForm
     template_name = "configure_tournament.html"
@@ -217,7 +225,7 @@ class ConfigureTournamentView(SuperuserRequiredMixin, UpdateView, TournamentMixi
         return reverse_tournament('tournament-admin-home', tournament=t)
 
 
-class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
+class SetCurrentRoundView(AdministratorMixin, UpdateView):
     model = Tournament
     form_class = SetCurrentRoundForm
     template_name = 'set_current_round.html'
@@ -254,7 +262,7 @@ class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
         return context
 
 
-class FixDebateTeamsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "fix_debate_teams.html"
 
     def get_incomplete_debates(self):
@@ -312,7 +320,7 @@ class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
 # Base classes for other apps
 # ==============================================================================
 
-class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
+class BaseSaveDragAndDropDebateJsonView(AdministratorMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
     """For AJAX issued updates which post a Debate dictionary; which is then
     modified and return back via a JSON response"""
     allows_creation = False

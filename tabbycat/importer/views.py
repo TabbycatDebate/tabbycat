@@ -11,7 +11,7 @@ from formtools.wizard.views import SessionWizardView
 from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Team
 from tournaments.mixins import TournamentMixin
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from venues.models import Venue
 
 from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
@@ -23,11 +23,11 @@ logger = logging.getLogger(__name__)
 
 # TODO: add log actions for all of these?
 
-class ImporterSimpleIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class ImporterSimpleIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = 'simple_import_index.html'
 
 
-class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
+class BaseImportWizardView(AdministratorMixin, TournamentMixin, SessionWizardView):
     """Common functionality for the import wizard views. In particular, this
     class implements functionality for a "details" step that is initialized
     with data from the previous step. The details step shows a ModelFormSet

@@ -1,13 +1,120 @@
-{% extends "results.html" %}
-{% load debate_tags %}
+{% extends "tables/base_vue_table.html" %}
+{% load humanize debate_tags i18n %}
 
-{% block head-title %}Enter Results for {{ current_round.name }}{% endblock %}
-{% block page-title %}Enter Results for {{ current_round.name }}{% endblock %}
+{% block page-title %}{% trans "Enter Results" %}{% endblock %}
+{% block head-title %}<span class="emoji">📩</span> {% trans "Enter Results" %}{% endblock %}
 
-{% block edit-link %}Check{% endblock %}
+{% block page-alerts %}
 
-{% block page-subnav-actions %}
-{% comment %}
-We don't want assistant users having an advance button
-{% endcomment %}
+  {# Administrators have a different alert that has a link, see admin_results.html. #}
+  {% if pref.enable_motions and round.motion_set.count == 0 and user_role == "assistant" %}
+    {% roundurl 'motions-edit' current_round as motions_url %}
+    {% blocktrans trimmed asvar message %}
+      Currently there are no motions entered for this round, so debate results
+      cannot be entered. Please ask an administrator to add motions.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="danger" %}
+  {% endif %}
+
+  {% with sides_unconfirmed=round.num_debates_with_sides_unconfirmed %}
+    {% if sides_unconfirmed > 0 and pref.draw_side_allocations != 'manual-ballot' %}
+      {% blocktrans trimmed asvar message count ndebates=sides_unconfirmed %}
+        One debate does not have its sides confirmed. Results for this debate cannot be entered until its side allocations are marked as confirmed.
+      {% plural %}
+        {{ ndebates }} debate do not have their sides confirmed. Results for these debates cannot be entered until their side allocations are marked as confirmed.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="danger" %}
+    {% endif %}
+  {% endwith %}
+
+  {% with num_even_panel=round.num_debates_with_even_panel %}
+    {% if pref.ballots_per_debate == 'per-adj' and num_even_panel > 0 %}
+      {% blocktrans trimmed asvar message count num_even_panel=num_even_panel %}
+         One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
+      {% plural %}
+        {{ num_even_panel }} debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="warning" %}
+    {% endif %}
+  {% endwith %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="card mb-3">
+    <div class="card-body text-center pb-1">
+      <div class="progress">
+
+        <div class="progress-bar bg-danger" role="progressbar"
+             style="width: {% percentage stats.none stats.total %}%;"
+             data-toggle="tooltip" title="{% trans "Unknown" %}">
+          <i data-feather="x"></i>&nbsp;&nbsp;{{ stats.none }}
+        </div>
+        <div class="progress-bar bg-primary" role="progressbar"
+             style="width: {% percentage stats.ballot_in stats.total %}%;"
+             data-toggle="tooltip" title="{% trans "Checked In" %}">
+          <i data-feather="inbox"></i>&nbsp;&nbsp;{{ stats.ballot_in }}
+        </div>
+        <div class="progress-bar bg-info" role="progressbar"
+             style="width: {% percentage stats.draft stats.total %}%"
+             data-toggle="tooltip" title="{% trans "Unconfirmed" %} ">
+          <i data-feather="circle"></i>&nbsp;&nbsp;{{ stats.draft }}
+        </div>
+        <div class="progress-bar bg-success" role="progressbar"
+             style="width: {% percentage stats.confirmed stats.total %}%"
+             data-toggle="tooltip" title="{% trans "Confirmed" %}">
+          <i data-feather="check"></i>&nbsp;&nbsp;{{ stats.confirmed }}
+        </div>
+        {% if pref.enable_postponements %}
+          <div class="progress-bar bg-secondary" role="progressbar"
+               style="width: {% percentage stats.postponed stats.total %}%"
+            {{ stats.postponed }} {% trans "Postponed" %}&nbsp;&nbsp;<i data-feather="pause"></i>
+          </div>
+        {% endif %}
+      </div>
+      <h6 class="pt-3 text-center text-secondary">{% trans "Ballot Statuses" %}</h6>
+    </div>
+  </div>
+
+  {{ block.super }}
+
+  <form id="postponeForm" action="{% roundurl 'results-postpone-debate' %}" method="POST">
+    <input type="hidden" id="postpone_debate_id" name="debate_id" />
+  </form>
+
+  <form id="unpostponeForm" action="{% roundurl 'results-unpostpone-debate' %}" method="POST">
+    <input type="hidden" id="unpostpone_debate_id" name="debate_id" />
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+
+  {{ block.super }}
+
+  <script>
+    $(document).ready( function() {
+
+      $(".postpone-link").each(function () {
+        $(this).click( function() {
+          var debate_id = $(this).attr("debate-id");
+          $("#postpone_debate_id").val(debate_id);
+          $("#postponeForm").submit();
+          $(this).html("<i>{% trans "Postponing…" %}</i>");
+          return false;
+        });
+      });
+
+      $(".unpostpone-link").each( function() {
+        $(this).click( function() {
+          var debate_id = $(this).attr("debate-id");
+          $("#unpostpone_debate_id").val(debate_id);
+          $("#unpostponeForm").submit();
+          $(this).html("<i>{% trans "Unpostponing…" %}</i>");
+          return false;
+        });
+      });
+
+    });
+  </script>
 {% endblock %}

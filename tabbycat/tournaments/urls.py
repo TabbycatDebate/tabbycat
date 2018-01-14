@@ -10,6 +10,9 @@ urlpatterns = [
     url(r'^admin/$',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
+    url(r'^assistant/$',
+        views.TournamentAssistantHomeView.as_view(),
+        name='tournament-assistant-home'),
 
     # Application URLs for public pages
     url(r'^break/',              include('breakqual.urls_public')),
@@ -38,6 +41,9 @@ urlpatterns = [
     url(r'^admin/results/',      include('results.urls_admin')),
     url(r'^admin/standings/',    include('standings.urls_admin')),
     url(r'^admin/venues/',       include('venues.urls_admin')),
+
+    # Application URLs for assistant pages
+    url(r'^assistant/results/',  include('results.urls_assistant')),
 
     # Round progression
     url(r'^admin/round/(?P<round_seq>\d+)/advance/check/$',

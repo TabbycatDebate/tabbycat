@@ -17,7 +17,7 @@ from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -31,7 +31,7 @@ from .templatetags.standingsformat import metricformat
 logger = logging.getLogger(__name__)
 
 
-class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
     template_name = 'standings_index.html'
 
@@ -281,7 +281,7 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
         add_speaker_round_results(standings, rounds, self.get_tournament())
 
 
-class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
+class SpeakerStandingsView(AdministratorMixin, BaseStandardSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add an info alert
 
 
@@ -311,7 +311,7 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseStan
         return super().get(request, *args, **kwargs)
 
 
-class SpeakerCategoryStandingsView(SuperuserRequiredMixin, BaseSpeakerCategoryStandingsView):
+class SpeakerCategoryStandingsView(AdministratorMixin, BaseSpeakerCategoryStandingsView):
     pass
 
 
@@ -365,7 +365,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
             info.result_missing = info.speaker.team not in teams_seen
 
 
-class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
+class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
     pass
 
 
@@ -436,7 +436,7 @@ class BaseTeamStandingsView(BaseStandingsView):
             info.result_missing = len(info.round_results) > 1 and info.round_results[-1] is None
 
 
-class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
     rankings = ('rank',)
 
@@ -444,7 +444,7 @@ class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
         return True
 
 
-class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
     page_title = ugettext_lazy("Division Standings")
@@ -501,7 +501,7 @@ class BaseMotionStandingsView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
+class MotionStandingsView(AdministratorMixin, BaseMotionStandingsView):
     pass
 
 
@@ -579,7 +579,7 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class DiversityStandingsView(SuperuserRequiredMixin, BaseDiversityStandingsView):
+class DiversityStandingsView(AdministratorMixin, BaseDiversityStandingsView):
 
     for_public = False
 

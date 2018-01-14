@@ -21,7 +21,8 @@ from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObj
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
-from utils.mixins import CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin
+from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin,
+                          SuperuserOrTabroomAssistantTemplateResponseMixin)
 from utils.views import JsonDataResponsePostView, JsonDataResponseView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
@@ -52,9 +53,7 @@ class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
 # Views that show the results for all rounds in a debate
 # ==============================================================================
 
-class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateView):
-
-    template_name = 'results.html'
+class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
 
     def _get_draw(self):
         if not hasattr(self, '_draw'):
@@ -64,8 +63,7 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
 
     def get_table(self):
         draw = self._get_draw()
-        table = ResultsTableBuilder(view=self,
-            admin=self.request.user.is_superuser, sort_key=_("Status"))
+        table = ResultsTableBuilder(view=self, sort_key=_("Status"))
         table.add_ballot_status_columns(draw)
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
@@ -87,6 +85,14 @@ class ResultsEntryForRoundView(RoundMixin, LoginRequiredMixin, VueTableTemplateV
         }
 
         return super().get_context_data(**kwargs)
+
+
+class AssistantResultsEntryForRoundView(AssistantMixin, BaseResultsEntryForRoundView):
+    template_name = 'assistant_results.html'
+
+
+class AdminResultsEntryForRoundView(AdministratorMixin, BaseResultsEntryForRoundView):
+    template_name = 'admin_results.html'
 
 
 class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableTemplateView):
@@ -186,7 +192,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 # Views that update the debate status (only)
 # ==============================================================================
 
-class BaseUpdateDebateStatusView(SuperuserRequiredMixin, RoundMixin, View):
+class BaseUpdateDebateStatusView(AdministratorMixin, RoundMixin, View):
 
     def post(self, request, *args, **kwargs):
         debate_id = request.POST['debate_id']

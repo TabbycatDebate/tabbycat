@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -117,13 +118,11 @@ class Tournament(models.Model):
     # Permalinks
     # --------------------------------------------------------------------------
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('tournament-admin-home', [self.slug])
+        return reverse('tournament-admin-home', kwargs={'tournament_slug': self.slug})
 
-    @models.permalink
     def get_public_url(self):
-        return ('tournament-public-index', [self.slug])
+        return reverse('tournament-public-index', kwargs={'tournament_slug': self.slug})
 
     # --------------------------------------------------------------------------
     # Convenience querysets

@@ -9,7 +9,7 @@ from draw.models import Debate
 from participants.models import Adjudicator
 from tournaments.mixins import OptionalAssistantTournamentPageMixin, RoundMixin, TournamentMixin
 from tournaments.models import Tournament
-from utils.mixins import LoginRequiredMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin, LoginRequiredMixin
 from venues.models import VenueCategory
 
 
@@ -207,7 +207,7 @@ class PrintScoresheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         return super().get_context_data(**kwargs)
 
 
-class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView):
 
     template_name = 'randomised_url_sheets.html'
 

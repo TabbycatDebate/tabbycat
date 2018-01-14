@@ -19,11 +19,14 @@
     </a>
     <div class="collapse" id="tlisth">
       {% for t in all_tournaments %}
-        <a href="{{ t.get_absolute_url  }}" class="list-group-item" data-parent="#titleh">
-          <i data-feather="settings"></i>{{ t }}
+        <a href="{% url 'tournament-admin-home' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+          <i data-feather="settings"></i>{% blocktrans trimmed %}{{ t }} (admin){% endblocktrans %}
         </a>
-        <a href="{{ t.get_public_url  }}" class="list-group-item" data-parent="#titleh">
-          <i data-feather="eye"></i>{{ t }}
+        <a href="{% url 'tournament-assistant-home' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+          <i data-feather="pocket"></i>{% blocktrans trimmed %}{{ t }} (assistant){% endblocktrans %}
+        </a>
+        <a href="{% url 'tournament-public-index' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+          <i data-feather="globe"></i>{{ t }}
         </a>
       {% endfor %}
       <a href="/" class="list-group-item" data-parent="#titleh">

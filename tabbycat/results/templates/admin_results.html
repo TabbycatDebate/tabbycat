@@ -1,0 +1,38 @@
+{% extends "assistant_results.html" %}
+{% load humanize debate_tags i18n %}
+
+{% block page-title %}{% trans "Enter Results" %}{% endblock %}
+{% block head-title %}<span class="emoji">📩</span> {% trans "Enter Results" %}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-primary">
+    <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
+  </a>
+  <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
+    {% trans "Check In Ballots" %}
+  </a>
+{% endblock %}
+
+{% block page-subnav-actions %}
+  {% if round.seq < tournament.round_set.count and current_round == round %}
+    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
+      {% trans "Advance to Next Round" %} <i data-feather="chevron-right"></i>
+    </a>
+  {% else %}
+    <div class="hidden"></div><!-- Just keeps the spacing consistent -->
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+  {% if pref.enable_motions and round.motion_set.count == 0 %}
+    {% roundurl 'motions-edit' current_round as motions_url %}
+    {% blocktrans trimmed asvar message %}
+      Currently there are no motions entered for this round, so debate results
+      cannot be entered. <a href="{{ motions_url }}" class="alert-link">Add Motions.</a>
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="danger" %}
+  {% endif %}
+
+  {{ block.super }}
+
+{% endblock %}

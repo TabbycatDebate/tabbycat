@@ -84,7 +84,7 @@ class TournamentMixin(TabbycatPageTitlesMixin):
         tournament = self.get_tournament()
         if tournament.current_round_id is None:
             full_path = self.request.get_full_path()
-            if hasattr(self.request, 'user') and self.request.user.is_authenticated:
+            if hasattr(self.request, 'user') and self.request.user.is_superuser:
                 logger.warning("Current round wasn't set, redirecting to set-current-round page")
                 set_current_round_url = reverse_tournament('tournament-set-current-round', self.get_tournament())
                 redirect_url = add_query_parameter(set_current_round_url, 'next', full_path)

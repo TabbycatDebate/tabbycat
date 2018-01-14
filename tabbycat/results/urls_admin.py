@@ -5,16 +5,8 @@ from . import views
 urlpatterns = [
     # Viewing
     url(r'^round/(?P<round_seq>\d+)/$',
-        views.ResultsEntryForRoundView.as_view(),
+        views.AdminResultsEntryForRoundView.as_view(),
         name='results-round-list'),
-
-    # JSON updates
-    url(r'^json/status/$',
-        views.BallotsStatusJsonView.as_view(),
-        name='results-ballots-graph-data'),
-    url(r'^json/latest/$',
-        views.LatestResultsJsonView.as_view(),
-        name='results-latest-json'),
 
     # Inline Actions
     url(r'^round/(?P<round_seq>\d+)/postpone/$',

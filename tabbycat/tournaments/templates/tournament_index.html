@@ -1,106 +1,74 @@
-{% extends "base.html" %}
-{% load static %}
-{% load debate_tags %}
-{% load i18n %}
-
-{% block page-title %}{% trans "Dashboard" %}{% endblock %}
-{% block head-title %}<span class="emoji">⏰</span> {% trans "Overview" %}{% endblock %}
-
-{% block sub-title %}
-  {% blocktrans with round_name=round.name round_status=round.get_draw_status_display.lower %}current round: {{ round_name }}, status: {{ round_status }}{% endblocktrans %}
-{% endblock %}
+{% extends "assistant_tournament_index.html" %}
+{% load i18n debate_tags static %}
 
 {% block content %}
 
-  {% if user.is_superuser %}
+  {% if round.is_break_round %}
+    {% tournamenturl 'tournament-donations' as url %}
+    {% blocktrans trimmed with amount=tournament.billable_teams asvar text %}
+      We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would
+      make a donation to the project in order to support its ongoing development and maintenance.
+      For a tournament of this size, we suggest a donation of <strong>${{ amount }}</strong>.
+      Note that if your tournament is run for profit, or for fundraising, making this payment is a
+      mandatory condition of Tabbycat's software license.
+      <a href="{{ url }}">Learn more about donating.</a>
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="info" icon="heart" %}
+    <hr>
+  {% endif %}
 
-    {% if round.is_break_round %}
-      {% tournamenturl 'tournament-donations' as url %}
-      {% blocktrans trimmed with amount=tournament.billable_teams asvar text %}
-        We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would
-        make a donation to the project in order to support its ongoing development and maintenance.
-        For a tournament of this size, we suggest a donation of <strong>${{ amount }}</strong>.
-        Note that if your tournament is run for profit, or for fundraising, making this payment is a
-        mandatory condition of Tabbycat's software license.
-        <a href="{{ url }}">Learn more about donating.</a>
-      {% endblocktrans %}
-      {% include "components/item-info.html" with type="info" icon="heart" %}
-      <hr>
-    {% endif %}
+  {% if blank %}
 
-    {% if blank %}
-
-      <div class="card border-info text-info mb-3">
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Welcome to your new tournament!" %}</h4>
-          <p class="card-text">
-            {% blocktrans trimmed %}
-              The next step is to import your initial tournament data: the
-              institutions, teams, adjudicators and venues that are in your
-              tournament. There are a number of ways to do this. For small-to-medium
-              tournaments, the simple importer is your best bet.
-            {% endblocktrans %}
-            {# Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link. #}
-            {% blocktrans trimmed %}
-              For more information, please consult our
-              <a href="https://tabbycat.readthedocs.io/en/{{ readthedocs_version }}/use/importing-data.html" class="alert-link" target="_blank">
-              documentation on importing initial data</a>.
-            {% endblocktrans %}
-          </p>
-        </div>
+    <div class="card border-info text-info mb-3">
+      <div class="card-body">
+        <h4 class="card-title">{% trans "Welcome to your new tournament!" %}</h4>
+        <p class="card-text">
+          {% blocktrans trimmed %}
+            The next step is to import your initial tournament data: the
+            institutions, teams, adjudicators and venues that are in your
+            tournament. There are a number of ways to do this. For small-to-medium
+            tournaments, the simple importer is your best bet.
+          {% endblocktrans %}
+          {# Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link. #}
+          {% blocktrans trimmed %}
+            For more information, please consult our
+            <a href="https://tabbycat.readthedocs.io/en/{{ readthedocs_version }}/use/importing-data.html" class="alert-link" target="_blank">
+            documentation on importing initial data</a>.
+          {% endblocktrans %}
+        </p>
       </div>
+    </div>
 
-      {% tournamenturl 'importer-simple-index' as url %}
-      {% trans "Use the simple importer to add your initial data." as text %}
-      {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
+    {% tournamenturl 'importer-simple-index' as url %}
+    {% trans "Use the simple importer to add your initial data." as text %}
+    {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
 
-    {% elif round.get_draw_status_display.lower == 'none' %}
+  {% elif round.get_draw_status_display.lower == 'none' %}
 
-      {% roundurl 'availability-index' round as url %}
-      {% blocktrans trimmed with round_name=round.name asvar text %}
-        Go to the checkins area to begin creating a draw for {{ round_name }}
-      {% endblocktrans %}
-      {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
+    {% roundurl 'availability-index' round as url %}
+    {% blocktrans trimmed with round_name=round.name asvar text %}
+      Go to the checkins area to begin creating a draw for {{ round_name }}
+    {% endblocktrans %}
+    {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
 
-    {% elif round.get_draw_status_display.lower == 'confirmed' %}
+  {% elif round.get_draw_status_display.lower == 'confirmed' %}
 
-      {% roundurl 'draw' round as url %}
-      {% blocktrans trimmed with round_name=round.name asvar text %}
-        Go to the draw area to allocate adjudicators for {{ round_name }}
-      {% endblocktrans %}
-      {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
+    {% roundurl 'draw' round as url %}
+    {% blocktrans trimmed with round_name=round.name asvar text %}
+      Go to the draw area to allocate adjudicators for {{ round_name }}
+    {% endblocktrans %}
+    {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
 
-    {% elif round.get_draw_status_display.lower == 'released' %}
+  {% elif round.get_draw_status_display.lower == 'released' %}
 
-      {% roundurl 'results-round-list' round as url %}
-      {% blocktrans trimmed with round_name=round.name asvar text %}
-        Go to the results area to begin entering ballots for {{ round_name }}
-      {% endblocktrans %}
-      {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
-
-    {% endif %}
+    {% roundurl 'results-round-list' round as url %}
+    {% blocktrans trimmed with round_name=round.name asvar text %}
+      Go to the results area to begin entering ballots for {{ round_name }}
+    {% endblocktrans %}
+    {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
 
   {% endif %}
 
-  <div id="vueMount">
-    <tournament-overview-container :actions-url="updateActionsURL"
-                                   :results-url="updateResultsURL"
-                                   :ballots-url="updateBallotsURL"
-                                   :round-status="roundStatus">
-    </tournament-overview-container>
-
-  </div>
+  {{ block.super }}
 
 {% endblock content %}
-
-{% block js %}
-  <script>
-    window.vueData = {
-      updateBallotsURL: '{% tournamenturl 'results-ballots-graph-data' %}',
-      updateActionsURL: '{% tournamenturl 'actionlog-latest-json' %}',
-      updateResultsURL: '{% tournamenturl 'results-latest-json' %}',
-      roundStatus: '{{ round.draw_status }}'
-    }
-  </script>
-  {{ block.super }}
-{% endblock %}

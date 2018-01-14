@@ -17,7 +17,7 @@ from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
 from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView
 
 from .allocator import allocate_adjudicators
@@ -31,7 +31,7 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
-class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     @cached_property
     def get_clashes(self):
@@ -156,7 +156,7 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataR
         }
 
 
-class SaveDebateImportance(SuperuserRequiredMixin, RoundMixin, LogActionMixin, View):
+class SaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):

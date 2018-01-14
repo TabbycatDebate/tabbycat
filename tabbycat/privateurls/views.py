@@ -10,7 +10,7 @@ from participants.models import Adjudicator, Speaker
 from privateurls.models import PrivateUrlSentMailRecord
 from tournaments.mixins import TournamentMixin
 from utils.misc import reverse_tournament
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.urlkeys import populate_url_keys
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
@@ -58,7 +58,7 @@ class RandomisedUrlsMixin(TournamentMixin):
         return speakers
 
 
-class RandomisedUrlsView(RandomisedUrlsMixin, SuperuserRequiredMixin, VueTableTemplateView):
+class RandomisedUrlsView(RandomisedUrlsMixin, AdministratorMixin, VueTableTemplateView):
 
     template_name = 'private_urls.html'
     tables_orientation = 'columns'
@@ -101,7 +101,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, SuperuserRequiredMixin, VueTableTe
         return [self.get_adjudicators_table(), self.get_teams_table()]
 
 
-class GenerateRandomisedUrlsView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'privateurls-list'
 
@@ -220,7 +220,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
         return [speaker_table, adjudicator_table]
 
 
-class BaseConfirmEmailRandomisedUrlsView(SuperuserRequiredMixin, RandomisedUrlsMixin, PostOnlyRedirectView):
+class BaseConfirmEmailRandomisedUrlsView(AdministratorMixin, RandomisedUrlsMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'privateurls-list'
 
