@@ -7,17 +7,39 @@ urlpatterns = [
     url(r'^$',
         views.TournamentPublicHomeView.as_view(),
         name='tournament-public-index'),
-    url(r'^donations/$',
-        views.TournamentDonationsView.as_view(),
-        name='tournament-donations'),
     url(r'^admin/$',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
-    url(r'^admin/configure/$',
-        views.ConfigureTournamentView.as_view(),
-        name='tournament-configure'),
 
-    # Round Progression
+    # Application URLs for public pages
+    url(r'^break/',              include('breakqual.urls_public')),
+    url(r'^divisions/',          include('divisions.urls')),
+    url(r'^draw/',               include('draw.urls_public')),
+    url(r'^feedback/',           include('adjfeedback.urls_public')),
+    url(r'^motions/',            include('motions.urls_public')),
+    url(r'^participants/',       include('participants.urls_public')),
+    url(r'^results/',            include('results.urls_public')),
+    url(r'^standings/',          include('standings.urls_public')),
+    url(r'^tab/',                include('standings.urls_public')),
+
+    # Application URLs for admin pages
+    url(r'^admin/actionlog/',    include('actionlog.urls')),
+    url(r'^admin/allocations/',  include('adjallocation.urls')),
+    url(r'^admin/availability/', include('availability.urls')),
+    url(r'^admin/break/',        include('breakqual.urls_admin')),
+    url(r'^admin/draw/',         include('draw.urls_admin')),
+    url(r'^admin/feedback/',     include('adjfeedback.urls_admin')),
+    url(r'^admin/import/',       include('importer.urls')),
+    url(r'^admin/motions/',      include('motions.urls_admin')),
+    url(r'^admin/options/',      include('options.urls')),
+    url(r'^admin/participants/', include('participants.urls_admin')),
+    url(r'^admin/printing/',     include('printing.urls_admin')),
+    url(r'^admin/privateurls/',  include('privateurls.urls')),
+    url(r'^admin/results/',      include('results.urls_admin')),
+    url(r'^admin/standings/',    include('standings.urls_admin')),
+    url(r'^admin/venues/',       include('venues.urls_admin')),
+
+    # Round progression
     url(r'^admin/round/(?P<round_seq>\d+)/advance/check/$',
         views.RoundAdvanceConfirmView.as_view(),
         name='tournament-advance-round-check'),
@@ -28,88 +50,14 @@ urlpatterns = [
         views.SetCurrentRoundView.as_view(),
         name='tournament-set-current-round'),
 
-    # Action Logs App
-    url(r'^admin/actionlog/',
-        include('actionlog.urls')),
-
-    # Allocations App
-    url(r'^admin/allocations/',
-        include('adjallocation.urls')),
-
-    # Availabilities App
-    url(r'^admin/availability/',
-        include('availability.urls')),
-
-    # Breaks App
-    url(r'^break/',
-        include('breakqual.urls_public')),
-    url(r'^admin/break/',
-        include('breakqual.urls_admin')),
-
-    # Divisions App
-    url(r'^divisions/',
-        include('divisions.urls')),
-
-    # Draws App
-    url(r'^draw/',
-        include('draw.urls_public')),
-    url(r'^admin/draw/',
-        include('draw.urls_admin')),
-
-    # Feedbacks App
-    url(r'^feedback/',
-        include('adjfeedback.urls_public')),
-    url(r'^admin/feedback/',
-        include('adjfeedback.urls_admin')),
-
-    # Importer App
-    url(r'^admin/import/',
-        include('importer.urls')),
-
-    # Motions App
-    url(r'^motions/',
-        include('motions.urls_public')),
-    url(r'^admin/motions/',
-        include('motions.urls_admin')),
-
-    # Options App
-    url(r'^admin/options/',
-        include('options.urls')),
-
-    # Printing App
-    url(r'^admin/printing/',
-        include('printing.urls_admin')),
-
-    # Participants App
-    url(r'^participants/',
-        include('participants.urls_public')),
-    url(r'^admin/participants/',
-        include('participants.urls_admin')),
-
-    # Private URLs App
-    url(r'^admin/privateurls/',
-        include('privateurls.urls')),
-
-    # Results App
-    url(r'^results/',
-        include('results.urls_public')),
-    url(r'^admin/results/',
-        include('results.urls_admin')),
-
-    # Standings App
-    url(r'^standings/',
-        include('standings.urls_public')),
-    url(r'^tab/',
-        include('standings.urls_public')),
-    url(r'^admin/standings/',
-        include('standings.urls_admin')),
-
-    # Venues App
-    url(r'^admin/venues/',
-        include('venues.urls_admin')),
-
-    # Error Pages
+    # Other pages
+    url(r'^admin/configure/$',
+        views.ConfigureTournamentView.as_view(),
+        name='tournament-configure'),
     url(r'^admin/fix-debate-teams/$',
         views.FixDebateTeamsView.as_view(),
         name='tournament-fix-debate-teams'),
+    url(r'^donations/$',
+        views.TournamentDonationsView.as_view(),
+        name='tournament-donations'),
 ]
