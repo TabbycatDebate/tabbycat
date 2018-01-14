@@ -2,7 +2,7 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -12,10 +12,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: motions/apps.py:7 motions/templates/public_motions.html:4
@@ -65,39 +65,39 @@ msgstr ""
 
 #: motions/models.py:24
 msgid "round"
-msgstr ""
+msgstr "tour"
 
 #: motions/models.py:26
 msgid "divisions"
-msgstr ""
+msgstr "divisions"
 
 #: motions/models.py:30 motions/models.py:42
 msgid "motion"
-msgstr ""
+msgstr "motion"
 
 #: motions/models.py:31
 msgid "motions"
-msgstr ""
+msgstr "motions"
 
 #: motions/models.py:40
 msgid "debate team"
-msgstr ""
+msgstr "débat-équipe"
 
 #: motions/models.py:44
 msgid "preferences"
-msgstr ""
+msgstr "préférences"
 
 #: motions/models.py:46
 msgid "ballot submission"
-msgstr ""
+msgstr "soumission de bulletin"
 
 #: motions/models.py:50
 msgid "debate team motion preference"
-msgstr ""
+msgstr "préférence de motion d'un débat-équipe"
 
 #: motions/models.py:51
 msgid "debate team motion preferences"
-msgstr ""
+msgstr "préférences de motion d'un débat-équipe"
 
 #: motions/templates/assign.html:4 motions/templates/assign.html:5
 msgid "Assign Motions"
@@ -131,15 +131,16 @@ msgstr ""
 msgid "No teams vetoed this topic"
 msgstr ""
 
-#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
+#: motions/templates/motions_edit.html:4
+#: motions/templates/motions_edit.html:10
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Modifier la motion"
+msgstr[1] "Modifier les motions"
 
 #: motions/templates/motions_edit.html:18
 msgid "Display Draw"
-msgstr ""
+msgstr "Affichage du tirage"
 
 #: motions/templates/motions_edit.html:23
 msgid "Assign Motions to Divisions"
@@ -148,67 +149,69 @@ msgstr ""
 #: motions/templates/motions_edit.html:61
 msgid "Save Motion"
 msgid_plural "Save Motions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Enregistrer la motion"
+msgstr[1] "Enregistrer les motions"
 
 #: motions/templates/public_motions.html:23
 msgid "View Info Slide"
-msgstr ""
+msgstr "Voir la diapositive d'information"
 
 #: motions/templates/public_motions.html:29
 msgid "There are no motions available for this round."
-msgstr ""
+msgstr "Il n'y a aucune motion disponible dans ce tour."
 
-#. Translators: Used when there are expected to be several motions per round (e.g. Australs)
+#. Translators: Used when there are expected to be several motions per round
+#. (e.g. Australs)
 #: motions/templates/public_motions.html:33
 msgid "The motions for this round have not been released."
-msgstr ""
+msgstr "Les motions de ce tour n'ont pas encore été publiées."
 
-#. Translators: Used when there is expected to be one motion per round (e.g. WUDC)
+#. Translators: Used when there is expected to be one motion per round (e.g.
+#. WUDC)
 #: motions/templates/public_motions.html:36
 msgid "The motion for this round has not been released."
-msgstr ""
+msgstr "La motion de ce tour n'a pas encore été publiée."
 
 #: motions/templates/show.html:15
 #, python-format
 msgid "Reveal Motion for %(round_name)s"
 msgid_plural "Reveal Motions for %(round_name)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Révéler la motion de %(round_name)s"
+msgstr[1] "Révéler les motions de %(round_name)s"
 
 #: motions/templates/show.html:23
 #, python-format
 msgid "Reveal Info Slide for %(round_name)s"
 msgid_plural "Reveal Info Slides for %(round_name)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Révéler la diapositive d'information de %(round_name)s"
+msgstr[1] "Révéler les diapositives d'information de %(round_name)s"
 
 #: motions/templates/show.html:40
 msgid "There are no motions for this round entered into Tabbycat."
-msgstr ""
+msgstr "Aucune motion pour ce tour a été enregistrée dans Tabbycat."
 
 #: motions/views.py:95
 msgid "The motion has been saved."
-msgstr ""
+msgstr "La motion a été enregistrée."
 
 #: motions/views.py:97
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d motions a été enregistrée."
+msgstr[1] "%(count)d motions ont été enregistrées."
 
 #: motions/views.py:102
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d motions a été supprimée."
+msgstr[1] "%(count)d motions ont été supprimées."
 
 #: motions/views.py:143
 msgid "Released the motion(s)."
-msgstr ""
+msgstr "Vous avez publié la ou les motions."
 
 #: motions/views.py:150
 msgid "Unreleased the motion(s)."
-msgstr ""
+msgstr "Vous avez dépublié la ou les motions."

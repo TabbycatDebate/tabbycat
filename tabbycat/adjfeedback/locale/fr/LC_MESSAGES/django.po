@@ -2,7 +2,7 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -12,10 +12,10 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: adjfeedback/admin.py:83
@@ -31,8 +31,8 @@ msgid_plural ""
 "%(count)d feedback submissions were marked as confirmed. Note that this may "
 "have caused other feedback submissions to be marked as unconfirmed."
 msgstr[0] ""
-"1 commentaire a été marqué comme confirmé. Notez que cette action peut avoir "
-"rendu autres commentaires marqué comme non confirmés."
+"1 commentaire a été marqué comme confirmé. Notez que cette action peut avoir"
+" rendu autres commentaires marqué comme non confirmés."
 msgstr[1] ""
 "%(count)d commentaires ont été marqué comme confirmés. Notez que cette "
 "action peut avoir rendu autres commentaires marqué comme non confirmés."
@@ -76,17 +76,20 @@ msgstr "panéliste"
 msgid "trainee"
 msgstr "stagiaire"
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
 #: adjfeedback/forms.py:53
 msgid "Yes"
 msgstr "Oui"
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
 #: adjfeedback/forms.py:55
 msgid "No"
 msgstr "Non"
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
 #: adjfeedback/forms.py:70 adjfeedback/forms.py:79
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
@@ -96,8 +99,10 @@ msgstr "Ce champ est obligatoire."
 msgid "Overall score (%(min)d=worst; %(max)d=best)"
 msgstr "Note globale (%(min)d=le pire; %(max)d=le meilleur)"
 
-#. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2", adjpos="chair"
-#. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round 3", adjpos="panellist"
+#. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2",
+#. adjpos="chair"
+#. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round
+#. 3", adjpos="panellist"
 #: adjfeedback/forms.py:227 adjfeedback/forms.py:284
 #, python-format
 msgid "%(name)s (%(round)s %(adjpos)s)"
@@ -291,7 +296,8 @@ msgstr ""
 
 #: adjfeedback/models.py:150
 msgid ""
-"Minimum allowed value for numeric fields (ignored for text or boolean fields)"
+"Minimum allowed value for numeric fields (ignored for text or boolean "
+"fields)"
 msgstr ""
 
 #: adjfeedback/models.py:152
@@ -300,7 +306,8 @@ msgstr ""
 
 #: adjfeedback/models.py:153
 msgid ""
-"Maximum allowed value for numeric fields (ignored for text or boolean fields)"
+"Maximum allowed value for numeric fields (ignored for text or boolean "
+"fields)"
 msgstr ""
 
 #: adjfeedback/models.py:155
@@ -310,8 +317,8 @@ msgstr ""
 #: adjfeedback/models.py:156
 #, python-format
 msgid ""
-"Permissible choices for select one/multiple fields, separated by %r (ignored "
-"for other fields)"
+"Permissible choices for select one/multiple fields, separated by %r (ignored"
+" for other fields)"
 msgstr ""
 
 #: adjfeedback/models.py:160
@@ -396,18 +403,18 @@ msgstr ""
 #, python-format
 msgid ""
 "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score "
-"<strong>outside the permitted range</strong> of adjudicator scores, which is "
-"currently set as %(min_score)s to %(max_score)s. This can cause adjudicator "
-"auto-allocation to behave in unexpected ways. If you'd like to use a wider "
-"score range, you can configure this in <a href=\"%(feedback_settings_url)s\" "
-"class=\"alert-link\"> feedback settings</a>."
+"<strong>outside the permitted range</strong> of adjudicator scores, which is"
+" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
+" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
+" class=\"alert-link\"> feedback settings</a>."
 msgid_plural ""
 "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores "
-"<strong>outside the permitted range</strong> of adjudicator scores, which is "
-"currently set as %(min_score)s to %(max_score)s. This can cause adjudicator "
-"auto-allocation to behave in unexpected ways. If you'd like to use a wider "
-"score range, you can configure this in <a href=\"%(feedback_settings_url)s\" "
-"class=\"alert-link\"> feedback settings</a>."
+"<strong>outside the permitted range</strong> of adjudicator scores, which is"
+" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
+" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
+" class=\"alert-link\"> feedback settings</a>."
 msgstr[0] ""
 msgstr[1] ""
 

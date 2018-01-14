@@ -780,7 +780,7 @@ msgid ""
 "will allow it to show it on the public page."
 msgstr ""
 "Votre tournoi est configuré pour afficher publiquement le tirage. La "
-"publication du tirage lui permettra d'afficher sur la page publique."
+"publication du tirage lui permettra de s'afficher sur la page publique."
 
 #: draw/templates/draw_display.html:181
 msgid ""
