@@ -21,8 +21,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObj
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
-from utils.mixins import (AdministratorMixin, AssistantMixin, CacheMixin,
-                          SuperuserOrTabroomAssistantTemplateResponseMixin)
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
 from utils.views import JsonDataResponsePostView, JsonDataResponseView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
@@ -284,15 +283,21 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return super().post(request, *args, **kwargs)
 
 
-class BaseAdminBallotSetView(SuperuserOrTabroomAssistantTemplateResponseMixin, BaseBallotSetView):
-    superuser_template_name = 'enter_results.html'
-    assistant_template_name = 'assistant_enter_results.html'
+class AdministratorBallotSetMixin(AdministratorMixin):
+    template_name = 'enter_results.html'
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
 
 
-class NewBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
+class AssistantBallotSetMixin(AssistantMixin):
+    template_name = 'assistant_enter_results.html'
+
+    def get_success_url(self):
+        return reverse_round('results-assistant-round-list', self.ballotsub.debate.round)
+
+
+class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
     model = Debate
     tournament_field_name = 'round__tournament'
@@ -324,7 +329,15 @@ class NewBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
             return redirect_round('results-round-list', self.ballotsub.debate.round)
 
 
-class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView):
+class AdminNewBallotSetView(AdministratorBallotSetMixin, BaseNewBallotSetView):
+    pass
+
+
+class AssistantNewBallotSetView(AssistantBallotSetMixin, BaseNewBallotSetView):
+    pass
+
+
+class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
     model = BallotSubmission
     tournament_field_name = 'debate__round__tournament'
@@ -338,6 +351,9 @@ class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView)
         else:
             return ActionLogEntry.ACTION_TYPE_BALLOT_EDIT
 
+    def get_success_url(self):
+        return reverse_round('results-round-list', self.ballotsub.debate.round)
+
     def add_success_message(self):
         if self.ballotsub.discarded:
             message = _("Ballot set for %(matchup)s discarded.")
@@ -350,6 +366,14 @@ class EditBallotSetView(SingleObjectFromTournamentMixin, BaseAdminBallotSetView)
     def populate_objects(self):
         self.ballotsub = self.object = self.get_object()
         self.debate = self.ballotsub.debate
+
+
+class AdminEditBallotSetView(AdministratorBallotSetMixin, BaseEditBallotSetView):
+    pass
+
+
+class AssistantEditBallotSetView(AssistantBallotSetMixin, BaseEditBallotSetView):
+    pass
 
 
 class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
@@ -587,7 +611,7 @@ class DebateBallotCheckinError(Exception):
     pass
 
 
-class BallotCheckinView(LoginRequiredMixin, RoundMixin, TemplateView):
+class BallotCheckinView(AssistantMixin, RoundMixin, TemplateView):
     template_name = 'ballot_checkin.html'
 
     def get_page_subtitle(self):
@@ -603,7 +627,7 @@ class BallotCheckinView(LoginRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class BaseBallotCheckinJsonResponseView(LoginRequiredMixin, RoundMixin, JsonDataResponsePostView):
+class BaseBallotCheckinJsonResponseView(AssistantMixin, RoundMixin, JsonDataResponsePostView):
 
     def get_debate(self):
         venue_id = self.request.POST.get('venue')

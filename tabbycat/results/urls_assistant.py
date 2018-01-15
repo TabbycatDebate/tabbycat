@@ -16,22 +16,22 @@ urlpatterns = [
         views.LatestResultsJsonView.as_view(),
         name='results-latest-json'),
 
-    # # Ballot check-in
-    # url(r'^round/(?P<round_seq>\d+)/checkin/$',
-    #     views.BallotCheckinView.as_view(),
-    #     name='results-ballot-checkin'),
-    # url(r'^round/(?P<round_seq>\d+)/checkin/detail/$',
-    #     views.BallotCheckinGetDetailsView.as_view(),
-    #     name='results-ballot-checkin-details'),
-    # url(r'^round/(?P<round_seq>\d+)/checkin/post/$',
-    #     views.PostBallotCheckinView.as_view(),
-    #     name='results-ballot-checkin-post'),
+    # Ballot check-in
+    url(r'^round/(?P<round_seq>\d+)/checkin/$',
+        views.BallotCheckinView.as_view(),
+        name='results-ballot-checkin'),
+    url(r'^round/(?P<round_seq>\d+)/checkin/detail/$',
+        views.BallotCheckinGetDetailsView.as_view(),
+        name='results-ballot-checkin-details'),
+    url(r'^round/(?P<round_seq>\d+)/checkin/post/$',
+        views.PostBallotCheckinView.as_view(),
+        name='results-ballot-checkin-post'),
 
-    # # Ballots
-    # url(r'^ballots/(?P<pk>\d+)/edit/$',
-    #     views.EditBallotSetView.as_view(),
-    #     name='results-ballotset-edit'),
-    # url(r'^debate/(?P<debate_id>\d+)/new/$',
-    #     views.NewBallotSetView.as_view(),
-    #     name='results-ballotset-new'),
+    # Ballots
+    url(r'^ballots/(?P<pk>\d+)/edit/$',
+        views.AssistantEditBallotSetView.as_view(),
+        name='results-assistant-ballotset-edit'),
+    url(r'^debate/(?P<debate_id>\d+)/new/$',
+        views.AssistantNewBallotSetView.as_view(),
+        name='results-assistant-ballotset-new'),
 ]

@@ -16,22 +16,11 @@ urlpatterns = [
         views.UnpostponeDebateView.as_view(),
         name='results-unpostpone-debate'),
 
-    # Ballot check-in
-    url(r'^round/(?P<round_seq>\d+)/checkin/$',
-        views.BallotCheckinView.as_view(),
-        name='results-ballot-checkin'),
-    url(r'^round/(?P<round_seq>\d+)/checkin/detail/$',
-        views.BallotCheckinGetDetailsView.as_view(),
-        name='results-ballot-checkin-details'),
-    url(r'^round/(?P<round_seq>\d+)/checkin/post/$',
-        views.PostBallotCheckinView.as_view(),
-        name='results-ballot-checkin-post'),
-
     # Ballots
     url(r'^ballots/(?P<pk>\d+)/edit/$',
-        views.EditBallotSetView.as_view(),
+        views.AdminEditBallotSetView.as_view(),
         name='results-ballotset-edit'),
     url(r'^debate/(?P<debate_id>\d+)/new/$',
-        views.NewBallotSetView.as_view(),
+        views.AdminNewBallotSetView.as_view(),
         name='results-ballotset-new'),
 ]
