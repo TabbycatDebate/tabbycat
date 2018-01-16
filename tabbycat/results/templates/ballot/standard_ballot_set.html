@@ -15,9 +15,15 @@
     <div class="list-group list-group-flush">
 
       {% if sheet.adjudicator %}
-        {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
-          Ballot from {{ name }} ({{ institution }})
-        {% endblocktrans %}
+        {% if sheet.adjudicator.institution %}
+          {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
+            Ballot from {{ name }} ({{ institution }})
+          {% endblocktrans %}
+        {% else %}
+          {% blocktrans trimmed with name=sheet.adjudicator.name asvar title %}
+            Ballot from {{ name }}
+          {% endblocktrans %}
+        {% endif %}
         {% include "components/form-title.html" %}
       {% else %}
         <div class="list-group-item pt-4">
