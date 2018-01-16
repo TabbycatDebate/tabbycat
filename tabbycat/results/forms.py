@@ -747,16 +747,16 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                 # Check that it was not a draw.
                 if totals[0] == totals[1]:
                     self.add_error(None, forms.ValidationError(
-                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s (%(adj_ins)s)."),
-                        params={'adj': adj.name, 'adj_ins': adj.institution.code}, code='draw'
+                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
+                        params={'adj': adj.name}, code='draw'
                     ))
 
                 # Check that the margin did not exceed the maximum permissible.
                 margin = abs(totals[0] - totals[1])
                 if self.max_margin and margin > self.max_margin:
                     self.add_error(None, forms.ValidationError(
-                        _("The margin (%(margin).1f) in the ballot of adjudicator %(adj)s (%(adj_ins)s) exceeds the maximum allowable margin (%(max_margin).1f)."),
-                        params={'adj': adj.name, 'adj_ins': adj.institution.code, 'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
+                        _("The margin (%(margin).1f) in the ballot of adjudicator %(adj)s exceeds the maximum allowable margin (%(max_margin).1f)."),
+                        params={'adj': adj.name, 'margin': margin, 'max_margin': self.max_margin}, code='max_margin'
                     ))
 
     def populate_result_with_scores(self, result):
