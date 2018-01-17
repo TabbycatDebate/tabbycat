@@ -60,7 +60,7 @@ export default {
     return {
       latestActions: false,
       latestResults: false,
-      pollFrequency: 3000, // 30 seconds
+      pollFrequency: 30000, // 30 seconds
     }
   },
   created: function() {
