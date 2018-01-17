@@ -9,6 +9,7 @@ Change Log
 
 - Fixed issue where draws of the "manual" type would not generate correctly
 - Fixed issue where a ballot's speaker names dropdown would contain both team's speakers when using formats with side selection
+- Fixed issue where scoresheets would not show correctly under some configurations
 - Other minor fixes
 
 
