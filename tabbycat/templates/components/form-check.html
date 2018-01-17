@@ -3,11 +3,10 @@
 <div class="{% if double %}col-lg-6{% endif %}{% if triple %}col-lg-4{% endif %} pt-1">
 
   {% if not field.is_hidden %}
-    <label for="{{ field.id_for_label }}" class="custom-control custom-checkbox pt-0">
-      {{ field|addcss:"custom-control-input" }}
-      <span class="custom-control-indicator"></span>
-      <span class="custom-control-description">{{ field.label }}</span>
-    </label>
+    <div class="form-check form-check-inline">
+      {{ field|addcss:"form-check-input" }}
+      <label class="form-check-label pt-0" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    </div>
   {% endif %}
 
   {% if field.help_text  %}

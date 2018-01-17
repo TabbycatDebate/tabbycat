@@ -67,3 +67,9 @@ span.emoji {
     color: theme-color("primary");
   }
 }
+
+// input-group-addon doesn't like icon (in the table quick find); tweak spacing
+.input-group-text .feather {
+  margin-bottom: -4px;
+  margin-left: -2px;
+}
