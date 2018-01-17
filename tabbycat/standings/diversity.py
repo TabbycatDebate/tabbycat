@@ -87,7 +87,7 @@ def compile_gender_counts(title, queryset, gender_field):
 
 
 def compile_grouped_counts(title, queryset, group_field, group_values, group_labels):
-    counts = queryset.values(group=group_field).annotate(count=Count(group_field))
+    counts = queryset.values(group=group_field).annotate(count=Count(Value(1)))  # Count counts records, value doesn't matter
     counts = {d['group']: d['count'] for d in counts}
     result = {'title': title}
     result['data'] = _group_data(lambda group: counts[group], group_values, group_labels)
@@ -95,7 +95,7 @@ def compile_grouped_counts(title, queryset, group_field, group_values, group_lab
 
 
 def compile_grouped_gender_counts(titles, queryset, gender_field, group_field, group_values):
-    counts = queryset.values(group_field, gender_group=_gender_group(gender_field)).annotate(count=Count(gender_field))
+    counts = queryset.values(group_field, gender_group=_gender_group(gender_field)).annotate(count=Count(Value(1)))
     counts = {(d[group_field], d['gender_group']): d['count'] for d in counts}
     results = []
     for title, group in zip(titles, group_values):
