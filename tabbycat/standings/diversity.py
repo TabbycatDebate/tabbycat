@@ -29,7 +29,7 @@ STATISTICS_MAP = {
 
 def _gender_group(gender_field):
     return Case(
-        When(**{'%s__in' % gender_field: [Person.GENDER_FEMALE, Person.GENDER_OTHER], 'then': Value('N')}),
+        When(**{'%s__in' % gender_field: (Person.GENDER_FEMALE, Person.GENDER_OTHER), 'then': Value('N')}),
         When(**{gender_field: Person.GENDER_MALE, 'then': Value('M')}),
         default=Value('-'),
         output_field=CharField(),
