@@ -10,11 +10,11 @@ Change Log
 - Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
 - Added an automated method for assigning importances to debates using their bracket or 'liveness'
 - Quality of life improvements
-  - Added a 'liveness' calculator for Open categories in BP
-  - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
-  - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+   - Added a 'liveness' calculator for Open categories in BP
+   - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
+   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
 - Current team standings page now shows silent round results if "Release all round results to public" is set
-
+- Upgraded to Django 2.0
 
 2.0.4
 -----
