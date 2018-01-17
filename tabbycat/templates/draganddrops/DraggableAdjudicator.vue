@@ -78,7 +78,9 @@ export default {
         return rating >= threshold.cutoff
       })
       if (_.isUndefined(rank)) {
-        console.log(rating)
+        // Sometimes a score might be weird like in the negatives; in which case
+        // just give them the lowest possible percentile to avoid an error
+        rank = this.percentiles[this.percentiles.length - 1]
       }
       if (rank.percentile > 50) {
         var percentileText = ' Ranking (Top ' + (100 - rank.percentile) + '%)'
