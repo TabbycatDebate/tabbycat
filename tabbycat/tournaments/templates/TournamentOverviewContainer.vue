@@ -81,6 +81,13 @@ export default {
       xhr.onload = function () {
         if (xhr.status == 403) {
           console.debug('DEBUG: JSON TournamentOverview fetchData gave 403 error');
+          if (resource === 'actions') {
+            self.latestActions = [{ "user": "Log in to resume updates." }]
+            setTimeout(self.updateActions, self.pollFrequency);
+          } else {
+            self.latestResults = [{ "user": "Log in to resume updates." }]
+            setTimeout(self.updateResults, self.pollFrequency);
+          }
         } else {
           console.debug('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText);
           // We just catch all parsing errors below because these are often thrown
