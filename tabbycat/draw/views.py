@@ -299,7 +299,8 @@ class AdminDrawView(RoundMixin, SuperuserRequiredMixin, AdminDrawUtiltiiesMixin,
             else:
                 self._add_break_rank_columns(table, draw, r.break_category)
             table.add_debate_metric_columns(draw, standings)
-            table.add_number_of_pullups_columns(draw, r.prev)
+            if self.get_tournament().pref('draw_pullup_restriction') == 'least_to_date':
+                table.add_number_of_pullups_columns(draw, r.prev)
             table.add_debate_side_history_columns(draw, r.prev)
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False)
