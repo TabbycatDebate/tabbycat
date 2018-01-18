@@ -22,7 +22,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             "pullup_random" - Pull up a random team from the next bracket down.
             "intermediate"  - The bottom team from the odd bracket and the top
                               team from the next bracket down face each other in
-                              an intermediate bubble.
+                              an intermediate bracket.
             "intermediate_bubble_up_down" - Like "intermediate", but will swap
                               teams that conflict by history or institution.
 
@@ -133,8 +133,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "pullup_bottom"              : "_pullup_bottom",
         "pullup_middle"              : "_pullup_middle",
         "pullup_random"              : "_pullup_random",
-        "intermediate"               : "_intermediate_bubbles",
-        "intermediate_bubble_up_down": "_intermediate_bubbles_with_up_down"
+        "intermediate"               : "_intermediate_brackets",
+        "intermediate_bubble_up_down": "_intermediate_brackets_with_bubble_up_down"
     }
 
     def resolve_odd_brackets(self, brackets):
@@ -179,7 +179,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             raise DrawFatalError("Last bracket is still odd!\n" + repr(pullup_needed_for))
 
     @classmethod
-    def _intermediate_bubbles(cls, brackets):
+    def _intermediate_brackets(cls, brackets):
         """Operates in-place."""
         new = OrderedDict()
         odd_team = None
@@ -196,11 +196,11 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         brackets.clear()
         brackets.update(new)
 
-    def _intermediate_bubbles_with_up_down(self, brackets):
+    def _intermediate_brackets_with_bubble_up_down(self, brackets):
         """Operates in-place.
         Requires Team.institution and Team.seen() to be defined."""
-        self._intermediate_bubbles(brackets)  # operates in-place
-        # Check each of the intermediate bubbles for conflicts.
+        self._intermediate_brackets(brackets)  # operates in-place
+        # Check each of the intermediate brackets for conflicts.
         # If there is one, try swapping the top team with the bottom team
         # of the bracket above. Failing that, try the same with the bottom
         # team and the top team of the bracket below. Failing that, give up.
@@ -390,18 +390,18 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         "pullup_top"
         "pullup_bottom"
         "pullup_random"
-        "intermediate1" - the excess teams in a bracket begin an intermediate bubble,
+        "intermediate1" - the excess teams in a bracket begin an intermediate bracket,
             which is filled by teams allocated to the other side from lower brackets,
             starting from the top of the next bracket down and pulling up as many
             teams as necessary. This may involve pulling up teams from multiple
             brackets if there aren't enough in the next bracket down.
-        "intermediate2" - the excess teams in a bracket begin an intermediate bubble,
+        "intermediate2" - the excess teams in a bracket begin an intermediate bracket,
             which is filled by teams allocated to the other side from lower brackets.
             However, if there aren't enough teams in the next bracket down, then only
             those teams are pulled up into this intermediate bracket, and the excess
-            teams (of the original excess) form a new, lower, intermediate bubble (but
+            teams (of the original excess) form a new, lower, intermediate bracket (but
             still higher than the next bracket down). So there can be multiple
-            intermediate bubbles between two brackets.
+            intermediate brackets between two brackets.
     """
 
     DEFAULT_OPTIONS = {
@@ -436,8 +436,8 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         "pullup_top"                  : "_pullup_top",
         "pullup_bottom"               : "_pullup_bottom",
         "pullup_random"               : "_pullup_random",
-        "intermediate1"               : "_intermediate_bubbles_1",
-        "intermediate2"               : "_intermediate_bubbles_2"
+        "intermediate1"               : "_intermediate_brackets_1",
+        "intermediate2"               : "_intermediate_brackets_2"
     }
 
     def _pullup_top(self, brackets):
@@ -507,10 +507,10 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
             raise DrawFatalError("Last bracket still needed pullups!\n" + repr(pullups_needed_for))
 
     @classmethod
-    def _intermediate_bubbles_1(cls, brackets):
+    def _intermediate_brackets_1(cls, brackets):
         """Operates in-place.
-        This implements the first intermediate bubbles method, where there is at most
-        one intermediate bubble between brackets, but may have pullups from multiple
+        This implements the first intermediate brackets method, where there is at most
+        one intermediate bracket between brackets, but may have pullups from multiple
         brackets.
         """
         new = OrderedDict()
@@ -566,11 +566,11 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         brackets.update(new_sorted)
 
     @classmethod
-    def _intermediate_bubbles_2(cls, brackets):
+    def _intermediate_brackets_2(cls, brackets):
         """Operates in-place.
-        This implements the second intermediate bubbles method, where all debates
-        in the same intermediate bubble have the same number of wins, but there
-        might be multiple intermediate bubbles between brackets.
+        This implements the second intermediate brackets method, where all debates
+        in the same intermediate bracket have the same number of wins, but there
+        might be multiple intermediate brackets between brackets.
         """
 
         new = OrderedDict()
@@ -640,10 +640,10 @@ class PowerPairedWithAllocatedSidesDrawGenerator(PowerPairedDrawGenerator):
         brackets.clear()
         brackets.update(new_sorted)
 
-    def _intermediate_bubbles_with_up_down():
+    def _intermediate_brackets_with_up_down():
         """This should never be called - the associated option string is removed
         from the allowable list above."""
-        raise NotImplementedError("Intermediate bubbles with conflict avoidance isn't supported with allocated sides.")
+        raise NotImplementedError("Intermediate brackets with conflict avoidance isn't supported with allocated sides.")
 
     @staticmethod
     def _pairings(brackets, presort_func):

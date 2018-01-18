@@ -53,7 +53,7 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
     - - Off
       - One-up-one-down
 
-.. caution:: The valid options for intermediate bubbles change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
+.. caution:: The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
 The big picture
 ===============
@@ -75,13 +75,13 @@ Explanations of options
 
 Odd bracket resolution
 ----------------------
-The **draw odd brackets** option specifies what you do when a bracket has an odd number of teams. (Obviously you have to do something, otherwise you can't pair off teams within the bracket.) There are two groups of methods: pull-up and intermediate bubbles.
+The **draw odd brackets** option specifies what you do when a bracket has an odd number of teams. (Obviously you have to do something, otherwise you can't pair off teams within the bracket.) There are two groups of methods: pull-up and intermediate brackets.
 
 .. rst-class:: spaced-list
 
 - **Pull-up methods** take one or more teams from the next bracket down, and move them into the odd bracket to fill the bracket.
 
-- **Intermediate bubbles** take the excess teams from the odd bracket and move them down into a new bubble, which sits between the odd bracket and the next one down (the "intermediate bubble"). It then takes teams from the next bracket down and moves them up to fill the new intermediate bubble.
+- **Intermediate brackets** take the excess teams from the odd bracket and move them down into a new bracket, which sits between the odd bracket and the next one down (the "intermediate bracket"). It then takes teams from the next bracket down and moves them up to fill the new intermediate bracket.
 
 The exact mechanics depend on whether or not sides are pre-allocated.
 
@@ -92,9 +92,9 @@ When sides are not pre-allocated
 
 - **Pull-up methods:** Take a team from the next bracket down, and add them to the odd bracket to form an even bracket. You can choose to pull up the top team from the next bracket, or the bottom team, or the middle team, or a randomly chosen team. (If you pull up the middle team, and the bracket has an even number of teams, then it will choose randomly from the two middle teams.)
 
-- **Intermediate bubbles:** Take the bottom team from the odd bracket and match them against the top team from the next bracket. An intermediate bubble always has two teams.
+- **Intermediate brackets:** Take the bottom team from the odd bracket and match them against the top team from the next bracket. An intermediate bracket always has two teams.
 
-  If you're using conflict avoidance and intermediate bubbles, you will probably want to use **Intermediate with bubble-up-bubble-down** instead. This uses the "bubble-up-bubble-down" rule to swap teams out of an intermediate bubble if there is a history or institution conflict. This is defined in the Australs constitution and is analogous to the "one-up-one-down" rule.
+  If you're using conflict avoidance and intermediate brackets, you will probably want to use **Intermediate with bubble-up-bubble-down** instead. This uses the "bubble-up-bubble-down" rule to swap teams out of an intermediate bracket if there is a history or institution conflict. This is defined in the Australs constitution and is analogous to the "one-up-one-down" rule.
 
 .. caution:: Using `Intermediate` with `One-up-one-down` does **not** imply `Intermediate with bubble-up-bubble-down`. You must enable `Intermediate with bubble-up-bubble-down` specifically.
 
@@ -106,9 +106,9 @@ When sides are pre-allocated, an "odd bracket" is one that has an uneven number 
 
 - **Pull-up methods:** Take as many teams from the next bracket down as necessary to fill the bracket. If there aren't enough teams in the next bracket down, take teams from the bracket after that, and so on, until the (original) odd bracket is filled. Higher brackets are always filled first. You can choose to pull up the top teams from the next bracket, the bottom teams, or a random selection of teams.
 
-- **Intermediate bubbles:** Take the unpaired teams in a bracket, and move them down to a new intermediate bubble. Then, take the number of teams necessary from the opposite side, from the next bracket down, to fill the next bubble.
+- **Intermediate brackets:** Take the unpaired teams in a bracket, and move them down to a new intermediate bracket. Then, take the number of teams necessary from the opposite side, from the next bracket down, to fill the next bracket.
 
-  **Intermediate 1** and **Intermediate 2** differ only in what happens if there aren't enough teams in the next bracket to fill the intermediate bubble. In **Intermediate 1**, it will just take teams from the bracket after that, and so on, until the intermediate bubble is filled. In **Intermediate 2**, it will split the intermediate bubble: the teams that can be paired with the next bracket form the first intermediate bubble, and then the teams that aren't form a new (unfilled) intermediate bubble, to be filled from teams from the bubble after that. This keeps going, splitting into as many intermediate bubbles as necessary, until all excess teams from the original odd bracket are paired.
+  **Intermediate 1** and **Intermediate 2** differ only in what happens if there aren't enough teams in the next bracket to fill the intermediate bracket. In **Intermediate 1**, it will just take teams from the bracket after that, and so on, until the intermediate bracket is filled. In **Intermediate 2**, it will split the intermediate bracket: the teams that can be paired with the next bracket form the first intermediate bracket, and then the teams that aren't form a new (unfilled) intermediate bracket, to be filled from teams from the bracket after that. This keeps going, splitting into as many intermediate brackets as necessary, until all excess teams from the original odd bracket are paired.
 
 .. _draw-side-allocations:
 

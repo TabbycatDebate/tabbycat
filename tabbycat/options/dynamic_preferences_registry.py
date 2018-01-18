@@ -168,8 +168,8 @@ class DrawOddBracket(ChoicePreference):
         ('pullup_bottom', _("Pull up from bottom")),
         ('pullup_middle', _("Pull up from middle")),
         ('pullup_random', _("Pull up at random")),
-        ('intermediate', _("Intermediate bubbles")),
-        ('intermediate_bubble_up_down', _("Intermediate with bubble-up-bubble-down")),
+        ('intermediate', _("Intermediate brackets")),
+        ('intermediate_bubble_up_down', _("Intermediate brackets with bubble-up-bubble-down")),
         ('intermediate1', _("Intermediate 1 (pre-allocated sides)")),
         ('intermediate2', _("Intermediate 2 (pre-allocated sides)")),
     )
