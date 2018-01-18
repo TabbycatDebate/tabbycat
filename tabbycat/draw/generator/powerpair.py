@@ -29,6 +29,12 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             or a function taking a dict mapping floats to lists of Team-like
             objects, and operating on the dict in-place.
 
+        "pullup_restriction" - Restriction on who can be pulled up. Permitted values:
+
+            "none"          - No restriction.
+            "least_to_date" - Choose from teams who have been pulled up the
+                              least number of times in previous rounds.
+
         "pairing_method" - How to pair teams. Permitted values:
             (best explained by example, these examples have a ten-team bracket)
 
@@ -52,9 +58,10 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     requires_prev_results = False
 
     DEFAULT_OPTIONS = {
-        "odd_bracket"    : "intermediate_bubble_up_down",
-        "pairing_method" : "slide",
-        "avoid_conflicts": "one_up_one_down"
+        "odd_bracket"           : "intermediate_bubble_up_down",
+        "pairing_method"        : "slide",
+        "avoid_conflicts"       : "one_up_one_down",
+        "pullup_restriction"    : False,
     }
 
     def __init__(self, *args, **kwargs):
@@ -68,6 +75,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                     "first metric in the team standings. Intermediate brackets require the first "
                     "team standings metric to be an integer (typically points or wins).") % {
                     'noninteger': noninteger, 'total': len(self.teams)})
+
+        if self.options["pullup_restriction"] == "least_to_date":
+            self.check_teams_for_attribute("npullups", checkfunc=lambda x: isinstance(x, int))
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
@@ -95,6 +105,26 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                 pool.append(teams.pop(0))
             brackets[points] = pool
         return brackets
+
+    # Pullup restrictions
+
+    PULLUP_ELIGIBILITY_FILTERS = {
+        "none"         : "_pullup_filter_none",
+        "least_to_date": "_pullup_filter_least_to_date",
+    }
+
+    def _pullup_filter(self, teams):
+        """Returns a function that takes one argument, a team, and returns a
+        bool, indicating whether that team is eligible to be pulled up."""
+        function = self.get_option_function("pullup_restriction", self.PULLUP_ELIGIBILITY_FILTERS)
+        return function(teams)
+
+    def _pullup_filter_none(self, teams):
+        return teams
+
+    def _pullup_filter_least_to_date(self, teams):
+        fewest = min(team.npullups for team in teams)
+        return [team for team in teams if team.npullups == fewest]
 
     # Odd bracket resolutions
 
@@ -132,14 +162,19 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         and returning an index for which team to take as the pullup.
         Operates in-place. Does not remove empty brackets."""
         pullup_needed_for = None
+
         for points, teams in brackets.items():
             if pullup_needed_for:
-                pullup_team = teams.pop(pos(len(teams)))
+                pullup_eligible_teams = self._pullup_filter(teams)
+                pullup_team = pullup_eligible_teams[pos(len(pullup_eligible_teams))]
+                teams.remove(pullup_team)
                 self.add_team_flag(pullup_team, "pullup")
                 pullup_needed_for.append(pullup_team)
                 pullup_needed_for = None
+
             if len(teams) % 2 != 0:
                 pullup_needed_for = teams
+
         if pullup_needed_for:
             raise DrawFatalError("Last bracket is still odd!\n" + repr(pullup_needed_for))
 
