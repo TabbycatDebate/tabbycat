@@ -17,7 +17,7 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
     - Description
     - Allowable values
 
-  * - :ref:`Draw odd brackets <draw-odd-bracket>`
+  * - :ref:`Odd bracket resolution method <draw-odd-bracket>`
     - How to resolve odd brackets
     - - Pull up from top
       - Pull up from bottom
@@ -34,24 +34,29 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
       - Intermediate 1
       - Intermediate 2
 
-  * - :ref:`Draw side allocations <draw-side-allocations>`
+  * - :ref:`Side allocations method <draw-side-allocations>`
     - How to allocate aff/neg
     - - Random
       - Balance
       - Pre-allocated
       - Manual ballot
 
-  * - :ref:`Draw pairing method <draw-pairing-method>`
+  * - :ref:`Pairing method <draw-pairing-method>`
     - How to pair teams within brackets
     - - Slide
       - Fold
       - Adjacent
       - Random
 
-  * - :ref:`Draw avoid conflicts <draw-conflict-avoidance>`
+  * - :ref:`Conflict avoidance method <draw-conflict-avoidance>`
     - How to avoid history/institution conflicts
     - - Off
       - One-up-one-down
+
+  * - :ref:`Pullup restriction <draw-pullup-restriction>`
+    - Whether and how to restrict pullups
+    - - No restriction
+      - Choose from teams who have been pulled up the fewest times so far
 
 .. caution:: The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
@@ -174,6 +179,14 @@ It's a bit more complicated than that, for two reasons:
 * Each swap obviously affects the debates around it, so it's not legal to have two adjacent swaps. (Otherwise, in theory, a team could "one down" all the way to the bottom of the draw!) So there is an optimization algorithm that finds the best combination of swaps, *i.e.* the one that minimises conflict, and if there are two profiles that have the same least conflict, then it chooses the one with fewer swaps.
 
 .. note:: Teams imported without an institutional affiliation are (for conflict avoidance purposes) considered to all be from the same institution and will trigger conflicts as described above. If this is a concern it can be assigning 'fake' institutions (i.e. *Swing 1*) to each unaffiliated team.
+
+.. _draw-pullup-restriction:
+
+Pullup restriction
+------------------
+You can restrict which teams can be pulled up, by configuring the draw generator to choose a pullup team from among only those teams who have been pulled up the fewest times in rounds preceding the current round. Most of the time, this is equivalent to saying that a team cannot be pulled up more than once. The difference is that if *all* teams in a bracket have been pulled up at least once, it then chooses from among teams who have been pulled up *only* once (if any), and so on.
+
+Pullup restrictions only apply when the :ref:`odd bracket resolution method <draw-odd-bracket>` is a pullup method. They have no effect on intermediate brackets.
 
 What do I do if the draw looks wrong?
 =====================================
