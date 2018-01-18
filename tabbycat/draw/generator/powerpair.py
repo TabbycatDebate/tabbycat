@@ -101,6 +101,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     ODD_BRACKET_FUNCTIONS = {
         "pullup_top"                 : "_pullup_top",
         "pullup_bottom"              : "_pullup_bottom",
+        "pullup_middle"              : "_pullup_middle",
         "pullup_random"              : "_pullup_random",
         "intermediate"               : "_intermediate_bubbles",
         "intermediate_bubble_up_down": "_intermediate_bubbles_with_up_down"
@@ -115,6 +116,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
 
     def _pullup_top(self, brackets):
         self._pullup(brackets, lambda x: 0)
+
+    def _pullup_middle(self, brackets):
+        self._pullup(brackets, lambda x: x // 2 - (random.randrange(2) if x % 2 == 0 else 0))
 
     def _pullup_bottom(self, brackets):
         self._pullup(brackets, lambda x: -1)

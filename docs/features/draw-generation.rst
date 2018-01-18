@@ -21,6 +21,7 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
     - How to resolve odd brackets
     - - Pull up from top
       - Pull up from bottom
+      - Pull up from middle
       - Pull up at random
 
       If sides are `Random` or `Balance`:
@@ -89,7 +90,7 @@ When sides are not pre-allocated
 
 .. rst-class:: spaced-list
 
-- **Pull-up methods:** Take a team from the next bracket down, and add them to the odd bracket to form an even bracket. You can choose to pull up the top team from the next bracket, or the bottom team, or a randomly chosen team.
+- **Pull-up methods:** Take a team from the next bracket down, and add them to the odd bracket to form an even bracket. You can choose to pull up the top team from the next bracket, or the bottom team, or the middle team, or a randomly chosen team. (If you pull up the middle team, and the bracket has an even number of teams, then it will choose randomly from the two middle teams.)
 
 - **Intermediate bubbles:** Take the bottom team from the odd bracket and match them against the top team from the next bracket. An intermediate bubble always has two teams.
 
