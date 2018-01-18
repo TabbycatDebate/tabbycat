@@ -61,7 +61,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         "odd_bracket"           : "intermediate_bubble_up_down",
         "pairing_method"        : "slide",
         "avoid_conflicts"       : "one_up_one_down",
-        "pullup_restriction"    : False,
+        "pullup_restriction"    : "none",
     }
 
     def __init__(self, *args, **kwargs):
