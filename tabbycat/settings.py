@@ -1,5 +1,4 @@
 import os
-from urllib.parse import urlparse
 
 from django.contrib.messages import constants as messages
 
@@ -285,14 +284,11 @@ if 'TAB_DIRECTOR_EMAIL' in os.environ:
 # Redis Services
 if os.environ.get('REDIS_URL', ''):
     try:
-        redis_url = urlparse.urlparse(os.environ.get('REDIS_URL'))
         CACHES = {
             "default": {
                 "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": "{0}:{1}".format(redis_url.hostname, redis_url.port),
+                "LOCATION": os.environ.get('REDIS_URL'),
                 "OPTIONS": {
-                    "PASSWORD": redis_url.password,
-                    "DB": 0,
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
                 }
             }
@@ -322,14 +318,51 @@ if os.environ.get('TRAVIS', '') == 'true':
     }
 
 # ==============================================================================
+# Debug Toolbar
+# ==============================================================================
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+)
+
+DEBUG_TOOLBAR_CONFIG = {
+    'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
+    'SHOW_COLLAPSED': True
+}
+
+# Must default to false; usually overridden in local_settings
+ENABLE_DEBUG_TOOLBAR = False
+
+# That said provide a flag to turn it on in Heroku
+if 'DEBUG_TOOLBAR' in os.environ and bool(int(os.environ['DEBUG_TOOLBAR'])):
+    ENABLE_DEBUG_TOOLBAR = True
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
+    INSTALLED_APPS += ('debug_toolbar',)
+    # Override check for internal IPs (and DEBUG=1) on Heroku
+    DEBUG_TOOLBAR_CONFIG['SHOW_TOOLBAR_CALLBACK'] = 'settings.show_toolbar'
+
+
+def show_toolbar(request):
+    return request.user.is_staff
+
+# ==============================================================================
 # Local Overrides and Docker
 # ==============================================================================
 
 # Hide league-related configuration options unless explicitly enabled
 LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
-
-# Must default to false; potentially overridden in local_settings
-ENABLE_DEBUG_TOOLBAR = False
 
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
     DEBUG = True # Just to be sure
