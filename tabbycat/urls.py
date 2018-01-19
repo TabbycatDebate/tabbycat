@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import include, url
+from django.urls import include, path
 from django.contrib import admin, messages
 from django.contrib.auth.views import logout as auth_logout
 from django.contrib.auth.signals import user_logged_in, user_logged_out
@@ -18,57 +18,57 @@ admin.autodiscover()
 urlpatterns = [
 
     # Indices
-    url(r'^$',
+    path('',
         tournaments.views.PublicSiteIndexView.as_view(),
         name='tabbycat-index'),
-    url(r'^start/',
+    path('start/',
         tournaments.views.BlankSiteStartView.as_view(),
         name='blank-site-start'),
-    url(r'^create/',
+    path('create/',
         tournaments.views.CreateTournamentView.as_view(),
         name='tournament-create'),
-    url(r'^load-demo/',
+    path('load-demo/',
         tournaments.views.LoadDemoView.as_view(),
         name='load-demo'),
 
     # Top Level Pages
-    url(r'^donations/',
+    path('donations/',
         tournaments.views.DonationsView.as_view(),
         name='donations'),
-    url(r'^style/$',
+    path('style/',
         tournaments.views.StyleGuideView.as_view(),
         name='style-guide'),
 
     # Admin area
-    url(r'^jet/',
+    path('jet/',
         include('jet.urls', 'jet')),
-    url(r'^database/',
+    path('database/',
         admin.site.urls),
 
     # Accounts
-    url(r'^accounts/logout/$',
+    path('accounts/logout/',
         auth_logout,
         {'next_page': '/'},  # override to specify next_page
         name='logout'),
-    url(r'^accounts/',
+    path('accounts/',
         include('django.contrib.auth.urls')),
 
     # Favicon for old browsers that ignore <head> links and always load via root
-    url(r'^favicon\.ico$',
+    path('favicon\.ico',
         RedirectView.as_view(url='/static/favicon.ico')),
 
     # Tournament URLs
-    url(r'^(?P<tournament_slug>[-\w_]+)/',
+    path('<slug:tournament_slug>/',
         include('tournaments.urls')),
 
     # Draws Cross Tournament
-    url(r'^draw/',
+    path('draw/',
         include('draw.urls_crosst'))
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG
     import debug_toolbar
-    urlpatterns.append(url(r'^__debug__/', include(debug_toolbar.urls)))
+    urlpatterns.append(path('__debug__/', include(debug_toolbar.urls)))
 
 
 # ==============================================================================

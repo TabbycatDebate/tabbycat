@@ -1,33 +1,33 @@
-from django.conf.urls import include, url
+from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
-    url(r'^round/(?P<round_seq>\d+)/', include([
-        url(r'^$',
+    path('round/<int:round_seq>/', include([
+        path('',
             views.StandingsIndexView.as_view(),
             name='standings-index'),
-        url(r'^team/$',
+        path('team/',
             views.TeamStandingsView.as_view(),
             name='standings-team'),
-        url(r'^division/$',
+        path('division/',
             views.DivisionStandingsView.as_view(),
             name='standings-division'),
 
-        url(r'^speaker/$',
+        path('speaker/',
             views.SpeakerStandingsView.as_view(),
             name='standings-speaker'),
-        url(r'^speaker/(?P<category>\w+)/$',
+        path('speaker/<slug:category>/',
             views.SpeakerCategoryStandingsView.as_view(),
             name='standings-speaker-category'),
-        url(r'^reply/$',
+        path('reply/',
             views.ReplyStandingsView.as_view(),
             name='standings-reply'),
 
-        url(r'^motions/$',
+        path('motions/',
             views.MotionStandingsView.as_view(),
             name='standings-motion'),
-        url(r'^diversity/$',
+        path('diversity/',
             views.DiversityStandingsView.as_view(),
             name='standings-diversity'),
     ])),

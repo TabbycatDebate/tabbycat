@@ -1,22 +1,22 @@
-from django.conf.urls import include, url
+from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
-    url(r'^round/(?P<round_seq>\d+)/', include([
-        url(r'^edit/$',
+    path('round/<int:round_seq>/', include([
+        path('edit/',
             views.EditMotionsView.as_view(),
             name='motions-edit'),
-        url(r'^assign/$',
+        path('assign/',
             views.AssignMotionsView.as_view(),
             name='motions_assign'),
-        url(r'^release/$',
+        path('release/',
             views.ReleaseMotionsView.as_view(),
             name='motions-release'),
-        url(r'^unrelease/$',
+        path('unrelease/',
             views.UnreleaseMotionsView.as_view(),
             name='motions-unrelease'),
-        url(r'^display/$',
+        path('display/',
             views.DisplayMotionsView.as_view(),
             name='motions-display'),
     ])),

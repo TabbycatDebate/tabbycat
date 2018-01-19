@@ -1,15 +1,15 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^$',
+    path('',
         views.PublicBreakIndexView.as_view(),
         name='breakqual-public-index'),
-    url(r'^teams/(?P<category>\w+)/$',
+    path('teams/<slug:category>/',
         views.PublicBreakingTeamsView.as_view(),
         name='breakqual-public-teams'),
-    url(r'^adjudicators/$',
+    path('adjudicators/',
         views.PublicBreakingAdjudicatorsView.as_view(),
         name='breakqual-public-adjs'),
 ]

@@ -1,45 +1,45 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
     # Viewing
-    url(r'^round/(?P<round_seq>\d+)/$',
+    path('round/<int:round_seq>/',
         views.ResultsEntryForRoundView.as_view(),
         name='results-round-list'),
 
     # JSON updates
-    url(r'^json/status/$',
+    path('json/status/',
         views.BallotsStatusJsonView.as_view(),
         name='results-ballots-graph-data'),
-    url(r'^json/latest/$',
+    path('json/latest/',
         views.LatestResultsJsonView.as_view(),
         name='results-latest-json'),
 
     # Inline Actions
-    url(r'^round/(?P<round_seq>\d+)/postpone/$',
+    path('round/<int:round_seq>/postpone/',
         views.PostponeDebateView.as_view(),
         name='results-postpone-debate'),
-    url(r'^round/(?P<round_seq>\d+)/unpostpone/$',
+    path('round/<int:round_seq>/unpostpone/',
         views.UnpostponeDebateView.as_view(),
         name='results-unpostpone-debate'),
 
     # Ballot check-in
-    url(r'^round/(?P<round_seq>\d+)/checkin/$',
+    path('round/<int:round_seq>/checkin/',
         views.BallotCheckinView.as_view(),
         name='results-ballot-checkin'),
-    url(r'^round/(?P<round_seq>\d+)/checkin/detail/$',
+    path('round/<int:round_seq>/checkin/detail/',
         views.BallotCheckinGetDetailsView.as_view(),
         name='results-ballot-checkin-details'),
-    url(r'^round/(?P<round_seq>\d+)/checkin/post/$',
+    path('round/<int:round_seq>/checkin/post/',
         views.PostBallotCheckinView.as_view(),
         name='results-ballot-checkin-post'),
 
     # Ballots
-    url(r'^ballots/(?P<pk>\d+)/edit/$',
+    path('ballots/<int:pk>/edit/',
         views.EditBallotSetView.as_view(),
         name='results-ballotset-edit'),
-    url(r'^debate/(?P<debate_id>\d+)/new/$',
+    path('debate/<int:debate_id>/new/',
         views.NewBallotSetView.as_view(),
         name='results-ballotset-new'),
 ]

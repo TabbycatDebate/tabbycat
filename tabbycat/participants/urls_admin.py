@@ -1,24 +1,24 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^list/$',
+    path('list/',
         views.ParticipantsListView.as_view(),
         name='participants-list'),
-    url(r'^eligibility/$',
+    path('eligibility/',
         views.EditSpeakerCategoryEligibilityView.as_view(),
         name='participants-speaker-eligibility'),
-    url(r'^eligibility/update/$',
+    path('eligibility/update/',
         views.UpdateEligibilityEditView.as_view(),
         name='participants-speaker-update-eligibility'),
-    url(r'^categories/$',
+    path('categories/',
         views.EditSpeakerCategoriesView.as_view(),
         name='participants-speaker-categories-edit'),
-    url(r'^team/(?P<pk>\d+)/$',
+    path('team/<int:pk>/',
         views.TeamRecordView.as_view(),
         name='participants-team-record'),
-    url(r'^adjudicator/(?P<pk>\d+)/$',
+    path('adjudicator/<int:pk>/',
         views.AdjudicatorRecordView.as_view(),
         name='participants-adjudicator-record'),
 ]

@@ -1,27 +1,27 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
 
-    url(r'^$',
+    path('',
         views.RandomisedUrlsView.as_view(),
         name='privateurls-list'),
-    url(r'^generate/$',
+    path('generate/',
         views.GenerateRandomisedUrlsView.as_view(),
         name='privateurls-generate'),
 
-    url(r'^email/ballot/$',
+    path('email/ballot/',
         views.EmailBallotUrlsView.as_view(),
         name='privateurls-email-ballot'),
-    url(r'^email/ballot/confirm/$',
+    path('email/ballot/confirm/',
         views.ConfirmEmailBallotUrlsView.as_view(),
         name='privateurls-email-ballot-send'),
 
-    url(r'^email/feedback/$',
+    path('email/feedback/',
         views.EmailFeedbackUrlsView.as_view(),
         name='privateurls-email-feedback'),
-    url(r'^email/feedback/confirm/$',
+    path('email/feedback/confirm/',
         views.ConfirmEmailFeedbackUrlsView.as_view(),
         name='privateurls-email-feedback-send'),
 
