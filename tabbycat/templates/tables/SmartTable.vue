@@ -1,32 +1,34 @@
 <template>
-  <table class="table table-responsive-md" :class="tableClass">
+  <div class="table-responsive-md">
+    <table class="table" :class="tableClass">
 
-    <thead>
-      <tr>
-        <th v-for="header in headers" @resort="updateSorting"
-            :header="header"
-            :sort-key="sortKey"
-            :sort-order="sortOrder"
-            is="smartHeader">
-        </th>
-      </tr>
-    </thead>
+      <thead>
+        <tr>
+          <th v-for="header in headers" @resort="updateSorting"
+              :header="header"
+              :sort-key="sortKey"
+              :sort-order="sortOrder"
+              is="smartHeader">
+          </th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
-        <td class="empty-cell text-center text-muted">
-          {{ emptyTitle }}
-        </td>
-      </tr>
-      <tr v-for="row in dataFilteredByKey">
-        <td v-for="(cellData, cellIndex) in row"
-          :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
-          :cell-data="cellData">
-        </td>
-      </tr>
-    </tbody>
+      <tbody>
+        <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
+          <td class="empty-cell text-center text-muted">
+            {{ emptyTitle }}
+          </td>
+        </tr>
+        <tr v-for="row in dataFilteredByKey">
+          <td v-for="(cellData, cellIndex) in row"
+            :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
+            :cell-data="cellData">
+          </td>
+        </tr>
+      </tbody>
 
-  </table>
+    </table>
+  </div>
 </template>
 
 <script>

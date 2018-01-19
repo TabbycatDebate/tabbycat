@@ -8,7 +8,7 @@ from settings import *
 SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 DATABASES           = {
     'default': {
-        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+        'ENGINE'  : 'django.db.backends.postgresql',
         'NAME'    : 'postgres',
         'USER'    : 'postgres',
         'PASSWORD': 'postgres',
@@ -67,22 +67,6 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 # Use the cache with database write through for local sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-
-# ==============================================================================
-# Django Gulp (development aid; helps live-reload front-end assets)
-# ==============================================================================
-
-ENABLE_DJANGO_GULP = False # True requires requirements_development install
-
-if ENABLE_DJANGO_GULP:
-    # Need to be before whitenoise/static etc so it can't be appended as usual
-    modified_apps = list(INSTALLED_APPS)
-    modified_apps.insert(5, 'django_gulp') # [5] is just before whitenoise
-    INSTALLED_APPS = tuple(modified_apps)
-
-    # collectstatic always runs GULP_PRODUCTION_COMMAND, even on debug
-    GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
-    GULP_DEVELOP_COMMAND = "npm run gulp watch -- --development"
 
 # ==============================================================================
 # Debug Toolbar (development aid; helps diagnose queries and performance)

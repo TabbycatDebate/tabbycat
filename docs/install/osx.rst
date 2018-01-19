@@ -103,7 +103,7 @@ Almost there!
 
      DATABASES = {
          'default': {
-             'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+             'ENGINE'  : 'django.db.backends.postgresql',
              'NAME'    : '',  # put your PostgreSQL database's name in here
              'USER'    : '',  # put your PostgreSQL login role's user name in here
              'PASSWORD': '',  # put your PostgreSQL login role's password in here

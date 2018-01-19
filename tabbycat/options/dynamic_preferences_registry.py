@@ -166,9 +166,10 @@ class DrawOddBracket(ChoicePreference):
     choices = (
         ('pullup_top', _("Pull up from top")),
         ('pullup_bottom', _("Pull up from bottom")),
+        ('pullup_middle', _("Pull up from middle")),
         ('pullup_random', _("Pull up at random")),
-        ('intermediate', _("Intermediate bubbles")),
-        ('intermediate_bubble_up_down', _("Intermediate with bubble-up-bubble-down")),
+        ('intermediate', _("Intermediate brackets")),
+        ('intermediate_bubble_up_down', _("Intermediate brackets with bubble-up-bubble-down")),
         ('intermediate1', _("Intermediate 1 (pre-allocated sides)")),
         ('intermediate2', _("Intermediate 2 (pre-allocated sides)")),
     )
@@ -208,7 +209,8 @@ class DrawPairingMethod(ChoicePreference):
 
 @tournament_preferences_registry.register
 class DrawAvoidConflicts(ChoicePreference):
-    help_text = _("Method used to try to avoid teams facing each other multiple times or their own institution (see documentation for further details)")
+    help_text = _("Method used to try to avoid teams facing each other multiple times or their "
+        "own institution (see documentation for further details)")
     verbose_name = _("Conflict avoidance method")
     section = draw_rules
     name = 'draw_avoid_conflicts'
@@ -217,6 +219,20 @@ class DrawAvoidConflicts(ChoicePreference):
         ('one_up_one_down', _("One-up-one-down")),
     )
     default = 'one_up_one_down'
+
+
+@tournament_preferences_registry.register
+class DrawPullupRestriction(ChoicePreference):
+    help_text = _("If using pull-ups, restrict which teams can be pulled up. "
+        "Two-team formats only. Has no effect on BP or intermediate brackets.")
+    verbose_name = _("Pullup restriction")
+    section = draw_rules
+    name = 'draw_pullup_restriction'
+    choices = (
+        ('none', _("No restriction")),
+        ('least_to_date', _("Choose from teams who have been pulled up the fewest times so far")),
+    )
+    default = 'none'
 
 
 @tournament_preferences_registry.register

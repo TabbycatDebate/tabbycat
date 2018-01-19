@@ -4,7 +4,7 @@ from urllib.parse import urlparse, urlunparse
 
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import NoReverseMatch
+from django.urls import NoReverseMatch
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Prefetch, Q

@@ -27,14 +27,17 @@ export default {
   },
   methods: {
     fetchData: function () {
-      console.log(this.pollUr)
       var xhr = new XMLHttpRequest()
       xhr.open('GET', this.pollUrl)
       var self = this
       xhr.onload = function(event) {
-        self.graphData = JSON.parse(xhr.responseText)
-        if (self.graphData.length > 0) {
-          initChart(self); // Don't init if no data is present
+        if (xhr.status == 403) {
+          console.debug('DEBUG: JSON TournamentOverview BallotsGraph gave 403 error');
+        } else {
+          self.graphData = JSON.parse(xhr.responseText)
+          if (self.graphData.length > 0) {
+            initChart(self); // Don't init if no data is present
+          }
         }
         setTimeout(self.fetchData, self.pollFrequency);
       }

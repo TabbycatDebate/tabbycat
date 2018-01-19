@@ -14,14 +14,14 @@
         {{ position.speaker|addcss:"js-speaker form-control custom-select required" }}
         {{ position.speaker.errors }}
 
-        <label class="iron-person small custom-control custom-checkbox pt-0 m-0" style="display: none;"
+        <div class="iron-person small pt-0 m-0 form-check form-check-inline" style="display: none;"
                data-toggle="tooltip" data-placement="bottom"
                title="{% trans "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-manning' you would typically mark only the lesser of their scores as a duplicate." %}">
-          {{ position.ghost|addcss:"custom-control-input" }}
-          <span class="custom-control-indicator mt-2"></span>
-          <span class="custom-control-description">{{ position.ghost.label_tag }}</span>
+          {{ position.ghost|addcss:"form-check-input" }}
+          <span class="mt-2"></span>
+          {{ position.ghost.label_tag }}
           {{ position.ghost.errors }}
-        </label>
+        </div>
 
       {% else %}
 

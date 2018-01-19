@@ -10,11 +10,13 @@ Change Log
 - Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
 - Added an automated method for assigning importances to debates using their bracket or 'liveness'
 - Quality of life improvements
-  - Added a 'liveness' calculator for Open categories in BP
-  - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
-  - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+   - Added a 'liveness' calculator for Open categories in BP
+   - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
+   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
 - Current team standings page now shows silent round results if "Release all round results to public" is set
-
+- Added draw pull-up option: pull up from middle
+- Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far
+- Upgraded to Django 2.0
 
 2.0.4
 -----
@@ -22,6 +24,8 @@ Change Log
 
 - Fixed issue where draws of the "manual" type would not generate correctly
 - Fixed issue where a ballot's speaker names dropdown would contain both team's speakers when using formats with side selection
+- Fixed issue where scoresheets would not show correctly under some configurations
+- Improved display of really long motions when using the inbuilt motion-showing page
 - Other minor fixes
 
 

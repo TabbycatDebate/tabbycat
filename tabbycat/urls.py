@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^jet/',
         include('jet.urls', 'jet')),
     url(r'^database/',
-        include(admin.site.urls)),
+        admin.site.urls),
 
     # Accounts
     url(r'^accounts/logout/$',
@@ -103,7 +103,7 @@ def on_user_logged_in(sender, request, **kwargs):
 
 def redirect(view):
     from django.http import HttpResponseRedirect
-    from django.core.urlresolvers import reverse
+    from django.urls import reverse
 
     def foo(request):
         return HttpResponseRedirect(reverse(view))

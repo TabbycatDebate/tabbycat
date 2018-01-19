@@ -63,7 +63,7 @@ class PreferencesPreset:
 
 class AustralsPreferences(PreferencesPreset):
     name         = "Australs Rules"
-    description  = ("3 vs 3 with replies, chosen motions, intermediate bubbles, "
+    description  = ("3 vs 3 with replies, chosen motions, intermediate brackets, "
         "one-up-one-down. Compliant with AIDA rules.")
     show_in_list = True
 

@@ -1,5 +1,5 @@
 from django.core.exceptions import SuspiciousFileOperation
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.shortcuts import redirect
 
 from ipware.ip import get_real_ip

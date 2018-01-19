@@ -5,10 +5,10 @@
     <span v-if="cellData['sort']" hidden>
       {{ cellData.checked }}
     </span>
-    <label class="form-check-label">
-      <input type="checkbox" class="form-check-input" @change="checkUpdate"
-             v-model.boolean.lazy="cellData.checked">
-    </label>
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input  position-static"
+             @change="checkUpdate" v-model.boolean.lazy="cellData.checked">
+    </div>
 
   </td>
 
