@@ -1,20 +1,20 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
     # Overview
-    url(r'^$',
+    path('',
         views.TournamentConfigIndexView.as_view(),
         name='options-tournament-index'),
 
     # Presets
-    url(r'^presets/(?P<preset_name>\w+)/confirm/$',
+    path('presets/<slug:preset_name>/confirm/',
         views.ConfirmTournamentPreferencesView.as_view(),
         name="options-presets-confirm"),
 
     # Per Type
-    url(r'^(?P<section>\w+)/$',
+    path('<slug:section>/',
         views.TournamentPreferenceFormView.as_view(),
         name="options-tournament-section"),
 ]

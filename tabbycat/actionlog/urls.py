@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^json/latest/$',
+    path('json/latest/',
         views.LatestActionsView.as_view(),
         name='actionlog-latest-json'),
 ]

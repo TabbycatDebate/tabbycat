@@ -1,33 +1,33 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
     # Viewing
-    url(r'^$',
+    path('',
         views.PublicResultsIndexView.as_view(),
         name='results-public-index'),
-    url(r'^round/(?P<round_seq>\d+)/$',
+    path('round/<int:round_seq>/',
         views.PublicResultsForRoundView.as_view(),
         name='results-public-round'),
-    url(r'^debate/(?P<pk>\d+)/scoresheets/$',
+    path('debate/<int:pk>/scoresheets/',
         views.PublicBallotScoresheetsView.as_view(),
         name='results-public-scoresheet-view'),
 
     # Public Ballots
-    url(r'^add/$',
+    path('add/',
         views.PublicBallotSubmissionIndexView.as_view(),
         name='results-public-ballot-submission-index'),
-    url(r'^add/adjudicator/(?P<adj_id>\d+)/$',
+    path('add/adjudicator/<int:adj_id>/',
         views.PublicNewBallotSetByIdUrlView.as_view(),
         name='results-public-ballotset-new-pk'),
 
     # Private Ballots
-    url(r'^add/a(?P<url_key>\w+)/$',
+    path('add/a<slug:url_key>/',
         views.PublicNewBallotSetByRandomisedUrlView.as_view(),
         name='results-public-ballotset-new-randomised'),
 
-    url(r'^added/$',
+    path('added/',
         views.PostPublicBallotSetSubmissionURLView.as_view(),
         name='post-results-public-ballotset-new'),
 ]

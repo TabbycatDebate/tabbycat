@@ -1,26 +1,26 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
     # Display
-    url(r'^$',
+    path('',
         views.AdminBreakIndexView.as_view(),
         name='breakqual-index'),
-    url(r'^teams/(?P<category>\w+)/$',
+    path('teams/<slug:category>/',
         views.BreakingTeamsFormView.as_view(),
         name='breakqual-teams'),
-    url(r'^adjudicators/$',
+    path('adjudicators/',
         views.AdminBreakingAdjudicatorsView.as_view(),
         name='breakqual-adjudicators'),
     # Create/Update
-    url(r'^generate_all/(?P<category>\w+)/$',
+    path('generate_all/<slug:category>/',
         views.GenerateAllBreaksView.as_view(),
         name='breakqual-generate-all'),
-    url(r'^eligibility/$',
+    path('eligibility/',
         views.EditTeamEligibilityView.as_view(),
         name='breakqual-edit-eligibility'),
-    url(r'^eligibility/update$',
+    path('eligibility/update',
         views.UpdateEligibilityEditView.as_view(),
         name='breakqual-update-eligibility'),
 ]
