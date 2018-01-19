@@ -5,10 +5,10 @@
     "keywords": ["debate", "debating"],
     "website": "https://tabbycat.readthedocs.io/",
     "addons": [
-        "memcachier",
         "papertrail",
         "sendgrid:starter",
-        "heroku-postgresql:hobby-dev"
+        "heroku-postgresql:hobby-dev",
+        "heroku-redis",
     ],
     "env": {
         "DJANGO_SECRET_KEY": {

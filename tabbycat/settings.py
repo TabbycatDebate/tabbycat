@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 
 from django.contrib.messages import constants as messages
 
@@ -136,6 +137,7 @@ CACHES = {
 # Use a db backed cache for sessions unless the app is retired (no db writes)
 if 'RETIRED' in os.environ:
     SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = "default"
 else:
     SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
@@ -280,25 +282,19 @@ ALLOWED_HOSTS = ['*']
 if 'TAB_DIRECTOR_EMAIL' in os.environ:
     TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
 
-# Memcache Services
-if os.environ.get('MEMCACHIER_SERVERS', ''):
+# Redis Services
+if os.environ.get('REDIS_URL', ''):
     try:
-        os.environ['MEMCACHE_SERVERS'] = os.environ[
-            'MEMCACHIER_SERVERS'].replace(',', ';')
-        os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
-        os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
+        redis_url = urlparse.urlparse(os.environ.get('REDIS_URL'))
         CACHES = {
-            'default': {
-                'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-                'TIMEOUT': 36000,
-                'BINARY': True,
-                'OPTIONS': {  # Maps to pylibmc "behaviors"
-                    # Enable faster IO
-                    'no_block': True,
-                    'tcp_nodelay': True,
-                },
-                # Timeout for set/get requests
-                '_poll_timeout': 2000,
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": "{0}:{1}".format(redis_url.hostname, redis_url.port),
+                "OPTIONS": {
+                    "PASSWORD": redis_url.password,
+                    "DB": 0,
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                }
             }
         }
     except:
