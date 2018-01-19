@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db import ProgrammingError
-from django.http import Http404, HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
@@ -308,6 +308,9 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     def add_success_message(self):
         messages.success(self.request, _("Ballot set for %(debate)s added.") % {'debate': self.debate.matchup})
 
+    def get_error_url(self):
+        return self.get_success_url()
+
     def populate_objects(self):
         self.debate = self.object = self.get_object()
         self.ballotsub = BallotSubmission(debate=self.debate, submitter=self.request.user,
@@ -320,13 +323,13 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
                 not self.debate.adjudicators.has_chair:
             messages.error(self.request, _("Whoops! The debate %(debate)s doesn't have a chair, "
                 "so you can't enter results for it.") % {'debate': self.debate.matchup})
-            return redirect_round('results-round-list', self.ballotsub.debate.round)
+            return HttpResponseRedirect(self.get_error_url())
 
         if not (t.pref('draw_side_allocations') == 'manual-ballot' and
                 t.pref('teams_in_debate') == 'two') and not self.debate.sides_confirmed:
             messages.error(self.request, _("Whoops! The debate %(debate)s doesn't have its "
                 "sides confirmed, so you can't enter results for it.") % {'debate': self.debate.matchup})
-            return redirect_round('results-round-list', self.ballotsub.debate.round)
+            return HttpResponseRedirect(self.get_error_url())
 
 
 class AdminNewBallotSetView(AdministratorBallotSetMixin, BaseNewBallotSetView):
