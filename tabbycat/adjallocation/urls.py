@@ -1,19 +1,19 @@
-from django.conf.urls import include, url
+from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
-    url(r'^round/(?P<round_seq>\d+)/', include([
-        url(r'^edit/$',
+    path('round/<int:round_seq>/', include([
+        path('edit/',
             views.EditAdjudicatorAllocationView.as_view(),
             name='edit-adj-allocation'),
-        url(r'^create/$',
+        path('create/',
             views.CreateAutoAllocation.as_view(),
             name='adjudicators-auto-allocate'),
-        url(r'^importance/set/$',
+        path('importance/set/',
             views.SaveDebateImportance.as_view(),
             name='save-debate-importance'),
-        url(r'^panel/set/$',
+        path('panel/set/',
             views.SaveDebatePanel.as_view(),
             name='save-debate-panel'),
     ])),

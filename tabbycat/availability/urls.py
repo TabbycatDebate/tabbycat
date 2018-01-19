@@ -1,38 +1,38 @@
-from django.conf.urls import include, url
+from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
-    url(r'^round/(?P<round_seq>\d+)/', include([
+    path('round/<int:round_seq>/', include([
         # Overview
-        url(r'^$',
+        path('',
             views.AvailabilityIndexView.as_view(),
             name='availability-index'),
 
         # Bulk Updates
-        url(r'all/update/$', views.CheckInAllInRoundView.as_view(),
+        path('all/update/', views.CheckInAllInRoundView.as_view(),
             name='availability-checkin-all'),
-        url(r'previous/update/$', views.CheckInAllFromPreviousRoundView.as_view(),
+        path('previous/update/', views.CheckInAllFromPreviousRoundView.as_view(),
             name='availability-checkin-previous'),
 
         # Adjudicators
-        url(r'adjudicators/$', views.AvailabilityTypeAdjudicatorView.as_view(),
+        path('adjudicators/', views.AvailabilityTypeAdjudicatorView.as_view(),
             name='availability-adjudicators'),
-        url(r'adjudicators/update/$', views.UpdateAdjudicatorsAvailabilityView.as_view(),
+        path('adjudicators/update/', views.UpdateAdjudicatorsAvailabilityView.as_view(),
             name='availability-update-adjudicators'),
-        url(r'adjudicators/update/breaking/$', views.CheckInAllBreakingAdjudicatorsView.as_view(),
+        path('adjudicators/update/breaking/', views.CheckInAllBreakingAdjudicatorsView.as_view(),
             name='availability-checkin-breaking-adjudicators'),
 
         # Teams
-        url(r'teams/$', views.AvailabilityTypeTeamView.as_view(),
+        path('teams/', views.AvailabilityTypeTeamView.as_view(),
             name='availability-teams'),
-        url(r'teams/update/$', views.UpdateTeamsAvailabilityView.as_view(),
+        path('teams/update/', views.UpdateTeamsAvailabilityView.as_view(),
             name='availability-update-teams'),
 
         # Venues
-        url(r'venues/$', views.AvailabilityTypeVenueView.as_view(),
+        path('venues/', views.AvailabilityTypeVenueView.as_view(),
             name='availability-venues'),
-        url(r'venues/update/$', views.UpdateVenuesAvailabilityView.as_view(),
+        path('venues/update/', views.UpdateVenuesAvailabilityView.as_view(),
             name='availability-update-venues'),
     ])),
 ]
