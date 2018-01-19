@@ -24,7 +24,7 @@ A partial list of major national and international tournaments (that we know of)
 - `KPU Pro Ams <https://kduproams2017.herokuapp.com/kduproams2017/>`_
 - `Malaysian National Intervarsity Debating Championship <masnationals2017.herokuapp.com>`_
 - `Melbourne Mini <http://mudstabs.herokuapp.com>`_
-- `New Zealand Easters <https://nzeasters2017.herokuapp.com>`_
+- `New Zealand Easters 2017 <https://nzeasters2017.herokuapp.com>`_
 - `New Zealand British Parliamentary Debating Championship <https://victabs.herokuapp.com/>`_
 - `North East Asia Open <https://neao2017.herokuapp.com/neao2017/>`_
 - `Swords Mini-Gong <https://minigong2017.herokuapp.com/>`_
@@ -43,7 +43,7 @@ A partial list of major national and international tournaments (that we know of)
 
 - `Sydney Easters <http://easters2016.herokuapp.com>`_
 - `Joynt Scroll 2016 <https://joyntscroll2016.herokuapp.com>`_
-- `Malaysia Debate Open <http://tabs.altairtechlab.com/malaysiadebateopen2016/192.168.1.134_8080/t/mdo2016/index.html>`_
+- `Malaysia Debate Open 2016 <http://tabs.altairtechlab.com/malaysiadebateopen2016/192.168.1.134_8080/t/mdo2016/index.html>`_
 - `New Zealand Easters 2016 <http://nzeasters2016.herokuapp.com>`_
 - `Perth Australs <http://australs2016.herokuapp.com>`_
 - `Thailand United Asian Debating Championships <http://uadc2016.herokuapp.com>`_
@@ -56,8 +56,8 @@ A partial list of major national and international tournaments (that we know of)
 - `Bali United Asian Debating Championships <http://tabs.altairtechlab.com/baliuadc2015/t/baliuadc/index.html>`_
 - `Daejeon Australs <http://tab.australasians2015.org>`_
 - `Joynt Scroll <http://joyntscroll2015.herokuapp.com/t/joynt/>`_
-- `Malaysia Debate Open <http://tabs.altairtechlab.com/malaysiadebateopen2015/>`_
-- `New Zealand Easters <https://nzeasters2015.herokuapp.com>`_
+- `Malaysia Debate Open 2015 <http://tabs.altairtechlab.com/malaysiadebateopen2015/>`_
+- `New Zealand Easters 2015 <https://nzeasters2015.herokuapp.com>`_
 - The National Law School Debate
 - `UNSW/UTS Easters <https://aueasters2015.herokuapp.com>`_
 
