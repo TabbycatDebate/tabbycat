@@ -4,8 +4,8 @@ from . import views
 
 urlpatterns = [
     # Viewing
-    path('round/<int:round_seq>/',
-        views.AssistantResultsEntryForRoundView.as_view(),
+    path('',
+        views.AssistantResultsEntryView.as_view(),
         name='results-assistant-round-list'),
 
     # JSON updates

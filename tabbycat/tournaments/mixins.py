@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404, redirect, reverse
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
+from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
 from adjallocation.models import DebateAdjudicator
@@ -165,6 +166,19 @@ class RoundMixin(TournamentMixin):
             except NoReverseMatch:
                 pass
         return super().get_redirect_url(*args, **kwargs)
+
+
+class CurrentRoundMixin(RoundMixin, ContextMixin):
+    """Mixin for views that relate to the current round (without URL reference)."""
+
+    def get_round(self):
+        # Override the round-grabbing mechanism of RoundMixin
+        return self.get_tournament().current_round
+
+    def get_context_data(self, **kwargs):
+        # Middleware won't find this in the URL, so add it ourselves
+        kwargs['round'] = self.get_round()
+        return super().get_context_data(**kwargs)
 
 
 class PublicTournamentPageMixin(TournamentMixin):

@@ -25,9 +25,9 @@ from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CrossTournamentPageMixin, DrawForDragAndDropMixin,
-    OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
-    TournamentMixin)
+from tournaments.mixins import (CrossTournamentPageMixin, CurrentRoundMixin,
+    DrawForDragAndDropMixin, OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin,
+    RoundMixin, TournamentMixin)
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from tournaments.utils import get_side_name
@@ -130,10 +130,8 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTabl
             return super().get_context_data(**kwargs)
 
 
-class PublicDrawForCurrentRoundView(PublicDrawForRoundView):
-
-    def get_round(self):
-        return self.get_tournament().current_round
+class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
+    pass
 
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):

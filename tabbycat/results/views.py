@@ -17,8 +17,9 @@ from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
-from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObjectByRandomisedUrlMixin,
-                                SingleObjectFromTournamentMixin, TournamentMixin)
+from tournaments.mixins import (CurrentRoundMixin, PublicTournamentPageMixin, RoundMixin,
+                                SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
+                                TournamentMixin)
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
@@ -86,7 +87,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         return super().get_context_data(**kwargs)
 
 
-class AssistantResultsEntryForRoundView(AssistantMixin, BaseResultsEntryForRoundView):
+class AssistantResultsEntryView(AssistantMixin, CurrentRoundMixin, BaseResultsEntryForRoundView):
     template_name = 'assistant_results.html'
 
 
@@ -294,7 +295,7 @@ class AssistantBallotSetMixin(AssistantMixin):
     template_name = 'assistant_enter_results.html'
 
     def get_success_url(self):
-        return reverse_round('results-assistant-round-list', self.ballotsub.debate.round)
+        return reverse_tournament('results-assistant-round-list', self.get_tournament())
 
 
 class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):

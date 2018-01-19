@@ -1,7 +1,7 @@
 {% load debate_tags i18n %}
 
 <li class="nav-item {% if results_nav %}active{% endif %}">
-  <a class="nav-link" href="{% roundurl 'results-assistant-round-list' current_round %}">
+  <a class="nav-link" href="{% tournamenturl 'results-assistant-round-list' %}">
     {% trans "Enter Results" %}
   </a>
 </li>
