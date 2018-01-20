@@ -10,7 +10,7 @@
     {# Administrators have different alert that have links, see admin_results.html. #}
     {% if pref.teams_in_debate == "bp" and pref.ballots_per_debate == "per-adj" %}
       {% blocktrans trimmed asvar message %}
-        This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Please ask an administrator to change this configuration.
+        This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration.
       {% endblocktrans %}
       {% include "components/alert.html" with type="danger" %}
     {% endif %}
