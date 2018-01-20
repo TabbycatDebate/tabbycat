@@ -230,16 +230,16 @@ class AdminDrawDisplayForRoundByTeamView(AdministratorMixin, BaseDrawDisplayForR
     pass
 
 
-class AssistantDrawDisplayView(OptionalAssistantTournamentPageMixin, BaseDrawDisplayView):
+class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayView):
     template_name = 'draw_display_assistant.html'
     assistant_page_permissions = ['all_areas', 'results_draw']
 
 
-class AssistantDrawDisplayForRoundByVenueView(OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByVenueView):
+class AssistantDrawDisplayForRoundByVenueView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByVenueView):
     assistant_page_permissions = ['all_areas', 'results_draw']
 
 
-class AssistantDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByTeamView):
+class AssistantDrawDisplayForRoundByTeamView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByTeamView):
     assistant_page_permissions = ['all_areas', 'results_draw']
 
 

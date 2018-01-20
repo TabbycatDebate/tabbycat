@@ -20,7 +20,7 @@
 
 {% if pref.assistant_access != "results_only" %}
   <li class="nav-item {% if draw_nav %}active{% endif %}">
-    <a class="nav-link" href="{% roundurl 'draw-assistant-display' current_round %}">
+    <a class="nav-link" href="{% tournamenturl 'draw-assistant-display' %}">
       {% trans "Display/Print Draw" %}
     </a>
   </li>
