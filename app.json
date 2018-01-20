@@ -1,32 +1,37 @@
 {
-    "name": "Tabbycat",
-    "description": "Debating tournament tabulation software for two-team parliamentary formats",
-    "repository": "https://github.com/TabbycatDebate/tabbycat",
-    "keywords": ["debate", "debating"],
-    "website": "https://tabbycat.readthedocs.io/",
-    "addons": [
-        "papertrail",
-        "sendgrid:starter",
-        "heroku-postgresql:hobby-dev",
-        "heroku-redis",
-    ],
-    "env": {
-        "DJANGO_SECRET_KEY": {
-            "description": "A secret key for cryptographic signing of user sessions.",
-            "generator": "secret"
-        },
-        "TAB_DIRECTOR_EMAIL": {
-          "description": "Your email address. Tabbycat's developers may need to contact you to help diagnose any unexpected errors.",
-          "value": ""
-        },
-        "DISABLE_COLLECTSTATIC": {
-          "description": "Leave this as-is.",
-          "value": "1"
-        }
+  "name": "Tabbycat",
+  "description": "Debating tournament tabulation software for two-team parliamentary formats",
+  "repository": "https://github.com/TabbycatDebate/tabbycat",
+  "keywords": ["debate", "debating"],
+  "website": "https://tabbycat.readthedocs.io/",
+  "addons": [
+    "papertrail",
+    "sendgrid:starter",
+    "heroku-postgresql:hobby-dev",
+    {
+      "plan": "heroku-redis:hobby-dev",
+      "options": {
+        "maxmemory-policy": "allkeys-lru"
+      }
+    }
+  ],
+  "env": {
+    "DJANGO_SECRET_KEY": {
+        "description": "A secret key for cryptographic signing of user sessions.",
+        "generator": "secret"
     },
-    "buildpacks": [
-        {"url": "heroku/nodejs"},
-        {"url": "heroku/python"}
-    ],
-    "success_url": "/start/"
+    "TAB_DIRECTOR_EMAIL": {
+      "description": "Your email address. Tabbycat's developers may need to contact you to help diagnose any unexpected errors.",
+      "value": ""
+    },
+    "DISABLE_COLLECTSTATIC": {
+      "description": "Leave this as-is.",
+      "value": "1"
+    }
+  },
+  "buildpacks": [
+    {"url": "heroku/nodejs"},
+    {"url": "heroku/python"}
+  ],
+  "success_url": "/start/"
 }
