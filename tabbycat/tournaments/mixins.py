@@ -7,7 +7,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
 from django.contrib import messages
 from django.db.models import Prefetch, Q
-from django.http import Http404, HttpResponseRedirect, QueryDict
+from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, reverse
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
@@ -197,8 +197,6 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
 
     def dispatch(self, request, *args, **kwargs):
         tournament = self.get_tournament()
-        if tournament is None:
-            raise Http404()
         if self.is_page_enabled(tournament):
             return super().dispatch(request, *args, **kwargs)
         else:
