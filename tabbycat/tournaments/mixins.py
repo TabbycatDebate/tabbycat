@@ -187,7 +187,7 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
     def is_page_enabled(self, tournament):
         raise NotImplementedError
 
-    def render_error_page(self):
+    def render_page_disabled_error_page(self):
         return TemplateResponse(
             request=self.request,
             template=self.template_403_name,
@@ -203,7 +203,7 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
             return super().dispatch(request, *args, **kwargs)
         else:
             logger.warning("Tried to access a disabled %s page" % (self._user_role,))
-            return self.render_error_page()
+            return self.render_page_disabled_error_page()
 
 
 class PublicTournamentPageMixin(TournamentAccessControlledPageMixin):

@@ -329,7 +329,7 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
         self.object = self.get_object()
         if not self.object.public:
             logger.warning("Tried to access a non-public speaker category tab page: %s", self.object.slug)
-            return self.render_error_page()
+            return self.render_page_disabled_error_page()
         return super().get(request, *args, **kwargs)
 
 
