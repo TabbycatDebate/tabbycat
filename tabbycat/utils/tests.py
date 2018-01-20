@@ -99,8 +99,8 @@ class ConditionalTournamentTestsMixin(TournamentTestsMixin):
         with self.assertLogs('tournaments.mixins', logging.WARNING):
             response = self.get_response()
 
-        # 302 redirect should be issued if setting is not enabled
-        self.assertEqual(response.status_code, 302)
+        # 403 (permission denied) should be issued if setting is not enabled
+        self.assertEqual(response.status_code, 403)
 
 
 class ConditionalTournamentViewBasicCheckMixin(ConditionalTournamentTestsMixin):
