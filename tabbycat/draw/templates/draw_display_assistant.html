@@ -16,8 +16,10 @@
       {% tournamenturl 'draw-assistant-display-by-team' as url %}
       {% include "components/item-action.html" with text="Display Draw ordered by Team" subtext="(for the briefing room)" emoji="👭" blank=True %}
 
-      {% roundurl 'motions-display' round as url %}
-      {% include "components/item-action.html" with text="Display Motions" subtext="(for the briefing room)" emoji="📃" blank=True %}
+      {% if pref.assistant_access == "all_areas" %}
+        {% tournamenturl 'motions-assistant-display' as url %}
+        {% include "components/item-action.html" with text="Display Motions" subtext="(for the briefing room)" emoji="📃" blank=True %}
+      {% endif %}
 
     </ul>
     <ul class="list-group mt-3">

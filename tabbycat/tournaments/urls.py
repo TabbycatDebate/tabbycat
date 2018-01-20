@@ -43,7 +43,8 @@ urlpatterns = [
     path('admin/venues/',       include('venues.urls_admin')),
 
     # Application URLs for assistant pages
-    path('assistant/draw/',  include('draw.urls_assistant')),
+    path('assistant/draw/',     include('draw.urls_assistant')),
+    path('assistant/motions/',  include('motions.urls_assistant')),
     path('assistant/results/',  include('results.urls_assistant')),
 
     # Round progression

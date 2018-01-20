@@ -7,7 +7,8 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin
+from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
+                                PublicTournamentPageMixin, RoundMixin)
 from utils.misc import redirect_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
@@ -150,12 +151,19 @@ class UnreleaseMotionsView(BaseReleaseMotionsView):
     message_text = _("Unreleased the motion(s).")
 
 
-class DisplayMotionsView(OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
+class BaseDisplayMotionsView(RoundMixin, TemplateView):
 
-    assistant_page_permissions = ['all_areas']
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):
         kwargs['motions'] = self.get_round().motion_set.all()
         kwargs['infos'] = self.get_round().motion_set.exclude(info_slide="")
         return super().get_context_data(**kwargs)
+
+
+class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
+    pass
+
+
+class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDisplayMotionsView):
+    assistant_page_permissions = ['all_areas']

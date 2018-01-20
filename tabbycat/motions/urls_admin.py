@@ -17,7 +17,7 @@ urlpatterns = [
             views.UnreleaseMotionsView.as_view(),
             name='motions-unrelease'),
         path('display/',
-            views.DisplayMotionsView.as_view(),
+            views.AdminDisplayMotionsView.as_view(),
             name='motions-display'),
     ])),
 ]
