@@ -16,7 +16,7 @@ from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import redirect_tournament, reverse_tournament
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -329,8 +329,7 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
         self.object = self.get_object()
         if not self.object.public:
             logger.warning("Tried to access a non-public speaker category tab page: %s", self.object.slug)
-            messages.error(self.request, self.get_disabled_message())
-            return redirect_tournament('tournament-public-index', self.get_tournament())
+            return self.render_error_page()
         return super().get(request, *args, **kwargs)
 
 

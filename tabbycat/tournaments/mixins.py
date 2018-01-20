@@ -7,11 +7,11 @@ from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
 from django.contrib import messages
 from django.db.models import Prefetch, Q
-from django.http import HttpResponseRedirect, QueryDict
-from django.shortcuts import get_object_or_404, redirect, reverse
+from django.http import Http404, HttpResponseRedirect, QueryDict
+from django.shortcuts import get_object_or_404, reverse
+from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
@@ -180,7 +180,33 @@ class CurrentRoundMixin(RoundMixin, ContextMixin):
         return super().get_context_data(**kwargs)
 
 
-class PublicTournamentPageMixin(TournamentMixin):
+class TournamentAccessControlledPageMixin(TournamentMixin):
+    """Base mixin for views that can be enabled and disabled by a tournament
+    preference."""
+
+    def is_page_enabled(self, tournament):
+        raise NotImplementedError
+
+    def render_error_page(self):
+        return TemplateResponse(
+            request=self.request,
+            template=self.template_403_name,
+            context={'user_role': self._user_role},
+            status=403
+        )
+
+    def dispatch(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        if tournament is None:
+            raise Http404()
+        if self.is_page_enabled(tournament):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            logger.warning("Tried to access a disabled %s page" % (self._user_role,))
+            return self.render_error_page()
+
+
+class PublicTournamentPageMixin(TournamentAccessControlledPageMixin):
     """Mixin for views that show public tournament pages that can be enabled and
     disabled by a tournament preference.
 
@@ -197,30 +223,16 @@ class PublicTournamentPageMixin(TournamentMixin):
     """
 
     public_page_preference = None
-    disabled_message = ugettext_lazy("That page isn't enabled for this tournament.")
-
-    def get_disabled_message(self):
-        return self.disabled_message
+    template_403_name = "errors/public_403.html"
+    _user_role = "public"
 
     def is_page_enabled(self, tournament):
         if self.public_page_preference is None:
             raise ImproperlyConfigured("public_page_preference isn't set on this view.")
         return tournament.pref(self.public_page_preference)
 
-    def dispatch(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-        if tournament is None:
-            messages.info(self.request, _("That tournament no longer exists."))
-            return redirect('tabbycat-index')
-        if self.is_page_enabled(tournament):
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            logger.warning("Tried to access a disabled public page")
-            messages.error(self.request, self.get_disabled_message())
-            return redirect_tournament('tournament-public-index', tournament)
 
-
-class OptionalAssistantTournamentPageMixin(TournamentMixin, AssistantMixin):
+class OptionalAssistantTournamentPageMixin(AssistantMixin, TournamentAccessControlledPageMixin):
     """Mixin for pages that are intended for assistants, but can be enabled and
     disabled by a tournament preference. This preference sets of access tiers;
     if the page requires a certain tier to access it then only superusers can
@@ -236,33 +248,15 @@ class OptionalAssistantTournamentPageMixin(TournamentMixin, AssistantMixin):
     that the page is disabled."""
 
     assistant_page_permissions = None
-    disabled_message = ugettext_lazy("That assistant page isn't enabled for this tournament.")
-
-    def get_disabled_message(self):
-        return self.disabled_message
+    template_403_name = "errors/assistant_403.html"
+    _user_role = "assistant"
 
     def is_page_enabled(self, tournament):
         if tournament is None:
             return False
         if self.assistant_page_permissions is None:
             raise ImproperlyConfigured("assistant_page_permissions isn't set on this view.")
-        if tournament.pref('assistant_access') in self.assistant_page_permissions:
-            return True
-        else:
-            return False
-
-    def dispatch(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-        if tournament is None:
-            messages.info(self.request, _("That tournament no longer exists."))
-            return redirect('tabbycat-index')
-
-        if self.is_page_enabled(tournament):
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            logger.warning("Tried to access a disabled assistant page")
-            messages.error(self.request, self.get_disabled_message())
-            return redirect_tournament('tournament-assistant-home', tournament)
+        return tournament.pref('assistant_access') in self.assistant_page_permissions
 
 
 class CrossTournamentPageMixin(PublicTournamentPageMixin):
