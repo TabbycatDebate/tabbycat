@@ -3,7 +3,6 @@
 
 # Development Dependencies
 
-django-debug-toolbar==1.9.1             # Debug Toolbar
 six==1.11                               # Python 2/3 compatibility library
 flake8==3.5.0                           # For testing/linting
 flake8-import-order==0.16.0             # Flake plugin for import order

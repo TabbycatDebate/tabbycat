@@ -129,7 +129,7 @@ def get_git_push_spec():
     exit(1)
 
 # Create the app with addons
-addons = ["memcachier", "papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
+addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create"]
 if addons:
     command.extend(["--addons", ",".join(addons)])
@@ -139,6 +139,9 @@ output = get_output_from_command(command)
 match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
+
+# Add the redis app (it needs a config flag)
+run_heroku_command(["addons:create", "heroku-redis:hobby-dev", "--maxmemory_policy", "allkeys-lru"])
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "heroku/python"])

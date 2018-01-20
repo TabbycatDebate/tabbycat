@@ -136,6 +136,7 @@ CACHES = {
 # Use a db backed cache for sessions unless the app is retired (no db writes)
 if 'RETIRED' in os.environ:
     SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = "default"
 else:
     SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
@@ -280,25 +281,16 @@ ALLOWED_HOSTS = ['*']
 if 'TAB_DIRECTOR_EMAIL' in os.environ:
     TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
 
-# Memcache Services
-if os.environ.get('MEMCACHIER_SERVERS', ''):
+# Redis Services
+if os.environ.get('REDIS_URL', ''):
     try:
-        os.environ['MEMCACHE_SERVERS'] = os.environ[
-            'MEMCACHIER_SERVERS'].replace(',', ';')
-        os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
-        os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
         CACHES = {
-            'default': {
-                'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-                'TIMEOUT': 36000,
-                'BINARY': True,
-                'OPTIONS': {  # Maps to pylibmc "behaviors"
-                    # Enable faster IO
-                    'no_block': True,
-                    'tcp_nodelay': True,
-                },
-                # Timeout for set/get requests
-                '_poll_timeout': 2000,
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": os.environ.get('REDIS_URL'),
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                }
             }
         }
     except:
@@ -326,14 +318,51 @@ if os.environ.get('TRAVIS', '') == 'true':
     }
 
 # ==============================================================================
+# Debug Toolbar
+# ==============================================================================
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+)
+
+DEBUG_TOOLBAR_CONFIG = {
+    'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
+    'SHOW_COLLAPSED': True
+}
+
+# Must default to false; usually overridden in local_settings
+ENABLE_DEBUG_TOOLBAR = False
+
+# That said provide a flag to turn it on in Heroku
+if 'DEBUG_TOOLBAR' in os.environ and bool(int(os.environ['DEBUG_TOOLBAR'])):
+    ENABLE_DEBUG_TOOLBAR = True
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
+    INSTALLED_APPS += ('debug_toolbar',)
+    # Override check for internal IPs (and DEBUG=1) on Heroku
+    DEBUG_TOOLBAR_CONFIG['SHOW_TOOLBAR_CALLBACK'] = 'settings.show_toolbar'
+
+
+def show_toolbar(request):
+    return request.user.is_staff
+
+# ==============================================================================
 # Local Overrides and Docker
 # ==============================================================================
 
 # Hide league-related configuration options unless explicitly enabled
 LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
-
-# Must default to false; potentially overridden in local_settings
-ENABLE_DEBUG_TOOLBAR = False
 
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
     DEBUG = True # Just to be sure

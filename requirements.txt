@@ -6,9 +6,8 @@
 # Base Heroku Requirements (from the toolbelt)
 dj-database-url==0.4.2
 
-# Mem-Caching
-pylibmc==1.5.2
-django-pylibmc==0.6.1
+# Redis
+django-redis==4.8.0
 
 # Monitoring (note the required heroku add-on is not added by default)
 newrelic
