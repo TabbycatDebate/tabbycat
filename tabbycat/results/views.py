@@ -3,7 +3,6 @@ import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db import ProgrammingError
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import render
@@ -489,88 +488,6 @@ class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
         stats.append([(timestamps[-1][0] + margin).isoformat(), none, draft, confirmed])
 
         return stats
-
-
-class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
-
-    def get_data(self):
-        t = self.get_tournament()
-        ndebates = 8 if t.pref('teams_in_debate') == 'bp' else 15
-
-        ballotsubs = BallotSubmission.objects.filter(
-            debate__round__tournament=t, confirmed=True
-        ).prefetch_related(
-            'teamscore_set__debate_team', 'teamscore_set__debate_team__team'
-        ).select_related('debate__round').order_by('-timestamp')[:ndebates]
-
-        def format_dt(dt):
-            # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-            return _("%(team_name)s as %(side_abbr)s") % {
-                'team_name': dt.team.short_name, 'side_abbr': dt.get_side_name(t, 'abbr')}
-
-        results_objects = []
-        for ballotsub in ballotsubs:
-            try:
-                if t.pref('teams_in_debate') == 'two':
-                    winner = None
-                    loser = None
-                    for teamscore in ballotsub.teamscore_set.all():
-                        if teamscore.win:
-                            winner = teamscore.debate_team
-                        else:
-                            loser = teamscore.debate_team
-
-                    result = _("%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)")
-                    result = result % {
-                        'winner': winner.team.short_name,
-                        'winner_side': winner.get_side_name(t, 'abbr'),
-                        'loser': loser.team.short_name,
-                        'loser_side': loser.get_side_name(t, 'abbr'),
-                    }
-
-                elif ballotsub.debate.round.is_break_round:
-                    advancing = []
-                    eliminated = []
-                    for teamscore in ballotsub.teamscore_set.all():
-                        if teamscore.win:
-                            advancing.append(teamscore.debate_team)
-                        else:
-                            eliminated.append(teamscore.debate_team)
-
-                    result = _("Advancing: %(advancing_list)s<br>\n"
-                               "Eliminated: %(eliminated_list)s")
-                    result = result % {
-                        'advancing_list': ", ".join(format_dt(dt) for dt in advancing),
-                        'eliminated_list': ", ".join(format_dt(dt) for dt in eliminated),
-                    }
-
-                else:  # BP preliminary round
-                    ordered = [None] * 4
-                    for teamscore in ballotsub.teamscore_set.all():
-                        ordered[teamscore.points] = teamscore.debate_team
-
-                    result = _("1st: %(first_team)s<br>\n"
-                               "2nd: %(second_team)s<br>\n"
-                               "3rd: %(third_team)s<br>\n"
-                               "4th: %(fourth_team)s")
-                    result = result % {
-                        'first_team':  format_dt(ordered[3]),
-                        'second_team': format_dt(ordered[2]),
-                        'third_team':  format_dt(ordered[1]),
-                        'fourth_team': format_dt(ordered[0]),
-                    }
-
-            except (IndexError, AttributeError):
-                logger.exception("Error constructing latest result string")
-                result = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
-
-            results_objects.append({
-                'user': result,
-                'timestamp': naturaltime(ballotsub.timestamp),
-                'id': ballotsub.id
-            })
-
-        return results_objects
 
 
 # ==============================================================================

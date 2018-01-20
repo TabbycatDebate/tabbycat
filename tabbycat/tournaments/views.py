@@ -23,6 +23,7 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from importer.management.commands import importtournament
 from importer.importers import TournamentDataImporterError
+from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
@@ -76,6 +77,15 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
                     'content_object', 'user').order_by('-timestamp')[:15]
         kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
+
+        ndebates = 8 if t.pref('teams_in_debate') == 'bp' else 15
+        subs = BallotSubmission.objects.filter(
+            debate__round__tournament=t, confirmed=True).prefetch_related(
+            'teamscore_set__debate_team',
+            'teamscore_set__debate_team__team').select_related(
+            'debate__round').order_by('-timestamp')[:ndebates]
+        subs = [bs.serialize_like_actionlog for bs in subs]
+        kwargs["initialBallots"] = json.dumps(subs)
 
         return super().get_context_data(**kwargs)
 

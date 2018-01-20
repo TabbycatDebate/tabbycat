@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from .result import DebateResult
+from .utils import readable_ballotsub_result
 
 logger = logging.getLogger(__name__)
 
@@ -134,6 +135,17 @@ class BallotSubmission(Submission):
 
         if self.forfeit is not None and self.forfeit.debate != self.debate:
             raise ValidationError(_("The forfeiter must be a team in the debate."))
+
+    @property
+    def serialize_like_actionlog(self):
+        return {
+            'user': readable_ballotsub_result(self),
+            'id': self.id,
+            'type': '',
+            'param': '',
+            'timestamp': self.timestamp.strftime("%H:%M"),
+            'confirmed': self.confirmed
+        }
 
 
 class SpeakerScoreByAdj(models.Model):

@@ -12,9 +12,6 @@ urlpatterns = [
     path('json/status/',
         views.BallotsStatusJsonView.as_view(),
         name='results-ballots-graph-data'),
-    path('json/latest/',
-        views.LatestResultsJsonView.as_view(),
-        name='results-latest-json'),
 
     # Inline Actions
     path('round/<int:round_seq>/postpone/',

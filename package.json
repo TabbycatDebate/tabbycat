@@ -18,7 +18,6 @@
     "browserify": "15.2.0",
     "d3": "3.5.17",
     "datalist-polyfill": "^1.11.1",
-    "django-channels": "^1.1.8",
     "envify": "^4.0.0",
     "eslint": "^4.15.0",
     "event-stream": "3.3.4",

@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -180,5 +179,5 @@ class ActionLogEntry(models.Model):
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
             'type': self.get_type_display(),
             'param': self.get_content_object_display(),
-            'timestamp': naturaltime(self.timestamp),
+            'timestamp': self.timestamp.strftime("%H:%M")
         }

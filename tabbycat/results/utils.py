@@ -1,3 +1,4 @@
+import logging
 from itertools import combinations
 
 from django.db.models import Count
@@ -6,6 +7,78 @@ from django.utils.translation import ugettext_lazy
 
 from draw.models import Debate
 from tournaments.utils import get_side_name
+
+logger = logging.getLogger(__name__)
+
+
+def readable_ballotsub_result(ballotsub):
+    """ Make a human-readable representation of a debate result """
+
+    def format_dt(dt, t):
+        # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
+        return _("%(team_name)s as %(side_abbr)s") % {
+            'team_name': dt.team.short_name,
+            'side_abbr': dt.get_side_name(t, 'abbr')
+        }
+
+    t = ballotsub.debate.round.tournament
+    team_scores = ballotsub.teamscore_set.all()
+
+    try:
+        if t.pref('teams_in_debate') == 'two':
+            winner = None
+            loser = None
+            for teamscore in team_scores:
+                if teamscore.win:
+                    winner = teamscore.debate_team
+                else:
+                    loser = teamscore.debate_team
+
+            result = _("%(winner)s (%(winner_side)s) won vs %(loser)s (%(loser_side)s)")
+            result = result % {
+                'winner': winner.team.short_name,
+                'winner_side': winner.get_side_name(t, 'abbr'),
+                'loser': loser.team.short_name,
+                'loser_side': loser.get_side_name(t, 'abbr'),
+            }
+
+        elif ballotsub.debate.round.is_break_round:
+            advancing = []
+            eliminated = []
+            for teamscore in team_scores:
+                if teamscore.win:
+                    advancing.append(teamscore.debate_team)
+                else:
+                    eliminated.append(teamscore.debate_team)
+
+            result = _("Advancing: %(advancing_list)s<br>\n"
+                       "Eliminated: %(eliminated_list)s")
+            result = result % {
+                'advancing_list': ", ".join(format_dt(dt, t) for dt in advancing),
+                'eliminated_list': ", ".join(format_dt(dt, t) for dt in eliminated),
+            }
+
+        else:  # BP preliminary round
+            ordered = [None] * 4
+            for teamscore in team_scores:
+                ordered[teamscore.points] = teamscore.debate_team
+
+            result = _("1st: %(first_team)s<br>\n"
+                       "2nd: %(second_team)s<br>\n"
+                       "3rd: %(third_team)s<br>\n"
+                       "4th: %(fourth_team)s")
+            result = result % {
+                'first_team':  format_dt(ordered[3]),
+                'second_team': format_dt(ordered[2]),
+                'third_team':  format_dt(ordered[1]),
+                'fourth_team': format_dt(ordered[0]),
+            }
+
+    except (IndexError, AttributeError):
+        logger.exception("Error constructing latest result string")
+        result = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
+
+    return result
 
 
 def set_float_or_int(number, step_value):

@@ -84,7 +84,7 @@
 
   <div id="vueMount">
     <tournament-overview-container :initial-actions="initialActions"
-                                   :ballots-url="updateBallotsURL"
+                                   :initial-ballots="initialBallots"
                                    :round-status="roundStatus">
     </tournament-overview-container>
 
@@ -97,7 +97,8 @@
     window.vueData = {
       updateBallotsURL: '{% tournamenturl 'results-ballots-graph-data' %}',
       roundStatus: '{{ round.draw_status }}',
-      initialActions: {{ initialActions|safe }}
+      initialActions: {{ initialActions|safe }},
+      initialBallots: {{ initialBallots|safe }}
     }
   </script>
   {{ block.super }}
