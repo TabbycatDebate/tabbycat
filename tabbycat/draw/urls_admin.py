@@ -41,7 +41,7 @@ urlpatterns = [
 
         # Display
         path('display/',
-            views.AdminDrawDisplay.as_view(),
+            views.AdminDrawDisplayView.as_view(),
             name='draw-display'),
         path('display-by-venue/',
             views.AdminDrawDisplayForRoundByVenueView.as_view(),

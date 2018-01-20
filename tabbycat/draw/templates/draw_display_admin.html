@@ -1,5 +1,8 @@
-{% extends "draw_display_assistant.html" %}
+{% extends "base.html" %}
 {% load debate_tags i18n %}
+
+{% block head-title %}📺 {% trans "Display Draw" %}{% endblock %}
+{% block page-title %}{% trans "Display Draw" %}{% endblock %}
 
 {% block page-alerts %}
   <div class="mb-3">

@@ -6,7 +6,6 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
 from django.contrib import messages
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Prefetch, Q
 from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, redirect, reverse
@@ -23,7 +22,7 @@ from participants.models import Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import TabbycatPageTitlesMixin
+from utils.mixins import AssistantMixin, TabbycatPageTitlesMixin
 
 
 from .models import Round, Tournament
@@ -221,10 +220,10 @@ class PublicTournamentPageMixin(TournamentMixin):
             return redirect_tournament('tournament-public-index', tournament)
 
 
-class OptionalAssistantTournamentPageMixin(TournamentMixin, UserPassesTestMixin):
+class OptionalAssistantTournamentPageMixin(TournamentMixin, AssistantMixin):
     """Mixin for pages that are intended for assistants, but can be enabled and
     disabled by a tournament preference. This preference sets of access tiers;
-    if the page requires a certain tier to acess it then only superusers can
+    if the page requires a certain tier to access it then only superusers can
     view it.
 
     Views using the mixins should set the `assistant_page_permissions` class to
@@ -233,18 +232,16 @@ class OptionalAssistantTournamentPageMixin(TournamentMixin, UserPassesTestMixin)
 
     If an anonymous user tries to access this page, they will be redirected to
     the login page. If an assistant user tries to access this page while
-    assistant access is disabled, they will be redirected to the login page."""
+    assistant access is disabled, they will be shown an error message explaining
+    that the page is disabled."""
 
     assistant_page_permissions = None
+    disabled_message = ugettext_lazy("That assistant page isn't enabled for this tournament.")
 
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        if not self.request.user.is_authenticated:
-            return False
+    def get_disabled_message(self):
+        return self.disabled_message
 
-        # if we got this far, it's an assistant user
-        tournament = self.get_tournament()
+    def is_page_enabled(self, tournament):
         if tournament is None:
             return False
         if self.assistant_page_permissions is None:
@@ -253,6 +250,19 @@ class OptionalAssistantTournamentPageMixin(TournamentMixin, UserPassesTestMixin)
             return True
         else:
             return False
+
+    def dispatch(self, request, *args, **kwargs):
+        tournament = self.get_tournament()
+        if tournament is None:
+            messages.info(self.request, _("That tournament no longer exists."))
+            return redirect('tabbycat-index')
+
+        if self.is_page_enabled(tournament):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            logger.warning("Tried to access a disabled assistant page")
+            messages.error(self.request, self.get_disabled_message())
+            return redirect_tournament('tournament-assistant-home', tournament)
 
 
 class CrossTournamentPageMixin(PublicTournamentPageMixin):

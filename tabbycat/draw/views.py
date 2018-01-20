@@ -194,20 +194,17 @@ class AdminDrawUtiltiiesMixin:
 # Viewing Draw (Admin)
 # ==============================================================================
 
-class AdminDrawDisplay(AdminDrawUtiltiiesMixin, OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
-
-    assistant_page_permissions = ['all_areas', 'results_draw']
-    template_name = 'draw_display.html'
+class BaseDrawDisplayView(AdminDrawUtiltiiesMixin, RoundMixin, TemplateView):
+    pass
 
 
-class AdminDrawDisplayForRoundByVenueView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
+class BaseDrawDisplayForRoundByVenueView(BaseDrawTableView):
+    # inherit everything, this class is kept in code for ease of reading
+    pass
 
-    assistant_page_permissions = ['all_areas', 'results_draw']
 
+class BaseDrawDisplayForRoundByTeamView(BaseDrawTableView):
 
-class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
-
-    assistant_page_permissions = ['all_areas', 'results_draw']
     sort_key = '' # Leave with default sort order
 
     def populate_table(self, draw, table, round, tournament):
@@ -219,6 +216,31 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
         else:
             draw, teams = zip(*draw_by_team)
         super().populate_table(draw, table, round, tournament, highlight=teams)
+
+
+class AdminDrawDisplayView(AdministratorMixin, BaseDrawDisplayView):
+    template_name = 'draw_display_admin.html'
+
+
+class AdminDrawDisplayForRoundByVenueView(AdministratorMixin, BaseDrawDisplayForRoundByVenueView):
+    pass
+
+
+class AdminDrawDisplayForRoundByTeamView(AdministratorMixin, BaseDrawDisplayForRoundByTeamView):
+    pass
+
+
+class AssistantDrawDisplayView(OptionalAssistantTournamentPageMixin, BaseDrawDisplayView):
+    template_name = 'draw_display_assistant.html'
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+class AssistantDrawDisplayForRoundByVenueView(OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByVenueView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+class AssistantDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByTeamView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
 
 
 # ==============================================================================
