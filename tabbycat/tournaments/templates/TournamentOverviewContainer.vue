@@ -22,10 +22,8 @@
             <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="action in latestActions" :key="action.id"
+            <updates-list v-for="action in actions" :key="action.id"
                           :item="action"></updates-list>
-            <li class="list-group-item text-secondary" v-if="!latestActions">Loading...</li>
-            <li class="list-group-item text-secondary" v-if="latestActions.length === 0">No Actions Yet</li>
           </ul>
         </div>
       </div>
@@ -36,10 +34,7 @@
             <h5 class="mb-0">Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="result in latestResults" :key="result.id"
-                          :item="result"></updates-list>
-            <li class="list-group-item text-secondary" v-if="!latestResults">Loading...</li>
-            <li class="list-group-item text-secondary" v-if="latestResults.length === 0">No Results Yet</li>
+
           </ul>
         </div>
       </div>
@@ -51,65 +46,28 @@
 <script>
 import UpdatesList from  '../../templates/graphs/UpdatesList.vue'
 import BallotsGraph from '../../templates/graphs/BallotsGraph.vue'
+import { WebSocketBridge } from 'django-channels'
 
 export default {
   mixins: [],
   components: { UpdatesList, BallotsGraph },
-  props: [ 'actionsUrl', 'resultsUrl', 'ballotsUrl', 'roundStatus'],
-  data: function() {
+  props: [ 'initialActions', 'ballotsUrl', 'roundStatus'],
+  data: function () {
     return {
-      latestActions: false,
-      latestResults: false,
-      pollFrequency: 30000, // 30 seconds
+      actions: this.initialActions
     }
   },
   created: function() {
-    this.updateActions()
-    this.updateResults()
+    // Subscribe to action log web stocket stream
+    var sock = new WebSocket("ws://" + window.location.host + "/actionlog/latest/");
+    sock.onmessage = function (event) {
+      this.updateActions(JSON.parse(event.data).payload.data)
+    }
   },
   methods: {
-    updateActions: function() {
-      this.fetchData(this.actionsUrl, 'actions');
-    },
-    updateResults: function() {
-      this.fetchData(this.resultsUrl, 'results');
-    },
-    fetchData: function (apiURL, resource) {
-      var xhr = new XMLHttpRequest()
-      var self = this
-      xhr.open('GET', apiURL)
-      xhr.onload = function () {
-        if (xhr.status == 403) {
-          console.debug('DEBUG: JSON TournamentOverview fetchData gave 403 error');
-          if (resource === 'actions') {
-            self.latestActions = [{ "user": "Log in to resume updates." }]
-            setTimeout(self.updateActions, self.pollFrequency);
-          } else {
-            self.latestResults = [{ "user": "Log in to resume updates." }]
-            setTimeout(self.updateResults, self.pollFrequency);
-          }
-        } else {
-          console.debug('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText);
-          // We just catch all parsing errors below because these are often thrown
-          // by a 503 error being issues; typically due to unrelated factors
-          // (e.g. a round not being set). Errors in constructing the list
-          // should be flagged by the backend itself.
-          if (resource === 'actions') {
-            try {
-              self.latestActions = JSON.parse(xhr.responseText);
-            } finally {
-              setTimeout(self.updateActions, self.pollFrequency);
-            }
-          } else {
-            try {
-              self.latestResults = JSON.parse(xhr.responseText);
-            } finally {
-              setTimeout(self.updateResults, self.pollFrequency);
-            }
-          }
-        }
-      }
-      xhr.send()
+    updateActions: function(data) {
+      this.actions.pop() // Remove last item
+      this.actions.unshift(data) // Add new item to front
     }
   }
 }

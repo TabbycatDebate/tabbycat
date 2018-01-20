@@ -68,10 +68,15 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
     template_name = "tournament_index.html"
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs["round"] = tournament.current_round
+        t = self.get_tournament()
+        kwargs["round"] = t.current_round
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
-        kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
+        kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
+
+        actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
+                    'content_object', 'user').order_by('-timestamp')[:15]
+        kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
+
         return super().get_context_data(**kwargs)
 
 

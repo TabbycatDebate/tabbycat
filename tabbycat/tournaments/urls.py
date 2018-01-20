@@ -23,7 +23,6 @@ urlpatterns = [
     path('tab/',                include('standings.urls_public')),
 
     # Application URLs for admin pages
-    path('admin/actionlog/',    include('actionlog.urls')),
     path('admin/allocations/',  include('adjallocation.urls')),
     path('admin/availability/', include('availability.urls')),
     path('admin/break/',        include('breakqual.urls_admin')),

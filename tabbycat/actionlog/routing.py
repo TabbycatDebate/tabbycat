@@ -1,11 +1,14 @@
-from channels.routing import route
+from channels.routing import route_class
+# from channels.routing import route
 
-from .consumers import ws_add, ws_disconnect, ws_message
+from .consumers import ActionLogDemultiplexer
+# from .consumers import ws_add, ws_disconnect, ws_message
 
 
 channel_routing = [
     # Listen for the stream of latest actions
-    route("websocket.connect", ws_add, path=r"^/latest/"),
-    route("websocket.receive", ws_message, path=r"^/latest/"),
-    route("websocket.disconnect", ws_disconnect, path=r"^/latest/"),
+    route_class(ActionLogDemultiplexer, path="^/latest/"),
+    # route("websocket.connect", ws_add, path=r"^/latest/"),
+    # route("websocket.receive", ws_message, path=r"^/latest/"),
+    # route("websocket.disconnect", ws_disconnect, path=r"^/latest/"),
 ]
