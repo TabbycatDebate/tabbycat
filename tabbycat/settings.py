@@ -256,7 +256,7 @@ MESSAGE_TAGS = {messages.ERROR: 'danger', }
 # Channels
 # ==============================================================================
 
-# Channel settings; TODO: setup for Redis on Heroku
+# Channel settings; note this is for development only
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "asgiref.inmemory.ChannelLayer",
@@ -308,6 +308,15 @@ if os.environ.get('REDIS_URL', ''):
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
                 }
             }
+        }
+        CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "asgi_redis.RedisChannelLayer",
+                "CONFIG": {
+                    "hosts": [os.environ.get('REDIS_URL')],
+                },
+                "ROUTING": "routing.channel_routing",
+            },
         }
     except:
         CACHES = {
