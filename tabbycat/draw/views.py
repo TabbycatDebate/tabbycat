@@ -211,10 +211,6 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
     sort_key = '' # Leave with default sort order
 
     def populate_table(self, draw, table, round, tournament):
-        # Old version, remove when we decide to stick with the new version
-        # draw, teams = zip(*[(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)])
-        # table.add_team_columns(teams, hide_institution=True, key="Team")
-
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
         draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)]
         draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', x[1].short_name))
