@@ -7,5 +7,5 @@ from .consumers import TournamentOverviewDemultiplexer
 
 channel_routing = [
     # Listen for the stream of latest actions
-    route_class(TournamentOverviewDemultiplexer, path="^/latest/"),
+    route_class(TournamentOverviewDemultiplexer, path="^/overviews/"),
 ]

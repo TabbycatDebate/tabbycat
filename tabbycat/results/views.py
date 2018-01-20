@@ -21,7 +21,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, RoundMixin, SingleObj
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin, SuperuserRequiredMixin
-from utils.views import JsonDataResponsePostView, JsonDataResponseView, VueTableTemplateView
+from utils.views import JsonDataResponsePostView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from venues.models import Venue
 
@@ -438,56 +438,6 @@ class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
     private URL brings up the same form again with a double-submission error"""
 
     template_name = 'base.html'
-
-
-# ==============================================================================
-# JSON views for tournament overview page
-# ==============================================================================
-
-class BallotsStatusJsonView(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
-
-    def get_data(self):
-
-        rd = self.get_tournament().current_round
-        ballots = BallotSubmission.objects.filter(debate__round=rd, discarded=False)
-
-        # For each debate, find (a) the first non-discarded submission time, and
-        # (b) the last confirmed confirmation time. (Note that this means when
-        # a ballot is discarded, the graph will change retrospectively.)
-        first_drafts = {}   # keys: debate IDs, values: timestamps
-        confirmations = {}  # keys: debate IDs, values: timestamps
-        for ballot in ballots:
-            did = ballot.debate_id
-            if ballot.timestamp and (did not in first_drafts or first_drafts[did] > ballot.timestamp):
-                first_drafts[did] = ballot.timestamp
-            if ballot.confirmed and ballot.confirm_timestamp and (did not in confirmations or
-                    confirmations[did] < ballot.confirm_timestamp):
-                confirmations[did] = ballot.confirm_timestamp
-
-        # Collate timestamps into a single list. Tuples are (time, none_change, draft_change, confirmed_change)
-        first_draft_timestamps = [(time, -1, +1, 0) for time in first_drafts.values()]
-        confirmation_timestamps = [(time, 0, -1, +1) for time in confirmations.values()]
-        timestamps = sorted(first_draft_timestamps + confirmation_timestamps)
-
-        if len(timestamps) == 0:
-            return []
-
-        # Generate the timeline, including one-minute margins on either side
-        margin = datetime.timedelta(minutes=1)
-        none = rd.debate_set.count()
-        draft = 0
-        confirmed = 0
-        stats = [[(timestamps[0][0] - margin).isoformat(), none, draft, confirmed]]
-        for time, none_change, draft_change, confirmed_change in timestamps:
-            time_iso = time.isoformat()
-            stats.append([time_iso, none, draft, confirmed])
-            none += none_change
-            draft += draft_change
-            confirmed += confirmed_change
-            stats.append([time_iso, none, draft, confirmed])
-        stats.append([(timestamps[-1][0] + margin).isoformat(), none, draft, confirmed])
-
-        return stats
 
 
 # ==============================================================================

@@ -3,7 +3,7 @@
 
     <svg id="ballotsStatusGraph" class="d3-graph"
          style="margin-top: -15px; margin-bottom: -15px; width: 100%;"></svg>
-    <div v-if="!graphData" class="text-center">
+    <div v-if="graphData.length === 0" class="text-center">
       No ballots in for this round yet
     </div>
 
@@ -15,41 +15,26 @@ var d3 = require("d3");
 
 export default {
   props: {
-    pollUrl: String,
     height: { type: Number, default: 200 },
     padding: { type: Number, default: 30 },
-    pollFrequency: { type: Number, default: 30000 }, // 30s
-  },
-  data: function() {
-    return {
-      graphData: { type: Object,  default: false }
-    }
-  },
-  methods: {
-    fetchData: function () {
-      var xhr = new XMLHttpRequest()
-      xhr.open('GET', this.pollUrl)
-      var self = this
-      xhr.onload = function(event) {
-        if (xhr.status == 403) {
-          console.debug('DEBUG: JSON TournamentOverview BallotsGraph gave 403 error');
-        } else {
-          self.graphData = JSON.parse(xhr.responseText)
-          if (self.graphData.length > 0) {
-            initChart(self); // Don't init if no data is present
-          }
-        }
-        setTimeout(self.fetchData, self.pollFrequency);
-      }
-      xhr.send()
-    }
+    graphData: { type: Array,  default: false }
   },
   mounted: function() {
-    this.fetchData();
+    initChart(this) // Don't init if no data is present
   },
+  watch: {
+    graphData: function (val, oldVal) {
+      console.log('graphData new: %s, old: %s', val, oldVal)
+      if (this.graphData.length > 0) {
+        initChart(this) // Don't init if no data is present
+      }
+    }
+  }
 }
 
 function initChart(vueContext){
+
+  console.log('initChart()')
 
   // Responsive width
   vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10);
@@ -100,5 +85,5 @@ function initChart(vueContext){
     .call(xAxis)
     .attr("transform", "translate(0," + vueContext.height + ")");
 
-};
+}
 </script>

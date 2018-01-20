@@ -7,8 +7,8 @@ export default {
   created: function() {
     var sock = new WebSocket("ws://" + window.location.host + this.socketPath);
     sock.onmessage = function(event) {
-      var message = JSON.parse(event.data).payload
-      this.handleSocketMessage(message)
+      var message = JSON.parse(event.data)
+      this.handleSocketMessage(message.stream, message.payload)
     }.bind(this)
   }
 }

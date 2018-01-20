@@ -1,13 +1,13 @@
 <template>
   <div>
 
-    <div class="row" v-if="roundStatus === 'R' || roundStatus === 'C'">
+    <div class="row" v-if="graphData.length > 0">
 
       <div class="col">
         <div class="card mt-3">
           <div class="card-body">
             <h5 class="mb-2 text-center">Ballots Status</h5>
-            <!-- <ballots-graph :poll-url="ballotsUrl"></ballots-graph> -->
+            <ballots-graph :graph-data="graphData" :poll-url="ballotsUrl"></ballots-graph>
           </div>
         </div>
       </div>
@@ -39,6 +39,7 @@
           </ul>
         </div>
       </div>
+
     </div>
 
   </div>
@@ -53,38 +54,44 @@ import _ from 'lodash'
 export default {
   mixins: [ WebSocketMixin ],
   components: { UpdatesList, BallotsGraph },
-  props: [ 'initialActions', 'initialBallots', 'roundStatus'],
+  props: [ 'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
       actions: this.initialActions,
       ballots: this.initialBallots,
-      socketPath: "/actionlog/latest/"
+      graphData: this.initialGraphData,
+      socketPath: "/actionlog/overviews/"
     }
   },
   methods: {
-    handleSocketMessage: function(message) {
+    handleSocketMessage: function(stream, payload) {
       // Check what type the stream is
-      if (message.model === "actionlog.actionlogentry") {
+      console.log(stream, payload)
+
+      if (stream === "status") {
+        this.graphData = payload.data
+        return
+      }
+
+      if (stream === "actionlog") {
         var dataType = "actions"
       }
-      if (message.model === "results.ballotsubmission") {
+      if (stream === "ballot") {
         var dataType = "ballots"
-        console.log('handle ballot', message.data.confirmed)
-        if (message.data.confirmed === false) {
+        if (payload.data.confirmed === false) {
           return // Don't update the list for unconfirmed ballots
         }
       }
+
       // Check for duplicates; do a inline replace if so
       let duplicateIndex = _.findIndex(this[dataType], function(i) {
-        return i.id == message.data.id
+        return i.id == payload.data.id
       })
       if (duplicateIndex != -1) {
-        this[dataType][duplicateIndex] = message.data
-        console.log('duplicate')
+        this[dataType][duplicateIndex] = payload.data
       } else {
         this[dataType].pop() // Remove last item
-        this[dataType].unshift(message.data) // Add new item to front
-        console.log('add')
+        this[dataType].unshift(payload.data) // Add new item to front
       }
     }
   }

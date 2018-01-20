@@ -24,6 +24,7 @@ from draw.models import Debate
 from importer.management.commands import importtournament
 from importer.importers import TournamentDataImporterError
 from results.models import BallotSubmission
+from results.utils import graphable_debate_statuses
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
@@ -70,6 +71,8 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
+        cr = t.current_round
+
         kwargs["round"] = t.current_round
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
@@ -86,6 +89,13 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
             'debate__round').order_by('-timestamp')[:ndebates]
         subs = [bs.serialize_like_actionlog for bs in subs]
         kwargs["initialBallots"] = json.dumps(subs)
+
+        status = cr.draw_status
+        if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
+            ballots = BallotSubmission.objects.filter(debate__round=cr,
+                                                      discarded=False)
+            stats = graphable_debate_statuses(ballots, cr)
+            kwargs["initialGraphData"] = json.dumps(stats)
 
         return super().get_context_data(**kwargs)
 

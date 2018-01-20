@@ -8,11 +8,6 @@ urlpatterns = [
         views.ResultsEntryForRoundView.as_view(),
         name='results-round-list'),
 
-    # JSON updates
-    path('json/status/',
-        views.BallotsStatusJsonView.as_view(),
-        name='results-ballots-graph-data'),
-
     # Inline Actions
     path('round/<int:round_seq>/postpone/',
         views.PostponeDebateView.as_view(),
