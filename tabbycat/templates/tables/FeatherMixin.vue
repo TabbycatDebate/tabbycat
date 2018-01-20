@@ -12,7 +12,7 @@ export default {
       // Need to dynamically update icons once table order changes
       // as they are otherwise tied to the DOM
       if (this.icon) {
-        return feather.toSvg(this.icon);
+        return feather.icons[this.icon].toSvg()
       }
     }
   },

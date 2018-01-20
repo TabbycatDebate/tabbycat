@@ -7,8 +7,15 @@
 {% block page-alerts %}
 
   {# Administrators have a different alert that has a link, see admin_results.html. #}
+  {% if pref.teams_in_debate == "bp" and pref.ballots_per_debate == "per-adj" and user_role == "assistant" %}
+    {% blocktrans trimmed asvar message %}
+      This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Please ask an administrator to change this configuration.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="danger" %}
+  {% endif %}
+
+  {# Administrators have a different alert that has a link, see admin_results.html. #}
   {% if pref.enable_motions and round.motion_set.count == 0 and user_role == "assistant" %}
-    {% roundurl 'motions-edit' current_round as motions_url %}
     {% blocktrans trimmed asvar message %}
       Currently there are no motions entered for this round, so debate results
       cannot be entered. Please ask an administrator to add motions.

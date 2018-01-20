@@ -42,25 +42,22 @@ satisfying a particular need. For example, you might have a category for each of
 
 Each venue can be in as many categories as you like (or none at all).
 
-To add a venue category, go to the **Edit Database** area (under
-Setup), scroll down to "Venues" and click "Venue categories". Then
-click the **+ Add venue category** button in the top-right of the
-page. You'll see a page with this on it:
-
 .. image:: images/add-venue-category.png
 
-Give your category a name (like "Step-free access"), assign it some venues, then
-click one of the "Save" buttons.
+To add or edit venue categories, go to the **Import Data** area (under
+Setup) then select **Add/Edit Venue Categories**. Note that this page will show all existing Venue Categories first before showing the blank forms that allow you to create new categories. Give your category a name (like "Step-free access"), assign it some venues, then click the "Save Venue Categories" button at the bottom of the page.
+
+Alternately you can add or edit a venue category by going to the **Edit Database** area (under Setup), scroll down to "Venues" and click "Venue categories". Then click the **+ Add venue category** button in the top-right of the page or click an existing item.
 
 Adding venue constraints
 ========================
 
-To add a venue constraint, go to the **Edit Database** area (under Setup),
-scroll down to "Venues", and click "Venue Constraints". Then click the **+ Add
-venue constraint** button in the top-right of the page. You'll see a page with
-this on it:
+To add or edit venue constraints, go to the **Import Data** area (under
+Setup) then select **Add/Edit Venue Constraints**. Note that this page will show all existing Venue Constraints first before showing the blank forms that allow you to create new categories. Note that the "Constrainee ID" field should let you select from a dropdown or type in the name of an adjudicator, institution, or team (rather than having to lookup the exact ID).
 
 .. image:: images/add-venue-constraint.png
+
+Alternately you can add or edit a venue category by going to the **Edit Database** area (under Setup), scroll down to "Venues" and click "Venue constraints". Then click the **+ Add venue category** button in the top-right of the page or click an existing item.
 
 For each constraint, you need to specify four things:
 
