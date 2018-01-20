@@ -28,6 +28,10 @@ sqlparse==0.2.4                         # Parsing SQL statements
 whitenoise==3.3.1                       # Static file serving
 waitress==1.1.0                         # For web serving
 
+# Channels
+
+channels==1.1.8
+
 # Misc
 
 django-debug-toolbar==1.9.1             # Debug; but useful to run in prod sometimes
