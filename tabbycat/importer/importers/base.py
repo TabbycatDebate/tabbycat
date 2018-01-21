@@ -246,9 +246,16 @@ class BaseTournamentDataImporter(object):
             for itemno, kwargs in enumerate(kwargs_list, start=1):
 
                 # Extra conversion for booleans (Django's BooleanField.to_python() is too restrictive)
+                boolean_error = False
                 for fieldname in kwargs:
                     if fieldname in boolean_fields:
-                        kwargs[fieldname] = convert_bool(kwargs[fieldname])
+                        try:
+                            kwargs[fieldname] = convert_bool(kwargs[fieldname])
+                        except ValueError as e:
+                            errors.add(lineno, model, str(e))
+                            boolean_error = True
+                if boolean_error:
+                    continue
 
                 description = model.__name__ + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
