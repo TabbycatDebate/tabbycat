@@ -8,8 +8,8 @@
 export default {
   created: function() {
     var path = "/" + this.tournamentId + this.socketPath + "/"
-    console.log("WS Connection", window.location.host + path)
-    var sock = new WebSocket("ws://" + window.location.host + path)
+    console.log("WS Connection", "wss://" + window.location.host + path)
+    var sock = new WebSocket("wss://" + window.location.host + path)
 
     sock.onmessage = function(event) {
       var message = JSON.parse(event.data)
