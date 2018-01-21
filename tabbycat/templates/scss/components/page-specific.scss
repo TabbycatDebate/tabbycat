@@ -156,15 +156,3 @@
 .draw-xl {
   font-size: $font-size-base * 1.55;
 }
-
-//------------------------------------------------------------------------------
-// Record Pages
-//------------------------------------------------------------------------------
-
-.record-this-round .list-group-item.lead.active a {
-  color: #fff;
-}
-
-.record-this-round .list-group-item.lead.active strong {
-  font-weight: bold;
-}
