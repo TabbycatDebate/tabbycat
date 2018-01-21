@@ -13,6 +13,7 @@ var uglify = require('gulp-uglify');
 
 // Browserify
 var browserify = require('browserify'); // Bundling modules
+var watchify = require('watchify'); // Incremental browserify; much faster!
 var babelify = require('babelify'); // Use ES syntax
 var vueify = require('vueify');
 var source = require('vinyl-source-stream'); // Use browserify in gulp
@@ -29,8 +30,58 @@ if (isProduction === true) {
   console.log('GULP: Building for development');
 }
 
-// Tasks
+function bundleBrowserify(){
+  // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
+  // We define our input files, which we want to have bundled...
+  var files = [
+      'tabbycat/templates/js-bundles/public.js',
+      'tabbycat/templates/js-bundles/admin.js'
+  ];
+  // ...then map them to our stream function
+  var tasks = files.map(function(entry) {
+    return watchify(browserify({ entries: [entry],
+                                 noparse: ['jquery', 'lodash'], // Skip big libs
+      }))
+      .on('update', function() {
+        // Recompile files incrementally after updates (on develop)
+        if (!isProduction) {
+          gulp.start('js-browserify-incremental');
+        }
+      })
+      .transform(vueify).on('error', gutil.log)
+      .transform([babelify, {
+          presets: ["es2015"],
+          plugins: ['transform-runtime']
+        }])
+        .on('error', gutil.log)
+      .transform(envify, {
+          // Read from the gulp --production flag to determine whether Vue
+          // should be in development mode or not
+          global: true,
+          _: 'purge',
+        })
+        .on('error', gutil.log)
+      .bundle().on('error', gutil.log)
+        .on('error', function() {
+          gutil.log
+          this.emit('end');
+        })
+      .pipe(source(entry)).on('error', gutil.log)
+      .pipe(isProduction ? streamify(uglify()) : gutil.noop()).on('error', gutil.log)
+      .pipe(rename({
+          extname: '.bundle.js',
+          dirname: ''
+      }))
+      .pipe(gulp.dest(outputDir + '/js/'));
+      // .pipe(isProduction ? gutil.noop() : livereload());
+      // TODO: get proper hot reloading going?
+  });
+  // create a merged stream
+  return es.merge.apply(null, tasks);
+}
 
+
+// Tasks
 gulp.task('fonts-compile', function() {
   gulp.src([
       'node_modules/inter-ui/Inter UI (web)/*.woff',
@@ -68,57 +119,16 @@ gulp.task("js-compile", function() {
     .pipe(isProduction ? gutil.noop() : livereload());
 });
 
+gulp.task("js-browserify-incremental", function() {
+  bundleBrowserify(true);
+});
+
 gulp.task("js-browserify", function() {
-  // With thanks to https://fettblog.eu/gulp-browserify-multiple-bundles/
-  // We define our input files, which we want to have bundled
-  var files = [
-      'tabbycat/templates/js-bundles/public.js',
-      'tabbycat/templates/js-bundles/admin.js'
-  ];
-  // map them to our stream function
-  var tasks = files.map(function(entry) {
-    return browserify({ entries: [entry],
-                        noparse: ['jquery', 'lodash'], // Skip big libs
-                        fast: false, // Skip detecting/inserting global vars
-      })
-      .transform(vueify)
-        .on('error', gutil.log)
-      .transform([babelify, {
-          presets: ["es2015"],
-          plugins: ['transform-runtime']
-        }])
-        .on('error', gutil.log)
-      .transform(envify, {
-          // Read from the gulp --production flag to determine whether Vue
-          // should be in development mode or not
-          global: true,
-          _: 'purge',
-        })
-        .on('error', gutil.log)
-      .bundle().on('error', gutil.log)
-        .on('error', function() {
-          gutil.log
-          this.emit('end');
-        })
-      .pipe(source(entry))
-        .on('error', gutil.log)
-      .pipe(isProduction ? streamify(uglify()) : gutil.noop())
-        .on('error', gutil.log)
-      .pipe(rename({
-          extname: '.bundle.js',
-          dirname: ''
-      }))
-      .pipe(gulp.dest(outputDir + '/js/'));
-      // .pipe(isProduction ? gutil.noop() : livereload());
-      // TODO: get proper hot reloading going?
-  });
-  // create a merged stream
-  return es.merge.apply(null, tasks);
+  bundleBrowserify(false);
 });
 
 gulp.task("html-reload", function() {
-  return gulp.src('')
-    .pipe(livereload());
+  return gulp.src('').pipe(livereload());
 });
 
 // Runs with --production if debug is false or there's no local settings
@@ -136,8 +146,6 @@ gulp.task('watch', ['build'], function() {
   livereload.listen();
   gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);
   gulp.watch('tabbycat/templates/js-standalones/*.js', ['js-compile']);
-  gulp.watch('tabbycat/templates/js-bundles/*.js', ['js-browserify']);
-  gulp.watch('tabbycat/**/*.vue', ['js-browserify']);
   gulp.watch('tabbycat/**/*.html', ['html-reload']);
   console.log('---------------------------');
   console.log('Finished building Tabbycat!');

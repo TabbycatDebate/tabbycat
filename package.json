@@ -42,7 +42,8 @@
     "vinyl-source-stream": "2.0.0",
     "vue": "2.5.13",
     "vue-template-compiler": "2.5.13",
-    "vueify": "9.4.1"
+    "vueify": "9.4.1",
+    "watchify": "3.9.0"
   },
   "scripts": {
     "build": "gulp build --development",
