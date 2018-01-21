@@ -2,7 +2,7 @@ from contextlib import contextmanager
 import json
 import logging
 
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.test import Client, modify_settings, override_settings, tag, TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver
