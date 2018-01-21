@@ -64,28 +64,24 @@ function leastSquares(xSeries, ySeries) {
 function initChart(vueContext){
 
   // Range is the pixel coordinates; domain is the axes range
-  var xScale = d3.scale.linear()
+  var xScale = d3.scaleLinear()
     .range([0, vueContext.width])
     .domain([0, vueContext.cellData.roundSeq])
 
-  var yScale = d3.scale.linear()
+  var yScale = d3.scaleLinear()
     .range([vueContext.height, 0])
     .domain([vueContext.cellData.minScore, vueContext.cellData.maxScore])
 
   // Scale axis to fit the range specified
-  var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("bottom")
-    .innerTickSize(-vueContext.height)
-    .outerTickSize(0)
+  var xAxis = d3.axisBottom(xScale)
+    .tickSizeInner(-vueContext.height)
+    .tickSizeOuter(0)
     .tickFormat(function (d) { return ''; }) // Hide ticks
     .tickValues(d3.range(0, vueContext.cellData.roundSeq + 0.5, 1)) // Set tick increments
 
-  var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient("left")
-    .innerTickSize(-vueContext.width)
-    .outerTickSize(0)
+  var yAxis = d3.axisLeft(yScale)
+    .tickSizeInner(-vueContext.width)
+    .tickSizeOuter(0)
     .tickPadding(10)
     .tickFormat(function (d) { return ''; }) // Hide ticks
     .tickValues(d3.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))  // Set tick increments

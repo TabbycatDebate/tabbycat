@@ -16,7 +16,7 @@
     "babelify": "8.0.0",
     "bootstrap": "^4.0.0",
     "browserify": "15.2.0",
-    "d3": "3.5.17",
+    "d3": "4.12.2",
     "datalist-polyfill": "^1.11.1",
     "envify": "^4.0.0",
     "eslint": "^4.15.0",

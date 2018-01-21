@@ -55,7 +55,6 @@ export default {
     },
     showPopover: function(event) {
       // Popovers are disabled sometimes; e.g. on a scrolling draw page
-      console.log('con', this.$refs.popHTML)
       if ($(event.target).hasClass("disable-hover") === false){
 
         // Unclear if waiting for nextTick helps here, but there were errors

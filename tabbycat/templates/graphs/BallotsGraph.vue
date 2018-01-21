@@ -54,9 +54,9 @@ function initChart(vueContext){
   // Responsive width
   vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10);
 
-  var x = d3.time.scale().range([0, vueContext.width])
-  var y = d3.scale.linear().range([vueContext.height, 0])
-  var z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
+  var x = d3.scaleTime().range([0, vueContext.width])
+  var y = d3.scaleLinear().range([vueContext.height, 0])
+  var z = d3.scaleOrdinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
 
   d3.selectAll("#ballotsStatusGraph > svg > *").remove(); // Remove prior graph
 
@@ -71,34 +71,40 @@ function initChart(vueContext){
   var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
   var remapped =["c1","c2","c3"].map(function(dat,i){
       return matrix.map(function(d,ii){
-          return {x: d3.time.format.iso.parse(d[0]), y: d[i+1]};
+          return {x: d3.isoParse(d[0]), y: d[i+1]}
       })
   });
-  var stacked = d3.layout.stack()(remapped)
 
-  x.domain([stacked[0][0].x, stacked[0][stacked[0].length - 1].x]);
-  y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
+  console.log(remapped)
+  var stack = d3.stack()
+  var stacked = stack(remapped)
+  console.log(stacked)
 
-  var area = d3.svg.area()
+  x.domain(0, 6)
+  y.domain(0, 6)
+  // x.domain([stacked[0][0].x, stacked[0][stacked[0].length - 1].x]);
+  // y.domain([0, d3.max(stacked[stacked.length - 1], function(d) {
+  //   return d.y0 + d.y;
+  // })]);
+
+  var area = d3.area()
     .x(function(d) { return x(d.x); })
     .y0(function(d) { return y(d.y0); })
-    .y1(function(d) { return y(d.y0 + d.y); });
+    .y1(function(d) { return y(d.y0 + d.y); })
 
   svg.selectAll("path")
     .data(stacked)
     .enter().append("path")
     .attr("d", area)
-    .style("fill", function(d, i) { return z(i); });
+    .style("fill", function(d, i) { return z(i); })
 
   // Add Scales
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .tickFormat(d3.time.format("%H:%M"));
+  // var xAxis = d3.axisTop()
+  //   .tickFormat(d3.timeParse("%H:%M"))
 
-  svg.append("g").attr("class", "x axis")
-    .call(xAxis)
-    .attr("transform", "translate(0," + vueContext.height + ")");
+  // svg.append("g").attr("class", "x axis")
+  //   .call(xAxis)
+  //   .attr("transform", "translate(0," + vueContext.height + ")")
 
 };
 </script>
