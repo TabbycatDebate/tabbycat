@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="row" v-if="graphData.length > 0">
+    <div class="row" v-if="graphData && graphData.length > 0">
 
       <div class="col">
         <div class="card mt-3">
@@ -24,6 +24,9 @@
           <ul class="list-group list-group-flush">
             <updates-list v-for="action in actions" :key="action.id"
                           :item="action"></updates-list>
+            <li class="list-group-item text-secondary" v-if="actions.length === 0">
+              No Actions Yet
+            </li>
           </ul>
         </div>
       </div>
@@ -36,6 +39,9 @@
           <ul class="list-group list-group-flush">
             <updates-list v-for="ballot in ballots" :key="ballot.id"
                           :item="ballot"></updates-list>
+            <li class="list-group-item text-secondary" v-if="ballots.length === 0">
+              No Results Yet
+            </li>
           </ul>
         </div>
       </div>

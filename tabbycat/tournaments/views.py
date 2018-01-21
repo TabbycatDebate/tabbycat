@@ -98,7 +98,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
             stats = graphable_debate_statuses(ballots, cr)
             kwargs["initialGraphData"] = json.dumps(stats)
         else:
-            kwargs["initialGraphData"] = json.dumps(None)
+            kwargs["initialGraphData"] = json.dumps([])
 
         return super().get_context_data(**kwargs)
 
