@@ -12,13 +12,14 @@ class ActionLogEntryBinding(WebsocketBinding):
     model = ActionLogEntry
     stream = "actionlog"
     fields = ["__all__"]
+    # We set the group_format dynamically to include the tournament ID
+    # So that the group becomes a per-tournament subscription to prevent mixed
+    # updates from different tournaments
+    group_format = 'actionlog-updates-{tournament_id}'
 
     @classmethod
     def group_names(cls, instance):
-        return ["actionlog-updates"]
-
-    def has_permission(self, user, action, pk):
-        return True
+        return [cls.group_format.format(tournament_id=instance.tournament_id)]
 
     # Override default method
     def serialize_data(self, instance):
@@ -30,17 +31,14 @@ class BallotSubmissionBinding(WebsocketBinding):
     model = BallotSubmission
     stream = "ballot"
     fields = ["__all__"]
+    group_format = 'ballot-updates-{tournament_id}'
 
     @classmethod
     def group_names(cls, instance):
-        return ["ballot-updates"]
+        return [cls.group_format.format(tournament_id=instance.tournament_id)]
 
-    def has_permission(self, user, action, pk):
-        return True
-
-    # Override default method
+    # Override default method'
     def serialize_data(self, instance):
-        print(instance.id, 'serialised ballots for results')
         return instance.serialize_like_actionlog
 
 
@@ -49,10 +47,11 @@ class DebateStatusBinding(WebsocketBinding):
     model = BallotSubmission
     stream = "status"
     fields = ["__all__"]
+    group_format = 'debate-status-updates-{tournament_id}'
 
     @classmethod
     def group_names(cls, instance):
-        return ["debate-status-updates"]
+        return [cls.group_format.format(tournament_id=instance.tournament_id)]
 
     def has_permission(self, user, action, pk):
         return True
@@ -78,6 +77,12 @@ class TournamentOverviewDemultiplexer(WebsocketDemultiplexer):
         "status": DebateStatusBinding.consumer
     }
 
-    def connection_groups(self):
+    def connection_groups(self, *args, **kwargs):
         # These must match group_names in the WebsocketBindings (I think)
-        return ["actionlog-updates", "ballot-updates", "debate-status-updates"]
+        print('test', kwargs['tournament_id'])
+        tournament_id = kwargs['tournament_id']
+        return [
+            "actionlog-updates" + "-" + tournament_id,
+            "ballot-updates" + "-" + tournament_id,
+            "debate-status-updates" + "-" + tournament_id
+        ]

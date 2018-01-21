@@ -6,5 +6,5 @@ from channels import include
 # Note the lack of trailing "/" (but paths in apps need a trailing "/")
 
 channel_routing = [
-    include('actionlog.routing.channel_routing', path=r"^/actionlog")
+    include('actionlog.routing.channel_routing', path=r"^/(?P<tournament_id>[^/]+)/actionlog")
 ]

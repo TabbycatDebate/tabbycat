@@ -179,5 +179,5 @@ class ActionLogEntry(models.Model):
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
             'type': self.get_type_display(),
             'param': self.get_content_object_display(),
-            'timestamp': self.timestamp.strftime("%H:%M")
+            'timestamp': self.timestamp.strftime("%d/%m %H:%M")
         }

@@ -54,13 +54,13 @@ import _ from 'lodash'
 export default {
   mixins: [ WebSocketMixin ],
   components: { UpdatesList, BallotsGraph },
-  props: [ 'initialActions', 'initialBallots', 'initialGraphData'],
+  props: [ 'tournamentId', 'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
       actions: this.initialActions,
       ballots: this.initialBallots,
       graphData: this.initialGraphData,
-      socketPath: "/actionlog/overviews/"
+      socketPath: "/actionlog/overviews"
     }
   },
   methods: {

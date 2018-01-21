@@ -108,10 +108,10 @@ def readable_ballotsub_result(ballotsub):
                        "3rd: %(third_team)s<br>\n"
                        "4th: %(fourth_team)s")
             result = result % {
-                'first_team':  format_dt(ordered[3]),
-                'second_team': format_dt(ordered[2]),
-                'third_team':  format_dt(ordered[1]),
-                'fourth_team': format_dt(ordered[0]),
+                'first_team':  format_dt(ordered[3], t),
+                'second_team': format_dt(ordered[2], t),
+                'third_team':  format_dt(ordered[1], t),
+                'fourth_team': format_dt(ordered[0], t),
             }
 
     except (IndexError, AttributeError):

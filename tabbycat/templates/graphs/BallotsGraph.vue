@@ -34,8 +34,6 @@ export default {
 
 function initChart(vueContext){
 
-  console.log('initChart()')
-
   // Responsive width
   vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10);
 

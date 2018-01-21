@@ -74,6 +74,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         cr = t.current_round
 
         kwargs["round"] = t.current_round
+        kwargs["tournament_id"] = t.id
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
 

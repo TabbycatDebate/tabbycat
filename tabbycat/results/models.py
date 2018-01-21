@@ -143,7 +143,7 @@ class BallotSubmission(Submission):
             'id': self.id,
             'type': '',
             'param': '',
-            'timestamp': self.timestamp.strftime("%H:%M"),
+            'timestamp': self.timestamp.strftime("%d/%m %H:%M"),
             'confirmed': self.confirmed
         }
 
