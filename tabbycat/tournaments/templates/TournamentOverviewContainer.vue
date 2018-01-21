@@ -78,7 +78,6 @@ export default {
         this.graphData = payload.data
         return
       }
-
       if (stream === "actionlog") {
         var dataType = "actions"
       }
@@ -96,8 +95,12 @@ export default {
       if (duplicateIndex != -1) {
         this[dataType][duplicateIndex] = payload.data
       } else {
-        this[dataType].pop() // Remove last item
-        this[dataType].unshift(payload.data) // Add new item to front
+        // Add new item to front
+        this[dataType].unshift(payload.data)
+        // Remove last item if at the limit
+        if (this[dataType].length >= 15) {
+          this[dataType].pop()
+        }
       }
     }
   }

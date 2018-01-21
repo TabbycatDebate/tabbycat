@@ -72,6 +72,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
         cr = t.current_round
+        updates = 15 # Number of items to fetch
 
         kwargs["round"] = t.current_round
         kwargs["tournament_id"] = t.id
@@ -79,15 +80,14 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
 
         actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
-                    'content_object', 'user').order_by('-timestamp')[:15]
+                    'content_object', 'user').order_by('-timestamp')[:updates]
         kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
 
-        ndebates = 8 if t.pref('teams_in_debate') == 'bp' else 15
         subs = BallotSubmission.objects.filter(
             debate__round__tournament=t, confirmed=True).prefetch_related(
             'teamscore_set__debate_team',
             'teamscore_set__debate_team__team').select_related(
-            'debate__round').order_by('-timestamp')[:ndebates]
+            'debate__round').order_by('-timestamp')[:updates]
         subs = [bs.serialize_like_actionlog for bs in subs]
         kwargs["initialBallots"] = json.dumps(subs)
 
