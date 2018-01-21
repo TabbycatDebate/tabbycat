@@ -11,7 +11,7 @@ class TestParticipantLookup(TestCase):
         self.tournament = Tournament.objects.create(slug="main")
         self.region = Region.objects.create()
         self.institution = Institution.objects.create(name="An Institution", code="Inst",
-                abbreviation="In.", region=self.region)
+                region=self.region)
 
         # team1 uses institution prefix, team2 does not
         self.team1 = Team.objects.create(institution=self.institution, reference="The First",
