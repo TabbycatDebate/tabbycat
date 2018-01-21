@@ -525,6 +525,15 @@ class Adjudicator(Person):
             self._seen_adjudicator_cache[before_round] = [da.adjudicator_id for da in qs]
         return self._seen_adjudicator_cache[before_round].count(adj.id)
 
+    def clean(self):
+        errors = {}
+        min_score = self.tournament.pref('adj_min_score')
+        max_score = self.tournament.pref('adj_max_score')
+        if self.test_score < min_score or max_score < self.test_score:
+            errors['test_score'] = _("This value must be between %d and %d" % (min_score, max_score))
+        if errors:
+            raise ValidationError(errors)
+
     def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
         adj['conflicts'] = {'clashes': [], 'histories': []}
