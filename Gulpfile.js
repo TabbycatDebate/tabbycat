@@ -10,10 +10,13 @@ var envify = require('envify');
 // Compression
 var cleanCSS = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
+var sourcemaps  = require('gulp-sourcemaps'); // Make source maps
+var buffer = require('vinyl-buffer'); // Need to convert stream back for maps
 
 // Browserify
 var browserify = require('browserify'); // Bundling modules
 var watchify = require('watchify'); // Incremental Browserify
+// var hotmodulereload = require('browserify-hmr');
 var babelify = require('babelify'); // Use ES syntax
 var vueify = require('vueify');
 var source = require('vinyl-source-stream'); // Use browserify in gulp
@@ -31,16 +34,25 @@ if (isProduction === true) {
 }
 
 // Browserify bundle sequence
-function bundle(entry, incremental) {
+function bundle(entry, incremental, i) {
 
   // If build-ing just use browserify
   var bundleFunction = browserify({
     noparse: ['jquery', 'lodash'], // Skip big libs
-    fast: false, // Skip detecting/inserting global vars
+    fast: true, // Skip detecting/inserting global vars
   });
+
   // If watch-ing wrap with watchify
   if (incremental === true) {
-    bundleFunction = watchify(bundleFunction);
+    bundleFunction = watchify(bundleFunction)
+      // This should work with webpack; but doesn't seem to without it
+      // .plugin(hotmodulereload, {
+      //   // We have both admin and public instances; so can't run two HMRs on
+      //   // the same socket; hence using the index to increment the key/ports
+      //   // to prevent collision
+      //   key: i,
+      //   port: 3123 + i,
+      // });
   }
 
   return bundleFunction
@@ -67,15 +79,18 @@ function bundle(entry, incremental) {
         gutil.log
         this.emit('end');
       })
-    .pipe(source(entry))
-      .on('error', gutil.log)
-    .pipe(isProduction ? streamify(uglify()) : gutil.noop())
-      .on('error', gutil.log)
-    .pipe(rename({
-        extname: '.bundle.js',
-        dirname: ''
-    }))
-    .pipe(gulp.dest(outputDir + '/js/'));
+    .pipe(source(entry)).on('error', gutil.log)
+    // Convert the stream back to to a buffer
+    .pipe(buffer())
+    // Save the source map if in development
+    .pipe(!isProduction ? sourcemaps.init({loadMaps: true}) : gutil.noop())
+    // Compress the source if on production
+    .pipe(isProduction ? uglify() : gutil.noop()).on('error', gutil.log)
+    // Restore the sourcemap if in development
+    .pipe(!isProduction ? sourcemaps.write() : gutil.noop())
+    // Rename and move the file
+    .pipe(rename({ extname: '.bundle.js', dirname: '' }))
+    .pipe(gulp.dest(outputDir + '/js/'))
 }
 
 // Tasks
@@ -125,15 +140,15 @@ var files = [
 ];
 
 gulp.task("js-browserify", function() {
-  var tasks = files.map(function(entry) {
-    return bundle(entry, false);
+  var tasks = files.map(function(entry, i) {
+    return bundle(entry, false, i);
   });
   return es.merge.apply(null, tasks);
 });
 
 gulp.task("js-watchify", function() {
-  var tasks = files.map(function(entry) {
-    return bundle(entry, true);
+  var tasks = files.map(function(entry, i) {
+    return bundle(entry, true, i);
   });
   return es.merge.apply(null, tasks);
 });
