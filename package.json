@@ -29,6 +29,7 @@
     "gulp-livereload": "3.8.1",
     "gulp-rename": "1.2.2",
     "gulp-sass": "3.1.0",
+    "gulp-sourcemaps": "2.6.3",
     "gulp-streamify": "1.0.2",
     "gulp-uglify": "3.0.0",
     "gulp-util": "3.0.8",
@@ -40,9 +41,11 @@
     "raven-js": "^3.22.1",
     "stats-percentile": "^2.0.0",
     "vinyl-source-stream": "2.0.0",
+    "vinyl-buffer": "1.0.1",
     "vue": "2.5.13",
     "vue-template-compiler": "2.5.13",
-    "vueify": "9.4.1"
+    "vueify": "9.4.1",
+    "watchify": "3.9.0"
   },
   "scripts": {
     "build": "gulp build --development",
