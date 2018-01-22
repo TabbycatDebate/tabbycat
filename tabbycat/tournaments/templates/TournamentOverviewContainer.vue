@@ -72,10 +72,9 @@ export default {
   methods: {
     handleSocketMessage: function(stream, payload) {
       // Check what type the stream is
-      console.log(stream, payload)
 
       if (stream === "status") {
-        this.graphData = payload.data
+        this.graphData = payload
         return
       }
       if (stream === "actionlog") {
@@ -83,20 +82,21 @@ export default {
       }
       if (stream === "ballot") {
         var dataType = "ballots"
-        if (payload.data.confirmed === false) {
+        if (payload.confirmed === false) {
           return // Don't update the list for unconfirmed ballots
         }
       }
 
       // Check for duplicates; do a inline replace if so
       let duplicateIndex = _.findIndex(this[dataType], function(i) {
-        return i.id == payload.data.id
+        return i.id == payload.id
       })
+
       if (duplicateIndex != -1) {
-        this[dataType][duplicateIndex] = payload.data
+        this[dataType][duplicateIndex] = payload
       } else {
         // Add new item to front
-        this[dataType].unshift(payload.data)
+        this[dataType].unshift(payload)
         // Remove last item if at the limit
         if (this[dataType].length >= 15) {
           this[dataType].pop()

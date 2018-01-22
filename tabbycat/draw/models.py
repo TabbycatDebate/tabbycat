@@ -263,6 +263,11 @@ class Debate(models.Model):
         debate['sidesConfirmed'] = self.sides_confirmed
         return debate
 
+    def save(self, *args, **kwargs):
+        result = super(Debate, self).save(*args, **kwargs)
+        print('debate saved')
+        return result
+
 
 class DebateTeamManager(models.Manager):
     use_for_related_fields = True

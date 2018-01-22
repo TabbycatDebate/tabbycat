@@ -31,6 +31,7 @@ export default {
     // Handle messages from the server
     sock.onmessage = function(event) {
       var message = JSON.parse(event.data)
+      console.log(message)
       this.handleSocketMessage(message.stream, message.payload)
     }.bind(this)
   }

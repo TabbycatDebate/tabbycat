@@ -1,88 +1,51 @@
-from channels.binding.websockets import WebsocketBinding
-from channels.generic.websockets import WebsocketDemultiplexer
-
-from results.models import BallotSubmission
-from results.utils import graphable_debate_statuses
-
 from .models import ActionLogEntry
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-class ActionLogEntryBinding(WebsocketBinding):
-
-    model = ActionLogEntry
-    stream = "actionlog"
-    fields = ["__all__"]
-    # We set the group_format dynamically to include the tournament ID
-    # So that the group becomes a per-tournament subscription to prevent mixed
-    # updates from different tournaments
-    group_format = 'actionlog-updates-{tournament_id}'
-
-    @classmethod
-    def group_names(cls, instance):
-        return [cls.group_format.format(tournament_id=instance.tournament_id)]
-
-    # Override default method
-    def serialize_data(self, instance):
-        return instance.serialize
+from channels import Group
+from channels.generic.websockets import JsonWebsocketConsumer
 
 
-class BallotSubmissionBinding(WebsocketBinding):
+class ActionLogEntryConsumer(JsonWebsocketConsumer):
+    http_user = True
+    group_base_string = 'actionlog' # Serves as group prefix and pseudo-stream
 
-    model = BallotSubmission
-    stream = "ballot"
-    fields = ["__all__"]
-    group_format = 'ballot-updates-{tournament_id}'
+    def connection_groups(self, **kwargs):
+        return [self.group_string(kwargs["tournament_id"])]
 
-    @classmethod
-    def group_names(cls, instance):
-        return [cls.group_format.format(tournament_id=instance.tournament_id)]
+    def connect(self, message, **kwargs):
+        # Unauthenticated users come in as AnonymousUser; need to reject
+        if not message.user.is_staff:
+            return
 
-    # Override default method'
-    def serialize_data(self, instance):
-        return instance.serialize_like_actionlog
+        # Add the user to the tournament specific group; otherwise reject connection
+        if kwargs['tournament_id']:
+            Group(self.group_string(kwargs['tournament_id'])).add(message.reply_channel)
+        else:
+            message.reply_channel.send({"close": True})
 
-
-class DebateStatusBinding(WebsocketBinding):
-
-    model = BallotSubmission
-    stream = "status"
-    fields = ["__all__"]
-    group_format = 'debate-status-updates-{tournament_id}'
+    def disconnect(self, message, **kwargs):
+        Group(self.group_string(kwargs['tournament_id'])).discard(message.reply_channel)
 
     @classmethod
-    def group_names(cls, instance):
-        return [cls.group_format.format(tournament_id=instance.tournament_id)]
+    def group_string(cls, tournament_id):
+        # Construct a unique group name for this tournament
+        return "%s-%s" % (cls.group_base_string, tournament_id)
 
-    def has_permission(self, user, action, pk):
-        return True
-
-    # Override default method
-    def serialize_data(self, instance):
-        ballots = BallotSubmission.objects.filter(discarded=False)
-        cr = ballots[0].debate.round.tournament.current_round
-        ballots = ballots.filter(debate__round=cr)
-        stats = graphable_debate_statuses(ballots, cr)
-        print(instance.id, 'serialised ballots for graph')
-        return stats
+    @classmethod
+    def group_send(cls, content):
+        # Serialise data using Tabbycat's method + add stream for frontend ID
+        group_name = cls.group_string(content.tournament.id)
+        content = {
+            'stream': cls.group_base_string,
+            'payload': content.serialize
+        }
+        super().group_send(group_name, content, False)
 
 
-class TournamentOverviewDemultiplexer(WebsocketDemultiplexer):
-
-    http_user_and_session = True # Require user login and user session
-
-    consumers = {
-        # These must match the streams in WebsocketBinding (I think)
-        "actionlog": ActionLogEntryBinding.consumer,
-        "ballot": BallotSubmissionBinding.consumer,
-        "status": DebateStatusBinding.consumer
-    }
-
-    def connection_groups(self, *args, **kwargs):
-        # These must match group_names in the WebsocketBindings (I think)
-        print('test', kwargs['tournament_id'])
-        tournament_id = kwargs['tournament_id']
-        return [
-            "actionlog-updates" + "-" + tournament_id,
-            "ballot-updates" + "-" + tournament_id,
-            "debate-status-updates" + "-" + tournament_id
-        ]
+# Send out updates upon new action log entries
+@receiver(post_save, sender=ActionLogEntry)
+def consumer(sender, instance, created, **kwargs):
+    if created:
+        ActionLogEntryConsumer.group_send(instance)
