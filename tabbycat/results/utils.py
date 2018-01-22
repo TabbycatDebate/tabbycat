@@ -20,18 +20,18 @@ def graphable_debate_statuses(ballots, round):
 
     # These two dictionaries record when a particular debate was first
     # entered or drafted. These can then be compared to given time intervals
-    first_drafts = {}
+    drafts = {}
     confirmations = {}
     for ballot in ballots:
         d_id = ballot.debate_id
-        if ballot.timestamp and (d_id not in first_drafts or first_drafts[d_id] > ballot.timestamp):
-            first_drafts[d_id] = ballot.timestamp
+        if ballot.timestamp and (d_id not in drafts or drafts[d_id] > ballot.timestamp):
+            drafts[d_id] = ballot.timestamp
         if ballot.confirmed and ballot.confirm_timestamp and (d_id not in confirmations or
                 confirmations[d_id] < ballot.confirm_timestamp):
             confirmations[d_id] = ballot.confirm_timestamp
 
     # Collate timestamps into a single list.
-    timestamps = [t for t in first_drafts.values()] + [t for t in confirmations.values()]
+    timestamps = [t for t in drafts.values()] + [t for t in confirmations.values()]
     if len(timestamps) == 0:
         return []
     timestamps = sorted(timestamps) # Order by time
@@ -51,17 +51,21 @@ def graphable_debate_statuses(ballots, round):
         # Count up the number of drafts at this point by reviewing timestamps
         interval_stat = {"time": interval_time.isoformat(),
                          "total": total_debates,
-                         "none": 0, "draft": 0, "confirmed": 0}
+                         "none": total_debates, "draft": 0, "confirmed": 0}
 
         # Count up the number of confirms/drafts at this point
+        recorded_ids = []
         for dID, timestamp in confirmations.items():
             if timestamp <= interval_time:
                 interval_stat['confirmed'] += 1
-            else:
-                if first_drafts[dID] <= interval_time:
+                interval_stat['none'] -= 1
+                recorded_ids.append(dID)
+
+        for dID, timestamp in drafts.items():
+            if dID not in recorded_ids:
+                if drafts[dID] <= interval_time:
                     interval_stat['draft'] += 1
-                else:
-                    interval_stat['none'] += 1
+                    interval_stat['none'] -= 1
 
         intervals_with_stats.append(interval_stat)
 

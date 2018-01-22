@@ -23,21 +23,20 @@ export default {
   mounted: function() {
     initChart(this.padding, this.height, this.graphData)
   },
-  // watch: {
-  //   graphData: function (val, oldVal) {
-  //     console.log('graphData new: %s, old: %s', val, oldVal)
-  //     if (this.graphData.length > 0) {
-  //       // Don't init if no data is present
-  //       // We pass data as JSON to get rid of the reactivity
-  //       initChart(this.padding, JSON.stringify(this.graphData))
-  //     }
-  //   }
-  // }
+  watch: {
+    graphData: function (val, oldVal) {
+      initChart(this.padding, this.height, this.graphData)
+    }
+  }
 }
 
-function initChart(pad, height, data){
+function initChart(pad, height, data) {
   // Based on https://bl.ocks.org/caravinden/8979a6c1063a4022cbd738b4498a0ba6
   // var data = [{"time":"2018-01-20T18:31:05.000","total":50,"confirmed":0,"none":20,"draft":5}]
+
+  if (data.length === 0) { return } // Don't init with blank data
+  d3.selectAll("#ballotsStatusGraph > svg > *").remove(); // Remove prior graph
+
   var stackKey = ["none", "draft", "confirmed"];
   var parseDate = d3.isoParse // Date is ISO; parse as such
   var colors = {
@@ -67,12 +66,7 @@ function initChart(pad, height, data){
     .order(d3.stackOrderNone)
     .offset(d3.stackOffsetNone);
 
-  console.log(d3.max(data, function(d) { return d.total }))
-
   var layers = stack(data);
-    // data.sort(function(a, b) {
-    //   return b.total - a.total;
-    // });
     xScale.domain(data.map(function(d) {
       return parseDate(d.time); // x-scale derives from time sequence
     }));

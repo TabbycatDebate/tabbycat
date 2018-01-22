@@ -84,8 +84,8 @@ export default {
         var dataType = "ballots"
       }
       if (stream === "ballot-statuses") {
-        this.graphData = payload
-        return // Temporary; to fix
+        this.graphData = payload // pass to graph as prop
+        return
       }
 
       // Check for duplicates; do a inline replace if so
