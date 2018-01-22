@@ -317,15 +317,13 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
             'test_score': _("Rating"),
         }
 
-    def clean(self):
-        clean_data = super().clean()
-        if 'test_score' not in clean_data:
-            return clean_data
+    def clean_test_score(self):
+        test_score = self.cleaned_data['test_score']
         min_score = self.tournament.pref('adj_min_score')
         max_score = self.tournament.pref('adj_max_score')
-        if clean_data['test_score'] < min_score or max_score < clean_data['test_score']:
+        if test_score < min_score or max_score < test_score:
             self.add_error('test_score', _("This value must be between %d and %d." % (min_score, max_score)))
-        return clean_data
+        return test_score
 
     def save(self, commit=True):
         adj = super().save(commit=commit)
