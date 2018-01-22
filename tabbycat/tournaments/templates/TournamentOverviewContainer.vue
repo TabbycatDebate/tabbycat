@@ -75,16 +75,13 @@ export default {
 
       if (stream === "status") {
         this.graphData = payload
-        return
+        return // Temporary; to fix
       }
       if (stream === "actionlog") {
         var dataType = "actions"
       }
       if (stream === "ballot") {
         var dataType = "ballots"
-        if (payload.confirmed === false) {
-          return // Don't update the list for unconfirmed ballots
-        }
       }
 
       // Check for duplicates; do a inline replace if so

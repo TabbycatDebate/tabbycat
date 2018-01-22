@@ -1,15 +1,10 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 from channels import Group
 from channels.generic.websockets import JsonWebsocketConsumer
 
-from .models import ActionLogEntry
 
-
-class ActionLogEntryConsumer(JsonWebsocketConsumer):
+class BallotSubmissionConsumer(JsonWebsocketConsumer):
     http_user = True
-    group_base_string = 'actionlog' # Serves as group prefix and stream_name
+    group_base_string = 'ballot' # Serves as group prefix and stream_name
 
     def connection_groups(self, **kwargs):
         return [self.group_string(kwargs["tournament_id"])]
@@ -35,17 +30,11 @@ class ActionLogEntryConsumer(JsonWebsocketConsumer):
 
     @classmethod
     def group_send(cls, content):
+        print('send result status')
         # Serialise data using Tabbycat's method + add stream for frontend ID
-        group_name = cls.group_string(content.tournament.id)
+        group_name = cls.group_string(content.debate.round.tournament.id)
         content = {
             'stream': cls.group_base_string,
-            'payload': content.serialize
+            'payload': content.serialize_like_actionlog
         }
         super().group_send(group_name, content, False)
-
-
-# Send out updates upon new action log entries
-@receiver(post_save, sender=ActionLogEntry)
-def consumer(sender, instance, created, **kwargs):
-    if created:
-        ActionLogEntryConsumer.group_send(instance)
