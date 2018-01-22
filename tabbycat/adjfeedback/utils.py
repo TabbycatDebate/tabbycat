@@ -42,7 +42,11 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
     if feedback_paths == 'all-adjs' or debateadj.type == DebateAdjudicator.TYPE_CHAIR:
         targets = [(adj, pos) for adj, pos in adjudicators.with_positions() if adj.id != debateadj.adjudicator_id]
     elif feedback_paths == 'with-p-on-c' and debateadj.type == DebateAdjudicator.TYPE_PANEL:
-        targets = [(adjudicators.chair, AdjudicatorAllocation.POSITION_CHAIR)]
+        if adjudicators.has_chair:
+            targets = [(adjudicators.chair, AdjudicatorAllocation.POSITION_CHAIR)]
+        else:
+            logger.warning("Panellist has no chair to give feedback on")
+            targets = []
     else:
         targets = []
 

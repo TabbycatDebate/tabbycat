@@ -23,5 +23,6 @@ class BreakCategoryAdmin(admin.ModelAdmin):
 class BreakingTeamAdmin(admin.ModelAdmin):
     list_display = ('break_category', 'team', 'rank', 'break_rank', 'remark')
     list_filter = ('break_category__tournament', 'break_category')
-    search_fields = ('team', )
+    search_fields = ('team__short_name', 'team__long_name',
+                     'team__institution__name', 'team__institution__code')
     ordering = ('break_category', )

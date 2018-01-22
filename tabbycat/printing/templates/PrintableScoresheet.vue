@@ -37,7 +37,7 @@
           Motion:
         </div>
         <div class="db-flex-item db-align-vertical-center" v-if="roundInfo.motions.length > 0">
-          <em>{{ motions[0].text }}</em>
+          <em>{{ roundInfo.motions[0].text }}</em>
         </div>
         <div v-else class="db-flex-item db-padding-horizontal db-fill-in"></div>
       </div>

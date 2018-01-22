@@ -17,12 +17,17 @@ export default {
           }
         },
         success: function(data, textStatus, xhr) {
-          self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-          console.debug("AJAX: Saved " + message)
-          console.debug('DEBUG: JSON ajaxSave success data:', data)
-          var dataResponse = JSON.parse(data)
-          if (completeFunction !== null) {
-            completeFunction(dataResponse, payload, returnPayload)
+          if (JSON.parse(data)["status"] === 503) {
+            // A straight up 503 response doesn't hit error function
+            this.error("", "", "503 Service Unavailable")
+          } else {
+            self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
+            console.debug("AJAX: Saved " + message)
+            console.debug('DEBUG: JSON ajaxSave success data:', data)
+            var dataResponse = JSON.parse(data)
+            if (completeFunction !== null) {
+              completeFunction(dataResponse, payload, returnPayload)
+            }
           }
         },
         timeout: 15000 // sets timeout to 15 seconds
@@ -37,15 +42,14 @@ export default {
           "Failed to save a change to " + message + " because the server did " +
           "not respond in time. This could be because your internet access " +
           "is slow/unreliable, or the server is under heavy load. Best to " +
-          "refresh this page to ensure the data is up to date"
+          "refresh this page to ensure the data is up to date."
         )
       } else {
         $('#modalAlert').find('.modal-body').text(
           "Failed to save a change to " + message + " because of a server " +
-          "error. Try making the change, or try refreshing the page and " +
-          "retrying then. If the problem persists please get in touch with " +
-          "the developers. Best to refresh this page to ensure the data is " +
-          "up to date"
+          "error. You should now refresh this page to ensure " +
+          "the data is up to date and then retry the action. If the problem " +
+          "persists please get in touch with the developers."
         )
       }
     }

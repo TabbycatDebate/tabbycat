@@ -309,7 +309,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {
             'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else opp.short_name},
-            'popover': {'content': [{'text': ''}], 'title': ''}
+            'popover': {'content': [], 'title': ''}
         }
         cell = self._result_cell_class_two(ts.win, cell)
 

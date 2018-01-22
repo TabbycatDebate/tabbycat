@@ -112,10 +112,12 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
         elif step == 'details':
             return {'form_kwargs': {'tournament': self.get_tournament()}}
 
-    def add_details(self, number, institution):
+    def make_initial_data(self, number, institution_id):
+        if number is None:  # occurs when field was left blank
+            return []
         initial_list = []
         for i in range(1, number+1):
-            initial = {'institution': institution}
+            initial = {'institution': institution_id}
             initial.update(self.get_details_instance_initial(i))
             initial_list.append(initial)
         return initial_list
@@ -124,15 +126,12 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
         data = self.get_cleaned_data_for_step('numbers')
         initial_list = []
 
-        institutionless = data.get('no_institution')
-        if institutionless is not None: # field left blank
-            initial_list.extend(self.add_details(institutionless, None))
+        nunaffiliated = data.get('number_unaffiliated')
+        initial_list.extend(self.make_initial_data(nunaffiliated, None))
 
         for institution in Institution.objects.order_by('name'):
-            number = data.get('number_institution_%d' % institution.id, 0)
-            if number is None: # field left blank
-                continue
-            initial_list.extend(self.add_details(number, institution.id))
+            number = data.get('number_institution_%d' % institution.id)
+            initial_list.extend(self.make_initial_data(number, institution.id))
 
         return initial_list
 

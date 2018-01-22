@@ -3,6 +3,18 @@ Change Log
 ==========
 
 
+2.0.4
+-----
+*Release date: 22 January 2018*
+
+- Add alert for users who try to do voting ballots on BP-configured tournaments
+- Fixed issue where draws of the "manual" type would not generate correctly
+- Fixed issue where a ballot's speaker names dropdown would contain both team's speakers when using formats with side selection
+- Fixed issue where scoresheets would not show correctly under some configurations
+- Improved display of really long motions when using the inbuilt motion-showing page
+- Other minor fixes
+
+
 2.0.3
 -----
 *Release date: 3 December 2017*

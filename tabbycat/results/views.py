@@ -565,7 +565,9 @@ class LatestResultsJsonView(LoginRequiredMixin, TournamentMixin, JsonDataRespons
                 result = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
 
             results_objects.append({
-                'user': result, 'timestamp': naturaltime(ballotsub.timestamp),
+                'user': result,
+                'timestamp': naturaltime(ballotsub.timestamp),
+                'id': ballotsub.id
             })
 
         return results_objects

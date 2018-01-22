@@ -50,3 +50,13 @@ h6,
 .alert-link {
   text-decoration: underline;
 }
+
+// Bootstrap only displays up to .display-4; long motions need more options
+.display-5 {
+  @extend .display-4;
+  font-size: 3.0rem;
+}
+.display-6 {
+  @extend .display-4;
+  font-size: 2.5rem;
+}
