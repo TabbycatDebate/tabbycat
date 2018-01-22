@@ -24,8 +24,9 @@ Change Log
 
 2.0.4
 -----
-*Release date: TBA*
+*Release date: 22 January 2018*
 
+- Add alert for users who try to do voting ballots on BP-configured tournaments
 - Fixed issue where draws of the "manual" type would not generate correctly
 - Fixed issue where a ballot's speaker names dropdown would contain both team's speakers when using formats with side selection
 - Fixed issue where scoresheets would not show correctly under some configurations
