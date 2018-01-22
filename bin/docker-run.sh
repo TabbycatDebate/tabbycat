@@ -9,5 +9,5 @@ python ./manage.py migrate --no-input
 
 # Run the server
 # python ./manage.py runserver 0.0.0.0:8000
-npm run gulp build
+npm run build
 python ./manage.py runserver 0.0.0.0:8000
