@@ -138,10 +138,11 @@ class BallotSubmission(Submission):
 
     @property
     def serialize_like_actionlog(self):
+        result_winner, result = readable_ballotsub_result(self)
         return {
-            'user': readable_ballotsub_result(self),
+            'user': result_winner,
             'id': self.id,
-            'type': '',
+            'type': result,
             'param': '',
             'timestamp': self.timestamp.strftime("%d/%m %H:%M"),
             'confirmed': self.confirmed

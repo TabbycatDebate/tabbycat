@@ -6,9 +6,13 @@
       <div class="col">
         <div class="card mt-3">
           <div class="card-body">
-            <h5 class="mb-2 text-center">Ballots Status</h5>
-            <ballots-graph :graph-data="graphData" :poll-url="ballotsUrl"></ballots-graph>
+            <h5 class="mb-0 text-center">Ballots Status</h5>
           </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-secondary">
+              <ballots-graph :graph-data="graphData"></ballots-graph>
+            </li>
+          </ul>
         </div>
       </div>
 

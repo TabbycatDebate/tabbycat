@@ -16,39 +16,56 @@ def graphable_debate_statuses(ballots, round):
     # For each debate, find (a) the first non-discarded submission time, and
     # (b) the last confirmed confirmation time. (Note that this means when
     # a ballot is discarded, the graph will change retrospectively.)
-    first_drafts = {}   # keys: debate IDs, values: timestamps
-    confirmations = {}  # keys: debate IDs, values: timestamps
+    total_debates = round.debate_set.count()
+
+    # These two dictionaries record when a particular debate was first
+    # entered or drafted. These can then be compared to given time intervals
+    first_drafts = {}
+    confirmations = {}
     for ballot in ballots:
-        did = ballot.debate_id
-        if ballot.timestamp and (did not in first_drafts or first_drafts[did] > ballot.timestamp):
-            first_drafts[did] = ballot.timestamp
-        if ballot.confirmed and ballot.confirm_timestamp and (did not in confirmations or
-                confirmations[did] < ballot.confirm_timestamp):
-            confirmations[did] = ballot.confirm_timestamp
+        d_id = ballot.debate_id
+        if ballot.timestamp and (d_id not in first_drafts or first_drafts[d_id] > ballot.timestamp):
+            first_drafts[d_id] = ballot.timestamp
+        if ballot.confirmed and ballot.confirm_timestamp and (d_id not in confirmations or
+                confirmations[d_id] < ballot.confirm_timestamp):
+            confirmations[d_id] = ballot.confirm_timestamp
 
-    # Collate timestamps into a single list. Tuples are (time, none_change, draft_change, confirmed_change)
-    first_draft_timestamps = [(time, -1, +1, 0) for time in first_drafts.values()]
-    confirmation_timestamps = [(time, 0, -1, +1) for time in confirmations.values()]
-    timestamps = sorted(first_draft_timestamps + confirmation_timestamps)
-
+    # Collate timestamps into a single list.
+    timestamps = [t for t in first_drafts.values()] + [t for t in confirmations.values()]
     if len(timestamps) == 0:
         return []
+    timestamps = sorted(timestamps) # Order by time
 
-    # Generate the timeline, including one-minute margins on either side
-    margin = datetime.timedelta(minutes=1)
-    none = round.debate_set.count()
-    draft = 0
-    confirmed = 0
-    stats = [[(timestamps[0][0] - margin).isoformat(), none, draft, confirmed]]
-    for time, none_change, draft_change, confirmed_change in timestamps:
-        time_iso = time.isoformat()
-        stats.append([time_iso, none, draft, confirmed])
-        none += none_change
-        draft += draft_change
-        confirmed += confirmed_change
-        stats.append([time_iso, none, draft, confirmed])
-    stats.append([(timestamps[-1][0] + margin).isoformat(), none, draft, confirmed])
-    return stats
+    # Create the spaced intervals
+    intervals = 20 # IE numbner of bars on the graph
+    start_of_entry = timestamps[0]
+    end_of_entry = timestamps[-1]
+    time_span = end_of_entry - start_of_entry
+    minutes_span_interval = (time_span.total_seconds() / 60.0) / intervals
+
+    intervals_with_stats = []
+    for i in range(0, intervals):
+        delta = (i * minutes_span_interval) + minutes_span_interval
+        interval_time = start_of_entry + datetime.timedelta(minutes=delta)
+
+        # Count up the number of drafts at this point by reviewing timestamps
+        interval_stat = {"time": interval_time.isoformat(),
+                         "total": total_debates,
+                         "none": 0, "draft": 0, "confirmed": 0}
+
+        # Count up the number of confirms/drafts at this point
+        for dID, timestamp in confirmations.items():
+            if timestamp <= interval_time:
+                interval_stat['confirmed'] += 1
+            else:
+                if first_drafts[dID] <= interval_time:
+                    interval_stat['draft'] += 1
+                else:
+                    interval_stat['none'] += 1
+
+        intervals_with_stats.append(interval_stat)
+
+    return intervals_with_stats
 
 
 def readable_ballotsub_result(ballotsub):
@@ -74,10 +91,13 @@ def readable_ballotsub_result(ballotsub):
                 else:
                     loser = teamscore.debate_team
 
-            result = _("%(winner)s (%(winner_side)s) won vs %(loser)s (%(loser_side)s)")
-            result = result % {
+            result_winner = _("%(winner)s (%(winner_side)s) won")
+            result_winner = result_winner % {
                 'winner': winner.team.short_name,
                 'winner_side': winner.get_side_name(t, 'abbr'),
+            }
+            result = _("vs %(loser)s (%(loser_side)s)")
+            result = result % {
                 'loser': loser.team.short_name,
                 'loser_side': loser.get_side_name(t, 'abbr'),
             }
@@ -91,10 +111,12 @@ def readable_ballotsub_result(ballotsub):
                 else:
                     eliminated.append(teamscore.debate_team)
 
-            result = _("Advancing: %(advancing_list)s<br>\n"
-                       "Eliminated: %(eliminated_list)s")
+            result_winner = _("Advancing: %(advancing_list)s<br>\n")
+            result_winner = result_winner % {
+                'advancing_list': ", ".join(format_dt(dt, t) for dt in advancing)
+            }
+            result = _("Eliminated: %(eliminated_list)s")
             result = result % {
-                'advancing_list': ", ".join(format_dt(dt, t) for dt in advancing),
                 'eliminated_list': ", ".join(format_dt(dt, t) for dt in eliminated),
             }
 
@@ -103,12 +125,12 @@ def readable_ballotsub_result(ballotsub):
             for teamscore in team_scores:
                 ordered[teamscore.points] = teamscore.debate_team
 
-            result = _("1st: %(first_team)s<br>\n"
-                       "2nd: %(second_team)s<br>\n"
+            result_winner = _("1st: %(first_team)s<br>\n")
+            result_winner = result_winner % {'first_team':  format_dt(ordered[3], t)}
+            result = _("2nd: %(second_team)s<br>\n"
                        "3rd: %(third_team)s<br>\n"
                        "4th: %(fourth_team)s")
             result = result % {
-                'first_team':  format_dt(ordered[3], t),
                 'second_team': format_dt(ordered[2], t),
                 'third_team':  format_dt(ordered[1], t),
                 'fourth_team': format_dt(ordered[0], t),
@@ -116,9 +138,10 @@ def readable_ballotsub_result(ballotsub):
 
     except (IndexError, AttributeError):
         logger.exception("Error constructing latest result string")
-        result = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
+        result_winner = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
+        result = ""
 
-    return result
+    return result_winner, result
 
 
 def set_float_or_int(number, step_value):
