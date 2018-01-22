@@ -148,7 +148,7 @@ def get_diversity_data_sets(t, for_public):
                     speakers.exclude(categories=sc), 'gender'))
 
     if Team.objects.exclude(institution__region__isnull=True).exists():
-        data_sets['speakers_region'].append(compile_grouped_counts(_("All"), speakers,
+        data_sets['speakers_region'].append(compile_grouped_counts(_("All Speakers"), speakers,
                 F('team__institution__region__id'), region_values, region_labels))
 
         if t.pref('public_breaking_teams') is True or for_public is False:
@@ -163,7 +163,7 @@ def get_diversity_data_sets(t, for_public):
     adjudicators = t.adjudicator_set.all()
 
     if adjudicators.count() > 0:
-        data_sets['adjudicators_gender'].append(compile_gender_counts(_("All"), adjudicators, 'gender'))
+        data_sets['adjudicators_gender'].append(compile_gender_counts(_("All Adjudicators"), adjudicators, 'gender'))
 
     if Adjudicator.objects.filter(tournament=t).filter(independent=True).exists():
         data_sets['adjudicators_gender'].append(compile_gender_counts(_("Indies"),

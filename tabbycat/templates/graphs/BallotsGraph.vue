@@ -3,7 +3,7 @@
 
     <svg id="ballotsStatusGraph" class="d3-graph"
          style="margin-top: -15px; margin-bottom: -15px; width: 100%;"></svg>
-    <div v-if="graphData.length === 0" class="text-center">
+    <div v-if="!graphData" class="text-center">
       No ballots in for this round yet
     </div>
 
@@ -16,7 +16,7 @@ var d3 = require("d3");
 export default {
   props: {
     height: { type: Number, default: 200 },
-    padding: { type: Number, default: 30 },
+    padding: { type: Number, default: 10 },
     graphData: { type: Array,  default: false }
   },
   mounted: function() {
@@ -34,54 +34,78 @@ export default {
 
 function initChart(vueContext){
 
+  // Based on https://bl.ocks.org/caravinden/8979a6c1063a4022cbd738b4498a0ba6
+
   // Responsive width
-  vueContext.width = parseInt(d3.select('#ballotsStatusGraph').style('width'), 10);
+  var pad = vueContext.padding
+  var bounds = d3.select('#ballotsStatusGraph').node().getBoundingClientRect()
+  var width = parseInt(bounds.width - (pad * 2));
+  var height = parseInt(bounds.height);
+  var margin = {top: pad, right: pad, bottom: pad, left: pad}
 
-  var x = d3.time.scale().range([0, vueContext.width])
-  var y = d3.scale.linear().range([vueContext.height, 0])
-  var z = d3.scale.ordinal().range(["#e34e42", "#f0c230", "#43ca75"]) // red-orange-green
+  var stackKey = ["none", "draft", "confirmed"];
+  var data = [
+    {"time":"2018-01-20T18:31:05.000","total":50,"confirmed":0,"none":20,"draft":5},
+    {"time":"2018-01-20T18:42:05.000","total":50,"confirmed":1,"none":10,"draft":9},
+    {"time":"2018-01-20T18:45:05.000","total":50,"confirmed":1,"none":10,"draft":6},
+    {"time":"2018-01-20T18:54:05.000","total":50,"confirmed":5,"none":10,"draft":2},
+    {"time":"2018-01-20T18:55:05.000","total":50,"confirmed":2,"none":1,"draft":13},
+    {"time":"2018-01-20T18:59:06.000","total":50,"confirmed":8,"none":8,"draft":7}
+  ]
 
-  d3.selectAll("#ballotsStatusGraph > svg > *").remove(); // Remove prior graph
+  var parseDate = d3.isoParse // Date is ISO; parse as such
+  var color = d3.scaleOrdinal(d3.schemeCategory20)
 
-  // Create Canvas and Scales
-  var svg = d3.select("#ballotsStatusGraph")
-    .attr("width", vueContext.width)
-    .attr("height", vueContext.height + vueContext.padding + vueContext.padding)
-    .append("g")
-    .attr("transform", "translate(0," + vueContext.padding + ")");
+  var xScale = d3.scaleBand().range([0, width]).padding(0.1)
+  var yScale = d3.scaleLinear().range([height, 0])
+  var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%H:%M"))
+  var yAxis = d3.axisLeft(yScale)
 
-  // Data Transforms and Domains
-  var matrix = vueContext.graphData; // 4 columns: time_ID,none,draft,confirmed
-  var remapped =["c1","c2","c3"].map(function(dat,i){
-      return matrix.map(function(d,ii){
-          return {x: d3.time.format.iso.parse(d[0]), y: d[i+1]};
-      })
-  });
-  var stacked = d3.layout.stack()(remapped)
+  var svg = d3.select("#ballotsStatusGraph").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + pad * 2.5 + "," + pad * -2.5 + ")");
 
-  x.domain([stacked[0][0].x, stacked[0][stacked[0].length - 1].x]);
-  y.domain([0, d3.max(stacked[stacked.length - 1], function(d) { return d.y0 + d.y; })]);
+  var stack = d3.stack()
+    .keys(stackKey)
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone);
 
-  var area = d3.svg.area()
-    .x(function(d) { return x(d.x); })
-    .y0(function(d) { return y(d.y0); })
-    .y1(function(d) { return y(d.y0 + d.y); });
+  console.log(d3.max(data, function(d) { return d.total }))
 
-  svg.selectAll("path")
-    .data(stacked)
-    .enter().append("path")
-    .attr("d", area)
-    .style("fill", function(d, i) { return z(i); });
+  var layers = stack(data);
+    data.sort(function(a, b) { return b.total - a.total; });
+    xScale.domain(data.map(function(d) {
+      return parseDate(d.time); // x-scale derives from time sequence
+    }));
+    yScale.domain([0, d3.max(data, function(d) {
+      return d.total; // y-scale is total ballots reported
+    })]).nice();
 
-  // Add Scales
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .tickFormat(d3.time.format("%H:%M"));
+  var layer = svg.selectAll(".layer")
+    .data(layers)
+    .enter().append("g")
+    .attr("class", "layer")
+    .style("fill", function(d, i) { return color(i); });
 
-  svg.append("g").attr("class", "x axis")
-    .call(xAxis)
-    .attr("transform", "translate(0," + vueContext.height + ")");
+  layer.selectAll("rect")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+      .attr("x", function(d) { return xScale(parseDate(d.data.time)); })
+      .attr("y", function(d) { return yScale(d[1]); })
+      .attr("height", function(d) { return yScale(d[0]) - yScale(d[1]); })
+      .attr("width", xScale.bandwidth());
+
+  svg.append("g")
+    .attr("class", "axis axis--x")
+    .attr("transform", "translate(0," + (height) + ")")
+    .call(xAxis);
+
+  svg.append("g")
+    .attr("class", "axis axis--y")
+    .attr("transform", "translate(0, 0)")
+    .call(yAxis);
 
 }
 </script>

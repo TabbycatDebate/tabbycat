@@ -66,11 +66,11 @@ function InitChart(vueContext){
 
   // Female - Male - Other - Unknown
 
-  var pie = d3.layout.pie()
+  var pie = d3.pie()
       .value(function(d) { return d.count; })
       .sort(null);
 
-  var arc = d3.svg.arc()
+  var arc = d3.arc()
       .innerRadius(vueContext.radius - (vueContext.radius / 2))
       .outerRadius(vueContext.radius - vueContext.padding * 2);
 
