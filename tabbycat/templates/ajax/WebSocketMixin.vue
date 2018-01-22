@@ -1,15 +1,28 @@
 <script>
 // Subclass should set following methods
-// - a data/prop of "tournamentId" that provides a tournament ID to be used
+// - Optional data/prop of "tournamentId" with a tournament ID for the path
+// - Optional data/prop of "roundSeq" with a round sequence ID for the path
 // - a data/prop of "socketPath" that provides a path like "/actionlog/latest"
-//    - note the lack of trailing backslash in the above
+//    - note the lack of appending/prepending backslash in the above
 // - handleSocketMessage() method that does something with the event data
 
 export default {
+  props: [ 'tournamentId', 'roundSeq'],
   created: function() {
     // Check if this is being run over HTTP(S); match the WS(S) procol
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const path = "/" + this.tournamentId + this.socketPath + "/"
+    var path = "/"
+    // Construct path
+    if (this.tournamentId !== undefined) {
+      path += this.tournamentId + "/"
+    }
+    path += this.socketPath + "/"
+    if (this.roundSeq !== undefined) {
+      path += this.roundSeq + "/"
+    }
+    // if (this.sessionKey !== undefined) {
+    //   path += "?session_key=" + this.sessionKey
+    // }
 
     // Open the connectoin
     console.log("WSConnect", scheme + "://" + window.location.host + path)

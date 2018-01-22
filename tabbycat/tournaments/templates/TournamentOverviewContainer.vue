@@ -66,7 +66,7 @@ export default {
       actions: this.initialActions,
       ballots: this.initialBallots,
       graphData: this.initialGraphData,
-      socketPath: "/actionlog/overviews"
+      socketPath: "actionlog/overviews"
     }
   },
   methods: {
