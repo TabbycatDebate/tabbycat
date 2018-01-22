@@ -83,10 +83,10 @@
   {% endif %}
 
   <div id="vueMount">
-    <tournament-overview-container :actions-url="updateActionsURL"
-                                   :results-url="updateResultsURL"
-                                   :ballots-url="updateBallotsURL"
-                                   :round-status="roundStatus">
+    <tournament-overview-container :tournament-id="tournamentId"
+                                   :initial-actions="initialActions"
+                                   :initial-ballots="initialBallots"
+                                   :initial-graph-data="initialGraphData">
     </tournament-overview-container>
 
   </div>
@@ -96,10 +96,10 @@
 {% block js %}
   <script>
     window.vueData = {
-      updateBallotsURL: '{% tournamenturl 'results-ballots-graph-data' %}',
-      updateActionsURL: '{% tournamenturl 'actionlog-latest-json' %}',
-      updateResultsURL: '{% tournamenturl 'results-latest-json' %}',
-      roundStatus: '{{ round.draw_status }}'
+      tournamentId: {{ tournament_id }},
+      initialActions: {{ initialActions|safe }},
+      initialBallots: {{ initialBallots|safe }},
+      initialGraphData: {{ initialGraphData|safe }},
     }
   </script>
   {{ block.super }}

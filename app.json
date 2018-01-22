@@ -29,6 +29,16 @@
       "value": "1"
     }
   },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
   "buildpacks": [
     {"url": "heroku/nodejs"},
     {"url": "heroku/python"}

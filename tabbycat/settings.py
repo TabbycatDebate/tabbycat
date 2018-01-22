@@ -46,25 +46,27 @@ MIDDLEWARE = [
     'utils.middleware.DebateMiddleware'
 ]
 
-TABBYCAT_APPS = ('actionlog',
-                 'adjallocation',
-                 'adjfeedback',
-                 'availability',
-                 'breakqual',
-                 'divisions',
-                 'draw',
-                 'motions',
-                 'options',
-                 'participants',
-                 'printing',
-                 'privateurls',
-                 'results',
-                 'tournaments',
-                 'venues',
-                 'utils',
-                 'users',
-                 'standings',
-                 'importer', )
+TABBYCAT_APPS = (
+    'actionlog',
+    'adjallocation',
+    'adjfeedback',
+    'availability',
+    'breakqual',
+    'divisions',
+    'draw',
+    'motions',
+    'options',
+    'participants',
+    'printing',
+    'privateurls',
+    'results',
+    'tournaments',
+    'venues',
+    'utils',
+    'users',
+    'standings',
+    'importer'
+)
 
 INSTALLED_APPS = (
     'jet',
@@ -72,6 +74,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'channels', # For Websockets / real-time connections (above whitenoise)
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
@@ -82,7 +85,8 @@ INSTALLED_APPS = (
     'dynamic_preferences.users.apps.UserPreferencesConfig',
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
-    'formtools')
+    'formtools',
+)
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -249,6 +253,18 @@ if 'DATABASE_URL' in os.environ and not DEBUG:
 MESSAGE_TAGS = {messages.ERROR: 'danger', }
 
 # ==============================================================================
+# Channels
+# ==============================================================================
+
+# Channel settings; note this is for development only
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "routing.channel_routing",
+    }
+}
+
+# ==============================================================================
 # Heroku
 # ==============================================================================
 
@@ -292,6 +308,15 @@ if os.environ.get('REDIS_URL', ''):
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
                 }
             }
+        }
+        CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "asgi_redis.RedisChannelLayer",
+                "CONFIG": {
+                    "hosts": [os.environ.get('REDIS_URL')],
+                },
+                "ROUTING": "routing.channel_routing",
+            },
         }
     except:
         CACHES = {

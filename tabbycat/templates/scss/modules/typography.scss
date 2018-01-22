@@ -24,6 +24,11 @@ h6,
   color: $headings-color;
 }
 
+.badge {
+  font-family: monospace; // Want evenly aligned labels
+  font-size: 100%; // Compensate for smaller mono sizes
+}
+
 //------------------------------------------------------------------------------
 // Text Utilities
 //------------------------------------------------------------------------------

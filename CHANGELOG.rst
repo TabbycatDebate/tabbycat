@@ -17,6 +17,10 @@ Change Log
 - Added draw pull-up option: pull up from middle
 - Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far
 - Upgraded to Django 2.0
+- Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
+    - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis'
+    - On Heroku: Sites should now always run at least 1 web dyno *as well as* 1 worker dyno. When scaling, generally you would scale *worker* dynos to handle a greater request throughput and scale *web* dynos to handle a greater request concurrency
+    - Locally: You should recreate your local_settings.py from the example file
 
 2.0.4
 -----

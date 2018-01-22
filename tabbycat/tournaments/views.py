@@ -23,6 +23,8 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from importer.management.commands import importtournament
 from importer.importers import TournamentDataImporterError
+from results.models import BallotSubmission
+from results.utils import graphable_debate_statuses
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
@@ -68,10 +70,36 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
     template_name = "tournament_index.html"
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs["round"] = tournament.current_round
+        t = self.get_tournament()
+        cr = t.current_round
+        updates = 15 # Number of items to fetch
+
+        kwargs["round"] = t.current_round
+        kwargs["tournament_id"] = t.id
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
-        kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
+        kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
+
+        actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
+                    'content_object', 'user').order_by('-timestamp')[:updates]
+        kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
+
+        subs = BallotSubmission.objects.filter(
+            debate__round__tournament=t, confirmed=True).prefetch_related(
+            'teamscore_set__debate_team',
+            'teamscore_set__debate_team__team').select_related(
+            'debate__round').order_by('-timestamp')[:updates]
+        subs = [bs.serialize_like_actionlog for bs in subs]
+        kwargs["initialBallots"] = json.dumps(subs)
+
+        status = cr.draw_status
+        if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
+            ballots = BallotSubmission.objects.filter(debate__round=cr,
+                                                      discarded=False)
+            stats = graphable_debate_statuses(ballots, cr)
+            kwargs["initialGraphData"] = json.dumps(stats)
+        else:
+            kwargs["initialGraphData"] = json.dumps([])
+
         return super().get_context_data(**kwargs)
 
 

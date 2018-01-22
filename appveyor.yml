@@ -60,6 +60,7 @@ install:
   - cd c:\projects\tabbycat
   - python -m pip install -U pip
   - pip install -r requirements_common.txt
+  - pip install pypiwin32 # Extra dependency for channels/twisted on Windows
   - npm install
   - npm -g install gulp-cli # Needs to be available to then use 'gulp' command later
 
