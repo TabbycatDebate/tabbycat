@@ -24,8 +24,8 @@ class ConsumerAdminRequiredMixin():
 
 class TournamentConsumer(JsonWebsocketConsumer):
     """For a channel consumer specific to a tournament and whose path includes
-    a tournament_id. Must provide:
-    - a group_base_string that serves as a group prefix + stream_name
+    a tournament_id. Must provide a group_base_string that serves as a group
+    prefix and stream_name. Must also provide two @staticmethod:
     - a make_payload() that produces an object that can be serialised
     - a get_tournament_id_from_content() that returns the relevant id from object
     """
@@ -36,12 +36,6 @@ class TournamentConsumer(JsonWebsocketConsumer):
     def group_string(cls, tournament_id):
         # Construct a unique group name for this tournament
         return "%s-%s" % (cls.group_base_string, tournament_id)
-
-    def make_payload(self, content):
-        raise NotImplementedError
-
-    def get_tournament_id_from_content(self, content):
-        raise NotImplementedError
 
     def connection_groups(self, **kwargs):
         return [self.group_string(kwargs["tournament_id"])]

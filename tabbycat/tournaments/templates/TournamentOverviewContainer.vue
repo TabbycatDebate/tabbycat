@@ -77,15 +77,15 @@ export default {
     handleSocketMessage: function(stream, payload) {
       // Check what type the stream is
 
-      if (stream === "status") {
-        this.graphData = payload
-        return // Temporary; to fix
-      }
       if (stream === "actionlog") {
         var dataType = "actions"
       }
-      if (stream === "ballot") {
+      if (stream === "ballot-results") {
         var dataType = "ballots"
+      }
+      if (stream === "ballot-statuses") {
+        this.graphData = payload
+        return // Temporary; to fix
       }
 
       // Check for duplicates; do a inline replace if so

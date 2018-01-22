@@ -9,11 +9,13 @@ from .models import ActionLogEntry
 class ActionLogEntryConsumer(ConsumerLoginRequiredMixin, TournamentConsumer):
     group_base_string = 'actionlog'
 
-    def get_tournament_id_from_content(self, content):
-        return content.tournament.id
+    @staticmethod
+    def get_tournament_id_from_content(actionlog):
+        return actionlog.tournament.id
 
-    def make_payload(self, content):
-        return content.serialize
+    @staticmethod
+    def make_payload(actionlog):
+        return actionlog.serialize
 
 
 # Send out updates upon new action log entries
