@@ -14,7 +14,7 @@
 
 </div>
 
-Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debating tournaments. It was used at Australs in 2010, [2012](https://www.facebook.com/Australs2012), [2014](http://australs2014.herokuapp.com), [2015](http://australs2015.herokuapp.com) [2016](http://australs2016.herokuapp.com), and [2017](http://australs2016.herokuapp.com) as well as [many other tournaments of all sizes and formats](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [Australs 2017 tab website](https://australs2017.herokuapp.com/2017_australs/).
+Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debating tournaments. It was used at Australs in 2010, [2012](https://www.facebook.com/Australs2012), [2014](http://australs2014.herokuapp.com), [2015](http://australs2015.herokuapp.com), [2016](http://australs2016.herokuapp.com), and [2017](http://australs2017.herokuapp.com) as well as [many other tournaments of all sizes and formats](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [Australs 2017 tab website](https://australs2017.herokuapp.com/2017_australs/).
 
 **Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 
