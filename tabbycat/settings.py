@@ -19,7 +19,7 @@ DEBUG_ASSETS = DEBUG
 # ==============================================================================
 
 MEDIA_URL = '/media/'
-TIME_ZONE = 'Australia/Melbourne'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
 LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en')
 USE_I18N = True
 
