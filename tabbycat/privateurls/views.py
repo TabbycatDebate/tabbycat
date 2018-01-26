@@ -39,6 +39,8 @@ class RandomisedUrlsMixin(TournamentMixin):
         adjudicators = Adjudicator.objects.filter(
             tournament=self.get_tournament(),
             url_key__isnull=False, email__isnull=False
+        ).exclude(
+            email__exact=""
         ).annotate(
             already_sent=Exists(subquery)
         ).filter(already_sent=already_sent)
@@ -52,6 +54,8 @@ class RandomisedUrlsMixin(TournamentMixin):
         speakers = Speaker.objects.filter(
             team__tournament=self.get_tournament(),
             team__url_key__isnull=False, email__isnull=False
+        ).exclude(
+            email__exact=""
         ).annotate(
             already_sent=Exists(subquery)
         ).filter(already_sent=already_sent)
