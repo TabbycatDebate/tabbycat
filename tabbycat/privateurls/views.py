@@ -2,7 +2,7 @@ import logging
 from smtplib import SMTPException
 
 from django.contrib import messages
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Q
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
@@ -151,7 +151,7 @@ class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['adjudicators_no_email'] = self.get_tournament().adjudicator_set.filter(
-            url_key__isnull=False, email__isnull=True
+            Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False
         ).values_list('name', flat=True)
         return super().get_context_data(**kwargs)
 
@@ -191,8 +191,11 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
     template_name = 'feedback_urls_email_list.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['speakers_no_email'] = Speaker.objects.filter(team__tournament=self.get_tournament(),
-            team__url_key__isnull=False, email__isnull=True).values_list('name', flat=True)
+        kwargs['speakers_no_email'] = Speaker.objects.filter(
+            Q(email__isnull=True) | Q(email__exact=""),
+            team__tournament=self.get_tournament(),
+            team__url_key__isnull=False
+        ).values_list('name', flat=True)
         kwargs['nadjudicators_already_sent'] = self.get_adjudicators_to_email(
             PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK, already_sent=True).count()
         kwargs['nspeakers_already_sent'] = self.get_speakers_to_email(already_sent=True).count()
