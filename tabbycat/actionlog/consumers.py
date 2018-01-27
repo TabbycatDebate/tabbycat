@@ -11,7 +11,11 @@ class ActionLogEntryConsumer(ConsumerLoginRequiredMixin, TournamentConsumer):
 
     @staticmethod
     def get_tournament_id_from_content(actionlog):
-        return actionlog.tournament.id
+        if actionlog.round is not None:
+            return actionlog.round.tournament.id
+        elif actionlog.tournament is not None:
+            return actionlog.tournament.id
+        return None
 
     @staticmethod
     def make_payload(actionlog):
