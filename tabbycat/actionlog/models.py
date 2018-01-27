@@ -178,6 +178,6 @@ class ActionLogEntry(models.Model):
             'id': self.id,
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
             'type': self.get_type_display(),
-            'param': self.get_content_object_display(),
+            'param': "" if self.content_type.model == 'tournament' else self.get_content_object_display(),
             'timestamp': self.timestamp.strftime("%d/%m %H:%M")
         }
