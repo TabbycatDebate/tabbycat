@@ -24,6 +24,13 @@ Printable Scoresheets for {{ round_name }}
 {% endblock content %}
 
 {% block js %}
+  <style>
+    @media print {
+      @page {
+        size: A4 landscape;
+      }
+    }
+  </style>
   <script>
     window.vueData = {
       // Strings to Fill In
