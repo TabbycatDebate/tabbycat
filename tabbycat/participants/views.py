@@ -329,7 +329,8 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
         return super().get_context_data(**kwargs)
 
 
-class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
+class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin,
+                                TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
 
     def set_category_eligibility(self, speaker, sent_status):
