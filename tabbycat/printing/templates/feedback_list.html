@@ -42,6 +42,13 @@ Printable Feedback Forms for {{ round_name }}
 {% endblock content %}
 
 {% block js %}
+  <style>
+    @media print {
+      @page {
+        size: A4 portrait;
+      }
+    }
+  </style>
   <script>
     window.vueData = {
       // Strings to Fill In
