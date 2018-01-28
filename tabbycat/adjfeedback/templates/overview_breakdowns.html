@@ -63,44 +63,50 @@
   <div class="card">
     <div class="card-body text-center pb-1">
       <div class="progress">
-        <div class="progress-bar position-display chair" role="progressbar"
-             style="width: {% percentage c_chairs c_total %}%;" data-toggle="tooltip"
-             title="{% blocktrans trimmed count count=c_chairs %}
-                There is {{ c_chairs }} debate per round, so there needs to be {{ c_chairs }} chair.
-              {% plural %}
-                There are {{ c_chairs }} debates per round, so there need to be {{ c_chairs }} chairs.
-              {% endblocktrans %}">
-          {% blocktrans trimmed count c_chairs=c_chairs %}
-            {{ c_chairs }} chair
-          {% plural %}
-            {{ c_chairs }} chairs
-          {% endblocktrans %}
-        </div>
-        <div class="progress-bar position-display panellist" role="progressbar"
-             style="width: {% percentage c_panellists c_total %}%;" data-toggle="tooltip"
-             title="{% blocktrans trimmed %}
-              All adjudicators with a score high enough to vote, but who aren't allocated as chairs,
-              are allocated as panellists by the auto-allocator.
-             {% endblocktrans %}">
-          {% blocktrans trimmed count c_panellists=c_panellists %}
-            {{ c_panellists }} panellist
-          {% plural %}
-            {{ c_panellists }} panellists
-          {% endblocktrans %}
-        </div>
-        <div class="progress-bar position-display trainee" role="progressbar"
-             style="width: {% percentage c_trainees c_total %}%;" data-toggle="tooltip"
-             title="{% blocktrans trimmed with min_voting=pref.adj_min_voting_score %}
-              Adjudicators are allocated as trainees by the auto-allocator if their score is less
-              than the 'minimum voting score' (currently {{ min_voting }}) set in this
-              tournament's Draw Rules configuration.
-             {% endblocktrans %}">
-          {% blocktrans trimmed count c_trainees=c_trainees %}
-            {{ c_trainees }} trainee
-          {% plural %}
-            {{ c_trainees }} trainees
-          {% endblocktrans %}
-        </div>
+        {% if c_chairs > 0 %}
+          <div class="progress-bar position-display chair" role="progressbar"
+               style="width: {% percentage c_chairs c_total %}%;" data-toggle="tooltip"
+               title="{% blocktrans trimmed count count=c_chairs %}
+                  There is {{ c_chairs }} debate per round, so there needs to be {{ c_chairs }} chair.
+                {% plural %}
+                  There are {{ c_chairs }} debates per round, so there need to be {{ c_chairs }} chairs.
+                {% endblocktrans %}">
+            {% blocktrans trimmed count c_chairs=c_chairs %}
+              {{ c_chairs }} chair
+            {% plural %}
+              {{ c_chairs }} chairs
+            {% endblocktrans %}
+          </div>
+        {% endif %}
+        {% if c_panellists > 0 %}
+          <div class="progress-bar position-display panellist" role="progressbar"
+               style="width: {% percentage c_panellists c_total %}%;" data-toggle="tooltip"
+               title="{% blocktrans trimmed %}
+                All adjudicators with a score high enough to vote, but who aren't allocated as chairs,
+                are allocated as panellists by the auto-allocator.
+               {% endblocktrans %}">
+            {% blocktrans trimmed count c_panellists=c_panellists %}
+              {{ c_panellists }} panellist
+            {% plural %}
+              {{ c_panellists }} panellists
+            {% endblocktrans %}
+          </div>
+        {% endif %}
+        {% if c_trainees > 0 %}
+          <div class="progress-bar position-display trainee" role="progressbar"
+               style="width: {% percentage c_trainees c_total %}%;" data-toggle="tooltip"
+               title="{% blocktrans trimmed with min_voting=pref.adj_min_voting_score %}
+                Adjudicators are allocated as trainees by the auto-allocator if their score is less
+                than the 'minimum voting score' (currently {{ min_voting }}) set in this
+                tournament's Draw Rules configuration.
+               {% endblocktrans %}">
+            {% blocktrans trimmed count c_trainees=c_trainees %}
+              {{ c_trainees }} trainee
+            {% plural %}
+              {{ c_trainees }} trainees
+            {% endblocktrans %}
+          </div>
+        {% endif %}
       </div>
       <h6 class="pt-3 text-center text-secondary">
         {% blocktrans trimmed with min_voting_score=pref.adj_min_voting_score %}
