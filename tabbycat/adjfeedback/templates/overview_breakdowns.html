@@ -54,7 +54,7 @@
             The proportion of an adjudicator's score determined by feedback vs the
             test is set on a per-round basis. This is the mix for the current round
             ({{ round }}).
-          {% endblocktrans %}">{% trans "Score Aspects" %}</h6>
+          {% endblocktrans %}">{{ current_round.abbreviation }} {% trans "Score Ratio" %}</h6>
     </div>
   </div>
 </div>
@@ -104,7 +104,7 @@
       </div>
       <h6 class="pt-3 text-center text-secondary">
         {% blocktrans trimmed with min_voting_score=pref.adj_min_voting_score %}
-          Auto-Allocate Distributions ({{ min_voting_score }} to vote)
+          Auto-Allocate Distributions ({{ min_voting_score }}+ to vote)
         {% endblocktrans %}
       </h6>
     </div>
