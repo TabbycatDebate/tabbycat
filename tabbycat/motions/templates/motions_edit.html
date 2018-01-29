@@ -28,7 +28,7 @@
 {% block content %}
 
   {% if formset.errors %}
-    {% include "components/form-errors.html" with errors=formset.non_field_errors %}
+    {% include "components/form-errors.html" with errors=formset.non_form_errors %}
   {% endif %}
 
   <form method="POST">
