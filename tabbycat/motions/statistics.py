@@ -19,12 +19,12 @@ class MotionStats:
 
         if t.pref('teams_in_debate') == 'two':
             self.isBP = False
-            self.round_rooms = int(len(results_data_for_round) / 2)
-            self.debate_rooms = int(len(results_data_for_motion) / 2)
+            self.round_rooms = len(results_data_for_round) // 2
+            self.debate_rooms = len(results_data_for_motion) // 2
         else:
             self.isBP = True
-            self.round_rooms = int(len(results_data_for_round) / 4)
-            self.debate_rooms = int(len(results_data_for_motion) / 4)
+            self.round_rooms = len(results_data_for_round) // 4
+            self.debate_rooms = len(results_data_for_motion) // 4
 
         self.placings = self.gather_placings(self.points_dict(), results_data_for_motion)
         self.result_balance = self.determine_balance()
@@ -79,7 +79,7 @@ class MotionStats:
             affs = self.placings['aff'][1]
             negs = self.placings['neg'][1]
 
-        n_2 = int(self.debate_rooms)
+        n_2 = self.debate_rooms / 2
         aff_c_stat = pow(affs - n_2, 2) / n_2
         neg_c_stat = pow(negs - n_2, 2) / n_2
         c_stat = round(aff_c_stat + neg_c_stat, 2)
