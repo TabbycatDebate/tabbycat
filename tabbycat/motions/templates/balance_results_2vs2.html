@@ -33,20 +33,14 @@
       <div class="progress-bar progress-bar-aff" style="width: {{ am.results_rates.aff.1 }}%">
         {% if am.debate_rooms > 0 %}
           {% if am.results_rates.aff.1 > 5 %}
-            {{ am.results_rates.aff.1|floatformat:"0" }}
-            <small class="d-sm-inline {% if am.results_rates.aff.1 < 10 %}d-none{% endif %}">
-              %
-            </small>
+            {{ am.results_rates.aff.1|floatformat:"0" }}%
           {% endif %}
         {% endif %}
       </div>
       <div class="progress-bar progress-bar-neg" style="width: {{ am.results_rates.neg.1 }}%">
         {% if am.debate_rooms > 0 %}
           {% if am.results_rates.neg.1 > 5 %}
-            {{ am.results_rates.neg.1|floatformat:"0" }}
-            <small class="d-sm-inline {% if am.results_rates.neg.1 < 10 %}d-none{% endif %}">
-              %
-            </small>
+            {{ am.results_rates.neg.1|floatformat:"0" }}%
           {% endif %}
         {% endif %}
       </div>
