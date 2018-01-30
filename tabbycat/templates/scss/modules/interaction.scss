@@ -98,8 +98,9 @@
 // Modals
 //------------------------------------------------------------------------------
 
-.modal {
-  z-index: $z_1;
+// Addressses flickering issue in https://github.com/twbs/bootstrap/issues/25206
+.list-group-item, .list-group-item:hover {
+  z-index: auto;
 }
 
 .modal-xl { // For motions page; probably feedback also (want super big modals)
