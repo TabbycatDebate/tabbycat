@@ -39,6 +39,10 @@ urlpatterns = [
         tournaments.views.StyleGuideView.as_view(),
         name='style-guide'),
 
+    # Set language override
+    path('i18n/',
+        include('django.conf.urls.i18n')),
+
     # Admin area
     path('jet/',
         include('jet.urls', 'jet')),

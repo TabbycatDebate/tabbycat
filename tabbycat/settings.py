@@ -1,6 +1,7 @@
 import os
 
 from django.contrib.messages import constants as messages
+from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -20,15 +21,27 @@ DEBUG_ASSETS = DEBUG
 
 MEDIA_URL = '/media/'
 TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
-LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en')
-USE_I18N = True
 
 TABBYCAT_VERSION = '2.1.0-dev'
 TABBYCAT_CODENAME = 'Japanese Bobtail'
 READTHEDOCS_VERSION = 'latest'  # change to v2.1.0 for release
 
+# ==============================================================================
+# Languages
+# ==============================================================================
+
+USE_I18N = True
+
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
+]
+
+# Languages that should be available in the switcher
+LANGUAGES = [
+  ('ar', _('Arabic')),
+  ('en', _('English')),
+  ('es', _('Spanish')),
+  ('fr', _('French'))
 ]
 
 # ==============================================================================
@@ -39,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # User language preferences
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

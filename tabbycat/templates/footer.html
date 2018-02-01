@@ -62,6 +62,12 @@
       <div class="col mt-2">
         <ul class="nav justify-content-center">
           <li class="nav-item p-2">
+            <i data-feather="globe"></i>
+            <a class="nav-link p-0 d-inline-block" href="#" data-toggle="modal" data-target="#setLanguageModal">
+              {% trans "Change Language" %}
+            </a>
+          </li>
+          <li class="nav-item p-2">
             <i data-feather="github"></i>
             <a class="nav-link p-0 d-inline-block" href="https://github.com/TabbycatDebate/tabbycat/">
               {% trans "GitHub" %}
@@ -98,3 +104,28 @@
   </div>
 </div>
 
+<div class="modal fade" id="setLanguageModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+          <input name="next" type="hidden" value="{{ redirect_to }}">
+          <select name="language" class="custom-select">
+              {% get_current_language as LANGUAGE_CODE %}
+              {% get_available_languages as LANGUAGES %}
+              {% get_language_info_list for LANGUAGES as languages %}
+              {% for language in languages %}
+                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                  {{ language.name_local }} ({{ language.code }})
+                </option>
+              {% endfor %}
+          </select>
+          <input class="btn btn-primary btn-block mt-3" type="submit" value="{% trans "Change Language" %}">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
