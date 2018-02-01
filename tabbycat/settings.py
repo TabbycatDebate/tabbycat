@@ -38,10 +38,10 @@ LOCALE_PATHS = [
 
 # Languages that should be available in the switcher
 LANGUAGES = [
-  ('ar', _('Arabic')),
-  ('en', _('English')),
-  ('es', _('Spanish')),
-  ('fr', _('French'))
+    ('ar', _('Arabic')),
+    ('en', _('English')),
+    ('es', _('Spanish')),
+    ('fr', _('French'))
 ]
 
 # ==============================================================================
