@@ -481,7 +481,7 @@ class DebateBallotCheckinError(Exception):
     pass
 
 
-class BallotCheckinView(AssistantMixin, RoundMixin, TemplateView):
+class BaseBallotCheckinView(RoundMixin, TemplateView):
     template_name = 'ballot_checkin.html'
 
     def get_page_subtitle(self):
@@ -495,6 +495,14 @@ class BallotCheckinView(AssistantMixin, RoundMixin, TemplateView):
         kwargs['venue_options'] = venues
 
         return super().get_context_data(**kwargs)
+
+
+class AdminBallotCheckinView(AdministratorMixin, BaseBallotCheckinView):
+    pass
+
+
+class AssistantBallotCheckinView(AssistantMixin, CurrentRoundMixin, BaseBallotCheckinView):
+    pass
 
 
 class BaseBallotCheckinJsonResponseView(AssistantMixin, RoundMixin, JsonDataResponsePostView):

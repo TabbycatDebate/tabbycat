@@ -8,6 +8,11 @@ urlpatterns = [
         views.AdminResultsEntryForRoundView.as_view(),
         name='results-round-list'),
 
+    # Ballot check-in
+    path('round/<int:round_seq>/checkin/',
+        views.AdminBallotCheckinView.as_view(),
+        name='results-ballot-checkin'),
+
     # Inline Actions
     path('round/<int:round_seq>/postpone/',
         views.PostponeDebateView.as_view(),

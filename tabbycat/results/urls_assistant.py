@@ -9,9 +9,9 @@ urlpatterns = [
         name='results-assistant-round-list'),
 
     # Ballot check-in
-    path('round/<int:round_seq>/checkin/',
-        views.BallotCheckinView.as_view(),
-        name='results-ballot-checkin'),
+    path('checkin/',
+        views.AssistantBallotCheckinView.as_view(),
+        name='results-assistant-ballot-checkin'),
     path('round/<int:round_seq>/checkin/detail/',
         views.BallotCheckinGetDetailsView.as_view(),
         name='results-ballot-checkin-details'),
