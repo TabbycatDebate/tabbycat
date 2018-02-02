@@ -8,14 +8,6 @@ urlpatterns = [
         views.AssistantResultsEntryView.as_view(),
         name='results-assistant-round-list'),
 
-    # JSON updates
-    path('json/status/',
-        views.BallotsStatusJsonView.as_view(),
-        name='results-ballots-graph-data'),
-    path('json/latest/',
-        views.LatestResultsJsonView.as_view(),
-        name='results-latest-json'),
-
     # Ballot check-in
     path('round/<int:round_seq>/checkin/',
         views.BallotCheckinView.as_view(),
