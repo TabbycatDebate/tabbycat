@@ -21,8 +21,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 
 from utils.misc import reverse_tournament
-from utils.mixins import (AdministratorMixin, CacheMixin,
-                          SuperuserOrTabroomAssistantTemplateResponseMixin)
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
 from utils.views import JsonDataResponseView, PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -367,13 +366,16 @@ class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class TabroomAddFeedbackIndexView(SuperuserOrTabroomAssistantTemplateResponseMixin, BaseAddFeedbackIndexView):
-    """View for the index page for tabroom officials to add feedback. The index
+class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
+    """View for the index page for administrators to add feedback. The index
     page lists all possible sources; officials should then choose the author
     of the feedback."""
+    template_name = 'assistant_add_feedback.html'
 
-    superuser_template_name = 'add_feedback.html'
-    assistant_template_name = 'assistant_add_feedback.html'
+
+class AssistantAddFeedbackIndexView(AssistantMixin, BaseAddFeedbackIndexView):
+    """As for AdminAddFeedbackIndexView, but for assistants."""
+    template_name = 'assistant_add_feedback.html'
 
 
 class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
@@ -430,7 +432,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         return super().post(request, *args, **kwargs)
 
 
-class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, BaseAddFeedbackView):
+class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, BaseAddFeedbackView):
     """View for tabroom officials to add feedback."""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE
@@ -449,6 +451,14 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, B
 
     def get_success_url(self):
         return reverse_tournament('adjfeedback-add-index', self.get_tournament())
+
+
+class AdminAddFeedbackView(AdministratorMixin, BaseTabroomAddFeedbackView):
+    pass
+
+
+class AssistantAddFeedbackView(AssistantMixin, BaseTabroomAddFeedbackView):
+    pass
 
 
 class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMixin, BaseAddFeedbackView):

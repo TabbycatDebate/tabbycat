@@ -1,6 +1,17 @@
 {% extends "add_feedback.html" %}
+{% load debate_tags %}
 
 {% block head-title %}Who is the feedback from?{% endblock %}
 {% block page-title %}Enter Feedback{% endblock %}
 
 {% block page-subnav-actions %}{% endblock %}
+
+{% block enter-feedback-team-link %}
+  <a href="{% tournamenturl 'adjfeedback-assistant-add-from-team' team.id %}">
+  {{ team.short_name }}</a>
+{% endblock %}
+
+{% block enter-feedback-adj-link %}
+  <a href="{% tournamenturl 'adjfeedback-assistant-add-from-adjudicator' adj.id %}">
+  {{ adj.name }}</a>
+{% endblock %}

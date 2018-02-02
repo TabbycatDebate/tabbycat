@@ -56,13 +56,13 @@ urlpatterns = [
 
     # Adding
     path('add/',
-        views.TabroomAddFeedbackIndexView.as_view(),
+        views.AdminAddFeedbackIndexView.as_view(),
         name='adjfeedback-add-index'),
     path('add/team/<int:source_id>/',
-        views.TabroomAddFeedbackView.as_view(model=Team),
+        views.AdminAddFeedbackView.as_view(model=Team),
         name='adjfeedback-add-from-team'),
     path('add/adjudicator/<int:source_id>/',
-        views.TabroomAddFeedbackView.as_view(model=Adjudicator),
+        views.AdminAddFeedbackView.as_view(model=Adjudicator),
         name='adjfeedback-add-from-adjudicator'),
 
 ]
