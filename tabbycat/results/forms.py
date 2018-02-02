@@ -9,6 +9,7 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
+from .consumers import BallotResultConsumer, BallotStatusConsumer
 from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
                      ForfeitDebateResult, VotingDebateResult)
 from .utils import side_and_position_names
@@ -185,6 +186,15 @@ class BaseResultForm(forms.Form):
 
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
+
+        # 5. Notify the websocket Latest Results consumer if result is 'final'
+        if self.ballotsub.confirmed:
+            if self.debate.result_status is self.debate.STATUS_CONFIRMED:
+                BallotResultConsumer.group_send(self.ballotsub)
+
+        # 6. Notify the websocket Ballots Status if result is for current round
+        if self.debate.round == self.debate.round.tournament.current_round:
+            BallotStatusConsumer.group_send(self.debate.round)
 
         return self.ballotsub
 

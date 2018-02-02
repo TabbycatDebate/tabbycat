@@ -329,7 +329,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
         return super().get_context_data(**kwargs)
 
 
-class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, View):
+class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
 
     def set_category_eligibility(self, speaker, sent_status):

@@ -17,7 +17,7 @@
   </a>
 
   {% if not pref.enable_debate_scheduling %}
-    <a href="" class="btn {% if round.starts_at %}btn-primary{% else %}btn-primary{% endif %}"
+    <a href="" class="btn {% if round.starts_at %}btn-outline-primary{% else %}btn-primary{% endif %}"
        data-toggle="modal" data-target="#editStartTime">
       {% if round.starts_at %}
         {% blocktrans trimmed with start_time=round.starts_at %}
@@ -291,7 +291,7 @@
 
 
 <div class="modal fade" id="editStartTime" tabindex="-1" role="dialog" aria-labelledby="editStartTime">
-  <div class="modal-dialog modal-sm">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
 
       <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}">

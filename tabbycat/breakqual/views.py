@@ -245,7 +245,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         return super().get_context_data(**kwargs)
 
 
-class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, View):
+class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
 
     def set_break_elibility(self, team, sent_status):

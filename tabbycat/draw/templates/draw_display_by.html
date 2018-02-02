@@ -64,21 +64,20 @@
   <script>
     function startScrolling() {
       console.log('startScrolling');
-      $('[data-toggle="tooltip"]').attr("data-toggle", "notip").css("pointer-events", "none")
       $('.table').addClass("hide-hover") // Hide the row highlight effect
-      $('.hover-target').addClass("disable-hover") // Suppress popovers while scrolling
       $('.popover').hide() // Hide any currently triggered popovers
       $('#stop_scrolling').show();
     }
     function stopScrolling() {
       console.log('stopScrolling');
-      $('[data-toggle="notip"]').attr("data-toggle", "tooltip").css("pointer-events", "auto")
       $('html, body').stop()
       $('.table').removeClass("hide-hover")
-      $('.hover-target').removeClass("disable-hover")
       $('#stop_scrolling').hide();
     }
     $(document).ready( function() {
+      // Disable all popovers here
+      $('.hover-target').css("pointer-events", "none")
+
       $('#stop_scrolling').hide();
       $(".scroll-speeds .btn").click(function(event){
         var speed = $(document).height() / $(this).attr('data-target');

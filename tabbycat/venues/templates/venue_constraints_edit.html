@@ -23,7 +23,7 @@
 
 
     {% if formset.errors %}
-      {% include "components/form-errors.html" with errors=formset.errors %}
+      {% include "components/form-errors.html" with errors=formset.non_form_errors %}
     {% endif %}
 
     <div class="card mt-3">

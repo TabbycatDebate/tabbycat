@@ -67,7 +67,7 @@ Then create local_settings.py as described in the :ref:`Linux instructions <loca
   pip install -r requirements_common.txt
   npm install
   dj migrate
-  npm run gulp build
+  npm run build
   dj collectstatic
   dj createsuperuser
   dj runserver

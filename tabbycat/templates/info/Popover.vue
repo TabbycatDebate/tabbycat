@@ -37,18 +37,23 @@ export default {
   computed: {
     popContent: function() {
       return this.cellData['content']
-    },
+    }
   },
   methods: {
-    showPopover: function(event) {
-
+    getPopContent: function() {
       // Grab popover content from actual render html
-      if (this.popContent.length > 0) {
-        var content = this.$refs.popHTML.innerHTML
-      } else {
-        var content = ""
+      if (this.cellData.content.length > 0) {
+        return this.$refs.popHTML.innerHTML
       }
-
+      return ""
+    },
+    getPopTitle: function() {
+      if (typeof(this.cellData['title']) !== undefined) {
+        return this.cellData['title']
+      }
+      return ""
+    },
+    showPopover: function(event) {
       // Popovers are disabled sometimes; e.g. on a scrolling draw page
       if ($(event.target).hasClass("disable-hover") === false){
 
@@ -62,8 +67,8 @@ export default {
             trigger: 'manual',
             placement: 'left',
             html: true,
-            title: this.cellData['title'],
-            content: content,
+            title: this.getPopTitle,
+            content: this.getPopContent,
             container: event.target, // Must be same as what triggers the event
             offset: '0,-40' // Shift so hover is easier
           })

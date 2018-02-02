@@ -30,13 +30,13 @@ class DebateAdjudicator(models.Model):
         verbose_name=_("type"))
     timing_confirmed = models.NullBooleanField(verbose_name=_("available?"))
 
-    def __str__(self):
-        return '{} in {} ({})'.format(self.adjudicator, self.debate, self.get_type_display())
-
     class Meta:
         verbose_name = _("debate adjudicator")
         verbose_name_plural = _("debate adjudicators")
         unique_together = ('debate', 'adjudicator')
+
+    def __str__(self):
+        return '{} in {} ({})'.format(self.adjudicator, self.debate, self.get_type_display())
 
 
 class AdjudicatorConflict(models.Model):
@@ -50,6 +50,9 @@ class AdjudicatorConflict(models.Model):
         verbose_name_plural = _("adjudicator-team conflicts")
         unique_together = ('adjudicator', 'team')
 
+    def __str__(self):
+        return '{} with {}'.format(self.adjudicator, self.team)
+
 
 class AdjudicatorAdjudicatorConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_source_set",
@@ -62,6 +65,9 @@ class AdjudicatorAdjudicatorConflict(models.Model):
         verbose_name_plural = _("adjudicator-adjudicator conflicts")
         unique_together = ('adjudicator', 'conflict_adjudicator')
 
+    def __str__(self):
+        return '{} with {}'.format(self.adjudicator, self.conflict_adjudicator)
+
 
 class AdjudicatorInstitutionConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
@@ -73,3 +79,6 @@ class AdjudicatorInstitutionConflict(models.Model):
         verbose_name = _("adjudicator-institution conflict")
         verbose_name_plural = _("adjudicator-institution conflicts")
         unique_together = ('adjudicator', 'institution')
+
+    def __str__(self):
+        return '{} with {}'.format(self.adjudicator, self.institution)

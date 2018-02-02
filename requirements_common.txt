@@ -26,7 +26,11 @@ sqlparse==0.2.4                         # Parsing SQL statements
 # Pipeline
 
 whitenoise==3.3.1                       # Static file serving
-waitress==1.1.0                         # For web serving
+
+# Channels
+
+daphne==1.4.2                           # Waitress replacement; handles HTTP + Websockets
+channels==1.1.8                         # Channels Layers
 
 # Misc
 

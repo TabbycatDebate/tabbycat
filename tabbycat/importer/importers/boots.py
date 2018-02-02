@@ -1,6 +1,8 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
 import adjallocation.models as am
+import availability.models as avm
 import adjfeedback.models as fm
 import breakqual.models as bm
 import tournaments.models as tm
@@ -8,7 +10,7 @@ import participants.models as pm
 import venues.models as vm
 from participants.emoji import set_emoji
 
-from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
+from .base import BaseTournamentDataImporter, convert_bool, make_interpreter, make_lookup
 
 
 class BootsTournamentDataImporter(BaseTournamentDataImporter):
@@ -148,8 +150,10 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, pm.Speaker.categories.through, speaker_category_interpreter)
 
     def import_venues(self, f, auto_create_categories=True):
-        interpreter = make_interpreter(tournament=self.tournament, DELETE=['category'])
-        self._import(f, vm.Venue, interpreter)
+        interpreter = make_interpreter(tournament=self.tournament,
+            DELETE=['category', lambda x: x.startswith('available:')])
+
+        venues = self._import(f, vm.Venue, interpreter)
 
         if auto_create_categories:
             def venue_category_interpreter(lineno, line):
@@ -162,10 +166,26 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             if line.get('category'):
                 return {
                     'venuecategory': vm.VenueCategory.objects.get(name=line['category']),
-                    'venue': vm.Venue.objects.get(name=line['name'])
+                    'venue': venues[lineno],
                 }
 
         self._import(f, vm.VenueCategory.venues.through, venue_category_venue_interpreter)
+
+        content_type = ContentType.objects.get_for_model(vm.Venue)
+
+        def venue_availability_interpreter(lineno, line):
+            availability_columns = [col for col in line if col.startswith('available:')]
+            for col in availability_columns:
+                round_name = col[10:]  # length of 'available:'
+                round = tm.Round.objects.lookup(round_name)
+                if convert_bool(line[col]):
+                    yield {
+                        'content_type': content_type,
+                        'object_id': venues[lineno].id,
+                        'round': round
+                    }
+
+        self._import(f, avm.RoundAvailability, venue_availability_interpreter)
 
     def import_team_conflicts(self, f):
         interpreter = make_interpreter(

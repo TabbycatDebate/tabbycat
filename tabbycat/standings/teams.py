@@ -185,9 +185,13 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             queryset[0].tournament.team_set.all(), "points", "points", "SUM", round)
 
         if round is not None:
-            prefetch_queryset = DebateTeam.objects.filter(debate__round__seq__lte=round.seq)
+            prefetch_queryset = DebateTeam.objects.filter(
+                debate__round__seq__lte=round.seq,
+                debate__round__stage=Round.STAGE_PRELIMINARY
+            )
         else:
             prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
+
         points_queryset = points_queryset.prefetch_related(Prefetch('debateteam_set',
                 queryset=prefetch_queryset, to_attr='debateteams'))
         points_queryset_teams = {team.id: team for team in points_queryset}

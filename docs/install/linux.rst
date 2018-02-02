@@ -49,7 +49,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   npm install
   cd tabbycat
   dj migrate
-  npm run gulp build
+  npm run build
   dj collectstatic
   dj createsuperuser
   dj runserver
@@ -195,7 +195,7 @@ Almost there!
 
     $ cd tabbycat
     $ dj migrate
-    $ npm run gulp build
+    $ npm run build
     $ dj collectstatic
     $ dj createsuperuser
 
