@@ -130,7 +130,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         return table
 
 
-class FeedbackOverview(LoginRequiredMixin, BaseFeedbackOverview):
+class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
 
     page_title = 'Feedback Overview'
     page_emoji = '🙅'
@@ -150,7 +150,7 @@ class FeedbackOverview(LoginRequiredMixin, BaseFeedbackOverview):
         return table
 
 
-class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
+class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
     template_name = "feedback_base.html"
     page_title = 'Find Feedback on Adjudicator'
     page_emoji = '🔍'
@@ -170,7 +170,7 @@ class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
         return table
 
 
-class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
+class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = "feedback_base.html"
     page_title = 'Find Feedback'
@@ -216,7 +216,7 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
         return [team_table, adj_table]
 
 
-class FeedbackCardsView(LoginRequiredMixin, TournamentMixin, TemplateView):
+class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
     """Base class for views displaying feedback as cards."""
 
     def get_score_thresholds(self):
@@ -432,7 +432,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         return super().post(request, *args, **kwargs)
 
 
-class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, BaseAddFeedbackView):
+class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackView):
     """View for tabroom officials to add feedback."""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE
