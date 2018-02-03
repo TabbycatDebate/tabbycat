@@ -3,15 +3,15 @@
 # Importing the base requirements
 -r requirements_common.txt
 
-# Base Heroku Requirements (from the toolbelt)
-dj-database-url==0.4.2
+# Base Heroku Requirements
+dj-database-url==0.4.2                  # From the heroku toolbelt
 
 # Redis
-django-redis==4.8.0 # Adds redis as caching backend
-asgi_redis==1.4.3 # Adds redis as a channel layer
+django-redis==4.8.0                     # Adds redis as caching backend
+asgi_redis==1.4.3                       # Adds redis as a channel layer
 
-# Monitoring (note the required heroku add-on is not added by default)
-newrelic
+# Monitoring
+newrelic                                # Requires heroku add-on; not used generally
 
 # Emailing
 sendgrid
