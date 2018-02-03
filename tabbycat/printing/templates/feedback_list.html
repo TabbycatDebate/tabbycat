@@ -37,6 +37,9 @@ Printable Feedback Forms for {{ round_name }}
         </main>
       </div>
     </template>
+    <div v-if="ballots.length === 0" class="alert alert-warning">
+      {% trans "There are no feedback sheets available — perhaps adjudicators have not been allocated?" %}
+    </div>
   </div>
 
 {% endblock content %}
