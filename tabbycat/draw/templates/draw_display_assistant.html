@@ -32,11 +32,6 @@
       {% tournamenturl 'printing-assistant-feedback' as url %}
       {% include "components/item-action.html" with text="View Feedback Forms" subtext="(for printing)" emoji="🙅" %}
 
-      {% if pref.public_divisions %}
-        {% roundurl 'printing-master-sheets-list' round as url %}
-        {% include "components/item-action.html" with text="View Division Sheet" subtext="(for printing)" emoji="📠" %}
-      {% endif %}
-
     </ul>
   </div>
 </div>

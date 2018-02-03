@@ -10,11 +10,11 @@ from participants.models import Adjudicator
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
 from tournaments.models import Tournament
-from utils.mixins import AdministratorMixin, LoginRequiredMixin
+from utils.mixins import AdministratorMixin
 from venues.models import VenueCategory
 
 
-class MasterSheetsListView(LoginRequiredMixin, RoundMixin, TemplateView):
+class MasterSheetsListView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'division_sheets_list.html'
 
     def get_context_data(self, **kwargs):
@@ -23,7 +23,7 @@ class MasterSheetsListView(LoginRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class MasterSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
+class MasterSheetsView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'master_sheets_view.html'
 
     def get_context_data(self, **kwargs):
@@ -46,7 +46,7 @@ class MasterSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class RoomSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
+class RoomSheetsView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'room_sheets_view.html'
 
     def get_context_data(self, **kwargs):

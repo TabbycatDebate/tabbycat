@@ -2,7 +2,6 @@ import json
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.utils.translation import ugettext as _
 from django.views.generic import FormView, TemplateView, View
@@ -202,7 +201,7 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
         return table
 
 
-class AdminBreakingAdjudicatorsView(LoginRequiredMixin, BaseBreakingAdjudicatorsView):
+class AdminBreakingAdjudicatorsView(AdministratorMixin, BaseBreakingAdjudicatorsView):
     template_name = 'breaking_adjs.html'
 
 
