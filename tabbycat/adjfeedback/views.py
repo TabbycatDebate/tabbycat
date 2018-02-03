@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse
+from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
@@ -293,17 +294,50 @@ class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
     allow_null_tournament = True
 
 
-class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):
+class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
 
-    def get_context_data(self, **kwargs):
+    def get_tables(self):
         tournament = self.get_tournament()
-        if not tournament.pref('share_adjs'):
-            kwargs['adjudicators'] = tournament.adjudicator_set.all().order_by('name')
-        else:
-            Adjudicator.objects.all().order_by('name')
 
-        kwargs['teams'] = tournament.team_set.all()
-        return super().get_context_data(**kwargs)
+        teams_table = TabbycatTableBuilder(view=self, sort_key=_("Team"), title=_("A Team"))
+        add_link_data = [{
+            'text': team.short_name,
+            'link': self.get_from_team_link(team),
+        } for team in tournament.team_set.all()]
+        teams_table.add_column(_("Team"), add_link_data)
+
+        if tournament.pref('show_team_institutions'):
+            teams_table.add_column({
+                'key': _("Institution"),
+                'icon': 'home',
+                'tooltip': _("Institution"),
+            }, [team.institution.code if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
+
+        if tournament.pref('share_adjs'):
+            adjudicators = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True))
+        else:
+            adjudicators = tournament.adjudicator_set.all()
+
+        adjs_table = TabbycatTableBuilder(view=self, sort_key=_("Adjudicator"), title=_("An Adjudicator"))
+        if tournament.pref('share_adjs'):
+            adjudicators = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True))
+        else:
+            adjudicators = tournament.adjudicator_set.all()
+
+        add_link_data = [{
+            'text': adj.name,
+            'link': self.get_from_adj_link(adj),
+        } for adj in adjudicators]
+        adjs_table.add_column(_("Adjudicator"), add_link_data)
+
+        if tournament.pref('show_adjudicator_institutions'):
+            adjs_table.add_column({
+                'key': _("Institution"),
+                'icon': 'home',
+                'tooltip': _("Institution"),
+            }, [adj.institution.code if adj.institution else TabbycatTableBuilder.BLANK_TEXT for adj in adjudicators])
+
+        return [teams_table, adjs_table]
 
 
 class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
@@ -312,10 +346,26 @@ class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
     of the feedback."""
     template_name = 'add_feedback.html'
 
+    def get_from_adj_link(self, adj):
+        return reverse_tournament('adjfeedback-add-from-adjudicator',
+                self.get_tournament(), kwargs={'source_id': adj.id})
+
+    def get_from_team_link(self, team):
+        return reverse_tournament('adjfeedback-add-from-team',
+                self.get_tournament(), kwargs={'source_id': team.id})
+
 
 class AssistantAddFeedbackIndexView(AssistantMixin, BaseAddFeedbackIndexView):
     """As for AdminAddFeedbackIndexView, but for assistants."""
     template_name = 'assistant_add_feedback.html'
+
+    def get_from_adj_link(self, adj):
+        return reverse_tournament('adjfeedback-assistant-add-from-adjudicator',
+                self.get_tournament(), kwargs={'source_id': adj.id})
+
+    def get_from_team_link(self, team):
+        return reverse_tournament('adjfeedback-assistant-add-from-team',
+                self.get_tournament(), kwargs={'source_id': team.id})
 
 
 class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
