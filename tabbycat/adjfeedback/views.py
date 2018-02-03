@@ -310,7 +310,7 @@ class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
     """View for the index page for administrators to add feedback. The index
     page lists all possible sources; officials should then choose the author
     of the feedback."""
-    template_name = 'assistant_add_feedback.html'
+    template_name = 'add_feedback.html'
 
 
 class AssistantAddFeedbackIndexView(AssistantMixin, BaseAddFeedbackIndexView):
