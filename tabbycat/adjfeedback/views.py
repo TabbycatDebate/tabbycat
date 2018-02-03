@@ -2,12 +2,10 @@ import json
 import logging
 import math
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.utils.translation import ungettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
@@ -22,36 +20,16 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
 
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
-from utils.views import JsonDataResponseView, PostOnlyRedirectView, VueTableTemplateView
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class
 from .tables import FeedbackTableBuilder
-from .utils import get_feedback_overview, parse_feedback
+from .utils import get_feedback_overview
 from .progress import get_feedback_progress
 
 logger = logging.getLogger(__name__)
-
-
-class GetAdjScores(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
-
-    def get_data(self):
-        feedback_weight = self.get_tournament().current_round.feedback_weight
-        data = {}
-        for adj in Adjudicator.objects.all():
-            data[adj.id] = adj.weighted_score(feedback_weight)
-        return data
-
-
-class GetAdjFeedbackJSON(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
-
-    def get_data(self):
-        adjudicator = get_object_or_404(Adjudicator, pk=self.kwargs['pk'])
-        feedback = adjudicator.get_feedback().filter(confirmed=True)
-        questions = self.get_tournament().adj_feedback_questions
-        data = [parse_feedback(f, questions) for f in feedback]
-        return data
 
 
 class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
@@ -313,44 +291,6 @@ class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
     source_name_attr = 'name'
     adjfeedback_filter_field = 'source_adjudicator__adjudicator'
     allow_null_tournament = True
-
-
-class GetAdjFeedback(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
-
-    def parse_feedback(self, f, questions):
-
-        if f.source_team:
-            source_annotation = " (" + f.source_team.get_result_display() + ")"
-        elif f.source_adjudicator:
-            source_annotation = " (" + f.source_adjudicator.get_type_display() + ")"
-        else:
-            source_annotation = ""
-
-        data = [
-            str(f.round.abbreviation),
-            str(str(f.version) + (f.confirmed and "*" or "")),
-            f.debate.bracket,
-            f.debate.matchup,
-            str(str(f.source) + source_annotation),
-            f.score,
-        ]
-        for question in questions:
-            try:
-                data.append(question.answer_set.get(feedback=f).answer)
-            except ObjectDoesNotExist:
-                data.append("-")
-        data.append(f.confirmed)
-        return data
-
-    def get_data(self):
-        t = self.get_tournament()
-        adj = get_object_or_404(Adjudicator, pk=int(self.request.GET['id']))
-        feedback = adj.get_feedback().filter(confirmed=True)
-        questions = t.adj_feedback_questions
-
-        data = [self.parse_feedback(f, questions) for f in feedback]
-        data = [parse_feedback(f, questions) for f in feedback]
-        return {'aaData': data}
 
 
 class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):

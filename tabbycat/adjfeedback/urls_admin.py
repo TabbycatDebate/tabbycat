@@ -23,13 +23,6 @@ urlpatterns = [
     path('notes/test/set/',
         views.SetAdjudicatorNoteView.as_view(),
         name='adjfeedback-set-adj-note'),
-    # Only used in old allocation screen; TODO: deprecate
-    path('scores/all/',
-        views.GetAdjScores.as_view(),
-        name='adj_scores'),
-    path('feedback/get/',
-        views.GetAdjFeedback.as_view(),
-        name='get_adj_feedback'),
 
     # Source
     path('latest/',
@@ -50,9 +43,6 @@ urlpatterns = [
     path('target/adjudicator/<int:pk>/',
         views.FeedbackOnAdjudicatorView.as_view(),
         name='adjfeedback-view-on-adjudicator'),
-    path('target/adjudicator/json/<int:pk>/',
-        views.GetAdjFeedbackJSON.as_view(),
-        name='get_adj_feedback_json'),
 
     # Adding
     path('add/',
