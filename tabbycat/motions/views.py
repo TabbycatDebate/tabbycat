@@ -2,19 +2,20 @@ from django.contrib import messages
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy, ungettext
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
-                                PublicTournamentPageMixin, RoundMixin)
+                                PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from utils.misc import redirect_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
 from .models import Motion
 from .forms import ModelAssignForm
+from .statistics import MotionStatistics
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
@@ -167,3 +168,18 @@ class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
 
 class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDisplayMotionsView):
     assistant_page_permissions = ['all_areas']
+
+
+class BaseMotionStatisticsView(TournamentMixin, TemplateView):
+
+    template_name = 'motion_statistics.html'
+    page_title = ugettext_lazy("Motion Statistics")
+    page_emoji = '💭'
+
+    def get_context_data(self, **kwargs):
+        kwargs['statistics'] = MotionStatistics(self.get_tournament())
+        return super().get_context_data(**kwargs)
+
+
+class MotionStatisticsView(AdministratorMixin, BaseMotionStatisticsView):
+    pass

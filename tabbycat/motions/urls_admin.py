@@ -20,4 +20,8 @@ urlpatterns = [
             views.AdminDisplayMotionsView.as_view(),
             name='motions-display'),
     ])),
+
+    path('statistics/',
+        views.MotionStatisticsView.as_view(),
+        name='motions-statistics'),
 ]

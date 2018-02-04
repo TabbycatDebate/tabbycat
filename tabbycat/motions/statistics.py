@@ -1,4 +1,136 @@
+from django.db.models import Count, Q
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 from django.utils.functional import cached_property
+
+from motions.models import Motion
+
+
+def MotionStatistics(tournament, *args, **kwargs):  # noqa: N802
+    if tournament.pref('teams_in_debate') == 'two':
+        return MotionTwoTeamStatsCalculator(tournament, *args, **kwargs)
+
+
+class MotionTwoTeamStatsCalculator:
+
+    def __init__(self, tournament):
+        self.tournament = tournament
+        self.by_motion = tournament.pref('enable_motions')
+        self.include_vetoes = self.by_motion and tournament.pref('motion_vetoes_enabled')
+
+        self._prefetch_motions()
+        self.ndebates_by_round = {r: r.ndebates for r in
+                tournament.round_set.annotate(ndebates=Count('debate'))}
+
+        for motion in self.motions:
+            self._annotate_percentages(motion)
+            motion.χ2_label, motion.χ2_info = self._annotate_χsquared(motion.aff_wins, motion.neg_wins)
+
+            if self.include_vetoes:
+                # vetoes are the "other way round", since an aff veto indicates it's neg-weighted
+                motion.veto_χ2_label, motion.veto_χ2_info = self._annotate_χsquared(motion.neg_vetoes, motion.aff_vetoes)
+
+    def _prefetch_motions(self):
+
+        self.motions = Motion.objects.filter(round__tournament=self.tournament).order_by(
+            'round__seq').select_related('round')
+
+        if self.by_motion:
+            self.motions = self.motions.filter(ballotsubmission__confirmed=True)
+
+            ndebates_annotation = Count('ballotsubmission')
+
+            wins_annotations = {'%s_wins' % side: Count('ballotsubmission__teamscore',
+                filter=Q(
+                    ballotsubmission__teamscore__debate_team__side=side,
+                    ballotsubmission__teamscore__win=True,
+                ), distinct=True) for side in self.tournament.sides}
+
+            vetoes_annotations = {'%s_vetoes' % side: Count('debateteammotionpreference',
+                filter=Q(
+                    debateteammotionpreference__debate_team__side=side,
+                    debateteammotionpreference__preference=3,
+                    debateteammotionpreference__ballot_submission__confirmed=True,
+                ), distinct=True) for side in self.tournament.sides}
+
+        else:
+            self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
+
+            ndebates_annotation = Count('round__debate__ballotsubmission')
+
+            wins_annotations = {'%s_wins' % side: Count('round__debate__ballotsubmission__teamscore',
+                filter=Q(
+                    round__debate__ballotsubmission__teamscore__debate_team__side=side,
+                    round__debate__ballotsubmission__teamscore__win=True,
+                ), distinct=True) for side in self.tournament.sides}
+
+        self.motions = self.motions.annotate(ndebates=ndebates_annotation, **wins_annotations)
+        if self.include_vetoes:
+            self.motions = self.motions.annotate(**vetoes_annotations)
+
+    def _annotate_percentages(self, motion):
+        ndebates_in_round = self.ndebates_by_round[motion.round]
+
+        if ndebates_in_round == 0:
+            return
+
+        motion.aff_win_percentage = motion.aff_wins / ndebates_in_round * 100
+        motion.neg_win_percentage = motion.neg_wins / ndebates_in_round * 100
+
+        if self.include_vetoes:
+            motion.aff_veto_percentage = motion.aff_vetoes / ndebates_in_round * 100 / 2
+            motion.neg_veto_percentage = motion.neg_vetoes / ndebates_in_round * 100 / 2
+
+    CRITICAL_VALUES = [
+        # (maximum value, level of significance as percentage string)
+        (10.826, '0.1%', ugettext_lazy("extremely strong evidence")),
+        (6.635,    '1%', ugettext_lazy("strong evidence")),
+        (5.412,    '2%', ugettext_lazy("moderate evidence")),
+        (3.841,    '5%', ugettext_lazy("weak evidence")),
+        (2.706,   '10%', ugettext_lazy("very weak evidence")),
+        (0.455,   '50%', ugettext_lazy("extremely weak evidence")),
+    ]
+
+    def _annotate_χsquared(self, affs, negs):  # noqa: N802
+        """Annotates motions with information from the χ² test.
+        Test and confidence levels contributed by Viran Weerasekera.
+        The χ² statistic is computed as follows:
+
+                (A - μ)²   (N - μ)²   (A² + N²)
+            T = -------- + -------- = --------- - n
+                   μ          μ           μ
+
+        where A is the number of debates won by affirmative teams,
+        N is the number of debates won by negative teams,
+        n = (A + N) is the total number of debates, and
+        μ = (A + N)/2 is the expected number of debates under the null hypothesis.
+
+        T is then distributed according to a χ² distribution with one degree of freedom.
+        """
+
+        n = affs + negs
+
+        if n < 10:
+            label = _("balance inconclusive")
+            info = _("too few debates to get a meaningful statistic")
+            return label, info
+
+        μ = n / 2  # noqa: N806
+        T = (affs ** 2 + negs ** 2) / μ - n  # noqa: N806
+
+        for critical, level_str, evidence_str in self.CRITICAL_VALUES:
+            if T > critical:
+                label = _("imbalanced at %(level)s level") % {'level': level_str}
+                info = _("χ² statistic is %(chisq).3f, providing %(evidence)s to "
+                    "suggest that this motion was imbalanced — at a %(level)s level of "
+                    "significance.") % {'chisq': T, 'level': level_str, 'evidence': evidence_str}
+                break
+        else:
+            label = _("probably balanced")
+            info = _("χ² statistic is %(chisq).3f, providing insufficient evidence "
+                "to suggest that this motion was imbalanced at any level of significance.") % {'chisq': T}
+
+        return label, info
 
 
 class MotionStats:
@@ -107,6 +239,7 @@ class MotionStats:
     def results_rates(self):
         return self.points_rates(self.placings)
 
+    # Called by template
     @cached_property
     def veto_rates(self):
         return self.points_rates(self.vetoes, True)
