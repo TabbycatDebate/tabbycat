@@ -55,18 +55,22 @@ class TournamentConsumer(JsonWebsocketConsumer):
 
     def connect(self):
         if self.is_authenticated():
-            print('logged in:', self.scope["user"])
             AsyncToSync(self.channel_layer.group_add)(self.group_name(), self.channel_name)
             self.accept()
-            print('action connect to', self.channel_name, self.group_name())
         else:
-            print('not authenticated')
+            pass
 
     def disconnect(self, message):
         AsyncToSync(self.channel_layer.group_discard)(self.group_name(), self.channel_name)
-        print('action disconnect from', self.channel_name, self.group_name())
+        # print('Channels: disconnect from', self.channel_name, self.group_name())
         super().disconnect(message)
 
     def broadcast(self, event):
         # Handles the "broadcast" event when sent out from outside the class
+        # print('Channels: broadcast for', self.group_name(), event)
         self.send_json(event["data"])
+
+    @classmethod
+    def get_data(cls, data):
+        # Optional; allows for custom methods to act on data before JSONing
+        return data

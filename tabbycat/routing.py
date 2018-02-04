@@ -4,6 +4,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 
 from actionlog.consumers import ActionLogEntryConsumer
+from results.consumers import BallotResultConsumer, BallotStatusConsumer
 
 
 # This acts like a urls.py equivalent; need to import the channel routes
@@ -17,7 +18,9 @@ application = ProtocolTypeRouter({
     # WebSocket handlers
     "websocket": AuthMiddlewareStack(
         URLRouter([
-            url(r'^(?P<tournament_slug>[-\w_]+)/actionlog/$', ActionLogEntryConsumer)
+            url(r'^(?P<tournament_slug>[-\w_]+)/actionlogs/$', ActionLogEntryConsumer),
+            url(r'^(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer),
+            url(r'^(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer)
         ])
     ),
 })

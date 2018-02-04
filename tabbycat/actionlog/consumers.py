@@ -10,12 +10,12 @@ from .models import ActionLogEntry
 
 class ActionLogEntryConsumer(TournamentConsumer, WSLoginRequiredMixin):
 
-    group_prefix = 'actionlog'
+    group_prefix = 'actionlogs'
 
 
 # Send out updates upon new action log entries
 @receiver(post_save, sender=ActionLogEntry)
-def consumer(sender, instance, created, **kwargs):
+def actionlog_notify_consumer(sender, instance, created, **kwargs):
     if created:
         slug = instance.tournament.slug
         group_name = ActionLogEntryConsumer.group_prefix + "_" + slug
