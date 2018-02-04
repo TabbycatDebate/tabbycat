@@ -46,13 +46,6 @@ class MotionTwoTeamStatsCalculator:
                     ballotsubmission__teamscore__win=True,
                 ), distinct=True) for side in self.tournament.sides}
 
-            vetoes_annotations = {'%s_vetoes' % side: Count('debateteammotionpreference',
-                filter=Q(
-                    debateteammotionpreference__debate_team__side=side,
-                    debateteammotionpreference__preference=3,
-                    debateteammotionpreference__ballot_submission__confirmed=True,
-                ), distinct=True) for side in self.tournament.sides}
-
         else:
             self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
 
@@ -65,7 +58,15 @@ class MotionTwoTeamStatsCalculator:
                 ), distinct=True) for side in self.tournament.sides}
 
         self.motions = self.motions.annotate(ndebates=ndebates_annotation, **wins_annotations)
+
         if self.include_vetoes:
+            vetoes_annotations = {'%s_vetoes' % side: Count('debateteammotionpreference',
+                filter=Q(
+                    debateteammotionpreference__debate_team__side=side,
+                    debateteammotionpreference__preference=3,
+                    debateteammotionpreference__ballot_submission__confirmed=True,
+                ), distinct=True) for side in self.tournament.sides}
+
             self.motions = self.motions.annotate(**vetoes_annotations)
 
     def _annotate_percentages(self, motion):
