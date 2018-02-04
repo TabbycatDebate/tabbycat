@@ -2,6 +2,7 @@ import os
 
 from django.contrib.messages import constants as messages
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -76,7 +77,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'channels', # For Websockets / real-time connections (above whitenoise)
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
-    'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
@@ -179,42 +179,35 @@ if os.environ.get('SENDGRID_USERNAME', ''):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'except_importer_base': {
-            '()': 'utils.logging.ExceptFilter',
-            'name': 'importer.importers.base',
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
-        'sentry': {
-            'level': 'WARNING',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'filters': ['except_importer_base'],
-        },
+        # 'sentry': {
+        #     'level': 'WARNING',
+        #     'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        # },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
-        'django.request': {
-            'handlers': ['sentry'],
-            'level': 'ERROR',
-        },
-        'raven': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
-        },
+        # 'django.request': {
+        #     'handlers': ['sentry'],
+        #     'level': 'ERROR',
+        # },
+        # 'raven': {
+        #     'level': 'INFO',
+        #     'handlers': ['console'],
+        #     'propagate': False,
+        # },
+        # 'sentry.errors': {
+        #     'level': 'INFO',
+        #     'handlers': ['console'],
+        #     'propagate': False,
+        # },
     },
     'formatters': {
         'standard': {
@@ -223,11 +216,11 @@ LOGGING = {
     },
 }
 
-for app in TABBYCAT_APPS:
-    LOGGING['loggers'][app] = {
-        'handlers': ['console', 'sentry'],
-        'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-    }
+# for app in TABBYCAT_APPS:
+#     LOGGING['loggers'][app] = {
+#         'handlers': ['console', 'sentry'],
+#         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+#     }
 
 # ==============================================================================
 # Sentry
@@ -235,16 +228,16 @@ for app in TABBYCAT_APPS:
 
 DISABLE_SENTRY = True
 
-if 'DATABASE_URL' in os.environ and not DEBUG:
-    DISABLE_SENTRY = False  # Only log JS errors in production on heroku
+# if 'DATABASE_URL' in os.environ and not DEBUG:
+#     DISABLE_SENTRY = False  # Only log JS errors in production on heroku
 
-    RAVEN_CONFIG = {
-        'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
-        'release': TABBYCAT_VERSION,
-    }
+#     RAVEN_CONFIG = {
+#         'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
+#         'release': TABBYCAT_VERSION,
+#     }
 
-    # Custom implementation makes the user ID the e-mail address, rather than the primary key
-    SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
+#     # Custom implementation makes the user ID the e-mail address, rather than the primary key
+#     SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
 
 # ==============================================================================
 # Messages
@@ -256,13 +249,7 @@ MESSAGE_TAGS = {messages.ERROR: 'danger', }
 # Channels
 # ==============================================================================
 
-# Channel settings; note this is for development only
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgiref.inmemory.ChannelLayer",
-        "ROUTING": "routing.channel_routing",
-    }
-}
+ASGI_APPLICATION = "routing.application"
 
 # ==============================================================================
 # Heroku
@@ -315,7 +302,6 @@ if os.environ.get('REDIS_URL', ''):
                 "CONFIG": {
                     "hosts": [os.environ.get('REDIS_URL')],
                 },
-                "ROUTING": "routing.channel_routing",
             },
         }
     except:

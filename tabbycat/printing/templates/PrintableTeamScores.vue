@@ -87,7 +87,11 @@ export default {
   },
   computed: {
     team: function() {
-      return this.dt.team
+      if (this.dt.team === null) {
+        console.log('null')
+      } else {
+        return this.dt.team
+      }
     },
     speakersList: function() {
       var speakersList = ""

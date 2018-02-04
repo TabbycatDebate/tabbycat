@@ -8,7 +8,7 @@ dj-database-url==0.4.2                  # From the heroku toolbelt
 
 # Redis
 django-redis==4.8.0                     # Adds redis as caching backend
-asgi_redis==1.4.3                       # Adds redis as a channel layer
+channels_redis==2.0.1                   # Adds redis as a channel layer
 
 # Monitoring
 newrelic                                # Requires heroku add-on; not used generally

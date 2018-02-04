@@ -78,11 +78,10 @@ USE_REDIS_LOCALLY = False
 if USE_REDIS_LOCALLY:
     CHANNEL_LAYERS = {
         "default": {
-            "BACKEND": "asgi_redis.RedisChannelLayer",
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
                 "hosts": [("localhost", 6379)],
             },
-            "ROUTING": "routing.channel_routing",
         },
     }
     CACHES = {

@@ -15,7 +15,6 @@ django-jet==1.0.7                       # Admin Backend
 django-gfklookupwidget==1.0.6           # Replaces object_id field with a search link
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
-raven==6.5.0                            # Client for Sentry error tracking
 selenium==3.8.1                         # Functional testing (in here for CI tests)
 
 # Database
@@ -27,10 +26,14 @@ sqlparse==0.2.4                         # Parsing SQL statements
 
 whitenoise==3.3.1                       # Static file serving
 
+# Cache
+
+django_redis==4.8.0                     # Use redis for cache (on heroku; local optional)
+
 # Channels
 
-daphne==1.4.2                           # Waitress replacement; handles HTTP + Websockets
-channels==1.1.8                         # Channels Layers
+channels==2.0.0                         # Channels
+channels_redis==2.0.1                   # Channels Layer
 
 # Misc
 

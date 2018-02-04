@@ -75,7 +75,7 @@ class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView)
         updates = 15 # Number of items to fetch
 
         kwargs["round"] = t.current_round
-        kwargs["tournament_id"] = t.id
+        kwargs["tournament_slug"] = t.slug
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
         kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
 
