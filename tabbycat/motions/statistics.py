@@ -1,14 +1,17 @@
-from django.db.models import Count, Q
+from django.db.models import Avg, Count, Q
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.utils.functional import cached_property
 
 from motions.models import Motion
+from tournaments.models import Round
 
 
 def MotionStatistics(tournament, *args, **kwargs):  # noqa: N802
     if tournament.pref('teams_in_debate') == 'two':
         return MotionTwoTeamStatsCalculator(tournament, *args, **kwargs)
+    else:
+        return MotionBPStatsCalculator(tournament, *args, **kwargs)
 
 
 class MotionTwoTeamStatsCalculator:
@@ -34,40 +37,39 @@ class MotionTwoTeamStatsCalculator:
 
         self.motions = Motion.objects.filter(round__tournament=self.tournament).order_by(
             'round__seq').select_related('round')
+        annotations = {}  # dict of keyword arguments to pass to .annotate()
 
+        # This if-else block could be simplified using **kwargs notation, but it'd be miserable to read
         if self.by_motion:
             self.motions = self.motions.filter(ballotsubmission__confirmed=True)
-
-            ndebates_annotation = Count('ballotsubmission')
-
-            wins_annotations = {'%s_wins' % side: Count('ballotsubmission__teamscore',
+            annotations['ndebates'] = Count('ballotsubmission', distinct=True)
+            annotations.update({'%s_wins' % side: Count(
+                'ballotsubmission__teamscore',
                 filter=Q(
                     ballotsubmission__teamscore__debate_team__side=side,
                     ballotsubmission__teamscore__win=True,
-                ), distinct=True) for side in self.tournament.sides}
+                ), distinct=True) for side in self.tournament.sides})
 
         else:
             self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
-
-            ndebates_annotation = Count('round__debate__ballotsubmission')
-
-            wins_annotations = {'%s_wins' % side: Count('round__debate__ballotsubmission__teamscore',
+            annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
+            annotations.update({'%s_wins' % side: Count(
+                'round__debate__ballotsubmission__teamscore',
                 filter=Q(
                     round__debate__ballotsubmission__teamscore__debate_team__side=side,
                     round__debate__ballotsubmission__teamscore__win=True,
-                ), distinct=True) for side in self.tournament.sides}
-
-        self.motions = self.motions.annotate(ndebates=ndebates_annotation, **wins_annotations)
+                ), distinct=True) for side in self.tournament.sides})
 
         if self.include_vetoes:
-            vetoes_annotations = {'%s_vetoes' % side: Count('debateteammotionpreference',
+            annotations.update({'%s_vetoes' % side: Count(
+                'debateteammotionpreference',
                 filter=Q(
                     debateteammotionpreference__debate_team__side=side,
                     debateteammotionpreference__preference=3,
                     debateteammotionpreference__ballot_submission__confirmed=True,
-                ), distinct=True) for side in self.tournament.sides}
+                ), distinct=True) for side in self.tournament.sides})
 
-            self.motions = self.motions.annotate(**vetoes_annotations)
+        self.motions = self.motions.annotate(**annotations)
 
     def _annotate_percentages(self, motion):
         ndebates_in_round = self.ndebates_by_round[motion.round]
@@ -83,7 +85,7 @@ class MotionTwoTeamStatsCalculator:
             motion.neg_veto_percentage = motion.neg_vetoes / ndebates_in_round * 100 / 2
 
     CRITICAL_VALUES = [
-        # (maximum value, level of significance as percentage string)
+        # (maximum value, level of significance as percentage string, evidence strength)
         (10.826, '0.1%', ugettext_lazy("extremely strong evidence")),
         (6.635,    '1%', ugettext_lazy("strong evidence")),
         (5.412,    '2%', ugettext_lazy("moderate evidence")),
@@ -132,6 +134,57 @@ class MotionTwoTeamStatsCalculator:
                 "to suggest that this motion was imbalanced at any level of significance.") % {'chisq': T}
 
         return label, info
+
+
+class MotionBPStatsCalculator:
+
+    def __init__(self, tournament):
+        self.tournament = tournament
+
+        self._prefetch_prelim_motions()
+        self._collate_prelim_motion_annotations()
+        self.motions = self.prelim_motions
+
+    def _prefetch_prelim_motions(self):
+
+        self.prelim_motions = Motion.objects.filter(
+            round__tournament=self.tournament,
+            round__stage=Round.STAGE_PRELIMINARY,
+        ).order_by('round__seq').select_related('round')
+        annotations = {}  # dict of keyword arguments to pass to .annotate()
+
+        self.prelim_motions = self.prelim_motions.filter(round__debate__ballotsubmission__confirmed=True)
+        annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
+
+        annotations.update({'%s_average' % side: Avg(
+            'round__debate__ballotsubmission__teamscore__points',
+            filter=Q(round__debate__ballotsubmission__teamscore__debate_team__side=side),
+            distinct=True,
+        ) for side in self.tournament.sides})
+
+        annotations.update({'%s_%d_count' % (side, points): Count(
+            'round__debate__ballotsubmission__teamscore',
+            filter=Q(
+                round__debate__ballotsubmission__teamscore__debate_team__side=side,
+                round__debate__ballotsubmission__teamscore__points=points
+            ), distinct=True
+        ) for side in self.tournament.sides for points in range(4)})
+
+        self.prelim_motions = self.prelim_motions.annotate(**annotations)
+
+    def _collate_prelim_motion_annotations(self):
+        for motion in self.prelim_motions:
+            motion.averages = []
+            motion.counts_by_side = []
+
+            for side in self.tournament.sides:
+                motion.averages.append((side, getattr(motion, '%s_average' % side)))
+                counts = []
+                for points in [3, 2, 1, 0]:
+                    count = getattr(motion, '%s_%d_count' % (side, points))
+                    percentage = count / motion.ndebates * 100 if motion.ndebates > 0 else 0
+                    counts.append((points, count, percentage))
+                motion.counts_by_side.append((side, counts))
 
 
 class MotionStats:
