@@ -178,7 +178,8 @@ class MotionBPStatsCalculator:
             motion.counts_by_side = []
 
             for side in self.tournament.sides:
-                motion.averages.append((side, getattr(motion, '%s_average' % side)))
+                average = getattr(motion, '%s_average' % side)
+                motion.averages.append((side, average, average / 6 * 100))
                 counts = []
                 for points in [3, 2, 1, 0]:
                     count = getattr(motion, '%s_%d_count' % (side, points))

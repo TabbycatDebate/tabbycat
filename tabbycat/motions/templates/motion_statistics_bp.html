@@ -8,17 +8,14 @@
     <div class="row mb-3">
       <div class="col-md-12">
         <div class="progress">
-
-          {% for side, average in motion.averages %}
-            {% widthratio average 6 100 as average_width %}
+          {% for side, average, width in motion.averages %}
             {% if average > 0 %}
               <div class="progress-bar progress-bar-{{ side }}"
-                   style="width: {{ average_width }}%">
+                   style="width: {{ width }}%">
                 {{ side.upper }} {{ average|floatformat:2 }}
               </div>
             {% endif %}
           {% endfor %}
-
         </div>
         <h6 class="mt-2 text-center text-muted">
           {% blocktrans trimmed count ndebates=motion.ndebates %}
