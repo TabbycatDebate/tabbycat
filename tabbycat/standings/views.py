@@ -10,8 +10,7 @@ from django.utils.translation import ugettext_lazy
 from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
-from motions.models import DebateTeamMotionPreference, Motion
-from motions.statistics import MotionStats
+from motions.models import Motion
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
@@ -463,49 +462,6 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')
-
-
-# ==============================================================================
-# Motion standings
-# ==============================================================================
-
-class BaseMotionStandingsView(TournamentMixin, TemplateView):
-
-    template_name = 'standings_motions.html'
-    page_title = ugettext_lazy("Motions Tab")
-    page_emoji = '💭'
-
-    def get_context_data(self, **kwargs):
-        t = self.get_tournament()
-        rounds = t.round_set.order_by('seq')
-
-        motions = Motion.objects.select_related('round').filter(round__in=rounds).order_by('round', 'seq')
-        results = TeamScore.objects.filter(ballot_submission__confirmed=True,
-            ballot_submission__debate__round__in=rounds).select_related(
-            'debate_team', 'ballot_submission__debate__round',
-            'ballot_submission__motion')
-
-        if t.pref('motion_vetoes_enabled'):
-            vetoes = DebateTeamMotionPreference.objects.filter(
-                preference=3,
-                ballot_submission__confirmed=True,
-                ballot_submission__debate__round__in=rounds).select_related(
-                'debate_team', 'ballot_submission__motion')
-        else:
-            vetoes = False
-
-        analysed_motions = [MotionStats(m, t, results, vetoes) for m in motions]
-
-        kwargs['analysed_motions'] = analysed_motions
-        return super().get_context_data(**kwargs)
-
-
-class MotionStandingsView(AdministratorMixin, BaseMotionStandingsView):
-    pass
-
-
-class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
-    public_page_preference = 'motion_tab_released'
 
 
 # ==============================================================================
