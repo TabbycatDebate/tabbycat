@@ -21,7 +21,7 @@ from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round
 from venues.models import Venue
@@ -29,7 +29,7 @@ from venues.models import Venue
 logger = logging.getLogger(__name__)
 
 
-class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     template_name = 'availability_index.html'
     page_title = ugettext_lazy("Check-Ins")
     page_emoji = '📍'
@@ -143,7 +143,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 # Specific Activation Pages
 # ==============================================================================
 
-class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
+class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView):
     template_name = "base_availability.html"
 
     def get_page_title(self):
@@ -238,7 +238,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 # Bulk Activations
 # ==============================================================================
 
-class BaseBulkActivationView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'availability-index'
 
@@ -287,7 +287,7 @@ class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
 # Specific Activation Actions
 # ==============================================================================
 
-class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, View):
+class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin, View):
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')

@@ -16,6 +16,7 @@ Change Log
 - Current team standings page now shows silent round results if "Release all round results to public" is set
 - Added draw pull-up option: pull up from middle
 - Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far
+- Fixed χ² test in motion statistics, and refactored and moved motion statistics page
 - Upgraded to Django 2.0
 - Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
     - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis'

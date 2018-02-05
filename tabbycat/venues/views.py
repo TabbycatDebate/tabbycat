@@ -13,7 +13,7 @@ from tournaments.mixins import DrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
 from .allocator import allocate_venues
@@ -23,7 +23,7 @@ from .models import Venue, VenueCategory, VenueConstraint
 logger = logging.getLogger(__name__)
 
 
-class VenueAllocationMixin(DrawForDragAndDropMixin, SuperuserRequiredMixin):
+class VenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     def get_unallocated_venues(self):
         unused_venues = self.get_round().unused_venues().prefetch_related('venuecategory_set')
@@ -82,7 +82,7 @@ class SaveVenuesView(BaseSaveDragAndDropDebateJsonView):
         return debate
 
 
-class VenueCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
     template_name = 'venue_categories_edit.html'
     formset_model = VenueCategory
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CATEGORIES_EDIT
@@ -120,7 +120,7 @@ class SelectPrepopulated(TextInput):
         self.attrs.update({'data_list': data_list})
 
 
-class VenueConstraintsView(SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class VenueConstraintsView(AdministratorMixin, TournamentMixin, ModelFormSetView):
     template_name = 'venue_constraints_edit.html'
     formset_model = VenueConstraint
 

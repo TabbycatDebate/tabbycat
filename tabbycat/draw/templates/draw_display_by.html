@@ -5,7 +5,7 @@
 
 {% block nav %}
   {# For admins and assistants, the draw opens without menu (for displaying in the briefing room) #}
-  {% if 'admin/' not in request.path or not user.is_authenticated %}
+  {% if user_role != "admin" and user_role != "assistant" %}
     {{ block.super }}
   {% endif %}
 {% endblock %}

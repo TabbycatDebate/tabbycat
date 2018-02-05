@@ -25,13 +25,13 @@ from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CrossTournamentPageMixin, DrawForDragAndDropMixin,
-    OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
-    TournamentMixin)
+from tournaments.mixins import (CrossTournamentPageMixin, CurrentRoundMixin,
+    DrawForDragAndDropMixin, OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin,
+    RoundMixin, TournamentMixin)
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from tournaments.utils import get_side_name
-from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin, CacheMixin
 from utils.views import BadJsonRequestError, PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
@@ -130,10 +130,8 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTabl
             return super().get_context_data(**kwargs)
 
 
-class PublicDrawForCurrentRoundView(PublicDrawForRoundView):
-
-    def get_round(self):
-        return self.get_tournament().current_round
+class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
+    pass
 
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):
@@ -196,27 +194,20 @@ class AdminDrawUtiltiiesMixin:
 # Viewing Draw (Admin)
 # ==============================================================================
 
-class AdminDrawDisplay(AdminDrawUtiltiiesMixin, OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
-
-    assistant_page_permissions = ['all_areas', 'results_draw']
-    template_name = 'draw_display.html'
+class BaseDrawDisplayView(AdminDrawUtiltiiesMixin, RoundMixin, TemplateView):
+    pass
 
 
-class AdminDrawDisplayForRoundByVenueView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
+class BaseDrawDisplayForRoundByVenueView(BaseDrawTableView):
+    # inherit everything, this class is kept in code for ease of reading
+    pass
 
-    assistant_page_permissions = ['all_areas', 'results_draw']
 
+class BaseDrawDisplayForRoundByTeamView(BaseDrawTableView):
 
-class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, BaseDrawTableView):
-
-    assistant_page_permissions = ['all_areas', 'results_draw']
     sort_key = '' # Leave with default sort order
 
     def populate_table(self, draw, table, round, tournament):
-        # Old version, remove when we decide to stick with the new version
-        # draw, teams = zip(*[(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)])
-        # table.add_team_columns(teams, hide_institution=True, key="Team")
-
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
         draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)]
         draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', x[1].short_name))
@@ -227,11 +218,36 @@ class AdminDrawDisplayForRoundByTeamView(OptionalAssistantTournamentPageMixin, B
         super().populate_table(draw, table, round, tournament, highlight=teams)
 
 
+class AdminDrawDisplayView(AdministratorMixin, BaseDrawDisplayView):
+    template_name = 'draw_display_admin.html'
+
+
+class AdminDrawDisplayForRoundByVenueView(AdministratorMixin, BaseDrawDisplayForRoundByVenueView):
+    pass
+
+
+class AdminDrawDisplayForRoundByTeamView(AdministratorMixin, BaseDrawDisplayForRoundByTeamView):
+    pass
+
+
+class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayView):
+    template_name = 'draw_display_assistant.html'
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+class AssistantDrawDisplayForRoundByVenueView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByVenueView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+class AssistantDrawDisplayForRoundByTeamView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByTeamView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
 # ==============================================================================
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawView(RoundMixin, SuperuserRequiredMixin, AdminDrawUtiltiiesMixin, VueTableTemplateView):
+class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiiesMixin, VueTableTemplateView):
     detailed = False
 
     def get_page_title(self):
@@ -364,7 +380,7 @@ class AdminDrawWithDetailsView(AdminDrawView):
         return ["draw_subpage.html"]
 
 
-class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
+class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplateView):
     page_emoji = "⚖"
     page_title = _("Position Balance Report")
     tables_orientation = 'rows'
@@ -437,7 +453,7 @@ class PositionBalanceReportView(RoundMixin, SuperuserRequiredMixin, VueTableTemp
 # Draw Status POSTS
 # ==============================================================================
 
-class DrawStatusEdit(LogActionMixin, SuperuserRequiredMixin, RoundMixin, PostOnlyRedirectView):
+class DrawStatusEdit(LogActionMixin, AdministratorMixin, RoundMixin, PostOnlyRedirectView):
     round_redirect_pattern_name = 'draw'
 
 
@@ -523,7 +539,7 @@ class DrawRegenerateView(DrawStatusEdit):
         return super().post(request, *args, **kwargs)
 
 
-class ConfirmDrawRegenerationView(SuperuserRequiredMixin, TemplateView):
+class ConfirmDrawRegenerationView(AdministratorMixin, TemplateView):
     template_name = "draw_confirm_regeneration.html"
 
 
@@ -586,7 +602,7 @@ class SetRoundStartTimeView(DrawStatusEdit):
 # Adjudicator Scheduling
 # ==============================================================================
 
-class ScheduleDebatesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class ScheduleDebatesView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = "draw_set_debate_times.html"
 
     def get_context_data(self, **kwargs):
@@ -605,7 +621,7 @@ class ScheduleDebatesView(SuperuserRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class ScheduleConfirmationsView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class ScheduleConfirmationsView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = "confirmations_view.html"
 
     def get_context_data(self, **kwargs):
@@ -687,7 +703,7 @@ class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
         return table
 
 
-class SideAllocationsView(SuperuserRequiredMixin, BaseSideAllocationsView):
+class SideAllocationsView(AdministratorMixin, BaseSideAllocationsView):
     pass
 
 
@@ -695,7 +711,7 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
-class EditMatchupsView(DrawForDragAndDropMixin, SuperuserRequiredMixin, TemplateView):
+class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = 'edit_matchups.html'
     save_url = "save-debate-teams"
 

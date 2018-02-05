@@ -22,7 +22,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin, CacheMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -66,7 +66,7 @@ class BaseParticipantsListView(VueTableTemplateView):
         return [adjs_table, speakers_table]
 
 
-class ParticipantsListView(BaseParticipantsListView, SuperuserRequiredMixin, TournamentMixin):
+class ParticipantsListView(BaseParticipantsListView, AdministratorMixin, TournamentMixin):
 
     template_name = 'participants_list.html'
 
@@ -228,11 +228,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return table
 
 
-class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
+class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
     admin = True
 
 
-class AdjudicatorRecordView(SuperuserRequiredMixin, BaseAdjudicatorRecordView):
+class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
     admin = True
 
 
@@ -250,7 +250,7 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 # Speaker categories
 # ==============================================================================
 
-class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
     # The tournament is included in the form as a hidden input so that
     # uniqueness checks will work. Since this is a superuser form, they can
     # access all tournaments anyway, so tournament forgery wouldn't be a
@@ -295,7 +295,7 @@ class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, Tourname
         return reverse_tournament('participants-list', self.get_tournament())
 
 
-class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
+class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     # form_class = forms.SpeakerCategoryEligibilityForm
     template_name = 'edit_speaker_eligibility.html'
@@ -329,8 +329,7 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
         return super().get_context_data(**kwargs)
 
 
-class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin,
-                                TournamentMixin, View):
+class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
 
     def set_category_eligibility(self, speaker, sent_status):

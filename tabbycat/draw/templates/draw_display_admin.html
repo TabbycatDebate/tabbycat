@@ -4,40 +4,34 @@
 {% block head-title %}📺 {% trans "Display Draw" %}{% endblock %}
 {% block page-title %}{% trans "Display Draw" %}{% endblock %}
 
-{% block page-subnav-sections %}
-  {% if user.is_superuser %}
-
-      <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
-        <i data-feather="chevron-left"></i> {% trans "View Draw" %}
-      </a>
-
-      {% if not pref.enable_debate_scheduling %}
-        <a href="" class="btn {% if round.starts_at %}btn-outline-primary{% else %}btn-primary{% endif %}"
-           data-toggle="modal" data-target="#editStartTime">
-          {% if round.starts_at %}
-            {% blocktrans trimmed with start_time=round.starts_at %}
-              Debates start at {{ start_time }}
-            {% endblocktrans %}
-          {% else %}
-            {% trans "Add Start Time" %}
-          {% endif %}
-        </a>
-      {% else %}
-        <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
-          {% trans "Schedule Debates" %}
-        </a>
-      {% endif %}
-
-  {% endif %}
-{% endblock %}
-
 {% block page-alerts %}
-
   <div class="mb-3">
     {% include "draw_alerts_venues.html" %}
     {% include "draw_alerts_adjudicators.html" %}
   </div>
+{% endblock %}
 
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
+    <i data-feather="chevron-left"></i> {% trans "View Draw" %}
+  </a>
+
+  {% if not pref.enable_debate_scheduling %}
+    <a href="" class="btn {% if round.starts_at %}btn-outline-primary{% else %}btn-primary{% endif %}"
+       data-toggle="modal" data-target="#editStartTime">
+      {% if round.starts_at %}
+        {% blocktrans trimmed with start_time=round.starts_at %}
+          Debates start at {{ start_time }}
+        {% endblocktrans %}
+      {% else %}
+        {% trans "Add Start Time" %}
+      {% endif %}
+    </a>
+  {% else %}
+    <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
+      {% trans "Schedule Debates" %}
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -48,7 +42,6 @@
 
 {% block content %}
 
-{% if user.is_superuser %}
 <div class="row mb-4">
 
   <div class="col-md col-12 mb-md-0 mb-3">
@@ -264,7 +257,6 @@
   </div>
 
 </div>
-{% endif %}
 
 <div class="row">
   <div class="col-md-12">

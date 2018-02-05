@@ -7,13 +7,14 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
 from draw.models import Debate
 from participants.models import Adjudicator
-from tournaments.mixins import OptionalAssistantTournamentPageMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
+                                RoundMixin, TournamentMixin)
 from tournaments.models import Tournament
-from utils.mixins import LoginRequiredMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from venues.models import VenueCategory
 
 
-class MasterSheetsListView(LoginRequiredMixin, RoundMixin, TemplateView):
+class MasterSheetsListView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'division_sheets_list.html'
 
     def get_context_data(self, **kwargs):
@@ -22,7 +23,7 @@ class MasterSheetsListView(LoginRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class MasterSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
+class MasterSheetsView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'master_sheets_view.html'
 
     def get_context_data(self, **kwargs):
@@ -45,7 +46,7 @@ class MasterSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class RoomSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
+class RoomSheetsView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'room_sheets_view.html'
 
     def get_context_data(self, **kwargs):
@@ -66,9 +67,8 @@ class RoomSheetsView(LoginRequiredMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, TemplateView):
+class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
 
-    assistant_page_permissions = ['all_areas', 'results_draw']
     template_name = 'feedback_list.html'
 
     def add_defaults(self):
@@ -84,7 +84,7 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
             default_questions.append(default_scale_info.serialize())
 
         default_scale_question = AdjudicatorFeedbackQuestion(
-            text='Overall Score', seq=0,
+            text=_("Overall Score"), seq=0,
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
             required=True, from_team=True, from_adj=True,
             min_value=t.pref('adj_min_score'),
@@ -105,7 +105,7 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
         source_n = source.name if hasattr(source, 'name') else source.short_name
         return {
             'venue': venue.serialize() if venue else '',
-            'authorInstitution': source.institution.code if source.institution else 'Unaffiliated',
+            'authorInstitution': source.institution.code if source.institution else _("Unaffiliated"),
             'author': source_n, 'authorPosition': source_p.upper(),
             'target': target.name, 'targetPosition': target_p.upper()
         }
@@ -161,9 +161,16 @@ class PrintFeedbackFormsView(RoundMixin, OptionalAssistantTournamentPageMixin, T
         return super().get_context_data(**kwargs)
 
 
-class PrintScoresheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, TemplateView):
+class AdminPrintFeedbackFormsView(AdministratorMixin, BasePrintFeedbackFormsView):
+    pass
 
-    assistant_page_permissions = ['all_areas']
+
+class AssistantPrintFeedbackFormsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BasePrintFeedbackFormsView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+class BasePrintScoresheetsView(RoundMixin, TemplateView):
+
     template_name = 'scoresheet_list.html'
 
     def add_ballot_data(self, adj, debate_info):
@@ -207,7 +214,15 @@ class PrintScoresheetsView(RoundMixin, OptionalAssistantTournamentPageMixin, Tem
         return super().get_context_data(**kwargs)
 
 
-class PrintableRandomisedURLs(TournamentMixin, SuperuserRequiredMixin, TemplateView):
+class AdminPrintScoresheetsView(AdministratorMixin, BasePrintScoresheetsView):
+    pass
+
+
+class AssistantPrintScoresheetsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BasePrintScoresheetsView):
+    assistant_page_permissions = ['all_areas']
+
+
+class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView):
 
     template_name = 'randomised_url_sheets.html'
 

@@ -24,9 +24,6 @@ urlpatterns = [
             views.ReplyStandingsView.as_view(),
             name='standings-reply'),
 
-        path('motions/',
-            views.MotionStandingsView.as_view(),
-            name='standings-motion'),
         path('diversity/',
             views.DiversityStandingsView.as_view(),
             name='standings-diversity'),

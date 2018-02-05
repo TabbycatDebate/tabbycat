@@ -36,16 +36,14 @@
 <body class="{% block body-class %}{% endblock %}">
 
   {% block nav %}
-    {% if 'admin/' not in request.path %}
-      {% include "nav/top_nav_base.html" %}
-    {% elif user.is_authenticated and not user.is_superuser %}
+    {% if user_role != "admin" %}
       {% include "nav/top_nav_base.html" %}
     {% endif %}
   {% endblock nav %}
 
   <div class="container-fluid">
 
-    {% if 'admin/' in request.path and user.is_superuser %}
+    {% if user_role == "admin" %}
       <!-- Fake full height for menu -->
       <div class="row">
         <div class="col-md-2 col-1 float-left pl-0 pr-lg-3 pr-md-3 pr-0 d-none d-sm-block width fake-sidebar">
@@ -62,7 +60,7 @@
     {% endif %}
 
     {% block header %}
-      <div class="row d-print-none {% if 'admin/' in request.path and user.is_superuser %}mb-3{% endif %}">
+      <div class="row d-print-none {% if user_role == "admin" %}mb-3{% endif %}">
         <div class="col mt-4 mb-3 h3">
 
           {% if page_title %}
@@ -110,7 +108,7 @@
       </div>
     </div>
 
-    {% if 'admin/' in request.path and user.is_superuser %}
+    {% if user_role == "admin" %}
 
         </main>
       </div>
@@ -119,7 +117,7 @@
 
   </div>
 
-  {% if 'admin/' not in request.path or not user.is_superuser %}
+  {% if user_role != "admin" %}
     <footer class="footer">
       <div class="container-fluid">
         {% block footer %}{% include "footer.html" %}{% endblock footer %}

@@ -1,4 +1,3 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import formats
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext as _
@@ -11,7 +10,7 @@ from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
 from utils.misc import reverse_tournament
 
-from .mixins import SuperuserRequiredMixin
+from .mixins import AdministratorMixin
 
 
 class BaseTableBuilder:
@@ -166,8 +165,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             self.tournament = kwargs.get('tournament')
 
-        if 'admin' not in kwargs and isinstance(view, SuperuserRequiredMixin) or \
-                (isinstance(view, LoginRequiredMixin) and view.request.user.is_superuser):
+        if 'admin' not in kwargs and isinstance(view, AdministratorMixin):
             self.admin = True
         else:
             self.admin = kwargs.get('admin', False)

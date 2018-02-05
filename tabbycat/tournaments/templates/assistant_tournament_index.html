@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n debate_tags static %}
+
+{% block page-title %}{% trans "Dashboard" %}{% endblock %}
+{% block head-title %}<span class="emoji">⏰</span> {% trans "Overview" %}{% endblock %}
+
+{% block sub-title %}
+  {% blocktrans trimmed with round_name=round.name round_status=round.get_draw_status_display.lower %}
+    current round: {{ round_name }}, status: {{ round_status }}
+  {% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+
+  <div id="vueMount">
+    <tournament-overview-container :tournament-id="tournamentId"
+                                   :initial-actions="initialActions"
+                                   :initial-ballots="initialBallots"
+                                   :initial-graph-data="initialGraphData">
+    </tournament-overview-container>
+
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+  <script>
+    window.vueData = {
+      tournamentId: {{ tournament_id }},
+      initialActions: {{ initialActions|safe }},
+      initialBallots: {{ initialBallots|safe }},
+      initialGraphData: {{ initialGraphData|safe }},
+    }
+  </script>
+  {{ block.super }}
+{% endblock %}

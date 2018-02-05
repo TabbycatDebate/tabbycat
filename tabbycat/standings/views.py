@@ -10,14 +10,13 @@ from django.utils.translation import ugettext_lazy
 from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
-from motions.models import DebateTeamMotionPreference, Motion
-from motions.statistics import MotionStats
+from motions.models import Motion
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import SuperuserRequiredMixin
+from utils.misc import reverse_tournament
+from utils.mixins import AdministratorMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -31,7 +30,7 @@ from .templatetags.standingsformat import metricformat
 logger = logging.getLogger(__name__)
 
 
-class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
     template_name = 'standings_index.html'
 
@@ -281,7 +280,7 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
         add_speaker_round_results(standings, rounds, self.get_tournament())
 
 
-class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
+class SpeakerStandingsView(AdministratorMixin, BaseStandardSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add an info alert
 
 
@@ -311,7 +310,7 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseStan
         return super().get(request, *args, **kwargs)
 
 
-class SpeakerCategoryStandingsView(SuperuserRequiredMixin, BaseSpeakerCategoryStandingsView):
+class SpeakerCategoryStandingsView(AdministratorMixin, BaseSpeakerCategoryStandingsView):
     pass
 
 
@@ -329,8 +328,7 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
         self.object = self.get_object()
         if not self.object.public:
             logger.warning("Tried to access a non-public speaker category tab page: %s", self.object.slug)
-            messages.error(self.request, self.get_disabled_message())
-            return redirect_tournament('tournament-public-index', self.get_tournament())
+            return self.render_page_disabled_error_page()
         return super().get(request, *args, **kwargs)
 
 
@@ -365,7 +363,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
             info.result_missing = info.speaker.team not in teams_seen
 
 
-class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
+class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
     pass
 
 
@@ -436,7 +434,7 @@ class BaseTeamStandingsView(BaseStandingsView):
             info.result_missing = len(info.round_results) > 1 and info.round_results[-1] is None
 
 
-class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
     rankings = ('rank',)
 
@@ -444,7 +442,7 @@ class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
         return True
 
 
-class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
     page_title = ugettext_lazy("Division Standings")
@@ -464,49 +462,6 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
     def show_ballots(self):
         return self.get_tournament().pref('ballots_released')
-
-
-# ==============================================================================
-# Motion standings
-# ==============================================================================
-
-class BaseMotionStandingsView(TournamentMixin, TemplateView):
-
-    template_name = 'standings_motions.html'
-    page_title = ugettext_lazy("Motions Tab")
-    page_emoji = '💭'
-
-    def get_context_data(self, **kwargs):
-        t = self.get_tournament()
-        rounds = t.round_set.order_by('seq')
-
-        motions = Motion.objects.select_related('round').filter(round__in=rounds).order_by('round', 'seq')
-        results = TeamScore.objects.filter(ballot_submission__confirmed=True,
-            ballot_submission__debate__round__in=rounds).select_related(
-            'debate_team', 'ballot_submission__debate__round',
-            'ballot_submission__motion')
-
-        if t.pref('motion_vetoes_enabled'):
-            vetoes = DebateTeamMotionPreference.objects.filter(
-                preference=3,
-                ballot_submission__confirmed=True,
-                ballot_submission__debate__round__in=rounds).select_related(
-                'debate_team', 'ballot_submission__motion')
-        else:
-            vetoes = False
-
-        analysed_motions = [MotionStats(m, t, results, vetoes) for m in motions]
-
-        kwargs['analysed_motions'] = analysed_motions
-        return super().get_context_data(**kwargs)
-
-
-class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
-    pass
-
-
-class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
-    public_page_preference = 'motion_tab_released'
 
 
 # ==============================================================================
@@ -579,7 +534,7 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class DiversityStandingsView(SuperuserRequiredMixin, BaseDiversityStandingsView):
+class DiversityStandingsView(AdministratorMixin, BaseDiversityStandingsView):
 
     for_public = False
 

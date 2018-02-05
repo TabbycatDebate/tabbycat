@@ -1,27 +1,27 @@
 {% load debate_tags i18n %}
 
 <li class="nav-item {% if results_nav %}active{% endif %}">
-  <a class="nav-link" href="{% roundurl 'results-round-list' current_round %}">
-    Enter Results
+  <a class="nav-link" href="{% tournamenturl 'results-assistant-round-list' %}">
+    {% trans "Enter Results" %}
   </a>
 </li>
 
 <li class="nav-item {% if checkins_nav %}active{% endif %}">
-  <a class="nav-link" href="{% roundurl 'results-ballot-checkin' current_round %}">
+  <a class="nav-link" href="{% tournamenturl 'results-assistant-ballot-checkin' %}">
     {% trans "Check In Ballots" %}
   </a>
 </li>
 
 <li class="nav-item {% if feedback_nav %}active{% endif %}">
-  <a class="nav-link" href="{% tournamenturl 'adjfeedback-add-index' %}">
-    Enter Feedback
+  <a class="nav-link" href="{% tournamenturl 'adjfeedback-assistant-add-index' %}">
+    {% trans "Enter Feedback" %}
   </a>
 </li>
 
 {% if pref.assistant_access != "results_only" %}
   <li class="nav-item {% if draw_nav %}active{% endif %}">
-    <a class="nav-link" href="{% roundurl 'draw-display' current_round %}">
-      Display/Print Draw
+    <a class="nav-link" href="{% tournamenturl 'draw-assistant-display' %}">
+      {% trans "Display/Print Draw" %}
     </a>
   </li>
 {% endif %}

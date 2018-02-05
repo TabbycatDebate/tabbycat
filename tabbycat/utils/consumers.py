@@ -6,7 +6,7 @@ class ConsumerLoginRequiredMixin():
     http_user = True
 
     def connect(self, message, **kwargs):
-        if not message.user.is_staff:
+        if not message.user.is_authenticated:
             return
         else:
             super().connect(message, **kwargs)
