@@ -1,0 +1,78 @@
+{% load i18n %}
+
+<div class="col-sm-12">
+
+{% if motion.ndebates > 0 %}
+
+  <div class="row">
+    <div class="col">
+      <h6 class="mt-2 text-center text-muted">
+        {% blocktrans trimmed count ndebates=motion.ndebates %}
+          results from {{ ndebates }} debate
+        {% plural %}
+          results from {{ ndebates }} debates
+        {% endblocktrans %}
+      </h6>
+    </div>
+  </div>
+
+  <div class="row">
+
+    {% for side, advancing, advancing_pc, eliminated, eliminated_pc in motion.counts_by_side %}
+
+      <div class="col-md-3 mb-3">
+        <div class="progress">
+
+          {% blocktrans trimmed with side=side.upper percentage=advancing_pc|floatformat count ndebates=motion.ndebates asvar advancing_tooltip_text %}
+            {{ advancing }} of {{ ndebates }} team on {{ side }} ({{ percentage }}%) advanced
+          {% plural %}
+            {{ advancing }} of {{ ndebates }} teams on {{ side }} ({{ percentage }}%) advanced
+          {% endblocktrans %}
+          {% blocktrans trimmed with side=side.upper percentage=eliminated_pc|floatformat count ndebates=motion.ndebates asvar eliminated_tooltip_text %}
+            {{ eliminated }} of {{ ndebates }} team on {{ side }} ({{ percentage }}%) were eliminated
+          {% plural %}
+            {{ eliminated }} of {{ ndebates }} teams on {{ side }} ({{ percentage }}%) were eliminated
+          {% endblocktrans %}
+
+          <div class="progress-bar progress-bar-advancing"
+               style="width: {{ advancing_pc }}%" data-toggle="tooltip"
+               title="{{ advancing_tooltip_text }}">
+            {% if advancing_pc >= 25 %}
+              {% trans "advanced" %}
+            {% else %}
+              {% trans "adv." context "abbreviation for 'advanced', used when not enough space" %}
+            {% endif %}
+          </div>
+          <div class="progress-bar progress-bar-eliminated"
+               style="width: {{ eliminated_pc }}%" data-toggle="tooltip"
+               title="{{ eliminated_tooltip_text }}">
+            {% if eliminated_pc >= 25 %}
+              {% trans "eliminated" %}
+            {% else %}
+              {% trans "elim." context "abbreviation for 'eliminated', used when not enough space" %}
+            {% endif %}
+          </div>
+
+        </div>
+        <h6 class="mt-2 text-center text-{{ side }}">
+          {% blocktrans trimmed with side=side.upper %}
+            {{ side }} results distribution
+          {% endblocktrans %}
+        </h6>
+      </div>
+
+    {% endfor %}
+
+  </div>
+
+{% else %}
+
+  <div class="row mb-2">
+    <div class="col text-muted">
+      {% trans "No results for this motion" %}
+    </div>
+  </div>
+
+{% endif %}
+
+</div>

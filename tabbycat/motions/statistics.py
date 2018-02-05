@@ -1,3 +1,5 @@
+import itertools
+
 from django.db.models import Avg, Count, Q
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
@@ -143,17 +145,28 @@ class MotionBPStatsCalculator:
 
         self._prefetch_prelim_motions()
         self._collate_prelim_motion_annotations()
-        self.motions = self.prelim_motions
+        self._prefetch_elim_motions()
+        self._collate_elim_motion_annotations()
+        self.motions = itertools.chain(self.prelim_motions, self.elim_motions)
 
     def _prefetch_prelim_motions(self):
+        """Constructs the database query for preliminary round motions.
+
+        The annotations are (1) the average team points by teams in each
+        position, and (2) the number of teams receiving n points from each
+        position for each n = 0, 1, 2, 3.
+
+        Assumes that motion selection is disabled, so there's only one motion
+        per round. We'll implement motion selection if and when we discover that
+        it's used by someone with BP."""
 
         self.prelim_motions = Motion.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_PRELIMINARY,
+            round__debate__ballotsubmission__confirmed=True,
         ).order_by('round__seq').select_related('round')
-        annotations = {}  # dict of keyword arguments to pass to .annotate()
 
-        self.prelim_motions = self.prelim_motions.filter(round__debate__ballotsubmission__confirmed=True)
+        annotations = {}  # dict of keyword arguments to pass to .annotate()
         annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
 
         annotations.update({'%s_average' % side: Avg(
@@ -173,6 +186,9 @@ class MotionBPStatsCalculator:
         self.prelim_motions = self.prelim_motions.annotate(**annotations)
 
     def _collate_prelim_motion_annotations(self):
+        """Collect annotations (which will be attributes) and convert them to
+        dictionaries to allow for easy iteration in the template."""
+
         for motion in self.prelim_motions:
             motion.averages = []
             motion.counts_by_side = []
@@ -186,6 +202,50 @@ class MotionBPStatsCalculator:
                     percentage = count / motion.ndebates * 100 if motion.ndebates > 0 else 0
                     counts.append((points, count, percentage))
                 motion.counts_by_side.append((side, counts))
+
+    def _prefetch_elim_motions(self):
+        """Constructs the database query for elimination round motions.
+
+        Elimination rounds in BP are advancing/eliminated, so this just collates
+        information on who advanced and who did not.
+
+        Assumes that motion selection is disabled, so there's only one motion
+        per round. We'll implement motion selection if and when we discover that
+        it's used by someone with BP."""
+
+        self.elim_motions = Motion.objects.filter(
+            round__tournament=self.tournament,
+            round__stage=Round.STAGE_ELIMINATION,
+        ).order_by('round__seq').select_related('round')
+
+        annotations = {}  # dict of keyword arguments to pass to .annotate()
+        annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
+
+        annotations.update({'%s_%s' % (side, status): Count(
+            'round__debate__ballotsubmission__teamscore',
+            filter=Q(
+                round__debate__ballotsubmission__teamscore__debate_team__side=side,
+                round__debate__ballotsubmission__teamscore__win=value,
+            ), distinct=True)
+            for side in self.tournament.sides
+            for (status, value) in [("advancing", True), ("eliminated", False)]
+        })
+
+        self.elim_motions = self.elim_motions.annotate(**annotations)
+
+    def _collate_elim_motion_annotations(self):
+        """Collect annotations (which will be attributes) and convert them to
+        dictionaries to allow for easy iteration in the template."""
+
+        for motion in self.elim_motions:
+            motion.counts_by_side = []
+
+            for side in self.tournament.sides:
+                advancing = getattr(motion, '%s_advancing' % side)
+                advancing_pc = advancing / motion.ndebates * 100 if motion.ndebates > 0 else 0
+                eliminated = getattr(motion, '%s_eliminated' % side)
+                eliminated_pc = eliminated / motion.ndebates * 100 if motion.ndebates > 0 else 0
+                motion.counts_by_side.append((side, advancing, advancing_pc, eliminated, eliminated_pc))
 
 
 class MotionStats:

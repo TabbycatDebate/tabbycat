@@ -46,6 +46,14 @@
   background-color: $co;
 }
 
+.progress-bar-advancing {
+  background-color: $green;
+}
+
+.progress-bar-eliminated {
+  background-color: $red;
+}
+
 .text-aff {
   color: $aff;
 }

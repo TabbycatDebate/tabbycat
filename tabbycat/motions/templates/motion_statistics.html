@@ -36,8 +36,10 @@
 
               {% if pref.teams_in_debate == 'two' %}
                 {% include "motion_statistics_twoteam.html" %}
-              {% else %}
-                {% include "motion_statistics_bp.html" %}
+              {% elif pref.teams_in_debate == 'bp' and round.stage == round.STAGE_ELIMINATION %}
+                {% include "motion_statistics_bp_elim.html" %}
+              {% elif pref.teams_in_debate == 'bp' and round.stage == round.STAGE_PRELIMINARY %}
+                {% include "motion_statistics_bp_prelim.html" %}
               {% endif %}
 
             </div>
