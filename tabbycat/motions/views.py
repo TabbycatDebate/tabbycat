@@ -183,3 +183,8 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
 
 class MotionStatisticsView(AdministratorMixin, BaseMotionStatisticsView):
     pass
+
+
+class PublicMotionStatisticsView(PublicTournamentPageMixin, BaseMotionStatisticsView):
+    public_page_preference = 'motion_tab_released'
+    template_name = 'public_motion_statistics.html'

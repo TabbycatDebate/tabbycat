@@ -73,8 +73,6 @@ def get_menu_highlight(request):
                 menu['standings_speaker_nav'] = True
             elif "reply" in path:
                 menu['standings_reply_nav'] = True
-            elif "motions" in path:
-                menu['feedback_motions_nav'] = True
             elif "diversity" in path:
                 menu['standings_diversity_nav'] = True
             else:
@@ -110,6 +108,9 @@ def get_menu_highlight(request):
             return {'sides_nav': True}
         elif "division_allocations" in request.path:
             return {'divisions_nav': True}
+        elif "motions/statistics" in path:
+            menu['motions_statistics_nav'] = True
+
     else: # PUBLIC
         if "display" in request.path:
             return {'display_nav': True}
@@ -121,8 +122,6 @@ def get_menu_highlight(request):
             return {'motions_nav': True}
         elif "diversity" in request.path:
             return {'diversity_nav': True}
-        elif "motions" in request.path:
-            return {'motions_nav': True}
         elif "overview" in request.path:
             return {'overview_nav': True}
         elif "results" in request.path and "add" in request.path:

@@ -39,9 +39,9 @@
 
 <div class="btn-group">
 
-  <a class="btn btn-outline-primary {% if feedback_motions_nav %}active disabled{% endif %}"
-     href="{% roundurl 'standings-motion' current_round %}">
-    {% trans "Motions Balance" %}
+  <a class="btn btn-outline-primary {% if motions_statistics_nav %}active disabled{% endif %}"
+     href="{% tournamenturl 'motions-statistics' %}">
+    {% trans "Motion Statistics" %}
   </a>
   <a class="btn btn-outline-primary {% if standings_diversity_nav %}active disabled{% endif %}"
      href="{% roundurl 'standings-diversity' current_round %}">

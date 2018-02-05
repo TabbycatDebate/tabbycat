@@ -167,7 +167,7 @@
           {% endblocktrans %}
         </a>
       {% endfor %}
-      <a class="list-group-item {% if feedback_motions_nav %}active{% endif %}" href="{% roundurl 'standings-motion' current_round %}">
+      <a class="list-group-item {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-statistics'  %}">
         <i data-feather="crosshair"></i>{% trans "Motions" %}
       </a>
       <a class="list-group-item {% if standings_diversity_nav %}active{% endif %}" href="{% roundurl 'standings-diversity' current_round %}">
