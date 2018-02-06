@@ -23,7 +23,7 @@
                      :regions="graphsData.regions"
                      :key="set.title"></donut-chart>
         <p v-if="graphsData.speakers_region.length === 0"
-           v-text="gettext('No Regions Information')">
+           v-text="gettext('No Region Information')">
         </p>
       </div>
     </div>

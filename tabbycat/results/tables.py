@@ -26,7 +26,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         else:
             raise ValueError('Debate has no discernable status')
 
-    def add_ballot_status_columns(self, debates, key="Status"):
+    def add_ballot_status_columns(self, debates, key):
 
         status_header = {
             'key': key,

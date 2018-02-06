@@ -136,7 +136,7 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
     def get_table(self):
         tournament = self.get_tournament()
-        table = TabbycatTableBuilder(view=self, sort_key="Name")
+        table = TabbycatTableBuilder(view=self, sort_key=_("Name"))
         table.add_adjudicator_columns(tournament.adjudicator_set.all())
         feedback_data = []
         for adj in tournament.adjudicator_set.all():
@@ -160,7 +160,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
         teams = tournament.team_set.all()
         team_table = TabbycatTableBuilder(
-            view=self, title='From Teams', sort_key='Team')
+            view=self, title='From Teams', sort_key=_('Team'))
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
@@ -177,7 +177,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
         adjs = tournament.adjudicator_set.all()
         adj_table = TabbycatTableBuilder(
-            view=self, title='From Adjudicators', sort_key='Name')
+            view=self, title='From Adjudicators', sort_key=_('Name'))
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
@@ -601,13 +601,13 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         teams_progress, adjs_progress = self.get_feedback_progress()
 
         adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
-            sort_key="Owed", sort_order="desc")
+            sort_key=_("Owed"), sort_order="desc")
         adjudicators = [progress.adjudicator for progress in adjs_progress]
         adjs_table.add_adjudicator_columns(adjudicators, hide_metadata=True)
         adjs_table.add_feedback_progress_columns(adjs_progress)
 
         teams_table = FeedbackTableBuilder(view=self, title="From Teams",
-            sort_key="Owed", sort_order="desc")
+            sort_key=_("Owed"), sort_order="desc")
         teams = [progress.team for progress in teams_progress]
         teams_table.add_team_columns(teams)
         teams_table.add_feedback_progress_columns(teams_progress)

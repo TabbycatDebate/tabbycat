@@ -196,7 +196,7 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🎉'
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key='name')
+        table = TabbycatTableBuilder(view=self, sort_key=_('name'))
         table.add_adjudicator_columns(self.get_tournament().adjudicator_set.filter(breaking=True))
         return table
 
@@ -221,7 +221,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
 
     def get_table(self):
         t = self.get_tournament()
-        table = TabbycatTableBuilder(view=self, sort_key='team')
+        table = TabbycatTableBuilder(view=self, sort_key=_('team'))
         teams = t.team_set.all().select_related(
             'institution').prefetch_related('break_categories', 'speaker_set')
         table.add_team_columns(teams)
