@@ -2,7 +2,6 @@
 -r requirements.txt
 
 # Development Dependencies
-
 six==1.11                               # Python 2/3 compatibility library
 flake8==3.5.0                           # For testing/linting
 flake8-import-order==0.16.0             # Flake plugin for import order
@@ -11,5 +10,4 @@ pep8-naming==0.5.0                      # Flake plugin for naming conventions
 chromedriver_installer==0.0.6           # Functional testing Chrome interface
 
 # Documentation Dependencies
-
 -r docs/requirements.txt                # Import Sphinx dependencies
