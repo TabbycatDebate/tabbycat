@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.0.5
+-----
+*Release date: 7 February 2018*
+
+- Improved the printing of scoresheets and feedback forms on Chrome.
+- Other minor fixes
+
 
 2.1.0 (Japanese Bobtail)
 ------------------------
