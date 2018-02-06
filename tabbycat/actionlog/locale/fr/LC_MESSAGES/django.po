@@ -2,20 +2,20 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:56+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: actionlog/apps.py:7
@@ -241,6 +241,6 @@ msgstr ""
 "Toutes les entrées de journal nécessitent au moins un utilisateur ou une "
 "adresse IP."
 
-#: actionlog/views.py:18
+#: actionlog/models.py:179
 msgid "anonymous"
 msgstr "anonyme"

@@ -2,20 +2,20 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:56+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: adjallocation/apps.py:7
@@ -39,7 +39,7 @@ msgid "debate"
 msgstr "débat"
 
 #: adjallocation/models.py:28 adjallocation/models.py:44
-#: adjallocation/models.py:68
+#: adjallocation/models.py:74
 msgid "adjudicator"
 msgstr "juge"
 
@@ -51,11 +51,11 @@ msgstr "type"
 msgid "available?"
 msgstr "disponible?"
 
-#: adjallocation/models.py:37
+#: adjallocation/models.py:34
 msgid "debate adjudicator"
 msgstr "débat-adjudicateur"
 
-#: adjallocation/models.py:38
+#: adjallocation/models.py:35
 msgid "debate adjudicators"
 msgstr "débat-adjudicateurs"
 
@@ -71,31 +71,31 @@ msgstr "conflit entre juge et équipe"
 msgid "adjudicator-team conflicts"
 msgstr "conflits entre juge et équipe"
 
-#: adjallocation/models.py:56
+#: adjallocation/models.py:59
 msgid "adjudicator 1"
 msgstr "juge 1"
 
-#: adjallocation/models.py:58
+#: adjallocation/models.py:61
 msgid "adjudicator 2"
 msgstr "juge 2"
 
-#: adjallocation/models.py:61
+#: adjallocation/models.py:64
 msgid "adjudicator-adjudicator conflict"
 msgstr "conflit entre juge et juge"
 
-#: adjallocation/models.py:62
+#: adjallocation/models.py:65
 msgid "adjudicator-adjudicator conflicts"
 msgstr "conflits entre juge et juge"
 
-#: adjallocation/models.py:70
+#: adjallocation/models.py:76
 msgid "institution"
 msgstr "institution"
 
-#: adjallocation/models.py:73
+#: adjallocation/models.py:79
 msgid "adjudicator-institution conflict"
 msgstr "conflit entre juge et institution"
 
-#: adjallocation/models.py:74
+#: adjallocation/models.py:80
 msgid "adjudicator-institution conflicts"
 msgstr "conflits entre juge et institution"
 
@@ -113,8 +113,8 @@ msgstr ""
 #: adjallocation/views.py:143
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
-"Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire"
-" l'allocation automatique."
+"Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire "
+"l'allocation automatique."
 
 #: adjallocation/views.py:192
 msgid "Not all adjudicators specified are associated with the tournament."

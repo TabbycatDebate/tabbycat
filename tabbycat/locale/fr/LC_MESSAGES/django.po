@@ -2,21 +2,37 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:56+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: settings.py:41
+msgid "Arabic"
+msgstr ""
+
+#: settings.py:42
+msgid "English"
+msgstr ""
+
+#: settings.py:43
+msgid "Spanish"
+msgstr ""
+
+#: settings.py:44
+msgid "French"
+msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -24,8 +40,8 @@ msgstr "Vous devez d’abord supprimer les objets ci-dessus."
 
 #: templates/admin/style_guide.html:30
 msgid ""
-"This style of info card announces critical information. <a "
-"href=\"\">Link</a>."
+"This style of info card announces critical information. <a href=\"\">Link</"
+"a>."
 msgstr ""
 "Cette style de carte d'information annonce de l'information critique. <a "
 "href=\"\">Lien</a>."
@@ -36,21 +52,21 @@ msgstr ""
 "Cette style de carte d'information annonce de <a href=\"\">l'information "
 "générale</a>."
 
-#: templates/admin/style_guide.html:158
+#: templates/admin/style_guide.html:160
 msgctxt "page title"
 msgid "Form Title"
 msgstr "Titre de forme"
 
-#: templates/admin/style_guide.html:159
+#: templates/admin/style_guide.html:161
 msgid "Sub Title Title"
 msgstr "Sous-titre titre"
 
-#: templates/admin/style_guide.html:195 templates/registration/login.html:61
+#: templates/admin/style_guide.html:197 templates/registration/login.html:61
 msgctxt "button"
 msgid "Log In"
 msgstr "Connexion"
 
-#: templates/admin/style_guide.html:196 templates/registration/login.html:62
+#: templates/admin/style_guide.html:198 templates/registration/login.html:62
 msgctxt "button"
 msgid "I forgot my password"
 msgstr "J'ai oublié mon mot de passe"
@@ -80,6 +96,25 @@ msgstr "Enregistrer et ajouter davantage"
 msgid "Whoops! There was an error with one or more fields"
 msgstr "Oups ! Il y a une erreur dans un ou plusieurs champs."
 
+#: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
+#: templates/errors/public_403.html:4 templates/errors/public_403.html:6
+msgid "Permission Denied (403)"
+msgstr ""
+
+#: templates/errors/assistant_403.html:13
+#, python-format
+msgid ""
+"This assistant page isn't enabled for this tournament. <a href=\"%(url)s"
+"\">Back to the assistant home page.</a>"
+msgstr ""
+
+#: templates/errors/public_403.html:13
+#, python-format
+msgid ""
+"Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s"
+"\">Back to the tournament home page.</a>"
+msgstr ""
+
 #: templates/footer.html:13
 #, python-format
 msgid "%(tournament)s runs on"
@@ -94,18 +129,18 @@ msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
-"Tabbycat est un projet open-source, développé par des bénévoles. Vous pouvez"
-" l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
+"Tabbycat est un projet open-source, développé par des bénévoles. Vous pouvez "
+"l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
 #: templates/footer.html:25
 #, python-format
 msgid ""
-"For a tournament of this size, we suggest a donation of "
-"<strong>$%(amount)s</strong>."
+"For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
+"strong>."
 msgstr ""
-"Pour un tournoi de cette taille, nous suggérons une donation de "
-"<strong>%(amount)s $</strong>."
+"Pour un tournoi de cette taille, nous suggérons une donation de <strong>"
+"%(amount)s $</strong>."
 
 #: templates/footer.html:29
 msgid "Learn more about donating."
@@ -127,19 +162,19 @@ msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 #: templates/footer.html:43
 #, python-format
 msgid ""
-"Using an app designed for debate timekeeping makes speaking and adjudicating"
-" easier! Check out <a href=\"https://itunes.apple.com/app/apple-"
-"store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> "
-"(iPhone/iPad) or <a "
-"href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a>"
-" (Android)."
+"Using an app designed for debate timekeeping makes speaking and adjudicating "
+"easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/"
+"id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/"
+"iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper</a> (Android)."
 msgstr ""
 "Une application réelle de débat rend plus facile parler et juger&nbsp;! "
-"Découvrez <a href=\"https://itunes.apple.com/app/apple-"
-"store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept "
-"(iPhone/iPad)</a> ou <a "
-"href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper"
-" (Android)</a>."
+"Découvrez <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?"
+"pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept (iPhone/iPad)</a> ou <a "
+"href=\"https://play.google.com/store/apps/details?id=net.czlee."
+"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
+"\">Debatekeeper (Android)</a>."
 
 #: templates/footer.html:52
 msgid "Need ballots?"
@@ -147,120 +182,148 @@ msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
 #: templates/footer.html:54
 msgid ""
-"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
-"target=\"_blank\"> customise and print</a> great ballots from your browser."
+"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" target="
+"\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 "Vous pouvez <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
-"target=\"_blank\">personnaliser et imprimer</a> des bulletins beaux de votre"
-" navigateur."
+"target=\"_blank\">personnaliser et imprimer</a> des bulletins beaux de votre "
+"navigateur."
 
-#: templates/footer.html:67
+#: templates/footer.html:67 templates/footer.html:126
+msgid "Change Language"
+msgstr ""
+
+#: templates/footer.html:73
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/footer.html:73
+#: templates/footer.html:79
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/footer.html:79
+#: templates/footer.html:85
 msgid "Support"
 msgstr "Aide"
 
-#: templates/footer.html:85
+#: templates/footer.html:91
 msgid "Facebook"
 msgstr "Facebook"
 
-#: templates/footer.html:91
+#: templates/footer.html:97
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
-#: templates/nav/admin_nav.html:42 templates/nav/admin_nav.html:110
-#: templates/nav/admin_nav.html:141 templates/nav/admin_nav.html:191
+#: templates/nav/admin_nav.html:23
+#, python-format
+msgid "%(t)s (admin)"
+msgstr ""
+
+#: templates/nav/admin_nav.html:26
+#, python-format
+msgid "%(t)s (assistant)"
+msgstr ""
+
+#: templates/nav/admin_nav.html:45 templates/nav/admin_nav.html:113
+#: templates/nav/admin_nav.html:144 templates/nav/admin_nav.html:194
 msgid "Overview"
 msgstr "Aperçu"
 
-#: templates/nav/admin_nav.html:50
+#: templates/nav/admin_nav.html:53
 msgid "Setup"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:57
+#: templates/nav/admin_nav.html:60
 msgid "Configuration"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:61
+#: templates/nav/admin_nav.html:64
 msgid "Import Data"
 msgstr "Importation des données"
 
-#: templates/nav/admin_nav.html:65 templates/nav/public_nav.html:151
+#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:151
 msgid "Participants"
 msgstr "Participants"
 
-#: templates/nav/admin_nav.html:70
+#: templates/nav/admin_nav.html:73
 msgid "Private URLs"
 msgstr "URLs privées"
 
-#: templates/nav/admin_nav.html:73
+#: templates/nav/admin_nav.html:76
 msgid "Edit Database"
 msgstr "Modification de la base de données"
 
-#: templates/nav/admin_nav.html:83 templates/nav/public_nav.html:136
+#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:136
 msgid "Sides"
 msgstr "Côtés"
 
-#: templates/nav/admin_nav.html:95 templates/nav/admin_nav.html:148
+#: templates/nav/admin_nav.html:98 templates/nav/admin_nav.html:151
 #: templates/nav/public_nav.html:126
 msgid "Divisions"
 msgstr "Divisions"
 
-#: templates/nav/admin_nav.html:104
+#: templates/nav/admin_nav.html:107
 msgid "Feedback"
 msgstr "Commentaires"
 
-#: templates/nav/admin_nav.html:134 templates/nav/public_nav.html:141
+#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:141
 msgid "Standings"
 msgstr "Classement"
 
-#: templates/nav/admin_nav.html:144
+#: templates/nav/admin_nav.html:147
 msgid "Teams"
 msgstr "Équipes"
 
-#: templates/nav/admin_nav.html:152
+#: templates/nav/admin_nav.html:155
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: templates/nav/admin_nav.html:157
+#: templates/nav/admin_nav.html:160
 msgid "Replies"
 msgstr "Discours de résponse"
 
-#: templates/nav/admin_nav.html:162
+#: templates/nav/admin_nav.html:165
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr "Orateurs %(category_name)s"
 
-#: templates/nav/admin_nav.html:168 templates/nav/public_nav.html:131
+#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:131
 msgid "Motions"
 msgstr "Motions"
 
-#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:146
+#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:146
 msgid "Diversity"
 msgstr "Aperçu de la diversité"
 
-#: templates/nav/admin_nav.html:184
+#: templates/nav/admin_nav.html:187
 msgid "Breaks"
 msgstr "Qualifications"
 
-#: templates/nav/admin_nav.html:195
+#: templates/nav/admin_nav.html:198
 #, python-format
 msgid "%(category_name)s"
 msgstr "%(category_name)s"
 
-#: templates/nav/admin_nav.html:214
+#: templates/nav/admin_nav.html:217 templates/nav/top_nav_base.html:92
 msgid "Log Out"
 msgstr "Deconnexion"
+
+#: templates/nav/assistant_nav.html:5
+#, fuzzy
+#| msgid "Results"
+msgid "Enter Results"
+msgstr "Résultats"
 
 #: templates/nav/assistant_nav.html:11
 msgid "Check In Ballots"
 msgstr "Enregistrement de la présence des bulletins de vote"
+
+#: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:166
+msgid "Enter Feedback"
+msgstr "Saisie d'une commentaire"
+
+#: templates/nav/assistant_nav.html:24
+msgid "Display/Print Draw"
+msgstr ""
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
@@ -315,10 +378,6 @@ msgstr "Progrès des commentaires"
 msgid "Enter Ballot"
 msgstr "Saisie d'un bulletin"
 
-#: templates/nav/public_nav.html:166
-msgid "Enter Feedback"
-msgstr "Saisie d'une commentaire"
-
 #: templates/nav/round_panel.html:28
 msgid "Check-Ins"
 msgstr "Enregistrements"
@@ -330,6 +389,32 @@ msgstr "Tirage"
 #: templates/nav/round_panel.html:51
 msgid "Display"
 msgstr "Affichage"
+
+#: templates/nav/top_nav_base.html:22
+#, python-format
+msgid "Administrator area for <strong>%(tournament)s</strong>"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:31
+#, python-format
+msgid "Assistant area for <strong>%(tournament)s</strong>"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:40
+#, python-format
+msgid "Public area for <strong>%(tournament)s</strong>"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:52
+msgid "Site Home"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:96
+#, fuzzy
+#| msgctxt "page title"
+#| msgid "Login"
+msgid "Login"
+msgstr "Connexion"
 
 #: templates/registration/login.html:4
 msgctxt "page title"
@@ -401,8 +486,7 @@ msgstr "Réinitialisation du mot de passe effectuée"
 msgid "Your password has been reset."
 msgstr "Votre mot de passe a été réinitialisé."
 
-#. Translators: This text appears on a button that takes the user to the login
-#. page after a password reset.
+#. Translators: This text appears on a button that takes the user to the login page after a password reset.
 #: templates/registration/password_reset_complete.html:23
 msgid "Go to the login page"
 msgstr "Aller à la page de connexion"
@@ -423,8 +507,8 @@ msgid ""
 "used.  Please request a new password reset."
 msgstr ""
 "Le lien de réinitialisation de mot de passe était invalide, peut-être parce "
-"qu'il a déjà été utilisé. Veuillez demander une nouvelle réinitialisation de"
-" mot de passe."
+"qu'il a déjà été utilisé. Veuillez demander une nouvelle réinitialisation de "
+"mot de passe."
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:5
@@ -437,8 +521,8 @@ msgid ""
 "We've e-mailed you instructions for setting your password, if an account "
 "exists with the e-mail address you entered. You should receive them shortly."
 msgstr ""
-"Un courriel contenant des instructions sur la manière de réinitialiser votre"
-" mot de passe a été envoyé à l'adresse électronique que vous avez fournie. "
+"Un courriel contenant des instructions sur la manière de réinitialiser votre "
+"mot de passe a été envoyé à l'adresse électronique que vous avez fournie. "
 "Vous devriez le recevoir rapidement."
 
 #: templates/registration/password_reset_done.html:19
@@ -447,11 +531,10 @@ msgid ""
 "you registered with, and check your spam folder."
 msgstr ""
 "Si vous ne recevez pas de courriel, assurez-vous d'avoir saisi la même "
-"adresse avec laquelle vous vous êtes enregistré et vérifiez votre dossier de"
-" courriers indésirables / spam."
+"adresse avec laquelle vous vous êtes enregistré et vérifiez votre dossier de "
+"courriers indésirables / spam."
 
-#. Translators: This text appears on a button that takes the user back to the
-#. login page from the password reset page.
+#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
 #: templates/registration/password_reset_done.html:26
 msgid "Return to the login page"
 msgstr "Retourner à la page de connexion"
@@ -480,8 +563,8 @@ msgstr ""
 #, python-format
 msgid ""
 "If this wasn't you, that probably means someone else typed your e-mail "
-"address into the password reset form on the Tabbycat site at "
-"%(protocol)s://%(domain)s."
+"address into the password reset form on the Tabbycat site at %(protocol)s://"
+"%(domain)s."
 msgstr ""
 "Si ce n’était pas vous, cela signifie probablement que quelqu'un d’autre a "
 "saisi votre adresse courriel dans le formulaire de réinitialisation de mot "
@@ -522,21 +605,21 @@ msgstr "Retour à la page de connexion"
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
-#: urls.py:84
+#: urls.py:88
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
 msgstr "Salut, %(username)s — vous venez de vous déconnecter !"
 
-#: urls.py:87
+#: urls.py:91
 msgid "Later! You were logged out!"
 msgstr "Salut ! Vous venez de vous déconnecter !"
 
-#: urls.py:94
+#: urls.py:98
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr "Salut, %(username)s — vous venez de vous connecter!"
 
-#: urls.py:97
+#: urls.py:101
 msgid "Welcome! You just logged in!"
 msgstr "Bienvenue ! Vous venez de vous connecter !"
 

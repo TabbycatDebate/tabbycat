@@ -2,334 +2,334 @@
 # Copyright (C) 2017 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:56+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: utils/forms.py:55
 msgid "E-mail address"
 msgstr "Adresse de courriel"
 
-#: utils/tables.py:38
+#: utils/tables.py:37
 msgid "No Data Available"
 msgstr ""
 
-#: utils/tables.py:143
+#: utils/tables.py:142
 msgid "Ⓒ"
 msgstr ""
 
-#: utils/tables.py:144
+#: utils/tables.py:143
 msgid "Ⓣ"
 msgstr ""
 
-#: utils/tables.py:148
+#: utils/tables.py:147
 msgid "chair"
 msgstr "président"
 
-#: utils/tables.py:149
+#: utils/tables.py:148
 msgid "panellist"
 msgstr "panéliste"
 
-#: utils/tables.py:150
+#: utils/tables.py:149
 msgid "trainee"
 msgstr "stagiaire"
 
-#: utils/tables.py:194 utils/tables.py:200
+#: utils/tables.py:192 utils/tables.py:198
 #, python-format
 msgid "View %(adj)s's Adjudication Record"
 msgstr "Voir le dossier de jugement de %(adj)s"
 
-#: utils/tables.py:210 utils/tables.py:215
+#: utils/tables.py:208 utils/tables.py:213
 #, python-format
 msgid "View %(team)s's Team Record"
 msgstr "Voir le dossier d'équipe de %(team)s"
 
-#: utils/tables.py:242
+#: utils/tables.py:240
 #, python-format
 msgid "%(team)s won"
 msgstr "%(team)s a gagné"
 
-#: utils/tables.py:247
+#: utils/tables.py:245
 #, python-format
 msgid "%(team)s lost"
 msgstr "%(team)s a perdu"
 
-#: utils/tables.py:252 utils/tables.py:280 utils/tables.py:298
+#: utils/tables.py:250 utils/tables.py:278 utils/tables.py:296
 #, python-format
 msgid "%(team)s—no result"
 msgstr "%(team)s—aucun résultat"
 
-#: utils/tables.py:260
+#: utils/tables.py:258
 #, python-format
 msgid "%(team)s took 1st"
 msgstr "%(team)s a pris 1er"
 
-#: utils/tables.py:265
+#: utils/tables.py:263
 #, python-format
 msgid "%(team)s took 2nd"
 msgstr "%(team)s a pris 2ème"
 
-#: utils/tables.py:270
+#: utils/tables.py:268
 #, python-format
 msgid "%(team)s took 3rd"
 msgstr "%(team)s a pris 3ème"
 
-#: utils/tables.py:275
+#: utils/tables.py:273
 #, python-format
 msgid "%(team)s took 4th"
 msgstr "%(team)s a pris 4ème"
 
-#: utils/tables.py:288
+#: utils/tables.py:286
 #, python-format
 msgid "%(team)s is advancing"
 msgstr "%(team)s avance"
 
-#: utils/tables.py:293
+#: utils/tables.py:291
 #, python-format
 msgid "%(team)s was eliminated"
 msgstr "%(team)s a été eliminé"
 
-#: utils/tables.py:311
+#: utils/tables.py:309
 #, python-format
 msgid " vs %(opposition)s"
 msgstr ""
 
-#: utils/tables.py:317
+#: utils/tables.py:315
 #, python-format
 msgid "Won against %(team)s"
 msgstr ""
 
-#: utils/tables.py:319
+#: utils/tables.py:317
 #, python-format
 msgid "Lost to %(team)s"
 msgstr ""
 
-#: utils/tables.py:321
+#: utils/tables.py:319
 #, python-format
 msgid "No result for debate against %(team)s"
 msgstr "Aucun résultat pour débat contre %(team)s"
 
-#: utils/tables.py:326 utils/tables.py:391
+#: utils/tables.py:324 utils/tables.py:389
 #, python-format
 msgid "Received <strong>%s</strong> team points"
 msgstr ""
 
-#: utils/tables.py:330 utils/tables.py:395
+#: utils/tables.py:328 utils/tables.py:393
 msgid "View debate ballot"
 msgstr ""
 
-#: utils/tables.py:334
+#: utils/tables.py:332
 #, python-format
 msgid "Speakers in <strong>%(opp)s</strong>: %(speakers)s"
 msgstr ""
 
-#: utils/tables.py:348
+#: utils/tables.py:346
 msgid "Teams in debate:"
 msgstr ""
 
-#: utils/tables.py:351
+#: utils/tables.py:349
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr "%(team)s (%(side)s)"
 
-#: utils/tables.py:369
+#: utils/tables.py:367
 msgid "advancing"
 msgstr "avançant"
 
-#: utils/tables.py:370
+#: utils/tables.py:368
 msgid "Advancing"
 msgstr ""
 
-#: utils/tables.py:372
+#: utils/tables.py:370
 msgid "eliminated"
 msgstr "éliminé"
 
-#: utils/tables.py:373
+#: utils/tables.py:371
 msgid "Eliminated"
 msgstr ""
 
-#: utils/tables.py:376 utils/tables.py:386
+#: utils/tables.py:374 utils/tables.py:384
 msgid "No result for debate"
 msgstr ""
 
-#: utils/tables.py:379
+#: utils/tables.py:377
 msgid "4th"
 msgstr "4ème"
 
-#: utils/tables.py:379
+#: utils/tables.py:377
 msgid "3rd"
 msgstr "3ème"
 
-#: utils/tables.py:379
+#: utils/tables.py:377
 msgid "2nd"
 msgstr "2ème"
 
-#: utils/tables.py:379
+#: utils/tables.py:377
 msgid "1st"
 msgstr "1er"
 
-#: utils/tables.py:383
+#: utils/tables.py:381
 #, python-format
 msgid "Took %(place)s"
 msgstr ""
 
-#: utils/tables.py:400 utils/tables.py:402
+#: utils/tables.py:398 utils/tables.py:400
 msgid "Tournament"
 msgstr "Tournoi"
 
-#: utils/tables.py:409 utils/tables.py:411
+#: utils/tables.py:407 utils/tables.py:409
 msgid "Round"
 msgstr "Tour"
 
-#: utils/tables.py:429 utils/tables.py:596
+#: utils/tables.py:427 utils/tables.py:594
 msgid "Name"
 msgstr "Nom"
 
-#: utils/tables.py:434 utils/tables.py:436 utils/tables.py:572
-#: utils/tables.py:574
+#: utils/tables.py:432 utils/tables.py:434 utils/tables.py:570
+#: utils/tables.py:572
 msgid "Institution"
 msgstr "Institution"
 
-#: utils/tables.py:442
+#: utils/tables.py:440
 msgid "Member of the Adjudication Core"
 msgstr ""
 
-#: utils/tables.py:449
+#: utils/tables.py:447
 msgid "Independent Adjudicator"
 msgstr ""
 
-#: utils/tables.py:457
+#: utils/tables.py:455
 msgid "Always Trainee"
 msgstr ""
 
-#: utils/tables.py:462
+#: utils/tables.py:460
 msgid "Adjs"
 msgstr "Juges"
 
-#: utils/tables.py:519
+#: utils/tables.py:517
 msgid "Debate Adjudicators"
 msgstr "Juges du débat"
 
-#: utils/tables.py:538
+#: utils/tables.py:536
 msgid "Motion"
 msgstr "Motion"
 
-#: utils/tables.py:541
+#: utils/tables.py:539
 msgid "Order"
 msgstr ""
 
-#: utils/tables.py:543
+#: utils/tables.py:541
 msgid "Order as listed"
 msgstr ""
 
-#: utils/tables.py:564
+#: utils/tables.py:562
 msgid "Team"
 msgstr "Équipe"
 
-#: utils/tables.py:568 utils/tables.py:618
+#: utils/tables.py:566 utils/tables.py:616
 msgid "Categories"
 msgstr "Catégories"
 
-#: utils/tables.py:583 utils/tables.py:585 utils/tables.py:659
-#: utils/tables.py:661
+#: utils/tables.py:581 utils/tables.py:583 utils/tables.py:657
+#: utils/tables.py:659
 msgid "Division"
 msgstr "Division"
 
-#: utils/tables.py:592
+#: utils/tables.py:590
 msgid "Redacted"
 msgstr ""
 
-#: utils/tables.py:616
+#: utils/tables.py:614
 msgid "Category"
 msgstr ""
 
-#: utils/tables.py:643
+#: utils/tables.py:641
 #, python-format
 msgid "This venue %(predicate)s."
 msgstr "Ce lieu %(predicate)s."
 
-#: utils/tables.py:645
+#: utils/tables.py:643
 #, python-format
 msgid "This venue %(predicates)s, and %(last_predicate)s."
 msgstr "Ce lieu %(predicates)s, et %(last_predicate)s."
 
-#: utils/tables.py:674 utils/tables.py:676
+#: utils/tables.py:672 utils/tables.py:674
 msgid "Venue"
 msgstr "Lieu"
 
-#: utils/tables.py:682
+#: utils/tables.py:680
 msgid "Date"
 msgstr ""
 
-#: utils/tables.py:682
+#: utils/tables.py:680
 msgid "Time"
 msgstr ""
 
-#: utils/tables.py:686
+#: utils/tables.py:684
 msgid "Bye"
 msgstr ""
 
-#: utils/tables.py:688
+#: utils/tables.py:686
 msgid "Postponed"
 msgstr ""
 
-#: utils/tables.py:690
+#: utils/tables.py:688
 msgid "Forfeit"
 msgstr ""
 
-#: utils/tables.py:711
+#: utils/tables.py:709
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
 msgstr[0] ""
 msgstr[1] ""
 
-#: utils/tables.py:717
+#: utils/tables.py:715
 msgid "Teams are from the same institution"
 msgstr ""
 
-#: utils/tables.py:723
+#: utils/tables.py:721
 msgid "Conflicts/Flags"
 msgstr "Conflits/signalements"
 
-#: utils/tables.py:767 utils/tables.py:777
+#: utils/tables.py:765 utils/tables.py:775
 msgid "Ballot"
 msgstr "Bulletin"
 
-#: utils/tables.py:771
+#: utils/tables.py:769
 msgid "View/Edit Ballot"
 msgstr ""
 
-#: utils/tables.py:786
+#: utils/tables.py:784
 msgid "View Ballot"
 msgstr ""
 
-#: utils/tables.py:793
+#: utils/tables.py:791
 msgid "Result"
 msgstr "Résultat"
 
 #. Translators: "TBC" stands for "to be confirmed".
-#: utils/tables.py:798
+#: utils/tables.py:796
 msgid "TBC"
 msgstr ""
 
-#: utils/tables.py:799
+#: utils/tables.py:797
 msgid "Side"
 msgstr "Côté"
 
-#: utils/tables.py:837
+#: utils/tables.py:835
 #, python-format
 msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
