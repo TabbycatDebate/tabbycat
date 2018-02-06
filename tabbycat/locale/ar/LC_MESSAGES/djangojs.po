@@ -19,5 +19,78 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
+#: templates/tables/TablesContrainer.vue:8
 msgid "Find in Table"
 msgstr "البحث في الجدول"
+
+#: participants/templates/DiversityContrainer.vue:6
+msgid "Speaker Demographics"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:11
+msgid "No Gender Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:18
+msgid "No Speaker Categories Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:26
+msgid "No Regions Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:33
+msgid "Speaker Results"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:36
+msgid "speakers with gender data"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:38
+msgid "speaker scores total"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:44
+msgid "No Gender Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:49
+msgid "No Region Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:56
+msgid "Adjudicator Demographics"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:61
+msgid "No Gender Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:68
+msgid "No Position Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:76
+msgid "No Region Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:83
+msgid "Adjudicator Results"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:86
+msgid "adjudicators with gender data"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:88
+msgid "feedback scores total"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:94
+msgid "No Adjudicator Ratings Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:99
+msgid "No Adjudicator-Adjudicator Feedback Information"
+msgstr ""
