@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:56+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"PO-Revision-Date: 2018-02-06 09:11-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: tournaments/admin.py:36
 #, python-format
@@ -140,7 +140,7 @@ msgstr ""
 #: tournaments/mixins.py:134
 #, python-format
 msgid "for %(round)s"
-msgstr ""
+msgstr "pour %(round)s"
 
 #: tournaments/models.py:26
 msgid ""
@@ -594,7 +594,7 @@ msgstr ""
 #: tournaments/templates/public_tournament_index.html:9
 #, python-format
 msgid "Welcome to %(tournament_name)s"
-msgstr ""
+msgstr "Bienvenue à %(tournament_name)s"
 
 #: tournaments/templates/public_tournament_index.html:18
 msgid "There is currently no public information available for this tournament."
@@ -626,61 +626,62 @@ msgid "Motions Tab"
 msgstr "Tab des motions"
 
 #: tournaments/templates/public_tournament_index.html:79
-#: tournaments/templates/public_tournament_index.html:108
+#: tournaments/templates/public_tournament_index.html:111
 msgid "Sides"
 msgstr "Côtés"
 
-#: tournaments/templates/public_tournament_index.html:90
-msgid "Results"
-msgstr "Résultats"
-
-#: tournaments/templates/public_tournament_index.html:96
-msgid "Divisions"
-msgstr "Divisions"
-
-#: tournaments/templates/public_tournament_index.html:102
-msgid "Motions"
-msgstr "Motions"
-
-#: tournaments/templates/public_tournament_index.html:114
-msgid "Team Standings"
-msgstr "Classement des équipes"
-
-#: tournaments/templates/public_tournament_index.html:121
-#, python-format
-msgid "%(category_name)s Break"
-msgstr "Qualification %(category_name)s"
-
-#: tournaments/templates/public_tournament_index.html:130
-msgid "Breaking Adjudicators"
-msgstr "Qualification des juges"
-
-#: tournaments/templates/public_tournament_index.html:136
-msgid "Diversity Overview"
-msgstr "Aperçu de la diversité"
-
-#: tournaments/templates/public_tournament_index.html:142
-msgid "Participants"
-msgstr "Participants"
-
-#: tournaments/templates/public_tournament_index.html:148
-msgid "Feedback Progress"
-msgstr "Progrès des commentaires"
-
-#: tournaments/templates/public_tournament_index.html:154
-msgid "Enter Ballot"
-msgstr "Saisie d'un bulletin"
-
-#: tournaments/templates/public_tournament_index.html:160
-msgid "Enter Feedback"
-msgstr "Saisie d'une commentaire"
-
-#: tournaments/templates/public_tournament_index.html:168
+#: tournaments/templates/public_tournament_index.html:86
+#: tournaments/templates/public_tournament_index.html:171
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr "Tirage de %(round_name)s"
 
-#: tournaments/templates/public_tournament_index.html:176
+#: tournaments/templates/public_tournament_index.html:93
+msgid "Results"
+msgstr "Résultats"
+
+#: tournaments/templates/public_tournament_index.html:99
+msgid "Divisions"
+msgstr "Divisions"
+
+#: tournaments/templates/public_tournament_index.html:105
+msgid "Motions"
+msgstr "Motions"
+
+#: tournaments/templates/public_tournament_index.html:117
+msgid "Team Standings"
+msgstr "Classement des équipes"
+
+#: tournaments/templates/public_tournament_index.html:124
+#, python-format
+msgid "%(category_name)s Break"
+msgstr "Qualification %(category_name)s"
+
+#: tournaments/templates/public_tournament_index.html:133
+msgid "Breaking Adjudicators"
+msgstr "Qualification des juges"
+
+#: tournaments/templates/public_tournament_index.html:139
+msgid "Diversity Overview"
+msgstr "Aperçu de la diversité"
+
+#: tournaments/templates/public_tournament_index.html:145
+msgid "Participants"
+msgstr "Participants"
+
+#: tournaments/templates/public_tournament_index.html:151
+msgid "Feedback Progress"
+msgstr "Progrès des commentaires"
+
+#: tournaments/templates/public_tournament_index.html:157
+msgid "Enter Ballot"
+msgstr "Saisie d'un bulletin"
+
+#: tournaments/templates/public_tournament_index.html:163
+msgid "Enter Feedback"
+msgstr "Saisie d'une commentaire"
+
+#: tournaments/templates/public_tournament_index.html:179
 msgid "View All Draws"
 msgstr "Afficher le tirage"
 
@@ -726,10 +727,9 @@ msgid "Assistant area for <strong>%(tn)s</strong>"
 msgstr "Zone pour les assistants de <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:29
-#, fuzzy, python-format
-#| msgid "Admin area for <strong>%(tn)s</strong>"
+#, python-format
 msgid "Public area for <strong>%(tn)s</strong>"
-msgstr "Zone administrative de <strong>%(tn)s</strong>"
+msgstr "Zone publique de <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:47
 msgid ""

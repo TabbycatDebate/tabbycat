@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr ""
 msgid "tournament"
 msgstr ""
 
-#: breakqual/models.py:10
+#: breakqual/models.py:10 breakqual/views.py:199
 msgid "name"
 msgstr ""
 
@@ -131,7 +131,7 @@ msgstr ""
 msgid "break categories"
 msgstr ""
 
-#: breakqual/models.py:73
+#: breakqual/models.py:73 breakqual/views.py:224
 msgid "team"
 msgstr ""
 
@@ -332,58 +332,58 @@ msgid ""
 "area</a>, then return to this page to set team's eligibility."
 msgstr ""
 
-#: breakqual/views.py:61
+#: breakqual/views.py:60
 msgid "Break"
 msgstr ""
 
-#: breakqual/views.py:67
+#: breakqual/views.py:66
 #, python-format
 msgid "%(category)s Break"
 msgstr ""
 
-#: breakqual/views.py:90
+#: breakqual/views.py:89
 #, python-format
 msgid ""
 "There was an error generating the break for category %(category)s: "
 "%(message)s"
 msgstr ""
 
-#: breakqual/views.py:132
+#: breakqual/views.py:131
 msgid "Eligible for"
 msgstr ""
 
-#: breakqual/views.py:133
+#: breakqual/views.py:132
 msgid "Edit Remark"
 msgstr ""
 
-#: breakqual/views.py:147
+#: breakqual/views.py:146
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for the "
 "following break categories: %(categories)s."
 msgstr ""
 
-#: breakqual/views.py:154
+#: breakqual/views.py:153
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for break "
 "category %(category)s."
 msgstr ""
 
-#: breakqual/views.py:159
+#: breakqual/views.py:158
 msgid "Changes to breaking team remarks saved."
 msgstr ""
 
-#: breakqual/views.py:183
+#: breakqual/views.py:182
 #, python-format
 msgid ""
 "Teams break generated for the following break categories: %(categories)s."
 msgstr ""
 
-#: breakqual/views.py:196
+#: breakqual/views.py:195
 msgid "Breaking Adjudicators"
 msgstr ""
 
-#: breakqual/views.py:220
+#: breakqual/views.py:219
 msgid "Break Eligibility"
 msgstr ""

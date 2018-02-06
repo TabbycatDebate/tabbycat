@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,6 +64,14 @@ msgstr ""
 #: printing/templates/scoresheet_list.html:7
 #, python-format
 msgid "Printable Scoresheets for %(round_name)s"
+msgstr ""
+
+#: printing/views.py:87
+msgid "Overall Score"
+msgstr ""
+
+#: printing/views.py:108
+msgid "Unaffiliated"
 msgstr ""
 
 #: printing/views.py:121 printing/views.py:125

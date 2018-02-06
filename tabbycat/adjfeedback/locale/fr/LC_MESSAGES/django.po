@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:56+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -498,6 +498,10 @@ msgstr[1] ""
 msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr ""
 
+#: adjfeedback/views.py:139 adjfeedback/views.py:180
+msgid "Name"
+msgstr ""
+
 #: adjfeedback/views.py:145 adjfeedback/views.py:171 adjfeedback/views.py:188
 #, python-format
 msgid "%(count)d feedback"
@@ -505,7 +509,7 @@ msgid_plural "%(count)d feedbacks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/views.py:302 adjfeedback/views.py:307
+#: adjfeedback/views.py:163 adjfeedback/views.py:302 adjfeedback/views.py:307
 msgid "Team"
 msgstr ""
 
@@ -529,3 +533,7 @@ msgstr "juge"
 #| msgid "adjudicator"
 msgid "An Adjudicator"
 msgstr "juge"
+
+#: adjfeedback/views.py:604 adjfeedback/views.py:610
+msgid "Owed"
+msgstr ""

@@ -1,13 +1,12 @@
 {% extends "base.html" %}
-{% load debate_tags %}
-
-{% block head-title %}Results for {{ round.name }}{% endblock %}
-{% block page-title %}Results for {{ round.name }}{% endblock %}
+{% load i18n %}
 
 {% block content %}
   <div class="card">
     <div class="card-body">
-      <p>{{ round.name }} is a silent round <span class="emoji">😶</span></p>
+      <p>{% blocktrans trimmed with round_name=round.name %}
+        {{ round_name }} is a silent round
+      {% endblocktrans %} <span class="emoji">😶</span></p>
     </div>
   </div>
 {% endblock %}

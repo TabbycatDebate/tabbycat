@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block page-title %}Enter Ballot{% endblock %}
-{% block head-title %}Who are you?{% endblock %}
-{% block sub-title %}(click your name on this list){% endblock %}
+{% block page-title %}{% trans "Enter Ballot" %}{% endblock %}
+{% block head-title %}{% trans "Who are you?" %}{% endblock %}
+{% block sub-title %}{% trans "(click your name on this list)" %}{% endblock %}
 
 {% block content %}
 <div class="card table-container">
@@ -12,7 +12,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Adjudicator</span></th>
+            <th>{% trans "Adjudicator" %}</span></th>
             <th><i data-feather="map-pin" data-toggle="tooltip"title="Venue"></i></th>
             {% tournament_side_names tournament 'full' as side_names %}
             {% for name in side_names %}
@@ -25,7 +25,9 @@
           <tr>
           <td>
             <a href="{% tournamenturl 'results-public-ballotset-new-pk' da.adjudicator.id %}">
-            <span>Add result from </span>{{ da.adjudicator.name }}
+            <span>{% blocktrans trimmed with adj_name=da.adjudicator.name %}
+              Add result from {{ adj_name }}
+            {% endblocktrans %}</span>
             </a>
           </td>
           <td>{{ da.debate.venue.display_name }}</td>

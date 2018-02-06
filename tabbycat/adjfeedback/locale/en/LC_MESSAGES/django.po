@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -438,10 +438,10 @@ msgid ""
 msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html:57
-msgid "Score Aspects"
+msgid "Score Ratio"
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:68
+#: adjfeedback/templates/overview_breakdowns.html:69
 #, python-format
 msgid ""
 "There is %(c_chairs)s debate per round, so there needs to be %(c_chairs)s "
@@ -452,27 +452,27 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:73
+#: adjfeedback/templates/overview_breakdowns.html:74
 #, python-format
 msgid "%(c_chairs)s chair"
 msgid_plural "%(c_chairs)s chairs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:81
+#: adjfeedback/templates/overview_breakdowns.html:84
 msgid ""
 "All adjudicators with a score high enough to vote, but who aren't allocated "
 "as chairs, are allocated as panellists by the auto-allocator."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:85
+#: adjfeedback/templates/overview_breakdowns.html:88
 #, python-format
 msgid "%(c_panellists)s panellist"
 msgid_plural "%(c_panellists)s panellists"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:93
+#: adjfeedback/templates/overview_breakdowns.html:98
 #, python-format
 msgid ""
 "Adjudicators are allocated as trainees by the auto-allocator if their score "
@@ -480,21 +480,50 @@ msgid ""
 "this tournament's Draw Rules configuration."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:98
+#: adjfeedback/templates/overview_breakdowns.html:103
 #, python-format
 msgid "%(c_trainees)s trainee"
 msgid_plural "%(c_trainees)s trainees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:106
+#: adjfeedback/templates/overview_breakdowns.html:112
 #, python-format
-msgid "Auto-Allocate Distributions (%(min_voting_score)s to vote)"
+msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr ""
 
-#: adjfeedback/views.py:167 adjfeedback/views.py:193 adjfeedback/views.py:210
+#: adjfeedback/views.py:139 adjfeedback/views.py:180
+msgid "Name"
+msgstr ""
+
+#: adjfeedback/views.py:145 adjfeedback/views.py:171 adjfeedback/views.py:188
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"
 msgstr[0] ""
 msgstr[1] ""
+
+#: adjfeedback/views.py:163 adjfeedback/views.py:302 adjfeedback/views.py:307
+msgid "Team"
+msgstr ""
+
+#: adjfeedback/views.py:302
+msgid "A Team"
+msgstr ""
+
+#: adjfeedback/views.py:311 adjfeedback/views.py:313 adjfeedback/views.py:335
+#: adjfeedback/views.py:337
+msgid "Institution"
+msgstr ""
+
+#: adjfeedback/views.py:321 adjfeedback/views.py:331
+msgid "Adjudicator"
+msgstr ""
+
+#: adjfeedback/views.py:321
+msgid "An Adjudicator"
+msgstr ""
+
+#: adjfeedback/views.py:604 adjfeedback/views.py:610
+msgid "Owed"
+msgstr ""

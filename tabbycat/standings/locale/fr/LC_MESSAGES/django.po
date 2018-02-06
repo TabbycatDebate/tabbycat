@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:56+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"PO-Revision-Date: 2018-02-06 09:43-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: standings/base.py:279
 msgid "The same metric would be added twice:"
@@ -282,7 +282,7 @@ msgstr ""
 
 #: standings/templates/current_standings.html:6
 msgid "It also excludes silent rounds (if any)."
-msgstr ""
+msgstr "Elle exclut aussi les tours silencieux (le cas échéant)."
 
 #: standings/templates/current_standings.html:9
 #, python-format
@@ -291,6 +291,10 @@ msgid ""
 "does not indicate each team's ranking within each bracket. "
 "%(silent_round_sentence)s"
 msgstr ""
+"Cette liste est triée par points d'equipe, et ensuite par ordre alphabétique "
+"suivant le nom d'équipe. Elle n'indique pas le rang de chaque équipe parmi "
+"les équipes ayant le même nombre de points d'équipe. "
+"%(silent_round_sentence)s"
 
 #: standings/templates/current_standings.html:15
 #, python-format
@@ -299,10 +303,14 @@ msgid ""
 "does not indicate each team's ranking within each bracket. "
 "%(silent_round_sentence)s"
 msgstr ""
+"Cette liste est triée par nombre de victoires, et ensuite par ordre "
+"alphabétique suivant le nom d'équipe. Elle n'indique pas le rang de chaque "
+"équipe parmi les équipes ayant le même nombre de victoires. "
+"%(silent_round_sentence)s"
 
 #: standings/templates/current_standings_no_round.html:6
 msgid "There aren't any rounds for which results are available."
-msgstr ""
+msgstr "Il n'y a aucune tour dont les résultats sont disponibles."
 
 #: standings/templates/speaker_standings.html:7
 msgid ""
@@ -371,7 +379,7 @@ msgstr "Orateurs de la catégorie %(category_name)s"
 
 #: standings/templates/standings_menu.html:44
 msgid "Motion Statistics"
-msgstr ""
+msgstr "Statistiques des motions"
 
 #: standings/templates/standings_menu.html:48
 msgid "Diversity Overview"
@@ -407,6 +415,8 @@ msgid ""
 "The tab can't be displayed because all rounds so far in this tournament are "
 "silent."
 msgstr ""
+"Le tab ne peut pas être affiché parce que tous les tours dans ce tournoi "
+"jusqu'ici sont silencieux."
 
 #: standings/views.py:252
 msgid "Speaker Standings"
@@ -432,7 +442,7 @@ msgstr "Classement des orateurs de réponse de la catégorie %(category_name)s"
 
 #: standings/views.py:343
 msgid "Reply speeches aren't enabled in this tournament."
-msgstr ""
+msgstr "Les discours de réponse ne sont pas activés dans ce tournoi."
 
 #: standings/views.py:371
 msgid "Reply Speaker Tab"
@@ -456,7 +466,7 @@ msgstr "Classement actuel des équipes"
 
 #: standings/views.py:509
 msgid "Points"
-msgstr ""
+msgstr "Points"
 
 #~ msgid "Motions Balance"
 #~ msgstr "Équilibre des motions"

@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:56+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"PO-Revision-Date: 2018-02-06 09:09-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,22 +16,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: settings.py:41
 msgid "Arabic"
-msgstr ""
+msgstr "arabe"
 
 #: settings.py:42
 msgid "English"
-msgstr ""
+msgstr "anglais"
 
 #: settings.py:43
 msgid "Spanish"
-msgstr ""
+msgstr "espagnol"
 
 #: settings.py:44
 msgid "French"
-msgstr ""
+msgstr "français"
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -78,7 +78,7 @@ msgid ""
 "for a variety of parliamentary debating formats"
 msgstr ""
 "La tabulation de %(tournament_name)s fonctionne sur Tabbycat, un système "
-"open-source pour tabuler une variété de formats de débat parlementaire."
+"open-source pour tabuler une variété de formats de débat parlementaire"
 
 #: templates/base.html:16
 msgid ""
@@ -86,14 +86,16 @@ msgid ""
 "parliamentary debating formats"
 msgstr ""
 "Cette tabulation fonctionne sur Tabbycat, un système open-source pour "
-"tabuler une variété de formats de débat parlementaire."
+"tabuler une variété de formats de débat parlementaire"
 
 #: templates/base_formset.html:26
 msgid "Save and Add More"
 msgstr "Enregistrer et ajouter davantage"
 
 #: templates/components/form-errors.html:4
-msgid "Whoops! There was an error with one or more fields"
+#, fuzzy
+#| msgid "Whoops! There was an error with one or more fields"
+msgid "Whoops! There was an error with one or more fields."
 msgstr "Oups ! Il y a une erreur dans un ou plusieurs champs."
 
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
@@ -117,14 +119,19 @@ msgstr ""
 
 #: templates/footer.html:13
 #, python-format
-msgid "%(tournament)s runs on"
-msgstr "%(tournament)s fonctionne sur"
+msgid ""
+"%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
+msgstr ""
+"%(tournament)s fonctionne sur Tabbycat %(tabbycat_version)s "
+"(%(tabbycat_codename)s)"
 
 #: templates/footer.html:15
-msgid "This site runs on"
-msgstr "Ce site fonctionne sur"
+#, python-format
+msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
+msgstr ""
+"Ce site fonctionne sur Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 
-#: templates/footer.html:21
+#: templates/footer.html:19
 msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
@@ -133,7 +140,7 @@ msgstr ""
 "l'utiliser gratuitement pour tabuler les tournois non lucratif et pas pour "
 "collecter des fonds."
 
-#: templates/footer.html:25
+#: templates/footer.html:23
 #, python-format
 msgid ""
 "For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
@@ -142,11 +149,11 @@ msgstr ""
 "Pour un tournoi de cette taille, nous suggérons une donation de <strong>"
 "%(amount)s $</strong>."
 
-#: templates/footer.html:29
+#: templates/footer.html:27
 msgid "Learn more about donating."
 msgstr "En savoir plus à propos des donations."
 
-#: templates/footer.html:33
+#: templates/footer.html:31
 #, python-format
 msgid ""
 "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or "
@@ -155,11 +162,11 @@ msgstr ""
 "<a href=\"%(donations_link)s\">Donations à Tabbycat des individuels ou des "
 "organisations</a> sont très appréciées."
 
-#: templates/footer.html:41
+#: templates/footer.html:39
 msgid "Still timing debates with the stopwatch app?"
 msgstr "Vous chronométrez encore avec l'application chronomètre&nbsp;?"
 
-#: templates/footer.html:43
+#: templates/footer.html:41
 #, python-format
 msgid ""
 "Using an app designed for debate timekeeping makes speaking and adjudicating "
@@ -176,11 +183,11 @@ msgstr ""
 "debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
 "\">Debatekeeper (Android)</a>."
 
-#: templates/footer.html:52
+#: templates/footer.html:50
 msgid "Need ballots?"
 msgstr "Avez-vous besoin des bulletins&nbsp;?"
 
-#: templates/footer.html:54
+#: templates/footer.html:52
 msgid ""
 "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" target="
 "\"_blank\"> customise and print</a> great ballots from your browser."
@@ -189,29 +196,33 @@ msgstr ""
 "target=\"_blank\">personnaliser et imprimer</a> des bulletins beaux de votre "
 "navigateur."
 
-#: templates/footer.html:67 templates/footer.html:126
+#: templates/footer.html:65 templates/footer.html:109
 msgid "Change Language"
-msgstr ""
+msgstr "Changer la langue"
 
-#: templates/footer.html:73
+#: templates/footer.html:71
 msgid "GitHub"
 msgstr "GitHub"
 
-#: templates/footer.html:79
+#: templates/footer.html:77
 msgid "Documentation"
 msgstr "Documentation"
 
-#: templates/footer.html:85
+#: templates/footer.html:83
 msgid "Support"
 msgstr "Aide"
 
-#: templates/footer.html:91
+#: templates/footer.html:89
 msgid "Facebook"
 msgstr "Facebook"
 
-#: templates/footer.html:97
+#: templates/footer.html:95
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
+
+#: templates/footer.html:127
+msgid "Set New Language"
+msgstr ""
 
 #: templates/nav/admin_nav.html:23
 #, python-format
@@ -240,7 +251,7 @@ msgstr "Configuration"
 msgid "Import Data"
 msgstr "Importation des données"
 
-#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:151
+#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:153
 msgid "Participants"
 msgstr "Participants"
 
@@ -252,12 +263,12 @@ msgstr "URLs privées"
 msgid "Edit Database"
 msgstr "Modification de la base de données"
 
-#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:136
+#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:138
 msgid "Sides"
 msgstr "Côtés"
 
 #: templates/nav/admin_nav.html:98 templates/nav/admin_nav.html:151
-#: templates/nav/public_nav.html:126
+#: templates/nav/public_nav.html:128
 msgid "Divisions"
 msgstr "Divisions"
 
@@ -265,7 +276,7 @@ msgstr "Divisions"
 msgid "Feedback"
 msgstr "Commentaires"
 
-#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:141
+#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:143
 msgid "Standings"
 msgstr "Classement"
 
@@ -286,11 +297,11 @@ msgstr "Discours de résponse"
 msgid "%(category_name)s Speakers"
 msgstr "Orateurs %(category_name)s"
 
-#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:131
+#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:133
 msgid "Motions"
 msgstr "Motions"
 
-#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:146
+#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:148
 msgid "Diversity"
 msgstr "Aperçu de la diversité"
 
@@ -317,7 +328,7 @@ msgstr "Résultats"
 msgid "Check In Ballots"
 msgstr "Enregistrement de la présence des bulletins de vote"
 
-#: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:166
+#: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:168
 msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
@@ -350,31 +361,36 @@ msgstr "Tab des juges"
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: templates/nav/public_nav.html:56
+#: templates/nav/public_nav.html:48
+#, python-format
+msgid "Draw for %(round_name)s"
+msgstr ""
+
+#: templates/nav/public_nav.html:58
 msgid "Draws"
 msgstr "Tirages"
 
-#: templates/nav/public_nav.html:69
+#: templates/nav/public_nav.html:71
 msgid "View All"
 msgstr "Afficher tout"
 
-#: templates/nav/public_nav.html:82 templates/nav/round_panel.html:61
+#: templates/nav/public_nav.html:84 templates/nav/round_panel.html:61
 msgid "Results"
 msgstr "Résultats"
 
-#: templates/nav/public_nav.html:104
+#: templates/nav/public_nav.html:106
 msgid "Break"
 msgstr "Qualification"
 
-#: templates/nav/public_nav.html:116
+#: templates/nav/public_nav.html:118
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: templates/nav/public_nav.html:156
+#: templates/nav/public_nav.html:158
 msgid "Feedback Progress"
 msgstr "Progrès des commentaires"
 
-#: templates/nav/public_nav.html:161
+#: templates/nav/public_nav.html:163
 msgid "Enter Ballot"
 msgstr "Saisie d'un bulletin"
 
@@ -605,21 +621,21 @@ msgstr "Retour à la page de connexion"
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
-#: urls.py:88
+#: urls.py:94
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
 msgstr "Salut, %(username)s — vous venez de vous déconnecter !"
 
-#: urls.py:91
+#: urls.py:97
 msgid "Later! You were logged out!"
 msgstr "Salut ! Vous venez de vous déconnecter !"
 
-#: urls.py:98
+#: urls.py:104
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr "Salut, %(username)s — vous venez de vous connecter!"
 
-#: urls.py:101
+#: urls.py:107
 msgid "Welcome! You just logged in!"
 msgstr "Bienvenue ! Vous venez de vous connecter !"
 
@@ -648,3 +664,9 @@ msgstr ""
 "pas accéder les zones confidentielles, par examples les sections de la "
 "qualification et pour voir les commentaires. Les membres de l'équipe "
 "d'adjudications reçoivent en général ce status s'ils savent ce qu'ils font."
+
+#~ msgid "%(tournament)s runs on"
+#~ msgstr "%(tournament)s fonctionne sur"
+
+#~ msgid "This site runs on"
+#~ msgstr "Ce site fonctionne sur"

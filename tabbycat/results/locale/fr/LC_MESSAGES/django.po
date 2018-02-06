@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:56+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"PO-Revision-Date: 2018-02-06 09:33-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,8 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
-#: results/apps.py:7 results/views.py:100
+#: results/apps.py:7 results/templates/public_results_index.html:4
+#: results/templates/public_results_index.html:5 results/views.py:100
 msgid "Results"
 msgstr "Résultats"
 
@@ -118,28 +119,22 @@ msgstr ""
 "(%(max_margin).1f)."
 
 #: results/forms.py:760
-#, fuzzy, python-format
-#| msgid ""
-#| "The total scores for the teams are the same (i.e. a draw) for adjudicator "
-#| "%(adj)s (%(adj_ins)s)."
+#, python-format
 msgid ""
 "The total scores for the teams are the same (i.e. a draw) for adjudicator "
 "%(adj)s."
 msgstr ""
-"Les scores totals pour les deux équipes sont la même (c'est-a-dire, un nul) "
-"pour l'adjudicateur %(adj)s (%(adj_ins)s)."
+"Les scores totals pour les équipes sont la même (c'est-a-dire, un nul) pour "
+"le/la juge %(adj)s."
 
 #: results/forms.py:768
-#, fuzzy, python-format
-#| msgid ""
-#| "The margin (%(margin).1f) in the ballot of adjudicator %(adj)s "
-#| "(%(adj_ins)s) exceeds the maximum allowable margin (%(max_margin).1f)."
+#, python-format
 msgid ""
 "The margin (%(margin).1f) in the ballot of adjudicator %(adj)s exceeds the "
 "maximum allowable margin (%(max_margin).1f)."
 msgstr ""
-"La marge (%(margin).1f) dans le bulletin de l'adjudicateur %(adj)s "
-"(%(adj_ins)s) excède la marge maximale admissable (%(max_margin).1f)."
+"La marge (%(margin).1f) dans le bulletin du/de la juge %(adj)s excède la "
+"marge maximale admissable (%(max_margin).1f)."
 
 #: results/forms.py:800
 #, python-format
@@ -389,19 +384,21 @@ msgstr "Vérifier v%(version)d"
 #. Translators: This comes after a link to edit the ballot and before the line indicating its author. Please mind the leading and trailing spaces.
 #: results/tables.py:74
 msgid " discarded; "
-msgstr "rejeté; "
+msgstr " rejeté; "
 
 #: results/tables.py:79
 #, python-format
 msgid " added by %(user)s"
-msgstr "ajouté par %(user)s"
+msgstr " ajouté par %(user)s"
 
 #: results/tables.py:81
 #, python-format
 msgid " a public submission from %(ip_address)s"
-msgstr "une soumission publique de %(ip_address)s"
+msgstr " une soumission publique de %(ip_address)s"
 
-#: results/tables.py:89
+#: results/tables.py:89 results/templates/public_add_ballot.html:4
+#: results/templates/public_add_ballot_unreleased.html:4
+#: results/templates/public_add_ballot_unreleased.html:5
 msgid "Enter Ballot"
 msgstr "Saisir bulletin"
 
@@ -748,6 +745,11 @@ msgid ""
 "for your debates. If you bookmark this page and return here after each "
 "debate, it will always show the debate that you just adjudicated."
 msgstr ""
+"L'URL de cette page est personnalisé pour vous, %(adj_name)s. <strong>Ne le "
+"partagez avec personne :</strong> quiconque sait cet URL peut soumettre les "
+"résultats de vos débats. Si vous ajoutez cette page à vos favoris et y "
+"retournez après chaque débat, cette page vous présentera toujours le débat "
+"que vous viendrez de juger."
 
 #: results/templates/includes/public_enter_results_info.html:12
 #, python-format
@@ -756,6 +758,32 @@ msgid ""
 "this page and return here after each debate, it will always show the debate "
 "that you just adjudicated."
 msgstr ""
+"L'URL de cette page est personnalisé pour vous, %(adj_name)s. Si vous "
+"ajoutez cette page à vos favoris et y retournez après chaque débat, cette "
+"page vous présentera toujours le débat que vous viendrez de juger."
+
+#: results/templates/public_add_ballot.html:5
+msgid "Who are you?"
+msgstr "Qui êtes-vous ?"
+
+#: results/templates/public_add_ballot.html:6
+msgid "(click your name on this list)"
+msgstr "(cliquez sur votre nom sur cette liste)"
+
+#: results/templates/public_add_ballot.html:15
+msgid "Adjudicator"
+msgstr "Juge"
+
+#: results/templates/public_add_ballot.html:28
+#, python-format
+msgid "Add result from %(adj_name)s"
+msgstr "Ajouter résultat de %(adj_name)s"
+
+#: results/templates/public_add_ballot_unreleased.html:8
+#, python-format
+msgid "The draw and/or motions for %(round_name)s have yet to be released."
+msgstr ""
+"Le tirage et/ou les motions de %(round_name)s ne sont pas encore publiées."
 
 #: results/templates/public_ballot_set.html:5
 #: results/templates/public_ballot_set.html:8
@@ -803,6 +831,37 @@ msgstr[1] ""
 "Cette formulaire a déjà été soumise <strong>%(nsubmissions)s</strong> fois. "
 "Veuillez contacter un officiel de tab après avoir soumis votre formulaire."
 
+#: results/templates/public_enter_results_error.html:4
+#: results/templates/public_enter_results_error.html:5
+msgid "No Result to Enter"
+msgstr ""
+
+#: results/templates/public_results_base.html:5
+#: results/templates/public_results_base.html:8
+#: results/templates/public_results_index.html:14
+#, python-format
+msgid "Results for %(round_name)s"
+msgstr "Résultats de %(round_name)s"
+
+#: results/templates/public_results_for_round.html:7
+msgid "View by Team"
+msgstr "Voir par équipe"
+
+#: results/templates/public_results_for_round.html:10
+msgid "View by Debate"
+msgstr "Voir par débat"
+
+#: results/templates/public_results_not_available.html:7
+#, fuzzy, python-format
+#| msgid "Return to Results for %(round_name)s"
+msgid "The results for %(round_name)s aren't yet available"
+msgstr "Retour aux résultats de %(round_name)s"
+
+#: results/templates/public_results_silent.html:7
+#, python-format
+msgid "%(round_name)s is a silent round"
+msgstr ""
+
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
 #: results/utils.py:80
 #, python-format
@@ -822,24 +881,14 @@ msgid "vs %(loser)s (%(loser_side)s)"
 msgstr "%(team)s (%(side)s)"
 
 #: results/utils.py:118
-#, fuzzy, python-format
-#| msgid ""
-#| "Advancing: %(advancing_list)s<br>\n"
-#| "Eliminated: %(eliminated_list)s"
+#, python-format
 msgid "Advancing: %(advancing_list)s<br>\n"
-msgstr ""
-"Avançants: %(advancing_list)s<br>\n"
-"Éliminés: %(eliminated_list)s"
+msgstr "Avançants: %(advancing_list)s<br>\n"
 
 #: results/utils.py:122
-#, fuzzy, python-format
-#| msgid ""
-#| "Advancing: %(advancing_list)s<br>\n"
-#| "Eliminated: %(eliminated_list)s"
+#, python-format
 msgid "Eliminated: %(eliminated_list)s"
-msgstr ""
-"Avançants: %(advancing_list)s<br>\n"
-"Éliminés: %(eliminated_list)s"
+msgstr "Éliminés: %(eliminated_list)s"
 
 #: results/utils.py:132
 #, python-format
@@ -944,7 +993,7 @@ msgstr "WO"
 msgid "Reply"
 msgstr "Sommaire"
 
-#: results/views.py:64
+#: results/views.py:64 results/views.py:65
 msgid "Status"
 msgstr "Statut"
 
@@ -1050,3 +1099,8 @@ msgstr ""
 #, python-format
 msgid "The ballot for venue %(venue_name)s has already been checked in."
 msgstr ""
+
+#, fuzzy
+#~| msgid "Return to Results for %(round_name)s"
+#~ msgid "Results for %(round.name)s"
+#~ msgstr "Retour aux résultats de %(round_name)s"

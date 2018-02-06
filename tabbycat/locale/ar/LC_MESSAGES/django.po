@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:59+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,7 +86,7 @@ msgid "Save and Add More"
 msgstr ""
 
 #: templates/components/form-errors.html:4
-msgid "Whoops! There was an error with one or more fields"
+msgid "Whoops! There was an error with one or more fields."
 msgstr ""
 
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
@@ -110,42 +110,44 @@ msgstr ""
 
 #: templates/footer.html:13
 #, python-format
-msgid "%(tournament)s runs on"
+msgid ""
+"%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
 #: templates/footer.html:15
-msgid "This site runs on"
+#, python-format
+msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
-#: templates/footer.html:21
+#: templates/footer.html:19
 msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
 
-#: templates/footer.html:25
+#: templates/footer.html:23
 #, python-format
 msgid ""
 "For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
 "strong>."
 msgstr ""
 
-#: templates/footer.html:29
+#: templates/footer.html:27
 msgid "Learn more about donating."
 msgstr ""
 
-#: templates/footer.html:33
+#: templates/footer.html:31
 #, python-format
 msgid ""
 "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or "
 "organisations</a> are much appreciated."
 msgstr ""
 
-#: templates/footer.html:41
+#: templates/footer.html:39
 msgid "Still timing debates with the stopwatch app?"
 msgstr ""
 
-#: templates/footer.html:43
+#: templates/footer.html:41
 #, python-format
 msgid ""
 "Using an app designed for debate timekeeping makes speaking and adjudicating "
@@ -156,38 +158,42 @@ msgid ""
 "\">Debatekeeper</a> (Android)."
 msgstr ""
 
-#: templates/footer.html:52
+#: templates/footer.html:50
 msgid "Need ballots?"
 msgstr ""
 
-#: templates/footer.html:54
+#: templates/footer.html:52
 msgid ""
 "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" target="
 "\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 
-#: templates/footer.html:67 templates/footer.html:126
+#: templates/footer.html:65 templates/footer.html:109
 msgid "Change Language"
 msgstr ""
 
-#: templates/footer.html:73
+#: templates/footer.html:71
 msgid "GitHub"
 msgstr ""
 
-#: templates/footer.html:79
+#: templates/footer.html:77
 msgid "Documentation"
 msgstr ""
 
-#: templates/footer.html:85
+#: templates/footer.html:83
 msgid "Support"
 msgstr ""
 
-#: templates/footer.html:91
+#: templates/footer.html:89
 msgid "Facebook"
 msgstr ""
 
-#: templates/footer.html:97
+#: templates/footer.html:95
 msgid "Set Up A Copy"
+msgstr ""
+
+#: templates/footer.html:127
+msgid "Set New Language"
 msgstr ""
 
 #: templates/nav/admin_nav.html:23
@@ -217,7 +223,7 @@ msgstr ""
 msgid "Import Data"
 msgstr ""
 
-#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:151
+#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:153
 msgid "Participants"
 msgstr ""
 
@@ -229,12 +235,12 @@ msgstr ""
 msgid "Edit Database"
 msgstr ""
 
-#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:136
+#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:138
 msgid "Sides"
 msgstr ""
 
 #: templates/nav/admin_nav.html:98 templates/nav/admin_nav.html:151
-#: templates/nav/public_nav.html:126
+#: templates/nav/public_nav.html:128
 msgid "Divisions"
 msgstr ""
 
@@ -242,7 +248,7 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:141
+#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:143
 msgid "Standings"
 msgstr ""
 
@@ -263,11 +269,11 @@ msgstr ""
 msgid "%(category_name)s Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:131
+#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:133
 msgid "Motions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:146
+#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:148
 msgid "Diversity"
 msgstr ""
 
@@ -292,7 +298,7 @@ msgstr ""
 msgid "Check In Ballots"
 msgstr ""
 
-#: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:166
+#: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:168
 msgid "Enter Feedback"
 msgstr ""
 
@@ -325,31 +331,36 @@ msgstr ""
 msgid "Motions Tab"
 msgstr ""
 
-#: templates/nav/public_nav.html:56
+#: templates/nav/public_nav.html:48
+#, python-format
+msgid "Draw for %(round_name)s"
+msgstr ""
+
+#: templates/nav/public_nav.html:58
 msgid "Draws"
 msgstr ""
 
-#: templates/nav/public_nav.html:69
+#: templates/nav/public_nav.html:71
 msgid "View All"
 msgstr ""
 
-#: templates/nav/public_nav.html:82 templates/nav/round_panel.html:61
+#: templates/nav/public_nav.html:84 templates/nav/round_panel.html:61
 msgid "Results"
 msgstr ""
 
-#: templates/nav/public_nav.html:104
+#: templates/nav/public_nav.html:106
 msgid "Break"
 msgstr ""
 
-#: templates/nav/public_nav.html:116
+#: templates/nav/public_nav.html:118
 msgid "Adjudicators"
 msgstr ""
 
-#: templates/nav/public_nav.html:156
+#: templates/nav/public_nav.html:158
 msgid "Feedback Progress"
 msgstr ""
 
-#: templates/nav/public_nav.html:161
+#: templates/nav/public_nav.html:163
 msgid "Enter Ballot"
 msgstr ""
 
@@ -557,21 +568,21 @@ msgstr ""
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:88
+#: urls.py:94
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
 msgstr ""
 
-#: urls.py:91
+#: urls.py:97
 msgid "Later! You were logged out!"
 msgstr ""
 
-#: urls.py:98
+#: urls.py:104
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr ""
 
-#: urls.py:101
+#: urls.py:107
 msgid "Welcome! You just logged in!"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:56+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "tournament"
 msgstr "tournoi"
 
-#: breakqual/models.py:10
+#: breakqual/models.py:10 breakqual/views.py:199
 msgid "name"
 msgstr "nom"
 
@@ -142,7 +142,7 @@ msgstr "catégorie de break"
 msgid "break categories"
 msgstr "catégories de break"
 
-#: breakqual/models.py:73
+#: breakqual/models.py:73 breakqual/views.py:224
 msgid "team"
 msgstr "équipe"
 

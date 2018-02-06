@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:56+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -303,6 +303,7 @@ msgid "emoji"
 msgstr "emoji"
 
 #: participants/models.py:215 participants/models.py:368
+#: participants/views.py:307
 msgid "team"
 msgstr "équipe"
 
@@ -776,6 +777,10 @@ msgstr ""
 #: participants/views.py:103 participants/views.py:176
 #, python-format
 msgid "Record for %(name)s"
+msgstr ""
+
+#: participants/views.py:152 participants/views.py:219
+msgid "Round"
 msgstr ""
 
 #: participants/views.py:219

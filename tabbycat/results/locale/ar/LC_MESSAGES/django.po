@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:59+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: results/apps.py:7 results/views.py:100
+#: results/apps.py:7 results/templates/public_results_index.html:4
+#: results/templates/public_results_index.html:5 results/views.py:100
 msgid "Results"
 msgstr ""
 
@@ -371,7 +372,9 @@ msgstr ""
 msgid " a public submission from %(ip_address)s"
 msgstr ""
 
-#: results/tables.py:89
+#: results/tables.py:89 results/templates/public_add_ballot.html:4
+#: results/templates/public_add_ballot_unreleased.html:4
+#: results/templates/public_add_ballot_unreleased.html:5
 msgid "Enter Ballot"
 msgstr ""
 
@@ -716,6 +719,28 @@ msgid ""
 "that you just adjudicated."
 msgstr ""
 
+#: results/templates/public_add_ballot.html:5
+msgid "Who are you?"
+msgstr ""
+
+#: results/templates/public_add_ballot.html:6
+msgid "(click your name on this list)"
+msgstr ""
+
+#: results/templates/public_add_ballot.html:15
+msgid "Adjudicator"
+msgstr ""
+
+#: results/templates/public_add_ballot.html:28
+#, python-format
+msgid "Add result from %(adj_name)s"
+msgstr ""
+
+#: results/templates/public_add_ballot_unreleased.html:8
+#, python-format
+msgid "The draw and/or motions for %(round_name)s have yet to be released."
+msgstr ""
+
 #: results/templates/public_ballot_set.html:5
 #: results/templates/public_ballot_set.html:8
 #, python-format
@@ -755,6 +780,36 @@ msgid_plural ""
 "times. Please contact a tab official after submitting your form."
 msgstr[0] ""
 msgstr[1] ""
+
+#: results/templates/public_enter_results_error.html:4
+#: results/templates/public_enter_results_error.html:5
+msgid "No Result to Enter"
+msgstr ""
+
+#: results/templates/public_results_base.html:5
+#: results/templates/public_results_base.html:8
+#: results/templates/public_results_index.html:14
+#, python-format
+msgid "Results for %(round_name)s"
+msgstr ""
+
+#: results/templates/public_results_for_round.html:7
+msgid "View by Team"
+msgstr ""
+
+#: results/templates/public_results_for_round.html:10
+msgid "View by Debate"
+msgstr ""
+
+#: results/templates/public_results_not_available.html:7
+#, python-format
+msgid "The results for %(round_name)s aren't yet available"
+msgstr ""
+
+#: results/templates/public_results_silent.html:7
+#, python-format
+msgid "%(round_name)s is a silent round"
+msgstr ""
 
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
 #: results/utils.py:80
@@ -876,7 +931,7 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: results/views.py:64
+#: results/views.py:64 results/views.py:65
 msgid "Status"
 msgstr ""
 

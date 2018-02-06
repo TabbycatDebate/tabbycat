@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:59+1100\n"
+"POT-Creation-Date: 2018-02-06 12:33-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -598,61 +598,62 @@ msgid "Motions Tab"
 msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:79
-#: tournaments/templates/public_tournament_index.html:108
+#: tournaments/templates/public_tournament_index.html:111
 msgid "Sides"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:90
-msgid "Results"
-msgstr "Resultados"
-
-#: tournaments/templates/public_tournament_index.html:96
-msgid "Divisions"
-msgstr "Divisiones"
-
-#: tournaments/templates/public_tournament_index.html:102
-msgid "Motions"
-msgstr "Mociones"
-
-#: tournaments/templates/public_tournament_index.html:114
-msgid "Team Standings"
-msgstr ""
-
-#: tournaments/templates/public_tournament_index.html:121
-#, python-format
-msgid "%(category_name)s Break"
-msgstr "Break de %(category_name)s"
-
-#: tournaments/templates/public_tournament_index.html:130
-msgid "Breaking Adjudicators"
-msgstr "Jueces que pasan el break"
-
-#: tournaments/templates/public_tournament_index.html:136
-msgid "Diversity Overview"
-msgstr ""
-
-#: tournaments/templates/public_tournament_index.html:142
-msgid "Participants"
-msgstr ""
-
-#: tournaments/templates/public_tournament_index.html:148
-msgid "Feedback Progress"
-msgstr ""
-
-#: tournaments/templates/public_tournament_index.html:154
-msgid "Enter Ballot"
-msgstr ""
-
-#: tournaments/templates/public_tournament_index.html:160
-msgid "Enter Feedback"
-msgstr ""
-
-#: tournaments/templates/public_tournament_index.html:168
+#: tournaments/templates/public_tournament_index.html:86
+#: tournaments/templates/public_tournament_index.html:171
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:176
+#: tournaments/templates/public_tournament_index.html:93
+msgid "Results"
+msgstr "Resultados"
+
+#: tournaments/templates/public_tournament_index.html:99
+msgid "Divisions"
+msgstr "Divisiones"
+
+#: tournaments/templates/public_tournament_index.html:105
+msgid "Motions"
+msgstr "Mociones"
+
+#: tournaments/templates/public_tournament_index.html:117
+msgid "Team Standings"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:124
+#, python-format
+msgid "%(category_name)s Break"
+msgstr "Break de %(category_name)s"
+
+#: tournaments/templates/public_tournament_index.html:133
+msgid "Breaking Adjudicators"
+msgstr "Jueces que pasan el break"
+
+#: tournaments/templates/public_tournament_index.html:139
+msgid "Diversity Overview"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:145
+msgid "Participants"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:151
+msgid "Feedback Progress"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:157
+msgid "Enter Ballot"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:163
+msgid "Enter Feedback"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:179
 msgid "View All Draws"
 msgstr ""
 

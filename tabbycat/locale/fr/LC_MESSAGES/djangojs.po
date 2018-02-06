@@ -3,24 +3,23 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2018-02-06 09:34-0800\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: templates/tables/TablesContrainer.vue:8
 msgid "Find in Table"
-msgstr "البحث في الجدول"
+msgstr "Chercher dans la table"
 
 #: participants/templates/DiversityContrainer.vue:6
 msgid "Speaker Demographics"
@@ -33,7 +32,6 @@ msgstr ""
 #: participants/templates/DiversityContrainer.vue:18
 msgid "No Speaker Categories Information"
 msgstr ""
-
 
 #: participants/templates/DiversityContrainer.vue:33
 msgid "Speaker Results"

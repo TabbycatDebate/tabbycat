@@ -9,13 +9,11 @@
       <div class="col-lg-6 col-md-5">
         <h6 class="d-inline-block">
           <img src="{% static 'logo.svg' %}" width="28" height="24" style="margin-top: -14px;">
-          {% if tournament %}
-            {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
+          {% if tournament and tabbycat_codename %}
+            {% blocktrans trimmed %}{{ tournament }} runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed %}This site runs on {% endblocktrans %}
+            {% blocktrans trimmed %}This site runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
           {% endif %}
-          Tabbycat
-          {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
         </h6>
         <p class="text-muted">
           {% blocktrans trimmed %}

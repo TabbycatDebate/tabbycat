@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
-{% block head-title %}No Result to Enter{% endblock %}
-{% block page-title %}No Result to Enter{% endblock %}
+{% block head-title %}{% trans "No Result to Enter" %}{% endblock %}
+{% block page-title %}{% trans "No Result to Enter" %}{% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block content %}

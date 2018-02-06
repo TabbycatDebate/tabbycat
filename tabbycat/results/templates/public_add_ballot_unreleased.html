@@ -1,10 +1,11 @@
 {% extends "base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load debate_tags static i18n %}
 
-{% block head-title %}Enter Ballot{% endblock %}
-{% block page-title %}Enter Ballot{% endblock %}
+{% block head-title %}{% trans "Enter Ballot" %}{% endblock %}
+{% block page-title %}{% trans "Enter Ballot" %}{% endblock %}
 
 {% block content %}
-  <p class="lead">The draw and/or motions for {{ round.name }} have yet to be released.</p>
+  <p class="lead">{% blocktrans trimmed with round_name=round.name %}
+    The draw and/or motions for {{ round_name }} have yet to be released.
+  {% endblocktrans %}</p>
 {% endblock %}
