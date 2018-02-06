@@ -106,6 +106,18 @@ import DiversityContainer from  '../../participants/templates/DiversityContainer
 vueComponents['DiversityContainer'] = DiversityContainer
 
 //------------------------------------------------------------------------------
+// Vue Transations Setup
+//------------------------------------------------------------------------------
+
+var vueTranslationMixin = {
+  methods: {
+    gettext: function(message) {
+      return window.gettext(message)
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
 // Expose data for admin/public.js to import
 //------------------------------------------------------------------------------
 
@@ -113,4 +125,5 @@ vueComponents['DiversityContainer'] = DiversityContainer
 export default {
   baseComponents: vueComponents,
   baseData: vueData,
+  vueTranslationMixin: vueTranslationMixin
 }
