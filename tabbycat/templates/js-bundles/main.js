@@ -109,10 +109,33 @@ vueComponents['DiversityContainer'] = DiversityContainer
 // Vue Transations Setup
 //------------------------------------------------------------------------------
 
+// Mixin that maps methods in Vue to what django's equivalents; passing args
 var vueTranslationMixin = {
   methods: {
-    gettext: function(message) {
-      return window.gettext(message)
+    gettext: function() {
+      return window.gettext.apply(this, arguments)
+    },
+    ngettext: function() {
+      return window.ngettext.apply(this, arguments)
+    },
+    interpolate: function() {
+      return window.interpolate.apply(this, arguments)
+    },
+    get_format: function() {
+      return window.get_format.apply(this, arguments)
+
+    },
+    gettext_noop: function() {
+      return window.gettext_noop.apply(this, arguments)
+    },
+    pgettext: function() {
+      return window.pgettext.apply(this, arguments)
+    },
+    npgettext: function() {
+      return window.npgettext.apply(this, arguments)
+    },
+    pluralidx: function() {
+      return window.pluralidx.apply(this, arguments)
     }
   }
 }
