@@ -20,7 +20,7 @@ from .utils import send_randomised_url_emails
 logger = logging.getLogger(__name__)
 
 
-class RandomisedUrlsMixin(TournamentMixin):
+class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
@@ -62,7 +62,7 @@ class RandomisedUrlsMixin(TournamentMixin):
         return speakers
 
 
-class RandomisedUrlsView(RandomisedUrlsMixin, AdministratorMixin, VueTableTemplateView):
+class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
     template_name = 'private_urls.html'
     tables_orientation = 'columns'
@@ -227,7 +227,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
         return [speaker_table, adjudicator_table]
 
 
-class BaseConfirmEmailRandomisedUrlsView(AdministratorMixin, RandomisedUrlsMixin, PostOnlyRedirectView):
+class BaseConfirmEmailRandomisedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'privateurls-list'
 
