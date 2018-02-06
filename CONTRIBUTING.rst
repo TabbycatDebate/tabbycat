@@ -90,6 +90,25 @@ Project Structure
     - All other folders are the Django apps that contain specific views, models, and templates for functions such as ``draw`` generation/display, or recording ``results``. Each has sub-folders for tests and templates.
 - In the root directory there are a number of files defining our python and javascript dependencies, core configuration files, and key documents like the ``README``
 
+Translations
+============
+
+The backend's translation files can be updated from the ``tabbycat`` directory using one of the supporting language codes (see settings.py)::
+
+    $ django-admin makemessages -l es
+
+These can then be compiled using:
+
+    $ django-admin compilemessages -l es
+
+As it stands Heroku needs the .mo files pre-compiled so these are committed to git. Note that `en` language files should not be compiled.
+
+The frontend's translation files are manually updated in ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``. These can then compiled to javascript bundles using:
+
+    $ python manage.py compilejsi18n
+
+These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of a gulp task.
+
 Release Checklist
 =================
 

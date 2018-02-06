@@ -1,4 +1,4 @@
-{% load static i18n debate_tags %}<!DOCTYPE html>
+{% load static statici18n i18n debate_tags %}<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -148,7 +148,7 @@
   {% endblock %}
 
   {% block js %}
-  <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+  <script src="{% statici18n LANGUAGE_CODE %}"></script>
   {% if user.is_authenticated %}
   <script>
     window.buildData = { // Pass to Raven

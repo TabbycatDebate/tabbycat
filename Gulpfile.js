@@ -114,6 +114,26 @@ gulp.task('styles-compile', function() {
     .pipe(isProduction ? gutil.noop() : livereload());
 });
 
+// Tasks
+gulp.task('jsi18n-compile', function() {
+  // AR
+  gulp.src(['tabbycat/locale/jsi18n/ar/djangojs.js'])
+    .pipe(gulp.dest(outputDir + '/jsi18n/ar/'))
+    .pipe(isProduction ? uglify() : gutil.noop())
+  // FR
+  gulp.src(['tabbycat/locale/jsi18n/fr/djangojs.js'])
+    .pipe(gulp.dest(outputDir + '/jsi18n/fr/'))
+    .pipe(isProduction ? uglify() : gutil.noop())
+  // EN
+  gulp.src(['tabbycat/locale/jsi18n/en/djangojs.js'])
+    .pipe(gulp.dest(outputDir + '/jsi18n/en/'))
+    .pipe(isProduction ? uglify() : gutil.noop())
+  // ES
+  gulp.src(['tabbycat/locale/jsi18n/es/djangojs.js'])
+    .pipe(gulp.dest(outputDir + '/jsi18n/es/'))
+    .pipe(isProduction ? uglify() : gutil.noop())
+});
+
 gulp.task("js-compile", function() {
   // Vendors
   gulp.src([
@@ -159,13 +179,13 @@ gulp.task("html-reload", function() {
 
 // Runs with --production if debug is false or there's no local settings
 gulp.task('build', [
-  'fonts-compile', 'styles-compile', 'js-compile', 'js-browserify'
+  'fonts-compile', 'styles-compile', 'jsi18n-compile', 'js-compile', 'js-browserify'
  ]);
 
 // Runs when debug is True and when runserver/collectstatic is called
 // Watch the CSS/JS for changes and copy over to static AND static files when done
 gulp.task('watch', [
-    'fonts-compile', 'styles-compile', 'js-compile', 'js-watchify'
+    'fonts-compile', 'styles-compile', 'jsi18n-compile', 'js-compile', 'js-watchify'
   ], function() {
     livereload.listen();
     gulp.watch('tabbycat/templates/scss/**/*.scss', ['styles-compile']);

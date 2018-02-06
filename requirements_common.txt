@@ -13,6 +13,7 @@ django-formtools==2.1                   # Form wizards
 django-ipware==2.0.1                    # IP Address logging
 django-jet==1.0.7                       # Admin Backend
 django-gfklookupwidget==1.0.6           # Replaces object_id field with a search link
+django-statici18n==1.6.1                # Compile translations files as static file
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 raven==6.5.0                            # Client for Sentry error tracking

@@ -44,6 +44,8 @@ LANGUAGES = [
     ('fr', _('French'))
 ]
 
+STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
+
 # ==============================================================================
 # Django-specific Module
 # ==============================================================================
@@ -100,6 +102,7 @@ INSTALLED_APPS = (
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
     'formtools',
+    'statici18n' # Compile js translations as static file; saving requests
 )
 
 ROOT_URLCONF = 'urls'
@@ -125,6 +128,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # for Jet
                 'utils.context_processors.debate_context',  # for tournament config vars
                 'utils.context_processors.get_menu_highlight',  # for navigation highlights
+                'django.template.context_processors.i18n'  # for serving static language translations
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
