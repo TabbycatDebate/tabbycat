@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:59+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -78,6 +78,14 @@ msgstr "Hojas de resultados"
 #, python-format
 msgid "Printable Scoresheets for %(round_name)s"
 msgstr "Hojas de resultados imprimibles para %(round_name)s"
+
+#: printing/views.py:87
+msgid "Overall Score"
+msgstr ""
+
+#: printing/views.py:108
+msgid "Unaffiliated"
+msgstr ""
 
 #: printing/views.py:121 printing/views.py:125
 msgid "Team"

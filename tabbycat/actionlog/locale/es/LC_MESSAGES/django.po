@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:59+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, "
 "2017\n"
@@ -240,6 +240,6 @@ msgid "All log entries require at least one of a user and an IP address."
 msgstr ""
 "Todos los registros requieren al menos uno de un usuario y una dirección IP."
 
-#: actionlog/views.py:18
+#: actionlog/models.py:179
 msgid "anonymous"
 msgstr "anónimo"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-06 12:59+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "Language: es\n"
@@ -16,6 +16,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: settings.py:41
+msgid "Arabic"
+msgstr ""
+
+#: settings.py:42
+msgid "English"
+msgstr ""
+
+#: settings.py:43
+msgid "Spanish"
+msgstr ""
+
+#: settings.py:44
+msgid "French"
+msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -31,21 +47,21 @@ msgstr ""
 msgid "This style of info card announces general <a href=\"\">information</a>."
 msgstr ""
 
-#: templates/admin/style_guide.html:158
+#: templates/admin/style_guide.html:160
 msgctxt "page title"
 msgid "Form Title"
 msgstr ""
 
-#: templates/admin/style_guide.html:159
+#: templates/admin/style_guide.html:161
 msgid "Sub Title Title"
 msgstr ""
 
-#: templates/admin/style_guide.html:195 templates/registration/login.html:61
+#: templates/admin/style_guide.html:197 templates/registration/login.html:61
 msgctxt "button"
 msgid "Log In"
 msgstr ""
 
-#: templates/admin/style_guide.html:196 templates/registration/login.html:62
+#: templates/admin/style_guide.html:198 templates/registration/login.html:62
 msgctxt "button"
 msgid "I forgot my password"
 msgstr ""
@@ -69,6 +85,25 @@ msgstr ""
 
 #: templates/components/form-errors.html:4
 msgid "Whoops! There was an error with one or more fields"
+msgstr ""
+
+#: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
+#: templates/errors/public_403.html:4 templates/errors/public_403.html:6
+msgid "Permission Denied (403)"
+msgstr ""
+
+#: templates/errors/assistant_403.html:13
+#, python-format
+msgid ""
+"This assistant page isn't enabled for this tournament. <a href=\"%(url)s"
+"\">Back to the assistant home page.</a>"
+msgstr ""
+
+#: templates/errors/public_403.html:13
+#, python-format
+msgid ""
+"Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s"
+"\">Back to the tournament home page.</a>"
 msgstr ""
 
 #: templates/footer.html:13
@@ -129,112 +164,138 @@ msgid ""
 "\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 
-#: templates/footer.html:67
-msgid "GitHub"
+#: templates/footer.html:67 templates/footer.html:126
+msgid "Change Language"
 msgstr ""
 
 #: templates/footer.html:73
-msgid "Documentation"
+msgid "GitHub"
 msgstr ""
 
 #: templates/footer.html:79
-msgid "Support"
+msgid "Documentation"
 msgstr ""
 
 #: templates/footer.html:85
-msgid "Facebook"
+msgid "Support"
 msgstr ""
 
 #: templates/footer.html:91
+msgid "Facebook"
+msgstr ""
+
+#: templates/footer.html:97
 msgid "Set Up A Copy"
 msgstr ""
 
-#: templates/nav/admin_nav.html:42 templates/nav/admin_nav.html:110
-#: templates/nav/admin_nav.html:141 templates/nav/admin_nav.html:191
+#: templates/nav/admin_nav.html:23
+#, python-format
+msgid "%(t)s (admin)"
+msgstr ""
+
+#: templates/nav/admin_nav.html:26
+#, python-format
+msgid "%(t)s (assistant)"
+msgstr ""
+
+#: templates/nav/admin_nav.html:45 templates/nav/admin_nav.html:113
+#: templates/nav/admin_nav.html:144 templates/nav/admin_nav.html:194
 msgid "Overview"
 msgstr ""
 
-#: templates/nav/admin_nav.html:50
+#: templates/nav/admin_nav.html:53
 msgid "Setup"
 msgstr ""
 
-#: templates/nav/admin_nav.html:57
+#: templates/nav/admin_nav.html:60
 msgid "Configuration"
 msgstr ""
 
-#: templates/nav/admin_nav.html:61
+#: templates/nav/admin_nav.html:64
 msgid "Import Data"
 msgstr ""
 
-#: templates/nav/admin_nav.html:65 templates/nav/public_nav.html:151
+#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:151
 msgid "Participants"
 msgstr ""
 
-#: templates/nav/admin_nav.html:70
+#: templates/nav/admin_nav.html:73
 msgid "Private URLs"
 msgstr ""
 
-#: templates/nav/admin_nav.html:73
+#: templates/nav/admin_nav.html:76
 msgid "Edit Database"
 msgstr ""
 
-#: templates/nav/admin_nav.html:83 templates/nav/public_nav.html:136
+#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:136
 msgid "Sides"
 msgstr ""
 
-#: templates/nav/admin_nav.html:95 templates/nav/admin_nav.html:148
+#: templates/nav/admin_nav.html:98 templates/nav/admin_nav.html:151
 #: templates/nav/public_nav.html:126
 msgid "Divisions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:104
+#: templates/nav/admin_nav.html:107
 msgid "Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:134 templates/nav/public_nav.html:141
+#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:141
 msgid "Standings"
 msgstr ""
 
-#: templates/nav/admin_nav.html:144
+#: templates/nav/admin_nav.html:147
 msgid "Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:152
+#: templates/nav/admin_nav.html:155
 msgid "Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:157
+#: templates/nav/admin_nav.html:160
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:162
+#: templates/nav/admin_nav.html:165
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:168 templates/nav/public_nav.html:131
+#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:131
 msgid "Motions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:146
+#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:146
 msgid "Diversity"
 msgstr ""
 
-#: templates/nav/admin_nav.html:184
+#: templates/nav/admin_nav.html:187
 msgid "Breaks"
 msgstr ""
 
-#: templates/nav/admin_nav.html:195
+#: templates/nav/admin_nav.html:198
 #, python-format
 msgid "%(category_name)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:214
+#: templates/nav/admin_nav.html:217 templates/nav/top_nav_base.html:92
 msgid "Log Out"
+msgstr ""
+
+#: templates/nav/assistant_nav.html:5
+msgid "Enter Results"
 msgstr ""
 
 #: templates/nav/assistant_nav.html:11
 msgid "Check In Ballots"
+msgstr ""
+
+#: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:166
+msgid "Enter Feedback"
+msgstr ""
+
+#: templates/nav/assistant_nav.html:24
+msgid "Display/Print Draw"
 msgstr ""
 
 #: templates/nav/public_nav.html:6
@@ -290,10 +351,6 @@ msgstr ""
 msgid "Enter Ballot"
 msgstr ""
 
-#: templates/nav/public_nav.html:166
-msgid "Enter Feedback"
-msgstr ""
-
 #: templates/nav/round_panel.html:28
 msgid "Check-Ins"
 msgstr ""
@@ -304,6 +361,29 @@ msgstr ""
 
 #: templates/nav/round_panel.html:51
 msgid "Display"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:22
+#, python-format
+msgid "Administrator area for <strong>%(tournament)s</strong>"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:31
+#, python-format
+msgid "Assistant area for <strong>%(tournament)s</strong>"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:40
+#, python-format
+msgid "Public area for <strong>%(tournament)s</strong>"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:52
+msgid "Site Home"
+msgstr ""
+
+#: templates/nav/top_nav_base.html:96
+msgid "Login"
 msgstr ""
 
 #: templates/registration/login.html:4
@@ -475,21 +555,21 @@ msgstr ""
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:84
+#: urls.py:88
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
 msgstr ""
 
-#: urls.py:87
+#: urls.py:91
 msgid "Later! You were logged out!"
 msgstr ""
 
-#: urls.py:94
+#: urls.py:98
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr ""
 
-#: urls.py:97
+#: urls.py:101
 msgid "Welcome! You just logged in!"
 msgstr ""
 
