@@ -16,7 +16,7 @@ django-statici18n==1.6.1                # Compile translations files as static f
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 raven==6.5.0                            # Client for Sentry error tracking
-selenium==3.8.1                         # Functional testing (in here for CI tests)
+selenium==3.9.0                         # Functional testing (in here for CI tests)
 
 # Database
 psycopg2==2.7.3.2                       # For Django to talk to postgres
