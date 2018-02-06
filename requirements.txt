@@ -14,4 +14,4 @@ asgi_redis==1.4.3                       # Adds redis as a channel layer
 newrelic==2.102.0.85; not used generally                                # Requires heroku add-on; not used generally
 
 # Emailing
-sendgrid
+sendgrid==5.3.0
