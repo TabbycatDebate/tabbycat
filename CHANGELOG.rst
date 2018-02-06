@@ -2,14 +2,6 @@
 Change Log
 ==========
 
-2.0.5
------
-*Release date: 7 February 2018*
-
-- Improved the printing of scoresheets and feedback forms on Chrome.
-- Other minor fixes
-
-
 2.1.0 (Japanese Bobtail)
 ------------------------
 *Release date: TBA*
@@ -29,6 +21,15 @@ Change Log
     - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis'
     - On Heroku: Sites should now always run at least 1 web dyno *as well as* 1 worker dyno. When scaling, generally you would scale *worker* dynos to handle a greater request throughput and scale *web* dynos to handle a greater request concurrency
     - Locally: You should recreate your local_settings.py from the example file
+
+
+2.0.5
+-----
+*Release date: 7 February 2018*
+
+- Improved the printing of scoresheets and feedback forms on Chrome.
+- Other minor fixes
+
 
 2.0.4
 -----
