@@ -36,7 +36,7 @@
     "Delete": "Eliminar",
     "February": "Febrero",
     "Filter": "Filtro",
-    "Find in Table": "Encontrar en la tabla",
+    "Find in Table": "\u0627\u0644\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062c\u062f\u0648\u0644",
     "General": "General",
     "Hide": "Esconder",
     "January": "Enero",

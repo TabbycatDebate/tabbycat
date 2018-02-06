@@ -34,10 +34,6 @@ msgstr ""
 msgid "No Speaker Categories Information"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:26
-msgid "No Regions Information"
-msgstr ""
-
 #: participants/templates/DiversityContrainer.vue:33
 msgid "Speaker Results"
 msgstr ""
@@ -50,10 +46,6 @@ msgstr ""
 msgid "speaker scores total"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:44
-msgid "No Gender Information"
-msgstr ""
-
 #: participants/templates/DiversityContrainer.vue:49
 msgid "No Region Information"
 msgstr ""
@@ -62,16 +54,8 @@ msgstr ""
 msgid "Adjudicator Demographics"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:61
-msgid "No Gender Information"
-msgstr ""
-
 #: participants/templates/DiversityContrainer.vue:68
 msgid "No Position Information"
-msgstr ""
-
-#: participants/templates/DiversityContrainer.vue:76
-msgid "No Region Information"
 msgstr ""
 
 #: participants/templates/DiversityContrainer.vue:83
