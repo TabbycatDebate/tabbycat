@@ -11,7 +11,7 @@ django-redis==4.8.0                     # Adds redis as caching backend
 asgi_redis==1.4.3                       # Adds redis as a channel layer
 
 # Monitoring
-newrelic                                # Requires heroku add-on; not used generally
+newrelic==2.102.0.85; not used generally                                # Requires heroku add-on; not used generally
 
 # Emailing
-sendgrid
+sendgrid==5.3.0

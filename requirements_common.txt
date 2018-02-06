@@ -17,7 +17,7 @@ django-statici18n==1.6.1                # Compile translations files as static f
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 raven==6.5.0                            # Client for Sentry error tracking
-selenium==3.8.1                         # Functional testing (in here for CI tests)
+selenium==3.9.0                         # Functional testing (in here for CI tests)
 
 # Database
 
@@ -30,8 +30,8 @@ whitenoise==3.3.1                       # Static file serving
 
 # Channels
 
-daphne==1.4.2                           # Waitress replacement; handles HTTP + Websockets
-channels==1.1.8                         # Channels Layers
+daphne==2.0.2; handles HTTP + Websockets                           # Waitress replacement; handles HTTP + Websockets
+channels==2.0.1                         # Channels Layers
 
 # Misc
 
