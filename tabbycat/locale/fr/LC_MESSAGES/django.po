@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
-"PO-Revision-Date: 2018-02-06 09:09-0800\n"
+"POT-Creation-Date: 2018-02-08 02:21-0500\n"
+"PO-Revision-Date: 2018-02-07 23:23-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -93,15 +93,13 @@ msgid "Save and Add More"
 msgstr "Enregistrer et ajouter davantage"
 
 #: templates/components/form-errors.html:4
-#, fuzzy
-#| msgid "Whoops! There was an error with one or more fields"
 msgid "Whoops! There was an error with one or more fields."
 msgstr "Oups ! Il y a une erreur dans un ou plusieurs champs."
 
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
 #: templates/errors/public_403.html:4 templates/errors/public_403.html:6
 msgid "Permission Denied (403)"
-msgstr ""
+msgstr "Accès refusé (403)"
 
 #: templates/errors/assistant_403.html:13
 #, python-format
@@ -109,6 +107,8 @@ msgid ""
 "This assistant page isn't enabled for this tournament. <a href=\"%(url)s"
 "\">Back to the assistant home page.</a>"
 msgstr ""
+"Cette page n'est pas activée pour les assistants de ce tournoi. <a href="
+"\"%(url)s\">Retourner à la page d'accueil pour les assistants.</a>"
 
 #: templates/errors/public_403.html:13
 #, python-format
@@ -116,6 +116,8 @@ msgid ""
 "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s"
 "\">Back to the tournament home page.</a>"
 msgstr ""
+"Oups ! Cette page n'est pas activée pour ce tournoi. <a href=\"%(url)s"
+"\">Retourner à la page d'accueil du tournoi.</a>"
 
 #: templates/footer.html:13
 #, python-format
@@ -221,18 +223,18 @@ msgid "Set Up A Copy"
 msgstr "Installer une copie"
 
 #: templates/footer.html:127
-msgid "Set New Language"
-msgstr ""
+msgid "Use this language"
+msgstr "Utiliser cette langue"
 
 #: templates/nav/admin_nav.html:23
 #, python-format
 msgid "%(t)s (admin)"
-msgstr ""
+msgstr "%(t)s (admin)"
 
 #: templates/nav/admin_nav.html:26
 #, python-format
 msgid "%(t)s (assistant)"
-msgstr ""
+msgstr "%(t)s (assistants)"
 
 #: templates/nav/admin_nav.html:45 templates/nav/admin_nav.html:113
 #: templates/nav/admin_nav.html:144 templates/nav/admin_nav.html:194
@@ -319,10 +321,8 @@ msgid "Log Out"
 msgstr "Deconnexion"
 
 #: templates/nav/assistant_nav.html:5
-#, fuzzy
-#| msgid "Results"
 msgid "Enter Results"
-msgstr "Résultats"
+msgstr "Saisie des résultats"
 
 #: templates/nav/assistant_nav.html:11
 msgid "Check In Ballots"
@@ -334,7 +334,7 @@ msgstr "Saisie d'une commentaire"
 
 #: templates/nav/assistant_nav.html:24
 msgid "Display/Print Draw"
-msgstr ""
+msgstr "Affichage et imprimerie du tirage"
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
@@ -347,7 +347,7 @@ msgstr "Tab des orateurs"
 #: templates/nav/public_nav.html:19
 #, python-format
 msgid "%(category_name)s Tab"
-msgstr ""
+msgstr "Tab des orateurs %(category_name)s"
 
 #: templates/nav/public_nav.html:29
 msgid "Replies Tab"
@@ -364,7 +364,7 @@ msgstr "Tab des motions"
 #: templates/nav/public_nav.html:48
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr ""
+msgstr "Tirage de %(round_name)s"
 
 #: templates/nav/public_nav.html:58
 msgid "Draws"
@@ -409,26 +409,23 @@ msgstr "Affichage"
 #: templates/nav/top_nav_base.html:22
 #, python-format
 msgid "Administrator area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Zone administrative de <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html:31
 #, python-format
 msgid "Assistant area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Zone pour les assistants de <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html:40
 #, python-format
 msgid "Public area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Zone publique de <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html:52
 msgid "Site Home"
-msgstr ""
+msgstr "Accueil du site"
 
 #: templates/nav/top_nav_base.html:96
-#, fuzzy
-#| msgctxt "page title"
-#| msgid "Login"
 msgid "Login"
 msgstr "Connexion"
 
