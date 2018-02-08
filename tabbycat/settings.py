@@ -77,6 +77,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'channels', # For Websockets / real-time connections (above whitenoise)
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
+    'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.messages') \
@@ -184,30 +185,30 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
-        # 'sentry': {
-        #     'level': 'WARNING',
-        #     'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        # },
+        'sentry': {
+            'level': 'WARNING',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
-        # 'django.request': {
-        #     'handlers': ['sentry'],
-        #     'level': 'ERROR',
-        # },
-        # 'raven': {
-        #     'level': 'INFO',
-        #     'handlers': ['console'],
-        #     'propagate': False,
-        # },
-        # 'sentry.errors': {
-        #     'level': 'INFO',
-        #     'handlers': ['console'],
-        #     'propagate': False,
-        # },
+        'django.request': {
+            'handlers': ['sentry'],
+            'level': 'ERROR',
+        },
+        'raven': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
     },
     'formatters': {
         'standard': {
@@ -216,11 +217,11 @@ LOGGING = {
     },
 }
 
-# for app in TABBYCAT_APPS:
-#     LOGGING['loggers'][app] = {
-#         'handlers': ['console', 'sentry'],
-#         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-#     }
+for app in TABBYCAT_APPS:
+    LOGGING['loggers'][app] = {
+        'handlers': ['console', 'sentry'],
+        'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+    }
 
 # ==============================================================================
 # Sentry
@@ -228,16 +229,16 @@ LOGGING = {
 
 DISABLE_SENTRY = True
 
-# if 'DATABASE_URL' in os.environ and not DEBUG:
-#     DISABLE_SENTRY = False  # Only log JS errors in production on heroku
+if 'DATABASE_URL' in os.environ and not DEBUG:
+    DISABLE_SENTRY = False  # Only log JS errors in production on heroku
 
-#     RAVEN_CONFIG = {
-#         'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
-#         'release': TABBYCAT_VERSION,
-#     }
+    RAVEN_CONFIG = {
+        'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
+        'release': TABBYCAT_VERSION,
+    }
 
-#     # Custom implementation makes the user ID the e-mail address, rather than the primary key
-#     SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
+    # Custom implementation makes the user ID the e-mail address, rather than the primary key
+    SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
 
 # ==============================================================================
 # Messages

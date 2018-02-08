@@ -14,7 +14,8 @@ django-ipware==2.0.1                    # IP Address logging
 django-jet==1.0.7                       # Admin Backend
 django-gfklookupwidget==1.0.6           # Replaces object_id field with a search link
 munkres==1.0.12                         # Algorithm for adjudicator allocation
-dj-cmd==1.0                             # Provides the dj command alias
+dj-cmd==0.5                             # Provides the dj command alias
+raven==6.5.0                            # Client for Sentry error tracking
 selenium==3.8.1                         # Functional testing (in here for CI tests)
 
 # Database
@@ -32,8 +33,8 @@ django_redis==4.8.0                     # Use redis for cache (on heroku; local 
 
 # Channels
 
-channels==2.0.0                         # Channels
-channels_redis==2.0.1                   # Channels Layer
+channels==2.0.2                         # Channels
+channels_redis==2.0.2                   # Channels Layer
 
 # Misc
 
