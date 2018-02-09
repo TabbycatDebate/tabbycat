@@ -5,7 +5,7 @@
   },
   "description": "Debating tabulation software for two-team parliamentary formats",
   "engines": {
-    "node": "6.11.5"
+    "node": "8.9.4"
   },
   "main": "index.js",
   "dependencies": {
