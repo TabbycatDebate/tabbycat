@@ -19,7 +19,7 @@ raven==6.5.0                            # Client for Sentry error tracking
 selenium==3.9.0                         # Functional testing (in here for CI tests)
 
 # Database
-psycopg2==2.7.3.2                       # For Django to talk to postgres
+psycopg2==2.7.4                       # For Django to talk to postgres
 sqlparse==0.2.4                         # Parsing SQL statements
 
 # Pipeline
