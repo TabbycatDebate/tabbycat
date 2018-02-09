@@ -377,6 +377,14 @@ class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddF
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'public'
 
+    def get_from_adj_link(self, team):
+        return reverse_tournament('adjfeedback-public-add-from-adjudicator-pk',
+                self.get_tournament(), kwargs={'source_id': team.id})
+
+    def get_from_team_link(self, team):
+        return reverse_tournament('adjfeedback-public-add-from-team-pk',
+                self.get_tournament(), kwargs={'source_id': team.id})
+
 
 class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormView):
     """Base class for views that allow users to add feedback."""

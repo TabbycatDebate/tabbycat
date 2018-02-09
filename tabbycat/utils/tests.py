@@ -2,6 +2,7 @@ from contextlib import contextmanager
 import json
 import logging
 
+from django.core.cache import cache
 from django.urls import reverse
 from django.test import Client, modify_settings, override_settings, tag, TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -68,6 +69,7 @@ class TournamentTestsMixin:
     @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
     @modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
     def get_response(self):
+        cache.clear() # overriding the CACHE setting itself isn't enough
         return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
@@ -79,13 +81,19 @@ class ConditionalTournamentTestsMixin(TournamentTestsMixin):
     subclass, because it provides tests which would be run on the base class."""
 
     view_toggle = None
+    view_toggle_on = None  # Otherwise will assign True as the set state
+    view_toggle_off = None  # Otherwise False as the config's unset state
 
     def validate_response(self, response):
         raise NotImplementedError
 
     def test_set_preference(self):
         # Check a page IS resolving when the preference is set
-        self.t.preferences[self.view_toggle] = True
+        if self.view_toggle_on is None:
+            self.t.preferences[self.view_toggle] = True
+        else:
+            self.t.preferences[self.view_toggle] = self.view_toggle_on
+
         response = self.get_response()
 
         # 200 OK should be issued if setting is not enabled
@@ -94,7 +102,10 @@ class ConditionalTournamentTestsMixin(TournamentTestsMixin):
 
     def test_unset_preference(self):
         # Check a page is not resolving when the preference is not set
-        self.t.preferences[self.view_toggle] = False
+        if self.view_toggle_off is None:
+            self.t.preferences[self.view_toggle] = False
+        else:
+            self.t.preferences[self.view_toggle] = self.view_toggle_off
 
         with self.assertLogs('tournaments.mixins', logging.WARNING):
             response = self.get_response()
