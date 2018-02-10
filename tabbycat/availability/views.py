@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Min
+from django.db.models import Min, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
@@ -145,6 +145,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 
 class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
     template_name = "base_availability.html"
+    share_key = False # The relevant pref to include tournament-less objects
 
     def get_page_title(self):
         # Can't construct with concatenation, need entire strings for translation
@@ -163,7 +164,12 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        return self.model.objects.filter(tournament=self.get_tournament())
+        # If Adjudicator/Venue sharing is enabled; ensure they are in the table
+        if self.share_key and self.get_tournament().pref(self.share_key):
+            filter_t = Q(tournament=self.get_tournament()) | Q(tournament=None)
+            return self.model.objects.filter(filter_t)
+        else:
+            return super().get_queryset().prefetch_related('speaker_set')
 
     def get_table(self):
         round = self.get_round()
@@ -208,6 +214,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     model = Adjudicator
     sort_key = 'name'
     update_view = 'availability-update-adjudicators'
+    share_key = 'share_adjs'
 
     @staticmethod
     def add_description_columns(table, adjudicators):
@@ -219,6 +226,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
     model = Venue
     sort_key = 'venue'
     update_view = 'availability-update-venues'
+    share_key = 'share_venues'
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('venuecategory_set')
