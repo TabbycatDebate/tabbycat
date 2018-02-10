@@ -6,6 +6,7 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 
 {% block page-subnav-sections %}
+  <!-- DISABLED UNTIL WORKING
   <form method="POST" action="{% tournamenturl 'create_division_allocation' %}">
     {% csrf_token %}
     <button class="btn btn-primary " type="submit">
@@ -18,8 +19,9 @@
       Auto-Allocate Bye Teams
     </button>
   </form>
+   -->
   <div class="btn btn-inactive text-muted">Preference:</div>
-  <div class="btn-group btn-group-sm">
+  <div class="btn-group">
     <div class="btn btn-success" disabled="disabled">1/2</div>
     <div class="btn btn-primary" disabled="disabled">3/4</div>
     <div class="btn btn-warning" disabled="disabled">5+</div>
