@@ -17,9 +17,10 @@ munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 raven==6.5.0                            # Client for Sentry error tracking
 selenium==3.9.0                         # Functional testing (in here for CI tests)
+numpy==1.14.0                           # Used in BP motion calculations
 
 # Database
-psycopg2==2.7.4                       # For Django to talk to postgres
+psycopg2==2.7.4                         # For Django to talk to postgres
 sqlparse==0.2.4                         # Parsing SQL statements
 
 # Pipeline

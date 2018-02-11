@@ -16,13 +16,18 @@
           {% endif %}
         {% endfor %}
       </div>
-      <h6 class="mt-2 text-center text-muted">
-        {% blocktrans trimmed count ndebates=motion.ndebates %}
-          average points per position from {{ ndebates }} debate
-        {% plural %}
-          average points per position from {{ ndebates }} debates
-        {% endblocktrans %}
-      </h6>
+      <div class="row mt-2 text-muted">
+        <div class="col h6 text-left">
+          {% blocktrans trimmed count ndebates=motion.ndebates %}
+            average points per position from {{ ndebates }} debate
+          {% plural %}
+            average points per position from {{ ndebates }} debates
+          {% endblocktrans %}
+        </div>
+        <div class="col-auto h6 text-right" data-toggle="tooltip" title="{{ motion.χ2_info }}">
+          {{ motion.χ2_label }}
+        </div>
+      </div>
     </div>
   </div>
 

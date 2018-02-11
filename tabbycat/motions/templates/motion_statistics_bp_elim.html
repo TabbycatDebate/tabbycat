@@ -37,7 +37,7 @@
           <div class="progress-bar progress-bar-advancing"
                style="width: {{ advancing_pc }}%" data-toggle="tooltip"
                title="{{ advancing_tooltip_text }}">
-            {% if advancing_pc >= 25 %}
+            {% if advancing_pc >= 28 %}
               {% trans "advanced" %}
             {% else %}
               {% trans "adv." context "abbreviation for 'advanced', used when not enough space" %}
@@ -46,7 +46,7 @@
           <div class="progress-bar progress-bar-eliminated"
                style="width: {{ eliminated_pc }}%" data-toggle="tooltip"
                title="{{ eliminated_tooltip_text }}">
-            {% if eliminated_pc >= 25 %}
+            {% if eliminated_pc >= 28 %}
               {% trans "eliminated" %}
             {% else %}
               {% trans "elim." context "abbreviation for 'eliminated', used when not enough space" %}

@@ -1,4 +1,7 @@
 import itertools
+import numpy
+
+from decimal import Decimal, getcontext
 
 from django.db.models import Avg, Count, Q
 from django.utils.translation import ugettext as _
@@ -146,6 +149,10 @@ class MotionBPStatsCalculator:
         self._collate_prelim_motion_annotations()
         self._prefetch_elim_motions()
         self._collate_elim_motion_annotations()
+
+        for motion in self.prelim_motions:
+            motion.χ2_label, motion.χ2_info = self._annotate_χsquared(motion.ndebates, motion.averages)
+
         self.motions = itertools.chain(self.prelim_motions, self.elim_motions)
 
     def _prefetch_prelim_motions(self):
@@ -245,3 +252,154 @@ class MotionBPStatsCalculator:
                 eliminated = getattr(motion, '%s_eliminated' % side)
                 eliminated_pc = eliminated / motion.ndebates * 100 if motion.ndebates > 0 else 0
                 motion.counts_by_side.append((side, advancing, advancing_pc, eliminated, eliminated_pc))
+
+    def _annotate_χsquared(self, ndebates, averages):
+        """ motion_chi() adapted from code provided by Sella Nevo """
+
+        averages_list = [a[1] for a in averages] # Eg [ 2, 1, 1, 0]
+        T, P = self.motion_chi(ndebates, averages_list)
+
+        for critical, level_str, evidence_str in self.CRITICAL_VALUES:
+            if T > critical:
+                label = _("imbalanced at %(level)s level") % {'level': level_str}
+                info = _("χ² statistic is %(chisq).3f, providing %(evidence)s to "
+                    "suggest that this motion was imbalanced — at a %(level)s level of "
+                    "significance.") % {'chisq': T, 'level': level_str, 'evidence': evidence_str}
+                break
+        else:
+            label = _("probably balanced")
+            info = _("χ² statistic is %(chisq).3f, providing insufficient evidence "
+                "to suggest that this motion was imbalanced at any level of significance.") % {'chisq': T}
+
+        return label, info
+
+    def motion_chi(self, N, averages):
+        # Calculates the chi-squared score of a motion.
+        # N is the number of rooms
+        # averages is the average number of points OG, OO, CG and CO received
+
+        assert len(averages) == 4
+        EPSILON = 0.0000001
+        assert abs(sum(averages) - 6) < EPSILON
+
+        # Remove CO (Since can be inferred from previous teams)
+        # And convert to array
+        averages = averages[:3]
+
+        X = numpy.matrix(averages)
+        # As opposed to Shengwu's proposition, I create a generic covariance matrix
+        # for placings. Though this might not actually be the covariance (For this
+        # round or in general), I think that it is more accurate than estimating it
+        # according to the round (Which might give a singular covariance matrix or
+        # just have too large of a statistical error)
+        V = self.create_general_places_covariance()
+        # (Also, for some reason linalg.inv sometimes gives wrong results, but it
+        # works for this matrix)
+        V_inv = numpy.linalg.inv(V)
+
+        mu = numpy.matrix([1.5, 1.5, 1.5])
+
+        z = float(N * (X-mu) * V_inv * numpy.transpose(X - mu))
+        DEG_OF_FREEDOM = 3
+        pvalue = self.chisqr(DEG_OF_FREEDOM, z)
+        # print('Bits:', math.log(pvalue, 0.5))
+        return z, pvalue
+
+    @staticmethod
+    def create_general_places_covariance():
+        possible_results = [numpy.matrix(x[:3]) for x in itertools.permutations(range(4))]
+        mu = numpy.matrix([1.5,1.5,1.5])
+
+        V = sum(numpy.transpose(list(possible_results)[i]) * possible_results[i] - numpy.transpose(mu) * mu for i in range(len(possible_results)))
+        V = V / float(len(possible_results))
+        return V
+
+    @staticmethod
+    def chisqr(dof, cv):
+
+        def igf(s, z):
+            if z < Decimal('0'):
+                return Decimal('0')
+
+            sc = Decimal('1') / s
+            sc *= getcontext().power(z,s)
+            sc *= Decimal(-z).exp()
+
+            sum_v = Decimal('1')
+            nom = Decimal('1')
+            denom = Decimal('1')
+
+            for i in range(0,200):
+                nom *= z
+                s+=Decimal('1')
+                denom *= s
+
+                sum_v += (nom / denom)
+
+            return sum_v * sc
+
+        def mygamma(z):
+            """
+               The constant SQRT2PI is defined as sqrt(2.0 * PI);
+               For speed the constant is already defined in decimal
+               form.  However, if you wish to ensure that you achieve
+               maximum precision on your own machine, you can calculate
+               it yourself using (sqrt(atan(1.0) * 8.0))
+           """
+            #const long double SQRT2PI = sqrtl(atanl(1.0) * 8.0);
+            SQRT2PI = Decimal('2.5066282746310005024157652848110452530069867406099383')
+            A = Decimal('15')
+
+            f = Decimal('1')
+            sum_v = SQRT2PI
+
+            sc = getcontext().power(z+A,z+Decimal('0.5'))
+
+            sc *= Decimal(Decimal('-1') * (z+A)).exp()
+
+            sc /= z
+
+            for k in range(1,15):
+                z+=Decimal('1')
+                ck = getcontext().power(A - Decimal(k) , Decimal(k) - Decimal('0.5'))
+                ck *= Decimal(A - Decimal(k)).exp()
+                ck /= f
+
+                sum_v += (ck / z)
+
+                f *= (Decimal('-1') * k)
+
+            return sum_v * sc
+
+        # Convert to decimal
+        dof = Decimal(dof)
+        cv = Decimal(cv)
+
+        if cv < Decimal('0') or dof < Decimal('1'):
+            return Decimal('0')
+
+        k = dof * Decimal('0.5')
+        x = cv * Decimal('0.5')
+
+        if dof == Decimal('2'):
+            print(Decimal(Decimal('-1') * x).exp())
+            return
+
+        pvalue = igf(k,x)
+
+        if pvalue.is_nan() or pvalue.is_infinite() or pvalue <= 1e-8:
+            return 1e-14
+
+        pvalue /= mygamma(k)
+
+        return float(Decimal('1') - pvalue)
+
+    CRITICAL_VALUES = [
+        # (maximum value, level of significance as percentage string, evidence strength)
+        (10.826, '0.1%', ugettext_lazy("extremely strong evidence")),
+        (6.635,    '1%', ugettext_lazy("strong evidence")),
+        (5.412,    '2%', ugettext_lazy("moderate evidence")),
+        (3.841,    '5%', ugettext_lazy("weak evidence")),
+        (2.706,   '10%', ugettext_lazy("very weak evidence")),
+        (0.455,   '50%', ugettext_lazy("extremely weak evidence")),
+    ]
