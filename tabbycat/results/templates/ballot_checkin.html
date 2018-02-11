@@ -75,17 +75,25 @@
       $('#success').hide();
 
       $('#venue').keyup(function(e) {
-        var val = $('#venue').val(); // The selected text
-        var venueID = $('#venues_list').children('option[value="'+val+'"]').attr('data-value');
-        lookUpBallot(e, venueID)
+        lookUpBallot(e, getVenueID('#venues_list'));
       });
 
       $('.polyfilling').keyup(function(e) {
-        // Dealing with Safari's polyfill and lack of data-list support
-        var val = $('#venue').val(); // The selected text
-        var venueID = $('.polyfilling').children('option[value="'+val+'"]').attr('data-value');
-        lookUpBallot(e, venueID)
+        lookUpBallot(e, getVenueID('.polyfilling'));
       });
+
+      function getVenueID(datalistIdentifier) {
+        var val = escape($('#venue').val()); // The selected text
+        var venueID = null;
+        // To deal with matching strings with potentially unescaped characters (i.e. /)
+        // Search through the list and match to escaped values
+        $(datalistIdentifier).children().each(function(index) {
+          if (escape($(this).attr('value')) === val) {
+            venueID = $(this).attr('data-value');
+          }
+        });
+        return venueID;
+      }
 
       function lookUpBallot(e, venueID) {
 
