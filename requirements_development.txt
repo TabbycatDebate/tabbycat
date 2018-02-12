@@ -4,7 +4,7 @@
 # Development Dependencies
 six==1.11                               # Python 2/3 compatibility library
 flake8==3.5.0                           # For testing/linting
-flake8-import-order==0.16.0             # Flake plugin for import order
+flake8-import-order==0.17             # Flake plugin for import order
 flake8-quotes==0.13.0                   # Flake plugin for quotes
 pep8-naming==0.5.0                      # Flake plugin for naming conventions
 chromedriver_installer==0.0.6           # Functional testing Chrome interface
