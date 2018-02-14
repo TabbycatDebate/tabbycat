@@ -166,10 +166,10 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
     def get_queryset(self):
         # If Adjudicator/Venue sharing is enabled; ensure they are in the table
         if self.share_key and self.get_tournament().pref(self.share_key):
-            filter_t = Q(tournament=self.get_tournament()) | Q(tournament=None)
-            return self.model.objects.filter(filter_t)
+            return self.model.objects.filter(
+                    Q(tournament=self.get_tournament()) | Q(tournament=None))
         else:
-            return super().get_queryset().prefetch_related('speaker_set')
+            return self.model.objects.filter(tournament=self.get_tournament())
 
     def get_table(self):
         round = self.get_round()
