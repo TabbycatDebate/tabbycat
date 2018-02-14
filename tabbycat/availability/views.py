@@ -145,7 +145,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
 
 class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView):
     template_name = "base_availability.html"
-    share_key = False # The relevant pref to include tournament-less objects
+    share_key = None  # The relevant pref to include tournament-less objects
 
     def get_page_title(self):
         # Can't construct with concatenation, need entire strings for translation
@@ -164,12 +164,10 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        # If Adjudicator/Venue sharing is enabled; ensure they are in the table
-        if self.share_key and self.get_tournament().pref(self.share_key):
-            return self.model.objects.filter(
-                    Q(tournament=self.get_tournament()) | Q(tournament=None))
-        else:
-            return self.model.objects.filter(tournament=self.get_tournament())
+        q = Q(tournament=self.get_tournament())
+        if self.share_key is not None and self.get_tournament().pref(self.share_key):
+            q |= Q(tournament__isnull=True)  # include shared objects, if relevant
+        return self.model.objects.filter(q)
 
     def get_table(self):
         round = self.get_round()
