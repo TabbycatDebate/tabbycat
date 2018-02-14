@@ -139,7 +139,11 @@ class TeamAdmin(admin.ModelAdmin):
 class AdjudicatorConflictInline(admin.TabularInline):
     model = AdjudicatorConflict
     extra = 1
-    verbose_name_plural = "Adjudicator team conflicts"
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'team':
+            kwargs["queryset"] = Team.objects.select_related('tournament')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
