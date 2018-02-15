@@ -2,20 +2,20 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: venues/apps.py:7
@@ -43,7 +43,8 @@ msgid "tournament"
 msgstr "torneo"
 
 #: venues/models.py:17
-msgid "Venues not assigned to any tournament can be shared between tournaments"
+msgid ""
+"Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
 "Las salas que no estén asignadas a ningún torneo pueden ser compartidas "
 "entre torneos"
@@ -70,9 +71,9 @@ msgstr "Mostrar como sufijo"
 
 #: venues/models.py:75
 msgid ""
-"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
-"\". This name is shown when the category is prefixed or suffixed to a venue "
-"name in the draw, e.g., \"Purple – G05\"."
+"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab "
+"room\". This name is shown when the category is prefixed or suffixed to a "
+"venue name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 "Nombre de la categoría, ej: \"Morado\", \"Acceso sin escaleras\", \"Cerca a "
 "tabulación\". Este nombre se muestra cuando la categoría se muestra como "
@@ -90,8 +91,8 @@ msgid ""
 msgstr ""
 "Descripción, como el predicado de una oración, ej: \"tiene acceso sin "
 "escaleras\", \"está cerca de la sala de anuncios\". La descripción le sigue "
-"a \"Esta sala\" cuando se muestra en tooltips, ej: \"Esta sala está cerca de "
-"la sala de anuncios\"."
+"a \"Esta sala\" cuando se muestra en tooltips, ej: \"Esta sala está cerca de"
+" la sala de anuncios\"."
 
 #: venues/models.py:88
 msgid "display in venue name"
@@ -152,24 +153,12 @@ msgid "Save Venue Categories"
 msgstr "Guardar las categorías de sala"
 
 #: venues/templates/venue_categories_edit.html:11
-#, fuzzy
-#| msgid ""
-#| "Venue categories allow you to <ul> <li>group venues together into \"zones"
-#| "\" to display in the draw and make navigation easier for participants, "
-#| "and/or</li> <li>specify constraints on venue allocation that require "
-#| "teams, adjudicators or institutions to be put in a venue in a particular "
-#| "category.</li> </ul>"
 msgid ""
 "Venue categories allow you to group venues together into \"zones\" to "
 "display in the draw and make navigation easier for participants, and/or "
 "specify constraints on venue allocation that require teams, adjudicators or "
 "institutions to be put in a venue in a particular category."
 msgstr ""
-"Las categorías de la sala te permiten<ul> <li>agrupar las salas en \"zonas\" "
-"para mostrar en el cuadro y hacer la navegación más fácil para los "
-"participantes, y/o</li> <li>especificar limitaciones de la sala que "
-"requieran los equipos, jueces o instituciones para que sean puestos en una "
-"sala dentro de esa categoría en particular.</li> </ul>"
 
 #: venues/templates/venue_categories_edit.html:16
 #, python-format
@@ -177,8 +166,8 @@ msgid ""
 "If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
 "class=\"alert-link\">Edit Database</a> area."
 msgstr ""
-"Si quieres eliminar alguna categoría de sala, utiliza el area de <a href="
-"\"%(edit_db_url)s\" class=\"alert-link\">Editar Base de Datos</a>."
+"Si quieres eliminar alguna categoría de sala, utiliza el area de <a "
+"href=\"%(edit_db_url)s\" class=\"alert-link\">Editar Base de Datos</a>."
 
 #: venues/templates/venue_constraints_edit.html:4
 #: venues/templates/venue_constraints_edit.html:5
@@ -187,15 +176,15 @@ msgstr "Limitaciones de sala"
 
 #: venues/templates/venue_constraints_edit.html:9
 msgid ""
-"Venue constraints tell the venue allocator to try to keep the specified team "
-"or adjudicator, or all teams (but not adjudicators) from the specified "
+"Venue constraints tell the venue allocator to try to keep the specified team"
+" or adjudicator, or all teams (but not adjudicators) from the specified "
 "institution, in a venue in the given category. The \"priority\" field "
 "resolves conflicting constraints: the higher priority takes precedence. You "
-"can also use the priority field to specify \"lower-preference\" constraints, "
-"which are taken if a higher-priority constraint couldn't be met."
+"can also use the priority field to specify \"lower-preference\" constraints,"
+" which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
-"Las limitaciones de sala le dicen al asignador de salas que intente mantener "
-"al equipo o juez en específico, o a todos los equipos (pero no jueces) de "
+"Las limitaciones de sala le dicen al asignador de salas que intente mantener"
+" al equipo o juez en específico, o a todos los equipos (pero no jueces) de "
 "una institución en específico, en una sala dentro de la categoría "
 "determinada. El campo de \"prioridad\" resuelve los conflictos en las "
 "limitaciones al momento de asignar: se prioridad las salas con mayor  "

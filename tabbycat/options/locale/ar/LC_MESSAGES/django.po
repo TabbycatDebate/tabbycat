@@ -1,23 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, options module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: options/dynamic_preferences_registry.py:16
 #: options/templates/preferences_index.html:15
@@ -293,8 +291,7 @@ msgid "Choose from teams who have been pulled up the fewest times so far"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:240
-msgid ""
-"In BP, how pullups are distributed. Only \"Anywhere\" is WUDC-compliant."
+msgid "In BP, how pullups are distributed. Only \"Anywhere\" is WUDC-compliant."
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:241
@@ -443,7 +440,8 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:369
 msgid ""
 "Used to inform available choices in the feedback forms for teams (both "
-"online and printed) and feedback progress; this option is used by, e.g., UADC"
+"online and printed) and feedback progress; this option is used by, e.g., "
+"UADC"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:373
@@ -521,8 +519,8 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:445
 msgid ""
-"Whether panels submit a ballot each or a single ballot for the debate. Note: "
-"BP must use one per debate."
+"Whether panels submit a ballot each or a single ballot for the debate. Note:"
+" BP must use one per debate."
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:446
@@ -637,8 +635,8 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:570
 msgid ""
-"Only show scores for the top X teams in the public tab (set to 0 to show all "
-"teams)."
+"Only show scores for the top X teams in the public tab (set to 0 to show all"
+" teams)."
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:571
@@ -726,8 +724,8 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:658
 msgid ""
-"Enables public display of every adjudicator's ballot. Intended for use after "
-"the tournament."
+"Enables public display of every adjudicator's ballot. Intended for use after"
+" the tournament."
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:659
@@ -773,7 +771,8 @@ msgid "Use publicly accessible form"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:695
-msgid "Whether participants can submit feedback themselves, and how they do so"
+msgid ""
+"Whether participants can submit feedback themselves, and how they do so"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:696
@@ -820,8 +819,8 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:745
 msgid ""
 "Whether assistants can access pages that can reveal matchups and motions "
-"ahead of public release (these pages are useful for displaying draws/motions "
-"to the public and for printing ballots)."
+"ahead of public release (these pages are useful for displaying draws/motions"
+" to the public and for printing ballots)."
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:748
@@ -1034,8 +1033,8 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:955
 msgid ""
-"Show an introduction screen when loading the allocation interface (this will "
-"automatically uncheck whenever the screen is shown)"
+"Show an introduction screen when loading the allocation interface (this will"
+" automatically uncheck whenever the screen is shown)"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:956
@@ -1247,10 +1246,11 @@ msgstr ""
 
 #: options/templates/preferences_index.html:90
 msgid ""
-"These modify common settings for basic rules; double check our <a href="
-"\"https://tabbycat.readthedocs.io/\" target=\"_blank\">documentation</a> to "
-"ensure they are correct for your tournament. Each links will display what "
-"settings it changes before applying them."
+"These modify common settings for basic rules; double check our <a "
+"href=\"https://tabbycat.readthedocs.io/\" "
+"target=\"_blank\">documentation</a> to ensure they are correct for your "
+"tournament. Each links will display what settings it changes before applying"
+" them."
 msgstr ""
 
 #: options/templates/preferences_index.html:101

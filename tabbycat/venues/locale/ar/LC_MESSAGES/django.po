@@ -1,23 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, venues module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: venues/apps.py:7
 msgid "Venues"
@@ -42,7 +40,8 @@ msgid "tournament"
 msgstr ""
 
 #: venues/models.py:17
-msgid "Venues not assigned to any tournament can be shared between tournaments"
+msgid ""
+"Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
 
 #: venues/models.py:24
@@ -67,9 +66,9 @@ msgstr ""
 
 #: venues/models.py:75
 msgid ""
-"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
-"\". This name is shown when the category is prefixed or suffixed to a venue "
-"name in the draw, e.g., \"Purple – G05\"."
+"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab "
+"room\". This name is shown when the category is prefixed or suffixed to a "
+"venue name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 
 #: venues/models.py:79
@@ -160,12 +159,12 @@ msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:9
 msgid ""
-"Venue constraints tell the venue allocator to try to keep the specified team "
-"or adjudicator, or all teams (but not adjudicators) from the specified "
+"Venue constraints tell the venue allocator to try to keep the specified team"
+" or adjudicator, or all teams (but not adjudicators) from the specified "
 "institution, in a venue in the given category. The \"priority\" field "
 "resolves conflicting constraints: the higher priority takes precedence. You "
-"can also use the priority field to specify \"lower-preference\" constraints, "
-"which are taken if a higher-priority constraint couldn't be met."
+"can also use the priority field to specify \"lower-preference\" constraints,"
+" which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:41
@@ -205,6 +204,10 @@ msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: venues/views.py:106
 msgid "No changes were made to the venue categories."
@@ -216,3 +219,7 @@ msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""

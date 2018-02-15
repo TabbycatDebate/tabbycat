@@ -1,23 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, availability module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: availability/apps.py:7
 msgid "Availability"
@@ -33,7 +32,7 @@ msgstr ""
 
 #: availability/models.py:20
 msgid "round"
-msgstr ""
+msgstr "جولة"
 
 #: availability/models.py:24
 msgid "round availability"
@@ -58,7 +57,7 @@ msgstr ""
 
 #: availability/templates/availability_index.html:40
 msgid "View Draw"
-msgstr ""
+msgstr "عرض القرعة "
 
 #: availability/templates/availability_index.html:48
 #: availability/templates/availability_index.html:53
@@ -70,7 +69,7 @@ msgstr ""
 #: availability/templates/availability_index.html:83
 #: availability/templates/availability_index.html:87
 msgid "Generate Draw"
-msgstr ""
+msgstr "إنشاء قرعة"
 
 #: availability/templates/availability_index.html:52
 msgid "The draw cannot be generated until some teams have been checked in."
@@ -112,82 +111,88 @@ msgstr ""
 #: availability/templates/availability_index.html:100
 #, python-format
 msgid ""
-"One debate from %(prev_round)s <strong>does not have a completed ballot</"
-"strong>. This may lead to a draw that fails or is incorrect, depending on "
-"your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link"
-"\"> Enter results from %(prev_round)s. </a>"
+"One debate from %(prev_round)s <strong>does not have a completed "
+"ballot</strong>. This may lead to a draw that fails or is incorrect, "
+"depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class"
+"=\"alert-link\"> Enter results from %(prev_round)s. </a>"
 msgid_plural ""
 "%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a "
 "completed ballot</strong>. This may lead to a draw that fails or is "
-"incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s"
-"\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+"incorrect, depending on your draw rules. <a "
+"href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from"
+" %(prev_round)s. </a>"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: availability/templates/availability_index.html:122
 #, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, however the current "
 "round is still set to <strong>%(current_round_name)s</strong>. Did you "
-"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to "
-"the next round?</a>"
+"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to"
+" the next round?</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:137
 #, python-format
 msgid ""
-"This is the first round, but its draw type is <strong>%(draw_type)s</"
-"strong>. Did you intend for it to be <strong>Random</strong> instead? You "
-"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
-"draw type in the Edit Database area.</a>"
+"This is the first round, but its draw type is "
+"<strong>%(draw_type)s</strong>. Did you intend for it to be "
+"<strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" "
+"class=\"alert-link\"> edit this round's draw type in the Edit Database "
+"area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:150
 #, python-format
 msgid ""
 "This is an elimination round, but it doesn't have a break category. "
-"Elimination rounds must be associated with a break category. Please <a href="
-"\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
+"Elimination rounds must be associated with a break category. Please <a "
+"href=\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
 "category in the Edit Database area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:162
 #, python-format
 msgid ""
-"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
-"strong>. The draw type of all elimination rounds must be \"Elimination\". "
-"Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this "
-"round's draw type in the Edit Database area.</a>"
+"This is an elimination round, but its draw type is "
+"<strong>%(draw_type)s</strong>. The draw type of all elimination rounds must"
+" be \"Elimination\". Please <a href=\"%(change_round_url)s\" class=\"alert-"
+"link\"> change this round's draw type in the Edit Database area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:175
 #, python-format
 msgid ""
-"There don't appear to be any teams breaking in the %(break_category)s Break. "
-"Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated "
-"the break for the %(break_category)s Break</a> yet?"
+"There don't appear to be any teams breaking in the %(break_category)s Break."
+" Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> "
+"generated the break for the %(break_category)s Break</a> yet?"
 msgstr ""
 
 #: availability/templates/availability_index.html:187
 #, python-format
 msgid ""
 "There's only one team breaking in the %(break_category)s Break. You can't "
-"generate an elimination round draw with only one team — you might like to <a "
-"href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for "
-"the %(break_category)s Break</a>."
+"generate an elimination round draw with only one team — you might like to <a"
+" href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for"
+" the %(break_category)s Break</a>."
 msgstr ""
 
 #: availability/templates/base_availability.html:35
 msgid "Select All"
-msgstr ""
+msgstr "تحديد الكل"
 
 #: availability/templates/base_availability.html:36
 msgid "Select None"
-msgstr ""
+msgstr "عدم تحديد الكل"
 
 #: availability/templates/base_availability.html:37 availability/views.py:34
 msgid "Check-Ins"
-msgstr ""
+msgstr "تسجيلات الدخول"
 
 #: availability/templates/base_availability.html:38
 msgid "Check In All Breaking"
@@ -195,31 +200,31 @@ msgstr ""
 
 #: availability/templates/base_availability.html:39
 msgid "Copy from Previous"
-msgstr ""
+msgstr "النسخ من السابق"
 
 #: availability/templates/base_availability.html:40
 msgid "Save Selected"
-msgstr ""
+msgstr "حفظ التحديد"
 
 #: availability/templates/checkin_progress.html:7
 msgid "Teams"
-msgstr ""
+msgstr "الفرق"
 
 #: availability/templates/checkin_progress.html:8
 msgid "Adjudicators"
-msgstr ""
+msgstr "المحكمين"
 
 #: availability/templates/checkin_progress.html:9
 msgid "Venues"
-msgstr ""
+msgstr "قاعات المناظرة"
 
 #: availability/templates/checkin_progress.html:43
 msgid "Check in teams"
-msgstr ""
+msgstr "تسجيل دخول الفرق"
 
 #: availability/templates/checkin_progress.html:46
 msgid "No need to check teams in"
-msgstr ""
+msgstr "لا حاجة لتسجيل دخول الفرق"
 
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams checked in for this round."
@@ -231,13 +236,14 @@ msgstr ""
 
 #: availability/templates/checkin_progress.html:59
 msgid "Edit team check-ins"
-msgstr ""
+msgstr "تعديل تسجيل دخول الفرق"
 
 #: availability/templates/checkin_progress.html:66
 msgid "Check in adjudicators"
-msgstr ""
+msgstr "تسجيل دخول المحكمين"
 
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#. Translators: required_count is a word for a number (e.g. "two", "three",
+#. etc.)
 #: availability/templates/checkin_progress.html:70
 #, python-format
 msgid ""
@@ -248,33 +254,47 @@ msgid_plural ""
 "the number of debates."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: availability/templates/checkin_progress.html:80
 msgid "Edit adjudicator check-ins"
-msgstr ""
+msgstr "تعديل تسجيل دخول المحكمين"
 
 #: availability/templates/checkin_progress.html:87
 msgid "Check in venues"
-msgstr ""
+msgstr "تسجيل قاعات المناظرة"
 
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#. Translators: required_count is a word for a number (e.g. "two", "three",
+#. etc.)
 #: availability/templates/checkin_progress.html:91
 #, python-format
 msgid ""
-"There needs to be at least one venue checked in, given the number of debates."
+"There needs to be at least one venue checked in, given the number of "
+"debates."
 msgid_plural ""
 "There need to be at least %(required_count)s venues checked in, given the "
 "number of debates."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "عدد القاعات كحد أدنى هو %(required_count)s"
+msgstr[1] "لا بد من تسجيل قاعة واحدة على الأقل. "
+msgstr[2] ""
+"بناء على عدد المناظرات، لا بد من تسجيل قاعتين على الأقل.%(required_count)s"
+msgstr[3] ""
+"عدد القاعات أقل من عدد المناظرات. الحد الأدنى للقاعات هو%(required_count)s"
+msgstr[4] "لا بد أن تكون القاعات عدد%(required_count)s كحد أدنى."
+msgstr[5] ""
+"بناء على عدد المناظرات. لا بد من تسجيل عدد %(required_count)s قاعات على "
+"الأقل."
 
 #: availability/templates/checkin_progress.html:103
 msgid "Edit venue check-ins"
-msgstr ""
+msgstr "تعديل تسجيل القاعات"
 
 #: availability/views.py:77
 msgid "no teams are debating"
-msgstr ""
+msgstr "لا توجد فرق تتناظر"
 
 #. Translators: nteams in this string can only be 0 or 1
 #: availability/views.py:87
@@ -283,6 +303,10 @@ msgid "%(nteams)d breaking team — no debates can happen"
 msgid_plural "%(nteams)d breaking teams — no debates can happen"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #. Translators: ndebating in this string is always at least 2
 #: availability/views.py:95
@@ -291,6 +315,10 @@ msgid "%(ndebating)d breaking team is debating this round"
 msgid_plural "%(ndebating)d breaking teams are debating this round"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #. Translators: This gets appended to the previous string (the one with
 #. ndebating in it) if (and only if) nbypassing is greater than 0.
@@ -301,6 +329,10 @@ msgid "; %(nbypassing)d team is bypassing it"
 msgid_plural "; %(nbypassing)d teams are bypassing it"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #. Translators: nadvancing in this string is always at least 2
 #: availability/views.py:122
@@ -309,52 +341,56 @@ msgid "%(nadvancing)s advancing team is debating this round"
 msgid_plural "%(nadvancing)s advancing teams are debating this round"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
-#: availability/views.py:152
+#: availability/views.py:153
 msgid "Team Availability"
 msgstr ""
 
-#: availability/views.py:154
+#: availability/views.py:155
 msgid "Adjudicator Availability"
 msgstr ""
 
-#: availability/views.py:156
+#: availability/views.py:157
 msgid "Venue Availability"
 msgstr ""
 
-#: availability/views.py:173
+#: availability/views.py:177
 msgid "Active Now"
 msgstr ""
 
-#: availability/views.py:183
+#: availability/views.py:187
 #, python-format
 msgid "Active in %(prev_round)s"
 msgstr ""
 
-#: availability/views.py:231
+#: availability/views.py:237
 msgid "Venue"
-msgstr ""
+msgstr "قاعة"
 
-#: availability/views.py:232
+#: availability/views.py:238
 msgid "Display Name (for the draw)"
-msgstr ""
+msgstr "اسم العرض (للقرعة)"
 
-#: availability/views.py:233
+#: availability/views.py:239
 msgid "Categories"
-msgstr ""
+msgstr "الفئات"
 
-#: availability/views.py:234
+#: availability/views.py:240
 msgid "Priority"
-msgstr ""
+msgstr "الأولوية"
 
-#: availability/views.py:252
+#: availability/views.py:258
 msgid "Checked in all teams, adjudicators and venues."
 msgstr ""
 
-#: availability/views.py:259
+#: availability/views.py:265
 msgid "Checked in all breaking adjudicators."
 msgstr ""
 
-#: availability/views.py:267
+#: availability/views.py:273
 msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""

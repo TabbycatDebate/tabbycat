@@ -1,23 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, draw module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: draw/admin.py:67
 #, python-format
@@ -25,6 +24,10 @@ msgid "%(count)d debate had its status set to %(status)s."
 msgid_plural "%(count)d debates had their statuses set to %(status)s."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/admin.py:74
 #, python-format
@@ -37,6 +40,10 @@ msgid "%(count)d debate was marked as having its sides confirmed."
 msgid_plural "%(count)d debates were marked as having their sides confirmed."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/admin.py:93
 #, python-format
@@ -45,10 +52,14 @@ msgid_plural ""
 "%(count)d debates were marked as having their sides not confirmed."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/apps.py:7 draw/views.py:262 draw/views.py:265
 msgid "Draw"
-msgstr ""
+msgstr "قرعة "
 
 #: draw/generator/__init__.py:16
 msgid "Too many swaps"
@@ -56,11 +67,11 @@ msgstr ""
 
 #: draw/generator/__init__.py:17
 msgid "One-up-one-down (history)"
-msgstr ""
+msgstr "من الاول إلى الاخير ( تاريخ ) "
 
 #: draw/generator/__init__.py:18
 msgid "One-up-one-down (institution)"
-msgstr ""
+msgstr "من الاول إلى الاخير ( مؤسسة ) "
 
 #: draw/generator/__init__.py:19
 msgid "One-up-one-down (to accommodate)"
@@ -119,8 +130,8 @@ msgstr ""
 #: draw/generator/bpelimination.py:75
 #, python-format
 msgid ""
-"The room ranks of the partial elimination round indicate that %(nbypassing)d "
-"teams bypassed it, but %(advancing)d teams advanced from it."
+"The room ranks of the partial elimination round indicate that %(nbypassing)d"
+" teams bypassed it, but %(advancing)d teams advanced from it."
 msgstr ""
 
 #: draw/generator/bpelimination.py:122
@@ -130,7 +141,8 @@ msgstr ""
 
 #: draw/generator/bphungarian.py:171
 #, python-format
-msgid "The Rényi order can't be negative, and it's currently set to %(alpha)f."
+msgid ""
+"The Rényi order can't be negative, and it's currently set to %(alpha)f."
 msgstr ""
 
 #: draw/generator/common.py:51
@@ -146,8 +158,8 @@ msgstr ""
 #: draw/generator/elimination.py:43
 #, python-format
 msgid ""
-"There are only %d teams breaking in this category; there need to be at least "
-"two to generate an elimination round draw."
+"There are only %d teams breaking in this category; there need to be at least"
+" two to generate an elimination round draw."
 msgstr ""
 
 #: draw/generator/elimination.py:75
@@ -198,7 +210,7 @@ msgstr ""
 
 #: draw/models.py:27
 msgid "none"
-msgstr ""
+msgstr "لا يوجد"
 
 #: draw/models.py:28
 msgid "postponed"
@@ -230,7 +242,7 @@ msgstr ""
 
 #: draw/models.py:45
 msgid "room rank"
-msgstr ""
+msgstr "مستوى الغرفة "
 
 #: draw/models.py:48
 msgid "time"
@@ -344,7 +356,8 @@ msgid "team side allocations"
 msgstr ""
 
 #. Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
-#. "Opening government: Total speaker score", "Closing opposition: Number of firsts"
+#. "Opening government: Total speaker score", "Closing opposition: Number of
+#. firsts"
 #: draw/tables.py:32
 #, python-format
 msgid "%(side_name)s: %(metric_name)s"
@@ -502,8 +515,8 @@ msgstr ""
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html:10
 msgid ""
-"Tabbycat requires that there be <strong>exactly</strong> one debate team for "
-"each side, and no other debate teams, in each debate. If you edit debate "
+"Tabbycat requires that there be <strong>exactly</strong> one debate team for"
+" each side, and no other debate teams, in each debate. If you edit debate "
 "teams in the database, you must ensure that this remains the case. If you "
 "don't do this correctly, many pages <strong>will</strong> crash."
 msgstr ""
@@ -514,6 +527,10 @@ msgid "1 debate does not have a chair."
 msgid_plural "%(ndebates)s debates do not have a chair."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_alerts_adjudicators.html:15
 #, python-format
@@ -523,6 +540,10 @@ msgid_plural ""
 "multiple debates: <strong>%(adjudicators)s</strong>"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_alerts_adjudicators.html:24
 #, python-format
@@ -531,6 +552,10 @@ msgid_plural ""
 "%(ndebates)s debates have panels with an even number of adjudicators."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_alerts_adjudicators.html:33
 #, python-format
@@ -538,6 +563,10 @@ msgid "1 debate has an adjudicator conflict."
 msgid_plural "%(ndebates)s debates have adjudicator conflicts."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_alerts_venues.html:5
 #, python-format
@@ -545,6 +574,10 @@ msgid "1 debate does not have a venue."
 msgid_plural "%(ndebates)s debates do not have a venue."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_alerts_venues.html:14
 #, python-format
@@ -554,6 +587,10 @@ msgid_plural ""
 "them: <strong>%(venues)s</strong>"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_alerts_venues.html:23
 #, python-format
@@ -561,6 +598,10 @@ msgid "1 debate has a venue constraint violation."
 msgid_plural "%(ndebates)s debates have venue constraint violations."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_base.html:6
 msgid "Check-Ins"
@@ -618,7 +659,8 @@ msgstr ""
 msgid "Motion Details"
 msgstr ""
 
-#. Translators: Used when only one motion is expected, but there is more than one.
+#. Translators: Used when only one motion is expected, but there is more than
+#. one.
 #: draw/templates/draw_display_admin.html:59
 #: draw/templates/draw_display_admin.html:85
 #, python-format
@@ -626,6 +668,10 @@ msgid "%(motions_count)s motion has been entered."
 msgid_plural "%(motions_count)s motions have been entered."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_display_admin.html:65
 msgid "Edit motions"
@@ -633,8 +679,8 @@ msgstr ""
 
 #: draw/templates/draw_display_admin.html:68
 msgid ""
-"Your configuration/format requires motions to be specified as part of ballot "
-"entry. Make sure they are added before results come in!"
+"Your configuration/format requires motions to be specified as part of ballot"
+" entry. Make sure they are added before results come in!"
 msgstr ""
 
 #: draw/templates/draw_display_admin.html:70
@@ -652,8 +698,8 @@ msgstr ""
 #: draw/templates/draw_display_admin.html:95
 msgid ""
 "A motion should be added if you want to display it to the auditorium or "
-"print in on your ballots (using the links below) or to display it (later) on "
-"the public motions page."
+"print in on your ballots (using the links below) or to display it (later) on"
+" the public motions page."
 msgstr ""
 
 #: draw/templates/draw_display_admin.html:97
@@ -687,18 +733,19 @@ msgstr ""
 #: draw/templates/draw_display_admin.html:135
 #, python-format
 msgid ""
-"You have released the draw, so ballots and/or feedback can be submitted from "
-"the public forms (if enabled). However, the draw itself will not show to the "
-"public unless the \"public view of draw\" setting is enabled in <a class="
-"\"alert-link\" href=\"%(alert_link)s\"> this tournament's configuration</a>."
+"You have released the draw, so ballots and/or feedback can be submitted from"
+" the public forms (if enabled). However, the draw itself will not show to "
+"the public unless the \"public view of draw\" setting is enabled in <a class"
+"=\"alert-link\" href=\"%(alert_link)s\"> this tournament's "
+"configuration</a>."
 msgstr ""
 
 #: draw/templates/draw_display_admin.html:140
 #, python-format
 msgid ""
 "You have released the draw, but it will not show to the public unless the "
-"\"public view of draw\" setting is enabled in <a class=\"alert-link\" href="
-"\"%(alert_link)s\"> this tournament's configuration</a>."
+"\"public view of draw\" setting is enabled in <a class=\"alert-link\" "
+"href=\"%(alert_link)s\"> this tournament's configuration</a>."
 msgstr ""
 
 #: draw/templates/draw_display_admin.html:150
@@ -770,14 +817,16 @@ msgstr ""
 #: draw/templates/draw_display_admin.html:215
 msgid ""
 "Your tournament is configured to allow motions to be vetoed and to allow "
-"ballots to be submitted by adjudicators. Ensure that you release the motions "
-"before debates finish, otherwise ballots will not be able to nominate vetoes."
+"ballots to be submitted by adjudicators. Ensure that you release the motions"
+" before debates finish, otherwise ballots will not be able to nominate "
+"vetoes."
 msgstr ""
 
 #: draw/templates/draw_display_admin.html:219
 msgid ""
 "Your tournament is configured to show the motion(s) for each round on the "
-"public site. You'll need to first release the motion(s) for it to show there."
+"public site. You'll need to first release the motion(s) for it to show "
+"there."
 msgstr ""
 
 #: draw/templates/draw_display_admin.html:223
@@ -798,8 +847,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You have released the motions, but they will not show to the public unless "
-"the \"public view of motions\" setting is enabled in <a class=\"alert-link\" "
-"href=\"%(alert_link)s\">this tournament's configuration</a>."
+"the \"public view of motions\" setting is enabled in <a class=\"alert-link\""
+" href=\"%(alert_link)s\">this tournament's configuration</a>."
 msgstr ""
 
 #: draw/templates/draw_display_by.html:17
@@ -857,7 +906,8 @@ msgid "Adjudicator Allocations"
 msgstr ""
 
 #: draw/templates/draw_status_confirmed.html:20
-msgid "There are currently fewer checked-in adjudicators than there are rooms."
+msgid ""
+"There are currently fewer checked-in adjudicators than there are rooms."
 msgstr ""
 
 #: draw/templates/draw_status_confirmed.html:31
@@ -890,6 +940,10 @@ msgid "1 debate does not have its sides confirmed."
 msgid_plural "%(ndebates)s debates do not have their sides confirmed."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: draw/templates/draw_status_draft.html:17
 msgid ""
@@ -904,11 +958,11 @@ msgstr ""
 #: draw/templates/draw_status_draft.html:24
 msgid ""
 "Highlighted cells relate to changes in position balance, as follows: <ul> "
-"<li>Red cells indicates that the team could not be allocated a position that "
-"maintains position balance.</li> <li>Yellow cells indicate that the team was "
-"previously imbalanced, and is given the best position possible in this draw, "
-"but is nonetheless still imbalanced.</li> <li>Green cells indicate that the "
-"team's previous imbalance is resolved with this draw.</li> </ul>"
+"<li>Red cells indicates that the team could not be allocated a position that"
+" maintains position balance.</li> <li>Yellow cells indicate that the team "
+"was previously imbalanced, and is given the best position possible in this "
+"draw, but is nonetheless still imbalanced.</li> <li>Green cells indicate "
+"that the team's previous imbalance is resolved with this draw.</li> </ul>"
 msgstr ""
 
 #: draw/templates/draw_status_none.html:6
@@ -930,10 +984,10 @@ msgstr ""
 #, python-format
 msgid ""
 "Your current position cost function is <strong>%(cost_func)s</strong>, "
-"raised to an exponent of <strong>%(exponent)s</strong>. <a href=\"http://"
-"tabbycat.readthedocs.io/en/latest/features/draw-generation-bp.html#position-"
-"cost-options\" target=_\"blank\">Read more about how position cost functions "
-"work</a> in our documentation."
+"raised to an exponent of <strong>%(exponent)s</strong>. <a "
+"href=\"http://tabbycat.readthedocs.io/en/latest/features/draw-generation-"
+"bp.html#position-cost-options\" target=_\"blank\">Read more about how "
+"position cost functions work</a> in our documentation."
 msgstr ""
 
 #: draw/templates/position_balance_break.html:6
@@ -948,7 +1002,8 @@ msgstr ""
 
 #: draw/templates/position_balance_round1.html:6
 msgid ""
-"Position balance reports aren't computed for the first round of a tournament."
+"Position balance reports aren't computed for the first round of a "
+"tournament."
 msgstr ""
 
 #: draw/views.py:59
@@ -1027,27 +1082,22 @@ msgstr ""
 #: draw/views.py:476
 #, python-format
 msgid ""
-"<p>The draw could not be created, for the following reason: <em>%(message)s</"
-"em></p>\n"
+"<p>The draw could not be created, for the following reason: <em>%(message)s</em></p>\n"
 "<p>Please fix this issue before attempting to create the draw.</p>"
 msgstr ""
 
 #: draw/views.py:484
 #, python-format
 msgid ""
-"The draw could not be created, because the following error occurred: <em>"
-"%(message)s</em></p>\n"
-"<p>If this issue persists and you're not sure how to resolve it, please "
-"contact the developers.</p>"
+"The draw could not be created, because the following error occurred: <em>%(message)s</em></p>\n"
+"<p>If this issue persists and you're not sure how to resolve it, please contact the developers.</p>"
 msgstr ""
 
 #: draw/views.py:493
 #, python-format
 msgid ""
-"<p>The team standings could not be generated, because the following error "
-"occurred: <em>%(message)s</em></p>\n"
-"<p>Because generating the draw uses the current team standings, this "
-"prevents the draw from being generated.</p>"
+"<p>The team standings could not be generated, because the following error occurred: <em>%(message)s</em></p>\n"
+"<p>Because generating the draw uses the current team standings, this prevents the draw from being generated.</p>"
 msgstr ""
 
 #: draw/views.py:509
@@ -1091,8 +1141,8 @@ msgstr ""
 
 #: draw/views.py:854
 msgid ""
-"This venue category does not exist or the URL for it might have changed. Try "
-"finding it again from the homepage."
+"This venue category does not exist or the URL for it might have changed. Try"
+" finding it again from the homepage."
 msgstr ""
 
 #: draw/views.py:861

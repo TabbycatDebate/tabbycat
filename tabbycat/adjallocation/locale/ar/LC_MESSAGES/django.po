@@ -1,118 +1,117 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, adjallocation module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
-msgstr ""
+msgstr "تعيين المحكمين"
 
 #: adjallocation/models.py:18
 msgid "chair"
-msgstr ""
+msgstr "رئيس الجلسة"
 
 #: adjallocation/models.py:19
 msgid "panellist"
-msgstr ""
+msgstr "أعضاء لجنة التحكيم"
 
 #: adjallocation/models.py:20
 msgid "trainee"
-msgstr ""
+msgstr "متدرب"
 
 #: adjallocation/models.py:26
 msgid "debate"
-msgstr ""
+msgstr "مناظرة"
 
 #: adjallocation/models.py:28 adjallocation/models.py:44
 #: adjallocation/models.py:74
 msgid "adjudicator"
-msgstr ""
+msgstr "محكم"
 
 #: adjallocation/models.py:30
 msgid "type"
-msgstr ""
+msgstr "نوع"
 
 #: adjallocation/models.py:31
 msgid "available?"
-msgstr ""
+msgstr "موجود ؟"
 
 #: adjallocation/models.py:34
 msgid "debate adjudicator"
-msgstr ""
+msgstr "محكم المناظرة"
 
 #: adjallocation/models.py:35
 msgid "debate adjudicators"
-msgstr ""
+msgstr "محكمو المناظرة"
 
 #: adjallocation/models.py:46
 msgid "team"
-msgstr ""
+msgstr "فريق"
 
 #: adjallocation/models.py:49
 msgid "adjudicator-team conflict"
-msgstr ""
+msgstr "تعارض محكم-فريق"
 
 #: adjallocation/models.py:50
 msgid "adjudicator-team conflicts"
-msgstr ""
+msgstr "تعارضات (محكم-فريق)"
 
 #: adjallocation/models.py:59
 msgid "adjudicator 1"
-msgstr ""
+msgstr "محكم-1"
 
 #: adjallocation/models.py:61
 msgid "adjudicator 2"
-msgstr ""
+msgstr "محكم-2"
 
 #: adjallocation/models.py:64
 msgid "adjudicator-adjudicator conflict"
-msgstr ""
+msgstr "تعارض محكم-محكم"
 
 #: adjallocation/models.py:65
 msgid "adjudicator-adjudicator conflicts"
-msgstr ""
+msgstr "تعارضات (محكم-محكم)"
 
 #: adjallocation/models.py:76
 msgid "institution"
-msgstr ""
+msgstr "منتخب"
 
 #: adjallocation/models.py:79
 msgid "adjudicator-institution conflict"
-msgstr ""
+msgstr "تعارض محكم-منتخب"
 
 #: adjallocation/models.py:80
 msgid "adjudicator-institution conflicts"
-msgstr ""
+msgstr "تعارضات (محكم-منتخب)"
 
 #: adjallocation/templates/edit_adjudicators.html:11
 #, python-format
 msgid "Edit Adjudicators for %(round_abbr)s"
-msgstr ""
+msgstr "تعديل محكمين للجولة %(round_abbr)s"
 
 #: adjallocation/views.py:139
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
-msgstr ""
+msgstr "تم إعلان القرعة مسبقا، قم برفعها لإعادة التوزيع التلقائي للمحكمين"
 
 #: adjallocation/views.py:143
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
-msgstr ""
+msgstr "لم يتم تأكيد القرعة بعد، قم بتأكيدها لإجراء التوزيع التلقائي للمحكمين"
 
 #: adjallocation/views.py:192
 msgid "Not all adjudicators specified are associated with the tournament."
-msgstr ""
+msgstr "ليس كل المحكمين المحددين مرتبطين بالبطولة."

@@ -2,20 +2,20 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: results/apps.py:7 results/templates/public_results_index.html:4
@@ -47,8 +47,8 @@ msgid ""
 "The debate status can't be confirmed unless one of the ballot sets is "
 "confirmed."
 msgstr ""
-"El estatus del debate no puede ser confirmado sin que un conjunto de ballots "
-"este confirmado."
+"El estatus del debate no puede ser confirmado sin que un conjunto de ballots"
+" este confirmado."
 
 #: results/forms.py:280
 msgid "---------"
@@ -253,8 +253,8 @@ msgstr ""
 
 #: results/models.py:182
 msgid ""
-"The debate team, debate adjudicator and ballot submission must all relate to "
-"the same debate."
+"The debate team, debate adjudicator and ballot submission must all relate to"
+" the same debate."
 msgstr ""
 
 #: results/models.py:198
@@ -360,7 +360,8 @@ msgstr ""
 msgid "Review v%(version)d"
 msgstr ""
 
-#. Translators: This comes after a link to edit the ballot and before the line indicating its author. Please mind the leading and trailing spaces.
+#. Translators: This comes after a link to edit the ballot and before the line
+#. indicating its author. Please mind the leading and trailing spaces.
 #: results/tables.py:74
 msgid " discarded; "
 msgstr ""
@@ -404,12 +405,12 @@ msgstr ""
 #: results/templates/admin_results.html:27
 #, python-format
 msgid ""
-"This tournament's configuration is set to <strong>British Parliamentary</"
-"strong> with <strong>one ballot per voting adjudicator</strong>. This "
-"combination isn't allowed: BP tournaments must use consensus ballots. "
-"Results can't be entered while this configuration is in place. Please <a "
-"href=\"%(debate_rules_url)s\">revise this tournament's configuration</a> "
-"before you try to enter results."
+"This tournament's configuration is set to <strong>British "
+"Parliamentary</strong> with <strong>one ballot per voting "
+"adjudicator</strong>. This combination isn't allowed: BP tournaments must "
+"use consensus ballots. Results can't be entered while this configuration is "
+"in place. Please <a href=\"%(debate_rules_url)s\">revise this tournament's "
+"configuration</a> before you try to enter results."
 msgstr ""
 
 #: results/templates/admin_results.html:35
@@ -449,11 +450,11 @@ msgstr ""
 
 #: results/templates/assistant_results.html:12
 msgid ""
-"This tournament's configuration is set to <strong>British Parliamentary</"
-"strong> with <strong>one ballot per voting adjudicator</strong>. This "
-"combination isn't allowed: BP tournaments must use consensus ballots. "
-"Results can't be entered while this configuration is in place. Please ask an "
-"administrator to change this configuration."
+"This tournament's configuration is set to <strong>British "
+"Parliamentary</strong> with <strong>one ballot per voting "
+"adjudicator</strong>. This combination isn't allowed: BP tournaments must "
+"use consensus ballots. Results can't be entered while this configuration is "
+"in place. Please ask an administrator to change this configuration."
 msgstr ""
 
 #: results/templates/assistant_results.html:19
@@ -465,8 +466,8 @@ msgstr ""
 #: results/templates/assistant_results.html:29
 #, python-format
 msgid ""
-"One debate does not have its sides confirmed. Results for this debate cannot "
-"be entered until its side allocations are marked as confirmed."
+"One debate does not have its sides confirmed. Results for this debate cannot"
+" be entered until its side allocations are marked as confirmed."
 msgid_plural ""
 "%(ndebates)s debate do not have their sides confirmed. Results for these "
 "debates cannot be entered until their side allocations are marked as "
@@ -531,15 +532,13 @@ msgstr ""
 
 #: results/templates/ballot/ballot_debate_info.html:44
 msgid ""
-"There were speakers who spoke multiple times (i.e. one or more 'Iron' person "
-"speeches)"
+"There were speakers who spoke multiple times (i.e. one or more 'Iron' person"
+" speeches)"
 msgstr ""
 
 #: results/templates/ballot/ballot_scoresheet.html:28
-#, fuzzy
-#| msgid "Results"
 msgid "Result"
-msgstr "Resultador"
+msgstr ""
 
 #: results/templates/ballot/ballot_scoresheet.html:28
 msgid "Rank"
@@ -555,7 +554,8 @@ msgstr ""
 #: results/templates/ballot/bp_elimination_ballot.html:6
 #: results/templates/ballot/standard_ballot_set.html:6
 msgid ""
-"There are some problems with this scoresheet. Please review and correct them."
+"There are some problems with this scoresheet. Please review and correct "
+"them."
 msgstr ""
 
 #: results/templates/ballot/bp_elimination_ballot.html:12
@@ -655,8 +655,8 @@ msgstr ""
 
 #: results/templates/ballot_checkin.html:13
 msgid ""
-"To check in a ballot start to type the ballot's <strong>venue</strong>. Then "
-"hit enter to select the correct venue, then enter again to search for the "
+"To check in a ballot start to type the ballot's <strong>venue</strong>. Then"
+" hit enter to select the correct venue, then enter again to search for the "
 "ballot."
 msgstr ""
 
@@ -778,8 +778,8 @@ msgstr ""
 #: results/templates/public_enter_results.html:30
 #, python-format
 msgid ""
-"This form has already been submitted <strong>once</strong>. Please contact a "
-"tab official after submitting your form."
+"This form has already been submitted <strong>once</strong>. Please contact a"
+" tab official after submitting your form."
 msgid_plural ""
 "This form has already been submitted <strong>%(nsubmissions)s</strong> "
 "times. Please contact a tab official after submitting your form."
@@ -963,8 +963,8 @@ msgstr ""
 #: results/views.py:329
 #, python-format
 msgid ""
-"Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't "
-"enter results for it."
+"Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't"
+" enter results for it."
 msgstr ""
 
 #: results/views.py:361
@@ -1028,7 +1028,8 @@ msgstr ""
 
 #: results/views.py:535
 #, python-format
-msgid "There appear to be multiple debates in venue %(venue_name)s this round."
+msgid ""
+"There appear to be multiple debates in venue %(venue_name)s this round."
 msgstr ""
 
 #: results/views.py:539

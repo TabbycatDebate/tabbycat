@@ -2,19 +2,19 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-08 02:21-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: settings.py:41
@@ -39,8 +39,8 @@ msgstr ""
 
 #: templates/admin/style_guide.html:30
 msgid ""
-"This style of info card announces critical information. <a href=\"\">Link</"
-"a>."
+"This style of info card announces critical information. <a "
+"href=\"\">Link</a>."
 msgstr ""
 
 #: templates/admin/style_guide.html:33
@@ -95,15 +95,15 @@ msgstr ""
 #: templates/errors/assistant_403.html:13
 #, python-format
 msgid ""
-"This assistant page isn't enabled for this tournament. <a href=\"%(url)s"
-"\">Back to the assistant home page.</a>"
+"This assistant page isn't enabled for this tournament. <a "
+"href=\"%(url)s\">Back to the assistant home page.</a>"
 msgstr ""
 
 #: templates/errors/public_403.html:13
 #, python-format
 msgid ""
-"Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s"
-"\">Back to the tournament home page.</a>"
+"Whoops! This page isn't enabled for this tournament. <a "
+"href=\"%(url)s\">Back to the tournament home page.</a>"
 msgstr ""
 
 #: templates/footer.html:13
@@ -114,7 +114,8 @@ msgstr ""
 
 #: templates/footer.html:15
 #, python-format
-msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
+msgid ""
+"This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
 #: templates/footer.html:19
@@ -126,8 +127,8 @@ msgstr ""
 #: templates/footer.html:23
 #, python-format
 msgid ""
-"For a tournament of this size, we suggest a donation of <strong>$%(amount)s</"
-"strong>."
+"For a tournament of this size, we suggest a donation of "
+"<strong>$%(amount)s</strong>."
 msgstr ""
 
 #: templates/footer.html:27
@@ -148,12 +149,12 @@ msgstr ""
 #: templates/footer.html:41
 #, python-format
 msgid ""
-"Using an app designed for debate timekeeping makes speaking and adjudicating "
-"easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/"
-"id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/"
-"iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee."
-"debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter"
-"\">Debatekeeper</a> (Android)."
+"Using an app designed for debate timekeeping makes speaking and adjudicating"
+" easier! Check out <a href=\"https://itunes.apple.com/app/apple-"
+"store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> "
+"(iPhone/iPad) or <a "
+"href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a>"
+" (Android)."
 msgstr ""
 
 #: templates/footer.html:50
@@ -162,8 +163,8 @@ msgstr ""
 
 #: templates/footer.html:52
 msgid ""
-"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" target="
-"\"_blank\"> customise and print</a> great ballots from your browser."
+"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
+"target=\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 
 #: templates/footer.html:65 templates/footer.html:109
@@ -465,7 +466,8 @@ msgstr ""
 msgid "Your password has been reset."
 msgstr ""
 
-#. Translators: This text appears on a button that takes the user to the login page after a password reset.
+#. Translators: This text appears on a button that takes the user to the login
+#. page after a password reset.
 #: templates/registration/password_reset_complete.html:23
 msgid "Go to the login page"
 msgstr ""
@@ -504,7 +506,8 @@ msgid ""
 "you registered with, and check your spam folder."
 msgstr ""
 
-#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
+#. Translators: This text appears on a button that takes the user back to the
+#. login page from the password reset page.
 #: templates/registration/password_reset_done.html:26
 msgid "Return to the login page"
 msgstr ""
@@ -529,8 +532,8 @@ msgstr ""
 #, python-format
 msgid ""
 "If this wasn't you, that probably means someone else typed your e-mail "
-"address into the password reset form on the Tabbycat site at %(protocol)s://"
-"%(domain)s."
+"address into the password reset form on the Tabbycat site at "
+"%(protocol)s://%(domain)s."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:4

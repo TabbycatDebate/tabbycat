@@ -2,19 +2,19 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: adjfeedback/admin.py:83
@@ -71,17 +71,20 @@ msgstr ""
 msgid "trainee"
 msgstr ""
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
 #: adjfeedback/forms.py:53
 msgid "Yes"
 msgstr ""
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
 #: adjfeedback/forms.py:55
 msgid "No"
 msgstr ""
 
-#. Translators: Please leave this blank, it should be left for the base Django translations.
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
 #: adjfeedback/forms.py:70 adjfeedback/forms.py:79
 msgid "This field is required."
 msgstr ""
@@ -91,8 +94,10 @@ msgstr ""
 msgid "Overall score (%(min)d=worst; %(max)d=best)"
 msgstr ""
 
-#. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2", adjpos="chair"
-#. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round 3", adjpos="panellist"
+#. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2",
+#. adjpos="chair"
+#. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round
+#. 3", adjpos="panellist"
 #: adjfeedback/forms.py:227 adjfeedback/forms.py:284
 #, python-format
 msgid "%(name)s (%(round)s %(adjpos)s)"
@@ -286,7 +291,8 @@ msgstr ""
 
 #: adjfeedback/models.py:150
 msgid ""
-"Minimum allowed value for numeric fields (ignored for text or boolean fields)"
+"Minimum allowed value for numeric fields (ignored for text or boolean "
+"fields)"
 msgstr ""
 
 #: adjfeedback/models.py:152
@@ -295,7 +301,8 @@ msgstr ""
 
 #: adjfeedback/models.py:153
 msgid ""
-"Maximum allowed value for numeric fields (ignored for text or boolean fields)"
+"Maximum allowed value for numeric fields (ignored for text or boolean "
+"fields)"
 msgstr ""
 
 #: adjfeedback/models.py:155
@@ -305,8 +312,8 @@ msgstr ""
 #: adjfeedback/models.py:156
 #, python-format
 msgid ""
-"Permissible choices for select one/multiple fields, separated by %r (ignored "
-"for other fields)"
+"Permissible choices for select one/multiple fields, separated by %r (ignored"
+" for other fields)"
 msgstr ""
 
 #: adjfeedback/models.py:160
@@ -389,18 +396,18 @@ msgstr ""
 #, python-format
 msgid ""
 "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score "
-"<strong>outside the permitted range</strong> of adjudicator scores, which is "
-"currently set as %(min_score)s to %(max_score)s. This can cause adjudicator "
-"auto-allocation to behave in unexpected ways. If you'd like to use a wider "
-"score range, you can configure this in <a href=\"%(feedback_settings_url)s\" "
-"class=\"alert-link\"> feedback settings</a>."
+"<strong>outside the permitted range</strong> of adjudicator scores, which is"
+" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
+" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
+" class=\"alert-link\"> feedback settings</a>."
 msgid_plural ""
 "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores "
-"<strong>outside the permitted range</strong> of adjudicator scores, which is "
-"currently set as %(min_score)s to %(max_score)s. This can cause adjudicator "
-"auto-allocation to behave in unexpected ways. If you'd like to use a wider "
-"score range, you can configure this in <a href=\"%(feedback_settings_url)s\" "
-"class=\"alert-link\"> feedback settings</a>."
+"<strong>outside the permitted range</strong> of adjudicator scores, which is"
+" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
+" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
+" class=\"alert-link\"> feedback settings</a>."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -523,6 +530,6 @@ msgstr ""
 msgid "An Adjudicator"
 msgstr ""
 
-#: adjfeedback/views.py:604 adjfeedback/views.py:610
+#: adjfeedback/views.py:612 adjfeedback/views.py:618
 msgid "Owed"
 msgstr ""
