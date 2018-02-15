@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -367,53 +367,53 @@ msgid_plural "%(nadvancing)s advancing teams are debating this round"
 msgstr[0] "%(nadvancing)s équipe avançante débat dans ce tour"
 msgstr[1] "%(nadvancing)s équipes avançantes débattent dans ce tour"
 
-#: availability/views.py:152
+#: availability/views.py:153
 msgid "Team Availability"
 msgstr "Disponibilité des équipes"
 
-#: availability/views.py:154
+#: availability/views.py:155
 msgid "Adjudicator Availability"
 msgstr "Disponibilité des juges"
 
-#: availability/views.py:156
+#: availability/views.py:157
 msgid "Venue Availability"
 msgstr "Disponibilité des lieux"
 
-#: availability/views.py:173
+#: availability/views.py:177
 msgid "Active Now"
 msgstr "Actif actuellement"
 
-#: availability/views.py:183
+#: availability/views.py:187
 #, python-format
 msgid "Active in %(prev_round)s"
 msgstr "Actif dans %(prev_round)s"
 
-#: availability/views.py:231
+#: availability/views.py:237
 msgid "Venue"
 msgstr "Lieu"
 
-#: availability/views.py:232
+#: availability/views.py:238
 msgid "Display Name (for the draw)"
 msgstr "Nom d'affichage (pour le tirage)"
 
-#: availability/views.py:233
+#: availability/views.py:239
 msgid "Categories"
 msgstr "Catégories"
 
-#: availability/views.py:234
+#: availability/views.py:240
 msgid "Priority"
 msgstr "Priorité"
 
-#: availability/views.py:252
+#: availability/views.py:258
 msgid "Checked in all teams, adjudicators and venues."
 msgstr ""
 "Toutes les équipes, tous les juges et tous les lieux ont été enregistrés."
 
-#: availability/views.py:259
+#: availability/views.py:265
 msgid "Checked in all breaking adjudicators."
 msgstr "Tous les juges qualifiants ont été enregistrés."
 
-#: availability/views.py:267
+#: availability/views.py:273
 msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""
 "Toutes les équipes, tous les juges et tous les lieux du tour précédent ont "

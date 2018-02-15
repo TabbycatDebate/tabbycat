@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,12 +49,18 @@ msgid ""
 "bare)."
 msgstr ""
 
+#: printing/templates/feedback_list.html:41
+msgid ""
+"There are no feedback sheets available — perhaps adjudicators have not been "
+"allocated?"
+msgstr ""
+
 #: printing/templates/printables_list.html:9
 msgid ""
 "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
-"<strong>orientation</strong>, to turn off <strong>headers/footers</strong> "
-"and turn on <strong>background graphics</strong>. Works best in Safari or "
-"Firefox."
+"<strong>page orientation</strong>, to turn off <strong>headers/footers</"
+"strong> and turn on <strong>background graphics</strong>. Works best in "
+"Chrome or Safari."
 msgstr ""
 
 #: printing/templates/scoresheet_list.html:5
@@ -64,6 +70,11 @@ msgstr ""
 #: printing/templates/scoresheet_list.html:7
 #, python-format
 msgid "Printable Scoresheets for %(round_name)s"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:23
+msgid ""
+"There are no scoresheets available — perhaps the round has not been drawn?"
 msgstr ""
 
 #: printing/views.py:87

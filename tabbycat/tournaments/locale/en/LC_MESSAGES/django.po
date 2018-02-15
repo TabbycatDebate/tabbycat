@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -421,7 +421,7 @@ msgstr ""
 msgid "Create New Tournament "
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:12
+#: tournaments/templates/create_tournament.html:11
 #, python-format
 msgid ""
 "Tabbycat is free to use for non-profit and non-fundraising tournaments "
@@ -432,11 +432,11 @@ msgid ""
 "a>."
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:24
+#: tournaments/templates/create_tournament.html:23
 msgid "Just trying out Tabbycat?"
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:25
+#: tournaments/templates/create_tournament.html:24
 msgid ""
 "If you are just learning or playing around with Tabbycat it's easiest to "
 "create a 'demo' tournament that is prepopulated with a fake (but typical) "
@@ -444,26 +444,26 @@ msgid ""
 "then be easily deleted later on."
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:37
+#: tournaments/templates/create_tournament.html:36
 msgid "Load Demo (8-team tournament)"
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:42
-#: tournaments/templates/create_tournament.html:59
+#: tournaments/templates/create_tournament.html:41
+#: tournaments/templates/create_tournament.html:58
 msgid ""
 "You already have a tournament set up using this data set. Reloading the data "
 "will delete <strong>all data</strong> from that tourament."
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:53
+#: tournaments/templates/create_tournament.html:52
 msgid "Load Demo (24-team tournament)"
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:78
+#: tournaments/templates/create_tournament.html:77
 msgid "Create Tournament"
 msgstr ""
 
-#: tournaments/templates/create_tournament.html:79
+#: tournaments/templates/create_tournament.html:78
 msgid "Cancel and go back to the site home page"
 msgstr ""
 

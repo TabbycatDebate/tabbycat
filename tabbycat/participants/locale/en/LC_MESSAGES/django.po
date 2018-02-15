@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-06 12:33-0500\n"
+"POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,11 +32,11 @@ msgid_plural "%(count)d teams had their URL keys removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/admin.py:132 participants/admin.py:191
+#: participants/admin.py:132 participants/admin.py:195
 msgid "Delete URL key"
 msgstr ""
 
-#: participants/admin.py:186
+#: participants/admin.py:190
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."
