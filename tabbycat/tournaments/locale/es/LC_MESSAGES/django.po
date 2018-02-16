@@ -109,13 +109,16 @@ msgstr ""
 
 #: tournaments/forms.py:84
 msgid "Public Configuration"
-msgstr ""
+msgstr "Configuración Pública"
 
 #: tournaments/forms.py:85
 msgid ""
 "Show non-sensitive information of the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
 msgstr ""
+"Mostrar información no confidencial en el sitio visible al público, como "
+"asignación de rondas (una vez publicadas) y las mociones de rondas "
+"anteriores"
 
 #: tournaments/mixins.py:94
 #, python-format
@@ -123,18 +126,24 @@ msgid ""
 "There's a problem with the data for the tournament %(tournament_name)s. "
 "Please contact a tab director and ask them to set its current round."
 msgstr ""
+"Hay un problema con los datos del torneo %(tournament_name)s. Por fabor "
+"contacte al equipo de tabulación y pídales que configuren la ronda actual."
 
 #: tournaments/mixins.py:106
 msgid ""
 "You've been redirected to this page because of a problem with how teams are "
 "assigned to sides in a debate."
 msgstr ""
+"Ha sido redirigido a esta página debido a un problema con la asignación de "
+"equipos de este debate."
 
 #: tournaments/mixins.py:111
 msgid ""
 "There's a problem with how teams are assigned to sides in a debate. The tab "
 "director will need to resolve this issue."
 msgstr ""
+"Hay un problema sobre como los equipos que fueron asignados en este debate. "
+"El jefe de tabulación debe resolver este problema."
 
 #: tournaments/mixins.py:134
 #, python-format
@@ -684,70 +693,71 @@ msgstr ""
 
 #: tournaments/templates/set_current_round.html:84
 msgid "Set Current Round"
-msgstr ""
+msgstr "Configurar ronda actual"
 
 #: tournaments/templates/site_index.html:4
 msgid "Welcome!"
-msgstr ""
+msgstr "¡Bienvenido!"
 
 #: tournaments/templates/site_index.html:17
 #, python-format
 msgid "Admin area for <strong>%(tn)s</strong>"
-msgstr ""
+msgstr "Área de admin para  <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:24
 #, python-format
 msgid "Assistant area for <strong>%(tn)s</strong>"
-msgstr ""
+msgstr "Área de asistencia para  <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:29
 #, python-format
 msgid "Public area for <strong>%(tn)s</strong>"
-msgstr ""
+msgstr "Área pública para  <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:47
 msgid ""
 "It looks like there aren't any tournaments on this site. Would you like to "
 "create one?"
 msgstr ""
+"Parece que no hay ningún torneo en este sitio. ¿Te gustaría crear uno?"
 
 #: tournaments/templates/site_index.html:55
 msgid "There are currently no tournaments set up on this site."
-msgstr ""
+msgstr "Actualmente no hay torneos configurados en este sitio."
 
 #: tournaments/templates/site_index.html:68
 msgid "All Draws by Venue"
-msgstr ""
+msgstr "Todas las asignaciones por sala"
 
 #: tournaments/templates/site_index.html:72
 msgid "All Draws by School"
-msgstr ""
+msgstr "Todas las asignaciones por escuela"
 
 #: tournaments/templates/site_index.html:76
 msgid "All Teams and Divisions"
-msgstr ""
+msgstr "Todos los equipos y divisiones"
 
 #: tournaments/templates/site_index.html:86
 msgid "New Tournament"
-msgstr ""
+msgstr "Nuevo torneo"
 
 #: tournaments/templates/site_index.html:89
 msgid "Edit Database Area"
-msgstr ""
+msgstr "Editar area de base de datos"
 
 #: tournaments/templates/site_index.html:98
 #, python-format
 msgid "Change Password (%(user)s)"
-msgstr ""
+msgstr "Cambiar contraseña %(user)s"
 
 #: tournaments/templates/site_index.html:102
 #, python-format
 msgid "Log Out (%(user)s)"
-msgstr ""
+msgstr "Cerrar sesión %(user)s"
 
 #: tournaments/templates/site_index.html:108
 msgid "Log In as Admin"
-msgstr ""
+msgstr "Inicia sesión como Administrador"
 
 #: tournaments/templates/tournament_index.html:8
 #, python-format
@@ -760,10 +770,17 @@ msgid ""
 "mandatory condition of Tabbycat's software license. <a "
 "href=\"%(url)s\">Learn more about donating.</a>"
 msgstr ""
+"Esperamos que hayas disfrutado usando Tabbycat para tu torneo. "
+"Agradeceríamos que hiciera una donación al proyecto para apoyar su "
+"desarrollo y mantenimiento continuo. Para un torneo de este tamaño, "
+"sugerimos una donación de  <strong>%(amount)s</strong>.  Tenga en cuenta que"
+" si su torneo se ejecuta con fines de lucro o para la recaudar fondos, hacer"
+" este pago es una condición obligatoria de la licencia de software de "
+"Tabbycat. <a href=\"%(url)s\"> Más información sobre cómo donar..</a>"
 
 #: tournaments/templates/tournament_index.html:24
 msgid "Welcome to your new tournament!"
-msgstr ""
+msgstr "¡Bienvenido a tu nuevo torneo!"
 
 #: tournaments/templates/tournament_index.html:26
 msgid ""
@@ -772,6 +789,10 @@ msgid ""
 "number of ways to do this. For small-to-medium tournaments, the simple "
 "importer is your best bet."
 msgstr ""
+"El siguiente paso es importar los datos iniciales del torneo: las "
+"instituciones, los equipos, los adjudicadores y las salas del torneo. Hay "
+"muchas maneras de hacer esto. Para torneos pequeños y medianos, el "
+"importador simple es su mejor apuesta."
 
 #. Translators: The documentation where the link goes to is in English;
 #. translations should mention this with "(in English)" after the link.
@@ -783,25 +804,33 @@ msgid ""
 "/importing-data.html\" class=\"alert-link\" target=\"_blank\"> documentation"
 " on importing initial data</a>."
 msgstr ""
+"Para más información, por favor consulta el documento <a "
+"href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use"
+"/importing-data.html\" class=\"alert-link\" target=\"_blank\"> en la sección"
+" importar datos iniciales."
 
 #: tournaments/templates/tournament_index.html:43
 msgid "Use the simple importer to add your initial data."
-msgstr ""
+msgstr "Usa la opción de importar para agregar los datos iniciales."
 
 #: tournaments/templates/tournament_index.html:49
 #, python-format
 msgid "Go to the checkins area to begin creating a draw for %(round_name)s"
-msgstr ""
+msgstr "Ve al area de check in para empezar a generar la ronda %(round_name)s"
 
 #: tournaments/templates/tournament_index.html:57
 #, python-format
 msgid "Go to the draw area to allocate adjudicators for %(round_name)s"
 msgstr ""
+"Ve al area de generación de ronda para asignar a los jueces para la ronda "
+"%(round_name)s"
 
 #: tournaments/templates/tournament_index.html:65
 #, python-format
 msgid "Go to the results area to begin entering ballots for %(round_name)s"
 msgstr ""
+"Ve al area de resultados para empezar a ingresar las ballots de la ronda "
+"%(round_name)s."
 
 #. Translators: abbreviation for "grand final"
 #: tournaments/utils.py:13
@@ -842,20 +871,20 @@ msgstr "OF"
 #. Translators: abbreviation for "double-octofinals"
 #: tournaments/utils.py:21
 msgid "Double-Octofinals"
-msgstr ""
+msgstr "Doble-Octavos de final"
 
 #: tournaments/utils.py:21
 msgid "DOF"
-msgstr ""
+msgstr "DOF"
 
 #. Translators: abbreviation for "triple-octofinals"
 #: tournaments/utils.py:23
 msgid "Triple-Octofinals"
-msgstr ""
+msgstr "Triple-Octavos de final"
 
 #: tournaments/utils.py:23
 msgid "TOF"
-msgstr ""
+msgstr "TOF"
 
 #: tournaments/utils.py:28
 msgid "affirmative"
@@ -1008,11 +1037,11 @@ msgstr "R%(number)d"
 #. when we don't know what it's called)
 #: tournaments/utils.py:103
 msgid "Unknown break round"
-msgstr ""
+msgstr "Ronda de break desconocida"
 
 #: tournaments/utils.py:103
 msgid "UBR"
-msgstr ""
+msgstr "RBD"
 
 #: tournaments/views.py:155
 #, python-format
@@ -1021,13 +1050,17 @@ msgid ""
 "of the preliminary rounds! Congratulations! The next step is to generate the"
 " break."
 msgstr ""
+"La ronda actual ha sido avanzada a %(round)s. ¡Has llegado al final de las "
+"rondas preliminares! ¡Felicitaciones! El siguiente paso es generar el break."
 
 #: tournaments/views.py:160
 #, python-format
 msgid "The current round has been advanced to %(round)s. Woohoo! Keep it up!"
-msgstr ""
+msgstr "La ronda actual ha avanzado a %(round)s. Wuhuu! ¡Sigue así!"
 
 #: tournaments/views.py:165
 msgid ""
 "Whoops! Could not advance round, because there's no round after this round!"
 msgstr ""
+"¡Upsss! ¡No se puede avanzar, porque no hay una ninguna ronda después de "
+"esta ronda!"
