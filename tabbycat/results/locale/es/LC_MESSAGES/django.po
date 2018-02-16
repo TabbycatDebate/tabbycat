@@ -21,7 +21,7 @@ msgstr ""
 #: results/apps.py:7 results/templates/public_results_index.html:4
 #: results/templates/public_results_index.html:5 results/views.py:100
 msgid "Results"
-msgstr "Resultador"
+msgstr "Resultados"
 
 #: results/forms.py:42
 msgid "That password isn't correct."
@@ -316,18 +316,20 @@ msgstr ""
 #: results/models.py:270
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr ""
+"El ingreso de la ballot y el debate deben estar relacionados con el mismo "
+"debate."
 
 #: results/tables.py:15
 msgid "Bye Debate"
-msgstr ""
+msgstr "Chao Debate"
 
 #: results/tables.py:17
 msgid "No Ballot"
-msgstr ""
+msgstr "No hay ballot"
 
 #: results/tables.py:19
 msgid "Ballot is In"
-msgstr ""
+msgstr "Ballot ingresada"
 
 #: results/tables.py:21
 msgid "Ballot is Unconfirmed"
@@ -789,63 +791,63 @@ msgstr[1] ""
 #: results/templates/public_enter_results_error.html:4
 #: results/templates/public_enter_results_error.html:5
 msgid "No Result to Enter"
-msgstr ""
+msgstr "No hay resultados que ingresar"
 
 #: results/templates/public_results_base.html:5
 #: results/templates/public_results_base.html:8
 #: results/templates/public_results_index.html:14
 #, python-format
 msgid "Results for %(round_name)s"
-msgstr ""
+msgstr "Resultados ronda %(round_name)s"
 
 #: results/templates/public_results_for_round.html:7
 msgid "View by Team"
-msgstr ""
+msgstr "Ver por equipo"
 
 #: results/templates/public_results_for_round.html:10
 msgid "View by Debate"
-msgstr ""
+msgstr "Ver por Debate"
 
 #: results/templates/public_results_not_available.html:7
 #, python-format
 msgid "The results for %(round_name)s aren't yet available"
-msgstr ""
+msgstr "Los resultados de la ronda %(round_name)s aun no están disponibles"
 
 #: results/templates/public_results_silent.html:7
 #, python-format
 msgid "%(round_name)s is a silent round"
-msgstr ""
+msgstr "%(round_name)s es una ronda cerrada"
 
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
 #: results/utils.py:80
 #, python-format
 msgid "%(team_name)s as %(side_abbr)s"
-msgstr ""
+msgstr "%(team_name)s como %(side_abbr)s"
 
 #: results/utils.py:98
 #, python-format
 msgid "%(winner)s (%(winner_side)s) won"
-msgstr ""
+msgstr "%(winner)s%(winner_side)s ganado"
 
 #: results/utils.py:103
 #, python-format
 msgid "vs %(loser)s (%(loser_side)s)"
-msgstr ""
+msgstr "vs %(loser)s%(loser_side)s"
 
 #: results/utils.py:118
 #, python-format
 msgid "Advancing: %(advancing_list)s<br>\n"
-msgstr ""
+msgstr "Avanza: %(advancing_list)s<br>\n"
 
 #: results/utils.py:122
 #, python-format
 msgid "Eliminated: %(eliminated_list)s"
-msgstr ""
+msgstr "Eliminado: %(eliminated_list)s"
 
 #: results/utils.py:132
 #, python-format
 msgid "1st: %(first_team)s<br>\n"
-msgstr ""
+msgstr "1ro: %(first_team)s<br>\n"
 
 #: results/utils.py:134
 #, python-format
@@ -854,104 +856,107 @@ msgid ""
 "3rd: %(third_team)s<br>\n"
 "4th: %(fourth_team)s"
 msgstr ""
+"2do: %(second_team)s<br>\n"
+"3ro: %(third_team)s<br>\n"
+"4to: %(fourth_team)s"
 
 #: results/utils.py:145
 #, python-format
 msgid "Error with result for %(debate)s"
-msgstr ""
+msgstr "Error con el resultado de %(debate)s"
 
 #: results/utils.py:213
 msgid "1st"
-msgstr ""
+msgstr "1ra"
 
 #: results/utils.py:214
 msgid "2nd"
-msgstr ""
+msgstr "2da"
 
 #: results/utils.py:215
 msgid "3rd"
-msgstr ""
+msgstr "3ra"
 
 #: results/utils.py:216
 msgid "4th"
-msgstr ""
+msgstr "4ta"
 
 #: results/utils.py:217
 msgid "5th"
-msgstr ""
+msgstr "5ta"
 
 #: results/utils.py:218
 msgid "6th"
-msgstr ""
+msgstr "6ta"
 
 #: results/utils.py:219
 msgid "7th"
-msgstr ""
+msgstr "7ma"
 
 #: results/utils.py:220
 msgid "8th"
-msgstr ""
+msgstr "8va"
 
 #. Translators: Abbreviation for Prime Minister
 #: results/utils.py:226
 msgid "PM"
-msgstr ""
+msgstr "PM"
 
 #. Translators: Abbreviation for Deputy Prime Minister
 #: results/utils.py:228
 msgid "DPM"
-msgstr ""
+msgstr "VPM"
 
 #. Translators: Abbreviation for Leader of the Opposition
 #: results/utils.py:230
 msgid "LO"
-msgstr ""
+msgstr "LO"
 
 #. Translators: Abbreviation for Deputy Leader of the Opposition
 #: results/utils.py:232
 msgid "DLO"
-msgstr ""
+msgstr "VLO"
 
 #. Translators: Abbreviation for Member for the Government
 #: results/utils.py:234
 msgid "MG"
-msgstr ""
+msgstr "MG"
 
 #. Translators: Abbreviation for Government Whip
 #: results/utils.py:236
 msgid "GW"
-msgstr ""
+msgstr "LG"
 
 #. Translators: Abbreviation for Member for the Opposition
 #: results/utils.py:238
 msgid "MO"
-msgstr ""
+msgstr "MO"
 
 #. Translators: Abbreviation for Opposition Whip
 #: results/utils.py:240
 msgid "OW"
-msgstr ""
+msgstr "LO"
 
 #: results/utils.py:260
 msgid "Reply"
-msgstr ""
+msgstr "Respuesta"
 
 #: results/views.py:64 results/views.py:65
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: results/views.py:118
 msgid "Venue"
-msgstr ""
+msgstr "Sala"
 
 #: results/views.py:146
 msgid "Team"
-msgstr ""
+msgstr "Equipo"
 
 #: results/views.py:308
 #, python-format
 msgid "Ballot set for %(debate)s added."
-msgstr ""
+msgstr "Configuración de la ballot para la sala %(debate)s agregada."
 
 #: results/views.py:323
 #, python-format
@@ -959,6 +964,8 @@ msgid ""
 "Whoops! The debate %(debate)s doesn't have a chair, so you can't enter "
 "results for it."
 msgstr ""
+"¡Upssss! El debate %(debate)s no tiene juez principal, por eso no pedes "
+"ingresar los resultados. Por favor contacta al equipo de tabulación. "
 
 #: results/views.py:329
 #, python-format
@@ -966,73 +973,83 @@ msgid ""
 "Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't"
 " enter results for it."
 msgstr ""
+"¡Upsss! El debate %(debate)s no tiene asignaciones confirmadas, por eso no "
+"puedes ingresar los resultados."
 
 #: results/views.py:361
 #, python-format
 msgid "Ballot set for %(matchup)s discarded."
-msgstr ""
+msgstr "Configuración de la ballot %(matchup)s descartada."
 
 #: results/views.py:363
 #, python-format
 msgid "Ballot set for %(matchup)s confirmed."
-msgstr ""
+msgstr "Configuración de la ballot %(matchup)s confirmada."
 
 #: results/views.py:365
 #, python-format
 msgid "Edits to ballot set for %(matchup)s saved."
-msgstr ""
+msgstr "Modificaciones de la ballot %(matchup)s guardadas."
 
 #: results/views.py:397
 #, python-format
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
-msgstr ""
+msgstr "Gracias, %(user)s Tu ballot de %(debate)s ha sido guardada."
 
 #: results/views.py:409
 msgid "The draw for this round hasn't been released yet."
-msgstr ""
+msgstr "La asignación de salas para esta ronda no ha sido anunciada aún."
 
 #: results/views.py:413
 msgid "The motions for this round haven't been released yet."
-msgstr ""
+msgstr "La moción para esta ronda no ha sido anunciada aún."
 
 #: results/views.py:418
 msgid "It looks like you don't have a debate this round."
-msgstr ""
+msgstr "Parece que no fuiste asignado a ningún debate en esta ronda."
 
 #: results/views.py:420
 msgid ""
 "It looks like you're assigned to two or more debates this round. Please "
 "contact a tab room official."
 msgstr ""
+"Parece que fuiste asignado a dos o más debates en esta ronda. Por favor "
+"contacta al equipo de tabulación."
 
 #: results/views.py:428
 msgid ""
 "Your debate doesn't have a chair, so you can't enter results for it. Please "
 "contact a tab room official."
 msgstr ""
+"Tu debate no tiene juez principal, por eso no pedes ingresar los resultados."
+" Por favor contacta al equipo de tabulación."
 
 #: results/views.py:433
 msgid ""
 "It looks like the sides for this debate haven't yet been confirmed, so you "
 "can't enter results for it. Please contact a tab room official."
 msgstr ""
+"Al parecer las asignaciones para este debate no han sido confirmadas, por "
+"eso no puedes ingresar los resultados. Por favor contacta al equipo de "
+"tabulación."
 
 #: results/views.py:514 results/views.py:527
 msgid "There aren't any venues with that name."
-msgstr ""
+msgstr "No hay salas con ese nombre."
 
 #: results/views.py:532
 #, python-format
 msgid "There wasn't a debate in venue %(venue_name)s this round."
-msgstr ""
+msgstr "No hay debate en la sala %(venue_name)s para esta ronda."
 
 #: results/views.py:535
 #, python-format
 msgid ""
 "There appear to be multiple debates in venue %(venue_name)s this round."
 msgstr ""
+"Parece que hay multiples debates en la sala %(venue_name)s para esta ronda."
 
 #: results/views.py:539
 #, python-format
 msgid "The ballot for venue %(venue_name)s has already been checked in."
-msgstr ""
+msgstr "La ballot para la sala %(venue_name)s ya ha sido verificada."

@@ -79,12 +79,12 @@ msgstr "المتحدث %(speaker)s لا يظهر على الفريق %(team)s"
 msgid "%(speaker)s appears to have given %(count)d substantive speech."
 msgid_plural ""
 "%(speaker)s appears to have given %(count)d substantive speeches."
-msgstr[0] "المحدث %(speaker)s لم يلق أية خطابات كمتحدث ثالث %(count)d"
-msgstr[1] "المتحدث %(speaker)s ألقى خطاب كمتحدث ثالث %(count)d مرات"
-msgstr[2] "المتحدث%(speaker)s ألقى خطاب كمتحدث ثالث %(count)d مرات"
-msgstr[3] "المتحدث%(speaker)s ألقى خطاب كمتحدث ثالث %(count)d مرات"
-msgstr[4] "المتحدث %(speaker)s ألقى خطاب كمتحدث ثالث %(count)d مرات"
-msgstr[5] "المتحدث %(speaker)s ألقى %(count)d خطابات كمتحدث ثالث"
+msgstr[0] "المحدث %(speaker)s لم يلق أية خطابات رئيسية %(count)d"
+msgstr[1] "المتحدث %(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[2] "المتحدث%(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[3] "المتحدث%(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[4] "المتحدث %(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[5] "المتحدث %(speaker)s ألقى %(count)d خطابات رئيسية"
 
 #: results/forms.py:498
 msgid "The last substantive speaker and reply speaker can't be the same."
@@ -115,7 +115,7 @@ msgstr ""
 msgid ""
 "The total scores for the teams are the same (i.e. a draw) for adjudicator "
 "%(adj)s."
-msgstr ""
+msgstr "مجموع نتائج الفرقين متساويين (تعادل) من قبل المحكم %(adj)s."
 
 #: results/forms.py:768
 #, python-format
@@ -141,11 +141,11 @@ msgstr ""
 
 #: results/models.py:28
 msgid "Tab room"
-msgstr ""
+msgstr "غرفة التحكم"
 
 #: results/models.py:29
 msgid "Public"
-msgstr ""
+msgstr "عمومي"
 
 #: results/models.py:32
 msgid "timestamp"
@@ -153,7 +153,7 @@ msgstr ""
 
 #: results/models.py:34
 msgid "version"
-msgstr ""
+msgstr "الاصدار"
 
 #: results/models.py:36
 msgid "submitter type"
@@ -161,7 +161,7 @@ msgstr ""
 
 #: results/models.py:38
 msgid "confirmed"
-msgstr ""
+msgstr "مؤكدة"
 
 #: results/models.py:43
 msgid "submitter"
@@ -185,11 +185,11 @@ msgstr ""
 
 #: results/models.py:95
 msgid "debate"
-msgstr ""
+msgstr "مناظرة"
 
 #: results/models.py:97
 msgid "motion"
-msgstr ""
+msgstr "نص قضية"
 
 #: results/models.py:99
 msgid "copied from"
@@ -233,11 +233,11 @@ msgstr ""
 
 #: results/models.py:159 results/models.py:195 results/models.py:241
 msgid "debate team"
-msgstr ""
+msgstr "فريق المناظرة"
 
 #: results/models.py:160 results/models.py:204 results/models.py:244
 msgid "score"
-msgstr ""
+msgstr "نقطة"
 
 #: results/models.py:161 results/models.py:245
 msgid "position"
@@ -263,7 +263,7 @@ msgstr ""
 
 #: results/models.py:200
 msgid "win"
-msgstr ""
+msgstr "فوز"
 
 #: results/models.py:202
 msgid "margin"
@@ -279,7 +279,7 @@ msgstr ""
 
 #: results/models.py:216
 msgid "team score"
-msgstr ""
+msgstr "نتيجة الفريق"
 
 #: results/models.py:217
 msgid "team scores"
@@ -287,7 +287,7 @@ msgstr ""
 
 #: results/models.py:243
 msgid "speaker"
-msgstr ""
+msgstr "متحدث"
 
 #: results/models.py:247
 msgid "ghost"
@@ -343,7 +343,7 @@ msgstr ""
 
 #: results/tables.py:33
 msgid "Status of this debate's ballot"
-msgstr ""
+msgstr "حالة نتيجة المناظرة"
 
 #: results/tables.py:64
 #, python-format
@@ -424,7 +424,7 @@ msgstr ""
 #: results/templates/assistant_enter_results.html:7
 #: results/templates/enter_results.html:27
 msgid "Back to All Results"
-msgstr ""
+msgstr "العودة إلى جميع النتائج"
 
 #: results/templates/assistant_enter_results.html:11
 #: results/templates/enter_results.html:31
@@ -437,7 +437,7 @@ msgstr ""
 
 #: results/templates/assistant_enter_results.html:41
 msgid "Confirm results"
-msgstr ""
+msgstr "تأكيد النتائج"
 
 #: results/templates/assistant_enter_results.html:44
 msgid "Results are incorrect"
@@ -446,7 +446,7 @@ msgstr ""
 #: results/templates/assistant_results.html:4
 #: results/templates/assistant_results.html:5
 msgid "Enter Results"
-msgstr ""
+msgstr "إدخال النتائج"
 
 #: results/templates/assistant_results.html:12
 msgid ""
@@ -546,7 +546,7 @@ msgstr ""
 
 #: results/templates/ballot/ballot_scoresheet.html:28
 msgid "Result"
-msgstr ""
+msgstr "نتيجة"
 
 #: results/templates/ballot/ballot_scoresheet.html:28
 msgid "Rank"
@@ -588,7 +588,7 @@ msgstr ""
 
 #: results/templates/ballot/other_ballots_list.html:29
 msgid "This ballot set is <strong>confirmed</strong>."
-msgstr ""
+msgstr "هذه النتيجة <strong>مؤكدة</strong>"
 
 #: results/templates/ballot/other_ballots_list.html:34
 msgid "This ballot set is <strong>discarded</strong>."
@@ -717,11 +717,11 @@ msgstr ""
 
 #: results/templates/enter_results.html:92
 msgid "Save Ballot"
-msgstr ""
+msgstr "حفظ النتيجة"
 
 #: results/templates/enter_results.html:95
 msgid "Cancel Entry"
-msgstr ""
+msgstr "إلغاء الادخال"
 
 #: results/templates/includes/public_enter_results_info.html:4
 #, python-format
@@ -742,7 +742,7 @@ msgstr ""
 
 #: results/templates/public_add_ballot.html:5
 msgid "Who are you?"
-msgstr ""
+msgstr "من أنت ؟"
 
 #: results/templates/public_add_ballot.html:6
 msgid "(click your name on this list)"
@@ -750,7 +750,7 @@ msgstr ""
 
 #: results/templates/public_add_ballot.html:15
 msgid "Adjudicator"
-msgstr ""
+msgstr "محكم"
 
 #: results/templates/public_add_ballot.html:28
 #, python-format
