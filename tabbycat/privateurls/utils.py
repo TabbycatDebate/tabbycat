@@ -41,7 +41,10 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
     try:
         send_mass_mail(messages, fail_silently=False)
     except SMTPException:
-        logger.warning("Failed to send randomised URL e-mails", exc_info=True)
+        logger.exception("Failed to send randomised URL e-mails")
+        raise
+    except ConnectionError:
+        logger.exception("Connection error sending randomised URL e-mails")
         raise
     else:
         logger.info("Sent %d randomised URL e-mails", len(messages))

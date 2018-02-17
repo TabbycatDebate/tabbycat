@@ -252,6 +252,11 @@ class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
             )
         except SMTPException:
             messages.error(request, _("There was a problem sending private ballot URLs to adjudicators."))
+        except ConnectionError:
+            messages.error(request, _(
+                "There was a problem connecting to the e-mail server when trying to send private"
+                "ballot URLs to adjudicators."
+            ))
         else:
             messages.success(request, ungettext(
                 "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator.",
