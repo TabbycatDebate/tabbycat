@@ -34,7 +34,7 @@
     "December": "D\u00e9cembre",
     "February": "F\u00e9vrier",
     "Filter": "Filtrer",
-    "Find in Table": "\u0627\u0644\u0628\u062d\u062b \u0641\u064a \u0627\u0644\u062c\u062f\u0648\u0644",
+    "Find in Table": "Chercher dans la table",
     "Hide": "Masquer",
     "January": "Janvier",
     "July": "Juillet",

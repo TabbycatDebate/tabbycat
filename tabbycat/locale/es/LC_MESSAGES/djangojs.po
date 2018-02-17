@@ -20,7 +20,7 @@ msgstr ""
 
 #: templates/tables/TablesContrainer.vue:8
 msgid "Find in Table"
-msgstr "البحث في الجدول"
+msgstr "Encontrar en la tabla"
 
 #: participants/templates/DiversityContrainer.vue:6
 msgid "Speaker Demographics"
