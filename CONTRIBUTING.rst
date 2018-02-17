@@ -93,20 +93,22 @@ Project Structure
 Translations
 ============
 
-The backend's translation files can be updated from the ``tabbycat`` directory using one of the supporting language codes (see settings.py)::
+The backend's translation files can be updated from the ``tabbycat`` directory using one or more of the supporting language codes (see settings.py)::
 
-    $ django-admin makemessages -l es
+    $ dj makemessages -l es
+    
+To do more than one language, just specify ``-l`` multiple times, _e.g._ ``-les -lar``.
 
-These can then be compiled using:
+These can then be compiled using::
 
-    $ django-admin compilemessages -l es
+    $ dj compilemessages -l es
 
-As it stands Heroku needs the .mo files pre-compiled so these are committed to git. Note that `en` language files should not be compiled.
+As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files should not be compiled; their sole purpose is to provide a source language for Transifex.
 
-The frontend's translation files are manually updated in ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``. These can then compiled to javascript bundles using:
+The frontend's translation files are manually updated in ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``. These can then compiled to javascript bundles using::
 
-    $ django-admin compilemessages -l es # Or whichever location you want to update
-    $ python manage.py compilejsi18n
+    $ dj compilemessages -l es        # or whichever language(s) you want to update
+    $ dj compilejsi18n
 
 These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of a gulp task.
 
