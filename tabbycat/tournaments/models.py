@@ -18,7 +18,7 @@ PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts',   # System
     'start', 'create', 'load-demo', # Setup Wizards
     'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
-    '__debug__', 'static', 'donations', 'style']  # Misc
+    '__debug__', 'static', 'donations', 'style', 'i18n', 'jsi18n']  # Misc
 
 
 def validate_tournament_slug(value):
