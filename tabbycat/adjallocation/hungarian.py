@@ -26,26 +26,26 @@ class HungarianAllocator(Allocator):
         self.feedback_weight = t.current_round.feedback_weight
 
     def populate_adj_scores(self, adjudicators):
+        score_min = self.min_score
+        score_range = self.max_score - score_min
+
         for adj in adjudicators:
-            adj._hungarian_score = adj.weighted_score(self.feedback_weight)
+            score = adj.weighted_score(self.feedback_weight)
+            # Normalize the adj score to a 0-5 range
+            adj._normalized_score = (score - score_min) / score_range * 5
+
+        ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
+        if ntoolarge > 0:
+            logger.warning("%d normalised scores are larger than 5.0", ntoolarge)
+        ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
+        if ntoosmall > 0:
+            logger.warning("%d normalised scores are smaller than 0.0", ntoosmall)
 
     def calc_cost(self, debate, adj, adjustment=0, chair=None):
         cost = 0
 
         # Normalise debate importances back to the 1-5 (not ±2) range expected
         normalised_importance = debate.importance + 3
-
-        # Similarly normalise adj scores to the 0-5 range expected
-        score_min = self.min_score
-        score_range = self.max_score - score_min
-        normalised_adj_score = (adj._hungarian_score - score_min) / score_range * 5 + 0
-
-        if normalised_adj_score > 5.0:
-            logger.warning("Normalised score %s is larger than 5.0 (raw score %s, min %s, max %s)",
-                normalised_adj_score, adj._hungarian_score, self.min_score, self.max_score)
-        elif normalised_adj_score < 0.0:
-            logger.warning("Normalised score %s is smaller than 0.0 (raw score %s, min %s, max %s)",
-                normalised_adj_score, adj._hungarian_score, self.min_score, self.max_score)
 
         for side in self.tournament.sides:
             cost += self.conflict_penalty * adj.conflicts_with_team(debate.get_team(side))
@@ -55,11 +55,11 @@ class HungarianAllocator(Allocator):
             cost += self.history_penalty * adj.seen_adjudicator(chair, debate.round)
 
         impt = normalised_importance + adjustment
-        diff = 5 + impt - adj._hungarian_score
+        diff = 5 + impt - adj._normalized_score
         if diff > 0.25:
             cost += 1000 * exp(diff - 0.25)
 
-        cost += self.max_score - adj._hungarian_score
+        cost += self.max_score - adj._normalized_score
 
         return cost
 
@@ -67,9 +67,9 @@ class HungarianAllocator(Allocator):
         self.populate_adj_scores(self.adjudicators)
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._hungarian_score >= self.min_voting_score and not a.trainee]
+        voting = [a for a in self.adjudicators if a._normalized_score >= self.min_voting_score and not a.trainee]
         random.shuffle(voting)
-        voting.sort(key=lambda a: a._hungarian_score, reverse=True)
+        voting.sort(key=lambda a: a._normalized_score, reverse=True)
 
         # Divide into solos, panellists and trainees
         n_debates = len(self.debates)
@@ -87,7 +87,7 @@ class HungarianAllocator(Allocator):
             trainees = []
         else:
             trainees = [a for a in self.adjudicators if a not in voting]
-            trainees.sort(key=lambda a: a._hungarian_score, reverse=True)
+            trainees.sort(key=lambda a: a._normalized_score, reverse=True)
 
         # Divide debates into solo-chaired debates and panel debates
         debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))
@@ -158,7 +158,7 @@ class HungarianAllocator(Allocator):
             # the chair is the highest-ranked adjudicator in the panel
             for i, debate in enumerate(panel_debates):
                 aa = AdjudicatorAllocation(debate)
-                panels[i].sort(key=lambda a: a._hungarian_score, reverse=True)
+                panels[i].sort(key=lambda a: a._normalized_score, reverse=True)
                 if not panels[i]:
                     continue
                 aa.chair = panels[i].pop(0)
