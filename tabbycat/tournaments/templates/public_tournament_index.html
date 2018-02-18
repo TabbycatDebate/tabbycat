@@ -23,10 +23,10 @@
 
 {% block content %}
 
-  {% if tournament.welcome_msg %}
+  {% if pref.welcome_message %}
     <div class="card">
       <div class="card-body pb-0">
-        {{ tournament.welcome_msg|safe|linebreaks }}
+        {{ pref.welcome_message|safe|linebreaks }}
       </div>
     </div>
   {% endif %}

@@ -44,9 +44,6 @@ class Tournament(models.Model):
     current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='current_tournament',
         verbose_name=_("current round"),
         help_text=_("Must be set for the tournament to start! (Set after rounds are inputted)"))
-    welcome_msg = models.TextField(blank=True, null=True, default="",
-        verbose_name=_("welcome message"),
-        help_text=_("Text/html entered here shows on the homepage for this tournament"))
     active = models.BooleanField(verbose_name=_("active"), default=True)
 
     class Meta:

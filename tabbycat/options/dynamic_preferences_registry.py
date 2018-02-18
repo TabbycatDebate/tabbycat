@@ -3,7 +3,7 @@ from django.forms import ValidationError
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 from dynamic_preferences.preferences import Section
-from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, StringPreference
+from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
 from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
@@ -867,6 +867,15 @@ class FeedbackProgress(BooleanPreference):
     section = public_features
     name = 'feedback_progress'
     default = False
+
+
+@tournament_preferences_registry.register
+class WelcomeMessage(LongStringPreference):
+    help_text = _("Message to be displayed on the tournament home page. Supports HTML.")
+    verbose_name = _("Welcome message")
+    section = public_features
+    name = 'welcome_message'
+    default = ""
 
 
 # ==============================================================================
