@@ -142,16 +142,11 @@ class ActionLogEntry(models.Model):
         if self.user is None and self.ip_address is None:
             raise ValidationError(_("All log entries require at least one of a user and an IP address."))
 
-    def get_content_object_display(self):
+    def get_content_object_display(self, omit_tournament=False):
         obj = self.content_object
 
         if obj is None:
-            if self.round is not None:
-                return self.round.name
-            elif self.tournament is not None:
-                return self.tournament.name
-            else:
-                return None
+            return None
 
         model_name = self.content_type.model
         try:
@@ -165,7 +160,9 @@ class ActionLogEntry(models.Model):
                 return obj.adjudicator.name + " (" + str(obj.score) + ")"
             elif model_name == 'adjudicatorfeedback':
                 return obj.adjudicator.name
-            elif model_name in ['round', 'tournament', 'adjudicator', 'breakcategory']:
+            elif model_name == 'tournament':
+                return None if omit_tournament else obj.name
+            elif model_name in ['round', 'adjudicator', 'breakcategory']:
                 return obj.name
             else:
                 return str(obj)
@@ -178,6 +175,6 @@ class ActionLogEntry(models.Model):
             'id': self.id,
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
             'type': self.get_type_display(),
-            'param': "" if self.content_type.model == 'tournament' else self.get_content_object_display(),
+            'param': self.get_content_object_display(omit_tournament=True),
             'timestamp': self.timestamp.strftime("%d/%m %H:%M")
         }
