@@ -690,6 +690,9 @@ msgid ""
 "need to <a href=\"%(round_changelist_url)s\">add rounds and associate them "
 "with this tournament</a> before you can set the current round."
 msgstr ""
+"El torneo <strong>%(tournament_name)s</strong> no tiene rondas. Necesitas <a"
+" href=\"%(round_changelist_url)s\"> agregar rondas y asociarlas con este "
+"torneo </a> antes de poder configurar la ronda actual."
 
 #: tournaments/templates/set_current_round.html:84
 msgid "Set Current Round"
