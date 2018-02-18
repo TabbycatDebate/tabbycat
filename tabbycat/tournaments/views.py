@@ -349,5 +349,5 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
 
         debate = self.get_debate(posted_debate['id'])
         debate = self.modify_debate(debate, posted_debate)
-        self.log_action()
+        self.log_action(content_object=debate)
         return json.dumps(debate.serialize())
