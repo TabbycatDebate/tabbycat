@@ -108,7 +108,7 @@ As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Pytho
 The frontend's translation files are manually updated in ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``. These can then compiled to javascript bundles using::
 
     $ dj compilemessages -l es        # or whichever language(s) you want to update
-    $ dj compilejsi18n
+    $ dj compilejsi18n -l es
 
 These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of a gulp task.
 
