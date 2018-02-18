@@ -163,5 +163,17 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
 
+    def get_default_test_score(self):
+        """Returns the midpoint of the configured allowable score range."""
+        if not hasattr(self, "_default_test_score"):
+            tournament = self.get_tournament()
+            min_score = tournament.pref('adj_min_score')
+            max_score = tournament.pref('adj_max_score')
+            self._default_test_score = (min_score + max_score) / 2
+        return self._default_test_score
+
     def get_details_instance_initial(self, i):
-        return {'name': _("Adjudicator %(number)d") % {'number': i}, 'test_score': 2.5}
+        return {
+            'name': _("Adjudicator %(number)d") % {'number': i},
+            'test_score': self.get_default_test_score()
+        }

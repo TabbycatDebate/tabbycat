@@ -13,14 +13,20 @@
     <button type="submit" class="btn btn-outline-primary" name="wizard_goto_step" value="{{ wizard.steps.prev }}"><i data-feather="chevron-left"></i>{% trans "Previous Step" %}</button>
   </div>
 
+  {% tournamenturl 'options-tournament-section' section='feedback' as options_feedback %}
   {% tournamenturl 'options-tournament-section' section='league_options' as options_league_url %}
-    {% blocktrans trimmed asvar settings_info with min=pref.adj_min_score max=pref.adj_max_score %}
-      As per this tournament's configuration, an adjudicator's rating must be between
-      <strong>{{ min }}</strong> and <strong>{{ max }}</strong>. Adjudicators marked as 'shared' will
-      not be associated with any particular tournament but will be available to any tournament which
-      has the "<a href="{{ options_league_url }}" class="alert-link">Share Adjudicators setting</a>" enabled.
-      Providing email addresses is optional but can be useful if using Private URLs for feedback or ballots.
-    {% endblocktrans %}
+  {% tournamenturl 'privateurls-list' as privateurls_url %}
+  {% blocktrans trimmed asvar settings_info with min=pref.adj_min_score max=pref.adj_max_score %}
+    As per <a href="{{ options_feedback }}" class="alert-link">this tournament's
+    configuration</a>, an adjudicator's rating must be between
+    <strong>{{ min }}</strong> and <strong>{{ max }}</strong>. Adjudicators
+    marked as 'shared' will not be associated with any particular tournament but
+    will be available to any tournament which has the
+    "<a href="{{ options_league_url }}" class="alert-link">Share adjudicators</a>"
+    setting enabled. Providing email addresses is optional but can be useful if
+    using <a href="{{ privateurls_url }}" class="alert-link">private URLs</a>
+    for feedback or ballots.
+  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" p1=settings_info %}
 
   {% csrf_token %}
