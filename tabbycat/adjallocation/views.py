@@ -21,8 +21,7 @@ from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView
 
 from .allocator import allocate_adjudicators
-from .consensushungarian import ConsensusHungarianAllocator
-from .hungarian import HungarianAllocator
+from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .models import DebateAdjudicator
 from .utils import get_clashes, get_histories
 
@@ -145,7 +144,7 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataR
             raise BadJsonRequestError(info)
 
         if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
-            allocator_class = HungarianAllocator
+            allocator_class = VotingHungarianAllocator
         else:
             allocator_class = ConsensusHungarianAllocator
 
