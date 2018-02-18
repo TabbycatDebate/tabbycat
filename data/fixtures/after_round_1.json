@@ -8387,7 +8387,6 @@
         "seq": null,
         "slug": "demo",
         "current_round": 2,
-        "welcome_msg": "",
         "active": true
     }
 },
