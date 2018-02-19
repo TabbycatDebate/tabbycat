@@ -49,6 +49,10 @@ urlpatterns = [
          JavaScriptCatalog.as_view(domain="djangojs", ),
          name='javascript-catalog'),
 
+    # Summernote (WYSYWIG)
+    path('summernote/',
+        include('django_summernote.urls')),
+
     # Admin area
     path('jet/',
         include('jet.urls', 'jet')),
