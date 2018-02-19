@@ -21,6 +21,7 @@ Change Log
     - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis'
     - On Heroku: Sites should now always run at least 1 web dyno *as well as* 1 worker dyno. When scaling, generally you would scale *worker* dynos to handle a greater request throughput and scale *web* dynos to handle a greater request concurrency
     - Locally: You should recreate your local_settings.py from the example file
+- Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
 
 
 2.0.5
