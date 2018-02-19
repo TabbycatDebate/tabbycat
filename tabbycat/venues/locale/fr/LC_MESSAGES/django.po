@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-18 17:57-0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-02-18 23:26-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,14 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: venues/apps.py:7
 msgid "Venues"
-msgstr ""
-"Description, comme le prédicat d’une phrase, par exemple « a l'accès sans "
-"marches », « est près de la salle de briefing ». Cette description fait "
-"suite à « Ce lieu » lorsqu'elle est affichée dans les info-bulles, par "
-"exemple, « Ce lieu est près de la salle de briefing. »"
+msgstr "Salles"
 
 #: venues/models.py:10 venues/models.py:74
 msgid "name"
@@ -39,8 +35,8 @@ msgid ""
 "Venues with a higher priority number will be preferred when allocating "
 "venues to debates"
 msgstr ""
-"Lieux ayant un nombre plus élevé de priorité seront privilégiées lors de "
-"l’attribution des lieux de débats"
+"Les salles ayant un nombre plus élevé de priorité seront privilégiées lors "
+"de l’attribution des lieux de débats"
 
 #: venues/models.py:16
 msgid "tournament"
@@ -49,20 +45,20 @@ msgstr "tournoi"
 #: venues/models.py:17
 msgid "Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
-"Lieux qui ne sont attribués à aucun tournoi peuvent être partagés entre les "
-"tournois"
+"Les salles n'étant pas attribuées à aucun tournoi peuvent être partagés "
+"entre les tournois"
 
 #: venues/models.py:24
 msgid "venue"
-msgstr "lieu"
+msgstr "salle"
 
 #: venues/models.py:25 venues/models.py:84
 msgid "venues"
-msgstr "lieux"
+msgstr "salles"
 
 #: venues/models.py:69
 msgid "Don't display in venue name"
-msgstr "Ne pas afficher dans le nom du lieu"
+msgstr "Ne pas afficher dans le nom de la salle"
 
 #: venues/models.py:70
 msgid "Display as prefix"
@@ -80,7 +76,7 @@ msgid ""
 msgstr ""
 "Nom de la catégorie, par exemple, « Violet », « sans marches », « près de la "
 "salle de tab ». Ce nom est affiché lorsque la catégorie est le préfixe ou "
-"suffixe d’un nom de lieu dans le tirage, par exemple, « Violet – G05 »."
+"suffixe d’un nom de salle dans le tirage, par exemple, « Violet – G05 »."
 
 #: venues/models.py:79
 msgid "description"
@@ -94,13 +90,13 @@ msgid ""
 msgstr ""
 "Description, comme le prédicat d’une phrase, par exemple « a accès sans "
 "étape », « est à proximité de la salle de réunion d’information ». Cette "
-"description fait suite à « Ce lieu » lorsque affiché dans les info-bulles, "
-"par exemple, « ce lieu est à proximité de la salle de réunion "
+"description fait suite à « Cette salle » lorsque affiché dans les info-"
+"bulles, par exemple, « cette salle est à proximité de la salle de réunion "
 "d’information. »."
 
 #: venues/models.py:88
 msgid "display in venue name"
-msgstr "afficher dans le nom du lieu"
+msgstr "afficher dans le nom de la salle"
 
 #: venues/models.py:89
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
@@ -115,17 +111,17 @@ msgid ""
 "Displays the description in the tooltip for the venue on public pages. The "
 "description, if not blank, will always show on admin pages."
 msgstr ""
-"Si actif, la description s’affiche dans l’info-bulle décrivant le lieu sur "
+"Si actif, la description s’affiche dans l’info-bulle décrivant la salle sur "
 "les pages publiques. La description, si non vide, s'affiche toujours sur les "
 "pages administratives."
 
 #: venues/models.py:96
 msgid "venue category"
-msgstr "catégorie de lieux"
+msgstr "catégorie de salles"
 
 #: venues/models.py:97
 msgid "venue categories"
-msgstr "catégories de lieux"
+msgstr "catégories de salles"
 
 #: venues/models.py:127
 msgid "category"
@@ -141,20 +137,20 @@ msgstr "identifiant de sujet"
 
 #: venues/models.py:140
 msgid "venue constraint"
-msgstr "contrainte de lieu"
+msgstr "contrainte de salle"
 
 #: venues/models.py:141
 msgid "venue constraints"
-msgstr "contraintes de lieu"
+msgstr "contraintes de salle"
 
 #: venues/templates/venue_categories_edit.html:4
 #: venues/templates/venue_categories_edit.html:5
 msgid "Venue Categories"
-msgstr "Catégories de lieux"
+msgstr "Catégories de salles"
 
 #: venues/templates/venue_categories_edit.html:7
 msgid "Save Venue Categories"
-msgstr "Enregistrer les catégories de lieux"
+msgstr "Enregistrer les catégories de salles"
 
 #: venues/templates/venue_categories_edit.html:11
 msgid ""
@@ -163,6 +159,11 @@ msgid ""
 "specify constraints on venue allocation that require teams, adjudicators or "
 "institutions to be put in a venue in a particular category."
 msgstr ""
+"En utilisant les catégories de salles, vous pouvez grouper les salles dans "
+"les « zones » pour les afficher dans le tirage et pour rendre la navigation "
+"plus facile pour les participants, et/ou spécifier les contraintes sur "
+"l'attribution des salles, pour que les équipes, juges ou institutions "
+"doivent être attribué une salle qui est dans une catégorie particulière."
 
 #: venues/templates/venue_categories_edit.html:16
 #, python-format
@@ -170,14 +171,14 @@ msgid ""
 "If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
 "class=\"alert-link\">Edit Database</a> area."
 msgstr ""
-"Si vous souhaitez supprimer des catégories de lieux, utilisez la zone pour "
+"Si vous souhaitez supprimer des catégories de salles, utilisez la zone pour "
 "<a href=\"%(edit_db_url)s\" class=\"alert-link\">modifier la base de "
 "données</a>."
 
 #: venues/templates/venue_constraints_edit.html:4
 #: venues/templates/venue_constraints_edit.html:5
 msgid "Venue Constraints"
-msgstr "Contraintes de lieu"
+msgstr "Contraintes de salle"
 
 #: venues/templates/venue_constraints_edit.html:9
 msgid ""
@@ -188,10 +189,18 @@ msgid ""
 "can also use the priority field to specify \"lower-preference\" constraints, "
 "which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
+"En spécifier des contraintes de salle, vous pouvez demander à l'allocateur "
+"des salles d'essayer de mettre l'équipe indiquée ou le juge indiqué, ou tous "
+"les équipes (mais pas les juges) de l'institution indiquée, dans une salle "
+"de la catégorie indiquée. Le champ « priorité » résout les contraintes "
+"contradictoires : le nombre plus élevé a la priorité. Vous pouvez aussi "
+"utiliser le champ de priorité pour spécifier des contraintes « d'ordre "
+"inférieur », qui sont prises si aucune contrainte de priorité plus élevé ne "
+"pouvais été satisfaite."
 
 #: venues/templates/venue_constraints_edit.html:41
 msgid "Save Venue Constraints"
-msgstr "Enregistrer les contraintes de lieu"
+msgstr "Enregistrer les contraintes de salle"
 
 #: venues/templates/venue_constraints_edit.html:44
 msgid "Save and Add More"
@@ -200,12 +209,12 @@ msgstr "Enregistrer et ajouter davantage"
 #: venues/utils.py:38 venues/utils.py:50
 #, python-format
 msgid "Venue constraint of %(name)s met (%(category)s)"
-msgstr "Contrainte de lieu de %(name)s est satisfaite (%(category)s)"
+msgstr "Contrainte de salle de %(name)s est satisfaite (%(category)s)"
 
 #: venues/utils.py:39 venues/utils.py:51
 #, python-format
 msgid "Venue does not meet any constraint of %(name)s"
-msgstr "Ce lieu ne satisfait aucune contrainte de %(name)s"
+msgstr "Cette salle ne satisfait aucune contrainte de %(name)s"
 
 #: venues/utils.py:44
 #, python-format
@@ -213,31 +222,31 @@ msgid ""
 "Venue constraint of %(team)s met (%(category)s, via institution "
 "%(institution)s)"
 msgstr ""
-"Contrainte de lieu de %(team)s est satisfaite (%(category)s, via institution "
-"%(institution)s)"
+"Contrainte de salle de %(team)s est satisfaite (%(category)s, via "
+"institution %(institution)s)"
 
 #: venues/utils.py:45
 #, python-format
 msgid ""
 "Venue does not meet any constraint of institution %(institution)s (%(team)s)"
 msgstr ""
-"Ce lieu ne satisfait aucune contrainte de l'institution %(institution)s "
+"Cette salle ne satisfait aucune contrainte de l'institution %(institution)s "
 "(%(team)s)"
 
 #: venues/views.py:100
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "La catégorie de salles suivante a été enregistrée : %(list)s"
+msgstr[1] "Les catégories de salles suivantes ont été enregistrées : %(list)s"
 
 #: venues/views.py:106
 msgid "No changes were made to the venue categories."
-msgstr "Aucune catégorie de lieux a été modifiée."
+msgstr "Aucune catégorie de salle a été modifiée."
 
 #: venues/views.py:176
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d contrainte de salle a été enregistrée."
+msgstr[1] "%(count)d contraintes de salle ont été enregistrées."
