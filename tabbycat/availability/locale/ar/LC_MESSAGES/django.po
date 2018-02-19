@@ -20,11 +20,11 @@ msgstr ""
 
 #: availability/apps.py:7
 msgid "Availability"
-msgstr ""
+msgstr "موجود "
 
 #: availability/models.py:15
 msgid "content type"
-msgstr ""
+msgstr "نوع المحتوى"
 
 #: availability/models.py:16
 msgid "object id"
@@ -36,11 +36,11 @@ msgstr "جولة"
 
 #: availability/models.py:24
 msgid "round availability"
-msgstr ""
+msgstr "الجولة موجودة"
 
 #: availability/models.py:25
 msgid "round availabilities"
-msgstr ""
+msgstr "الجولة موجودة"
 
 #: availability/templates/availability_index.html:11
 msgid "Check In All Breaking Adjs"
@@ -48,7 +48,7 @@ msgstr ""
 
 #: availability/templates/availability_index.html:18
 msgid "Check In Everything"
-msgstr ""
+msgstr "دخول الجميع"
 
 #: availability/templates/availability_index.html:25
 #, python-format
@@ -73,12 +73,12 @@ msgstr "إنشاء قرعة"
 
 #: availability/templates/availability_index.html:52
 msgid "The draw cannot be generated until some teams have been checked in."
-msgstr ""
+msgstr "لا يمكن إنشاء السحب حتى يتم التحقق من بعض الفرق."
 
 #: availability/templates/availability_index.html:57
 msgid ""
 "The draw cannot be generated until some adjudicators have been checked in."
-msgstr ""
+msgstr "لا يمكن إنشاء السحب حتى يتم التحقق من بعض المحكمين ."
 
 #: availability/templates/availability_index.html:62
 msgid "The draw cannot be generated until some venues have been checked in."
@@ -360,12 +360,12 @@ msgstr ""
 
 #: availability/views.py:177
 msgid "Active Now"
-msgstr ""
+msgstr "مفعل "
 
 #: availability/views.py:187
 #, python-format
 msgid "Active in %(prev_round)s"
-msgstr ""
+msgstr "مفعل في %(prev_round)s"
 
 #: availability/views.py:237
 msgid "Venue"

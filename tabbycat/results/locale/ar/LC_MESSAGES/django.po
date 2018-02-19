@@ -303,11 +303,11 @@ msgstr ""
 
 #: results/models.py:257
 msgid "speaker score"
-msgstr ""
+msgstr "نقاط المتحدث"
 
 #: results/models.py:258
 msgid "speaker scores"
-msgstr ""
+msgstr "نقاط المتحدثين"
 
 #: results/models.py:267
 msgid "The debate team and speaker must be from the same team."

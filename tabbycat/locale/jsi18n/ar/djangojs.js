@@ -150,7 +150,7 @@
       "%m/%d/%y %H:%M",
       "%m/%d/%y"
     ],
-    "DATE_FORMAT": "N j, Y",
+    "DATE_FORMAT": "j F\u060c Y",
     "DATE_INPUT_FORMATS": [
       "%Y-%m-%d",
       "%m/%d/%Y",
@@ -164,14 +164,14 @@
       "%d %B %Y",
       "%d %B, %Y"
     ],
-    "DECIMAL_SEPARATOR": ".",
+    "DECIMAL_SEPARATOR": ",",
     "FIRST_DAY_OF_WEEK": 0,
-    "MONTH_DAY_FORMAT": "F j",
+    "MONTH_DAY_FORMAT": "j F",
     "NUMBER_GROUPING": 0,
     "SHORT_DATETIME_FORMAT": "m/d/Y P",
-    "SHORT_DATE_FORMAT": "m/d/Y",
-    "THOUSAND_SEPARATOR": ",",
-    "TIME_FORMAT": "P",
+    "SHORT_DATE_FORMAT": "d\u200f/m\u200f/Y",
+    "THOUSAND_SEPARATOR": ".",
+    "TIME_FORMAT": "g:i A",
     "TIME_INPUT_FORMATS": [
       "%H:%M:%S",
       "%H:%M:%S.%f",

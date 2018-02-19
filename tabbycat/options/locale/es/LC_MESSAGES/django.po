@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Julian Duarte <jaduarteb@unal.edu.co>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:16
 #: options/templates/preferences_index.html:15
 msgid "Score Rules"
-msgstr ""
+msgstr "Reglas de puntuación"
 
 #: options/dynamic_preferences_registry.py:22
 msgid "Minimum allowed score for substantive speeches"
@@ -28,11 +29,11 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:25
 msgid "Minimum speaker score"
-msgstr ""
+msgstr "Puntuación de orador mínima "
 
 #: options/dynamic_preferences_registry.py:31
 msgid "Maximum speaker score"
-msgstr ""
+msgstr "Puntuación de orador máxima"
 
 #: options/dynamic_preferences_registry.py:32
 msgid "Maximum allowed score for substantive speeches"
@@ -52,26 +53,28 @@ msgstr ""
 msgid ""
 "The largest amount by which one team can beat another (0 means no limit)"
 msgstr ""
+"La cantidad más grande por la cual un equipo puede vencer a otro (0 "
+"significa que no hay límite)"
 
 #: options/dynamic_preferences_registry.py:50
 msgid "Maximum margin"
-msgstr ""
+msgstr "Margen máximo"
 
 #: options/dynamic_preferences_registry.py:59
 msgid "Minimum allowed score for reply speeches"
-msgstr ""
+msgstr "Puntaje mínimo permitido para discursos de replica"
 
 #: options/dynamic_preferences_registry.py:60
 msgid "Minimum reply score"
-msgstr ""
+msgstr "Puntaje mínimo de replica"
 
 #: options/dynamic_preferences_registry.py:68
 msgid "Maximum allowed score for reply speeches"
-msgstr ""
+msgstr "Puntaje máximo permitido para discursos de replica"
 
 #: options/dynamic_preferences_registry.py:69
 msgid "Maximum reply score"
-msgstr ""
+msgstr "Puntaje máximo de replica"
 
 #: options/dynamic_preferences_registry.py:77
 msgid ""
@@ -101,26 +104,28 @@ msgid ""
 "The auto-allocator will only take adjudicators at or above this score as "
 "voting panellists"
 msgstr ""
+"La auto-colocación solo tendrá en cuenta jueces con o por debajo de este "
+"puntaje como panelistas con voto "
 
 #: options/dynamic_preferences_registry.py:100
 msgid "Minimum adjudicator score to vote"
-msgstr ""
+msgstr "Puntaje de juez mínimo para votar"
 
 #: options/dynamic_preferences_registry.py:108
 msgid "Penalty applied by auto-allocator for adjudicator-team conflict"
-msgstr ""
+msgstr "Precio aplicado por la auto-colocación para conflictos juez-equipo"
 
 #: options/dynamic_preferences_registry.py:109
 msgid "Adjudicator-team conflict penalty"
-msgstr ""
+msgstr "Precio del conflicto juez-equipo"
 
 #: options/dynamic_preferences_registry.py:117
 msgid "Penalty applied by auto-allocator for adjudicator-team history"
-msgstr ""
+msgstr "Precio aplicado por la auto-colocación por la historia juez-equipo  "
 
 #: options/dynamic_preferences_registry.py:118
 msgid "Adjudicator-team history penalty"
-msgstr ""
+msgstr "Precio de la historia juez-equipo "
 
 #: options/dynamic_preferences_registry.py:126
 msgid ""
@@ -130,7 +135,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:127
 msgid "Team institution penalty"
-msgstr ""
+msgstr "Precio equipo-institución "
 
 #: options/dynamic_preferences_registry.py:135
 msgid ""
@@ -150,7 +155,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:145
 msgid "Avoid same institution"
-msgstr ""
+msgstr "Evitar la misma institución "
 
 #: options/dynamic_preferences_registry.py:153
 msgid ""
@@ -164,10 +169,12 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:162
 msgid "How odd brackets are resolved (see documentation for further details)"
 msgstr ""
+"Como se resuelven los agrupamientos impares (ver la documentación para más "
+"detalles)"
 
 #: options/dynamic_preferences_registry.py:163
 msgid "Odd bracket resolution method"
-msgstr ""
+msgstr "Método de resolución de agrupamientos impares"
 
 #: options/dynamic_preferences_registry.py:167
 msgid "Pull up from top"
@@ -187,7 +194,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:171
 msgid "Intermediate brackets"
-msgstr ""
+msgstr "Agrupamientos intermedios "
 
 #: options/dynamic_preferences_registry.py:172
 msgid "Intermediate brackets with bubble-up-bubble-down"
@@ -195,38 +202,40 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:173
 msgid "Intermediate 1 (pre-allocated sides)"
-msgstr ""
+msgstr "Intermedio 1 (equipos previamente ubicados)"
 
 #: options/dynamic_preferences_registry.py:174
 msgid "Intermediate 2 (pre-allocated sides)"
-msgstr ""
+msgstr "Intermedio 2 (equipos previamente ubicados)"
 
 #: options/dynamic_preferences_registry.py:181
 msgid ""
 "How affirmative/negative positions are assigned (see documentation for "
 "further details)"
 msgstr ""
+"Como se asignan las posiciones afirmativo/negativo (ver la documentación "
+"para más detalles)"
 
 #: options/dynamic_preferences_registry.py:182
 msgid "Side allocations method"
-msgstr ""
+msgstr "Método de ubicación de equipos"
 
 #: options/dynamic_preferences_registry.py:186
 #: options/dynamic_preferences_registry.py:203
 msgid "Random"
-msgstr ""
+msgstr "Al azar"
 
 #: options/dynamic_preferences_registry.py:187
 msgid "Balance"
-msgstr ""
+msgstr "Balance"
 
 #: options/dynamic_preferences_registry.py:188
 msgid "Pre-allocated"
-msgstr ""
+msgstr "Previamente ubicados"
 
 #: options/dynamic_preferences_registry.py:189
 msgid "Manually enter from ballot"
-msgstr ""
+msgstr "Ingreso manual del sorteo"
 
 #: options/dynamic_preferences_registry.py:196
 msgid ""
@@ -236,7 +245,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:197
 msgid "Pairing method"
-msgstr ""
+msgstr "Método de emparejamiento "
 
 #: options/dynamic_preferences_registry.py:201
 msgid "Slide"
@@ -259,6 +268,8 @@ msgid ""
 "Method used to try to avoid teams facing each other multiple times or their "
 "own institution (see documentation for further details)"
 msgstr ""
+"Método usado para tratar de evitar equipos enfrentados entre ellos o a su "
+"propia institución varias veces (Ver la documentación para más detalles)"
 
 #: options/dynamic_preferences_registry.py:214
 msgid "Conflict avoidance method"
@@ -284,7 +295,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:232
 msgid "No restriction"
-msgstr ""
+msgstr "Sin restricción "
 
 #: options/dynamic_preferences_registry.py:233
 msgid "Choose from teams who have been pulled up the fewest times so far"
@@ -317,11 +328,11 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:258
 msgid "Simple"
-msgstr ""
+msgstr "Simple"
 
 #: options/dynamic_preferences_registry.py:259
 msgid "Rényi entropy"
-msgstr ""
+msgstr "Entropía de Rényi"
 
 #: options/dynamic_preferences_registry.py:260
 msgid "Population variance"
