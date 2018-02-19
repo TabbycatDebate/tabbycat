@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-18 17:57-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -508,6 +508,15 @@ msgstr ""
 #: participants/templates/adjudicator_record.html:209
 #, python-format
 msgid "%(adj_name)s is on the adjudication core."
+msgstr ""
+
+#: participants/templates/admin/participants/adjudicator/change_form.html:8
+msgid ""
+"<strong>Don't forget:</strong> If this adjudicator should be conflicted "
+"against their own institution, you should add this conflict <strong>now</"
+"strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, "
+"because the own-institution conflict is <strong>not</strong> automatically "
+"created when using this form."
 msgstr ""
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:7

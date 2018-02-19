@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-18 17:57-0800\n"
 "PO-Revision-Date: 2018-02-07 23:23-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -18,19 +18,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
-#: settings.py:41
+#: settings.py:42
 msgid "Arabic"
 msgstr "arabe"
 
-#: settings.py:42
+#: settings.py:43
 msgid "English"
 msgstr "anglais"
 
-#: settings.py:43
+#: settings.py:44
 msgid "Spanish"
 msgstr "espagnol"
 
-#: settings.py:44
+#: settings.py:45
 msgid "French"
 msgstr "français"
 
@@ -198,10 +198,6 @@ msgstr ""
 "target=\"_blank\">personnaliser et imprimer</a> des bulletins beaux de votre "
 "navigateur."
 
-#: templates/footer.html:65 templates/footer.html:109
-msgid "Change Language"
-msgstr "Changer la langue"
-
 #: templates/footer.html:71
 msgid "GitHub"
 msgstr "GitHub"
@@ -221,6 +217,10 @@ msgstr "Facebook"
 #: templates/footer.html:95
 msgid "Set Up A Copy"
 msgstr "Installer une copie"
+
+#: templates/footer.html:109
+msgid "Change Language"
+msgstr "Changer la langue"
 
 #: templates/footer.html:127
 msgid "Use this language"

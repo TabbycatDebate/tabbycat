@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-18 17:57-0800\n"
 "PO-Revision-Date: 2018-02-06 09:33-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -151,80 +151,80 @@ msgstr ""
 msgid "There must be exactly two teams advancing."
 msgstr "Il faut qu'il y ait exactement deux équipes avançantes."
 
-#: results/models.py:28
+#: results/models.py:30
 msgid "Tab room"
 msgstr "Salle de tab"
 
-#: results/models.py:29
+#: results/models.py:31
 msgid "Public"
 msgstr "Publique"
 
-#: results/models.py:32
+#: results/models.py:34
 msgid "timestamp"
 msgstr "horodatage"
 
-#: results/models.py:34
+#: results/models.py:36
 msgid "version"
 msgstr "version"
 
-#: results/models.py:36
+#: results/models.py:38
 msgid "submitter type"
 msgstr "type d'auteur"
 
-#: results/models.py:38
+#: results/models.py:40
 msgid "confirmed"
 msgstr "vérifié"
 
-#: results/models.py:43
+#: results/models.py:45
 msgid "submitter"
 msgstr "auteur"
 
-#: results/models.py:46
+#: results/models.py:48
 msgid "confirmer"
 msgstr "vérifieur"
 
-#: results/models.py:48
+#: results/models.py:50
 msgid "confirm timestamp"
 msgstr "horodatage de confirmation"
 
-#: results/models.py:50
+#: results/models.py:52
 msgid "IP address"
 msgstr "adresse IP"
 
-#: results/models.py:87
+#: results/models.py:89
 msgid "A tab room ballot must have a user associated."
 msgstr "Un bulletin de la salle de tab doit avoir un utilisateur associé."
 
-#: results/models.py:95
+#: results/models.py:97
 msgid "debate"
 msgstr "débat"
 
-#: results/models.py:97
+#: results/models.py:99
 msgid "motion"
 msgstr "motion"
 
-#: results/models.py:99
+#: results/models.py:101
 msgid "copied from"
 msgstr "copié de"
 
-#: results/models.py:101
+#: results/models.py:103
 msgid "discarded"
 msgstr "rejeté"
 
-#: results/models.py:103 results/models.py:211
+#: results/models.py:105 results/models.py:213
 msgid "forfeit"
 msgstr "forfait"
 
-#: results/models.py:107 results/models.py:155 results/models.py:193
-#: results/models.py:239
+#: results/models.py:109 results/models.py:157 results/models.py:195
+#: results/models.py:241
 msgid "ballot submission"
 msgstr "soumission de bulletin"
 
-#: results/models.py:108
+#: results/models.py:110
 msgid "ballot submissions"
 msgstr "soumissions de bulletin"
 
-#: results/models.py:127
+#: results/models.py:129
 #, python-format
 msgid ""
 "Debate is in round %(round)d but motion (%(motion)s) is from round "
@@ -233,39 +233,39 @@ msgstr ""
 "Le débat est en tour %(round)d mais la motion (%(motion)s) est en tour "
 "%(motion_round)d"
 
-#: results/models.py:134
+#: results/models.py:136
 msgid "A ballot can't be both confirmed and discarded!"
 msgstr "Un bulletin ne peut pas être réjeté et confirmé !"
 
-#: results/models.py:137
+#: results/models.py:139
 msgid "The forfeiter must be a team in the debate."
 msgstr "Il faut que l'équipe qui déclare forfait soit dans ce débat."
 
-#: results/models.py:157
+#: results/models.py:159
 msgid "debate adjudicator"
 msgstr "débat-adjudicateur"
 
-#: results/models.py:159 results/models.py:195 results/models.py:241
+#: results/models.py:161 results/models.py:197 results/models.py:243
 msgid "debate team"
 msgstr "débat-équipe"
 
-#: results/models.py:160 results/models.py:204 results/models.py:244
+#: results/models.py:162 results/models.py:206 results/models.py:246
 msgid "score"
 msgstr "score"
 
-#: results/models.py:161 results/models.py:245
+#: results/models.py:163 results/models.py:247
 msgid "position"
 msgstr "position"
 
-#: results/models.py:167
+#: results/models.py:169
 msgid "speaker score by adjudicator"
 msgstr "score d'orateur par adjudicateur"
 
-#: results/models.py:168
+#: results/models.py:170
 msgid "speaker scores by adjudicator"
 msgstr "scores d'orateur par adjudicateur"
 
-#: results/models.py:182
+#: results/models.py:184
 msgid ""
 "The debate team, debate adjudicator and ballot submission must all relate to "
 "the same debate."
@@ -273,43 +273,43 @@ msgstr ""
 "La débat-équipe, le débat-adjudicateur et la soumission de bulletin doivent "
 "tous concerner le même débat."
 
-#: results/models.py:198
+#: results/models.py:200
 msgid "points"
 msgstr "points"
 
-#: results/models.py:200
+#: results/models.py:202
 msgid "win"
 msgstr "victoire"
 
-#: results/models.py:202
+#: results/models.py:204
 msgid "margin"
 msgstr "marge"
 
-#: results/models.py:206
+#: results/models.py:208
 msgid "votes given"
 msgstr "voix reçues"
 
-#: results/models.py:208
+#: results/models.py:210
 msgid "votes possible"
 msgstr "voix possibles"
 
-#: results/models.py:216
+#: results/models.py:218
 msgid "team score"
 msgstr "score d'équipe"
 
-#: results/models.py:217
+#: results/models.py:219
 msgid "team scores"
 msgstr "scores d'équipe"
 
-#: results/models.py:243
+#: results/models.py:245
 msgid "speaker"
 msgstr "orateur"
 
-#: results/models.py:247
+#: results/models.py:249
 msgid "ghost"
 msgstr "fantôme"
 
-#: results/models.py:248
+#: results/models.py:250
 msgid ""
 "If checked, this score does not count towards the speaker tab. This is "
 "typically checked for speeches where someone spoke twice to make up for an "
@@ -321,19 +321,19 @@ msgstr ""
 "fois afin de compenser le discours d'un coéquipier absent (parfois appelé un "
 "discours « iron-person » ou « iron-man »)."
 
-#: results/models.py:257
+#: results/models.py:259
 msgid "speaker score"
 msgstr "score d'orateur"
 
-#: results/models.py:258
+#: results/models.py:260
 msgid "speaker scores"
 msgstr "scores d'orateur"
 
-#: results/models.py:267
+#: results/models.py:269
 msgid "The debate team and speaker must be from the same team."
 msgstr "La débat-équipe et l'orateur doivent être de la même équipe."
 
-#: results/models.py:270
+#: results/models.py:272
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr ""
 "La soumission de bulletin et la débat-équipe doivent concerner le même débat."

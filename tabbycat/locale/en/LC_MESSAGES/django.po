@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-18 17:57-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings.py:41
+#: settings.py:42
 msgid "Arabic"
 msgstr ""
 
-#: settings.py:42
+#: settings.py:43
 msgid "English"
 msgstr ""
 
-#: settings.py:43
+#: settings.py:44
 msgid "Spanish"
 msgstr ""
 
-#: settings.py:44
+#: settings.py:45
 msgid "French"
 msgstr ""
 
@@ -166,10 +166,6 @@ msgid ""
 "\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 
-#: templates/footer.html:65 templates/footer.html:109
-msgid "Change Language"
-msgstr ""
-
 #: templates/footer.html:71
 msgid "GitHub"
 msgstr ""
@@ -188,6 +184,10 @@ msgstr ""
 
 #: templates/footer.html:95
 msgid "Set Up A Copy"
+msgstr ""
+
+#: templates/footer.html:109
+msgid "Change Language"
 msgstr ""
 
 #: templates/footer.html:127

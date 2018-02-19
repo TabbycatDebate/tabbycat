@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-18 17:57-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,14 +103,14 @@ msgstr ""
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr ""
 
-#: adjallocation/views.py:139
+#: adjallocation/views.py:138
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:143
+#: adjallocation/views.py:142
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:192
+#: adjallocation/views.py:191
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr ""

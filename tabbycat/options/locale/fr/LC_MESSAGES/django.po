@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-18 17:57-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -951,218 +951,226 @@ msgstr ""
 msgid "Enable public view of unsubmitted feedback"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:873
+#: options/dynamic_preferences_registry.py:874
+msgid "Message to be displayed on the tournament home page. Supports HTML."
+msgstr ""
+
+#: options/dynamic_preferences_registry.py:875
+msgid "Welcome message"
+msgstr ""
+
+#: options/dynamic_preferences_registry.py:882
 #: options/templates/preferences_index.html:61
 msgid "UI Options"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:879
+#: options/dynamic_preferences_registry.py:888
 msgid "If showing results to public, show splitting adjudicators in them"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:880
+#: options/dynamic_preferences_registry.py:889
 msgid "Show splitting adjudicators"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:888
+#: options/dynamic_preferences_registry.py:897
 msgid ""
 "If showing results to public, show which motions were selected in the record"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:889
+#: options/dynamic_preferences_registry.py:898
 msgid "Show motions in results"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:897
+#: options/dynamic_preferences_registry.py:906
 msgid "Enables emoji in the draw"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:898
+#: options/dynamic_preferences_registry.py:907
 msgid "Show emoji"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:906
+#: options/dynamic_preferences_registry.py:915
 msgid "In tables listing teams, adds a column showing their institutions"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:907
-msgid "Show team institutions"
-msgstr ""
-
-#: options/dynamic_preferences_registry.py:915
-msgid ""
-"In tables listing adjudicators, adds a column showing their institutions"
-msgstr ""
-
 #: options/dynamic_preferences_registry.py:916
-msgid "Show adjudicator institutions"
+msgid "Show team institutions"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:924
 msgid ""
-"Enables a hover element on every team's name showing that team's speakers"
+"In tables listing adjudicators, adds a column showing their institutions"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:925
-msgid "Show speakers in draw"
+msgid "Show adjudicator institutions"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:933
-msgid "If showing draws to public, show all (past and future) released draws"
+msgid ""
+"Enables a hover element on every team's name showing that team's speakers"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:934
-msgid "Show all draws"
+msgid "Show speakers in draw"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:942
-msgid "Order in which are listed by round in the public view"
+msgid "If showing draws to public, show all (past and future) released draws"
 msgstr ""
 
 #: options/dynamic_preferences_registry.py:943
+msgid "Show all draws"
+msgstr ""
+
+#: options/dynamic_preferences_registry.py:951
+msgid "Order in which are listed by round in the public view"
+msgstr ""
+
+#: options/dynamic_preferences_registry.py:952
 msgid "Order to display motions"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:947
+#: options/dynamic_preferences_registry.py:956
 msgid "Earliest round first"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:948
+#: options/dynamic_preferences_registry.py:957
 msgid "Latest round first"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:955
+#: options/dynamic_preferences_registry.py:964
 msgid ""
 "Show an introduction screen when loading the allocation interface (this will "
 "automatically uncheck whenever the screen is shown)"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:956
+#: options/dynamic_preferences_registry.py:965
 msgid "Show allocation UI intro"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:962
+#: options/dynamic_preferences_registry.py:971
 #: options/templates/preferences_index.html:67
 msgid "League Options"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:968
+#: options/dynamic_preferences_registry.py:977
 msgid "Enables public interface to see divisions"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:969
+#: options/dynamic_preferences_registry.py:978
 msgid "Show divisions to public"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:977
+#: options/dynamic_preferences_registry.py:986
 msgid "Enables the sorting and display of teams into divisions"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:978
+#: options/dynamic_preferences_registry.py:987
 msgid "Enable divisions"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:986
+#: options/dynamic_preferences_registry.py:995
 msgid "Enables debates to have their status set to postponed"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:987
+#: options/dynamic_preferences_registry.py:996
 msgid "Enable postponements"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:995
+#: options/dynamic_preferences_registry.py:1004
 msgid "Allows debates to be marked as wins by forfeit"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:996
+#: options/dynamic_preferences_registry.py:1005
 msgid "Enable forfeits"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1004
+#: options/dynamic_preferences_registry.py:1013
 msgid "Enables assigning motions to a division"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1005
+#: options/dynamic_preferences_registry.py:1014
 msgid "Enable division motions"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1013
+#: options/dynamic_preferences_registry.py:1022
 msgid "Smallest allowed size for a division"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1014
+#: options/dynamic_preferences_registry.py:1023
 msgid "Minimum division size"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1022
+#: options/dynamic_preferences_registry.py:1031
 msgid "Ideal size for a division"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1023
+#: options/dynamic_preferences_registry.py:1032
 msgid "Ideal division size"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1031
+#: options/dynamic_preferences_registry.py:1040
 msgid "Largest allowed size for a division"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1032
+#: options/dynamic_preferences_registry.py:1041
 msgid "Maximum division size"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1040
+#: options/dynamic_preferences_registry.py:1049
 msgid "Allow particular motions to be flagged as contentious"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1041
+#: options/dynamic_preferences_registry.py:1050
 msgid "Enable flagged motions"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1049
+#: options/dynamic_preferences_registry.py:1058
 msgid "Enables a general-purpose notes field for adjudicators"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1050
+#: options/dynamic_preferences_registry.py:1059
 msgid "Enable adjudicator notes"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1058
+#: options/dynamic_preferences_registry.py:1067
 msgid "Enables specific dates and times to be set for debates"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1059
+#: options/dynamic_preferences_registry.py:1068
 msgid "Enable debate scheduling"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1068
+#: options/dynamic_preferences_registry.py:1077
 msgid "Share adjudicators"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1077
+#: options/dynamic_preferences_registry.py:1086
 msgid "Share venues"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1086
+#: options/dynamic_preferences_registry.py:1095
 msgid "Use division venue categories"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1094
+#: options/dynamic_preferences_registry.py:1103
 msgid "If unchecked, adjudicators can only be given one room per round"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1095
+#: options/dynamic_preferences_registry.py:1104
 msgid "Allow adjudicators to be allocated to multiple rooms"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1104
+#: options/dynamic_preferences_registry.py:1113
 msgid "Adjudicator allocation confirmations"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1112
+#: options/dynamic_preferences_registry.py:1121
 msgid "Enables pages that show draws across tournaments (ie by institution)"
 msgstr ""
 
-#: options/dynamic_preferences_registry.py:1113
+#: options/dynamic_preferences_registry.py:1122
 msgid "Public cross draw pages"
 msgstr ""
 

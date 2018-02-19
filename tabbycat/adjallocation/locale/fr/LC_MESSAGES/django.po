@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-18 17:57-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -104,18 +104,18 @@ msgstr "conflits entre juge et institution"
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr "Modifier les juges dans %(round_abbr)s"
 
-#: adjallocation/views.py:139
+#: adjallocation/views.py:138
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 "Le tirage est déjà publié; il faut le dépublier pour pouvoir refaire "
 "l'allocation automatique."
 
-#: adjallocation/views.py:143
+#: adjallocation/views.py:142
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 "Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire "
 "l'allocation automatique."
 
-#: adjallocation/views.py:192
+#: adjallocation/views.py:191
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr "Certains juges spécifiés ne sont pas associés au tournoi."
