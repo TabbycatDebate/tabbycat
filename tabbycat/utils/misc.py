@@ -1,9 +1,14 @@
+import logging
+
 from django.core.exceptions import SuspiciousFileOperation
 from django.urls import reverse
+from django.utils import formats, timezone, translation
 from django.shortcuts import redirect
 
 from ipware.ip import get_real_ip
 from whitenoise.storage import CompressedManifestStaticFilesStorage
+
+logger = logging.getLogger(__name__)
 
 
 def get_ip_address(request):
@@ -44,3 +49,17 @@ class SquashedWhitenoiseStorage(CompressedManifestStaticFilesStorage):
         except SuspiciousFileOperation:
             # Triggers within jet CSS files link to images outside path
             return name
+
+
+def badge_datetime_format(timestamp):
+    lang = translation.get_language()
+    for module in formats.get_format_modules(lang):
+        fmt = getattr(module, "BADGE_DATETIME_FORMAT", None)
+        if fmt is not None:
+            break
+    else:
+        logger.error("No BADGE_DATETIME_FORMAT found for language: %s", lang)
+        fmt = "d/m H:i"   # 18/02 16:33, as fallback in case nothing is defined
+
+    localized_time = timezone.localtime(timestamp)
+    return formats.date_format(localized_time, format=fmt)

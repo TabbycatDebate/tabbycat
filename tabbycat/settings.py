@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==============================================================================
-# Overwritten in Local
+# Overwritten in local_settings.py
 # ==============================================================================
 
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
@@ -16,21 +16,22 @@ DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 DEBUG_ASSETS = DEBUG
 
 # ==============================================================================
-# Global Settings
+# Version
 # ==============================================================================
-
-MEDIA_URL = '/media/'
-TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
 
 TABBYCAT_VERSION = '2.1.0-dev'
 TABBYCAT_CODENAME = 'Japanese Bobtail'
 READTHEDOCS_VERSION = 'latest'  # change to v2.1.0 for release
 
 # ==============================================================================
-# Languages
+# Internationalization and Localization
 # ==============================================================================
 
 USE_I18N = True
+USE_TZ = True
+USE_L10N = True
+LANGUAGE_CODE = 'en'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
@@ -45,6 +46,10 @@ LANGUAGES = [
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
+
+FORMAT_MODULE_PATH = [
+    'utils.formats',
+]
 
 # ==============================================================================
 # Django-specific Module

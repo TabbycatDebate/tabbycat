@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from utils.misc import badge_datetime_format
+
 
 class ActionLogManager(models.Manager):
     def log(self, *args, **kwargs):
@@ -176,5 +178,5 @@ class ActionLogEntry(models.Model):
             'user': self.user.username if self.user else self.ip_address or _("anonymous"),
             'type': self.get_type_display(),
             'param': self.get_content_object_display(omit_tournament=True),
-            'timestamp': self.timestamp.strftime("%d/%m %H:%M")
+            'timestamp': badge_datetime_format(self.timestamp),
         }

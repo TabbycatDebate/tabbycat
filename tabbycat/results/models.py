@@ -6,6 +6,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from utils.misc import badge_datetime_format
+
 from .result import DebateResult
 from .utils import readable_ballotsub_result
 
@@ -144,7 +146,7 @@ class BallotSubmission(Submission):
             'id': self.id,
             'type': result,
             'param': '',
-            'timestamp': self.timestamp.strftime("%d/%m %H:%M"),
+            'timestamp': badge_datetime_format(self.timestamp),
             'confirmed': self.confirmed
         }
 
