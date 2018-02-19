@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
     'formtools',
+    'django_summernote',
     'statici18n' # Compile js translations as static file; saving requests
 )
 
@@ -274,6 +275,24 @@ if 'DATABASE_URL' in os.environ and not DEBUG:
 # ==============================================================================
 
 MESSAGE_TAGS = {messages.ERROR: 'danger', }
+
+# ==============================================================================
+# Summernote (WYSWIG)
+# ==============================================================================
+
+SUMMERNOTE_CONFIG = {
+    'width': '100%',
+    'height': '480',
+    'toolbar': [
+        ['style', ['bold', 'italic', 'underline', 'fontsize', 'color', 'clear']],
+        ['para', ['ul', 'ol']],
+        ['insert', ['link', 'picture', 'video', 'hr']],
+        ['misc', ['undo', 'redo', 'codeview']],
+        ['help', ['help']]
+    ],
+    'disable_upload': True,
+    'iframe': True, # When django-summernote supports Bootstrap4 change this
+}
 
 # ==============================================================================
 # Channels
