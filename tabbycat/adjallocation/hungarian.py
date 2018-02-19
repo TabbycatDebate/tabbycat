@@ -205,9 +205,9 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
     def run_allocation(self):
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._hungarian_score >= self.min_voting_score and not a.trainee]
+        voting = [a for a in self.adjudicators if a._normalized_score >= self.min_voting_score and not a.trainee]
         random.shuffle(voting)
-        voting.sort(key=lambda a: a._hungarian_score, reverse=True)
+        voting.sort(key=lambda a: a._normalized_score, reverse=True)
 
         n_debates = len(self.debates)
         if self.no_panellists:
@@ -218,7 +218,7 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
             trainees = []
         else:
             trainees = [a for a in self.adjudicators if a not in voting]
-            trainees.sort(key=lambda a: a._hungarian_score, reverse=True)
+            trainees.sort(key=lambda a: a._normalized_score, reverse=True)
 
         # Divide debates into solo-chaired debates and panel debates
         debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))
@@ -254,7 +254,7 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
             aa = AdjudicatorAllocation(debate)
             panel_indices = indexes[0:njudges]
             panel = [voting[c] for r, c in panel_indices]
-            panel.sort(key=lambda a: a._hungarian_score, reverse=True)
+            panel.sort(key=lambda a: a._normalized_score, reverse=True)
             try:
                 aa.chair = panel.pop(0)
             except IndexError:
