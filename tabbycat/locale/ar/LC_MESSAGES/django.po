@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,19 +20,19 @@ msgstr ""
 
 #: settings.py:41
 msgid "Arabic"
-msgstr ""
+msgstr "عربي"
 
 #: settings.py:42
 msgid "English"
-msgstr ""
+msgstr "انجليزي "
 
 #: settings.py:43
 msgid "Spanish"
-msgstr ""
+msgstr "اسباني "
 
 #: settings.py:44
 msgid "French"
-msgstr ""
+msgstr "فرنسي "
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -50,21 +51,21 @@ msgstr ""
 #: templates/admin/style_guide.html:160
 msgctxt "page title"
 msgid "Form Title"
-msgstr ""
+msgstr "من  الموضوع "
 
 #: templates/admin/style_guide.html:161
 msgid "Sub Title Title"
-msgstr ""
+msgstr "الموضوع "
 
 #: templates/admin/style_guide.html:197 templates/registration/login.html:61
 msgctxt "button"
 msgid "Log In"
-msgstr ""
+msgstr "دخول "
 
 #: templates/admin/style_guide.html:198 templates/registration/login.html:62
 msgctxt "button"
 msgid "I forgot my password"
-msgstr ""
+msgstr "نسيت كلمة المرور "
 
 #: templates/base.html:12
 #, python-format
@@ -81,11 +82,11 @@ msgstr ""
 
 #: templates/base_formset.html:26
 msgid "Save and Add More"
-msgstr ""
+msgstr "حفظ و اضافة المزيد"
 
 #: templates/components/form-errors.html:4
 msgid "Whoops! There was an error with one or more fields."
-msgstr ""
+msgstr "خلال في الحقول "
 
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
 #: templates/errors/public_403.html:4 templates/errors/public_403.html:6
@@ -169,7 +170,7 @@ msgstr ""
 
 #: templates/footer.html:65 templates/footer.html:109
 msgid "Change Language"
-msgstr ""
+msgstr "تغيير اللغة "
 
 #: templates/footer.html:71
 msgid "GitHub"
@@ -185,7 +186,7 @@ msgstr ""
 
 #: templates/footer.html:89
 msgid "Facebook"
-msgstr ""
+msgstr "فيس بوك"
 
 #: templates/footer.html:95
 msgid "Set Up A Copy"
@@ -450,7 +451,7 @@ msgstr ""
 #: templates/registration/password_reset_confirm.html:38
 msgctxt "button"
 msgid "Change my password"
-msgstr ""
+msgstr "تغيير كلمة السر "
 
 #: templates/registration/password_change_form.html:26
 msgid "Cancel and go back to the site home page"
@@ -460,11 +461,11 @@ msgstr ""
 #: templates/registration/password_reset_complete.html:5
 msgctxt "page title"
 msgid "Password reset complete"
-msgstr ""
+msgstr "تم تغيير كلمة السر "
 
 #: templates/registration/password_reset_complete.html:16
 msgid "Your password has been reset."
-msgstr ""
+msgstr "لقد تم اعادة تنصيب كلمة السر "
 
 #. Translators: This text appears on a button that takes the user to the login
 #. page after a password reset.
@@ -553,16 +554,16 @@ msgstr ""
 
 #: templates/registration/password_reset_form.html:39
 msgid "E-mail address"
-msgstr ""
+msgstr "البريد الالكتروني"
 
 #: templates/registration/password_reset_form.html:50
 msgctxt "button"
 msgid "Reset my password"
-msgstr ""
+msgstr "اعادة كلمة المرور "
 
 #: templates/registration/password_reset_form.html:53
 msgid "Back to the login page"
-msgstr ""
+msgstr "العودة إلى صفحة الدخول "
 
 #: templates/registration/password_reset_subject.txt:2
 #, python-format
@@ -581,11 +582,11 @@ msgstr ""
 #: urls.py:104
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
-msgstr ""
+msgstr "مرحبا ، %(username)s — لقد تم تسجل دخولك "
 
 #: urls.py:107
 msgid "Welcome! You just logged in!"
-msgstr ""
+msgstr "مرحباً بك "
 
 #: users/admin.py:19
 msgid ""

@@ -348,15 +348,15 @@ msgstr[5] ""
 
 #: availability/views.py:153
 msgid "Team Availability"
-msgstr ""
+msgstr "الفريق متاح "
 
 #: availability/views.py:155
 msgid "Adjudicator Availability"
-msgstr ""
+msgstr "الحكام متاح "
 
 #: availability/views.py:157
 msgid "Venue Availability"
-msgstr ""
+msgstr "الموقع متاح "
 
 #: availability/views.py:177
 msgid "Active Now"
@@ -385,7 +385,7 @@ msgstr "الأولوية"
 
 #: availability/views.py:258
 msgid "Checked in all teams, adjudicators and venues."
-msgstr ""
+msgstr "دخول جميع الفرق ، الحكام ، المواقع "
 
 #: availability/views.py:265
 msgid "Checked in all breaking adjudicators."
@@ -393,4 +393,4 @@ msgstr ""
 
 #: availability/views.py:273
 msgid "Checked in all teams, adjudicators and venues from previous round."
-msgstr ""
+msgstr "دخول جميع الفرق ، الحكام ، المواقع "

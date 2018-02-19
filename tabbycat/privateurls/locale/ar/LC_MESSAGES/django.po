@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-15 02:19-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +20,7 @@ msgstr ""
 
 #: privateurls/admin.py:18 privateurls/views.py:81 privateurls/views.py:214
 msgid "Team"
-msgstr ""
+msgstr "الفرق"
 
 #: privateurls/apps.py:7
 msgid "Private URL Management"
@@ -27,19 +28,19 @@ msgstr ""
 
 #: privateurls/models.py:12
 msgid "ballot"
-msgstr ""
+msgstr "تصويت"
 
 #: privateurls/models.py:13
 msgid "feedback"
-msgstr ""
+msgstr "تغذية راجعة "
 
 #: privateurls/models.py:17
 msgid "recipient adjudicator"
-msgstr ""
+msgstr "الحكم المستلم "
 
 #: privateurls/models.py:19
 msgid "recipient speaker"
-msgstr ""
+msgstr "المتحديث المستلم "
 
 #: privateurls/models.py:22
 msgid "URL type"
@@ -47,7 +48,7 @@ msgstr ""
 
 #: privateurls/models.py:24
 msgid "e-mail address"
-msgstr ""
+msgstr "البريد الالكتروني"
 
 #: privateurls/models.py:25
 msgid "URL key"
@@ -55,7 +56,7 @@ msgstr ""
 
 #: privateurls/models.py:27
 msgid "timestamp"
-msgstr ""
+msgstr "الزمن "
 
 #: privateurls/models.py:30
 msgid "private URL sent mail record"
@@ -71,7 +72,7 @@ msgstr ""
 
 #: privateurls/models.py:56
 msgid "No recipient (adjudicator or speaker) was specified."
-msgstr ""
+msgstr "لا يوجد مستلم "
 
 #: privateurls/models.py:59
 msgid "There was both a recipient adjudicator and a recipient speaker."
@@ -252,24 +253,24 @@ msgstr ""
 
 #: privateurls/views.py:81
 msgid "Teams"
-msgstr ""
+msgstr "الفرق"
 
 #: privateurls/views.py:83 privateurls/views.py:99 privateurls/views.py:218
 #: privateurls/views.py:226
 msgid "Feedback URL"
-msgstr ""
+msgstr "تغذية راجعة "
 
 #: privateurls/views.py:97
 msgid "Adjudicators"
-msgstr ""
+msgstr "المحكمين"
 
 #: privateurls/views.py:97 privateurls/views.py:167
 msgid "Name"
-msgstr ""
+msgstr "اسم "
 
 #: privateurls/views.py:100 privateurls/views.py:186
 msgid "Ballot URL"
-msgstr ""
+msgstr "تصويت"
 
 #: privateurls/views.py:123
 msgid ""

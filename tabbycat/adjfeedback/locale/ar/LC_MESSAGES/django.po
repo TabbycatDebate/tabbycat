@@ -70,7 +70,7 @@ msgstr "التعذية الراجعة من المحكم "
 
 #: adjfeedback/forms.py:22
 msgid "chair"
-msgstr "كرسي"
+msgstr "رئيس الجلسة"
 
 #: adjfeedback/forms.py:23
 msgid "solo"
@@ -78,11 +78,11 @@ msgstr "فردي "
 
 #: adjfeedback/forms.py:24
 msgid "panellist"
-msgstr "المحاور"
+msgstr "محكم"
 
 #: adjfeedback/forms.py:25
 msgid "trainee"
-msgstr "المتدرب "
+msgstr "محكم متدرب "
 
 #. Translators: Please leave this blank, it should be left for the base Django
 #. translations.
@@ -222,7 +222,7 @@ msgstr ""
 
 #: adjfeedback/models.py:92
 msgid "integer scale"
-msgstr ""
+msgstr "الميا"
 
 #: adjfeedback/models.py:93
 msgid "float"

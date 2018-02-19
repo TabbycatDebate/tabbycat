@@ -108,7 +108,7 @@ msgstr "قام بحفظ قاعة يدويا"
 
 #: actionlog/models.py:85
 msgid "Saved the sides status of a matchup"
-msgstr ""
+msgstr "ل"
 
 #: actionlog/models.py:86
 msgid "Saved divisions"
