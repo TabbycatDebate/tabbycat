@@ -31,6 +31,7 @@ class RegionAdmin(admin.ModelAdmin):
 @admin.register(Institution)
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'region')
+    list_select_related = ('region',)
     ordering = ('name', )
     search_fields = ('name', )
 
@@ -107,8 +108,8 @@ class TeamAdmin(admin.ModelAdmin):
     actions = ['delete_url_key']
 
     def get_queryset(self, request):
-        return super(TeamAdmin, self).get_queryset(request).prefetch_related(
-            'institution', 'division')
+        # can't use select_related, because TeamManager always puts a select_related on this
+        return super().get_queryset(request).select_related('tournament')
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'emoji' and kwargs.get("initial") is None:
@@ -183,6 +184,10 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
     actions = ['delete_url_key']
+
+    def get_queryset(self, request):
+        # can't use select_related, because TeamManager always puts a select_related on this
+        return super().get_queryset(request).select_related('tournament')
 
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
