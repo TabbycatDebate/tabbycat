@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
-"PO-Revision-Date: 2018-02-18 18:08-0800\n"
+"POT-Creation-Date: 2018-02-19 20:32-0800\n"
+"PO-Revision-Date: 2018-02-19 20:32-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -43,21 +43,25 @@ msgstr "Open"
 
 #: tournaments/forms.py:79
 msgid "Format Configuration"
-msgstr ""
+msgstr "Configuration de format"
 
 #: tournaments/forms.py:80
-msgid "Apply a standard set of settings to match a common debate format "
+msgid "Apply a standard set of settings to match a common debate format"
 msgstr ""
+"Appliquer un ensemble standard de paramètres correspondant à un format de "
+"débat qui est commun"
 
 #: tournaments/forms.py:84
 msgid "Public Configuration"
-msgstr ""
+msgstr "Configuration d'accès du public"
 
 #: tournaments/forms.py:85
 msgid ""
-"Show non-sensitive information of the public-facing side of this site, like "
+"Show non-sensitive information on the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
 msgstr ""
+"Afficher des informations non sensibles sur les pages accessibles au public, "
+"par ex., les tirages publiés et les motions des tours antérieurs"
 
 #: tournaments/mixins.py:94
 #, python-format
@@ -74,6 +78,8 @@ msgid ""
 "You've been redirected to this page because of a problem with how teams are "
 "assigned to sides in a debate."
 msgstr ""
+"Vous avez été redirigé(e) vers cette page en raison d’un problème avec "
+"l'attribution des équipes aux côtés dans un débat."
 
 #: tournaments/mixins.py:111
 msgid ""
@@ -462,17 +468,23 @@ msgid ""
 "assigned to each side. When that is not the case, this error occurs. "
 "Usually, this is the result of debates having been manually edited."
 msgstr ""
+"Tabbycat exige toujours que, dans chaque débat, une et une seule équipe soit "
+"attribuée à chaque côté. Quand ce n’est pas le cas, cette erreur se produit. "
+"Typiquement, cela est le résultat de la modification manuelle des débats."
 
 #: tournaments/templates/fix_debate_teams.html:24
 msgid ""
 "A list of offending debates is presented below. To fix them, you'll need to "
 "do the following:"
 msgstr ""
+"Une liste des débats problématiques est présentée ci-dessous. Pour les "
+"corriger, vous devrez effectuer les opérations suivantes :"
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:33
 msgid "Click the <strong>Fix this debate</strong> button for that debate."
 msgstr ""
+"Cliquer sur le bouton <strong>Corriger ce débat</strong> pour ce débat-là."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:39
@@ -482,23 +494,32 @@ msgid ""
 "find an empty row and use the magnifying glass to select a team. Then set "
 "the new team's <strong>side</strong> accordingly."
 msgstr ""
+"Vous assurer que chaque <strong>côté</strong> qui doit être présente dans le "
+"débat soit présente et qu'une <strong>équipe</strong> y soit attribuée. S’il "
+"manque une équipe, trouver une ligne vide et utiliser la loupe pour "
+"sélectionner une équipe. Ensuite préciser en conséquence la côté de cette "
+"nouvelle équipe."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:48
 msgid ""
 "Ensure that no <strong>side</strong> appears more than once in the debate."
 msgstr ""
+"Vous assurer qu'aucun <strong>côté</strong> apparaisse plus qu'une fois dans "
+"le débat."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:55
 msgid "<strong>Save</strong> the changes."
-msgstr ""
+msgstr "<strong>Enregistrer</strong> les modifications."
 
 #: tournaments/templates/fix_debate_teams.html:62
 msgid ""
 "Once you've fixed all the debates, you should then be able to return to "
 "whatever page you were originally on without the error reoccurring."
 msgstr ""
+"Après avoir corrigé tous les débat, vous pourrez ensuite retourner la page "
+"auquel vous étiez initialement, sans que l'erreur se reproduise."
 
 #: tournaments/templates/fix_debate_teams.html:68
 #, python-format
@@ -506,42 +527,47 @@ msgid ""
 "You can also see all the debates in the <a href=\"%(edit_debates_url)s\" "
 "target=\"_blank\">Debates section of the Edit Database Area</a>."
 msgstr ""
+"Vous pouvez aussi voir tous les débats dans la <a href=\"%(edit_debates_url)s"
+"\" target=\"_blank\">sections des débats de la zone pour modifier le base de "
+"données</a>."
 
 #: tournaments/templates/fix_debate_teams.html:82
 msgid "Debate ID"
-msgstr ""
+msgstr "Identifiant de débat"
 
 #: tournaments/templates/fix_debate_teams.html:85
 #, python-format
 msgid "Team(s) on %(side_name)s"
-msgstr ""
+msgstr "Le(s) équipe(s) de %(side_name)s"
 
 #: tournaments/templates/fix_debate_teams.html:90
 msgid "Link to fix this debate"
-msgstr ""
+msgstr "Lien pour corriger ce débat"
 
 #: tournaments/templates/fix_debate_teams.html:101
 msgid "No teams"
-msgstr ""
+msgstr "Aucune équipe"
 
 #: tournaments/templates/fix_debate_teams.html:109
 msgid "Multiple teams"
-msgstr ""
+msgstr "Plusieurs équipes"
 
 #: tournaments/templates/fix_debate_teams.html:120
 msgctxt "button label"
 msgid "Fix this debate"
-msgstr ""
+msgstr "Corriger ce débat"
 
 #: tournaments/templates/fix_debate_teams.html:127
 msgid "It looks like all debates are in good shape!"
-msgstr ""
+msgstr "Il semble que tous les débats soient corrects !"
 
 #: tournaments/templates/fix_debate_teams.html:128
 msgid ""
 "If you keep getting redirected to this page and you're not sure why, please "
 "contact the developers of Tabbycat."
 msgstr ""
+"Si vous continuez d'être redirigé(e) à cette page et vous ne savez pas "
+"pourquoi, veuillez contacter les développeurs de Tabbycat."
 
 #: tournaments/templates/public_tournament_index.html:5
 #: tournaments/templates/public_tournament_index.html:9
@@ -552,6 +578,7 @@ msgstr "Bienvenue à %(tournament_name)s"
 #: tournaments/templates/public_tournament_index.html:18
 msgid "There is currently no public information available for this tournament."
 msgstr ""
+"Il n’y a actuellement aucune information publique disponible sur ce tournoi."
 
 #: tournaments/templates/public_tournament_index.html:37
 msgid "Team Tab"
@@ -759,6 +786,11 @@ msgid ""
 "number of ways to do this. For small-to-medium tournaments, the simple "
 "importer is your best bet."
 msgstr ""
+"L’étape suivante consiste à importer les données initiales de votre "
+"tournoi : les institutions, les équipes, les juges et les salles qui font "
+"partie de votre tournoi. Il y a quelques façons de le faire. Pour les "
+"tournois de taille petit ou moyen, l’importateur simple est la meilleure "
+"option."
 
 #. Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link.
 #: tournaments/templates/tournament_index.html:33
@@ -776,76 +808,80 @@ msgstr ""
 
 #: tournaments/templates/tournament_index.html:43
 msgid "Use the simple importer to add your initial data."
-msgstr ""
+msgstr "Utiliser l’importateur simple afin d'ajouter vos données initiales."
 
 #: tournaments/templates/tournament_index.html:49
 #, python-format
 msgid "Go to the checkins area to begin creating a draw for %(round_name)s"
 msgstr ""
+"Allez à la zone d'enregistrements afin de créer un tirage pour %(round_name)s"
 
 #: tournaments/templates/tournament_index.html:57
 #, python-format
 msgid "Go to the draw area to allocate adjudicators for %(round_name)s"
 msgstr ""
+"Allez à la zone de tirage afin d'attribuer les juges aux débats de "
+"%(round_name)s"
 
 #: tournaments/templates/tournament_index.html:65
 #, python-format
 msgid "Go to the results area to begin entering ballots for %(round_name)s"
 msgstr ""
+"Allez à la zone de résultats afin de saisir les bulletins pour %(round_name)s"
 
 #. Translators: abbreviation for "grand final"
 #: tournaments/utils.py:13
 msgid "Grand Final"
-msgstr ""
+msgstr "Grande finale"
 
 #: tournaments/utils.py:13
 msgid "GF"
-msgstr ""
+msgstr "GF"
 
 #. Translators: abbreviation for "semifinals"
 #: tournaments/utils.py:15
 msgid "Semifinals"
-msgstr ""
+msgstr "Demi-finales"
 
 #: tournaments/utils.py:15
 msgid "SF"
-msgstr ""
+msgstr "DF"
 
 #. Translators: abbreviation for "quarterfinals"
 #: tournaments/utils.py:17
 msgid "Quarterfinals"
-msgstr ""
+msgstr "Quarts de finale"
 
 #: tournaments/utils.py:17
 msgid "QF"
-msgstr ""
+msgstr "QF"
 
 #. Translators: abbreviation for "octofinals"
 #: tournaments/utils.py:19
 msgid "Octofinals"
-msgstr ""
+msgstr "Huitièmes de finale"
 
 #: tournaments/utils.py:19
 msgid "OF"
-msgstr ""
+msgstr "HF"
 
 #. Translators: abbreviation for "double-octofinals"
 #: tournaments/utils.py:21
 msgid "Double-Octofinals"
-msgstr ""
+msgstr "Seizièmes de finale"
 
 #: tournaments/utils.py:21
 msgid "DOF"
-msgstr ""
+msgstr "16F"
 
 #. Translators: abbreviation for "triple-octofinals"
 #: tournaments/utils.py:23
 msgid "Triple-Octofinals"
-msgstr ""
+msgstr "Trente-deuxièmes de finale"
 
 #: tournaments/utils.py:23
 msgid "TOF"
-msgstr ""
+msgstr "32F"
 
 #: tournaments/utils.py:28
 msgid "affirmative"
@@ -941,7 +977,7 @@ msgstr "première opposition"
 
 #: tournaments/utils.py:64
 msgid "closing government"
-msgstr "seconde gouvernement"
+msgstr "second gouvernement"
 
 #: tournaments/utils.py:65
 msgid "closing opposition"
@@ -957,7 +993,7 @@ msgstr "équipe de la première opposition"
 
 #: tournaments/utils.py:68
 msgid "closing government team"
-msgstr "équipe du seconde gouvernement"
+msgstr "équipe du second gouvernement"
 
 #: tournaments/utils.py:69
 msgid "closing opposition team"
@@ -1010,19 +1046,21 @@ msgid ""
 "of the preliminary rounds! Congratulations! The next step is to generate the "
 "break."
 msgstr ""
-"Le tour actuel s'est avancé à %(round)s. Vous êtes venu(e) à bout des tours "
-"préliminaires ! Félicitations ! L'étape suivante consiste à générer la "
-"qualification."
+"Le tour actuel a été avancé à %(round)s. Vous êtes arrivé(e) au bout des "
+"tours préliminaires ! Félicitations ! L'étape suivante consiste à générer "
+"les équipes qualifiant au tours éliminatoires."
 
 #: tournaments/views.py:160
 #, python-format
 msgid "The current round has been advanced to %(round)s. Woohoo! Keep it up!"
-msgstr ""
+msgstr "Le tour actuel a été avancé à %(round)s. Woohoo ! Continuez !"
 
 #: tournaments/views.py:165
 msgid ""
 "Whoops! Could not advance round, because there's no round after this round!"
 msgstr ""
+"Oups ! Impossible d'avancer le tour, parce qu'il n'y a pas de tour après ce "
+"tour !"
 
 #~ msgid "%(count)d round was marked as silent."
 #~ msgid_plural "%(count)d rounds were marked as silent."

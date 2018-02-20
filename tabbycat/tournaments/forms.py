@@ -77,7 +77,7 @@ class TournamentConfigureForm(ModelForm):
     preset_rules = ChoiceField(
         choices=presets_for_form(), # Tuple with (Present_Index, Preset_Name)
         label=_("Format Configuration"),
-        help_text=_("Apply a standard set of settings to match a common debate format "))
+        help_text=_("Apply a standard set of settings to match a common debate format"))
 
     public_info = ChoiceField(
         choices=public_presets_for_form(), # Tuple with (Present_Index, Preset_Name)
