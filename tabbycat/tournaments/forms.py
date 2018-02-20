@@ -82,7 +82,7 @@ class TournamentConfigureForm(ModelForm):
     public_info = ChoiceField(
         choices=public_presets_for_form(), # Tuple with (Present_Index, Preset_Name)
         label=_("Public Configuration"),
-        help_text=_("Show non-sensitive information of the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
+        help_text=_("Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
 
     def save(self):
         presets = list(all_presets())
