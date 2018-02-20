@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-18 17:57-0800\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: 2018-02-07 23:23-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -618,21 +618,21 @@ msgstr "Retour à la page de connexion"
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
-#: urls.py:94
+#: urls.py:98
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
 msgstr "Salut, %(username)s — vous venez de vous déconnecter !"
 
-#: urls.py:97
+#: urls.py:101
 msgid "Later! You were logged out!"
 msgstr "Salut ! Vous venez de vous déconnecter !"
 
-#: urls.py:104
+#: urls.py:108
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr "Salut, %(username)s — vous venez de vous connecter!"
 
-#: urls.py:107
+#: urls.py:111
 msgid "Welcome! You just logged in!"
 msgstr "Bienvenue ! Vous venez de vous connecter !"
 

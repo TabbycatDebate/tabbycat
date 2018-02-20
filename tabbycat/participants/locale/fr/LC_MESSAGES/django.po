@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-18 17:57-0800\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -18,25 +18,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: participants/admin.py:91
+#: participants/admin.py:92
 #, python-format
 msgid ""
 "The team can't be in a break category of a different tournament. Please "
 "remove: %(category)s"
 msgstr ""
 
-#: participants/admin.py:127
+#: participants/admin.py:128
 #, python-format
 msgid "%(count)d team had its URL key removed."
 msgid_plural "%(count)d teams had their URL keys removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/admin.py:132 participants/admin.py:195
+#: participants/admin.py:133 participants/admin.py:200
 msgid "Delete URL key"
 msgstr ""
 
-#: participants/admin.py:190
+#: participants/admin.py:195
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."

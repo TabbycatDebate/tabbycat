@@ -322,7 +322,7 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
         min_score = self.tournament.pref('adj_min_score')
         max_score = self.tournament.pref('adj_max_score')
         if test_score < min_score or max_score < test_score:
-            self.add_error('test_score', _("This value must be between %d and %d." % (min_score, max_score)))
+            self.add_error('test_score', _("This value must be between %d and %d.") % (min_score, max_score))
         return test_score
 
     def save(self, commit=True):

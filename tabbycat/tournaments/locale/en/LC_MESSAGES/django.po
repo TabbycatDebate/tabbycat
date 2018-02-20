@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-18 17:57-0800\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,62 +17,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-
-#: tournaments/admin.py:36
-#, python-format
-msgid "%(count)d round was marked as silent."
-msgid_plural "%(count)d rounds were marked as silent."
-msgstr[0] ""
-msgstr[1] ""
-
-#: tournaments/admin.py:41
-msgid "Mark as silent"
-msgstr ""
-
-#: tournaments/admin.py:46
-#, python-format
-msgid "%(count)d round was marked as not silent."
-msgid_plural "%(count)d rounds were marked as not silent."
-msgstr[0] ""
-msgstr[1] ""
-
-#: tournaments/admin.py:51
-msgid "Mark as not silent"
-msgstr ""
-
-#: tournaments/admin.py:56
-#, python-format
-msgid "%(count)d round was marked as motions released."
-msgid_plural "%(count)d rounds were marked as motions released."
-msgstr[0] ""
-msgstr[1] ""
-
-#: tournaments/admin.py:61
-msgid "Release motions"
-msgstr ""
-
-#: tournaments/admin.py:66
-#, python-format
-msgid "%(count)d round was marked as motions not released."
-msgid_plural "%(count)d rounds were marked as motions not released."
-msgstr[0] ""
-msgstr[1] ""
-
-#: tournaments/admin.py:71
-msgid "Unrelease motions"
-msgstr ""
-
-#: tournaments/admin.py:79
-#, python-format
-msgid "%(count)d round had its draw status set to %(status)s."
-msgid_plural "%(count)d rounds had their draw status set to %(status)s."
-msgstr[0] ""
-msgstr[1] ""
-
-#: tournaments/admin.py:87
-#, python-format
-msgid "Set draw status to %(status)s"
-msgstr ""
 
 #: tournaments/apps.py:7
 msgid "Tournaments"
@@ -351,6 +295,19 @@ msgstr ""
 
 #: tournaments/models.py:287
 msgid "Elimination rounds must have a break category."
+msgstr ""
+
+#: tournaments/templates/admin/tournaments/tournament/change_form.html:11
+#, python-format
+msgid ""
+"Looking for the welcome message? That's been moved to the tournament "
+"configuration, under <a href=\"%(features_url)s\">Public Features</a>."
+msgstr ""
+
+#: tournaments/templates/admin/tournaments/tournament/change_form.html:15
+msgid ""
+"Looking for the welcome message? That's moved to the tournament "
+"configuration, under Public Features."
 msgstr ""
 
 #: tournaments/templates/assistant_tournament_index.html:4
