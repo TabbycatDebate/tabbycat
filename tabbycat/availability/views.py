@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = ugettext_lazy("Check-Ins")
+    page_title = ugettext_lazy("Availability")
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):

@@ -25,7 +25,7 @@
         {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
         {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
         {% else %} circle-later{% endif %}"></i>
-      {% trans "Check-Ins" %}
+      {% trans "Availability" %}
     </a>
 
     <a href="{% roundurl 'draw' r %}" data-parent="#rh{{ r.id }}"
