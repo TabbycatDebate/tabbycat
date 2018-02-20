@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-19 20:32-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -44,7 +44,7 @@ msgid "Format Configuration"
 msgstr ""
 
 #: tournaments/forms.py:80
-msgid "Apply a standard set of settings to match a common debate format "
+msgid "Apply a standard set of settings to match a common debate format"
 msgstr ""
 
 #: tournaments/forms.py:84
@@ -53,7 +53,7 @@ msgstr ""
 
 #: tournaments/forms.py:85
 msgid ""
-"Show non-sensitive information of the public-facing side of this site, like "
+"Show non-sensitive information on the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-19 20:32-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -130,7 +130,7 @@ msgstr "تصنيف"
 
 #: importer/forms.py:325
 #, python-format
-msgid "This value must be between %d and %d."
+msgid "This value must be between %(min)d and %(max)d."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:4

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 20:32-0800\n"
-"PO-Revision-Date: 2018-02-19 20:32-0800\n"
+"PO-Revision-Date: 2018-02-20 08:13-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -97,6 +97,8 @@ msgid ""
 "You can't use this as a tournament slug, because it's reserved for a "
 "Tabbycat system URL. Please try another one."
 msgstr ""
+"Il est impossible d'utiliser cela comme un slug d'un tournoi, car c'est "
+"réservé pour une URL du système Tabbycat. Veuillez essayer un autre."
 
 #: tournaments/models.py:33 tournaments/models.py:234
 msgid "name"
@@ -315,12 +317,16 @@ msgid ""
 "A round in the elimination stage must have its draw type set to \"Elimination"
 "\"."
 msgstr ""
+"Il faut que le type du tirage d'un tour de l'étape éliminatoire soit "
+"« Éliminatoire »."
 
 #: tournaments/models.py:282
 msgid ""
 "A round in the preliminary stage cannot have its draw type set to "
 "\"Elimination\"."
 msgstr ""
+"Il ne faut pas que le type du tirage d'un tour de l'étape préliminaire soit "
+"« Éliminatoire »."
 
 #: tournaments/models.py:287
 msgid "Elimination rounds must have a break category."
@@ -381,16 +387,18 @@ msgid ""
 "one, but if you don't, you won't be able to reset your password if you "
 "forget it."
 msgstr ""
+"Cette adresse de courriel est utilisée pour les réinitialisations de mot de "
+"passe. Vous n'êtes pas obligé d'en fournir une, mais sinon, vous ne pourrez "
+"pas réinitialiser votre mot de passe si vous l'oubliez."
 
 #: tournaments/templates/blank_site_start.html:40
 msgid "Create Account"
 msgstr "Créer compte"
 
 #: tournaments/templates/configure_tournament.html:5
-#, fuzzy, python-format
-#| msgid "Welcome to %(tournament_name)s"
+#, python-format
 msgid "Configure Tournament %(tournament_name)s"
-msgstr "Bienvenue à %(tournament_name)s"
+msgstr "Configuration du tournoi %(tournament_name)s"
 
 #: tournaments/templates/configure_tournament.html:19
 msgid ""
@@ -404,11 +412,9 @@ msgstr ""
 
 #: tournaments/templates/configure_tournament.html:24
 msgid "Configure Tournament"
-msgstr ""
+msgstr "Configuration du tournoi"
 
 #: tournaments/templates/create_tournament.html:4
-#, fuzzy
-#| msgid "Create New Tournament "
 msgid "Create New Tournament"
 msgstr "Créer nouveau tournoi"
 
@@ -422,6 +428,13 @@ msgid ""
 "readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</"
 "a>."
 msgstr ""
+"Tabbycat est gratuit à utiliser pour les tournois à but non lucratif et qui "
+"ne sont pas pour la collecte des fonds (toutefois, les dons sont "
+"encouragés). Si votre tournoi est à but lucratif ou pour la collecte des "
+"fonds, veuillez noter qu'il existe un <a href=\"%(donations_url)s\">paiement "
+"obligatoire</a>. Pour plus de détails, lisez <a href=\"http://tabbycat."
+"readthedocs.io/en/stable/about/licence.html\">l'accord de licence de "
+"Tabbycat</a>."
 
 #: tournaments/templates/create_tournament.html:23
 msgid "Just trying out Tabbycat?"
@@ -437,7 +450,7 @@ msgstr ""
 
 #: tournaments/templates/create_tournament.html:36
 msgid "Load Demo (8-team tournament)"
-msgstr ""
+msgstr "Charger la démo (tournoi à 8 équipes)"
 
 #: tournaments/templates/create_tournament.html:41
 #: tournaments/templates/create_tournament.html:58
@@ -448,7 +461,7 @@ msgstr ""
 
 #: tournaments/templates/create_tournament.html:52
 msgid "Load Demo (24-team tournament)"
-msgstr ""
+msgstr "Charger la démo (tournoi à 24 équipes)"
 
 #: tournaments/templates/create_tournament.html:77
 msgid "Create Tournament"
@@ -456,7 +469,7 @@ msgstr "Créer tournoi"
 
 #: tournaments/templates/create_tournament.html:78
 msgid "Cancel and go back to the site home page"
-msgstr ""
+msgstr "Annuler et revenir à la page d’accueil du site"
 
 #: tournaments/templates/donations.html:4
 msgid "Donate to Tabbycat"

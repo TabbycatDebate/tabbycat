@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-19 20:32-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -44,10 +44,8 @@ msgid "Format Configuration"
 msgstr "Configuración del Formato"
 
 #: tournaments/forms.py:80
-msgid "Apply a standard set of settings to match a common debate format "
+msgid "Apply a standard set of settings to match a common debate format"
 msgstr ""
-"Aplica un set estándar de configuraciones para coincidir con un formato de "
-"debate común"
 
 #: tournaments/forms.py:84
 msgid "Public Configuration"
@@ -55,12 +53,9 @@ msgstr "Configuración Pública"
 
 #: tournaments/forms.py:85
 msgid ""
-"Show non-sensitive information of the public-facing side of this site, like "
+"Show non-sensitive information on the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
 msgstr ""
-"Mostrar información no confidencial en el sitio visible al público, como "
-"asignación de rondas (una vez publicadas) y las mociones de rondas "
-"anteriores"
 
 #: tournaments/mixins.py:94
 #, python-format
