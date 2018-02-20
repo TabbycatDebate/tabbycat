@@ -7,6 +7,7 @@
 // Boostrap Type
 //------------------------------------------------------------------------------
 
+// Family
 $font-family-sans-serif:  "Inter-UI-Regular", -apple-system,
   BlinkMacSystemFont, "Segoe UI", Roboto,
   "Helvetica Neue", Arial, sans-serif,
@@ -14,8 +15,11 @@ $font-family-sans-serif:  "Inter-UI-Regular", -apple-system,
   "Segoe UI Symbol" !default;
 $headings-font-family:    -apple-system, BlinkMacSystemFont, "Helvetica Neue",
   Arial, sans-serif;
-$headings-font-weight:    700;
+
+// Sizing
 $font-size-base:          1rem; // Usually 16px;
+$line-height-base:        1.375; // Usually 1.5; this maps to 16px > 22px
+$headings-font-weight:    700;
 
 //------------------------------------------------------------------------------
 // Bootstrap Color Overrides
