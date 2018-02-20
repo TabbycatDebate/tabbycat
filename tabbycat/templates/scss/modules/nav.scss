@@ -79,6 +79,7 @@
   }
 }
 
+
 // Sub menu items
 .admin-sidebar .list-group-item > .collapse,
 .admin-sidebar .list-group-item > .collapsing {
@@ -91,6 +92,15 @@
       margin-right: 0.8rem;
     }
   }
+
+  // Heading item used to organise a tournament's admin/assistant/public links
+  .tournament-areas-title {
+    color: $sidebar-muted-text;
+    font-weight: bold;
+    font-family: $headings-font-family;
+    padding-left: 16px;
+  }
+
 }
 
 .admin-sidebar .tournament-title {
