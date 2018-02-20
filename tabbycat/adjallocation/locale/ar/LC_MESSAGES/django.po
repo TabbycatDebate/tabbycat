@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -104,14 +104,14 @@ msgstr "تعارضات (محكم-منتخب)"
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr "تعديل محكمين للجولة %(round_abbr)s"
 
-#: adjallocation/views.py:139
+#: adjallocation/views.py:138
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr "تم إعلان القرعة مسبقا، قم برفعها لإعادة التوزيع التلقائي للمحكمين"
 
-#: adjallocation/views.py:143
+#: adjallocation/views.py:142
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr "لم يتم تأكيد القرعة بعد، قم بتأكيدها لإجراء التوزيع التلقائي للمحكمين"
 
-#: adjallocation/views.py:192
+#: adjallocation/views.py:191
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr "ليس كل المحكمين المحددين مرتبطين بالبطولة."

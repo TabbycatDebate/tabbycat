@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: draw/admin.py:67
+#: draw/admin.py:68
 #, python-format
 msgid "%(count)d debate had its status set to %(status)s."
 msgid_plural "%(count)d debates had their statuses set to %(status)s."
@@ -29,12 +29,12 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: draw/admin.py:74
+#: draw/admin.py:75
 #, python-format
 msgid "Set result status to %(status)s"
 msgstr ""
 
-#: draw/admin.py:84
+#: draw/admin.py:85
 #, python-format
 msgid "%(count)d debate was marked as having its sides confirmed."
 msgid_plural "%(count)d debates were marked as having their sides confirmed."
@@ -45,7 +45,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: draw/admin.py:93
+#: draw/admin.py:94
 #, python-format
 msgid "%(count)d debate was marked as having its sides not confirmed."
 msgid_plural ""

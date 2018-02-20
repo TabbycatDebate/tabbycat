@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -317,6 +317,12 @@ msgid "There was a problem sending private ballot URLs to adjudicators."
 msgstr ""
 
 #: privateurls/views.py:264
+msgid ""
+"There was a problem connecting to the e-mail server when trying to send "
+"privateballot URLs to adjudicators."
+msgstr ""
+
+#: privateurls/views.py:269
 #, python-format
 msgid ""
 "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator."
@@ -326,12 +332,12 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: privateurls/views.py:279
+#: privateurls/views.py:284
 #, python-format
 msgid "Your team's feedback submission URL for %(tournament)s"
 msgstr ""
 
-#: privateurls/views.py:281
+#: privateurls/views.py:286
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -342,16 +348,16 @@ msgid ""
 "%(url)s"
 msgstr ""
 
-#: privateurls/views.py:300
+#: privateurls/views.py:305
 msgid "There was a problem sending private feedback URLs to speakers."
 msgstr ""
 
-#: privateurls/views.py:303
+#: privateurls/views.py:308
 #, python-format
 msgid "Your personal feedback submission URL for %(tournament)s"
 msgstr ""
 
-#: privateurls/views.py:305
+#: privateurls/views.py:310
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -362,13 +368,13 @@ msgid ""
 "%(url)s"
 msgstr ""
 
-#: privateurls/views.py:323
+#: privateurls/views.py:328
 msgid "There was a problem sending private feedback URLs to adjudicators."
 msgstr ""
 
 #. Translators: This goes in the "speakers_phrase" variable in "E-mails with
 #. private feedback URLs were sent..."
-#: privateurls/views.py:328
+#: privateurls/views.py:333
 #, python-format
 msgid "%(nspeakers)d speaker"
 msgid_plural "%(nspeakers)d speakers"
@@ -377,14 +383,14 @@ msgstr[1] ""
 
 #. Translators: This goes in the "adjudicators_phrase" variable in "E-mails
 #. with private feedback URLs were sent..."
-#: privateurls/views.py:331
+#: privateurls/views.py:336
 #, python-format
 msgid "%(nadjudicators)d adjudicator"
 msgid_plural "%(nadjudicators)d adjudicators"
 msgstr[0] ""
 msgstr[1] ""
 
-#: privateurls/views.py:333
+#: privateurls/views.py:338
 #, python-format
 msgid ""
 "E-mails with private feedback URLs were sent to %(speakers_phrase)s and "

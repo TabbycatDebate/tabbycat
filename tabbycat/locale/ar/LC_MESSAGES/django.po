@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -18,19 +18,19 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: settings.py:41
+#: settings.py:42
 msgid "Arabic"
 msgstr "عربي"
 
-#: settings.py:42
+#: settings.py:43
 msgid "English"
 msgstr "انجليزي "
 
-#: settings.py:43
+#: settings.py:44
 msgid "Spanish"
 msgstr "اسباني "
 
-#: settings.py:44
+#: settings.py:45
 msgid "French"
 msgstr "فرنسي "
 
@@ -168,10 +168,6 @@ msgid ""
 "target=\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 
-#: templates/footer.html:65 templates/footer.html:109
-msgid "Change Language"
-msgstr "تغيير اللغة "
-
 #: templates/footer.html:71
 msgid "GitHub"
 msgstr ""
@@ -191,6 +187,10 @@ msgstr "فيس بوك"
 #: templates/footer.html:95
 msgid "Set Up A Copy"
 msgstr ""
+
+#: templates/footer.html:109
+msgid "Change Language"
+msgstr "تغيير اللغة "
 
 #: templates/footer.html:127
 msgid "Use this language"
@@ -570,21 +570,21 @@ msgstr "العودة إلى صفحة الدخول "
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:94
+#: urls.py:98
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
 msgstr ""
 
-#: urls.py:97
+#: urls.py:101
 msgid "Later! You were logged out!"
 msgstr ""
 
-#: urls.py:104
+#: urls.py:108
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr "مرحبا ، %(username)s — لقد تم تسجل دخولك "
 
-#: urls.py:107
+#: urls.py:111
 msgid "Welcome! You just logged in!"
 msgstr "مرحباً بك "
 

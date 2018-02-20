@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -22,218 +22,218 @@ msgstr ""
 msgid "Action Log"
 msgstr "سجل التحديثات"
 
-#: actionlog/models.py:64
+#: actionlog/models.py:66
 msgid "Discarded ballot set"
 msgstr "قام بحذف نتيجة"
 
-#: actionlog/models.py:65
+#: actionlog/models.py:67
 msgid "Checked in ballot set"
 msgstr "قام بإدخال نتيجة"
 
-#: actionlog/models.py:66
+#: actionlog/models.py:68
 msgid "Created ballot set"
 msgstr "قام بإنشاء نموذج نتيجة"
 
-#: actionlog/models.py:67
+#: actionlog/models.py:69
 msgid "Edited ballot set"
 msgstr "قام بتعديل نتيجة"
 
-#: actionlog/models.py:68
+#: actionlog/models.py:70
 msgid "Confirmed ballot set"
 msgstr "قام بتأكيد نتيجة"
 
-#: actionlog/models.py:69
+#: actionlog/models.py:71
 msgid "Submitted ballot set from the public form"
 msgstr "قام بتسليم النتيجة من النموذج العام"
 
-#: actionlog/models.py:70
+#: actionlog/models.py:72
 msgid "Submitted feedback from the public form"
 msgstr "قام بتسليم التغذية الراجعة من النموذج العام"
 
-#: actionlog/models.py:71
+#: actionlog/models.py:73
 msgid "Saved feedback"
 msgstr "قام بحفظ تغذية راجعة"
 
-#: actionlog/models.py:72
+#: actionlog/models.py:74
 msgid "Edited adjudicator test score"
 msgstr "قام بتعديل درجة محكم"
 
-#: actionlog/models.py:73
+#: actionlog/models.py:75
 msgid "Set adjudicator note"
 msgstr "وضع ملاحظة محكم"
 
-#: actionlog/models.py:74
+#: actionlog/models.py:76
 msgid "Saved adjudicator allocation"
 msgstr "قام بحفظ تعيين محكم"
 
-#: actionlog/models.py:75
+#: actionlog/models.py:77
 msgid "Auto-allocated adjudicators"
 msgstr "قام بالتعيين التلقائي للمحكمين"
 
-#: actionlog/models.py:76
+#: actionlog/models.py:78
 msgid "Saved a venue manual edit"
 msgstr "قام بحفظ قاعة يدويا"
 
-#: actionlog/models.py:77
+#: actionlog/models.py:79
 msgid "Auto-allocated venues"
 msgstr "قام بالتعيين التلقائي لقاعات المناظرة"
 
-#: actionlog/models.py:78
+#: actionlog/models.py:80
 msgid "Edited venue categories"
 msgstr "قام بتعديل فئات قاعات المناظرة"
 
-#: actionlog/models.py:79
+#: actionlog/models.py:81
 msgid "Created draw"
 msgstr "قام بإنشاء قرعة"
 
-#: actionlog/models.py:80
+#: actionlog/models.py:82
 msgid "Confirmed draw"
 msgstr "قام بتأكيد القرعة"
 
-#: actionlog/models.py:81
+#: actionlog/models.py:83
 msgid "Regenerated draw"
 msgstr "قام بإعادة تعيين القرعة"
 
-#: actionlog/models.py:82
+#: actionlog/models.py:84
 msgid "Released draw"
 msgstr "قام بإعلان القرعة"
 
-#: actionlog/models.py:83
+#: actionlog/models.py:85
 msgid "Unreleased draw"
 msgstr "قام برفع القرعة"
 
-#: actionlog/models.py:84
+#: actionlog/models.py:86
 msgid "Saved a matchup manual edit"
 msgstr "قام بحفظ قاعة يدويا"
 
-#: actionlog/models.py:85
+#: actionlog/models.py:87
 msgid "Saved the sides status of a matchup"
 msgstr "ل"
 
-#: actionlog/models.py:86
+#: actionlog/models.py:88
 msgid "Saved divisions"
 msgstr ""
 
-#: actionlog/models.py:87
+#: actionlog/models.py:89
 msgid "Added/edited motion"
 msgstr "قام بإضافة/تعديل نص قضية مناظرة"
 
-#: actionlog/models.py:88
+#: actionlog/models.py:90
 msgid "Released motions"
 msgstr "قام بإعلان نص قضايا المناظرة"
 
-#: actionlog/models.py:89
+#: actionlog/models.py:91
 msgid "Unreleased motions"
 msgstr "قام بإزالة إعلان قضايا المناظرة المناظرة"
 
-#: actionlog/models.py:90
+#: actionlog/models.py:92
 msgid "Edited debate importance"
 msgstr "قام بتعديل أهمية المناظرة"
 
-#: actionlog/models.py:91
+#: actionlog/models.py:93
 msgid "Changed adjudicator breaking status"
 msgstr ""
 
-#: actionlog/models.py:92
+#: actionlog/models.py:94
 msgid "Edited break eligibility"
 msgstr ""
 
-#: actionlog/models.py:93
+#: actionlog/models.py:95
 msgid "Edited break categories"
 msgstr ""
 
-#: actionlog/models.py:94
+#: actionlog/models.py:96
 msgid "Generated the team break for all categories"
 msgstr ""
 
-#: actionlog/models.py:95
+#: actionlog/models.py:97
 msgid "Edited breaking team remarks and updated all team breaks"
 msgstr ""
 
-#: actionlog/models.py:96
+#: actionlog/models.py:98
 msgid "Edited breaking team remarks and updated this team break"
 msgstr ""
 
-#: actionlog/models.py:97
+#: actionlog/models.py:99
 msgid "Edited breaking team remarks"
 msgstr ""
 
-#: actionlog/models.py:98
+#: actionlog/models.py:100
 msgid "Set start time"
 msgstr "تحديد وقت البداية"
 
-#: actionlog/models.py:99
+#: actionlog/models.py:101
 msgid "Advanced the current round to"
 msgstr ""
 
-#: actionlog/models.py:100
+#: actionlog/models.py:102
 msgid "Edited teams availability"
 msgstr "قام بتعديل تواجد الفرق"
 
-#: actionlog/models.py:101
+#: actionlog/models.py:103
 msgid "Edited adjudicators availability"
 msgstr "قام بتعديل تواجد المحكمين"
 
-#: actionlog/models.py:102
+#: actionlog/models.py:104
 msgid "Edited venue availability"
 msgstr "قام بتعديل تواجد قاعات المناظرة"
 
-#: actionlog/models.py:103
+#: actionlog/models.py:105
 msgid "Edited tournament options"
 msgstr "قام بتعديل إعدادات البطولة"
 
-#: actionlog/models.py:104
+#: actionlog/models.py:106
 msgid "Edited speaker category eligibility"
 msgstr "قام بتعديل استحقاقت فئت المتحدثين"
 
-#: actionlog/models.py:105
+#: actionlog/models.py:107
 msgid "Edited speaker categories"
 msgstr "قام بتعديل فئات المتحدثين"
 
-#: actionlog/models.py:109
+#: actionlog/models.py:111
 msgid "type"
 msgstr "نوع"
 
-#: actionlog/models.py:111
+#: actionlog/models.py:113
 msgid "timestamp"
 msgstr ""
 
-#: actionlog/models.py:114
+#: actionlog/models.py:116
 msgid "user"
 msgstr "مستخدم"
 
-#: actionlog/models.py:116
+#: actionlog/models.py:118
 msgid "IP address"
 msgstr ""
 
-#: actionlog/models.py:120
+#: actionlog/models.py:122
 msgid "tournament"
 msgstr "بطولة"
 
-#: actionlog/models.py:122
+#: actionlog/models.py:124
 msgid "round"
 msgstr "جولة"
 
-#: actionlog/models.py:126
+#: actionlog/models.py:128
 msgid "content type"
 msgstr "نوع المحتوى"
 
-#: actionlog/models.py:128
+#: actionlog/models.py:130
 msgid "object ID"
 msgstr ""
 
-#: actionlog/models.py:134
+#: actionlog/models.py:136
 msgid "action log"
 msgstr "سجل التحديثات"
 
-#: actionlog/models.py:135
+#: actionlog/models.py:137
 msgid "action log entries"
 msgstr "مدخلات سجل التحديثات"
 
-#: actionlog/models.py:143
+#: actionlog/models.py:145
 msgid "All log entries require at least one of a user and an IP address."
 msgstr "كافة مدخلات السجل تحتاج مستخدم و IP كحد أدنى"
 
-#: actionlog/models.py:179
+#: actionlog/models.py:178
 msgid "anonymous"
 msgstr "مستخدم مجهول"

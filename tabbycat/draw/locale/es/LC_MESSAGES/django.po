@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -18,26 +18,26 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: draw/admin.py:67
+#: draw/admin.py:68
 #, python-format
 msgid "%(count)d debate had its status set to %(status)s."
 msgid_plural "%(count)d debates had their statuses set to %(status)s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: draw/admin.py:74
+#: draw/admin.py:75
 #, python-format
 msgid "Set result status to %(status)s"
 msgstr "Configurar el status a %(status)s"
 
-#: draw/admin.py:84
+#: draw/admin.py:85
 #, python-format
 msgid "%(count)d debate was marked as having its sides confirmed."
 msgid_plural "%(count)d debates were marked as having their sides confirmed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: draw/admin.py:93
+#: draw/admin.py:94
 #, python-format
 msgid "%(count)d debate was marked as having its sides not confirmed."
 msgid_plural ""

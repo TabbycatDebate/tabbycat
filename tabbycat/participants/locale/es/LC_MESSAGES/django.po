@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: David Alejandro Huertas Erazo <dale.huertas@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: participants/admin.py:91
+#: participants/admin.py:92
 #, python-format
 msgid ""
 "The team can't be in a break category of a different tournament. Please "
@@ -27,18 +27,18 @@ msgstr ""
 "El equipo no puede estar en una categoría de break en un torneo diferente. "
 "Por favor elimina: %(category)s"
 
-#: participants/admin.py:127
+#: participants/admin.py:128
 #, python-format
 msgid "%(count)d team had its URL key removed."
 msgid_plural "%(count)d teams had their URL keys removed."
 msgstr[0] "a %(count)d equipo se le ha quitado su clave URL"
 msgstr[1] "a %(count)d equipos se les han quitado su claves URL"
 
-#: participants/admin.py:132 participants/admin.py:195
+#: participants/admin.py:133 participants/admin.py:200
 msgid "Delete URL key"
 msgstr "Borrar clave URL"
 
-#: participants/admin.py:190
+#: participants/admin.py:195
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."
@@ -299,19 +299,19 @@ msgstr "swing"
 
 #: participants/models.py:193
 msgid "composite"
-msgstr ""
+msgstr "compuesto"
 
 #: participants/models.py:194
 msgid "bye"
-msgstr ""
+msgstr "adiós"
 
 #: participants/models.py:196
 msgid "type"
-msgstr ""
+msgstr "tipo"
 
 #: participants/models.py:199
 msgid "emoji"
-msgstr ""
+msgstr "emoji"
 
 #: participants/models.py:215 participants/models.py:368
 #: participants/views.py:307
@@ -557,6 +557,15 @@ msgstr "%(adj_name)s es un juez independiente."
 msgid "%(adj_name)s is on the adjudication core."
 msgstr "%(adj_name)s hace parte del equipo de adjudicación."
 
+#: participants/templates/admin/participants/adjudicator/change_form.html:8
+msgid ""
+"<strong>Don't forget:</strong> If this adjudicator should be conflicted "
+"against their own institution, you should add this conflict "
+"<strong>now</strong> in the <strong>Adjudicator-institution "
+"conflicts</strong> tab above, because the own-institution conflict is "
+"<strong>not</strong> automatically created when using this form."
+msgstr ""
+
 #: participants/templates/admin/participants/delete_debateteam_warning.html:7
 #, python-format
 msgid ""
@@ -586,12 +595,21 @@ msgid ""
 "<strong>not</strong> delete it. Just mark the team inactive under the "
 "“Check-Ins” section of the Tabbycat admin area."
 msgstr ""
+"Este es especialmente el caso en el que algún equipo que debería ser "
+"eliminado ya ha participado en un debate. Si un equipo ya tiene un resultado"
+" ingresado, la eliminación del equipo también elimina esos resultados, "
+"<strong>lo que normalmente rompe el tab</strong>, incluso si crees que ya no"
+" necesitas esos resultados. Si un equipo ha debatido y se está retirando del"
+" torneo, <strong>no</strong> debe eliminarlo. Simplemente marque al equipo "
+"inactivo en la sección “Check-Ins” del área de administración de Tabbycat."
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:32
 msgid ""
 "Note that deleting an institution also deletes all teams from that "
 "institution."
 msgstr ""
+"Note que borrar una institución también borra todos los equipos de esta "
+"institución."
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:40
 #, python-format
@@ -600,6 +618,10 @@ msgid ""
 "above objects first, and be sure to heed the warning that you will see on "
 "the “debate team” objects page before proceeding."
 msgstr ""
+"Si está muy seguro de borrar este%(object_name)s, por favor borre los "
+"objetos de arriba primero, y asegúrese de prestar especial atención a la "
+"advertencia que verá la página de objetos “equipo de debate” antes de "
+"proceder. "
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:46
 #, python-format
@@ -608,6 +630,10 @@ msgid ""
 " above objects first, and be sure to heed the warning that you will see on "
 "the “debate team” objects page before proceeding."
 msgstr ""
+"Si está muy seguro de borrar estos %(objects_name)s, por favor borre los "
+"objetos de arriba primero, y asegúrese de prestar especial atención a la "
+"advertencia que verá la página de objetos “equipo de debate” antes de "
+"proceder. "
 
 #: participants/templates/edit_speaker_eligibility.html:7
 #, python-format
@@ -618,15 +644,20 @@ msgid ""
 "Categories</a> page to define them, then return to this page to set speaker "
 "eligibility."
 msgstr ""
+"Parece que no hay ninguna categoría de oradores definida. Si quisiera "
+"producir tabs por categorías de los oradores, tales como novato o ESL, use "
+"la página <a href=\"%(categories_url)s\" class=\"alert-link\">Categorías de "
+"Oradores</a> para definirlas, lego regrese a esta página para configurar la "
+"elegibilidad del orador."
 
 #: participants/templates/feedback_progress_panel.html:10
 msgid "Feedback Returns"
-msgstr ""
+msgstr "Devoluciones de retroalimentación"
 
 #: participants/templates/feedback_progress_panel.html:17
 #, python-format
 msgid "Has submitted feedback for <strong>%(adjudicator)s</strong>"
-msgstr ""
+msgstr "Ha enviado retroalimentación para <strong>%(adjudicator)s</strong>"
 
 #: participants/templates/feedback_progress_panel.html:25
 #, python-format
@@ -634,43 +665,47 @@ msgid ""
 "Has not submitted feedback for one of: <strong>%(adjudicators)s</strong> "
 "(whoever gave the oral adjudication)"
 msgstr ""
+"No ha enviado retroalimentación para uno de: "
+"<strong>%(adjudicators)s</strong>(el que dio la retroalimentación oral)"
 
 #: participants/templates/feedback_progress_panel.html:30
 #, python-format
 msgid "Has not submitted feedback for <strong>%(adjudicator)s</strong>"
-msgstr ""
+msgstr "No ha enviado retroalimentación para <strong>%(adjudicator)s</strong>"
 
 #: participants/templates/feedback_progress_panel.html:39
 msgid "More feedback submissions than expected for this debate:"
 msgstr ""
+"Hay más envíos de retroalimentación de los esperados para este debate:"
 
 #: participants/templates/feedback_progress_panel.html:48
 #, python-format
 msgid "Unexpected feedback submission for <strong>%(adjudicator)s</strong>"
 msgstr ""
+"envío de retroalimentación inesperado para <strong>%(adjudicator)s</strong>"
 
 #: participants/templates/feedback_progress_panel.html:55
 #, python-format
 msgid "%(participant_name)s doesn't have any feedback to submit."
-msgstr ""
+msgstr "%(participant_name)s no tiene ninguna retroalimentación por enviar."
 
 #: participants/templates/participants_subnav.html:6
 msgid "Participants List"
-msgstr ""
+msgstr "Lista de Participantes"
 
 #: participants/templates/participants_subnav.html:10
 #: participants/templates/speaker_categories_edit.html:4
 #: participants/templates/speaker_categories_edit.html:5
 msgid "Speaker Categories"
-msgstr ""
+msgstr "Categorías de Orador"
 
 #: participants/templates/participants_subnav.html:14
 msgid "Speaker Eligibility"
-msgstr ""
+msgstr "Elegibilidad del Orador"
 
 #: participants/templates/speaker_categories_edit.html:11
 msgid "Save Speaker Categories"
-msgstr ""
+msgstr "Guardar Categorías de Orador"
 
 #: participants/templates/speaker_categories_edit.html:18
 msgid ""
@@ -679,6 +714,11 @@ msgid ""
 " speaker categories exist. After you've defined the categories, you can set "
 "speaker eligibility on the Speaker Eligibility page."
 msgstr ""
+"Las categorías de orador permiten producir tabs específicos por categoría, "
+"<i>ej.</i>, para las categorías novatos o ESL. En esta página, puede definir"
+" que categorías de orador existen. DEspués de definir las categorías, puede "
+"configurar la elegibilidad del orador en la página de Eligibilidad del "
+"Orador."
 
 #: participants/templates/speaker_categories_edit.html:25
 #, python-format

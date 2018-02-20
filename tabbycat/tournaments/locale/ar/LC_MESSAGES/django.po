@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -17,82 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-
-#: tournaments/admin.py:36
-#, python-format
-msgid "%(count)d round was marked as silent."
-msgid_plural "%(count)d rounds were marked as silent."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: tournaments/admin.py:41
-msgid "Mark as silent"
-msgstr "نتيجة صامتة "
-
-#: tournaments/admin.py:46
-#, python-format
-msgid "%(count)d round was marked as not silent."
-msgid_plural "%(count)d rounds were marked as not silent."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: tournaments/admin.py:51
-msgid "Mark as not silent"
-msgstr "نتئجة معلانة "
-
-#: tournaments/admin.py:56
-#, python-format
-msgid "%(count)d round was marked as motions released."
-msgid_plural "%(count)d rounds were marked as motions released."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: tournaments/admin.py:61
-msgid "Release motions"
-msgstr "المواضيع المعلنة "
-
-#: tournaments/admin.py:66
-#, python-format
-msgid "%(count)d round was marked as motions not released."
-msgid_plural "%(count)d rounds were marked as motions not released."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: tournaments/admin.py:71
-msgid "Unrelease motions"
-msgstr "المواضيع الغير معلنة "
-
-#: tournaments/admin.py:79
-#, python-format
-msgid "%(count)d round had its draw status set to %(status)s."
-msgid_plural "%(count)d rounds had their draw status set to %(status)s."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: tournaments/admin.py:87
-#, python-format
-msgid "Set draw status to %(status)s"
-msgstr ""
 
 #: tournaments/apps.py:7
 msgid "Tournaments"
@@ -163,7 +87,7 @@ msgid ""
 "Tabbycat system URL. Please try another one."
 msgstr ""
 
-#: tournaments/models.py:33 tournaments/models.py:237
+#: tournaments/models.py:33 tournaments/models.py:234
 msgid "name"
 msgstr "اسم "
 
@@ -181,7 +105,7 @@ msgstr ""
 msgid "The name used in the menu, e.g. \"Australs 2016\""
 msgstr ""
 
-#: tournaments/models.py:39 tournaments/models.py:235
+#: tournaments/models.py:39 tournaments/models.py:232
 msgid "sequence number"
 msgstr ""
 
@@ -208,123 +132,115 @@ msgid ""
 "Must be set for the tournament to start! (Set after rounds are inputted)"
 msgstr ""
 
-#: tournaments/models.py:48
-msgid "welcome message"
-msgstr ""
-
-#: tournaments/models.py:49
-msgid "Text/html entered here shows on the homepage for this tournament"
-msgstr ""
-
-#: tournaments/models.py:50
+#: tournaments/models.py:47
 msgid "active"
 msgstr ""
 
-#: tournaments/models.py:53 tournaments/models.py:234
+#: tournaments/models.py:50 tournaments/models.py:231
 msgid "tournament"
 msgstr "دوري"
 
-#: tournaments/models.py:54
+#: tournaments/models.py:51
 msgid "tournaments"
 msgstr "دوري"
 
 #. Translators: These are choices for the type of draw a round should have.
-#: tournaments/models.py:211
+#: tournaments/models.py:208
 msgid "Random"
 msgstr "عشوائي "
 
-#: tournaments/models.py:212
+#: tournaments/models.py:209
 msgid "Manual"
 msgstr "يدوي"
 
-#: tournaments/models.py:213
+#: tournaments/models.py:210
 msgid "Round-robin"
 msgstr ""
 
-#: tournaments/models.py:214
+#: tournaments/models.py:211
 msgid "Power-paired"
 msgstr ""
 
-#: tournaments/models.py:215 tournaments/models.py:220
+#: tournaments/models.py:212 tournaments/models.py:217
 msgid "Elimination"
 msgstr ""
 
-#: tournaments/models.py:219
+#: tournaments/models.py:216
 msgid "Preliminary"
 msgstr ""
 
 #. Translators: These are choices for the status of the draw for a round.
-#: tournaments/models.py:227
+#: tournaments/models.py:224
 msgid "None"
 msgstr "لا يوجد"
 
-#: tournaments/models.py:228
+#: tournaments/models.py:225
 msgid "Draft"
 msgstr ""
 
-#: tournaments/models.py:229
+#: tournaments/models.py:226
 msgid "Confirmed"
 msgstr "معتمد"
 
-#: tournaments/models.py:230
+#: tournaments/models.py:227
 msgid "Released"
 msgstr ""
 
-#: tournaments/models.py:236
+#: tournaments/models.py:233
 msgid ""
 "A number that determines the order of the round, should count consecutively "
 "from 1 for the first round"
 msgstr ""
 
-#: tournaments/models.py:237
+#: tournaments/models.py:234
 msgid "e.g. \"Round 1\""
 msgstr ""
 
-#: tournaments/models.py:238
+#: tournaments/models.py:235
 msgid "abbreviation"
 msgstr ""
 
-#: tournaments/models.py:238
+#: tournaments/models.py:235
 msgid "e.g. \"R1\""
 msgstr ""
 
-#: tournaments/models.py:240
+#: tournaments/models.py:237
 msgid "stage"
 msgstr "مسرح"
 
-#: tournaments/models.py:241
+#: tournaments/models.py:238
 msgid "Preliminary = inrounds, elimination = outrounds"
 msgstr ""
 
-#: tournaments/models.py:243
+#: tournaments/models.py:240
 msgid "draw type"
 msgstr ""
 
-#: tournaments/models.py:244
+#: tournaments/models.py:241
 msgid "Which draw method to use"
 msgstr ""
 
-#: tournaments/models.py:247
+#: tournaments/models.py:244
 msgid "break category"
 msgstr ""
 
-#: tournaments/models.py:248
+#: tournaments/models.py:245
 msgid "If elimination round, which break category"
 msgstr ""
 
-#: tournaments/models.py:251
+#: tournaments/models.py:248
 msgid "draw status"
 msgstr ""
 
-#: tournaments/models.py:252
+#: tournaments/models.py:249
 msgid "The status of this round's draw"
 msgstr ""
 
-#: tournaments/models.py:255
+#: tournaments/models.py:252
 msgid "feedback weight"
 msgstr ""
 
-#: tournaments/models.py:257
+#: tournaments/models.py:254
 #, no-python-format
 msgid ""
 "The extent to which each adjudicator's overall score depends on feedback vs "
@@ -334,52 +250,65 @@ msgstr ""
 
 #. Translators: A silent round is a round for which results are not disclosed
 #. once the round is over.
-#: tournaments/models.py:260
+#: tournaments/models.py:257
 msgid "silent"
 msgstr "صامت"
 
-#: tournaments/models.py:261
+#: tournaments/models.py:258
 msgid ""
 "If marked silent, information about this round (such as its results) will "
 "not be shown publicly."
 msgstr ""
 
-#: tournaments/models.py:263
+#: tournaments/models.py:260
 msgid "motions released"
 msgstr ""
 
-#: tournaments/models.py:264
+#: tournaments/models.py:261
 msgid ""
 "Whether motions will appear on the public website, assuming that feature is "
 "turned on"
 msgstr ""
 
-#: tournaments/models.py:265
+#: tournaments/models.py:262
 msgid "starts at"
 msgstr ""
 
-#: tournaments/models.py:268
+#: tournaments/models.py:265
 msgid "round"
 msgstr ""
 
-#: tournaments/models.py:269
+#: tournaments/models.py:266
 msgid "rounds"
 msgstr ""
 
-#: tournaments/models.py:282
+#: tournaments/models.py:279
 msgid ""
 "A round in the elimination stage must have its draw type set to "
 "\"Elimination\"."
 msgstr ""
 
-#: tournaments/models.py:285
+#: tournaments/models.py:282
 msgid ""
 "A round in the preliminary stage cannot have its draw type set to "
 "\"Elimination\"."
 msgstr ""
 
-#: tournaments/models.py:290
+#: tournaments/models.py:287
 msgid "Elimination rounds must have a break category."
+msgstr ""
+
+#: tournaments/templates/admin/tournaments/tournament/change_form.html:11
+#, python-format
+msgid ""
+"Looking for the welcome message? That's been moved to the tournament "
+"configuration, under <a href=\"%(features_url)s\">Public Features</a>."
+msgstr ""
+
+#: tournaments/templates/admin/tournaments/tournament/change_form.html:15
+msgid ""
+"Looking for the welcome message? That's moved to the tournament "
+"configuration, under Public Features."
 msgstr ""
 
 #: tournaments/templates/assistant_tournament_index.html:4
@@ -423,23 +352,24 @@ msgstr ""
 msgid "Create Account"
 msgstr ""
 
-#: tournaments/templates/configure_tournament.html:4
-msgid "Configure Tournament "
+#: tournaments/templates/configure_tournament.html:5
+#, python-format
+msgid "Configure Tournament %(tournament_name)s"
 msgstr ""
 
-#: tournaments/templates/configure_tournament.html:16
+#: tournaments/templates/configure_tournament.html:19
 msgid ""
 "To finish creating your tournament select a basic configuration options. "
 "Note that these can always be changed later (and with more precise control) "
 "if needed."
 msgstr ""
 
-#: tournaments/templates/configure_tournament.html:21
+#: tournaments/templates/configure_tournament.html:24
 msgid "Configure Tournament"
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:4
-msgid "Create New Tournament "
+msgid "Create New Tournament"
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:11

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 02:19-0500\n"
+"POT-Creation-Date: 2018-02-19 19:43-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
@@ -122,6 +122,11 @@ msgstr ""
 msgid "Rating"
 msgstr ""
 
+#: importer/forms.py:325
+#, python-format
+msgid "This value must be between %d and %d."
+msgstr ""
+
 #: importer/templates/simple_import_adjudicators_details.html:4
 #: importer/templates/simple_import_adjudicators_details.html:6
 #: importer/templates/simple_import_adjudicators_numbers.html:4
@@ -149,28 +154,30 @@ msgstr ""
 msgid "Previous Step"
 msgstr ""
 
-#: importer/templates/simple_import_adjudicators_details.html:17
+#: importer/templates/simple_import_adjudicators_details.html:19
 #, python-format
 msgid ""
-"As per this tournament's configuration, an adjudicator's rating must be "
-"between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Adjudicators "
-"marked as 'shared' will not be associated with any particular tournament but"
-" will be available to any tournament which has the \"<a "
-"href=\"%(options_league_url)s\" class=\"alert-link\">Share Adjudicators "
-"setting</a>\" enabled. Providing email addresses is optional but can be "
-"useful if using Private URLs for feedback or ballots."
+"As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this "
+"tournament's configuration</a>, an adjudicator's rating must be between "
+"<strong>%(min)s</strong> and <strong>%(max)s</strong>. Adjudicators marked "
+"as 'shared' will not be associated with any particular tournament but will "
+"be available to any tournament which has the \"<a "
+"href=\"%(options_league_url)s\" class=\"alert-link\">Share "
+"adjudicators</a>\" setting enabled. Providing email addresses is optional "
+"but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-"
+"link\">private URLs</a> for feedback or ballots."
 msgstr ""
 
-#: importer/templates/simple_import_adjudicators_details.html:45
+#: importer/templates/simple_import_adjudicators_details.html:51
 #, python-format
 msgid "Adjudicators for %(institution_name)s"
 msgstr ""
 
-#: importer/templates/simple_import_adjudicators_details.html:49
+#: importer/templates/simple_import_adjudicators_details.html:55
 msgid "Unaffiliated Adjudicators"
 msgstr ""
 
-#: importer/templates/simple_import_adjudicators_details.html:69
+#: importer/templates/simple_import_adjudicators_details.html:75
 msgid "Save All Adjudicators"
 msgstr ""
 
@@ -320,7 +327,7 @@ msgstr ""
 msgid "Added %(count)d %(model_plural)s."
 msgstr ""
 
-#: importer/views.py:167
+#: importer/views.py:177
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr ""
