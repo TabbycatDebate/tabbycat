@@ -65,17 +65,7 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
 
-class TournamentAssistantHomeView(AssistantMixin, TournamentMixin, TemplateView):
-    template_name = 'assistant_tournament_index.html'
-
-    def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs["round"] = tournament.current_round
-        return super().get_context_data(**kwargs)
-
-
-class TournamentAdminHomeView(AdministratorMixin, TournamentMixin, TemplateView):
-    template_name = 'tournament_index.html'
+class TournamentDashboardHomeView(TournamentMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
@@ -109,6 +99,14 @@ class TournamentAdminHomeView(AdministratorMixin, TournamentMixin, TemplateView)
             kwargs["initialGraphData"] = json.dumps([])
 
         return super().get_context_data(**kwargs)
+
+
+class TournamentAssistantHomeView(AssistantMixin, TournamentDashboardHomeView):
+    template_name = 'assistant_tournament_index.html'
+
+
+class TournamentAdminHomeView(AdministratorMixin, TournamentDashboardHomeView):
+    template_name = 'tournament_index.html'
 
 
 class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
