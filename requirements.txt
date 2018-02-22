@@ -11,5 +11,5 @@ django-redis==4.8.0                     # Adds redis as caching backend
 asgi_redis==1.4.3                       # Adds redis as a channel layer
 
 # Misc
-newrelic==2.102.0.85                    # Monitoring; requires add-on; generally unused
+newrelic==2.104.0.86; requires add-on; generally unused                    # Monitoring; requires add-on; generally unused
 sendgrid==5.3.0                         # Emailing
