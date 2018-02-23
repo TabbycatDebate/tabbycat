@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -350,6 +350,16 @@ msgstr ""
 msgid "Adjudicator did not see this debate."
 msgstr ""
 
+#: adjfeedback/tables.py:38
+#, fuzzy
+#| msgid "score"
+msgid "Score"
+msgstr "note"
+
+#: adjfeedback/tables.py:73 adjfeedback/templates/overview_breakdowns.html:49
+msgid "Feedback"
+msgstr ""
+
 #: adjfeedback/templates/enter_feedback.html:26
 msgid ""
 "There are some problems with this feedback submission. Please review and "
@@ -357,6 +367,12 @@ msgid ""
 msgstr ""
 "Cette soumission de commentaires a des problèmes. Veuillez les examiner et "
 "les corriger."
+
+#: adjfeedback/templates/enter_feedback.html:41
+msgid ""
+"When submitting this form your IP address will be stored for logging "
+"purposes."
+msgstr ""
 
 #: adjfeedback/templates/feedback_by_source.html:12
 #, python-format
@@ -431,10 +447,6 @@ msgstr ""
 msgid "Test"
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:49
-msgid "Feedback"
-msgstr ""
-
 #: adjfeedback/templates/overview_breakdowns.html:53
 #, python-format
 msgid ""
@@ -498,10 +510,6 @@ msgstr[1] ""
 msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr ""
 
-#: adjfeedback/views.py:139 adjfeedback/views.py:180
-msgid "Name"
-msgstr ""
-
 #: adjfeedback/views.py:145 adjfeedback/views.py:171 adjfeedback/views.py:188
 #, python-format
 msgid "%(count)d feedback"
@@ -509,24 +517,17 @@ msgid_plural "%(count)d feedbacks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/views.py:163 adjfeedback/views.py:302 adjfeedback/views.py:307
-msgid "Team"
-msgstr ""
-
 #: adjfeedback/views.py:302
 msgid "A Team"
 msgstr ""
 
-#: adjfeedback/views.py:311 adjfeedback/views.py:313 adjfeedback/views.py:335
-#: adjfeedback/views.py:337
-msgid "Institution"
+#: adjfeedback/views.py:307
+msgid "Team"
 msgstr ""
 
-#: adjfeedback/views.py:321 adjfeedback/views.py:331
-#, fuzzy
-#| msgid "adjudicator"
-msgid "Adjudicator"
-msgstr "juge"
+#: adjfeedback/views.py:313 adjfeedback/views.py:337
+msgid "Institution"
+msgstr ""
 
 #: adjfeedback/views.py:321
 #, fuzzy
@@ -534,6 +535,8 @@ msgstr "juge"
 msgid "An Adjudicator"
 msgstr "juge"
 
-#: adjfeedback/views.py:612 adjfeedback/views.py:618
-msgid "Owed"
-msgstr ""
+#: adjfeedback/views.py:331
+#, fuzzy
+#| msgid "adjudicator"
+msgid "Adjudicator"
+msgstr "juge"

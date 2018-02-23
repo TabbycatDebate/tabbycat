@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "tournament"
 msgstr "tournoi"
 
-#: breakqual/models.py:10 breakqual/views.py:199
+#: breakqual/models.py:10
 msgid "name"
 msgstr "nom"
 
@@ -142,7 +142,7 @@ msgstr "catégorie de break"
 msgid "break categories"
 msgstr "catégories de break"
 
-#: breakqual/models.py:73 breakqual/views.py:224
+#: breakqual/models.py:73
 msgid "team"
 msgstr "équipe"
 
@@ -378,12 +378,12 @@ msgstr ""
 msgid "Break"
 msgstr ""
 
-#: breakqual/views.py:66
+#: breakqual/views.py:67
 #, python-format
 msgid "%(category)s Break"
 msgstr "Qualification %(category)s"
 
-#: breakqual/views.py:89
+#: breakqual/views.py:90
 #, python-format
 msgid ""
 "There was an error generating the break for category %(category)s: "
@@ -392,15 +392,15 @@ msgstr ""
 "Une erreur s'est produite lors de la génération de la qualification pour la "
 "catégorie %(category)s : %(message)s"
 
-#: breakqual/views.py:131
+#: breakqual/views.py:132
 msgid "Eligible for"
 msgstr ""
 
-#: breakqual/views.py:132
+#: breakqual/views.py:133
 msgid "Edit Remark"
 msgstr ""
 
-#: breakqual/views.py:146
+#: breakqual/views.py:147
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for the "
@@ -410,7 +410,7 @@ msgstr ""
 "enregistrés, et la qualification des équipes a été mise à jour, pour les "
 "catégories de qualification suivantes : %(categories)s."
 
-#: breakqual/views.py:153
+#: breakqual/views.py:154
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for break "
@@ -420,11 +420,11 @@ msgstr ""
 "enregistrés, et la qualification des équipes a été mise à jour, pour la "
 "catégorie de qualification %(category)s."
 
-#: breakqual/views.py:158
+#: breakqual/views.py:159
 msgid "Changes to breaking team remarks saved."
 msgstr ""
 
-#: breakqual/views.py:182
+#: breakqual/views.py:183
 #, python-format
 msgid ""
 "Teams break generated for the following break categories: %(categories)s."
@@ -432,10 +432,10 @@ msgstr ""
 "La qualification des équipes s'est générée pour les catégories de "
 "qualification suivantes : %(categories)s."
 
-#: breakqual/views.py:195
+#: breakqual/views.py:196
 msgid "Breaking Adjudicators"
 msgstr ""
 
-#: breakqual/views.py:219
+#: breakqual/views.py:220
 msgid "Break Eligibility"
 msgstr "Admissibilité pour la qualification"

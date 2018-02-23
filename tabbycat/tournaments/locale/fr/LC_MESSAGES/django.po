@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 20:32-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: 2018-02-20 08:13-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -400,7 +400,7 @@ msgstr "Créer compte"
 msgid "Configure Tournament %(tournament_name)s"
 msgstr "Configuration du tournoi %(tournament_name)s"
 
-#: tournaments/templates/configure_tournament.html:19
+#: tournaments/templates/configure_tournament.html:20
 msgid ""
 "To finish creating your tournament select a basic configuration options. "
 "Note that these can always be changed later (and with more precise control) "
@@ -410,7 +410,7 @@ msgstr ""
 "base. Notez que les paramètres peuvent toujours être changées plus tard (et "
 "à plus de la precision) si vous en avez besoin."
 
-#: tournaments/templates/configure_tournament.html:24
+#: tournaments/templates/configure_tournament.html:25
 msgid "Configure Tournament"
 msgstr "Configuration du tournoi"
 
@@ -472,8 +472,52 @@ msgid "Cancel and go back to the site home page"
 msgstr "Annuler et revenir à la page d’accueil du site"
 
 #: tournaments/templates/donations.html:4
+#: tournaments/templates/donations.html:5
+#, fuzzy
+#| msgid "Donate to Tabbycat"
+msgctxt "title"
 msgid "Donate to Tabbycat"
 msgstr "Donations à Tabbycat"
+
+#: tournaments/templates/donations.html:11
+msgid ""
+"Tabbycat is a volunteer effort. Since 2012, its maintainers have spent "
+"thousands of hours working on it."
+msgstr ""
+
+#: tournaments/templates/donations.html:17
+msgid ""
+"Donating to Tabbycat helps the maintainers to meet recurring costs and "
+"justify our ongoing contributions in responding to support enquiries, "
+"keeping the software up to date, fixing bugs, and developing new features."
+msgstr ""
+
+#: tournaments/templates/donations.html:24
+msgid ""
+"We suggest that tournaments budget for a donation of A$1 (Australian dollar) "
+"per team. For tournaments run for fundraising or for profit, whether partly "
+"or solely, this payment is <strong>required</strong> and your licence to use "
+"Tabbycat is conditional upon it. General donations from individuals or "
+"organisations are of course also much appreciated."
+msgstr ""
+
+#: tournaments/templates/donations.html:34
+#, python-format
+msgid ""
+"Our suggested donation from %(tournament)s, based on its size, is <strong>A$"
+"%(nteams)s</strong>. The easiest way to donate is <a href=\"http://PayPal.Me/"
+"tabbycatproject/%(nteams)saud\">via Paypal</a>, but please don’t hesitate to "
+"<a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email"
+"\">email us</a> if other methods would work better for you. Feel free to get "
+"in touch if you require an invoice or receipt for the payment also."
+msgstr ""
+
+#: tournaments/templates/donations.html:46
+msgid ""
+"The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/0aud"
+"\">via Paypal</a>. Please <a href=\"http://tabbycat.readthedocs.io/en/stable/"
+"about/support.html\">contact us</a> if you require other options."
+msgstr ""
 
 #: tournaments/templates/fix_debate_teams.html:16
 msgid ""
@@ -1052,7 +1096,7 @@ msgstr "Tour éliminatoire inconnu"
 msgid "UBR"
 msgstr "TÉI"
 
-#: tournaments/views.py:155
+#: tournaments/views.py:153
 #, python-format
 msgid ""
 "The current round has been advanced to %(round)s. You've made it to the end "
@@ -1063,12 +1107,12 @@ msgstr ""
 "tours préliminaires ! Félicitations ! L'étape suivante consiste à générer "
 "les équipes qualifiant au tours éliminatoires."
 
-#: tournaments/views.py:160
+#: tournaments/views.py:158
 #, python-format
 msgid "The current round has been advanced to %(round)s. Woohoo! Keep it up!"
 msgstr "Le tour actuel a été avancé à %(round)s. Woohoo ! Continuez !"
 
-#: tournaments/views.py:165
+#: tournaments/views.py:163
 msgid ""
 "Whoops! Could not advance round, because there's no round after this round!"
 msgstr ""

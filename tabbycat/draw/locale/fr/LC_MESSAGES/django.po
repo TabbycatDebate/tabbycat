@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -360,17 +360,9 @@ msgstr "%(side_name)s : %(metric_name)s"
 msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
 
-#: draw/tables.py:80 draw/views.py:286
-msgid "Room rank"
-msgstr "Rang de salle"
-
 #: draw/tables.py:82
 msgid "Room rank of this debate"
 msgstr "Rang de salle de ce débat"
-
-#: draw/tables.py:88 draw/views.py:289
-msgid "Bracket"
-msgstr "Tranche"
 
 #: draw/tables.py:90
 msgid "Bracket of this debate"
@@ -416,15 +408,11 @@ msgstr ""
 msgid "Was imbalanced and still imbalanced"
 msgstr ""
 
-#: draw/tables.py:251 draw/tables.py:291 draw/tables.py:368
-msgid "Cost"
-msgstr "Coût"
-
-#: draw/tables.py:264 draw/tables.py:359
+#: draw/tables.py:264
 msgid "Pts"
 msgstr "Pts"
 
-#: draw/tables.py:264 draw/tables.py:359
+#: draw/tables.py:264 draw/tables.py:362
 msgid "Points"
 msgstr "Points"
 
@@ -432,39 +420,39 @@ msgstr "Points"
 msgid "Side"
 msgstr "Côté"
 
-#: draw/tables.py:273
+#: draw/tables.py:274
 msgid "Position this round"
 msgstr "Position dans ce tour"
 
-#: draw/tables.py:277
+#: draw/tables.py:278
 msgid "Before"
 msgstr "Avant"
 
-#: draw/tables.py:277
+#: draw/tables.py:279
 msgid "Side history before this round"
 msgstr "Historique de côté avant ce tour"
 
-#: draw/tables.py:281
+#: draw/tables.py:283
 msgid "After"
 msgstr "Après"
 
-#: draw/tables.py:281
+#: draw/tables.py:284
 msgid "Side history after this round"
 msgstr "Historique de côté après ce tour"
 
-#: draw/tables.py:291
+#: draw/tables.py:294 draw/tables.py:371
+msgid "Cost"
+msgstr "Coût"
+
+#: draw/tables.py:294
 msgid "Position cost"
 msgstr "Coût de position"
 
-#: draw/tables.py:304
+#: draw/tables.py:307
 msgid "Status"
 msgstr "État"
 
-#: draw/tables.py:341
-msgid "Room"
-msgstr "Salle"
-
-#: draw/tables.py:343
+#: draw/tables.py:346
 msgid ""
 "Teams with this many points are permitted in this debate<br>\n"
 "(bracket in bold)"
@@ -472,15 +460,15 @@ msgstr ""
 "Les équipes qui ont ce nombre de points sont permises dans ce débat<br>\n"
 "(tranche en caractères gras)"
 
-#: draw/tables.py:363
+#: draw/tables.py:366
 msgid "side history before this round"
 msgstr "historique de côté avant ce tour"
 
-#: draw/tables.py:363
+#: draw/tables.py:366
 msgid "Sides"
 msgstr "Côtés"
 
-#: draw/tables.py:368
+#: draw/tables.py:371
 msgid "position cost"
 msgstr "coût de position"
 
@@ -1189,3 +1177,12 @@ msgstr ""
 #: draw/views.py:863
 msgid "Unknown Venue Category"
 msgstr ""
+
+#~ msgid "Room rank"
+#~ msgstr "Rang de salle"
+
+#~ msgid "Bracket"
+#~ msgstr "Tranche"
+
+#~ msgid "Room"
+#~ msgstr "Salle"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -354,16 +354,8 @@ msgstr ""
 msgid "Team %(num)d"
 msgstr ""
 
-#: draw/tables.py:80 draw/views.py:286
-msgid "Room rank"
-msgstr ""
-
 #: draw/tables.py:82
 msgid "Room rank of this debate"
-msgstr ""
-
-#: draw/tables.py:88 draw/views.py:289
-msgid "Bracket"
 msgstr ""
 
 #: draw/tables.py:90
@@ -406,15 +398,11 @@ msgstr ""
 msgid "Was imbalanced and still imbalanced"
 msgstr ""
 
-#: draw/tables.py:251 draw/tables.py:291 draw/tables.py:368
-msgid "Cost"
-msgstr ""
-
-#: draw/tables.py:264 draw/tables.py:359
+#: draw/tables.py:264
 msgid "Pts"
 msgstr ""
 
-#: draw/tables.py:264 draw/tables.py:359
+#: draw/tables.py:264 draw/tables.py:362
 msgid "Points"
 msgstr ""
 
@@ -422,53 +410,53 @@ msgstr ""
 msgid "Side"
 msgstr ""
 
-#: draw/tables.py:273
+#: draw/tables.py:274
 msgid "Position this round"
 msgstr ""
 
-#: draw/tables.py:277
+#: draw/tables.py:278
 msgid "Before"
 msgstr ""
 
-#: draw/tables.py:277
+#: draw/tables.py:279
 msgid "Side history before this round"
 msgstr ""
 
-#: draw/tables.py:281
+#: draw/tables.py:283
 msgid "After"
 msgstr ""
 
-#: draw/tables.py:281
+#: draw/tables.py:284
 msgid "Side history after this round"
 msgstr ""
 
-#: draw/tables.py:291
+#: draw/tables.py:294 draw/tables.py:371
+msgid "Cost"
+msgstr ""
+
+#: draw/tables.py:294
 msgid "Position cost"
 msgstr ""
 
-#: draw/tables.py:304
+#: draw/tables.py:307
 msgid "Status"
 msgstr ""
 
-#: draw/tables.py:341
-msgid "Room"
-msgstr ""
-
-#: draw/tables.py:343
+#: draw/tables.py:346
 msgid ""
 "Teams with this many points are permitted in this debate<br>\n"
 "(bracket in bold)"
 msgstr ""
 
-#: draw/tables.py:363
+#: draw/tables.py:366
 msgid "side history before this round"
 msgstr ""
 
-#: draw/tables.py:363
+#: draw/tables.py:366
 msgid "Sides"
 msgstr ""
 
-#: draw/tables.py:368
+#: draw/tables.py:371
 msgid "position cost"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:44-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -710,14 +710,6 @@ msgid ""
 "debate, it will always show the debate that you just adjudicated."
 msgstr ""
 
-#: results/templates/includes/public_enter_results_info.html:12
-#, python-format
-msgid ""
-"The URL of this page is personalised to you, %(adj_name)s. If you bookmark "
-"this page and return here after each debate, it will always show the debate "
-"that you just adjudicated."
-msgstr ""
-
 #: results/templates/public_add_ballot.html:5
 msgid "Who are you?"
 msgstr ""
@@ -779,6 +771,12 @@ msgid_plural ""
 "times. Please contact a tab official after submitting your form."
 msgstr[0] ""
 msgstr[1] ""
+
+#: results/templates/public_enter_results.html:71
+msgid ""
+"When submitting this form your IP address will be stored for logging "
+"purposes."
+msgstr ""
 
 #: results/templates/public_enter_results_error.html:4
 #: results/templates/public_enter_results_error.html:5
@@ -928,18 +926,6 @@ msgstr ""
 
 #: results/utils.py:260
 msgid "Reply"
-msgstr ""
-
-#: results/views.py:64 results/views.py:65
-msgid "Status"
-msgstr ""
-
-#: results/views.py:118
-msgid "Venue"
-msgstr ""
-
-#: results/views.py:146
-msgid "Team"
 msgstr ""
 
 #: results/views.py:308

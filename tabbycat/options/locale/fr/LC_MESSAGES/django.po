@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"PO-Revision-Date: 2018-02-20 12:55-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,27 +16,28 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: options/dynamic_preferences_registry.py:17
 #: options/templates/preferences_index.html:15
 msgid "Score Rules"
-msgstr "Règles des notes"
+msgstr "Règles des scores"
 
 #: options/dynamic_preferences_registry.py:23
 msgid "Minimum allowed score for substantive speeches"
-msgstr ""
+msgstr "Score minimum admissible pour les discours substantifs"
 
 #: options/dynamic_preferences_registry.py:26
 msgid "Minimum speaker score"
-msgstr ""
+msgstr "Score minimum de discours"
 
 #: options/dynamic_preferences_registry.py:32
 msgid "Maximum speaker score"
-msgstr ""
+msgstr "Score maximum de discours"
 
 #: options/dynamic_preferences_registry.py:33
 msgid "Maximum allowed score for substantive speeches"
-msgstr ""
+msgstr "Score maximum admissible pour les discours substantifs"
 
 #: options/dynamic_preferences_registry.py:41
 msgid "Speaker score step"
@@ -56,23 +56,23 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:51
 msgid "Maximum margin"
-msgstr ""
+msgstr "Marge maximum"
 
 #: options/dynamic_preferences_registry.py:60
 msgid "Minimum allowed score for reply speeches"
-msgstr ""
+msgstr "Score minimum admissible pour les discours de réponse"
 
 #: options/dynamic_preferences_registry.py:61
 msgid "Minimum reply score"
-msgstr ""
+msgstr "Score minimum de réponse"
 
 #: options/dynamic_preferences_registry.py:69
 msgid "Maximum allowed score for reply speeches"
-msgstr ""
+msgstr "Score maximum admissible pour les discours de réponse"
 
 #: options/dynamic_preferences_registry.py:70
 msgid "Maximum reply score"
-msgstr ""
+msgstr "Score maximum de réponse"
 
 #: options/dynamic_preferences_registry.py:78
 msgid ""
@@ -500,23 +500,24 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:427
 #: options/templates/preferences_index.html:25
 msgid "Debate Rules"
-msgstr ""
+msgstr "Règles de débat"
 
 #: options/dynamic_preferences_registry.py:433
 msgid "Two-team format (e.g. Australs, WSDC) or British Parliamentary"
 msgstr ""
+"Format à deux équipes (par ex. Australs, WUDC) ou Parlementaire britannique"
 
 #: options/dynamic_preferences_registry.py:434
 msgid "Teams in debate"
-msgstr ""
+msgstr "Équipes dans le débat"
 
 #: options/dynamic_preferences_registry.py:438
 msgid "Two-team format"
-msgstr ""
+msgstr "Format à deux équipes"
 
 #: options/dynamic_preferences_registry.py:439
 msgid "British Parliamentary (four teams)"
-msgstr ""
+msgstr "Parlementaire britannique (quatre équipes)"
 
 #: options/dynamic_preferences_registry.py:446
 msgid ""
@@ -622,7 +623,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:556
 #: options/templates/preferences_index.html:46
 msgid "Tab Release"
-msgstr ""
+msgstr "Publication du tab"
 
 #: options/dynamic_preferences_registry.py:562
 msgid ""
@@ -1239,7 +1240,7 @@ msgstr ""
 
 #: options/templates/preferences_index.html:81
 msgid "Manually Set Current Round"
-msgstr ""
+msgstr "Changer manuellement le tour actuel"
 
 #: options/templates/preferences_index.html:82
 msgid ""

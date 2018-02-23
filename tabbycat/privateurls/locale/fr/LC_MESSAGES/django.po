@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: privateurls/admin.py:18 privateurls/views.py:81 privateurls/views.py:214
+#: privateurls/admin.py:18
 msgid "Team"
 msgstr "Équipe"
 
@@ -266,10 +266,6 @@ msgstr "URL pour les commentaires"
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: privateurls/views.py:97 privateurls/views.py:167
-msgid "Name"
-msgstr "Nom"
-
 #: privateurls/views.py:100 privateurls/views.py:186
 msgid "Ballot URL"
 msgstr "URL pour les bulletins"
@@ -450,3 +446,6 @@ msgid ""
 msgstr ""
 "Les courriels avec les URLs privées pour les commentaires ont été envoyés à "
 "%(speakers_phrase)s et %(adjudicators_phrase)s."
+
+#~ msgid "Name"
+#~ msgstr "Nom"
