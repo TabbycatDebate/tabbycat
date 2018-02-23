@@ -61,8 +61,8 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
 
     def get_table(self):
         draw = self._get_draw()
-        table = ResultsTableBuilder(view=self, sort_key=_("Status"))
-        table.add_ballot_status_columns(draw, key=_("Status"))
+        table = ResultsTableBuilder(view=self, sort_key="status")
+        table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw)
@@ -115,7 +115,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         populate_confirmed_ballots(debates, motions=True,
                 results=tournament.pref('ballots_per_debate') == 'per-adj')
 
-        table = TabbycatTableBuilder(view=self, sort_key=_("Venue"))
+        table = TabbycatTableBuilder(view=self, sort_key="venue")
         table.add_debate_venue_columns(debates)
         table.add_debate_results_columns(debates)
         if not (tournament.pref('teams_in_debate') == 'bp' and round.is_break_round):
@@ -143,7 +143,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         populate_confirmed_ballots(debates, motions=True,
                 results=tournament.pref('ballots_per_debate') == 'per-adj')
 
-        table = TabbycatTableBuilder(view=self, sort_key=_("Team"))
+        table = TabbycatTableBuilder(view=self, sort_key="team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
         table.add_debate_result_by_team_column(teamscores)
         table.add_debate_side_by_team_column(teamscores)

@@ -78,7 +78,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
             return {'text': self.request.build_absolute_uri(path), 'class': 'small'}
 
         teams = tournament.team_set.all()
-        table = TabbycatTableBuilder(view=self, title=_("Teams"), sort_key=_("Team"))
+        table = TabbycatTableBuilder(view=self, title=_("Teams"), sort_key="team")
         table.add_team_columns(teams)
         table.add_column(_("Feedback URL"), [_build_url(team) for team in teams])
 
@@ -94,7 +94,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
             return {'text': self.request.build_absolute_uri(path), 'class': 'small'}
 
         adjudicators = Adjudicator.objects.all() if tournament.pref('share_adjs') else tournament.adjudicator_set.all()
-        table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key=_("Name"))
+        table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         table.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
         table.add_column(_("Feedback URL"), [_build_url(adj, 'adjfeedback-public-add-from-adjudicator-randomised') for adj in adjudicators])
         table.add_column(_("Ballot URL"), [_build_url(adj, 'results-public-ballotset-new-randomised') for adj in adjudicators])
@@ -164,7 +164,7 @@ class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
         adjudicators = self.get_adjudicators_to_email(url_type)
         title = _("Adjudicators who will be sent e-mails (%(n)s)") % {'n': adjudicators.count()}
-        table = TabbycatTableBuilder(view=self, title=title, sort_key=_("Name"))
+        table = TabbycatTableBuilder(view=self, title=title, sort_key="name")
         table.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
         table.add_column(_("Email"), [adj.email for adj in adjudicators])
         table.add_column(url_header, [_build_url(adj) for adj in adjudicators])
@@ -211,7 +211,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
 
         speakers = self.get_speakers_to_email()
         title = _("Speakers who will be sent e-mails (%(n)s)") % {'n': speakers.count()}
-        table = TabbycatTableBuilder(view=self, title=title, sort_key=_("Team"))
+        table = TabbycatTableBuilder(view=self, title=title, sort_key="team")
         table.add_speaker_columns(speakers, categories=False)
         table.add_team_columns([speaker.team for speaker in speakers])
         table.add_column(_("Email"), [speaker.email for speaker in speakers])

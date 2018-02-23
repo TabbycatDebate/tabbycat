@@ -54,12 +54,12 @@ class BaseParticipantsListView(VueTableTemplateView):
         t = self.get_tournament()
 
         adjudicators = t.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key=_("Name"))
+        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         adjs_table.add_adjudicator_columns(adjudicators)
 
         speakers = Speaker.objects.filter(team__tournament=t).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
-        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key=_("Team"))
+        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="team")
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
@@ -149,7 +149,7 @@ class BaseTeamRecordView(BaseRecordView):
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TeamResultTableBuilder(view=self, title="Results", sort_key=_("Round"))
+        table = TeamResultTableBuilder(view=self, title="Results", sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
@@ -216,7 +216,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key=_("Round"))
+        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
@@ -304,7 +304,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
 
     def get_table(self):
         t = self.get_tournament()
-        table = TabbycatTableBuilder(view=self, sort_key=_('team'))
+        table = TabbycatTableBuilder(view=self, sort_key='team')
         speakers = Speaker.objects.filter(team__tournament=t).select_related(
             'team', 'team__institution').prefetch_related('categories')
         table.add_speaker_columns(speakers, categories=False)

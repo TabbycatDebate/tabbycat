@@ -208,7 +208,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         return standings, rounds
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key="Rk")
+        table = TabbycatTableBuilder(view=self, sort_key="rk")
 
         try:
             standings, rounds = self.get_standings()
@@ -409,7 +409,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         pass
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key="Rk")
+        table = TabbycatTableBuilder(view=self, sort_key="rk")
 
         try:
             standings, rounds = self.get_standings()
