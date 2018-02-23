@@ -77,7 +77,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
     def add_room_rank_columns(self, debates):
         header = {
-            'key': _("Room rank"),
+            'key': "room-rank",
             'icon': 'bar-chart-2',
             'tooltip': _("Room rank of this debate"),
         }
@@ -85,7 +85,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
     def add_debate_bracket_columns(self, debates):
         header = {
-            'key': _("Bracket"),
+            'key': "bracket",
             'icon': 'bar-chart-2',
             'tooltip': _("Bracket of this debate"),
         }
@@ -248,7 +248,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.sort_key = _("Cost")
+        self.sort_key = "cost"
 
     def build(self, draw, teams, side_histories_before, side_histories_now, standings):
         self.side_histories_before = side_histories_before
@@ -261,7 +261,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
 
         # Points
         infos = self.standings.get_standings(teams)
-        header = {'key': _("Pts"), 'tooltip': _("Points")}
+        header = {'key': "pts", 'title': _("Pts"), 'tooltip': _("Points")}
         self.add_column(header, [info.metrics['points'] for info in infos])
 
         # Sides
@@ -270,15 +270,18 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         sides = [sides_lookup[team.id] for team in teams]
         poses = [self.tournament.sides.index(side) for side in sides]  # used later
         names = {side: get_side_name(self.tournament, side, 'abbr') for side in self.tournament.sides}
-        header = {'key': _("Side"), 'tooltip': _("Position this round")}
+        header = {'key': "side", 'title': _("Side"),
+                  'tooltip': _("Position this round")}
         self.add_column(header, [names[side] for side in sides])
 
         # Side counts before and now
-        header = {'key': _("Before"), 'tooltip': _("Side history before this round")}
+        header = {'key': "before", 'title': _("Before"),
+                  'tooltip': _("Side history before this round")}
         cells = self._side_history_by_team(self.side_histories_before, teams)
         self.add_column(header, cells)
 
-        header = {'key': _("After"), 'tooltip': _("Side history after this round")}
+        header = {'key': "after", 'title': _("After"),
+                  'tooltip': _("Side history after this round")}
         side_histories_now_highlighted = []
         for team, pos in zip(teams, poses):
             history = [str(x) for x in self.side_histories_now[team.id]]
@@ -288,7 +291,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         self.add_column(header, side_histories_now_highlighted)
 
         # Position cost
-        header = {'key': _("Cost"), 'tooltip': _("Position cost")}
+        header = {'key': "cost", 'title': _("Cost"), 'tooltip': _("Position cost")}
         cells = [metricformat(self.get_position_cost(pos, team)) for pos, team in zip(poses, teams)]
         self.add_column(header, cells)
 
@@ -338,7 +341,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             strs[0] = "<strong>%s</strong>" % strs[0]
             cells.append(", ".join(strs))
         header = {
-            'key': _("Room"),
+            'key': "room",
             'icon': "bar-chart",
             'tooltip': _("Teams with this many points are permitted in this debate<br>\n(bracket in bold)"),
         }
@@ -356,7 +359,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
 
         # Points of team
         infos = self.standings.get_standings(teams)
-        header = {'key': _("Pts"), 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
+        header = {'key': "pts", 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
         self.add_column(header, [info.metrics['points'] for info in infos])
 
         # Side history after last round

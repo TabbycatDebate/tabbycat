@@ -97,7 +97,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         self.add_column(entry_header, entry_cells)
 
         if self.tournament.pref('enable_postponements'):
-            postpones_header = {'key': _("Postpone")}
+            postpones_header = {'title': _("Postpone"), 'key': "postpone"}
             postpones_cells = []
             for debate in debates:
                 if debate.result_status == Debate.STATUS_POSTPONED:

@@ -506,11 +506,11 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, t.short_name))
-        measure = _("Points") if tournament.pref('teams_in_debate') == 'bp' else _("Wins")
+        key = "Points" if tournament.pref('teams_in_debate') == 'bp' else "Wins"
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column(measure, [team.points for team in teams])
+        table.add_column({'key': key, 'title': _(key)}, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
         return table
@@ -555,7 +555,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     page_title = 'Feedback Overview'
     page_emoji = '🙅'
     for_public = False
-    sort_key = 'Name'
+    sort_key = 'name'
     sort_order = 'asc'
     template_name = 'standings_adjudicators.html'
 

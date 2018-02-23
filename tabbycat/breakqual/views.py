@@ -57,7 +57,8 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
         self.standings = self.get_standings()
         table = TabbycatTableBuilder(view=self, title=self.object.name, sort_key='Rk')
         table.add_ranking_columns(self.standings)
-        table.add_column(_("Break"), [tsi.break_rank for tsi in self.standings])
+        table.add_column({'title': _("Break"), 'key': 'break'},
+                         [tsi.break_rank for tsi in self.standings])
         table.add_team_columns([tsi.team for tsi in self.standings])
         table.add_metric_columns(self.standings)
         return table
@@ -228,7 +229,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         break_categories = t.breakcategory_set.all()
 
         for bc in break_categories:
-            table.add_column(bc.name, [{
+            table.add_column({'title': bc.name, 'key': bc.name}, [{
                 'component': 'check-cell',
                 'checked': True if bc in team.break_categories.all() else False,
                 'id': team.id,

@@ -174,7 +174,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
-        table.add_column(_("Active Now"), [{
+        table.add_column({'key': 'active', 'title': _("Active Now")}, [{
             'component': 'check-cell',
             'checked': inst.available,
             'sort': inst.available,
@@ -184,7 +184,8 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         } for inst in queryset])
 
         if round.prev:
-            table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}, [{
+            title = _("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}
+            table.add_column({'key': 'active', 'title': title}, [{
                 'sort': inst.prev_available,
                 'icon': 'check' if inst.prev_available else ''
             } for inst in queryset])

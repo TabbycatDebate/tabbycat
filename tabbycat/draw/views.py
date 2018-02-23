@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     template_name = 'draw_display_by.html'
-    sort_key = 'Venue'
+    sort_key = 'venue'
 
     def get_page_title(self):
         return _("Draw for %(round)s") % {'round': self.get_round().name}
@@ -283,10 +283,10 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiiesMixin, Vue
         r = self.get_round()
 
         if r.is_break_round:
-            sort_key = _("Room rank")
+            sort_key = "room-rank"
             sort_order = 'asc'
         else:
-            sort_key = _("Bracket")
+            sort_key = "bracket"
             sort_order = 'desc'
 
         table = AdminDrawTableBuilder(view=self, sort_key=sort_key,
