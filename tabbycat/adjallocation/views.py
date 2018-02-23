@@ -143,7 +143,7 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataR
             logger.warning(info)
             raise BadJsonRequestError(info)
 
-        if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
+        if round.ballots_per_debate == 'per-adj':
             allocator_class = VotingHungarianAllocator
         else:
             allocator_class = ConsensusHungarianAllocator
