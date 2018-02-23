@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: privateurls/admin.py:18 privateurls/views.py:81 privateurls/views.py:214
+#: privateurls/admin.py:18
 msgid "Team"
 msgstr "Equipo"
 
@@ -251,10 +251,6 @@ msgstr "URL de Feedback"
 #: privateurls/views.py:97
 msgid "Adjudicators"
 msgstr "Jueces"
-
-#: privateurls/views.py:97 privateurls/views.py:167
-msgid "Name"
-msgstr "Nombre"
 
 #: privateurls/views.py:100 privateurls/views.py:186
 msgid "Ballot URL"

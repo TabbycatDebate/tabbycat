@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: David Alejandro Huertas Erazo <dale.huertas@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -314,7 +314,6 @@ msgid "emoji"
 msgstr "emoji"
 
 #: participants/models.py:215 participants/models.py:368
-#: participants/views.py:307
 msgid "team"
 msgstr "equipo"
 
@@ -800,26 +799,14 @@ msgstr "Elegible para categorías de break:"
 msgid "Adjudicators"
 msgstr "Jueces"
 
-#: participants/views.py:57
-msgid "Name"
-msgstr "Nombre"
-
 #: participants/views.py:62
 msgid "Speakers"
 msgstr "Oradores"
-
-#: participants/views.py:62
-msgid "Team"
-msgstr "Equipo"
 
 #: participants/views.py:103 participants/views.py:176
 #, python-format
 msgid "Record for %(name)s"
 msgstr "Registro para %(name)s"
-
-#: participants/views.py:152 participants/views.py:219
-msgid "Round"
-msgstr "Ronda"
 
 #: participants/views.py:219
 msgid "Previous Rounds"

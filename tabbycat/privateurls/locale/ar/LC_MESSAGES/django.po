@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: privateurls/admin.py:18 privateurls/views.py:81 privateurls/views.py:214
+#: privateurls/admin.py:18
 msgid "Team"
 msgstr "الفرق"
 
@@ -263,10 +263,6 @@ msgstr "تغذية راجعة "
 #: privateurls/views.py:97
 msgid "Adjudicators"
 msgstr "المحكمين"
-
-#: privateurls/views.py:97 privateurls/views.py:167
-msgid "Name"
-msgstr "اسم "
 
 #: privateurls/views.py:100 privateurls/views.py:186
 msgid "Ballot URL"

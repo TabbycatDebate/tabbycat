@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -390,31 +390,31 @@ msgstr "Activo"
 msgid "Active in %(prev_round)s"
 msgstr "Activo en %(prev_round)s"
 
-#: availability/views.py:237
+#: availability/views.py:238
 msgid "Venue"
 msgstr "Sala"
 
-#: availability/views.py:238
+#: availability/views.py:239
 msgid "Display Name (for the draw)"
 msgstr "Mostrar nombre (para el cuadro)"
 
-#: availability/views.py:239
+#: availability/views.py:240
 msgid "Categories"
 msgstr "Categorías"
 
-#: availability/views.py:240
+#: availability/views.py:241
 msgid "Priority"
 msgstr "Prioridad"
 
-#: availability/views.py:258
+#: availability/views.py:259
 msgid "Checked in all teams, adjudicators and venues."
 msgstr "Se han chequeado todos los equipos, jueces y salas."
 
-#: availability/views.py:265
+#: availability/views.py:266
 msgid "Checked in all breaking adjudicators."
 msgstr "Se han chequeado todos los jueces que breakean."
 
-#: availability/views.py:273
+#: availability/views.py:274
 msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""
 "Se han chequeado todos los equipos, jueces y salas de la ronda anterior."
