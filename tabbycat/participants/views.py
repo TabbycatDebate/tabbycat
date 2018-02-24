@@ -312,7 +312,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
         speaker_categories = self.get_tournament().speakercategory_set.all()
 
         for sc in speaker_categories:
-            table.add_column(sc.name, [{
+            table.add_column({'key': sc.name, 'title': sc.name}, [{
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,

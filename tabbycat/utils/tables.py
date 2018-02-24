@@ -609,7 +609,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     categories_data.append(", ".join(category_strs))
 
                 self.add_column({
-                    '': "category",
+                    'key': "category",
                     'title': _("Category"),
                     'icon': 'user-check', # Not ideal but full name blows out tables
                     'tooltip': _("Categories")
