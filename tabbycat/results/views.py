@@ -113,7 +113,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         tournament = self.get_tournament()
         debates = round.debate_set_with_prefetches(results=True, wins=True)
         populate_confirmed_ballots(debates, motions=True,
-                results=tournament.pref('ballots_per_debate') == 'per-adj')
+                results=round.ballots_per_debate == 'per-adj')
 
         table = TabbycatTableBuilder(view=self, sort_key="venue")
         table.add_debate_venue_columns(debates)
@@ -141,7 +141,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         if tournament.pref('teams_in_debate') == 'two':
             populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True,
-                results=tournament.pref('ballots_per_debate') == 'per-adj')
+            results=round.ballots_per_debate == 'per-adj')
 
         table = TabbycatTableBuilder(view=self, sort_key="team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
@@ -238,7 +238,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         tournament = self.get_tournament()
         if tournament.pref('teams_in_debate') == 'bp' and self.debate.round.is_break_round:
             return BPEliminationResultForm
-        elif tournament.pref('ballots_per_debate') == 'per-adj':
+        elif self.debate.round.ballots_per_debate == 'per-adj':
             return PerAdjudicatorBallotSetForm
         else:
             return SingleBallotSetForm
@@ -318,7 +318,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
         t = self.get_tournament()
 
-        if t.pref('ballots_per_debate') == 'per-adj' and \
+        if self.debate.round.ballots_per_debate == 'per-adj' and \
                 not self.debate.adjudicators.has_chair:
             messages.error(self.request, _("Whoops! The debate %(debate)s doesn't have a chair, "
                 "so you can't enter results for it.") % {'debate': self.debate.matchup})

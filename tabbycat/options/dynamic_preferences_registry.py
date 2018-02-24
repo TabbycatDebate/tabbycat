@@ -442,11 +442,24 @@ class TeamsInDebate(ChoicePreference):
 
 
 @tournament_preferences_registry.register
-class BallotsPerDebate(ChoicePreference):
-    help_text = _("Whether panels submit a ballot each or a single ballot for the debate. Note: BP must use one per debate.")
-    verbose_name = _("Ballots per debate")
+class BallotsPerDebatePreliminary(ChoicePreference):
+    help_text = _("Whether panels submit a ballot each or a single ballot for a debate during the preliminary rounds. Note: BP must use one per debate.")
+    verbose_name = _("Ballots per debate (for in-rounds)")
     section = debate_rules
-    name = 'ballots_per_debate'
+    name = 'ballots_per_debate_prelim'
+    choices = (
+        ('per-adj', _("One ballot per voting adjudicator")),
+        ('per-debate', _("Consensus ballot (one ballot per debate)")),
+    )
+    default = 'per-adj'
+
+
+@tournament_preferences_registry.register
+class BallotsPerDebateElimination(ChoicePreference):
+    help_text = _("Whether panels submit a ballot each or a single ballot for a debate during the elimination rounds. Note: BP must use one per debate.")
+    verbose_name = _("Ballots per debate (for out-rounds)")
+    section = debate_rules
+    name = 'ballots_per_debate_elim'
     choices = (
         ('per-adj', _("One ballot per voting adjudicator")),
         ('per-debate', _("Consensus ballot (one ballot per debate)")),

@@ -183,8 +183,9 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
         return ballot_data
 
     def get_context_data(self, **kwargs):
-        motions = self.get_round().motion_set.order_by('seq')
-        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
+        round = self.get_round()
+        motions = round.motion_set.order_by('seq')
+        draw = round.debate_set_with_prefetches(ordering=('venue__name',))
 
         # Sort by venue categories to ensure it matches the draw
         draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
@@ -204,7 +205,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
             else:
                 for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] == "C"):
                     ballots.append(self.add_ballot_data(adj, debate_info))
-                if self.get_tournament().pref('ballots_per_debate') == 'per-adj':
+                if round.ballots_per_debate == 'per-adj':
                     for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] == "P"):
                         ballots.append(self.add_ballot_data(adj, debate_info))
 

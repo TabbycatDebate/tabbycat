@@ -35,7 +35,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         round.save()
 
         self.stdout.write("Auto-allocating adjudicators for round '{}'...".format(round.name))
-        if round.tournament.pref('ballots_per_debate') == 'per-adj':
+        if round.ballots_per_debate == 'per-adj':
             allocator_class = VotingHungarianAllocator
         else:
             allocator_class = ConsensusHungarianAllocator
