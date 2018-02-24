@@ -781,6 +781,15 @@ class PublicDiversity(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class PublicCheckinStatuses(BooleanPreference):
+    help_text = _("Enables the public page showing checkin statuses for individuals, institutions, and teams")
+    verbose_name = _("Enable public view of the checkin statuses")
+    section = public_features
+    name = 'public_checkins'
+    default = False
+
+
+@tournament_preferences_registry.register
 class PublicBreakCategories(BooleanPreference):
     help_text = _("If the participants list is enabled, displays break category eligibility on that page")
     verbose_name = _("Show break categories on participants page")

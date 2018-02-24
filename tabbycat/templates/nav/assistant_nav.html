@@ -6,9 +6,21 @@
   </a>
 </li>
 
-<li class="nav-item {% if checkins_nav %}active{% endif %}">
+<li class="nav-item {% if ballot_checkins_nav %}active{% endif %}">
   <a class="nav-link" href="{% tournamenturl 'results-assistant-ballot-checkin' %}">
     {% trans "Check In Ballots" %}
+  </a>
+</li>
+
+<li class="nav-item {% if checkins_scans %}active{% endif %}">
+  <a class="nav-link" href="{% tournamenturl 'assistant-checkin-scan' %}">
+    {% trans "Check In People" %}
+  </a>
+</li>
+
+<li class="nav-item {% if checkins_status %}active{% endif %}">
+  <a class="nav-link" href="{% tournamenturl 'assistant-checkin-status' %}">
+    {% trans "Check In Statuses" %}
   </a>
 </li>
 

@@ -16,6 +16,7 @@ urlpatterns = [
 
     # Application URLs for public pages
     path('break/',              include('breakqual.urls_public')),
+    path('checkins/',           include('checkins.urls_public')),
     path('divisions/',          include('divisions.urls')),
     path('draw/',               include('draw.urls_public')),
     path('feedback/',           include('adjfeedback.urls_public')),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('admin/allocations/',  include('adjallocation.urls')),
     path('admin/availability/', include('availability.urls')),
     path('admin/break/',        include('breakqual.urls_admin')),
+    path('admin/checkins/',     include('checkins.urls_admin')),
     path('admin/draw/',         include('draw.urls_admin')),
     path('admin/feedback/',     include('adjfeedback.urls_admin')),
     path('admin/import/',       include('importer.urls')),
@@ -43,6 +45,7 @@ urlpatterns = [
 
     # Application URLs for assistant pages
     path('assistant/feedback/', include('adjfeedback.urls_assistant')),
+    path('assistant/checkins/', include('checkins.urls_assistant')),
     path('assistant/draw/',     include('draw.urls_assistant')),
     path('assistant/motions/',  include('motions.urls_assistant')),
     path('assistant/printing/', include('printing.urls_assistant')),

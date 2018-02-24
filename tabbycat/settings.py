@@ -73,6 +73,7 @@ TABBYCAT_APPS = (
     'adjfeedback',
     'availability',
     'breakqual',
+    'checkins',
     'divisions',
     'draw',
     'motions',

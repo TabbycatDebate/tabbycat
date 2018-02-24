@@ -89,7 +89,7 @@ def get_menu_highlight(request):
             elif "motions" in path:
                 menu['motions_nav'] = True
             elif "checkin" in path:
-                menu['checkins_nav'] = True
+                menu['ballot_checkins_nav'] = True
             elif "results" in path:
                 menu['results_nav'] = True
 
@@ -101,6 +101,13 @@ def get_menu_highlight(request):
                 menu['break_teams_nav'] = True
             else:
                 menu['break_overview_nav'] = True
+
+        elif "checkins" in path:
+            menu['checkins_nav'] = True
+            if "scan" in path:
+                menu['checkins_scans'] = True
+            elif "status" in path:
+                menu['checkins_status'] = True
 
         elif "overview" in path:
             return {"overview_nav": True} # Other sections have overviews; go after
@@ -132,6 +139,8 @@ def get_menu_highlight(request):
             return {'ballots_nav': True}
         elif "results" in request.path:
             return {'results_nav': True}
+        elif "checkins" in path:
+            return {'checkins_status': True}
         elif "standings" in request.path:
             return {'standings_nav': True}
         elif "tab" in request.path and "team" in request.path:

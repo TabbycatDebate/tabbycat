@@ -76,6 +76,15 @@
   {% endif %}
 {% endif %}
 
+<!-- CHECK INS -->
+{% if pref.public_checkins  %}
+  <li class="nav-item {% if checkins_status %}active{% endif %}">
+    <a class="nav-link" href="{% tournamenturl 'public-checkin-status' %}">
+      {% trans "Check Ins" %}
+    </a>
+  </li>
+{% endif %}
+
 <!-- RESULTS RELEASES -->
 {% if pref.public_results and current_round.prev %}
   <li class="nav-item dropdown {% if results_nav %}active{% endif %}">

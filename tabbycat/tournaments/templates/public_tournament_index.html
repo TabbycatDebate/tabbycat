@@ -89,6 +89,12 @@
       {% include "components/item-action.html" with icon="eye" text=draw_for_round_text %}
     {% endif %}
 
+    {% if pref.public_checkins %}
+      {% trans "Check Ins" as text %}
+      {% tournamenturl 'public-checkin-status' as url %}
+      {% include "components/item-action.html" with icon="compass" %}
+    {% endif %}
+
     {% if pref.public_results and current_round.prev %}
       {% trans "Results" as text %}
       {% tournamenturl 'results-public-index' as url %}
