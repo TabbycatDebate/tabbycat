@@ -71,21 +71,25 @@ Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/
 3. Set up a new database
 ================================================================================
 
-.. hint:: You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
+.. hint:: You can skip steps 1-3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
-1. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
+1. Open up a copy of the Terminal app, then copy/paste or type in::
+
+    $ sudo mkdir -p /etc/paths.d && echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp
+
+2. Hit enter then quit and reopen the Terminal app.
+
+3. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
 
   ::
 
     $ createuser myusername --pwprompt
 
-  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
-
-2. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
+4. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
     $ createdb mydatabasename --owner myusername
 
-3. In terminal type in::
+5. In terminal type in::
 
     $ PATH="/Applications/Postgres.app/Contents/Versions/9.6/bin:$PATH"
 
