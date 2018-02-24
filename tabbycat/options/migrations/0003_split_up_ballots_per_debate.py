@@ -7,9 +7,12 @@ def copy_ballots_per_debate(apps, schema_editor):
 
     for tournament in Tournament.objects.all():
 
-        all_ballots = TournamentPreferenceModel.objects.get(
-            section='debate_rules', name='ballots_per_debate',
-            instance_id=tournament.id)
+        try:
+            all_ballots = TournamentPreferenceModel.objects.get(
+                section='debate_rules', name='ballots_per_debate',
+                instance_id=tournament.id)
+        except TournamentPreferenceModel.DoesNotExist:
+            continue
 
         if all_ballots:
             prelim_ballots = TournamentPreferenceModel(
@@ -33,12 +36,15 @@ def reverse_copy_ballots_per_debate(apps, schema_editor):
 
     for tournament in Tournament.objects.all():
 
-        prelim_ballots = TournamentPreferenceModel.objects.get(
-            section='debate_rules', name='ballots_per_debate_prelim',
-            instance_id=tournament.id)
-        elim_ballots = TournamentPreferenceModel.objects.get(
-            section='debate_rules', name='ballots_per_debate_prelim',
-            instance_id=tournament.id)
+        try:
+            prelim_ballots = TournamentPreferenceModel.objects.get(
+                section='debate_rules', name='ballots_per_debate_prelim',
+                instance_id=tournament.id)
+            elim_ballots = TournamentPreferenceModel.objects.get(
+                section='debate_rules', name='ballots_per_debate_prelim',
+                instance_id=tournament.id)
+        except TournamentPreferenceModel.DoesNotExist:
+            continue
 
         if prelim_ballots:
             all_ballots = TournamentPreferenceModel(
