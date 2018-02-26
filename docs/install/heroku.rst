@@ -46,8 +46,8 @@ Short version of the long way
 .. parsed-literal::
 
   git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
-  git checkout |vrelease|                               # or master
   cd tabbycat
+  git checkout |vrelease|                               # or master
   python deploy_heroku.py <yourappname>
 
 If you want to :ref:`import tournament data <importing-initial-data>` from CSV files, :ref:`install Tabbycat locally <install-local>`, put your CSV files in ``data/<yourtournamentname>``, then::
@@ -100,7 +100,7 @@ a. Navigate to your Tabbycat directory::
 
     cd path/to/my/tabbycat/directory
 
-b. Run the script to deploy the app to Heroku. Replace ``<yourappname>`` with your preferred URL. Your website will be at ``<yourname>.herokuapp.com``.
+b. Run the script to deploy the app to Heroku. Replace ``<yourappname>`` with your preferred URL. Your website will be at ``<yourappname>.herokuapp.com``.
 
   ::
 
