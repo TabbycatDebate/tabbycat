@@ -44,10 +44,14 @@ The executable will probably be called ``python3``, rather than ``python``. Chec
 
   These instructions will use the ``venv`` module. If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead.
 
-1(b). PostgreSQL
+1(b). Postgres.app
 --------------------------------------------------------------------------------
 
-Download `postgres.app <http://postgresapp.com/>`_, move it to your Applications folder, and open it. This should place an icon in your menu bar, showing that the postgres database is running. Whenever you are running Tabbycat you'll need to have this app running.
+Download `Postgres.app <http://postgresapp.com/>`_, move it to your Applications folder, and open it. This should place an icon in your menu bar, showing that the postgres database is running. Whenever you are running Tabbycat you'll need to have this app running.
+
+You'll need to use the PostgreSQL command-line tools, so run the command that the Postgres.app suggests in its `installation instructions <http://postgresapp.com/documentation/install.html>`_ for adding them to your ``$PATH``. As of February 2018, it was::
+
+  sudo mkdir -p /etc/paths.d && echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp
 
 1(c). Node.js/NPM
 --------------------------------------------------------------------------------
@@ -57,9 +61,9 @@ Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/
 2. Get the source code
 ================================================================================
 
-1. `Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_.
-2. Download the zip or tar.gz file.
-3. Extract all files in it to a folder of your choice.
+a. `Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_.
+b. Download the zip or tar.gz file.
+c. Extract all files in it to a folder of your choice.
 
 .. admonition:: Advanced users
   :class: tip
@@ -73,23 +77,23 @@ Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/
 
 .. hint:: You can skip steps 1-3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
-1. Open up a copy of the Terminal app, then copy/paste or type in::
+a. Open up a copy of the Terminal app, then copy/paste or type in::
 
     $ sudo mkdir -p /etc/paths.d && echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp
 
-2. Hit enter then quit and reopen the Terminal app.
+b. Hit enter then quit and reopen the Terminal app.
 
-3. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
+c. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
 
   ::
 
     $ createuser myusername --pwprompt
 
-4. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
+d. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
     $ createdb mydatabasename --owner myusername
 
-5. In terminal type in::
+e. In terminal type in::
 
     $ PATH="/Applications/Postgres.app/Contents/Versions/9.6/bin:$PATH"
 
@@ -97,11 +101,11 @@ Download and run the `node.js 8 macOS Installer (.pkg) <https://nodejs.org/dist/
 ================================================================================
 Almost there!
 
-1. Navigate to your Tabbycat directory::
+a. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat/directory
 
-2. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+b. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -116,21 +120,21 @@ Almost there!
          }
      }
 
-3. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+c. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
     $ python3 -m venv venv
 
-4. Run the ``activate`` script. This puts you "into" the virtual environment::
+d. Run the ``activate`` script. This puts you "into" the virtual environment::
 
     $ source venv/bin/activate
 
-5. Install Tabbycat's requirements into your virtual environment::
+e. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
     $ npm install
 
-6. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::
+f. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::
 
     $ cd tabbycat
     $ dj migrate
@@ -138,7 +142,7 @@ Almost there!
     $ dj collectstatic
     $ dj createsuperuser
 
-7. Start Tabbycat!
+g. Start Tabbycat!
 
   ::
 
@@ -148,7 +152,7 @@ Almost there!
 
     serving on http://127.0.0.1:8000
 
-8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
+h. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-osx.png
       :alt: Bare Tabbycat installation
