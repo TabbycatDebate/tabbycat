@@ -891,6 +891,7 @@ class WelcomeMessage(LongStringPreference):
     name = 'welcome_message'
     default = ""
     widget = SummernoteWidget
+    field_kwargs = {'required': False}
 
 
 # ==============================================================================
