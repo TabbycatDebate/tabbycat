@@ -16,7 +16,6 @@
     <div class="alert alert-info">
       <i data-feather="alert-circle"></i>
       {% trans "There is currently no public information available for this tournament." %}
-      <span class="emoji">😹</span>
     </div>
   {% endif %}
 {% endblock %}
@@ -31,7 +30,7 @@
     </div>
   {% endif %}
 
- <div class="list-group mt-2">
+  <div class="list-group mt-2">
 
     {% if pref.team_tab_released > 0 %}
       {% trans "Team Tab" as text %}
@@ -183,4 +182,28 @@
     {% endif %}
 
   </div>
+
+  {% if pref.tab_credit or pref.org_credit or pref.adj_credit %}
+    <div class="card-deck mt-3">
+      {% if pref.adj_credit %}
+        <div class="card">
+          <div class="card-header h6">{% trans "Adjudication Team" %}</div>
+          <div class="card-body">{{ pref.adj_credit }}</div>
+        </div>
+      {% endif %}
+      {% if pref.tab_credit %}
+        <div class="card">
+          <div class="card-header h6">{% trans "Tab Team" %}</div>
+          <div class="card-body">{{ pref.tab_credit }}</div>
+        </div>
+      {% endif %}
+      {% if pref.org_credit %}
+        <div class="card">
+          <div class="card-header h6">{% trans "Organisation Team" %}</div>
+          <div class="card-body">{{ pref.org_credit }}</div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
 {% endblock content %}

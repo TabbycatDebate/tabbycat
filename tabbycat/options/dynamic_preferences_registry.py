@@ -884,6 +884,36 @@ class FeedbackProgress(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class TabDirectorCredit(StringPreference):
+    help_text = _("The names of the tab directors and/or tab team. Optional; will display on the home page if set.")
+    verbose_name = _("Tab Credit")
+    section = public_features
+    name = 'tab_credit'
+    default = ""
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class OrgComCredit(StringPreference):
+    help_text = _("The names of organising committee and/or convenors. Optional; will display on the home page if set.")
+    verbose_name = _("Organisation Credit")
+    section = public_features
+    name = 'org_credit'
+    default = ""
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class AdjCoreCredit(StringPreference):
+    help_text = _("The names of the adjudication core and/or chief adjudicators. Optional; will display on the home page if set.")
+    verbose_name = _("Adjudication Credit")
+    section = public_features
+    name = 'adj_credit'
+    default = ""
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
 class WelcomeMessage(LongStringPreference):
     help_text = _("Message to be displayed on the tournament home page. Supports HTML.")
     verbose_name = _("Welcome message")
