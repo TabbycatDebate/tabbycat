@@ -14,20 +14,19 @@ def copy_ballots_per_debate(apps, schema_editor):
         except TournamentPreferenceModel.DoesNotExist:
             continue
 
-        if all_ballots:
-            prelim_ballots = TournamentPreferenceModel(
-                section='debate_rules', name='ballots_per_debate_prelim',
-                instance_id=tournament.id)
-            prelim_ballots.raw_value = all_ballots.raw_value
-            prelim_ballots.save()
+        prelim_ballots, _ = TournamentPreferenceModel.objects.get_or_create(
+            section='debate_rules', name='ballots_per_debate_prelim',
+            instance_id=tournament.id)
+        prelim_ballots.raw_value = all_ballots.raw_value
+        prelim_ballots.save()
 
-            elim_ballots = TournamentPreferenceModel(
-                section='debate_rules', name='ballots_per_debate_elim',
-                instance_id=tournament.id)
-            elim_ballots.raw_value = all_ballots.raw_value
-            elim_ballots.save()
+        elim_ballots, _ = TournamentPreferenceModel.get_or_create(
+            section='debate_rules', name='ballots_per_debate_elim',
+            instance_id=tournament.id)
+        elim_ballots.raw_value = all_ballots.raw_value
+        elim_ballots.save()
 
-            all_ballots.delete()
+        all_ballots.delete()
 
 
 def reverse_copy_ballots_per_debate(apps, schema_editor):
@@ -40,21 +39,16 @@ def reverse_copy_ballots_per_debate(apps, schema_editor):
             prelim_ballots = TournamentPreferenceModel.objects.get(
                 section='debate_rules', name='ballots_per_debate_prelim',
                 instance_id=tournament.id)
-            elim_ballots = TournamentPreferenceModel.objects.get(
-                section='debate_rules', name='ballots_per_debate_prelim',
-                instance_id=tournament.id)
         except TournamentPreferenceModel.DoesNotExist:
             continue
 
-        if prelim_ballots:
-            all_ballots = TournamentPreferenceModel(
-                section='debate_rules', name='ballots_per_debate',
-                instance_id=tournament.id)
-            all_ballots.raw_value = prelim_ballots.raw_value
-            all_ballots.save()
+        all_ballots = TournamentPreferenceModel.objects.get_or_create(
+            section='debate_rules', name='ballots_per_debate',
+            instance_id=tournament.id)
+        all_ballots.raw_value = prelim_ballots.raw_value
+        all_ballots.save()
 
-            prelim_ballots.delete()
-            elim_ballots.delete()
+        prelim_ballots.delete()
 
 
 class Migration(migrations.Migration):
