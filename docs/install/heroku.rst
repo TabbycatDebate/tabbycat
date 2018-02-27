@@ -21,7 +21,7 @@ If you don't already have a Heroku account, it'll prompt you to create one. Once
 
 .. note:: During the setup process, Heroku will ask you to verify your account by adding a credit card. A standard Tabbycat site *will not charge* your card — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
-  If you can't access a credit card, you can instead install a limited version, which we call "Tabbykitten". However, Tabbykitten cannot send any e-mails, does not send error reports to the developers, and can handle much less public traffic. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
+  If you can't access a credit card, you can instead install a limited version, which we call "Tabbykitten". However, Tabbykitten cannot send any e-mails, send error reports to the developers or handle as much public traffic. We therefore strongly recommend it only as a last resort, and even then only for small tournaments.  `Use this link to set up a Tabbykitten site <https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten>`_.
 
 The long way
 ============
@@ -43,6 +43,9 @@ When we say "command shell", on Windows we mean **Command Prompt**, and on Linux
 
 Short version of the long way
 -----------------------------
+
+.. warning:: Don't just copy-and-paste these commands before you understand what they do! If things aren't set up perfectly they can fail, so it's important to "supervise" them the first time you do them.
+
 .. parsed-literal::
 
   git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
@@ -87,7 +90,14 @@ If you don't already have a local installation, follow these instructions for yo
 - :ref:`install-wsl`
 - :ref:`install-windows`
 
-.. tip:: If you already have a local installation, you needn't go through the whole process again. However, you should run ``git pull`` to update to the latest version, then press ahead to step 3: Deploy to Heroku.
+If you do already have a local installation, update to the latest version using:
+
+.. parsed-literal::
+
+    $ git checkout |vrelease|                              # or master
+
+.. admonition:: Advanced users
+  :class: tip
 
   It's not *strictly* necessary to have a fully functional local installation if you don't want to import data from CSV files. But it certainly helps.
 
