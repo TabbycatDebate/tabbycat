@@ -20,7 +20,7 @@ def copy_ballots_per_debate(apps, schema_editor):
         prelim_ballots.raw_value = all_ballots.raw_value
         prelim_ballots.save()
 
-        elim_ballots, _ = TournamentPreferenceModel.get_or_create(
+        elim_ballots, _ = TournamentPreferenceModel.objects.get_or_create(
             section='debate_rules', name='ballots_per_debate_elim',
             instance_id=tournament.id)
         elim_ballots.raw_value = all_ballots.raw_value
