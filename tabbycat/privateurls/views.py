@@ -3,8 +3,8 @@ from smtplib import SMTPException
 
 from django.contrib import messages
 from django.db.models import Exists, OuterRef, Q
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from participants.models import Adjudicator, Speaker
 from privateurls.models import PrivateUrlSentMailRecord
@@ -265,7 +265,7 @@ class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
                 "ballot URLs to adjudicators."
             ))
         else:
-            messages.success(request, ungettext(
+            messages.success(request, ngettext(
                 "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator.",
                 "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicators.",
                 nadjudicators
@@ -330,10 +330,10 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
 
         if success:
             # Translators: This goes in the "speakers_phrase" variable in "E-mails with private feedback URLs were sent..."
-            speakers_phrase = ungettext("%(nspeakers)d speaker",
+            speakers_phrase = ngettext("%(nspeakers)d speaker",
                 "%(nspeakers)d speakers", nspeakers) % {'nspeakers': nspeakers}
             # Translators: This goes in the "adjudicators_phrase" variable in "E-mails with private feedback URLs were sent..."
-            adjudicators_phrase = ungettext("%(nadjudicators)d adjudicator",
+            adjudicators_phrase = ngettext("%(nadjudicators)d adjudicator",
                 "%(nadjudicators)d adjudicators", nadjudicators) % {'nadjudicators': nadjudicators}
             messages.success(request, _("E-mails with private feedback URLs were sent to "
                 "%(speakers_phrase)s and %(adjudicators_phrase)s.") % {

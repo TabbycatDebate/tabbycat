@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
@@ -268,10 +268,10 @@ class AdjudicatorFeedback(Submission):
     def clean(self):
         if not (self.source_adjudicator or self.source_team):
             raise ValidationError(
-                ugettext("Either the source adjudicator or source team wasn't specified."))
+                gettext("Either the source adjudicator or source team wasn't specified."))
         if self.source_adjudicator and self.source_team:
             raise ValidationError(
-                ugettext("There was both a source adjudicator and a source team."))
+                gettext("There was both a source adjudicator and a source team."))
         if self.adjudicator not in self.debate.adjudicators:
-            raise ValidationError(ugettext("Adjudicator did not see this debate."))
+            raise ValidationError(gettext("Adjudicator did not see this debate."))
         return super(AdjudicatorFeedback, self).clean()

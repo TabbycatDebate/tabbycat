@@ -1,7 +1,7 @@
 import random
 from collections import OrderedDict
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
 from .pairing import Pairing

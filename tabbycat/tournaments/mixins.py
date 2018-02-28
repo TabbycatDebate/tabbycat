@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect, QueryDict
 from django.shortcuts import get_object_or_404, reverse
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 

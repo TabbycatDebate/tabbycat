@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.db import ProgrammingError
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView, View
 
 from actionlog.mixins import LogActionMixin
@@ -97,7 +97,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
     template_name = "public_results_for_round.html"
     public_page_preference = 'public_results'
-    page_title = ugettext_lazy("Results")
+    page_title = gettext_lazy("Results")
     page_emoji = '💥'
     default_view = 'team'
 

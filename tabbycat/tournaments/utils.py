@@ -2,8 +2,8 @@ import itertools
 
 from django.db.models import Max
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import pgettext_lazy, ugettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, pgettext_lazy
 
 from .models import Round
 
@@ -83,9 +83,9 @@ def auto_make_rounds(tournament, num_rounds):
         Round(
             tournament=tournament,
             seq=i,
-            name=ugettext("Round %(number)d") % {'number': i},
+            name=gettext("Round %(number)d") % {'number': i},
             # Translators: This stands for "Round %(number)d".
-            abbreviation=ugettext("R%(number)d") % {'number': i},
+            abbreviation=gettext("R%(number)d") % {'number': i},
             stage=Round.STAGE_PRELIMINARY,
             draw_type=Round.DRAW_RANDOM if (i == 1) else Round.DRAW_POWERPAIRED,
             feedback_weight=min((i-1)*0.1, 0.5),

@@ -3,8 +3,8 @@ import datetime
 from itertools import combinations
 
 from django.db.models import Count
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from draw.models import Debate
 from tournaments.utils import get_side_name
@@ -210,34 +210,34 @@ def ballot_checkin_number_left(round):
 
 
 _ORDINALS = {
-    1: ugettext_lazy("1st"),
-    2: ugettext_lazy("2nd"),
-    3: ugettext_lazy("3rd"),
-    4: ugettext_lazy("4th"),
-    5: ugettext_lazy("5th"),
-    6: ugettext_lazy("6th"),
-    7: ugettext_lazy("7th"),
-    8: ugettext_lazy("8th"),
+    1: gettext_lazy("1st"),
+    2: gettext_lazy("2nd"),
+    3: gettext_lazy("3rd"),
+    4: gettext_lazy("4th"),
+    5: gettext_lazy("5th"),
+    6: gettext_lazy("6th"),
+    7: gettext_lazy("7th"),
+    8: gettext_lazy("8th"),
 }
 
 
 _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Prime Minister
-    [ugettext_lazy("PM"),
+    [gettext_lazy("PM"),
     # Translators: Abbreviation for Deputy Prime Minister
-     ugettext_lazy("DPM")],
+     gettext_lazy("DPM")],
     # Translators: Abbreviation for Leader of the Opposition
-    [ugettext_lazy("LO"),
+    [gettext_lazy("LO"),
     # Translators: Abbreviation for Deputy Leader of the Opposition
-     ugettext_lazy("DLO")],
+     gettext_lazy("DLO")],
     # Translators: Abbreviation for Member for the Government
-    [ugettext_lazy("MG"),
+    [gettext_lazy("MG"),
     # Translators: Abbreviation for Government Whip
-     ugettext_lazy("GW")],
+     gettext_lazy("GW")],
     # Translators: Abbreviation for Member for the Opposition
-    [ugettext_lazy("MO"),
+    [gettext_lazy("MO"),
     # Translators: Abbreviation for Opposition Whip
-     ugettext_lazy("OW")]
+     gettext_lazy("OW")]
 ]
 
 

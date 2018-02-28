@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
@@ -142,7 +142,7 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
         for adj in tournament.adjudicator_set.all():
             count = adj.adjudicatorfeedback_set.count()
             feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
             })
         table.add_column("Feedbacks", feedback_data)
@@ -168,7 +168,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
                 source_team__team=team).select_related(
                 'source_team__team').count()
             team_feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-team',
                                            tournament,
                                            kwargs={'pk': team.id}),
@@ -185,7 +185,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
                 source_adjudicator__adjudicator=adj).select_related(
                 'source_adjudicator__adjudicator').count()
             adj_feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-adjudicator',
                                            tournament,
                                            kwargs={'pk': adj.id}),

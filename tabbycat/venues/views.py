@@ -3,8 +3,8 @@ import logging
 
 from django.contrib import messages
 from django.forms import Select, TextInput
-from django.utils.translation import ungettext
-from django.utils.translation import ugettext as _
+from django.utils.translation import ngettext
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -97,7 +97,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            message = ungettext("Saved venue category: %(list)s",
+            message = ngettext("Saved venue category: %(list)s",
                 "Saved venue categories: %(list)s",
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
@@ -173,7 +173,7 @@ class VenueConstraintsView(AdministratorMixin, TournamentMixin, ModelFormSetView
         result = super().formset_valid(formset)
         if self.instances:
             count = len(self.instances)
-            message = ungettext("Saved %(count)d venue constraint.",
+            message = ngettext("Saved %(count)d venue constraint.",
                 "Saved %(count)d venue constraints.", count) % {'count': count}
             messages.success(self.request, message)
         if "add_more" in self.request.POST:

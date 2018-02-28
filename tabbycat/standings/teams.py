@@ -4,7 +4,7 @@ import logging
 
 from django.db.models import Prefetch, Sum
 from django.db.models.expressions import RawSQL
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from draw.models import DebateTeam
 from draw.prefetch import populate_opponents

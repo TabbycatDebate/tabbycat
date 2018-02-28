@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry

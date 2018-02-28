@@ -2,8 +2,8 @@ import logging
 
 from django import forms
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy
+from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
@@ -19,10 +19,10 @@ from .utils import expected_feedback_targets
 logger = logging.getLogger(__name__)
 
 ADJUDICATOR_POSITION_NAMES = {
-    AdjudicatorAllocation.POSITION_CHAIR: ugettext_lazy("chair"),
-    AdjudicatorAllocation.POSITION_ONLY: ugettext_lazy("solo"),
-    AdjudicatorAllocation.POSITION_PANELLIST: ugettext_lazy("panellist"),
-    AdjudicatorAllocation.POSITION_TRAINEE: ugettext_lazy("trainee")
+    AdjudicatorAllocation.POSITION_CHAIR: gettext_lazy("chair"),
+    AdjudicatorAllocation.POSITION_ONLY: gettext_lazy("solo"),
+    AdjudicatorAllocation.POSITION_PANELLIST: gettext_lazy("panellist"),
+    AdjudicatorAllocation.POSITION_TRAINEE: gettext_lazy("trainee")
 }
 
 
@@ -50,9 +50,9 @@ class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
         choices = (
             ('1', '--------'),
             # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('2', ugettext_lazy('Yes')),
+            ('2', gettext_lazy('Yes')),
             # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('3', ugettext_lazy('No'))
+            ('3', gettext_lazy('No'))
         )
         # skip the NullBooleanSelect constructor
         super(forms.NullBooleanSelect, self).__init__(attrs, choices)

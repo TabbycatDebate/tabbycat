@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
 
 
 class PrivateUrlSentMailRecord(models.Model):
@@ -36,7 +36,7 @@ class PrivateUrlSentMailRecord(models.Model):
     @property
     def recipient_name(self):
         if self.adjudicator and self.speaker:
-            return ugettext("<both adjudicator and speaker>")
+            return gettext("<both adjudicator and speaker>")
         elif self.adjudicator:
             return self.adjudicator.name
         elif self.speaker:
@@ -53,8 +53,8 @@ class PrivateUrlSentMailRecord(models.Model):
     def clean(self):
         if not (self.adjudicator or self.speaker):
             raise ValidationError(
-                ugettext("No recipient (adjudicator or speaker) was specified."))
+                gettext("No recipient (adjudicator or speaker) was specified."))
         if self.adjudicator and self.speaker:
             raise ValidationError(
-                ugettext("There was both a recipient adjudicator and a recipient speaker."))
+                gettext("There was both a recipient adjudicator and a recipient speaker."))
         return super().clean()

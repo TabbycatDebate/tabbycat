@@ -2,7 +2,7 @@ import math
 
 from django.forms.fields import IntegerField
 from django.forms import CharField, ChoiceField, ModelChoiceField, ModelForm
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory

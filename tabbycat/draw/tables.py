@@ -1,8 +1,8 @@
 from itertools import islice, zip_longest
 
 from django.utils.html import format_html
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from participants.utils import get_side_history
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
@@ -240,10 +240,10 @@ class BasePositionBalanceReportTableBuilder(BaseDrawTableBuilder):
 class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBuilder):
 
     STATUSES = {
-        "regression": ugettext_lazy("Went from balanced to imbalanced"),
-        "resolved": ugettext_lazy("Went from imbalanced to balanced"),
-        "improving": ugettext_lazy("Best improvement possible, still imbalanced"),
-        "still-bad": ugettext_lazy("Was imbalanced and still imbalanced"),
+        "regression": gettext_lazy("Went from balanced to imbalanced"),
+        "resolved": gettext_lazy("Went from imbalanced to balanced"),
+        "improving": gettext_lazy("Best improvement possible, still imbalanced"),
+        "still-bad": gettext_lazy("Was imbalanced and still imbalanced"),
     }
 
     def __init__(self, *args, **kwargs):

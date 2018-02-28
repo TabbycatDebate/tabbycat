@@ -5,7 +5,7 @@ from itertools import zip_longest
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue

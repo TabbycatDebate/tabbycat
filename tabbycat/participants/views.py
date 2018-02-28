@@ -7,8 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import ugettext_lazy, ungettext
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext as _
 from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
@@ -47,7 +47,7 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
 
 class BaseParticipantsListView(VueTableTemplateView):
 
-    page_title = ugettext_lazy("Participants")
+    page_title = gettext_lazy("Participants")
     page_emoji = '🚌'
 
     def get_tables(self):
@@ -280,7 +280,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            message = ungettext("Saved speaker category: %(list)s",
+            message = ngettext("Saved speaker category: %(list)s",
                 "Saved speaker categories: %(list)s",
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}

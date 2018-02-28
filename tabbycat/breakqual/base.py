@@ -5,7 +5,7 @@ import logging
 from itertools import groupby
 
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from breakqual.models import BreakingTeam
 from standings.teams import TeamStandingsGenerator

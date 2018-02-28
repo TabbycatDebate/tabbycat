@@ -1,7 +1,7 @@
 from django.utils import formats
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate
@@ -705,7 +705,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.tournament.pref('avoid_team_history'):
                 history = debate.history
                 if history > 0:
-                    conflicts.append(("warning", ungettext("Teams have met once",
+                    conflicts.append(("warning", ngettext("Teams have met once",
                             "Teams have met %(count)d times", history) % {'count': history}))
 
             if self.tournament.pref('avoid_same_institution'):

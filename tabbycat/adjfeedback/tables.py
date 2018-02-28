@@ -1,6 +1,6 @@
 import logging
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder

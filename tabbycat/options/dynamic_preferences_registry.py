@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.forms import ValidationError
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 from django_summernote.widgets import SummernoteWidget
