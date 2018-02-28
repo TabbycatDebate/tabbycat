@@ -108,11 +108,11 @@ msgstr "قام بحفظ قاعة يدويا"
 
 #: actionlog/models.py:87
 msgid "Saved the sides status of a matchup"
-msgstr "ل"
+msgstr "حفظ التقسيمات في المناظرة "
 
 #: actionlog/models.py:88
 msgid "Saved divisions"
-msgstr ""
+msgstr "حفظ التقسيمات "
 
 #: actionlog/models.py:89
 msgid "Added/edited motion"
@@ -132,31 +132,31 @@ msgstr "قام بتعديل أهمية المناظرة"
 
 #: actionlog/models.py:93
 msgid "Changed adjudicator breaking status"
-msgstr ""
+msgstr "تغيير حالة الحكم "
 
 #: actionlog/models.py:94
 msgid "Edited break eligibility"
-msgstr ""
+msgstr "تعديل الحالة "
 
 #: actionlog/models.py:95
 msgid "Edited break categories"
-msgstr ""
+msgstr "تعديل الفواصل"
 
 #: actionlog/models.py:96
 msgid "Generated the team break for all categories"
-msgstr ""
+msgstr "جميع الفرق و التصانيف "
 
 #: actionlog/models.py:97
 msgid "Edited breaking team remarks and updated all team breaks"
-msgstr ""
+msgstr "تعديل درجات الفرق  و تحديثها "
 
 #: actionlog/models.py:98
 msgid "Edited breaking team remarks and updated this team break"
-msgstr ""
+msgstr "تعديل درجات الفريق  و تحديثها "
 
 #: actionlog/models.py:99
 msgid "Edited breaking team remarks"
-msgstr ""
+msgstr "تعديل درجات الفريق "
 
 #: actionlog/models.py:100
 msgid "Set start time"
@@ -164,7 +164,7 @@ msgstr "تحديد وقت البداية"
 
 #: actionlog/models.py:101
 msgid "Advanced the current round to"
-msgstr ""
+msgstr "الجولة الحالية "
 
 #: actionlog/models.py:102
 msgid "Edited teams availability"
@@ -196,7 +196,7 @@ msgstr "نوع"
 
 #: actionlog/models.py:113
 msgid "timestamp"
-msgstr ""
+msgstr "الزمن "
 
 #: actionlog/models.py:116
 msgid "user"
@@ -204,7 +204,7 @@ msgstr "مستخدم"
 
 #: actionlog/models.py:118
 msgid "IP address"
-msgstr ""
+msgstr "عنوان ال IP"
 
 #: actionlog/models.py:122
 msgid "tournament"
@@ -220,7 +220,7 @@ msgstr "نوع المحتوى"
 
 #: actionlog/models.py:130
 msgid "object ID"
-msgstr ""
+msgstr "ID للموضوع "
 
 #: actionlog/models.py:136
 msgid "action log"

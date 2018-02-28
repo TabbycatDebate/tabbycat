@@ -31,15 +31,15 @@ msgstr ""
 msgid ""
 "No feedback questions have been added for either teams or adjudicators to "
 "answer."
-msgstr ""
+msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة "
 
 #: printing/templates/feedback_list.html:16
 msgid "No feedback questions have been added for teams to answer."
-msgstr ""
+msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة من الفريق"
 
 #: printing/templates/feedback_list.html:18
 msgid "No feedback questions have been added for adjudicators to answer."
-msgstr ""
+msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة من الحكم"
 
 #: printing/templates/feedback_list.html:20
 #, python-format
@@ -54,7 +54,7 @@ msgstr ""
 msgid ""
 "There are no feedback sheets available — perhaps adjudicators have not been "
 "allocated?"
-msgstr ""
+msgstr "لا يوجد استبيان متوفر — "
 
 #: printing/templates/printables_list.html:9
 msgid ""
@@ -63,6 +63,9 @@ msgid ""
 "<strong>headers/footers</strong> and turn on <strong>background "
 "graphics</strong>. Works best in Chrome or Safari."
 msgstr ""
+"استخدم كترل + P للطباعة أو الحفظ إلى بدف. تأكد من تعيين<strong> الصفحة "
+"المناسبة </strong>التوجه، لإيقاف <strong>رؤوس / التذييلات </strong>وتشغيل "
+"<strong> باكغروند الرسومات </strong>يعمل بشكل أفضل في كروم أو سفاري."
 
 #: printing/templates/scoresheet_list.html:5
 msgid "Scoresheets"
@@ -76,7 +79,7 @@ msgstr "ورقة النتائج جاهزة للطباعة  %(round_name)s"
 #: printing/templates/scoresheet_list.html:23
 msgid ""
 "There are no scoresheets available — perhaps the round has not been drawn?"
-msgstr ""
+msgstr "لم تتوفر نموذج درجات لهذه الجولة — "
 
 #: printing/views.py:87
 msgid "Overall Score"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:58-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: 2018-02-20 08:13-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -22,40 +22,40 @@ msgstr ""
 msgid "Tournaments"
 msgstr "Tournois"
 
-#: tournaments/forms.py:23
+#: tournaments/forms.py:24
 msgid "Number of preliminary rounds"
 msgstr "Nombre de tours préliminaires"
 
-#: tournaments/forms.py:28
+#: tournaments/forms.py:29
 msgid "Number of teams in the open break"
 msgstr "Nombre d'équipes dans le break open"
 
-#: tournaments/forms.py:29
+#: tournaments/forms.py:30
 msgid "Leave blank if there are no break rounds."
 msgstr ""
 "C'est-a-dire, qui avancera aux tours à élimination dans la catégorie open. "
 "Laissez vide s'il n'y a pas de tours à élimination."
 
 #. Translators: This is the name given to the 'Open Break'.
-#: tournaments/forms.py:54
+#: tournaments/forms.py:55
 msgid "Open"
 msgstr "Open"
 
-#: tournaments/forms.py:79
+#: tournaments/forms.py:80
 msgid "Format Configuration"
 msgstr "Configuration de format"
 
-#: tournaments/forms.py:80
+#: tournaments/forms.py:81
 msgid "Apply a standard set of settings to match a common debate format"
 msgstr ""
 "Appliquer un ensemble standard de paramètres correspondant à un format de "
 "débat qui est commun"
 
-#: tournaments/forms.py:84
+#: tournaments/forms.py:85
 msgid "Public Configuration"
 msgstr "Configuration d'accès du public"
 
-#: tournaments/forms.py:85
+#: tournaments/forms.py:86
 msgid ""
 "Show non-sensitive information on the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
@@ -637,90 +637,108 @@ msgid "There is currently no public information available for this tournament."
 msgstr ""
 "Il n’y a actuellement aucune information publique disponible sur ce tournoi."
 
-#: tournaments/templates/public_tournament_index.html:37
+#: tournaments/templates/public_tournament_index.html:36
 msgid "Team Tab"
 msgstr "Tab des équipes"
 
-#: tournaments/templates/public_tournament_index.html:43
+#: tournaments/templates/public_tournament_index.html:42
 msgid "Speaker Tab"
 msgstr "Tab des orateurs"
 
-#: tournaments/templates/public_tournament_index.html:51
+#: tournaments/templates/public_tournament_index.html:50
 #, python-format
 msgid "%(category_name)s Speaker Tab"
 msgstr "Tab des orateurs %(category_name)s"
 
-#: tournaments/templates/public_tournament_index.html:61
+#: tournaments/templates/public_tournament_index.html:60
 msgid "Replies Tab"
 msgstr "Tab des discours de résponse"
 
-#: tournaments/templates/public_tournament_index.html:67
+#: tournaments/templates/public_tournament_index.html:66
 msgid "Adjudicator Tab"
 msgstr "Tab des juges"
 
-#: tournaments/templates/public_tournament_index.html:73
+#: tournaments/templates/public_tournament_index.html:72
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: tournaments/templates/public_tournament_index.html:79
-#: tournaments/templates/public_tournament_index.html:111
+#: tournaments/templates/public_tournament_index.html:78
+#: tournaments/templates/public_tournament_index.html:110
 msgid "Sides"
 msgstr "Côtés"
 
-#: tournaments/templates/public_tournament_index.html:86
-#: tournaments/templates/public_tournament_index.html:171
+#: tournaments/templates/public_tournament_index.html:85
+#: tournaments/templates/public_tournament_index.html:170
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr "Tirage de %(round_name)s"
 
-#: tournaments/templates/public_tournament_index.html:93
+#: tournaments/templates/public_tournament_index.html:92
 msgid "Results"
 msgstr "Résultats"
 
-#: tournaments/templates/public_tournament_index.html:99
+#: tournaments/templates/public_tournament_index.html:98
 msgid "Divisions"
 msgstr "Divisions"
 
-#: tournaments/templates/public_tournament_index.html:105
+#: tournaments/templates/public_tournament_index.html:104
 msgid "Motions"
 msgstr "Motions"
 
-#: tournaments/templates/public_tournament_index.html:117
+#: tournaments/templates/public_tournament_index.html:116
 msgid "Team Standings"
 msgstr "Classement des équipes"
 
-#: tournaments/templates/public_tournament_index.html:124
+#: tournaments/templates/public_tournament_index.html:123
 #, python-format
 msgid "%(category_name)s Break"
 msgstr "Qualification %(category_name)s"
 
-#: tournaments/templates/public_tournament_index.html:133
+#: tournaments/templates/public_tournament_index.html:132
 msgid "Breaking Adjudicators"
 msgstr "Qualification des juges"
 
-#: tournaments/templates/public_tournament_index.html:139
+#: tournaments/templates/public_tournament_index.html:138
 msgid "Diversity Overview"
 msgstr "Aperçu de la diversité"
 
-#: tournaments/templates/public_tournament_index.html:145
+#: tournaments/templates/public_tournament_index.html:144
 msgid "Participants"
 msgstr "Participants"
 
-#: tournaments/templates/public_tournament_index.html:151
+#: tournaments/templates/public_tournament_index.html:150
 msgid "Feedback Progress"
 msgstr "Progrès des commentaires"
 
-#: tournaments/templates/public_tournament_index.html:157
+#: tournaments/templates/public_tournament_index.html:156
 msgid "Enter Ballot"
 msgstr "Saisie d'un bulletin"
 
-#: tournaments/templates/public_tournament_index.html:163
+#: tournaments/templates/public_tournament_index.html:162
 msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
-#: tournaments/templates/public_tournament_index.html:179
+#: tournaments/templates/public_tournament_index.html:178
 msgid "View All Draws"
 msgstr "Afficher le tirage"
+
+#: tournaments/templates/public_tournament_index.html:190
+#, fuzzy
+#| msgid "Adjudicator Tab"
+msgid "Adjudication Team"
+msgstr "Tab des juges"
+
+#: tournaments/templates/public_tournament_index.html:196
+#, fuzzy
+#| msgid "Team Tab"
+msgid "Tab Team"
+msgstr "Tab des équipes"
+
+#: tournaments/templates/public_tournament_index.html:202
+#, fuzzy
+#| msgid "proposition team"
+msgid "Organisation Team"
+msgstr "équipe de la proposition"
 
 #: tournaments/templates/set_current_round.html:33
 #, python-format

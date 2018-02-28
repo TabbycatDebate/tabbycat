@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -114,7 +114,7 @@ msgstr "مجموع الدرجات ( %(min)d= سيء ; %(max)d = أفضل ) "
 #: adjfeedback/forms.py:227 adjfeedback/forms.py:284
 #, python-format
 msgid "%(name)s (%(round)s %(adjpos)s)"
-msgstr ""
+msgstr "%(name)s(%(round)s%(adjpos)s)"
 
 #: adjfeedback/forms.py:244 adjfeedback/forms.py:305
 msgid "-- Adjudicators --"
@@ -127,19 +127,19 @@ msgstr "راي الحكم حول التغذية الراجعة "
 #: adjfeedback/forms.py:281
 #, python-format
 msgid "%(name)s (%(round)s)"
-msgstr ""
+msgstr "%(name)s(%(round)s)"
 
 #: adjfeedback/forms.py:287
 #, python-format
 msgid "%(name)s (%(round)s — chair gave oral)"
-msgstr ""
+msgstr "%(name)s(%(round)s— عدد الكراسي ) "
 
 #: adjfeedback/forms.py:289
 #, python-format
 msgid "%(name)s (%(round)s — chair rolled, this panellist gave oral)"
-msgstr ""
+msgstr "%(name)s(%(round)s— رئيس الجلسة )"
 
-#: adjfeedback/models.py:13 adjfeedback/models.py:209
+#: adjfeedback/models.py:13 adjfeedback/models.py:214
 msgid "adjudicator"
 msgstr "محكم "
 
@@ -147,7 +147,7 @@ msgstr "محكم "
 msgid "round"
 msgstr "جولة"
 
-#: adjfeedback/models.py:17 adjfeedback/models.py:210
+#: adjfeedback/models.py:17 adjfeedback/models.py:215
 msgid "score"
 msgstr "درجة "
 
@@ -157,11 +157,11 @@ msgstr "الزمن "
 
 #: adjfeedback/models.py:21
 msgid "adjudicator test score history"
-msgstr ""
+msgstr "تاريخ درجات الحكم "
 
 #: adjfeedback/models.py:22
 msgid "adjudicator test score histories"
-msgstr ""
+msgstr "تواريخ درجات الحكم"
 
 #: adjfeedback/models.py:30
 msgid "question"
@@ -178,35 +178,35 @@ msgstr "جواب "
 
 #: adjfeedback/models.py:46
 msgid "adjudicator feedback boolean answer"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة "
 
 #: adjfeedback/models.py:47
 msgid "adjudicator feedback boolean answers"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة "
 
 #: adjfeedback/models.py:54
 msgid "adjudicator feedback integer answer"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة "
 
 #: adjfeedback/models.py:55
 msgid "adjudicator feedback integer answers"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة "
 
 #: adjfeedback/models.py:62
 msgid "adjudicator feedback float answer"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة كانت عامة"
 
 #: adjfeedback/models.py:63
 msgid "adjudicator feedback float answers"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة كانت عامة"
 
 #: adjfeedback/models.py:70
 msgid "adjudicator feedback string answer"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة "
 
 #: adjfeedback/models.py:71
 msgid "adjudicator feedback string answers"
-msgstr ""
+msgstr "اجابة الحكم حول التغذية الراجعة "
 
 #: adjfeedback/models.py:89
 msgid "checkbox"
@@ -218,7 +218,7 @@ msgstr "نعم/لا"
 
 #: adjfeedback/models.py:91
 msgid "integer (textbox)"
-msgstr ""
+msgstr "عدد صحيح (textbox)"
 
 #: adjfeedback/models.py:92
 msgid "integer scale"
@@ -226,9 +226,9 @@ msgstr "الميا"
 
 #: adjfeedback/models.py:93
 msgid "float"
-msgstr ""
+msgstr "عام "
 
-#: adjfeedback/models.py:94 adjfeedback/models.py:127
+#: adjfeedback/models.py:94 adjfeedback/models.py:126
 msgid "text"
 msgstr "نص"
 
@@ -244,130 +244,129 @@ msgstr "اختيار "
 msgid "select multiple"
 msgstr "اختيار متعدد "
 
-#: adjfeedback/models.py:123
+#: adjfeedback/models.py:122
 msgid "tournament"
 msgstr "دوري"
 
-#: adjfeedback/models.py:125
+#: adjfeedback/models.py:124
 msgid "sequence number"
 msgstr "رقم التسلسل "
 
-#: adjfeedback/models.py:128
+#: adjfeedback/models.py:127
 msgid ""
 "The question displayed to participants, e.g., \"Did you agree with the "
 "decision?\""
 msgstr "السؤال المعروض على المشاركين، على سبيل المثال، \"هل توافق على القرار؟\""
 
-#: adjfeedback/models.py:130
+#: adjfeedback/models.py:129
 msgid "name"
 msgstr "اسم "
 
-#: adjfeedback/models.py:131
+#: adjfeedback/models.py:130
 msgid "A short name for the question, e.g., \"Agree with decision\""
 msgstr "سؤال قصير على سبيل المثال \" موافق على القرار \" "
 
-#: adjfeedback/models.py:133
+#: adjfeedback/models.py:132
 msgid "reference"
 msgstr "معارض "
 
-#: adjfeedback/models.py:134
+#: adjfeedback/models.py:133
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
 msgstr ""
 
-#: adjfeedback/models.py:137
+#: adjfeedback/models.py:136
 msgid "from adjudicator"
 msgstr "من الحكم "
 
-#: adjfeedback/models.py:138
+#: adjfeedback/models.py:137
 msgid "Adjudicators should be asked this question (about other adjudicators)"
 msgstr "سؤال من الحكم "
 
-#: adjfeedback/models.py:140
+#: adjfeedback/models.py:139
 msgid "from team"
 msgstr "من الفريق "
 
-#: adjfeedback/models.py:141
+#: adjfeedback/models.py:140
 msgid "Teams should be asked this question"
 msgstr "سؤال الفريق "
 
-#: adjfeedback/models.py:144
+#: adjfeedback/models.py:143
 msgid "answer type"
 msgstr "نوع الجواب "
 
-#: adjfeedback/models.py:146
+#: adjfeedback/models.py:145
 msgid "required"
 msgstr "مطلوب "
 
-#: adjfeedback/models.py:149
+#: adjfeedback/models.py:148
 msgid "minimum value"
 msgstr "الدرحة المتدنية "
 
-#: adjfeedback/models.py:150
+#: adjfeedback/models.py:149
 msgid ""
 "Minimum allowed value for numeric fields (ignored for text or boolean "
 "fields)"
-msgstr ""
+msgstr "الحد الأدنى للقيمة المسموح بها للحقول الرقمية"
 
-#: adjfeedback/models.py:152
+#: adjfeedback/models.py:151
 msgid "maximum value"
 msgstr "الدرجة العالية "
 
-#: adjfeedback/models.py:153
+#: adjfeedback/models.py:152
 msgid ""
 "Maximum allowed value for numeric fields (ignored for text or boolean "
 "fields)"
-msgstr ""
+msgstr "الحد الاعلى للقيمة المسموح بها للحقول الرقمية"
 
-#: adjfeedback/models.py:155
+#: adjfeedback/models.py:159
 msgid "choices"
 msgstr "أختيارات "
 
-#: adjfeedback/models.py:156
-#, python-format
+#: adjfeedback/models.py:160
 msgid ""
-"Permissible choices for select one/multiple fields, separated by %r (ignored"
-" for other fields)"
+"Permissible choices for select one/multiple fields, separated by '//' "
+"(ignored for other fields)"
 msgstr ""
 
-#: adjfeedback/models.py:160
+#: adjfeedback/models.py:165
 msgid "adjudicator feedback question"
 msgstr "سؤال للتعذية الراجعة من المحكم "
 
-#: adjfeedback/models.py:161
+#: adjfeedback/models.py:166
 msgid "adjudicator feedback questions"
 msgstr "جواب للتعذية الراجعة من المحكم "
 
-#: adjfeedback/models.py:214
+#: adjfeedback/models.py:219
 msgid "source adjudicator"
 msgstr "نتيجة الحكم "
 
-#: adjfeedback/models.py:216
+#: adjfeedback/models.py:221
 msgid "source team"
 msgstr "نتيجة الفريق "
 
-#: adjfeedback/models.py:220
+#: adjfeedback/models.py:225
 msgid "adjudicator feedback"
 msgstr "التعذية الراجعة من المحكم "
 
-#: adjfeedback/models.py:221
+#: adjfeedback/models.py:226
 msgid "adjudicator feedbacks"
 msgstr "التعذية الراجعة من المحكم "
 
-#: adjfeedback/models.py:266
-msgid "Either the source adjudicator or source team wasn't specified."
-msgstr ""
-
-#: adjfeedback/models.py:269
-msgid "There was both a source adjudicator and a source team."
-msgstr ""
-
 #: adjfeedback/models.py:271
+msgid "Either the source adjudicator or source team wasn't specified."
+msgstr "يتم تحديد رئيس الجلسة "
+
+#: adjfeedback/models.py:274
+msgid "There was both a source adjudicator and a source team."
+msgstr "كان هناك حكم من الفريق المشارك "
+
+#: adjfeedback/models.py:276
 msgid "Adjudicator did not see this debate."
-msgstr ""
+msgstr "الحكم لم يشاهد هذه المناظرة "
 
 #: adjfeedback/tables.py:38
 msgid "Score"
-msgstr ""
+msgstr "الدرجات "
 
 #: adjfeedback/tables.py:73 adjfeedback/templates/overview_breakdowns.html:49
 msgid "Feedback"
@@ -377,13 +376,13 @@ msgstr "تغذية راجعة "
 msgid ""
 "There are some problems with this feedback submission. Please review and "
 "correct them."
-msgstr ""
+msgstr "هناك بعض المشاكل في التغذية الراجعة يرجى مراجعتهم "
 
 #: adjfeedback/templates/enter_feedback.html:41
 msgid ""
 "When submitting this form your IP address will be stored for logging "
 "purposes."
-msgstr ""
+msgstr "عند إرسال هذا النموذج سيتم تخزين عنوان إب الخاص بك لأغراض التسجيل."
 
 #: adjfeedback/templates/feedback_by_source.html:12
 #, python-format
@@ -476,7 +475,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html:57
 msgid "Score Ratio"
-msgstr ""
+msgstr "الدرجات "
 
 #: adjfeedback/templates/overview_breakdowns.html:69
 #, python-format
@@ -509,6 +508,8 @@ msgid ""
 "All adjudicators with a score high enough to vote, but who aren't allocated "
 "as chairs, are allocated as panellists by the auto-allocator."
 msgstr ""
+"ويتم تخصيص جميع المحكمين الذين يحصلون على درجة عالية بما فيه الكفاية "
+"للتصويت، "
 
 #: adjfeedback/templates/overview_breakdowns.html:88
 #, python-format

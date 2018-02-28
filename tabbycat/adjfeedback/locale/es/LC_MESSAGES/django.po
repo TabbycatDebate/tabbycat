@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: David Alejandro Huertas Erazo <dale.huertas@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -142,7 +142,7 @@ msgstr ""
 "%(name)s (%(round)s — el juez principal fue superado por votación, este "
 "panelista dio retroalimentación oral)"
 
-#: adjfeedback/models.py:13 adjfeedback/models.py:209
+#: adjfeedback/models.py:13 adjfeedback/models.py:214
 msgid "adjudicator"
 msgstr "juez"
 
@@ -150,7 +150,7 @@ msgstr "juez"
 msgid "round"
 msgstr "ronda"
 
-#: adjfeedback/models.py:17 adjfeedback/models.py:210
+#: adjfeedback/models.py:17 adjfeedback/models.py:215
 msgid "score"
 msgstr "puntaje"
 
@@ -231,7 +231,7 @@ msgstr "escala de enteros"
 msgid "float"
 msgstr "float"
 
-#: adjfeedback/models.py:94 adjfeedback/models.py:127
+#: adjfeedback/models.py:94 adjfeedback/models.py:126
 msgid "text"
 msgstr "texto"
 
@@ -247,15 +247,15 @@ msgstr "escoja uno"
 msgid "select multiple"
 msgstr "escoja varios"
 
-#: adjfeedback/models.py:123
+#: adjfeedback/models.py:122
 msgid "tournament"
 msgstr "torneo"
 
-#: adjfeedback/models.py:125
+#: adjfeedback/models.py:124
 msgid "sequence number"
 msgstr "número de secuencia"
 
-#: adjfeedback/models.py:128
+#: adjfeedback/models.py:127
 msgid ""
 "The question displayed to participants, e.g., \"Did you agree with the "
 "decision?\""
@@ -263,51 +263,51 @@ msgstr ""
 "La pregunta mostrada a los participantes, ej., \"Está de acuerdo con la "
 "decisión?\""
 
-#: adjfeedback/models.py:130
+#: adjfeedback/models.py:129
 msgid "name"
 msgstr "nombre"
 
-#: adjfeedback/models.py:131
+#: adjfeedback/models.py:130
 msgid "A short name for the question, e.g., \"Agree with decision\""
 msgstr "Un nombre corto para la pregunta, ej., \"acuerdo con decisión\""
 
-#: adjfeedback/models.py:133
+#: adjfeedback/models.py:132
 msgid "reference"
 msgstr "referencia"
 
-#: adjfeedback/models.py:134
+#: adjfeedback/models.py:133
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
 msgstr "Referencia compatible con el código, ej., \"acuerdo_con_decision\""
 
-#: adjfeedback/models.py:137
+#: adjfeedback/models.py:136
 msgid "from adjudicator"
 msgstr "del juez"
 
-#: adjfeedback/models.py:138
+#: adjfeedback/models.py:137
 msgid "Adjudicators should be asked this question (about other adjudicators)"
 msgstr "A los jueces debería preguntárseles esto (sobre otros jueces)"
 
-#: adjfeedback/models.py:140
+#: adjfeedback/models.py:139
 msgid "from team"
 msgstr "del equipo"
 
-#: adjfeedback/models.py:141
+#: adjfeedback/models.py:140
 msgid "Teams should be asked this question"
 msgstr "A los equipos debería preguntárseles esto"
 
-#: adjfeedback/models.py:144
+#: adjfeedback/models.py:143
 msgid "answer type"
 msgstr "tipo de respuesta"
 
-#: adjfeedback/models.py:146
+#: adjfeedback/models.py:145
 msgid "required"
 msgstr "necesario"
 
-#: adjfeedback/models.py:149
+#: adjfeedback/models.py:148
 msgid "minimum value"
 msgstr "valor mínimo"
 
-#: adjfeedback/models.py:150
+#: adjfeedback/models.py:149
 msgid ""
 "Minimum allowed value for numeric fields (ignored for text or boolean "
 "fields)"
@@ -315,11 +315,11 @@ msgstr ""
 "Valor mínimo permitido para campos numéricos (ignorar para campos de texto o"
 " boleanos)"
 
-#: adjfeedback/models.py:152
+#: adjfeedback/models.py:151
 msgid "maximum value"
 msgstr "valor máximo"
 
-#: adjfeedback/models.py:153
+#: adjfeedback/models.py:152
 msgid ""
 "Maximum allowed value for numeric fields (ignored for text or boolean "
 "fields)"
@@ -327,52 +327,49 @@ msgstr ""
 "Valor máximo permitido para campos numéricos (ignorar para campos de texto o"
 " boleanos)"
 
-#: adjfeedback/models.py:155
+#: adjfeedback/models.py:159
 msgid "choices"
 msgstr "elecciones"
 
-#: adjfeedback/models.py:156
-#, python-format
-msgid ""
-"Permissible choices for select one/multiple fields, separated by %r (ignored"
-" for other fields)"
-msgstr ""
-"Elecciones permitidas para campos de escojencia única/múltiple, separados "
-"por %r (ignorado para otros campos)"
-
 #: adjfeedback/models.py:160
+msgid ""
+"Permissible choices for select one/multiple fields, separated by '//' "
+"(ignored for other fields)"
+msgstr ""
+
+#: adjfeedback/models.py:165
 msgid "adjudicator feedback question"
 msgstr "pregunta de retroalimentación del juez"
 
-#: adjfeedback/models.py:161
+#: adjfeedback/models.py:166
 msgid "adjudicator feedback questions"
 msgstr "preguntas de retroalimentación del juez"
 
-#: adjfeedback/models.py:214
+#: adjfeedback/models.py:219
 msgid "source adjudicator"
 msgstr "juez fuente"
 
-#: adjfeedback/models.py:216
+#: adjfeedback/models.py:221
 msgid "source team"
 msgstr "equipo fuente"
 
-#: adjfeedback/models.py:220
+#: adjfeedback/models.py:225
 msgid "adjudicator feedback"
 msgstr "retroalimentación del juez"
 
-#: adjfeedback/models.py:221
+#: adjfeedback/models.py:226
 msgid "adjudicator feedbacks"
 msgstr "retroalimentaciones del juez"
 
-#: adjfeedback/models.py:266
+#: adjfeedback/models.py:271
 msgid "Either the source adjudicator or source team wasn't specified."
 msgstr "Ni el juez fuente ni el equpo fuente fueron especificados. "
 
-#: adjfeedback/models.py:269
+#: adjfeedback/models.py:274
 msgid "There was both a source adjudicator and a source team."
 msgstr "Hay un juez fuente y un equipo fuente."
 
-#: adjfeedback/models.py:271
+#: adjfeedback/models.py:276
 msgid "Adjudicator did not see this debate."
 msgstr "El juez no vio este debate."
 
@@ -524,27 +521,34 @@ msgid_plural ""
 "There are %(c_chairs)s debates per round, so there need to be %(c_chairs)s "
 "chairs."
 msgstr[0] ""
+"Hay %(c_chairs)sdebate por ronda, entonces se necesita %(c_chairs)s juez "
+"principal."
 msgstr[1] ""
+"Hay %(c_chairs)s debates por ronda, entonces se necesitan %(c_chairs)s "
+"jueces principales"
 
 #: adjfeedback/templates/overview_breakdowns.html:74
 #, python-format
 msgid "%(c_chairs)s chair"
 msgid_plural "%(c_chairs)s chairs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(c_chairs)s juez principal"
+msgstr[1] "%(c_chairs)s jueces principales"
 
 #: adjfeedback/templates/overview_breakdowns.html:84
 msgid ""
 "All adjudicators with a score high enough to vote, but who aren't allocated "
 "as chairs, are allocated as panellists by the auto-allocator."
 msgstr ""
+"Todos los jueces con un puntaje suficientemente alto para votar, pero que no"
+" se asignaron como jueces principales, son asignados como panelistas por el "
+"sistema de auto asignación."
 
 #: adjfeedback/templates/overview_breakdowns.html:88
 #, python-format
 msgid "%(c_panellists)s panellist"
 msgid_plural "%(c_panellists)s panellists"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(c_panellists)s panelista"
+msgstr[1] "%(c_panellists)s panelistas"
 
 #: adjfeedback/templates/overview_breakdowns.html:98
 #, python-format
@@ -553,25 +557,29 @@ msgid ""
 "is less than the 'minimum voting score' (currently %(min_voting)s) set in "
 "this tournament's Draw Rules configuration."
 msgstr ""
+"Los jueces son asignados como trainees por el sistema de auto asignación si "
+"su puntaje es menor al 'puntaje mínimo para votar' (actualmente "
+"%(min_voting)s) configurado en las configuraciones de las Reglas de "
+"Enfrentamiento de este torneo."
 
 #: adjfeedback/templates/overview_breakdowns.html:103
 #, python-format
 msgid "%(c_trainees)s trainee"
 msgid_plural "%(c_trainees)s trainees"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(c_trainees)s trainee"
+msgstr[1] "%(c_trainees)s trainees"
 
 #: adjfeedback/templates/overview_breakdowns.html:112
 #, python-format
 msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
-msgstr ""
+msgstr "Distribuciones de Auto asignación (%(min_voting_score)s+ para votar)"
 
 #: adjfeedback/views.py:145 adjfeedback/views.py:171 adjfeedback/views.py:188
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d retroalimentación"
+msgstr[1] "%(count)d retroalimentaciones"
 
 #: adjfeedback/views.py:302
 msgid "A Team"

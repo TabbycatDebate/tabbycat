@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,12 +53,12 @@ msgstr[5] ""
 
 #: participants/apps.py:7 participants/views.py:50
 msgid "Participants"
-msgstr ""
+msgstr "المشاركون"
 
 #: participants/models.py:21 participants/models.py:41
 #: participants/models.py:74 participants/models.py:108
 msgid "name"
-msgstr ""
+msgstr "الاسم"
 
 #: participants/models.py:24 participants/models.py:49
 msgid "region"
@@ -99,7 +100,7 @@ msgstr ""
 #: participants/models.py:72 participants/models.py:172
 #: participants/models.py:392
 msgid "tournament"
-msgstr ""
+msgstr "البطولة"
 
 #. Translators: Translate ESL to the acronym for "<target language> as a
 #. second/foreign language", not "English"
@@ -109,7 +110,7 @@ msgstr ""
 
 #: participants/models.py:78
 msgid "slug"
-msgstr ""
+msgstr "اختصار"
 
 #. Translators: Translate esl to the acronym for "<target language> as a
 #. second/foreign language", not "English"
@@ -137,13 +138,13 @@ msgstr ""
 
 #: participants/models.py:88
 msgid "public"
-msgstr ""
+msgstr "عمومي"
 
 #: participants/models.py:89
 msgid ""
 "If checked, this category will be included in the speaker category tabs "
 "shown to the public"
-msgstr ""
+msgstr "اذا تم اختياره، سيتم إظهار هذه الفئة مع نتائج المتحدثين للعموم."
 
 #: participants/models.py:95
 msgid "speaker category"
@@ -409,6 +410,8 @@ msgid ""
 "%(adj_name)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s "
 "in <strong>%(venue)s</strong>."
 msgstr ""
+"المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في المناظرة بين %(aff)s "
+"و%(neg)s في قاعة <strong>%(venue)s</strong>"
 
 #: participants/templates/adjudicator_record.html:42
 #, python-format
@@ -416,13 +419,15 @@ msgid ""
 "%(adj_name)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s "
 "in <strong>%(venue)s</strong>."
 msgstr ""
+"%(adj_name)s هو <strong>%(type)s</strong> يحكم بين %(aff)s و%(neg)s في "
+"القاعة <strong>%(venue)s</strong>."
 
 #: participants/templates/adjudicator_record.html:46
 #, python-format
 msgid ""
 "%(adj_name)s is adjudicating %(aff)s vs %(neg)s in "
 "<strong>%(venue)s</strong>."
-msgstr ""
+msgstr "%(adj_name)s يحكم بين %(aff)s و%(neg)s في <strong>%(venue)s</strong>"
 
 #: participants/templates/adjudicator_record.html:55
 #, python-format
@@ -430,6 +435,8 @@ msgid ""
 "%(adj_name)s is the <strong>chair</strong> adjudicating in "
 "<strong>%(venue)s</strong>."
 msgstr ""
+"المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في "
+"<strong>%(venue)s</strong>"
 
 #: participants/templates/adjudicator_record.html:59
 #, python-format

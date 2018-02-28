@@ -117,7 +117,6 @@ class AdjudicatorFeedbackQuestion(models.Model):
         AdjudicatorFeedbackBooleanAnswer:
         [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
     }
-    CHOICE_SEPARATOR = "//"
 
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
@@ -151,9 +150,15 @@ class AdjudicatorFeedbackQuestion(models.Model):
     max_value = models.FloatField(blank=True, null=True,
         verbose_name=_("maximum value"),
         help_text=_("Maximum allowed value for numeric fields (ignored for text or boolean fields)"))
+
+    CHOICE_SEPARATOR = "//"  # This is hard-coded into the help text string below
+    # We can't insert the CHOICE_SEPARATOR using string formatting because the below must be
+    # translated lazily, and string formatting isn't compatible with lazy objects. (It can be
+    # done with django.utils.text.format_lazy(), but this uses {}-style formating, not %-style.)
     choices = models.CharField(max_length=500, blank=True,
         verbose_name=_("choices"),
-        help_text=_("Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)" % CHOICE_SEPARATOR))
+        help_text=_("Permissible choices for select one/multiple fields, separated by '//' "
+                    "(ignored for other fields)"))
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]

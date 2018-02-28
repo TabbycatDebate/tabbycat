@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:58-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -22,36 +22,36 @@ msgstr ""
 msgid "Tournaments"
 msgstr "Torneos"
 
-#: tournaments/forms.py:23
+#: tournaments/forms.py:24
 msgid "Number of preliminary rounds"
 msgstr "Número de rondas preliminares"
 
-#: tournaments/forms.py:28
+#: tournaments/forms.py:29
 msgid "Number of teams in the open break"
 msgstr "Número de equipos en el break del abierto"
 
-#: tournaments/forms.py:29
+#: tournaments/forms.py:30
 msgid "Leave blank if there are no break rounds."
 msgstr "Dejar en blanco si no hay rondas después del break."
 
 #. Translators: This is the name given to the 'Open Break'.
-#: tournaments/forms.py:54
+#: tournaments/forms.py:55
 msgid "Open"
 msgstr "Abierto"
 
-#: tournaments/forms.py:79
+#: tournaments/forms.py:80
 msgid "Format Configuration"
 msgstr "Configuración del Formato"
 
-#: tournaments/forms.py:80
+#: tournaments/forms.py:81
 msgid "Apply a standard set of settings to match a common debate format"
 msgstr ""
 
-#: tournaments/forms.py:84
+#: tournaments/forms.py:85
 msgid "Public Configuration"
 msgstr "Configuración Pública"
 
-#: tournaments/forms.py:85
+#: tournaments/forms.py:86
 msgid ""
 "Show non-sensitive information on the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
@@ -570,89 +570,101 @@ msgid ""
 "There is currently no public information available for this tournament."
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:37
+#: tournaments/templates/public_tournament_index.html:36
 msgid "Team Tab"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:43
+#: tournaments/templates/public_tournament_index.html:42
 msgid "Speaker Tab"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:51
+#: tournaments/templates/public_tournament_index.html:50
 #, python-format
 msgid "%(category_name)s Speaker Tab"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:61
+#: tournaments/templates/public_tournament_index.html:60
 msgid "Replies Tab"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:67
+#: tournaments/templates/public_tournament_index.html:66
 msgid "Adjudicator Tab"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:73
+#: tournaments/templates/public_tournament_index.html:72
 msgid "Motions Tab"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:79
-#: tournaments/templates/public_tournament_index.html:111
+#: tournaments/templates/public_tournament_index.html:78
+#: tournaments/templates/public_tournament_index.html:110
 msgid "Sides"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:86
-#: tournaments/templates/public_tournament_index.html:171
+#: tournaments/templates/public_tournament_index.html:85
+#: tournaments/templates/public_tournament_index.html:170
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:93
+#: tournaments/templates/public_tournament_index.html:92
 msgid "Results"
 msgstr "Resultados"
 
-#: tournaments/templates/public_tournament_index.html:99
+#: tournaments/templates/public_tournament_index.html:98
 msgid "Divisions"
 msgstr "Divisiones"
 
-#: tournaments/templates/public_tournament_index.html:105
+#: tournaments/templates/public_tournament_index.html:104
 msgid "Motions"
 msgstr "Mociones"
 
-#: tournaments/templates/public_tournament_index.html:117
+#: tournaments/templates/public_tournament_index.html:116
 msgid "Team Standings"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:124
+#: tournaments/templates/public_tournament_index.html:123
 #, python-format
 msgid "%(category_name)s Break"
 msgstr "Break de %(category_name)s"
 
-#: tournaments/templates/public_tournament_index.html:133
+#: tournaments/templates/public_tournament_index.html:132
 msgid "Breaking Adjudicators"
 msgstr "Jueces que pasan el break"
 
-#: tournaments/templates/public_tournament_index.html:139
+#: tournaments/templates/public_tournament_index.html:138
 msgid "Diversity Overview"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:145
+#: tournaments/templates/public_tournament_index.html:144
 msgid "Participants"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:151
+#: tournaments/templates/public_tournament_index.html:150
 msgid "Feedback Progress"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:157
+#: tournaments/templates/public_tournament_index.html:156
 msgid "Enter Ballot"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:163
+#: tournaments/templates/public_tournament_index.html:162
 msgid "Enter Feedback"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:179
+#: tournaments/templates/public_tournament_index.html:178
 msgid "View All Draws"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:190
+msgid "Adjudication Team"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:196
+msgid "Tab Team"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:202
+msgid "Organisation Team"
 msgstr ""
 
 #: tournaments/templates/set_current_round.html:33
