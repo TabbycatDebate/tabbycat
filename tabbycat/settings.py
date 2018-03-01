@@ -100,13 +100,13 @@ INSTALLED_APPS = (
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_summernote',  # Keep above our apps; as we unregister an admin model
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
     'formtools',
-    'django_summernote',
     'statici18n' # Compile js translations as static file; saving requests
 )
 
