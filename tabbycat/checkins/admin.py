@@ -5,7 +5,7 @@ from .models import Event, Identifier
 
 @admin.register(Identifier)
 class CheckinIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('content_object', 'content_type')
+    list_display = ('content_object', 'content_type', 'identifier', 'object_id')
     list_filter = ('content_type',)
 
     def get_queryset(self, request):

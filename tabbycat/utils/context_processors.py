@@ -107,7 +107,9 @@ def get_menu_highlight(request):
             if "scan" in path:
                 menu['checkins_scans'] = True
             elif "status" in path:
-                menu['checkins_status'] = True
+                menu['checkins_statuses'] = True
+            elif "identifiers" in path:
+                menu['checkins_ids'] = True
 
         elif "overview" in path:
             return {"overview_nav": True} # Other sections have overviews; go after

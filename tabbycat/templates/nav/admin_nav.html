@@ -113,13 +113,20 @@
        <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
     </a>
     <div class="collapse {% if checkins_nav %}show{% endif %}" id="checkinh">
+      <a href="{% tournamenturl 'admin-checkin-identifiers' %}"
+         class="list-group-item {% if checkins_ids %}active{% endif %}" data-parent="#checkinh">
+        <span class="circle-icon small-circle"></span><i data-feather="menu"></i>
+        {% trans "Identifiers" %}
+      </a>
       <a href="{% tournamenturl 'admin-checkin-scan' %}"
          class="list-group-item {% if checkins_scans %}active{% endif %}" data-parent="#checkinh">
-        <span class="circle-icon small-circle"></span><i data-feather="instagram"></i>{% trans "Scanning" %}
+        <span class="circle-icon small-circle"></span><i data-feather="instagram"></i>
+        {% trans "Scanning" %}
       </a>
-      <a href="{% tournamenturl 'admin-checkin-status' %}"
-         class="list-group-item {% if checkins_status %}active{% endif %}" data-parent="#checkinh">
-        <span class="circle-icon small-circle"></span><i data-feather="watch"></i>{% trans "Statuses" %}
+      <a href="{% tournamenturl 'admin-checkin-statuses' %}"
+         class="list-group-item {% if checkins_statuses %}active{% endif %}" data-parent="#checkinh">
+        <span class="circle-icon small-circle"></span><i data-feather="watch"></i>
+        {% trans "Statuses" %}
       </a>
     </div>
   </div>

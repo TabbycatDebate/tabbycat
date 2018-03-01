@@ -2,6 +2,12 @@
 
 {% block content %}
 
-<h1>STATUS</h1>
+  <h1>STATUS</h1>
+
+  {% for event in events %}
+
+    {{ event.time }} ({{ event.identifier.content_type }}) {{ event.identifier.identifier }}
+
+  {% endfor %}
 
 {% endblock content %}

@@ -8,5 +8,8 @@ urlpatterns = [
         name='assistant-checkin-scan'),
     path('status/',
         views.AssistantCheckInStatusView.as_view(),
-        name='assistant-checkin-status'),
+        name='assistant-checkin-statuses'),
+    path('identifiers/',
+        views.AssistantCheckInIdentifiersView.as_view(),
+        name='assistant-checkin-identifiers'),
 ]
