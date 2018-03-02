@@ -44,7 +44,7 @@ When we say "command shell", on Windows we mean **Command Prompt**, and on Linux
 Short version of the long way
 -----------------------------
 
-.. warning:: Don't just copy-and-paste these commands before you understand what they do! If things aren't set up perfectly they can fail, so it's important to "supervise" them the first time you do them.
+.. warning:: We provide a "short version" for experienced users. Don't just copy-and-paste these commands before you understand what they do! If things aren't set up perfectly they can fail, so it's important to supervise them the first time you do them. If this is all new to you, read the long version of the instructions below.
 
 .. parsed-literal::
 
@@ -74,7 +74,7 @@ b. If you don't already have **Git**, follow the `instructions on the GitHub web
 2. Set up a local installation
 ------------------------------
 
-If you don't already have a local installation, follow these instructions for your operating system to set up a local installation.
+If you don't already have a local installation, follow the instructions on the page for your operating system, listed below, to set up a local installation.
 
 .. attention:: When downloading the source code, you **must** take the option involving cloning the GitHub repository using Git. In the macOS and Windows instructions, this means the option described in the "Advanced users" box. To do so, use these commands:
 
@@ -127,11 +127,17 @@ b. Run the script to deploy the app to Heroku. Replace ``<yourappname>`` with yo
 
 .. note:: Steps 4 and 5 are optional; there are other methods of :ref:`importing data <importing-initial-data>`. However the following method is most useful for large tournaments where manual entry would be tedious.
 
+.. note:: Step 4 is the same as the process described in :ref:`importtournament-command`.
+
 .. rst-class:: spaced-list
 
 a. Place your CSV files in ``data/yourtournamentname``, as described in :ref:`importing-initial-data`.
 
-b. Create a new, blank local database, and reconfigure ``DATABASES`` in your local_settings.py file to point to this new database.
+b. Create a new, blank local database::
+
+    createdb <yourlocaldatabasename>
+
+  Reconfigure ``DATABASES`` in your local_settings.py file to point to this new database.
 
 c. Activate your virtual environment::
 
@@ -161,7 +167,7 @@ Once you're happy with how your local import went, you can push the local databa
 
 .. tip:: If you have multiple Heroku sites, you may find that the ``heroku`` commands refuse to run, prompting you to specify an app. If so, add ``--app <yourappname>`` to each ``heroku`` command.
 
-a. Enable maintenance mode::
+a. Enable maintenance mode. This takes the site offline, to ensure that no-one can possibly create or change any data on the site while you're pushing a new database up::
 
     heroku maintenance:on
 
@@ -175,7 +181,7 @@ c. Push your local database to Heroku::
 
     heroku pg:push <yourlocaldatabasename> DATABASE
 
-  You might need to specify your local PostgreSQL credentials by adding ``PGUSER=<yourusername> PGPASSWORD=******** PGHOST=localhost`` to the *front* of that command.
+  You might need to specify your local PostgreSQL credentials by adding ``PGUSER=<yourusername> PGPASSWORD=******** PGHOST=localhost`` to the *beginning* of that command. (This sets environment variables to those values for the duration of that one command.)
 
 d. Disable maintenance mode::
 
