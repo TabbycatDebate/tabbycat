@@ -13,7 +13,7 @@ class Identifier(models.Model):
     """ A unique string that will be matched to either a Person, Debate,
     or Venue (of which only Person is supported at present)"""
 
-    barID = RegexValidator(r'^[0-9a-zA-Z]{6,}$',
+    barID = RegexValidator(r'^[0-9a-zA-Z]{,6}$',
                            'Only up 6 alphanumeric characters are allowed.')
     identifier = models.CharField(unique=True, max_length=6, validators=[barID])
 
@@ -43,7 +43,7 @@ class Event(models.Model):
                                    verbose_name=_("identifier"))
     # timezone.now used over auto_add so times are visible/editable in admin
     time = models.DateTimeField(db_index=True, default=timezone.now,
-                                verbose_name=_("checkin"))
+                                verbose_name=_("check-in time"))
 
     class Meta:
         verbose_name = _("check-in event")
