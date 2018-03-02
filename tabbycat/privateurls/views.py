@@ -12,10 +12,9 @@ from tournaments.mixins import TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
-from utils.urlkeys import populate_url_keys
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
-from .utils import send_randomised_url_emails
+from .utils import populate_url_keys, send_randomised_url_emails
 
 logger = logging.getLogger(__name__)
 
