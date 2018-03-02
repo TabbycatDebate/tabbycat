@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from utils.mixins import AdministratorMixin, AssistantMixin
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
-from .models import Event, Identifier
+from .models import Event, PersonIdentifier
 
 
 class CheckInScanView(TournamentMixin, TemplateView):
@@ -42,7 +42,7 @@ class CheckInIdentifiersView(TournamentMixin, TemplateView):
     template_name = 'checkin_ids.html'
 
     def get_context_data(self, **kwargs):
-        kwargs["identifiers"] = Identifier.objects.all()
+        kwargs["identifiers"] = PersonIdentifier.objects.all()
         return super().get_context_data(**kwargs)
 
 

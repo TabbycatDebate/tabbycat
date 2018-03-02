@@ -20,9 +20,8 @@ def generate_url_key(length=8):
     return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
 
 
-def populate_url_keys(queryset, length=8):
+def populate_url_keys(queryset, length=8, num_attempts=10):
     """Populates the URL key field for every instance in the given QuerySet."""
-    num_attempts = 10
     for instance in queryset:
         for i in range(num_attempts):
             instance.url_key = generate_url_key(length)
