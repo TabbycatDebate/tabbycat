@@ -5,8 +5,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
 from django.utils.html import mark_safe
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
@@ -87,12 +87,12 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
 
     template_name = 'standings_table.html'
 
-    standings_error_message = ugettext_lazy(
+    standings_error_message = gettext_lazy(
         "<p>There was an error generating the standings: "
         "<em>%(message)s</em></p>"
     )
 
-    admin_standings_error_instructions = ugettext_lazy(
+    admin_standings_error_instructions = gettext_lazy(
         "<p>You may need to double-check the "
         "<a href=\"%(standings_options_url)s\" class=\"alert-link\">"
         "standings configuration under the Setup section</a>. "
@@ -100,7 +100,7 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         "contact the developers.</p>"
     )
 
-    public_standings_error_instructions = ugettext_lazy(
+    public_standings_error_instructions = gettext_lazy(
         "<p>The tab director will need to resolve this issue.</p>"
     )
 
@@ -208,7 +208,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         return standings, rounds
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key="Rk")
+        table = TabbycatTableBuilder(view=self, sort_key="rk")
 
         try:
             standings, rounds = self.get_standings()
@@ -249,7 +249,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
 class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     """The standard speaker standings view."""
-    page_title = ugettext_lazy("Speaker Standings")
+    page_title = gettext_lazy("Speaker Standings")
     page_emoji = '💯'
 
     def get_speakers(self):
@@ -285,7 +285,7 @@ class SpeakerStandingsView(AdministratorMixin, BaseStandardSpeakerStandingsView)
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
-    page_title = ugettext_lazy("Speaker Tab")
+    page_title = gettext_lazy("Speaker Tab")
     public_page_preference = 'speaker_tab_released'
 
     def get_tab_limit(self):
@@ -334,7 +334,7 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
 
 class BaseReplyStandingsView(BaseSpeakerStandingsView):
     """Speaker standings view for replies."""
-    page_title = ugettext_lazy("Reply Speaker Standings")
+    page_title = gettext_lazy("Reply Speaker Standings")
     page_emoji = '💁'
 
     def get_speakers(self):
@@ -368,7 +368,7 @@ class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
-    page_title = ugettext_lazy("Reply Speaker Tab")
+    page_title = gettext_lazy("Reply Speaker Tab")
     public_page_preference = 'replies_tab_released'
     public_limit_preference = 'replies_tab_limit'
 
@@ -380,7 +380,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 class BaseTeamStandingsView(BaseStandingsView):
     """Base class for views that display team standings."""
 
-    page_title = ugettext_lazy("Team Standings")
+    page_title = gettext_lazy("Team Standings")
     page_emoji = '👯'
 
     def get_standings(self):
@@ -409,7 +409,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         pass
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key="Rk")
+        table = TabbycatTableBuilder(view=self, sort_key="rk")
 
         try:
             standings, rounds = self.get_standings()
@@ -445,7 +445,7 @@ class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
 class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
-    page_title = ugettext_lazy("Division Standings")
+    page_title = gettext_lazy("Division Standings")
     page_emoji = '👯'
 
 
@@ -455,7 +455,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     During the tournament, "public team standings" only shows wins and results.
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
-    page_title = ugettext_lazy("Team Tab")
+    page_title = gettext_lazy("Team Tab")
     public_page_preference = 'team_tab_released'
     public_limit_preference = 'team_tab_limit'
     rankings = ('rank',)
@@ -471,7 +471,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplateView):
 
     public_page_preference = 'public_team_standings'
-    page_title = ugettext_lazy("Current Team Standings")
+    page_title = gettext_lazy("Current Team Standings")
     page_emoji = '🌟'
 
     def get_rounds(self):
@@ -506,11 +506,11 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, t.short_name))
-        measure = _("Points") if tournament.pref('teams_in_debate') == 'bp' else _("Wins")
+        key = "Points" if tournament.pref('teams_in_debate') == 'bp' else "Wins"
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column(measure, [team.points for team in teams])
+        table.add_column({'key': key, 'title': _(key)}, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
         return table
@@ -555,7 +555,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     page_title = 'Feedback Overview'
     page_emoji = '🙅'
     for_public = False
-    sort_key = 'Name'
+    sort_key = 'name'
     sort_order = 'asc'
     template_name = 'standings_adjudicators.html'
 

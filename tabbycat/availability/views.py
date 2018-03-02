@@ -8,8 +8,8 @@ from django.db.models import Min, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy, ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
 
 from . import utils
 
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = ugettext_lazy("Availability")
+    page_title = gettext_lazy("Availability")
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):
@@ -82,7 +82,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
             teams_dict = {'total': break_size}
             if break_size < 2:
                 teams_dict['in_now'] = 0
-                teams_dict['message'] = ungettext(
+                teams_dict['message'] = ngettext(
                     # Translators: nteams in this string can only be 0 or 1
                     "%(nteams)d breaking team — no debates can happen",
                     "%(nteams)d breaking teams — no debates can happen",  # in English, used when break_size == 0
@@ -90,13 +90,13 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
             else:
                 debates, bypassing = partial_break_round_split(break_size)
                 teams_dict['in_now'] = 2 * debates
-                teams_dict['message'] = ungettext(
+                teams_dict['message'] = ngettext(
                     # Translators: ndebating in this string is always at least 2
                     "%(ndebating)d breaking team is debating this round",  # never used, but needed for i18n
                     "%(ndebating)d breaking teams are debating this round",
                     2 * debates) % {'ndebating': 2 * debates}
                 if bypassing > 0:
-                    teams_dict['message'] += ungettext(
+                    teams_dict['message'] += ngettext(
                         # Translators: This gets appended to the previous string (the one with
                         # ndebating in it) if (and only if) nbypassing is greater than 0.
                         # "It" refers to this round.
@@ -117,7 +117,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
             return {
                 'total'     : nadvancing,
                 'in_now'    : nadvancing,
-                'message'   : ungettext(
+                'message'   : ngettext(
                     # Translators: nadvancing in this string is always at least 2
                     "%(nadvancing)s advancing team is debating this round",  # never used, but needed for i18n
                     "%(nadvancing)s advancing teams are debating this round",
@@ -174,7 +174,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
-        table.add_column(_("Active Now"), [{
+        table.add_column({'key': 'active', 'title': _("Active Now")}, [{
             'component': 'check-cell',
             'checked': inst.available,
             'sort': inst.available,
@@ -184,7 +184,8 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         } for inst in queryset])
 
         if round.prev:
-            table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}, [{
+            title = _("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}
+            table.add_column({'key': 'active', 'title': title}, [{
                 'sort': inst.prev_available,
                 'icon': 'check' if inst.prev_available else ''
             } for inst in queryset])
@@ -255,14 +256,14 @@ class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectVie
 
 
 class CheckInAllInRoundView(BaseBulkActivationView):
-    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues.")
+    activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues.")
 
     def activate_function(self):
         utils.activate_all(self.get_round())
 
 
 class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
-    activation_msg = ugettext_lazy("Checked in all breaking adjudicators.")
+    activation_msg = gettext_lazy("Checked in all breaking adjudicators.")
 
     def activate_function(self):
         utils.set_availability(self.get_tournament().relevant_adjudicators.filter(breaking=True),
@@ -270,7 +271,7 @@ class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
 
 
 class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
-    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
+    activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
 
     def activate_function(self):
         t = self.get_tournament()

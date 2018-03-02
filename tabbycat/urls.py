@@ -4,7 +4,7 @@ from django.contrib import admin, messages
 from django.contrib.auth.views import logout as auth_logout
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
 

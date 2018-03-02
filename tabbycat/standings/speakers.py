@@ -1,6 +1,6 @@
 """Standings generator for speakers."""
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from tournaments.models import Round
 

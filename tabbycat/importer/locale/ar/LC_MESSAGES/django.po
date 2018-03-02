@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: importer/forms.py:20
 #, python-format
 msgid "line %(lineno)d: %(message)s"
-msgstr ""
+msgstr "سطر%(lineno)d:%(message)s"
 
 #: importer/forms.py:37
 msgid "Unaffiliated (no institution)"
@@ -30,7 +30,7 @@ msgstr "مستقل (دون منتخب)"
 #: importer/forms.py:48
 #, python-format
 msgid "%(name)s (%(code)s)"
-msgstr ""
+msgstr "%(name)s(%(code)s)"
 
 #: importer/forms.py:70
 #, python-format
@@ -101,7 +101,7 @@ msgstr "متحدث%d"
 #: importer/forms.py:234
 #, python-format
 msgid "speaker%d@example.edu"
-msgstr ""
+msgstr "المتحدث %d  EX@.edu"
 
 #: importer/forms.py:248
 msgid "There must be at least one speaker."
@@ -130,8 +130,8 @@ msgstr "تصنيف"
 
 #: importer/forms.py:325
 #, python-format
-msgid "This value must be between %d and %d."
-msgstr ""
+msgid "This value must be between %(min)d and %(max)d."
+msgstr "لا بد أن تكون هذه القيمة بين %(min)dو%(max)d."
 
 #: importer/templates/simple_import_adjudicators_details.html:4
 #: importer/templates/simple_import_adjudicators_details.html:6
@@ -173,6 +173,14 @@ msgid ""
 "but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-"
 "link\">private URLs</a> for feedback or ballots."
 msgstr ""
+"بناء على <a href=\"%(options_feedback)s\" class=\"alert-link\">إعدادات  "
+"البطولة</a> لا بد أن تكون درجة المحكم بين <strong>%(min)s</strong> و "
+"<strong>%(max)s</strong>. المحكمين المعينين كحكم مشترك لن يكونوا لبطولة "
+"معينة وسيكونون متواجدين مع كل بطولة فيه خيار <a "
+"href=\"%(options_league_url)s\" class=\"alert-link\">مشاركة محكمين</a> مفعل."
+"  إضافة الايميلات أمر اختياري لكنه مفيد في حالة استخدام <a "
+"href=\"%(privateurls_url)s\" class=\"alert-link\">روابط خاصة</a> للتغذية "
+"الراجعة وإدخال النتائج."
 
 #: importer/templates/simple_import_adjudicators_details.html:51
 #, python-format
@@ -349,7 +357,7 @@ msgstr "حفظ جميع القاعات"
 #: importer/views.py:73
 #, python-format
 msgid "Added %(count)d %(model_plural)s."
-msgstr ""
+msgstr "تمت إضافة %(count)d%(model_plural)s"
 
 #: importer/views.py:177
 #, python-format

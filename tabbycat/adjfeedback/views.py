@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
@@ -114,7 +114,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
     page_title = 'Feedback Overview'
     page_emoji = '🙅'
     for_public = False
-    sort_key = 'Score'
+    sort_key = 'score'
     sort_order = 'desc'
     template_name = 'feedback_overview.html'
 
@@ -136,13 +136,13 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
     def get_table(self):
         tournament = self.get_tournament()
-        table = TabbycatTableBuilder(view=self, sort_key=_("Name"))
+        table = TabbycatTableBuilder(view=self, sort_key="name")
         table.add_adjudicator_columns(tournament.adjudicator_set.all())
         feedback_data = []
         for adj in tournament.adjudicator_set.all():
             count = adj.adjudicatorfeedback_set.count()
             feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
             })
         table.add_column("Feedbacks", feedback_data)
@@ -160,7 +160,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
         teams = tournament.team_set.all()
         team_table = TabbycatTableBuilder(
-            view=self, title='From Teams', sort_key=_('Team'))
+            view=self, title='From Teams', sort_key='team')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
@@ -168,7 +168,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
                 source_team__team=team).select_related(
                 'source_team__team').count()
             team_feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-team',
                                            tournament,
                                            kwargs={'pk': team.id}),
@@ -177,7 +177,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
         adjs = tournament.adjudicator_set.all()
         adj_table = TabbycatTableBuilder(
-            view=self, title='From Adjudicators', sort_key=_('Name'))
+            view=self, title='From Adjudicators', sort_key='name')
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
@@ -185,7 +185,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
                 source_adjudicator__adjudicator=adj).select_related(
                 'source_adjudicator__adjudicator').count()
             adj_feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-adjudicator',
                                            tournament,
                                            kwargs={'pk': adj.id}),
@@ -299,7 +299,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
     def get_tables(self):
         tournament = self.get_tournament()
 
-        teams_table = TabbycatTableBuilder(view=self, sort_key=_("Team"), title=_("A Team"))
+        teams_table = TabbycatTableBuilder(view=self, sort_key="team", title=_("A Team"))
         add_link_data = [{
             'text': team.short_name,
             'link': self.get_from_team_link(team),
@@ -308,7 +308,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
 
         if tournament.pref('show_team_institutions'):
             teams_table.add_column({
-                'key': _("Institution"),
+                'key': 'institution',
                 'icon': 'home',
                 'tooltip': _("Institution"),
             }, [team.institution.code if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
@@ -318,7 +318,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
         else:
             adjudicators = tournament.adjudicator_set.all()
 
-        adjs_table = TabbycatTableBuilder(view=self, sort_key=_("Adjudicator"), title=_("An Adjudicator"))
+        adjs_table = TabbycatTableBuilder(view=self, sort_key="adjudicator", title=_("An Adjudicator"))
         if tournament.pref('share_adjs'):
             adjudicators = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True))
         else:
@@ -332,7 +332,7 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
 
         if tournament.pref('show_adjudicator_institutions'):
             adjs_table.add_column({
-                'key': _("Institution"),
+                'key': 'institution',
                 'icon': 'home',
                 'tooltip': _("Institution"),
             }, [adj.institution.code if adj.institution else TabbycatTableBuilder.BLANK_TEXT for adj in adjudicators])
@@ -609,13 +609,13 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         teams_progress, adjs_progress = self.get_feedback_progress()
 
         adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
-            sort_key=_("Owed"), sort_order="desc")
+            sort_key="owed", sort_order="desc")
         adjudicators = [progress.adjudicator for progress in adjs_progress]
         adjs_table.add_adjudicator_columns(adjudicators, hide_metadata=True)
         adjs_table.add_feedback_progress_columns(adjs_progress)
 
         teams_table = FeedbackTableBuilder(view=self, title="From Teams",
-            sort_key=_("Owed"), sort_order="desc")
+            sort_key="owed", sort_order="desc")
         teams = [progress.team for progress in teams_progress]
         teams_table.add_team_columns(teams)
         teams_table.add_feedback_progress_columns(teams_progress)

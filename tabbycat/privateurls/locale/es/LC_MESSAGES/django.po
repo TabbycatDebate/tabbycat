@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
+"Last-Translator: David Alejandro Huertas Erazo <dale.huertas@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: privateurls/admin.py:18 privateurls/views.py:81 privateurls/views.py:214
+#: privateurls/admin.py:18
 msgid "Team"
 msgstr "Equipo"
 
 #: privateurls/apps.py:7
 msgid "Private URL Management"
-msgstr "Manejo de URLs Privadas"
+msgstr "Manejo de links Privados"
 
 #: privateurls/models.py:12
 msgid "ballot"
@@ -36,11 +36,11 @@ msgstr "feedback"
 
 #: privateurls/models.py:17
 msgid "recipient adjudicator"
-msgstr ""
+msgstr "Juez que recibe"
 
 #: privateurls/models.py:19
 msgid "recipient speaker"
-msgstr ""
+msgstr "Orador que recibe"
 
 #: privateurls/models.py:22
 msgid "URL type"
@@ -52,7 +52,7 @@ msgstr "dirección e-mail"
 
 #: privateurls/models.py:25
 msgid "URL key"
-msgstr ""
+msgstr "Clave de URL"
 
 #: privateurls/models.py:27
 msgid "timestamp"
@@ -60,23 +60,23 @@ msgstr "marca de tiempo"
 
 #: privateurls/models.py:30
 msgid "private URL sent mail record"
-msgstr ""
+msgstr " El URL privado fue enviado al correo registrado"
 
 #: privateurls/models.py:31
 msgid "private URL sent mail records"
-msgstr ""
+msgstr "El URL privado fue enviado a los correos registrados"
 
 #: privateurls/models.py:39
 msgid "<both adjudicator and speaker>"
-msgstr ""
+msgstr "<both adjudicator and speaker>"
 
 #: privateurls/models.py:56
 msgid "No recipient (adjudicator or speaker) was specified."
-msgstr ""
+msgstr "No se especificó ningún destinatario (adjudicador o debatiente)"
 
 #: privateurls/models.py:59
 msgid "There was both a recipient adjudicator and a recipient speaker."
-msgstr ""
+msgstr "Hay ambos, un adjudicador y un orador que reciben"
 
 #: privateurls/templates/ballot_urls_email_list.html:4
 #: privateurls/templates/ballot_urls_email_list.html:5
@@ -89,6 +89,9 @@ msgid ""
 "private ballot URL, then click the button at the bottom of the page to send "
 "the emails."
 msgstr ""
+"Revise la lista de jueces a los que les falta enviar un correo electrónico "
+"con la URL de su ballot privado, luego haga click en el botón al final de la"
+" página para mandar el los correos electrónicos."
 
 #: privateurls/templates/ballot_urls_email_list.html:19
 #: privateurls/templates/feedback_urls_email_list.html:27
@@ -97,6 +100,9 @@ msgid ""
 "The following adjudicators have a URL key but don't have an e-mail address, "
 "so won't get e-mails: %(adjudicators_list)s"
 msgstr ""
+"Los siguientes jueces tienen una clave URL pero no tienen una dirección de "
+"correo electrónico, por lo que no recibirán este "
+"correo:%(adjudicators_list)s"
 
 #: privateurls/templates/ballot_urls_email_list.html:29
 #, python-format
@@ -109,11 +115,21 @@ msgid_plural ""
 "are excluded from the below list. You can review the sent mail records in "
 "the <a href=\"%(sent_mail_records_url)s\">Edit Database area</a>."
 msgstr[0] ""
+"%(nadjs)s juez al que ya se le envió la URL de sus ballot se excluye de la "
+"siguiente lista. Puede revisar el registro de correos electrónicos enviados "
+"en el <a href=\"%(sent_mail_records_url)s\">área de Edición de Base de "
+"Datos</a>."
 msgstr[1] ""
+"%(nadjs)s jueces a los que ya se les enviaron las URLs de sus ballots se "
+"excluyen de la siguiente lista. Puede revisar el registro de correos "
+"electrónicos enviados en el <a href=\"%(sent_mail_records_url)s\">área de "
+"Edición de Base de Datos</a>."
 
 #: privateurls/templates/ballot_urls_email_list.html:43
 msgid "Send emails with private ballot URLs to adjudicators"
 msgstr ""
+"Enviar correos electrónicos con las URLs de las ballots privadas a los "
+"jueces."
 
 #: privateurls/templates/feedback_urls_email_list.html:4
 #: privateurls/templates/feedback_urls_email_list.html:5
@@ -126,6 +142,9 @@ msgid ""
 " with their private feedback URL, then click the button at the bottom of the"
 " page to send the emails."
 msgstr ""
+"Revise la lista de oradores y jueces que aún no envían un correo electrónico"
+" con su URL de retroalimentación privada, luego haga click en el botón al "
+"final de la página para enviar los correos."
 
 #: privateurls/templates/feedback_urls_email_list.html:19
 #, python-format
@@ -133,6 +152,8 @@ msgid ""
 "The following speakers have a URL key but don't have an e-mail address, so "
 "won't get e-mails: %(speakers_list)s"
 msgstr ""
+"Los siguientes oradores tienen una clave URL pero no tienen una dirección de"
+" correo electrónico, por lo que no recibirán este correo: %(speakers_list)s"
 
 #: privateurls/templates/feedback_urls_email_list.html:37
 #, python-format
@@ -146,7 +167,7 @@ msgstr[1] "%(nspeakers)s oradores"
 msgid "%(nadjs)s adjudicator"
 msgid_plural "%(nadjs)s adjudicators"
 msgstr[0] "juez %(nadjs)s "
-msgstr[1] "jueces %(nadjs)s "
+msgstr[1] "%(nadjs)s jueces"
 
 #: privateurls/templates/feedback_urls_email_list.html:47
 #, python-format
@@ -156,10 +177,16 @@ msgid ""
 "the sent mail records in the <a href=\"%(sent_mail_records_url)s\">Edit "
 "Database area</a>."
 msgstr ""
+"%(speaker_phrase)s y %(adjudicator_phrase)s a los que ya se les enviaron las"
+" URLs de su retroalimentación son excluidos de la siguiente lista. Puede "
+"revisar el registro de correos electrónicos enviados en el <a "
+"href=\"%(sent_mail_records_url)s\">área de Edición de Base de Datos</a>."
 
 #: privateurls/templates/feedback_urls_email_list.html:58
 msgid "Send emails with private feedback URLs to speakers and adjudicators"
 msgstr ""
+"Enviar correos electrónicos con las URLs de retroalimentación privada a "
+"oradores y jueces"
 
 #: privateurls/templates/private_urls.html:17
 msgid ""
@@ -252,10 +279,6 @@ msgstr "URL de Feedback"
 msgid "Adjudicators"
 msgstr "Jueces"
 
-#: privateurls/views.py:97 privateurls/views.py:167
-msgid "Name"
-msgstr "Nombre"
-
 #: privateurls/views.py:100 privateurls/views.py:186
 msgid "Ballot URL"
 msgstr "URL de Ballot"
@@ -321,6 +344,8 @@ msgid ""
 "There was a problem connecting to the e-mail server when trying to send "
 "privateballot URLs to adjudicators."
 msgstr ""
+"Hubo un problema conectando con el e-mail del servidor cuando intentábamos "
+"enviar los URLs de las ballots a los adjudicadores."
 
 #: privateurls/views.py:269
 #, python-format
@@ -335,7 +360,7 @@ msgstr[1] ""
 #: privateurls/views.py:284
 #, python-format
 msgid "Your team's feedback submission URL for %(tournament)s"
-msgstr ""
+msgstr "El URL de tu equipo para cargar el feedback de%(tournament)s"
 
 #: privateurls/views.py:286
 #, python-format
@@ -347,15 +372,23 @@ msgid ""
 "Your team's private feedback submission URL is:\n"
 "%(url)s"
 msgstr ""
+"Hola %(name)s\n"
+"\n"
+"En el %(tournament)s, estamos usando un sistema en linea de retroalimentación a los adjudicadores. Como parte del equipo %(team)s, puedes subir tu feedback en la siguiente URL. Esta URL es unicamente para ti — no la compartas con nadie, si alguien más la tiene puede cargar el feedback de tu equipo a tu nombre. Esta URL será la misma durante todo el torneo, te sugerimos guardarla en favoritos.\n"
+"\n"
+"La URL privada para que tu equipo cargue el feedback es: \n"
+"%(url)s"
 
 #: privateurls/views.py:305
 msgid "There was a problem sending private feedback URLs to speakers."
 msgstr ""
+"Hubo un problema al enviar los URLs con los códigos privados de los "
+"oradores."
 
 #: privateurls/views.py:308
 #, python-format
 msgid "Your personal feedback submission URL for %(tournament)s"
-msgstr ""
+msgstr "Tu URL personal para cargar el feedback para el %(tournament)s"
 
 #: privateurls/views.py:310
 #, python-format
@@ -367,10 +400,17 @@ msgid ""
 "Your personal private feedback submission URL is:\n"
 "%(url)s"
 msgstr ""
+"Hola %(name)s,\n"
+"\n"
+"En el %(tournament)s, estamos usando un sistema de retroalimentación en linea para calificar a los jueces, este estará disponible en el siguiente link. Este link es para su uso exclusivo — no lo comparta con nadie más, si alguien más lo tiene podrá ingresar el resultado por usted. Este link será el mismo durante todo el torneo, así que le recomendamos guardar la dirección en favoritos.\n"
+"\n"
+"El link para cargar su feedback es:\n"
+"%(url)s"
 
 #: privateurls/views.py:328
 msgid "There was a problem sending private feedback URLs to adjudicators."
 msgstr ""
+"Hubo un problema al enviar el link con los feedbacks a los adjudicadores."
 
 #. Translators: This goes in the "speakers_phrase" variable in "E-mails with
 #. private feedback URLs were sent..."
@@ -387,8 +427,8 @@ msgstr[1] ""
 #, python-format
 msgid "%(nadjudicators)d adjudicator"
 msgid_plural "%(nadjudicators)d adjudicators"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(nadjudicators)djueces"
+msgstr[1] "%(nadjudicators)d jueces"
 
 #: privateurls/views.py:338
 #, python-format
@@ -396,3 +436,5 @@ msgid ""
 "E-mails with private feedback URLs were sent to %(speakers_phrase)s and "
 "%(adjudicators_phrase)s."
 msgstr ""
+"Los e-mails con los links para acceder a los feedbacks privados fueron "
+"enviados a %(speakers_phrase)s y a %(adjudicators_phrase)s"

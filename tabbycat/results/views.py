@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.db import ProgrammingError
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView, View
 
 from actionlog.mixins import LogActionMixin
@@ -61,8 +61,8 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
 
     def get_table(self):
         draw = self._get_draw()
-        table = ResultsTableBuilder(view=self, sort_key=_("Status"))
-        table.add_ballot_status_columns(draw, key=_("Status"))
+        table = ResultsTableBuilder(view=self, sort_key="status")
+        table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw)
@@ -97,7 +97,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
     template_name = "public_results_for_round.html"
     public_page_preference = 'public_results'
-    page_title = ugettext_lazy("Results")
+    page_title = gettext_lazy("Results")
     page_emoji = '💥'
     default_view = 'team'
 
@@ -113,9 +113,9 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         tournament = self.get_tournament()
         debates = round.debate_set_with_prefetches(results=True, wins=True)
         populate_confirmed_ballots(debates, motions=True,
-                results=tournament.pref('ballots_per_debate') == 'per-adj')
+                results=round.ballots_per_debate == 'per-adj')
 
-        table = TabbycatTableBuilder(view=self, sort_key=_("Venue"))
+        table = TabbycatTableBuilder(view=self, sort_key="venue")
         table.add_debate_venue_columns(debates)
         table.add_debate_results_columns(debates)
         if not (tournament.pref('teams_in_debate') == 'bp' and round.is_break_round):
@@ -141,9 +141,9 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         if tournament.pref('teams_in_debate') == 'two':
             populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True,
-                results=tournament.pref('ballots_per_debate') == 'per-adj')
+            results=round.ballots_per_debate == 'per-adj')
 
-        table = TabbycatTableBuilder(view=self, sort_key=_("Team"))
+        table = TabbycatTableBuilder(view=self, sort_key="team")
         table.add_team_columns([ts.debate_team.team for ts in teamscores])
         table.add_debate_result_by_team_column(teamscores)
         table.add_debate_side_by_team_column(teamscores)
@@ -238,7 +238,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         tournament = self.get_tournament()
         if tournament.pref('teams_in_debate') == 'bp' and self.debate.round.is_break_round:
             return BPEliminationResultForm
-        elif tournament.pref('ballots_per_debate') == 'per-adj':
+        elif self.debate.round.ballots_per_debate == 'per-adj':
             return PerAdjudicatorBallotSetForm
         else:
             return SingleBallotSetForm
@@ -318,7 +318,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
         t = self.get_tournament()
 
-        if t.pref('ballots_per_debate') == 'per-adj' and \
+        if self.debate.round.ballots_per_debate == 'per-adj' and \
                 not self.debate.adjudicators.has_chair:
             messages.error(self.request, _("Whoops! The debate %(debate)s doesn't have a chair, "
                 "so you can't enter results for it.") % {'debate': self.debate.matchup})

@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.forms import ValidationError
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 from django_summernote.widgets import SummernoteWidget
@@ -442,11 +442,24 @@ class TeamsInDebate(ChoicePreference):
 
 
 @tournament_preferences_registry.register
-class BallotsPerDebate(ChoicePreference):
-    help_text = _("Whether panels submit a ballot each or a single ballot for the debate. Note: BP must use one per debate.")
-    verbose_name = _("Ballots per debate")
+class BallotsPerDebatePreliminary(ChoicePreference):
+    help_text = _("Whether panels submit a ballot each or a single ballot for a debate during the preliminary rounds. Note: BP must use one per debate.")
+    verbose_name = _("Ballots per debate (for in-rounds)")
     section = debate_rules
-    name = 'ballots_per_debate'
+    name = 'ballots_per_debate_prelim'
+    choices = (
+        ('per-adj', _("One ballot per voting adjudicator")),
+        ('per-debate', _("Consensus ballot (one ballot per debate)")),
+    )
+    default = 'per-adj'
+
+
+@tournament_preferences_registry.register
+class BallotsPerDebateElimination(ChoicePreference):
+    help_text = _("Whether panels submit a ballot each or a single ballot for a debate during the elimination rounds. Note: BP must use one per debate.")
+    verbose_name = _("Ballots per debate (for out-rounds)")
+    section = debate_rules
+    name = 'ballots_per_debate_elim'
     choices = (
         ('per-adj', _("One ballot per voting adjudicator")),
         ('per-debate', _("Consensus ballot (one ballot per debate)")),
@@ -880,6 +893,36 @@ class FeedbackProgress(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class TabDirectorCredit(StringPreference):
+    help_text = _("The names of the tab directors and/or tab team. Optional; will display on the home page if set.")
+    verbose_name = _("Tab Credit")
+    section = public_features
+    name = 'tab_credit'
+    default = ""
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class OrgComCredit(StringPreference):
+    help_text = _("The names of organising committee and/or convenors. Optional; will display on the home page if set.")
+    verbose_name = _("Organisation Credit")
+    section = public_features
+    name = 'org_credit'
+    default = ""
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
+class AdjCoreCredit(StringPreference):
+    help_text = _("The names of the adjudication core and/or chief adjudicators. Optional; will display on the home page if set.")
+    verbose_name = _("Adjudication Credit")
+    section = public_features
+    name = 'adj_credit'
+    default = ""
+    field_kwargs = {'required': False}
+
+
+@tournament_preferences_registry.register
 class WelcomeMessage(LongStringPreference):
     help_text = _("Message to be displayed on the tournament home page. Supports HTML.")
     verbose_name = _("Welcome message")
@@ -887,6 +930,7 @@ class WelcomeMessage(LongStringPreference):
     name = 'welcome_message'
     default = ""
     widget = SummernoteWidget
+    field_kwargs = {'required': False}
 
 
 # ==============================================================================

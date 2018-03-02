@@ -1,7 +1,7 @@
 from django.utils import formats
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy, ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate
@@ -395,18 +395,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         return cell
 
-    def add_tournament_column(self, tournaments, key=ugettext_lazy("Tournament")):
+    def add_tournament_column(self, tournaments):
         header = {
-            'key': key, 'icon': 'tag', 'tooltip': _("Tournament")
+            'key': "tournament", 'icon': 'tag', 'tooltip': _("Tournament")
         }
         data = [{
             'sort': t.seq, 'text': t.short_name, 'tooltip': t.short_name,
         } for t in tournaments]
         self.add_column(header, data)
 
-    def add_round_column(self, rounds, key=ugettext_lazy("Round")):
+    def add_round_column(self, rounds):
         header = {
-            'key': key, 'icon': 'clock', 'tooltip': _("Round")
+            'key': "round", 'icon': 'clock', 'tooltip': _("Round")
         }
         data = [{
             'sort': round.seq, 'text': round.abbreviation, 'tooltip': round.name,
@@ -424,12 +424,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if subtext == 'institution' and adj.institution is not None:
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
-        self.add_column({'key': _('Name'), 'tooltip': _("Name"), 'icon': 'user'},
-                        adj_data)
+        self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, adj_data)
 
         if self.tournament.pref('show_adjudicator_institutions') and not hide_institution:
             self.add_column({
-                'key': _("Institution"),
+                'key': "institution",
                 'icon': 'home',
                 'tooltip': _("Institution"),
             }, [adj.institution.code if adj.institution else self.BLANK_TEXT for adj in adjudicators])
@@ -457,7 +456,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(trainee_header, [adj.trainee for adj in adjudicators])
 
-    def add_debate_adjudicators_column(self, debates, key=ugettext_lazy("Adjs"), show_splits=False, highlight_adj=None):
+    def add_debate_adjudicators_column(self, debates, title="Adjs", show_splits=False, highlight_adj=None):
         da_data = []
 
         def construct_text(adjs_data):
@@ -497,7 +496,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             adjs_data = []
             # The purpose of the second condition is to short-circuit debate.confirmed_ballot
-            if show_splits and self.tournament.pref('ballots_per_debate') == 'per-adj' \
+            if show_splits and debate.round.ballots_per_debate == 'per-adj' \
                     and debate.confirmed_ballot \
                     and debate.confirmed_ballot.result.is_voting \
                     and debate.confirmed_ballot.result.is_valid() \
@@ -519,7 +518,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 }
             })
 
-        self.add_column(key, da_data)
+        self.add_column({'key': 'adjudicators', 'title': _(title)}, da_data)
 
     def add_debate_motion_column(self, debates):
         """Shows the motions associated with the debates.
@@ -533,10 +532,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
             motions = [debate.round.motion_set.first() for debate in debates]
         self.add_motion_column(motions)
 
-    def add_motion_column(self, motions, key=ugettext_lazy("Motion"), show_order=False):
+    def add_motion_column(self, motions, show_order=False):
         if show_order and self.tournament.pref('enable_motions'):
             self.add_column({
-                'key': _("Order"),
+                'key': "order",
                 'icon': 'hash',
                 'tooltip': _("Order as listed"),
             }, [{
@@ -548,7 +547,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'text': motion.reference if motion.reference else '?',
             'popover': {'content' : [{'text': motion.text}]}
         } if motion else self.BLANK_TEXT for motion in motions]
-        self.add_column(key, motion_data)
+        self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)
 
     def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
                          show_divisions=True, hide_institution=False, key=None):
@@ -559,7 +558,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if key:
             header = {'key': key, 'text': key}
         else:
-            header = {'key': _('Team'), 'tooltip': _("Team"), 'icon': 'users'}
+            header = {'key': 'team', 'tooltip': _("Team"), 'icon': 'users'}
         self.add_column(header, team_data)
 
         if break_categories:
@@ -567,7 +566,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self.tournament.pref('show_team_institutions') and not hide_institution:
             self.add_column({
-                'key': _("Institution"),
+                'key': "institution",
                 'icon': 'home',
                 'tooltip': _("Institution"),
             }, [
@@ -578,7 +577,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if show_divisions and self.tournament.pref('enable_divisions'):
             self.add_column({
-                'key': _("Division"),
+                'key': "division",
                 'icon': 'layers',
                 'tooltip': _("Division"),
             }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
@@ -591,8 +590,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             else:
                 speaker_data.append(speaker.name)
 
-        self.add_column({'key': _('Name'), 'tooltip': _("Name"), 'icon': 'user'},
-                        speaker_data)
+        self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, speaker_data)
 
         if categories:
             speakercategory_set = self.tournament.speakercategory_set
@@ -611,7 +609,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     categories_data.append(", ".join(category_strs))
 
                 self.add_column({
-                    'key': _("Category"),
+                    'key': "category",
+                    'title': _("Category"),
                     'icon': 'user-check', # Not ideal but full name blows out tables
                     'tooltip': _("Categories")
                 }, categories_data)
@@ -654,7 +653,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             # Add divisions immediately before the venue in in-rounds if enabled
             if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
                 divisions_header = {
-                    'key': _("Division"),
+                    'key': "division",
                     'icon': 'layers',
                     'tooltip': _("Division"),
                 }
@@ -669,7 +668,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             venue_data = [construct_venue_cell(d.venue) for d in debates]
 
         venue_header = {
-            'key': _("Venue"),
+            'key': 'venue',
             'icon': 'map-pin',
             'tooltip': _("Venue"),
         }
@@ -706,7 +705,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.tournament.pref('avoid_team_history'):
                 history = debate.history
                 if history > 0:
-                    conflicts.append(("warning", ungettext("Teams have met once",
+                    conflicts.append(("warning", ngettext("Teams have met once",
                             "Teams have met %(count)d times", history) % {'count': history}))
 
             if self.tournament.pref('avoid_same_institution'):
@@ -718,7 +717,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             conflicts.extend(venue_conflicts[debate])
             conflicts_by_debate.append(conflicts)
 
-        conflicts_header = {'key': _("Conflicts/Flags")}
+        conflicts_header = {'title': _("Conflicts/Flags"), 'key': 'conflags'}
         conflicts_data = [{
             'text': "".join(["<div class=\"text-{0}\">{1}</div>".format(*conflict) for conflict in debate_conflicts]),
             'class': 'small'
@@ -728,12 +727,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _standings_headers(self, info_list):
         headers = []
         for info in info_list:
-            header = {
-                'key': info['abbr'],
-                'tooltip': force_text(info['name']).capitalize(),
-                'icon': info['icon'],
-                'text': force_text(info['abbr']) if info['icon'] is None else None
-            }
+            header = {'key': info['abbr'],
+                      'tooltip': force_text(info['name']).capitalize()}
+            if info['icon']:
+                header['icon'] = info['icon']
+            else:
+                header['title'] = force_text(info['abbr'])
+
             headers.append(header)
         return headers
 
@@ -762,7 +762,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_columns(headers, data)
 
     def add_debate_ballot_link_column(self, debates):
-        ballot_links_header = {'key': _("Ballot"), 'icon': 'search'}
+        ballot_links_header = {'key': "ballot", 'icon': 'search'}
 
         if self.admin:
             ballot_links_data = [{
@@ -772,7 +772,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.add_column(ballot_links_header, ballot_links_data)
 
         elif self.tournament.pref('ballots_released'):
-            ballot_links_header = {'key': _("Ballot"), 'icon': 'search'}
+            ballot_links_header = {'key': "ballot", 'icon': 'search'}
             ballot_links_data = []
             for debate in debates:
                 if not debate.confirmed_ballot:
@@ -829,10 +829,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
             results_data.append(row)
 
         if all_sides_confirmed:
-            results_header = [get_side_name(self.tournament, side, 'abbr').capitalize()
-                    for side in self.tournament.sides]
+            results_header = [{
+                'title': get_side_name(self.tournament, side, 'abbr').capitalize(),
+                'key': 'A'
+            } for side in self.tournament.sides]
         else:
-            results_header = [_("Team %(num)d") % {'num': i} for i in range(1, len(side_abbrs)+1)]
+            results_header = [{
+                'title': _("Team %(num)d") % {'num': i},
+                'key': 'B'
+            } for i in range(1, len(side_abbrs)+1)]
 
         self.add_columns(results_header, results_data)
 

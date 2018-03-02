@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr[5] ""
 #: draw/admin.py:75
 #, python-format
 msgid "Set result status to %(status)s"
-msgstr ""
+msgstr "عرض حالة الدرجات %(status)s"
 
 #: draw/admin.py:85
 #, python-format
@@ -63,7 +63,7 @@ msgstr "قرعة "
 
 #: draw/generator/__init__.py:16
 msgid "Too many swaps"
-msgstr ""
+msgstr "الكثير من المقايضة "
 
 #: draw/generator/__init__.py:17
 msgid "One-up-one-down (history)"
@@ -75,44 +75,44 @@ msgstr "من الاول إلى الاخير ( مؤسسة ) "
 
 #: draw/generator/__init__.py:19
 msgid "One-up-one-down (to accommodate)"
-msgstr ""
+msgstr "من واحد إلى اقل "
 
 #: draw/generator/__init__.py:20
 msgid "Bubble up (history)"
-msgstr ""
+msgstr "تصاعدي (تاريخ)"
 
 #: draw/generator/__init__.py:21
 msgid "Bubble down (history)"
-msgstr ""
+msgstr "تنازلي (تاريخ)"
 
 #: draw/generator/__init__.py:22
 msgid "Bubble up (institution)"
-msgstr ""
+msgstr "تصاعدي (مؤسس)"
 
 #: draw/generator/__init__.py:23
 msgid "Bubble down (institution)"
-msgstr ""
+msgstr "تنازلي (مؤسس)"
 
 #: draw/generator/__init__.py:24
 msgid "Bubble up (to accommodate)"
-msgstr ""
+msgstr "تصاعدي"
 
 #: draw/generator/__init__.py:25
 msgid "Bubble down (to accommodate)"
-msgstr ""
+msgstr "تنازلي"
 
 #: draw/generator/__init__.py:26
 msgid "Can't bubble up/down"
-msgstr ""
+msgstr "لا يمكن ترتيب حسب / تصاعدي أو تنازلي"
 
 #: draw/generator/__init__.py:27
 msgid "Pull-up team"
-msgstr ""
+msgstr "اقوى الفرق"
 
 #: draw/generator/bpelimination.py:36 draw/generator/elimination.py:68
 #, python-format
 msgid "%d debates in the previous round don't have a result."
-msgstr ""
+msgstr "%dالمتناظر الذي لم يحصل على الدرجات "
 
 #: draw/generator/bpelimination.py:38
 #, python-format
@@ -153,7 +153,7 @@ msgstr ""
 
 #: draw/generator/common.py:54
 msgid "There were no teams for the draw."
-msgstr ""
+msgstr "لا توجد فرق لإجراء القرعة"
 
 #: draw/generator/elimination.py:43
 #, python-format
@@ -214,31 +214,31 @@ msgstr "لا يوجد"
 
 #: draw/models.py:28
 msgid "postponed"
-msgstr ""
+msgstr "مؤجل"
 
 #: draw/models.py:29
 msgid "draft"
-msgstr ""
+msgstr "مشروع"
 
 #: draw/models.py:30
 msgid "confirmed"
-msgstr ""
+msgstr "مؤكد"
 
 #: draw/models.py:35 draw/models.py:404
 msgid "round"
-msgstr ""
+msgstr "جولة"
 
 #: draw/models.py:37
 msgid "venue"
-msgstr ""
+msgstr "قاعات "
 
 #: draw/models.py:40
 msgid "division"
-msgstr ""
+msgstr "التقسيمات "
 
 #: draw/models.py:43
 msgid "bracket"
-msgstr ""
+msgstr "التأهل"
 
 #: draw/models.py:45
 msgid "room rank"
@@ -246,7 +246,7 @@ msgstr "مستوى الغرفة "
 
 #: draw/models.py:48
 msgid "time"
-msgstr ""
+msgstr "الوقت"
 
 #: draw/models.py:49
 msgid "The time/date of a debate if it is specifically scheduled"
@@ -254,11 +254,11 @@ msgstr ""
 
 #: draw/models.py:55
 msgid "importance"
-msgstr ""
+msgstr "أهمية"
 
 #: draw/models.py:57
 msgid "result status"
-msgstr ""
+msgstr "حالة النتيجة"
 
 #: draw/models.py:59
 msgid "ballot in"
@@ -276,11 +276,11 @@ msgstr ""
 
 #: draw/models.py:65 draw/models.py:291
 msgid "debate"
-msgstr ""
+msgstr "مناظرة"
 
 #: draw/models.py:66
 msgid "debates"
-msgstr ""
+msgstr "مناظرات"
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
@@ -293,15 +293,15 @@ msgstr ""
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
 #: draw/models.py:89
 msgid " vs "
-msgstr ""
+msgstr "ضد"
 
 #: draw/models.py:281
 msgid "affirmative"
-msgstr ""
+msgstr "موالاة"
 
 #: draw/models.py:282
 msgid "negative"
-msgstr ""
+msgstr "معارضة"
 
 #: draw/models.py:283
 msgid "opening government"
@@ -321,7 +321,7 @@ msgstr ""
 
 #: draw/models.py:293 draw/models.py:406
 msgid "team"
-msgstr ""
+msgstr "فريق"
 
 #: draw/models.py:295 draw/models.py:408
 msgid "side"
@@ -341,11 +341,11 @@ msgstr ""
 
 #: draw/models.py:341
 msgid "Won"
-msgstr ""
+msgstr "فاز"
 
 #: draw/models.py:343
 msgid "Lost"
-msgstr ""
+msgstr "خسر"
 
 #: draw/models.py:412
 msgid "team side allocation"
@@ -368,16 +368,8 @@ msgstr ""
 msgid "Team %(num)d"
 msgstr ""
 
-#: draw/tables.py:80 draw/views.py:286
-msgid "Room rank"
-msgstr ""
-
 #: draw/tables.py:82
 msgid "Room rank of this debate"
-msgstr ""
-
-#: draw/tables.py:88 draw/views.py:289
-msgid "Bracket"
 msgstr ""
 
 #: draw/tables.py:90
@@ -420,15 +412,11 @@ msgstr ""
 msgid "Was imbalanced and still imbalanced"
 msgstr ""
 
-#: draw/tables.py:251 draw/tables.py:291 draw/tables.py:368
-msgid "Cost"
-msgstr ""
-
-#: draw/tables.py:264 draw/tables.py:359
+#: draw/tables.py:264
 msgid "Pts"
 msgstr ""
 
-#: draw/tables.py:264 draw/tables.py:359
+#: draw/tables.py:264 draw/tables.py:362
 msgid "Points"
 msgstr ""
 
@@ -436,53 +424,53 @@ msgstr ""
 msgid "Side"
 msgstr ""
 
-#: draw/tables.py:273
+#: draw/tables.py:274
 msgid "Position this round"
 msgstr ""
 
-#: draw/tables.py:277
+#: draw/tables.py:278
 msgid "Before"
-msgstr ""
+msgstr "قبل"
 
-#: draw/tables.py:277
+#: draw/tables.py:279
 msgid "Side history before this round"
 msgstr ""
 
-#: draw/tables.py:281
+#: draw/tables.py:283
 msgid "After"
 msgstr ""
 
-#: draw/tables.py:281
+#: draw/tables.py:284
 msgid "Side history after this round"
 msgstr ""
 
-#: draw/tables.py:291
+#: draw/tables.py:294 draw/tables.py:371
+msgid "Cost"
+msgstr ""
+
+#: draw/tables.py:294
 msgid "Position cost"
 msgstr ""
 
-#: draw/tables.py:304
+#: draw/tables.py:307
 msgid "Status"
 msgstr ""
 
-#: draw/tables.py:341
-msgid "Room"
-msgstr ""
-
-#: draw/tables.py:343
+#: draw/tables.py:346
 msgid ""
 "Teams with this many points are permitted in this debate<br>\n"
 "(bracket in bold)"
 msgstr ""
 
-#: draw/tables.py:363
+#: draw/tables.py:366
 msgid "side history before this round"
 msgstr ""
 
-#: draw/tables.py:363
+#: draw/tables.py:366
 msgid "Sides"
 msgstr ""
 
-#: draw/tables.py:368
+#: draw/tables.py:371
 msgid "position cost"
 msgstr ""
 

@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.db.models import Q
 from django.forms.models import modelformset_factory
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy, ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -96,12 +96,12 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         if not self.get_tournament().pref('enable_motions') and count == 1:
             messages.success(self.request, _("The motion has been saved."))
         elif count > 0:
-            messages.success(self.request, ungettext("%(count)d motion has been saved.",
+            messages.success(self.request, ngettext("%(count)d motion has been saved.",
                 "%(count)d motions have been saved.", count) % {'count': count})
 
         count = len(formset.deleted_objects)
         if count > 0:
-            messages.success(self.request, ungettext("%(count)d motion has been deleted.",
+            messages.success(self.request, ngettext("%(count)d motion has been deleted.",
                 "%(count)d motions have been deleted.", count) % {'count': count})
 
         return redirect_round('draw-display', round)
@@ -173,7 +173,7 @@ class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournament
 class BaseMotionStatisticsView(TournamentMixin, TemplateView):
 
     template_name = 'motion_statistics.html'
-    page_title = ugettext_lazy("Motion Statistics")
+    page_title = gettext_lazy("Motion Statistics")
     page_emoji = '💭'
 
     def get_context_data(self, **kwargs):

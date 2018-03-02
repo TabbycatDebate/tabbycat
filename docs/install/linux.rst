@@ -113,7 +113,9 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
 2. Get the source code
 ======================
 
-Download and extract:
+Choose either of these two methods:
+
+**Method 1:** Download and extract:
 
 .. parsed-literal::
 
@@ -121,7 +123,7 @@ Download and extract:
     $ tar xf |vrelease|.tar.gz
     $ cd tabbycat-|release|
 
-If you've used Git before, you might prefer to clone `our GitHub repository`_ instead:
+**Method 2 (advanced users):** If you've used Git before, you might prefer to clone `our GitHub repository`_ instead:
 
 .. parsed-literal::
 
@@ -135,7 +137,7 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 
 .. hint:: You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
-1. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
+a. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
 
   ::
 
@@ -143,7 +145,7 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 
   .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
 
-2. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
+b. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
     $ sudo -u postgres createdb mydatabasename --owner myusername
 
@@ -154,29 +156,29 @@ If you've used Git before, you might prefer to clone `our GitHub repository`_ in
 ===================
 Almost there!
 
-1. Navigate to your Tabbycat directory::
+a. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat/directory
 
 .. _local-settings-linux:
 
-2. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
+b. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like:
 
   .. code:: bash
 
     $ python3 -m venv venv
 
-3. Run the ``activate`` script. This puts you "into" the virtual environment::
+c. Run the ``activate`` script. This puts you "into" the virtual environment::
 
     $ source venv/bin/activate
 
-4. Install Tabbycat's requirements into your virtual environment::
+d. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
     $ pip install -r requirements_common.txt
     $ npm install
 
-5. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+e. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -191,7 +193,7 @@ Almost there!
          }
      }
 
-6. Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::
+f. Navigate to the **tabbycat** sub-directory, initialize the database, compile the assets, and create a user account for yourself::
 
     $ cd tabbycat
     $ dj migrate
@@ -199,7 +201,7 @@ Almost there!
     $ dj collectstatic
     $ dj createsuperuser
 
-7. Start Tabbycat!
+g. Start Tabbycat!
 
   ::
 
@@ -209,7 +211,7 @@ Almost there!
 
     serving on http://127.0.0.1:8000
 
-8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
+h. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000.) It should look something like the screenshot below. If it does, great! You've successfully installed Tabbycat.
 
   .. image:: images/tabbycat-bare-linux.png
       :alt: Bare Tabbycat installation

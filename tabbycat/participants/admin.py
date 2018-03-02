@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.utils.translation import ungettext
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy as _
 
 from draw.models import TeamSideAllocation
 from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
@@ -124,7 +124,7 @@ class TeamAdmin(admin.ModelAdmin):
 
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
-        message = ungettext(
+        message = ngettext(
             "%(count)d team had its URL key removed.",
             "%(count)d teams had their URL keys removed.",
             updated
@@ -191,7 +191,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
 
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
-        message = ungettext(
+        message = ngettext(
             "%(count)d adjudicator had their URL key removed.",
             "%(count)d adjudicators had their URL keys removed.",
             updated

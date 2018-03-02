@@ -10,8 +10,8 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 
     template_name = 'draw_display_by.html'
-    sort_key = 'Venue'
+    sort_key = 'venue'
 
     def get_page_title(self):
         return _("Draw for %(round)s") % {'round': self.get_round().name}
@@ -283,10 +283,10 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiiesMixin, Vue
         r = self.get_round()
 
         if r.is_break_round:
-            sort_key = _("Room rank")
+            sort_key = "room-rank"
             sort_order = 'asc'
         else:
-            sort_key = _("Bracket")
+            sort_key = "bracket"
             sort_order = 'desc'
 
         table = AdminDrawTableBuilder(view=self, sort_key=sort_key,
@@ -679,7 +679,7 @@ class ApplyDebateScheduleView(DrawStatusEdit):
 
 class BaseSideAllocationsView(TournamentMixin, VueTableTemplateView):
 
-    page_title = ugettext_lazy("Side Pre-Allocations")
+    page_title = gettext_lazy("Side Pre-Allocations")
 
     def get_table(self):
         tournament = self.get_tournament()
@@ -817,7 +817,7 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
 
 class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableView):
     public_page_preference = 'enable_mass_draws'
-    page_title = ugettext_lazy("All Draws for All Teams")
+    page_title = gettext_lazy("All Draws for All Teams")
 
     def get_draw(self):
         draw = Debate.objects.all().select_related('round', 'round__tournament',

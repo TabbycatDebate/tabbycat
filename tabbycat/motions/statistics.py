@@ -1,8 +1,8 @@
 import itertools
 
 from django.db.models import Avg, Count, Q
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from motions.models import Motion
 from tournaments.models import Round
@@ -87,12 +87,12 @@ class MotionTwoTeamStatsCalculator:
 
     CRITICAL_VALUES = [
         # (maximum value, level of significance as percentage string, evidence strength)
-        (10.826, '0.1%', ugettext_lazy("extremely strong evidence")),
-        (6.635,    '1%', ugettext_lazy("strong evidence")),
-        (5.412,    '2%', ugettext_lazy("moderate evidence")),
-        (3.841,    '5%', ugettext_lazy("weak evidence")),
-        (2.706,   '10%', ugettext_lazy("very weak evidence")),
-        (0.455,   '50%', ugettext_lazy("extremely weak evidence")),
+        (10.826, '0.1%', gettext_lazy("extremely strong evidence")),
+        (6.635,    '1%', gettext_lazy("strong evidence")),
+        (5.412,    '2%', gettext_lazy("moderate evidence")),
+        (3.841,    '5%', gettext_lazy("weak evidence")),
+        (2.706,   '10%', gettext_lazy("very weak evidence")),
+        (0.455,   '50%', gettext_lazy("extremely weak evidence")),
     ]
 
     def _annotate_χsquared(self, affs, negs):  # noqa: N802

@@ -5,7 +5,7 @@ from itertools import zip_longest
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
@@ -322,7 +322,8 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
         min_score = self.tournament.pref('adj_min_score')
         max_score = self.tournament.pref('adj_max_score')
         if test_score < min_score or max_score < test_score:
-            self.add_error('test_score', _("This value must be between %d and %d.") % (min_score, max_score))
+            self.add_error('test_score', _("This value must be between %(min)d and %(max)d.") %
+                {'min': min_score, 'max': max_score})
         return test_score
 
     def save(self, commit=True):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -287,7 +287,6 @@ msgid "emoji"
 msgstr ""
 
 #: participants/models.py:215 participants/models.py:368
-#: participants/views.py:307
 msgid "team"
 msgstr ""
 
@@ -709,25 +708,13 @@ msgstr ""
 msgid "Adjudicators"
 msgstr ""
 
-#: participants/views.py:57
-msgid "Name"
-msgstr ""
-
 #: participants/views.py:62
 msgid "Speakers"
-msgstr ""
-
-#: participants/views.py:62
-msgid "Team"
 msgstr ""
 
 #: participants/views.py:103 participants/views.py:176
 #, python-format
 msgid "Record for %(name)s"
-msgstr ""
-
-#: participants/views.py:152 participants/views.py:219
-msgid "Round"
 msgstr ""
 
 #: participants/views.py:219

@@ -84,7 +84,8 @@ class AustralsPreferences(PreferencesPreset):
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
     # Debate Rules
     debate_rules__teams_in_debate              = 'two'
-    debate_rules__ballots_per_debate           = 'per-adj'
+    debate_rules__ballots_per_debate_prelim    = 'per-adj'
+    debate_rules__ballots_per_debate_elim      = 'per-adj'
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
     debate_rules__motion_vetoes_enabled        = True
@@ -111,7 +112,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     # Debate Rules
     debate_rules__substantive_speakers         = 2
     debate_rules__teams_in_debate              = 'bp'
-    debate_rules__ballots_per_debate           = 'per-debate'
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-debate'
     debate_rules__side_names                   = 'gov-opp'
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = False
@@ -146,7 +148,8 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
     debate_rules__substantive_speakers         = 2
     debate_rules__side_names                   = 'gov-opp'
     debate_rules__motion_vetoes_enabled        = False
-    debate_rules__ballots_per_debate           = 'per-debate'
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-debate'
     data_entry__enable_motions                 = False
     # Draws
     draw_rules__avoid_same_institution         = False # TBC
@@ -171,6 +174,8 @@ class AustralianEastersPreferences(AustralsPreferences):
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = True
     data_entry__enable_motions                 = True
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-adj'
     # Standings Rules
     standings__rank_speakers_by                = 'average' # constitutional
 

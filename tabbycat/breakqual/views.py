@@ -3,7 +3,7 @@ import logging
 
 from django.contrib import messages
 from django.http import JsonResponse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic import FormView, TemplateView, View
 
 from actionlog.mixins import LogActionMixin
@@ -57,7 +57,8 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
         self.standings = self.get_standings()
         table = TabbycatTableBuilder(view=self, title=self.object.name, sort_key='Rk')
         table.add_ranking_columns(self.standings)
-        table.add_column(_("Break"), [tsi.break_rank for tsi in self.standings])
+        table.add_column({'title': _("Break"), 'key': 'break'},
+                         [tsi.break_rank for tsi in self.standings])
         table.add_team_columns([tsi.team for tsi in self.standings])
         table.add_metric_columns(self.standings)
         return table
@@ -196,7 +197,7 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🎉'
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key=_('name'))
+        table = TabbycatTableBuilder(view=self, sort_key='name')
         table.add_adjudicator_columns(self.get_tournament().adjudicator_set.filter(breaking=True))
         return table
 
@@ -221,14 +222,14 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
 
     def get_table(self):
         t = self.get_tournament()
-        table = TabbycatTableBuilder(view=self, sort_key=_('team'))
+        table = TabbycatTableBuilder(view=self, sort_key='team')
         teams = t.team_set.all().select_related(
             'institution').prefetch_related('break_categories', 'speaker_set')
         table.add_team_columns(teams)
         break_categories = t.breakcategory_set.all()
 
         for bc in break_categories:
-            table.add_column(bc.name, [{
+            table.add_column({'title': bc.name, 'key': bc.name}, [{
                 'component': 'check-cell',
                 'checked': True if bc in team.break_categories.all() else False,
                 'id': team.id,

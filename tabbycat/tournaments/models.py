@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
 
@@ -444,3 +444,10 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
+
+    @property
+    def ballots_per_debate(self):
+        if self.is_break_round:
+            return self.tournament.pref("ballots_per_debate_elim")
+        else:
+            return self.tournament.pref("ballots_per_debate_prelim")

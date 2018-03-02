@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: privateurls/admin.py:18 privateurls/views.py:81 privateurls/views.py:214
+#: privateurls/admin.py:18
 msgid "Team"
 msgstr ""
 
@@ -250,10 +250,6 @@ msgstr ""
 
 #: privateurls/views.py:97
 msgid "Adjudicators"
-msgstr ""
-
-#: privateurls/views.py:97 privateurls/views.py:167
-msgid "Name"
 msgstr ""
 
 #: privateurls/views.py:100 privateurls/views.py:186

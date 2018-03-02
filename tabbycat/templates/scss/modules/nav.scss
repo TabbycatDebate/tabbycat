@@ -150,7 +150,8 @@
 // Applies just to phones
 @include media-breakpoint-up(xs) {
 
-  .admin-sidebar .list-group-item a {
+  .admin-sidebar .list-group-item a,
+  .admin-sidebar .list-group-item .tournament-areas-title {
     font-size: 12px;
     padding: 0.75rem 0.4rem;
   }

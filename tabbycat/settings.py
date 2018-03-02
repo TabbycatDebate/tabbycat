@@ -1,7 +1,7 @@
 import os
 
 from django.contrib.messages import constants as messages
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -101,14 +101,13 @@ INSTALLED_APPS = (
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_summernote',  # Keep above our apps; as we unregister an admin model
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'dynamic_preferences.users.apps.UserPreferencesConfig',
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
     'formtools',
-    'django_summernote',
     'statici18n' # Compile js translations as static file; saving requests
 )
 

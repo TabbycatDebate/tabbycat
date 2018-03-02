@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: 2018-02-07 23:23-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -226,97 +226,95 @@ msgstr "Changer la langue"
 msgid "Use this language"
 msgstr "Utiliser cette langue"
 
-#: templates/nav/admin_nav.html:23
-#, python-format
-msgid "%(t)s (admin)"
-msgstr "%(t)s (admin)"
+#: templates/nav/admin_nav.html:32
+msgid "Admin Area"
+msgstr ""
 
-#: templates/nav/admin_nav.html:26
-#, python-format
-msgid "%(t)s (assistant)"
-msgstr "%(t)s (assistants)"
+#: templates/nav/admin_nav.html:35
+msgid "Assistant Area"
+msgstr ""
 
-#: templates/nav/admin_nav.html:45 templates/nav/admin_nav.html:113
-#: templates/nav/admin_nav.html:144 templates/nav/admin_nav.html:194
+#: templates/nav/admin_nav.html:48 templates/nav/admin_nav.html:116
+#: templates/nav/admin_nav.html:147 templates/nav/admin_nav.html:197
 msgid "Overview"
 msgstr "Aperçu"
 
-#: templates/nav/admin_nav.html:53
+#: templates/nav/admin_nav.html:56
 msgid "Setup"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:60
+#: templates/nav/admin_nav.html:63
 msgid "Configuration"
 msgstr "Configuration"
 
-#: templates/nav/admin_nav.html:64
+#: templates/nav/admin_nav.html:67
 msgid "Import Data"
 msgstr "Importation des données"
 
-#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:153
+#: templates/nav/admin_nav.html:71 templates/nav/public_nav.html:153
 msgid "Participants"
 msgstr "Participants"
 
-#: templates/nav/admin_nav.html:73
+#: templates/nav/admin_nav.html:76
 msgid "Private URLs"
 msgstr "URLs privées"
 
-#: templates/nav/admin_nav.html:76
+#: templates/nav/admin_nav.html:79
 msgid "Edit Database"
 msgstr "Modification de la base de données"
 
-#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:138
+#: templates/nav/admin_nav.html:89 templates/nav/public_nav.html:138
 msgid "Sides"
 msgstr "Côtés"
 
-#: templates/nav/admin_nav.html:98 templates/nav/admin_nav.html:151
+#: templates/nav/admin_nav.html:101 templates/nav/admin_nav.html:154
 #: templates/nav/public_nav.html:128
 msgid "Divisions"
 msgstr "Divisions"
 
-#: templates/nav/admin_nav.html:107
+#: templates/nav/admin_nav.html:110
 msgid "Feedback"
 msgstr "Commentaires"
 
-#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:143
+#: templates/nav/admin_nav.html:140 templates/nav/public_nav.html:143
 msgid "Standings"
 msgstr "Classement"
 
-#: templates/nav/admin_nav.html:147
+#: templates/nav/admin_nav.html:150
 msgid "Teams"
 msgstr "Équipes"
 
-#: templates/nav/admin_nav.html:155
+#: templates/nav/admin_nav.html:158
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: templates/nav/admin_nav.html:160
+#: templates/nav/admin_nav.html:163
 msgid "Replies"
 msgstr "Discours de résponse"
 
-#: templates/nav/admin_nav.html:165
+#: templates/nav/admin_nav.html:168
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr "Orateurs %(category_name)s"
 
-#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:133
+#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:133
 msgid "Motions"
 msgstr "Motions"
 
-#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:148
+#: templates/nav/admin_nav.html:177 templates/nav/public_nav.html:148
 msgid "Diversity"
 msgstr "Aperçu de la diversité"
 
-#: templates/nav/admin_nav.html:187
+#: templates/nav/admin_nav.html:190
 msgid "Breaks"
 msgstr "Qualifications"
 
-#: templates/nav/admin_nav.html:198
+#: templates/nav/admin_nav.html:201
 #, python-format
 msgid "%(category_name)s"
 msgstr "%(category_name)s"
 
-#: templates/nav/admin_nav.html:217 templates/nav/top_nav_base.html:92
+#: templates/nav/admin_nav.html:220 templates/nav/top_nav_base.html:92
 msgid "Log Out"
 msgstr "Deconnexion"
 
@@ -661,6 +659,12 @@ msgstr ""
 "pas accéder les zones confidentielles, par examples les sections de la "
 "qualification et pour voir les commentaires. Les membres de l'équipe "
 "d'adjudications reçoivent en général ce status s'ils savent ce qu'ils font."
+
+#~ msgid "%(t)s (admin)"
+#~ msgstr "%(t)s (admin)"
+
+#~ msgid "%(t)s (assistant)"
+#~ msgstr "%(t)s (assistants)"
 
 #~ msgid "%(tournament)s runs on"
 #~ msgstr "%(tournament)s fonctionne sur"

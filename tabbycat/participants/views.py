@@ -7,8 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import ugettext_lazy, ungettext
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext as _
 from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
@@ -47,19 +47,19 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
 
 class BaseParticipantsListView(VueTableTemplateView):
 
-    page_title = ugettext_lazy("Participants")
+    page_title = gettext_lazy("Participants")
     page_emoji = '🚌'
 
     def get_tables(self):
         t = self.get_tournament()
 
         adjudicators = t.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key=_("Name"))
+        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         adjs_table.add_adjudicator_columns(adjudicators)
 
         speakers = Speaker.objects.filter(team__tournament=t).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
-        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key=_("Team"))
+        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="team")
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
@@ -149,7 +149,7 @@ class BaseTeamRecordView(BaseRecordView):
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TeamResultTableBuilder(view=self, title="Results", sort_key=_("Round"))
+        table = TeamResultTableBuilder(view=self, title="Results", sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
@@ -216,7 +216,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key=_("Round"))
+        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
@@ -280,7 +280,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            message = ungettext("Saved speaker category: %(list)s",
+            message = ngettext("Saved speaker category: %(list)s",
                 "Saved speaker categories: %(list)s",
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
@@ -304,7 +304,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
 
     def get_table(self):
         t = self.get_tournament()
-        table = TabbycatTableBuilder(view=self, sort_key=_('team'))
+        table = TabbycatTableBuilder(view=self, sort_key='team')
         speakers = Speaker.objects.filter(team__tournament=t).select_related(
             'team', 'team__institution').prefetch_related('categories')
         table.add_speaker_columns(speakers, categories=False)
@@ -312,7 +312,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
         speaker_categories = self.get_tournament().speakercategory_set.all()
 
         for sc in speaker_categories:
-            table.add_column(sc.name, [{
+            table.add_column({'key': sc.name, 'title': sc.name}, [{
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,

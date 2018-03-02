@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -185,128 +185,114 @@ msgstr "1er"
 msgid "Took %(place)s"
 msgstr ""
 
-#: utils/tables.py:398 utils/tables.py:400
+#: utils/tables.py:400
 msgid "Tournament"
 msgstr "Tournoi"
 
-#: utils/tables.py:407 utils/tables.py:409
+#: utils/tables.py:409
 msgid "Round"
 msgstr "Tour"
 
-#: utils/tables.py:427 utils/tables.py:594
+#: utils/tables.py:427 utils/tables.py:593
 msgid "Name"
 msgstr "Nom"
 
-#: utils/tables.py:432 utils/tables.py:434 utils/tables.py:570
-#: utils/tables.py:572
+#: utils/tables.py:433 utils/tables.py:571
 msgid "Institution"
 msgstr "Institution"
 
-#: utils/tables.py:440
+#: utils/tables.py:439
 msgid "Member of the Adjudication Core"
 msgstr ""
 
-#: utils/tables.py:447
+#: utils/tables.py:446
 msgid "Independent Adjudicator"
 msgstr ""
 
-#: utils/tables.py:455
+#: utils/tables.py:454
 msgid "Always Trainee"
 msgstr ""
 
-#: utils/tables.py:460
-msgid "Adjs"
-msgstr "Juges"
-
-#: utils/tables.py:517
+#: utils/tables.py:516
 msgid "Debate Adjudicators"
 msgstr "Juges du débat"
 
-#: utils/tables.py:536
-msgid "Motion"
-msgstr "Motion"
-
-#: utils/tables.py:539
-msgid "Order"
-msgstr ""
-
-#: utils/tables.py:541
+#: utils/tables.py:540
 msgid "Order as listed"
 msgstr ""
 
-#: utils/tables.py:562
+#: utils/tables.py:550
+msgid "Motion"
+msgstr "Motion"
+
+#: utils/tables.py:561
 msgid "Team"
 msgstr "Équipe"
 
-#: utils/tables.py:566 utils/tables.py:616
+#: utils/tables.py:565 utils/tables.py:615
 msgid "Categories"
 msgstr "Catégories"
 
-#: utils/tables.py:581 utils/tables.py:583 utils/tables.py:657
-#: utils/tables.py:659
+#: utils/tables.py:582 utils/tables.py:658
 msgid "Division"
 msgstr "Division"
 
-#: utils/tables.py:590
+#: utils/tables.py:589
 msgid "Redacted"
 msgstr ""
 
-#: utils/tables.py:614
+#: utils/tables.py:613
 msgid "Category"
 msgstr ""
 
-#: utils/tables.py:641
+#: utils/tables.py:640
 #, python-format
 msgid "This venue %(predicate)s."
 msgstr "Ce lieu %(predicate)s."
 
-#: utils/tables.py:643
+#: utils/tables.py:642
 #, python-format
 msgid "This venue %(predicates)s, and %(last_predicate)s."
 msgstr "Ce lieu %(predicates)s, et %(last_predicate)s."
 
-#: utils/tables.py:672 utils/tables.py:674
+#: utils/tables.py:673
 msgid "Venue"
 msgstr "Lieu"
 
-#: utils/tables.py:680
+#: utils/tables.py:679
 msgid "Date"
 msgstr ""
 
-#: utils/tables.py:680
+#: utils/tables.py:679
 msgid "Time"
 msgstr ""
 
-#: utils/tables.py:684
+#: utils/tables.py:683
 msgid "Bye"
 msgstr ""
 
-#: utils/tables.py:686
+#: utils/tables.py:685
 msgid "Postponed"
 msgstr ""
 
-#: utils/tables.py:688
+#: utils/tables.py:687
 msgid "Forfeit"
 msgstr ""
 
-#: utils/tables.py:709
+#: utils/tables.py:708
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
 msgstr[0] ""
 msgstr[1] ""
 
-#: utils/tables.py:715
+#: utils/tables.py:714
 msgid "Teams are from the same institution"
 msgstr ""
 
-#: utils/tables.py:721
+#: utils/tables.py:720
 msgid "Conflicts/Flags"
 msgstr "Conflits/signalements"
-
-#: utils/tables.py:765 utils/tables.py:775
-msgid "Ballot"
-msgstr "Bulletin"
 
 #: utils/tables.py:769
 msgid "View/Edit Ballot"
@@ -329,7 +315,13 @@ msgstr ""
 msgid "Side"
 msgstr "Côté"
 
-#: utils/tables.py:835
+#: utils/tables.py:838
 #, python-format
 msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
+
+#~ msgid "Adjs"
+#~ msgstr "Juges"
+
+#~ msgid "Ballot"
+#~ msgstr "Bulletin"

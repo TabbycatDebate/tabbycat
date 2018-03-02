@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: 2018-02-06 09:43-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -184,7 +184,7 @@ msgstr ""
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:124 standings/views.py:509
+#: standings/teams.py:124
 msgid "Wins"
 msgstr ""
 
@@ -464,9 +464,8 @@ msgstr "Tab des équipes"
 msgid "Current Team Standings"
 msgstr "Classement actuel des équipes"
 
-#: standings/views.py:509
-msgid "Points"
-msgstr "Points"
+#~ msgid "Points"
+#~ msgstr "Points"
 
 #~ msgid "Motions Balance"
 #~ msgstr "Équilibre des motions"

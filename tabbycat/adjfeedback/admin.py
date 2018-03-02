@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.db.models import Prefetch
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from draw.models import DebateTeam
 
@@ -97,7 +97,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             fb.save()
         final_count = queryset.filter(confirmed=True).count()
 
-        message = ungettext(
+        message = ngettext(
             "1 feedback submission was marked as confirmed. Note that this may "
             "have caused other feedback submissions to be marked as unconfirmed.",
             "%(count)d feedback submissions were marked as confirmed. Note that "
@@ -109,7 +109,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
         difference = original_count - final_count
         if difference > 0:
-            message = ungettext(
+            message = ngettext(
                 "1 feedback submission was not marked as confirmed, probably "
                 "because other feedback submissions that conflict with it were "
                 "also marked as confirmed.",
@@ -122,7 +122,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
 
     def mark_as_unconfirmed(self, request, queryset):
         count = queryset.update(confirmed=False)
-        message = ungettext(
+        message = ngettext(
             "1 feedback submission was marked as unconfirmed.",
             "%(count)d feedback submissions were marked as unconfirmed.",
             count

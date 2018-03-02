@@ -13,7 +13,7 @@ from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
 

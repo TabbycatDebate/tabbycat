@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 19:43-0800\n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -36,7 +36,7 @@ msgstr "فرنسي "
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
-msgstr ""
+msgstr "تحتاج إلى مسح الموضوع أولا "
 
 #: templates/admin/style_guide.html:30
 msgid ""
@@ -91,7 +91,7 @@ msgstr "خلال في الحقول "
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
 #: templates/errors/public_403.html:4 templates/errors/public_403.html:6
 msgid "Permission Denied (403)"
-msgstr ""
+msgstr "تم رفض "
 
 #: templates/errors/assistant_403.html:13
 #, python-format
@@ -134,7 +134,7 @@ msgstr ""
 
 #: templates/footer.html:27
 msgid "Learn more about donating."
-msgstr ""
+msgstr "تعلم المزيد حول النظام"
 
 #: templates/footer.html:31
 #, python-format
@@ -160,7 +160,7 @@ msgstr ""
 
 #: templates/footer.html:50
 msgid "Need ballots?"
-msgstr ""
+msgstr "تحتاج إلى نتائج ؟ "
 
 #: templates/footer.html:52
 msgid ""
@@ -174,7 +174,7 @@ msgstr ""
 
 #: templates/footer.html:77
 msgid "Documentation"
-msgstr ""
+msgstr "البيانات "
 
 #: templates/footer.html:83
 msgid "Support"
@@ -186,7 +186,7 @@ msgstr "فيس بوك"
 
 #: templates/footer.html:95
 msgid "Set Up A Copy"
-msgstr ""
+msgstr "اعداد نسخة "
 
 #: templates/footer.html:109
 msgid "Change Language"
@@ -194,175 +194,173 @@ msgstr "تغيير اللغة "
 
 #: templates/footer.html:127
 msgid "Use this language"
+msgstr "استخدم هذه اللغة "
+
+#: templates/nav/admin_nav.html:32
+msgid "Admin Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:23
-#, python-format
-msgid "%(t)s (admin)"
+#: templates/nav/admin_nav.html:35
+msgid "Assistant Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:26
-#, python-format
-msgid "%(t)s (assistant)"
-msgstr ""
-
-#: templates/nav/admin_nav.html:45 templates/nav/admin_nav.html:113
-#: templates/nav/admin_nav.html:144 templates/nav/admin_nav.html:194
+#: templates/nav/admin_nav.html:48 templates/nav/admin_nav.html:116
+#: templates/nav/admin_nav.html:147 templates/nav/admin_nav.html:197
 msgid "Overview"
-msgstr ""
+msgstr "عرض "
 
-#: templates/nav/admin_nav.html:53
+#: templates/nav/admin_nav.html:56
 msgid "Setup"
 msgstr ""
 
-#: templates/nav/admin_nav.html:60
+#: templates/nav/admin_nav.html:63
 msgid "Configuration"
 msgstr ""
 
-#: templates/nav/admin_nav.html:64
+#: templates/nav/admin_nav.html:67
 msgid "Import Data"
 msgstr ""
 
-#: templates/nav/admin_nav.html:68 templates/nav/public_nav.html:153
+#: templates/nav/admin_nav.html:71 templates/nav/public_nav.html:153
 msgid "Participants"
 msgstr ""
 
-#: templates/nav/admin_nav.html:73
-msgid "Private URLs"
-msgstr ""
-
 #: templates/nav/admin_nav.html:76
+msgid "Private URLs"
+msgstr "رابط خاص "
+
+#: templates/nav/admin_nav.html:79
 msgid "Edit Database"
-msgstr ""
+msgstr "تعديل البيانات "
 
-#: templates/nav/admin_nav.html:86 templates/nav/public_nav.html:138
+#: templates/nav/admin_nav.html:89 templates/nav/public_nav.html:138
 msgid "Sides"
-msgstr ""
+msgstr "الجانب "
 
-#: templates/nav/admin_nav.html:98 templates/nav/admin_nav.html:151
+#: templates/nav/admin_nav.html:101 templates/nav/admin_nav.html:154
 #: templates/nav/public_nav.html:128
 msgid "Divisions"
-msgstr ""
+msgstr "تقاسيم "
 
-#: templates/nav/admin_nav.html:107
+#: templates/nav/admin_nav.html:110
 msgid "Feedback"
-msgstr ""
+msgstr "التغذية الراجعة "
 
-#: templates/nav/admin_nav.html:137 templates/nav/public_nav.html:143
+#: templates/nav/admin_nav.html:140 templates/nav/public_nav.html:143
 msgid "Standings"
-msgstr ""
+msgstr "التقسيمات "
 
-#: templates/nav/admin_nav.html:147
+#: templates/nav/admin_nav.html:150
 msgid "Teams"
-msgstr ""
+msgstr "الفرق"
 
-#: templates/nav/admin_nav.html:155
+#: templates/nav/admin_nav.html:158
 msgid "Speakers"
-msgstr ""
+msgstr "متحدث"
 
-#: templates/nav/admin_nav.html:160
+#: templates/nav/admin_nav.html:163
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:165
+#: templates/nav/admin_nav.html:168
 #, python-format
 msgid "%(category_name)s Speakers"
-msgstr ""
+msgstr "%(category_name)sالمتحدث "
 
-#: templates/nav/admin_nav.html:171 templates/nav/public_nav.html:133
+#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:133
 msgid "Motions"
-msgstr ""
+msgstr "قضايا"
 
-#: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:148
+#: templates/nav/admin_nav.html:177 templates/nav/public_nav.html:148
 msgid "Diversity"
-msgstr ""
+msgstr "تقاسيم "
 
-#: templates/nav/admin_nav.html:187
+#: templates/nav/admin_nav.html:190
 msgid "Breaks"
 msgstr ""
 
-#: templates/nav/admin_nav.html:198
+#: templates/nav/admin_nav.html:201
 #, python-format
 msgid "%(category_name)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:217 templates/nav/top_nav_base.html:92
+#: templates/nav/admin_nav.html:220 templates/nav/top_nav_base.html:92
 msgid "Log Out"
-msgstr ""
+msgstr "الخروج"
 
 #: templates/nav/assistant_nav.html:5
 msgid "Enter Results"
-msgstr ""
+msgstr "ادخال النتيجة "
 
 #: templates/nav/assistant_nav.html:11
 msgid "Check In Ballots"
-msgstr ""
+msgstr "تاكد من النتيجة "
 
 #: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:168
 msgid "Enter Feedback"
-msgstr ""
+msgstr "ادخال التغذية الراجعة "
 
 #: templates/nav/assistant_nav.html:24
 msgid "Display/Print Draw"
-msgstr ""
+msgstr "عرض / طباعة "
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
-msgstr ""
+msgstr "تاب الفريق"
 
 #: templates/nav/public_nav.html:11
 msgid "Speaker Tab"
-msgstr ""
+msgstr "تاب المتناظرين "
 
 #: templates/nav/public_nav.html:19
 #, python-format
 msgid "%(category_name)s Tab"
-msgstr ""
+msgstr "%(category_name)sتاب "
 
 #: templates/nav/public_nav.html:29
 msgid "Replies Tab"
-msgstr ""
+msgstr "تب النتائج "
 
 #: templates/nav/public_nav.html:34
 msgid "Adjudicator Tab"
-msgstr ""
+msgstr "تاب المحكمين "
 
 #: templates/nav/public_nav.html:39
 msgid "Motions Tab"
-msgstr ""
+msgstr "تاب القضايا "
 
 #: templates/nav/public_nav.html:48
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr ""
+msgstr "سحب من %(round_name)s"
 
 #: templates/nav/public_nav.html:58
 msgid "Draws"
-msgstr ""
+msgstr "سحب "
 
 #: templates/nav/public_nav.html:71
 msgid "View All"
-msgstr ""
+msgstr "عرض الكل "
 
 #: templates/nav/public_nav.html:84 templates/nav/round_panel.html:61
 msgid "Results"
-msgstr ""
+msgstr "النتائج"
 
 #: templates/nav/public_nav.html:106
 msgid "Break"
-msgstr ""
+msgstr "تأهل "
 
 #: templates/nav/public_nav.html:118
 msgid "Adjudicators"
-msgstr ""
+msgstr "المحكمين"
 
 #: templates/nav/public_nav.html:158
 msgid "Feedback Progress"
-msgstr ""
+msgstr "التغذية الراجعة "
 
 #: templates/nav/public_nav.html:163
 msgid "Enter Ballot"
-msgstr ""
+msgstr "تصويت"
 
 #: templates/nav/round_panel.html:28
 msgid "Check-Ins"
@@ -370,7 +368,7 @@ msgstr ""
 
 #: templates/nav/round_panel.html:39
 msgid "Draw"
-msgstr ""
+msgstr "قرعة "
 
 #: templates/nav/round_panel.html:51
 msgid "Display"
@@ -393,25 +391,25 @@ msgstr ""
 
 #: templates/nav/top_nav_base.html:52
 msgid "Site Home"
-msgstr ""
+msgstr "الصفحة الرئيسية "
 
 #: templates/nav/top_nav_base.html:96
 msgid "Login"
-msgstr ""
+msgstr "دخول "
 
 #: templates/registration/login.html:4
 msgctxt "page title"
 msgid "Login"
-msgstr ""
+msgstr "دخول "
 
 #: templates/registration/login.html:29
 msgctxt "page title"
 msgid "Log in to Tabbycat"
-msgstr ""
+msgstr "دخول إلى تاب"
 
 #: templates/registration/login.html:37
 msgid "Your username and password didn't match."
-msgstr ""
+msgstr "أسم المستخدم و كلمة المرور لا يتطابقان "
 
 #: templates/registration/login.html:46
 msgid ""
@@ -421,31 +419,31 @@ msgstr ""
 
 #: templates/registration/login.html:49
 msgid "Please log in to see this page."
-msgstr ""
+msgstr "الرجاء الدخول من خلال هذه الصفحة "
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_done.html:5
 msgctxt "page title"
 msgid "Password changed"
-msgstr ""
+msgstr "تغيير كلمة السر"
 
 #: templates/registration/password_change_done.html:11
 msgid "Your password has been changed."
-msgstr ""
+msgstr "تم تغيير كلمة السر "
 
 #: templates/registration/password_change_done.html:14
 msgid "Go to the home page"
-msgstr ""
+msgstr "العودة إلى الصفحة الرئيسية "
 
 #: templates/registration/password_change_form.html:4
 #: templates/registration/password_change_form.html:19
 msgctxt "page title"
 msgid "Password Change"
-msgstr ""
+msgstr "تغيير كلمة السر "
 
 #: templates/registration/password_change_form.html:20
 msgid "Please enter your old password, then enter a new one."
-msgstr ""
+msgstr "الرجاء ادخل كلمة السر القديمة و ثم الجديد "
 
 #: templates/registration/password_change_form.html:25
 #: templates/registration/password_reset_confirm.html:38
@@ -455,7 +453,7 @@ msgstr "تغيير كلمة السر "
 
 #: templates/registration/password_change_form.html:26
 msgid "Cancel and go back to the site home page"
-msgstr ""
+msgstr "ألغاء و العودة إلى الصفحة الرئيسية "
 
 #: templates/registration/password_reset_complete.html:4
 #: templates/registration/password_reset_complete.html:5
@@ -471,29 +469,29 @@ msgstr "لقد تم اعادة تنصيب كلمة السر "
 #. page after a password reset.
 #: templates/registration/password_reset_complete.html:23
 msgid "Go to the login page"
-msgstr ""
+msgstr "الذهاب إلى صفحة الدخول "
 
 #: templates/registration/password_reset_confirm.html:4
 #: templates/registration/password_reset_confirm.html:14
 msgctxt "page title"
 msgid "Password Reset Confirmation"
-msgstr ""
+msgstr "اعادة انشاء كلمة مرور "
 
 #: templates/registration/password_reset_confirm.html:26
 msgid "Please enter a new password (twice):"
-msgstr ""
+msgstr "الرجاء ادخل كلمة السر ( مرتين ) "
 
 #: templates/registration/password_reset_confirm.html:44
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr ""
+msgstr "تم ارسال رابط تغيير كلمة السر . الرجاء نحديث كلمة السر"
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:5
 msgctxt "page title"
 msgid "Password reset e-mail sent"
-msgstr ""
+msgstr "تم ارسال كلمة السر إلى الايميل "
 
 #: templates/registration/password_reset_done.html:16
 msgid ""
@@ -511,12 +509,12 @@ msgstr ""
 #. login page from the password reset page.
 #: templates/registration/password_reset_done.html:26
 msgid "Return to the login page"
-msgstr ""
+msgstr "العودة إلى صفحة الدخول "
 
 #: templates/registration/password_reset_email.html:2
 #, python-format
 msgid "Hi, %(username)s!"
-msgstr ""
+msgstr "%(username)sمرحبا"
 
 #: templates/registration/password_reset_email.html:6
 #, python-format
@@ -527,7 +525,7 @@ msgstr ""
 
 #: templates/registration/password_reset_email.html:10
 msgid "If this was you, follow the link below to reset your password:"
-msgstr ""
+msgstr "ادخل هذا الرابط لتعيين كلمة السر "
 
 #: templates/registration/password_reset_email.html:13
 #, python-format
@@ -541,16 +539,16 @@ msgstr ""
 #: templates/registration/password_reset_form.html:24
 msgctxt "page title"
 msgid "Password Reset"
-msgstr ""
+msgstr "اعادة تعيين كلمة السر "
 
 #: templates/registration/password_reset_form.html:27
 msgid ""
 "Enter your e-mail address below, and we'll e-mail you a password reset link."
-msgstr ""
+msgstr "اكتب ايميلك ليتم ارسال رابط تغيير كلمة السر "
 
 #: templates/registration/password_reset_form.html:34
 msgid "Please enter a valid e-mail address."
-msgstr ""
+msgstr "الرجاء ادخل الايميل "
 
 #: templates/registration/password_reset_form.html:39
 msgid "E-mail address"
@@ -568,16 +566,16 @@ msgstr "العودة إلى صفحة الدخول "
 #: templates/registration/password_reset_subject.txt:2
 #, python-format
 msgid "Password reset on Tabbycat site at %(domain)s"
-msgstr ""
+msgstr "تم تغييير كلمة السر ل،%(domain)s"
 
 #: urls.py:98
 #, python-format
 msgid "Later, %(username)s — you were logged out!"
-msgstr ""
+msgstr "وداعاً %(username)s—  قمت بتسجيل الخروح "
 
 #: urls.py:101
 msgid "Later! You were logged out!"
-msgstr ""
+msgstr "ودعاً تم تسجيل الخروج "
 
 #: urls.py:108
 #, python-format
