@@ -16,7 +16,7 @@ django-statici18n==1.7.0                # Compile translations files as static f
 django-summernote==0.8.8.6              # WYSIWYG editor
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
-raven==6.5.0                            # Client for Sentry error tracking
+raven==6.6.0                            # Client for Sentry error tracking
 selenium==3.9.0                         # Functional testing (in here for CI tests)
 
 # Database
