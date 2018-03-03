@@ -4,7 +4,7 @@
 -r requirements_common.txt
 
 # Base Heroku Requirements
-dj-database-url==0.4.2                  # From the heroku toolbelt
+dj-database-url==0.5.0                  # From the heroku toolbelt
 
 # Redis
 django-redis==4.8.0                     # Adds redis as caching backend
