@@ -7,7 +7,7 @@
 dj-database-url==0.5.0                  # From the heroku toolbelt
 
 # Redis
-django-redis==4.8.0                     # Adds redis as caching backend
+django-redis==4.9.0                     # Adds redis as caching backend
 asgi_redis==1.4.3                       # Adds redis as a channel layer
 
 # Misc
