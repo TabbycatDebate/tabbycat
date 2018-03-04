@@ -3,7 +3,7 @@ import logging
 from django.contrib import messages
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 from django.views.generic import TemplateView
 
 from formtools.wizard.views import SessionWizardView
@@ -68,10 +68,13 @@ class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, 
             form.save_as_new = True
         return form
 
+    def get_message(self, count):
+        raise NotImplementedError
+
     def done(self, form_list, form_dict, **kwargs):
         self.instances = form_dict[self.DETAILS_STEP].save()
-        messages.success(self.request, _("Added %(count)d %(model_plural)s.") % {
-                'count': len(self.instances), 'model_plural': self.model._meta.verbose_name_plural})
+        count = len(self.instances)
+        messages.success(self.request, self.get_message(count) % {'count': count})
         self.log_action()
         return HttpResponseRedirect(self.get_redirect_url())
 
@@ -86,6 +89,9 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['institutions_raw']
+
+    def get_message(self, count):
+        return ngettext("Added %(count)d institution.", "Added %(count)d institutions.", count)
 
 
 class ImportVenuesWizardView(BaseImportWizardView):
@@ -104,6 +110,9 @@ class ImportVenuesWizardView(BaseImportWizardView):
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['venues_raw']
+
+    def get_message(self, count):
+        return ngettext("Added %(count)d venue.", "Added %(count)d venues.", count)
 
 
 class BaseImportByInstitutionWizardView(BaseImportWizardView):
@@ -159,6 +168,9 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
         set_emoji(self.instances, self.get_tournament())
         return redirect
 
+    def get_message(self, count):
+        return ngettext("Added %(count)d team.", "Added %(count)d teams.", count)
+
 
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
@@ -182,3 +194,6 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
             'name': _("Adjudicator %(number)d") % {'number': i},
             'test_score': self.get_default_test_score()
         }
+
+    def get_message(self, count):
+        return ngettext("Added %(count)d adjudicator.", "Added %(count)d adjudicators.", count)
