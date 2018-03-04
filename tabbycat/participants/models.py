@@ -106,7 +106,6 @@ class SpeakerCategory(models.Model):
 class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,
         verbose_name=_("name"))
-    barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True,
         verbose_name=_("e-mail address"))
     phone = models.CharField(max_length=40, blank=True,
@@ -115,7 +114,6 @@ class Person(models.Model):
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
 
-    checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True, null=True,
         verbose_name=_("notes"))
 
