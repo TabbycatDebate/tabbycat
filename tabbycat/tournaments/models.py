@@ -125,11 +125,6 @@ class Tournament(models.Model):
     # Convenience querysets
     # --------------------------------------------------------------------------
 
-    @cached_property
-    def teams(self):
-        warn('Tournament.teams is deprecated, use Tournament.team_set instead.', stacklevel=2)
-        return self.team_set
-
     @property
     def relevant_adjudicators(self):
         """Convenience property for retrieving adjudicators relevant to the tournament.
