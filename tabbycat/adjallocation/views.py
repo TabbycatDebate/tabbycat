@@ -86,8 +86,8 @@ class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
 
     template_name = 'edit_adjudicators.html'
-    auto_url = "adjudicators-auto-allocate"
-    save_url = "save-debate-panel"
+    auto_url = "adjallocation-auto-allocate"
+    save_url = "adjallocation-save-debate-panel"
 
     def get_regions_info(self):
         # Need to extract and annotate regions for the allcoation actions key
@@ -107,7 +107,7 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
     def annotate_round_info(self, round_info):
         t = self.get_tournament()
         r = self.get_round()
-        round_info['updateImportanceURL'] = reverse_round('save-debate-importance', r)
+        round_info['updateImportanceURL'] = reverse_round('adjallocation-save-debate-importance', r)
         round_info['scoreMin'] = t.pref('adj_min_score')
         round_info['scoreMax'] = t.pref('adj_max_score')
         round_info['scoreForVote'] = t.pref('adj_min_voting_score')
