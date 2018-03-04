@@ -147,28 +147,24 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
         return formset_factory_kwargs
 
     def subject_choices(self):
-        from participants.models import Adjudicator, Team, Institution
-        from divisions.models import Division
+        from participants.models import Institution
 
         tournament = self.get_tournament()
         options = []
 
-        if tournament.pref('share_adjs'):
-            adjudicators = Adjudicator.objects.filter(tournament=tournament).values_list('id', 'name').order_by('name')
-        else:
-            adjudicators = Adjudicator.objects.values_list('id', 'name').order_by('name')
-        options.extend([(a[0], a[1] + ' (Adjudicator)') for a in adjudicators])
+        adjudicators = tournament.relevant_adjudicators.values('id', 'name')
+        options.extend([(a['id'], _('%s (Adjudicator)') % a['name']) for a in adjudicators])
 
-        teams = Team.objects.filter(tournament=tournament).values_list('id', 'short_name').order_by('short_name')
-        options.extend([(t[0], t[1] + ' (Team)') for t in teams])
+        teams = tournament.team_set.values('id', 'short_name')
+        options.extend([(t['id'], _('%s (Team)') % t['short_name']) for t in teams])
 
-        institutions = Institution.objects.values_list('id', 'name').order_by('name')
-        options.extend([(i[0], i[1] + ' (Institution)') for i in institutions])
+        institutions = Institution.objects.values('id', 'name')
+        options.extend([(i['id'], _('%s (Institution)') % i['name']) for i in institutions])
 
-        divisions = Division.objects.filter(tournament=tournament).values_list('id', 'name').order_by('name')
-        options.extend([(d[0], d[1] + ' (Division)') for d in divisions])
+        divisions = tournament.division_set.values('id', 'name')
+        options.extend([(d['id'], _('%s (Division)') % d['name']) for d in divisions])
 
-        return sorted(options, key=lambda tup: tup[1])
+        return sorted(options, key=lambda x: x[1])
 
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
