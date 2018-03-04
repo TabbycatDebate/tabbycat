@@ -8,6 +8,8 @@ from django.views.generic import TemplateView
 
 from formtools.wizard.views import SessionWizardView
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Team
 from tournaments.mixins import TournamentMixin
@@ -21,13 +23,11 @@ from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
 logger = logging.getLogger(__name__)
 
 
-# TODO: add log actions for all of these?
-
 class ImporterSimpleIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = 'simple_import_index.html'
 
 
-class BaseImportWizardView(AdministratorMixin, TournamentMixin, SessionWizardView):
+class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, SessionWizardView):
     """Common functionality for the import wizard views. In particular, this
     class implements functionality for a "details" step that is initialized
     with data from the previous step. The details step shows a ModelFormSet
@@ -72,6 +72,7 @@ class BaseImportWizardView(AdministratorMixin, TournamentMixin, SessionWizardVie
         self.instances = form_dict[self.DETAILS_STEP].save()
         messages.success(self.request, _("Added %(count)d %(model_plural)s.") % {
                 'count': len(self.instances), 'model_plural': self.model._meta.verbose_name_plural})
+        self.log_action()
         return HttpResponseRedirect(self.get_redirect_url())
 
 
@@ -81,6 +82,7 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
         ('raw', ImportInstitutionsRawForm),
         ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_INSTITUTIONS
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['institutions_raw']
@@ -92,6 +94,7 @@ class ImportVenuesWizardView(BaseImportWizardView):
         ('raw', ImportVenuesRawForm),
         ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0))
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_VENUES
 
     def get_form_kwargs(self, step):
         if step == 'details':
@@ -145,6 +148,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
         ('numbers', NumberForEachInstitutionForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_TEAMS
 
     def get_details_instance_initial(self, i):
         return {'reference': str(i), 'use_institution_prefix': True}
@@ -162,6 +166,7 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
         ('numbers', NumberForEachInstitutionForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
 
     def get_default_test_score(self):
         """Returns the midpoint of the configured allowable score range."""

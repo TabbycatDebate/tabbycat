@@ -120,9 +120,10 @@ class SelectPrepopulated(TextInput):
         self.attrs.update({'data_list': data_list})
 
 
-class VenueConstraintsView(AdministratorMixin, TournamentMixin, ModelFormSetView):
+class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, ModelFormSetView):
     template_name = 'venue_constraints_edit.html'
     formset_model = VenueConstraint
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_EDIT
 
     def get_formset_factory_kwargs(self):
         # Need to built a dynamic choices list for the widget; so override the
