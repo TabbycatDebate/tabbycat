@@ -88,8 +88,9 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
+        queryset = self.get_tournament().relevant_venues.prefetch_related('venuecategory_set')
         formset_factory_kwargs = {
-            'form': venuecategoryform_factory(self.get_tournament()),
+            'form': venuecategoryform_factory(venues_queryset=queryset),
             'extra': 3
         }
         return formset_factory_kwargs
