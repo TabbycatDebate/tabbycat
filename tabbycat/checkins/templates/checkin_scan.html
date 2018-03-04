@@ -1,14 +1,22 @@
 {% extends "base.html" %}
+{% load debate_tags i18n %}
 
 {% block content %}
 
-<h1>SCAN</h1>
+  {% blocktrans trimmed asvar text %}
+    To check in an adjudicator, speaker, or venue, type (or scan) their <strong>identifier</strong>. The form will auto-submit once enough characters have been entered.
+  {% endblocktrans %}
+  {% include "components/item-info.html" with type="info" %}
+
+  <div id="vueMount">
+    <check-in-scan-container></check-in-scan-container>
+  </div>
 
 {% endblock content %}
 
 {% block js %}
-  {{ block.super }}
   <script>
-
+    window.vueData = {}
   </script>
+  {{ block.super }}
 {% endblock js %}

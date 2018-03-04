@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block content %}
+
+  {% for id in identifiers %}
+    <div class="col-3 p-2">
+      <div class="card text-center">
+
+        <div class="card-body px-1">
+          <h5 class="card-title">{{ id.content_type }} </h5>
+          <img class="barcode-placeholder" id="{{ id.identifier }}">
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">{{ id.owner }}</small>
+        </div>
+
+      </div>
+    </div>
+  {% endfor %}
+
+{% endblock content %}
+
+{% block js %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.code128.min.js"></script>
+  <script>
+    $(".barcode-placeholder").each(function() {
+      var code = $(this).attr("id");
+      $(this).JsBarcode(code);
+    });
+  </script>
+{% endblock js %}

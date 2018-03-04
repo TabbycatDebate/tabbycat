@@ -44,6 +44,13 @@ import CheckboxTablesContainer from  '../tables/CheckboxTablesContainer.vue'
 vueComponents['CheckboxTablesContainer'] = CheckboxTablesContainer
 
 //------------------------------------------------------------------------------
+// Check-Ins
+//------------------------------------------------------------------------------
+
+import CheckInScanContainer from '../../checkins/templates/CheckInScanContainer.vue'
+vueComponents['CheckInScanContainer'] = CheckInScanContainer
+
+//------------------------------------------------------------------------------
 // Draw Containers
 //------------------------------------------------------------------------------
 

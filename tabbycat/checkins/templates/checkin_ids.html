@@ -1,36 +1,55 @@
 {% extends "base.html" %}
+{% load debate_tags i18n %}
 
 {% block content %}
 
-  <h1>Identifiers</h1>
+  <div class="card-deck">
 
-  <div class="row p-2">
-    {% for id in identifiers %}
-      <div class="col-3 p-2">
-        <div class="card text-center">
-
-          <div class="card-body px-1">
-            <h5 class="card-title">{{ id.content_type }} </h5>
-            <img class="barcode-placeholder" id="{{ id.identifier }}">
-          </div>
-          <div class="card-footer">
-            <small class="text-muted">{{ id.owner }}</small>
-          </div>
-
-        </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-0">Speakers and Adjudicators</h5>
       </div>
-    {% endfor %}
+      <div class="list-group list-group-flush">
+        <div class="list-group-item">
+          <div class="d-flex justify-content-end">
+            <span class="mr-auto">People with identifiers</span>
+            <strong>{{ peopleWithIDs }}/{{ allPeople }}</strong>
+          </div>
+          {% include "components/progress-bar.html" with value=peopleWithIDs total=allPeople type="info" %}
+        </div>
+        <!-- IF EMPTY -->
+          {% include "components/item-action.html" with text="Generate All Identifiers" type="primary" %}
+        <!-- IF GAPS -->
+          {% include "components/item-action.html" with text="Generate Missing Identifiers" type="primary" %}
+
+        {% include "components/item-action.html" with text="View Barcodes" type="primary" %}
+        {% include "components/item-action.html" with text="View QR codes" type="primary" %}
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-0">Venues</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item">
+          <div class="d-flex justify-content-end">
+            <span class="mr-auto">Venues with identifiers</span>
+            <strong>{{ venuesWithIDs }}/{{ allVenues }}</strong>
+          </div>
+          {% include "components/progress-bar.html" with value=venuesWithIDs total=allVenues type="info" %}
+        </div>
+        <!-- IF EMPTY -->
+          {% include "components/item-action.html" with text="Generate All Identifiers" type="primary" %}
+        <!-- IF GAPS -->
+          {% include "components/item-action.html" with text="Generate Missing Identifiers" type="primary" %}
+
+        {% include "components/item-action.html" with text="View Barcodes" type="primary" %}
+        {% include "components/item-action.html" with text="View QR codes" type="primary" %}
+      </div>
+    </div>
+
   </div>
 
 {% endblock content %}
-
-{% block js %}
-  {{ block.super }}
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.code128.min.js"></script>
-  <script>
-    $(".barcode-placeholder").each(function() {
-      var code = $(this).attr("id");
-      $(this).JsBarcode(code);
-    });
-  </script>
-{% endblock js %}
