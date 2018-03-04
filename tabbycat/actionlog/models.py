@@ -61,6 +61,9 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_OPTIONS_EDIT             = 'op.edit'
     ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT = 'se.edit'
     ACTION_TYPE_SPEAKER_CATEGORIES_EDIT  = 'se.ca.edit'
+    ACTION_TYPE_CHECKIN_SPEAK_GENERATE   = 'ch.sp.gene'
+    ACTION_TYPE_CHECKIN_ADJ_GENERATE     = 'ch.aj.gene'
+    ACTION_TYPE_CHECKIN_VENUES_GENERATE  = 'ch.ve.gene'
 
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD          , _("Discarded ballot set")),
@@ -105,6 +108,9 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_OPTIONS_EDIT            , _("Edited tournament options")),
         (ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT, _("Edited speaker category eligibility")),
         (ACTION_TYPE_SPEAKER_CATEGORIES_EDIT , _("Edited speaker categories")),
+        (ACTION_TYPE_CHECKIN_SPEAK_GENERATE  , _("Generated check in identifiers for speakers")),
+        (ACTION_TYPE_CHECKIN_ADJ_GENERATE    , _("Generated check in identifiers for adjudicators")),
+        (ACTION_TYPE_CHECKIN_VENUES_GENERATE , _("Generated check in identifiers for venues")),
     )
 
     type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES,

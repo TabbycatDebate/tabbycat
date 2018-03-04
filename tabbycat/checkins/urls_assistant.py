@@ -12,4 +12,7 @@ urlpatterns = [
     path('identifiers/',
         views.AssistantCheckInIdentifiersView.as_view(),
         name='assistant-checkin-identifiers'),
+    path('identifiers/print/<kind>/',
+        views.AssistantCheckInPrintablesView.as_view(),
+        name='assistant-checkin-print'),
 ]

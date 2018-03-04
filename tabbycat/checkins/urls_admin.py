@@ -12,4 +12,10 @@ urlpatterns = [
     path('identifiers/',
         views.AdminCheckInIdentifiersView.as_view(),
         name='admin-checkin-identifiers'),
+    path('identifiers/generate/<kind>/',
+        views.AdminCheckInGenerateView.as_view(),
+        name='admin-checkin-generate'),
+    path('identifiers/print/<kind>/',
+        views.AdminCheckInPrintablesView.as_view(),
+        name='admin-checkin-print'),
 ]

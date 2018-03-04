@@ -1,7 +1,18 @@
+import random
+from string import digits
+
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+
+def generate_identifier():
+    new_id = ''.join([random.choice(digits) for n in range(5)])
+    if Identifier.objects.filter(identifier=new_id).count() == 0:
+        return new_id
+    else:
+        return generate_identifier()
 
 
 class Identifier(models.Model):
@@ -10,10 +21,10 @@ class Identifier(models.Model):
 
     instance_attr = None
 
-    validate_alphanumeric = RegexValidator(r'^[0-9a-zA-Z]{6}$',
+    validate_alphanumeric = RegexValidator(r'^[0-9]{5}$',
         message=_("The identifier must be exactly 6 alphanumeric characters."))
-    identifier = models.CharField(unique=True, max_length=6,
-        validators=[validate_alphanumeric],
+    identifier = models.CharField(unique=True, max_length=5,
+        validators=[validate_alphanumeric], default=generate_identifier,
         verbose_name=_("identifier"))
 
     @property

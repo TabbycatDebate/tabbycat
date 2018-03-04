@@ -3,52 +3,57 @@
 
 {% block content %}
 
-  <div class="card-deck">
+  <div class="row">
 
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title mb-0">Speakers and Adjudicators</h5>
-      </div>
-      <div class="list-group list-group-flush">
-        <div class="list-group-item">
-          <div class="d-flex justify-content-end">
-            <span class="mr-auto">People with identifiers</span>
-            <strong>{{ peopleWithIDs }}/{{ allPeople }}</strong>
+    {% for check_key, check_info in check_in_info.items %}
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-0">{{ check_info.title }}</h5>
           </div>
-          {% include "components/progress-bar.html" with value=peopleWithIDs total=allPeople type="info" %}
-        </div>
-        <!-- IF EMPTY -->
-          {% include "components/item-action.html" with text="Generate All Identifiers" type="primary" %}
-        <!-- IF GAPS -->
-          {% include "components/item-action.html" with text="Generate Missing Identifiers" type="primary" %}
+          <div class="list-group list-group-flush">
 
-        {% include "components/item-action.html" with text="View Barcodes" type="primary" %}
-        {% include "components/item-action.html" with text="View QR codes" type="primary" %}
-      </div>
-    </div>
+            <div class="list-group-item">
+              <div class="d-flex justify-content-end">
+                <span class="mr-auto">{% trans "With barcodes" %}</span>
+                <strong>{{ check_info.in }}/{{ check_info.total }}</strong>
+              </div>
+              {% include "components/progress-bar.html" with value=check_info.in total=check_info.total type="info" %}
+            </div>
 
+            {% if check_info.in > 0 %}
+              {% if user_role == "admin" %}
+                {% tournamenturl "admin-checkin-print" kind=check_key as url %}
+              {% else %}
+                {% tournamenturl "assistant-checkin-print" kind=check_key as url %}
+              {% endif %}
+              {% trans "View barcodes" as text %}
+              {% include "components/item-action.html" with type="primary" %}
+            {% endif %}
 
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title mb-0">Venues</h5>
-      </div>
-      <div class="list-group list-group-flush">
-        <div class="list-group-item">
-          <div class="d-flex justify-content-end">
-            <span class="mr-auto">Venues with identifiers</span>
-            <strong>{{ venuesWithIDs }}/{{ allVenues }}</strong>
+            {% if check_info.in != check_info.total and user_role == "admin" %}
+              {% if check_info.in > 0 %}
+                {% trans "Generate missing barcodes" as text %}
+              {% else %}
+                {% trans "Generate all barcodes" as text %}
+              {% endif %}
+              <div class="list-item-group">
+                <form action={% tournamenturl "admin-checkin-generate" kind=check_key %} method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary btn-block">{{ text }}</button>
+                </form>
+              </div>
+            {% endif %}
+
+            {% if user_role == "assistant" and check_info.in == 0 %}
+              {% trans "There are no barcodes available to view. An admin will need to generate them." as text %}
+              {% include "components/item-info.html" with type="info" %}
+            {% endif %}
+
           </div>
-          {% include "components/progress-bar.html" with value=venuesWithIDs total=allVenues type="info" %}
         </div>
-        <!-- IF EMPTY -->
-          {% include "components/item-action.html" with text="Generate All Identifiers" type="primary" %}
-        <!-- IF GAPS -->
-          {% include "components/item-action.html" with text="Generate Missing Identifiers" type="primary" %}
-
-        {% include "components/item-action.html" with text="View Barcodes" type="primary" %}
-        {% include "components/item-action.html" with text="View QR codes" type="primary" %}
       </div>
-    </div>
+    {% endfor %}
 
   </div>
 
