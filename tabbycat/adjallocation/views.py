@@ -1,12 +1,14 @@
 import json
 import logging
 
+from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
+from django.forms import ModelChoiceField
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
 from django.utils.functional import cached_property
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -15,14 +17,15 @@ from draw.models import Debate
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
-from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin
+from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import BadJsonRequestError, JsonDataResponsePostView
+from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
 from .allocator import allocate_adjudicators
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
-from .models import DebateAdjudicator
+from .models import AdjudicatorConflict, DebateAdjudicator
 from .utils import get_clashes, get_histories
 
 from utils.misc import reverse_round
@@ -201,3 +204,47 @@ class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
                     adj_name_lookup[adj_id], obj.get_type_display(), debate.matchup)
 
         return debate
+
+
+# ==============================================================================
+# Conflict formset views
+# ==============================================================================
+
+class TeamChoiceField(ModelChoiceField):
+
+    def label_from_instance(self, obj):
+        return obj.short_name
+
+
+class AdjudicatorTeamConflictsView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
+
+    template_name = 'edit_conflicts.html'
+    formset_model = AdjudicatorConflict
+    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
+
+    def get_formset_factory_kwargs(self):
+        formset_factory_kwargs = {
+            'fields': ('adjudicator', 'team'),
+            'field_classes': {'team': TeamChoiceField},
+            'extra': 5,
+        }
+        return formset_factory_kwargs
+
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        count = len(self.instances)
+        if count > 0:
+            message = ngettext(
+                "Saved %(count)d adjudicator-team conflict.",
+                "Saved %(count)d adjudicator-team conflicts.",
+                count,
+            ) % {'count': count}
+            messages.success(self.request, message)
+        else:
+            messages.success(self.request, _("No changes were made to adjudicator-team conflicts."))
+        if "add_more" in self.request.POST:
+            return redirect_tournament('adjallocation-conflicts-adj-team', self.get_tournament())
+        return result
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_tournament('importer-simple-index', self.get_tournament())

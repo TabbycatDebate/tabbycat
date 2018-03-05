@@ -17,4 +17,7 @@ urlpatterns = [
             views.SaveDebatePanel.as_view(),
             name='adjallocation-save-debate-panel'),
     ])),
+    path('conflicts/adjudicator-team/',
+        views.AdjudicatorTeamConflictsView.as_view(),
+        name='adjallocation-conflicts-adj-team'),
 ]

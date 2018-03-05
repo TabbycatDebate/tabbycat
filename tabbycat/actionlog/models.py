@@ -66,6 +66,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_SIMPLE_IMPORT_VENUES       = 'si.venu'
     ACTION_TYPE_SIMPLE_IMPORT_TEAMS        = 'si.team'
     ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS = 'si.adju'
+    ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT    = 'ac.at.edit'
 
     ACTION_TYPE_CHOICES = (
         (ACTION_TYPE_BALLOT_DISCARD            , _("Discarded ballot set")),
@@ -115,6 +116,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_SIMPLE_IMPORT_VENUES      , _("Imported venues using the simple importer")),
         (ACTION_TYPE_SIMPLE_IMPORT_TEAMS       , _("Imported teams using the simple importer")),
         (ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS, _("Imported adjudicators using the simple importer")),
+        (ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT   , _("Edited adjudicator-team conflicts")),
     )
 
     type = models.CharField(max_length=10, choices=ACTION_TYPE_CHOICES,

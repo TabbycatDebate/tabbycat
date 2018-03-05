@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.contrib import messages
-from django.forms import Select, TextInput
+from django.forms import Select
 from django.utils.translation import ngettext
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
@@ -12,6 +12,7 @@ from actionlog.models import ActionLogEntry
 from tournaments.mixins import DrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from utils.forms import SelectPrepopulated
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
@@ -111,14 +112,6 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.get_tournament())
-
-
-class SelectPrepopulated(TextInput):
-    template_name = 'select_prepopulated_widget.html'
-
-    def __init__(self, data_list, *args, **kwargs):
-        super(SelectPrepopulated, self).__init__(*args, **kwargs)
-        self.attrs.update({'data_list': data_list})
 
 
 class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, ModelFormSetView):
