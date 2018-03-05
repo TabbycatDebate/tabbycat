@@ -230,6 +230,13 @@ class AdjudicatorTeamConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         }
         return formset_factory_kwargs
 
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.get_tournament().adjudicator_set.order_by('name').all()
+        for form in formset:
+            form.fields['adjudicator'].queryset = all_adjs # Order list by alpha
+        return formset
+
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         count = len(self.instances)
