@@ -45,9 +45,14 @@ export default {
           "refresh this page to ensure the data is up to date."
         )
       } else {
+        var error = "of a server error" // Default error
+        var response = JSON.parse(responseText)
+        if (typeof(response.message) !== 'undefined') {
+          error = response.message // Get error text from response if provided
+        }
         $('#modalAlert').find('.modal-body').text(
-          "Failed to save a change to " + message + " because of a server " +
-          "error. You should now refresh this page to ensure " +
+          "Failed to save a change to " + message + " because " + error +
+          ". You should now refresh this page to ensure " +
           "the data is up to date and then retry the action. If the problem " +
           "persists please get in touch with the developers."
         )
