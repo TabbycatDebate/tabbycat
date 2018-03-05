@@ -3,8 +3,8 @@
   <div class="list-group mt-3">
 
     <div class="list-group-item">
-      <input v-model.string="barcode" autofocus placeholder="identifier"
-             type="number" step="1" class="form-control">
+      <input v-model.string="barcode" autofocus :placeholder="placeholderText"
+             type="number" step="1" class="form-control" :disabled="processing">
     </div>
     <!-- extra items for error messages -->
 
@@ -22,31 +22,45 @@ export default {
   data: function() {
     return {
       barcode: "",
+      processing: false
     }
   },
-  components: { },
-  props: { },
-  computed: { },
+  props: {
+    'scanUrl': String
+  },
+  computed: {
+    placeholderText: function() {
+      if (this.processing === true) {
+        return "processing scan..."
+      } else {
+        return "enter barcode identifier"
+      }
+    }
+  },
   methods: {
     checkInIdentifier: function(barcodeIdentifier) {
-      var payload = {
-        'barcode': barcodeIdentifier
-      }
-      this.ajaxSave(this.checkInURL, barcodeIdentifier, 'test',
-                    this.finishCheckIn(), this.failCheckIn(), null)
+      var message = 'the checkin status of ' + barcodeIdentifier
+      var payload = { 'barcode': barcodeIdentifier }
+      this.ajaxSave(this.scanUrl, payload, message,
+                    this.finishCheckIn, this.failCheckIn, null, false)
       this.barcode = "" // Reset
     },
-    finishCheckIn: function() {
-      console.log('fininished')
+    finishCheckIn: function(dataResponse, payload, returnPayload) {
+      this.processing = false
+      var message = dataResponse.time + ' checked-in identifier ' + dataResponse.id
+      $.fn.showAlert("success", message, 0)
     },
-    failCheckIn: function() {
-      console.log('failed')
+    failCheckIn: function(payload, returnPayload) {
+      this.processing = false
+      var message = 'Failed to check in identifier ' + payload.barcode
+      $.fn.showAlert("danger", message, 0)
     }
   },
   watch: {
     barcode: function(current, old) {
       if (current.length >= 5) {
-        this.checkInIdentifier(current.toInteger())
+        this.processing = true
+        this.checkInIdentifier(current)
       }
     }
   }

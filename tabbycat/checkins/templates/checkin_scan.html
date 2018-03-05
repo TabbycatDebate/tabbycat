@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
+{% block subheader %}{% endblock %}<!-- Overwritten to add messages later -->
 
 {% block content %}
 
   {% blocktrans trimmed asvar text %}
-    To check in an adjudicator, speaker, or venue, type (or scan) their <strong>identifier</strong>. The form will auto-submit once enough characters have been entered.
+    You can use this page to check in an adjudicators, speakers, or venue. There are a number of ways to do so. First, you can manually type their identifiers (the 5-number codes under each barcode) into the box below. Second, if using a barcode scanner you should be able to scan them and have this form log the result.
   {% endblocktrans %}
   {% include "components/item-info.html" with type="info" %}
 
   <div id="vueMount">
-    <check-in-scan-container></check-in-scan-container>
+    <check-in-scan-container :scan-url="scanUrl"></check-in-scan-container>
   </div>
+
+  <div class="mt-3" id="messages-container"></div>
 
 {% endblock content %}
 
 {% block js %}
   <script>
-    window.vueData = {}
+    window.vueData = {
+      'scanUrl': '{{ scan_url }}'
+    }
   </script>
   {{ block.super }}
 {% endblock js %}

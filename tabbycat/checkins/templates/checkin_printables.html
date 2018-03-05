@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
+{% block page-alerts %}
+  {% trans "Each of the images below can be saved individually." as title_text %}
+  {% include "components/item-info.html" with text=title_text %}
+{% endblock %}
+
 {% block content %}
 
   <div class="row">
     {% for id in identifiers %}
-      <div class="col-3 p-2">
+      <div class="col-3 p-3">
         <div class="card text-center">
 
           <div class="card-body px-1">

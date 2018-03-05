@@ -21,7 +21,7 @@
     <a class="dropdown-item {% if ballot_checkins_nav %}active{% endif %}" href="{% tournamenturl 'results-assistant-ballot-checkin' %}">
       {% trans "Scan Ballots" %}
     </a>
-    <a class="dropdown-item {% if checkins_scans %}active{% endif %}" href="{% tournamenturl 'assistant-checkin-scan' %}">
+    <a class="dropdown-item {% if checkins_scans %}active{% endif %}" href="{% tournamenturl 'assistant-checkin-prescan' %}">
       {% trans "Scan People" %}
     </a>
     <a class="dropdown-item {% if checkins_ids %}active{% endif %}" href="{% tournamenturl 'assistant-checkin-identifiers' %}">

@@ -1,7 +1,8 @@
 <script>
 export default {
   methods: {
-    ajaxSave: function (url, payload, message, completeFunction, failFunction, returnPayload) {
+    ajaxSave: function (url, payload, message, completeFunction, failFunction,
+                        returnPayload, showErrorModal = true) {
       var self = this
       var dataPayload = JSON.stringify(payload)
       $.ajax({
@@ -11,7 +12,9 @@ export default {
         contentType: "application/json",
         dataType: "json",
         error: function(hxr, textStatus, errorThrown) {
-          self.ajaxError(message, hxr.responseText, textStatus, errorThrown)
+          if (showErrorModal === true) {
+            self.ajaxError(message, hxr.responseText, textStatus, errorThrown)
+          }
           if (failFunction !== null) {
             failFunction(payload, returnPayload)
           }

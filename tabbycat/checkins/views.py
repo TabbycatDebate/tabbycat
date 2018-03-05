@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.base import TemplateView
@@ -8,16 +10,42 @@ from actionlog.models import ActionLogEntry
 from participants.models import Speaker
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import JsonDataResponsePostView, PostOnlyRedirectView
+from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import Event, Identifier, PersonIdentifier, VenueIdentifier
 
 
-class CheckInScanView(TournamentMixin, TemplateView):
+class CheckInPreScanView(TournamentMixin, TemplateView):
     template_name = 'checkin_scan.html'
     page_title = _('Scan Identifiers')
     page_emoji = '📷'
+
+    def get_context_data(self, **kwargs):
+        kwargs["scan_url"] = reverse_tournament(self.scan_view,
+                                                self.get_tournament())
+        return super().get_context_data(**kwargs)
+
+
+class AdminCheckInPreScanView(AdministratorMixin, CheckInPreScanView):
+    scan_view = 'admin-checkin-scan'
+
+
+class AssistantCheckInPreScanView(AssistantMixin, CheckInPreScanView):
+    scan_view = 'assistant-checkin-scan'
+
+
+class CheckInScanView(JsonDataResponsePostView):
+
+    def post_data(self):
+        barcode_id = json.loads(self.body)['barcode']
+        try:
+            identifier = Identifier.objects.get(identifier=barcode_id)
+            event = Event.objects.create(identifier=identifier)
+            return json.dumps({'id': barcode_id,
+                               'time': event.time.strftime('%H:%M:%S')})
+        except ObjectDoesNotExist:
+            raise BadJsonRequestError("Identifier doesn't exist")
 
 
 class AdminCheckInScanView(AdministratorMixin, CheckInScanView):
@@ -26,20 +54,6 @@ class AdminCheckInScanView(AdministratorMixin, CheckInScanView):
 
 class AssistantCheckInScanView(AssistantMixin, CheckInScanView):
     pass
-
-
-class CheckInIdentifier(JsonDataResponsePostView):
-
-    def post_data(self):
-        barcode_id = self.request.POST.get('barcode')
-        print(barcode_id)
-        identifier = Identifier.objects.filter(identifier=barcode_id)
-
-        print(identifier)
-
-        return {
-
-        }
 
 
 class CheckInStatusView(TournamentMixin, TemplateView):
@@ -166,9 +180,9 @@ class CheckInPrintablesView(SegregatedCheckinsMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         if self.kwargs["kind"] == "speakers":
-            kwargs["identifiers"] = self.speakers_with_barcodes()
+            kwargs["identifiers"] = self.speakers_with_barcodes().order_by('person__name')
         elif self.kwargs["kind"] == "adjudicators":
-            kwargs["identifiers"] = self.adjs_with_barcodes()
+            kwargs["identifiers"] = self.adjs_with_barcodes().order_by('person__name')
         elif self.kwargs["kind"] == "venue":
             kwargs["identifiers"] = VenueIdentifier.objects.all()
 
