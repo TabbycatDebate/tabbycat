@@ -79,7 +79,8 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         ntotal = len(scores)
         ntrainees = [x < t.pref('adj_min_voting_score') for x in scores].count(True)
         nvoting = ntotal - ntrainees
-        nchairs = min(nvoting, t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2))
+        ndebates = t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2)
+        nchairs = min(nvoting, ndebates)
         npanellists = nvoting - nchairs
 
         max_score = int(math.ceil(t.pref('adj_max_score')))
@@ -111,6 +112,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         kwargs.update({
             'c_total': ntotal,
             'c_chairs': nchairs,
+            'c_debates': ndebates,
             'c_panellists': npanellists,
             'c_trainees': ntrainees,
             'c_thresholds': band_specs,
