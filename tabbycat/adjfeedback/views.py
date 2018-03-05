@@ -55,9 +55,10 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         kwargs['c_breaking'] = adjudicators.filter(breaking=True).count()
 
         ntotal = len(scores)
-        nchairs = t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2)
         ntrainees = [x < t.pref('adj_min_voting_score') for x in scores].count(True)
-        npanellists = ntotal - nchairs - ntrainees
+        nvoting = ntotal - ntrainees
+        nchairs = min(nvoting, t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2))
+        npanellists = nvoting - nchairs
 
         max_score = int(math.ceil(t.pref('adj_max_score')))
         min_score = int(math.floor(t.pref('adj_min_score')))

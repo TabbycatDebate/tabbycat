@@ -109,8 +109,14 @@ export default {
         $.fn.resetButton(event.target)
       }).fail(function(response) {
         // Handle Failure (or at least log it so we can figure out failure mode)
+        // Note: this block duplicated in AllocationModal
         console.debug(JSON.stringify(response))
-        var info = response.responseJSON.message
+        var info = ""
+        if (response.hasOwnProperty('responseJSON')) {
+          info += response.responseJSON.message
+        } else {
+          info += "status code " + response["status"] + " because " + response["statusText"]
+        }
         $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         $.fn.resetButton(event.target)
       })

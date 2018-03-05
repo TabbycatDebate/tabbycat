@@ -24,6 +24,12 @@ Change Log
     - Locally: You should recreate your local_settings.py from the example file
 - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
 
+2.0.6
+-----
+*Release date: Not yet released*
+
+- Added reminder to add own-institution conflicts in the Edit Database area
+- Other minor fixes
 
 2.0.5
 -----
