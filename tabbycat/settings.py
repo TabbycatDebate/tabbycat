@@ -252,6 +252,12 @@ MESSAGE_TAGS = {messages.ERROR: 'danger', }
 
 ASGI_APPLICATION = "routing.application"
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
 # ==============================================================================
 # Heroku
 # ==============================================================================
@@ -306,11 +312,7 @@ if os.environ.get('REDIS_URL', ''):
             },
         }
     except:
-        CACHES = {
-            'default': {
-                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-            }
-        }
+        pass
 
 # ==============================================================================
 # Travis CI
