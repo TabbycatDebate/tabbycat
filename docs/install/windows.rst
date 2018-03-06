@@ -96,14 +96,14 @@ requires Git to work. So, install the latest version for Windows from the
 -----------------
   *Node.js is a JavaScript runtime.*
 
-Download and run the node.js 6 Installer (.msi) for either `x64 versions  <https://nodejs.org/dist/latest-v6.x/node-v6.11.5-x64.msi>`_ of Windows or `x86 versions <https://nodejs.org/dist/latest-v6.x/node-v6.11.5-x86.msi>`_.
+Download and run the node.js 8 Installer (.msi) for either `x64 versions  <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x64.msi>`_ of Windows or `x86 versions <https://nodejs.org/dist/v8.9.4/node-v8.9.4-x86.msi>`_.
 
 2. Get the source code
 ======================
 
-1. `Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_.
-2. Download the zip file.
-3. Extract all files in it to a folder of your choice.
+a. `Go to the page for our latest release <https://github.com/TabbycatDebate/tabbycat/releases/latest>`_.
+b. Download the zip file.
+c. Extract all files in it to a folder of your choice.
 
 .. admonition:: Advanced users
   :class: tip
@@ -119,24 +119,24 @@ Download and run the node.js 6 Installer (.msi) for either `x64 versions  <https
 
 .. hint:: You can skip steps 2 and 3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
-1. Open the **pgAdmin** tool, which you installed as part of installing PostgreSQL. In the object browser on the left, double-click the server marked "(localhost:5432)". Log in using the password you set during installation.
+a. Open the **pgAdmin** tool, which you installed as part of installing PostgreSQL. In the object browser on the left, double-click the server marked "(localhost:5432)". Log in using the password you set during installation.
 
-2. Right-click Login Roles, and click "New Login Role…"
+b. Right-click Login Roles, and click "New Login Role…"
 
   .. image:: images/pgadmin-new-login-role-menu.png
 
-3. Fill in the New Login Role box as follows (everything not listed below can be left as-is):
+c. Fill in the New Login Role box as follows (everything not listed below can be left as-is):
 
    - In the **Properties** tab, in **Role Name**, choose a user account name. (If you don't know what to pick, we suggest "tabbycat".)
    - In the **Definition** tab, choose a **Password** and type it in **Password (again)**.
 
    Then click OK. (Remember this user name and password, you'll need it later.)
 
-4. Right-click Databases, and click "New Database…"
+d. Right-click Databases, and click "New Database…"
 
   .. image:: images/pgadmin-new-database-menu.png
 
-5. Fill in the New Database box as follows (everything not listed below can be left as-is):
+e. Fill in the New Database box as follows (everything not listed below can be left as-is):
 
    - In the **Properties** tab, in **Name**, choose a database name (with no spaces in it).
    - In the **Properties** tab, in **Owner**, type the name of the login role you just created.
@@ -148,11 +148,11 @@ Download and run the node.js 6 Installer (.msi) for either `x64 versions  <https
 
 Almost there!
 
-1. Open a Windows PowerShell. Navigate to the folder where you cloned/extracted Tabbycat. For example, if you installed it in ``C:\Users\myusername\Documents\GitHub\tabbycat``, then run::
+a. Open a Windows PowerShell. Navigate to the folder where you cloned/extracted Tabbycat. For example, if you installed it in ``C:\Users\myusername\Documents\GitHub\tabbycat``, then run::
 
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat
 
-2. Make a copy of **local_settings.example** and rename it to **local_settings.py**. Open your new local_settings.py. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
+b. Make a copy of **local_settings.example** and rename it to **local_settings.py**. Open your new local_settings.py. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
 
   .. code:: python
 
@@ -167,11 +167,11 @@ Almost there!
          }
      }
 
-3. Start a new virtual environment. We suggest the name `venv`, though it can be any name you like::
+c. Start a new virtual environment. We suggest the name `venv`, though it can be any name you like::
 
     > python -m venv venv
 
-4. Run the `Activate.ps1` script. This puts you "into" the virtual environment::
+d. Run the `Activate.ps1` script. This puts you "into" the virtual environment::
 
     > .\venv\Scripts\Activate.ps1
 
@@ -181,7 +181,7 @@ Almost there!
 
     Read the warning message, then type ``y`` to confirm. By default, the execution policy on Windows is ``Restricted``, which does not permit scripts like ``activate`` to be run. Changing it to ``RemoteSigned`` relaxes it to allow local scripts to be run without checking the signature.
 
-5. Install Tabbycat's requirements.
+e. Install Tabbycat's requirements.
 
   If you installed **32-bit Python**::
 
@@ -205,7 +205,7 @@ Almost there!
 
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 
-6. Initialize the database and create a user account for yourself::
+f. Initialize the database and create a user account for yourself::
 
     > cd tabbycat
     > dj migrate
@@ -213,7 +213,7 @@ Almost there!
     > dj collectstatic
     > dj createsuperuser
 
-7. Start Tabbycat!
+g. Start Tabbycat!
 
   ::
 
@@ -223,7 +223,7 @@ Almost there!
 
     Starting development server on http://127.0.0.1:8000
 
-8. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/). It should look something like this:
+h. Open your browser and go to the URL printed above. (In the above example, it's http://127.0.0.1:8000/). It should look something like this:
 
   .. image:: images/tabbycat-bare-windows.png
 

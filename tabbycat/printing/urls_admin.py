@@ -5,11 +5,11 @@ from . import views
 urlpatterns = [
 
     # Traditional sheets
-    path('round/<int:round_seq>/print/scoresheets/',
-        views.PrintScoresheetsView.as_view(),
+    path('round/<int:round_seq>/scoresheets/',
+        views.AdminPrintScoresheetsView.as_view(),
         name='printing-scoresheets'),
-    path('round/<int:round_seq>/print/feedback/',
-        views.PrintFeedbackFormsView.as_view(),
+    path('round/<int:round_seq>/feedback/',
+        views.AdminPrintFeedbackFormsView.as_view(),
         name='printing-feedback'),
 
     # Private URL distribution

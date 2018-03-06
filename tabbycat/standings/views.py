@@ -5,19 +5,18 @@ from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count
 from django.utils.html import mark_safe
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
-from motions.models import DebateTeamMotionPreference, Motion
-from motions.statistics import MotionStats
+from motions.models import Motion
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import SuperuserRequiredMixin
+from utils.misc import reverse_tournament
+from utils.mixins import AdministratorMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -31,7 +30,7 @@ from .templatetags.standingsformat import metricformat
 logger = logging.getLogger(__name__)
 
 
-class StandingsIndexView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
     template_name = 'standings_index.html'
 
@@ -88,12 +87,12 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
 
     template_name = 'standings_table.html'
 
-    standings_error_message = ugettext_lazy(
+    standings_error_message = gettext_lazy(
         "<p>There was an error generating the standings: "
         "<em>%(message)s</em></p>"
     )
 
-    admin_standings_error_instructions = ugettext_lazy(
+    admin_standings_error_instructions = gettext_lazy(
         "<p>You may need to double-check the "
         "<a href=\"%(standings_options_url)s\" class=\"alert-link\">"
         "standings configuration under the Setup section</a>. "
@@ -101,7 +100,7 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         "contact the developers.</p>"
     )
 
-    public_standings_error_instructions = ugettext_lazy(
+    public_standings_error_instructions = gettext_lazy(
         "<p>The tab director will need to resolve this issue.</p>"
     )
 
@@ -209,7 +208,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         return standings, rounds
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key="Rk")
+        table = TabbycatTableBuilder(view=self, sort_key="rk")
 
         try:
             standings, rounds = self.get_standings()
@@ -250,7 +249,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
 class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
     """The standard speaker standings view."""
-    page_title = ugettext_lazy("Speaker Standings")
+    page_title = gettext_lazy("Speaker Standings")
     page_emoji = '💯'
 
     def get_speakers(self):
@@ -281,12 +280,12 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
         add_speaker_round_results(standings, rounds, self.get_tournament())
 
 
-class SpeakerStandingsView(SuperuserRequiredMixin, BaseStandardSpeakerStandingsView):
+class SpeakerStandingsView(AdministratorMixin, BaseStandardSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add an info alert
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
-    page_title = ugettext_lazy("Speaker Tab")
+    page_title = gettext_lazy("Speaker Tab")
     public_page_preference = 'speaker_tab_released'
 
     def get_tab_limit(self):
@@ -311,7 +310,7 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseStan
         return super().get(request, *args, **kwargs)
 
 
-class SpeakerCategoryStandingsView(SuperuserRequiredMixin, BaseSpeakerCategoryStandingsView):
+class SpeakerCategoryStandingsView(AdministratorMixin, BaseSpeakerCategoryStandingsView):
     pass
 
 
@@ -329,14 +328,13 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
         self.object = self.get_object()
         if not self.object.public:
             logger.warning("Tried to access a non-public speaker category tab page: %s", self.object.slug)
-            messages.error(self.request, self.get_disabled_message())
-            return redirect_tournament('tournament-public-index', self.get_tournament())
+            return self.render_page_disabled_error_page()
         return super().get(request, *args, **kwargs)
 
 
 class BaseReplyStandingsView(BaseSpeakerStandingsView):
     """Speaker standings view for replies."""
-    page_title = ugettext_lazy("Reply Speaker Standings")
+    page_title = gettext_lazy("Reply Speaker Standings")
     page_emoji = '💁'
 
     def get_speakers(self):
@@ -365,12 +363,12 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
             info.result_missing = info.speaker.team not in teams_seen
 
 
-class ReplyStandingsView(SuperuserRequiredMixin, BaseReplyStandingsView):
+class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
     pass
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
-    page_title = ugettext_lazy("Reply Speaker Tab")
+    page_title = gettext_lazy("Reply Speaker Tab")
     public_page_preference = 'replies_tab_released'
     public_limit_preference = 'replies_tab_limit'
 
@@ -382,7 +380,7 @@ class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
 class BaseTeamStandingsView(BaseStandingsView):
     """Base class for views that display team standings."""
 
-    page_title = ugettext_lazy("Team Standings")
+    page_title = gettext_lazy("Team Standings")
     page_emoji = '👯'
 
     def get_standings(self):
@@ -411,7 +409,7 @@ class BaseTeamStandingsView(BaseStandingsView):
         pass
 
     def get_table(self):
-        table = TabbycatTableBuilder(view=self, sort_key="Rk")
+        table = TabbycatTableBuilder(view=self, sort_key="rk")
 
         try:
             standings, rounds = self.get_standings()
@@ -436,7 +434,7 @@ class BaseTeamStandingsView(BaseStandingsView):
             info.result_missing = len(info.round_results) > 1 and info.round_results[-1] is None
 
 
-class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
     rankings = ('rank',)
 
@@ -444,10 +442,10 @@ class TeamStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
         return True
 
 
-class DivisionStandingsView(SuperuserRequiredMixin, BaseTeamStandingsView):
+class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Special team standings view that also shows rankings within divisions."""
     rankings = ('rank', 'division')
-    page_title = ugettext_lazy("Division Standings")
+    page_title = gettext_lazy("Division Standings")
     page_emoji = '👯'
 
 
@@ -457,7 +455,7 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     During the tournament, "public team standings" only shows wins and results.
     Once the tab is released, to the public the team standings are known as the
     "team tab"."""
-    page_title = ugettext_lazy("Team Tab")
+    page_title = gettext_lazy("Team Tab")
     public_page_preference = 'team_tab_released'
     public_limit_preference = 'team_tab_limit'
     rankings = ('rank',)
@@ -467,56 +465,13 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
 
 # ==============================================================================
-# Motion standings
-# ==============================================================================
-
-class BaseMotionStandingsView(TournamentMixin, TemplateView):
-
-    template_name = 'standings_motions.html'
-    page_title = ugettext_lazy("Motions Tab")
-    page_emoji = '💭'
-
-    def get_context_data(self, **kwargs):
-        t = self.get_tournament()
-        rounds = t.round_set.order_by('seq')
-
-        motions = Motion.objects.select_related('round').filter(round__in=rounds).order_by('round', 'seq')
-        results = TeamScore.objects.filter(ballot_submission__confirmed=True,
-            ballot_submission__debate__round__in=rounds).select_related(
-            'debate_team', 'ballot_submission__debate__round',
-            'ballot_submission__motion')
-
-        if t.pref('motion_vetoes_enabled'):
-            vetoes = DebateTeamMotionPreference.objects.filter(
-                preference=3,
-                ballot_submission__confirmed=True,
-                ballot_submission__debate__round__in=rounds).select_related(
-                'debate_team', 'ballot_submission__motion')
-        else:
-            vetoes = False
-
-        analysed_motions = [MotionStats(m, t, results, vetoes) for m in motions]
-
-        kwargs['analysed_motions'] = analysed_motions
-        return super().get_context_data(**kwargs)
-
-
-class MotionStandingsView(SuperuserRequiredMixin, BaseMotionStandingsView):
-    pass
-
-
-class PublicMotionsTabView(PublicTabMixin, BaseMotionStandingsView):
-    public_page_preference = 'motion_tab_released'
-
-
-# ==============================================================================
 # Current team standings (win-loss records only)
 # ==============================================================================
 
 class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplateView):
 
     public_page_preference = 'public_team_standings'
-    page_title = ugettext_lazy("Current Team Standings")
+    page_title = gettext_lazy("Current Team Standings")
     page_emoji = '🌟'
 
     def get_rounds(self):
@@ -551,11 +506,11 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, t.short_name))
-        measure = _("Points") if tournament.pref('teams_in_debate') == 'bp' else _("Wins")
+        key = "Points" if tournament.pref('teams_in_debate') == 'bp' else "Wins"
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column(measure, [team.points for team in teams])
+        table.add_column({'key': key, 'title': _(key)}, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
         return table
@@ -579,7 +534,7 @@ class BaseDiversityStandingsView(TournamentMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class DiversityStandingsView(SuperuserRequiredMixin, BaseDiversityStandingsView):
+class DiversityStandingsView(AdministratorMixin, BaseDiversityStandingsView):
 
     for_public = False
 
@@ -600,7 +555,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     page_title = 'Feedback Overview'
     page_emoji = '🙅'
     for_public = False
-    sort_key = 'Name'
+    sort_key = 'name'
     sort_order = 'asc'
     template_name = 'standings_adjudicators.html'
 

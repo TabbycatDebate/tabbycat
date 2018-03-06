@@ -5,7 +5,7 @@
   },
   "description": "Debating tabulation software for two-team parliamentary formats",
   "engines": {
-    "node": "6.11.5"
+    "node": "8.9.4"
   },
   "main": "index.js",
   "dependencies": {
@@ -15,12 +15,12 @@
     "babel-runtime": "^6.26.0",
     "babelify": "^8.0.0",
     "bootstrap": "^4.0.0",
-    "browserify": "^15.2.0",
+    "browserify": "^16.1.0",
     "d3": "^4.12.2",
     "datalist-polyfill": "^1.11.1",
     "django-channels": "^1.1.6",
     "envify": "^4.1.0",
-    "eslint": "^4.16.0",
+    "eslint": "^4.18.0",
     "event-stream": "^3.3.4",
     "feather-icons": "^4.5.0",
     "gulp": "^3.9.1",
@@ -30,23 +30,23 @@
     "gulp-livereload": "^3.8.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-    "gulp-sourcemaps": "^2.6.3",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
-    "inter-ui": "^2.4.0",
+    "inter-ui": "^2.5.0",
     "jquery": "^3.3.0",
     "jquery-validation": "~1.17.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.5",
     "popper.js": "^1.12.9",
-    "raven-js": "^3.22.1",
+    "raven-js": "^3.22.3",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-buffer": "^1.0.1",
     "stats-percentile": "^3.1.0",
     "vue": "^2.5.13",
     "vue-template-compiler": "^2.5.13",
     "vueify": "^9.4.1",
-    "watchify": "^3.9.0"
+    "watchify": "^3.10.0"
   },
   "scripts": {
     "build": "gulp build --development",
@@ -61,8 +61,8 @@
     "eslint-plugin-html": "^4.0.1",
     "eslint-plugin-import": "^2.8.0",
     "postcss-selector-parser": "^3.1.1",
-    "stylelint": "^8.4.0",
+    "stylelint": "^9.0.0",
     "stylelint-config-standard": "^18.0.0",
-    "stylelint-scss": "^2.2.0"
+    "stylelint-scss": "^2.3.0"
   }
 }

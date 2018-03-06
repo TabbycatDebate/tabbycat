@@ -4,13 +4,10 @@
 -r requirements_common.txt
 
 # Base Heroku Requirements
-dj-database-url==0.4.2                  # From the heroku toolbelt
+dj-database-url==0.5.0                  # From the heroku toolbelt
 
 # Redis
-django-redis==4.8.0                     # Adds redis as caching backend
+django-redis==4.9.0                     # Adds redis as caching backend
 
-# Monitoring
-newrelic                                # Requires heroku add-on; not used generally
-
-# Emailing
-sendgrid
+# Misc
+sendgrid==5.3.0                         # Emailing

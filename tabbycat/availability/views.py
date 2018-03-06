@@ -4,12 +4,12 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Min
+from django.db.models import Min, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy, ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
 
 from . import utils
 
@@ -21,7 +21,7 @@ from participants.models import Adjudicator, Team
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round
 from venues.models import Venue
@@ -29,9 +29,9 @@ from venues.models import Venue
 logger = logging.getLogger(__name__)
 
 
-class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
+class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = ugettext_lazy("Check-Ins")
+    page_title = gettext_lazy("Check-Ins")
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):
@@ -82,7 +82,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             teams_dict = {'total': break_size}
             if break_size < 2:
                 teams_dict['in_now'] = 0
-                teams_dict['message'] = ungettext(
+                teams_dict['message'] = ngettext(
                     # Translators: nteams in this string can only be 0 or 1
                     "%(nteams)d breaking team — no debates can happen",
                     "%(nteams)d breaking teams — no debates can happen",  # in English, used when break_size == 0
@@ -90,13 +90,13 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             else:
                 debates, bypassing = partial_break_round_split(break_size)
                 teams_dict['in_now'] = 2 * debates
-                teams_dict['message'] = ungettext(
+                teams_dict['message'] = ngettext(
                     # Translators: ndebating in this string is always at least 2
                     "%(ndebating)d breaking team is debating this round",  # never used, but needed for i18n
                     "%(ndebating)d breaking teams are debating this round",
                     2 * debates) % {'ndebating': 2 * debates}
                 if bypassing > 0:
-                    teams_dict['message'] += ungettext(
+                    teams_dict['message'] += ngettext(
                         # Translators: This gets appended to the previous string (the one with
                         # ndebating in it) if (and only if) nbypassing is greater than 0.
                         # "It" refers to this round.
@@ -117,7 +117,7 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
             return {
                 'total'     : nadvancing,
                 'in_now'    : nadvancing,
-                'message'   : ungettext(
+                'message'   : ngettext(
                     # Translators: nadvancing in this string is always at least 2
                     "%(nadvancing)s advancing team is debating this round",  # never used, but needed for i18n
                     "%(nadvancing)s advancing teams are debating this round",
@@ -143,8 +143,9 @@ class AvailabilityIndexView(RoundMixin, SuperuserRequiredMixin, TemplateView):
 # Specific Activation Pages
 # ==============================================================================
 
-class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateView):
+class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView):
     template_name = "base_availability.html"
+    share_key = None  # The relevant pref to include tournament-less objects
 
     def get_page_title(self):
         # Can't construct with concatenation, need entire strings for translation
@@ -163,14 +164,17 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        return self.model.objects.filter(tournament=self.get_tournament())
+        q = Q(tournament=self.get_tournament())
+        if self.share_key is not None and self.get_tournament().pref(self.share_key):
+            q |= Q(tournament__isnull=True)  # include shared objects, if relevant
+        return self.model.objects.filter(q)
 
     def get_table(self):
         round = self.get_round()
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
-        table.add_column(_("Active Now"), [{
+        table.add_column({'key': 'active', 'title': _("Active Now")}, [{
             'component': 'check-cell',
             'checked': inst.available,
             'sort': inst.available,
@@ -180,7 +184,8 @@ class AvailabilityTypeBase(RoundMixin, SuperuserRequiredMixin, VueTableTemplateV
         } for inst in queryset])
 
         if round.prev:
-            table.add_column(_("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}, [{
+            title = _("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}
+            table.add_column({'key': 'active', 'title': title}, [{
                 'sort': inst.prev_available,
                 'icon': 'check' if inst.prev_available else ''
             } for inst in queryset])
@@ -208,6 +213,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     model = Adjudicator
     sort_key = 'name'
     update_view = 'availability-update-adjudicators'
+    share_key = 'share_adjs'
 
     @staticmethod
     def add_description_columns(table, adjudicators):
@@ -219,6 +225,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
     model = Venue
     sort_key = 'venue'
     update_view = 'availability-update-venues'
+    share_key = 'share_venues'
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('venuecategory_set')
@@ -238,7 +245,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 # Bulk Activations
 # ==============================================================================
 
-class BaseBulkActivationView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirectView):
+class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'availability-index'
 
@@ -249,14 +256,14 @@ class BaseBulkActivationView(RoundMixin, SuperuserRequiredMixin, PostOnlyRedirec
 
 
 class CheckInAllInRoundView(BaseBulkActivationView):
-    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues.")
+    activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues.")
 
     def activate_function(self):
         utils.activate_all(self.get_round())
 
 
 class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
-    activation_msg = ugettext_lazy("Checked in all breaking adjudicators.")
+    activation_msg = gettext_lazy("Checked in all breaking adjudicators.")
 
     def activate_function(self):
         utils.set_availability(self.get_tournament().relevant_adjudicators.filter(breaking=True),
@@ -264,7 +271,7 @@ class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
 
 
 class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
-    activation_msg = ugettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
+    activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
 
     def activate_function(self):
         t = self.get_tournament()
@@ -287,7 +294,7 @@ class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
 # Specific Activation Actions
 # ==============================================================================
 
-class BaseAvailabilityUpdateView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, View):
+class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin, View):
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')

@@ -1,0 +1,59 @@
+{% extends "standings_base.html" %}
+{% load debate_tags static i18n %}
+
+{% block page-title %}Motion Statistics{% endblock %}
+{% block head-title %}<span class="emoji">💭</span> Motion Statistics{% endblock %}
+
+{% block content %}
+
+  {% if statistics.motions %}
+
+    {% regroup statistics.motions by round as motions_by_round %}
+
+    {% for round, motions in motions_by_round %}
+      <div class="list-group mt-3">
+
+        <div class="list-group-item disabled text-center strong">
+          {{ round.name }}
+        </div>
+
+        {% for motion in motions %}
+          <div class="list-group-item pb-0 text-center">
+
+            <h4 class="mb-3 mt-1">
+              {{ motion.text }}
+            </h4>
+
+            {% if motion.info_slide %}
+              <span class="h6 badge badge-light text-secondary mx-auto mb-3 mt-0 hover-target"
+                    data-toggle="modal" data-target="#info_{{ motion.id }}">
+                {% trans "View Info Slide" %}
+              </span>
+              {% include 'motions_info.html' %}
+            {% endif %}
+
+            <div class="row">
+
+              {% if pref.teams_in_debate == 'two' %}
+                {% include "motion_statistics_twoteam.html" %}
+              {% elif pref.teams_in_debate == 'bp' and round.stage == round.STAGE_ELIMINATION %}
+                {% include "motion_statistics_bp_elim.html" %}
+              {% elif pref.teams_in_debate == 'bp' and round.stage == round.STAGE_PRELIMINARY %}
+                {% include "motion_statistics_bp_prelim.html" %}
+              {% endif %}
+
+            </div>
+
+          </div>
+        {% endfor %}
+
+      </div>
+    {% endfor %}
+
+    {% else %}
+
+      {% include "components/item-info.html" with text="There are no motions in Tabbycat" type="info" %}
+
+    {% endif %}
+
+{% endblock content %}

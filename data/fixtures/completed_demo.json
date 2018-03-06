@@ -3,7 +3,7 @@
     "model": "auth.user",
     "fields": {
         "password": "pbkdf2_sha256$36000$qmC2Cn9aIXt7$mEQwGXDmVNxcYqQFInOSI7JYFlQhv9fNVbF1+Tuz0Js=",
-        "last_login": "2017-07-13T15:33:21",
+        "last_login": "2017-07-13T05:33:21Z",
         "is_superuser": true,
         "username": "admin",
         "first_name": "",
@@ -11,7 +11,7 @@
         "email": "",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2016-04-14T13:17:48",
+        "date_joined": "2016-04-14T03:17:48Z",
         "groups": [],
         "user_permissions": []
     }
@@ -1255,7 +1255,7 @@
         "adjudicator": 73,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.407"
+        "timestamp": "2016-04-14T03:19:04.407Z"
     }
 },
 {
@@ -1265,7 +1265,7 @@
         "adjudicator": 74,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.409"
+        "timestamp": "2016-04-14T03:19:04.409Z"
     }
 },
 {
@@ -1275,7 +1275,7 @@
         "adjudicator": 75,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.410"
+        "timestamp": "2016-04-14T03:19:04.410Z"
     }
 },
 {
@@ -1285,7 +1285,7 @@
         "adjudicator": 76,
         "round": null,
         "score": 1.0,
-        "timestamp": "2016-04-14T13:19:04.411"
+        "timestamp": "2016-04-14T03:19:04.411Z"
     }
 },
 {
@@ -1295,7 +1295,7 @@
         "adjudicator": 77,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.412"
+        "timestamp": "2016-04-14T03:19:04.412Z"
     }
 },
 {
@@ -1305,7 +1305,7 @@
         "adjudicator": 78,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.413"
+        "timestamp": "2016-04-14T03:19:04.413Z"
     }
 },
 {
@@ -1315,7 +1315,7 @@
         "adjudicator": 79,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.414"
+        "timestamp": "2016-04-14T03:19:04.414Z"
     }
 },
 {
@@ -1325,7 +1325,7 @@
         "adjudicator": 80,
         "round": null,
         "score": 4.0,
-        "timestamp": "2016-04-14T13:19:04.415"
+        "timestamp": "2016-04-14T03:19:04.415Z"
     }
 },
 {
@@ -1335,7 +1335,7 @@
         "adjudicator": 81,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.416"
+        "timestamp": "2016-04-14T03:19:04.416Z"
     }
 },
 {
@@ -1345,7 +1345,7 @@
         "adjudicator": 82,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.417"
+        "timestamp": "2016-04-14T03:19:04.417Z"
     }
 },
 {
@@ -1355,7 +1355,7 @@
         "adjudicator": 83,
         "round": null,
         "score": 4.0,
-        "timestamp": "2016-04-14T13:19:04.417"
+        "timestamp": "2016-04-14T03:19:04.417Z"
     }
 },
 {
@@ -1365,7 +1365,7 @@
         "adjudicator": 84,
         "round": null,
         "score": 4.0,
-        "timestamp": "2016-04-14T13:19:04.418"
+        "timestamp": "2016-04-14T03:19:04.418Z"
     }
 },
 {
@@ -1375,7 +1375,7 @@
         "adjudicator": 85,
         "round": null,
         "score": 4.0,
-        "timestamp": "2016-04-14T13:19:04.419"
+        "timestamp": "2016-04-14T03:19:04.419Z"
     }
 },
 {
@@ -1385,7 +1385,7 @@
         "adjudicator": 86,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.420"
+        "timestamp": "2016-04-14T03:19:04.420Z"
     }
 },
 {
@@ -1395,7 +1395,7 @@
         "adjudicator": 87,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.421"
+        "timestamp": "2016-04-14T03:19:04.421Z"
     }
 },
 {
@@ -1405,7 +1405,7 @@
         "adjudicator": 88,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.422"
+        "timestamp": "2016-04-14T03:19:04.422Z"
     }
 },
 {
@@ -1415,7 +1415,7 @@
         "adjudicator": 89,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.423"
+        "timestamp": "2016-04-14T03:19:04.423Z"
     }
 },
 {
@@ -1425,7 +1425,7 @@
         "adjudicator": 90,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.424"
+        "timestamp": "2016-04-14T03:19:04.424Z"
     }
 },
 {
@@ -1435,7 +1435,7 @@
         "adjudicator": 91,
         "round": null,
         "score": 1.0,
-        "timestamp": "2016-04-14T13:19:04.425"
+        "timestamp": "2016-04-14T03:19:04.425Z"
     }
 },
 {
@@ -1445,7 +1445,7 @@
         "adjudicator": 92,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.425"
+        "timestamp": "2016-04-14T03:19:04.425Z"
     }
 },
 {
@@ -1455,7 +1455,7 @@
         "adjudicator": 93,
         "round": null,
         "score": 4.0,
-        "timestamp": "2016-04-14T13:19:04.426"
+        "timestamp": "2016-04-14T03:19:04.426Z"
     }
 },
 {
@@ -1465,7 +1465,7 @@
         "adjudicator": 94,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.427"
+        "timestamp": "2016-04-14T03:19:04.427Z"
     }
 },
 {
@@ -1475,7 +1475,7 @@
         "adjudicator": 95,
         "round": null,
         "score": 3.0,
-        "timestamp": "2016-04-14T13:19:04.428"
+        "timestamp": "2016-04-14T03:19:04.428Z"
     }
 },
 {
@@ -1485,7 +1485,7 @@
         "adjudicator": 96,
         "round": null,
         "score": 2.0,
-        "timestamp": "2016-04-14T13:19:04.429"
+        "timestamp": "2016-04-14T03:19:04.429Z"
     }
 },
 {
@@ -1495,7 +1495,7 @@
         "adjudicator": 97,
         "round": null,
         "score": 4.0,
-        "timestamp": "2016-04-14T13:19:04.430"
+        "timestamp": "2016-04-14T03:19:04.430Z"
     }
 },
 {
@@ -1505,7 +1505,7 @@
         "adjudicator": 98,
         "round": null,
         "score": 3.0,
-        "timestamp": "2016-04-14T13:19:04.430"
+        "timestamp": "2016-04-14T03:19:04.430Z"
     }
 },
 {
@@ -1515,7 +1515,7 @@
         "adjudicator": 99,
         "round": null,
         "score": 5.0,
-        "timestamp": "2016-04-14T13:19:04.431"
+        "timestamp": "2016-04-14T03:19:04.431Z"
     }
 },
 {
@@ -3898,6 +3898,7 @@
         "seq": 1,
         "text": "This House would abolish national days",
         "reference": "National days",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -3910,6 +3911,7 @@
         "seq": 2,
         "text": "This House regrets the existence of Valentine's Day",
         "reference": "Valentine\u2019s Day",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -3922,6 +3924,7 @@
         "seq": 3,
         "text": "This House would rename Christmas with a name that is religiously neutral",
         "reference": "Christmas",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -3934,6 +3937,7 @@
         "seq": 1,
         "text": "This House would not buy Apple",
         "reference": "Apple",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -3946,6 +3950,7 @@
         "seq": 2,
         "text": "This House would end all research and development tax credits for highly profitable technology companies",
         "reference": "R&D tax credit",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -3958,6 +3963,7 @@
         "seq": 3,
         "text": "This House regrets the rise of computer science at the expense of the humanities",
         "reference": "Computer science",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -3970,6 +3976,7 @@
         "seq": 1,
         "text": "This House would favour creativity over intelligence",
         "reference": "Creativity and intelligence",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -3982,6 +3989,7 @@
         "seq": 2,
         "text": "This House believes that field hockey is better than ice hockey",
         "reference": "Hockey",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -3994,6 +4002,7 @@
         "seq": 3,
         "text": "This House would rather play with Lego than Barbie",
         "reference": "Lego and Barbie",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -4006,6 +4015,7 @@
         "seq": 1,
         "text": "This House would stop importing bananas from Latin America",
         "reference": "Bananas",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -4018,6 +4028,7 @@
         "seq": 2,
         "text": "This House believes that tomatoes are a fruit",
         "reference": "Tomatoes",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -4030,6 +4041,7 @@
         "seq": 3,
         "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
         "reference": "Pesticide labelling",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -4042,6 +4054,7 @@
         "seq": 1,
         "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
         "reference": "Indecent exposure",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -4054,6 +4067,7 @@
         "seq": 2,
         "text": "This House regrets the development of different fashion lines for men and women",
         "reference": "Gender and fashion",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -4066,6 +4080,7 @@
         "seq": 3,
         "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
         "reference": "Flip-flops",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -4078,6 +4093,7 @@
         "seq": 1,
         "text": "This House would stop using cash",
         "reference": "Cash",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -4090,6 +4106,7 @@
         "seq": 2,
         "text": "This House supports Bitcoin",
         "reference": "Bitcoin",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -4102,6 +4119,7 @@
         "seq": 3,
         "text": "This House would allow private organisations to compete in providing currency",
         "reference": "Private currency",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -7266,7 +7284,7 @@
     "model": "results.ballotsubmission",
     "pk": 1,
     "fields": {
-        "timestamp": "2016-04-14T13:21:34.759",
+        "timestamp": "2016-04-14T03:21:34.759Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7287,7 +7305,7 @@
     "model": "results.ballotsubmission",
     "pk": 2,
     "fields": {
-        "timestamp": "2016-04-14T13:21:34.841",
+        "timestamp": "2016-04-14T03:21:34.841Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7308,7 +7326,7 @@
     "model": "results.ballotsubmission",
     "pk": 3,
     "fields": {
-        "timestamp": "2016-04-14T13:21:34.914",
+        "timestamp": "2016-04-14T03:21:34.914Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7329,7 +7347,7 @@
     "model": "results.ballotsubmission",
     "pk": 4,
     "fields": {
-        "timestamp": "2016-04-14T13:21:34.987",
+        "timestamp": "2016-04-14T03:21:34.987Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7350,7 +7368,7 @@
     "model": "results.ballotsubmission",
     "pk": 5,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.057",
+        "timestamp": "2016-04-14T03:21:35.057Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7371,7 +7389,7 @@
     "model": "results.ballotsubmission",
     "pk": 6,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.127",
+        "timestamp": "2016-04-14T03:21:35.127Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7392,7 +7410,7 @@
     "model": "results.ballotsubmission",
     "pk": 7,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.198",
+        "timestamp": "2016-04-14T03:21:35.198Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7413,7 +7431,7 @@
     "model": "results.ballotsubmission",
     "pk": 8,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.268",
+        "timestamp": "2016-04-14T03:21:35.268Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7434,7 +7452,7 @@
     "model": "results.ballotsubmission",
     "pk": 9,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.398",
+        "timestamp": "2016-04-14T03:21:35.398Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7455,7 +7473,7 @@
     "model": "results.ballotsubmission",
     "pk": 10,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.503",
+        "timestamp": "2016-04-14T03:21:35.503Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7476,7 +7494,7 @@
     "model": "results.ballotsubmission",
     "pk": 11,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.654",
+        "timestamp": "2016-04-14T03:21:35.654Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7497,7 +7515,7 @@
     "model": "results.ballotsubmission",
     "pk": 12,
     "fields": {
-        "timestamp": "2016-04-14T13:21:35.757",
+        "timestamp": "2016-04-14T03:21:35.757Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7518,7 +7536,7 @@
     "model": "results.ballotsubmission",
     "pk": 13,
     "fields": {
-        "timestamp": "2016-04-14T13:22:17.975",
+        "timestamp": "2016-04-14T03:22:17.975Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7539,7 +7557,7 @@
     "model": "results.ballotsubmission",
     "pk": 14,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.113",
+        "timestamp": "2016-04-14T03:22:18.113Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7560,7 +7578,7 @@
     "model": "results.ballotsubmission",
     "pk": 15,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.193",
+        "timestamp": "2016-04-14T03:22:18.193Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7581,7 +7599,7 @@
     "model": "results.ballotsubmission",
     "pk": 16,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.319",
+        "timestamp": "2016-04-14T03:22:18.319Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7602,7 +7620,7 @@
     "model": "results.ballotsubmission",
     "pk": 17,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.475",
+        "timestamp": "2016-04-14T03:22:18.475Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7623,7 +7641,7 @@
     "model": "results.ballotsubmission",
     "pk": 18,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.592",
+        "timestamp": "2016-04-14T03:22:18.592Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7644,7 +7662,7 @@
     "model": "results.ballotsubmission",
     "pk": 19,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.666",
+        "timestamp": "2016-04-14T03:22:18.666Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7665,7 +7683,7 @@
     "model": "results.ballotsubmission",
     "pk": 20,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.789",
+        "timestamp": "2016-04-14T03:22:18.789Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7686,7 +7704,7 @@
     "model": "results.ballotsubmission",
     "pk": 21,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.909",
+        "timestamp": "2016-04-14T03:22:18.909Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7707,7 +7725,7 @@
     "model": "results.ballotsubmission",
     "pk": 22,
     "fields": {
-        "timestamp": "2016-04-14T13:22:18.986",
+        "timestamp": "2016-04-14T03:22:18.986Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7728,7 +7746,7 @@
     "model": "results.ballotsubmission",
     "pk": 23,
     "fields": {
-        "timestamp": "2016-04-14T13:22:19.061",
+        "timestamp": "2016-04-14T03:22:19.061Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7749,7 +7767,7 @@
     "model": "results.ballotsubmission",
     "pk": 24,
     "fields": {
-        "timestamp": "2016-04-14T13:22:19.183",
+        "timestamp": "2016-04-14T03:22:19.183Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7770,7 +7788,7 @@
     "model": "results.ballotsubmission",
     "pk": 25,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.130",
+        "timestamp": "2016-04-14T03:23:01.130Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7791,7 +7809,7 @@
     "model": "results.ballotsubmission",
     "pk": 26,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.211",
+        "timestamp": "2016-04-14T03:23:01.211Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7812,7 +7830,7 @@
     "model": "results.ballotsubmission",
     "pk": 27,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.279",
+        "timestamp": "2016-04-14T03:23:01.279Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7833,7 +7851,7 @@
     "model": "results.ballotsubmission",
     "pk": 28,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.382",
+        "timestamp": "2016-04-14T03:23:01.382Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7854,7 +7872,7 @@
     "model": "results.ballotsubmission",
     "pk": 29,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.490",
+        "timestamp": "2016-04-14T03:23:01.490Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7875,7 +7893,7 @@
     "model": "results.ballotsubmission",
     "pk": 30,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.595",
+        "timestamp": "2016-04-14T03:23:01.595Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7896,7 +7914,7 @@
     "model": "results.ballotsubmission",
     "pk": 31,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.664",
+        "timestamp": "2016-04-14T03:23:01.664Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7917,7 +7935,7 @@
     "model": "results.ballotsubmission",
     "pk": 32,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.732",
+        "timestamp": "2016-04-14T03:23:01.732Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7938,7 +7956,7 @@
     "model": "results.ballotsubmission",
     "pk": 33,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.800",
+        "timestamp": "2016-04-14T03:23:01.800Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7959,7 +7977,7 @@
     "model": "results.ballotsubmission",
     "pk": 34,
     "fields": {
-        "timestamp": "2016-04-14T13:23:01.870",
+        "timestamp": "2016-04-14T03:23:01.870Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -7980,7 +7998,7 @@
     "model": "results.ballotsubmission",
     "pk": 35,
     "fields": {
-        "timestamp": "2016-04-14T13:23:02.052",
+        "timestamp": "2016-04-14T03:23:02.052Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8001,7 +8019,7 @@
     "model": "results.ballotsubmission",
     "pk": 36,
     "fields": {
-        "timestamp": "2016-04-14T13:23:02.157",
+        "timestamp": "2016-04-14T03:23:02.157Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8022,7 +8040,7 @@
     "model": "results.ballotsubmission",
     "pk": 37,
     "fields": {
-        "timestamp": "2016-04-14T13:25:54.869",
+        "timestamp": "2016-04-14T03:25:54.869Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8043,7 +8061,7 @@
     "model": "results.ballotsubmission",
     "pk": 38,
     "fields": {
-        "timestamp": "2016-04-14T13:25:54.956",
+        "timestamp": "2016-04-14T03:25:54.956Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8064,7 +8082,7 @@
     "model": "results.ballotsubmission",
     "pk": 39,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.027",
+        "timestamp": "2016-04-14T03:25:55.027Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8085,7 +8103,7 @@
     "model": "results.ballotsubmission",
     "pk": 40,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.136",
+        "timestamp": "2016-04-14T03:25:55.136Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8106,7 +8124,7 @@
     "model": "results.ballotsubmission",
     "pk": 41,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.246",
+        "timestamp": "2016-04-14T03:25:55.246Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8127,7 +8145,7 @@
     "model": "results.ballotsubmission",
     "pk": 42,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.351",
+        "timestamp": "2016-04-14T03:25:55.351Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8148,7 +8166,7 @@
     "model": "results.ballotsubmission",
     "pk": 43,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.486",
+        "timestamp": "2016-04-14T03:25:55.486Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8169,7 +8187,7 @@
     "model": "results.ballotsubmission",
     "pk": 44,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.594",
+        "timestamp": "2016-04-14T03:25:55.594Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8190,7 +8208,7 @@
     "model": "results.ballotsubmission",
     "pk": 45,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.665",
+        "timestamp": "2016-04-14T03:25:55.665Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8211,7 +8229,7 @@
     "model": "results.ballotsubmission",
     "pk": 46,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.778",
+        "timestamp": "2016-04-14T03:25:55.778Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8232,7 +8250,7 @@
     "model": "results.ballotsubmission",
     "pk": 47,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.854",
+        "timestamp": "2016-04-14T03:25:55.854Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8253,7 +8271,7 @@
     "model": "results.ballotsubmission",
     "pk": 48,
     "fields": {
-        "timestamp": "2016-04-14T13:25:55.933",
+        "timestamp": "2016-04-14T03:25:55.933Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -22071,7 +22089,6 @@
         "seq": null,
         "slug": "demo",
         "current_round": 4,
-        "welcome_msg": "",
         "active": true
     }
 },

@@ -5,8 +5,12 @@
   </button>
 
   {% if subtitle %}
-    <div class="text-center pb-2 small">
-      <a href="{{ suburl }}">{{ subtitle }}</a>
+    <div class="text-center pb-2 small text-muted">
+      {% if suburl %}
+        <a href="{{ suburl }}">{{ subtitle }}</a>
+      {% else %}
+        {{ subtitle }}
+      {% endif %}
     </div>
   {% endif %}
 

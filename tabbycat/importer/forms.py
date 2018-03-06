@@ -5,7 +5,7 @@ from itertools import zip_longest
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
@@ -145,7 +145,13 @@ class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
     """Also provides for the boolean 'shared' field, which indicates that the
     adjudicator should not be attached to a tournament."""
 
-    shared = forms.BooleanField(initial=False, required=False)
+    shared_pref_name = None
+
+    def __init__(self, tournament, *args, **kwargs):
+        super().__init__(tournament, *args, **kwargs)
+
+        if self.shared_pref_name is None or tournament.pref(self.shared_pref_name):
+            self.fields['shared'] = forms.BooleanField(initial=False, required=False)
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -156,6 +162,8 @@ class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
 
 
 class VenueDetailsForm(SharedBetweenTournamentsObjectForm):
+
+    shared_pref_name = 'share_venues'
 
     class Meta:
         model = Venue
@@ -310,12 +318,23 @@ class TeamDetailsFormSet(forms.BaseModelFormSet):
 
 class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitutionObjectDetailsForm):
 
+    shared_pref_name = 'share_adjs'
+
     class Meta:
         model = Adjudicator
         fields = ('name', 'test_score', 'institution', 'email')
         labels = {
             'test_score': _("Rating"),
         }
+
+    def clean_test_score(self):
+        test_score = self.cleaned_data['test_score']
+        min_score = self.tournament.pref('adj_min_score')
+        max_score = self.tournament.pref('adj_max_score')
+        if test_score < min_score or max_score < test_score:
+            self.add_error('test_score', _("This value must be between %(min)d and %(max)d.") %
+                {'min': min_score, 'max': max_score})
+        return test_score
 
     def save(self, commit=True):
         adj = super().save(commit=commit)

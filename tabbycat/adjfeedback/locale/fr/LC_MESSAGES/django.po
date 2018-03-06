@@ -1,22 +1,22 @@
 # Tabbycat translations, adjfeedback module
-# Copyright (C) 2017 Tabbycat developers and translators
+# Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
-# 
-#, fuzzy
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2017\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"PO-Revision-Date: 2018-02-27 22:01-0800\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: adjfeedback/admin.py:83
 msgid "Source"
@@ -31,8 +31,8 @@ msgid_plural ""
 "%(count)d feedback submissions were marked as confirmed. Note that this may "
 "have caused other feedback submissions to be marked as unconfirmed."
 msgstr[0] ""
-"1 commentaire a été marqué comme confirmé. Notez que cette action peut avoir"
-" rendu autres commentaires marqué comme non confirmés."
+"1 commentaire a été marqué comme confirmé. Notez que cette action peut avoir "
+"rendu autres commentaires marqué comme non confirmés."
 msgstr[1] ""
 "%(count)d commentaires ont été marqué comme confirmés. Notez que cette "
 "action peut avoir rendu autres commentaires marqué comme non confirmés."
@@ -76,20 +76,17 @@ msgstr "panéliste"
 msgid "trainee"
 msgstr "stagiaire"
 
-#. Translators: Please leave this blank, it should be left for the base Django
-#. translations.
+#. Translators: Please leave this blank, it should be left for the base Django translations.
 #: adjfeedback/forms.py:53
 msgid "Yes"
 msgstr "Oui"
 
-#. Translators: Please leave this blank, it should be left for the base Django
-#. translations.
+#. Translators: Please leave this blank, it should be left for the base Django translations.
 #: adjfeedback/forms.py:55
 msgid "No"
 msgstr "Non"
 
-#. Translators: Please leave this blank, it should be left for the base Django
-#. translations.
+#. Translators: Please leave this blank, it should be left for the base Django translations.
 #: adjfeedback/forms.py:70 adjfeedback/forms.py:79
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
@@ -99,10 +96,8 @@ msgstr "Ce champ est obligatoire."
 msgid "Overall score (%(min)d=worst; %(max)d=best)"
 msgstr "Note globale (%(min)d=le pire; %(max)d=le meilleur)"
 
-#. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2",
-#. adjpos="chair"
-#. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round
-#. 3", adjpos="panellist"
+#. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2", adjpos="chair"
+#. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round 3", adjpos="panellist"
 #: adjfeedback/forms.py:227 adjfeedback/forms.py:284
 #, python-format
 msgid "%(name)s (%(round)s %(adjpos)s)"
@@ -131,7 +126,7 @@ msgstr ""
 msgid "%(name)s (%(round)s — chair rolled, this panellist gave oral)"
 msgstr ""
 
-#: adjfeedback/models.py:13 adjfeedback/models.py:209
+#: adjfeedback/models.py:13 adjfeedback/models.py:214
 msgid "adjudicator"
 msgstr "juge"
 
@@ -139,7 +134,7 @@ msgstr "juge"
 msgid "round"
 msgstr "tour"
 
-#: adjfeedback/models.py:17 adjfeedback/models.py:210
+#: adjfeedback/models.py:17 adjfeedback/models.py:215
 msgid "score"
 msgstr "note"
 
@@ -220,7 +215,7 @@ msgstr ""
 msgid "float"
 msgstr ""
 
-#: adjfeedback/models.py:94 adjfeedback/models.py:127
+#: adjfeedback/models.py:94 adjfeedback/models.py:126
 msgid "text"
 msgstr ""
 
@@ -236,125 +231,132 @@ msgstr ""
 msgid "select multiple"
 msgstr ""
 
-#: adjfeedback/models.py:123
+#: adjfeedback/models.py:122
 msgid "tournament"
 msgstr ""
 
-#: adjfeedback/models.py:125
+#: adjfeedback/models.py:124
 msgid "sequence number"
 msgstr ""
 
-#: adjfeedback/models.py:128
+#: adjfeedback/models.py:127
 msgid ""
 "The question displayed to participants, e.g., \"Did you agree with the "
 "decision?\""
 msgstr ""
 
-#: adjfeedback/models.py:130
+#: adjfeedback/models.py:129
 msgid "name"
 msgstr ""
 
-#: adjfeedback/models.py:131
+#: adjfeedback/models.py:130
 msgid "A short name for the question, e.g., \"Agree with decision\""
 msgstr ""
 
-#: adjfeedback/models.py:133
+#: adjfeedback/models.py:132
 msgid "reference"
 msgstr ""
 
-#: adjfeedback/models.py:134
+#: adjfeedback/models.py:133
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
 msgstr ""
 
-#: adjfeedback/models.py:137
+#: adjfeedback/models.py:136
 msgid "from adjudicator"
-msgstr ""
+msgstr "des juges"
 
-#: adjfeedback/models.py:138
+#: adjfeedback/models.py:137
 msgid "Adjudicators should be asked this question (about other adjudicators)"
-msgstr ""
+msgstr "Cette question devrait être posée aux juges (à propos des autre juges)"
+
+#: adjfeedback/models.py:139
+msgid "from team"
+msgstr "des équipes"
 
 #: adjfeedback/models.py:140
-msgid "from team"
-msgstr ""
-
-#: adjfeedback/models.py:141
 msgid "Teams should be asked this question"
-msgstr ""
+msgstr "Cette question devrait être posée aux équipes"
 
-#: adjfeedback/models.py:144
+#: adjfeedback/models.py:143
 msgid "answer type"
 msgstr ""
 
-#: adjfeedback/models.py:146
+#: adjfeedback/models.py:145
 msgid "required"
 msgstr ""
 
-#: adjfeedback/models.py:149
+#: adjfeedback/models.py:148
 msgid "minimum value"
 msgstr ""
 
-#: adjfeedback/models.py:150
+#: adjfeedback/models.py:149
 msgid ""
-"Minimum allowed value for numeric fields (ignored for text or boolean "
-"fields)"
+"Minimum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr ""
 
-#: adjfeedback/models.py:152
+#: adjfeedback/models.py:151
 msgid "maximum value"
 msgstr ""
 
-#: adjfeedback/models.py:153
+#: adjfeedback/models.py:152
 msgid ""
-"Maximum allowed value for numeric fields (ignored for text or boolean "
-"fields)"
+"Maximum allowed value for numeric fields (ignored for text or boolean fields)"
 msgstr ""
 
-#: adjfeedback/models.py:155
+#: adjfeedback/models.py:159
 msgid "choices"
 msgstr ""
 
-#: adjfeedback/models.py:156
-#, python-format
-msgid ""
-"Permissible choices for select one/multiple fields, separated by %r (ignored"
-" for other fields)"
-msgstr ""
-
 #: adjfeedback/models.py:160
+msgid ""
+"Permissible choices for select one/multiple fields, separated by "
+"'//' (ignored for other fields)"
+msgstr ""
+"Les choix acceptables pour les champs « sélectionner un/plusieurs », séparés "
+"par « // » (ignoré dans les autres types de champs)"
+
+#: adjfeedback/models.py:165
 msgid "adjudicator feedback question"
 msgstr ""
 
-#: adjfeedback/models.py:161
+#: adjfeedback/models.py:166
 msgid "adjudicator feedback questions"
 msgstr ""
 
-#: adjfeedback/models.py:214
+#: adjfeedback/models.py:219
 msgid "source adjudicator"
 msgstr ""
 
-#: adjfeedback/models.py:216
+#: adjfeedback/models.py:221
 msgid "source team"
 msgstr ""
 
-#: adjfeedback/models.py:220
+#: adjfeedback/models.py:225
 msgid "adjudicator feedback"
 msgstr ""
 
-#: adjfeedback/models.py:221
+#: adjfeedback/models.py:226
 msgid "adjudicator feedbacks"
 msgstr ""
 
-#: adjfeedback/models.py:266
+#: adjfeedback/models.py:271
 msgid "Either the source adjudicator or source team wasn't specified."
 msgstr ""
 
-#: adjfeedback/models.py:269
+#: adjfeedback/models.py:274
 msgid "There was both a source adjudicator and a source team."
 msgstr ""
 
-#: adjfeedback/models.py:271
+#: adjfeedback/models.py:276
 msgid "Adjudicator did not see this debate."
+msgstr ""
+
+#: adjfeedback/tables.py:38
+msgid "Score"
+msgstr "Score"
+
+#: adjfeedback/tables.py:73 adjfeedback/templates/overview_breakdowns.html:49
+msgid "Feedback"
 msgstr ""
 
 #: adjfeedback/templates/enter_feedback.html:26
@@ -364,6 +366,12 @@ msgid ""
 msgstr ""
 "Cette soumission de commentaires a des problèmes. Veuillez les examiner et "
 "les corriger."
+
+#: adjfeedback/templates/enter_feedback.html:41
+msgid ""
+"When submitting this form your IP address will be stored for logging "
+"purposes."
+msgstr ""
 
 #: adjfeedback/templates/feedback_by_source.html:12
 #, python-format
@@ -403,18 +411,18 @@ msgstr ""
 #, python-format
 msgid ""
 "There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score "
-"<strong>outside the permitted range</strong> of adjudicator scores, which is"
-" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
-" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
-"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
-" class=\"alert-link\"> feedback settings</a>."
+"<strong>outside the permitted range</strong> of adjudicator scores, which is "
+"currently set as %(min_score)s to %(max_score)s. This can cause adjudicator "
+"auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\" "
+"class=\"alert-link\"> feedback settings</a>."
 msgid_plural ""
 "There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores "
-"<strong>outside the permitted range</strong> of adjudicator scores, which is"
-" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
-" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
-"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
-" class=\"alert-link\"> feedback settings</a>."
+"<strong>outside the permitted range</strong> of adjudicator scores, which is "
+"currently set as %(min_score)s to %(max_score)s. This can cause adjudicator "
+"auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\" "
+"class=\"alert-link\"> feedback settings</a>."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -438,10 +446,6 @@ msgstr ""
 msgid "Test"
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:49
-msgid "Feedback"
-msgstr ""
-
 #: adjfeedback/templates/overview_breakdowns.html:53
 #, python-format
 msgid ""
@@ -451,10 +455,10 @@ msgid ""
 msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html:57
-msgid "Score Aspects"
+msgid "Score Ratio"
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:68
+#: adjfeedback/templates/overview_breakdowns.html:69
 #, python-format
 msgid ""
 "There is %(c_chairs)s debate per round, so there needs to be %(c_chairs)s "
@@ -465,27 +469,27 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:73
+#: adjfeedback/templates/overview_breakdowns.html:74
 #, python-format
 msgid "%(c_chairs)s chair"
 msgid_plural "%(c_chairs)s chairs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:81
+#: adjfeedback/templates/overview_breakdowns.html:84
 msgid ""
 "All adjudicators with a score high enough to vote, but who aren't allocated "
 "as chairs, are allocated as panellists by the auto-allocator."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:85
+#: adjfeedback/templates/overview_breakdowns.html:88
 #, python-format
 msgid "%(c_panellists)s panellist"
 msgid_plural "%(c_panellists)s panellists"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:93
+#: adjfeedback/templates/overview_breakdowns.html:98
 #, python-format
 msgid ""
 "Adjudicators are allocated as trainees by the auto-allocator if their score "
@@ -493,21 +497,41 @@ msgid ""
 "this tournament's Draw Rules configuration."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:98
+#: adjfeedback/templates/overview_breakdowns.html:103
 #, python-format
 msgid "%(c_trainees)s trainee"
 msgid_plural "%(c_trainees)s trainees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:106
+#: adjfeedback/templates/overview_breakdowns.html:112
 #, python-format
-msgid "Auto-Allocate Distributions (%(min_voting_score)s to vote)"
+msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr ""
 
-#: adjfeedback/views.py:167 adjfeedback/views.py:193 adjfeedback/views.py:210
+#: adjfeedback/views.py:145 adjfeedback/views.py:171 adjfeedback/views.py:188
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"
 msgstr[0] ""
 msgstr[1] ""
+
+#: adjfeedback/views.py:302
+msgid "A Team"
+msgstr ""
+
+#: adjfeedback/views.py:307
+msgid "Team"
+msgstr ""
+
+#: adjfeedback/views.py:313 adjfeedback/views.py:337
+msgid "Institution"
+msgstr ""
+
+#: adjfeedback/views.py:321
+msgid "An Adjudicator"
+msgstr "Un(e) juge"
+
+#: adjfeedback/views.py:331
+msgid "Adjudicator"
+msgstr "Juge"

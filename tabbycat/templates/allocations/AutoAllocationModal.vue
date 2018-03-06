@@ -54,8 +54,14 @@ export default {
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
       }).fail(function(response) {
         // Handle Failure
+        // Note: this block duplicated in EditVenuesContainer
         console.debug(JSON.stringify(response)) // Help identify failures in sentry
-        var info = response.responseJSON.message
+        var info = ""
+        if (response.hasOwnProperty('responseJSON')) {
+          info += response.responseJSON.message
+        } else {
+          info += "status code " + response["status"] + " because " + response["statusText"]
+        }
         $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         self.resetAutoAllocationModal(event.target)
       })

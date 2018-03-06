@@ -16,7 +16,7 @@ build: false
 
 # Set python version to not be the default (2.7.X)
 environment:
-  nodejs_version: "6" # Match install instructions
+  nodejs_version: "8" # Match install instructions
   matrix:
     - PYTHON: "C:\\Python35" # Match install instructions
       PYTHON_VERSION: "3.5.3"

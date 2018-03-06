@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic.base import ContextMixin, TemplateResponseMixin
+from django.views.generic.base import ContextMixin
 
 logger = logging.getLogger(__name__)
 
@@ -40,28 +40,24 @@ class TabbycatPageTitlesMixin(ContextMixin):
         return super().get_context_data(**kwargs)
 
 
-class SuperuserRequiredMixin(UserPassesTestMixin):
-    """Class-based view mixin. Requires user to be a superuser."""
+class AdministratorMixin(UserPassesTestMixin, ContextMixin):
+    """Mixin for views that are for administrators.
+    Requires use to be a superuser."""
+
+    def get_context_data(self, **kwargs):
+        kwargs["user_role"] = "admin"
+        return super().get_context_data(**kwargs)
 
     def test_func(self):
         return self.request.user.is_superuser
 
 
-class SuperuserOrTabroomAssistantTemplateResponseMixin(LoginRequiredMixin, TemplateResponseMixin):
-    """Mixin for views that choose either a superuser view or an assistant view,
-    depending on the privileges of the user who is logged in.
+class AssistantMixin(LoginRequiredMixin, ContextMixin):
+    """Mixin for views that are for assistants."""
 
-    Views using this mixin must define the `superuser_template_name` and
-    `assistant_template_name` class attributes."""
-
-    superuser_template_name = None
-    assistant_template_name = None
-
-    def get_template_names(self):
-        if self.request.user.is_superuser:
-            return [self.superuser_template_name]
-        else:
-            return [self.assistant_template_name]
+    def get_context_data(self, **kwargs):
+        kwargs["user_role"] = "assistant"
+        return super().get_context_data(**kwargs)
 
 
 class CacheMixin:

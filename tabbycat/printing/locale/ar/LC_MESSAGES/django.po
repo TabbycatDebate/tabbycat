@@ -1,0 +1,94 @@
+# Tabbycat translations, printing module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: printing/templates/feedback_list.html:5
+msgid "Feedback Forms"
+msgstr "تموذج التغذية الراجعة"
+
+#: printing/templates/feedback_list.html:7
+#, python-format
+msgid "Printable Feedback Forms for %(round_name)s"
+msgstr ""
+
+#: printing/templates/feedback_list.html:14
+msgid ""
+"No feedback questions have been added for either teams or adjudicators to "
+"answer."
+msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة "
+
+#: printing/templates/feedback_list.html:16
+msgid "No feedback questions have been added for teams to answer."
+msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة من الفريق"
+
+#: printing/templates/feedback_list.html:18
+msgid "No feedback questions have been added for adjudicators to answer."
+msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة من الحكم"
+
+#: printing/templates/feedback_list.html:20
+#, python-format
+msgid ""
+"%(first_sentence)s Check the <a "
+"href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-"
+"feedback.html\" target=\"_blank\">documentation</a> for information on how "
+"to add these (otherwise these forms will be quite bare)."
+msgstr ""
+
+#: printing/templates/feedback_list.html:41
+msgid ""
+"There are no feedback sheets available — perhaps adjudicators have not been "
+"allocated?"
+msgstr "لا يوجد استبيان متوفر — "
+
+#: printing/templates/printables_list.html:9
+msgid ""
+"Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
+"<strong>page orientation</strong>, to turn off "
+"<strong>headers/footers</strong> and turn on <strong>background "
+"graphics</strong>. Works best in Chrome or Safari."
+msgstr ""
+"استخدم كترل + P للطباعة أو الحفظ إلى بدف. تأكد من تعيين<strong> الصفحة "
+"المناسبة </strong>التوجه، لإيقاف <strong>رؤوس / التذييلات </strong>وتشغيل "
+"<strong> باكغروند الرسومات </strong>يعمل بشكل أفضل في كروم أو سفاري."
+
+#: printing/templates/scoresheet_list.html:5
+msgid "Scoresheets"
+msgstr "ورقة النتائج "
+
+#: printing/templates/scoresheet_list.html:7
+#, python-format
+msgid "Printable Scoresheets for %(round_name)s"
+msgstr "ورقة النتائج جاهزة للطباعة  %(round_name)s"
+
+#: printing/templates/scoresheet_list.html:23
+msgid ""
+"There are no scoresheets available — perhaps the round has not been drawn?"
+msgstr "لم تتوفر نموذج درجات لهذه الجولة — "
+
+#: printing/views.py:87
+msgid "Overall Score"
+msgstr "مجموع الدرجات"
+
+#: printing/views.py:108
+msgid "Unaffiliated"
+msgstr "غير منتسبين"
+
+#: printing/views.py:121 printing/views.py:125
+msgid "Team"
+msgstr "فريق"

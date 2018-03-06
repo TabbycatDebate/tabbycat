@@ -6,6 +6,9 @@ import vueBases from './main.js';
 var vueComponents = vueBases.baseComponents
 var vueData = vueBases.baseData
 
+// Make a global mixin to provide translation functions
+Vue.mixin(vueBases.vueTranslationMixin)
+
 // This is an coordinating instance used for inter-component pub/sub interfaces
 var eventHub = new Vue()
 Vue.prototype.$eventHub = eventHub

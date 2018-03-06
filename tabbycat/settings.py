@@ -1,13 +1,14 @@
 import os
 
 from django.contrib.messages import constants as messages
+from django.utils.translation import gettext_lazy as _
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==============================================================================
-# Overwritten in Local
+# Overwritten in local_settings.py
 # ==============================================================================
 
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
@@ -16,20 +17,39 @@ DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 DEBUG_ASSETS = DEBUG
 
 # ==============================================================================
-# Global Settings
+# Version
 # ==============================================================================
-
-MEDIA_URL = '/media/'
-TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
-LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'en')
-USE_I18N = True
 
 TABBYCAT_VERSION = '2.1.0-dev'
 TABBYCAT_CODENAME = 'Japanese Bobtail'
 READTHEDOCS_VERSION = 'latest'  # change to v2.1.0 for release
 
+# ==============================================================================
+# Internationalization and Localization
+# ==============================================================================
+
+USE_I18N = True
+USE_TZ = True
+USE_L10N = True
+LANGUAGE_CODE = 'en'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
+
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
+]
+
+# Languages that should be available in the switcher
+LANGUAGES = [
+    ('ar', _('Arabic')),
+    ('en', _('English')),
+    ('es', _('Spanish')),
+    ('fr', _('French'))
+]
+
+STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
+
+FORMAT_MODULE_PATH = [
+    'utils.formats',
 ]
 
 # ==============================================================================
@@ -40,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # User language preferences
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -80,13 +101,14 @@ INSTALLED_APPS = (
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_summernote',  # Keep above our apps; as we unregister an admin model
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'dynamic_preferences.users.apps.UserPreferencesConfig',
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
     'formtools',
+    'statici18n' # Compile js translations as static file; saving requests
 )
 
 ROOT_URLCONF = 'urls'
@@ -112,6 +134,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # for Jet
                 'utils.context_processors.debate_context',  # for tournament config vars
                 'utils.context_processors.get_menu_highlight',  # for navigation highlights
+                'django.template.context_processors.i18n'  # for serving static language translations
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -245,6 +268,24 @@ if 'DATABASE_URL' in os.environ and not DEBUG:
 # ==============================================================================
 
 MESSAGE_TAGS = {messages.ERROR: 'danger', }
+
+# ==============================================================================
+# Summernote (WYSWIG)
+# ==============================================================================
+
+SUMMERNOTE_CONFIG = {
+    'width': '100%',
+    'height': '480',
+    'toolbar': [
+        ['style', ['bold', 'italic', 'underline', 'fontsize', 'color', 'clear']],
+        ['para', ['ul', 'ol']],
+        ['insert', ['link', 'picture', 'video', 'hr']],
+        ['misc', ['undo', 'redo', 'codeview']],
+        ['help', ['help']]
+    ],
+    'disable_upload': True,
+    'iframe': True, # When django-summernote supports Bootstrap4 change this
+}
 
 # ==============================================================================
 # Channels

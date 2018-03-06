@@ -1,14 +1,14 @@
 # Tabbycat translations, participants module
-# Copyright (C) 2017 Tabbycat developers and translators
+# Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,25 +18,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: participants/admin.py:91
+#: participants/admin.py:92
 #, python-format
 msgid ""
 "The team can't be in a break category of a different tournament. Please "
 "remove: %(category)s"
 msgstr ""
 
-#: participants/admin.py:127
+#: participants/admin.py:128
 #, python-format
 msgid "%(count)d team had its URL key removed."
 msgid_plural "%(count)d teams had their URL keys removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/admin.py:132 participants/admin.py:191
+#: participants/admin.py:133 participants/admin.py:200
 msgid "Delete URL key"
 msgstr ""
 
-#: participants/admin.py:186
+#: participants/admin.py:195
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."
@@ -509,6 +509,15 @@ msgstr ""
 msgid "%(adj_name)s is on the adjudication core."
 msgstr ""
 
+#: participants/templates/admin/participants/adjudicator/change_form.html:8
+msgid ""
+"<strong>Don't forget:</strong> If this adjudicator should be conflicted "
+"against their own institution, you should add this conflict <strong>now</"
+"strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, "
+"because the own-institution conflict is <strong>not</strong> automatically "
+"created when using this form."
+msgstr ""
+
 #: participants/templates/admin/participants/delete_debateteam_warning.html:7
 #, python-format
 msgid ""
@@ -699,16 +708,8 @@ msgstr ""
 msgid "Adjudicators"
 msgstr ""
 
-#: participants/views.py:57
-msgid "Name"
-msgstr ""
-
 #: participants/views.py:62
 msgid "Speakers"
-msgstr ""
-
-#: participants/views.py:62
-msgid "Team"
 msgstr ""
 
 #: participants/views.py:103 participants/views.py:176

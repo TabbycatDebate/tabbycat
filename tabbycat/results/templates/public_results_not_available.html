@@ -1,13 +1,12 @@
-{% extends "base.html" %}
-{% load debate_tags %}
-
-{% block head-title %}Results for {{ round.name }}{% endblock %}
-{% block page-title %}Results for {{ round.name }}{% endblock %}
+{% extends "public_results_base.html" %}
+{% load i18n %}
 
 {% block content %}
   <div class="card">
     <div class="card-body">
-      <p>The results for {{ round.name }} aren't yet available <span class="emoji">😴</span></p>
+      <p>{% blocktrans trimmed with round_name=round.name %}
+        The results for {{ round_name }} aren't yet available
+      {% endblocktrans %} <span class="emoji">😶</span></p>
     </div>
   </div>
 {% endblock %}

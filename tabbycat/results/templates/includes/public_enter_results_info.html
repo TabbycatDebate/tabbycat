@@ -8,11 +8,4 @@
     debate, it will always show the debate that you just adjudicated.
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
-{% else %}
-  {% blocktrans trimmed with adj_name=adjudicator.name asvar p1 %}
-    The URL of this page is personalised to you, {{ adj_name }}. If you bookmark
-    this page and return here after each debate, it will always show the debate
-    that you just adjudicated.
-  {% endblocktrans %}
-  {% include "components/explainer-card.html" with type="info" %}
 {% endif %}

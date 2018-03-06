@@ -4,8 +4,9 @@ from django.contrib import admin, messages
 from django.contrib.auth.views import logout as auth_logout
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic.base import RedirectView
+from django.views.i18n import JavaScriptCatalog
 
 import tournaments.views
 
@@ -39,6 +40,19 @@ urlpatterns = [
         tournaments.views.StyleGuideView.as_view(),
         name='style-guide'),
 
+    # Set language override
+    path('i18n/',
+        include('django.conf.urls.i18n')),
+
+    # JS Translations Catalogue; includes all djangojs files in locale folders
+    path('jsi18n/',
+         JavaScriptCatalog.as_view(domain="djangojs", ),
+         name='javascript-catalog'),
+
+    # Summernote (WYSYWIG)
+    path('summernote/',
+        include('django_summernote.urls')),
+
     # Admin area
     path('jet/',
         include('jet.urls', 'jet')),
@@ -63,7 +77,7 @@ urlpatterns = [
 
     # Draws Cross Tournament
     path('draw/',
-        include('draw.urls_crosst'))
+        include('draw.urls_crosst')),
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG

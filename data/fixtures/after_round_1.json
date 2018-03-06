@@ -11,7 +11,7 @@
         "email": "",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2017-09-07T18:36:20.997",
+        "date_joined": "2017-09-07T08:36:20.997Z",
         "groups": [],
         "user_permissions": []
     }
@@ -28,7 +28,7 @@
         "email": "",
         "is_staff": false,
         "is_active": true,
-        "date_joined": "2017-09-07T18:36:34.295",
+        "date_joined": "2017-09-07T08:36:34.295Z",
         "groups": [],
         "user_permissions": []
     }
@@ -692,7 +692,7 @@
         "adjudicator": 73,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.054"
+        "timestamp": "2017-09-07T08:36:04.054Z"
     }
 },
 {
@@ -702,7 +702,7 @@
         "adjudicator": 74,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.059"
+        "timestamp": "2017-09-07T08:36:04.059Z"
     }
 },
 {
@@ -712,7 +712,7 @@
         "adjudicator": 75,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.061"
+        "timestamp": "2017-09-07T08:36:04.061Z"
     }
 },
 {
@@ -722,7 +722,7 @@
         "adjudicator": 76,
         "round": null,
         "score": 1.0,
-        "timestamp": "2017-09-07T18:36:04.063"
+        "timestamp": "2017-09-07T08:36:04.063Z"
     }
 },
 {
@@ -732,7 +732,7 @@
         "adjudicator": 78,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.065"
+        "timestamp": "2017-09-07T08:36:04.065Z"
     }
 },
 {
@@ -742,7 +742,7 @@
         "adjudicator": 79,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.067"
+        "timestamp": "2017-09-07T08:36:04.067Z"
     }
 },
 {
@@ -752,7 +752,7 @@
         "adjudicator": 80,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.069"
+        "timestamp": "2017-09-07T08:36:04.069Z"
     }
 },
 {
@@ -762,7 +762,7 @@
         "adjudicator": 81,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.071"
+        "timestamp": "2017-09-07T08:36:04.071Z"
     }
 },
 {
@@ -772,7 +772,7 @@
         "adjudicator": 83,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.072"
+        "timestamp": "2017-09-07T08:36:04.072Z"
     }
 },
 {
@@ -782,7 +782,7 @@
         "adjudicator": 84,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.074"
+        "timestamp": "2017-09-07T08:36:04.074Z"
     }
 },
 {
@@ -792,7 +792,7 @@
         "adjudicator": 85,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.076"
+        "timestamp": "2017-09-07T08:36:04.076Z"
     }
 },
 {
@@ -802,7 +802,7 @@
         "adjudicator": 86,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.078"
+        "timestamp": "2017-09-07T08:36:04.078Z"
     }
 },
 {
@@ -812,7 +812,7 @@
         "adjudicator": 87,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.079"
+        "timestamp": "2017-09-07T08:36:04.079Z"
     }
 },
 {
@@ -822,7 +822,7 @@
         "adjudicator": 88,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.081"
+        "timestamp": "2017-09-07T08:36:04.081Z"
     }
 },
 {
@@ -832,7 +832,7 @@
         "adjudicator": 89,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.083"
+        "timestamp": "2017-09-07T08:36:04.083Z"
     }
 },
 {
@@ -842,7 +842,7 @@
         "adjudicator": 90,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.085"
+        "timestamp": "2017-09-07T08:36:04.085Z"
     }
 },
 {
@@ -852,7 +852,7 @@
         "adjudicator": 91,
         "round": null,
         "score": 1.0,
-        "timestamp": "2017-09-07T18:36:04.087"
+        "timestamp": "2017-09-07T08:36:04.087Z"
     }
 },
 {
@@ -862,7 +862,7 @@
         "adjudicator": 93,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.089"
+        "timestamp": "2017-09-07T08:36:04.089Z"
     }
 },
 {
@@ -872,7 +872,7 @@
         "adjudicator": 94,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.090"
+        "timestamp": "2017-09-07T08:36:04.090Z"
     }
 },
 {
@@ -882,7 +882,7 @@
         "adjudicator": 95,
         "round": null,
         "score": 3.0,
-        "timestamp": "2017-09-07T18:36:04.092"
+        "timestamp": "2017-09-07T08:36:04.092Z"
     }
 },
 {
@@ -892,7 +892,7 @@
         "adjudicator": 96,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.094"
+        "timestamp": "2017-09-07T08:36:04.094Z"
     }
 },
 {
@@ -902,7 +902,7 @@
         "adjudicator": 97,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.096"
+        "timestamp": "2017-09-07T08:36:04.096Z"
     }
 },
 {
@@ -912,7 +912,7 @@
         "adjudicator": 98,
         "round": null,
         "score": 3.0,
-        "timestamp": "2017-09-07T18:36:04.098"
+        "timestamp": "2017-09-07T08:36:04.098Z"
     }
 },
 {
@@ -922,7 +922,7 @@
         "adjudicator": 99,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.100"
+        "timestamp": "2017-09-07T08:36:04.100Z"
     }
 },
 {
@@ -1616,6 +1616,7 @@
         "seq": 1,
         "text": "This House would abolish national days",
         "reference": "National days",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -1628,6 +1629,7 @@
         "seq": 2,
         "text": "This House regrets the existence of Valentine's Day",
         "reference": "Valentine\u2019s Day",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -1640,6 +1642,7 @@
         "seq": 3,
         "text": "This House would rename Christmas with a name that is religiously neutral",
         "reference": "Christmas",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -1652,6 +1655,7 @@
         "seq": 1,
         "text": "This House would not buy Apple",
         "reference": "Apple",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -1664,6 +1668,7 @@
         "seq": 2,
         "text": "This House would end all research and development tax credits for highly profitable technology companies",
         "reference": "R&D tax credit",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -1676,6 +1681,7 @@
         "seq": 3,
         "text": "This House regrets the rise of computer science at the expense of the humanities",
         "reference": "Computer science",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -1688,6 +1694,7 @@
         "seq": 1,
         "text": "This House would favour creativity over intelligence",
         "reference": "Creativity and intelligence",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -1700,6 +1707,7 @@
         "seq": 2,
         "text": "This House believes that field hockey is better than ice hockey",
         "reference": "Hockey",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -1712,6 +1720,7 @@
         "seq": 3,
         "text": "This House would rather play with Lego than Barbie",
         "reference": "Lego and Barbie",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -1724,6 +1733,7 @@
         "seq": 1,
         "text": "This House would stop importing bananas from Latin America",
         "reference": "Bananas",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -1736,6 +1746,7 @@
         "seq": 2,
         "text": "This House believes that tomatoes are a fruit",
         "reference": "Tomatoes",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -1748,6 +1759,7 @@
         "seq": 3,
         "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
         "reference": "Pesticide labelling",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -1760,6 +1772,7 @@
         "seq": 1,
         "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
         "reference": "Indecent exposure",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -1772,6 +1785,7 @@
         "seq": 2,
         "text": "This House regrets the development of different fashion lines for men and women",
         "reference": "Gender and fashion",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -1784,6 +1798,7 @@
         "seq": 3,
         "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
         "reference": "Flip-flops",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -1796,6 +1811,7 @@
         "seq": 1,
         "text": "This House would stop using cash",
         "reference": "Cash",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -1808,6 +1824,7 @@
         "seq": 2,
         "text": "This House supports Bitcoin",
         "reference": "Bitcoin",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -1820,6 +1837,7 @@
         "seq": 3,
         "text": "This House would allow private organisations to compete in providing currency",
         "reference": "Private currency",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -5034,7 +5052,7 @@
     "model": "results.ballotsubmission",
     "pk": 1,
     "fields": {
-        "timestamp": "2017-09-07T18:36:34.410",
+        "timestamp": "2017-09-07T08:36:34.410Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5055,7 +5073,7 @@
     "model": "results.ballotsubmission",
     "pk": 2,
     "fields": {
-        "timestamp": "2017-09-07T18:36:34.634",
+        "timestamp": "2017-09-07T08:36:34.634Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5076,7 +5094,7 @@
     "model": "results.ballotsubmission",
     "pk": 3,
     "fields": {
-        "timestamp": "2017-09-07T18:36:34.910",
+        "timestamp": "2017-09-07T08:36:34.910Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5097,7 +5115,7 @@
     "model": "results.ballotsubmission",
     "pk": 4,
     "fields": {
-        "timestamp": "2017-09-07T18:36:35.160",
+        "timestamp": "2017-09-07T08:36:35.160Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5118,7 +5136,7 @@
     "model": "results.ballotsubmission",
     "pk": 5,
     "fields": {
-        "timestamp": "2017-09-07T18:36:35.525",
+        "timestamp": "2017-09-07T08:36:35.525Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5139,7 +5157,7 @@
     "model": "results.ballotsubmission",
     "pk": 6,
     "fields": {
-        "timestamp": "2017-09-07T18:36:35.864",
+        "timestamp": "2017-09-07T08:36:35.864Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5160,7 +5178,7 @@
     "model": "results.ballotsubmission",
     "pk": 7,
     "fields": {
-        "timestamp": "2017-09-07T18:36:36.206",
+        "timestamp": "2017-09-07T08:36:36.206Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5181,7 +5199,7 @@
     "model": "results.ballotsubmission",
     "pk": 8,
     "fields": {
-        "timestamp": "2017-09-07T18:36:36.525",
+        "timestamp": "2017-09-07T08:36:36.525Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5202,7 +5220,7 @@
     "model": "results.ballotsubmission",
     "pk": 9,
     "fields": {
-        "timestamp": "2017-09-07T18:36:36.875",
+        "timestamp": "2017-09-07T08:36:36.875Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5223,7 +5241,7 @@
     "model": "results.ballotsubmission",
     "pk": 10,
     "fields": {
-        "timestamp": "2017-09-07T18:36:37.191",
+        "timestamp": "2017-09-07T08:36:37.191Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5244,7 +5262,7 @@
     "model": "results.ballotsubmission",
     "pk": 11,
     "fields": {
-        "timestamp": "2017-09-07T18:36:37.651",
+        "timestamp": "2017-09-07T08:36:37.651Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5265,7 +5283,7 @@
     "model": "results.ballotsubmission",
     "pk": 12,
     "fields": {
-        "timestamp": "2017-09-07T18:36:38.121",
+        "timestamp": "2017-09-07T08:36:38.121Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -8387,7 +8405,6 @@
         "seq": null,
         "slug": "demo",
         "current_round": 2,
-        "welcome_msg": "",
         "active": true
     }
 },

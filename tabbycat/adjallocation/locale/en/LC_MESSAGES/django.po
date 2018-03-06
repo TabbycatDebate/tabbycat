@@ -1,14 +1,14 @@
 # Tabbycat translations, adjallocation module
-# Copyright (C) 2017 Tabbycat developers and translators
+# Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgid "debate"
 msgstr ""
 
 #: adjallocation/models.py:28 adjallocation/models.py:44
-#: adjallocation/models.py:68
+#: adjallocation/models.py:74
 msgid "adjudicator"
 msgstr ""
 
@@ -50,11 +50,11 @@ msgstr ""
 msgid "available?"
 msgstr ""
 
-#: adjallocation/models.py:37
+#: adjallocation/models.py:34
 msgid "debate adjudicator"
 msgstr ""
 
-#: adjallocation/models.py:38
+#: adjallocation/models.py:35
 msgid "debate adjudicators"
 msgstr ""
 
@@ -70,31 +70,31 @@ msgstr ""
 msgid "adjudicator-team conflicts"
 msgstr ""
 
-#: adjallocation/models.py:56
+#: adjallocation/models.py:59
 msgid "adjudicator 1"
 msgstr ""
 
-#: adjallocation/models.py:58
+#: adjallocation/models.py:61
 msgid "adjudicator 2"
 msgstr ""
 
-#: adjallocation/models.py:61
+#: adjallocation/models.py:64
 msgid "adjudicator-adjudicator conflict"
 msgstr ""
 
-#: adjallocation/models.py:62
+#: adjallocation/models.py:65
 msgid "adjudicator-adjudicator conflicts"
 msgstr ""
 
-#: adjallocation/models.py:70
+#: adjallocation/models.py:76
 msgid "institution"
 msgstr ""
 
-#: adjallocation/models.py:73
+#: adjallocation/models.py:79
 msgid "adjudicator-institution conflict"
 msgstr ""
 
-#: adjallocation/models.py:74
+#: adjallocation/models.py:80
 msgid "adjudicator-institution conflicts"
 msgstr ""
 
@@ -103,14 +103,14 @@ msgstr ""
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr ""
 
-#: adjallocation/views.py:139
+#: adjallocation/views.py:138
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:143
+#: adjallocation/views.py:142
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:192
+#: adjallocation/views.py:191
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr ""

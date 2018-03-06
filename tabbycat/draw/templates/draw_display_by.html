@@ -1,12 +1,11 @@
 {% extends "tables/base_vue_table.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load debate_tags static i18n %}
 
 {% block body-class %}override-sidebar-offset{% endblock %}
 
 {% block nav %}
   {# For admins and assistants, the draw opens without menu (for displaying in the briefing room) #}
-  {% if 'admin/' not in request.path or not user.is_authenticated %}
+  {% if user_role != "admin" and user_role != "assistant" %}
     {{ block.super }}
   {% endif %}
 {% endblock %}
@@ -15,46 +14,46 @@
 
   <div class="btn-group scroll-speeds d-none d-md-flex">
     <div class="btn btn-outline-secondary">
-      Scroll Speed
+      {% trans "Scroll Speed" %}
     </div>
     <div class="btn btn-outline-primary" data-target="0.07" id="scroll_draw1">
-      Fast
+      {% trans "Fast" %}
     </div>
     <div class="btn btn-outline-primary" data-target="0.055" id="scroll_draw2">
-      Medium
+      {% trans "Medium" %}
     </div>
     <div class="btn btn-outline-primary" data-target="0.04" id="scroll_draw3">
-      Slow
+      {% trans "Slow" %}
     </div>
     <div class="btn btn-outline-primary" data-target="0.025" id="scroll_draw4">
-      Extra Slow
+      {% trans "Extra Slow" %}
     </div>
   </div>
 
   <div class="btn-group text-size d-none d-md-flex">
     <div class="btn btn-outline-secondary">
-      Text Size
+      {% trans "Text Size" %}
     </div>
     <div class="btn btn-outline-primary" data-target="draw-xs" id="tiny_text">
-      Tiny
+      {% trans "Tiny" %}
     </div>
     <div class="btn btn-outline-primary" data-target="draw-s" id="small_text">
-      Small
+      {% trans "Small" %}
     </div>
     <div class="btn btn-outline-primary" data-target="draw-m" id="medium_text">
-      Medium
+      {% trans "Medium" %}
     </div>
     <div class="btn btn-outline-primary" data-target="draw-l" id="large_text">
-      Large
+      {% trans "Large" %}
     </div>
     <div class="btn btn-outline-primary" data-target="draw-xl" id="huge_text">
-      Huge
+      {% trans "Huge" %}
     </div>
   </div>
 
   <div class="btn btn-secondary btn-sm btn btn-stop-scrolling fixed-top text-white mt-2 mr-2"
      data-target="draw-xs" id="stop_scrolling">
-    Stop Scroll
+    {% trans "Stop Scroll" %}
   </div>
 
 {% endblock %}

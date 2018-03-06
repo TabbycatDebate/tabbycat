@@ -82,8 +82,8 @@ The general pattern goes like this: Go to **Setup > Edit Database**, find the ty
 
 .. _importtournament-command:
 
-The ``importtournament`` command
-=================================
+The ``importtournament`` command on local installations
+=======================================================
 
 We've written a management command called ``importtournament`` to help automate the tournament set-up. The script, however, is neither foolproof nor comprehensive, so you might find you need to modify things slightly if your tournament structure is different from ours. Be prepared to try this a few times to get it to work. Nonetheless, this is probably the fastest way to set up a tournament.
 
@@ -104,9 +104,7 @@ This script has a number of options. They're worth taking a look at before you r
 ``importtournament`` on Heroku installs
 ========================================
 
-The ``importtournament`` script can be run on Heroku directly; you just need to commit and push your new data directory to your server first. See :ref:`install-heroku` for details. If you have a local installation ready, you might like to iron out all the errors in your data until you can import locally without error, before pushing your data files to your server to be imported there.
-
-If you want to import locally and push the database to the server, you can use the ``heroku pg:push`` command. We assume that, if you want to use this method, you know what you're doing or are comfortable reading the Heroku documentation to find out. We're happy to help if you have questions about this, but for most tournaments, committing the data to the server and running the script on the server directly will be easier.
+Instructions for using the ``importtournament`` command on Heroku installations are in steps 4 and 5 of :ref:`install-heroku`. The recommended procedure is first to import the tournament into a local installation, :ref:`as described above <importtournament-command>`, and then to push the local database to Heroku using the ``heroku pg:push`` command.
 
 Developing your own importer
 ============================

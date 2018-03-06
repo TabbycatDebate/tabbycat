@@ -2,8 +2,8 @@ import logging
 
 from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
 
 from tournaments.utils import get_side_name
 
@@ -82,11 +82,11 @@ class Debate(models.Model):
             # Translators: This is appended to a list of teams, e.g. "Auckland
             # 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
             # space.
-            return teams_list + ugettext(" (sides not confirmed)")
+            return teams_list + gettext(" (sides not confirmed)")
         try:
             # Translators: This goes between teams in a debate, e.g. "Auckland 1
             # vs Vic Wellington 1". Mind the leading and trailing spaces.
-            return ugettext(" vs ").join(self.get_team(side).short_name for side in self.round.tournament.sides)
+            return gettext(" vs ").join(self.get_team(side).short_name for side in self.round.tournament.sides)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             return self._teams_and_sides_display()
 
@@ -336,13 +336,13 @@ class DebateTeam(models.Model):
             elif self.points is 0:
                 return "Placed 4th"
             else:
-                return ugettext("result unknown")
+                return gettext("result unknown")
         elif self.win is True:
-            return ugettext("Won")
+            return gettext("Won")
         elif self.win is False:
-            return ugettext("Lost")
+            return gettext("Lost")
         else:
-            return ugettext("result unknown")
+            return gettext("result unknown")
 
     @property
     def win(self):

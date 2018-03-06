@@ -5,8 +5,13 @@ from . import views
 urlpatterns = [
     # Viewing
     path('round/<int:round_seq>/',
-        views.ResultsEntryForRoundView.as_view(),
+        views.AdminResultsEntryForRoundView.as_view(),
         name='results-round-list'),
+
+    # Ballot check-in
+    path('round/<int:round_seq>/checkin/',
+        views.AdminBallotCheckinView.as_view(),
+        name='results-ballot-checkin'),
 
     # Inline Actions
     path('round/<int:round_seq>/postpone/',
@@ -16,22 +21,11 @@ urlpatterns = [
         views.UnpostponeDebateView.as_view(),
         name='results-unpostpone-debate'),
 
-    # Ballot check-in
-    path('round/<int:round_seq>/checkin/',
-        views.BallotCheckinView.as_view(),
-        name='results-ballot-checkin'),
-    path('round/<int:round_seq>/checkin/detail/',
-        views.BallotCheckinGetDetailsView.as_view(),
-        name='results-ballot-checkin-details'),
-    path('round/<int:round_seq>/checkin/post/',
-        views.PostBallotCheckinView.as_view(),
-        name='results-ballot-checkin-post'),
-
     # Ballots
     path('ballots/<int:pk>/edit/',
-        views.EditBallotSetView.as_view(),
+        views.AdminEditBallotSetView.as_view(),
         name='results-ballotset-edit'),
     path('debate/<int:debate_id>/new/',
-        views.NewBallotSetView.as_view(),
+        views.AdminNewBallotSetView.as_view(),
         name='results-ballotset-new'),
 ]

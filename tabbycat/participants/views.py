@@ -7,8 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Prefetch
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import ugettext_lazy, ungettext
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext as _
 from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
@@ -22,7 +22,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin, CacheMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -47,26 +47,26 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
 
 class BaseParticipantsListView(VueTableTemplateView):
 
-    page_title = ugettext_lazy("Participants")
+    page_title = gettext_lazy("Participants")
     page_emoji = '🚌'
 
     def get_tables(self):
         t = self.get_tournament()
 
         adjudicators = t.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key=_("Name"))
+        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         adjs_table.add_adjudicator_columns(adjudicators)
 
         speakers = Speaker.objects.filter(team__tournament=t).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
-        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key=_("Team"))
+        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="team")
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
         return [adjs_table, speakers_table]
 
 
-class ParticipantsListView(BaseParticipantsListView, SuperuserRequiredMixin, TournamentMixin):
+class ParticipantsListView(BaseParticipantsListView, AdministratorMixin, TournamentMixin):
 
     template_name = 'participants_list.html'
 
@@ -149,7 +149,7 @@ class BaseTeamRecordView(BaseRecordView):
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TeamResultTableBuilder(view=self, title="Results", sort_key="Round")
+        table = TeamResultTableBuilder(view=self, title="Results", sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
@@ -216,7 +216,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="Round")
+        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
@@ -228,11 +228,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return table
 
 
-class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
+class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
     admin = True
 
 
-class AdjudicatorRecordView(SuperuserRequiredMixin, BaseAdjudicatorRecordView):
+class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
     admin = True
 
 
@@ -250,7 +250,7 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 # Speaker categories
 # ==============================================================================
 
-class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
     # The tournament is included in the form as a hidden input so that
     # uniqueness checks will work. Since this is a superuser form, they can
     # access all tournaments anyway, so tournament forgery wouldn't be a
@@ -280,7 +280,7 @@ class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, Tourname
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            message = ungettext("Saved speaker category: %(list)s",
+            message = ngettext("Saved speaker category: %(list)s",
                 "Saved speaker categories: %(list)s",
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
@@ -295,7 +295,7 @@ class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, Tourname
         return reverse_tournament('participants-list', self.get_tournament())
 
 
-class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
+class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     # form_class = forms.SpeakerCategoryEligibilityForm
     template_name = 'edit_speaker_eligibility.html'
@@ -312,7 +312,7 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
         speaker_categories = self.get_tournament().speakercategory_set.all()
 
         for sc in speaker_categories:
-            table.add_column(sc.name, [{
+            table.add_column({'key': sc.name, 'title': sc.name}, [{
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,
@@ -329,8 +329,7 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
         return super().get_context_data(**kwargs)
 
 
-class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin,
-                                TournamentMixin, View):
+class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
 
     def set_category_eligibility(self, speaker, sent_status):

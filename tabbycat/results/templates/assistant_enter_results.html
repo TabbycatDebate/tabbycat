@@ -1,6 +1,18 @@
 {% extends "enter_results.html" %}
 {% load static debate_tags i18n %}
 
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'results-assistant-round-list' %}">
+    <i data-feather="chevron-left"></i>
+    {% trans "Back to All Results" %}
+  </a>
+  {% if not new %}
+    <a class="btn btn-primary" href="{% tournamenturl 'results-assistant-ballotset-new' debate.id %}">
+      {% trans "Create a new ballot set for this debate" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   <form id="resultsForm" action="." method="POST">
     {% csrf_token %}

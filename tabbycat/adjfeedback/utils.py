@@ -1,7 +1,6 @@
 import logging
 from statistics import mean, StatisticsError
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Avg, Count, Prefetch, Q
 
 from adjallocation.allocation import AdjudicatorAllocation
@@ -156,39 +155,3 @@ def feedback_stats(adj, rounds):
             })
 
     return feedback_data
-
-
-def parse_feedback(feedback, questions):
-
-    if feedback.source_team:
-        source_annotation = " (" + feedback.source_team.get_result_display() + ")"
-    elif feedback.source_adjudicator:
-        source_annotation = " (" + feedback.source_adjudicator.get_type_display() + ")"
-    else:
-        source_annotation = ""
-
-    data = {
-        'round': feedback.round.abbreviation,
-        'version': str(feedback.version) + (feedback.confirmed and "*" or ""),
-        'bracket': feedback.debate.bracket,
-        'matchup': feedback.debate.matchup,
-        'source': feedback.source,
-        'source_note': source_annotation,
-        'score': feedback.score,
-        'questions': []
-    }
-
-    for question in questions:
-        q = {
-            'reference': question.reference,
-            'text': question.text,
-            'name': question.name
-        }
-        try:
-            q['answer'] = question.answer_set.get(feedback=feedback).answer
-        except ObjectDoesNotExist:
-            q['answer'] = "-"
-
-        data['questions'].append(q)
-
-    return data

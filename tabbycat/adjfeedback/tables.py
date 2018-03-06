@@ -1,5 +1,7 @@
 import logging
 
+from django.utils.translation import gettext as _
+
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
 
@@ -12,7 +14,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
     def add_breaking_checkbox(self, adjudicators, key="Breaking"):
         breaking_header = {
-            'key': 'B',
+            'key': 'breaking',
             'icon': 'award',
             'tooltip': 'Whether the adj is marked as breaking (click to mark)',
         }
@@ -32,8 +34,8 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
 
         overall_header = {
-            'key': 'Score',
-            'text': 'Score',
+            'key': 'score',
+            'title': _('Score'),
             'tooltip': 'Current weighted score',
         }
         overall_data = [{
@@ -45,7 +47,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
     def add_test_score_columns(self, adjudicators, editable=False):
         test_header = {
-            'key': 'Test Score',
+            'key': 'test-score',
             'icon': 'clipboard',
             'tooltip': 'Test score result',
         }
@@ -67,8 +69,8 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_graphs(self, adjudicators):
         nprelims = self.tournament.prelim_rounds().count()
         feedback_head = {
-            'key': 'Feedback',
-            'text': 'Feedback',
+            'key': 'feedback',
+            'title': _('Feedback'),
             'tooltip': 'Hover over the data points to show the average score received in that round'
         }
         feedback_graph_data = [{
@@ -82,7 +84,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
     def add_feedback_link_columns(self, adjudicators):
         link_head = {
-            'key': 'VF',
+            'key': 'view-feedback',
             'icon': 'zoom-in'
         }
         link_cell = [{
@@ -95,7 +97,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_misc_columns(self, adjudicators):
         if self.tournament.pref('enable_adj_notes'):
             note_head = {
-                'key': 'NO',
+                'key': 'no',
                 'icon': 'tablet'
             }
             note_cell = [{
@@ -106,7 +108,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             self.add_column(note_head, note_cell)
 
         adjudications_head = {
-            'key': 'DD',
+            'key': 'debates-done',
             'icon': 'eye',
             'tooltip': 'Debates adjudicated'
         }
@@ -114,7 +116,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         self.add_column(adjudications_head, adjudications_cell)
 
         avgs_head = {
-            'key': 'AVGS',
+            'key': 'avgs',
             'icon': 'crosshair',
             'tooltip': 'Average Margin (top) and Average Score (bottom)'
         }
@@ -136,7 +138,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             return cell
 
         owed_header = {
-            'key': 'Owed',
+            'key': 'owed',
             'icon': 'slash',
             'tooltip': 'Unsubmitted feedback ballots',
         }
@@ -158,7 +160,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
                 return reverse_tournament(url_name, self.tournament, kwargs={'pk': pk})
 
             owed_link_header = {
-                'key': 'Submitted',
+                'key': 'submitted',
                 'icon': 'check',
             }
             owed_link_data = [{

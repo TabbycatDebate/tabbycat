@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models import Prefetch
-from django.utils.translation import ugettext_lazy, ungettext
+from django.utils.translation import gettext_lazy, ngettext
 
 from adjallocation.models import DebateAdjudicator
 from utils.admin import TabbycatModelAdminFieldsMixin
@@ -44,8 +44,9 @@ class DebateAdjudicatorInline(admin.TabularInline):
 
 @admin.register(Debate)
 class DebateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status')
+    list_display = ('id', 'round', 'bracket', 'matchup', 'result_status', 'sides_confirmed')
     list_filter = ('round__tournament', 'round', 'division')
+    list_editable = ('result_status', 'sides_confirmed')
     inlines = (DebateTeamInline, DebateAdjudicatorInline)
     raw_id_fields = ('venue', 'division')
 
@@ -64,14 +65,14 @@ class DebateAdmin(admin.ModelAdmin):
         def _make_set_result_status(value, verbose_name):
             def _set_result_status(modeladmin, request, queryset):
                 count = queryset.update(result_status=value)
-                message = ungettext("%(count)d debate had its status set to %(status)s.",
+                message = ngettext("%(count)d debate had its status set to %(status)s.",
                     "%(count)d debates had their statuses set to %(status)s.", count) % {
                         'count': count, 'status': verbose_name}
                 modeladmin.message_user(request, message)
 
             # so that they look different to DebateAdmin
             _set_result_status.__name__ = "set_result_status_%s" % verbose_name.lower()
-            _set_result_status.short_description = ugettext_lazy("Set result status to "
+            _set_result_status.short_description = gettext_lazy("Set result status to "
                     "%(status)s") % {'status': verbose_name}
             return _set_result_status
 
@@ -80,7 +81,7 @@ class DebateAdmin(admin.ModelAdmin):
 
     def mark_as_sides_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=True)
-        message = ungettext(
+        message = ngettext(
             "%(count)d debate was marked as having its sides confirmed.",
             "%(count)d debates were marked as having their sides confirmed.",
             updated
@@ -89,7 +90,7 @@ class DebateAdmin(admin.ModelAdmin):
 
     def mark_as_sides_not_confirmed(self, request, queryset):
         updated = queryset.update(sides_confirmed=False)
-        message = ungettext(
+        message = ngettext(
             "%(count)d debate was marked as having its sides not confirmed.",
             "%(count)d debates were marked as having their sides not confirmed.",
             updated

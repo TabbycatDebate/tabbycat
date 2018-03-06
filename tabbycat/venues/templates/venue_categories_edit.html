@@ -1,4 +1,4 @@
-{% extends "base_formset.html" %}
+{% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">🏪</span> {% trans "Venue Categories" %}{% endblock %}
@@ -19,6 +19,7 @@
 
   {% include "components/explainer-card.html" with type="info" %}
 
-  {{ block.super }}
+  {% trans "Save Venue Categories" as save_text %}
+  {% include "components/formset.html" with double=True %}
 
 {% endblock content %}

@@ -39,7 +39,6 @@ def version(path_string, base_url=settings.MEDIA_URL):
 def tournament_side_names(tournament, name_type):
     side_names = [get_side_name(tournament, 'aff', name_type),
                   get_side_name(tournament, 'neg', name_type)]
-    print(side_names)
     return side_names
 
 

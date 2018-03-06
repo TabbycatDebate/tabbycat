@@ -4,14 +4,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.utils.text import slugify
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 from dynamic_preferences.views import PreferenceFormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.misc import reverse_tournament
 
 from .presets import all_presets, get_preferences_data
@@ -21,7 +21,7 @@ from .dynamic_preferences_registry import tournament_preferences_registry
 logger = logging.getLogger(__name__)
 
 
-class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "preferences_index.html"
 
     def get_preset_options(self):
@@ -44,7 +44,7 @@ class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, Templat
         return super().get_context_data(**kwargs)
 
 
-class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
+class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
     registry = tournament_preferences_registry
     section = None
     template_name = "preferences_section_set.html"
@@ -65,7 +65,7 @@ class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, Tourn
         return form_class
 
 
-class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "preferences_presets_confirm.html"
 
     def get_selected_preset(self):

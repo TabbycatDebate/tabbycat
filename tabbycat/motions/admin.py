@@ -20,5 +20,6 @@ admin.site.register(Motion, MotionAdmin)
 class DebateTeamMotionPreferenceAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('ballot_submission', 'get_confirmed', 'get_team',
                     'get_team_side', 'preference', 'get_motion_ref')
+    search_fields = ('motion__reference',)
 
 admin.site.register(DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)

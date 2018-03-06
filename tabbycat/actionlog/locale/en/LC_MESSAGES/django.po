@@ -1,14 +1,14 @@
 # Tabbycat translations, actionlog module
-# Copyright (C) 2017 Tabbycat developers and translators
+# Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,218 +21,218 @@ msgstr ""
 msgid "Action Log"
 msgstr ""
 
-#: actionlog/models.py:64
+#: actionlog/models.py:66
 msgid "Discarded ballot set"
 msgstr ""
 
-#: actionlog/models.py:65
+#: actionlog/models.py:67
 msgid "Checked in ballot set"
 msgstr ""
 
-#: actionlog/models.py:66
+#: actionlog/models.py:68
 msgid "Created ballot set"
 msgstr ""
 
-#: actionlog/models.py:67
+#: actionlog/models.py:69
 msgid "Edited ballot set"
 msgstr ""
 
-#: actionlog/models.py:68
+#: actionlog/models.py:70
 msgid "Confirmed ballot set"
 msgstr ""
 
-#: actionlog/models.py:69
+#: actionlog/models.py:71
 msgid "Submitted ballot set from the public form"
 msgstr ""
 
-#: actionlog/models.py:70
+#: actionlog/models.py:72
 msgid "Submitted feedback from the public form"
 msgstr ""
 
-#: actionlog/models.py:71
+#: actionlog/models.py:73
 msgid "Saved feedback"
 msgstr ""
 
-#: actionlog/models.py:72
+#: actionlog/models.py:74
 msgid "Edited adjudicator test score"
 msgstr ""
 
-#: actionlog/models.py:73
+#: actionlog/models.py:75
 msgid "Set adjudicator note"
 msgstr ""
 
-#: actionlog/models.py:74
+#: actionlog/models.py:76
 msgid "Saved adjudicator allocation"
 msgstr ""
 
-#: actionlog/models.py:75
+#: actionlog/models.py:77
 msgid "Auto-allocated adjudicators"
 msgstr ""
 
-#: actionlog/models.py:76
+#: actionlog/models.py:78
 msgid "Saved a venue manual edit"
 msgstr ""
 
-#: actionlog/models.py:77
+#: actionlog/models.py:79
 msgid "Auto-allocated venues"
 msgstr ""
 
-#: actionlog/models.py:78
+#: actionlog/models.py:80
 msgid "Edited venue categories"
 msgstr ""
 
-#: actionlog/models.py:79
+#: actionlog/models.py:81
 msgid "Created draw"
 msgstr ""
 
-#: actionlog/models.py:80
+#: actionlog/models.py:82
 msgid "Confirmed draw"
 msgstr ""
 
-#: actionlog/models.py:81
+#: actionlog/models.py:83
 msgid "Regenerated draw"
 msgstr ""
 
-#: actionlog/models.py:82
+#: actionlog/models.py:84
 msgid "Released draw"
 msgstr ""
 
-#: actionlog/models.py:83
+#: actionlog/models.py:85
 msgid "Unreleased draw"
 msgstr ""
 
-#: actionlog/models.py:84
+#: actionlog/models.py:86
 msgid "Saved a matchup manual edit"
 msgstr ""
 
-#: actionlog/models.py:85
+#: actionlog/models.py:87
 msgid "Saved the sides status of a matchup"
 msgstr ""
 
-#: actionlog/models.py:86
+#: actionlog/models.py:88
 msgid "Saved divisions"
 msgstr ""
 
-#: actionlog/models.py:87
+#: actionlog/models.py:89
 msgid "Added/edited motion"
 msgstr ""
 
-#: actionlog/models.py:88
+#: actionlog/models.py:90
 msgid "Released motions"
 msgstr ""
 
-#: actionlog/models.py:89
+#: actionlog/models.py:91
 msgid "Unreleased motions"
 msgstr ""
 
-#: actionlog/models.py:90
+#: actionlog/models.py:92
 msgid "Edited debate importance"
 msgstr ""
 
-#: actionlog/models.py:91
+#: actionlog/models.py:93
 msgid "Changed adjudicator breaking status"
 msgstr ""
 
-#: actionlog/models.py:92
+#: actionlog/models.py:94
 msgid "Edited break eligibility"
 msgstr ""
 
-#: actionlog/models.py:93
+#: actionlog/models.py:95
 msgid "Edited break categories"
 msgstr ""
 
-#: actionlog/models.py:94
+#: actionlog/models.py:96
 msgid "Generated the team break for all categories"
 msgstr ""
 
-#: actionlog/models.py:95
+#: actionlog/models.py:97
 msgid "Edited breaking team remarks and updated all team breaks"
 msgstr ""
 
-#: actionlog/models.py:96
+#: actionlog/models.py:98
 msgid "Edited breaking team remarks and updated this team break"
 msgstr ""
 
-#: actionlog/models.py:97
+#: actionlog/models.py:99
 msgid "Edited breaking team remarks"
 msgstr ""
 
-#: actionlog/models.py:98
+#: actionlog/models.py:100
 msgid "Set start time"
 msgstr ""
 
-#: actionlog/models.py:99
+#: actionlog/models.py:101
 msgid "Advanced the current round to"
 msgstr ""
 
-#: actionlog/models.py:100
+#: actionlog/models.py:102
 msgid "Edited teams availability"
 msgstr ""
 
-#: actionlog/models.py:101
+#: actionlog/models.py:103
 msgid "Edited adjudicators availability"
 msgstr ""
 
-#: actionlog/models.py:102
+#: actionlog/models.py:104
 msgid "Edited venue availability"
 msgstr ""
 
-#: actionlog/models.py:103
+#: actionlog/models.py:105
 msgid "Edited tournament options"
 msgstr ""
 
-#: actionlog/models.py:104
+#: actionlog/models.py:106
 msgid "Edited speaker category eligibility"
 msgstr ""
 
-#: actionlog/models.py:105
+#: actionlog/models.py:107
 msgid "Edited speaker categories"
 msgstr ""
 
-#: actionlog/models.py:109
+#: actionlog/models.py:111
 msgid "type"
 msgstr ""
 
-#: actionlog/models.py:111
+#: actionlog/models.py:113
 msgid "timestamp"
 msgstr ""
 
-#: actionlog/models.py:114
+#: actionlog/models.py:116
 msgid "user"
 msgstr ""
 
-#: actionlog/models.py:116
+#: actionlog/models.py:118
 msgid "IP address"
 msgstr ""
 
-#: actionlog/models.py:120
+#: actionlog/models.py:122
 msgid "tournament"
 msgstr ""
 
-#: actionlog/models.py:122
+#: actionlog/models.py:124
 msgid "round"
 msgstr ""
 
-#: actionlog/models.py:126
+#: actionlog/models.py:128
 msgid "content type"
 msgstr ""
 
-#: actionlog/models.py:128
+#: actionlog/models.py:130
 msgid "object ID"
 msgstr ""
 
-#: actionlog/models.py:134
+#: actionlog/models.py:136
 msgid "action log"
 msgstr ""
 
-#: actionlog/models.py:135
+#: actionlog/models.py:137
 msgid "action log entries"
 msgstr ""
 
-#: actionlog/models.py:143
+#: actionlog/models.py:145
 msgid "All log entries require at least one of a user and an IP address."
 msgstr ""
 
-#: actionlog/views.py:18
+#: actionlog/models.py:178
 msgid "anonymous"
 msgstr ""

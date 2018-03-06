@@ -10,6 +10,9 @@ urlpatterns = [
     path('admin/',
         views.TournamentAdminHomeView.as_view(),
         name='tournament-admin-home'),
+    path('assistant/',
+        views.TournamentAssistantHomeView.as_view(),
+        name='tournament-assistant-home'),
 
     # Application URLs for public pages
     path('break/',              include('breakqual.urls_public')),
@@ -37,6 +40,13 @@ urlpatterns = [
     path('admin/results/',      include('results.urls_admin')),
     path('admin/standings/',    include('standings.urls_admin')),
     path('admin/venues/',       include('venues.urls_admin')),
+
+    # Application URLs for assistant pages
+    path('assistant/feedback/', include('adjfeedback.urls_assistant')),
+    path('assistant/draw/',     include('draw.urls_assistant')),
+    path('assistant/motions/',  include('motions.urls_assistant')),
+    path('assistant/printing/', include('printing.urls_assistant')),
+    path('assistant/results/',  include('results.urls_assistant')),
 
     # Round progression
     path('admin/round/<int:round_seq>/advance/check/',

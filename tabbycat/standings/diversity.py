@@ -1,5 +1,5 @@
 from django.db.models import Aggregate, Avg, Case, CharField, Count, F, Value, When
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback

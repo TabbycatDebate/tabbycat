@@ -1,11 +1,12 @@
 import math
 
 from django.forms.fields import IntegerField
-from django.forms import ChoiceField, ModelChoiceField, ModelForm
-from django.utils.translation import ugettext_lazy as _
+from django.forms import CharField, ChoiceField, ModelChoiceField, ModelForm
+from django.utils.translation import gettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
+from options.dynamic_preferences_registry import AdjCoreCredit, OrgComCredit, TabDirectorCredit
 from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
 from .models import Round, Tournament
@@ -77,12 +78,27 @@ class TournamentConfigureForm(ModelForm):
     preset_rules = ChoiceField(
         choices=presets_for_form(), # Tuple with (Present_Index, Preset_Name)
         label=_("Format Configuration"),
-        help_text=_("Apply a standard set of settings to match a common debate format "))
+        help_text=_("Apply a standard set of settings to match a common debate format"))
 
     public_info = ChoiceField(
         choices=public_presets_for_form(), # Tuple with (Present_Index, Preset_Name)
         label=_("Public Configuration"),
-        help_text=_("Show non-sensitive information of the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
+        help_text=_("Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
+
+    tab_credit = CharField(
+        label=TabDirectorCredit.verbose_name,
+        required=False,
+        help_text=TabDirectorCredit.help_text)
+
+    org_credit = CharField(
+        label=OrgComCredit.verbose_name,
+        required=False,
+        help_text=OrgComCredit.help_text)
+
+    adj_credit = CharField(
+        label=AdjCoreCredit.verbose_name,
+        required=False,
+        help_text=AdjCoreCredit.help_text)
 
     def save(self):
         presets = list(all_presets())
@@ -102,6 +118,11 @@ class TournamentConfigureForm(ModelForm):
             public_preferences = get_preferences_data(public_preset, t)
             for preference in public_preferences:
                 t.preferences[preference['key']] = preference['new_value']
+
+        # Apply the credits
+        t.preferences["public_features__tab_credit"] = self.cleaned_data["tab_credit"]
+        t.preferences["public_features__org_credit"] = self.cleaned_data["org_credit"]
+        t.preferences["public_features__adj_credit"] = self.cleaned_data["adj_credit"]
 
         # Create break rounds (need to do so after we know teams-per-room)
         open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()

@@ -4,8 +4,8 @@ from itertools import product
 from asgiref.sync import AsyncToSync
 from channels.layers import get_channel_layer
 from django import forms
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
@@ -489,7 +489,7 @@ class BaseBallotSetForm(BaseResultForm):
             for speaker, positions in speaker_positions.items():
                 if len(positions) > 1:
                     # Translators: count is always at least 2
-                    message = ungettext(
+                    message = ngettext(
                         "%(speaker)s appears to have given %(count)d substantive speech.",  # never used, needed for i18n
                         "%(speaker)s appears to have given %(count)d substantive speeches.",
                         len(positions)

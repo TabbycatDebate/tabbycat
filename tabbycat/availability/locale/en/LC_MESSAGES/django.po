@@ -1,14 +1,14 @@
 # Tabbycat translations, availability module
-# Copyright (C) 2017 Tabbycat developers and translators
+# Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2017
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,51 +309,51 @@ msgid_plural "%(nadvancing)s advancing teams are debating this round"
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/views.py:152
+#: availability/views.py:153
 msgid "Team Availability"
 msgstr ""
 
-#: availability/views.py:154
+#: availability/views.py:155
 msgid "Adjudicator Availability"
 msgstr ""
 
-#: availability/views.py:156
+#: availability/views.py:157
 msgid "Venue Availability"
 msgstr ""
 
-#: availability/views.py:173
+#: availability/views.py:177
 msgid "Active Now"
 msgstr ""
 
-#: availability/views.py:183
+#: availability/views.py:187
 #, python-format
 msgid "Active in %(prev_round)s"
 msgstr ""
 
-#: availability/views.py:231
+#: availability/views.py:238
 msgid "Venue"
 msgstr ""
 
-#: availability/views.py:232
+#: availability/views.py:239
 msgid "Display Name (for the draw)"
 msgstr ""
 
-#: availability/views.py:233
+#: availability/views.py:240
 msgid "Categories"
 msgstr ""
 
-#: availability/views.py:234
+#: availability/views.py:241
 msgid "Priority"
 msgstr ""
 
-#: availability/views.py:252
+#: availability/views.py:259
 msgid "Checked in all teams, adjudicators and venues."
 msgstr ""
 
-#: availability/views.py:259
+#: availability/views.py:266
 msgid "Checked in all breaking adjudicators."
 msgstr ""
 
-#: availability/views.py:267
+#: availability/views.py:274
 msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""

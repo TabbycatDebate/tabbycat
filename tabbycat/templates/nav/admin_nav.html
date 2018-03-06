@@ -18,20 +18,26 @@
       </div>
     </a>
     <div class="collapse" id="tlisth">
-      {% for t in all_tournaments %}
-        <a href="{{ t.get_absolute_url  }}" class="list-group-item" data-parent="#titleh">
-          <i data-feather="settings"></i>{{ t }}
-        </a>
-        <a href="{{ t.get_public_url  }}" class="list-group-item" data-parent="#titleh">
-          <i data-feather="eye"></i>{{ t }}
-        </a>
-      {% endfor %}
       <a href="/" class="list-group-item" data-parent="#titleh">
         <i data-feather="home"></i>Site Home
       </a>
       <a href="{% url 'tournament-create' %}" class="list-group-item" data-parent="#titleh">
         <i data-feather="edit-2"></i>New Tournament
       </a>
+      {% for t in all_tournaments %}
+        <div class="list-group-item tournament-areas-title" data-parent="#titleh">
+          {{ t }}
+        </div>
+        <a href="{% url 'tournament-admin-home' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+          <i data-feather="settings"></i>{% blocktrans trimmed %}Admin Area{% endblocktrans %}
+        </a>
+        <a href="{% url 'tournament-assistant-home' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+          <i data-feather="pocket"></i>{% blocktrans trimmed %}Assistant Area{% endblocktrans %}
+        </a>
+        <a href="{% url 'tournament-public-index' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+          <i data-feather="globe"></i>Public Area
+        </a>
+      {% endfor %}
     </div>
   </div>
 
@@ -164,7 +170,7 @@
           {% endblocktrans %}
         </a>
       {% endfor %}
-      <a class="list-group-item {% if feedback_motions_nav %}active{% endif %}" href="{% roundurl 'standings-motion' current_round %}">
+      <a class="list-group-item {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-statistics'  %}">
         <i data-feather="crosshair"></i>{% trans "Motions" %}
       </a>
       <a class="list-group-item {% if standings_diversity_nav %}active{% endif %}" href="{% roundurl 'standings-diversity' current_round %}">

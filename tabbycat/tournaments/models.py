@@ -4,8 +4,9 @@ from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
 
@@ -17,7 +18,7 @@ PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts',   # System
     'start', 'create', 'load-demo', # Setup Wizards
     'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
-    '__debug__', 'static', 'donations', 'style']  # Misc
+    '__debug__', 'static', 'donations', 'style', 'i18n', 'jsi18n']  # Misc
 
 
 def validate_tournament_slug(value):
@@ -43,9 +44,6 @@ class Tournament(models.Model):
     current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='current_tournament',
         verbose_name=_("current round"),
         help_text=_("Must be set for the tournament to start! (Set after rounds are inputted)"))
-    welcome_msg = models.TextField(blank=True, null=True, default="",
-        verbose_name=_("welcome message"),
-        help_text=_("Text/html entered here shows on the homepage for this tournament"))
     active = models.BooleanField(verbose_name=_("active"), default=True)
 
     class Meta:
@@ -117,22 +115,15 @@ class Tournament(models.Model):
     # Permalinks
     # --------------------------------------------------------------------------
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('tournament-admin-home', [self.slug])
+        return reverse('tournament-admin-home', kwargs={'tournament_slug': self.slug})
 
-    @models.permalink
     def get_public_url(self):
-        return ('tournament-public-index', [self.slug])
+        return reverse('tournament-public-index', kwargs={'tournament_slug': self.slug})
 
     # --------------------------------------------------------------------------
     # Convenience querysets
     # --------------------------------------------------------------------------
-
-    @cached_property
-    def teams(self):
-        warn('Tournament.teams is deprecated, use Tournament.team_set instead.', stacklevel=2)
-        return self.team_set
 
     @property
     def relevant_adjudicators(self):
@@ -448,3 +439,10 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
+
+    @property
+    def ballots_per_debate(self):
+        if self.is_break_round:
+            return self.tournament.pref("ballots_per_debate_elim")
+        else:
+            return self.tournament.pref("ballots_per_debate_prelim")

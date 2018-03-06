@@ -12,7 +12,7 @@
 
     <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')"
           :class="[header['tooltip'] ? 'tooltip-trigger'  : '']">
-      <span>{{ header['key'] }}</span>
+      <span>{{ header['title'] }}</span>
     </span>
 
     <div :class="sortClasses(header['key'])">

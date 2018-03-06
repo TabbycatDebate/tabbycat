@@ -36,7 +36,7 @@
 {% endif %}
 {% if pref.motion_tab_released > 0 %}
   <li class="nav-item {% if motions_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'standings-public-tab-motions' %}">{% trans "Motions Tab" %}</a>
+    <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
   </li>
 {% endif %}
 
@@ -45,7 +45,9 @@
   {% if pref.show_all_draws == 0 %}
     <li class="nav-item {% if draw_nav %}active{% endif %}">
       <a class="nav-link" href="{% tournamenturl 'draw-public-current-round' %}">
-        Draw for {{ current_round.name }}
+        {% blocktrans trimmed with round_name=current_round.name %}
+          Draw for {{ round_name }}
+        {% endblocktrans %}
       </a>
     </li>
   {% endif %}

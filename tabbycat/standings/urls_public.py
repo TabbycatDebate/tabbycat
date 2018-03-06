@@ -25,9 +25,6 @@ urlpatterns = [
     path('replies/',
         views.PublicReplyTabView.as_view(),
         name='standings-public-tab-replies'),
-    path('motions/',
-        views.PublicMotionsTabView.as_view(),
-        name='standings-public-tab-motions'),
 
     path('adjudicators/',
         views.PublicAdjudicatorsTabView.as_view(),

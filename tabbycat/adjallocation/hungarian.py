@@ -10,7 +10,7 @@ from .allocator import Allocator
 logger = logging.getLogger(__name__)
 
 
-class HungarianAllocator(Allocator):
+class BaseHungarianAllocator(Allocator):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,27 +25,33 @@ class HungarianAllocator(Allocator):
         self.duplicate_allocations = t.pref('duplicate_adjs')
         self.feedback_weight = t.current_round.feedback_weight
 
+        self.munkres = Munkres()
+
+    def allocate(self):
+        self.populate_adj_scores(self.adjudicators)
+        return self.run_allocation()
+
     def populate_adj_scores(self, adjudicators):
+        score_min = self.min_score
+        score_range = self.max_score - score_min
+
         for adj in adjudicators:
-            adj._hungarian_score = adj.weighted_score(self.feedback_weight)
+            score = adj.weighted_score(self.feedback_weight)
+            # Normalize the adj score to a 0-5 range
+            adj._normalized_score = (score - score_min) / score_range * 5
+
+        ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
+        if ntoolarge > 0:
+            logger.warning("%d normalised scores are larger than 5.0", ntoolarge)
+        ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
+        if ntoosmall > 0:
+            logger.warning("%d normalised scores are smaller than 0.0", ntoosmall)
 
     def calc_cost(self, debate, adj, adjustment=0, chair=None):
         cost = 0
 
         # Normalise debate importances back to the 1-5 (not ±2) range expected
         normalised_importance = debate.importance + 3
-
-        # Similarly normalise adj scores to the 0-5 range expected
-        score_min = self.min_score
-        score_range = self.max_score - score_min
-        normalised_adj_score = (adj._hungarian_score - score_min) / score_range * 5 + 0
-
-        if normalised_adj_score > 5.0:
-            logger.warning("Normalised score %s is larger than 5.0 (raw score %s, min %s, max %s)",
-                normalised_adj_score, adj._hungarian_score, self.min_score, self.max_score)
-        elif normalised_adj_score < 0.0:
-            logger.warning("Normalised score %s is smaller than 0.0 (raw score %s, min %s, max %s)",
-                normalised_adj_score, adj._hungarian_score, self.min_score, self.max_score)
 
         for side in self.tournament.sides:
             cost += self.conflict_penalty * adj.conflicts_with_team(debate.get_team(side))
@@ -55,21 +61,44 @@ class HungarianAllocator(Allocator):
             cost += self.history_penalty * adj.seen_adjudicator(chair, debate.round)
 
         impt = normalised_importance + adjustment
-        diff = 5 + impt - adj._hungarian_score
+        diff = 5 + impt - adj._normalized_score
         if diff > 0.25:
             cost += 1000 * exp(diff - 0.25)
 
-        cost += self.max_score - adj._hungarian_score
+        cost += self.max_score - adj._normalized_score
 
         return cost
 
-    def allocate(self):
-        self.populate_adj_scores(self.adjudicators)
+    def allocate_trainees(self, trainees, allocation, debates):
+        if len(trainees) > 0 and len(debates) > 0:
+            allocation_by_debate = {aa.debate: aa for aa in allocation}
+
+            logger.info("costing trainees")
+            cost_matrix = []
+            for debate in debates:
+                chair = allocation_by_debate[debate].chair
+                row = [self.calc_cost(debate, adj, adjustment=-2.0, chair=chair) for adj in trainees]
+                cost_matrix.append(row)
+
+            logger.info("optimizing trainees (matrix size: %d positions by %d trainees)", len(cost_matrix), len(cost_matrix[0]))
+            indexes = self.munkres.compute(cost_matrix)
+            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+            logger.info('total cost for %d trainees: %f', len(indexes), total_cost)
+
+            result = ((debates[i], trainees[j]) for i, j in indexes if i < len(debates))
+            for debate, trainee in result:
+                allocation_by_debate[debate].trainees.append(trainee)
+                logger.info("allocating to %s: %s (t)", debate, trainee)
+
+
+class VotingHungarianAllocator(BaseHungarianAllocator):
+
+    def run_allocation(self):
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._hungarian_score >= self.min_voting_score and not a.trainee]
+        voting = [a for a in self.adjudicators if a._normalized_score >= self.min_voting_score and not a.trainee]
         random.shuffle(voting)
-        voting.sort(key=lambda a: a._hungarian_score, reverse=True)
+        voting.sort(key=lambda a: a._normalized_score, reverse=True)
 
         # Divide into solos, panellists and trainees
         n_debates = len(self.debates)
@@ -87,7 +116,7 @@ class HungarianAllocator(Allocator):
             trainees = []
         else:
             trainees = [a for a in self.adjudicators if a not in voting]
-            trainees.sort(key=lambda a: a._hungarian_score, reverse=True)
+            trainees.sort(key=lambda a: a._normalized_score, reverse=True)
 
         # Divide debates into solo-chaired debates and panel debates
         debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))
@@ -106,9 +135,6 @@ class HungarianAllocator(Allocator):
             logger.warning("There are %d panel debates but only %d available panellists "
                     "(less than %d)", len(panel_debates), len(panellists), len(panel_debates) * 3)
 
-        # Allocate solos
-        m = Munkres()
-
         if len(solos) > 0 and len(solo_debates) > 0:
             logger.info("costing solos")
             cost_matrix = []
@@ -117,7 +143,7 @@ class HungarianAllocator(Allocator):
                 cost_matrix.append(row)
 
             logger.info("optimizing solos (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
-            indexes = m.compute(cost_matrix)
+            indexes = self.munkres.compute(cost_matrix)
             total_cost = sum(cost_matrix[i][j] for i, j in indexes)
             logger.info('total cost for %d solo debates: %f', len(solos), total_cost)
 
@@ -143,7 +169,7 @@ class HungarianAllocator(Allocator):
                     cost_matrix.append(row)
 
             logger.info("optimizing panellists (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
-            indexes = m.compute(cost_matrix)
+            indexes = self.munkres.compute(cost_matrix)
             total_cost = sum(cost_matrix[i][j] for i, j in indexes)
             logger.info('total cost for %d panel debates: %f', len(panel_debates), total_cost)
 
@@ -158,7 +184,7 @@ class HungarianAllocator(Allocator):
             # the chair is the highest-ranked adjudicator in the panel
             for i, debate in enumerate(panel_debates):
                 aa = AdjudicatorAllocation(debate)
-                panels[i].sort(key=lambda a: a._hungarian_score, reverse=True)
+                panels[i].sort(key=lambda a: a._normalized_score, reverse=True)
                 if not panels[i]:
                     continue
                 aa.chair = panels[i].pop(0)
@@ -169,36 +195,77 @@ class HungarianAllocator(Allocator):
             logger.info("allocating to %s: %s (c), %s", aa.debate, aa.chair, ", ".join([str(p) for p in aa.panellists]))
 
         # Allocate trainees, one per solo debate (leave the rest unallocated)
-        if len(trainees) > 0 and len(solo_debates) > 0:
-            allocation_by_debate = {aa.debate: aa for aa in alloc}
-
-            logger.info("costing trainees")
-            cost_matrix = []
-            for debate in solo_debates:
-                chair = allocation_by_debate[debate].chair
-                row = [self.calc_cost(debate, adj, adjustment=-2.0, chair=chair) for adj in trainees]
-                cost_matrix.append(row)
-
-            logger.info("optimizing trainees (matrix size: %d positions by %d trainees)", len(cost_matrix), len(cost_matrix[0]))
-            indexes = m.compute(cost_matrix)
-            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
-            logger.info('total cost for %d trainees: %f', len(solos), total_cost)
-
-            result = ((solo_debates[i], trainees[j]) for i, j in indexes if i < len(solo_debates))
-            for debate, trainee in result:
-                allocation_by_debate[debate].trainees.append(trainee)
-                logger.info("allocating to %s: %s (t)", debate, trainee)
+        self.allocate_trainees(trainees, alloc, solo_debates)
 
         return alloc
 
 
-def test():
-    from tournaments.models import Round
-    r = Round.objects.get(pk=4)
-    debates = r.debates()
-    adjs = list(r.active_adjudicators.all())
+class ConsensusHungarianAllocator(BaseHungarianAllocator):
 
-    HungarianAllocator(debates, adjs).allocate()
+    def run_allocation(self):
 
-if __name__ == '__main__':
-    test()
+        # Sort voting adjudicators in descending order by score
+        voting = [a for a in self.adjudicators if a._normalized_score >= self.min_voting_score and not a.trainee]
+        random.shuffle(voting)
+        voting.sort(key=lambda a: a._normalized_score, reverse=True)
+
+        n_debates = len(self.debates)
+        if self.no_panellists:
+            voting = voting[:n_debates]
+        n_voting = len(voting)
+
+        if self.no_trainees:
+            trainees = []
+        else:
+            trainees = [a for a in self.adjudicators if a not in voting]
+            trainees.sort(key=lambda a: a._normalized_score, reverse=True)
+
+        # Divide debates into solo-chaired debates and panel debates
+        debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))
+
+        # Figure out how many judges per room, prioritising the most important
+        judges_per_room_floor = n_voting // n_debates
+        n_bigger_panels = n_voting % n_debates
+        judges_per_room = [judges_per_room_floor+1] * n_bigger_panels + [judges_per_room_floor] * (n_debates - n_bigger_panels)
+
+        logger.info("There are %d debates, %d voting adjudicators and %d trainees",
+                len(debates_sorted), len(voting), len(trainees))
+        if n_voting < n_debates:
+            logger.warning("There are %d debates but only %d voting adjudicators", n_debates, n_voting)
+
+        # Allocate voting
+        logger.info("costing voting adjudicators")
+        cost_matrix = []
+        for debate, njudges in zip(debates_sorted, judges_per_room):
+            for i in range(njudges):
+                row = [self.calc_cost(debate, adj, adjustment=-i) for adj in voting]
+                cost_matrix.append(row)
+
+        logger.info("optimizing voting adjudicators (matrix size: %d positions by %d adjudicators)",
+                len(cost_matrix), len(cost_matrix[0]))
+        indexes = self.munkres.compute(cost_matrix)
+        indexes.sort()
+        total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+        logger.info('total cost for %d debates: %f', n_debates, total_cost)
+
+        # transfer the indices to the debates
+        alloc = []
+        for debate, njudges in zip(debates_sorted, judges_per_room):
+            aa = AdjudicatorAllocation(debate)
+            panel_indices = indexes[0:njudges]
+            panel = [voting[c] for r, c in panel_indices]
+            panel.sort(key=lambda a: a._normalized_score, reverse=True)
+            try:
+                aa.chair = panel.pop(0)
+            except IndexError:
+                aa.chair = None
+            aa.panellists = panel
+            alloc.append(aa)
+            del indexes[0:njudges]
+
+            logger.info("allocating to %s: %s (c), %s", aa.debate, aa.chair, ", ".join([str(p) for p in aa.panellists]))
+
+        # Allocate trainees
+        self.allocate_trainees(trainees, alloc, debates_sorted)
+
+        return alloc

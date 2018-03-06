@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from draw.models import Debate
 from participants.models import Team
@@ -26,7 +26,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         else:
             raise ValueError('Debate has no discernable status')
 
-    def add_ballot_status_columns(self, debates, key="Status"):
+    def add_ballot_status_columns(self, debates, key):
 
         status_header = {
             'key': key,
@@ -55,7 +55,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             if not self.admin and ballotsub.discarded:
                 continue
 
-            link = reverse_tournament('results-ballotset-edit',
+            link = reverse_tournament('results-ballotset-edit' if self.admin else 'results-assistant-ballotset-edit',
                                       self.tournament,
                                       kwargs={'pk': ballotsub.id})
             ballotsubs_info += "<a href=" + link + " class='text-nowrap'>"
@@ -83,7 +83,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             ballotsubs_info += "</small>"
 
         if all(x.discarded for x in ballotsubmissions):
-            link = reverse_tournament('results-ballotset-new',
+            link = reverse_tournament('results-ballotset-new' if self.admin else 'results-assistant-ballotset-new',
                                       self.tournament,
                                       kwargs={'debate_id': debate.id})
             ballotsubs_info += "<a href=" + link + ">" + _("Enter Ballot")  + "</a>"
@@ -97,7 +97,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         self.add_column(entry_header, entry_cells)
 
         if self.tournament.pref('enable_postponements'):
-            postpones_header = {'key': _("Postpone")}
+            postpones_header = {'title': _("Postpone"), 'key': "postpone"}
             postpones_cells = []
             for debate in debates:
                 if debate.result_status == Debate.STATUS_POSTPONED:

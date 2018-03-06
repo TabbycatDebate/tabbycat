@@ -1,0 +1,325 @@
+# Tabbycat translations, utils module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: utils/forms.py:55
+msgid "E-mail address"
+msgstr "البريد الالكتروني"
+
+#: utils/tables.py:37
+msgid "No Data Available"
+msgstr "لا يوجد معلومات متوفرة "
+
+#: utils/tables.py:142
+msgid "Ⓒ"
+msgstr "(ر)"
+
+#: utils/tables.py:143
+msgid "Ⓣ"
+msgstr "Ⓣ"
+
+#: utils/tables.py:147
+msgid "chair"
+msgstr "رئيس الجلسة"
+
+#: utils/tables.py:148
+msgid "panellist"
+msgstr "عضو لجنة التحكيم"
+
+#: utils/tables.py:149
+msgid "trainee"
+msgstr "متدرب"
+
+#: utils/tables.py:192 utils/tables.py:198
+#, python-format
+msgid "View %(adj)s's Adjudication Record"
+msgstr "عرض %(adj)s درجات الحكام "
+
+#: utils/tables.py:208 utils/tables.py:213
+#, python-format
+msgid "View %(team)s's Team Record"
+msgstr "عرض %(team)s درجات الفريق "
+
+#: utils/tables.py:240
+#, python-format
+msgid "%(team)s won"
+msgstr "%(team)sفاز"
+
+#: utils/tables.py:245
+#, python-format
+msgid "%(team)s lost"
+msgstr "%(team)s خسر"
+
+#: utils/tables.py:250 utils/tables.py:278 utils/tables.py:296
+#, python-format
+msgid "%(team)s—no result"
+msgstr "%(team)s  — لا توجد له نتيجة"
+
+#: utils/tables.py:258
+#, python-format
+msgid "%(team)s took 1st"
+msgstr "%(team)s أخذ المركز الأول"
+
+#: utils/tables.py:263
+#, python-format
+msgid "%(team)s took 2nd"
+msgstr "%(team)s المركز الثاني "
+
+#: utils/tables.py:268
+#, python-format
+msgid "%(team)s took 3rd"
+msgstr "%(team)s المركز الثالث "
+
+#: utils/tables.py:273
+#, python-format
+msgid "%(team)s took 4th"
+msgstr "%(team)s المركز الرابع "
+
+#: utils/tables.py:286
+#, python-format
+msgid "%(team)s is advancing"
+msgstr "%(team)s تقدم "
+
+#: utils/tables.py:291
+#, python-format
+msgid "%(team)s was eliminated"
+msgstr "%(team)s تراجع "
+
+#: utils/tables.py:309
+#, python-format
+msgid " vs %(opposition)s"
+msgstr "ضد %(opposition)s"
+
+#: utils/tables.py:315
+#, python-format
+msgid "Won against %(team)s"
+msgstr "فاز على %(team)s"
+
+#: utils/tables.py:317
+#, python-format
+msgid "Lost to %(team)s"
+msgstr "خسر من %(team)s"
+
+#: utils/tables.py:319
+#, python-format
+msgid "No result for debate against %(team)s"
+msgstr "لا يوجد نتيجة لفريق %(team)s"
+
+#: utils/tables.py:324 utils/tables.py:389
+#, python-format
+msgid "Received <strong>%s</strong> team points"
+msgstr "حصل <strong>%s</strong> الفريق على نقاط "
+
+#: utils/tables.py:328 utils/tables.py:393
+msgid "View debate ballot"
+msgstr "عرض النتيجة "
+
+#: utils/tables.py:332
+#, python-format
+msgid "Speakers in <strong>%(opp)s</strong>: %(speakers)s"
+msgstr "المتناظر <strong>%(opp)s</strong>%(speakers)s"
+
+#: utils/tables.py:346
+msgid "Teams in debate:"
+msgstr "الفريق من المناظرة "
+
+#: utils/tables.py:349
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr "%(team)s(%(side)s)"
+
+#: utils/tables.py:367
+msgid "advancing"
+msgstr "متقدم"
+
+#: utils/tables.py:368
+msgid "Advancing"
+msgstr "تقدم "
+
+#: utils/tables.py:370
+msgid "eliminated"
+msgstr "تراجع"
+
+#: utils/tables.py:371
+msgid "Eliminated"
+msgstr "تراجع "
+
+#: utils/tables.py:374 utils/tables.py:384
+msgid "No result for debate"
+msgstr "لا نتائج لهذه القضية"
+
+#: utils/tables.py:377
+msgid "4th"
+msgstr "4th"
+
+#: utils/tables.py:377
+msgid "3rd"
+msgstr "المركز الثال3rdث"
+
+#: utils/tables.py:377
+msgid "2nd"
+msgstr "2nd"
+
+#: utils/tables.py:377
+msgid "1st"
+msgstr "1st"
+
+#: utils/tables.py:381
+#, python-format
+msgid "Took %(place)s"
+msgstr "حصل %(place)s"
+
+#: utils/tables.py:400
+msgid "Tournament"
+msgstr "البطولة"
+
+#: utils/tables.py:409
+msgid "Round"
+msgstr "جولة"
+
+#: utils/tables.py:427 utils/tables.py:593
+msgid "Name"
+msgstr "اسم "
+
+#: utils/tables.py:433 utils/tables.py:571
+msgid "Institution"
+msgstr "منتخب"
+
+#: utils/tables.py:439
+msgid "Member of the Adjudication Core"
+msgstr "محكم المناظرة"
+
+#: utils/tables.py:446
+msgid "Independent Adjudicator"
+msgstr "محكم المناظرة"
+
+#: utils/tables.py:454
+msgid "Always Trainee"
+msgstr "المتدربين"
+
+#: utils/tables.py:516
+msgid "Debate Adjudicators"
+msgstr "الحكام "
+
+#: utils/tables.py:540
+msgid "Order as listed"
+msgstr "الترتيب كما هو مدرج"
+
+#: utils/tables.py:550
+msgid "Motion"
+msgstr "قضايا"
+
+#: utils/tables.py:561
+msgid "Team"
+msgstr "فريق"
+
+#: utils/tables.py:565 utils/tables.py:615
+msgid "Categories"
+msgstr "الفئات"
+
+#: utils/tables.py:582 utils/tables.py:658
+msgid "Division"
+msgstr "التقسيمات "
+
+#: utils/tables.py:589
+msgid "Redacted"
+msgstr "حجب "
+
+#: utils/tables.py:613
+msgid "Category"
+msgstr "الفئات"
+
+#: utils/tables.py:640
+#, python-format
+msgid "This venue %(predicate)s."
+msgstr "هذه القاعة %(predicate)s"
+
+#: utils/tables.py:642
+#, python-format
+msgid "This venue %(predicates)s, and %(last_predicate)s."
+msgstr "هذه القاعة %(predicates)sو %(last_predicate)s"
+
+#: utils/tables.py:673
+msgid "Venue"
+msgstr "القاعة"
+
+#: utils/tables.py:679
+msgid "Date"
+msgstr "الترجمة "
+
+#: utils/tables.py:679
+msgid "Time"
+msgstr "وقت"
+
+#: utils/tables.py:683
+msgid "Bye"
+msgstr "وداعا"
+
+#: utils/tables.py:685
+msgid "Postponed"
+msgstr "مؤجل"
+
+#: utils/tables.py:687
+msgid "Forfeit"
+msgstr "المصدر "
+
+#: utils/tables.py:708
+#, python-format
+msgid "Teams have met once"
+msgid_plural "Teams have met %(count)d times"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: utils/tables.py:714
+msgid "Teams are from the same institution"
+msgstr "الفرق تقابلت اكثر من مره "
+
+#: utils/tables.py:720
+msgid "Conflicts/Flags"
+msgstr "نفس المنطقة / نفس الجنسية "
+
+#: utils/tables.py:769
+msgid "View/Edit Ballot"
+msgstr "تعديل النتائج "
+
+#: utils/tables.py:784
+msgid "View Ballot"
+msgstr "عرض النتائج "
+
+#: utils/tables.py:791
+msgid "Result"
+msgstr "النتائج"
+
+#. Translators: "TBC" stands for "to be confirmed".
+#: utils/tables.py:796
+msgid "TBC"
+msgstr "TBC"
+
+#: utils/tables.py:797
+msgid "Side"
+msgstr "الجانب "
+
+#: utils/tables.py:838
+#, python-format
+msgid "Team %(num)d"
+msgstr "الفريق %(num)d"

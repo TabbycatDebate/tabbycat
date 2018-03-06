@@ -18,9 +18,10 @@ matrix:
       osx_image: xcode9.1 # macOS 10.12
       language: generic # Override global
       before_install: # Need to bootstrap dependencies on macOS
-        - brew update # Need to update ruby first else python3 fails
-        - brew install python3 # Install latest Python3
-        - virtualenv env -p python3
+        - brew update # Need to update first
+        - brew upgrade python # Install latest Python3
+        - virtualenv env -p python
+        - python --version
         - source env/bin/activate
       before_script:
         - brew services start postgresql
