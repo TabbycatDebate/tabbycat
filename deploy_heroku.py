@@ -184,8 +184,8 @@ print_yellow("Now creating a superuser for the Heroku site.")
 print_yellow("You'll need to respond to the prompts:")
 run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
 
-# Scale Dynos (by default it only adds 1 web dyno; we need a worker too)
-run_heroku_command(["ps:scale", "web=1:free", "worker=1:free"])
+# Scale Dynos (by default it only adds 1 web dyno)
+run_heroku_command(["ps:scale", "web=1:free"])
 
 # Import tournament, if provided
 if args.import_tournament:

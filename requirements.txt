@@ -6,8 +6,5 @@
 # Base Heroku Requirements
 dj-database-url==0.5.0                  # From the heroku toolbelt
 
-# Redis
-django-redis==4.9.0                     # Adds redis as caching backend
-
 # Misc
 sendgrid==5.3.0                         # Emailing

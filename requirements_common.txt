@@ -30,7 +30,7 @@ whitenoise==3.3.1                       # Static file serving
 django_redis==4.8.0                     # Use redis for cache (on heroku; local optional)
 
 # Channels
-git+ssh://git@github.com/django/channels.git@db131ca93d93503147e00f51a94ea3d57ead09e3
+git+https://github.com/django/channels.git@db131ca93d93503147e00f51a94ea3d57ead09e3
                                         # Channels (disabled until 2.0.2+)
 channels_redis==2.0.2                   # Channels Layer
 
