@@ -13,12 +13,11 @@
 {% block content %}
 
   <div id="vueMount">
-    <tournament-overview-container :tournament-id="tournamentId"
+    <tournament-overview-container :tournament-slug="tournamentSlug"
                                    :initial-actions="initialActions"
                                    :initial-ballots="initialBallots"
                                    :initial-graph-data="initialGraphData">
     </tournament-overview-container>
-
   </div>
 
 {% endblock content %}
@@ -26,7 +25,7 @@
 {% block js %}
   <script>
     window.vueData = {
-      tournamentId: {{ tournament_id }},
+      tournamentSlug: '{{ tournament_slug }}',
       initialActions: {{ initialActions|safe }},
       initialBallots: {{ initialBallots|safe }},
       initialGraphData: {{ initialGraphData|safe }},

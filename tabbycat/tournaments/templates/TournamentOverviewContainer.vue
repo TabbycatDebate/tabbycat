@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="row" v-if="graphData && graphData.length > 0">
+    <div class="row" v-if="ballot_statuses && ballot_statuses.length > 0">
 
       <div class="col">
         <div class="card mt-3">
@@ -10,7 +10,7 @@
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item text-secondary">
-              <ballots-graph :graph-data="graphData"></ballots-graph>
+              <ballots-graph :graph-data="ballot_statuses"></ballots-graph>
             </li>
           </ul>
         </div>
@@ -26,9 +26,9 @@
             <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="action in actions" :key="action.id"
+            <updates-list v-for="action in actionlogs" :key="action.id"
                           :item="action"></updates-list>
-            <li class="list-group-item text-secondary" v-if="actions.length === 0">
+            <li class="list-group-item text-secondary" v-if="actionlogs.length === 0">
               No Actions Yet
             </li>
           </ul>
@@ -41,9 +41,9 @@
             <h5 class="mb-0">Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="ballot in ballots" :key="ballot.id"
+            <updates-list v-for="ballot in ballot_results" :key="ballot.id"
                           :item="ballot"></updates-list>
-            <li class="list-group-item text-secondary" v-if="ballots.length === 0">
+            <li class="list-group-item text-secondary" v-if="ballot_results.length === 0">
               No Results Yet
             </li>
           </ul>
@@ -64,43 +64,34 @@ import _ from 'lodash'
 export default {
   mixins: [ WebSocketMixin ],
   components: { UpdatesList, BallotsGraph },
-  props: [ 'tournamentId', 'initialActions', 'initialBallots', 'initialGraphData'],
+  props: [ 'tournamentSlug', 'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
-      actions: this.initialActions,
-      ballots: this.initialBallots,
-      graphData: this.initialGraphData,
-      socketPath: "actionlog/overviews"
+      actionlogs: this.initialActions,
+      ballot_results: this.initialBallots,
+      ballot_statuses: this.initialGraphData,
+      sockets: ['actionlogs', 'ballot_results', 'ballot_statuses']
     }
   },
   methods: {
-    handleSocketMessage: function(stream, payload) {
-      // Check what type the stream is
-
-      if (stream === "actionlog") {
-        var dataType = "actions"
-      }
-      if (stream === "ballot-results") {
-        var dataType = "ballots"
-      }
-      if (stream === "ballot-statuses") {
-        this.graphData = payload // pass to graph as prop
+    handleSocketMessage: function(payload, socketLabel) {
+      console.log('handleSocketMessage', socketLabel, ' : ', payload)
+      if (socketLabel === 'ballot_statuses') {
+        this.ballot_statuses = payload
         return
       }
-
       // Check for duplicates; do a inline replace if so
-      let duplicateIndex = _.findIndex(this[dataType], function(i) {
+      let duplicateIndex = _.findIndex(this[socketLabel], function(i) {
         return i.id == payload.id
       })
-
       if (duplicateIndex != -1) {
-        this[dataType][duplicateIndex] = payload
+        this[socketLabel][duplicateIndex] = payload
       } else {
         // Add new item to front
-        this[dataType].unshift(payload)
+        this[socketLabel].unshift(payload)
         // Remove last item if at the limit
-        if (this[dataType].length >= 15) {
-          this[dataType].pop()
+        if (this[socketLabel].length >= 15) {
+          this[socketLabel].pop()
         }
       }
     }

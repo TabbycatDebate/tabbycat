@@ -12,6 +12,7 @@ Change Log
    - Added a 'liveness' calculator for Open categories in BP
    - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
    - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+   - The "shared" checkbox in the simple importer is now hidden unless the relevant tournament option is enabled
 - Current team standings page now shows silent round results if "Release all round results to public" is set
 - Added draw pull-up option: pull up from middle
 - Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far
@@ -20,10 +21,15 @@ Change Log
 - Upgraded to Django 2.0
 - Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
     - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis'
-    - On Heroku: Sites should now always run at least 1 web dyno *as well as* 1 worker dyno. When scaling, generally you would scale *worker* dynos to handle a greater request throughput and scale *web* dynos to handle a greater request concurrency
     - Locally: You should recreate your local_settings.py from the example file
 - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
 
+2.0.6
+-----
+*Release date: Not yet released*
+
+- Added reminder to add own-institution conflicts in the Edit Database area
+- Other minor fixes
 
 2.0.5
 -----

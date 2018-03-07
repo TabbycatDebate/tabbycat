@@ -1,63 +1,76 @@
-from channels import Group
-from channels.generic.websockets import JsonWebsocketConsumer
+from asgiref.sync import AsyncToSync
+from django.core.cache import cache
+from django.shortcuts import get_object_or_404
+
+from channels.generic.websocket import JsonWebsocketConsumer
+
+from tournaments.models import Tournament
 
 
-class ConsumerLoginRequiredMixin():
-    http_user = True
+class WSLoginRequiredMixin():
 
-    def connect(self, message, **kwargs):
-        if not message.user.is_authenticated:
-            return
-        else:
-            super().connect(message, **kwargs)
+    def is_authenticated(self):
+        return self.scope["user"].is_authenticated
 
 
-class ConsumerAdminRequiredMixin():
-    http_user = True
+class WSSuperUserRequiredMixin():
 
-    def connect(self, message, **kwargs):
-        if not message.user.is_admin:
-            return
-        else:
-            super().connect(message, **kwargs)
+    def is_authenticated(self):
+        return self.scope["user"].is_superuser
 
 
 class TournamentConsumer(JsonWebsocketConsumer):
     """For a channel consumer specific to a tournament and whose path includes
-    a tournament_id. Must provide a group_base_string that serves as a group
-    prefix and stream_name. Must also provide two @staticmethod:
-    - a make_payload() that produces an object that can be serialised
-    - a get_tournament_id_from_content() that returns the relevant id from object
-    """
-    http_user = True
-    group_base_string = None # Serves as group prefix and stream_name
+    a tournament_slug. Must provide a group_prefix that serves as a stream_name
+    to be follow by "_" and tournament_slug."""
 
-    @classmethod
-    def group_string(cls, tournament_id):
-        # Construct a unique group name for this tournament
-        return "%s-%s" % (cls.group_base_string, tournament_id)
+    group_prefix = None
 
-    def connection_groups(self, **kwargs):
-        return [self.group_string(kwargs["tournament_id"])]
+    tournament_slug_url_kwarg = "tournament_slug"
+    tournament_cache_key = "{slug}_object"
+    tournament_redirect_pattern_name = None
 
-    def connect(self, message, **kwargs):
-        # Add the user to the tournament specific group; otherwise reject connection
-        if kwargs['tournament_id']:
-            Group(self.group_string(kwargs['tournament_id'])).add(message.reply_channel)
+    # TODO: unify with TournamentMixin()
+    def get_tournament(self):
+        # First look in self,
+        if hasattr(self, "_tournament_from_url"):
+            return self._tournament_from_url
+
+        # then look in cache,
+        slug = self.scope["url_route"]["kwargs"][self.tournament_slug_url_kwarg]
+        key = self.tournament_cache_key.format(slug=slug)
+        cached_tournament = cache.get(key)
+        if cached_tournament:
+            self._tournament_from_url = cached_tournament
+            return cached_tournament
+
+        # and if it was in neither place, retrieve the object
+        tournament = get_object_or_404(Tournament, slug=slug)
+        cache.set(key, tournament, None)
+        self._tournament_from_url = tournament
+        return tournament
+
+    def group_name(self):
+        return self.group_prefix + '_' + self.get_tournament().slug
+
+    def connect(self):
+        if self.is_authenticated():
+            AsyncToSync(self.channel_layer.group_add)(self.group_name(), self.channel_name)
+            self.accept()
         else:
-            message.reply_channel.send({"close": True})
+            pass
 
-    def disconnect(self, message, **kwargs):
-        Group(self.group_string(kwargs['tournament_id'])).discard(message.reply_channel)
+    def disconnect(self, message):
+        AsyncToSync(self.channel_layer.group_discard)(self.group_name(), self.channel_name)
+        # print('Channels: disconnect from', self.channel_name, self.group_name())
+        super().disconnect(message)
+
+    def broadcast(self, event):
+        # Handles the "broadcast" event when sent out from outside the class
+        # print('Channels: broadcast for', self.group_name(), event)
+        self.send_json(event["data"])
 
     @classmethod
-    def group_send(cls, content):
-        # Serialise data using a specific Tabbycat
-        # And add the add stream for frontend ID
-        tournament_id = cls.get_tournament_id_from_content(content)
-        group_name = cls.group_string(tournament_id)
-        content = {
-            'stream': cls.group_base_string,
-            'payload': cls.make_payload(content)
-        }
-        super().group_send(group_name, content, False)
+    def get_data(cls, data):
+        # Optional; allows for custom methods to act on data before JSONing
+        return data

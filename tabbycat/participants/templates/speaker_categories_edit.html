@@ -1,4 +1,4 @@
-{% extends "base_formset.html" %}
+{% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">🗂</span>{% trans "Speaker Categories" %}{% endblock %}
@@ -7,8 +7,6 @@
 {% block page-subnav-sections %}
   {% include "participants_subnav.html" %}
 {% endblock %}
-
-{% block save-button-text %}{% trans "Save Speaker Categories" %}{% endblock %}
 
 {% block content %}
 
@@ -28,6 +26,7 @@
     </div>
   </div>
 
-  {{ block.super }}
+  {% trans "Save Speaker Categories" as save_text %}
+  {% include "components/formset.html" with double=True %}
 
 {% endblock content %}

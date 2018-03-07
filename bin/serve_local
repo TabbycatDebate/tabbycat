@@ -3,4 +3,4 @@ set -eo pipefail
 
 npm run build
 cd ./tabbycat/
-daphne asgi:channel_layer --port 8000 -v 1 & python manage.py runworker -v 1 --threads 6
+daphne -p 8001 asgi:application

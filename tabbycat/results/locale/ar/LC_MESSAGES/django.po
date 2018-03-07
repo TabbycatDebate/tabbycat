@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,7 +149,7 @@ msgstr "عمومي"
 
 #: results/models.py:34
 msgid "timestamp"
-msgstr ""
+msgstr "الزمن "
 
 #: results/models.py:36
 msgid "version"
@@ -169,15 +169,15 @@ msgstr ""
 
 #: results/models.py:48
 msgid "confirmer"
-msgstr ""
+msgstr "مؤكدة"
 
 #: results/models.py:50
 msgid "confirm timestamp"
-msgstr ""
+msgstr "تأكيد النتائج"
 
 #: results/models.py:52
 msgid "IP address"
-msgstr ""
+msgstr "عنوان ال IP"
 
 #: results/models.py:89
 msgid "A tab room ballot must have a user associated."
@@ -206,11 +206,11 @@ msgstr ""
 #: results/models.py:109 results/models.py:157 results/models.py:195
 #: results/models.py:241
 msgid "ballot submission"
-msgstr ""
+msgstr "تسليم النتائج"
 
 #: results/models.py:110
 msgid "ballot submissions"
-msgstr ""
+msgstr "تسليم النتائج"
 
 #: results/models.py:129
 #, python-format
@@ -241,15 +241,15 @@ msgstr "نقطة"
 
 #: results/models.py:163 results/models.py:247
 msgid "position"
-msgstr ""
+msgstr "الموقع "
 
 #: results/models.py:169
 msgid "speaker score by adjudicator"
-msgstr ""
+msgstr "درجة المتحدث من الحكم "
 
 #: results/models.py:170
 msgid "speaker scores by adjudicator"
-msgstr ""
+msgstr "نقاط المتحدثين"
 
 #: results/models.py:184
 msgid ""
@@ -259,7 +259,7 @@ msgstr ""
 
 #: results/models.py:200
 msgid "points"
-msgstr ""
+msgstr "نقاط"
 
 #: results/models.py:202
 msgid "win"

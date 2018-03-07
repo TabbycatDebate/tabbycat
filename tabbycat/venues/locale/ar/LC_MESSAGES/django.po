@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-23 09:28-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Last-Translator: mohamad salman <mmali@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,7 @@ msgstr "الأولوية"
 msgid ""
 "Venues with a higher priority number will be preferred when allocating "
 "venues to debates"
-msgstr "وستفضل الأماكن التي لها رقم أولوية أعلى عند تخصيص أماكن للمناقشات"
+msgstr "ستفضل القاعات التي لها رقم أولوية أعلى عند تخصيص أماكن للمناظرات"
 
 #: venues/models.py:16
 msgid "tournament"
@@ -56,7 +56,7 @@ msgstr "قاعات "
 
 #: venues/models.py:69
 msgid "Don't display in venue name"
-msgstr "لا تعرض في اسم المكان"
+msgstr "لا تعرض اسم المكان"
 
 #: venues/models.py:70
 msgid "Display as prefix"
@@ -111,7 +111,7 @@ msgstr ""
 
 #: venues/models.py:96
 msgid "venue category"
-msgstr "مكان الفية "
+msgstr "فئة القاعة"
 
 #: venues/models.py:97
 msgid "venue categories"

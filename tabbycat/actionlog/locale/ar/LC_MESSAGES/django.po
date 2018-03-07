@@ -24,35 +24,35 @@ msgstr "سجل التحديثات"
 
 #: actionlog/models.py:66
 msgid "Discarded ballot set"
-msgstr "قام بحذف نتيجة"
+msgstr "حذف النتيجة"
 
 #: actionlog/models.py:67
 msgid "Checked in ballot set"
-msgstr "قام بإدخال نتيجة"
+msgstr "إدخال النتيجة"
 
 #: actionlog/models.py:68
 msgid "Created ballot set"
-msgstr "قام بإنشاء نموذج نتيجة"
+msgstr "إنشاء استمارة التحكيم"
 
 #: actionlog/models.py:69
 msgid "Edited ballot set"
-msgstr "قام بتعديل نتيجة"
+msgstr "تعديل النتيجة"
 
 #: actionlog/models.py:70
 msgid "Confirmed ballot set"
-msgstr "قام بتأكيد نتيجة"
+msgstr "تأكيد النتيجة"
 
 #: actionlog/models.py:71
 msgid "Submitted ballot set from the public form"
-msgstr "قام بتسليم النتيجة من النموذج العام"
+msgstr "تقديم النتيجة من النموذج العام"
 
 #: actionlog/models.py:72
 msgid "Submitted feedback from the public form"
-msgstr "قام بتسليم التغذية الراجعة من النموذج العام"
+msgstr "تقديم التغذية الراجعة من النموذج العام"
 
 #: actionlog/models.py:73
 msgid "Saved feedback"
-msgstr "قام بحفظ تغذية راجعة"
+msgstr "حفظ التغذية الراجعة"
 
 #: actionlog/models.py:74
 msgid "Edited adjudicator test score"
@@ -68,11 +68,11 @@ msgstr "قام بحفظ تعيين محكم"
 
 #: actionlog/models.py:77
 msgid "Auto-allocated adjudicators"
-msgstr "قام بالتعيين التلقائي للمحكمين"
+msgstr "التعيين التلقائي للمحكمين"
 
 #: actionlog/models.py:78
 msgid "Saved a venue manual edit"
-msgstr "قام بحفظ قاعة يدويا"
+msgstr "قام بتعديل قاعة (غير تلقائي)"
 
 #: actionlog/models.py:79
 msgid "Auto-allocated venues"
@@ -116,15 +116,15 @@ msgstr "حفظ التقسيمات "
 
 #: actionlog/models.py:89
 msgid "Added/edited motion"
-msgstr "قام بإضافة/تعديل نص قضية مناظرة"
+msgstr "قام بإضافة/تعديل نص قضية"
 
 #: actionlog/models.py:90
 msgid "Released motions"
-msgstr "قام بإعلان نص قضايا المناظرة"
+msgstr "قام بإعلان نص قضايا المناظرات"
 
 #: actionlog/models.py:91
 msgid "Unreleased motions"
-msgstr "قام بإزالة إعلان قضايا المناظرة المناظرة"
+msgstr "قام بإزالة إعلان قضايا المناظرات"
 
 #: actionlog/models.py:92
 msgid "Edited debate importance"
@@ -220,7 +220,7 @@ msgstr "نوع المحتوى"
 
 #: actionlog/models.py:130
 msgid "object ID"
-msgstr "ID للموضوع "
+msgstr "Object ID"
 
 #: actionlog/models.py:136
 msgid "action log"
@@ -232,7 +232,7 @@ msgstr "مدخلات سجل التحديثات"
 
 #: actionlog/models.py:145
 msgid "All log entries require at least one of a user and an IP address."
-msgstr "كافة مدخلات السجل تحتاج مستخدم و IP كحد أدنى"
+msgstr "كافة مدخلات السجل تحتاج مستخدم و IP واحد كحد أدنى"
 
 #: actionlog/models.py:178
 msgid "anonymous"

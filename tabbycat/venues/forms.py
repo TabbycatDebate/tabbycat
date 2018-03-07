@@ -1,18 +1,17 @@
-from django.db.models import Q
 from django.forms import ModelForm, ModelMultipleChoiceField, SelectMultiple
 
-from .models import Venue, VenueCategory
+from .models import VenueCategory
 
 
-def venuecategoryform_factory(tournament):
+def venuecategoryform_factory(venues_queryset):
 
-    venue_queryset = Venue.objects.filter(Q(tournament=tournament) |
-            Q(tournament__isnull=True)).order_by('name')
+    venue_choices = [(venue.id, venue.display_name) for venue in venues_queryset]
 
     class VenueCategoryForm(ModelForm):
 
-        venues = ModelMultipleChoiceField(queryset=venue_queryset,
+        venues = ModelMultipleChoiceField(queryset=venues_queryset,
             widget=SelectMultiple(attrs={'size': 10}))
+        venues.choices = venue_choices  # can't be passed as keyword argument
 
         class Meta:
             model = VenueCategory

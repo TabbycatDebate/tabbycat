@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Last-Translator: mohamad salman <mmali@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,11 +24,11 @@ msgstr "الدوي "
 
 #: tournaments/forms.py:24
 msgid "Number of preliminary rounds"
-msgstr "ارقام الجولات الاولى "
+msgstr "ارقام الجولات الأولية"
 
 #: tournaments/forms.py:29
 msgid "Number of teams in the open break"
-msgstr "ارقام الفرق المتأهله "
+msgstr "عدد الفرق المتأهله "
 
 #: tournaments/forms.py:30
 msgid "Leave blank if there are no break rounds."
@@ -45,17 +45,19 @@ msgstr "ترتيب "
 
 #: tournaments/forms.py:81
 msgid "Apply a standard set of settings to match a common debate format"
-msgstr ""
+msgstr "تطبيق مجموعة قياسية من الإعدادات لمطابقة شكل المناظرة مشترك"
 
 #: tournaments/forms.py:85
 msgid "Public Configuration"
-msgstr ""
+msgstr "التهئية العامة "
 
 #: tournaments/forms.py:86
 msgid ""
 "Show non-sensitive information on the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
 msgstr ""
+"عرض معلومات غير حساسة على الجانب الذي يواجه الجمهور من هذا الموقع، مثل سحب "
+"(مرة واحدة صدر) والحركات من الجولات السابقة"
 
 #: tournaments/mixins.py:94
 #, python-format
@@ -63,23 +65,29 @@ msgid ""
 "There's a problem with the data for the tournament %(tournament_name)s. "
 "Please contact a tab director and ask them to set its current round."
 msgstr ""
+"هناك مشكلة في بيانات البطولة%(tournament_name)s يرجى الاتصال بغرفة التاب و "
+"اطلب منهم تعيين الجولة الحالية."
 
 #: tournaments/mixins.py:106
 msgid ""
 "You've been redirected to this page because of a problem with how teams are "
 "assigned to sides in a debate."
 msgstr ""
+"تمت إعادة توجيهك إلى هذه الصفحة بسبب وجود مشكلة في كيفية تعيين الفرق للجوانب"
+" في المناظرة ."
 
 #: tournaments/mixins.py:111
 msgid ""
 "There's a problem with how teams are assigned to sides in a debate. The tab "
 "director will need to resolve this issue."
 msgstr ""
+"هناك مشكلة في كيفية تعيين الفرق إلى الجانبين في النقاش. سيحتاج مدير علامة "
+"التبويب إلى حل هذه المشكلة."
 
 #: tournaments/mixins.py:134
 #, python-format
 msgid "for %(round)s"
-msgstr ""
+msgstr "من %(round)s"
 
 #: tournaments/models.py:26
 msgid ""
@@ -176,7 +184,7 @@ msgstr "لا يوجد"
 
 #: tournaments/models.py:225
 msgid "Draft"
-msgstr ""
+msgstr "مشروع"
 
 #: tournaments/models.py:226
 msgid "Confirmed"

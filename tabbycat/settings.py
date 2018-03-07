@@ -3,6 +3,7 @@ import os
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -203,12 +204,6 @@ if os.environ.get('SENDGRID_USERNAME', ''):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'except_importer_base': {
-            '()': 'utils.logging.ExceptFilter',
-            'name': 'importer.importers.base',
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
@@ -217,7 +212,6 @@ LOGGING = {
         'sentry': {
             'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'filters': ['except_importer_base'],
         },
     },
     'loggers': {
@@ -298,12 +292,12 @@ SUMMERNOTE_CONFIG = {
 # Channels
 # ==============================================================================
 
-# Channel settings; note this is for development only
+ASGI_APPLICATION = "routing.application"
+
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "asgiref.inmemory.ChannelLayer",
-        "ROUTING": "routing.channel_routing",
-    }
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
 }
 
 # ==============================================================================
@@ -353,19 +347,14 @@ if os.environ.get('REDIS_URL', ''):
         }
         CHANNEL_LAYERS = {
             "default": {
-                "BACKEND": "asgi_redis.RedisChannelLayer",
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
                 "CONFIG": {
                     "hosts": [os.environ.get('REDIS_URL')],
                 },
-                "ROUTING": "routing.channel_routing",
             },
         }
     except:
-        CACHES = {
-            'default': {
-                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-            }
-        }
+        pass
 
 # ==============================================================================
 # Travis CI

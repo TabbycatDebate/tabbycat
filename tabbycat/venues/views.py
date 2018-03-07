@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.contrib import messages
-from django.forms import Select, TextInput
+from django.forms import Select
 from django.utils.translation import ngettext
 from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
@@ -12,6 +12,7 @@ from actionlog.models import ActionLogEntry
 from tournaments.mixins import DrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from utils.forms import SelectPrepopulated
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
@@ -88,8 +89,9 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
+        queryset = self.get_tournament().relevant_venues.prefetch_related('venuecategory_set')
         formset_factory_kwargs = {
-            'form': venuecategoryform_factory(self.get_tournament()),
+            'form': venuecategoryform_factory(venues_queryset=queryset),
             'extra': 3
         }
         return formset_factory_kwargs
@@ -112,17 +114,10 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         return reverse_tournament('importer-simple-index', self.get_tournament())
 
 
-class SelectPrepopulated(TextInput):
-    template_name = 'select_prepopulated_widget.html'
-
-    def __init__(self, data_list, *args, **kwargs):
-        super(SelectPrepopulated, self).__init__(*args, **kwargs)
-        self.attrs.update({'data_list': data_list})
-
-
-class VenueConstraintsView(AdministratorMixin, TournamentMixin, ModelFormSetView):
+class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, ModelFormSetView):
     template_name = 'venue_constraints_edit.html'
     formset_model = VenueConstraint
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_EDIT
 
     def get_formset_factory_kwargs(self):
         # Need to built a dynamic choices list for the widget; so override the
@@ -146,28 +141,24 @@ class VenueConstraintsView(AdministratorMixin, TournamentMixin, ModelFormSetView
         return formset_factory_kwargs
 
     def subject_choices(self):
-        from participants.models import Adjudicator, Team, Institution
-        from divisions.models import Division
+        from participants.models import Institution
 
         tournament = self.get_tournament()
         options = []
 
-        if tournament.pref('share_adjs'):
-            adjudicators = Adjudicator.objects.filter(tournament=tournament).values_list('id', 'name').order_by('name')
-        else:
-            adjudicators = Adjudicator.objects.values_list('id', 'name').order_by('name')
-        options.extend([(a[0], a[1] + ' (Adjudicator)') for a in adjudicators])
+        adjudicators = tournament.relevant_adjudicators.values('id', 'name')
+        options.extend([(a['id'], _('%s (Adjudicator)') % a['name']) for a in adjudicators])
 
-        teams = Team.objects.filter(tournament=tournament).values_list('id', 'short_name').order_by('short_name')
-        options.extend([(t[0], t[1] + ' (Team)') for t in teams])
+        teams = tournament.team_set.values('id', 'short_name')
+        options.extend([(t['id'], _('%s (Team)') % t['short_name']) for t in teams])
 
-        institutions = Institution.objects.values_list('id', 'name').order_by('name')
-        options.extend([(i[0], i[1] + ' (Institution)') for i in institutions])
+        institutions = Institution.objects.values('id', 'name')
+        options.extend([(i['id'], _('%s (Institution)') % i['name']) for i in institutions])
 
-        divisions = Division.objects.filter(tournament=tournament).values_list('id', 'name').order_by('name')
-        options.extend([(d[0], d[1] + ' (Division)') for d in divisions])
+        divisions = tournament.division_set.values('id', 'name')
+        options.extend([(d['id'], _('%s (Division)') % d['name']) for d in divisions])
 
-        return sorted(options, key=lambda tup: tup[1])
+        return sorted(options, key=lambda x: x[1])
 
     def formset_valid(self, formset):
         result = super().formset_valid(formset)

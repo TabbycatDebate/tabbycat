@@ -89,7 +89,7 @@ msgstr "تعارضات (محكم-محكم)"
 
 #: adjallocation/models.py:76
 msgid "institution"
-msgstr "منتخب"
+msgstr "مؤسسة"
 
 #: adjallocation/models.py:79
 msgid "adjudicator-institution conflict"

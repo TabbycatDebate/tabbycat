@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🔶</span> {% trans "Adjudicator-Team Conflicts" %}{% endblock %}
+{% block page-title %}🔶{% trans "Adjudicator-Team Conflicts" %}{% endblock %}
+
+{% block save-button-text %}{% trans "Save Adjudicator-Team Conflicts" %}{% endblock %}
+
+{% block content %}
+
+  {% trans "Save Adjudicator-Team Conflicts" as save_text %}
+  {% include "components/formset.html" with double=True %}
+
+{% endblock content %}

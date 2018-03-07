@@ -14,20 +14,27 @@
   </div>
 
   {% tournamenturl 'options-tournament-section' section='feedback' as options_feedback %}
-  {% tournamenturl 'options-tournament-section' section='league_options' as options_league_url %}
   {% tournamenturl 'privateurls-list' as privateurls_url %}
   {% blocktrans trimmed asvar settings_info with min=pref.adj_min_score max=pref.adj_max_score %}
     As per <a href="{{ options_feedback }}" class="alert-link">this tournament's
     configuration</a>, an adjudicator's rating must be between
-    <strong>{{ min }}</strong> and <strong>{{ max }}</strong>. Adjudicators
-    marked as 'shared' will not be associated with any particular tournament but
-    will be available to any tournament which has the
-    "<a href="{{ options_league_url }}" class="alert-link">Share adjudicators</a>"
-    setting enabled. Providing email addresses is optional but can be useful if
+    <strong>{{ min }}</strong> and <strong>{{ max }}</strong>.
+    Providing email addresses is optional but can be useful if
     using <a href="{{ privateurls_url }}" class="alert-link">private URLs</a>
     for feedback or ballots.
   {% endblocktrans %}
-  {% include "components/explainer-card.html" with type="info" p1=settings_info %}
+
+  {% if pref.share_adjs %}
+    {% tournamenturl 'options-tournament-section' section='league_options' as options_league_url %}
+    {% blocktrans trimmed asvar shared_info %}
+      Adjudicators marked as 'shared' will not be associated with any particular
+      tournament but will be available to any tournament which has the
+      "<a href="{{ options_league_url }}" class="alert-link">Share adjudicators</a>"
+      setting enabled.
+    {% endblocktrans %}
+  {% endif %}
+
+  {% include "components/explainer-card.html" with type="info" p1=settings_info p2=shared_info %}
 
   {% csrf_token %}
   {{ wizard.management_form }}
@@ -60,7 +67,11 @@
 
             {% for form in forms.list %}
               {{ form.id }}
-              {% include "components/form-main.html" with quadruple=True %}
+              {% if pref.share_adjs %}
+                {% include "components/form-main.html" with quadruple=True %}
+              {% else %}
+                {% include "components/form-main.html" with triple=True %}
+              {% endif %}
             {% endfor %}
 
           </div>

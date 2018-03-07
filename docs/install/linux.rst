@@ -67,16 +67,16 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 ------------
-Tabbycat requires Python 3.4 or later.  You probably already have Python 3.4, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
+Tabbycat requires Python 3.5 or later.  You probably already have Python 3.5, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
 
     $ sudo apt-get install python3-dev python3-venv
 
 Check the version::
 
     $ python3 --version
-    Python 3.4.4
+    Python 3.5.2
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.4 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.5 or later.
 
 .. admonition:: Advanced users
   :class: tip

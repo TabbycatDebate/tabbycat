@@ -1,6 +1,8 @@
 import logging
 from itertools import product
 
+from asgiref.sync import AsyncToSync
+from channels.layers import get_channel_layer
 from django import forms
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -190,11 +192,21 @@ class BaseResultForm(forms.Form):
         # 5. Notify the websocket Latest Results consumer if result is 'final'
         if self.ballotsub.confirmed:
             if self.debate.result_status is self.debate.STATUS_CONFIRMED:
-                BallotResultConsumer.group_send(self.ballotsub)
+                slug = self.debate.round.tournament.slug
+                group_name = BallotResultConsumer.group_prefix + "_" + slug
+                AsyncToSync(get_channel_layer().group_send)(group_name, {
+                    "type": "broadcast",
+                    "data": self.ballotsub.serialize_like_actionlog
+                })
 
         # 6. Notify the websocket Ballots Status if result is for current round
         if self.debate.round == self.debate.round.tournament.current_round:
-            BallotStatusConsumer.group_send(self.debate.round)
+            slug = self.debate.round.tournament.slug
+            group_name = BallotStatusConsumer.group_prefix + "_" + slug
+            AsyncToSync(get_channel_layer().group_send)(group_name, {
+                "type": "broadcast",
+                "data": BallotStatusConsumer.get_data(self.debate.round)
+            })
 
         return self.ballotsub
 

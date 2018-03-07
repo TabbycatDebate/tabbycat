@@ -145,7 +145,13 @@ class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
     """Also provides for the boolean 'shared' field, which indicates that the
     adjudicator should not be attached to a tournament."""
 
-    shared = forms.BooleanField(initial=False, required=False)
+    shared_pref_name = None
+
+    def __init__(self, tournament, *args, **kwargs):
+        super().__init__(tournament, *args, **kwargs)
+
+        if self.shared_pref_name is None or tournament.pref(self.shared_pref_name):
+            self.fields['shared'] = forms.BooleanField(initial=False, required=False)
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -156,6 +162,8 @@ class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
 
 
 class VenueDetailsForm(SharedBetweenTournamentsObjectForm):
+
+    shared_pref_name = 'share_venues'
 
     class Meta:
         model = Venue
@@ -309,6 +317,8 @@ class TeamDetailsFormSet(forms.BaseModelFormSet):
 
 
 class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitutionObjectDetailsForm):
+
+    shared_pref_name = 'share_adjs'
 
     class Meta:
         model = Adjudicator
