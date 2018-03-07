@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,68 +21,70 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:17
 #: options/templates/preferences_index.html:15
 msgid "Score Rules"
-msgstr ""
+msgstr "قوانين الدرجات"
 
 #: options/dynamic_preferences_registry.py:23
 msgid "Minimum allowed score for substantive speeches"
-msgstr ""
+msgstr "أقل درجة مسموحة للخطابات الأساسية"
 
 #: options/dynamic_preferences_registry.py:26
 msgid "Minimum speaker score"
-msgstr ""
+msgstr "أقل درجة المتحدث"
 
 #: options/dynamic_preferences_registry.py:32
 msgid "Maximum speaker score"
-msgstr ""
+msgstr "أعلى درجة المتحدث"
 
 #: options/dynamic_preferences_registry.py:33
 msgid "Maximum allowed score for substantive speeches"
-msgstr ""
+msgstr "أكثر درجة مسموحة للخطابات الأساسية"
 
 #: options/dynamic_preferences_registry.py:41
 msgid "Speaker score step"
-msgstr ""
+msgstr "درجات المتحدث "
 
 #: options/dynamic_preferences_registry.py:42
 msgid ""
 "Score steps allowed for substantive speeches, e.g. full points (1) or half "
 "points (0.5)"
-msgstr ""
+msgstr "تسجيل درجات المتحدث ، على سبيل المثال درجة كاملة (1) نصف درجة (0.5) "
 
 #: options/dynamic_preferences_registry.py:50
 msgid ""
 "The largest amount by which one team can beat another (0 means no limit)"
 msgstr ""
+"أقصى فرق درجات يمكن أن يكون بين فريقين في نفس القاعة (0 يعني لا نهائي)"
 
 #: options/dynamic_preferences_registry.py:51
 msgid "Maximum margin"
-msgstr ""
+msgstr "أقصى فرق درجات"
 
 #: options/dynamic_preferences_registry.py:60
 msgid "Minimum allowed score for reply speeches"
-msgstr ""
+msgstr "أقل درجة مسموحة لخطاب الرد"
 
 #: options/dynamic_preferences_registry.py:61
 msgid "Minimum reply score"
-msgstr ""
+msgstr "أقل درجة خطاب رد"
 
 #: options/dynamic_preferences_registry.py:69
 msgid "Maximum allowed score for reply speeches"
-msgstr ""
+msgstr "أكثر درجة مسموحة للخطاب الرد"
 
 #: options/dynamic_preferences_registry.py:70
 msgid "Maximum reply score"
-msgstr ""
+msgstr "أكثر درجة خطاب رد"
 
 #: options/dynamic_preferences_registry.py:78
 msgid ""
 "Score steps allowed for reply speeches, e.g. full points (1) or half points "
 "(0.5)"
 msgstr ""
+"تسجيل درجات خطاب الرد ، على سبيل المثال درجة كاملة (1) نصف درجة (0.5) "
 
 #: options/dynamic_preferences_registry.py:79
 msgid "Reply score step"
-msgstr ""
+msgstr "درجات المداخلة "
 
 #: options/dynamic_preferences_registry.py:87
 msgid "If checked, a team's winning margin includes dissenting adjudicators"
@@ -94,7 +97,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:94
 #: options/templates/preferences_index.html:20
 msgid "Draw Rules"
-msgstr ""
+msgstr "قوانين القرعة"
 
 #: options/dynamic_preferences_registry.py:100
 msgid ""
@@ -104,7 +107,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:101
 msgid "Minimum adjudicator score to vote"
-msgstr ""
+msgstr "اقل درجة مُنيحة من قبل الحكام "
 
 #: options/dynamic_preferences_registry.py:109
 msgid "Penalty applied by auto-allocator for adjudicator-team conflict"
@@ -214,7 +217,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:187
 #: options/dynamic_preferences_registry.py:204
 msgid "Random"
-msgstr ""
+msgstr "عشوائي "
 
 #: options/dynamic_preferences_registry.py:188
 msgid "Balance"
@@ -240,7 +243,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:202
 msgid "Slide"
-msgstr ""
+msgstr "جانب"
 
 #: options/dynamic_preferences_registry.py:203
 msgid "Fold"
@@ -248,7 +251,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:205
 msgid "Adjacent"
-msgstr ""
+msgstr "حكم "
 
 #: options/dynamic_preferences_registry.py:206
 msgid "Fold top, adjacent rest"
@@ -266,11 +269,11 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:219
 msgid "Off"
-msgstr ""
+msgstr "اطفاء "
 
 #: options/dynamic_preferences_registry.py:220
 msgid "One-up-one-down"
-msgstr ""
+msgstr "واحد- فوق-واحد-اسفل"
 
 #: options/dynamic_preferences_registry.py:227
 msgid ""
@@ -317,7 +320,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:259
 msgid "Simple"
-msgstr ""
+msgstr "بسيط "
 
 #: options/dynamic_preferences_registry.py:260
 msgid "Rényi entropy"
@@ -393,23 +396,23 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:331
 #: options/templates/preferences_index.html:35
 msgid "Feedback"
-msgstr ""
+msgstr "التغذية الراجعة "
 
 #: options/dynamic_preferences_registry.py:337
 msgid "Minimum possible adjudicator score that can be given"
-msgstr ""
+msgstr "أقل درجة محتملة من الحكم "
 
 #: options/dynamic_preferences_registry.py:338
 msgid "Minimum adjudicator score"
-msgstr ""
+msgstr "اقل درجة من الحكم "
 
 #: options/dynamic_preferences_registry.py:346
 msgid "Maximum possible adjudicator score that can be given"
-msgstr ""
+msgstr "أعلى درجة محتملة من الحكم "
 
 #: options/dynamic_preferences_registry.py:347
 msgid "Maximum adjudicator score"
-msgstr ""
+msgstr "أعلى درجة من الحكم "
 
 #: options/dynamic_preferences_registry.py:355
 msgid ""
@@ -431,7 +434,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:362
 msgid "All adjudicators (including trainees) on each other"
-msgstr ""
+msgstr "جميع الحكام (بالاضافة إلى المدربين ) "
 
 #: options/dynamic_preferences_registry.py:369
 msgid "Expect feedback to be submitted by teams on"
@@ -499,7 +502,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:427
 #: options/templates/preferences_index.html:25
 msgid "Debate Rules"
-msgstr ""
+msgstr "قوانين المناظرة"
 
 #: options/dynamic_preferences_registry.py:433
 msgid "Two-team format (e.g. Australs, WSDC) or British Parliamentary"
@@ -507,7 +510,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:434
 msgid "Teams in debate"
-msgstr ""
+msgstr "الفريق من المناظرة "
 
 #: options/dynamic_preferences_registry.py:438
 msgid "Two-team format"
@@ -603,11 +606,11 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:528
 msgid "Average"
-msgstr ""
+msgstr "متوسط"
 
 #: options/dynamic_preferences_registry.py:529
 msgid "Total"
-msgstr ""
+msgstr "المجموع "
 
 #: options/dynamic_preferences_registry.py:536
 msgid "Metrics to use to rank teams (see documentation for further details)"
@@ -757,7 +760,7 @@ msgstr ""
 #: options/dynamic_preferences_registry.py:689
 #: options/templates/preferences_index.html:51
 msgid "Data Entry"
-msgstr ""
+msgstr "إعدادات إدخال البيانات"
 
 #: options/dynamic_preferences_registry.py:695
 msgid "Whether adjudicators can submit ballots themselves, and how they do so"
@@ -999,12 +1002,12 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:919
 msgid "Welcome message"
-msgstr ""
+msgstr "رسالة الترحيب"
 
 #: options/dynamic_preferences_registry.py:928
 #: options/templates/preferences_index.html:61
 msgid "UI Options"
-msgstr ""
+msgstr "إعدادات واجهة المستخدم"
 
 #: options/dynamic_preferences_registry.py:934
 msgid "If showing results to public, show splitting adjudicators in them"
@@ -1029,7 +1032,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:953
 msgid "Show emoji"
-msgstr ""
+msgstr "إظهار الايموجي"
 
 #: options/dynamic_preferences_registry.py:961
 msgid "In tables listing teams, adds a column showing their institutions"
@@ -1037,7 +1040,7 @@ msgstr ""
 
 #: options/dynamic_preferences_registry.py:962
 msgid "Show team institutions"
-msgstr ""
+msgstr "إظهار مؤسسة الفريق"
 
 #: options/dynamic_preferences_registry.py:970
 msgid ""
@@ -1306,7 +1309,7 @@ msgstr ""
 #: options/templates/preferences_index.html:101
 #, python-format
 msgid "Apply %(preset_name)s"
-msgstr ""
+msgstr "تطبيق %(preset_name)s"
 
 #: options/templates/preferences_presets_complete.html:4
 #: options/templates/preferences_presets_complete.html:5
@@ -1318,7 +1321,7 @@ msgstr ""
 #: options/templates/preferences_presets_confirm.html:10
 #: options/templates/preferences_section_set.html:19
 msgid "Back to Configuration"
-msgstr ""
+msgstr "العودة إلى الترتيب "
 
 #: options/templates/preferences_presets_complete.html:16
 msgid "Preferences that were changed"
@@ -1346,19 +1349,19 @@ msgstr ""
 #: options/templates/preferences_section_set.html:6
 #, python-format
 msgid "Configuration: %(section_name)s"
-msgstr ""
+msgstr "الترتيب : %(section_name)s"
 
 #: options/templates/preferences_section_set.html:10
 #, python-format
 msgid "Edit Configuration: %(section_name)s"
-msgstr ""
+msgstr "تعديل الترتيب : %(section_name)s"
 
 #: options/views.py:55
 #, python-format
 msgid "Tournament options (%(section)s) saved."
-msgstr ""
+msgstr "خيارات البطولة  ( %(section)s ) حفظت "
 
 #: options/views.py:108
 #, python-format
 msgid "Tournament options saved according to preset %(name)s."
-msgstr ""
+msgstr "خيارات البطولة حفظت   و تم ارسالها إلى %(name)s "

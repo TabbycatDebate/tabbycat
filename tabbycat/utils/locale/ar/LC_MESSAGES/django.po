@@ -24,7 +24,7 @@ msgstr "البريد الالكتروني"
 
 #: utils/tables.py:37
 msgid "No Data Available"
-msgstr "لا يوجد معلومات متوفرة "
+msgstr "عدم توافر المعلومات"
 
 #: utils/tables.py:142
 msgid "Ⓒ"

@@ -73,7 +73,7 @@ msgstr "حفظ التقسيمات "
 
 #: motions/models.py:30 motions/models.py:42
 msgid "motion"
-msgstr "نص قضية"
+msgstr "نص القضية"
 
 #: motions/models.py:31
 msgid "motions"

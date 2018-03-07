@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-27 22:01-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,7 +132,7 @@ msgstr "%(name)s(%(round)s)"
 #: adjfeedback/forms.py:287
 #, python-format
 msgid "%(name)s (%(round)s — chair gave oral)"
-msgstr "%(name)s(%(round)s— عدد الكراسي ) "
+msgstr ""
 
 #: adjfeedback/forms.py:289
 #, python-format
@@ -218,11 +218,11 @@ msgstr "نعم/لا"
 
 #: adjfeedback/models.py:91
 msgid "integer (textbox)"
-msgstr "عدد صحيح (textbox)"
+msgstr ""
 
 #: adjfeedback/models.py:92
 msgid "integer scale"
-msgstr "الميا"
+msgstr ""
 
 #: adjfeedback/models.py:93
 msgid "float"
@@ -300,7 +300,7 @@ msgstr "مطلوب "
 
 #: adjfeedback/models.py:148
 msgid "minimum value"
-msgstr "الدرحة المتدنية "
+msgstr "أقل قيمة"
 
 #: adjfeedback/models.py:149
 msgid ""
@@ -310,7 +310,7 @@ msgstr "الحد الأدنى للقيمة المسموح بها للحقول ا
 
 #: adjfeedback/models.py:151
 msgid "maximum value"
-msgstr "الدرجة العالية "
+msgstr "أعلى قيمة"
 
 #: adjfeedback/models.py:152
 msgid ""
@@ -338,11 +338,11 @@ msgstr "جواب للتعذية الراجعة من المحكم "
 
 #: adjfeedback/models.py:219
 msgid "source adjudicator"
-msgstr "نتيجة الحكم "
+msgstr ""
 
 #: adjfeedback/models.py:221
 msgid "source team"
-msgstr "نتيجة الفريق "
+msgstr ""
 
 #: adjfeedback/models.py:225
 msgid "adjudicator feedback"
@@ -382,7 +382,7 @@ msgstr "هناك بعض المشاكل في التغذية الراجعة يرج
 msgid ""
 "When submitting this form your IP address will be stored for logging "
 "purposes."
-msgstr "عند إرسال هذا النموذج سيتم تخزين عنوان إب الخاص بك لأغراض التسجيل."
+msgstr "عند إرسال هذا النموذج سيتم تخزين عنوان IP الخاص بك لأغراض التسجيل."
 
 #: adjfeedback/templates/feedback_by_source.html:12
 #, python-format
