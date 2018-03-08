@@ -158,6 +158,9 @@ class Team(models.Model):
     short_reference = models.CharField(blank=True, max_length=35,
         verbose_name=_("short name/suffix"),
         help_text=_("The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)"))
+    code_name = models.CharField(blank=True, max_length=150,
+        verbose_name=_("code name"),
+        help_text=_("Name used to obscure institutional identity on public-facing pages"))
 
     short_name = models.CharField(editable=False, max_length=50,
         verbose_name=_("short name"),
@@ -238,10 +241,6 @@ class Team(models.Model):
             return long_name
         else:
             return self.reference
-
-    @property
-    def code_name(self):
-        return "Code Name"
 
     @property
     def region(self):

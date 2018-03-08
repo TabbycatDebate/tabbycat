@@ -35,6 +35,32 @@ def pick_unused_emoji():
         return None
 
 
+def populate_code_names_from_emoji(teams, overwrite=True):
+    """Populates team code names based on existing emoji."""
+    count = 0
+
+    for team in teams:
+        try:
+            new_code_name = EMOJI_NAMES[team.emoji]
+        except KeyError:
+            logger.warning("Unrecognized emoji for team %s: %s (%#x)", team.short_name, team.emoji, ord(team.emoji))
+            continue
+
+        if team.code_name and overwrite:
+            logger.info("Team %s already has code name %s, overwriting with %s",
+                team.short_name, team.code_name, new_code_name)
+        elif team.code_name:
+            logger.info("Team %s already has code name %s, leaving unchanged",
+                team.short_name, team.code_name)
+            continue
+
+        team.code_name = new_code_name
+        team.save()
+        count += 1
+
+    return count
+
+
 # With thanks to emojipedia.org
 EMOJI_LIST = (
     # Unicode Version 1.1 (these all render using primitive icons)
