@@ -252,7 +252,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             cell['subtext'] = subtext
 
         if (self.tournament.pref('team_code_names') == 'all-tooltips' or  # code names in tooltips
-            (self.tournament.pref('team_code_names') == 'admin-tooltips-code' and self.admin)):
+                (self.tournament.pref('team_code_names') == 'admin-tooltips-code' and self.admin)):
             cell['popover']['content'].append({'text': _("Code name: <strong>%(name)s</strong>") % {'name': team.code_name}})
         if self.tournament.pref('team_code_names') == 'admin-tooltips-real' and self.admin:
             cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': team.short_name}})

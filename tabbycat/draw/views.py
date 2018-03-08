@@ -216,13 +216,8 @@ class BaseDrawDisplayForRoundByTeamView(BasePublicDrawTableView):
     def populate_table(self, draw, table, round, tournament):
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
         draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)]
+        draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', table._team_short_name(x[1])))
 
-        if tournament.pref('team_code_names') in ['admin-tooltips-code', 'admin-tooltips-real', 'everywhere']:
-            sort_key = lambda x: unicodedata.normalize('NFKD', x[1].code_name)
-        else:
-            sort_key = lambda x: unicodedata.normalize('NFKD', x[1].short_name)
-
-        draw_by_team.sort(key=sort_key)
         if len(draw_by_team) == 0:
             draw, teams = [], []  # next line can't unpack if draw_by_team is empty
         else:
