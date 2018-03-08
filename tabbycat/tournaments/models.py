@@ -1,5 +1,3 @@
-from warnings import warn
-
 from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
@@ -341,11 +339,8 @@ class Round(models.Model):
     # --------------------------------------------------------------------------
 
     def get_draw(self, ordering=('venue__name',)):
-        warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
-        related = ('venue',)
-        if self.tournament.pref('enable_divisions'):
-            related += ('division', 'division__venue_category')
-        return self.debate_set.order_by(*ordering).select_related(*related)
+        # Deprecated fully 8/3/2018, remove after 8/4/2018
+        raise RuntimeError("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.")
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, wins=False,
