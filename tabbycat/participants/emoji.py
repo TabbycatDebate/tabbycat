@@ -46,13 +46,16 @@ def populate_code_names_from_emoji(teams, overwrite=True):
             logger.warning("Unrecognized emoji for team %s: %s (%#x)", team.short_name, team.emoji, ord(team.emoji))
             continue
 
-        if team.code_name and overwrite:
-            logger.info("Team %s already has code name %s, overwriting with %s",
-                team.short_name, team.code_name, new_code_name)
-        elif team.code_name:
-            logger.info("Team %s already has code name %s, leaving unchanged",
-                team.short_name, team.code_name)
-            continue
+        if team.code_name:
+            if team.code_name == new_code_name:
+                continue
+            elif overwrite:
+                logger.info("Team %s already has code name %s, overwriting with %s",
+                    team.short_name, team.code_name, new_code_name)
+            else:
+                logger.info("Team %s already has code name %s, leaving unchanged",
+                    team.short_name, team.code_name)
+                continue
 
         team.code_name = new_code_name
         team.save()
