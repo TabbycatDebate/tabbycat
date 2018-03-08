@@ -290,7 +290,7 @@ EMOJI_LIST = (
     # DULL ("🙎", "Person With Pouting Face"),
     ("🙅", "Face With No Good Gesture"),
     ("🙆", "Face With OK Gesture"),
-    ("💁", "for reply standings"),
+    ("💁", "Information Desk Person"),  # for reply standings
     ("🙋", "Happy Person Raising One Hand"),
     ("🙇", "Person Bowing Deeply"),
     ("🙌", "Person Raising Both Hands in Celebration"),
@@ -317,12 +317,12 @@ EMOJI_LIST = (
     ("👌", "OK Hand Sign"),
     ("👍", "Thumbs Up Sign"),
     ("👎", "Thumbs Down Sign"),
-    # USED BY UI ("👋", "for the welcome pages"),
+    # USED BY UI ("👋", "Waving Hand Sign"),  # for the welcome pages
     # DULL ("👏", "Clapping Hands Sign"),
     ("👐", "Open Hands Sign"),
     ("💅", "Nail Polish"),
     # DULL ("👣", "Footprints"),
-    # USED BY UI ("👀", "for the draw pages"),
+    # USED BY UI ("👀", "Eyes"),  # for the draw pages
     ("👂", "Ear"),
     ("👃", "Nose"),
     ("👅", "Tongue"),
@@ -369,7 +369,7 @@ EMOJI_LIST = (
     ("👠", "High-Heeled Shoe"),
     # DULL ("👡", "Womans Sandal"),
     # DULL ("👢", "Womans Boots"),
-    # USED BY UI ("👑", "for the break pages"),
+    # USED BY UI ("👑", "Crown"),  # for the break pages
     ("👒", "Womans Hat"),
     ("🎩", "Top Hat"),
     ("💄", "Lipstick"),
@@ -391,13 +391,13 @@ EMOJI_LIST = (
     # TOO SIMILAR ("🐕", "Dog"),
     ("🐩", "Poodle"),
     # TOO SIMILAR ("🐺", "Wolf Face"),
-    # ("🐱", "USED BY UI"),
-    # ("😸", "USED BY UI"),
-    # ("😹", "USED BY UI"),
-    # ("😺", "USED BY UI"),
-    # ("😻", "USED BY UI"),
-    # ("😼", "USED BY UI"),
-    # ("😽", "USED BY UI"),
+    # ("🐱", "Cat Face"),  # USED BY UI
+    # ("😸", "Grinning Cat Face With Smiling Eyes"),  # USED BY UI
+    # ("😹", "Cat Face With Tears of Joy"),  # USED BY UI
+    # ("😺", "Smiling Cat Face With Open Mouth"),  # USED BY UI
+    # ("😻", "Smiling Cat Face With Heart-Shaped Eyes"),  # USED BY UI
+    # ("😼", "Cat Face With Wry Smile"),  # USED BY UI
+    # ("😽", "Kissing Cat Face With Closed Eyes"),  # USED BY UI
     # ("😾", "Pouting Cat Face")  # USED BY UI
     # ("😿", "Crying Cat Face")  # USED BY UI
     # ("🙀", "Weary Cat Face")  # USED BY UI
@@ -740,7 +740,7 @@ EMOJI_LIST = (
     # DULL ("🔈", "Speaker"),
     # DULL ("🔉", "Speaker With One Sound Wave"),
     # DULL ("🔊", "Speaker With Three Sound Waves"),
-    # USED BY UI ("📢", "for public config settings"),
+    # USED BY UI ("📢", "Public Address Loudspeaker"),  # for public config settings
     ("📣", "Cheering Megaphone"),
     ("📯", "Postal Horn"),
     ("🔔", "Bell"),
@@ -1149,7 +1149,7 @@ EMOJI_LIST = (
     ("❓", "Black Question Mark Ornament"),
     # TOO SIMILAR ("❔", "White Question Mark Ornament"),
     # TOO SIMILAR ("❕", "White Exclamation Mark Ornament"),
-    # USED BY UI ("💯", "Speaker tab"),
+    # USED BY UI ("💯", "Hundred Points Symbol"),  # Speaker tab
     ("🔞", "No One Under Eighteen Symbol"),
     # DULL ("🔠", "Input Symbol for Latin Capital Letters"),
     # DULL ("🔡", "Input Symbol for Latin Small Letters"),
