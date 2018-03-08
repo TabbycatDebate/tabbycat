@@ -1,3 +1,6 @@
+import logging
+import warnings
+
 from django.utils import formats
 from django.utils.encoding import force_text
 from django.utils.translation import gettext as _
@@ -11,6 +14,8 @@ from tournaments.utils import get_side_name
 from utils.misc import reverse_tournament
 
 from .mixins import AdministratorMixin
+
+logger = logging.getLogger(__name__)
 
 
 class BaseTableBuilder:
@@ -42,7 +47,10 @@ class BaseTableBuilder:
             header['key'] = force_text(header['key'])
             return header
         else:
-            return {'key': force_text(header)}
+            # not sure why warnings module isn't working, so also use logger.warning to be annoying
+            warnings.warn("Plain-text headers are deprecated, use a dict with key and title instead", stacklevel=3)
+            logger.warning("Plain-text headers are deprecated, use a dict with key and title instead", stack_info=True)
+            return {'key': force_text(header), 'title': force_text(header)}
 
     @staticmethod
     def _convert_cell(cell):

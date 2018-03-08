@@ -68,8 +68,9 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
                 team_data.append(self._team_cell(team, subtext=subtext, hide_emoji=False, highlight=team == hl))
 
-            key = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
-            self.add_column(key, team_data)
+            title = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
+            header = {'key': side, 'title': title}
+            self.add_column(header, team_data)
 
 
 class AdminDrawTableBuilder(PublicDrawTableBuilder):
