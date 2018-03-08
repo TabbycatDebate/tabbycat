@@ -50,7 +50,13 @@ from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilde
 logger = logging.getLogger(__name__)
 
 
-class BaseDrawTableView(RoundMixin, VueTableTemplateView):
+class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
+    """Base class for views showing a draw table to the public in some way.
+    Subclasses are *not* necessarily public views; they may be admin/assistant
+    views intended to facilitate displaying the draw in the general assembly
+    room. Since, whether a public, assistant or admin view, the content on it
+    is intended for consumption by the public, the table is always built as if
+    it were a public view."""
 
     template_name = 'draw_display_by.html'
     sort_key = 'venue'
@@ -102,7 +108,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
         tournament = self.get_tournament()
         round = self.get_round()
         draw = self.get_draw()
-        table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key)
+        table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key, admin=False)
         self.populate_table(draw, table, round, tournament)
         return table
 
@@ -111,7 +117,7 @@ class BaseDrawTableView(RoundMixin, VueTableTemplateView):
 # Viewing Draw (Public)
 # ==============================================================================
 
-class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):
+class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
 
     public_page_preference = 'public_draw'
 
@@ -125,7 +131,7 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BaseDrawTabl
         round = self.get_round()
         if round.draw_status != Round.STATUS_RELEASED:
             kwargs["round"] = self.get_round()
-            return super(BaseDrawTableView, self).get_context_data(**kwargs) # skip BaseDrawTableView
+            return super(BasePublicDrawTableView, self).get_context_data(**kwargs) # skip BasePublicDrawTableView
         else:
             return super().get_context_data(**kwargs)
 
@@ -134,7 +140,7 @@ class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
     pass
 
 
-class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, BaseDrawTableView):
+class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_round(self):
@@ -198,19 +204,25 @@ class BaseDrawDisplayView(AdminDrawUtiltiiesMixin, RoundMixin, TemplateView):
     pass
 
 
-class BaseDrawDisplayForRoundByVenueView(BaseDrawTableView):
+class BaseDrawDisplayForRoundByVenueView(BasePublicDrawTableView):
     # inherit everything, this class is kept in code for ease of reading
     pass
 
 
-class BaseDrawDisplayForRoundByTeamView(BaseDrawTableView):
+class BaseDrawDisplayForRoundByTeamView(BasePublicDrawTableView):
 
     sort_key = '' # Leave with default sort order
 
     def populate_table(self, draw, table, round, tournament):
         # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
         draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)]
-        draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', x[1].short_name))
+
+        if tournament.pref('team_code_names') in ['admin-tooltips-code', 'admin-tooltips-real', 'everywhere']:
+            sort_key = lambda x: unicodedata.normalize('NFKD', x[1].code_name)
+        else:
+            sort_key = lambda x: unicodedata.normalize('NFKD', x[1].short_name)
+
+        draw_by_team.sort(key=sort_key)
         if len(draw_by_team) == 0:
             draw, teams = [], []  # next line can't unpack if draw_by_team is empty
         else:
@@ -815,7 +827,7 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableView):
+class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
     page_title = gettext_lazy("All Draws for All Teams")
 
@@ -825,7 +837,7 @@ class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BaseDrawTabl
         return draw
 
 
-class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableView):
+class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_institution(self):
@@ -844,7 +856,7 @@ class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BaseDrawT
         return draw
 
 
-class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, BaseDrawTableView):
+class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_venue_category(self):

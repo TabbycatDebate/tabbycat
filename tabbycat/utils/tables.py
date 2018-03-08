@@ -185,6 +185,27 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _show_speakers_in_draw(self):
         return self.tournament.pref('show_speakers_in_draw') or self.admin
 
+    @property
+    def _use_team_code_names(self):
+        return (
+            (self.tournament.pref('team_code_names') in ['admin-tooltips-real', 'everywhere']) or
+            (self.tournament.pref('team_code_names') == 'admin-tooltips-code' and not self.admin)
+        )
+
+    def _team_short_name(self, team):
+        """Returns the appropriate short name for the team, accounting for team code name preference."""
+        if self._use_team_code_names:
+            return team.code_name
+        else:
+            return team.short_name
+
+    def _team_long_name(self, team):
+        """Returns the appropriate long name for the team, accounting for team code name preference."""
+        if self._use_team_code_names:
+            return team.code_name
+        else:
+            return team.long_name
+
     def _adjudicator_record_link(self, adj):
         adj_short_name = adj.name.split(" ")[0]
         if self.admin:
@@ -205,12 +226,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _team_record_link(self, team):
         if self.admin:
             return {
-                'text': _("View %(team)s's Team Record") % {'team': team.short_name},
+                'text': _("View %(team)s's Team Record") % {'team': self._team_short_name(team)},
                 'link': reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(team)s's Team Record") % {'team': team.short_name},
+                'text': _("View %(team)s's Team Record") % {'team': self._team_short_name(team)},
                 'link': reverse_tournament('participants-public-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         else:
@@ -218,20 +239,29 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def _team_cell(self, team, hide_emoji=True, subtext=None, highlight=False):
         cell = {
-            'text': team.short_name,
+            'text': self._team_short_name(team),
             'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
-            'sort': team.short_name,
+            'sort': self._team_short_name(team),
             'class': 'team-name',
-            'popover': {'title': team.long_name, 'content': []}
+            'popover': {'title': self._team_long_name(team), 'content': []}
         }
+
         if highlight:
             cell['class'] += ' font-weight-bold table-secondary'
         if subtext:
             cell['subtext'] = subtext
+
+        if (self.tournament.pref('team_code_names') == 'all-tooltips' or  # code names in tooltips
+            (self.tournament.pref('team_code_names') == 'admin-tooltips-code' and self.admin)):
+            cell['popover']['content'].append({'text': _("Code name: <strong>%(name)s</strong>") % {'name': team.code_name}})
+        if self.tournament.pref('team_code_names') == 'admin-tooltips-real' and self.admin:
+            cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': team.short_name}})
+
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({'text': ", ".join([s.name for s in team.speakers])})
         if self._show_record_links:
             cell['popover']['content'].append(self._team_record_link(team))
+
         return cell
 
     def _result_cell_class_two(self, win, cell):
@@ -306,17 +336,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
         opp_vshort = '<i class="emoji">' + opp.emoji + '</i>' if opp.emoji else "…"
 
         cell = {
-            'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else opp.short_name},
+            'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else self._team_short_name(opp)},
             'popover': {'content': [], 'title': ''}
         }
         cell = self._result_cell_class_two(ts.win, cell)
 
         if ts.win is True:
-            cell['popover']['title'] = _("Won against %(team)s") % {'team': opp.long_name}
+            cell['popover']['title'] = _("Won against %(team)s") % {'team': self._team_long_name(opp)}
         elif ts.win is False:
-            cell['popover']['title'] = _("Lost to %(team)s") % {'team': opp.long_name}
+            cell['popover']['title'] = _("Lost to %(team)s") % {'team': self._team_long_name(opp)}
         else: # None
-            cell['popover']['title'] = _("No result for debate against %(team)s") % {'team': opp.long_name}
+            cell['popover']['title'] = _("No result for debate against %(team)s") % {'team': self._team_long_name(opp)}
 
         if show_score:
             cell['subtext'] = metricformat(ts.score)
@@ -330,7 +360,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({'text': _("Speakers in <strong>%(opp)s</strong>: %(speakers)s") % {
-                'opp': opp.short_name, 'speakers': ", ".join([s.name for s in opp.speakers])}})
+                'opp': self._team_short_name(opp), 'speakers': ", ".join([s.name for s in opp.speakers])}})
 
         if self._show_record_links:
             cell['popover']['content'].append(
@@ -342,7 +372,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if not hasattr(ts, 'debate_team'):
             return {'text': self.BLANK_TEXT}
 
-        other_teams = {dt.side: dt.team.short_name for dt in ts.debate_team.debate.debateteam_set.all()}
+        other_teams = {dt.side: self._team_short_name(dt.team) for dt in ts.debate_team.debate.debateteam_set.all()}
         other_team_strs = [_("Teams in debate:")]
         for side in self.tournament.sides:
             if ts.debate_team.debate.sides_confirmed:
@@ -699,7 +729,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             # conflicts is a list of (level, message) tuples
             conflicts = [("secondary", flag) for flag in debate.get_flags_display()]
-            conflicts += [("secondary", "%(team)s: %(flag)s" % {'team': debate.get_team(side).short_name, 'flag': flag})
+            conflicts += [("secondary", "%(team)s: %(flag)s" % {'team': self._team_short_name(debate.get_team(side)), 'flag': flag})
                     for side in self.tournament.sides for flag in debate.get_dt(side).get_flags_display()]
 
             if self.tournament.pref('avoid_team_history'):

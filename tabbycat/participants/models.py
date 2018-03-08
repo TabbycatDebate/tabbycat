@@ -242,6 +242,10 @@ class Team(models.Model):
             return self.reference
 
     @property
+    def code_name(self):
+        return "Code Name"
+
+    @property
     def region(self):
         institution = self.get_cached_institution()
         if institution is None:
