@@ -63,6 +63,7 @@ Printable Feedback Forms for {{ round_name }}
         // From Django
         round: '{{ round.abbreviation }}',
         questions: {{ questions|safe }},
+        teamCodes: '{{ pref.team_code_names }}'
       },
       ballots: {{ ballots|safe }},
     }

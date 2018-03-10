@@ -102,7 +102,14 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         return questions
 
     def construct_info(self, venue, source, source_p, target, target_p):
-        source_n = source.name if hasattr(source, 'name') else source.short_name
+        t = self.get_tournament()
+        if hasattr(source, 'name'):
+            source_n = source.name
+        elif t.pref('team_code_names') == 'all-tooltips' or t.pref('team_code_names') == 'off':
+            source_n = source.short_name
+        else:
+            source_n = source.code_name
+
         return {
             'venue': venue.serialize() if venue else '',
             'authorInstitution': source.institution.code if source.institution else _("Unaffiliated"),

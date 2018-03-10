@@ -350,7 +350,8 @@ class Team(models.Model):
         super().save(*args, **kwargs)
 
     def serialize(self):
-        team = {'id': self.id, 'short_name': self.short_name, 'long_name': self.long_name}
+        team = {'id': self.id, 'short_name': self.short_name,
+                'long_name': self.long_name, 'code_name': self.code_name}
         team['emoji'] = self.emoji
         team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize if self.institution else None

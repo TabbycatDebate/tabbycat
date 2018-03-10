@@ -4,7 +4,7 @@
     <div class="db-flex-item-3 db-flex-row db-bottom-border">
       <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
         <div class="db-flex-item-1">
-          <span class="h6">{{ team.short_name }}</span>
+          <span class="h6">{{ teamName }}</span>
           <small>({{ speakersList }})</small>
         </div>
         <div class="db-flex-static">
@@ -91,6 +91,14 @@ export default {
         console.log('null')
       } else {
         return this.dt.team
+      }
+    },
+    teamName: function() {
+      if (this.roundInfo.teamCodes === 'off' ||
+          this.roundInfo.teamCodes === 'all-tooltips') {
+        return this.team.short_name
+      } else {
+        return this.team.code_name
       }
     },
     speakersList: function() {
