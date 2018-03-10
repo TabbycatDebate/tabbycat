@@ -11,14 +11,16 @@ def set_emoji(teams, tournament):
     tournament must be provided as the second argument."""
 
     used_emoji = tournament.team_set.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unused_emoji = [e[0] for e in EMOJI_LIST if e[0] not in used_emoji]
+    unused_emoji = [e for e in EMOJI_LIST if e[0] not in used_emoji]
 
     if len(teams) > len(unused_emoji):
         teams = teams[:len(unused_emoji)]
     emojis = random.sample(unused_emoji, len(teams))
 
     for team, emoji in zip(teams, emojis):
-        team.emoji = emoji
+        team.emoji = emoji[0]
+        if not team.code_name:
+            team.code_name = emoji[1]
         team.save()
 
 
