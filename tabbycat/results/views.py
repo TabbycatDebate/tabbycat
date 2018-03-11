@@ -3,6 +3,7 @@ import logging
 
 from django.contrib import messages
 from django.db import ProgrammingError
+from django.db.models import Prefetch
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import gettext as _
@@ -12,7 +13,7 @@ from django.views.generic import FormView, TemplateView, View
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
-from draw.models import Debate
+from draw.models import Debate, DebateTeam
 from draw.prefetch import populate_opponents
 from participants.models import Adjudicator
 from tournaments.mixins import (CurrentRoundMixin, PublicTournamentPageMixin, RoundMixin,
@@ -647,5 +648,11 @@ class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, Tem
     def get_context_data(self, **kwargs):
         if self.is_draw_released():
             kwargs['das'] = DebateAdjudicator.objects.filter(
-                debate__round=self.get_tournament().current_round).select_related('adjudicator', 'debate').order_by('adjudicator__name')
+                debate__round=self.get_tournament().current_round,
+            ).select_related(
+                'adjudicator', 'debate__venue',
+            ).prefetch_related(
+                'debate__venue__venuecategory_set',
+                Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
+            ).order_by('adjudicator__name')
         return super().get_context_data(**kwargs)
