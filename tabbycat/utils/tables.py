@@ -8,6 +8,7 @@ from django.utils.translation import ngettext
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate
+from options.utils import use_team_code_names
 from participants.models import Team
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
@@ -195,10 +196,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     @property
     def _use_team_code_names(self):
-        return (
-            (self.tournament.pref('team_code_names') in ['admin-tooltips-real', 'everywhere']) or
-            (self.tournament.pref('team_code_names') == 'admin-tooltips-code' and not self.admin)
-        )
+        return use_team_code_names(self.tournament, self.admin)
 
     def _team_short_name(self, team):
         """Returns the appropriate short name for the team, accounting for team code name preference."""
@@ -826,13 +824,15 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_debate_result_by_team_column(self, teamscores):
         results_data = [self._result_cell(ts) for ts in teamscores]
-        self.add_column(_("Result"), results_data)
+        header = {'key': 'result', 'title': _("Result")}
+        self.add_column(header, results_data)
 
     def add_debate_side_by_team_column(self, teamscores):
         sides_data = [ts.debate_team.get_side_name().title()
             # Translators: "TBC" stands for "to be confirmed".
             if ts.debate_team.debate.sides_confirmed else _("TBC") for ts in teamscores]
-        self.add_column(_("Side"), sides_data)
+        header = {'key': 'side', 'title': _("Side")}
+        self.add_column(header, sides_data)
 
     def add_team_results_columns(self, teams, rounds):
         """ Takes an iterable of Teams, assumes their round_results match rounds"""

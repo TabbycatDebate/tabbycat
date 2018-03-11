@@ -16,6 +16,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
+from options.utils import use_team_code_names
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
@@ -84,9 +85,13 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     allow_null_tournament = True
 
+    def use_team_code_names(self):
+        return use_team_code_names(self.get_tournament(), self.admin)
+
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
         kwargs['draw_released'] = self.get_tournament().current_round.draw_status == Round.STATUS_RELEASED
+        kwargs['use_code_names'] = self.use_team_code_names()
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -100,7 +105,9 @@ class BaseTeamRecordView(BaseRecordView):
     template_name = 'team_record.html'
 
     def get_page_title(self):
-        return _("Record for %(name)s") % {'name': self.object.long_name}
+        # This has to be in Python so that the emoji can be team-dependent.
+        name = self.object.code_name if self.use_team_code_names() else self.object.long_name
+        return _("Record for %(name)s") % {'name': name}
 
     def get_page_emoji(self):
         if self.get_tournament().pref('show_emoji'):
@@ -116,6 +123,7 @@ class BaseTeamRecordView(BaseRecordView):
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
 
+        kwargs['team_short_name'] = self.object.code_name if self.use_team_code_names() else self.object.short_name
         kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, tournament)
 
         return super().get_context_data(**kwargs)
@@ -149,7 +157,7 @@ class BaseTeamRecordView(BaseRecordView):
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TeamResultTableBuilder(view=self, title="Results", sort_key="round")
+        table = TeamResultTableBuilder(view=self, title=_("Results"), sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
