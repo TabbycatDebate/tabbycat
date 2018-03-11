@@ -13,6 +13,7 @@ from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from options.utils import use_team_code_names_data_entry
 from participants.models import Adjudicator, Team
 from participants.prefetch import populate_feedback_scores
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
@@ -302,12 +303,22 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
     def get_tables(self):
         tournament = self.get_tournament()
 
+        use_code_names = use_team_code_names_data_entry(self.get_tournament(), self.tabroom)
         teams_table = TabbycatTableBuilder(view=self, sort_key="team", title=_("A Team"))
-        add_link_data = [{
-            'text': team.short_name,
-            'link': self.get_from_team_link(team),
-        } for team in tournament.team_set.all()]
-        teams_table.add_column(_("Team"), add_link_data)
+        add_link_data = []
+        for team in tournament.team_set.all():
+            cell = {'link': self.get_from_team_link(team)}
+            if use_code_names == 'code':
+                cell['text'] = team.code_name
+            elif use_code_names == 'both':
+                # Note: The same string is in results/templates/ballot/ballot_scoresheet.html
+                cell['text'] = _("%(code_name)s <em>(%(real_name)s)</em>") % {
+                    'code_name': team.code_name, 'real_name': team.short_name}
+            else:
+                cell['text'] = team.short_name
+            add_link_data.append(cell)
+        header = {'key': 'team', 'title': _("Team")}
+        teams_table.add_column(header, add_link_data)
 
         if tournament.pref('show_team_institutions'):
             teams_table.add_column({
@@ -331,7 +342,8 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
             'text': adj.name,
             'link': self.get_from_adj_link(adj),
         } for adj in adjudicators]
-        adjs_table.add_column(_("Adjudicator"), add_link_data)
+        header = {'key': 'adjudicator', 'title': _("Adjudicator")}
+        adjs_table.add_column(header, add_link_data)
 
         if tournament.pref('show_adjudicator_institutions'):
             adjs_table.add_column({
@@ -348,6 +360,7 @@ class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
     page lists all possible sources; officials should then choose the author
     of the feedback."""
     template_name = 'add_feedback.html'
+    tabroom = True
 
     def get_from_adj_link(self, adj):
         return reverse_tournament('adjfeedback-add-from-adjudicator',
@@ -361,6 +374,7 @@ class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
 class AssistantAddFeedbackIndexView(AssistantMixin, BaseAddFeedbackIndexView):
     """As for AdminAddFeedbackIndexView, but for assistants."""
     template_name = 'assistant_add_feedback.html'
+    tabroom = True
 
     def get_from_adj_link(self, adj):
         return reverse_tournament('adjfeedback-assistant-add-from-adjudicator',
@@ -376,6 +390,7 @@ class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddF
     lists all possible sources; public users should then choose themselves."""
 
     template_name = 'public_add_feedback.html'
+    tabroom = False
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'public'

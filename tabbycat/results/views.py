@@ -3,7 +3,6 @@ import logging
 
 from django.contrib import messages
 from django.db import ProgrammingError
-from django.db.models import Prefetch
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import gettext as _
@@ -13,8 +12,9 @@ from django.views.generic import FormView, TemplateView, View
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
-from draw.models import Debate, DebateTeam
+from draw.models import Debate
 from draw.prefetch import populate_opponents
+from options.utils import use_team_code_names_data_entry
 from participants.models import Adjudicator
 from tournaments.mixins import (CurrentRoundMixin, PublicTournamentPageMixin, RoundMixin,
                                 SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
@@ -223,19 +223,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     tabroom = False
 
     def use_team_code_names(self):
-        # This is a bit more complicated than options.utils.use_team_code_names,
-        # because if code names are in use at all, they'll be on the paper
-        # ballots, so needs to match tabroom data entry screens.
-        pref = self.get_tournament().pref('team_code_names')
-        if pref in ['off', 'all-tooltips']:
-            return 'off'
-        elif pref in ['admin-tooltips-code', 'admin-tooltips-real']:
-            return 'both' if self.tabroom else 'code'
-        elif pref == 'everywhere':
-            return 'code'
-        else:
-            logger.error("Unrecognized team code name preference: %s", pref)
-            return 'code'
+        return use_team_code_names_data_entry(self.get_tournament(), self.tabroom)
 
     def get_context_data(self, **kwargs):
         kwargs['ballotsub'] = self.ballotsub
@@ -653,7 +641,7 @@ class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleO
         return super().get(self, request, *args, **kwargs)
 
 
-class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, TemplateView):
+class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, VueTableTemplateView):
     """Public view listing all debate-adjudicators for the current round, as
     links for them to enter their ballots."""
 
@@ -670,14 +658,28 @@ class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, Tem
         else:
             return ['public_add_ballot_unreleased.html']
 
-    def get_context_data(self, **kwargs):
-        if self.is_draw_released():
-            kwargs['das'] = DebateAdjudicator.objects.filter(
-                debate__round=self.get_tournament().current_round,
-            ).select_related(
-                'adjudicator', 'debate__venue',
-            ).prefetch_related(
-                'debate__venue__venuecategory_set',
-                Prefetch('debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')),
-            ).order_by('adjudicator__name')
-        return super().get_context_data(**kwargs)
+    def get_table(self):
+        if not self.is_draw_released():
+            return None
+
+        debateadjs = DebateAdjudicator.objects.filter(
+            debate__round=self.get_tournament().current_round,
+        ).select_related(
+            'adjudicator', 'debate__venue',
+        ).prefetch_related(
+            'debate__venue__venuecategory_set',
+        ).order_by('adjudicator__name')
+
+        table = TabbycatTableBuilder(view=self, sort_key='adj')
+
+        data = [{
+            'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.name},
+            'link': reverse_tournament('results-public-ballotset-new-pk', self.get_tournament(),
+                    kwargs={'adj_id': da.adjudicator.id}),
+        } for da in debateadjs]
+        header = {'key': 'adj', 'title': _("Adjudicator")}
+        table.add_column(header, data)
+
+        debates = [da.debate for da in debateadjs]
+        table.add_debate_venue_columns(debates)
+        return table
