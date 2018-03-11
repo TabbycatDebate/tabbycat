@@ -162,7 +162,7 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, Ba
 # Draw Alerts Utilities (Admin)
 # ==============================================================================
 
-class AdminDrawUtiltiiesMixin:
+class AdminDrawUtiltiesMixin:
     """ Shared between the Admin Draw page and Admin Display Page"""
 
     def get_draw(self):
@@ -200,16 +200,26 @@ class AdminDrawUtiltiiesMixin:
 # Viewing Draw (Admin)
 # ==============================================================================
 
-class BaseDrawDisplayView(AdminDrawUtiltiiesMixin, RoundMixin, TemplateView):
+class BaseDrawDisplayView(AdminDrawUtiltiesMixin, RoundMixin, TemplateView):
     pass
 
 
-class BaseDrawDisplayForRoundByVenueView(BasePublicDrawTableView):
+class BaseBriefingRoomDrawTableView(BasePublicDrawTableView):
+    """Despite the inheritance, this is a base class for views that can be
+    accessed only by admins and assistants, and is intended for views of the
+    draw that get projected in the briefing room."""
+
+    def get_context_data(self, **kwargs):
+        kwargs['no_popovers'] = True  # Note: can't do so in BaseDrawDisplayView
+        return super().get_context_data(**kwargs)
+
+
+class BaseDrawDisplayForRoundByVenueView(BaseBriefingRoomDrawTableView):
     # inherit everything, this class is kept in code for ease of reading
     pass
 
 
-class BaseDrawDisplayForRoundByTeamView(BasePublicDrawTableView):
+class BaseDrawDisplayForRoundByTeamView(BaseBriefingRoomDrawTableView):
 
     sort_key = '' # Leave with default sort order
 
@@ -254,7 +264,7 @@ class AssistantDrawDisplayForRoundByTeamView(CurrentRoundMixin, OptionalAssistan
 # Draw Creation (Admin)
 # ==============================================================================
 
-class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiiesMixin, VueTableTemplateView):
+class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueTableTemplateView):
     detailed = False
 
     def get_page_title(self):

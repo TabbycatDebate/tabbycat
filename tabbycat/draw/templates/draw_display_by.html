@@ -74,8 +74,10 @@
       $('#stop_scrolling').hide();
     }
     $(document).ready( function() {
-      // Disable all popovers here
+      // Disable all popovers (if in the GA view)
+      {% if no_popovers %}
       $('.hover-target').css("pointer-events", "none")
+      {% endif %}
 
       $('#stop_scrolling').hide();
       $(".scroll-speeds .btn").click(function(event){

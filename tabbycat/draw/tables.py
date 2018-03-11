@@ -60,15 +60,15 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
 
         for i, side in enumerate(self.tournament.sides, start=1):
-            side_abbr = get_side_name(self.tournament, side, 'abbr')
+            side_name = get_side_name(self.tournament, side, 'full')
 
             team_data = []
             for debate, hl in zip_longest(debates, highlight):
                 team = debate.get_team(side)
-                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
+                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
                 team_data.append(self._team_cell(team, subtext=subtext, hide_emoji=False, highlight=team == hl))
 
-            title = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
+            title = side_name if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             header = {'key': side, 'title': title}
             self.add_column(header, team_data)
 
