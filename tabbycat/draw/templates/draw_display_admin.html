@@ -129,7 +129,7 @@
           {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
           {% if pref.public_draw %}
-            {% trans "Draw has been released." as text %}
+            {% trans "The draw has been released." as text %}
             {% include "components/item-info.html" with type="" %}
           {% elif pref.participant_ballots != 'off' or pref.participant_feedback != 'off' %}
             {% blocktrans trimmed asvar text %}
