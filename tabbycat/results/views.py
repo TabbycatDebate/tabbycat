@@ -220,12 +220,35 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     """Base class for views displaying ballot set entry forms."""
 
     action_log_content_object_attr = 'ballotsub'
+    tabroom = False
+
+    def use_team_code_names(self):
+        # This is a bit more complicated than options.utils.use_team_code_names,
+        # because if code names are in use at all, they'll be on the paper
+        # ballots, so needs to match tabroom data entry screens.
+        pref = self.get_tournament().pref('team_code_names')
+        if pref in ['off', 'all-tooltips']:
+            return 'off'
+        elif pref in ['admin-tooltips-code', 'admin-tooltips-real']:
+            return 'both' if self.tabroom else 'code'
+        elif pref == 'everywhere':
+            return 'code'
+        else:
+            logger.error("Unrecognized team code name preference: %s", pref)
+            return 'code'
 
     def get_context_data(self, **kwargs):
         kwargs['ballotsub'] = self.ballotsub
         kwargs['debate'] = self.debate
         kwargs['all_ballotsubs'] = self.get_all_ballotsubs()
         kwargs['new'] = self.relates_to_new_ballotsub
+        kwargs['use_team_code_names'] = self.use_team_code_names()
+
+        sides = self.get_tournament().sides
+        if self.use_team_code_names() == 'off':
+            kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).short_name for side in sides)
+        else:
+            kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).code_name for side in sides)
         return super().get_context_data(**kwargs)
 
     def get_all_ballotsubs(self):
@@ -285,6 +308,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
 class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'enter_results.html'
+    tabroom = True
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
@@ -292,6 +316,7 @@ class AdministratorBallotSetMixin(AdministratorMixin):
 
 class AssistantBallotSetMixin(AssistantMixin):
     template_name = 'assistant_enter_results.html'
+    tabroom = True
 
     def get_success_url(self):
         return reverse_tournament('results-assistant-round-list', self.get_tournament())
