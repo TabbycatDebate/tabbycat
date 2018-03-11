@@ -132,14 +132,18 @@ class PublicTabMixin(PublicTournamentPageMixin):
     def get_page_subtitle(self):
         return None
 
-    def get_round(self):
+    @property
+    def round(self):
+        if hasattr(self, "_round"):
+            return self._round
+
         # Always show tabs with respect to current round on public tab pages,
         # or the last non-silent round if the current round is silent.
-        round = self.tournament.current_round
-        if round.silent and not self.tournament.pref('all_results_released'):
-            round = self.tournament.prelim_rounds(until=round).filter(
+        self._round = self.tournament.current_round
+        if self._round.silent and not self.tournament.pref('all_results_released'):
+            self._round = self.tournament.prelim_rounds(until=self._round).filter(
                     silent=False).order_by('seq').last()
-        return round
+        return self._round
 
     def get_rounds(self):
         # Hide silent rounds
