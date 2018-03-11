@@ -94,11 +94,10 @@ export default {
       }
     },
     teamName: function() {
-      if (this.roundInfo.teamCodes === 'off' ||
-          this.roundInfo.teamCodes === 'all-tooltips') {
-        return this.team.short_name
-      } else {
+      if (this.roundInfo.teamCodes === true) {
         return this.team.code_name
+      } else {
+        return this.team.short_name
       }
     },
     speakersList: function() {

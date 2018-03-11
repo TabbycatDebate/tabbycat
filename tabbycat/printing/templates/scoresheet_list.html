@@ -64,7 +64,7 @@ Printable Scoresheets for {{ round_name }}
         replyMax: '{{ pref.reply_score_max }}',
         replyStep: '{{ pref.reply_score_step }}',
         motions: {{ motions|safe }},
-        teamCodes: '{{ pref.team_code_names }}'
+        teamCodes: {{ use_team_code_names|lower }},
       },
       // From Django
       ballots: {{ ballots|safe }},
