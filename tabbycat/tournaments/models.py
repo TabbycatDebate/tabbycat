@@ -109,6 +109,17 @@ class Tournament(models.Model):
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
 
+    def ballots_per_debate(self, stage):
+        """Returns the 'ballots per debate' setting for the stage of the
+        tournament given. Callers can use this to avoid querying the round's
+        tournament repeatedly."""
+        if stage == Round.STAGE_PRELIMINARY:
+            return self.pref('ballots_per_debate_prelim')
+        elif stage == Round.STAGE_ELIMINATION:
+            return self.pref('ballots_per_debate_elim')
+        else:
+            raise ValueError("Unrecognized stage: %r" % (stage,))
+
     # --------------------------------------------------------------------------
     # Permalinks
     # --------------------------------------------------------------------------
@@ -437,7 +448,4 @@ class Round(models.Model):
 
     @property
     def ballots_per_debate(self):
-        if self.is_break_round:
-            return self.tournament.pref("ballots_per_debate_elim")
-        else:
-            return self.tournament.pref("ballots_per_debate_prelim")
+        return self.tournament.ballots_per_debate(self.stage)

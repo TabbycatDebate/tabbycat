@@ -532,7 +532,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for debate in debates:
             adjs_data = []
             # The purpose of the second condition is to short-circuit debate.confirmed_ballot
-            if show_splits and debate.round.ballots_per_debate == 'per-adj' \
+            if show_splits and self.tournament.ballots_per_debate(debate.round.stage) == 'per-adj' \
                     and debate.confirmed_ballot \
                     and debate.confirmed_ballot.result.is_voting \
                     and debate.confirmed_ballot.result.is_valid() \
