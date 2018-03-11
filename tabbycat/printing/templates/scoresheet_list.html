@@ -1,5 +1,5 @@
 {% extends "printables_list.html" %}
-{% load i18n %}
+{% load i18n l10n %}
 
 {% block head-title %}
   {% trans "Scoresheets" %}
@@ -57,12 +57,12 @@ Printable Scoresheets for {{ round_name }}
         showTabRoomRow: true,
         showInfoRow: false,
         showPronouns: true,
-        substantiveMin: '{{ pref.score_min }}',
-        substantiveMax: '{{ pref.score_max }}',
-        substantiveStep: '{{ pref.score_step }}',
-        replyMin: '{{ pref.reply_score_min }}',
-        replyMax: '{{ pref.reply_score_max }}',
-        replyStep: '{{ pref.reply_score_step }}',
+        substantiveMin: '{{ pref.score_min|unlocalize }}',
+        substantiveMax: '{{ pref.score_max|unlocalize }}',
+        substantiveStep: '{{ pref.score_step|unlocalize }}',
+        replyMin: '{{ pref.reply_score_min|unlocalize }}',
+        replyMax: '{{ pref.reply_score_max|unlocalize }}',
+        replyStep: '{{ pref.reply_score_step|unlocalize }}',
         motions: {{ motions|safe }},
         teamCodes: {{ use_team_code_names|lower }},
       },
