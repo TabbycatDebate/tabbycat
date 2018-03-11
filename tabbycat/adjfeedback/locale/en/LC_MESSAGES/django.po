@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -353,13 +353,26 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: adjfeedback/templates/enter_feedback.html:26
+#: adjfeedback/templates/enter_feedback.html:5
+msgid "Enter Feedback"
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html:9
+#, python-format
+msgid "Add Feedback from %(source_name)s"
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html:13
+msgid "Add Feedback"
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html:33
 msgid ""
 "There are some problems with this feedback submission. Please review and "
 "correct them."
 msgstr ""
 
-#: adjfeedback/templates/enter_feedback.html:41
+#: adjfeedback/templates/enter_feedback.html:48
 msgid ""
 "When submitting this form your IP address will be stored for logging "
 "purposes."
@@ -450,7 +463,7 @@ msgstr ""
 msgid "Score Ratio"
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:69
+#: adjfeedback/templates/overview_breakdowns.html:70
 #, python-format
 msgid ""
 "There is %(c_chairs)s debate per round, so there needs to be %(c_chairs)s "
@@ -461,27 +474,38 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:74
+#: adjfeedback/templates/overview_breakdowns.html:76
+#, python-format
+msgid ""
+"There is %(c_debates)s debate per round, but only %(c_chairs)s above the "
+"minimum voting score."
+msgid_plural ""
+"There are %(c_debates)s debates per round, but only %(c_chairs)s above the "
+"minimum voting score."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:83
 #, python-format
 msgid "%(c_chairs)s chair"
 msgid_plural "%(c_chairs)s chairs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:84
+#: adjfeedback/templates/overview_breakdowns.html:93
 msgid ""
 "All adjudicators with a score high enough to vote, but who aren't allocated "
 "as chairs, are allocated as panellists by the auto-allocator."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:88
+#: adjfeedback/templates/overview_breakdowns.html:97
 #, python-format
 msgid "%(c_panellists)s panellist"
 msgid_plural "%(c_panellists)s panellists"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:98
+#: adjfeedback/templates/overview_breakdowns.html:107
 #, python-format
 msgid ""
 "Adjudicators are allocated as trainees by the auto-allocator if their score "
@@ -489,41 +513,41 @@ msgid ""
 "this tournament's Draw Rules configuration."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:103
+#: adjfeedback/templates/overview_breakdowns.html:112
 #, python-format
 msgid "%(c_trainees)s trainee"
 msgid_plural "%(c_trainees)s trainees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:112
+#: adjfeedback/templates/overview_breakdowns.html:121
 #, python-format
 msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr ""
 
-#: adjfeedback/views.py:145 adjfeedback/views.py:171 adjfeedback/views.py:188
+#: adjfeedback/views.py:150 adjfeedback/views.py:176 adjfeedback/views.py:193
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/views.py:302
+#: adjfeedback/views.py:308
 msgid "A Team"
 msgstr ""
 
-#: adjfeedback/views.py:307
+#: adjfeedback/views.py:313
 msgid "Team"
 msgstr ""
 
-#: adjfeedback/views.py:313 adjfeedback/views.py:337
+#: adjfeedback/views.py:320 adjfeedback/views.py:345
 msgid "Institution"
 msgstr ""
 
-#: adjfeedback/views.py:321
+#: adjfeedback/views.py:328
 msgid "An Adjudicator"
 msgstr ""
 
-#: adjfeedback/views.py:331
+#: adjfeedback/views.py:338
 msgid "Adjudicator"
 msgstr ""

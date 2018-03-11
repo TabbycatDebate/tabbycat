@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: 2018-02-18 23:26-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -149,6 +149,8 @@ msgid "Venue Categories"
 msgstr "Catégories de salles"
 
 #: venues/templates/venue_categories_edit.html:7
+#: venues/templates/venue_categories_edit.html:22
+#: venues/templates/venue_constraints_edit.html:22
 msgid "Save Venue Categories"
 msgstr "Enregistrer les catégories de salles"
 
@@ -180,7 +182,11 @@ msgstr ""
 msgid "Venue Constraints"
 msgstr "Contraintes de salle"
 
-#: venues/templates/venue_constraints_edit.html:9
+#: venues/templates/venue_constraints_edit.html:7
+msgid "Save Venue Constraints"
+msgstr "Enregistrer les contraintes de salle"
+
+#: venues/templates/venue_constraints_edit.html:11
 msgid ""
 "Venue constraints tell the venue allocator to try to keep the specified team "
 "or adjudicator, or all teams (but not adjudicators) from the specified "
@@ -197,14 +203,6 @@ msgstr ""
 "utiliser le champ de priorité pour spécifier des contraintes « d'ordre "
 "inférieur », qui sont prises si aucune contrainte de priorité plus élevé ne "
 "pouvais été satisfaite."
-
-#: venues/templates/venue_constraints_edit.html:41
-msgid "Save Venue Constraints"
-msgstr "Enregistrer les contraintes de salle"
-
-#: venues/templates/venue_constraints_edit.html:44
-msgid "Save and Add More"
-msgstr "Enregistrer et ajouter davantage"
 
 #: venues/utils.py:38 venues/utils.py:50
 #, python-format
@@ -233,20 +231,43 @@ msgstr ""
 "Cette salle ne satisfait aucune contrainte de l'institution %(institution)s "
 "(%(team)s)"
 
-#: venues/views.py:100
+#: venues/views.py:102
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] "La catégorie de salles suivante a été enregistrée : %(list)s"
 msgstr[1] "Les catégories de salles suivantes ont été enregistrées : %(list)s"
 
-#: venues/views.py:106
+#: venues/views.py:108
 msgid "No changes were made to the venue categories."
 msgstr "Aucune catégorie de salle a été modifiée."
 
-#: venues/views.py:176
+#: venues/views.py:150
+#, python-format
+msgid "%s (Adjudicator)"
+msgstr ""
+
+#: venues/views.py:153
+#, python-format
+msgid "%s (Team)"
+msgstr ""
+
+#: venues/views.py:156
+#, python-format
+msgid "%s (Institution)"
+msgstr ""
+
+#: venues/views.py:159
+#, python-format
+msgid "%s (Division)"
+msgstr ""
+
+#: venues/views.py:167
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."
 msgstr[0] "%(count)d contrainte de salle a été enregistrée."
 msgstr[1] "%(count)d contraintes de salle ont été enregistrées."
+
+#~ msgid "Save and Add More"
+#~ msgstr "Enregistrer et ajouter davantage"
