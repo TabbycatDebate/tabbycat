@@ -19,7 +19,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
-from options.dynamic_preferences_registry import BPPositionCost
+from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
 from participants.utils import get_side_history
 from standings.base import StandingsError
