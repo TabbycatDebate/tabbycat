@@ -5,11 +5,12 @@ from django.views.generic.base import TemplateView
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
-from draw.models import Debate
+from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
 from tournaments.models import Tournament
+from tournaments.utils import get_side_name
 from utils.mixins import AdministratorMixin
 from venues.models import VenueCategory
 
@@ -113,8 +114,8 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         return {
             'venue': venue.serialize() if venue else '',
             'authorInstitution': source.institution.code if source.institution else _("Unaffiliated"),
-            'author': source_n, 'authorPosition': source_p.upper(),
-            'target': target.name, 'targetPosition': target_p.upper()
+            'author': source_n, 'authorPosition': source_p,
+            'target': target.name, 'targetPosition': target_p,
         }
 
     def get_team_feedbacks(self, debate, team):
@@ -128,9 +129,8 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             ballots.append(self.construct_info(debate.venue, team, _("Team"),
                                                debate.adjudicators.chair, ""))
         elif team_paths == 'all-adjs':
-            for target in debate.debateadjudicator_set.all():
-                ballots.append(self.construct_info(debate.venue, team, _("Team"),
-                                                   target.adjudicator, ""))
+            for target in debate.adjudicators.all():
+                ballots.append(self.construct_info(debate.venue, team, _("Team"), target, ""))
 
         return ballots
 
@@ -149,8 +149,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         return ballots
 
     def get_context_data(self, **kwargs):
-        draw = self.get_round().debate_set_with_prefetches(ordering=('venue__name',))
-        # Sort by venue categories to ensure it matches the draw
+        draw = self.get_round().debate_set_with_prefetches(institutions=True)
         draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
 
         ballots = []
@@ -180,45 +179,78 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
 
     template_name = 'scoresheet_list.html'
 
-    def add_ballot_data(self, adj, debate_info):
-        ballot_data = {
-            'author': adj['adjudicator']['name'],
-            'authorInstitution': adj['adjudicator']['institution']['code'] if adj['adjudicator']['institution'] else "Unaffiliated",
-            'authorPosition': adj['position'],
-        }
-        ballot_data.update(debate_info)  # Extend with debateInfo keys
-        return ballot_data
-
-    def get_context_data(self, **kwargs):
+    def get_ballots_dicts(self):
+        tournament = self.get_tournament()
         round = self.get_round()
-        motions = round.motion_set.order_by('seq')
-        draw = round.debate_set_with_prefetches(ordering=('venue__name',))
-
-        # Sort by venue categories to ensure it matches the draw
+        draw = round.debate_set_with_prefetches()
         draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
+        ballots_dicts = []
 
-        ballots = []
         for debate in draw:
-            debate_info = debate.serialize()
+            debate_dict = {}
 
-            if len(debate_info['debateAdjudicators']) is 0:
-                ballot_data = {
+            if debate.venue:
+                debate_dict['venue'] = {'display_name': debate.venue.display_name}
+            else:
+                debate_dict['venue'] = None
+
+            debate_dict['debateTeams'] = []
+            for side in tournament.sides:
+                dt_dict = {
+                    'side': side,
+                    'position': get_side_name(tournament, side, 'full'),
+                    'abbr': get_side_name(tournament, side, 'abbr'),
+                }
+                try:
+                    team = debate.get_team(side)
+                    dt_dict['team'] = {
+                        'short_name': team.short_name,
+                        'code_name': team.code_name,
+                        'speakers': [{'name': s.name} for s in team.speakers],
+                    }
+                except DebateTeam.DoesNotExist:
+                    dt_dict['team'] = None
+                debate_dict['debateTeams'].append(dt_dict)
+
+            debate_dict['debateAdjudicators'] = []
+            for adj, pos in debate.adjudicators.with_positions():
+                da_dict = {'position': pos}
+                da_dict['adjudicator'] = {
+                    'name': adj.name,
+                    'institution': {'code': adj.institution.code},
+                }
+                debate_dict['debateAdjudicators'].append(da_dict)
+
+            if round.ballots_per_debate == 'per-adj':
+                authors = list(debate.adjudicators.voting_with_positions())
+            else:
+                authors = [(debate.adjudicators.chair, debate.adjudicators.POSITION_CHAIR)]
+
+            # Add a ballot for each author
+            for author, pos in authors:
+                ballot_dict = {
+                    'author': author.name,
+                    'authorInstitution': author.institution.code if author.institution else _("Unaffiliated"),
+                    'authorPosition': pos,
+                }
+                ballot_dict.update(debate_dict)
+                ballots_dicts.append(ballot_dict)
+
+            if len(authors) == 0:
+                ballot_dict = {
                     'author': "_______________________________________________",
                     'authorInstitution': "",
                     'authorPosition': "",
                 }
-                ballot_data.update(debate_info)  # Extend with debateInfo keys
-                ballots.append(ballot_data)
-            else:
-                for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] == "C"):
-                    ballots.append(self.add_ballot_data(adj, debate_info))
-                if round.ballots_per_debate == 'per-adj':
-                    for adj in (a for a in debate_info['debateAdjudicators'] if a['position'] == "P"):
-                        ballots.append(self.add_ballot_data(adj, debate_info))
+                ballot_dict.update(debate_dict)
+                ballots_dicts.append(ballot_dict)
 
-        kwargs['ballots'] = json.dumps(ballots)
-        kwargs['motions'] = json.dumps([
-            {'seq': m.seq, 'text': m.text} for m in motions])
+        return ballots_dicts
+
+    def get_context_data(self, **kwargs):
+        kwargs['ballots'] = json.dumps(self.get_ballots_dicts())
+        motions = self.get_round().motion_set.order_by('seq')
+        kwargs['motions'] = json.dumps([{'seq': m.seq, 'text': m.text} for m in motions])
         return super().get_context_data(**kwargs)
 
 

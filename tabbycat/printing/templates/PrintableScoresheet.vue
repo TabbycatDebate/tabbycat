@@ -7,16 +7,16 @@
         The other adjudicators are
         <span v-for="(da, i) in panellistsExcludingSelf">
           <span v-if="i !== 0">&nbsp;and</span>&nbsp;<strong>{{ da.adjudicator.name }}</strong>
-          <span v-if="da.position === 'C'">
+          <span v-if="da.position === 'c'">
             (Chair, {{ getAdjudicatorInstitution(da) }})
           </span>
-          <span v-if="da.position === 'O'">
+          <span v-if="da.position === 'o'">
             (Solo Chair, {{ getAdjudicatorInstitution(da) }})
           </span>
-          <span v-if="da.position === 'P'">
+          <span v-if="da.position === 'p'">
             (Panellist, {{ getAdjudicatorInstitution(da) }})
           </span>
-          <span v-if="da.position === 'T'">
+          <span v-if="da.position === 't'">
             (Trainee, {{ getAdjudicatorInstitution(da) }})
           </span>
         </span>.
