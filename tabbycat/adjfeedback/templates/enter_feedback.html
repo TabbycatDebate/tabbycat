@@ -2,9 +2,16 @@
 
 {% load add_field_css i18n %}
 
-{% block page-title %}🙅Enter Feedback{% endblock %}
+{% block page-title %}🙅 {% trans "Enter Feedback" %}{% endblock %}
 {% block head-title %}
-  <span class="emoji">🙅</span>Add Feedback {% if source_name %}from {{ source_name }}{% endif %}
+  <span class="emoji">🙅</span>
+  {% if source_name %}
+    {% blocktrans trimmed %}
+      Add Feedback from {{ source_name }}
+    {% endblocktrans %}
+  {% else %}
+    {% trans "Add Feedback" %}
+  {% endif %}
 {% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 

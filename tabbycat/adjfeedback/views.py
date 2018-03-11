@@ -13,9 +13,10 @@ from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from options.utils import use_team_code_names_data_entry
+from options.utils import use_team_code_names, use_team_code_names_data_entry
 from participants.models import Adjudicator, Team
 from participants.prefetch import populate_feedback_scores
+from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
@@ -305,18 +306,10 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
 
         use_code_names = use_team_code_names_data_entry(self.get_tournament(), self.tabroom)
         teams_table = TabbycatTableBuilder(view=self, sort_key="team", title=_("A Team"))
-        add_link_data = []
-        for team in tournament.team_set.all():
-            cell = {'link': self.get_from_team_link(team)}
-            if use_code_names == 'code':
-                cell['text'] = team.code_name
-            elif use_code_names == 'both':
-                # Note: The same string is in results/templates/ballot/ballot_scoresheet.html
-                cell['text'] = _("%(code_name)s <em>(%(real_name)s)</em>") % {
-                    'code_name': team.code_name, 'real_name': team.short_name}
-            else:
-                cell['text'] = team.short_name
-            add_link_data.append(cell)
+        add_link_data = [{
+            'text': team_name_for_data_entry(team, use_code_names),
+            'link': self.get_from_team_link(team)
+        } for team in tournament.team_set.all()]
         header = {'key': 'team', 'title': _("Team")}
         teams_table.add_column(header, add_link_data)
 
@@ -435,8 +428,9 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         if isinstance(self.object, Adjudicator):
             self.source_name = self.object.name
         elif isinstance(self.object, Team):
-            self.source_name = self.object.short_name
+            self.source_name = self.get_team_short_name(self.object)
         else:
+            logger.error("self.object was neither an Adjudicator nor a Team")
             self.source_name = "<ERROR>"
 
     def get(self, request, *args, **kwargs):
@@ -458,6 +452,10 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
         'include_unreleased_draws': True,
         'use_tournament_password': False,
     }
+
+    def get_team_short_name(self, team):
+        use_code_names = use_team_code_names_data_entry(self.get_tournament(), tabroom=True)
+        return team_name_for_data_entry(team, use_code_names)
 
     def form_valid(self, form):
         result = super().form_valid(form)
@@ -498,6 +496,10 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
 class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is a randomised one."""
 
+    def get_team_short_name(self, team):
+        # It's a private URL, so always show the team's real name.
+        return team.short_name
+
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'private-urls'
 
@@ -515,6 +517,12 @@ class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Pub
 
 class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is by object ID."""
+
+    tabroom = False
+
+    def get_team_short_name(self, team):
+        use_code_names = use_team_code_names(self.get_tournament(), admin=False)
+        return team.code_name if use_code_names else team.short_name
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'public'

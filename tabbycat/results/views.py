@@ -222,21 +222,21 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     action_log_content_object_attr = 'ballotsub'
     tabroom = False
 
-    def use_team_code_names(self):
-        return use_team_code_names_data_entry(self.get_tournament(), self.tabroom)
-
     def get_context_data(self, **kwargs):
         kwargs['ballotsub'] = self.ballotsub
         kwargs['debate'] = self.debate
         kwargs['all_ballotsubs'] = self.get_all_ballotsubs()
         kwargs['new'] = self.relates_to_new_ballotsub
-        kwargs['use_team_code_names'] = self.use_team_code_names()
+
+        use_team_code_names = use_team_code_names_data_entry(self.get_tournament(), self.tabroom)
+        kwargs['use_team_code_names'] = use_team_code_names
 
         sides = self.get_tournament().sides
-        if self.use_team_code_names() == 'off':
+        if use_team_code_names == 'off':
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).short_name for side in sides)
         else:
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).code_name for side in sides)
+
         return super().get_context_data(**kwargs)
 
     def get_all_ballotsubs(self):
