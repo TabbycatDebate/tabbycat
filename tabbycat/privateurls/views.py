@@ -23,7 +23,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
-        tournament = self.get_tournament()
+        tournament = self.tournament
         kwargs['exists'] = tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
             tournament.team_set.filter(url_key__isnull=False).exists()
         kwargs['blank_exists'] = tournament.adjudicator_set.filter(url_key__isnull=True).exists() or \
@@ -36,7 +36,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
             url_type=url_type, adjudicator_id=OuterRef('pk'),
         )
         adjudicators = Adjudicator.objects.filter(
-            tournament=self.get_tournament(),
+            tournament=self.tournament,
             url_key__isnull=False, email__isnull=False
         ).exclude(
             email__exact=""
@@ -51,7 +51,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
             url_type=PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK, speaker_id=OuterRef('pk'),
         )
         speakers = Speaker.objects.filter(
-            team__tournament=self.get_tournament(),
+            team__tournament=self.tournament,
             team__url_key__isnull=False, email__isnull=False
         ).exclude(
             email__exact=""
@@ -67,7 +67,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     tables_orientation = 'columns'
 
     def get_teams_table(self):
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         def _build_url(team):
             if team.url_key is None:
@@ -84,7 +84,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
         return table
 
     def get_adjudicators_table(self):
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         def _build_url(adjudicator, url_name):
             if adjudicator.url_key is None:
@@ -109,7 +109,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
     tournament_redirect_pattern_name = 'privateurls-list'
 
     def post(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         nexisting_adjs = tournament.adjudicator_set.filter(url_key__isnull=False).count()
         nexisting_teams = tournament.team_set.filter(url_key__isnull=False).count()
@@ -149,13 +149,13 @@ class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     tables_orientation = 'rows'
 
     def get_context_data(self, **kwargs):
-        kwargs['adjudicators_no_email'] = self.get_tournament().adjudicator_set.filter(
+        kwargs['adjudicators_no_email'] = self.tournament.adjudicator_set.filter(
             Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False
         ).values_list('name', flat=True)
         return super().get_context_data(**kwargs)
 
     def get_adjudicators_table(self, url_type, url_name, url_header):
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         def _build_url(adjudicator):
             path = reverse_tournament(url_name, tournament, kwargs={'url_key': adjudicator.url_key})
@@ -192,7 +192,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
     def get_context_data(self, **kwargs):
         kwargs['speakers_no_email'] = Speaker.objects.filter(
             Q(email__isnull=True) | Q(email__exact=""),
-            team__tournament=self.get_tournament(),
+            team__tournament=self.tournament,
             team__url_key__isnull=False
         ).values_list('name', flat=True)
         kwargs['nadjudicators_already_sent'] = self.get_adjudicators_to_email(
@@ -201,7 +201,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
         return super().get_context_data(**kwargs)
 
     def get_speakers_table(self):
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         def _build_url(speaker):
             path = reverse_tournament('adjfeedback-public-add-from-team-randomised', tournament,
@@ -235,7 +235,7 @@ class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
 
     def post(self, request, *args, **kwargs):
 
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         subject = _("Your personal ballot submission URL for %(tournament)s")
         message = _(
@@ -277,7 +277,7 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
 
     def post(self, request, *args, **kwargs):
 
-        tournament = self.get_tournament()
+        tournament = self.tournament
         success = True
 
         subject = _("Your team's feedback submission URL for %(tournament)s")

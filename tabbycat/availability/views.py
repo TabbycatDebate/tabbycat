@@ -35,28 +35,25 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):
-        r = self.get_round()
-        tournament = self.get_tournament()
-
-        if r.prev:
-            kwargs['previous_unconfirmed'] = r.prev.debate_set.filter(
+        if self.round.prev:
+            kwargs['previous_unconfirmed'] = self.round.prev.debate_set.filter(
                 result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
 
-        if r.is_break_round:
+        if self.round.is_break_round:
             teams = self._get_breaking_teams_dict()
         else:
-            teams = self._get_dict(tournament.team_set)
+            teams = self._get_dict(self.tournament.team_set)
 
         # Basic check before enable the button to advance
-        adjs = self._get_dict(tournament.relevant_adjudicators)
-        venues = self._get_dict(tournament.relevant_venues)
+        adjs = self._get_dict(self.tournament.relevant_adjudicators)
+        venues = self._get_dict(self.tournament.relevant_venues)
         kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
 
         # Order needs to be predictable when iterating through values
         kwargs['checkin_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
 
         # Check the number of teams/adjudicators is sufficient
-        if tournament.pref('teams_in_debate') == 'two':
+        if self.tournament.pref('teams_in_debate') == 'two':
             per_room_divisor = 2
         else:
             per_room_divisor = 4
@@ -67,9 +64,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
     def _get_breaking_teams_dict(self):
-        r = self.get_round()
-
-        if r.break_category is None:
+        if self.round.break_category is None:
             self.error_type = 'no_break_category'
             return {
                 'total': 0,
@@ -77,8 +72,8 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
                 'message': _("no teams are debating"),
             }
 
-        if r.prev is None or not r.prev.is_break_round:
-            break_size = r.break_category.breakingteam_set_competing.count()
+        if self.round.prev is None or not self.round.prev.is_break_round:
+            break_size = self.round.break_category.breakingteam_set_competing.count()
             teams_dict = {'total': break_size}
             if break_size < 2:
                 teams_dict['in_now'] = 0
@@ -106,12 +101,12 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
             return teams_dict
 
         else:
-            nadvancing = r.prev.debate_set.count()
-            if self.get_tournament().pref('teams_in_debate') == 'bp':
+            nadvancing = self.round.prev.debate_set.count()
+            if self.tournament.pref('teams_in_debate') == 'bp':
                 nadvancing *= 2
 
             # add teams that bypassed the last round
-            nadvancing += r.prev.debate_set.all().aggregate(
+            nadvancing += self.round.prev.debate_set.all().aggregate(
                     lowest_room=Coalesce(Min('room_rank') - 1, 0))['lowest_room']
 
             return {
@@ -127,7 +122,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     def _get_dict(self, queryset_all):
         contenttype = ContentType.objects.get_for_model(queryset_all.model)
         availability_queryset = RoundAvailability.objects.filter(content_type=contenttype)
-        round = self.get_round()
+        round = self.round
         result = {
             'total': queryset_all.count(),
             'in_now': availability_queryset.filter(round=round).count(),
@@ -160,17 +155,17 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
 
     def get_context_data(self, **kwargs):
         kwargs['model'] = self.model._meta.label  # does not get translated
-        kwargs['saveURL'] = reverse_round(self.update_view, self.get_round())
+        kwargs['saveURL'] = reverse_round(self.update_view, self.round)
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        q = Q(tournament=self.get_tournament())
-        if self.share_key is not None and self.get_tournament().pref(self.share_key):
+        q = Q(tournament=self.tournament)
+        if self.share_key is not None and self.tournament.pref(self.share_key):
             q |= Q(tournament__isnull=True)  # include shared objects, if relevant
         return self.model.objects.filter(q)
 
     def get_table(self):
-        round = self.get_round()
+        round = self.round
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
         queryset = utils.annotate_availability(self.get_queryset(), round)
 
@@ -259,35 +254,34 @@ class CheckInAllInRoundView(BaseBulkActivationView):
     activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues.")
 
     def activate_function(self):
-        utils.activate_all(self.get_round())
+        utils.activate_all(self.round)
 
 
 class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
     activation_msg = gettext_lazy("Checked in all breaking adjudicators.")
 
     def activate_function(self):
-        utils.set_availability(self.get_tournament().relevant_adjudicators.filter(breaking=True),
-                self.get_round())
+        utils.set_availability(self.tournament.relevant_adjudicators.filter(breaking=True),
+                self.round)
 
 
 class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
     activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
 
     def activate_function(self):
-        t = self.get_tournament()
-        round = self.get_round()
+        t = self.tournament
         items = [(Team, t.team_set), (Adjudicator, t.relevant_adjudicators), (Venue, t.relevant_venues)]
 
         for model, relevant_instances in items:
             contenttype = ContentType.objects.get_for_model(model)
             previous_ids = set(a['object_id'] for a in
-                RoundAvailability.objects.filter(content_type=contenttype, round=round.prev).values('object_id'))
+                RoundAvailability.objects.filter(content_type=contenttype, round=self.round.prev).values('object_id'))
             logger.debug("Previous IDs for %s: %s", model._meta.verbose_name_plural, previous_ids)
             relevant_ids = set(x['id'] for x in relevant_instances.values('id'))
             logger.debug("Relevant IDs for %s: %s", model._meta.verbose_name_plural, relevant_ids)
             previous_relevant_ids = previous_ids & relevant_ids
             logger.debug("Checking in %s: %s", model._meta.verbose_name_plural, previous_relevant_ids)
-            utils.set_availability_by_id(model, previous_relevant_ids, round)
+            utils.set_availability_by_id(model, previous_relevant_ids, self.round)
 
 
 # ==============================================================================
@@ -306,7 +300,7 @@ class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin,
                 active_ids.append(key)
 
         try:
-            utils.set_availability_by_id(self.model, active_ids, self.get_round())
+            utils.set_availability_by_id(self.model, active_ids, self.round)
             self.log_action()
 
         except:

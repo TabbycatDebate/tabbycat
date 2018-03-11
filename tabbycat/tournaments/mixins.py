@@ -1,5 +1,6 @@
 import json
 import logging
+import warnings
 from urllib.parse import urlparse, urlunparse
 
 from django.core.cache import cache
@@ -43,7 +44,7 @@ class TournamentMixin(TabbycatPageTitlesMixin):
     relating to a tournament in the URL.
 
     Views using this mixin should have a `tournament_slug` group in their URL's
-    regular expression. They should then call `self.get_tournament()` to
+    regular expression. They should then call `self.tournament` to
     retrieve the tournament.
     """
     tournament_slug_url_kwarg = "tournament_slug"
@@ -51,6 +52,11 @@ class TournamentMixin(TabbycatPageTitlesMixin):
     tournament_redirect_pattern_name = None
 
     def get_tournament(self):
+        warnings.warn("get_tournament() is deprecated, use self.tournament instead", stacklevel=2)
+        return self.tournament
+
+    @property
+    def tournament(self):
         # First look in self,
         if hasattr(self, "_tournament_from_url"):
             return self._tournament_from_url
@@ -75,18 +81,18 @@ class TournamentMixin(TabbycatPageTitlesMixin):
         if self.tournament_redirect_pattern_name:
             try:
                 return reverse_tournament(self.tournament_redirect_pattern_name,
-                        self.get_tournament(), args=args, kwargs=kwargs)
+                        self.tournament, args=args, kwargs=kwargs)
             except NoReverseMatch:
                 pass
         return super().get_redirect_url(*args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
+        tournament = self.tournament
         if tournament.current_round_id is None:
             full_path = self.request.get_full_path()
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
                 logger.warning("Current round wasn't set, redirecting to set-current-round page")
-                set_current_round_url = reverse_tournament('tournament-set-current-round', self.get_tournament())
+                set_current_round_url = reverse_tournament('tournament-set-current-round', self.tournament)
                 redirect_url = add_query_parameter(set_current_round_url, 'next', full_path)
                 return HttpResponseRedirect(redirect_url)
             else:
@@ -118,7 +124,7 @@ class RoundMixin(TournamentMixin):
     to a round in the URL.
 
     Views using this mixin should have `tournament_slug` and `round_seq` groups
-    in their URL's regular expression. They should then call `self.get_round()`
+    in their URL's regular expression. They should then call `self.round`
     to retrieve the round.
 
     This mixin includes `TournamentMixin`, so classes using `RoundMixin` do not
@@ -130,18 +136,23 @@ class RoundMixin(TournamentMixin):
 
     def get_page_subtitle(self):
         if not getattr(self, "page_subtitle") and not getattr(self, "use_template_subtitle", False) \
-                and self.get_round() is not None:
-            return _("for %(round)s") % {'round': self.get_round().name}
+                and self.round is not None:
+            return _("for %(round)s") % {'round': self.round.name}
         else:
             return super().get_page_subtitle()
 
     def get_round(self):
+        warnings.warn("get_round() is deprecated, use self.round instead", stacklevel=2)
+        return self.round
+
+    @property
+    def round(self):
         # First look in self,
         if hasattr(self, "_round_from_url"):
             return self._round_from_url
 
         # then look in cache,
-        tournament = self.get_tournament()
+        tournament = self.tournament
         seq = self.kwargs[self.round_seq_url_kwarg]
         key = self.round_cache_key.format(slug=tournament.slug, seq=seq)
         cached_round = cache.get(key)
@@ -161,7 +172,7 @@ class RoundMixin(TournamentMixin):
         if self.round_redirect_pattern_name:
             try:
                 return reverse_round(self.round_redirect_pattern_name,
-                        self.get_round(), args=args, kwargs=kwargs)
+                        self.round, args=args, kwargs=kwargs)
             except NoReverseMatch:
                 pass
         return super().get_redirect_url(*args, **kwargs)
@@ -170,13 +181,14 @@ class RoundMixin(TournamentMixin):
 class CurrentRoundMixin(RoundMixin, ContextMixin):
     """Mixin for views that relate to the current round (without URL reference)."""
 
-    def get_round(self):
+    @property
+    def round(self):
         # Override the round-grabbing mechanism of RoundMixin
-        return self.get_tournament().current_round
+        return self.tournament.current_round
 
     def get_context_data(self, **kwargs):
         # Middleware won't find this in the URL, so add it ourselves
-        kwargs['round'] = self.get_round()
+        kwargs['round'] = self.round
         return super().get_context_data(**kwargs)
 
 
@@ -196,7 +208,7 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
         )
 
     def dispatch(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
+        tournament = self.tournament
         if self.is_page_enabled(tournament):
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -271,7 +283,7 @@ class CrossTournamentPageMixin(PublicTournamentPageMixin):
         return tournament
 
     def get_context_data(self, **kwargs):
-        kwargs['tournament'] = self.get_tournament()
+        kwargs['tournament'] = self.tournament
         return super().get_context_data(**kwargs)
 
 
@@ -286,7 +298,7 @@ class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
     def get_queryset(self):
         # Filter for this tournament; if self.allow_null_tournament is True,
         # then also allow objects with no tournament.
-        q = Q(**{self.tournament_field_name: self.get_tournament()})
+        q = Q(**{self.tournament_field_name: self.tournament})
         if self.allow_null_tournament:
             q |= Q(**{self.tournament_field_name + "__isnull": True})
         return super().get_queryset().filter(q)
@@ -337,12 +349,12 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     @cached_property
     def break_categories(self):
-        return self.get_tournament().breakcategory_set.order_by('-is_general', 'name')
+        return self.tournament.breakcategory_set.order_by('-is_general', 'name')
 
     @cached_property
     def break_thresholds(self):
-        t = self.get_tournament()
-        r = self.get_round()
+        t = self.tournament
+        r = self.round
         return {bc.id: calculate_live_thresholds(bc, t, r) for bc in self.break_categories}
 
     @cached_property
@@ -376,7 +388,7 @@ class DrawForDragAndDropMixin(RoundMixin):
         return round_info
 
     def get_draw(self):
-        round = self.get_round()
+        round = self.round
 
         # The use-case for prefetches here is so intense that we'll just implement
         # a separate one (as opposed to use Round.debate_set_with_prefetches())
@@ -399,8 +411,8 @@ class DrawForDragAndDropMixin(RoundMixin):
         return json.dumps(serialised_draw)
 
     def get_round_info(self):
-        round = self.get_round()
-        t = self.get_tournament()
+        round = self.round
+        t = self.tournament
         adjudicator_positions = ["C"]
         if not t.pref('no_panellist_position'):
             adjudicator_positions += "P"

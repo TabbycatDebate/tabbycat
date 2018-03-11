@@ -104,7 +104,7 @@ class ImportVenuesWizardView(BaseImportWizardView):
 
     def get_form_kwargs(self, step):
         if step == 'details':
-            return {'form_kwargs': {'tournament': self.get_tournament()}}
+            return {'form_kwargs': {'tournament': self.tournament}}
         else:
             return super().get_form_kwargs(step)
 
@@ -122,7 +122,7 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
         if step == 'numbers':
             return {'institutions': Institution.objects.all()}
         elif step == 'details':
-            return {'form_kwargs': {'tournament': self.get_tournament()}}
+            return {'form_kwargs': {'tournament': self.tournament}}
 
     def make_initial_data(self, number, institution_id):
         if number is None:  # occurs when field was left blank
@@ -165,7 +165,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     def done(self, form_list, form_dict, **kwargs):
         # Also set emoji on teams
         redirect = super().done(form_list, form_dict, **kwargs)
-        set_emoji(self.instances, self.get_tournament())
+        set_emoji(self.instances, self.tournament)
         return redirect
 
     def get_message(self, count):
@@ -183,9 +183,8 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     def get_default_test_score(self):
         """Returns the midpoint of the configured allowable score range."""
         if not hasattr(self, "_default_test_score"):
-            tournament = self.get_tournament()
-            min_score = tournament.pref('adj_min_score')
-            max_score = tournament.pref('adj_max_score')
+            min_score = self.tournament.pref('adj_min_score')
+            max_score = self.tournament.pref('adj_max_score')
             self._default_test_score = (min_score + max_score) / 2
         return self._default_test_score
 

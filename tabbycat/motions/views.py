@@ -22,8 +22,7 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_motions'
 
     def using_division_motions(self):
-        tournament = self.get_tournament()
-        return tournament.pref('enable_divisions') and tournament.pref('enable_division_motions')
+        return self.tournament.pref('enable_divisions') and self.tournament.pref('enable_division_motions')
 
     def get_template_names(self):
         if self.using_division_motions():
@@ -32,17 +31,16 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
             return ['public_motions.html']
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        order_by = 'seq' if tournament.pref('public_motions_order') == 'forward' else '-seq'
+        order_by = 'seq' if self.tournament.pref('public_motions_order') == 'forward' else '-seq'
 
         # Include rounds whether *either* motions are released *or* it's this
         # round or a previous round. The template checks motion_released again
         # and displays a "not released" message if motions are not released.
         filter_q = Q(motions_released=True)
         if not self.using_division_motions():
-            filter_q |= Q(seq__lte=tournament.current_round.seq)
+            filter_q |= Q(seq__lte=self.tournament.current_round.seq)
 
-        kwargs['rounds'] = tournament.round_set.filter(filter_q).order_by(
+        kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
                 order_by).prefetch_related('motion_set')
         return super().get_context_data(**kwargs)
 
@@ -57,17 +55,16 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
-        tournament = self.get_tournament()
         excludes = ['round', 'id']
 
-        if not tournament.pref('enable_flagged_motions'):
+        if not self.tournament.pref('enable_flagged_motions'):
             excludes.append('flagged')
 
-        if not tournament.pref('enable_divisions'):
+        if not self.tournament.pref('enable_divisions'):
             excludes.append('divisions')
 
         nexisting = self.get_formset_queryset().count()
-        if tournament.pref('enable_motions'):
+        if self.tournament.pref('enable_motions'):
             delete = True
             extras = max(3 - nexisting, 0)
         else:
@@ -78,13 +75,13 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         return dict(can_delete=delete, extra=extras, exclude=excludes)
 
     def get_formset_queryset(self):
-        return self.get_round().motion_set.all()
+        return self.round.motion_set.all()
 
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
-        round = self.get_round()
+        round = self.round
         for i, motion in enumerate(motions, start=1):
-            if not self.get_tournament().pref('enable_motions'):
+            if not self.tournament.pref('enable_motions'):
                 motion.seq = i
             motion.round = round
             motion.save()
@@ -93,7 +90,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
             motion.delete()
 
         count = len(motions)
-        if not self.get_tournament().pref('enable_motions') and count == 1:
+        if not self.tournament.pref('enable_motions') and count == 1:
             messages.success(self.request, _("The motion has been saved."))
         elif count > 0:
             messages.success(self.request, ngettext("%(count)d motion has been saved.",
@@ -114,7 +111,7 @@ class AssignMotionsView(AdministratorMixin, RoundMixin, ModelFormSetView):
     formset_model = Motion
 
     def get_formset_queryset(self):
-        return self.get_round().motion_set.all()
+        return self.round.motion_set.all()
 
     def get_formset_class(self):
         return modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
@@ -122,7 +119,7 @@ class AssignMotionsView(AdministratorMixin, RoundMixin, ModelFormSetView):
     def formset_valid(self, formset):
         formset.save()  # Should be checking for validity but on a deadline and was buggy
         messages.success(self.request, 'Those motion assignments have been saved.')
-        return redirect_round('motions-edit', self.get_round())
+        return redirect_round('motions-edit', self.round)
 
 
 class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
@@ -130,7 +127,7 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        round = self.get_round()
+        round = self.round
         round.motions_released = self.motions_released
         round.save()
         self.log_action()
@@ -157,8 +154,8 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = self.get_round().motion_set.all()
-        kwargs['infos'] = self.get_round().motion_set.exclude(info_slide="")
+        kwargs['motions'] = self.round.motion_set.all()
+        kwargs['infos'] = self.round.motion_set.exclude(info_slide="")
         return super().get_context_data(**kwargs)
 
 
@@ -177,7 +174,7 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
     page_emoji = '💭'
 
     def get_context_data(self, **kwargs):
-        kwargs['statistics'] = MotionStatistics(self.get_tournament())
+        kwargs['statistics'] = MotionStatistics(self.tournament)
         return super().get_context_data(**kwargs)
 
 

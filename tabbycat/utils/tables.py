@@ -50,7 +50,6 @@ class BaseTableBuilder:
         else:
             # not sure why warnings module isn't working, so also use logger.warning to be annoying
             warnings.warn("Plain-text headers are deprecated, use a dict with key and title instead", stacklevel=3)
-            logger.warning("Plain-text headers are deprecated, use a dict with key and title instead", stack_info=True)
             return {'key': force_text(header), 'title': force_text(header)}
 
     @staticmethod
@@ -170,7 +169,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
           from `view`. This option is provided for convenience.
         """
         if 'tournament' not in kwargs and hasattr(view, 'get_tournament'):
-            self.tournament = view.get_tournament()
+            self.tournament = view.tournament
         else:
             self.tournament = kwargs.get('tournament')
 

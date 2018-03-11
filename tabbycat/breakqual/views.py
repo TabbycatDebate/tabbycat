@@ -33,7 +33,7 @@ class AdminBreakIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = 'breaking_index.html'
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
+        tournament = self.tournament
         kwargs['categories'] = breakcategories_with_counts(tournament)
         kwargs['no_teams_eligible'] = not BreakCategory.team_set.through.objects.filter(breakcategory__tournament=tournament).exists()
         kwargs['break_not_generated'] = not BreakingTeam.objects.filter(break_category__tournament=tournament).exists()
@@ -110,11 +110,11 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
             return ActionLogEntry.ACTION_TYPE_BREAK_EDIT_REMARKS
 
     def get_success_url(self):
-        return reverse_tournament('breakqual-teams', self.get_tournament(), kwargs={'category': self.object.slug})
+        return reverse_tournament('breakqual-teams', self.tournament, kwargs={'category': self.object.slug})
 
     def get_context_data(self, **kwargs):
         kwargs['generated'] = BreakingTeam.objects.filter(
-                break_category__tournament=self.get_tournament()).exists()
+                break_category__tournament=self.tournament).exists()
         kwargs['category'] = self.object
 
         # Populate the form here, so we can save it in self.form
@@ -142,7 +142,7 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
         form.save()
 
         if 'save_update_all' in self.request.POST:
-            successes = self.generate_break(self.get_tournament().breakcategory_set.order_by('-priority'))
+            successes = self.generate_break(self.tournament.breakcategory_set.order_by('-priority'))
             if successes:
                 messages.success(self.request, _("Changes to breaking team remarks saved "
                         "and teams break updated for the following break categories: "
@@ -175,8 +175,8 @@ class GenerateAllBreaksView(GenerateBreakMixin, LogActionMixin, TournamentMixin,
     tournament_redirect_pattern_name = 'breakqual-teams'
 
     def post(self, request, *args, **kwargs):
-        BreakingTeam.objects.filter(break_category__tournament=self.get_tournament()).delete()
-        tournament = self.get_tournament()
+        BreakingTeam.objects.filter(break_category__tournament=self.tournament).delete()
+        tournament = self.tournament
 
         successes = self.generate_break(tournament.breakcategory_set.order_by('-priority'))
         if successes:
@@ -198,7 +198,7 @@ class BaseBreakingAdjudicatorsView(TournamentMixin, VueTableTemplateView):
 
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key='name')
-        table.add_adjudicator_columns(self.get_tournament().adjudicator_set.filter(breaking=True))
+        table.add_adjudicator_columns(self.tournament.adjudicator_set.filter(breaking=True))
         return table
 
 
@@ -221,7 +221,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
     page_emoji = '🍯'
 
     def get_table(self):
-        t = self.get_tournament()
+        t = self.tournament
         table = TabbycatTableBuilder(view=self, sort_key='team')
         teams = t.team_set.all().select_related(
             'institution').prefetch_related('break_categories', 'speaker_set')
@@ -238,7 +238,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         return table
 
     def get_context_data(self, **kwargs):
-        break_categories = self.get_tournament().breakcategory_set.all()
+        break_categories = self.tournament.breakcategory_set.all()
         json_categories = [bc.serialize for bc in break_categories]
         kwargs["break_categories"] = json.dumps(json_categories)
         kwargs["break_categories_length"] = break_categories.count()
