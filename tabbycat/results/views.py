@@ -493,7 +493,7 @@ class BaseBallotCheckinView(RoundMixin, TemplateView):
     def get_context_data(self, **kwargs):
         kwargs['ballots_left'] = ballot_checkin_number_left(self.round)
         venues = Venue.objects.filter(debate__round=self.round,
-                debate__ballot_in=False)
+                debate__ballot_in=False).prefetch_related('venuecategory_set')
         kwargs['venue_options'] = venues
 
         return super().get_context_data(**kwargs)
