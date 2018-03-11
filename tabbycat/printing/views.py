@@ -8,10 +8,10 @@ from adjfeedback.utils import expected_feedback_targets
 from draw.models import Debate, DebateTeam
 from options.utils import use_team_code_names
 from participants.models import Adjudicator
+from results.utils import side_and_position_names
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
 from tournaments.models import Tournament
-from tournaments.utils import get_side_name
 from utils.mixins import AdministratorMixin
 from venues.models import VenueCategory
 
@@ -183,6 +183,10 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
         draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
         ballots_dicts = []
 
+        # Force translation before JSON serialization
+        sides_and_positions = [(side, [str(pos) for pos in positions])
+            for side, positions in side_and_position_names(self.tournament)]
+
         for debate in draw:
             debate_dict = {}
 
@@ -192,12 +196,8 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
                 debate_dict['venue'] = None
 
             debate_dict['debateTeams'] = []
-            for side in self.tournament.sides:
-                dt_dict = {
-                    'side': side,
-                    'position': get_side_name(self.tournament, side, 'full'),
-                    'abbr': get_side_name(self.tournament, side, 'abbr'),
-                }
+            for side, (side_name, positions) in zip(self.tournament.sides, sides_and_positions):
+                dt_dict = {'side_name': side_name, 'positions': positions}
                 try:
                     team = debate.get_team(side)
                     dt_dict['team'] = {
@@ -214,7 +214,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
                 da_dict = {'position': pos}
                 da_dict['adjudicator'] = {
                     'name': adj.name,
-                    'institution': {'code': adj.institution.code},
+                    'institution': {'code': adj.institution.code if adj.institution else _("Unaffiliated")},
                 }
                 debate_dict['debateAdjudicators'].append(da_dict)
 
