@@ -11,6 +11,7 @@ from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
 from motions.models import Motion
+from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
@@ -492,25 +493,26 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
     def get_table(self):
         tournament = self.get_tournament()
-
-        teams = tournament.team_set.prefetch_related('speaker_set').order_by(
-                'institution__code', 'reference')  # Obscure true rankings, in case client disabled JavaScript
         rounds = self.get_rounds()
-
         if not rounds:
             return TabbycatTableBuilder(view=self) # empty (as precaution)
+
+        name_attr = 'code_name' if use_team_code_names(tournament, False) else 'short_name'
+
+        # Obscure true rankings, in case client disabled JavaScript
+        teams = tournament.team_set.prefetch_related('speaker_set').order_by(name_attr)
 
         # Can't use prefetch.populate_win_counts, since that doesn't exclude
         # silent rounds and future rounds appropriately
         add_team_round_results_public(teams, rounds)
 
         # Pre-sort, as Vue tables can't do two sort keys
-        teams = sorted(teams, key=lambda t: (-t.points, t.short_name))
-        key = "Points" if tournament.pref('teams_in_debate') == 'bp' else "Wins"
+        teams = sorted(teams, key=lambda t: (-t.points, getattr(t, name_attr)))
+        key, title = ('points', _("Points")) if tournament.pref('teams_in_debate') == 'bp' else ('wins', _("Wins"))
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column({'key': key, 'title': _(key)}, [team.points for team in teams])
+        table.add_column({'key': key, 'title': title}, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
         return table

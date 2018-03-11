@@ -839,7 +839,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for round_seq, round in enumerate(rounds):
             results = [self._result_cell(
                 t.round_results[round_seq]) for t in teams]
-            self.add_column(round.abbreviation, results)
+            header = {'key': 'r%d' % round_seq, 'title': round.abbreviation}
+            self.add_column(header, results)
 
     def add_debate_results_columns(self, debates):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
