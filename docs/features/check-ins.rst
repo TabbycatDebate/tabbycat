@@ -19,6 +19,8 @@ Once this number has been generated it can be transformed into a barcode so that
 
 .. image:: images/barcodes.png
 
+.. note:: The identifiers for ballots are automatically generated when printing ballots.
+
 Recording Check-Ins
 ===================
 
@@ -28,13 +30,22 @@ On the *Scanning* section of Check-ins you can record a particular check-in. Thi
 
 2. If you have purchased barcode scanners and configured them as USB keyboards they should then be compatible with this page. I.E. upon page load the cursor should be positioned in the input field, and any scanned barcodes should populate it with the specified number, issue the check-in, and then clear the box for the next scan.
 
-3. Phone scanning (TODO)
+3. If your device has a (web)cam you can use the Scan Using Camera button. Any barcodes put in front of the camera's video stream will be scanned into the form.
 
-4. The Check-in status page (described in detail below) allows assistants and administrators to manually check-in particular people or entire institutions without needing to know their identifiers. This style of check-in is designed for use an auditorium type situation where you might be calling out to identify missing people or identifying absences on a per-institution basis.
+    .. image:: images/checkin_live.png
+
+
+    .. note:: Camera scanning works on most modern browsers although it will only work with Safari 11 or higher (iOS 11+ and macOS 10.13+). Camera scanning may also not work when using a local-installation of Tabbycat in all browsers, *except* Firefox. Depending on the quality of your camera barcodes that are less than 4cm wide may not be recognised — ideally barcodes should be at least 5cm if using this method as your main way of checking-in things.
+
+4. The Check-in status page (described below) allows assistants and administrators to manually check-in particular people or entire institutions without needing to know their identifiers.
 
 Viewing Check-Ins
 =================
 
-On the *Statuses* section of Check-ins you can view who has or has not been checked-in.
+On the *People Statuses* section of Check-ins you can view who has or has not been checked-in. This page will live-update with the latest check-ins so you should be able to leave it open to monitor income attendances.
 
 .. image:: images/checkin_statuses.png
+
+The blue "tick" boxes allow you to manually check-in people and/or entire institutions (for *People*) or venues and/or venue groups (for *Venues*) , without the need to scan their identifiers. This style of check-in is designed for use an auditorium roll-call type situation where you might be running through a list of people to the room or identifying absences on a per-institution basis.
+
+    .. note:: Viewing ballot check-ins is done on the *Results* page for that round.

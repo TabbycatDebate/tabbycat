@@ -35,6 +35,18 @@
   margin-left: 10px;
 }
 
+.scan-container {
+  width: 640px;
+  height: 480px;
+  position: relative;
+}
+
+.drawingBuffer {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
 //------------------------------------------------------------------------------
 // Motions Tab
 //------------------------------------------------------------------------------

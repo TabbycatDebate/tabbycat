@@ -127,7 +127,11 @@
       </a>
       <a href="{% tournamenturl 'admin-checkin-statuses' %}"
          class="list-group-item {% if checkins_statuses %}active{% endif %}" data-parent="#checkinh">
-        <i data-feather="watch"></i>{% trans "Statuses" %}
+        <i data-feather="watch"></i>{% trans "People's Status" %}
+      </a>
+      <a href="{% tournamenturl 'admin-checkin-statuses' %}"
+         class="list-group-item {% if checkins_statuses %}active{% endif %}" data-parent="#checkinh">
+        <i data-feather="shopping-bag"></i>{% trans "Room's Status" %}
       </a>
     </div>
   </div>
