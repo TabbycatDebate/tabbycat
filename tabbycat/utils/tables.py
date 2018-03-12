@@ -491,7 +491,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(trainee_header, [adj.trainee for adj in adjudicators])
 
-    def add_debate_adjudicators_column(self, debates, title="Adjs", show_splits=False, highlight_adj=None):
+    def add_debate_adjudicators_column(self, debates, title="Adjudicators", show_splits=False, highlight_adj=None):
         da_data = []
 
         def construct_text(adjs_data):

@@ -60,7 +60,11 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
 
         for i, side in enumerate(self.tournament.sides, start=1):
-            side_name = get_side_name(self.tournament, side, 'full')
+            # For BP team names are often longer than the full position label
+            if self.tournament.pref('teams_in_debate') == 'bp':
+                side_name = get_side_name(self.tournament, side, 'abbr')
+            else:
+                side_name = get_side_name(self.tournament, side, 'full')
 
             team_data = []
             for debate, hl in zip_longest(debates, highlight):
