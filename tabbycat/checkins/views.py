@@ -14,6 +14,7 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyR
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import Event, Identifier, PersonIdentifier, VenueIdentifier
+from .utils import get_unexpired_checkins
 
 
 class CheckInPreScanView(TournamentMixin, TemplateView):
@@ -22,7 +23,7 @@ class CheckInPreScanView(TournamentMixin, TemplateView):
     page_emoji = '📷'
 
     def get_context_data(self, **kwargs):
-        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.get_tournament())
+        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.tournament)
         return super().get_context_data(**kwargs)
 
 
@@ -34,14 +35,15 @@ class AssistantCheckInPreScanView(AssistantMixin, CheckInPreScanView):
     scan_view = 'assistant-checkin-scan'
 
 
-class CheckInScanView(JsonDataResponsePostView):
+class CheckInScanView(JsonDataResponsePostView, TournamentMixin):
 
     def post_data(self):
         barcode_ids = json.loads(self.body)['barcodes']
         for barcode in barcode_ids:
             try:
                 identifier = Identifier.objects.get(identifier=barcode)
-                event = Event.objects.create(identifier=identifier)
+                event = Event.objects.create(identifier=identifier,
+                                             tournament=self.tournament)
             except ObjectDoesNotExist:
                 raise BadJsonRequestError("Identifier doesn't exist")
 
@@ -63,39 +65,32 @@ class CheckInStatusView(TournamentMixin, TemplateView):
     page_emoji = '⌚️'
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
 
-        events = Event.objects.all().select_related('identifier')
+        events = get_unexpired_checkins(self.tournament)
         kwargs["events"] = json.dumps([e.serialize() for e in events])
 
-        identifiers = PersonIdentifier.objects.all()
+        bcodes = PersonIdentifier.objects.values('person_id', 'identifier')
 
         adjudicators = []
-        for adj in t.relevant_adjudicators.all():
-            try:
-                identifier = identifiers.get(person=adj).identifier
-            except ObjectDoesNotExist:
-                identifier = None
+        for adj in self.tournament.relevant_adjudicators.all().select_related('institution'):
+            bcode = next((i['identifier'] for i in bcodes if i['person_id'] == adj.id), None)
             adjudicators.append({
-                'id': adj.id, 'name': adj.name, 'identifier': identifier,
+                'id': adj.id, 'name': adj.name, 'identifier': bcode,
                 'institution': adj.institution.serialize if adj.institution else None,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
         speakers = []
-        for speaker in Speaker.objects.filter(team__tournament=t).select_related('team'):
-            try:
-                identifier = identifiers.get(person=adj).identifier
-            except ObjectDoesNotExist:
-                identifier = None
+        for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution'):
+            bcode = next((i['identifier'] for i in bcodes if i['person_id'] == speaker.id), None)
             speakers.append({
-                'id': speaker.id, 'name': speaker.name, 'identifier': identifier,
+                'id': speaker.id, 'name': speaker.name, 'identifier': bcode,
                 'institution': speaker.team.institution.serialize if speaker.team.institution else None,
                 'team': speaker.team.short_name,
             })
         kwargs["speakers"] = json.dumps(speakers)
 
-        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.get_tournament())
+        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.tournament)
         return super().get_context_data(**kwargs)
 
 
@@ -115,7 +110,7 @@ class SegregatedCheckinsMixin(TournamentMixin):
 
     def t_speakers(self):
         return Speaker.objects.filter(
-            team__tournament=self.get_tournament()).values_list(
+            team__tournament=self.tournament).values_list(
             'person_ptr_id', flat=True)
 
     def speakers_with_barcodes(self):
@@ -123,7 +118,7 @@ class SegregatedCheckinsMixin(TournamentMixin):
         return identifiers.filter(person_id__in=self.t_speakers())
 
     def t_adjs(self):
-        return self.get_tournament().adjudicator_set.values_list(
+        return self.tournament.adjudicator_set.values_list(
             'person_ptr_id', flat=True)
 
     def adjs_with_barcodes(self):
@@ -137,7 +132,7 @@ class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
     page_emoji = '📛'
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         kwargs["check_in_info"] = {
             "speakers": {
                 "title": _("Speakers"),
@@ -189,10 +184,10 @@ class AdminCheckInGenerateView(AdministratorMixin, LogActionMixin,
 
     # Providing tournament_slug_url_kwarg isn't working for some reason; so use:
     def get_redirect_url(self, *args, **kwargs):
-        return reverse_tournament('admin-checkin-identifiers', self.get_tournament())
+        return reverse_tournament('admin-checkin-identifiers', self.tournament)
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
 
         if self.kwargs["kind"] == "speakers":
             self.create_ids(PersonIdentifier, Speaker.objects.filter(team__tournament=t))

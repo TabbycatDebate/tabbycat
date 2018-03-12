@@ -1,10 +1,11 @@
+import datetime
 import logging
 import random
 import string
 
 from django.db import IntegrityError
 
-from .models import DebateIdentifier, PersonIdentifier, VenueIdentifier
+from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
 logger = logging.getLogger(__name__)
 
@@ -45,3 +46,11 @@ def delete_identifiers(queryset):
     klass = IDENTIFIER_CLASSES[queryset.model._meta.label]
     attr = klass.instance_attr
     klass.objects.filter(**{attr + '__in': queryset}).delete()
+
+
+def get_unexpired_checkins(tournament):
+    start = datetime.timedelta(hours=tournament.pref('checkin_window'))
+    time_window = datetime.datetime.now() - start
+    events = Event.objects.filter(tournament=tournament,
+                                  time__gte=time_window).select_related('identifier')
+    return events

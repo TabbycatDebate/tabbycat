@@ -26,14 +26,13 @@
       </div>
     </div>
 
-    <template v-for="(people, grouper) in peopleBySortingSetting">
-      <div class="card mt-3">
+    <transition-group name="animated-list" tag="div">
+      <div v-for="(people, grouper) in peopleBySortingSetting"
+           :key="grouper" class="card mt-3">
 
         <div class="card-header py-1 pr-3">
           <div class="row">
-            <div class="col h5 mb-0 py-2">
-              {{ grouper }}
-            </div>
+            <div class="col h5 mb-0 py-2">{{ grouper }}</div>
             <div class="col-auto">
               <button class="btn-info btn-sm mt-1" @click="checkInPeople(people)">
                 Check-In All <strong>✓</strong>
@@ -43,28 +42,35 @@
         </div>
 
         <div class="card-body pb-2 pr-2">
-          <div class="row no-gutters">
+          <transition-group name="animated-list" tag="div" class="row no-gutters">
 
-            <div class="col-3 check-in-person" v-for="person in people">
+            <div v-for="person in people":key="person.id"
+                 class="col-3 check-in-person">
               <div class="row no-gutters h6 mb-0 pb-2 pr-2 text-white">
 
-                <div :class="['col p-2', person.status ? 'bg-info' : 'bg-danger']" data-toggle="tooltip" :title="getToolTipForPerson(person)">
+                <div :class="['col p-2', person.status ? 'bg-info' : 'bg-warning']"
+                     data-toggle="tooltip" :title="getToolTipForPerson(person)">
                   {{ person.name }}
                 </div>
-                <a v-if="!person.status" class="col-auto p-2 btn-info text-center"
+                <a v-if="!person.status && person.identifier"
+                   class="col-auto p-2 btn-info text-center"
                    data-toggle="tooltip" title="Click to check-in manually"
                    @click="checkInIdentifiers([person.identifier])">
                   ✓
                 </a>
+                <div v-if="!person.identifier" class="col-auto p-2 btn-danger text-center"
+                     data-toggle="tooltip" title="This person does not have a check-in identifier so can't be checked in">
+                  ✖
+                </div>
 
               </div>
             </div>
 
-          </div>
+          </transition-group>
         </div>
 
       </div>
-    </template>
+    </transition-group>
 
     <div class="alert alert-info" v-if="peopleByPresence.length === 0">
       No matching people found.
@@ -76,11 +82,12 @@
 
 <script>
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
+import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin],
+  mixins: [AjaxMixin, WebSocketMixin],
   data: function() {
     return {
       filterByPresence: {
@@ -92,6 +99,7 @@ export default {
       sortBy: {
         'Sort by Institution': true, 'Sort by Name': false,
       },
+      sockets: ['checkins']
     }
   },
   props: {
@@ -184,7 +192,7 @@ export default {
       this.ajaxSave(this.scanUrl, payload, message, null, this.failCheckIn, null, false)
     },
     failCheckIn: function(payload, returnPayload) {
-      var message = 'Failed to check in identifiers ' + payload.barcodes
+      var message = 'Failed to check in one or more identifiers: ' + payload.barcodes
       $.fn.showAlert("danger", message, 0)
     },
     setListContext: function(metaKey, selectedKey, selectedValue) {
@@ -206,6 +214,10 @@ export default {
       }
       tt += ' with identifier of ' + person.identifier
       return tt
+    },
+    handleSocketMessage: function(payload, socketLabel) {
+      console.log('handleSocketMessage', socketLabel, ' : ', payload)
+      this.events.push(payload)
     }
   }
 }

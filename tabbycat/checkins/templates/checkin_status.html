@@ -4,6 +4,7 @@
 
   <div id="vueMount">
     <check-in-status-container :events="events"
+                               :tournament-slug="tournamentSlug"
                                :adjudicators="adjudicators"
                                :speakers="speakers"
                                :scan-url="scanUrl">
@@ -16,6 +17,7 @@
   <script>
     window.vueData = {
       'events': {{ events|safe }},
+      'tournamentSlug': '{{ tournament_slug }}',
       'adjudicators': {{ adjudicators|safe }},
       'speakers': {{ speakers|safe }},
       'scanUrl': '{{ scan_url }}'

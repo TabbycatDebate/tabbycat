@@ -78,6 +78,8 @@ class Event(models.Model):
     # timezone.now used over auto_add so times are visible/editable in admin
     time = models.DateTimeField(db_index=True, default=timezone.now,
                                 verbose_name=_("check-in time"))
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+                                   verbose_name=_("tournament"))
 
     class Meta:
         verbose_name = _("check-in event")

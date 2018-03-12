@@ -8,6 +8,7 @@ Change Log
 
 - Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
 - Added an automated method for assigning importances to debates using their bracket or 'liveness'
+- Added a 'check-in' functionality for recording the attendance of participants, as well as tracking ballot and room statuses. Includes barcode integrations and methods for translating check-ins into the existing availability methods.
 - Quality of life improvements
    - Added a 'liveness' calculator for Open categories in BP
    - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen

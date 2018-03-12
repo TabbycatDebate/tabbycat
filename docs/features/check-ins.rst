@@ -37,4 +37,4 @@ Viewing Check-Ins
 
 On the *Statuses* section of Check-ins you can view who has or has not been checked-in.
 
-Can enable a public status page but note that it needs to be manually refreshed and data is a minute out of date?
+.. image:: images/checkin_statuses.png

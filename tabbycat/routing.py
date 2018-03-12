@@ -4,6 +4,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 
 from actionlog.consumers import ActionLogEntryConsumer
+from checkins.consumers import CheckInEventConsumer
 from results.consumers import BallotResultConsumer, BallotStatusConsumer
 
 
@@ -18,9 +19,12 @@ application = ProtocolTypeRouter({
     # WebSocket handlers
     "websocket": AuthMiddlewareStack(
         URLRouter([
+            # TournamentOverviewContainer
             url(r'^(?P<tournament_slug>[-\w_]+)/actionlogs/$', ActionLogEntryConsumer),
             url(r'^(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer),
-            url(r'^(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer)
+            url(r'^(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer),
+            # CheckInStatusContainer
+            url(r'^(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer)
         ])
     ),
 })

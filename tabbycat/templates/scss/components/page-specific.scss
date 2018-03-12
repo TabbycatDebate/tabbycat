@@ -2,6 +2,23 @@
 // Checkins
 //------------------------------------------------------------------------------
 
+.animated-list-enter-active {
+  transition: all .3s ease;
+}
+
+.animated-list-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.animated-list-enter, .animated-list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+//------------------------------------------------------------------------------
+// Availabilities
+//------------------------------------------------------------------------------
+
 .progress {
   // margin-bottom: 0; // Progress bars have bottom margins; need to offset
   height: 30px; // Increase height from standard

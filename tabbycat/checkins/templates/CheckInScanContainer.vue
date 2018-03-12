@@ -4,7 +4,8 @@
 
     <div class="list-group-item">
       <input v-model.string="barcode" autofocus :placeholder="placeholderText"
-             type="number" step="1" class="form-control" :disabled="processing">
+             type="number" pattern="[0-9]*" inputmode="numeric"
+             step="1" class="form-control" :disabled="processing">
     </div>
     <!-- extra items for error messages -->
 
@@ -52,7 +53,7 @@ export default {
     },
     failCheckIn: function(payload, returnPayload) {
       this.processing = false
-      var message = 'Failed to check in identifier ' + payload.barcodes[0] + ' maybe it was misspelt?'
+      var message = 'Failed to check in identifier ' + payload.barcodes[0] + '. Maybe it was misspelt?'
       $.fn.showAlert("danger", message, 0)
     }
   },
