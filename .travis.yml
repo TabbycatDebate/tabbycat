@@ -20,9 +20,10 @@ matrix:
       before_install: # Need to bootstrap dependencies on macOS
         - brew update # Need to update first
         - brew upgrade python # Install latest Python3
+        - export PATH="/usr/local/opt/python/libexec/bin:$PATH" # Alias 'python' to latest Python3
         - virtualenv env -p python
-        - python --version
         - source env/bin/activate
+        - python --version
       before_script:
         - brew services start postgresql
         # We are testing, in effect, the local install so use local settings:
