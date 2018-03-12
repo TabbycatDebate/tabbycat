@@ -68,8 +68,7 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
 class TournamentDashboardHomeView(TournamentMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
-        cr = t.current_round
+        t = self.tournament
         updates = 15 # Number of items to fetch
 
         kwargs["round"] = t.current_round
@@ -89,11 +88,11 @@ class TournamentDashboardHomeView(TournamentMixin, TemplateView):
         subs = [bs.serialize_like_actionlog for bs in subs]
         kwargs["initialBallots"] = json.dumps(subs)
 
-        status = cr.draw_status
+        status = t.current_round.draw_status
         if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
-            ballots = BallotSubmission.objects.filter(debate__round=cr,
+            ballots = BallotSubmission.objects.filter(debate__round=t.current_round,
                                                       discarded=False)
-            stats = graphable_debate_statuses(ballots, cr)
+            stats = graphable_debate_statuses(ballots, t.current_round)
             kwargs["initialGraphData"] = json.dumps(stats)
         else:
             kwargs["initialGraphData"] = json.dumps([])
@@ -113,18 +112,17 @@ class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'round_advance_check.html'
 
     def get(self, request, *args, **kwargs):
-        round = self.get_round()
-        current_round = self.get_tournament().current_round
-        if round != current_round:
+        current_round = self.tournament.current_round
+        if self.round != current_round:
             messages.error(self.request, "You are trying to advance from {this_round} but "
                 "the current round is {current_round} — advance to {this_round} first!".format(
-                    this_round=round.name, current_round=current_round.name))
-            return redirect_round('results-round-list', self.get_tournament().current_round)
+                    this_round=self.round.name, current_round=current_round.name))
+            return redirect_round('results-round-list', current_round)
         else:
             return super().get(self, request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['num_unconfirmed'] = self.get_round().debate_set.filter(
+        kwargs['num_unconfirmed'] = self.round.debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
         return super().get_context_data(**kwargs)
@@ -136,24 +134,22 @@ class RoundAdvanceView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyR
     round_redirect_pattern_name = 'results-round-list' # standard redirect is only on error
 
     def post(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-
         # Advance relative to the round of the view, not the current round, so
         # that in times of confusion, going back then clicking again won't advance
         # twice.
-        next_round = tournament.round_set.filter(seq__gt=self.get_round().seq).order_by('seq').first()
+        next_round = self.tournament.round_set.filter(seq__gt=self.round.seq).order_by('seq').first()
 
         if next_round:
-            tournament.current_round = next_round
-            tournament.save()
+            self.tournament.current_round = next_round
+            self.tournament.save()
             self.log_action(round=next_round, content_object=next_round)
 
             if (next_round.stage == Round.STAGE_ELIMINATION and
-                    self.get_round().stage == Round.STAGE_PRELIMINARY):
+                    self.round.stage == Round.STAGE_PRELIMINARY):
                 messages.success(request, _("The current round has been advanced to %(round)s. "
                         "You've made it to the end of the preliminary rounds! Congratulations! "
                         "The next step is to generate the break.") % {'round': next_round.name})
-                return redirect_tournament('breakqual-index', tournament)
+                return redirect_tournament('breakqual-index', self.tournament)
             else:
                 messages.success(request, _("The current round has been advanced to %(round)s. "
                     "Woohoo! Keep it up!") % {'round': next_round.name})
@@ -247,7 +243,7 @@ class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
     slug_url_kwarg = 'tournament_slug'
 
     def get_success_url(self):
-        t = self.get_tournament()
+        t = self.tournament
         return reverse_tournament('tournament-admin-home', tournament=t)
 
 
@@ -292,24 +288,23 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "fix_debate_teams.html"
 
     def get_incomplete_debates(self):
-        tournament = self.get_tournament()
         annotations = {  # annotates with the number of DebateTeams on each side in the debate
             side: RawSQL("""
                 SELECT DISTINCT COUNT('a')
                 FROM draw_debateteam
                 WHERE draw_debate.id = draw_debateteam.debate_id
                 AND draw_debateteam.side = %s""", (side,))
-            for side in tournament.sides
+            for side in self.tournament.sides
         }
-        debates = Debate.objects.filter(round__tournament=tournament)
+        debates = Debate.objects.filter(round__tournament=self.tournament)
         debates = debates.prefetch_related('debateteam_set__team').annotate(**annotations)
 
         # A debate is incomplete if there isn't exactly one team on each side
-        incomplete_debates = debates.filter(~Q(**{side: 1 for side in tournament.sides}))
+        incomplete_debates = debates.filter(~Q(**{side: 1 for side in self.tournament.sides}))
 
         # Finally, go through and populate lists of teams on each side
         for debate in incomplete_debates:
-            debate.teams_on_each_side = OrderedDict((side, []) for side in tournament.sides)
+            debate.teams_on_each_side = OrderedDict((side, []) for side in self.tournament.sides)
             for dt in debate.debateteam_set.all():
                 try:
                     debate.teams_on_each_side[dt.side].append(dt.team)
@@ -319,8 +314,7 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
         return incomplete_debates
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs['side_names'] = [get_side_name(tournament, side, 'full') for side in tournament.sides]
+        kwargs['side_names'] = [get_side_name(self.tournament, side, 'full') for side in self.tournament.sides]
         kwargs['incomplete_debates'] = self.get_incomplete_debates()
         return super().get_context_data(**kwargs)
 
@@ -364,7 +358,7 @@ class BaseSaveDragAndDropDebateJsonView(AdministratorMixin, RoundMixin, LogActio
         and returns it. If the debate doesn't exist and `self.allows_creation`
         is False, it raises a BadJsonRequestError.
         """
-        r = self.get_round()
+        r = self.round
         try:
             return Debate.objects.get(round=r, pk=id)
         except Debate.DoesNotExist:

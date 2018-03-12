@@ -1,6 +1,6 @@
 import logging
 
-from .dynamic_preferences_registry import tournament_preferences_registry
+from .preferences import tournament_preferences_registry
 
 logger = logging.getLogger(__name__)
 

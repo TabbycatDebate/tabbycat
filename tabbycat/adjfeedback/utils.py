@@ -28,7 +28,7 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 
     `feedback_paths` can be used to avoid unnecessary tournament lookups,
     and should be one of the available options in
-    options.dynamic_preferences_registry.FeedbackPaths.choices.
+    options.preferences.FeedbackPaths.choices.
 
     `debate` can be used to avoid unnecessary database hits populating
     AdjudicatorAllocation, and should be equal to debateadj.debate.

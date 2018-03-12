@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 class VenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     def get_unallocated_venues(self):
-        unused_venues = self.get_round().unused_venues().prefetch_related('venuecategory_set')
+        unused_venues = self.round.unused_venues().prefetch_related('venuecategory_set')
         return json.dumps([v.serialize() for v in unused_venues])
 
 
@@ -50,18 +50,17 @@ class AutoAllocateVenuesView(VenueAllocationMixin, LogActionMixin, JsonDataRespo
     round_redirect_pattern_name = 'venues-edit'
 
     def post_data(self):
-        round = self.get_round()
         self.log_action()
-        if round.draw_status == Round.STATUS_RELEASED:
+        if self.round.draw_status == Round.STATUS_RELEASED:
             info = "Draw is already released, unrelease draw to redo auto-allocations."
             logger.warning(info)
             raise BadJsonRequestError(info)
-        if round.draw_status != Round.STATUS_CONFIRMED:
+        if self.round.draw_status != Round.STATUS_CONFIRMED:
             info = "Draw is not confirmed, confirm draw to run auto-allocations."
             logger.warning(info)
             raise BadJsonRequestError(info)
 
-        allocate_venues(self.get_round())
+        allocate_venues(self.round)
         return {
             'debates': self.get_draw(),
             'unallocatedVenues': self.get_unallocated_venues()
@@ -89,7 +88,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CATEGORIES_EDIT
 
     def get_formset_factory_kwargs(self):
-        queryset = self.get_tournament().relevant_venues.prefetch_related('venuecategory_set')
+        queryset = self.tournament.relevant_venues.prefetch_related('venuecategory_set')
         formset_factory_kwargs = {
             'form': venuecategoryform_factory(venues_queryset=queryset),
             'extra': 3
@@ -107,11 +106,11 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         else:
             messages.success(self.request, _("No changes were made to the venue categories."))
         if "add_more" in self.request.POST:
-            return redirect_tournament('venues-categories', self.get_tournament())
+            return redirect_tournament('venues-categories', self.tournament)
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.get_tournament())
+        return reverse_tournament('importer-simple-index', self.tournament)
 
 
 class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, ModelFormSetView):
@@ -143,19 +142,18 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
     def subject_choices(self):
         from participants.models import Institution
 
-        tournament = self.get_tournament()
         options = []
 
-        adjudicators = tournament.relevant_adjudicators.values('id', 'name')
+        adjudicators = self.tournament.relevant_adjudicators.values('id', 'name')
         options.extend([(a['id'], _('%s (Adjudicator)') % a['name']) for a in adjudicators])
 
-        teams = tournament.team_set.values('id', 'short_name')
+        teams = self.tournament.team_set.values('id', 'short_name')
         options.extend([(t['id'], _('%s (Team)') % t['short_name']) for t in teams])
 
         institutions = Institution.objects.values('id', 'name')
         options.extend([(i['id'], _('%s (Institution)') % i['name']) for i in institutions])
 
-        divisions = tournament.division_set.values('id', 'name')
+        divisions = self.tournament.division_set.values('id', 'name')
         options.extend([(d['id'], _('%s (Division)') % d['name']) for d in divisions])
 
         return sorted(options, key=lambda x: x[1])
@@ -168,8 +166,8 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
                 "Saved %(count)d venue constraints.", count) % {'count': count}
             messages.success(self.request, message)
         if "add_more" in self.request.POST:
-            return redirect_tournament('venues-constraints', self.get_tournament())
+            return redirect_tournament('venues-constraints', self.tournament)
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.get_tournament())
+        return reverse_tournament('importer-simple-index', self.tournament)

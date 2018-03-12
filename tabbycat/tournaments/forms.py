@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
-from options.dynamic_preferences_registry import AdjCoreCredit, OrgComCredit, TabDirectorCredit
+from options.preferences import AdjCoreCredit, OrgComCredit, TabDirectorCredit
 from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
 from .models import Round, Tournament

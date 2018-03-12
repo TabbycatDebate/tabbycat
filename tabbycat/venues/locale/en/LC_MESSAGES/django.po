@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -134,6 +134,8 @@ msgid "Venue Categories"
 msgstr ""
 
 #: venues/templates/venue_categories_edit.html:7
+#: venues/templates/venue_categories_edit.html:22
+#: venues/templates/venue_constraints_edit.html:22
 msgid "Save Venue Categories"
 msgstr ""
 
@@ -157,7 +159,11 @@ msgstr ""
 msgid "Venue Constraints"
 msgstr ""
 
-#: venues/templates/venue_constraints_edit.html:9
+#: venues/templates/venue_constraints_edit.html:7
+msgid "Save Venue Constraints"
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:11
 msgid ""
 "Venue constraints tell the venue allocator to try to keep the specified team "
 "or adjudicator, or all teams (but not adjudicators) from the specified "
@@ -165,14 +171,6 @@ msgid ""
 "resolves conflicting constraints: the higher priority takes precedence. You "
 "can also use the priority field to specify \"lower-preference\" constraints, "
 "which are taken if a higher-priority constraint couldn't be met."
-msgstr ""
-
-#: venues/templates/venue_constraints_edit.html:41
-msgid "Save Venue Constraints"
-msgstr ""
-
-#: venues/templates/venue_constraints_edit.html:44
-msgid "Save and Add More"
 msgstr ""
 
 #: venues/utils.py:38 venues/utils.py:50
@@ -198,18 +196,38 @@ msgid ""
 "Venue does not meet any constraint of institution %(institution)s (%(team)s)"
 msgstr ""
 
-#: venues/views.py:100
+#: venues/views.py:102
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: venues/views.py:106
+#: venues/views.py:108
 msgid "No changes were made to the venue categories."
 msgstr ""
 
-#: venues/views.py:176
+#: venues/views.py:150
+#, python-format
+msgid "%s (Adjudicator)"
+msgstr ""
+
+#: venues/views.py:153
+#, python-format
+msgid "%s (Team)"
+msgstr ""
+
+#: venues/views.py:156
+#, python-format
+msgid "%s (Institution)"
+msgstr ""
+
+#: venues/views.py:159
+#, python-format
+msgid "%s (Division)"
+msgstr ""
+
+#: venues/views.py:167
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."

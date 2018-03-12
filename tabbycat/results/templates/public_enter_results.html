@@ -2,11 +2,11 @@
 {% load debate_tags add_field_css humanize static i18n %}
 
 
-{% block page-title %}{% blocktrans trimmed with matchup=debate.matchup %}
-  Enter Results for {{ matchup }}
+{% block page-title %}{% blocktrans trimmed %}
+  Enter Results for {{ debate_name }}
 {% endblocktrans %}{% endblock %}
-{% block head-title %}{% blocktrans trimmed with matchup=debate.matchup %}
-  Enter Results for {{ matchup }}
+{% block head-title %}{% blocktrans trimmed %}
+  Enter Results for {{ debate_name }}
 {% endblocktrans %}{% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 

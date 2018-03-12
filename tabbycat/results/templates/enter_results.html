@@ -3,12 +3,12 @@
 
 {% block head-title %}
   {% if new %}
-    {% blocktrans trimmed with matchup=debate.matchup %}
-      New Ballot Set for {{ matchup }}
+    {% blocktrans trimmed %}
+      New Ballot Set for {{ debate_name }}
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with matchup=debate.matchup %}
-      Edit Ballot Set for {{ matchup }}
+    {% blocktrans trimmed %}
+      Edit Ballot Set for {{ debate_name }}
     {% endblocktrans %}
   {% endif %}
 {% endblock %}
@@ -19,7 +19,7 @@
   {% endblocktrans %}
 {% endblock %}
 
-{% block page-title %}{{ debate.matchup }} {{ debate.round.name }} @ {% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}{% endblock %}
+{% block page-title %}{% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}: {{ debate_name }}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary" href="{% roundurl 'results-round-list' debate.round %}">

@@ -56,6 +56,14 @@ SIDE_NAMES = {
         "aff_abbr": _("Pro"),
         "neg_abbr": _("Con"),
     },
+    'appellant-respondent': {
+        "aff_full": _("appellant"),
+        "neg_full": _("respondent"),
+        "aff_team": _("appellant team"),
+        "neg_team": _("respondent team"),
+        "aff_abbr": _("App"),
+        "neg_abbr": _("Res"),
+    },
 }
 
 BP_SIDE_NAMES = {  # stop-gap before this system gets refactored

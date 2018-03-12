@@ -36,7 +36,7 @@
           <div class="row mb-3">
             <div class="btn-group col" role="group" aria-label="Basic example">
               <button type="button" class="btn btn-secondary">Venue</button>
-              <button type="button" class="btn btn-primary" id="venue_confirm"></button>
+              <button type="button" class="btn btn-outline-primary" id="venue_confirm"></button>
             </div>
           </div>
 
@@ -119,7 +119,7 @@
 
               $('#teams .team').remove();
               $.each(data.teams, function(index, value) {
-                $('#teams').append("<button class='team btn btn-primary'>" + value + "</button>");
+                $('#teams').append("<button class='team btn btn-outline-primary'>" + value + "</button>");
               });
 
               var num_ballots_text, from_text;
@@ -135,7 +135,7 @@
 
               $('#adjudicators .adj').remove();
               $.each(data.adjudicators, function(index, value) {
-                $('#adjudicators').append("<button class='adj btn btn-primary'>" + value + "</button>");
+                $('#adjudicators').append("<button class='adj btn btn-outline-primary'>" + value + "</button>");
               });
 
               $('#debate_details').show();

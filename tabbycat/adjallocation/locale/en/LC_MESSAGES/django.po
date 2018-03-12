@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,14 +103,35 @@ msgstr ""
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr ""
 
-#: adjallocation/views.py:138
+#: adjallocation/templates/edit_conflicts.html:4
+#: adjallocation/templates/edit_conflicts.html:5
+msgid "Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/templates/edit_conflicts.html:7
+#: adjallocation/templates/edit_conflicts.html:11
+msgid "Save Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:141
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:142
+#: adjallocation/views.py:145
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:191
+#: adjallocation/views.py:194
 msgid "Not all adjudicators specified are associated with the tournament."
+msgstr ""
+
+#: adjallocation/views.py:245
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:251
+msgid "No changes were made to adjudicator-team conflicts."
 msgstr ""

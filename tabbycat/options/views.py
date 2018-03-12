@@ -16,7 +16,7 @@ from utils.misc import reverse_tournament
 
 from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
-from .dynamic_preferences_registry import tournament_preferences_registry
+from .preferences import tournament_preferences_registry
 
 logger = logging.getLogger(__name__)
 
@@ -56,12 +56,11 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
         return super().form_valid(*args, **kwargs)
 
     def get_success_url(self):
-        return reverse_tournament('options-tournament-index', self.get_tournament())
+        return reverse_tournament('options-tournament-index', self.tournament)
 
     def get_form_class(self, *args, **kwargs):
-        tournament = self.get_tournament()
         section = self.kwargs.get('section', None)
-        form_class = tournament_preference_form_builder(instance=tournament, section=section)
+        form_class = tournament_preference_form_builder(instance=self.tournament, section=section)
         return form_class
 
 
@@ -80,9 +79,8 @@ class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, Temp
         return selected_presets[0]
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, t)
+        preset_preferences = get_preferences_data(selected_preset, self.tournament)
         kwargs["preset_title"] = selected_preset.name
         kwargs["preset_name"] = self.kwargs["preset_name"]
         kwargs["changed_preferences"] = [p for p in preset_preferences if p['changed']]
@@ -96,15 +94,14 @@ class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, Temp
             return ["preferences_presets_complete.html"]
 
     def save_presets(self):
-        t = self.get_tournament()
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, t)
+        preset_preferences = get_preferences_data(selected_preset, self.tournament)
 
         for pref in preset_preferences:
-            t.preferences[pref['key']] = pref['new_value']
+            self.tournament.preferences[pref['key']] = pref['new_value']
 
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
-                user=self.request.user, tournament=t, content_object=t)
+                user=self.request.user, tournament=self.tournament, content_object=self.tournament)
         messages.success(self.request, _("Tournament options saved according to preset "
                 "%(name)s.") % {'name': selected_preset.name})
 

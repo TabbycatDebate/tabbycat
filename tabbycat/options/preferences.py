@@ -957,6 +957,24 @@ class ShowMotionsInResults(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class TeamCodeNames(ChoicePreference):
+    help_text = _("Whether and how to use code names for teams")
+    verbose_name = _("Team code names")
+    section = ui_options
+    name = 'team_code_names'
+    default = 'off'
+    choices = (
+        ('off',                 _("Do not use code names")),
+        ('all-tooltips',        _("Use real names everywhere, and show code names in tooltips")),
+        ('admin-tooltips-code', _("Use code names for public; real names with code names in "
+                                  "tooltips for admins")),
+        ('admin-tooltips-real', _("Use code names for public; code names with real names in "
+                                  "tooltips for admins")),
+        ('everywhere',          _("Use code names everywhere; do not use tooltips (real names show in some admin views)")),
+    )
+
+
+@tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
     help_text = _("Enables emoji in the draw")
     verbose_name = _("Show emoji")

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -83,7 +83,16 @@ msgstr "Il y avait un juge destinataire et un orateur destinataire."
 msgid "Email Private Ballot URLs"
 msgstr "Envoyer les URLs privées pour les bulletins"
 
-#: privateurls/templates/ballot_urls_email_list.html:13
+#: privateurls/templates/ballot_urls_email_list.html:14
+#: privateurls/templates/feedback_urls_email_list.html:14
+msgid ""
+"Because you deployed the 'Tabbykitten' edition of Tabbycat your Heroku "
+"instance probably doesn't have the addon necessary to to send emails. You'll "
+"need to verify your Heroku account and install the <a href=\"https://"
+"elements.heroku.com/addons/sendgrid\">SendGrid plugin manually.</a>"
+msgstr ""
+
+#: privateurls/templates/ballot_urls_email_list.html:20
 msgid ""
 "Review the list of adjudicators who are due to be sent an email with their "
 "private ballot URL, then click the button at the bottom of the page to send "
@@ -92,8 +101,8 @@ msgstr ""
 "Vérifiez la liste des juges auxquels on doit envoyer un courriel avec son "
 "URL privée, puis cliquez le bouton en bas de page pour les envoyer."
 
-#: privateurls/templates/ballot_urls_email_list.html:19
-#: privateurls/templates/feedback_urls_email_list.html:27
+#: privateurls/templates/ballot_urls_email_list.html:26
+#: privateurls/templates/feedback_urls_email_list.html:34
 #, python-format
 msgid ""
 "The following adjudicators have a URL key but don't have an e-mail address, "
@@ -102,7 +111,7 @@ msgstr ""
 "Les juges suivants ont une clé d'URL mais n'ont pas d'adresse courriel, donc "
 "ils ne seront pas envoyés des courriels : %(adjudicators_list)s"
 
-#: privateurls/templates/ballot_urls_email_list.html:29
+#: privateurls/templates/ballot_urls_email_list.html:36
 #, python-format
 msgid ""
 "%(nadjs)s adjudicator who has already had their ballot URL sent to them is "
@@ -123,7 +132,7 @@ msgstr[1] ""
 "envoyés dans <a href=\"%(sent_mail_records_url)s\">la zone pour modifier la "
 "base de données</a>."
 
-#: privateurls/templates/ballot_urls_email_list.html:43
+#: privateurls/templates/ballot_urls_email_list.html:50
 msgid "Send emails with private ballot URLs to adjudicators"
 msgstr "Envoyer aux juges les courriels avec les URLs privées de bulletins"
 
@@ -132,35 +141,35 @@ msgstr "Envoyer aux juges les courriels avec les URLs privées de bulletins"
 msgid "Email Private Feedback URLs"
 msgstr "Envoyer les URLs privées pour les commentaires"
 
-#: privateurls/templates/feedback_urls_email_list.html:13
+#: privateurls/templates/feedback_urls_email_list.html:20
 msgid ""
 "Review the list of speakers and adjudicators who are due to be sent an email "
 "with their private feedback URL, then click the button at the bottom of the "
 "page to send the emails."
 msgstr ""
 
-#: privateurls/templates/feedback_urls_email_list.html:19
+#: privateurls/templates/feedback_urls_email_list.html:26
 #, python-format
 msgid ""
 "The following speakers have a URL key but don't have an e-mail address, so "
 "won't get e-mails: %(speakers_list)s"
 msgstr ""
 
-#: privateurls/templates/feedback_urls_email_list.html:37
+#: privateurls/templates/feedback_urls_email_list.html:44
 #, python-format
 msgid "%(nspeakers)s speaker"
 msgid_plural "%(nspeakers)s speakers"
 msgstr[0] "%(nspeakers)s orateur"
 msgstr[1] "%(nspeakers)s orateurs"
 
-#: privateurls/templates/feedback_urls_email_list.html:42
+#: privateurls/templates/feedback_urls_email_list.html:49
 #, python-format
 msgid "%(nadjs)s adjudicator"
 msgid_plural "%(nadjs)s adjudicators"
 msgstr[0] "%(nadjs)s juge"
 msgstr[1] "%(nadjs)s juges"
 
-#: privateurls/templates/feedback_urls_email_list.html:47
+#: privateurls/templates/feedback_urls_email_list.html:54
 #, python-format
 msgid ""
 "%(speaker_phrase)s and %(adjudicator_phrase)s who have already had their "
@@ -169,7 +178,7 @@ msgid ""
 "Database area</a>."
 msgstr ""
 
-#: privateurls/templates/feedback_urls_email_list.html:58
+#: privateurls/templates/feedback_urls_email_list.html:65
 msgid "Send emails with private feedback URLs to speakers and adjudicators"
 msgstr ""
 
@@ -249,41 +258,41 @@ msgstr ""
 msgid "All participants already have private URLs."
 msgstr "Tous les participants ont déjà leurs URLs privées."
 
-#: privateurls/views.py:75 privateurls/views.py:92
+#: privateurls/views.py:74 privateurls/views.py:91
 msgid "no URL"
 msgstr "pas de URL"
 
-#: privateurls/views.py:81
+#: privateurls/views.py:80
 msgid "Teams"
 msgstr "Équipes"
 
-#: privateurls/views.py:83 privateurls/views.py:99 privateurls/views.py:218
-#: privateurls/views.py:226
+#: privateurls/views.py:82 privateurls/views.py:98 privateurls/views.py:217
+#: privateurls/views.py:225
 msgid "Feedback URL"
 msgstr "URL pour les commentaires"
 
-#: privateurls/views.py:97
+#: privateurls/views.py:96
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: privateurls/views.py:100 privateurls/views.py:186
+#: privateurls/views.py:99 privateurls/views.py:185
 msgid "Ballot URL"
 msgstr "URL pour les bulletins"
 
-#: privateurls/views.py:123
+#: privateurls/views.py:122
 msgid ""
 "All adjudicators and teams already have private URLs. If you want to delete "
 "them, use the Edit Database area."
 msgstr ""
 
-#: privateurls/views.py:132
+#: privateurls/views.py:131
 #, python-format
 msgid ""
 "Private URLs were generated for all %(nblank_adjs)d adjudicators and all "
 "%(nblank_teams)d teams."
 msgstr ""
 
-#: privateurls/views.py:138
+#: privateurls/views.py:137
 #, python-format
 msgid ""
 "Private URLs were generated for %(nblank_adjs)d adjudicators and "
@@ -292,26 +301,26 @@ msgid ""
 "intact."
 msgstr ""
 
-#: privateurls/views.py:166
+#: privateurls/views.py:165
 #, python-format
 msgid "Adjudicators who will be sent e-mails (%(n)s)"
 msgstr ""
 
-#: privateurls/views.py:169 privateurls/views.py:217
+#: privateurls/views.py:168 privateurls/views.py:216
 msgid "Email"
 msgstr "Courriel"
 
-#: privateurls/views.py:213
+#: privateurls/views.py:212
 #, python-format
 msgid "Speakers who will be sent e-mails (%(n)s)"
 msgstr ""
 
-#: privateurls/views.py:241
+#: privateurls/views.py:240
 #, python-format
 msgid "Your personal ballot submission URL for %(tournament)s"
 msgstr ""
 
-#: privateurls/views.py:243
+#: privateurls/views.py:242
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -326,11 +335,11 @@ msgid ""
 "%(url)s"
 msgstr ""
 
-#: privateurls/views.py:261
+#: privateurls/views.py:260
 msgid "There was a problem sending private ballot URLs to adjudicators."
 msgstr ""
 
-#: privateurls/views.py:264
+#: privateurls/views.py:263
 #, fuzzy
 #| msgid "There was a problem sending private feedback URLs to adjudicators."
 msgid ""
@@ -340,7 +349,7 @@ msgstr ""
 "Une erreur s'est produit lors de l'envoi aux juges des URLs privées pour les "
 "commentaires."
 
-#: privateurls/views.py:269
+#: privateurls/views.py:268
 #, python-format
 msgid ""
 "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator."
@@ -349,12 +358,12 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: privateurls/views.py:284
+#: privateurls/views.py:283
 #, python-format
 msgid "Your team's feedback submission URL for %(tournament)s"
 msgstr ""
 
-#: privateurls/views.py:286
+#: privateurls/views.py:285
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -380,17 +389,17 @@ msgstr ""
 "La URL privée de votre équipe pour la soumission des commentaires est:\n"
 "%(url)s"
 
-#: privateurls/views.py:305
+#: privateurls/views.py:304
 msgid "There was a problem sending private feedback URLs to speakers."
 msgstr ""
 
-#: privateurls/views.py:308
+#: privateurls/views.py:307
 #, python-format
 msgid "Your personal feedback submission URL for %(tournament)s"
 msgstr ""
 "Votre URL personnelle pour la soumission des commentaires à %(tournament)s"
 
-#: privateurls/views.py:310
+#: privateurls/views.py:309
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -416,14 +425,14 @@ msgstr ""
 "Votre URL privée et personnelle pour la soumission des commentaires est:\n"
 "%(url)s"
 
-#: privateurls/views.py:328
+#: privateurls/views.py:327
 msgid "There was a problem sending private feedback URLs to adjudicators."
 msgstr ""
 "Une erreur s'est produit lors de l'envoi aux juges des URLs privées pour les "
 "commentaires."
 
 #. Translators: This goes in the "speakers_phrase" variable in "E-mails with private feedback URLs were sent..."
-#: privateurls/views.py:333
+#: privateurls/views.py:332
 #, python-format
 msgid "%(nspeakers)d speaker"
 msgid_plural "%(nspeakers)d speakers"
@@ -431,14 +440,14 @@ msgstr[0] "%(nspeakers)d orateur"
 msgstr[1] "%(nspeakers)d orateurs"
 
 #. Translators: This goes in the "adjudicators_phrase" variable in "E-mails with private feedback URLs were sent..."
-#: privateurls/views.py:336
+#: privateurls/views.py:335
 #, python-format
 msgid "%(nadjudicators)d adjudicator"
 msgid_plural "%(nadjudicators)d adjudicators"
 msgstr[0] "%(nadjudicators)d juge"
 msgstr[1] "%(nadjudicators)d juges"
 
-#: privateurls/views.py:338
+#: privateurls/views.py:337
 #, python-format
 msgid ""
 "E-mails with private feedback URLs were sent to %(speakers_phrase)s and "

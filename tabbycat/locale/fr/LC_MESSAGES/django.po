@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: 2018-02-07 23:23-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -18,19 +18,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
-#: settings.py:42
+#: settings.py:43
 msgid "Arabic"
 msgstr "arabe"
 
-#: settings.py:43
+#: settings.py:44
 msgid "English"
 msgstr "anglais"
 
-#: settings.py:44
+#: settings.py:45
 msgid "Spanish"
 msgstr "espagnol"
 
-#: settings.py:45
+#: settings.py:46
 msgid "French"
 msgstr "français"
 
@@ -88,13 +88,13 @@ msgstr ""
 "Cette tabulation fonctionne sur Tabbycat, un système open-source pour "
 "tabuler une variété de formats de débat parlementaire"
 
-#: templates/base_formset.html:26
-msgid "Save and Add More"
-msgstr "Enregistrer et ajouter davantage"
-
 #: templates/components/form-errors.html:4
 msgid "Whoops! There was an error with one or more fields."
 msgstr "Oups ! Il y a une erreur dans un ou plusieurs champs."
+
+#: templates/components/formset.html:23
+msgid "Save and Add More"
+msgstr "Enregistrer et ajouter davantage"
 
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
 #: templates/errors/public_403.html:4 templates/errors/public_403.html:6

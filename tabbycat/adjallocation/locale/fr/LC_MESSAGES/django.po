@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 22:01-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -104,18 +104,46 @@ msgstr "conflits entre juge et institution"
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr "Modifier les juges dans %(round_abbr)s"
 
-#: adjallocation/views.py:138
+#: adjallocation/templates/edit_conflicts.html:4
+#: adjallocation/templates/edit_conflicts.html:5
+#, fuzzy
+#| msgid "adjudicator-team conflicts"
+msgid "Adjudicator-Team Conflicts"
+msgstr "conflits entre juge et équipe"
+
+#: adjallocation/templates/edit_conflicts.html:7
+#: adjallocation/templates/edit_conflicts.html:11
+#, fuzzy
+#| msgid "adjudicator-team conflicts"
+msgid "Save Adjudicator-Team Conflicts"
+msgstr "conflits entre juge et équipe"
+
+#: adjallocation/views.py:141
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 "Le tirage est déjà publié; il faut le dépublier pour pouvoir refaire "
 "l'allocation automatique."
 
-#: adjallocation/views.py:142
+#: adjallocation/views.py:145
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 "Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire "
 "l'allocation automatique."
 
-#: adjallocation/views.py:191
+#: adjallocation/views.py:194
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr "Certains juges spécifiés ne sont pas associés au tournoi."
+
+#: adjallocation/views.py:245
+#, fuzzy, python-format
+#| msgid "adjudicator-team conflict"
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] "conflit entre juge et équipe"
+msgstr[1] "conflit entre juge et équipe"
+
+#: adjallocation/views.py:251
+#, fuzzy
+#| msgid "adjudicator-team conflicts"
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr "conflits entre juge et équipe"

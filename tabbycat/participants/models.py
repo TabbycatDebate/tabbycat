@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
 
-from .emoji import EMOJI_LIST
+from .emoji import EMOJI_CHOICES
 
 logger = logging.getLogger(__name__)
 
@@ -156,6 +156,9 @@ class Team(models.Model):
     short_reference = models.CharField(blank=True, max_length=35,
         verbose_name=_("short name/suffix"),
         help_text=_("The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)"))
+    code_name = models.CharField(blank=True, max_length=150,
+        verbose_name=_("code name"),
+        help_text=_("Name used to obscure institutional identity on public-facing pages"))
 
     short_name = models.CharField(editable=False, max_length=50,
         verbose_name=_("short name"),
@@ -193,10 +196,8 @@ class Team(models.Model):
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
         verbose_name=_("type"))
 
-    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_LIST, # uses null=True to allow multiple teams to have no emoji
+    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_CHOICES, # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
-
-    construct_emoji = None # historical reference for migration 0026_auto_20170416_2332
 
     class Meta:
         unique_together = [
@@ -347,7 +348,8 @@ class Team(models.Model):
         super().save(*args, **kwargs)
 
     def serialize(self):
-        team = {'id': self.id, 'short_name': self.short_name, 'long_name': self.long_name}
+        team = {'id': self.id, 'short_name': self.short_name,
+                'long_name': self.long_name, 'code_name': self.code_name}
         team['emoji'] = self.emoji
         team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize if self.institution else None

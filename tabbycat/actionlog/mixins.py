@@ -51,9 +51,9 @@ class LogActionMixin:
         if self.action_log_content_object_attr is not None:
             return getattr(self, self.action_log_content_object_attr)
         elif hasattr(self, 'get_round') and callable(self.get_round):
-            return self.get_round()
+            return self.round
         elif hasattr(self, 'get_tournament') and callable(self.get_tournament):
-            return self.get_tournament()
+            return self.tournament
         else:
             return None
 
@@ -78,10 +78,10 @@ class LogActionMixin:
         if hasattr(self, 'round') and isinstance(self.round, Round):
             kwargs.setdefault('round', self.round)
         elif hasattr(self, 'get_round') and callable(self.get_round):
-            kwargs.setdefault('round', self.get_round())
+            kwargs.setdefault('round', self.round)
 
         if hasattr(self, 'get_tournament') and callable(self.get_tournament):
-            kwargs.setdefault('tournament', self.get_tournament())
+            kwargs.setdefault('tournament', self.tournament)
 
         if hasattr(self.request, 'user') and isinstance(self.request.user, User):
             kwargs.setdefault('user', self.request.user)

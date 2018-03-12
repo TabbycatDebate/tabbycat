@@ -37,14 +37,14 @@ class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     @cached_property
     def get_clashes(self):
-        return get_clashes(self.get_tournament(), self.get_round())
+        return get_clashes(self.tournament, self.round)
 
     @cached_property
     def get_histories(self):
-        return get_histories(self.get_tournament(), self.get_round())
+        return get_histories(self.tournament, self.round)
 
     def get_unallocated_adjudicators(self):
-        round = self.get_round()
+        round = self.round
         unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
         populate_feedback_scores(unused_adj_instances)
         unused_adjs = [a.serialize(round) for a in unused_adj_instances]
@@ -102,14 +102,14 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
     def get_categories_info(self):
         # Need to extract and annotate categories for the allcoation actions key
         all_bcs = [c.serialize for c in BreakCategory.objects.filter(
-            tournament=self.get_tournament()).order_by('id')]
+            tournament=self.tournament).order_by('id')]
         for i, bc in enumerate(all_bcs):
             bc['class'] = i
         return all_bcs
 
     def annotate_round_info(self, round_info):
-        t = self.get_tournament()
-        r = self.get_round()
+        t = self.tournament
+        r = self.round
         round_info['updateImportanceURL'] = reverse_round('adjallocation-save-debate-importance', r)
         round_info['scoreMin'] = t.pref('adj_min_score')
         round_info['scoreMax'] = t.pref('adj_max_score')
@@ -120,7 +120,7 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
         return round_info
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
         kwargs['showAllocationIntro'] = t.pref('show_allocation_intro')
         # This is meant to be shown once only; so we set false if true
@@ -135,7 +135,7 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataR
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
     def post_data(self):
-        round = self.get_round()
+        round = self.round
         self.log_action()
         if round.draw_status == Round.STATUS_RELEASED:
             info = _("Draw is already released, unrelease draw to redo auto-allocations.")
@@ -151,7 +151,7 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataR
         else:
             allocator_class = ConsensusHungarianAllocator
 
-        allocate_adjudicators(self.get_round(), allocator_class)
+        allocate_adjudicators(self.round, allocator_class)
         return {
             'debates': self.get_draw(),
             'unallocatedAdjudicators': self.get_unallocated_adjudicators()
@@ -189,7 +189,7 @@ class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
         logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
 
         # Check all the adjudicators are part of the tournament
-        adjs = Adjudicator.objects.filter(Q(tournament=self.get_tournament()) | Q(tournament__isnull=True), id__in=adj_ids)
+        adjs = Adjudicator.objects.filter(Q(tournament=self.tournament) | Q(tournament__isnull=True), id__in=adj_ids)
         if len(adjs) != len(posted_debateadjudicators):
             raise BadJsonRequestError(_("Not all adjudicators specified are associated with the tournament."))
         adj_name_lookup = {adj.id: adj.name for adj in adjs}  # for debugging messages
@@ -232,7 +232,7 @@ class AdjudicatorTeamConflictsView(LogActionMixin, AdministratorMixin, Tournamen
 
     def get_formset(self):
         formset = super().get_formset()
-        all_adjs = self.get_tournament().adjudicator_set.order_by('name').all()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
         for form in formset:
             form.fields['adjudicator'].queryset = all_adjs # Order list by alpha
         return formset
@@ -250,8 +250,8 @@ class AdjudicatorTeamConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         else:
             messages.success(self.request, _("No changes were made to adjudicator-team conflicts."))
         if "add_more" in self.request.POST:
-            return redirect_tournament('adjallocation-conflicts-adj-team', self.get_tournament())
+            return redirect_tournament('adjallocation-conflicts-adj-team', self.tournament)
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.get_tournament())
+        return reverse_tournament('importer-simple-index', self.tournament)

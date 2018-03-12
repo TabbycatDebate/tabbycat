@@ -26,7 +26,7 @@ class PublicDivisionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
     template_name = "public_divisions.html"
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         divisions = Division.objects.filter(tournament=t).all().select_related('venue_category')
         divisions = sorted(divisions, key=lambda x: x.name)
         if len(divisions) > 0:
@@ -45,7 +45,7 @@ class DivisionsAllocatorView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "division_allocations.html"
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         teams = Team.objects.filter(tournament=t).all()
         teams_json = []
         for team in teams:
@@ -85,7 +85,7 @@ class CreateByesView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         divisions = Division.objects.filter(tournament=t)
         Team.objects.filter(tournament=t, type=Team.TYPE_BYE).delete()
         for division in divisions:
@@ -109,7 +109,7 @@ class CreateDivisionView(AdministratorMixin, TournamentMixin, PostOnlyRedirectVi
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         division = Division.objects.create(name="temporary_name", tournament=t)
         division.save()
         division.name = "%s" % division.id
@@ -121,7 +121,7 @@ class CreateDivisionAllocationView(AdministratorMixin, TournamentMixin, PostOnly
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         teams = list(Team.objects.filter(tournament=t))
         institutions = Institution.objects.all()
         venue_categories = VenueCategory.objects.all()

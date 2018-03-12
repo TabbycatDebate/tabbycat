@@ -1,5 +1,3 @@
-from warnings import warn
-
 from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
@@ -110,6 +108,17 @@ class Tournament(models.Model):
         if self.pref('reply_scores_enabled') is True:
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
+
+    def ballots_per_debate(self, stage):
+        """Returns the 'ballots per debate' setting for the stage of the
+        tournament given. Callers can use this to avoid querying the round's
+        tournament repeatedly."""
+        if stage == Round.STAGE_PRELIMINARY:
+            return self.pref('ballots_per_debate_prelim')
+        elif stage == Round.STAGE_ELIMINATION:
+            return self.pref('ballots_per_debate_elim')
+        else:
+            raise ValueError("Unrecognized stage: %r" % (stage,))
 
     # --------------------------------------------------------------------------
     # Permalinks
@@ -341,11 +350,8 @@ class Round(models.Model):
     # --------------------------------------------------------------------------
 
     def get_draw(self, ordering=('venue__name',)):
-        warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
-        related = ('venue',)
-        if self.tournament.pref('enable_divisions'):
-            related += ('division', 'division__venue_category')
-        return self.debate_set.order_by(*ordering).select_related(*related)
+        # Deprecated fully 8/3/2018, remove after 8/4/2018
+        raise RuntimeError("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.")
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, wins=False,
@@ -442,7 +448,4 @@ class Round(models.Model):
 
     @property
     def ballots_per_debate(self):
-        if self.is_break_round:
-            return self.tournament.pref("ballots_per_debate_elim")
-        else:
-            return self.tournament.pref("ballots_per_debate_prelim")
+        return self.tournament.ballots_per_debate(self.stage)
