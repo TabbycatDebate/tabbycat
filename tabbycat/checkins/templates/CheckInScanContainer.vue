@@ -40,19 +40,19 @@ export default {
   methods: {
     checkInIdentifier: function(barcodeIdentifier) {
       var message = 'the checkin status of ' + barcodeIdentifier
-      var payload = { 'barcode': barcodeIdentifier }
+      var payload = { 'barcodes': [barcodeIdentifier] }
       this.ajaxSave(this.scanUrl, payload, message,
                     this.finishCheckIn, this.failCheckIn, null, false)
       this.barcode = "" // Reset
     },
     finishCheckIn: function(dataResponse, payload, returnPayload) {
       this.processing = false
-      var message = dataResponse.time + ' checked-in identifier ' + dataResponse.id
+      var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]
       $.fn.showAlert("success", message, 0)
     },
     failCheckIn: function(payload, returnPayload) {
       this.processing = false
-      var message = 'Failed to check in identifier ' + payload.barcode
+      var message = 'Failed to check in identifier ' + payload.barcodes[0] + ' maybe it was misspelt?'
       $.fn.showAlert("danger", message, 0)
     }
   },

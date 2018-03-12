@@ -15,7 +15,7 @@
 
             <div class="list-group-item">
               <div class="d-flex justify-content-end">
-                <span class="mr-auto">{% trans "With barcodes" %}</span>
+                <span class="mr-auto">{% trans "With identifiers" %}</span>
                 <strong>{{ check_info.in }}/{{ check_info.total }}</strong>
               </div>
               {% include "components/progress-bar.html" with value=check_info.in total=check_info.total type="info" %}
@@ -28,14 +28,14 @@
                 {% tournamenturl "assistant-checkin-print" kind=check_key as url %}
               {% endif %}
               {% trans "View barcodes" as text %}
-              {% include "components/item-action.html" with type="primary" %}
+              {% include "components/item-action.html" with type="primary" blank=True %}
             {% endif %}
 
             {% if check_info.in != check_info.total and user_role == "admin" %}
               {% if check_info.in > 0 %}
-                {% trans "Generate missing barcodes" as text %}
+                {% trans "Generate missing identifiers" as text %}
               {% else %}
-                {% trans "Generate all barcodes" as text %}
+                {% trans "Generate all identifiers" as text %}
               {% endif %}
               <div class="list-item-group">
                 <form action={% tournamenturl "admin-checkin-generate" kind=check_key %} method="POST">
@@ -46,7 +46,7 @@
             {% endif %}
 
             {% if user_role == "assistant" and check_info.in == 0 %}
-              {% trans "There are no barcodes available to view. An admin will need to generate them." as text %}
+              {% trans "There are no identifiers available to view. An admin will need to generate them." as text %}
               {% include "components/item-info.html" with type="info" %}
             {% endif %}
 

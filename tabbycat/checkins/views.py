@@ -22,8 +22,7 @@ class CheckInPreScanView(TournamentMixin, TemplateView):
     page_emoji = '📷'
 
     def get_context_data(self, **kwargs):
-        kwargs["scan_url"] = reverse_tournament(self.scan_view,
-                                                self.get_tournament())
+        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.get_tournament())
         return super().get_context_data(**kwargs)
 
 
@@ -38,14 +37,16 @@ class AssistantCheckInPreScanView(AssistantMixin, CheckInPreScanView):
 class CheckInScanView(JsonDataResponsePostView):
 
     def post_data(self):
-        barcode_id = json.loads(self.body)['barcode']
-        try:
-            identifier = Identifier.objects.get(identifier=barcode_id)
-            event = Event.objects.create(identifier=identifier)
-            return json.dumps({'id': barcode_id,
-                               'time': event.time.strftime('%H:%M:%S')})
-        except ObjectDoesNotExist:
-            raise BadJsonRequestError("Identifier doesn't exist")
+        barcode_ids = json.loads(self.body)['barcodes']
+        for barcode in barcode_ids:
+            try:
+                identifier = Identifier.objects.get(identifier=barcode)
+                event = Event.objects.create(identifier=identifier)
+            except ObjectDoesNotExist:
+                raise BadJsonRequestError("Identifier doesn't exist")
+
+        return json.dumps({'ids': barcode_ids,
+                           'time': event.time.strftime('%H:%M:%S')})
 
 
 class AdminCheckInScanView(AdministratorMixin, CheckInScanView):
@@ -62,16 +63,48 @@ class CheckInStatusView(TournamentMixin, TemplateView):
     page_emoji = '⌚️'
 
     def get_context_data(self, **kwargs):
-        kwargs["events"] = Event.objects.all()
+        t = self.get_tournament()
+
+        events = Event.objects.all().select_related('identifier')
+        kwargs["events"] = json.dumps([e.serialize() for e in events])
+
+        identifiers = PersonIdentifier.objects.all()
+
+        adjudicators = []
+        for adj in t.relevant_adjudicators.all():
+            try:
+                identifier = identifiers.get(person=adj).identifier
+            except ObjectDoesNotExist:
+                identifier = None
+            adjudicators.append({
+                'id': adj.id, 'name': adj.name, 'identifier': identifier,
+                'institution': adj.institution.serialize if adj.institution else None,
+            })
+        kwargs["adjudicators"] = json.dumps(adjudicators)
+
+        speakers = []
+        for speaker in Speaker.objects.filter(team__tournament=t).select_related('team'):
+            try:
+                identifier = identifiers.get(person=adj).identifier
+            except ObjectDoesNotExist:
+                identifier = None
+            speakers.append({
+                'id': speaker.id, 'name': speaker.name, 'identifier': identifier,
+                'institution': speaker.team.institution.serialize if speaker.team.institution else None,
+                'team': speaker.team.short_name,
+            })
+        kwargs["speakers"] = json.dumps(speakers)
+
+        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.get_tournament())
         return super().get_context_data(**kwargs)
 
 
 class AdminCheckInStatusView(AdministratorMixin, CheckInStatusView):
-    pass
+    scan_view = 'admin-checkin-scan'
 
 
 class AssistantCheckInStatusView(AssistantMixin, CheckInStatusView):
-    pass
+    scan_view = 'assistant-checkin-scan'
 
 
 class PublicCheckInStatusView(PublicTournamentPageMixin, CheckInStatusView):

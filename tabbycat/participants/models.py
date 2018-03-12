@@ -374,6 +374,11 @@ class Speaker(Person):
     def __str__(self):
         return str(self.name)
 
+    def serialize(self):
+        speaker = {'id': self.id, 'name': self.name, 'team': self.team.short_name}
+        speaker['institution'] = self.institution.serialize if self.institution else None
+        return speaker
+
 
 class AdjudicatorManager(models.Manager):
     use_for_related_fields = True

@@ -2,42 +2,24 @@
 
 {% block content %}
 
-  <div class="d-lg-flex justify-content-lg-between">
-
-    <div>
-      <div class="btn-group">
-        <button type="button" class="btn btn-outline-primary">View Missing</button>
-        <button type="button" class="btn btn-outline-primary active">View Present</button>
-      </div>
-      <div class="btn-group">
-        <button type="button" class="btn btn-outline-primary">'Late' Threshold</button>
-      </div>
-    </div>
-
-    <div class="btn-group">
-      <button type="button" class="btn btn-outline-primary active">Sort By Institution</button>
-      <button type="button" class="btn btn-outline-primary">Sort By Name</button>
-      <button type="button" class="btn btn-outline-primary">Sort By Time</button>
-    </div>
-
-  </div>
-
-  <div class="card-columns mt-3">
-    {% for event in events %}
-     <div class="card text-center">
-        <div class="card-header bg-danger text-white h5">
-          NAME here
-        </div>
-        <div class="card-body px-1">
-          <h5 class="card-title">{{ event.identifier.identifier }}</h5>
-          <button>Button to manually check in</button>
-          <p>Maybe also show round availabilities?</p>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Last seen {{ event.time }}</small>
-        </div>
-      </div>
-    {% endfor %}
+  <div id="vueMount">
+    <check-in-status-container :events="events"
+                               :adjudicators="adjudicators"
+                               :speakers="speakers"
+                               :scan-url="scanUrl">
+    </check-in-status-container>
   </div>
 
 {% endblock content %}
+
+{% block js %}
+  <script>
+    window.vueData = {
+      'events': {{ events|safe }},
+      'adjudicators': {{ adjudicators|safe }},
+      'speakers': {{ speakers|safe }},
+      'scanUrl': '{{ scan_url }}'
+    }
+  </script>
+  {{ block.super }}
+{% endblock js %}
