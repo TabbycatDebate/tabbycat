@@ -39,6 +39,13 @@ On the *Scanning* section of Check-ins you can record a particular check-in. Thi
 
 4. The Check-in status page (described below) allows assistants and administrators to manually check-in particular people or entire institutions without needing to know their identifiers.
 
+The Check-In 'Window'
+=====================
+
+Because Check-In events are not explicitly linked to rounds you should consider how long it takes for a check-in to be considered valid. The time of this 'window' in hours can be set in *Setup* > *Configuration* > *Data Entry*.
+
+At tournaments where you want to run a check-in process at the start of each round you may want to set the time to around 2 hours. At tournaments the run check-ins during the start of each day the check-in 'window' (i.e. the time before check-ins expire) should be set at around 12 hours or more — enough time to distinguish between the first check-ins of that day as compared to the last check-ins of the previous day.
+
 Viewing Check-Ins
 =================
 
