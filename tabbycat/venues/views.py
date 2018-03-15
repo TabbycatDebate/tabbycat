@@ -135,7 +135,7 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
                 'subject_content_type': Select(attrs={'data-filter': True}),
                 'subject_id': SelectPrepopulated(data_list=self.subject_choices())
             },
-            'extra': 3
+            'extra': 8
         }
         return formset_factory_kwargs
 
