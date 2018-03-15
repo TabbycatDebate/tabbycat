@@ -200,7 +200,7 @@ names are relevant, or to the team's real name if it is not. #}
             </div>
           {% endif %} {# pref.public_break_categories or admin_page #}
 
-          {% if team.institution %}
+          {% if team.institution and pref.show_team_institutions %}
             <div class="list-group-item">
               <strong>{% trans "Institution:" %}</strong>
               {{ team.institution.name }}
