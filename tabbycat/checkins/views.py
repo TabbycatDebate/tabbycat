@@ -79,20 +79,29 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
         adjudicators = []
         for adj in self.tournament.relevant_adjudicators.all().select_related('institution', 'checkin_identifier'):
+            try:
+                code = adj.checkin_identifier.barcode
+            except ObjectDoesNotExist:
+                code = None
+
             adjudicators.append({
                 'id': adj.id, 'name': adj.name, 'type': 'Adjudicator',
-                'identifier': adj.checkin_identifier.barcode,
+                'identifier': code,
                 'institution': adj.institution.serialize if adj.institution else None,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
+            try:
+                code = speaker.checkin_identifier.barcode
+            except ObjectDoesNotExist:
+                code = None
+
             speakers.append({
                 'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
-                'identifier': speaker.checkin_identifier.barcode,
+                'identifier': code, 'team': speaker.team.short_name,
                 'institution': speaker.team.institution.serialize if speaker.team.institution else None,
-                'team': speaker.team.short_name,
             })
         kwargs["speakers"] = json.dumps(speakers)
 
@@ -120,7 +129,10 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
         venues = []
         for venue in self.tournament.relevant_venues.select_related('checkin_identifier').prefetch_related('venuecategory_set').all():
             item = venue.serialize()
-            item['identifier'] = venue.checkin_identifier.barcode
+            try:
+                item['identifier'] = venue.checkin_identifier.barcode
+            except ObjectDoesNotExist:
+                item['identifier'] = None
             venues.append(item)
         kwargs["venues"] = json.dumps(venues)
 

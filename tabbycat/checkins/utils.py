@@ -72,7 +72,11 @@ def single_checkin(instance, events):
     instance.checked_icon = ''
     instance.checked_in = False
     instance.checked_tooltip = _('Not checked-in')
-    identifier = instance.checkin_identifier
+    try:
+        identifier = instance.checkin_identifier
+    except ObjectDoesNotExist:
+        identifier = None
+
     if identifier:
         instance.time = next((e['time'] for e in events if e['identifier__barcode'] == identifier.barcode), None)
         if instance.time:
