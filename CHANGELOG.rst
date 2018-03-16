@@ -8,7 +8,11 @@ Change Log
 
 - Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
 - Added an automated method for assigning importances to debates using their bracket or 'liveness'
-- Added a 'check-in' functionality for recording the attendance of participants, as well as tracking ballot and room statuses. Includes barcode integrations and methods for translating check-ins into the existing availability methods.
+- Added a 'check-in' functionality
+    - This includes barcode assignment, printing, and scanning. Scanning methods are optimised both for manual entry, entry with barcodes scanners, and for a 'live' scanning view that uses your phone's camera!
+    - This includes new people and venue status pages that show an overview of check-in status and allow for easy manual check-ins; ideal for a roll-calls!. This page can also be made public.
+    - Ballot check-ins have been converted to this new method, and now all printed ballots will contain the barcodes needed to scan them.
+    - Venue check-ins have been added alongside the standard 'person' check-ins to allow you to track a room's status at the start of the day or round-by-round.
 - Quality of life improvements
    - Added a 'liveness' calculator for Open categories in BP
    - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
