@@ -18,14 +18,11 @@
     {% trans "Check-Ins" %}
   </a>
   <div class="dropdown-menu" aria-labelledby="checkinsDrop">
-    <a class="dropdown-item {% if ballot_checkins_nav %}active{% endif %}" href="{% tournamenturl 'results-assistant-ballot-checkin' %}">
-      {% trans "Scan Ballots" %}
-    </a>
     <a class="dropdown-item {% if checkins_scans %}active{% endif %}" href="{% tournamenturl 'assistant-checkin-prescan' %}">
-      {% trans "Scan People" %}
+      {% trans "Scan Identifiers" %}
     </a>
     <a class="dropdown-item {% if checkins_ids %}active{% endif %}" href="{% tournamenturl 'assistant-checkin-identifiers' %}">
-      {% trans "Identifiers" %}
+      {% trans "View Identifiers" %}
     </a>
     <a class="dropdown-item {% if checkins_people_statuses %}active{% endif %}" href="{% tournamenturl 'assistant-people-statuses' %}">
       {% trans "People's Status" %}

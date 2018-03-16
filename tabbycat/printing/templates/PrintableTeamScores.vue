@@ -4,11 +4,11 @@
     <div class="db-flex-item-3 db-flex-row db-bottom-border">
       <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
         <div class="db-flex-item-1">
-          <span class="h6">{{ teamName }}</span>
+          <strong>{{ teamName }}</strong>
           <small>({{ speakersList }})</small>
         </div>
-        <div class="db-flex-static">
-          <h6>{{ titleCasePosition }}</h6>
+        <div class="db-flex-static text-uppercase">
+          {{ titleCasePosition }}
         </div>
       </div>
       <div class="db-padding-horizontal db-flex-static "></div>

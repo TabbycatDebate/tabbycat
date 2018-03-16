@@ -22,15 +22,14 @@ from tournaments.mixins import (CurrentRoundMixin, PublicTournamentPageMixin, Ro
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
-from utils.views import JsonDataResponsePostView, VueTableTemplateView
+from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
-from venues.models import Venue
 
 from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
-from .utils import ballot_checkin_number_left, get_result_status_stats, populate_identical_ballotsub_lists
+from .utils import get_result_status_stats, populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
 
@@ -56,12 +55,13 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
     def _get_draw(self):
         if not hasattr(self, '_draw'):
             self._draw = self.round.debate_set_with_prefetches(
-                    ordering=('room_rank',), results=True, wins=True)
+                    ordering=('room_rank',), results=True, wins=True, check_ins=True)
         return self._draw
 
     def get_table(self):
         draw = self._get_draw()
         table = ResultsTableBuilder(view=self, sort_key="status")
+        table.add_ballot_check_in_columns(draw, key="check_ins")
         table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw)
         table.add_debate_venue_columns(draw, for_admin=True)
@@ -473,118 +473,6 @@ class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
     private URL brings up the same form again with a double-submission error"""
 
     template_name = 'base.html'
-
-
-# ==============================================================================
-# Ballot check-in views
-# ==============================================================================
-
-class DebateBallotCheckinError(Exception):
-    pass
-
-
-class BaseBallotCheckinView(RoundMixin, TemplateView):
-    template_name = 'ballot_checkin.html'
-
-    def get_page_subtitle(self):
-        """Override RoundMixin to allow template subtitle to take precedence."""
-        return ""
-
-    def get_context_data(self, **kwargs):
-        kwargs['ballots_left'] = ballot_checkin_number_left(self.round)
-        venues = Venue.objects.filter(debate__round=self.round,
-                debate__ballot_in=False).prefetch_related('venuecategory_set')
-        kwargs['venue_options'] = venues
-
-        return super().get_context_data(**kwargs)
-
-
-class AdminBallotCheckinView(AdministratorMixin, BaseBallotCheckinView):
-    pass
-
-
-class AssistantBallotCheckinView(AssistantMixin, CurrentRoundMixin, BaseBallotCheckinView):
-    pass
-
-
-class BaseBallotCheckinJsonResponseView(AssistantMixin, RoundMixin, JsonDataResponsePostView):
-
-    def get_debate(self):
-        venue_id = self.request.POST.get('venue')
-
-        if venue_id is None:
-            raise DebateBallotCheckinError(_("There aren't any venues with that name."))
-
-        # TODO: The below errors are all hangovers from when searches were by
-        # name only. They can still in theory happen, if an administrator
-        # changes things (e.g. deletes or reassigns a venue) and the client
-        # doesn't reload the page, so that the client is working on outdated
-        # information. Nonetheless, this workflow needs to be reworked for the
-        # new paradigm of selecting venues from a predefined list, while keeping
-        # the UI textbox-centric.
-
-        try:
-            venue = Venue.objects.get(id=venue_id)
-        except Venue.DoesNotExist:
-            raise DebateBallotCheckinError(_("There aren't any venues with that name."))
-
-        try:
-            debate = Debate.objects.get(round=self.round, venue=venue)
-        except Debate.DoesNotExist:
-            raise DebateBallotCheckinError(_("There wasn't a debate in venue %(venue_name)s "
-                "this round.") % {'venue_name': venue.name})
-        except Debate.MultipleObjectsReturned:
-            raise DebateBallotCheckinError(_("There appear to be multiple debates in venue "
-                "%(venue_name)s this round.") % {'venue_name': venue.name})
-
-        if debate.ballot_in:
-            raise DebateBallotCheckinError(_("The ballot for venue %(venue_name)s has already "
-                "been checked in.") % {'venue_name': venue.name})
-
-        return debate
-
-
-class BallotCheckinGetDetailsView(BaseBallotCheckinJsonResponseView):
-
-    def post_data(self):
-        try:
-            debate = self.get_debate()
-        except DebateBallotCheckinError as e:
-            return {'exists': False, 'message': str(e)}
-
-        return {
-            'exists': True,
-            'venue': debate.venue.name,
-            'venue_id': debate.venue.id,
-            'teams': [team.short_name for team in debate.teams],
-            'num_adjs': len(debate.adjudicators),
-            'adjudicators': [adj.name for adj in debate.adjudicators.voting()],
-            'ballots_left': ballot_checkin_number_left(self.round),
-        }
-
-
-class PostBallotCheckinView(LogActionMixin, BaseBallotCheckinJsonResponseView):
-
-    action_log_type = ActionLogEntry.ACTION_TYPE_BALLOT_CHECKIN
-    action_log_content_object_attr = 'debate'
-
-    def post_data(self):
-        try:
-            self.debate = self.get_debate()
-        except DebateBallotCheckinError as e:
-            return {'success': False, 'message': str(e)}
-
-        self.debate.ballot_in = True
-        self.debate.save()
-
-        self.log_action()
-
-        return {
-            'success': True,
-            'venue': self.debate.venue.name,
-            'matchup': self.debate.matchup,
-            'ballots_left': ballot_checkin_number_left(self.round),
-        }
 
 
 # ==============================================================================

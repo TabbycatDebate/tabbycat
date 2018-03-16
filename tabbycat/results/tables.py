@@ -26,6 +26,23 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         else:
             raise ValueError('Debate has no discernable status')
 
+    def add_ballot_check_in_columns(self, debates, key):
+
+        status_header = {
+            'key': key,
+            'tooltip': _("Whether this debate's ballot has been checked-in"),
+            'icon': "compass",
+        }
+        status_cells = []
+        for debate in debates:
+            cell = {
+                'icon': 'x',
+                'sort': 0,
+                'tooltip': 'none'
+            }
+            status_cells.append(cell)
+        self.add_column(status_header, status_cells)
+
     def add_ballot_status_columns(self, debates, key):
 
         status_header = {

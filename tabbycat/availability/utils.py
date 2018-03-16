@@ -34,13 +34,13 @@ def annotate_availability(queryset, round):
     return queryset
 
 
-def single_checkin(instance, bcodes, events, value_string):
+def single_checkin(instance, events, value_string):
     instance.checked_icon = ''
     instance.checked_in = False
     instance.checked_tooltip = _('Not checked-in')
-    identifier = next((i['identifier'] for i in bcodes if i[value_string] == instance.id), None)
+    identifier = instance.checkin_identifier
     if identifier:
-        instance.time = next((e['time'] for e in events if e['identifier__identifier'] == identifier), None)
+        instance.time = next((e['time'] for e in events if e['identifier__barcode'] == identifier.barcode), None)
         if instance.time:
             instance.checked_in = True
             instance.checked_icon = 'check'
@@ -48,13 +48,13 @@ def single_checkin(instance, bcodes, events, value_string):
     return instance
 
 
-def multi_checkin(team, bcodes, events, value_string, substantives):
+def multi_checkin(team, events, value_string, substantives):
     team.checked_icon = ''
     team.checked_in = False
     team.checked_tooltip = ''
 
     for speaker in team.speaker_set.all():
-        speaker = single_checkin(speaker, bcodes, events, value_string)
+        speaker = single_checkin(speaker, events, value_string)
         if speaker.checked_in:
             team.checked_tooltip += _("%s checked-in at %s. ") % (speaker.name, speaker.time.strftime('%H:%M'))
         else:
@@ -71,15 +71,14 @@ def multi_checkin(team, bcodes, events, value_string, substantives):
     return team
 
 
-def get_checkins(queryset, t, identifier_model, value_string):
-    events = get_unexpired_checkins(t).values('time', 'identifier__identifier')
-    bcodes = identifier_model.objects.values(value_string, 'identifier')
+def get_checkins(queryset, t, value_string):
+    events = get_unexpired_checkins(t).values('time', 'identifier__barcode')
     substantives = t.pref('substantive_speakers')
     for instance in queryset:
         if hasattr(instance, 'use_institution_prefix'):
-            instance = multi_checkin(instance, bcodes, events, value_string, substantives)
+            instance = multi_checkin(instance, events, value_string, substantives)
         else:
-            instance = single_checkin(instance, bcodes, events, value_string)
+            instance = single_checkin(instance, events, value_string)
 
     return queryset
 

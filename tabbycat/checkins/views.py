@@ -14,7 +14,7 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyR
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .models import Event, Identifier, PersonIdentifier, VenueIdentifier
-from .utils import get_unexpired_checkins
+from .utils import create_identifiers, get_unexpired_checkins
 
 
 class CheckInPreScanView(TournamentMixin, TemplateView):
@@ -41,7 +41,7 @@ class CheckInScanView(JsonDataResponsePostView, TournamentMixin):
         barcode_ids = json.loads(self.body)['barcodes']
         for barcode in barcode_ids:
             try:
-                identifier = Identifier.objects.get(identifier=barcode)
+                identifier = Identifier.objects.get(barcode=barcode)
                 event = Event.objects.create(identifier=identifier,
                                              tournament=self.tournament)
             except ObjectDoesNotExist:
@@ -76,22 +76,21 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
     page_title = _("People's Check-In Statuses")
 
     def get_context_data(self, **kwargs):
-        bcodes = PersonIdentifier.objects.values('person_id', 'identifier')
 
         adjudicators = []
-        for adj in self.tournament.relevant_adjudicators.all().select_related('institution'):
-            bcode = next((i['identifier'] for i in bcodes if i['person_id'] == adj.id), None)
+        for adj in self.tournament.relevant_adjudicators.all().select_related('institution', 'checkin_identifier'):
             adjudicators.append({
-                'id': adj.id, 'name': adj.name, 'identifier': bcode, 'type': 'Adjudicator',
+                'id': adj.id, 'name': adj.name, 'type': 'Adjudicator',
+                'identifier': adj.checkin_identifier.barcode,
                 'institution': adj.institution.serialize if adj.institution else None,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
         speakers = []
-        for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution'):
-            bcode = next((i['identifier'] for i in bcodes if i['person_id'] == speaker.id), None)
+        for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
             speakers.append({
-                'id': speaker.id, 'name': speaker.name, 'identifier': bcode, 'type': 'Speaker',
+                'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
+                'identifier': speaker.checkin_identifier.barcode,
                 'institution': speaker.team.institution.serialize if speaker.team.institution else None,
                 'team': speaker.team.short_name,
             })
@@ -118,12 +117,10 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
     page_title = _("Venue's Check-In Statuses")
 
     def get_context_data(self, **kwargs):
-        bcodes = VenueIdentifier.objects.values('venue_id', 'identifier')
-
         venues = []
-        for venue in self.tournament.relevant_venues.prefetch_related('venuecategory_set').all():
+        for venue in self.tournament.relevant_venues.select_related('checkin_identifier').prefetch_related('venuecategory_set').all():
             item = venue.serialize()
-            item['identifier'] = next((i['identifier'] for i in bcodes if i['venue_id'] == venue.id), None)
+            item['identifier'] = venue.checkin_identifier.barcode
             venues.append(item)
         kwargs["venues"] = json.dumps(venues)
 
@@ -160,7 +157,7 @@ class SegregatedCheckinsMixin(TournamentMixin):
 
 class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
     template_name = 'checkin_ids.html'
-    page_title = _('Identifiers Overview')
+    page_title = _('Make Identifiers')
     page_emoji = '📛'
 
     def get_context_data(self, **kwargs):
@@ -204,16 +201,6 @@ class AdminCheckInGenerateView(AdministratorMixin, LogActionMixin,
         elif self.kwargs["kind"] == "venues":
             return ActionLogEntry.ACTION_TYPE_CHECKIN_VENUES_GENERATE
 
-    def create_ids(self, model_to_make, items_to_check):
-        kind = model_to_make.instance_attr
-        for item in list(items_to_check):
-            try:
-                model_to_make.objects.get(**{kind: item})
-            except ObjectDoesNotExist:
-                model_to_make.objects.create(**{kind: item})
-
-        return
-
     # Providing tournament_slug_url_kwarg isn't working for some reason; so use:
     def get_redirect_url(self, *args, **kwargs):
         return reverse_tournament('admin-checkin-identifiers', self.tournament)
@@ -222,11 +209,11 @@ class AdminCheckInGenerateView(AdministratorMixin, LogActionMixin,
         t = self.tournament
 
         if self.kwargs["kind"] == "speakers":
-            self.create_ids(PersonIdentifier, Speaker.objects.filter(team__tournament=t))
+            create_identifiers(PersonIdentifier, Speaker.objects.filter(team__tournament=t))
         elif self.kwargs["kind"] == "adjudicators":
-            self.create_ids(PersonIdentifier, t.adjudicator_set.all())
+            create_identifiers(PersonIdentifier, t.adjudicator_set.all())
         elif self.kwargs["kind"] == "venues":
-            self.create_ids(VenueIdentifier, t.venue_set.all())
+            create_identifiers(VenueIdentifier, t.venue_set.all())
 
         messages.success(request, _("Generated identifiers for %s" % self.kwargs["kind"]))
         self.log_action()  # Need to call explicitly

@@ -4,6 +4,7 @@ import random
 import string
 
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
@@ -54,3 +55,13 @@ def get_unexpired_checkins(tournament):
     events = Event.objects.filter(tournament=tournament,
         time__gte=time_window).select_related('identifier').order_by('time')
     return events
+
+
+def create_identifiers(model_to_make, items_to_check):
+    kind = model_to_make.instance_attr
+    for item in list(items_to_check):
+        try:
+            model_to_make.objects.get(**{kind: item})
+        except ObjectDoesNotExist:
+            model_to_make.objects.create(**{kind: item})
+    return

@@ -25,7 +25,7 @@ export default {
       } else {
         tt += ' (no category) '
       }
-      tt += ' with identifier of ' + entity.identifier
+      tt += ' with identifier of ' + entity.barcode
       return tt
     },
   },

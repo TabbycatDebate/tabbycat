@@ -5,6 +5,8 @@ from django.views.generic.base import TemplateView
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
+from checkins.models import DebateIdentifier
+from checkins.utils import create_identifiers
 from draw.models import Debate, DebateTeam
 from options.utils import use_team_code_names
 from participants.models import Adjudicator
@@ -183,6 +185,10 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
         draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
         ballots_dicts = []
 
+        # Create the DebateIdentifiers for the ballots if needed
+        create_identifiers(DebateIdentifier, draw)
+        identifiers = DebateIdentifier.objects.values('debate_id', 'barcode')
+
         # Force translation before JSON serialization
         sides_and_positions = [(side, [str(pos) for pos in positions])
             for side, positions in side_and_position_names(self.tournament)]
@@ -194,6 +200,8 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
                 debate_dict['venue'] = {'display_name': debate.venue.display_name}
             else:
                 debate_dict['venue'] = None
+
+            debate_dict['barcode'] = next((i['barcode'] for i in identifiers if i['debate_id'] == debate.id), None)
 
             debate_dict['debateTeams'] = []
             for side, (side_name, positions) in zip(self.tournament.sides, sides_and_positions):

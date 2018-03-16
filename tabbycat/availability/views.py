@@ -15,7 +15,6 @@ from . import utils
 
 from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
-from checkins.models import PersonIdentifier, VenueIdentifier
 from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
@@ -204,7 +203,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
     update_view = 'availability-update-teams'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('speaker_set')
+        return super().get_queryset().prefetch_related('speaker_set').prefetch_related('speaker_set__checkin_identifier')
 
     @staticmethod
     def add_description_columns(table, teams):
@@ -212,7 +211,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return utils.get_checkins(queryset, t, PersonIdentifier, 'person_id')
+        return utils.get_checkins(queryset, t, 'person_id')
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
@@ -222,13 +221,16 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     update_view = 'availability-update-adjudicators'
     share_key = 'share_adjs'
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('checkin_identifier')
+
     @staticmethod
     def add_description_columns(table, adjudicators):
         table.add_adjudicator_columns(adjudicators)
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return utils.get_checkins(queryset, t, PersonIdentifier, 'person_id')
+        return utils.get_checkins(queryset, t, 'person_id')
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
@@ -239,7 +241,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
     share_key = 'share_venues'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('venuecategory_set')
+        return super().get_queryset().select_related('checkin_identifier').prefetch_related('venuecategory_set')
 
     @staticmethod
     def add_description_columns(table, venues):
@@ -253,7 +255,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return utils.get_checkins(queryset, t, VenueIdentifier, 'venue_id')
+        return utils.get_checkins(queryset, t, 'venue_id')
 
 
 # ==============================================================================

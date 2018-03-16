@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 def generate_identifier():
     new_id = ''.join([random.choice(digits) for n in range(5)])
-    if Identifier.objects.filter(identifier=new_id).count() == 0:
+    if Identifier.objects.filter(barcode=new_id).count() == 0:
         return new_id
     else:
         return generate_identifier()
@@ -22,10 +22,10 @@ class Identifier(models.Model):
     instance_attr = None
 
     validate_alphanumeric = RegexValidator(r'^[0-9]{5}$',
-        message=_("The identifier must be exactly 6 alphanumeric characters."))
-    identifier = models.CharField(unique=True, max_length=5,
+        message=_("The barcode must be exactly 6 alphanumeric characters."))
+    barcode = models.CharField(unique=True, max_length=5,
         validators=[validate_alphanumeric], default=generate_identifier,
-        verbose_name=_("identifier"))
+        verbose_name=_("barcode"))
 
     @property
     def owner(self):
@@ -87,5 +87,5 @@ class Event(models.Model):
 
     def serialize(self):
         event = {'id': self.id, 'time': self.time.__str__(),
-                 'identifier': self.identifier.identifier}
+                 'identifier': self.identifier.barcode}
         return event

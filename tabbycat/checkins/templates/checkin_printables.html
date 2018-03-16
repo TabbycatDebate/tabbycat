@@ -21,7 +21,7 @@
 
 {% block content %}
 
-  {% for id in identifiers %}
+  {% for identifier in identifiers %}
 
     {% if forloop.first or forloop.counter0|divisibleby:24 %}
       {% if not forloop.first %}</div></div></div>{% endif %}
@@ -31,10 +31,11 @@
     <div class="col-3 p-2">
       <div class="card text-center">
         <div class="card-body p-0">
-          <img class="barcode-placeholder" id="{{ id.identifier }}" title="{{ id.owner }}">
+          <img id="{{ identifier.barcode }}" title="{{ identifier.owner }}"
+               class="barcode-placeholder">
         </div>
         <div class="card-footer">
-          <small>{{ id.owner }}, {{ id.identifier }}</small>
+          <small>{{ identifier.owner }}, {{ identifier.barcode }}</small>
         </div>
       </div>
     </div>

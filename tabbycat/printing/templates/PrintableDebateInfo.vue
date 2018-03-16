@@ -12,16 +12,16 @@
               <span v-if="i !== 0">&amp;</span>
               <strong>{{ da.adjudicator.name }}</strong>
               <span v-if="da.position === 'c'">
-                (Chair, {{ getAdjudicatorInstitution(da) }})
+                <small>(Chair, {{ getAdjudicatorInstitution(da) }})</small>
               </span>
               <span v-if="da.position === 'o'">
-                (Solo Chair, {{ getAdjudicatorInstitution(da) }})
+                <small>(Solo Chair, {{ getAdjudicatorInstitution(da) }})</small>
               </span>
               <span v-if="da.position === 'p'">
-                (Panellist, {{ getAdjudicatorInstitution(da) }})
+                <small>(Panellist, {{ getAdjudicatorInstitution(da) }})</small>
               </span>
               <span v-if="da.position === 't'">
-                (Trainee, {{ getAdjudicatorInstitution(da) }})
+                <small>(Trainee, {{ getAdjudicatorInstitution(da) }})</small>
               </span>
             </span>
 
@@ -60,17 +60,18 @@
             <div class="db-flex-item-2 db-flex-row">
               <div v-for="motion in motionsAccountingForBlanks"
                    class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text">
-                <span class="db-fill-in">{{ motion.seq }}</span>
+                <span class="db-fill-in"><strong>{{ motion.seq }}</strong></span>
               </div>
             </div>
           </div>
           <div class="db-item-gutter"></div>
         </template>
 
-        <div class="db-flex-item-6 db-flex-row db-align-vertical-center">
-          <template v-for="(motion, index) in roundInfo.motions">
-            {{ motion.seq }}: {{ motion.text }}<br>
-          </template>
+        <div class="db-flex-item-6 db-flex-column pt-2 pb-2">
+          <div class="db-flex-item db-align-vertical-center"
+               v-for="(motion, index) in roundInfo.motions">
+            <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
+          </div>
         </div>
 
       </section>
@@ -80,7 +81,7 @@
     <div class="db-item-gutter"></div>
 
     <div class="db-flex-static db-bordered">
-      <img :id="'111'" class="barcode-placeholder">
+      <img :id="ballot.barcode" class="barcode-placeholder">
     </div>
 
   </div>
@@ -111,11 +112,15 @@ export default {
       height = 105 // Blow out the height to the big veto box has space
     }
     $(".barcode-placeholder").each(function() {
-      var code = $(this).attr("id");
+      var code = $(this).attr("id")
       $(this).JsBarcode(code, {
-        width: 2,
+        width: 3,
         height: height,
-        displayValue: false
+        text: code,
+        fontSize: 14,
+        textPosition: 'top',
+        textMargin: 3,
+        textAlign: 'right',
       })
     })
   },
