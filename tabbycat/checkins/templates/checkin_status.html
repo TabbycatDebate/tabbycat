@@ -7,6 +7,7 @@
                                :tournament-slug="tournamentSlug"
                                :adjudicators="adjudicators"
                                :speakers="speakers"
+                               :venues="venues"
                                :scan-url="scanUrl">
     </check-in-status-container>
   </div>
@@ -18,8 +19,9 @@
     window.vueData = {
       'events': {{ events|safe }},
       'tournamentSlug': '{{ tournament_slug }}',
-      'adjudicators': {{ adjudicators|safe }},
-      'speakers': {{ speakers|safe }},
+      'adjudicators': {% if adjudicators %}{{ adjudicators|safe }}{% else %}null{% endif %},
+      'speakers': {% if speakers %}{{ speakers|safe }}{% else %}null{% endif %},
+      'venues': {% if venues %}{{ venues|safe }}{% else %}null{% endif %},
       'scanUrl': '{{ scan_url }}'
     }
   </script>

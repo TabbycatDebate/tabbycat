@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     path('status/',
-        views.PublicCheckInStatusView.as_view(),
+        views.PublicCheckInPeopleStatusView.as_view(),
         name='public-checkin-status'),
 ]

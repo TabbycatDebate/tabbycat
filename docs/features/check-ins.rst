@@ -30,6 +30,8 @@ On the *Scanning* section of Check-ins you can record a particular check-in. Thi
 
 2. If you have purchased barcode scanners and configured them as USB keyboards they should then be compatible with this page. I.E. upon page load the cursor should be positioned in the input field, and any scanned barcodes should populate it with the specified number, issue the check-in, and then clear the box for the next scan.
 
+    .. note:: Barcode scanners are probably cheaper than you think. A perfectly serviceable model should be around $20 USD or less although a cursory Google search might at first turn up models that are many times that amount. If you are a curious tab director, or are involved in a tournament with a little spare money, having just one or two around for critical tasks can be highly valuable.
+
 3. If your device has a (web)cam you can use the Scan Using Camera button. Any barcodes put in front of the camera's video stream will be scanned into the form.
 
     .. image:: images/checkin_live.png
@@ -55,4 +57,6 @@ On the *People Statuses* section of Check-ins you can view who has or has not be
 
 The blue "tick" boxes allow you to manually check-in people and/or entire institutions (for *People*) or venues and/or venue groups (for *Venues*) , without the need to scan their identifiers. This style of check-in is designed for use an auditorium roll-call type situation where you might be running through a list of people to the room or identifying absences on a per-institution basis.
 
-    .. note:: Viewing ballot check-ins is done on the *Results* page for that round.
+    .. note:: A public version of this check-in status page can be enabled under *Setup* > *Configuration* > *Public Features*
+
+Viewing ballot check-ins is done on the *Results* page for that round.

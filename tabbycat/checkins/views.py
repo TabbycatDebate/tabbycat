@@ -9,7 +9,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.models import Speaker
 from utils.misc import reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
@@ -59,23 +59,30 @@ class AssistantCheckInScanView(AssistantMixin, CheckInScanView):
     pass
 
 
-class CheckInStatusView(TournamentMixin, TemplateView):
+class BaseCheckInStatusView(TournamentMixin, TemplateView):
     template_name = 'checkin_status.html'
-    page_title = _('Check In Statuses')
-    page_emoji = '⌚️'
+    scan_view = False
 
     def get_context_data(self, **kwargs):
-
         events = get_unexpired_checkins(self.tournament)
         kwargs["events"] = json.dumps([e.serialize() for e in events])
+        if self.scan_view:
+            kwargs["scan_url"] = reverse_tournament(self.scan_view, self.tournament)
+        return super().get_context_data(**kwargs)
 
+
+class CheckInPeopleStatusView(BaseCheckInStatusView):
+    page_emoji = '⌚️'
+    page_title = _("People's Check-In Statuses")
+
+    def get_context_data(self, **kwargs):
         bcodes = PersonIdentifier.objects.values('person_id', 'identifier')
 
         adjudicators = []
         for adj in self.tournament.relevant_adjudicators.all().select_related('institution'):
             bcode = next((i['identifier'] for i in bcodes if i['person_id'] == adj.id), None)
             adjudicators.append({
-                'id': adj.id, 'name': adj.name, 'identifier': bcode,
+                'id': adj.id, 'name': adj.name, 'identifier': bcode, 'type': 'Adjudicator',
                 'institution': adj.institution.serialize if adj.institution else None,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
@@ -84,26 +91,52 @@ class CheckInStatusView(TournamentMixin, TemplateView):
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution'):
             bcode = next((i['identifier'] for i in bcodes if i['person_id'] == speaker.id), None)
             speakers.append({
-                'id': speaker.id, 'name': speaker.name, 'identifier': bcode,
+                'id': speaker.id, 'name': speaker.name, 'identifier': bcode, 'type': 'Speaker',
                 'institution': speaker.team.institution.serialize if speaker.team.institution else None,
                 'team': speaker.team.short_name,
             })
         kwargs["speakers"] = json.dumps(speakers)
 
-        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.tournament)
         return super().get_context_data(**kwargs)
 
 
-class AdminCheckInStatusView(AdministratorMixin, CheckInStatusView):
+class AdminCheckInPeopleStatusView(AdministratorMixin, CheckInPeopleStatusView):
     scan_view = 'admin-checkin-scan'
 
 
-class AssistantCheckInStatusView(AssistantMixin, CheckInStatusView):
+class AssistantCheckInPeopleStatusView(AssistantMixin, CheckInPeopleStatusView):
     scan_view = 'assistant-checkin-scan'
 
 
-class PublicCheckInStatusView(PublicTournamentPageMixin, CheckInStatusView):
+class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CacheMixin,
+                                    CheckInPeopleStatusView):
     public_page_preference = 'public_checkins'
+
+
+class CheckInVenuesStatusView(BaseCheckInStatusView):
+    page_emoji = '👜'
+    page_title = _("Venue's Check-In Statuses")
+
+    def get_context_data(self, **kwargs):
+        bcodes = VenueIdentifier.objects.values('venue_id', 'identifier')
+
+        venues = []
+        for venue in self.tournament.relevant_venues.prefetch_related('venuecategory_set').all():
+            bcode = next((i['identifier'] for i in bcodes if i['venue_id'] == venue.id), None)
+            item = venue.serialize()
+            item['identifier'] = bcode
+            venues.append(item)
+        kwargs["venues"] = json.dumps(venues)
+
+        return super().get_context_data(**kwargs)
+
+
+class AdminCheckInVenuesStatusView(AdministratorMixin, CheckInVenuesStatusView):
+    scan_view = 'admin-checkin-scan'
+
+
+class AssistantCheckInVenuesStatusView(AssistantMixin, CheckInVenuesStatusView):
+    scan_view = 'assistant-checkin-scan'
 
 
 class SegregatedCheckinsMixin(TournamentMixin):
@@ -211,8 +244,9 @@ class CheckInPrintablesView(SegregatedCheckinsMixin, TemplateView):
             kwargs["identifiers"] = self.speakers_with_barcodes().order_by('person__name')
         elif self.kwargs["kind"] == "adjudicators":
             kwargs["identifiers"] = self.adjs_with_barcodes().order_by('person__name')
-        elif self.kwargs["kind"] == "venue":
-            kwargs["identifiers"] = VenueIdentifier.objects.all()
+        elif self.kwargs["kind"] == "venues":
+            venues = self.tournament.relevant_venues
+            kwargs["identifiers"] = VenueIdentifier.objects.filter(venue__in=venues)
 
         return super().get_context_data(**kwargs)
 

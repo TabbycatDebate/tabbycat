@@ -10,9 +10,12 @@ urlpatterns = [
         views.AdminCheckInScanView.as_view(),
         name='admin-checkin-scan'),
 
-    path('statuses/',
-        views.AdminCheckInStatusView.as_view(),
-        name='admin-checkin-statuses'),
+    path('statuses/people',
+        views.AdminCheckInPeopleStatusView.as_view(),
+        name='admin-people-statuses'),
+    path('status/venues',
+        views.AdminCheckInVenuesStatusView.as_view(),
+        name='admin-venues-statuses'),
 
     path('identifiers/',
         views.AdminCheckInIdentifiersView.as_view(),

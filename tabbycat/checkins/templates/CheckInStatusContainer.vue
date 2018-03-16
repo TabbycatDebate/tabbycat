@@ -3,38 +3,49 @@
   <div>
 
     <div class="d-lg-flex justify-content-lg-between mb-3">
-      <div class="btn-group">
+
+      <div class="btn-group mb-md-0 mb-3">
         <button v-for="(optionState, optionKey) in this.filterByPresence" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('filterByPresence', optionKey, !optionState)">
           {{ optionKey }}
         </button>
       </div>
-      <div class="btn-group">
+
+      <div class="btn-group mb-md-0 mb-3" v-if="!isForVenues">
         <button v-for="(optionState, optionKey) in this.filterByType" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('filterByType', optionKey, !optionState)">
           {{ optionKey }}
         </button>
       </div>
-      <div class="btn-group">
-        <button v-for="(optionState, optionKey) in this.sortBy" type="button"
+
+      <div class="btn-group mb-md-0 mb-3">
+        <button v-for="(optionState, optionKey) in this.sortByGroup" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
-                @click="setListContext('sortBy', optionKey, !optionState)">
+                @click="setListContext('sortByGroup', optionKey, !optionState)">
           {{ optionKey }}
         </button>
       </div>
+
+    </div>
+
+    <div class="alert alert-info" v-if="entitiesByPresence.length === 0">
+      No matching <span v-if="isForVenues">venues</span><span v-else>people</span> found.
+    </div>
+    <div class="alert alert-info">
+      This page will live-update with new check-ins.
     </div>
 
     <transition-group :name="mainTransitions" tag="div">
-      <div v-for="(people, grouper) in peopleBySortingSetting"
+      <div v-for="(entity, grouper) in entitiesBySortingSetting"
            :key="grouper" class="card mt-3">
 
         <div class="card-header px-2 py-1">
           <div class="row">
             <div class="col h5 mb-0 py-2">{{ grouper }}</div>
-            <div class="col-auto">
-              <button class="btn-info btn-sm mt-1" @click="checkInPeople(people)">
+            <div class="col-auto" v-if="scanUrl">
+              <button class="btn-success btn-sm mt-1" @click="checkInEntity(entity)">
                 Check-In All <strong>✓</strong>
               </button>
             </div>
@@ -44,26 +55,26 @@
         <div class="card-body pl-2 pt-2 p-0">
           <transition-group :name="mainTransitions" tag="div" class="row no-gutters">
 
-            <div v-for="person in people":key="person.id"
-                 class="col-3 check-in-person">
+            <div v-for="entity in entity":key="entity.id"
+                 class="col-lg-3 col-md-4 col-6 check-in-person">
               <div class="row no-gutters h6 mb-0 pb-2 pr-2 p-0 text-white">
 
-                <div :class="['col p-2', person.status ? 'bg-info' : 'bg-warning']"
-                     data-toggle="tooltip" :title="getToolTipForPerson(person)">
-                  {{ person.name }}
+                <div :class="['col p-2', entity.status ? 'bg-info' : 'bg-secondary']"
+                     data-toggle="tooltip" :title="getToolTipForEntity(entity)">
+                  {{ entity.name }}
                 </div>
-                <a v-if="!person.status && person.identifier"
-                   class="col-auto p-2 btn-info text-center"
+                <a v-if="scanUrl && !entity.status && entity.identifier"
+                   class="col-auto p-2 btn-success text-center"
                    data-toggle="tooltip" title="Click to check-in manually"
-                   @click="checkInIdentifiers([person.identifier])">
+                   @click="checkInIdentifiers([entity.identifier])">
                   ✓
                 </a>
-                <div v-if="!person.identifier" class="col-auto p-2 btn-danger text-center"
+                <div v-if="scanUrl && !entity.identifier" class="col-auto p-2 btn-danger text-center"
                      data-toggle="tooltip" title="This person does not have a check-in identifier so can't be checked in">
                   ✖
                 </div>
-                <div v-if="person.status" class="col-auto p-2 btn-info text-center">
-                  {{ lastSeenTime(person.status.time) }}
+                <div v-if="entity.status" class="col-auto p-2 btn-info text-center">
+                  {{ lastSeenTime(entity.status.time) }}
                 </div>
 
               </div>
@@ -75,10 +86,6 @@
       </div>
     </transition-group>
 
-    <div class="alert alert-info" v-if="peopleByPresence.length === 0">
-      No matching people found.
-    </div>
-
   </div>
 
 </template>
@@ -87,20 +94,17 @@
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
+import PeopleStatusMixin from './PeopleStatusMixin.vue'
+import VenuesStatusMixin from './VenuesStatusMixin.vue'
+
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin, WebSocketMixin],
+  mixins: [AjaxMixin, WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],
   data: function() {
     return {
       filterByPresence: {
-        'Both': true, 'Missing': false, 'Present': false,
-      },
-      filterByType: {
-        'Both': true, 'Adjudicators': false, 'Speakers': false,
-      },
-      sortBy: {
-        'By Institution': true, 'By Name': false, 'By Time': false
+        'Absent': false, 'Present': false, 'All': true
       },
       enableAnimations: true,
       sockets: ['checkins']
@@ -108,11 +112,18 @@ export default {
   },
   props: {
     'events': Array,
-    'adjudicators': Array,
-    'speakers': Array,
     'scanUrl': String,
   },
   computed: {
+    isForVenues: function() {
+      return this.venues === null ? false : true
+    },
+    filterByType: function() {
+      return this.isForVenues ? this.venuesFilterByType : this.peopleFilterByType
+    },
+    sortByGroup: function() {
+      return this.isForVenues ? this.venuesSortByGroup : this.peopleSortByGroup
+    },
     mainTransitions: function() {
       // Don't want the entire list to animate when changing filter effects
       if (this.enableAnimations) {
@@ -121,72 +132,30 @@ export default {
         return ''
       }
     },
-    annotatedSpeakers: function() {
-      var events = this.events
-       _.forEach(this.speakers, function(person) {
-        person["status"] = _.find(events, ['identifier', person.identifier])
-      })
-      return this.speakers
+    entitiesByType: function() {
+      return this.isForVenues ? this.venuesByType : this.peopleByType
     },
-    annotatedAdjudicators: function() {
-      var events = this.events
-      _.forEach(this.adjudicators, function(person) {
-        person["status"] = _.find(events, ['identifier', person.identifier])
-      })
-      return this.adjudicators
-    },
-    peopleByType: function() {
-      var people = []
-      // Filter by speaker type
-      if (this.filterByType['Both'] || this.filterByType['Adjudicators']) {
-        _.forEach(this.annotatedAdjudicators, function(adjudicator) {
-          people.push(adjudicator)
-        })
-      }
-      if (this.filterByType['Both'] || this.filterByType['Speakers']) {
-        _.forEach(this.annotatedSpeakers, function(speaker) {
-          people.push(speaker)
-        })
-      }
-      return people
-    },
-    peopleByPresence: function() {
+    entitiesByPresence: function() {
       // Filter by status
-      if (this.filterByPresence["Both"]) {
-        return this.peopleByType
+      if (this.filterByPresence["All"]) {
+        return this.entitiesByType
       } else {
-        var filterByStatus = this.filterByPresence["Missing"]
-        return _.filter(this.peopleByType, function(p) {
+        var filterByStatus = this.filterByPresence["Absent"]
+        return _.filter(this.entitiesByType, function(p) {
           return _.isUndefined(p["status"]) === filterByStatus
         })
       }
     },
-    peopleByName: function() {
-      var sortedByName = _.sortBy(this.peopleByPresence, ['name'])
-      return _.groupBy(sortedByName, function(p) {
+    entitiesSortedByName: function() {
+      return _.sortBy(this.entitiesByPresence, ['name'])
+    },
+    entitiesByName: function() {
+      return _.groupBy(this.entitiesSortedByName, function(p) {
         return p.name[0]
       })
     },
-    peopleByInstitution: function() {
-      var sortedByName = _.sortBy(this.peopleByPresence, ['name'])
-      var sortedByInstitution = _.sortBy(sortedByName, function(p) {
-        if (p.institution === null) {
-          return "Unaffiliated"
-        } else {
-          return p.institution.name
-        }
-      })
-      return _.groupBy(sortedByInstitution, function(p) {
-        if (p.institution === null) {
-          return "Unaffiliated"
-        } else {
-          return p.institution.name
-        }
-      })
-    },
-    peopleByTime: function() {
-      var sortedByName = _.sortBy(this.peopleByPresence, ['name'])
-      var sortedByTime = _.sortBy(sortedByName, function(p) {
+    entitiesByTime: function() {
+      var sortedByTime = _.sortBy(this.entitiesSortedByName, function(p) {
         if (_.isUndefined(p["status"])) {
           return "2999-01-01 01:01:01.00000+00:00"
         } else {
@@ -208,15 +177,18 @@ export default {
         }
       })
     },
-    peopleBySortingSetting: function() {
-      if (this.sortBy['By Name'] === true) {
-        return this.peopleByName
-      } else if(this.sortBy['By Institution'] === true) {
+    entitiesBySortingSetting: function() {
+      if (this.sortByGroup['By Category'] === true) {
+        return this.venuesByCategory
+      } else if (this.sortByGroup['By Priority'] === true) {
+        return this.venuesByPriority
+      } else if (this.sortByGroup['By Name'] === true) {
+        return this.entitiesByName
+      } else if(this.sortByGroup['By Institution'] === true) {
         return this.peopleByInstitution
-      } else if(this.sortBy['By Time'] === true) {
-        return this.peopleByTime
+      } else if(this.sortByGroup['By Time'] === true) {
+        return this.entitiesByTime
       }
-      return this.peopleByName
     },
   },
   methods: {
@@ -224,13 +196,16 @@ export default {
       var paddedTime = ("0" + timeRead).slice(-2)
       return paddedTime
     },
-    checkInPeople: function(people) {
-      var identifiersForPeople = _.map(people, 'identifier')
-      this.checkInIdentifiers(identifiersForPeople)
+    checkInEntity: function(entity) {
+      var identifiersForEntities = _.map(entity, 'identifier')
+      this.checkInIdentifiers(identifiersForEntities)
     },
     lastSeenTime: function(timeString) {
       var time = new Date(timeString)
       return this.clock(time.getHours()) + ":" + this.clock(time.getMinutes())
+    },
+    getToolTipForEntity: function(entity) {
+      return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
     },
     checkInIdentifiers: function(barcodeIdentifiers) {
       var message = 'the checkin status of ' + barcodeIdentifiers
@@ -254,16 +229,6 @@ export default {
       this.$nextTick(function() {
         self.enableAnimations = true
       })
-    },
-    getToolTipForPerson: function(person) {
-      var tt = person.name
-      if (person.institution === null) {
-        tt += ' of Unaffiliated'
-      } else {
-        tt += ' of ' + person.institution.name
-      }
-      tt += ' with identifier of ' + person.identifier
-      return tt
     },
     handleSocketMessage: function(payload, socketLabel) {
       console.log('handleSocketMessage', socketLabel, ' : ', payload)

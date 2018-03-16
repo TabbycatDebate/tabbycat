@@ -106,8 +106,10 @@ def get_menu_highlight(request):
             menu['checkins_nav'] = True
             if "scan" in path:
                 menu['checkins_scans'] = True
-            elif "status" in path:
-                menu['checkins_statuses'] = True
+            elif "status" and "people" in path:
+                menu['checkins_people_statuses'] = True
+            elif "status" and "venues" in path:
+                menu['checkins_venues_statuses'] = True
             elif "identifiers" in path:
                 menu['checkins_ids'] = True
 
