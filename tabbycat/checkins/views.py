@@ -78,22 +78,34 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
     def get_context_data(self, **kwargs):
 
         adjudicators = []
-        for adj in self.tournament.relevant_adjudicators.all().select_related('institution', 'checkin_identifier'):
-            adjudicators.append({
-                'id': adj.id, 'name': adj.name, 'type': 'Adjudicator',
-                'identifier': adj.checkin_identifier.barcode,
+        for adj in self.tournament.relevant_adjudicators.select_related('institution', 'checkin_identifier'):
+            adj_dict = {
+                'id': adj.id,
+                'name': adj.name,
+                'type': 'Adjudicator',
                 'institution': adj.institution.serialize if adj.institution else None,
-            })
+            }
+            try:
+                adj_dict['identifier'] = adj.checkin_identifier.barcode
+            except ObjectDoesNotExist:
+                pass
+            adjudicators.append(adj_dict)
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
         speakers = []
         for speaker in Speaker.objects.filter(team__tournament=self.tournament).select_related('team', 'team__institution', 'checkin_identifier'):
-            speakers.append({
-                'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
-                'identifier': speaker.checkin_identifier.barcode,
+            speaker_dict = {
+                'id': speaker.id,
+                'name': speaker.name,
+                'type': 'Speaker',
                 'institution': speaker.team.institution.serialize if speaker.team.institution else None,
                 'team': speaker.team.short_name,
-            })
+            }
+            try:
+                speaker_dict['identifier'] = speaker.checkin_identifier.barcode
+            except ObjectDoesNotExist:
+                pass
+            speakers.append(speaker_dict)
         kwargs["speakers"] = json.dumps(speakers)
 
         return super().get_context_data(**kwargs)
@@ -120,7 +132,10 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
         venues = []
         for venue in self.tournament.relevant_venues.select_related('checkin_identifier').prefetch_related('venuecategory_set').all():
             item = venue.serialize()
-            item['identifier'] = venue.checkin_identifier.barcode
+            try:
+                item['identifier'] = venue.checkin_identifier.barcode
+            except ObjectDoesNotExist:
+                pass
             venues.append(item)
         kwargs["venues"] = json.dumps(venues)
 
