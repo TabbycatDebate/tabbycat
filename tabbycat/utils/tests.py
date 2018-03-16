@@ -2,6 +2,7 @@ from contextlib import contextmanager
 import json
 import logging
 
+from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.urls import reverse
 from django.test import Client, modify_settings, override_settings, tag, TestCase
@@ -73,6 +74,41 @@ class TournamentTestsMixin:
         return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
 
 
+class TournamentViewDoesLoadTest(TournamentTestsMixin):
+    """For testing that a given view_name will merely load"""
+
+    def test_response(self):
+        response = self.get_response()
+        self.assertEqual(response.status_code, 200)
+
+
+class AssistantTournamentViewDoesLoadTest(TournamentTestsMixin):
+    """For testing that a given view_name will merely load properly with auth"""
+
+    def test_authenticated_response(self):
+        get_user_model().objects.create_user('testb', 'b@gmail.com', 'pwd',
+                                             is_staff=True)
+        self.client.login(username='testb', password='pwd')
+
+        self.assertEqual(self.get_response().status_code, 200)
+
+    def test_unauthenticated_response(self):
+        self.assertEqual(self.get_response().status_code, 302) # Redirect to login
+
+
+class AdminTournamentViewDoesLoadTest(TournamentTestsMixin):
+    """For testing that a given view_name will merely load properly with auth"""
+
+    def test_authenticated_response(self):
+        get_user_model().objects.create_superuser('testa', 'a@a.com', 'pwd')
+        self.client.login(username='testa', password='pwd')
+
+        self.assertEqual(self.get_response().status_code, 200)
+
+    def test_unauthenticated_response(self):
+        self.assertEqual(self.get_response().status_code, 302) # Redirect to login
+
+
 class ConditionalTournamentTestsMixin(TournamentTestsMixin):
     """Mixin that provides tests for testing a view class that is conditionally
     shown depending on whether a user preference is set.
@@ -114,7 +150,7 @@ class ConditionalTournamentTestsMixin(TournamentTestsMixin):
         self.assertEqual(response.status_code, 403)
 
 
-class ConditionalTournamentViewBasicCheckMixin(ConditionalTournamentTestsMixin):
+class ConditionalTournamentViewLoadTest(ConditionalTournamentTestsMixin):
     """Simply checks the view and only fails if an error is thrown"""
 
     def validate_response(self, response):

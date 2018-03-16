@@ -4,7 +4,7 @@
 
   <div class="list-group-item d-inline-block">
     <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
-      class="tournament-title d-flex justify-content-between align-items-center">
+       class="tournament-title d-flex justify-content-between align-items-center">
       <div>
         <img src="{% static 'logo.svg' %}" class="d-md-block d-none" width="24" height="24" alt="">
         <img src="{% static 'logo.svg' %}" class="d-md-none" width="20" height="20" alt="">
@@ -28,14 +28,17 @@
         <div class="list-group-item tournament-areas-title" data-parent="#titleh">
           {{ t }}
         </div>
-        <a href="{% url 'tournament-admin-home' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+        <a href="{% url 'tournament-admin-home' tournament_slug=t.slug %}"
+           class="list-group-item" data-parent="#titleh">
           <i data-feather="settings"></i>{% blocktrans trimmed %}Admin Area{% endblocktrans %}
         </a>
-        <a href="{% url 'tournament-assistant-home' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
+        <a href="{% url 'tournament-assistant-home' tournament_slug=t.slug %}"
+           class="list-group-item" data-parent="#titleh">
           <i data-feather="pocket"></i>{% blocktrans trimmed %}Assistant Area{% endblocktrans %}
         </a>
-        <a href="{% url 'tournament-public-index' tournament_slug=t.slug %}" class="list-group-item" data-parent="#titleh">
-          <i data-feather="globe"></i>Public Area
+        <a href="{% url 'tournament-public-index' tournament_slug=t.slug %}"
+           class="list-group-item" data-parent="#titleh">
+          <i data-feather="globe"></i>{% trans "Public Area" %}
         </a>
       {% endfor %}
     </div>
@@ -75,7 +78,8 @@
          data-parent="#rh{{ r.id }}">
         <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}
       </a>
-      <a href="{% url 'admin:index' %}" target="_blank" class="list-group-item" data-parent="#setuph">
+      <a href="{% url 'admin:index' %}" target="_blank"
+         class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="edit"></i>{% trans "Edit Database" %}
       </a>
     </div>
@@ -103,9 +107,38 @@
     </div>
   {% endif %}
 
+
+  <div class="list-group-item d-inline-block">
+    <a href="#checkinh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
+       class="{% if checkins_nav %}active{% endif %}">
+       <i data-feather="compass"></i>
+       <span class="d-none d-md-inline">{% trans "Check-Ins" %}</span>
+       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+       <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
+    </a>
+    <div class="collapse {% if checkins_nav %}show{% endif %}" id="checkinh">
+      <a href="{% tournamenturl 'admin-checkin-identifiers' %}"
+         class="list-group-item {% if checkins_ids %}active{% endif %}" data-parent="#checkinh">
+        <i data-feather="menu"></i>{% trans "Identifiers" %}
+      </a>
+      <a href="{% tournamenturl 'admin-checkin-prescan' %}"
+         class="list-group-item {% if checkins_scans %}active{% endif %}" data-parent="#checkinh">
+        <i data-feather="instagram"></i>{% trans "Scan Identifiers" %}
+      </a>
+      <a href="{% tournamenturl 'admin-people-statuses' %}"
+         class="list-group-item {% if checkins_people_statuses %}active{% endif %}" data-parent="#checkinh">
+        <i data-feather="watch"></i>{% trans "People's Status" %}
+      </a>
+      <a href="{% tournamenturl 'admin-venues-statuses' %}"
+         class="list-group-item {% if checkins_venues_statuses %}active{% endif %}" data-parent="#checkinh">
+        <i data-feather="shopping-bag"></i>{% trans "Room's Status" %}
+      </a>
+    </div>
+  </div>
+
   <div class="list-group-item d-inline-block">
     <a href="#feedh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
-       class="collapsed {% if feedback_nav %}active{% endif %}">
+       class="{% if feedback_nav %}active{% endif %}">
       <i data-feather="message-circle"></i>
       <span class="d-none d-md-inline">{% trans "Feedback" %}</span>
       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
@@ -116,19 +149,19 @@
         <i data-feather="maximize"></i>{% trans "Overview" %}
       </a>
       <a class="list-group-item {% if feedback_latest_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-latest' %}" data-parent="#feedh">
-        <i data-feather="clock"></i>Latest
+        <i data-feather="clock"></i>{% trans "Latest" %}
       </a>
       <a class="list-group-item {% if feedback_source_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-by-source' %}" data-parent="#feedh">
-        <i data-feather="phone-outgoing"></i>Find by Source
+        <i data-feather="phone-outgoing"></i>{% trans "Find by Source" %}
       </a>
       <a class="list-group-item {% if feedback_target_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-by-target' %}" data-parent="#feedh">
-        <i data-feather="phone-incoming"></i>Find by Target
+        <i data-feather="phone-incoming"></i>{% trans "Find by Target" %}
       </a>
       <a class="list-group-item {% if feedback_progress_nav %}active{% endif %}" href="{% tournamenturl 'feedback_progress' %}" data-parent="#feedh">
-        <i data-feather="x-circle"></i>Unsubmitted
+        <i data-feather="x-circle"></i>{% trans "Unsubmitted" %}
       </a>
       <a class="list-group-item" href="{% tournamenturl 'adjfeedback-add-index' %}">
-        <i data-feather="plus-circle"></i>Add Feedback
+        <i data-feather="plus-circle"></i>{% trans "Add Feedback" %}
       </a>
     </div>
   </div>
@@ -202,7 +235,7 @@
               </a>
             {% endfor %}
             <a class="list-group-item {% if break_adjudicators_nav %}active{% endif %}" href="{% tournamenturl 'breakqual-adjudicators' %}">
-              <i data-feather="shield"></i>Adjudicators
+              <i data-feather="shield"></i>{% trans "Adjudicators" %}
             </a>
           </div>
 

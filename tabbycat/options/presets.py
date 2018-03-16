@@ -382,3 +382,8 @@ class TabRelease(PreferencesPreset):
     public_features__public_results            = True
     public_features__public_breaking_teams     = True
     public_features__public_breaking_adjs      = True
+    # Disable
+    public_features__public_checkins           = False
+    public_features__public_team_standings     = False
+    public_features__public_draw               = False
+    public_features__public_break_categories   = False

@@ -1,6 +1,7 @@
 """Functions that prefetch data for efficiency."""
 
 from adjallocation.models import DebateAdjudicator
+from checkins.utils import get_checkins
 from draw.models import DebateTeam
 from tournaments.models import Tournament
 
@@ -60,6 +61,10 @@ def populate_confirmed_ballots(debates, motions=False, results=False):
 
     if results:
         populate_results(confirmed_ballots)
+
+
+def populate_checkins(debates, tournament):
+    get_checkins(debates, tournament)
 
 
 def populate_results(ballotsubs):

@@ -8,17 +8,6 @@ urlpatterns = [
         views.AssistantResultsEntryView.as_view(),
         name='results-assistant-round-list'),
 
-    # Ballot check-in
-    path('checkin/',
-        views.AssistantBallotCheckinView.as_view(),
-        name='results-assistant-ballot-checkin'),
-    path('round/<int:round_seq>/checkin/detail/',
-        views.BallotCheckinGetDetailsView.as_view(),
-        name='results-ballot-checkin-details'),
-    path('round/<int:round_seq>/checkin/post/',
-        views.PostBallotCheckinView.as_view(),
-        name='results-ballot-checkin-post'),
-
     # Ballots
     path('ballots/<int:pk>/edit/',
         views.AssistantEditBallotSetView.as_view(),

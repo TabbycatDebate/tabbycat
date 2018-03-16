@@ -8,14 +8,14 @@
       <form method="POST" action="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
         {% csrf_token %}
         <button class="btn btn-primary " type="submit">
-          {% trans "Check In All Breaking Adjs" %}
+          {% trans "Set All Breaking Adjs as Available" %}
         </button>
       </form>
     {% else %}
       <form method="POST" action="{% roundurl 'availability-checkin-all' %}">
         {% csrf_token %}
         <button class="btn btn-primary " type="submit">
-          {% trans "Check In Everything" %}
+          {% trans "Set Everything as Available" %}
         </button>
       </form>
       {% if round.prev %}
@@ -23,7 +23,7 @@
           {% csrf_token %}
           <button class="btn btn-primary " type="submit">
             {% blocktrans trimmed with prev_round=round.prev.abbreviation %}
-              Copy from {{ prev_round }}
+              Copy Availability from {{ prev_round }}
             {% endblocktrans %}
           </button>
         </form>

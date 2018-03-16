@@ -105,6 +105,7 @@ vueComponents['TablesContainer'] = TablesContainer
 import DiversityContainer from  '../../participants/templates/DiversityContainer.vue'
 vueComponents['DiversityContainer'] = DiversityContainer
 
+
 //------------------------------------------------------------------------------
 // Vue Transations Setup
 //------------------------------------------------------------------------------

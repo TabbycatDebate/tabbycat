@@ -174,11 +174,6 @@ def get_result_status_stats(round):
     for item in query:
         stats[item['result_status']] = item['result_status__count']
 
-    # separately, count ballot-in debates and subtract from the 'None' count
-    ballot_in = round.debate_set.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count()
-    stats['B'] = ballot_in
-    stats[Debate.STATUS_NONE] -= ballot_in
-
     return stats
 
 
@@ -203,10 +198,6 @@ def populate_identical_ballotsub_lists(ballotsubs):
 
     for ballotsub in ballotsubs:
         ballotsub.identical_ballotsub_versions.sort()
-
-
-def ballot_checkin_number_left(round):
-    return Debate.objects.filter(round=round, ballot_in=False).count()
 
 
 _ORDINALS = {

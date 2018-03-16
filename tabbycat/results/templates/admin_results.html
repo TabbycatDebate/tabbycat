@@ -5,8 +5,8 @@
   <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-primary">
     <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
   </a>
-  <a class="btn btn-outline-primary " href="{% roundurl 'results-ballot-checkin' round %}">
-    {% trans "Check In Ballots" %}
+  <a class="btn btn-outline-primary " href="{% tournamenturl 'admin-checkin-prescan' %}">
+    {% trans "Check-In Ballots" %}
   </a>
 {% endblock %}
 

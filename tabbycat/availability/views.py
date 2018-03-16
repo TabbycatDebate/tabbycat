@@ -15,10 +15,11 @@ from . import utils
 
 from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
+from checkins.utils import get_checkins
 from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
-from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
 from utils.mixins import AdministratorMixin
@@ -31,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
     template_name = 'availability_index.html'
-    page_title = gettext_lazy("Check-Ins")
+    page_title = gettext_lazy("Availability")
     page_emoji = '📍'
 
     def get_context_data(self, **kwargs):
@@ -165,25 +166,32 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         return self.model.objects.filter(q)
 
     def get_table(self):
-        round = self.round
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
-        queryset = utils.annotate_availability(self.get_queryset(), round)
+        queryset = utils.annotate_availability(self.get_queryset(), self.round)
+        self.annotate_checkins(queryset, self.tournament)
 
         table.add_column({'key': 'active', 'title': _("Active Now")}, [{
             'component': 'check-cell',
             'checked': inst.available,
             'sort': inst.available,
             'id': inst.id,
-            'prev': inst.prev_available if round.prev else False,
+            'prev': inst.prev_available if self.round.prev else False,
+            'checked_in': inst.checked_in,
             'type': 0,
         } for inst in queryset])
 
-        if round.prev:
-            title = _("Active in %(prev_round)s") % {'prev_round': round.prev.abbreviation}
+        if self.round.prev:
+            title = _("Active in %(prev_round)s") % {'prev_round': self.round.prev.abbreviation}
             table.add_column({'key': 'active', 'title': title}, [{
                 'sort': inst.prev_available,
                 'icon': 'check' if inst.prev_available else ''
             } for inst in queryset])
+
+        checked_in_header = {'key': "tournament", 'title': _('Checked-In')}
+        checked_in_data = [{
+            'sort': inst.checked_in, 'icon': inst.checked_icon, 'tooltip': inst.checked_tooltip,
+        } for inst in queryset]
+        table.add_column(checked_in_header, checked_in_data)
 
         self.add_description_columns(table, queryset)
         return table
@@ -196,11 +204,15 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
     update_view = 'availability-update-teams'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('speaker_set')
+        return super().get_queryset().prefetch_related('speaker_set').prefetch_related('speaker_set__checkin_identifier')
 
     @staticmethod
     def add_description_columns(table, teams):
         table.add_team_columns(teams)
+
+    @staticmethod
+    def annotate_checkins(queryset, t):
+        return get_checkins(queryset, t)
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
@@ -210,9 +222,16 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     update_view = 'availability-update-adjudicators'
     share_key = 'share_adjs'
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('checkin_identifier')
+
     @staticmethod
     def add_description_columns(table, adjudicators):
         table.add_adjudicator_columns(adjudicators)
+
+    @staticmethod
+    def annotate_checkins(queryset, t):
+        return get_checkins(queryset, t)
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
@@ -223,7 +242,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
     share_key = 'share_venues'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('venuecategory_set')
+        return super().get_queryset().select_related('checkin_identifier').prefetch_related('venuecategory_set')
 
     @staticmethod
     def add_description_columns(table, venues):
@@ -234,6 +253,10 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         table.add_column(_("Display Name (for the draw)"), [v.display_name for v in venues])
         table.add_column(_("Categories"), [v.cats for v in venues])
         table.add_column(_("Priority"), [v.priority for v in venues])
+
+    @staticmethod
+    def annotate_checkins(queryset, t):
+        return get_checkins(queryset, t)
 
 
 # ==============================================================================

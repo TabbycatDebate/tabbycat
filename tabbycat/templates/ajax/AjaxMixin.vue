@@ -1,7 +1,8 @@
 <script>
 export default {
   methods: {
-    ajaxSave: function (url, payload, message, completeFunction, failFunction, returnPayload) {
+    ajaxSave: function (url, payload, message, completeFunction, failFunction,
+                        returnPayload, showErrorModal = true) {
       var self = this
       var dataPayload = JSON.stringify(payload)
       $.ajax({
@@ -11,7 +12,9 @@ export default {
         contentType: "application/json",
         dataType: "json",
         error: function(hxr, textStatus, errorThrown) {
-          self.ajaxError(message, hxr.responseText, textStatus, errorThrown)
+          if (showErrorModal === true) {
+            self.ajaxError(message, hxr.responseText, textStatus, errorThrown)
+          }
           if (failFunction !== null) {
             failFunction(payload, returnPayload)
           }
@@ -45,9 +48,14 @@ export default {
           "refresh this page to ensure the data is up to date."
         )
       } else {
+        var error = "of a server error" // Default error
+        var response = JSON.parse(responseText)
+        if (typeof(response.message) !== 'undefined') {
+          error = response.message // Get error text from response if provided
+        }
         $('#modalAlert').find('.modal-body').text(
-          "Failed to save a change to " + message + " because of a server " +
-          "error. You should now refresh this page to ensure " +
+          "Failed to save a change to " + message + " because " + error +
+          ". You should now refresh this page to ensure " +
           "the data is up to date and then retry the action. If the problem " +
           "persists please get in touch with the developers."
         )

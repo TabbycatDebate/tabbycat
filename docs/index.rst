@@ -55,6 +55,7 @@ formats too. If you're looking for a general overview of the software, check out
    features/adjudicator-allocation
    features/backups
    features/breaks
+   features/check-ins
    features/data-entry
    features/draw-generation
    features/draw-generation-bp

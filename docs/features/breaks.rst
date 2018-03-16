@@ -171,7 +171,7 @@ Creating draws for break rounds
 ===============================
 
 Creating a draw for a break round proceeds as normal, except that the team
-check-in process is skipped. Instead, when you visit the check-ins page for that
+availability process is skipped. Instead, when you visit the availability page for that
 round it will have automatically determined which teams should be debating based
 upon the determined break for that category. Once a draw has been generated it
 will then use the relevant break ranks to create the matchups (ie 1st-breaking

@@ -11,14 +11,14 @@
         </div>
 
         <div class="btn-group" v-for="(bc, index) in categories">
-          <button class="btn btn-secondary">
+          <button class="btn btn-secondary" v-if="categories.length > 1">
             {{ bc.name }}
           </button>
           <button @click="massSelect(true, bc.id)" class="btn btn-primary">
-            <i data-feather="check-circle"></i> All
+            <i data-feather="check-circle"></i> Set All
           </button>
           <button @click="massSelect(false, bc.id)" class="btn btn-primary">
-            <i data-feather="x-circle"></i> All
+            <i data-feather="x-circle"></i> Set None
           </button>
         </div>
 
@@ -27,13 +27,26 @@
           <form v-if="roundInfo.break === 'True' && roundInfo.model === 'participants.Adjudicator'"
                 :action="urls.breakingAdjs" method="post">
             <button class="btn btn-primary" type="submit">
-              {{ translations["Check In All Breaking"] }}
+              {{ gettext("Set All Breaking as Available") }}
             </button>
           </form>
-          <button v-if="roundInfo.seq > 1" @click="copyFromPrevious"
-                  class="btn btn-primary" type="button">
-            {{ translations["Copy from Previous"] }}
-          </button>
+          <div class="btn-group">
+            <button v-if="roundInfo.seq > 1" @click="copyFromPrevious"
+                    class="btn btn-primary" type="button" data-toggle="tooltip"
+                    :title="gettext('Set all the availabilities to exactly match what they were in the previous round.')">
+              <i data-feather="repeat"></i> {{ gettext("Match") }} R{{ roundInfo.seq }}
+            </button>
+            <button @click="setFromCheckIns(true)"
+                    class="btn btn-primary" type="button" data-toggle="tooltip"
+                    :title="gettext('Set all availabilities to exactly match check-ins.')">
+              <i data-feather="repeat"></i> {{ gettext("Match Check-Ins") }}
+            </button>
+            <button @click="setFromCheckIns(false)"
+                    class="btn btn-primary" type="button" data-toggle="tooltip"
+                    :title="gettext('Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities.')">
+              <i data-feather="corner-up-right"></i> {{ gettext("Copy Check-Ins") }}
+            </button>
+          </div>
         </template>
 
         <auto-save-counter :css="'btn-md'"></auto-save-counter>
@@ -95,6 +108,19 @@ export default {
     copyFromPrevious: function() {
       _.forEach(this.tablesData[0].data, function(row) {
         row[0].checked = row[0].prev
+      })
+      this.saveChecks(0)
+    },
+    setFromCheckIns: function(match) {
+      _.forEach(this.tablesData[0].data, function(row) {
+        if (match) {
+          row[0].checked = row[0].checked_in
+        } else {
+          // Only update for those checked (i.e. don't overrwrite existing)
+          if (row[0].checked_in) {
+            row[0].checked = row[0].checked_in
+          }
+        }
       })
       this.saveChecks(0)
     },

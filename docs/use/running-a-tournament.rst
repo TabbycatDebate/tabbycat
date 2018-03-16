@@ -6,11 +6,11 @@ Running a Tournament
 
 Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`.
 
-This is all done from an admin interface (*i.e.*, by the tab director or adjudication core member). In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top of the left-hand menu, while round-specific pages (check-ins, draw, display, motions, and results) are in dropdown's organised by each round;s abbreviation.
+This is all done from an admin interface (*i.e.*, by the tab director or adjudication core member). In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top of the left-hand menu, while round-specific pages (availability, draw, display, motions, and results) are in dropdown's organised by each round;s abbreviation.
 
 The basic workflow for each round is:
 
-#. :ref:`Check-in the teams, adjudicators, and venues present <check-ins>`
+#. :ref:`Mark the teams, adjudicators, and venues present as available <availability>`
 #. :ref:`Generate the draw <generating-the-draw>` and allocate the adjudicators
 #. :ref:`Show/release the draw <releasing-the-draw>`
 #. :ref:`Release/enter <releasing-the-motions>` the motions
@@ -18,10 +18,10 @@ The basic workflow for each round is:
 #. :ref:`Enter results <entering-results>`
 #. :ref:`Advance to the next round <advancing-round>`
 
-.. _check-ins:
+.. availability:
 
-Check-ins
-=========
+Availability
+============
 
 **Set availability.** For each round, you need to set the venue, team and adjudicator availability. If any of those are not marked as available they will not be used within the draw; so this feature is mostly useful for when adjudicators or venues are only available for certain rounds.
 

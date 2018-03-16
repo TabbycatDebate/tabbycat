@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block content %}
+
+  <div class="row">
+
+    {% for check_key, check_info in check_in_info.items %}
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-0">{{ check_info.title }}</h5>
+          </div>
+          <div class="list-group list-group-flush">
+
+            <div class="list-group-item">
+              <div class="d-flex justify-content-end">
+                <span class="mr-auto">{% trans "With identifiers" %}</span>
+                <strong>{{ check_info.in }}/{{ check_info.total }}</strong>
+              </div>
+              {% include "components/progress-bar.html" with value=check_info.in total=check_info.total type="info" %}
+            </div>
+
+            {% if check_info.in > 0 %}
+              {% if user_role == "admin" %}
+                {% tournamenturl "admin-checkin-print" kind=check_key as url %}
+              {% else %}
+                {% tournamenturl "assistant-checkin-print" kind=check_key as url %}
+              {% endif %}
+              {% trans "View as barcodes" as text %}
+              {% include "components/item-action.html" with type="primary" blank=True %}
+            {% endif %}
+
+            {% if check_info.in != check_info.total and user_role == "admin" %}
+              {% if check_info.in > 0 %}
+                {% trans "Generate missing identifiers" as text %}
+              {% else %}
+                {% trans "Generate all identifiers" as text %}
+              {% endif %}
+              <div class="list-item-group">
+                <form action={% tournamenturl "admin-checkin-generate" kind=check_key %} method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary btn-block">{{ text }}</button>
+                </form>
+              </div>
+            {% endif %}
+
+            {% if user_role == "assistant" and check_info.in == 0 %}
+              {% trans "There are no identifiers available to view. An admin will need to generate them." as text %}
+              {% include "components/item-info.html" with type="info" %}
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+
+{% endblock content %}

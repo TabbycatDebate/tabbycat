@@ -83,7 +83,9 @@ class TournamentMixin(TabbycatPageTitlesMixin):
                 return reverse_tournament(self.tournament_redirect_pattern_name,
                         self.tournament, args=args, kwargs=kwargs)
             except NoReverseMatch:
+                logger.warning("No Reverse Match for given tournament_slug_url_kwarg")
                 pass
+
         return super().get_redirect_url(*args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):

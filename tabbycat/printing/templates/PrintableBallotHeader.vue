@@ -18,7 +18,7 @@
       <div class="db-flex-static db-align-vertical-end">
         <h2>Venue:</h2>
         <span class="db-padding-horizontal db-fill-in"
-              style="width: 200px; margin: 0 3px 0 5px; display: inline-block">
+              style="width: 185px; margin: 0 3px 0 5px; display: inline-block">
         </span>
       </div>
     </template>
