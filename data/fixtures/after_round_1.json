@@ -1178,7 +1178,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1195,7 +1194,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1212,7 +1210,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1229,7 +1226,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1246,7 +1242,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1263,7 +1258,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1280,7 +1274,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1297,7 +1290,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1314,7 +1306,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1331,7 +1322,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1348,7 +1338,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1365,7 +1354,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -3326,6 +3314,7 @@
     "fields": {
         "reference": "Custom Team Name",
         "short_reference": "Custom Team Name",
+        "code_name": "",
         "short_name": "Custom Team Name",
         "long_name": "Custom Team Name",
         "institution": 1,
@@ -3344,6 +3333,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Caltech 2",
         "long_name": "California Institute of Technology 2",
         "institution": 1,
@@ -3362,6 +3352,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Caltech 3",
         "long_name": "California Institute of Technology 3",
         "institution": 1,
@@ -3380,6 +3371,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Columbia 1",
         "long_name": "Columbia University 1",
         "institution": 2,
@@ -3398,6 +3390,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Cornell 1",
         "long_name": "Cornell University 1",
         "institution": 3,
@@ -3416,6 +3409,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Harvard 1",
         "long_name": "Harvard University 1",
         "institution": 4,
@@ -3434,6 +3428,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Harvard 2",
         "long_name": "Harvard University 2",
         "institution": 4,
@@ -3452,6 +3447,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Johns Hopkins 1",
         "long_name": "Johns Hopkins University 1",
         "institution": 5,
@@ -3470,6 +3466,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "MIT 1",
         "long_name": "Massachusetts Institute of Technology 1",
         "institution": 6,
@@ -3488,6 +3485,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "MIT 2",
         "long_name": "Massachusetts Institute of Technology 2",
         "institution": 6,
@@ -3506,6 +3504,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Princeton 1",
         "long_name": "Princeton University 1",
         "institution": 7,
@@ -3524,6 +3523,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Princeton 2",
         "long_name": "Princeton University 2",
         "institution": 7,
@@ -3542,6 +3542,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Stanford 1",
         "long_name": "Stanford University 1",
         "institution": 8,
@@ -3560,6 +3561,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Stanford 2",
         "long_name": "Stanford University 2",
         "institution": 8,
@@ -3578,6 +3580,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Stanford 3",
         "long_name": "Stanford University 3",
         "institution": 8,
@@ -3596,6 +3599,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Berkeley 1",
         "long_name": "University of California, Berkeley 1",
         "institution": 9,
@@ -3614,6 +3618,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Chicago 1",
         "long_name": "University of Chicago 1",
         "institution": 10,
@@ -3632,6 +3637,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Chicago 2",
         "long_name": "University of Chicago 2",
         "institution": 10,
@@ -3650,6 +3656,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Chicago 3",
         "long_name": "University of Chicago 3",
         "institution": 10,
@@ -3668,6 +3675,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Pennsylvania 1",
         "long_name": "University of Pennsylvania 1",
         "institution": 11,
@@ -3686,6 +3694,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Pennsylvania 2",
         "long_name": "University of Pennsylvania 2",
         "institution": 11,
@@ -3704,6 +3713,7 @@
     "fields": {
         "reference": "Special Name",
         "short_reference": "Special Name",
+        "code_name": "",
         "short_name": "Special Name",
         "long_name": "Special Name",
         "institution": 13,
@@ -3722,6 +3732,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Yale 2",
         "long_name": "Yale University 2",
         "institution": 13,
@@ -3740,6 +3751,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Yale 3",
         "long_name": "Yale University 3",
         "institution": 13,
