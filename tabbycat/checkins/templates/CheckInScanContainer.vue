@@ -1,8 +1,8 @@
 <template>
 
-  <div class="list-group mt-3">
+  <div class="list-group mt-md-2">
 
-    <div class="list-group-item">
+    <div class="list-group-item" v-if="!liveScanning">
       <input v-model.string="barcode" autofocus :placeholder="placeholderText"
              type="number" pattern="[0-9]*" inputmode="numeric"
              step="1" class="form-control" :disabled="processing">
@@ -124,12 +124,12 @@ export default {
 
           if (result.box) {
             Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx,
-                                       {color: "#663da0", lineWidth: 2});
+                                       {color: "#663da0", lineWidth: 4});
           }
 
           if (result.codeResult && result.codeResult.code) {
             Quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, drawingCtx,
-                                       {color: '#00bf8a', lineWidth: 3});
+                                       {color: '#00bf8a', lineWidth: 8});
           }
 
         }
