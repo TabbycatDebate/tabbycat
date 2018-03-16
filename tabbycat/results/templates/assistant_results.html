@@ -49,38 +49,34 @@
 
 {% block content %}
 
-  <div class="card mb-3">
-    <div class="card-body text-center pb-1">
-      <div class="progress">
-
-        <div class="progress-bar bg-danger" role="progressbar"
-             style="width: {% percentage stats.none stats.total %}%;"
-             data-toggle="tooltip" title="{% trans "Unknown" %}">
-          <i data-feather="x"></i>&nbsp;&nbsp;{{ stats.none }}
-        </div>
-        <div class="progress-bar bg-primary" role="progressbar"
-             style="width: {% percentage stats.ballot_in stats.total %}%;"
-             data-toggle="tooltip" title="{% trans "Checked In" %}">
-          <i data-feather="inbox"></i>&nbsp;&nbsp;{{ stats.ballot_in }}
-        </div>
-        <div class="progress-bar bg-info" role="progressbar"
-             style="width: {% percentage stats.draft stats.total %}%"
-             data-toggle="tooltip" title="{% trans "Unconfirmed" %} ">
-          <i data-feather="circle"></i>&nbsp;&nbsp;{{ stats.draft }}
-        </div>
-        <div class="progress-bar bg-success" role="progressbar"
-             style="width: {% percentage stats.confirmed stats.total %}%"
-             data-toggle="tooltip" title="{% trans "Confirmed" %}">
-          <i data-feather="check"></i>&nbsp;&nbsp;{{ stats.confirmed }}
-        </div>
-        {% if pref.enable_postponements %}
-          <div class="progress-bar bg-secondary" role="progressbar"
-               style="width: {% percentage stats.postponed stats.total %}%"
-            {{ stats.postponed }} {% trans "Postponed" %}&nbsp;&nbsp;<i data-feather="pause"></i>
+  <div class="card-deck">
+    <div class="card mb-3">
+      <div class="card-body text-center pb-1">
+        <div class="progress">
+          <div class="progress-bar bg-danger" role="progressbar"
+               style="width: {% percentage stats.none stats.total %}%;"
+               data-toggle="tooltip" title="{% trans "Unknown" %}">
+            <i data-feather="x"></i>&nbsp;&nbsp;{{ stats.none }}
           </div>
-        {% endif %}
+          <div class="progress-bar bg-info" role="progressbar"
+               style="width: {% percentage stats.draft stats.total %}%"
+               data-toggle="tooltip" title="{% trans "Unconfirmed" %} ">
+            <i data-feather="circle"></i>&nbsp;&nbsp;{{ stats.draft }}
+          </div>
+          <div class="progress-bar bg-success" role="progressbar"
+               style="width: {% percentage stats.confirmed stats.total %}%"
+               data-toggle="tooltip" title="{% trans "Confirmed" %}">
+            <i data-feather="check"></i>&nbsp;&nbsp;{{ stats.confirmed }}
+          </div>
+          {% if pref.enable_postponements %}
+            <div class="progress-bar bg-secondary" role="progressbar"
+                 style="width: {% percentage stats.postponed stats.total %}%"
+              {{ stats.postponed }} {% trans "Postponed" %}&nbsp;&nbsp;<i data-feather="pause"></i>
+            </div>
+          {% endif %}
+        </div>
+        <h6 class="pt-3 text-center text-secondary">{% trans "Ballot Statuses" %}</h6>
       </div>
-      <h6 class="pt-3 text-center text-secondary">{% trans "Ballot Statuses" %}</h6>
     </div>
   </div>
 

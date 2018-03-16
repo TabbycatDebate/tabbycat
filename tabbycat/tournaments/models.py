@@ -362,7 +362,7 @@ class Round(models.Model):
         from adjallocation.models import DebateAdjudicator
         from draw.models import DebateTeam
         from participants.models import Speaker
-        from results.prefetch import populate_confirmed_ballots, populate_wins
+        from results.prefetch import populate_confirmed_ballots, populate_wins, populate_checkins
 
         debates = self.debate_set.all()
         if filter_kwargs:
@@ -399,6 +399,8 @@ class Round(models.Model):
             populate_confirmed_ballots(debates, motions=True, results=True)
         if wins:
             populate_wins(debates)
+        if check_ins:
+            populate_checkins(debates, self.tournament)
 
         return debates
 

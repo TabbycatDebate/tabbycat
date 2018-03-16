@@ -5,6 +5,7 @@ import string
 
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import gettext as _
 
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
@@ -65,3 +66,52 @@ def create_identifiers(model_to_make, items_to_check):
         except ObjectDoesNotExist:
             model_to_make.objects.create(**{kind: item})
     return
+
+
+def single_checkin(instance, events):
+    instance.checked_icon = ''
+    instance.checked_in = False
+    instance.checked_tooltip = _('Not checked-in')
+    identifier = instance.checkin_identifier
+    if identifier:
+        instance.time = next((e['time'] for e in events if e['identifier__barcode'] == identifier.barcode), None)
+        if instance.time:
+            instance.checked_in = True
+            instance.checked_icon = 'check'
+            instance.checked_tooltip = _('Checked-in at %s') % instance.time.strftime('%H:%M')
+    return instance
+
+
+def multi_checkin(team, events, t):
+    team.checked_icon = ''
+    team.checked_in = False
+    team.checked_tooltip = ''
+
+    for speaker in team.speaker_set.all():
+        speaker = single_checkin(speaker, events)
+        if speaker.checked_in:
+            team.checked_tooltip += _("%s checked-in at %s. ") % (speaker.name, speaker.time.strftime('%H:%M'))
+        else:
+            team.checked_tooltip += _("%s is missing. ") % speaker.name
+
+    check_ins = sum(s.checked_in for s in team.speaker_set.all())
+    substantives = t.pref('substantive_speakers')
+    if check_ins >= substantives:
+        team.checked_in = True
+        team.checked_icon = 'check'
+    elif check_ins == substantives - 1:
+        team.checked_in = True
+        team.checked_icon = 'shuffle'
+
+    return team
+
+
+def get_checkins(queryset, t):
+    events = get_unexpired_checkins(t).values('time', 'identifier__barcode')
+    for instance in queryset:
+        if hasattr(instance, 'use_institution_prefix'):
+            instance = multi_checkin(instance, events, t)
+        else:
+            instance = single_checkin(instance, events)
+
+    return queryset

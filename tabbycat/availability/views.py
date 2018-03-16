@@ -15,10 +15,11 @@ from . import utils
 
 from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
+from checkins.utils import get_checkins
 from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
-from actionlog.models import ActionLogEntry
 from tournaments.mixins import RoundMixin
 from utils.tables import TabbycatTableBuilder
 from utils.mixins import AdministratorMixin
@@ -211,7 +212,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return utils.get_checkins(queryset, t, 'person_id')
+        return get_checkins(queryset, t)
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
@@ -230,7 +231,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return utils.get_checkins(queryset, t, 'person_id')
+        return get_checkins(queryset, t)
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
@@ -255,7 +256,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return utils.get_checkins(queryset, t, 'venue_id')
+        return get_checkins(queryset, t)
 
 
 # ==============================================================================

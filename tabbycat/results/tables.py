@@ -13,10 +13,8 @@ class ResultsTableBuilder(TabbycatTableBuilder):
     def get_status_meta(self, debate):
         if any(team.type == Team.TYPE_BYE for team in debate.teams):
             return "fast-forward", "", 5, _("Bye Debate")
-        elif debate.result_status == Debate.STATUS_NONE and not debate.ballot_in:
+        elif debate.result_status == Debate.STATUS_NONE:
             return "x", "text-danger", 0, _("No Ballot")
-        elif debate.result_status == Debate.STATUS_NONE and debate.ballot_in:
-            return "inbox", "text-primary", 1, _("Ballot is In")
         elif debate.result_status == Debate.STATUS_DRAFT:
             return "circle", "text-info", 2, _("Ballot is Unconfirmed")
         elif debate.result_status == Debate.STATUS_CONFIRMED:
@@ -36,9 +34,9 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         status_cells = []
         for debate in debates:
             cell = {
-                'icon': 'x',
-                'sort': 0,
-                'tooltip': 'none'
+                'icon': 'check' if debate.checked_in else 'x',
+                'sort': 1 if debate.checked_in else 0,
+                'tooltip': debate.checked_tooltip
             }
             status_cells.append(cell)
         self.add_column(status_header, status_cells)

@@ -3,10 +3,8 @@ import logging
 from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError, transaction
 from django.db.models import Prefetch
-from django.utils.translation import gettext as _
 
 from availability.models import RoundAvailability
-from checkins.utils import get_unexpired_checkins
 from participants.models import Adjudicator, Team
 from venues.models import Venue
 
@@ -30,55 +28,6 @@ def annotate_availability(queryset, round):
         instance.available = len(instance.availability) > 0
         if round.prev:
             instance.prev_available = len(instance.prev_availability) > 0
-
-    return queryset
-
-
-def single_checkin(instance, events, value_string):
-    instance.checked_icon = ''
-    instance.checked_in = False
-    instance.checked_tooltip = _('Not checked-in')
-    identifier = instance.checkin_identifier
-    if identifier:
-        instance.time = next((e['time'] for e in events if e['identifier__barcode'] == identifier.barcode), None)
-        if instance.time:
-            instance.checked_in = True
-            instance.checked_icon = 'check'
-            instance.checked_tooltip = _('Checked-in at %s') % instance.time.strftime('%H:%M')
-    return instance
-
-
-def multi_checkin(team, events, value_string, substantives):
-    team.checked_icon = ''
-    team.checked_in = False
-    team.checked_tooltip = ''
-
-    for speaker in team.speaker_set.all():
-        speaker = single_checkin(speaker, events, value_string)
-        if speaker.checked_in:
-            team.checked_tooltip += _("%s checked-in at %s. ") % (speaker.name, speaker.time.strftime('%H:%M'))
-        else:
-            team.checked_tooltip += _("%s is missing. ") % speaker.name
-
-    check_ins = sum(s.checked_in for s in team.speaker_set.all())
-    if check_ins >= substantives:
-        team.checked_in = True
-        team.checked_icon = 'check'
-    elif check_ins == substantives - 1:
-        team.checked_in = True
-        team.checked_icon = 'shuffle'
-
-    return team
-
-
-def get_checkins(queryset, t, value_string):
-    events = get_unexpired_checkins(t).values('time', 'identifier__barcode')
-    substantives = t.pref('substantive_speakers')
-    for instance in queryset:
-        if hasattr(instance, 'use_institution_prefix'):
-            instance = multi_checkin(instance, events, value_string, substantives)
-        else:
-            instance = single_checkin(instance, events, value_string)
 
     return queryset
 
