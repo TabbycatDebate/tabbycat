@@ -1204,7 +1204,7 @@ EMOJI_LIST = (
     # DULL      ("🈳", "Squared CJK Unified Ideograph-7a7a"),
     # DULL      ("🈺", "Squared CJK Unified Ideograph-55b6"),
     # DULL      ("🈵", "Squared CJK Unified Ideograph-6e80"),
-    # DULL      ("🔶", "Large Orange Diamond"),
+    # UI USES   ("🔶", "Large Orange Diamond"),
     # DULL      ("🔷", "Large Blue Diamond"),
     # DULL      ("🔸", "Small Orange Diamond"),
     # DULL      ("🔹", "Small Blue Diamond"),

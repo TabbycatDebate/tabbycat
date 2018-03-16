@@ -17,7 +17,15 @@ urlpatterns = [
             views.SaveDebatePanel.as_view(),
             name='adjallocation-save-debate-panel'),
     ])),
-    path('conflicts/adjudicator-team/',
-        views.AdjudicatorTeamConflictsView.as_view(),
-        name='adjallocation-conflicts-adj-team'),
+    path('conflicts/', include([
+        path('adjudicator-team/',
+            views.AdjudicatorTeamConflictsView.as_view(),
+            name='adjallocation-conflicts-adj-team'),
+        path('adjudicator-adjudicator/',
+            views.AdjudicatorAdjudicatorConflictsView.as_view(),
+            name='adjallocation-conflicts-adj-adj'),
+        path('adjudicator-institution/',
+            views.AdjudicatorInstitutionConflictsView.as_view(),
+            name='adjallocation-conflicts-adj-inst'),
+    ])),
 ]

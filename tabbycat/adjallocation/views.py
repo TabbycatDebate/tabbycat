@@ -8,7 +8,7 @@ from django.forms import ModelChoiceField
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
 from django.utils.functional import cached_property
-from django.utils.translation import gettext as _, ngettext
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -25,7 +25,8 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelForm
 
 from .allocator import allocate_adjudicators
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
-from .models import AdjudicatorConflict, DebateAdjudicator
+from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorConflict,
+                     AdjudicatorInstitutionConflict, DebateAdjudicator)
 from .utils import get_clashes, get_histories
 
 from utils.misc import reverse_round
@@ -216,19 +217,22 @@ class TeamChoiceField(ModelChoiceField):
         return obj.short_name
 
 
-class AdjudicatorTeamConflictsView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
+class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
 
     template_name = 'edit_conflicts.html'
-    formset_model = AdjudicatorConflict
-    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
+    page_emoji = "🔶"
 
-    def get_formset_factory_kwargs(self):
-        formset_factory_kwargs = {
-            'fields': ('adjudicator', 'team'),
-            'field_classes': {'team': TeamChoiceField},
-            'extra': 5,
-        }
-        return formset_factory_kwargs
+    formset_factory_kwargs = {
+        'extra': 10,
+        'can_delete': True,
+    }
+
+    def get_context_data(self, **kwargs):
+        kwargs['save_text'] = self.save_text
+        return super().get_context_data(**kwargs)
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(adjudicator__tournament=self.tournament)
 
     def get_formset(self):
         formset = super().get_formset()
@@ -236,6 +240,22 @@ class AdjudicatorTeamConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         for form in formset:
             form.fields['adjudicator'].queryset = all_adjs # Order list by alpha
         return formset
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_tournament('importer-simple-index', self.tournament)
+
+
+class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
+    formset_model = AdjudicatorConflict
+    page_title = gettext_lazy("Adjudicator-Team Conflicts")
+    save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
+    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs.update({
+        'fields': ('adjudicator', 'team'),
+        'field_classes': {'team': TeamChoiceField},
+    })
 
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
@@ -253,5 +273,61 @@ class AdjudicatorTeamConflictsView(LogActionMixin, AdministratorMixin, Tournamen
             return redirect_tournament('adjallocation-conflicts-adj-team', self.tournament)
         return result
 
-    def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.tournament)
+
+class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT
+    formset_model = AdjudicatorAdjudicatorConflict
+    page_title = gettext_lazy("Adjudicator-Adjudicator Conflicts")
+    save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
+    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs.update({'fields': ('adjudicator', 'conflict_adjudicator')})
+
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        for form in formset:
+            form.fields['conflict_adjudicator'].queryset = all_adjs # Order list by alpha
+        return formset
+
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        count = len(self.instances)
+        if count > 0:
+            message = ngettext(
+                "Saved %(count)d adjudicator-adjudicator conflict.",
+                "Saved %(count)d adjudicator-adjudicator conflicts.",
+                count,
+            ) % {'count': count}
+            messages.success(self.request, message)
+        else:
+            messages.success(self.request, _("No changes were made to adjudicator-adjudicator conflicts."))
+        if "add_more" in self.request.POST:
+            return redirect_tournament('adjallocation-conflicts-adj-adj', self.tournament)
+        return result
+
+
+class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT
+    formset_model = AdjudicatorInstitutionConflict
+    page_title = gettext_lazy("Adjudicator-Institution Conflicts")
+    save_text = gettext_lazy("Save Adjudicator-Institution Conflicts")
+    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs.update({'fields': ('adjudicator', 'institution')})
+
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        count = len(self.instances)
+        if count > 0:
+            message = ngettext(
+                "Saved %(count)d adjudicator-institution conflict.",
+                "Saved %(count)d adjudicator-institution conflicts.",
+                count,
+            ) % {'count': count}
+            messages.success(self.request, message)
+        else:
+            messages.success(self.request, _("No changes were made to adjudicator-institution conflicts."))
+        if "add_more" in self.request.POST:
+            return redirect_tournament('adjallocation-conflicts-adj-inst', self.tournament)
+        return result
