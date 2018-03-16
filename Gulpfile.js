@@ -26,7 +26,8 @@ var streamify = require('gulp-streamify');
 // Debug & Config
 var livereload = require('gulp-livereload');
 var outputDir = 'tabbycat/static/';
-var isProduction = (gutil.env.production === true) ? true : false;
+
+var isProduction = (process.env.NODE_ENV === 'production') ? true : false;
 if (isProduction === true) {
   console.log('GULP: Building for production');
 } else if (isProduction === false) {
