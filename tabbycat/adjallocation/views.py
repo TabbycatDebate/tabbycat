@@ -244,6 +244,15 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)
 
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        nsaved = len(self.instances)
+        ndeleted = len(formset.deleted_objects)
+        self.add_message(nsaved, ndeleted)
+        if "add_more" in self.request.POST:
+            return redirect_tournament(self.same_view, self.tournament)
+        return result
+
 
 class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
@@ -251,27 +260,28 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
     formset_model = AdjudicatorConflict
     page_title = gettext_lazy("Adjudicator-Team Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
+    same_view = 'adjallocation-conflicts-adj-team'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({
         'fields': ('adjudicator', 'team'),
         'field_classes': {'team': TeamChoiceField},
     })
 
-    def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        count = len(self.instances)
-        if count > 0:
-            message = ngettext(
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
                 "Saved %(count)d adjudicator-team conflict.",
                 "Saved %(count)d adjudicator-team conflicts.",
-                count,
-            ) % {'count': count}
-            messages.success(self.request, message)
-        else:
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d adjudicator-team conflict.",
+                "Deleted %(count)d adjudicator-team conflicts.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
             messages.success(self.request, _("No changes were made to adjudicator-team conflicts."))
-        if "add_more" in self.request.POST:
-            return redirect_tournament('adjallocation-conflicts-adj-team', self.tournament)
-        return result
 
 
 class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
@@ -280,6 +290,7 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
     formset_model = AdjudicatorAdjudicatorConflict
     page_title = gettext_lazy("Adjudicator-Adjudicator Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
+    same_view = 'adjallocation-conflicts-adj-adj'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({'fields': ('adjudicator', 'conflict_adjudicator')})
 
@@ -290,21 +301,21 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
             form.fields['conflict_adjudicator'].queryset = all_adjs # Order list by alpha
         return formset
 
-    def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        count = len(self.instances)
-        if count > 0:
-            message = ngettext(
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
                 "Saved %(count)d adjudicator-adjudicator conflict.",
                 "Saved %(count)d adjudicator-adjudicator conflicts.",
-                count,
-            ) % {'count': count}
-            messages.success(self.request, message)
-        else:
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d adjudicator-adjudicator conflict.",
+                "Deleted %(count)d adjudicator-adjudicator conflicts.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
             messages.success(self.request, _("No changes were made to adjudicator-adjudicator conflicts."))
-        if "add_more" in self.request.POST:
-            return redirect_tournament('adjallocation-conflicts-adj-adj', self.tournament)
-        return result
 
 
 class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
@@ -313,21 +324,22 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
     formset_model = AdjudicatorInstitutionConflict
     page_title = gettext_lazy("Adjudicator-Institution Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Institution Conflicts")
+    same_view = 'adjallocation-conflicts-adj-inst'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({'fields': ('adjudicator', 'institution')})
 
-    def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        count = len(self.instances)
-        if count > 0:
-            message = ngettext(
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
                 "Saved %(count)d adjudicator-institution conflict.",
                 "Saved %(count)d adjudicator-institution conflicts.",
-                count,
-            ) % {'count': count}
-            messages.success(self.request, message)
-        else:
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d adjudicator-institution conflict.",
+                "Deleted %(count)d adjudicator-institution conflicts.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
             messages.success(self.request, _("No changes were made to adjudicator-institution conflicts."))
-        if "add_more" in self.request.POST:
-            return redirect_tournament('adjallocation-conflicts-adj-inst', self.tournament)
-        return result
