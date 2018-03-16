@@ -55,8 +55,6 @@ class Debate(models.Model):
         verbose_name=_("importance"))
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
         verbose_name=_("result status"))
-    ballot_in = models.BooleanField(default=False,
-        verbose_name=_("ballot in"))
     sides_confirmed = models.BooleanField(default=True,
         verbose_name=_("sides confirmed"),
         help_text=_("If unchecked, the sides assigned to teams in this debate are just placeholders."))

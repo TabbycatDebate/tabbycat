@@ -74,13 +74,11 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
 
         kwargs["stats"] = {
             'none': result_status_stats[Debate.STATUS_NONE],
-            'ballot_in': result_status_stats['B'],
             'draft': result_status_stats[Debate.STATUS_DRAFT],
             'confirmed': result_status_stats[Debate.STATUS_CONFIRMED],
             'postponed': result_status_stats[Debate.STATUS_POSTPONED],
             'total': len(self._get_draw())
         }
-
         return super().get_context_data(**kwargs)
 
 
