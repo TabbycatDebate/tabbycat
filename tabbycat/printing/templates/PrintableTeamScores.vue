@@ -15,9 +15,7 @@
     </div>
 
     <div class="db-flex-item-2 db-flex-row db-bottom-border"><!-- Keys -->
-      <div class="db-align-vertical-center db-left-text"
-           :class="{ 'db-flex-item-fws': !roundInfo.isBP, 'db-flex-item-fwm': roundInfo.isBP }">
-      </div>
+      <div class="db-align-vertical-center db-left-text db-flex-item-fwm"></div>
       <div class="db-align-vertical-center db-padding-horizontal db-flex-item">
         <small>Speaker's First and Last Name</small>
       </div>

@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -61,7 +61,7 @@ msgid ""
 "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
 "<strong>page orientation</strong>, to turn off "
 "<strong>headers/footers</strong> and turn on <strong>background "
-"graphics</strong>. Works best in Chrome or Safari."
+"graphics</strong>. Works best in Chrome."
 msgstr ""
 "استخدم كترل + P للطباعة أو الحفظ إلى بدف. تأكد من تعيين<strong> الصفحة "
 "المناسبة </strong>التوجه، لإيقاف <strong>رؤوس / التذييلات </strong>وتشغيل "
