@@ -122,9 +122,8 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
 
         venues = []
         for venue in self.tournament.relevant_venues.prefetch_related('venuecategory_set').all():
-            bcode = next((i['identifier'] for i in bcodes if i['venue_id'] == venue.id), None)
             item = venue.serialize()
-            item['identifier'] = bcode
+            item['identifier'] = next((i['identifier'] for i in bcodes if i['venue_id'] == venue.id), None)
             venues.append(item)
         kwargs["venues"] = json.dumps(venues)
 

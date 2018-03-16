@@ -65,7 +65,7 @@
                 </div>
                 <a v-if="scanUrl && !entity.status && entity.identifier"
                    class="col-auto p-2 btn-success text-center"
-                   data-toggle="tooltip" title="Click to check-in manually"
+                   title="Click to check-in manually"
                    @click="checkInIdentifiers([entity.identifier])">
                   ✓
                 </a>

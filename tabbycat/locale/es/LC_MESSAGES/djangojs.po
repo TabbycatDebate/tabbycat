@@ -22,6 +22,34 @@ msgstr ""
 msgid "Find in Table"
 msgstr "Encontrar en la tabla"
 
+#: templates/tables/CheckboxTables.vue:30
+msgid "Set All Breaking as Available"
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:36
+msgid "Set all the availabilities to exactly match what they were in the previous round."
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:37
+msgid "Match"
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:41
+msgid "Set all availabilities to exactly match check-ins."
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:44
+msgid "Match Check-Ins"
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:
+msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:47
+msgid "Copy From Check-Ins
+msgstr ""
+
 #: participants/templates/DiversityContrainer.vue:6
 msgid "Speaker Demographics"
 msgstr ""

@@ -52,5 +52,5 @@ def get_unexpired_checkins(tournament):
     start = datetime.timedelta(hours=tournament.pref('checkin_window'))
     time_window = datetime.datetime.now() - start
     events = Event.objects.filter(tournament=tournament,
-                                  time__gte=time_window).select_related('identifier')
+        time__gte=time_window).select_related('identifier').order_by('time')
     return events
