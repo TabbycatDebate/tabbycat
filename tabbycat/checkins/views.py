@@ -45,7 +45,10 @@ class CheckInScanView(JsonDataResponsePostView, TournamentMixin):
                 event = Event.objects.create(identifier=identifier,
                                              tournament=self.tournament)
             except ObjectDoesNotExist:
-                raise BadJsonRequestError("Identifier doesn't exist")
+                # Only raise an error for single check-ins as for multi-check-in
+                # events its from the Status page so is clear what fails or not
+                if len(barcode_ids) == 1:
+                    raise BadJsonRequestError("Identifier doesn't exist")
 
         return json.dumps({'ids': barcode_ids,
                            'time': event.time.strftime('%H:%M:%S')})
