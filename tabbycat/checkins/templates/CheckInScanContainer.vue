@@ -58,7 +58,16 @@ export default {
       var payload = { 'barcodes': [barcodeIdentifier] }
       this.ajaxSave(this.scanUrl, payload, message,
                     this.finishCheckIn, this.failCheckIn, null, false)
-      document.getElementById('finishedScanSound').play()
+
+      // Audio Problem
+      var promise = document.getElementById('finishedScanSound').play();
+      if (promise !== undefined) {
+        promise.catch(error => {
+          // Auto-play was prevented
+          // Show a UI element to let the user manually start playback
+          console.log('Safari autoplay ... needs permission for sound')
+        })
+      }
       this.barcode = "" // Reset
     },
     finishCheckIn: function(dataResponse, payload, returnPayload) {
@@ -96,8 +105,9 @@ export default {
           readers : ["code_128_reader"]
         }
       }, function(err) {
-        if (err) {
-          console.log(err);
+        if(err) {
+          console.log("Initialization failed due to user camera permissions denial.");
+          self.liveScanning = false
           return
         }
         Quagga.start();
@@ -109,7 +119,6 @@ export default {
             drawingCanvas = Quagga.canvas.dom.overlay;
 
         if (result) {
-
           if (result.boxes) {
             drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")),
                                        parseInt(drawingCanvas.getAttribute("height")));
@@ -121,20 +130,16 @@ export default {
                                          {color: "#fd681d", lineWidth: 2});
             });
           }
-
           if (result.box) {
             Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx,
                                        {color: "#663da0", lineWidth: 4});
           }
-
           if (result.codeResult && result.codeResult.code) {
             Quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, drawingCtx,
                                        {color: '#00bf8a', lineWidth: 8});
           }
-
         }
       })
-
       // Process a valid result (if it hasn't already been processed
       Quagga.onDetected(function(result) {
         var code = result.codeResult.code;

@@ -80,6 +80,14 @@
         {% trans "Edit adjudicator availability" as title_text %}
         {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
       {% endif %}
+      {% if adjs_no_t > 0 %}
+        {% blocktrans trimmed asvar text count count=adjs_no_t %}
+          One adjudicator does not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% plural %}
+          {{ count }} adjudicators do not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% endif %}
 
     {% elif type == "venues" %}
 
@@ -102,6 +110,14 @@
       {% else %}
         {% trans "Edit venue availability" as title_text %}
         {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
+      {% endif %}
+      {% if venues_no_t > 0 %}
+        {% blocktrans trimmed asvar text count count=venues_no_t %}
+          One venue does not have an associated Tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
+        {% plural %}
+          {{ count }} venues do not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
       {% endif %}
 
     {% endif %}

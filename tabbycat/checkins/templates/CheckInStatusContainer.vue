@@ -34,7 +34,7 @@
       No matching <span v-if="isForVenues">venues</span><span v-else>people</span> found.
     </div>
     <div class="alert alert-info">
-      This page will live-update with new check-ins.
+      This page will live-update with new check-ins as they occur although the initial list may be up to a minute old. <template v-if="assistantUrl"> If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can <a :href="assistantUrl" target="_blank"> open the assistant version.</a></template>
     </div>
 
     <transition-group :name="mainTransitions" tag="div">
@@ -116,6 +116,7 @@ export default {
   props: {
     'events': Array,
     'scanUrl': String,
+    'assistantUrl': String
   },
   computed: {
     isForVenues: function() {
