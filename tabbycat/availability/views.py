@@ -50,6 +50,12 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
         venues = self._get_dict(self.tournament.relevant_venues)
         kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
 
+        # People often add adjs/venues then get confused why they are not here
+        if not self.tournament.pref('share_adjs'):
+            kwargs['adjs_no_t'] = Adjudicator.objects.filter(tournament__isnull=True).count()
+        if not self.tournament.pref('share_venues'):
+            kwargs['venues_no_t'] = Venue.objects.filter(tournament__isnull=True).count()
+
         # Order needs to be predictable when iterating through values
         kwargs['checkin_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
 
