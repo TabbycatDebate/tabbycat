@@ -190,22 +190,22 @@
   </div>
 
   {% if pref.tab_credit or pref.org_credit or pref.adj_credit %}
-    <div class="card-deck mt-3">
+    <div class="card-group mt-3">
       {% if pref.adj_credit %}
         <div class="card">
-          <div class="card-header h6">{% trans "Adjudication Team" %}</div>
+          <div class="card-header h6">{% trans "Adjudication Officials" %}</div>
           <div class="card-body">{{ pref.adj_credit }}</div>
         </div>
       {% endif %}
       {% if pref.tab_credit %}
         <div class="card">
-          <div class="card-header h6">{% trans "Tab Team" %}</div>
+          <div class="card-header h6">{% trans "Tabulation Officials" %}</div>
           <div class="card-body">{{ pref.tab_credit }}</div>
         </div>
       {% endif %}
       {% if pref.org_credit %}
         <div class="card">
-          <div class="card-header h6">{% trans "Organisation Team" %}</div>
+          <div class="card-header h6">{% trans "Organising Committee" %}</div>
           <div class="card-body">{{ pref.org_credit }}</div>
         </div>
       {% endif %}
