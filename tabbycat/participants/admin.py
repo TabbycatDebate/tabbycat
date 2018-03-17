@@ -181,6 +181,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
                     'independent', 'adj_core', 'gender')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'name', 'institution')
+    list_editable = ('independent', 'adj_core', 'trainee')
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
     actions = ['delete_url_key']
