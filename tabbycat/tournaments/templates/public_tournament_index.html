@@ -190,25 +190,38 @@
   </div>
 
   {% if pref.tab_credit or pref.org_credit or pref.adj_credit %}
-    <div class="card-group mt-3">
-      {% if pref.adj_credit %}
-        <div class="card">
-          <div class="card-header h6">{% trans "Adjudication Officials" %}</div>
-          <div class="card-body">{{ pref.adj_credit }}</div>
+    <div class="card mt-3">
+      <div class="card-header h5">
+        {% trans "Tournament Officials" %}
+      </div>
+      <div class="card-body py-1">
+        <div class="row">
+          {% if pref.adj_credit %}
+            <div class="col p-0">
+              <div class="card m-1">
+                <div class="card-header h6">{% trans "Adjudication" %}</div>
+                <div class="card-body">{{ pref.adj_credit }}</div>
+              </div>
+            </div>
+          {% endif %}
+          {% if pref.tab_credit %}
+            <div class="col p-0">
+              <div class="card m-1">
+                <div class="card-header h6">{% trans "Tabulation" %}</div>
+                <div class="card-body">{{ pref.tab_credit }}</div>
+              </div>
+            </div>
+          {% endif %}
+          {% if pref.org_credit %}
+            <div class="col p-0">
+              <div class="card m-1">
+                <div class="card-header h6">{% trans "Organisation" %}</div>
+                <div class="card-body">{{ pref.org_credit }}</div>
+              </div>
+            </div>
+          {% endif %}
         </div>
-      {% endif %}
-      {% if pref.tab_credit %}
-        <div class="card">
-          <div class="card-header h6">{% trans "Tabulation Officials" %}</div>
-          <div class="card-body">{{ pref.tab_credit }}</div>
-        </div>
-      {% endif %}
-      {% if pref.org_credit %}
-        <div class="card">
-          <div class="card-header h6">{% trans "Organising Committee" %}</div>
-          <div class="card-body">{{ pref.org_credit }}</div>
-        </div>
-      {% endif %}
+      </div>
     </div>
   {% endif %}
 
