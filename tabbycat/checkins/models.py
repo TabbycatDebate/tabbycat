@@ -86,6 +86,6 @@ class Event(models.Model):
         verbose_name_plural = _("check-in events")
 
     def serialize(self):
-        event = {'id': self.id, 'time': self.time.__str__(),
-                 'identifier': self.identifier.barcode}
+        event = {'id': self.id, 'identifier': self.identifier.barcode,
+                 'time': self.time.strftime("%a, %d %b %Y %H:%M:%S")}
         return event

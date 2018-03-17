@@ -160,7 +160,7 @@ export default {
     entitiesByTime: function() {
       var sortedByTime = _.sortBy(this.entitiesSortedByName, function(p) {
         if (_.isUndefined(p["status"])) {
-          return "2999-01-01 01:01:01.00000+00:00"
+          return "Thu, 01 Jan 2070 00:00:00 GMT-0400"
         } else {
           return p.status.time
         }
@@ -170,7 +170,7 @@ export default {
         if (_.isUndefined(p["status"])) {
           return "Not Checked In"
         } else {
-          var time = new Date(p.status.time)
+          var time = new Date(Date.parse(p.status.time))
           var hours = self.clock(time.getHours())
           if (time.getMinutes() < 30) {
             return hours + ":00" + " - " + hours + ":29"
@@ -204,7 +204,7 @@ export default {
       this.checkInIdentifiers(identifiersForEntities)
     },
     lastSeenTime: function(timeString) {
-      var time = new Date(timeString)
+      var time = new Date(Date.parse(timeString))
       return this.clock(time.getHours()) + ":" + this.clock(time.getMinutes())
     },
     getToolTipForEntity: function(entity) {
