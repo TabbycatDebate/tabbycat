@@ -9,7 +9,7 @@ var envify = require('envify');
 
 // Compression
 var cleanCSS = require('gulp-clean-css');
-var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify-es').default;
 var sourcemaps  = require('gulp-sourcemaps'); // Make source maps
 var buffer = require('vinyl-buffer'); // Need to convert stream back for maps
 
@@ -119,20 +119,20 @@ gulp.task('styles-compile', function() {
 gulp.task('jsi18n-compile', function() {
   // AR
   gulp.src(['tabbycat/locale/jsi18n/ar/djangojs.js'])
-    .pipe(gulp.dest(outputDir + '/jsi18n/ar/'))
     .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/jsi18n/ar/'))
   // FR
   gulp.src(['tabbycat/locale/jsi18n/fr/djangojs.js'])
-    .pipe(gulp.dest(outputDir + '/jsi18n/fr/'))
     .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/jsi18n/fr/'))
   // EN
   gulp.src(['tabbycat/locale/jsi18n/en/djangojs.js'])
-    .pipe(gulp.dest(outputDir + '/jsi18n/en/'))
     .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/jsi18n/en/'))
   // ES
   gulp.src(['tabbycat/locale/jsi18n/es/djangojs.js'])
-    .pipe(gulp.dest(outputDir + '/jsi18n/es/'))
     .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/jsi18n/es/'))
 });
 
 gulp.task("js-compile", function() {
@@ -140,7 +140,7 @@ gulp.task("js-compile", function() {
   gulp.src([
     'node_modules/jquery/dist/jquery.js', // For Debug Toolbar
     'node_modules/jquery-validation/dist/jquery.validate.js', // Deprecate,
-    'node_modules/jsbarcode/dist/barcodes/JsBarcode.code128.min.js', // Deprecate,
+    'node_modules/jsbarcode/dist/barcodes/JsBarcode.code128.js', // Deprecate,
     ])
     .pipe(isProduction ? uglify() : gutil.noop()) // Doesnt crash
     .pipe(gulp.dest(outputDir + '/js/vendor/'));
