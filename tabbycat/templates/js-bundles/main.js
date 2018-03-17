@@ -18,9 +18,6 @@ require("bootstrap");
 // Icons
 import feather from 'feather-icons';
 
-// Polyfill Safari support for datalists (ballot checkins + constraints import)
-require("datalist-polyfill");
-
 // Add alerts programmatically
 $.fn.extend({
   showAlert: function(alerttype, message, timeout) {
@@ -47,12 +44,14 @@ $(document).ready(function(){
   $('[data-toggle=tooltip]').tooltip({
     'html': true
   });
+
   // Feather shim for icons
   feather.replace();
+
   // Remove the pre-expanded sidebar states for mobile (they overlap)
   if ($(window).width() < 768) {
     $("#sidebar .collapse").removeClass("show");
-  };
+  }
 
   // Auto disable submit buttons for forms upon submission (prevent double-sub)
   $('form').submit(function(event) {
@@ -80,7 +79,6 @@ $(document).ready(function(){
   $('.submit-disable').click(function(event){
     $.fn.loadButton(event.target);
   });
-
 });
 
 //------------------------------------------------------------------------------
@@ -105,7 +103,6 @@ vueComponents['TablesContainer'] = TablesContainer
 import DiversityContainer from  '../../participants/templates/DiversityContainer.vue'
 vueComponents['DiversityContainer'] = DiversityContainer
 
-
 //------------------------------------------------------------------------------
 // Vue Transations Setup
 //------------------------------------------------------------------------------
@@ -124,7 +121,6 @@ var vueTranslationMixin = {
     },
     get_format: function() {
       return window.get_format.apply(this, arguments)
-
     },
     gettext_noop: function() {
       return window.gettext_noop.apply(this, arguments)

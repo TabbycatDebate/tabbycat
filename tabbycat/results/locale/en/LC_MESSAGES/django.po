@@ -647,13 +647,6 @@ msgstr ""
 msgid "Forfeits"
 msgstr ""
 
-#: results/templates/ballot_checkin.html:13
-msgid ""
-"To check in a ballot start to type the ballot's <strong>venue</strong>. Then "
-"hit enter to select the correct venue, then enter again to search for the "
-"ballot."
-msgstr ""
-
 #: results/templates/enter_results.html:6
 #, python-format
 msgid "New Ballot Set for %(debate_name)s"

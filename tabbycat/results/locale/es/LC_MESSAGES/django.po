@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -692,13 +692,6 @@ msgstr ""
 
 #: results/templates/ballot/standard_ballot_set.html:68
 msgid "Forfeits"
-msgstr ""
-
-#: results/templates/ballot_checkin.html:13
-msgid ""
-"To check in a ballot start to type the ballot's <strong>venue</strong>. Then"
-" hit enter to select the correct venue, then enter again to search for the "
-"ballot."
 msgstr ""
 
 #: results/templates/enter_results.html:6

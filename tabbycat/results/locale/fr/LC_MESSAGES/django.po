@@ -701,13 +701,6 @@ msgstr "Attribuez les côtés avant de saisir les scores"
 msgid "Forfeits"
 msgstr "Forfaits"
 
-#: results/templates/ballot_checkin.html:13
-msgid ""
-"To check in a ballot start to type the ballot's <strong>venue</strong>. Then "
-"hit enter to select the correct venue, then enter again to search for the "
-"ballot."
-msgstr ""
-
 #: results/templates/enter_results.html:6
 #, fuzzy, python-format
 #| msgid "New Ballot Set for %(matchup)s"
