@@ -64,7 +64,7 @@ class BaseCheckInStatusView(TournamentMixin, TemplateView):
     scan_view = False
 
     def get_context_data(self, **kwargs):
-        events = get_unexpired_checkins(self.tournament)
+        events = get_unexpired_checkins(self.tournament, self.window_preference)
         kwargs["events"] = json.dumps([e.serialize() for e in events])
         if self.scan_view:
             kwargs["scan_url"] = reverse_tournament(self.scan_view, self.tournament)
@@ -74,6 +74,7 @@ class BaseCheckInStatusView(TournamentMixin, TemplateView):
 class CheckInPeopleStatusView(BaseCheckInStatusView):
     page_emoji = '⌚️'
     page_title = _("People's Check-In Statuses")
+    window_preference = 'checkin_window_people'
 
     def get_context_data(self, **kwargs):
 
@@ -124,6 +125,7 @@ class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CacheMixin,
 class CheckInVenuesStatusView(BaseCheckInStatusView):
     page_emoji = '👜'
     page_title = _("Venue's Check-In Statuses")
+    window_preference = 'checkin_window_venues'
 
     def get_context_data(self, **kwargs):
         venues = []
