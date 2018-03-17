@@ -212,7 +212,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return get_checkins(queryset, t)
+        return get_checkins(queryset, t, 'checkin_window_people')
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
@@ -231,7 +231,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return get_checkins(queryset, t)
+        return get_checkins(queryset, t, 'checkin_window_people')
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
@@ -256,7 +256,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
 
     @staticmethod
     def annotate_checkins(queryset, t):
-        return get_checkins(queryset, t)
+        return get_checkins(queryset, t, 'checkin_window_venues')
 
 
 # ==============================================================================

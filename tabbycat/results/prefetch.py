@@ -64,7 +64,7 @@ def populate_confirmed_ballots(debates, motions=False, results=False):
 
 
 def populate_checkins(debates, tournament):
-    get_checkins(debates, tournament)
+    get_checkins(debates, tournament, None)
 
 
 def populate_results(ballotsubs):

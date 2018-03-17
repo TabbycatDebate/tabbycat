@@ -63,11 +63,13 @@ Check-Ins for Ballots
 
 Ballots can be checked-in to quickly validate which ballots are physically present in the tab room. This can help more quickly identify ballots that are missing. Which ballots have or have not been checked-in will show up on the Results page. Ballots can be scanned using the standard 'Scan Identifiers' page.
 
-Barcodes are automatically assigned and included to ballots when they are printed.
+Barcodes are automatically assigned and included to ballots when they are printed. Barcodes have no check-in window — any relevant check-in event counts regardless of how long ago it was.
 
 Check-Ins for Venues
 ====================
 
 Venues can be checked-in, but what a 'venue check-in' means is a bit more flexible. It might be used to validate which rooms are debate-ready at the start of a day (i.e. unlocked; has a desk) or it could be used during the rounds to record which rooms have returned their ballots.
+
+Venues have a separate check-in window setting to that of people.
 
 Venues have their own Status page (like people) and can be checked-in there manually. Like speakers and adjudicators their barcodes can also be printed off.

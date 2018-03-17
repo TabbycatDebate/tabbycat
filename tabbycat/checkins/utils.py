@@ -50,9 +50,13 @@ def delete_identifiers(queryset):
     klass.objects.filter(**{attr + '__in': queryset}).delete()
 
 
-def get_unexpired_checkins(tournament):
-    start = datetime.timedelta(hours=tournament.pref('checkin_window'))
-    time_window = datetime.datetime.now() - start
+def get_unexpired_checkins(tournament, window_preference):
+    if not window_preference:
+        time_window = datetime.datetime.fromtimestamp(0)  # Unix start
+    else:
+        start = datetime.timedelta(hours=tournament.pref(window_preference))
+        time_window = datetime.datetime.now() - start
+
     events = Event.objects.filter(tournament=tournament,
         time__gte=time_window).select_related('identifier').order_by('time')
     return events
@@ -110,8 +114,8 @@ def multi_checkin(team, events, t):
     return team
 
 
-def get_checkins(queryset, t):
-    events = get_unexpired_checkins(t).values('time', 'identifier__barcode')
+def get_checkins(queryset, t, window_preference):
+    events = get_unexpired_checkins(t, window_preference).values('time', 'identifier__barcode')
     for instance in queryset:
         if hasattr(instance, 'use_institution_prefix'):
             instance = multi_checkin(instance, events, t)

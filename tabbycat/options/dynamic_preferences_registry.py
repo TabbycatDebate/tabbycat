@@ -771,12 +771,21 @@ class AssistantAccess(ChoicePreference):
 
 
 @tournament_preferences_registry.register
-class CheckInWindow(FloatPreference):
-    help_text = _("The amount of time (in hours) before a check-in event expires")
+class CheckInWindowPeople(FloatPreference):
+    help_text = _("The amount of time (in hours) before a speaker or adjudicator's check-in event expires")
     section = data_entry
-    name = 'checkin_window'
-    verbose_name = _("Check-In Window")
-    default = 18.0
+    name = 'checkin_window_people'
+    verbose_name = _("Check-In Window (People)")
+    default = 12.0
+
+
+@tournament_preferences_registry.register
+class CheckInWindowVenues(FloatPreference):
+    help_text = _("The amount of time (in hours) before a venue's check-in event expires")
+    section = data_entry
+    name = 'checkin_window_venues'
+    verbose_name = _("Check-In Window (Venues)")
+    default = 2.0
 
 
 # ==============================================================================
