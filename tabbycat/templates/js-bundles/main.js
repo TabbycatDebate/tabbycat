@@ -103,6 +103,10 @@ vueComponents['TablesContainer'] = TablesContainer
 import DiversityContainer from  '../../participants/templates/DiversityContainer.vue'
 vueComponents['DiversityContainer'] = DiversityContainer
 
+// Checkin Statuses
+import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
+vueComponents['CheckInStatusContainer'] = CheckInStatusContainer
+
 //------------------------------------------------------------------------------
 // Vue Transations Setup
 //------------------------------------------------------------------------------
