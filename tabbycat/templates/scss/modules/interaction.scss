@@ -2,6 +2,12 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
+// Generic 'contains action'
+.hoverable:hover {
+  cursor: pointer;
+}
+
+// Specific styling for tooltips/popovers
 [data-toggle='tooltip'],
 [data-toggle="popover"],
 .hover-target {

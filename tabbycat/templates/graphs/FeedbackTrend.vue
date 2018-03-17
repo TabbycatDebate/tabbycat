@@ -142,7 +142,7 @@ function initChart(vueContext){
     .attr("cx", function (d) { return xScale (d.x); })
     .attr("cy", function (d) { return yScale (d.y); })
     .attr("r", 5) // Size of circle
-    .attr("class", function(d) { return "d3-hoverable position-display d3-hover-black " + d.position_class})
+    .attr("class", function(d) { return "hoverable position-display d3-hover-black " + d.position_class})
     .on("mouseover", function(d, i) {
       div.transition()
           .duration(200)

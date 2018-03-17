@@ -45,7 +45,8 @@
           <div class="row">
             <div class="col h5 mb-0 py-2">{{ grouper }}</div>
             <div class="col-auto" v-if="scanUrl">
-              <button class="btn-info btn-sm mt-1" @click="checkInEntity(entity)">
+              <button class="btn btn-info btn-sm mt-1 hoverable"
+                      @click="checkInEntity(entity)">
                 Check-In All <strong>✓</strong>
               </button>
             </div>
@@ -64,14 +65,16 @@
                   {{ entity.name }}
                 </div>
                 <a v-if="scanUrl && !entity.status && entity.identifier"
-                   class="col-auto p-2 btn-info text-center"
+                   class="col-auto p-2 btn-info text-center hoverable"
                    title="Click to check-in manually"
                    @click="checkInIdentifiers([entity.identifier])">
                   ✓
                 </a>
-                <div v-if="scanUrl && !entity.identifier" class="col-auto p-2 btn-danger text-center"
-                     data-toggle="tooltip" title="This person does not have a check-in identifier so can't be checked in">
-                  ✖
+                <div v-if="scanUrl && !entity.identifier"
+                     class="col-auto p-2 btn-secondary text-white text-center"
+                     data-toggle="tooltip"
+                     title="This person does not have a check-in identifier so can't be checked in">
+                  ?
                 </div>
                 <div v-if="entity.status" class="col-auto p-2 btn-success text-center">
                   {{ lastSeenTime(entity.status.time) }}

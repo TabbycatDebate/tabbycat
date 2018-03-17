@@ -3,12 +3,8 @@
 //------------------------------------------------------------------------------
 
 // Actionable elements (buttons, navs) should be distinct
-.btn {
-  padding: 10px 12px;
-
-  .feather {
-    margin-bottom: -3px;
-  }
+.btn .feather {
+  margin-bottom: -3px;
 }
 
 // Same as .btn; but .btn-link removes this radius for some reason
