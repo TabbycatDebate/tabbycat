@@ -178,10 +178,10 @@ class AdjudicatorForm(forms.ModelForm):
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'trainee',
-                    'independent', 'adj_core', 'gender')
+                    'independent', 'adj_core', 'gender', 'test_score')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'name', 'institution')
-    list_editable = ('independent', 'adj_core', 'trainee')
+    list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
     actions = ['delete_url_key']
