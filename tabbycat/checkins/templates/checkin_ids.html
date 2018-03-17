@@ -3,7 +3,12 @@
 
 {% block content %}
 
-  <div class="row">
+  {% blocktrans trimmed asvar text %}
+    You can read more about what check-ins are and how they work in our <a href="http://tabbycat.readthedocs.io/en/features/check-ins.html" target="_blank">documentation</a>
+  {% endblocktrans %}
+  {% include "components/item-info.html" with type="info" %}
+
+  <div class="row mt-3">
 
     {% for check_key, check_info in check_in_info.items %}
       <div class="col">

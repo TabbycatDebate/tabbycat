@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load debate_tags %}
 
 {% block content %}
 
@@ -8,7 +9,8 @@
                                :adjudicators="adjudicators"
                                :speakers="speakers"
                                :venues="venues"
-                               :scan-url="scanUrl">
+                               :scan-url="scanUrl"
+                               :assistant-url="assistantUrl">
     </check-in-status-container>
   </div>
 
@@ -22,7 +24,8 @@
       'adjudicators': {% if adjudicators %}{{ adjudicators|safe }}{% else %}null{% endif %},
       'speakers': {% if speakers %}{{ speakers|safe }}{% else %}null{% endif %},
       'venues': {% if venues %}{{ venues|safe }}{% else %}null{% endif %},
-      'scanUrl': '{{ scan_url }}'
+      'scanUrl': '{{ scan_url }}',
+      'assistantUrl': {% if user_role == "admin" %}'{% tournamenturl "assistant-people-statuses" %}'{% else %}''{% endif %},
     }
   </script>
   {{ block.super }}
