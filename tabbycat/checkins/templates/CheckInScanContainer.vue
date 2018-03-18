@@ -153,6 +153,8 @@ export default {
             if (!_.includes(self.scannedResults, code)) {
               self.checkInIdentifier(code)
               self.scannedResults.push(code)
+            } else {
+              // $.fn.showAlert("info", 'Already checked-in identifier ' + code, 0)
             }
           }
         }
