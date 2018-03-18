@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  {% if round.seq < tournament.round_set.count and current_round == round %}
+  {% if show_advance_button %}
     <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
       {% trans "Advance to Next Round" %} <i data-feather="chevron-right"></i>
     </a>

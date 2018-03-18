@@ -79,6 +79,12 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
             'postponed': result_status_stats[Debate.STATUS_POSTPONED],
             'total': len(self._get_draw())
         }
+
+        kwargs["show_advance_button"] = (
+            self.tournament.current_round == self.round and
+            self.tournament.round_set.filter(seq__gt=self.round.seq).exists()
+        )
+
         return super().get_context_data(**kwargs)
 
 
