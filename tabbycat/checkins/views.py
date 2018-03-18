@@ -90,7 +90,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
             adjudicators.append({
                 'id': adj.id, 'name': adj.name, 'type': 'Adjudicator',
-                'identifier': code,
+                'identifier': code, 'locked': False,
                 'institution': adj.institution.serialize if adj.institution else None,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
@@ -104,7 +104,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
             speakers.append({
                 'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
-                'identifier': code, 'team': speaker.team.short_name,
+                'identifier': code, 'team': speaker.team.short_name, 'locked': False,
                 'institution': speaker.team.institution.serialize if speaker.team.institution else None,
             })
         kwargs["speakers"] = json.dumps(speakers)
@@ -134,6 +134,7 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
         venues = []
         for venue in self.tournament.relevant_venues.select_related('checkin_identifier').prefetch_related('venuecategory_set').all():
             item = venue.serialize()
+            item['locked'] = False
             try:
                 item['identifier'] = venue.checkin_identifier.barcode
             except ObjectDoesNotExist:

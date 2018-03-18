@@ -46,7 +46,7 @@
             <div class="col h5 mb-0 py-2">{{ grouper }}</div>
             <div class="col-auto" v-if="scanUrl">
               <button class="btn btn-info btn-sm mt-1 hoverable"
-                      @click="checkInEntity(entity)">
+                      @click="checkInGroup(entity)">
                 Check-In All <strong>✓</strong>
               </button>
             </div>
@@ -64,19 +64,23 @@
                      data-toggle="tooltip" :title="getToolTipForEntity(entity)">
                   {{ entity.name }}
                 </div>
-                <a v-if="scanUrl && !entity.status && entity.identifier"
+                <a v-if="scanUrl && !entity.status && entity.identifier && !entity.locked"
                    class="col-auto p-2 btn-info text-center hoverable"
                    title="Click to check-in manually"
                    @click="checkInIdentifiers([entity.identifier])">
                   ✓
                 </a>
+                <div v-if="scanUrl && !entity.status && entity.identifier && entity.locked"
+                     class="col-auto p-2 btn-secondary text-center btn-no-hover">
+                  saving...
+                </div>
                 <div v-if="scanUrl && !entity.identifier"
                      class="col-auto p-2 btn-secondary text-white text-center"
                      data-toggle="tooltip"
                      title="This person does not have a check-in identifier so can't be checked in">
                   ?
                 </div>
-                <div v-if="entity.status" class="col-auto p-2 btn-success text-center">
+                <div v-if="entity.status" class="col-auto p-2 btn-success btn-no-hover text-center">
                   {{ lastSeenTime(entity.status.time) }}
                 </div>
 
@@ -95,6 +99,7 @@
 
 <script>
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
+import FeatherMixin from '../../templates/tables/FeatherMixin.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 import PeopleStatusMixin from './PeopleStatusMixin.vue'
@@ -200,9 +205,31 @@ export default {
       var paddedTime = ("0" + timeRead).slice(-2)
       return paddedTime
     },
-    checkInEntity: function(entity) {
+    checkInGroup: function(entity) {
       var identifiersForEntities = _.map(entity, 'identifier')
       this.checkInIdentifiers(identifiersForEntities)
+    },
+    checkInIdentifiers: function(barcodeIdentifiers) {
+      var message = 'the checkin status of ' + barcodeIdentifiers
+      var payload = { 'barcodes': barcodeIdentifiers }
+      this.setLocked(barcodeIdentifiers, true)
+      this.ajaxSave(this.scanUrl, payload, message, this.passCheckIn, this.failCheckIn, null, false)
+    },
+    setLocked: function(identifiers, status) {
+      _.forEach(this.entitiesByType, function(entity) {
+        if (_.includes(identifiers, entity.identifier)) {
+          console.log('lock', entity.identifier)
+          entity.locked = true
+        }
+      })
+    },
+    passCheckIn: function(dataResponse, payload, returnPayload) {
+      this.setLocked(payload.barcodes, false)
+    },
+    failCheckIn: function(payload, returnPayload) {
+      var message = 'Failed to check in one or more identifiers: ' + payload.barcodes
+      $.fn.showAlert("danger", message, 0)
+      this.setLocked(payload.barcodes, false)
     },
     lastSeenTime: function(timeString) {
       var time = new Date(Date.parse(timeString))
@@ -210,15 +237,6 @@ export default {
     },
     getToolTipForEntity: function(entity) {
       return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
-    },
-    checkInIdentifiers: function(barcodeIdentifiers) {
-      var message = 'the checkin status of ' + barcodeIdentifiers
-      var payload = { 'barcodes': barcodeIdentifiers }
-      this.ajaxSave(this.scanUrl, payload, message, null, this.failCheckIn, null, false)
-    },
-    failCheckIn: function(payload, returnPayload) {
-      var message = 'Failed to check in one or more identifiers: ' + payload.barcodes
-      $.fn.showAlert("danger", message, 0)
     },
     setListContext: function(metaKey, selectedKey, selectedValue) {
       this.enableAnimations = false
