@@ -34,7 +34,7 @@
             <button v-if="roundInfo.seq > 1" @click="copyFromPrevious"
                     class="btn btn-primary" type="button" data-toggle="tooltip"
                     :title="gettext('Set all the availabilities to exactly match what they were in the previous round.')">
-              <i data-feather="repeat"></i> {{ gettext("Match") }} R{{ roundInfo.seq }}
+              <i data-feather="repeat"></i> {{ gettext("Match") }} {{ roundInfo.prev}}
             </button>
             <button @click="setFromCheckIns(true)"
                     class="btn btn-primary" type="button" data-toggle="tooltip"

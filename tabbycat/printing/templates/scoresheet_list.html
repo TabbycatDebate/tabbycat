@@ -39,7 +39,7 @@ Printable Scoresheets for {{ round_name }}
       // Strings to Fill In
       roundInfo: {
         tournamentName: '{{ tournament.short_name }}',
-        returnLocation: '{{ pref.feedback_return_location }}',
+        returnLocation: '{{ pref.score_return_location }}',
         votingBallots: {% if round.ballots_per_debate == 'per-adj' %}true{% else %}false{% endif %},
         // Formatting
         showTabRoomRow: true,

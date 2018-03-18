@@ -41,7 +41,10 @@ export default {
           return da.position === "p";
         })
         if (!_.isUndefined(panellists) && panellists.length > 0) {
-          return "Chair of Panel"
+          var voters = _.filter(this.ballot.debateAdjudicators, function(da) {
+            return da.position !== "t";
+          })
+          return "Chair for Panel of " + voters.length
         } else {
           return "Solo Chair"
         }
