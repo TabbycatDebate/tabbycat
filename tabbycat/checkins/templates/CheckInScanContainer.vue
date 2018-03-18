@@ -1,6 +1,6 @@
 <template>
 
-  <div class="list-group mt-md-2">
+  <div class="list-group mt-3">
 
     <div class="list-group-item" v-if="!liveScanning">
       <input v-model.string="barcode" autofocus :placeholder="placeholderText"
@@ -87,8 +87,10 @@ export default {
       this.$nextTick(function() {
         if (self.liveScanning) {
           self.streamScan()
+          document.getElementById("pageTitle").style.display = 'none'
         } else {
           Quagga.stop()
+          document.getElementById("pageTitle").style.display = 'block'
         }
       })
     },
