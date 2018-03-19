@@ -189,38 +189,13 @@
 
   </div>
 
-  {% if pref.tab_credit or pref.org_credit or pref.adj_credit %}
+  {% if pref.tournament_staff %}
     <div class="card mt-3">
-      <div class="card-header h5">
-        {% trans "Tournament Officials" %}
+      <div class="card-header h6">
+        {% trans "Tournament Staff" %}
       </div>
-      <div class="card-body py-1">
-        <div class="row">
-          {% if pref.adj_credit %}
-            <div class="col p-0">
-              <div class="card m-1">
-                <div class="card-header h6">{% trans "Adjudication" %}</div>
-                <div class="card-body">{{ pref.adj_credit }}</div>
-              </div>
-            </div>
-          {% endif %}
-          {% if pref.tab_credit %}
-            <div class="col p-0">
-              <div class="card m-1">
-                <div class="card-header h6">{% trans "Tabulation" %}</div>
-                <div class="card-body">{{ pref.tab_credit }}</div>
-              </div>
-            </div>
-          {% endif %}
-          {% if pref.org_credit %}
-            <div class="col p-0">
-              <div class="card m-1">
-                <div class="card-header h6">{% trans "Organisation" %}</div>
-                <div class="card-body">{{ pref.org_credit }}</div>
-              </div>
-            </div>
-          {% endif %}
-        </div>
+      <div class="card-body">
+        {{ pref.tournament_staff|safe }}
       </div>
     </div>
   {% endif %}

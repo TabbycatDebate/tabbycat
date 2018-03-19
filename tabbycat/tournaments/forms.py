@@ -3,10 +3,11 @@ import math
 from django.forms.fields import IntegerField
 from django.forms import CharField, ChoiceField, ModelChoiceField, ModelForm
 from django.utils.translation import gettext_lazy as _
+from django_summernote.widgets import SummernoteWidget
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
-from options.preferences import AdjCoreCredit, OrgComCredit, TabDirectorCredit
+from options.preferences import TournamentStaff
 from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
 from .models import Round, Tournament
@@ -29,16 +30,17 @@ class TournamentStartForm(ModelForm):
         label=_("Number of teams in the open break"),
         help_text=_("Leave blank if there are no break rounds."))
 
-    def add_default_feedback_questions(self, tournament):
+    @staticmethod
+    def add_default_feedback_questions(tournament):
         agree = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=2, required=True,
-            text="Did you agree with their decision?", name="Agree?",
+            text=_("Did you agree with their decision?"), name=_("Agree?"),
             reference="agree", from_adj=True, from_team=True,
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT)
         agree.save()
         comments = AdjudicatorFeedbackQuestion(
             tournament=tournament, seq=3, required=False,
-            text="Any further comments?", name="Comments?",
+            text=_("Comments"), name=_("Comments"),
             reference="comments", from_adj=True, from_team=True,
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT)
         comments.save()
@@ -63,7 +65,7 @@ class TournamentStartForm(ModelForm):
             open_break.save()
 
         self.add_default_feedback_questions(tournament)
-        tournament.current_round = tournament.round_set.first()
+        tournament.current_round = tournament.round_set.order_by('seq').first()
         tournament.save()
 
         return tournament
@@ -85,20 +87,15 @@ class TournamentConfigureForm(ModelForm):
         label=_("Public Configuration"),
         help_text=_("Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"))
 
-    tab_credit = CharField(
-        label=TabDirectorCredit.verbose_name,
+    tournament_staff = CharField(
+        label=TournamentStaff.verbose_name,
         required=False,
-        help_text=TabDirectorCredit.help_text)
-
-    org_credit = CharField(
-        label=OrgComCredit.verbose_name,
-        required=False,
-        help_text=OrgComCredit.help_text)
-
-    adj_credit = CharField(
-        label=AdjCoreCredit.verbose_name,
-        required=False,
-        help_text=AdjCoreCredit.help_text)
+        help_text=TournamentStaff.help_text,
+        initial=_("<strong>Tabulation:</strong> [list tabulation staff here]<br />"
+            "<strong>Organisation:</strong> [list organising committee members here]<br />"
+            "<strong>Adjudication:</strong> [list chief adjudicators here]"),
+        widget=SummernoteWidget,
+    )
 
     def save(self):
         presets = list(all_presets())
@@ -120,15 +117,13 @@ class TournamentConfigureForm(ModelForm):
                 t.preferences[preference['key']] = preference['new_value']
 
         # Apply the credits
-        t.preferences["public_features__tab_credit"] = self.cleaned_data["tab_credit"]
-        t.preferences["public_features__org_credit"] = self.cleaned_data["org_credit"]
-        t.preferences["public_features__adj_credit"] = self.cleaned_data["adj_credit"]
+        if self.cleaned_data['tournament_staff'] != self.fields['tournament_staff'].initial:
+            t.preferences["public_features__tournament_staff"] = self.cleaned_data["tournament_staff"]
 
         # Create break rounds (need to do so after we know teams-per-room)
         open_break = BreakCategory.objects.filter(tournament=t, is_general=True).first()
         # Check there aren't already break rounds (i.e. when importing demos)
-        existing_break_rounds_count = t.break_rounds().count()
-        if open_break and existing_break_rounds_count == 0:
+        if open_break and not t.break_rounds().exists():
             if t.pref('teams_in_debate') == 'bp':
                 num_break_rounds = math.ceil(math.log2(open_break.break_size / 2))
             else:
