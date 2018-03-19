@@ -7,7 +7,7 @@
   {% endblocktrans %}
 {% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
-{% block body-class %}override-sidebar-offset{% endblock %}
+{% block sidebar %}{% endblock %} {# Need to override sidebar manually it will crash when no tournaments are present. Ideally this would be handled with the Mixins but this is a relatively unique view as it is part of Tournaments but is admin-only and thus shown with the sidebar #}
 
 {% block nav %}{% endblock %}
 
