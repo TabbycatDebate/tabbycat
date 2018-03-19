@@ -1081,6 +1081,15 @@ class EnableForfeits(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class HideAdjudicators(BooleanPreference):
+    help_text = _("Hides the adjudicators in public views of the draw")
+    verbose_name = _("Mask adjudicators")
+    section = league_options
+    name = 'hide_adjudicators'
+    default = False
+
+
+@tournament_preferences_registry.register
 class EnableDivisionMotions(BooleanPreference):
     help_text = _("Enables assigning motions to a division")
     verbose_name = _("Enable division motions")

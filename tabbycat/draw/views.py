@@ -101,7 +101,7 @@ class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
         if tournament.pref('enable_division_motions'):
             table.add_motion_column(d.division_motion for d in draw)
 
-        if not tournament.pref('enable_divisions'):
+        if not tournament.pref('hide_adjudicators'):
             table.add_debate_adjudicators_column(draw, show_splits=False)
 
     def get_table(self):
