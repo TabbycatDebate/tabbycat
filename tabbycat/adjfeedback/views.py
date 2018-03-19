@@ -59,11 +59,14 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
     """ Also inherited by the adjudicator's tab """
 
     def get_adjudicators(self):
-        t = self.get_tournament()
-        if t.pref('share_adjs'):
-            return Adjudicator.objects.filter(Q(tournament=t) | Q(tournament__isnull=True))
-        else:
-            return Adjudicator.objects.filter(tournament=t)
+        if not hasattr(self, '_adjudicators'):
+            t = self.get_tournament()
+            if t.pref('share_adjs'):
+                self._adjudicators = Adjudicator.objects.filter(Q(tournament=t) | Q(tournament__isnull=True))
+            else:
+                self._adjudicators = Adjudicator.objects.filter(tournament=t)
+            populate_feedback_scores(self._adjudicators)
+        return self._adjudicators
 
     def get_context_data(self, **kwargs):
         t = self.get_tournament()
@@ -74,9 +77,11 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         kwargs['c_breaking'] = adjudicators.filter(breaking=True).count()
 
         ntotal = len(scores)
-        nchairs = t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2)
         ntrainees = [x < t.pref('adj_min_voting_score') for x in scores].count(True)
-        npanellists = ntotal - nchairs - ntrainees
+        nvoting = ntotal - ntrainees
+        ndebates = t.team_set.count() // (4 if t.pref('teams_in_debate') == 'bp' else 2)
+        nchairs = min(nvoting, ndebates)
+        npanellists = nvoting - nchairs
 
         max_score = int(math.ceil(t.pref('adj_max_score')))
         min_score = int(math.floor(t.pref('adj_min_score')))
@@ -107,6 +112,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         kwargs.update({
             'c_total': ntotal,
             'c_chairs': nchairs,
+            'c_debates': ndebates,
             'c_panellists': npanellists,
             'c_trainees': ntrainees,
             'c_thresholds': band_specs,
@@ -120,7 +126,6 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
     def get_table(self):
         t = self.get_tournament()
         adjudicators = self.get_adjudicators()
-        populate_feedback_scores(adjudicators)
         # Gather stats necessary to construct the graphs
         adjudicators = get_feedback_overview(t, adjudicators)
         table = FeedbackTableBuilder(view=self, sort_key=self.sort_key,

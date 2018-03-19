@@ -22,4 +22,4 @@ def team_record_link(team, admin):
     else:
         url = reverse_tournament('participants-public-team-record', tournament, kwargs={'pk': team.pk})
 
-    return mark_safe("""<a href="%(url)s" class="list-group-item-text">%(name)s</a>""" % {'url': url, 'name': name})
+    return mark_safe("""<a href="%(url)s" class="list-group-item-text alert-link">%(name)s</a>""" % {'url': url, 'name': name})

@@ -65,6 +65,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         self.add_column(test_header, test_data)
 
     def add_feedback_graphs(self, adjudicators):
+        nprelims = self.tournament.prelim_rounds().count()
         feedback_head = {
             'key': 'Feedback',
             'text': 'Feedback',
@@ -75,7 +76,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'component': 'feedback-trend',
             'minScore': self.tournament.pref('adj_min_score'),
             'maxScore': self.tournament.pref('adj_max_score'),
-            'roundSeq': len(self.tournament.prelim_rounds()),
+            'roundSeq': nprelims,
         } for adj in adjudicators]
         self.add_column(feedback_head, feedback_graph_data)
 
