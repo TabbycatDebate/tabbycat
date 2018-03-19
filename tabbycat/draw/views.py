@@ -810,7 +810,9 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
 
 class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
-    page_title = gettext_lazy("All Draws for All Teams")
+
+    def get_page_title(self):
+        return _("All Draws for All Teams")
 
     def get_draw(self):
         draw = Debate.objects.all().select_related('round', 'round__tournament',

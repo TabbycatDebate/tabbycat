@@ -10,7 +10,7 @@
     {% for institution in institutions %}
       <a class="list-group-item" href="{% url 'all-draws-for-institution' institution.id %}">
         <span>Draws for {{ institution.name }}</span>
-        <span class="badge badge-secondary">VIEW ALL</span>
+        <span class="badge badge-secondary float-right">VIEW ALL</span>
       </a>
     {% endfor %}
   </ul>
