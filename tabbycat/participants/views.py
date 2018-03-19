@@ -52,14 +52,16 @@ class BaseParticipantsListView(VueTableTemplateView):
     page_emoji = '🚌'
 
     def get_tables(self):
-        t = self.tournament
-
-        adjudicators = t.adjudicator_set.select_related('institution')
+        adjudicators = self.tournament.adjudicator_set.select_related('institution')
         adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         adjs_table.add_adjudicator_columns(adjudicators)
 
-        speakers = Speaker.objects.filter(team__tournament=t).select_related(
+        speakers = Speaker.objects.filter(team__tournament=self.tournament).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
+        if use_team_code_names(self.tournament, self.admin):
+            speakers = speakers.order_by('team__code_name')
+        else:
+            speakers = speakers.order_by('team__short_name')
         speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="team")
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
@@ -70,11 +72,13 @@ class BaseParticipantsListView(VueTableTemplateView):
 class ParticipantsListView(BaseParticipantsListView, AdministratorMixin, TournamentMixin):
 
     template_name = 'participants_list.html'
+    admin = True
 
 
 class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageMixin, CacheMixin):
 
     public_page_preference = 'public_participants'
+    admin = False
 
 
 # ==============================================================================
