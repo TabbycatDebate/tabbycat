@@ -15,7 +15,7 @@
 
     {% if user.is_superuser %}
       {% blocktrans trimmed asvar text with tn=tournament.name %}
-        Admin area for <strong>{{ tn }}</strong>
+        Administrator area for <strong>{{ tn }}</strong>
       {% endblocktrans %}
       {% include "components/item-action.html" with icon="settings" url=admin_url %}
     {% endif %}
