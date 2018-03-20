@@ -277,12 +277,13 @@ class CrossTournamentPageMixin(PublicTournamentPageMixin):
     and check its preferences"""
     cross_tournament = True
 
-    def get_round(self):
+    @property
+    def round(self):
         return None  # Override Parent
 
-    def get_tournament(self):
-        tournament = Tournament.objects.order_by('id').last()
-        return tournament
+    @property
+    def tournament(self):
+        return Tournament.objects.order_by('id').last()
 
     def get_context_data(self, **kwargs):
         kwargs['tournament'] = self.tournament

@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('all_tournaments_all_venues/',
         views.AllTournamentsAllVenuesView.as_view(),
-        name='all_tournaments-all-venues'),
+        name='all-tournaments-all-venues'),
 
     path('all_tournaments_all_teams/',
         views.AllDrawsForAllTeamsView.as_view(),

@@ -342,6 +342,7 @@ class WADLPreferences(PreferencesPreset):
     league_options__enable_debate_scheduling   = True
     league_options__share_adjs                 = True
     league_options__share_venues               = True
+    league_options__hide_adjudicators          = True
     league_options__division_venues            = True
     league_options__duplicate_adjs             = True
     league_options__public_divisions           = True
