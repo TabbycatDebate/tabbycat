@@ -1,4 +1,4 @@
 name,slug,seq,break_size,is_general,priority,rule
-Open,open,1,12,1,30,standard
-Novice,novice,2,8,0,20,standard
+Open,open,1,16,1,30,standard
+Novice,novice,2,6,0,20,standard
 ESL,esl,3,4,0,20,standard

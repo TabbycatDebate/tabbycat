@@ -1,0 +1,89 @@
+institution,reference,use_institution_prefix,break_category,speaker1_name,speaker1_email,speaker1_gender,speaker1_category,speaker2_name,speaker2_email,speaker2_gender,speaker2_category
+Arnor,AC,TRUE,,Bahiyy al Din Awad,BahiyyalDinButrusAwad@fleckens.hu,male,,Rikard Csizmadia,CsizmadiaRikard@gustr.com,male,novice
+Arnor,II,TRUE,esl,Deodato Iadanza,DeodatoIadanza@superrito.com,male,esl,Chisom Iheatu,ChisomIheatu@dayrep.com,female,esl
+Arnor,RA,TRUE,,Kosa Rošic,KosaRosic@gustr.com,female,novice,Durar Almasi,DurarSaihahAlmasi@dayrep.com,female,novice
+Arnor,LJ,TRUE,,Milton Lindholm,MiltonLindholm@jourrapide.com,male,,Niamh Johannes,NiamhJohannes@superrito.com,female,
+Bree,PB,TRUE,,Amadeusz Piotrowski,AmadeuszPiotrowski@armyspy.com,male,,Omar Berg,OmarBerg@dayrep.com,male,
+Bree,MN,TRUE,,Martyna Mitchell,MartynaMitchell@gustr.com,female,,Mehret Nuguse,MehretNuguse@armyspy.com,female,
+Bree,HC,TRUE,,Elvar Hallbjörnsson,ElvarHallbjornsson@jourrapide.com,male,,Florus Couet,FlorusCouet@teleworm.us,male,
+Caras Galadhon,LD,TRUE,,Elizabeta Lučić,ElizabetaLucic@rhyta.com,female,esl,Ella Dumas,EllaDumas@rhyta.com,female,esl
+Caras Galadhon,BL,TRUE,,May Boffin,MayBoffin@cuvox.de,female,esl,Courtney Leach,CourtneyLeach@jourrapide.com,female,esl
+Dale,BV,TRUE,novice,Manuela Brajković,ManuelaBrajkovic@gustr.com,female,novice,Cung Võ,VoXuanCung@rhyta.com,male,novice
+Dale,TM,TRUE,,Beata Trentini,BeataTrentini@teleworm.us,female,novice,Brigitte Metzger,BrigitteMetzger@einrot.com,female,novice
+Dale,EK,TRUE,,Marie Ebersbach,MarieEbersbach@fleckens.hu,female,,Bećir Kontestabile,BecirKontestabile@teleworm.us,male,
+Dale,CS,TRUE,,Leonor Carvalho,LeonorCostaCarvalho@jourrapide.com,female,,Hans Sandström,HansSandstrom@fleckens.hu,male,novice
+Dol Amroth,CW,TRUE,,Władysława Czerwinska,WladyslawaCzerwinska@jourrapide.com,female,,Rafael Wiles,RafaelSWiles@dayrep.com,male,
+Dorwinion,SS,TRUE,novice,Edipo Sánchez,EdipoSanchezReyna@jourrapide.com,male,novice,Inas Said,InasSumaiyaSaid@armyspy.com,female,novice
+Dorwinion,DG,TRUE,esl,Aron Dang,AronDang@einrot.com,male,esl,Sovbika Gairbekov,SovbikaGairbekov@rhyta.com,female,esl
+Dorwinion,ŠT,TRUE,,Nevenka Šimić,NevenkaSimic@jourrapide.com,female,,John Tobiassen,JohnTobiassen@einrot.com,male,
+Dorwinion,MI,TRUE,,Mike Møller,MikeAMller@einrot.com,male,,Luukas Ikonen,LuukasIkonen@armyspy.com,male,
+Edoras,SW,TRUE,,Noah Shah,NoahShah@cuvox.de,male,,Dominic Walton,DominicWalton@teleworm.us,male,
+Edoras,PW,TRUE,,Petr Petrů,PetrPetru@gustr.com,male,,James Wright,JamesJWright@fleckens.hu,male,
+Edoras,NB,TRUE,novice,Nnanna Nkemjika,NnannaNkemjika@armyspy.com,male,novice,Dorene Brunault,DoreneBrunault@teleworm.us,female,novice
+Éothéod,SD,TRUE,,Marmaduc Sandheaver,MarmaducSandheaver@teleworm.us,male,esl,Dani Delijaj,DaniDelijaj@gustr.com,female,esl
+Éothéod,AK,TRUE,novice,Jaromir Alekseeva,JaromirAlekseeva@dayrep.com,male,novice,Dieter Konig,DieterKonig@teleworm.us,male,novice
+Éothéod,PY,TRUE,,Hanne Poulsen,HannePoulsen@einrot.com,female,,Zula Yonas,ZulaYonas@rhyta.com,male,
+Éothéod,YA,TRUE,,Kirika Yamamura,KirikaYamamura@jourrapide.com,female,esl,Vitor Almeida,VitorCostaAlmeida@cuvox.de,male,esl
+Éothéod,ÓG,TRUE,,Örvar Ómarsson,OrvarOmarsson@teleworm.us,male,novice,Agnar Georgsson,AgnarGeorgsson@cuvox.de,male,novice
+Erebor,OS,TRUE,,Ymke Owusu,YmkeOwusu@einrot.com,female,,Seth Simos,SethSimos@fleckens.hu,male,
+Erebor,OT,TRUE,,Ibeamaka Otutodilinna,IbeamakaOtutodilinna@rhyta.com,male,,Lelio Toscani,LelioToscani@rhyta.com,male,
+Erebor,RJ,TRUE,,Patricia Repina,PatriciaRepina@dayrep.com,female,,Julie Johansen,JulieJohansen@superrito.com,female,
+Erebor,BP,TRUE,,Lodovica Boni,LodovicaBoni@rhyta.com,female,,Texas Petersson,TexasPetersson@einrot.com,male,
+Hobbiton,KH,TRUE,novice,Shirabe Kaneko,ShirabeKaneko@gustr.com,female,novice,Renata Hajná,RenataHajna@fleckens.hu,female,novice
+Hobbiton,LW,TRUE,novice,Regina Loggia,ReginaLoggia@rhyta.com,female,novice,Melilot Whitfoot,MelilotWhitfoot@einrot.com,female,novice
+Hobbiton,SZ,TRUE,esl/novice,Ine Suda,IneSuda@fleckens.hu,female,esl/novice,Bartolomeo Zito,BartolomeoZito@cuvox.de,male,esl/novice
+Iron Hills,HS,TRUE,,Patrick Hussein,PatrickHussein@fleckens.hu,male,,Fesahaye Selam,FesahayeSelam@superrito.com,male,
+Iron Hills,AD,TRUE,esl/novice,Evelyn Almeida,EvelynMartinsAlmeida@superrito.com,female,esl/novice,Birthe Davidsen,BirtheDavidsen@teleworm.us,female,esl/novice
+Iron Hills,VN,TRUE,,Marie Vytlačilová,MarieVytlacilova@cuvox.de,female,esl,Odili Ndubuisi,OdiliNdubuisi@einrot.com,male,esl
+Iron Hills,LE,TRUE,,Aune Leppälä,AuneLeppala@teleworm.us,female,,Lukas Ekström,LukasEkstrom@superrito.com,male,
+Iron Hills,RM,TRUE,,Circe Rodarte,CirceRodarteGaytan@einrot.com,female,,Chikwado Madueke,ChikwadoMadueke@superrito.com,male,
+Isengard,BH,TRUE,,Vitória Barbosa,VitoriaSilvaBarbosa@rhyta.com,female,,Yohannes Hagos,YohannesHagos@cuvox.de,male,
+Isengard,NS,TRUE,,Yousui Nakanishi,YousuiNakanishi@superrito.com,male,,Elita Sultygov,ElitaSultygov@jourrapide.com,female,
+Isengard,NH,TRUE,novice,Rafah Naifeh,RafahFalakNaifeh@einrot.com,female,novice,Falerina Hébert,FalerinaHebert@cuvox.de,female,novice
+Ithilien,YT,TRUE,,Naotatsu Yokoyama,NaotatsuYokoyama@armyspy.com,male,,Huân Tạ,TaThanhHuan@fleckens.hu,male,
+Ithilien,CM,TRUE,,Felicienne Champagne,FelicienneChampagne@armyspy.com,female,novice,William Mogensen,WilliamRMogensen@armyspy.com,male,novice
+Ithilien,TN,TRUE,,Nike Tožbar,NikeTozbar@teleworm.us,female,novice,Thamer Nassar,ThamerAdnanNassar@jourrapide.com,male,novice
+Ithilien,HG,TRUE,,Santiago Howard,SantiagoSHoward@cuvox.de,male,,Karl Garðarsson,KarlGararsson@gustr.com,male,
+Lórien,TH,TRUE,,Kacey Thompson,KaceyThompson@cuvox.de,female,,Pernille Hermansen,PernilleDHermansen@fleckens.hu,female,
+Lórien,GN,TRUE,novice,Franciska Gyenis,GyenisFranciska@gustr.com,female,novice,Osman Nasih,OsmanNasih@einrot.com,male,novice
+Lórien,BD,TRUE,novice,Jesper Boncoeur,JesperBoncoeur@gustr.com,male,novice,Katarzyna Dudek,KatarzynaDudek@gustr.com,female,novice
+Lórien,SB,TRUE,,Eligiusz Szczepański,EligiuszSzczepanski@fleckens.hu,male,,Peterke Bodo,BodoPeterke@cuvox.de,male,
+Minas Tirith,HO,TRUE,,Marja Huovinen,MarjaHuovinen@gustr.com,female,novice,Chimaijem Obielumani,ChimaijemObielumani@teleworm.us,female,novice
+Minas Tirith,EN,TRUE,,Hortencia Ellis,HortenciaGEllis@cuvox.de,female,,Ängla Nyström,AnglaNystrom@teleworm.us,female,
+Minas Tirith,BV,TRUE,novice,Angelina Belyakova,AngelinaBelyakova@armyspy.com,female,novice,Olga Väätäinen,OlgaVaatainen@armyspy.com,female,novice
+Minas Tirith,CB,TRUE,,Ella Chin Kaw,EllaChinKaw@dayrep.com,female,,Lokman Bolka,LokmanBolka@rhyta.com,male,
+Mithlond,NC,TRUE,esl,Meeri Nyman,MeeriNyman@armyspy.com,female,esl,Samantha Coxen,SamanthaCoxen@teleworm.us,female,esl
+Mithlond,SR,TRUE,,Mali Sultanovich,MaliSultanovich@jourrapide.com,female,,Brice Routhier,BriceRouthier@armyspy.com,female,
+Mithlond,RP,TRUE,,Ravi Rotteveel,RaviRotteveel@teleworm.us,male,,Daniel Poulsen,DanielPoulsen@cuvox.de,male,
+Mithlond,AB,TRUE,,Izaket Akhtakhanov,IzaketAkhtakhanov@dayrep.com,female,,Zaynap Bisliev,ZaynapBisliev@dayrep.com,female,
+Northern Mirkwood,PD,TRUE,novice,Michael Ponomarev,MichaelPonomarev@rhyta.com,male,novice,Vitéz Dömötör,DomotorVitez@jourrapide.com,male,novice
+Northern Mirkwood,SV,TRUE,,Dositeo Sauceda,DositeoSaucedaRuvalcaba@jourrapide.com,male,,Chân Võ,VoThiGamChan@fleckens.hu,female,
+Northern Mirkwood,NS,TRUE,esl,Nkemka Nwabugwu,NkemkaNwabugwu@jourrapide.com,female,esl,Joseph Steele,JosephSteele@superrito.com,male,esl
+Pelargir,GS,TRUE,,Thomas Gjedrem,ThomasGjedrem@jourrapide.com,male,,Erlend Sandbakken,ErlendSandbakken@fleckens.hu,male,novice
+RI Rohan,MM,TRUE,,Demsas Mewael,DemsasMewael@jourrapide.com,male,,Ye Meng,YeMeng@superrito.com,male,
+Rivendell,CL,TRUE,esl,Obielumani Chukwubuikem,ObielumaniChukwubuikem@armyspy.com,male,esl,Musette Lajoie,MusetteLajoie@dayrep.com,female,esl
+Rivendell,DD,TRUE,novice,Jurek Dąbrowski ,JurekDabrowski@cuvox.de,male,novice,Lechosława Dąbrowski ,LechoslawaDabrowski@fleckens.hu,female,novice
+Rivendell,BA,TRUE,novice,Ela Borkowska,ElaBorkowska@gustr.com,female,novice,Alhasan Atiyeh,AlhasanAfifAtiyeh@superrito.com,male,novice
+Rivendell,IS,TRUE,novice,Patrik Ivanović,PatrikIvanovic@teleworm.us,male,novice,Cordelia Sagese,CordeliaSagese@teleworm.us,female,novice
+Rohan Military,WA,TRUE,,Ryan Watt,RyanWatt@fleckens.hu,male,,Rodrigo Araujo,RodrigoCastroAraujo@einrot.com,male,
+Rohan Military,SB,TRUE,novice,Adam Stanley,AdamStanley@gustr.com,male,novice,Desimir Barišić,DesimirBarisic@superrito.com,male,novice
+Southern Mirkwood,TG,TRUE,,Ruby Took-Brandybuck,RubyTook-Brandybuck@rhyta.com,female,,Sergiusz Grabowski,SergiuszGrabowski@jourrapide.com,male,novice
+Southern Mirkwood,BV,TRUE,,Daría Briones,DariaBrionesPerales@rhyta.com,female,esl,Sebastian Volodin,SebastianVolodin@einrot.com,male,esl
+Staddle,JL,TRUE,novice,Lindsay Jones,LindsayJJones@rhyta.com,female,novice,Jan Laine,JanLaine@cuvox.de,male,novice
+Staddle,RB,TRUE,,Júlia Rocha,JuliaSouzaRocha@fleckens.hu,female,,Wyatt Bourgouin,WyattBourgouin@dayrep.com,male,
+Staddle,DV,TRUE,,Beaufort Dagenais,BeaufortDagenais@teleworm.us,male,esl/novice,Roberto Vukelić,RobertoVukelic@cuvox.de,male,esl/novice
+The Shire,DN,TRUE,,Fahdah Deeb,FahdahBarirahDeeb@fleckens.hu,female,esl,Enwelumokwu Nnonso,EnwelumokwuNnonso@armyspy.com,female,esl
+The Shire,WL,TRUE,novice,Jodie Williamson,JodieWilliamson@armyspy.com,female,novice,Gerardino Loggia,GerardinoLoggia@armyspy.com,male,novice
+The Shire,NE,TRUE,esl,Somadina Nwokike,SomadinaNwokike@einrot.com,female,esl,Michelle Eriksen,MichelleSEriksen@gustr.com,female,esl
+The Shire,TH,TRUE,,Tuất Tôn,TonHungTuat@teleworm.us,male,,Jaroslav Hornych,JaroslavHornych@fleckens.hu,male,
+UG Anfalas,KB,TRUE,,Markha Kadiev,MarkhaKadiev@dayrep.com,female,,Lea Beich,LeaBeich@gustr.com,female,
+UG Anfalas,BL,TRUE,novice,Tamara Barna,BarnaTamara@einrot.com,female,novice,Edward Lennon,EdwardLennon@armyspy.com,male,novice
+UG Lebennin,HK,TRUE,,Ivana Hanáčková,IvanaHanackova@gustr.com,female,,Oksana Kubíková,OksanaKubikova@einrot.com,female,
+UG Lossarnach,OR,TRUE,,Femme Oehlers,FemmeOehlers@armyspy.com,female,,Jan Rogstad,JanRogstad@jourrapide.com,male,
+UG Lossarnach,SK,TRUE,,Zaurbek Sultanovich,ZaurbekSultanovich@armyspy.com,male,,Aleksander Kowalczyk,AleksanderKowalczyk@armyspy.com,male,
+UG Ringló Vale,RM,TRUE,,Nura Rushisvili,NuraRushisvili@dayrep.com,female,,Caio Marino,CaioMarino@fleckens.hu,male,
+UG Ringló Vale,FK,TRUE,,Luca Frei,LucaFrei@armyspy.com,male,esl,Aziz Kidane,AzizKidane@einrot.com,male,esl
+UG Ringló Vale,PN,TRUE,,Rasmus Pedersen,RasmusJPedersen@dayrep.com,male,,Mebrahtu Nasih,MebrahtuNasih@gustr.com,male,
+Upbourn,GB,TRUE,novice,Sancho Gamgee,SanchoGamgee@cuvox.de,male,novice,Amaury Bousquet,AmauryBousquet@dayrep.com,male,novice
+Upbourn,RZ,TRUE,esl,Jennifer Rothman,JenniferDRothman@armyspy.com,female,esl,Izydor Zawadzki,IzydorZawadzki@cuvox.de,male,esl
+Upbourn,VS,TRUE,,Rez Veress,VeressRez@teleworm.us,male,,Utka Segovia,UtkaSegoviaBaca@fleckens.hu,male,

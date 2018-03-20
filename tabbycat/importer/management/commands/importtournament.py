@@ -20,8 +20,8 @@ class Command(BaseCommand):
         parser.add_argument('path', help="Directory to import tournament data from")
         parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
-        parser.add_argument('-i', '--importer', type=str, default='anorak', choices=importer_registry,
-                            help='Which importer to use (default: anorak)')
+        parser.add_argument('-i', '--importer', type=str, default=None, choices=importer_registry,
+                            help='Which importer to use (default: read from .importer file)')
 
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
                             help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
@@ -60,7 +60,7 @@ class Command(BaseCommand):
         self.make_tournament()
         loglevel = [logging.ERROR, logging.WARNING, DUPLICATE_INFO, logging.DEBUG][self.verbosity]
 
-        importer_class = importer_registry[self.options['importer']]
+        importer_class = self.get_importer_class()
         self.importer = importer_class(
             self.t, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
 
@@ -70,6 +70,28 @@ class Command(BaseCommand):
                 self.make_rounds()
             else:
                 self.make(item)
+
+    def get_importer_class(self):
+        importer_spec_filepath = os.path.join(self.dirpath, ".importer")
+        if not os.path.exists(importer_spec_filepath):
+            raise CommandError("The --importer option wasn't specified and the file "
+                "%s does not exist." % importer_spec_filepath)
+        try:
+            f = open(importer_spec_filepath, 'r')
+        except OSError:
+            raise CommandError("Error opening file %s" % importer_spec_filepath)
+        importer_spec = f.read().strip()
+
+        if self.options['importer'] is not None:
+            if self.options['importer'] != importer_spec:
+                self._warning("Using importer %s, but data directory suggests "
+                        "%s" % (self.options['importer'], importer_spec))
+            importer_spec = self.options['importer']  # manual override
+
+        if importer_spec not in importer_registry:
+            raise CommandError("There is no importer %r." % importer_spec)
+
+        return importer_registry[importer_spec]
 
     def _print_stage(self, message):
         if self.verbosity > 0:

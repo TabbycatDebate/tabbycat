@@ -46,8 +46,13 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         'venues',
         'team_conflicts',
         'institution_conflicts',
+        'adjudicator_conflicts',
         'team_institution_conflicts',
     ]
+
+    def _adj_lookup(self, x):
+        return pm.Adjudicator.objects.get(
+                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x)
 
     def import_rounds(self, f):
         round_interpreter = make_interpreter(
@@ -62,8 +67,15 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
         self.tournament.save()
 
-    def import_institutions(self, f):
-        self._import(f, pm.Institution)
+    def import_institutions(self, f, auto_create_regions=True):
+        if auto_create_regions:
+            def region_interpreter(lineno, line):
+                if line.get('region'):
+                    return {'name': line['region']}  # otherwise return None
+            self._import(f, pm.Region, region_interpreter, expect_unique=False)
+
+        interpreter = make_interpreter(region=lambda x: pm.Region.objects.get(name=x))
+        self._import(f, pm.Institution, interpreter)
 
     def import_break_categories(self, f):
         interpreter = make_interpreter(tournament=self.tournament)
@@ -96,8 +108,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         # on adjudicators.
         interpreter = make_interpreter(
             round=None,
-            adjudicator=lambda x: pm.Adjudicator.objects.get(
-                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+            adjudicator=self._adj_lookup,
         )
         histories = self._import(f, fm.AdjudicatorTestScoreHistory, interpreter)
 
@@ -190,18 +201,23 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
     def import_team_conflicts(self, f):
         interpreter = make_interpreter(
             team=lambda x: pm.Team.objects.lookup(name=x, tournament=self.tournament),
-            adjudicator=lambda x: pm.Adjudicator.objects.get(
-                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+            adjudicator=self._adj_lookup,
         )
         self._import(f, am.AdjudicatorConflict, interpreter)
 
     def import_institution_conflicts(self, f):
         interpreter = make_interpreter(
             institution=pm.Institution.objects.lookup,
-            adjudicator=lambda x: pm.Adjudicator.objects.get(
-                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+            adjudicator=self._adj_lookup,
         )
         self._import(f, am.AdjudicatorInstitutionConflict, interpreter)
+
+    def import_adjudicator_conflicts(self, f):
+        interpreter = make_interpreter(
+            adjudicator=self._adj_lookup,
+            conflict_adjudicator=self._adj_lookup,
+        )
+        self._import(f, am.AdjudicatorAdjudicatorConflict, interpreter)
 
     def import_team_institution_conflicts(self, f):
         """Adds team conflicts for all adjudicators for the listed institution.
