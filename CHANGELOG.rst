@@ -27,12 +27,12 @@ Change Log
 - Fixed χ² test in motion statistics, and refactored and moved motion statistics page
 - Teams, like adjudicators, no longer need to have an institution
 - Quality of life improvements
-   - Added a 'liveness' calculator for Open categories in BP
-   - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
-   - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
-   - Added "appellant" and "respondent" to the side name options
-   - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
-   - The "shared" checkbox in the simple importer is now hidden unless the relevant tournament option is enabled
+    - Added a 'liveness' calculator for Open categories in BP
+    - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
+    - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
+    - Added "appellant" and "respondent" to the side name options
+    - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+    - The "shared" checkbox in the simple importer is now hidden unless the relevant tournament option is enabled
     - Current team standings page now shows silent round results if "Release all round results to public" is set
     - The Consensus vs Voting options for how ballots work has not been split into two settings: one for in-rounds and one for out-rounds
 - Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:

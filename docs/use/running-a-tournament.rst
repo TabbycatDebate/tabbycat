@@ -6,7 +6,7 @@ Running a Tournament
 
 Once you've finished the steps in :ref:`starting-a-tournament`, you're ready to go! This page outlines what you would do for each round during the tournament. After the tournament, proceed to :ref:`finishing-a-tournament`.
 
-This is all done from an admin interface (*i.e.*, by the tab director or adjudication core member). In the admin interface, tournament-wide pages (feedback, standings, and break) are at the top of the left-hand menu, while round-specific pages (availability, draw, display, motions, and results) are in dropdown's organised by each round;s abbreviation.
+This is all done from the admin area (*i.e.*, by the tab director or adjudication core member). In the admin area, tournament-wide pages (feedback, standings, and break) are at the top of the left-hand menu, while round-specific pages (availability, draw, display, motions, and results) are in dropdown's organised by each round's abbreviation.
 
 The basic workflow for each round is:
 
@@ -18,7 +18,7 @@ The basic workflow for each round is:
 #. :ref:`Enter results <entering-results>`
 #. :ref:`Advance to the next round <advancing-round>`
 
-.. availability:
+.. _availability:
 
 Availability
 ============
@@ -91,11 +91,11 @@ Entering Results
 
 2. Both results and feedback entered in the tab room or online need to be confirmed before the results are counted. To confirm a debate ballot and the debate as a whole, the confirmed checkbox under *Ballot Status* should be ticket in addition to the *Debate Status* being set to Confirmed.
 
-3. Note that you can track data entry progress from the **Overview** page in an admin account (get there by clicking the tournament's name in the menu).
+3. Note that you can track data entry progress from the **Overview** page for the tournament.
 
 See :ref:`data-entry` for more details about the data entry process.
 
-.. warning:: For major tournaments, we don't recommend entering any data from an admin's account. This is because the admin interface (intentionally) does not enforce the data confirmation procedure.
+.. warning:: We strongly recommend entering all data using the assistant area, not the admin area. This is because the admin area (intentionally) does not enforce the data confirmation procedure.
 
 .. _advancing-round:
 
