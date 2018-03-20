@@ -30,7 +30,7 @@ from utils.misc import redirect_round, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
-from .forms import SetCurrentRoundForm, TournamentConfigureForm
+from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 from .utils import get_side_name
@@ -201,8 +201,7 @@ class CreateTournamentView(AdministratorMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
-    fields = ('name', 'short_name', 'slug')
-
+    form_class = TournamentStartForm
     template_name = "create_tournament.html"
 
     def get_context_data(self, **kwargs):
@@ -237,14 +236,15 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
         return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
 
 
-class ConfigureTournamentView(AdministratorMixin, UpdateView):
+class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
     model = Tournament
     form_class = TournamentConfigureForm
     template_name = "configure_tournament.html"
     slug_url_kwarg = 'tournament_slug'
 
     def get_success_url(self):
-        return reverse_tournament('tournament-admin-home', tournament=self.object)
+        t = self.tournament
+        return reverse_tournament('tournament-admin-home', tournament=t)
 
 
 class SetCurrentRoundView(AdministratorMixin, UpdateView):
