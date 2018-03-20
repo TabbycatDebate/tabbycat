@@ -108,25 +108,23 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
             bc['class'] = i
         return all_bcs
 
-    def annotate_round_info(self, round_info):
-        t = self.tournament
-        r = self.round
-        round_info['updateImportanceURL'] = reverse_round('adjallocation-save-debate-importance', r)
-        round_info['scoreMin'] = t.pref('adj_min_score')
-        round_info['scoreMax'] = t.pref('adj_max_score')
-        round_info['scoreForVote'] = t.pref('adj_min_voting_score')
-        round_info['allowDuplicateAllocations'] = t.pref('duplicate_adjs')
+    def get_round_info(self):
+        round_info = super().get_round_info()
+        round_info['updateImportanceURL'] = reverse_round('adjallocation-save-debate-importance', self.round)
+        round_info['scoreMin'] = self.tournament.pref('adj_min_score')
+        round_info['scoreMax'] = self.tournament.pref('adj_max_score')
+        round_info['scoreForVote'] = self.tournament.pref('adj_min_voting_score')
+        round_info['allowDuplicateAllocations'] = self.tournament.pref('duplicate_adjs')
         round_info['regions'] = self.get_regions_info()
         round_info['categories'] = self.get_categories_info()
         return round_info
 
     def get_context_data(self, **kwargs):
-        t = self.tournament
         kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
-        kwargs['showAllocationIntro'] = t.pref('show_allocation_intro')
+        kwargs['showAllocationIntro'] = self.tournament.pref('show_allocation_intro')
         # This is meant to be shown once only; so we set false if true
-        if t.pref('show_allocation_intro'):
-            t.preferences['ui_options__show_allocation_intro'] = False
+        if self.tournament.pref('show_allocation_intro'):
+            self.tournament.preferences['ui_options__show_allocation_intro'] = False
 
         return super().get_context_data(**kwargs)
 

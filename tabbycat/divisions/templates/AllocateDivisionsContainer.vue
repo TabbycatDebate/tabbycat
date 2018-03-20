@@ -8,7 +8,8 @@
           :division="division"
           :save-venue-category-url="saveVenueCategoryUrl"
           :teams="teamsInDivision(division.id)"
-          :vcs="venueCategories">
+          :vcs="venueCategories"
+          :round-info="roundInfo">
         </division-droppable>
       </div>
     </div>
@@ -32,7 +33,7 @@ import _ from 'lodash'
 export default {
   mixins: [AjaxMixin],
   components: { DraggableTeam, DivisionDroppable, UnallocatedItemsContainer },
-  props: ['teams', 'divisions', 'venueCategories',
+  props: ['teams', 'divisions', 'venueCategories', 'roundInfo',
           'saveDivisionsUrl', 'saveVenueCategoryUrl'],
   created: function () {
     // Watch for events on the global event hub

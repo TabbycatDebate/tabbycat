@@ -7,6 +7,7 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
+from utils.misc import reverse_round
 
 import logging
 logger = logging.getLogger(__name__)
@@ -292,6 +293,25 @@ class Round(models.Model):
 
         if errors:
             raise ValidationError(errors)
+
+    def serialize(self):
+        adjudicator_positions = ["C"]
+        if not self.tournament.pref('no_panellist_position'):
+            adjudicator_positions += "P"
+        if not self.tournament.pref('no_trainee_position'):
+            adjudicator_positions += "T"
+
+        round_info = {
+            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
+            'adjudicatorDoubling': self.tournament.pref('duplicate_adjs'),
+            'teamsInDebate': self.tournament.pref('teams_in_debate'),
+            'teamPositions': self.tournament.sides,
+            'backUrl': reverse_round('draw', self),
+            'roundName' : self.abbreviation,
+            'roundSeq' : self.seq,
+            'roundIsPrelim' : not self.is_break_round,
+        }
+        return round_info
 
     # --------------------------------------------------------------------------
     # Checks for potential errors

@@ -77,6 +77,7 @@ class DivisionsAllocatorView(AdministratorMixin, TournamentMixin, TemplateView):
         kwargs["divisions"] = json.dumps(list(divisions.values(
             'id', 'name', 'venue_category', 'venue_category__name')))
         kwargs["venue_categories"] = json.dumps(venue_categories)
+        kwargs['round_info'] = json.dumps(t.current_round.serialize())
 
         return super().get_context_data(**kwargs)
 
@@ -156,7 +157,6 @@ class SetTeamDivisionView(TournamentMixin, AdministratorMixin, View):
 
     def post(self, request, *args, **kwargs):
         posted_data = json.loads(self.request.body)
-        print(posted_data)
         team = Team.objects.get(pk=int(posted_data['team']))
         if posted_data['division'] is None:
             team.division = None

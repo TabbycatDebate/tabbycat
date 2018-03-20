@@ -249,14 +249,13 @@ class Debate(models.Model):
             yield sdt
 
     def serialize(self):
-        round = self.round
         debate = {'id': self.id, 'bracket': self.bracket,
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
         debate['debateTeams'] = list(self.serial_debateteams_ordered())
         debate['debateAdjudicators'] = [{
             'position': position,
-            'adjudicator': adj.serialize(round=round),
+            'adjudicator': adj.serialize(round=self.round),
         } for adj, position in self.adjudicators.with_debateadj_types()]
         debate['sidesConfirmed'] = self.sides_confirmed
         return debate

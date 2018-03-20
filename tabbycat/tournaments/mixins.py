@@ -387,7 +387,12 @@ class DrawForDragAndDropMixin(RoundMixin):
 
         return serialised_draw
 
-    def annotate_round_info(self, round_info):
+    def get_round_info(self):
+        round_info = self.round.serialize()
+        if hasattr(self, 'auto_url'):
+            round_info['autoUrl'] = reverse_round(self.auto_url, self.round)
+        if hasattr(self, 'save_url'):
+            round_info['saveUrl'] = reverse_round(self.save_url, self.round)
         return round_info
 
     def get_draw(self):
@@ -413,31 +418,7 @@ class DrawForDragAndDropMixin(RoundMixin):
         draw = self.annotate_draw(draw, serialised_draw)
         return json.dumps(serialised_draw)
 
-    def get_round_info(self):
-        round = self.round
-        t = self.tournament
-        adjudicator_positions = ["C"]
-        if not t.pref('no_panellist_position'):
-            adjudicator_positions += "P"
-        if not t.pref('no_trainee_position'):
-            adjudicator_positions += "T"
-
-        round_info = {
-            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
-            'adjudicatorDoubling': t.pref('duplicate_adjs'),
-            'teamsInDebate': t.pref('teams_in_debate'),
-            'teamPositions': t.sides,
-            'backUrl': reverse_round('draw', round),
-            'autoUrl': reverse_round(self.auto_url, round) if hasattr(self, 'auto_url') else None,
-            'saveUrl': reverse_round(self.save_url, round) if hasattr(self, 'save_url') else None,
-            'roundName' : round.abbreviation,
-            'roundSeq' : round.seq,
-            'roundIsPrelim' : not round.is_break_round,
-        }
-        round_info = self.annotate_round_info(round_info)
-        return json.dumps(round_info)
-
     def get_context_data(self, **kwargs):
         kwargs['vueDebates'] = self.get_draw()
-        kwargs['vueRoundInfo'] = self.get_round_info()
+        kwargs['vueRoundInfo'] = json.dumps(self.get_round_info())
         return super().get_context_data(**kwargs)

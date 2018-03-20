@@ -8,7 +8,8 @@
 
       <droppable-generic :assignment-id="division.id"
                          :extra-css="'card-body division-droppable'">
-        <draggable-team v-for="team in teams" :key="team.id":team="team">
+        <draggable-team v-for="team in teams" :round-info="roundInfo"
+                       :key="team.id" :team="team">
         </draggable-team>
       </droppable-generic>
 
@@ -35,7 +36,7 @@ import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 export default {
   mixins: [AjaxMixin],
   components: { DroppableGeneric, DraggableTeam },
-  props: [ 'division', 'vcs', 'teams', 'saveVenueCategoryUrl'],
+  props: [ 'division', 'vcs', 'teams', 'saveVenueCategoryUrl', 'roundInfo'],
   computed: {
     hasEvenNumbers: function () {
       return (this.teams.length % 2) == 1;
