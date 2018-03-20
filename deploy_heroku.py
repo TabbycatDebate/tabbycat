@@ -175,7 +175,7 @@ run_command(["git", "push", remote_name, push_spec])
 # Make secret key
 command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])
 secret_key = get_output_from_command(command)
-secret_key = secret_key.strip().split()[0].strip()  # turn command output into string of just the key
+secret_key = secret_key.strip().split()[-1].strip()  # turn command output into string of just the key
 print_yellow("Made secret key: \"%s\"" % secret_key)
 command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
 run_heroku_command(command)
