@@ -16,6 +16,23 @@ from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
 class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     """Anorak: The original tournament data format."""
 
+    order = [
+        'venue_categories',
+        'venues',
+        'regions',
+        'institutions',
+        'break_categories',
+        'teams',
+        'speakers',
+        'adjudicators',
+        'rounds',
+        'motions',
+        'sides',
+        'adj_feedback_questions',
+        'adj_venue_constraints',
+        'team_venue_constraints',
+    ]
+
     lookup_round_stage = make_lookup("round stage", {
         ("preliminary", "p"): tm.Round.STAGE_PRELIMINARY,
         ("elimination", "break", "e", "b"): tm.Round.STAGE_ELIMINATION,
@@ -57,23 +74,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         ("suffix"): vm.VenueCategory.DISPLAY_SUFFIX,
         ("prefix"): vm.VenueCategory.DISPLAY_PREFIX
     })
-
-    order = [
-        'venue_categories',
-        'venues',
-        'regions',
-        'institutions',
-        'break_categories',
-        'teams',
-        'speakers',
-        'adjudicators',
-        'rounds',
-        'motions',
-        'sides',
-        'adj_feedback_questions',
-        'adj_venue_constraints',
-        'team_venue_constraints',
-    ]
 
     def import_rounds(self, f):
         round_interpreter = make_interpreter(

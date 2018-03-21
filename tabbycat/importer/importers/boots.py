@@ -16,6 +16,22 @@ from .base import BaseTournamentDataImporter, convert_bool, make_interpreter, ma
 class BootsTournamentDataImporter(BaseTournamentDataImporter):
     """Boots: Added for British Parliamentary convenience."""
 
+    order = [
+        'break_categories',
+        'rounds',
+        'institutions',
+        'speaker_categories',
+        'adjudicators',
+        'scores',
+        'teams',
+        'venues',
+        'team_conflicts',
+        'institution_conflicts',
+        'adjudicator_conflicts',
+        'team_institution_conflicts',
+        'adj_feedback_questions',
+    ]
+
     lookup_round_stage = make_lookup("round stage", {
         ("preliminary", "p"): tm.Round.STAGE_PRELIMINARY,
         ("elimination", "break", "e", "b"): tm.Round.STAGE_ELIMINATION,
@@ -35,20 +51,17 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         ("other", "o"): pm.Person.GENDER_OTHER,
     })
 
-    order = [
-        'break_categories',
-        'rounds',
-        'institutions',
-        'speaker_categories',
-        'adjudicators',
-        'scores',
-        'teams',
-        'venues',
-        'team_conflicts',
-        'institution_conflicts',
-        'adjudicator_conflicts',
-        'team_institution_conflicts',
-    ]
+    lookup_feedback_answer_type = make_lookup("feedback answer type", {
+        ("checkbox"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
+        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
+        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
+        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
+        ("float"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
+        ("text"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
+        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
+        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
+        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
+    })
 
     def _adj_lookup(self, x):
         return pm.Adjudicator.objects.get(
@@ -234,3 +247,11 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator': adj,
                 }
         self._import(f, am.AdjudicatorConflict, interpreter)
+
+    def import_adj_feedback_questions(self, f):
+        interpreter = make_interpreter(
+            tournament=self.tournament,
+            answer_type=self.lookup_feedback_answer_type,
+        )
+
+        self._import(f, fm.AdjudicatorFeedbackQuestion, interpreter)
