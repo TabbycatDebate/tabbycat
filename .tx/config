@@ -108,3 +108,9 @@ file_filter = tabbycat/venues/locale/<lang>/LC_MESSAGES/django.po
 source_file = tabbycat/venues/locale/en/LC_MESSAGES/django.po
 source_lang = en
 type = PO
+
+[tabbycat.javascript]
+file_filter = tabbycat/locale/<lang>/LC_MESSAGES/djangojs.po
+source_file = tabbycat/locale/en/LC_MESSAGES/djangojs.po
+source_lang = en
+type = PO
