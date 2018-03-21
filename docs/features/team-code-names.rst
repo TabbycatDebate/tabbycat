@@ -52,16 +52,18 @@ You can choose between the following options:
 - Use code names for public; code names with real names in tooltips for admins
 - Use code names everywhere; do not use tooltips (real names show in some admin views)
 
-"Code/real names in tooltips" means that the code name will display in the details
-box that appears when you roll over a team's name.
+"Code names in tooltips" means that the code name will display in the details
+box that appears when you roll over a team's name, and similarly for real names.
 
 One typical use is as follows:
 
-- Before the tournament, *use code names for public; real names with code names
-  in tooltips for admins*.
-- After the tournament, *use real names everywhere, and show code names in
-  tooltips*. This basically decodes all team names, while still allowing people
-  to look up the (now former) code name of a team.
+- Before the tournament, set the team code names setting to *Use code names for
+  public; real names with code names in tooltips for admins*. This hides real
+  names from anything participants would see, but continues to refer to teams in
+  administrative views by real names.
+- After the break is announced, set it to *Use real names everywhere, and show
+  code names in tooltips*. This basically decodes all team names, while still
+  allowing people to look up the (now former) code name of a team.
 
 .. tip:: If you're enabling team codes, you probably want to disable the
     **Show team institutions** option too.
