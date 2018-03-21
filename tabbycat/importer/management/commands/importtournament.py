@@ -73,20 +73,26 @@ class Command(BaseCommand):
 
     def get_importer_class(self):
         importer_spec_filepath = os.path.join(self.dirpath, ".importer")
-        if not os.path.exists(importer_spec_filepath):
+        importer_spec_arg = self.options['importer']
+
+        if not os.path.exists(importer_spec_filepath) and importer_spec_arg is None:
             raise CommandError("The --importer option wasn't specified and the file "
                 "%s does not exist." % importer_spec_filepath)
-        try:
-            f = open(importer_spec_filepath, 'r')
-        except OSError:
-            raise CommandError("Error opening file %s" % importer_spec_filepath)
-        importer_spec = f.read().strip()
 
-        if self.options['importer'] is not None:
-            if self.options['importer'] != importer_spec:
+        if os.path.exists(importer_spec_filepath):
+            try:
+                f = open(importer_spec_filepath, 'r')
+            except OSError as e:
+                raise CommandError("Error opening file %s: %s" % (importer_spec_filepath, e))
+            importer_spec = f.read().strip()
+        else:
+            importer_spec = None
+
+        if importer_spec_arg is not None:
+            if importer_spec is not None and importer_spec_arg != importer_spec:
                 self._warning("Using importer %s, but data directory suggests "
-                        "%s" % (self.options['importer'], importer_spec))
-            importer_spec = self.options['importer']  # manual override
+                        "%s" % (importer_spec_arg, importer_spec))
+            importer_spec = importer_spec_arg
 
         if importer_spec not in importer_registry:
             raise CommandError("There is no importer %r." % importer_spec)
