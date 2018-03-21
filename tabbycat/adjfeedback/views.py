@@ -20,6 +20,7 @@ from participants.templatetags.team_name_for_data_entry import team_name_for_dat
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
+from tournaments.models import Round
 
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
@@ -491,6 +492,11 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
         messages.success(self.request, "Thanks, {}! Your feedback on {} has been recorded.".format(
             self.source_name, self.adj_feedback.adjudicator.name))
         return result
+
+    def get_context_data(self, **kwargs):
+        kwargs['no_rounds_released'] = not self.tournament.round_set.filter(
+                draw_status=Round.STATUS_RELEASED).exists()
+        return super().get_context_data(**kwargs)
 
 
 class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
