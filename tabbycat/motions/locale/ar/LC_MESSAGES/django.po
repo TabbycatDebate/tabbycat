@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -265,7 +265,7 @@ msgstr[5] ""
 
 #: motions/templates/motion_statistics_bp_prelim.html:50
 msgid "1st"
-msgstr "المركز الأول"
+msgstr "المتحدث 1"
 
 #: motions/templates/motion_statistics_bp_prelim.html:52
 msgctxt "used when there isn't enough space to display '1st'"
@@ -274,7 +274,7 @@ msgstr "1"
 
 #: motions/templates/motion_statistics_bp_prelim.html:56
 msgid "2nd"
-msgstr "المركز الثاني"
+msgstr "المتحدث 2"
 
 #: motions/templates/motion_statistics_bp_prelim.html:58
 msgctxt "used when there isn't enough space to display '2nd'"
@@ -283,7 +283,7 @@ msgstr "2"
 
 #: motions/templates/motion_statistics_bp_prelim.html:62
 msgid "3rd"
-msgstr "المركز الثالث"
+msgstr "المتحدث 3"
 
 #: motions/templates/motion_statistics_bp_prelim.html:64
 msgctxt "used when there isn't enough space to display '3rd'"

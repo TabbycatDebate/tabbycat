@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,19 +18,19 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: settings.py:42
+#: settings.py:43
 msgid "Arabic"
 msgstr "عربي"
 
-#: settings.py:43
+#: settings.py:44
 msgid "English"
 msgstr "انجليزي "
 
-#: settings.py:44
+#: settings.py:45
 msgid "Spanish"
 msgstr "اسباني "
 
-#: settings.py:45
+#: settings.py:46
 msgid "French"
 msgstr "فرنسي "
 
@@ -80,13 +80,13 @@ msgid ""
 "parliamentary debating formats"
 msgstr ""
 
-#: templates/base_formset.html:26
-msgid "Save and Add More"
-msgstr "حفظ و اضافة المزيد"
-
 #: templates/components/form-errors.html:4
 msgid "Whoops! There was an error with one or more fields."
 msgstr "خلال في الحقول "
+
+#: templates/components/formset.html:23
+msgid "Save and Add More"
+msgstr "حفظ و اضافة المزيد"
 
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
 #: templates/errors/public_403.html:4 templates/errors/public_403.html:6
@@ -306,11 +306,11 @@ msgstr "عرض / طباعة "
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
-msgstr "تاب الفريق"
+msgstr "تصنيف النتائج حسب الفرق"
 
 #: templates/nav/public_nav.html:11
 msgid "Speaker Tab"
-msgstr "تاب المتناظرين "
+msgstr "تصنيف النتائج حسب المتحدثين"
 
 #: templates/nav/public_nav.html:19
 #, python-format
@@ -319,7 +319,7 @@ msgstr "%(category_name)sتاب "
 
 #: templates/nav/public_nav.html:29
 msgid "Replies Tab"
-msgstr "تب النتائج "
+msgstr "نتائج خطابات الرد"
 
 #: templates/nav/public_nav.html:34
 msgid "Adjudicator Tab"
@@ -332,11 +332,11 @@ msgstr "تاب القضايا "
 #: templates/nav/public_nav.html:48
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr "سحب من %(round_name)s"
+msgstr "قرعة%(round_name)s"
 
 #: templates/nav/public_nav.html:58
 msgid "Draws"
-msgstr "سحب "
+msgstr "القرعة"
 
 #: templates/nav/public_nav.html:71
 msgid "View All"

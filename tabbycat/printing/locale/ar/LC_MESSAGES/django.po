@@ -2,13 +2,13 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -61,7 +61,7 @@ msgid ""
 "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
 "<strong>page orientation</strong>, to turn off "
 "<strong>headers/footers</strong> and turn on <strong>background "
-"graphics</strong>. Works best in Chrome."
+"graphics</strong>. Works best in Chrome or Safari."
 msgstr ""
 "استخدم كترل + P للطباعة أو الحفظ إلى بدف. تأكد من تعيين<strong> الصفحة "
 "المناسبة </strong>التوجه، لإيقاف <strong>رؤوس / التذييلات </strong>وتشغيل "
@@ -85,10 +85,10 @@ msgstr "لم تتوفر نموذج درجات لهذه الجولة — "
 msgid "Overall Score"
 msgstr "مجموع الدرجات"
 
-#: printing/views.py:108
+#: printing/views.py:115
 msgid "Unaffiliated"
 msgstr "غير منتسبين"
 
-#: printing/views.py:121 printing/views.py:125
+#: printing/views.py:128 printing/views.py:132
 msgid "Team"
 msgstr "فريق"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -182,7 +182,7 @@ msgstr "النقاط (2/1/0)"
 msgid "wins"
 msgstr "عدد مرات الفوز"
 
-#: standings/teams.py:124
+#: standings/teams.py:124 standings/views.py:511
 msgid "Wins"
 msgstr "عدد مرات الفوز"
 
@@ -383,13 +383,13 @@ msgstr "إحصائيات القضية"
 msgid "Diversity Overview"
 msgstr "عرض التقاسيم"
 
-#: standings/views.py:91
+#: standings/views.py:92
 #, python-format
 msgid ""
 "<p>There was an error generating the standings: <em>%(message)s</em></p>"
 msgstr "<p>هناك خلل في اعداد الترتيب :   <em>    %(message)s    </em> </p>"
 
-#: standings/views.py:96
+#: standings/views.py:97
 #, python-format
 msgid ""
 "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
@@ -401,64 +401,68 @@ msgstr ""
 "=\"alert-link\"> تحت الاعدادات </a> في حالة عدم قدرتك على اصلاح المشكلة "
 "يمكنك الاتصال بالمطور . </p>"
 
-#: standings/views.py:104
+#: standings/views.py:105
 msgid "<p>The tab director will need to resolve this issue.</p>"
 msgstr "<p> على غرفة العمليات معالجة هذا العطل</p>"
 
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:168
+#: standings/views.py:169
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s( أفضل %(limit)d فقط )"
 
-#: standings/views.py:195 standings/views.py:391
+#: standings/views.py:196 standings/views.py:392
 msgid ""
 "The tab can't be displayed because all rounds so far in this tournament are "
 "silent."
 msgstr "لا يمكن إظهار النتائج لأن كافة جولات البطولة جولات صامتة."
 
-#: standings/views.py:252
+#: standings/views.py:253
 msgid "Speaker Standings"
 msgstr "مكان المتحدث "
 
-#: standings/views.py:288
+#: standings/views.py:289
 msgid "Speaker Tab"
 msgstr "النتائج حسب المتحدثين"
 
-#: standings/views.py:306
+#: standings/views.py:307
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr "%(category)sترتيب المتحدثين "
 
-#: standings/views.py:324
+#: standings/views.py:325
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr "النتائج حسب المتحدثين من فئة %(category)s"
 
-#: standings/views.py:337
+#: standings/views.py:338
 msgid "Reply Speaker Standings"
 msgstr "ترتيب الفرق الحالي"
 
-#: standings/views.py:343
+#: standings/views.py:344
 msgid "Reply speeches aren't enabled in this tournament."
 msgstr "ترديب المتحدثين خلال البطولة "
 
-#: standings/views.py:371
+#: standings/views.py:372
 msgid "Reply Speaker Tab"
 msgstr "النتائج متحدثي خطاب الرد"
 
-#: standings/views.py:383
+#: standings/views.py:384
 msgid "Team Standings"
 msgstr "ترتيب الفرق الحالي"
 
-#: standings/views.py:448
+#: standings/views.py:449
 msgid "Division Standings"
 msgstr "التقسيمات "
 
-#: standings/views.py:458
+#: standings/views.py:459
 msgid "Team Tab"
 msgstr "النتائج حسب الفرق"
 
-#: standings/views.py:474
+#: standings/views.py:475
 msgid "Current Team Standings"
 msgstr "ترتيب الفرق الحالي"
+
+#: standings/views.py:511
+msgid "Points"
+msgstr ""

@@ -1,8 +1,8 @@
-# Tabbycat translations, base directory
+# Tabbycat translations, JavaScript strings
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -10,24 +10,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: templates/tables/TablesContrainer.vue:8
 msgid "Find in Table"
-msgstr "Encontrar en la tabla"
+msgstr ""
 
 #: templates/tables/CheckboxTables.vue:30
 msgid "Set All Breaking as Available"
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:36
-msgid "Set all the availabilities to exactly match what they were in the previous round."
+msgid ""
+"Set all the availabilities to exactly match what they were in the previous "
+"round."
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:37
@@ -42,12 +43,14 @@ msgstr ""
 msgid "Match Check-Ins"
 msgstr ""
 
-#: templates/tables/CheckboxTables.vue:
-msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
+#: templates/tables/CheckboxTables.vue
+msgid ""
+"Set people as available only if they have a check-in and are currently "
+"unavailable — i.e. it will not overwrite any existing availabilities."
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:47
-msgid "Copy From Check-Ins
+msgid "Copy From Check-Ins"
 msgstr ""
 
 #: participants/templates/DiversityContrainer.vue:6

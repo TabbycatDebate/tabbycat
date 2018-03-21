@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 09:28-0800\n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -104,14 +104,39 @@ msgstr "تعارضات (محكم-منتخب)"
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr "تعديل محكمين للجولة %(round_abbr)s"
 
-#: adjallocation/views.py:138
+#: adjallocation/templates/edit_conflicts.html:4
+#: adjallocation/templates/edit_conflicts.html:5
+msgid "Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/templates/edit_conflicts.html:7
+#: adjallocation/templates/edit_conflicts.html:11
+msgid "Save Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:141
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr "تم إعلان القرعة مسبقا، قم برفعها لإعادة التوزيع التلقائي للمحكمين"
 
-#: adjallocation/views.py:142
+#: adjallocation/views.py:145
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr "لم يتم تأكيد القرعة بعد، قم بتأكيدها لإجراء التوزيع التلقائي للمحكمين"
 
-#: adjallocation/views.py:191
+#: adjallocation/views.py:194
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr "ليس كل المحكمين المحددين مرتبطين بالبطولة."
+
+#: adjallocation/views.py:245
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjallocation/views.py:251
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr ""

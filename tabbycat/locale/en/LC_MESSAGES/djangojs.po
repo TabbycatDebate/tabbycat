@@ -47,7 +47,7 @@ msgid "Set people as available only if they have a check-in and are currently un
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:47
-msgid "Copy From Check-Ins
+msgid "Copy From Check-Ins"
 msgstr ""
 
 #: participants/templates/DiversityContrainer.vue:6
