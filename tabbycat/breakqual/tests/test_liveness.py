@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from .liveness import liveness_twoteam, liveness_bp
+from ..liveness import liveness_twoteam, liveness_bp
 
 
 class TestLiveness(TestCase):
