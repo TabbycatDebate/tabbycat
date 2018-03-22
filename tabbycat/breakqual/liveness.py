@@ -87,7 +87,7 @@ def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds
         # First index for which sum_d[i] > break_size, i.e. highest impossible-to-break.
         index = next((i for i, x in enumerate(sum_d) if x > break_size), max_points+1)
         highest_nonbreaking = max_points - index  # after total_rounds rounds
-        dead = highest_nonbreaking - points_to_go
+        dead = highest_nonbreaking - points_to_go - 1
 
     else:
         team_scores.sort(reverse=True)
