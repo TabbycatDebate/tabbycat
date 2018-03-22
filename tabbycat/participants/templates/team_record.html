@@ -170,7 +170,7 @@ names are relevant, or to the team's real name if it is not. #}
             </div>
           {% endif %}
 
-          {% if not use_code_names and team.code_name %}
+          {% if not use_code_names and team.code_name and pref.team_code_names != 'off' %}
             <div class="list-group-item">
               <strong>{% trans "Code name:" %}</strong>
               {{ team.code_name }}
