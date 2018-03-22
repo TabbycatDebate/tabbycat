@@ -3,9 +3,9 @@
   <div class="list-group mt-3">
 
     <div class="list-group-item" v-if="!liveScanning">
-      <input v-model.string="barcode" autofocus :placeholder="placeholderText"
-             type="number" pattern="[0-9]*" inputmode="numeric"
-             step="1" class="form-control" :disabled="processing">
+      <input v-model="barcode" :placeholder="placeholderText"
+             type="number" pattern="[0-9]*" inputmode="numeric" step="1"
+             class="form-control" ref="entry" autofocus>
     </div>
     <div class="list-group-item pb-3">
       <button v-if="!liveScanning" class="btn btn-block btn-success" @click="toggleScan">
@@ -35,22 +35,12 @@ export default {
   data: function() {
     return {
       barcode: "",
-      processing: false,
       liveScanning: false,
       scannedResults: [],
     }
   },
   props: {
     'scanUrl': String
-  },
-  computed: {
-    placeholderText: function() {
-      if (this.processing === true) {
-        return "processing scan..."
-      } else {
-        return "enter barcode identifier"
-      }
-    }
   },
   methods: {
     checkInIdentifier: function(barcodeIdentifier) {
@@ -69,14 +59,13 @@ export default {
         })
       }
       this.barcode = "" // Reset
+      this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
     },
     finishCheckIn: function(dataResponse, payload, returnPayload) {
-      this.processing = false
       var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]
       $.fn.showAlert("success", message, 0)
     },
     failCheckIn: function(payload, returnPayload) {
-      this.processing = false
       var message = 'Failed to check in identifier ' + payload.barcodes[0] + '. Maybe it was misspelt?'
       $.fn.showAlert("danger", message, 0)
     },
@@ -159,7 +148,7 @@ export default {
           }
         }
       })
-    }
+    },
   },
   watch: {
     barcode: function(current, old) {
