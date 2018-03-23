@@ -218,14 +218,14 @@ h. Open your browser and go to the URL printed above. (In the above example, it'
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
 
-.. admonition:: Time Zones (optional)
+.. admonition:: Changing the site's time zone (optional)
   :class: tip
 
-  By default Tabbycat displays times and dates formatted as if they were in Melbourne (we had to nominate somewhere). Not much critical information has a time/date but if you wish you can change the timezone by editing ``settings.py`` by finding this line:
+  By default, Tabbycat displays times and dates according to the time in Melbourne (we had to nominate somewhere). Not much critical information has a time/date, but if you wish you can change the time zone by changing this line in your **local_settings.py** file::
 
-      ``TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')``
+    TIME_ZONE = "Australia/Melbourne"
 
-  ...and changing 'Australia/Melbourne' to match ISO standard label for your region. These labels can be found `on Wikipedia <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in the 'TZ*' column, e.g. 'America/Mexico_City'.
+  The string must be a time zone name from the IANA tz database, for example, ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``. You can find a `list of these on Wikipedia <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_, in the "TZ\*" column.
 
 Starting up an existing Tabbycat instance
 =========================================
