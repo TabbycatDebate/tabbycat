@@ -309,7 +309,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
                 'sort': sort,
                 'class': 'text-' + style
             })
-        self.add_column(_("Status"), cells)
+        self.add_column({'key': 'status', 'title': _("Status")}, cells)
 
         # Sort by points as secondary sort (will be sorted by cost in Vue)
         self.data.sort(key=lambda x: x[1]['sort'], reverse=True)

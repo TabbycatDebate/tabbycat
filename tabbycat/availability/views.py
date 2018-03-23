@@ -255,10 +255,13 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         for v in venues:
             v.cats = ", ".join([vc.name for vc in v.venuecategory_set.all()])
 
-        table.add_column(_("Venue"), [v.name for v in venues])
-        table.add_column(_("Display Name (for the draw)"), [v.display_name for v in venues])
-        table.add_column(_("Categories"), [v.cats for v in venues])
-        table.add_column(_("Priority"), [v.priority for v in venues])
+        table.add_column({'key': 'venue', 'title': _("Venue")}, [v.name for v in venues])
+        table.add_column(
+            {'key': 'display', 'title': _("Display Name (for the draw)")},
+            [v.display_name for v in venues]
+        )
+        table.add_column({'key': 'categories', 'title': _("Categories")}, [v.cats for v in venues])
+        table.add_column({'key': 'priority', 'title': _("Priority")}, [v.priority for v in venues])
 
     @staticmethod
     def annotate_checkins(queryset, t):

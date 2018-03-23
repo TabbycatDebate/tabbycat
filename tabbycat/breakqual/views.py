@@ -129,8 +129,14 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
 
     def get_table(self):
         table = super().get_table()  # as for public view, but add some more columns
-        table.add_column(_("Eligible for"), [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings])
-        table.add_column(_("Edit Remark"), [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings])
+        table.add_column(
+            {'key': 'eligible-for', 'title': _("Eligible for")},
+            [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings]
+        )
+        table.add_column(
+            {'key': 'edit-remark', 'title': _("Edit Remark")},
+            [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings]
+        )
         return table
 
     def get_form_kwargs(self):

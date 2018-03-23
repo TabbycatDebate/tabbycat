@@ -597,7 +597,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column(header, team_data)
 
         if break_categories:
-            self.add_column(_("Categories"), [", ".join(bc.name for bc in team.break_categories) for team in teams])
+            self.add_column(
+                {'key': 'categories', 'title': _("Categories")},
+                [", ".join(bc.name for bc in team.break_categories) for team in teams]
+            )
 
         if self.tournament.pref('show_team_institutions') and not hide_institution:
             self.add_column({

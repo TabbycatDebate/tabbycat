@@ -79,7 +79,10 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
         teams = tournament.team_set.all()
         table = TabbycatTableBuilder(view=self, title=_("Teams"), sort_key="team")
         table.add_team_columns(teams)
-        table.add_column(_("Feedback URL"), [_build_url(team) for team in teams])
+        table.add_column(
+            {'key': 'feedback-url', 'title': _("Feedback URL")},
+            [_build_url(team) for team in teams]
+        )
 
         return table
 
@@ -95,8 +98,14 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
         adjudicators = Adjudicator.objects.all() if tournament.pref('share_adjs') else tournament.adjudicator_set.all()
         table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         table.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
-        table.add_column(_("Feedback URL"), [_build_url(adj, 'adjfeedback-public-add-from-adjudicator-randomised') for adj in adjudicators])
-        table.add_column(_("Ballot URL"), [_build_url(adj, 'results-public-ballotset-new-randomised') for adj in adjudicators])
+        table.add_column(
+            {'key': 'feedback-url', 'title': _("Feedback URL")},
+            [_build_url(adj, 'adjfeedback-public-add-from-adjudicator-randomised') for adj in adjudicators]
+        )
+        table.add_column(
+            {'key': 'ballot-url', 'title': _("Ballot URL")},
+            [_build_url(adj, 'results-public-ballotset-new-randomised') for adj in adjudicators]
+        )
 
         return table
 
@@ -165,7 +174,7 @@ class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
         title = _("Adjudicators who will be sent e-mails (%(n)s)") % {'n': adjudicators.count()}
         table = TabbycatTableBuilder(view=self, title=title, sort_key="name")
         table.add_adjudicator_columns(adjudicators, hide_institution=True, hide_metadata=True)
-        table.add_column(_("Email"), [adj.email for adj in adjudicators])
+        table.add_column({'key': 'email', 'title': _("Email")}, [adj.email for adj in adjudicators])
         table.add_column(url_header, [_build_url(adj) for adj in adjudicators])
 
         return table
@@ -213,8 +222,14 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
         table = TabbycatTableBuilder(view=self, title=title, sort_key="team")
         table.add_speaker_columns(speakers, categories=False)
         table.add_team_columns([speaker.team for speaker in speakers])
-        table.add_column(_("Email"), [speaker.email for speaker in speakers])
-        table.add_column(_("Feedback URL"), [_build_url(speaker) for speaker in speakers])
+        table.add_column(
+            {'key': 'title', 'title': _("Email")},
+            [speaker.email for speaker in speakers]
+        )
+        table.add_column(
+            {'key': 'feedback-url', 'title': _("Feedback URL")},
+            [_build_url(speaker) for speaker in speakers]
+        )
 
         return table
 
