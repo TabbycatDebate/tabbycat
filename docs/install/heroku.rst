@@ -224,3 +224,8 @@ Starting from version 1.3, all Tabbycat sites deployed to Heroku will redirect a
 For a myriad of reasons, we strongly advise against disabling this. But if for some reason you need to run on plain HTTP, you can do this by setting the ``DISABLE_HTTPS_REDIRECTS`` config variable in Heroku to ``disable`` (see `Heroku documentation on config vars <https://devcenter.heroku.com/articles/config-vars>`_). The value of the config var must be ``disable``; if it's anything else, HTTPS redirects will remain in place.
 
 .. tip:: Most modern browsers, after having been redirected by a site to HTTPS once, remember that that site requires HTTPS and go there for all subsequent visits even if the user typed in a plain http\:// address. It may do this because it cached the HTTP 301 permanent redirect, stored an HSTS entry and/or tagged its session cookie to require HTTPS. If, after disabling HTTPS on your Tabbycat site, you find that you're still being redirected to HTTPS, first try a browser or computer that *hasn't* visited the site before. If that works, then remove the relevant entry from your (original) browser's cache, HSTS set and cookies, and try again.
+
+Time Zone
+---------
+
+If for some reason you want to change the time zone you nominated during deployment, you can do so by going to the app in your Heroku Dashboard, going to the Settings tab, clicking 'Reveal Config Vars' and creating a new field called ``TIME_ZONE`` with a value that matches ISO standard label for your region such as ``America/Mexico_City``. These labels can be found `on Wikipedia <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in the 'TZ*' column, e.g. 'America/Mexico_City'.

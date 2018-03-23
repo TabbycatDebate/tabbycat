@@ -27,6 +27,10 @@
     "DISABLE_COLLECTSTATIC": {
       "description": "Leave this as-is.",
       "value": "1"
+    },
+    "TIME_ZONE": {
+      "description": "The ISO standard time zone label for the tournament's location, e.g. 'Australia/Melbourne', 'Europe/London', 'US/Pacific', or 'Asia/Kuala_Lumpur'. You can find these by looking at the 'TZ*' column at http://wikipedia.org/wiki/List_of_tz_database_time_zones#List",
+      "value": "Australia/Melbourne"
     }
   },
   "formation": {
