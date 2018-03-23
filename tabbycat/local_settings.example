@@ -2,21 +2,24 @@ LOCAL_SETTINGS = True
 from settings import *
 
 # ==============================================================================
-# Database Settings
+# Settings that you should specify
 # ==============================================================================
 
-SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
-DATABASES           = {
+DATABASES = {
     'default': {
-        'ENGINE'  : 'django.db.backends.postgresql',
-        'NAME'    : 'postgres',
-        'USER'    : 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST':     'localhost',
-        'PORT':     '5432',
+        'ENGINE'      : 'django.db.backends.postgresql',
+        'NAME'        : '',  # put your PostgreSQL database's name in here
+        'USER'        : '',  # put your PostgreSQL login role's user name in here
+        'PASSWORD'    : '',  # put your PostgreSQL login role's password in here
+        'HOST'        : 'localhost',
+        'PORT'        : '5432',
         'CONN_MAX_AGE': 600,
     }
 }
+
+# Replace this with your time zone, as defined in the IANA time zone database:
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+TIME_ZONE = 'Australia/Melbourne'
 
 # ==============================================================================
 # Overwrites main settings
@@ -26,7 +29,7 @@ ADMINS              = ()
 MANAGERS            = ADMINS
 DEBUG               = True
 DEBUG_ASSETS        = True
-TIME_ZONE           = 'Australia/Melbourne'
+SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ==============================================================================
 # Django-specific Modules
