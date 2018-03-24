@@ -25,7 +25,7 @@ export default {
       } else {
         tt += ' (no category) '
       }
-      tt += ' with identifier of ' + entity.barcode
+      tt += ' with identifier of ' + entity.identifier[0]
       return tt
     },
   },
@@ -33,7 +33,10 @@ export default {
     annotatedVenues: function() {
       var events = this.events
       _.forEach(this.venues, function(venue) {
-        venue["status"] = _.find(events, ['identifier', venue.identifier])
+        venue["status"] = _.find(events, ['identifier', venue.identifier[0]])
+        if (_.isUndefined(venue["status"])) {
+          venue["status"] = false
+        }
         venue["name"] = venue["display_name"] // Match people here
       })
       return this.venues

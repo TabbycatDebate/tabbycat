@@ -75,11 +75,12 @@ def create_identifiers(model_to_make, items_to_check):
 def single_checkin(instance, events):
     instance.checked_icon = ''
     instance.checked_in = False
-    instance.checked_tooltip = _('Not checked-in')
     try:
         identifier = instance.checkin_identifier
+        instance.checked_tooltip = _('Not checked-in (barcode %s)') % identifier.barcode
     except ObjectDoesNotExist:
         identifier = None
+        instance.checked_tooltip = _('Not checked-in; no barcode assigned')
 
     if identifier:
         instance.time = next((e['time'] for e in events if e['identifier__barcode'] == identifier.barcode), None)

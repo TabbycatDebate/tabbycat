@@ -20,6 +20,14 @@
         </button>
       </div>
 
+      <div class="btn-group mb-md-0 mb-3" v-if="!isForVenues">
+        <button v-for="(optionState, optionKey) in this.speakerGroupings" type="button"
+                :class="['btn btn-outline-primary', optionState ? 'active' : '']"
+                @click="setListContext('speakerGroupings', optionKey, !optionState)">
+          {{ optionKey }}
+        </button>
+      </div>
+
       <div class="btn-group mb-md-0 mb-3">
         <button v-for="(optionState, optionKey) in this.sortByGroup" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
@@ -39,13 +47,13 @@
 
     <transition-group :name="mainTransitions" tag="div">
       <div v-for="(entity, grouper) in entitiesBySortingSetting"
-           :key="grouper" class="card mt-3">
+           :key="grouper" class="card mt-2">
 
-        <div class="card-header px-2 py-1">
+        <div class="card-header px-1 py-1">
           <div class="row">
-            <div class="col h5 mb-0 py-2">{{ grouper }}</div>
+            <div class="col strong mt-1 pt-1 ml-1">{{ grouper }}</div>
             <div class="col-auto" v-if="scanUrl">
-              <button class="btn btn-info btn-sm mt-1 hoverable"
+              <button class="btn btn-info btn-sm hoverable"
                       @click="checkInGroup(entity)">
                 Check-In All <strong>✓</strong>
               </button>
@@ -53,28 +61,30 @@
           </div>
         </div>
 
-        <div class="card-body pl-2 pt-2 p-0">
+        <div class="card-body pl-1 pt-1 p-0">
           <transition-group :name="mainTransitions" tag="div" class="row no-gutters">
 
             <div v-for="entity in entity":key="entity.id"
-                 class="col-lg-3 col-md-4 col-6 check-in-person">
-              <div class="row no-gutters h6 mb-0 pb-2 pr-2 p-0 text-white">
+                 class="col-lg-3 col-md-3 col-6 check-in-person">
+              <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
 
-                <div :class="['col p-2', entity.status ? 'bg-success' : 'bg-secondary']"
+                <div :class="['col p-2',
+                              entity.status ? 'bg-success' : 'bg-secondary',
+                              entity.type === 'Adjudicator' ? 'text-capitalize' : '']"
                      data-toggle="tooltip" :title="getToolTipForEntity(entity)">
                   {{ entity.name }}
                 </div>
                 <a v-if="scanUrl && !entity.status && entity.identifier && !entity.locked"
                    class="col-auto p-2 btn-info text-center hoverable"
                    title="Click to check-in manually"
-                   @click="checkInIdentifiers([entity.identifier])">
+                   @click="checkInIdentifiers(entity.identifier)">
                   ✓
                 </a>
-                <div v-if="scanUrl && !entity.status && entity.identifier && entity.locked"
+                <div v-if="scanUrl && !entity.status && entity.identifier.length > 0 && entity.locked"
                      class="col-auto p-2 btn-secondary text-center btn-no-hover">
                   saving...
                 </div>
-                <div v-if="scanUrl && !entity.identifier"
+                <div v-if="scanUrl && entity.identifier.length === 0"
                      class="col-auto p-2 btn-secondary text-white text-center"
                      data-toggle="tooltip"
                      title="This person does not have a check-in identifier so can't be checked in">
@@ -148,10 +158,13 @@ export default {
       // Filter by status
       if (this.filterByPresence["All"]) {
         return this.entitiesByType
-      } else {
-        var filterByStatus = this.filterByPresence["Absent"]
+      } else if (this.filterByPresence["Absent"]) {
         return _.filter(this.entitiesByType, function(p) {
-          return _.isUndefined(p["status"]) === filterByStatus
+          return p["status"] === false
+        })
+      } else {
+        return _.filter(this.entitiesByType, function(p) {
+          return p["status"] !== false
         })
       }
     },
@@ -173,7 +186,7 @@ export default {
       })
       var self = this
       return _.groupBy(sortedByTime, function(p) {
-        if (_.isUndefined(p["status"])) {
+        if (_.isUndefined(p["status"]) || p["status"] === false) {
           return "Not Checked In"
         } else {
           var time = new Date(Date.parse(p.status.time))
@@ -206,7 +219,8 @@ export default {
       return paddedTime
     },
     checkInGroup: function(entity) {
-      var identifiersForEntities = _.map(entity, 'identifier')
+      var identifiersForEntities = _.flatten(_.map(entity, 'identifier'))
+      console.log('test', identifiersForEntities)
       this.checkInIdentifiers(identifiersForEntities)
     },
     checkInIdentifiers: function(barcodeIdentifiers) {
