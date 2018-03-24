@@ -117,7 +117,9 @@ def calculate_live_thresholds(bc, tournament, round):
     total_rounds = tournament.prelim_rounds().count()
     team_scores = get_scores(bc) if not bc.is_general else None
 
-    if bc.break_size <= 1:
+    if team_scores is not None and len(team_scores) == 0:
+        return -1, -1 # First round; no scores to base calculations off
+    elif bc.break_size <= 1:
         return None, None # Bad input
     elif bc.break_size >= bc.team_set.count():
         return 0, 0 # All teams break

@@ -100,6 +100,9 @@ def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds
 
         # The dead score is the highest score from which a team can no longer
         # 'catch' a team in the last breaking spot.
-        dead = team_scores[break_size-1] - points_to_go - 1
+        if len(team_scores) >= break_size - 1:
+            dead = team_scores[break_size-1] - points_to_go - 1
+        else:
+            dead = -1 # All are live if no team scores exist (i.e. Round 1)
 
     return safe, dead
