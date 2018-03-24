@@ -88,6 +88,11 @@ $footer-height: 175px;
   }
 }
 
+@mixin outline-highlights($baseColor) {
+  border-color: $baseColor;
+  color: $baseColor;
+}
+
 //------------------------------------------------------------------------------
 // Z-Index Hierarchy
 //------------------------------------------------------------------------------

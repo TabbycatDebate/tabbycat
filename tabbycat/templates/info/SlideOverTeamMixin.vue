@@ -19,7 +19,7 @@ export default {
       var bcInfo = _.map(this.team.break_categories, function(bc) {
         return {
           'title': self.titleForBC(bc),
-          'class': 'category-display category-' + bc.class,
+          'class': self.classForBC(bc),
           'icon': self.iconForBC(bc)
         }
       })
@@ -49,6 +49,13 @@ export default {
         } else {
           return bc.name + ' Break'
         }
+      }
+    },
+    classForBC: function(bc) {
+      if (bc.will_break === 'dead' || bc.will_break === 'safe') {
+        return 'category-display category-' + bc.class + '-disabled'
+      } else {
+        return 'category-display category-' + bc.class
       }
     },
     iconForBC: function(bc) {
