@@ -6,7 +6,7 @@ urlpatterns = [
     url(r'^$',
         views.PublicBreakIndexView.as_view(),
         name='breakqual-public-index'),
-    url(r'^teams/(?P<category>\w+)/$',
+    url(r'^teams/(?P<category>[-\w]+)/$',
         views.PublicBreakingTeamsView.as_view(),
         name='breakqual-public-teams'),
     url(r'^adjudicators/$',
