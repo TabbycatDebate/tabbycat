@@ -7,6 +7,11 @@
   margin-bottom: -3px;
 }
 
+// Fix bad inheritance
+.list-group-item .btn .feather {
+  margin-right: 0;
+}
+
 // Same as .btn; but .btn-link removes this radius for some reason
 .btn-link {
   border-radius: $border-radius;
