@@ -1,7 +1,6 @@
 import logging
 
-from django.db.models import Count, Sum
-from django.db.models.expressions import RawSQL
+from django.db.models import Count, Q, Sum
 
 from standings.teams import TeamStandingsGenerator
 
@@ -39,29 +38,11 @@ def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
     return standings
 
 
-def get_scores(bc):
-    teams = bc.team_set.filter(
-        debateteam__teamscore__ballot_submission__confirmed=True
-    ).annotate(score=Sum('debateteam__teamscore__points'))
-    scores = sorted([team.score for team in teams], reverse=True)
-    return scores
-
-
 def breakcategories_with_counts(tournament):
-    breaking = RawSQL("""
-        SELECT DISTINCT COUNT(breakqual_breakingteam.id) FROM breakqual_breakingteam
-        WHERE breakqual_breakcategory.id = breakqual_breakingteam.break_category_id
-        AND breakqual_breakingteam.break_rank IS NOT NULL
-    """, ())
-    excluded = RawSQL("""
-        SELECT DISTINCT COUNT(breakqual_breakingteam.id) FROM breakqual_breakingteam
-        WHERE breakqual_breakcategory.id = breakqual_breakingteam.break_category_id
-        AND breakqual_breakingteam.break_rank IS NULL
-    """, ())
     categories = tournament.breakcategory_set.annotate(
         eligible=Count('team', distinct=True),
-        breaking=breaking,
-        excluded=excluded
+        breaking=Count('breakingteam', filter=Q(breakingteam__break_rank__isnull=False), distinct=True),
+        excluded=Count('breakingteam', filter=Q(breakingteam__break_rank__isnull=True), distinct=True),
     )
     for category in categories:
         category.nonbreaking = category.eligible - category.breaking
@@ -115,16 +96,19 @@ def determine_liveness(thresholds, points):
 def calculate_live_thresholds(bc, tournament, round):
     total_teams = tournament.team_set.count()
     total_rounds = tournament.prelim_rounds().count()
-    team_scores = get_scores(bc) if not bc.is_general else None
 
-    if team_scores is not None and len(team_scores) == 0:
-        return -1, -1 # First round; no scores to base calculations off
-    elif bc.break_size <= 1:
+    if not bc.is_general:
+        team_scores = bc.team_set.filter(
+            debateteam__debate__round__seq__lt=round.seq,
+            debateteam__teamscore__ballot_submission__confirmed=True,
+        ).annotate(score=Sum('debateteam__teamscore__points')).values_list('score', flat=True)
+        team_scores = list(team_scores)
+        team_scores += [0] * (bc.team_set.count() - len(team_scores))
+    else:
+        team_scores = None
+
+    if bc.break_size <= 1 or total_teams == 0:
         return None, None # Bad input
-    elif bc.break_size >= bc.team_set.count():
-        return 0, 0 # All teams break
-    elif total_teams == 0:
-        return None, None
     elif tournament.pref('teams_in_debate') == 'bp':
         safe, dead = liveness_bp(bc.is_general, round.seq, bc.break_size,
                             total_teams, total_rounds, team_scores)

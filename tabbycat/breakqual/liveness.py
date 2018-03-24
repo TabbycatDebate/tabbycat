@@ -20,7 +20,10 @@ COEFFICIENTS_BP = [
 ]
 
 
-def liveness_twoteam(is_general, current_round, break_size, total_teams, total_rounds, team_scores):
+def liveness_twoteam(is_general, current_round, break_size, total_teams, total_rounds, team_scores=None):
+
+    if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
+        return 0, -1  # special case, everyone is safe
 
     coefficients = [factorial(total_rounds) / factorial(i) / factorial(total_rounds - i)
                     for i in range(total_rounds+1)]
@@ -49,9 +52,7 @@ def liveness_twoteam(is_general, current_round, break_size, total_teams, total_r
 
         # Check if teams in breaking range can still be 'caught' by the team
         # just outside breaking range, and lower the safe score if so.
-        for score in team_scores[0:break_size]:
-            if score - team_scores[break_size] > rounds_to_go and score < safe:
-                safe = score
+        safe = min(safe, team_scores[break_size] + rounds_to_go + 1)
 
         # The dead score is the highest score from which a team can no longer
         # 'catch' a team in the last breaking spot.
@@ -60,7 +61,10 @@ def liveness_twoteam(is_general, current_round, break_size, total_teams, total_r
     return safe, dead
 
 
-def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds, team_scores):
+def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds, team_scores=None):
+
+    if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
+        return -1, -1  # special case, everyone is safe
 
     originals = [total_teams / (4**total_rounds) * coeff for coeff in COEFFICIENTS_BP[total_rounds]]
     ceilings = [ceil(x) for x in originals]
@@ -94,9 +98,7 @@ def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds
 
         # Check if teams in breaking range can still be 'caught' by the team
         # just outside breaking range, and lower the safe score if so.
-        for score in team_scores[0:break_size]:
-            if score - team_scores[break_size] > points_to_go and score < safe:
-                safe = score
+        safe = min(safe, team_scores[break_size] + points_to_go + 1)
 
         # The dead score is the highest score from which a team can no longer
         # 'catch' a team in the last breaking spot.
