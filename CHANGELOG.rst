@@ -41,7 +41,7 @@ Change Log
 
 2.0.6
 -----
-*Release date: Not yet released*
+*Release date: 20 March 2018*
 
 - Added reminder to add own-institution conflicts in the Edit Database area
 - Other minor fixes

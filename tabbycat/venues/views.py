@@ -2,6 +2,7 @@ import json
 import logging
 
 from django.contrib import messages
+from django.db.models import Q
 from django.forms import Select
 from django.utils.translation import ngettext
 from django.utils.translation import gettext as _
@@ -95,6 +96,14 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         }
         return formset_factory_kwargs
 
+    def get_formset(self):
+        formset = super().get_formset()
+        # Show relevant venues; not all venues
+        venues = self.get_tournament().relevant_venues.all()
+        for form in formset:
+            form.fields['venues'].queryset = venues
+        return formset
+
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
@@ -138,6 +147,17 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
             'extra': 8
         }
         return formset_factory_kwargs
+
+    def get_formset_queryset(self):
+        # Show relevant venue constraints; not all venue constraints
+        q = Q(adjudicator__isnull=False, adjudicator__tournament=self.tournament)
+        q |= Q(team__isnull=False, team__tournament=self.tournament)
+        q |= Q(division__isnull=False, division__tournament=self.tournament)
+        q |= Q(institution__isnull=False)
+        if self.tournament.pref('share_adjs'):
+            q |= Q(adjudicator__isnull=False, adjudicator__tournament__isnull=True)
+
+        return VenueConstraint.objects.filter(q)
 
     def subject_choices(self):
         from participants.models import Institution

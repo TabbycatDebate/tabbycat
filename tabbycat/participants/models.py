@@ -307,7 +307,7 @@ class Team(models.Model):
 
     def same_institution(self, other):
         """Returns True if this team and `other` are from the same institution.
-        Always returns False if this team has no instititution."""
+        Always returns False if this team has no institution."""
         return self.institution_id is not None and self.institution_id == other.institution_id
 
     def prev_debate(self, round_seq):
