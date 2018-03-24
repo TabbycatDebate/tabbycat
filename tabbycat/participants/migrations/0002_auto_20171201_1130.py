@@ -11,6 +11,10 @@ class Migration(migrations.Migration):
         ('participants', '0001_initial'),
     ]
 
+    replaces = [
+        ('participants', '0002_auto_20180320_1018'),
+    ]
+
     operations = [
         migrations.AlterModelOptions(
             name='adjudicator',
