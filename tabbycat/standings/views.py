@@ -233,7 +233,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table.add_speaker_columns([info.speaker for info in standings])
         table.add_team_columns([info.speaker.team for info in standings])
 
-        scores_headers = [round.abbreviation for round in rounds]
+        scores_headers = [{'key': round.abbreviation, 'title': round.abbreviation} for round in rounds]
         scores_data = [list(map(metricformat, standing.scores)) for standing in standings]
         table.add_columns(scores_headers, scores_data)
         table.add_metric_columns(standings)
