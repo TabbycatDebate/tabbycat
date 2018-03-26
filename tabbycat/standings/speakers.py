@@ -25,8 +25,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     function = None  # Must be set by subclasses
     replies = False
 
-    @classmethod
-    def get_annotation(cls, queryset, column_name, round):
+    def get_annotation(self, queryset, column_name, round):
         """Returns a QuerySet annotated with the metric given. All positional
         arguments from the third onwards, and all keyword arguments, are passed
         to get_annotation_metric_query_str()."""
@@ -37,12 +36,12 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
             speakerscore__debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
             speakerscore__ghost=False,
         )
-        if cls.replies:
+        if self.replies:
             annotation_filter &= Q(speakerscore__position=round.tournament.reply_position)
         else:
             annotation_filter &= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
 
-        return cls.function('speakerscore__score', filter=annotation_filter)
+        return self.function('speakerscore__score', filter=annotation_filter)
 
 
 class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):

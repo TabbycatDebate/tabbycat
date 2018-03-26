@@ -3,6 +3,7 @@
 import logging
 
 from django.db.models import Avg, Count, Prefetch, Sum, StdDev, Q
+from django.db.models.expressions import RawSQL
 from django.utils.translation import gettext_lazy as _
 
 from draw.models import DebateTeam
@@ -32,20 +33,23 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     exclude_forfeits = False
     where_value = None
 
-    @classmethod
-    def get_annotation(cls, queryset, column_name, round=None):
+    def get_field(self):
+        """Subclasses with complicated fields override this method."""
+        return 'debateteam__teamscore__' + self.field
+
+    def get_annotation(self, queryset, column_name, round=None):
         annotation_filter = Q(
             debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
-        if cls.exclude_forfeits:
+        if self.exclude_forfeits:
             annotation_filter &= Q(debateteam__teamscore__forfeit=False)
-        if cls.where_value is not None:
-            annotation_filter &= Q(**{'debateteam__teamscore__' + cls.field: cls.where_value})
+        if self.where_value is not None:
+            annotation_filter &= Q(**{self.get_field(): self.where_value})
 
-        return cls.function('debateteam__teamscore__' + cls.field, filter=annotation_filter)
+        return self.function(self.get_field(), filter=annotation_filter)
 
 
 class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -68,10 +72,9 @@ class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         exclude_forfeits = True
         where_value = False
 
-    @classmethod
-    def get_annotation(cls, queryset, column_name, round=None):
-        wins = cls.WinsIncludingForfeits.get_annotation(queryset, 'wins', round)
-        losses = cls.LossesExcludingForfeits.get_annotation(queryset, 'losses', round)
+    def get_annotation(self, queryset, column_name, round=None):
+        wins = self.WinsIncludingForfeits().get_annotation(queryset, 'wins', round)
+        losses = self.LossesExcludingForfeits().get_annotation(queryset, 'losses', round)
 
         bye_filter = Q(debateteam__team__type=Team.TYPE_BYE,
                 debateteam__debate__round__stage=Round.STAGE_PRELIMINARY)
@@ -171,7 +174,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
         if round is not None:
             prefetch_queryset = prefetch_queryset.filter(debate__round__seq__lte=round.seq)
 
-        points_queryset = PointsMetricAnnotator.get_annotated_queryset(
+        points_queryset = PointsMetricAnnotator().get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), 'points', round).prefetch_related(
                 Prefetch('debateteam_set',queryset=prefetch_queryset, to_attr='debateteams'))
         points_queryset_teams = {team.id: team for team in points_queryset}
@@ -205,9 +208,10 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = 3
 
-    @property
-    def field(self):
-        return "CAST(votes_given AS float) / NULLIF(votes_possible, 0) * {:d}".format(self.adjs_per_debate)
+    def get_field(self):
+        # We have to use RawSQL as Django doesn't have a function for NULLIF()
+        return RawSQL("CAST(results_teamscore.votes_given AS float) / "
+            "NULLIF(results_teamscore.votes_possible, 0) * %s", (self.adjs_per_debate,))
 
     def annotate(self, queryset, standings, round=None):
         super().annotate(queryset, standings, round)
