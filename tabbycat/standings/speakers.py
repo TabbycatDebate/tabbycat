@@ -3,7 +3,7 @@
 import logging
 
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Avg, Count, Sum, StdDev, Q
+from django.db.models import Avg, Count, Q, Sum, StdDev
 
 from tournaments.models import Round
 

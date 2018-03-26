@@ -2,7 +2,7 @@
 
 import logging
 
-from django.db.models import Avg, Count, Prefetch, Sum, StdDev, Q
+from django.db.models import Avg, Count, Prefetch, Q, Sum, StdDev
 from django.db.models.expressions import RawSQL
 from django.utils.translation import gettext_lazy as _
 
