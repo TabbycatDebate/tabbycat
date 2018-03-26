@@ -1,12 +1,17 @@
 """Standings generator for speakers."""
 
+import logging
+
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Avg, Count, Sum, StdDev, Q
 
 from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
 from .metrics import QuerySetMetricAnnotator
 from .ranking import BasicRankAnnotator
+
+logger = logging.getLogger(__name__)
 
 
 # ==============================================================================
@@ -18,48 +23,26 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     of SpeakerScore instances."""
 
     function = None  # Must be set by subclasses
-    field = None  # Must be set by subclasses
     replies = False
 
-    @staticmethod
-    def get_annotation_metric_query_str(function, round, replies=False):
-        """Returns a string, being an SQL query that can be passed into RawSQL()."""
-        # This is what might be more concisely expressed, if it were permissible
-        # in Django, as:
-        # teams = teams.annotate_if(
-        #     models.Count('debateteam__teamscore__{field:s}'),
-        #     condition={"debateteam__teamscore__ballot_submission__confirmed": True,
-        #         "debateteam__debate__round__stage": Round.STAGE_PRELIMINARY}
-        # )
-        #
-        # That is, it adds up the relevant field on *confirmed* ballots for each
-        # team and adds them as columns to the table it returns. The standings
-        # include only preliminary rounds.
+    @classmethod
+    def get_annotation(cls, queryset, column_name, round):
+        """Returns a QuerySet annotated with the metric given. All positional
+        arguments from the third onwards, and all keyword arguments, are passed
+        to get_annotation_metric_query_str()."""
 
-        query = """
-            SELECT DISTINCT {function}(score)
-            FROM results_speakerscore
-            JOIN results_ballotsubmission ON results_speakerscore.ballot_submission_id = results_ballotsubmission.id
-            JOIN draw_debateteam ON results_speakerscore.debate_team_id = draw_debateteam.id
-            JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
-            JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
-            WHERE results_ballotsubmission.confirmed = TRUE
-            AND results_speakerscore.speaker_id = participants_speaker.person_ptr_id
-            AND tournaments_round.stage = '""" + str(Round.STAGE_PRELIMINARY) + """'
-            AND tournaments_round.seq <= {round:d}
-            AND ghost = FALSE"""
-
-        if replies:
-            query += """
-            AND results_speakerscore.position = {position:d}""".format(position=round.tournament.reply_position)
+        annotation_filter = Q(
+            speakerscore__ballot_submission__confirmed=True,
+            speakerscore__debate_team__debate__round__seq__lte=round.seq,
+            speakerscore__debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
+            speakerscore__ghost=False,
+        )
+        if cls.replies:
+            annotation_filter &= Q(speakerscore__position=round.tournament.reply_position)
         else:
-            query += """
-            AND results_speakerscore.position <= {position:d}""".format(position=round.tournament.last_substantive_position)
+            annotation_filter &= Q(speakerscore__position__lte=round.tournament.last_substantive_position)
 
-        return query.format(function=function, round=round.seq)
-
-    def get_annotation_metric_query_args(self, round):
-        return (self.function, round, self.replies)
+        return cls.function('speakerscore__score', filter=annotation_filter)
 
 
 class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -67,7 +50,7 @@ class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     key = "total"
     name = _("total")
     abbr = _("Total")
-    function = "SUM"
+    function = Sum
 
 
 class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -75,7 +58,7 @@ class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     key = "average"
     name = _("average")
     abbr = _("Avg")
-    function = "AVG"
+    function = Avg
 
 
 class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -83,7 +66,7 @@ class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnn
     key = "stdev"
     name = _("standard deviation")
     abbr = _("Stdev")
-    function = "STDDEV_SAMP"
+    function = StdDev
 
 
 class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -91,7 +74,7 @@ class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     key = "count"
     name = _("number of speeches given")
     abbr = _("Num")
-    function = "COUNT"
+    function = Count
 
 
 class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -99,7 +82,7 @@ class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     key = "replies_sum"
     name = _("total")
     abbr = _("Total")
-    function = "SUM"
+    function = Sum
     replies = True
     listed = False
 
@@ -109,7 +92,7 @@ class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     key = "replies_avg"
     name = _("average")
     abbr = _("Avg")
-    function = "AVG"
+    function = Avg
     replies = True
     listed = False
 
@@ -119,7 +102,7 @@ class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnot
     key = "replies_stddev"
     name = _("standard deviation")
     abbr = _("Stdev")
-    function = "STDDEV_SAMP"
+    function = StdDev
     replies = True
     listed = False
 
@@ -129,7 +112,7 @@ class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     key = "replies_count"
     name = _("replies given")
     abbr = _("Num")
-    function = "COUNT"
+    function = Count
     replies = True
     listed = False
 

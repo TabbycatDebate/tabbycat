@@ -10,8 +10,6 @@ import logging
 
 from operator import itemgetter
 
-from django.db.models.expressions import RawSQL
-
 logger = logging.getLogger(__name__)
 
 
@@ -82,22 +80,16 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
 class QuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations."""
 
-    @staticmethod
-    def get_annotation_metric_query_str():
-        raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation_metric_query_str().")
-
-    def get_annotation_metric_query_args(self):
-        raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation_metric_query_args().")
+    @classmethod
+    def get_annotation(cls, queryset, column_name, round):
+        raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
 
     @classmethod
-    def get_annotated_queryset(cls, queryset, column_name, *args, **kwargs):
-        """Returns a QuerySet annotated with the metric given. All positional
-        arguments from the third onwards, and all keyword arguments, are passed
-        to get_annotation_metric_query_str()."""
-        query = cls.get_annotation_metric_query_str(*args, **kwargs)
-        logger.info("Running query in %s: %s", cls.__name__, query)
-        sql = RawSQL(query, ())
-        return queryset.annotate(**{column_name: sql}).distinct()
+    def get_annotated_queryset(cls, queryset, column_name, round=None):
+        """Returns a QuerySet annotated with the metric given."""
+        annotation = cls.get_annotation(queryset, column_name, round=round)
+        logger.info("Annotation in %s: %s", cls.__name__, str(annotation.as_sql))
+        return queryset.annotate(**{column_name: annotation}).distinct()
 
     def annotate_with_queryset(self, queryset, standings, round=None):
         """Annotates items with the given QuerySet, using the "metric" field."""
@@ -108,6 +100,5 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(item, self.key, item.metric)
 
     def annotate(self, queryset, standings, round=None):
-        args = self.get_annotation_metric_query_args(round)
-        queryset = self.get_annotated_queryset(queryset, "metric", *args)
+        queryset = self.get_annotated_queryset(queryset, "metric", round)
         self.annotate_with_queryset(queryset, standings, round)
