@@ -381,6 +381,8 @@ class BaseStandingsGenerator:
         for key, annotator in cls.metric_annotator_classes.items():
             if not ranked_only and annotator.ranked_only:
                 continue
+            if not annotator.listed:
+                continue
             if hasattr(annotator, 'choice_name'):
                 choice_name = annotator.choice_name.capitalize()
             else:

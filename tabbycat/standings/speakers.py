@@ -64,7 +64,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
 
 class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for total speaker score."""
-    key = "speaks_sum"
+    key = "total"
     name = _("total")
     abbr = _("Total")
     function = "SUM"
@@ -72,7 +72,7 @@ class TotalSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for average speaker score."""
-    key = "speaks_avg"
+    key = "average"
     name = _("average")
     abbr = _("Avg")
     function = "AVG"
@@ -80,7 +80,7 @@ class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
 
 class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for standard deviation of speaker score."""
-    key = "speaks_stddev"
+    key = "stdev"
     name = _("standard deviation")
     abbr = _("Stdev")
     function = "STDDEV_SAMP"
@@ -88,8 +88,8 @@ class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnn
 
 class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for number of speeches given."""
-    key = "speeches_count"
-    name = _("speeches given")
+    key = "count"
+    name = _("number of speeches given")
     abbr = _("Num")
     function = "COUNT"
 
@@ -101,6 +101,7 @@ class TotalReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     abbr = _("Total")
     function = "SUM"
     replies = True
+    listed = False
 
 
 class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -110,6 +111,7 @@ class AverageReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     abbr = _("Avg")
     function = "AVG"
     replies = True
+    listed = False
 
 
 class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -119,6 +121,7 @@ class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnot
     abbr = _("Stdev")
     function = "STDDEV_SAMP"
     replies = True
+    listed = False
 
 
 class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -128,6 +131,7 @@ class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     abbr = _("Num")
     function = "COUNT"
     replies = True
+    listed = False
 
 
 # ==============================================================================
@@ -150,10 +154,10 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.speaker.team.institution.name)
 
     metric_annotator_classes = {
-        "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
-        "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
-        "speaks_stddev" : StandardDeviationSpeakerScoreMetricAnnotator,
-        "speeches_count": NumberOfSpeechesMetricAnnotator,
+        "total"         : TotalSpeakerScoreMetricAnnotator,
+        "average"       : AverageSpeakerScoreMetricAnnotator,
+        "stdev"         : StandardDeviationSpeakerScoreMetricAnnotator,
+        "count"         : NumberOfSpeechesMetricAnnotator,
         "replies_sum"   : TotalReplyScoreMetricAnnotator,
         "replies_avg"   : AverageReplyScoreMetricAnnotator,
         "replies_stddev": StandardDeviationReplyScoreMetricAnnotator,

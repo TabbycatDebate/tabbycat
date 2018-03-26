@@ -43,6 +43,7 @@ class BaseMetricAnnotator:
     icon = None
     ranked_only = False
     repeatable = False
+    listed = True
 
     def run(self, queryset, standings, round=None):
         standings.record_added_metric(self.key, self.name, self.abbr, self.icon)

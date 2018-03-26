@@ -7,6 +7,7 @@ from dynamic_preferences.types import BooleanPreference, ChoicePreference, Float
 from django_summernote.widgets import SummernoteWidget
 
 from standings.teams import TeamStandingsGenerator
+from standings.speakers import SpeakerStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
 from .types import MultiValueChoicePreference
@@ -511,24 +512,11 @@ standings = Section('standings', verbose_name=_("Standings"))
 
 @tournament_preferences_registry.register
 class StandingsMissedDebates(IntegerPreference):
-    help_text = _("The number of debates a speaker can miss and still be on the speaker tab")
+    help_text = _("The number of debates a speaker can miss and still be on the speaker tab (-1 means no limit)")
     verbose_name = _("Debates missable for standings eligibility")
     section = standings
     name = 'standings_missed_debates'
-    default = 1
-
-
-@tournament_preferences_registry.register
-class RankSpeakersBy(ChoicePreference):
-    help_text = _("How speakers are ranked on the speaker tab")
-    verbose_name = _("Rank speakers by")
-    section = standings
-    name = 'rank_speakers_by'
-    choices = (
-        ('average', _("Average")),
-        ('total', _("Total")),
-    )
-    default = 'average'
+    default = -1
 
 
 @tournament_preferences_registry.register
@@ -556,7 +544,7 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
 
 @tournament_preferences_registry.register
 class TeamStandingsExtraMetrics(MultiValueChoicePreference):
-    help_text = _("Metrics not used to rank teams")
+    help_text = _("Metrics to calculate, but not used to rank teams")
     verbose_name = _("Team standings extra metrics")
     section = standings
     name = 'team_standings_extra_metrics'
@@ -564,6 +552,42 @@ class TeamStandingsExtraMetrics(MultiValueChoicePreference):
     nfields = 5
     allow_empty = True
     default = []
+
+
+@tournament_preferences_registry.register
+class SpeakerStandingsPrecedence(MultiValueChoicePreference):
+    help_text = _("Metrics to use to rank speakers (see documentation for further details)")
+    verbose_name = _("Speaker standings precedence")
+    section = standings
+    name = 'speaker_standings_precedence'
+    choices = SpeakerStandingsGenerator.get_metric_choices()
+    nfields = 4
+    allow_empty = True
+    default = ['average']
+
+    def validate(self, value):
+        super().validate(value)
+
+        # Check that non-repeatable metrics aren't listed twice
+        classes = [SpeakerStandingsGenerator.metric_annotator_classes[metric] for metric in value]
+        duplicates = [c for c in classes if c.repeatable is False and classes.count(c) > 1]
+        if duplicates:
+            duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
+            raise ValidationError(_("The following metrics can't be listed twice: "
+                    "%(duplicates)s") % {'duplicates': duplicates_str})
+
+
+@tournament_preferences_registry.register
+class SpeakerStandingsExtraMetrics(MultiValueChoicePreference):
+    help_text = _("Metrics to calculate, but not used to rank speakers")
+    verbose_name = _("Speaker standings extra metrics")
+    section = standings
+    name = 'speaker_standings_extra_metrics'
+    choices = SpeakerStandingsGenerator.get_metric_choices(ranked_only=False)
+    nfields = 5
+    allow_empty = True
+    default = ['stdev', 'count']
+
 
 # ==============================================================================
 tab_release = Section('tab_release', verbose_name=_("Tab Release"))

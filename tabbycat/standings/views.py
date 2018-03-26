@@ -267,18 +267,24 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
         )
 
     def get_metrics(self):
-        method = self.tournament.pref('rank_speakers_by')
-        if method == 'average':
-            return ('speaks_avg',), ('speaks_sum', 'speaks_stddev', 'speeches_count')
-        else:
-            return ('speaks_sum',), ('speaks_avg', 'speaks_stddev', 'speeches_count')
+        metrics = self.tournament.pref('speaker_standings_precedence')
+        extra_metrics = self.tournament.pref('speaker_standings_extra_metrics')
+
+        # 'count' is necessary to enforce the 'missed debates' limit, so add it if necessary.
+        # There's also an alert in the speaker_standings.html template to explain this.
+        if self.tournament.pref('standings_missed_debates') >= 0 and 'count' not in extra_metrics:
+            extra_metrics.append('count')
+
+        return metrics, extra_metrics
 
     def get_rank_filter(self):
+        missable_debates = self.tournament.pref('standings_missed_debates')
+        if missable_debates < 0:
+            return None  # no limit
         total_prelim_rounds = self.tournament.round_set.filter(
             stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
-        missable_debates = self.tournament.pref('standings_missed_debates')
         minimum_debates_needed = total_prelim_rounds - missable_debates
-        return lambda info: info.metrics["speeches_count"] >= minimum_debates_needed
+        return lambda info: info.metrics["count"] >= minimum_debates_needed
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament)

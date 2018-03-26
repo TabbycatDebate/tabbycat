@@ -94,7 +94,8 @@ class AustralsPreferences(PreferencesPreset):
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO= check this
     standings__team_standings_precedence       = ['wins', 'speaks_sum']
-    standings__rank_speakers_by                = 'average' # constitutional
+    standings__speaker_standings_precedence    = ['average'] # constitutional
+    standings__speaker_standings_extra_metrics = ['stdev', 'count']
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -127,9 +128,10 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     draw_rules__bp_position_cost_exponent      = 4.0
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
     # Standings Rules
-    standings__standings_missed_debates        = 10 # Speakers always show
+    standings__standings_missed_debates        = -1 # Speakers always show
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
-    standings__rank_speakers_by                = 'total' # Missing debates hurts totals
+    standings__speaker_standings_precedence    = ['total'] # constitutional
+    standings__speaker_standings_extra_metrics = ['stdev']
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -177,7 +179,7 @@ class AustralianEastersPreferences(AustralsPreferences):
     debate_rules__ballots_per_debate_prelim    = 'per-debate'
     debate_rules__ballots_per_debate_elim      = 'per-adj'
     # Standings Rules
-    standings__rank_speakers_by                = 'average' # constitutional
+    standings__speaker_standings_precedence    = ['average']  # constitutional
 
 
 class NZEastersPreferences(AustralsPreferences):
@@ -297,7 +299,7 @@ class WSDCPreferences(AustralsPreferences):
     draw_rules__avoid_same_institution         = False
     # Standings
     standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
-    standings__rank_speakers_by                = 'average' # Speakers sub in/out
+    standings__speaker_standings_precedence    = ['average']  # speakers sub in/out
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = False
@@ -317,7 +319,8 @@ class WADLPreferences(PreferencesPreset):
     # Standings Rules
     standings__standings_missed_debates        = 0
     standings__team_standings_precedence       = ['points210', 'wbwd', 'margin_avg', 'speaks_avg']
-    standings__rank_speakers_by                = 'average'
+    standings__speaker_standings_precedence    = ['average']
+    standings__speaker_standings_extra_metrics = ['stdev', 'count']
     # Draws
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = False
