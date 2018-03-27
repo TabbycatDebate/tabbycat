@@ -26,6 +26,10 @@ Change Log
 - Administrators can now view pages as if they were Assistants; allowing them to (for example) use the data entry forms that enforce double-checking without needed to create a separate account
 - Fixed χ² test in motion statistics, and refactored and moved motion statistics page
 - Teams, like adjudicators, no longer need to have an institution
+- Made speaker standings more configurable
+    - Second-order metrics can now be specified
+    - Added ability to set no limit for number of missed debates
+    - Standard deviation is now the population standard deviation (was previously sample)
 - Quality of life improvements
     - Added a 'liveness' calculator for BP
     - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
@@ -38,6 +42,8 @@ Change Log
 - Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
     - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis' to any instances being upgraded
     - Locally: You should recreate your local_settings.py from the example file
+- Upgraded to Django 2.0
+    - Converted most raw SQL queries to use the new ``filter`` keyword in annotations
 
 2.0.6
 -----
