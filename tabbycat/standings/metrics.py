@@ -80,12 +80,12 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
 class QuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations."""
 
-    def get_annotation(self, queryset, column_name, round):
+    def get_annotation(self, round):
         raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
 
     def get_annotated_queryset(self, queryset, column_name, round=None):
         """Returns a QuerySet annotated with the metric given."""
-        annotation = self.get_annotation(queryset, column_name, round=round)
+        annotation = self.get_annotation(round=round)
         logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation.as_sql))
         return queryset.annotate(**{column_name: annotation}).distinct()
 

@@ -3,7 +3,7 @@
 import logging
 
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Avg, Count, Q, StdDev, Sum
+from django.db.models import Avg, Case, Count, F, FloatField, Max, Min, Q, StdDev, Sum, When
 
 from tournaments.models import Round
 
@@ -25,7 +25,7 @@ class SpeakerScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     function = None  # Must be set by subclasses
     replies = False
 
-    def get_annotation(self, queryset, column_name, round):
+    def get_annotation(self, round):
         """Returns a QuerySet annotated with the metric given. All positional
         arguments from the third onwards, and all keyword arguments, are passed
         to get_annotation_metric_query_str()."""
@@ -58,6 +58,39 @@ class AverageSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name = _("average")
     abbr = _("Avg")
     function = Avg
+
+
+class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+    """Metric annotator for trimmed mean speaker score."""
+    key = "trimmed_mean"
+    name = _("trimmed mean (high-low drop)")
+    abbr = _("Trim")
+
+    class MaximumScore(SpeakerScoreQuerySetMetricAnnotator):
+        function = Max
+
+    class MinimumScore(SpeakerScoreQuerySetMetricAnnotator):
+        function = Min
+
+    def get_annotated_queryset(self, queryset, column_name, round=None):
+        # Slight breach of separation of concerns: add the 'count' annotation so
+        # that the main annotation will know what 'count' means. We can't do
+        # this inline in get_annotation() because Django doesn't support the
+        # syntax F('count') > 2, and we're forced to use count__gt=2 instead.
+        queryset = NumberOfSpeechesMetricAnnotator().get_annotated_queryset(queryset, 'count', round=round)
+        return super().get_annotated_queryset(queryset, column_name, round=round)
+
+    def get_annotation(self, round=None):
+        total = TotalSpeakerScoreMetricAnnotator().get_annotation(round)
+        highest = self.MaximumScore().get_annotation(round)
+        lowest = self.MinimumScore().get_annotation(round)
+
+        return Case(
+            When(count__gt=2, then=(total - highest - lowest) / (F('count') - 2)),
+            When(count__gt=0, then=total / F('count')),
+            default=None,
+            output_field=FloatField()
+        )
 
 
 class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -138,6 +171,7 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
     metric_annotator_classes = {
         "total"         : TotalSpeakerScoreMetricAnnotator,
         "average"       : AverageSpeakerScoreMetricAnnotator,
+        "trimmed_mean"  : TrimmedMeanSpeakerScoreMetricAnnotator,
         "stdev"         : StandardDeviationSpeakerScoreMetricAnnotator,
         "count"         : NumberOfSpeechesMetricAnnotator,
         "replies_sum"   : TotalReplyScoreMetricAnnotator,
