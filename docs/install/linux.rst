@@ -11,6 +11,7 @@ Installing Locally on Linux
 
   If you just want to quickly set up a copy of Tabbycat to run locally on Linux, consider :ref:`installing using Docker<install-docker>`, which is a shorter process than the one below.
 
+The instructions apply to both Linux, and :ref:`Linux on Windows <install-wsl>`.
 
 Requisite technical background
 ==============================
@@ -27,7 +28,7 @@ Short version
 .. parsed-literal::
 
   curl -sL https\:\/\/deb.nodesource.com/setup_8.x | sudo -E bash -    # add Node.js source repository
-  sudo apt-get install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs
+  sudo apt install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs gcc g++ make
 
   # either
   wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
@@ -35,10 +36,11 @@ Short version
   cd tabbycat-|release|
   # or
   git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+  cd tabbycat
   git checkout |vrelease|                                         # or master
 
-  sudo -u postgres createuser myusername --pwprompt           # skip if not first time
-  sudo -u postgres createdb mydatabasename --owner myusername
+  sudo -u postgres createuser myusername --createdb --pwprompt    # skip if not first time
+  createdb mydatabasename
 
 Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
 
@@ -69,7 +71,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
 Tabbycat requires Python 3.5 or later.  You probably already have Python 3.5, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
 
-    $ sudo apt-get install python3-dev python3-venv
+    $ sudo apt install python3-dev python3-venv
 
 Check the version::
 
@@ -78,18 +80,13 @@ Check the version::
 
 .. warning:: Tabbycat does not support Python 2. You must use Python 3.5 or later.
 
-.. admonition:: Advanced users
-  :class: tip
-
-  If you prefer, you can use `Virtualenv <https://virtualenv.pypa.io/en/latest/installation.html>`_ instead of Python's built-in ``venv`` module.
-
 1(b). PostgreSQL
 ----------------
   *PostgreSQL is a database management system.*
 
 You'll need the *server-dev* package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
 
-    $ sudo apt-get install postgresql-9.6 postgresql-server-dev-9.6
+    $ sudo apt install postgresql-9.6 postgresql-server-dev-9.6
 
 If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
 
@@ -103,10 +100,16 @@ Tabbycat requires Node and its package manager to compile front-end dependencies
 
 .. parsed-literal::
 
-  $ sudo apt-get install curl
+  $ sudo apt install curl
   $ curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-  $ sudo apt-get install -y nodejs
+  $ sudo apt install -y nodejs
   $ sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+1(d). Other development tools
+-----------------------------
+Some of the Python packages require GCC, G++ and Make in order to install::
+
+    $ sudo apt install gcc g++ make
 
 .. _install-linux-source-code:
 
@@ -137,17 +140,17 @@ Choose either of these two methods:
 
 .. hint:: You can skip step 1 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
-a. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``.
+a. Create a new user account with a password, replacing ``myusername`` with whatever name you prefer. If you don't know what username to pick, use ``tabbycat``. Grant this user the ability to create databases, since this'll make it easier to spin up new instances of Tabbycat in the future.
 
   ::
 
-    $ sudo -u postgres createuser myusername --pwprompt
+    $ sudo -u postgres createuser myusername --createdb --pwprompt
 
-  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*. If you want your new PostgreSQL account to be able to create databases, add ``--createdb`` to the above command.
+  .. tip:: If you'll be running multiple instances of Tabbycat, developing, or diving into the database yourself, you might find it convenient to set up client authentication so that you don't need to do all manual operations from ``sudo -u postgres``. See the `PostgreSQL documentation on client authentication <http://www.postgresql.org/docs/9.6/static/client-authentication.html>`_ for more information. For example, you could add a ``local all myusername md5`` line to the *pg_hba.conf* file, or you could define a mapping in *pg_ident.conf* and append the ``map=`` option to the ``local all all peer`` line in *pg_hba.conf*.
 
 b. Create a new database, replacing ``mydatabasename`` with whatever name you prefer, probably the name of the tournament you're running::
 
-    $ sudo -u postgres createdb mydatabasename --owner myusername
+    $ createdb mydatabasename
 
 
 .. _install-linux-tabbycat:
