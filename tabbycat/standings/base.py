@@ -140,6 +140,7 @@ class Standings:
         self._rank_limit = None
 
         self.metric_keys = list()
+        self.metric_ascending = list()
         self.ranking_keys = list()
         self._metric_specs = list()
         self._ranking_specs = list()
@@ -206,8 +207,9 @@ class Standings:
         except KeyError as e:
             raise ValueError("{!r} isn't in these standings.".format(e.args[0]))
 
-    def record_added_metric(self, key, name, abbr, icon):
+    def record_added_metric(self, key, name, abbr, icon, ascending):
         self.metric_keys.append(key)
+        self.metric_ascending.append(ascending)
         self._metric_specs.append((key, name, abbr, icon))
 
     def record_added_ranking(self, key, name, abbr, icon):
@@ -224,11 +226,18 @@ class Standings:
         if tiebreak_func:
             tiebreak_func(self._standings)
 
+        metricitemgetter = itemgetter(*precedence)
+
+        def metrics_for_ranking(info):
+            # Like standings.metrics.metricgetter, but negates metrics ranked in ascending order
+            metrics = metricitemgetter(info.metrics)
+            return tuple(-x if asc else x for x, asc in zip(metrics, self.metric_ascending))
+
         try:
-            self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
+            self._standings.sort(key=metrics_for_ranking, reverse=True)
         except TypeError:
             for info in self.infos.values():
-                logger.info("%30s %s", info.instance, itemgetter(*precedence)(info.metrics))
+                logger.info("%30s %s", info.instance, metrics_for_ranking(info))
             raise
 
         if self.rank_filter:

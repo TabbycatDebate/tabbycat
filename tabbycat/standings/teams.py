@@ -138,6 +138,7 @@ class SpeakerScoreStandardDeviationMetricAnnotator(TeamScoreQuerySetMetricAnnota
     name = _("speaker score standard deviation")
     abbr = _("SSD")
     exclude_forfeits = True
+    ascending = True
 
     function = StdDev
     field = "score"

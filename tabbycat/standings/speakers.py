@@ -99,6 +99,7 @@ class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnn
     name = _("standard deviation")
     abbr = _("Stdev")
     function = StdDev
+    ascending = True
 
 
 class NumberOfSpeechesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
@@ -137,6 +138,7 @@ class StandardDeviationReplyScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnot
     function = StdDev
     replies = True
     listed = False
+    ascending = True
 
 
 class NumberOfRepliesMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):

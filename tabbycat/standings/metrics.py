@@ -20,7 +20,8 @@ def metricgetter(*items):
      - After `f = metricgetter("a")`, the call `f(x)` returns `x.metrics["a"]`.
      - After `g = metricgetter(4, 9)`, the call `g(x)` returns `(x.metrics[4], x.metrics[9])`.
     """
-    return lambda x: itemgetter(*items)(x.metrics)
+    metricitemgetter = itemgetter(*items)
+    return lambda x: metricitemgetter(x.metrics)
 
 
 class BaseMetricAnnotator:
@@ -42,9 +43,10 @@ class BaseMetricAnnotator:
     ranked_only = False
     repeatable = False
     listed = True
+    ascending = False  # if True, this metric is sorted in ascending order, not descending
 
     def run(self, queryset, standings, round=None):
-        standings.record_added_metric(self.key, self.name, self.abbr, self.icon)
+        standings.record_added_metric(self.key, self.name, self.abbr, self.icon, self.ascending)
         self.annotate(queryset, standings, round)
 
     def annotate(self, queryset, standings, round=None):
