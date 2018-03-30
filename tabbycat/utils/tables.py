@@ -826,7 +826,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def add_debate_result_by_team_column(self, teamscores):
         results_data = [self._result_cell(ts) for ts in teamscores]
-        header = {'key': 'result', 'title': _("Result")}
+        header = {'key': 'result', 'title': _("Result"), 'icon': 'thermometer'}
         self.add_column(header, results_data)
 
     def add_debate_side_by_team_column(self, teamscores):
