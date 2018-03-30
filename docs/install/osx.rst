@@ -120,6 +120,10 @@ b. Copy **local_settings.example** to **local_settings.py**. Find this part in y
          }
      }
 
+  Optionally, replace the value in this line in the same file with your own time zone, as defined in the `IANA time zone database <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ (*e.g.*, ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``)::
+
+    TIME_ZONE = 'Australia/Melbourne'
+
 c. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
     $ python3 -m venv venv
@@ -158,15 +162,6 @@ h. Open your browser and go to the URL printed above. (In the above example, it'
       :alt: Bare Tabbycat installation
 
 Naturally, your database is currently empty, so proceed to :ref:`importing initial data <importing-initial-data>`.
-
-.. admonition:: Changing the site's time zone (optional)
-  :class: tip
-
-  By default, Tabbycat displays times and dates according to the time in Melbourne (we had to nominate somewhere). Not much critical information has a time/date, but if you wish you can change the time zone by changing this line in your **local_settings.py** file::
-
-    TIME_ZONE = "Australia/Melbourne"
-
-  The string must be a time zone name from the IANA tz database, for example, ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``. You can find a `list of these on Wikipedia <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_, in the "TZ\*" column.
 
 Starting up an existing Tabbycat instance
 ================================================================================
