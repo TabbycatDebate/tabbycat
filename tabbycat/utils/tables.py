@@ -362,9 +362,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 {'text': _("Total speaker score: <strong>%s</strong>") % metricformat(score)})
 
         if show_ballots:
-            cell['popover']['content'].append(
-                {'text': _("View debate ballot"), 'link': reverse_tournament('results-public-scoresheet-view',
-                    self.tournament, kwargs={'pk': ts.debate_team.debate.id})})
+            if self.admin:
+                cell['popover']['content'].append({
+                    'text': _("View/edit debate ballot"),
+                    'link': reverse_tournament('results-ballotset-edit',
+                            self.tournament, kwargs={'pk': ts.ballot_submission_id})
+                })
+            elif self.tournament.pref('ballots_released'):
+                cell['popover']['content'].append({
+                    'text': _("View debate ballot"),
+                    'link': reverse_tournament('results-public-scoresheet-view',
+                            self.tournament, kwargs={'pk': ts.debate_team.debate_id})
+                })
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({'text': _("Speakers in <strong>%(opp)s</strong>: %(speakers)s") % {
@@ -430,9 +439,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 {'text': _("Total speaker score: <strong>%s</strong>") % metricformat(score)})
 
         if show_ballots:
-            cell['popover']['content'].append(
-                {'text': _("View debate ballot"), 'link': reverse_tournament('results-public-scoresheet-view',
-                    self.tournament, kwargs={'pk': ts.debate_team.debate.id})})
+            if self.admin:
+                cell['popover']['content'].append({
+                    'text': _("View/edit debate ballot"),
+                    'link': reverse_tournament('results-ballotset-edit',
+                            self.tournament, kwargs={'pk': ts.ballot_submission_id})
+                })
+            elif self.tournament.pref('ballots_released'):
+                cell['popover']['content'].append({
+                    'text': _("View debate ballot"),
+                    'link': reverse_tournament('results-public-scoresheet-view',
+                            self.tournament, kwargs={'pk': ts.debate_team.debate_id})
+                })
 
         return cell
 
