@@ -28,8 +28,10 @@ Change Log
 - Teams, like adjudicators, no longer need to have an institution
 - Made speaker standings more configurable
     - Second-order metrics can now be specified
+    - Added trimmed mean (also known as high-low drop)
     - Added ability to set no limit for number of missed debates
-    - Standard deviation is now the population standard deviation (was previously sample)
+    - Standard deviation is now the population standard deviation (was previously sample), and
+      ranks in ascending order if used to rank speakers.
 - Quality of life improvements
     - Added a 'liveness' calculator for BP
     - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
@@ -39,6 +41,7 @@ Change Log
     - The "shared" checkbox in the simple importer is now hidden unless the relevant tournament option is enabled
     - Current team standings page now shows silent round results if "Release all round results to public" is set
     - The Consensus vs Voting options for how ballots work has not been split into two settings: one for preliminary rounds and one for elimination rounds
+    - Speaker scores now show as integers (without decimals) where the tournament format would not allow decimals.
 - Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
     - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis' to any instances being upgraded
     - Locally: You should recreate your local_settings.py from the example file
