@@ -228,10 +228,17 @@ class Standings:
 
         metricitemgetter = itemgetter(*precedence)
 
-        def metrics_for_ranking(info):
-            # Like standings.metrics.metricgetter, but negates metrics ranked in ascending order
-            metrics = metricitemgetter(info.metrics)
-            return tuple(-x if asc else x for x, asc in zip(metrics, self.metric_ascending))
+        # Like standings.metrics.metricgetter, but negates metrics ranked in ascending order
+        if len(precedence) == 1 and self.metric_ascending[0]:
+            def metrics_for_ranking(info):
+                return -metricitemgetter(info.metrics)
+        elif len(precedence) == 1 and not self.metric_ascending[0]:
+            def metrics_for_ranking(info):
+                return metricitemgetter(info.metrics)
+        else:
+            def metrics_for_ranking(info):
+                metrics = metricitemgetter(info.metrics)
+                return tuple(-x if asc else x for x, asc in zip(metrics, self.metric_ascending))
 
         try:
             self._standings.sort(key=metrics_for_ranking, reverse=True)

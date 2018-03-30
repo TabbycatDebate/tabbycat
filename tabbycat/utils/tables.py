@@ -353,10 +353,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else: # None
             cell['popover']['title'] = _("No result for debate against %(team)s") % {'team': self._team_long_name(opp)}
 
-        if show_score:
-            cell['subtext'] = metricformat(ts.score)
+        if show_score and ts.score is not None:
+            score = ts.score
+            if self.tournament.integer_scores(ts.debate_team.debate.round.stage) and score.is_integer():
+                score = int(ts.score)
+            cell['subtext'] = metricformat(score)
             cell['popover']['content'].append(
-                {'text': _("Received <strong>%s</strong> team points") % metricformat(ts.score)})
+                {'text': _("Total speaker score: <strong>%s</strong>") % metricformat(score)})
 
         if show_ballots:
             cell['popover']['content'].append(
@@ -419,9 +422,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['title'] = _("No result for debate")
 
         if show_score and ts.score is not None:
-            cell['subtext'] = metricformat(ts.score)
+            score = ts.score
+            if self.tournament.integer_scores(ts.debate_team.debate.round.stage) and score.is_integer():
+                score = int(ts.score)
+            cell['subtext'] = metricformat(score)
             cell['popover']['content'].append(
-                {'text': _("Received <strong>%s</strong> team points") % metricformat(ts.score)})
+                {'text': _("Total speaker score: <strong>%s</strong>") % metricformat(score)})
 
         if show_ballots:
             cell['popover']['content'].append(
@@ -785,12 +791,20 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } for ranking in standing.iterrankings()])
         self.add_columns(headers, data)
 
-    def add_metric_columns(self, standings):
+    def add_metric_columns(self, standings, integer_score_columns=[]):
+        """`integer_score_columns`, if given, indicates which metrics to cast to
+        an int if the metric's value is an integer. For example, if the
+        tournament preferences are such that the total speaker score should
+        always be an integer, a list containing the string 'total' or
+        'speaks_sum' should be passed in via this argument."""
+
         headers = self._standings_headers(standings.metrics_info())
         data = []
         for standing in standings:
             row = []
-            for metric in standing.itermetrics():
+            for key, metric in zip(standings.metric_keys, standing.itermetrics()):
+                if key in integer_score_columns and hasattr(metric, 'is_integer') and metric.is_integer():
+                    metric = int(metric)
                 try:
                     sort = float(metric)
                 except (TypeError, ValueError):

@@ -121,6 +121,19 @@ class Tournament(models.Model):
         else:
             raise ValueError("Unrecognized stage: %r" % (stage,))
 
+    def integer_scores(self, stage):
+        """Returns True if all total speaker scores will be integers, at least
+        according to tournament preferences. Callers should still check that
+        the value in question is in fact an integer before casting."""
+        if self.ballots_per_debate(stage) == 'per-adj':
+            return False
+        if not self.pref('score_step').is_integer():
+            return False
+        if (self.pref('reply_scores_enabled') and
+                not self.pref('reply_score_step').is_integer()):
+            return False
+        return True
+
     # --------------------------------------------------------------------------
     # Permalinks
     # --------------------------------------------------------------------------

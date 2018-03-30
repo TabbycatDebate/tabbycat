@@ -234,15 +234,19 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table.add_team_columns([info.speaker.team for info in standings])
 
         scores_headers = [{'key': round.abbreviation, 'title': round.abbreviation} for round in rounds]
-        scores_data = [list(map(metricformat, standing.scores)) for standing in standings]
+        scores_data = [[metricformat(x) for x in standing.scores] for standing in standings]
         table.add_columns(scores_headers, scores_data)
-        table.add_metric_columns(standings)
+        table.add_metric_columns(standings, integer_score_columns=self.integer_score_columns(rounds))
 
         return table
 
     def limit_rank_display(self, standings):
         # Only filter ranks on PublicTabMixin
         pass
+
+    def integer_score_columns(self, rounds):
+        # Only for substantive speech standings
+        return []
 
     def get_rank_filter(self):
         return None
@@ -251,9 +255,18 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         for info in standings:
             info.result_missing = len(info.scores) > 1 and info.scores[-1] is None
 
+    def cast_round_results(self, standings, rounds, step_preference):
+        """For use by subclasses. Casts round results to integers if appropriate
+        according to tournament preferences."""
+        if self.tournament.pref(step_preference).is_integer():
+            is_consensus_by_round = [self.tournament.ballots_per_debate(r.stage) == 'per-debate' for r in rounds]
+            for info in standings:
+                for i, is_consensus in enumerate(is_consensus_by_round):
+                    if is_consensus and info.scores[i].is_integer():
+                        info.scores[i] = int(info.scores[i])
 
-class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
-    """The standard speaker standings view."""
+
+class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
     page_title = gettext_lazy("Speaker Standings")
     page_emoji = '💯'
 
@@ -277,6 +290,12 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
         return metrics, extra_metrics
 
+    def integer_score_columns(self, rounds):
+        if all(self.tournament.integer_scores(rd.stage) for rd in rounds):
+            return ['total']
+        else:
+            return []
+
     def get_rank_filter(self):
         missable_debates = self.tournament.pref('standings_missed_debates')
         if missable_debates < 0:
@@ -288,13 +307,14 @@ class BaseStandardSpeakerStandingsView(BaseSpeakerStandingsView):
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament)
+        self.cast_round_results(standings, rounds, 'score_step')
 
 
-class SpeakerStandingsView(AdministratorMixin, BaseStandardSpeakerStandingsView):
+class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
     template_name = 'speaker_standings.html'  # add an info alert
 
 
-class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
+class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
     page_title = gettext_lazy("Speaker Tab")
     public_page_preference = 'speaker_tab_released'
 
@@ -302,7 +322,7 @@ class PublicSpeakerTabView(PublicTabMixin, BaseStandardSpeakerStandingsView):
         return self.tournament.pref('speaker_tab_limit')
 
 
-class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseStandardSpeakerStandingsView):
+class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiveSpeakerStandingsView):
     """Speaker standings view for a category."""
 
     model = SpeakerCategory
@@ -361,6 +381,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament, replies=True)
+        self.cast_round_results(standings, rounds, 'reply_score_step')
 
     def populate_result_missing(self, standings):
         teams_seen = set()
@@ -428,12 +449,18 @@ class BaseTeamStandingsView(BaseStandingsView):
         table.add_team_columns([info.team for info in standings])
 
         table.add_standings_results_columns(standings, rounds, self.show_ballots())
-        table.add_metric_columns(standings)
+        table.add_metric_columns(standings, integer_score_columns=self.integer_score_columns(rounds))
 
         return table
 
     def show_ballots(self):
         return False
+
+    def integer_score_columns(self, rounds):
+        if all(self.tournament.integer_scores(rd.stage) for rd in rounds):
+            return ['speaks_sum']
+        else:
+            return []
 
     def populate_result_missing(self, standings):
         for info in standings:
