@@ -11,7 +11,7 @@ export default {
       this.$emit('resort', key)
     },
     sortClasses: function(key) {
-      var baseCSS = "vue-sort-key "
+      var baseCSS = "vue-sort-key d-none d-sm-inline"
       if (this.sortKey.toLowerCase() === key.toLowerCase()) {
         if (this.sortOrder === "asc") {
           return baseCSS + "vue-sort-active sort-by-asc"
