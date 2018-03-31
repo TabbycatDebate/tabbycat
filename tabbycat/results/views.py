@@ -70,6 +70,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         return table
 
     def get_context_data(self, **kwargs):
+        draw = self._get_draw()
         result_status_stats = get_result_status_stats(self.round)
 
         kwargs["stats"] = {
@@ -77,7 +78,12 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
             'draft': result_status_stats[Debate.STATUS_DRAFT],
             'confirmed': result_status_stats[Debate.STATUS_CONFIRMED],
             'postponed': result_status_stats[Debate.STATUS_POSTPONED],
-            'total': len(self._get_draw())
+            'total': len(draw)
+        }
+        kwargs["checks"] = {
+            'checked': sum(1 for debate in draw if debate.checked_in),
+            'missing': sum(1 for debate in draw if not debate.checked_in),
+            'total': len(draw)
         }
 
         kwargs["show_advance_button"] = (
