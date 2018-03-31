@@ -1,24 +1,27 @@
 <template>
-  <th class="vue-sortable" @click="resort(header['key'])"
-      :title="header['tooltip']"
-      :data-toggle="header['tooltip'] ? 'tooltip' : null"
-      @hover="header['tooltip'] ? showTooltip  : null">
+  <th class="vue-sortable" @click="resort(header.key)"
+      :title="header.tooltip" :data-toggle="header.tooltip ? 'tooltip' : null"
+      @hover="header.tooltip ? showTooltip : null">
 
-    <i v-if="header['icon']" :data-feather="header['icon']"
-       :class="[header['tooltip'] ? 'tooltip-trigger'  : '']"></i>
+    <div class="d-flex align-items-end">
 
-    <span v-if="header['text']" v-html="header['text']"
-          :class="[header['tooltip'] ? 'tooltip-trigger'  : '']"></span>
+      <i v-if="header.icon" :data-feather="header.icon"
+         :class="['header-icon', header.tooltip ? 'tooltip-trigger' : '']"></i>
 
-    <span v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')"
-          :class="[header['tooltip'] ? 'tooltip-trigger'  : '']">
-      <span>{{ header['title'] }}</span>
-    </span>
+      <div v-if="header.text" v-html="header.text"
+            :class="[header.tooltip ? 'tooltip-trigger' : '']">
+      </div>
 
-    <div :class="sortClasses(header['key'])">
-      <span class="sorting-placeholder-for-width"></span>
-      <i data-feather="chevrons-down"></i>
-      <i data-feather="chevrons-up"></i>
+      <div v-if="!header.hasOwnProperty('icon') && !header.hasOwnProperty('text')"
+            :class="[header.tooltip ? 'tooltip-trigger' : '']">
+        <span>{{ header.title }}</span>
+      </div>
+
+      <div :class="['mr-auto', sortClasses(header['key'])]">
+        <i data-feather="chevrons-down"></i>
+        <i data-feather="chevrons-up"></i>
+      </div>
+
     </div>
 
   </th>
@@ -30,7 +33,7 @@ import SortableHeaderMixin from '../tables/SortableHeaderMixin.vue'
 export default {
   mixins: [SortableHeaderMixin],
   methods: {
-    showTooltip: function(event) {
+    showTooltip: function (event) {
       $(event.target).tooltip('show')
     },
   },

@@ -18,7 +18,6 @@
               better adjudicators during auto-allocation." >
           <span class="tooltip-trigger">Priority</span>
           <div :class="sortClasses('importance')">
-            <span class="sorting-placeholder-for-width"></span>
             <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
           </div>
         </div>

@@ -20,7 +20,6 @@
              class="vue-sortable thead flex-cell flex-12 ">
           <span>Venue </span>
           <div :class="sortClasses('venue')">
-            <span class="sorting-placeholder-for-width"></span>
             <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
           </div>
         </div>

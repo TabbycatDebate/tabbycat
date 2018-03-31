@@ -6,7 +6,6 @@
            data-toggle="tooltip" title="Debate's Bracket">
         <i data-feather="bar-chart-2" class="tooltip-trigger"></i>
         <div :class="sortClasses('bracket')">
-          <span class="sorting-placeholder-for-width"></span>
           <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
         </div>
       </div>
@@ -17,7 +16,6 @@
            data-toggle="tooltip" title="How many break categories are live in this room">
         <i data-feather="star" class="tooltip-trigger"></i>
         <div :class="sortClasses('liveness')">
-          <span class="sorting-placeholder-for-width"></span>
           <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
         </div>
       </div>
@@ -28,7 +26,6 @@
            data-toggle="tooltip" title="The assigned priority value of this debate">
         <i data-feather="thermometer" class="tooltip-trigger"></i>
         <div :class="sortClasses('importance')">
-          <span class="sorting-placeholder-for-width"></span>
           <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
         </div>
       </div>
@@ -39,7 +36,6 @@
            data-toggle="tooltip" title="The venue of this debate">
         <i data-feather="map-pin" class="tooltip-trigger"></i>
         <div :class="sortClasses('venue')">
-          <span class="sorting-placeholder-for-width"></span>
           <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
         </div>
       </div>
@@ -51,7 +47,6 @@
            data-toggle="tooltip" :title="'The ' + position + ' team'">
         <span>{{ position }}</span>
         <div :class="sortClasses(position)">
-          <span class="sorting-placeholder-for-width"></span>
           <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
         </div>
       </div>

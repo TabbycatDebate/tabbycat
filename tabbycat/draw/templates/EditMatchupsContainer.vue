@@ -49,7 +49,6 @@
                    v-for="position in teamPositions" @click="updateSorting(position)">
                 <span>{{ position }}</span>
                 <div :class="sortClasses(position)">
-                  <span class="sorting-placeholder-for-width"></span>
                   <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
                 </div>
               </div>
