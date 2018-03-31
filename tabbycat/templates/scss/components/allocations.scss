@@ -35,9 +35,7 @@
 
   .vue-sort-key,
   .thead.vue-droppable-container .vue-sort-key {
-    margin-left: 2px; // Fixes for the pretend table headers
-    border-bottom: 0;
-    margin-bottom: 3px;
+    margin-bottom: -2px;
   }
 }
 

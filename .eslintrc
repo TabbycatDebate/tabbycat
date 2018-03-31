@@ -1,5 +1,7 @@
 {
-  "extends": "airbnb-base",
+  "extends": [
+    "airbnb-base",
+  ],
   "plugins": [
     "html"
   ],
@@ -8,6 +10,9 @@
     "jquery": true // jQuery global variable
   },
   "rules": {
-    "semi": 0 // Disallow semi colons for now
+    "semi": 0, // Disallow semi colons for now
+    "no-var": "off",
+    "func-names": "off", // Conflicts with vue
+    "object-shorthand": "off", // Conflicts with vue
   }
 }

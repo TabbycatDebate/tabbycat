@@ -18,13 +18,15 @@
                    :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"
              class="vue-sortable thead flex-cell flex-12 ">
-          <span>Venue </span>
-          <div :class="sortClasses('venue')">
-            <span class="sorting-placeholder-for-width"></span>
-            <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+          <div class="d-flex align-items-end">
+            <span>Venue </span>
+            <div :class="sortClasses('venue')">
+              <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+            </div>
           </div>
         </div>
       </draw-header>
+
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
@@ -52,10 +54,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import VenueMovingMixin from '../../templates/ajax/VenueMovingMixin.vue'
 import DraggableVenue from '../../templates/draganddrops/DraggableVenue.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [VenueMovingMixin, DrawContainerMixin],
