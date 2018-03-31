@@ -1,29 +1,17 @@
 <template>
 
-  <div class="hover-target"
-       @mouseenter="showPopover" @mouseleave="hidePopover">
+  <div class="hover-target" @click="showPopover" @mouseenter="showPopover">
 
     <slot>
       {{ content }}
     </slot>
 
-    <ul class="list-group list-group-item-flush" hidden ref="popHTML">
-
-      <li v-for="item in popContent" class="list-group-item">
-        <a v-if="item['link']" :href="item['link']">
-          <span v-html="item['text']"></span>
-        </a>
-        <span v-else>
-          <span v-html="item['text']"></span>
-        </span>
-      </li>
-
-    </ul>
   </div>
 
 </template>
 
 <script>
+import _ from 'lodash'
 // Inheriting componets should provide a getPopOverTitle() method
 // Along with providing an element with the "popover-raw" class as a direct
 // descendent of the component's root template
@@ -34,52 +22,50 @@ export default {
   props: {
     cellData: Object,
   },
-  computed: {
-    popContent: function() {
-      return this.cellData['content']
-    }
-  },
   methods: {
-    getPopContent: function() {
-      // Grab popover content from actual render html
+    getPopContent: function () {
+      // Grab popover content from actual render html back as a string
+      // Include the HTML explicitly in the template created problems
+      var string = ''
       if (this.cellData.content.length > 0) {
-        return this.$refs.popHTML.innerHTML
+        string += '<div class="list-group list-group-item-flush">'
+        _.forEach(this.cellData.content, (item) => {
+          string += '<div class="list-group-item">'
+          if (item.link) {
+            string += `<a href="${item.link}">${item.text}</a></div>`
+          } else {
+            string += `${item.text}</div>`
+          }
+        });
+        string += '</div>'
       }
-      return ""
+      return string
     },
-    getPopTitle: function() {
-      if (typeof(this.cellData['title']) !== undefined) {
-        return this.cellData['title']
+    getPopTitle: function () {
+      if (!_.isUndefined(this.cellData.title)) {
+        return this.cellData.title
       }
-      return ""
+      return ''
     },
-    showPopover: function(event) {
+    showPopover: function (event) {
       // Popovers are disabled sometimes; e.g. on a scrolling draw page
-      if ($(event.target).hasClass("disable-hover") === false){
-
-        // Unclear if waiting for nextTick helps here, but there were errors
-        // being thrown where the tooltip element's this.config.template was
-        // null; possibly because the DOM hadn't been resolved yet?
-        this.$nextTick(function() {
-
-          $(event.target).popover({
-            animation: true,
-            trigger: 'manual',
-            placement: 'left',
-            html: true,
-            title: this.getPopTitle,
-            content: this.getPopContent,
-            container: event.target, // Must be same as what triggers the event
-            offset: '0,-40' // Shift so hover is easier
-          })
-          $(event.target).popover('show')
-
+      if ($(event.target).hasClass('disable-hover') === false) {
+        $(event.target).popover({
+          animation: true,
+          trigger: 'hover click', // Dismiss handlers
+          placement: 'bottom',
+          html: true,
+          title: this.getPopTitle,
+          content: this.getPopContent,
+          container: event.target, // Must be same as what triggers the event
+          offset: '-25, 0', // Shift so hover is easier
         })
+        $(event.target).popover('show')
       }
     },
-    hidePopover: function(event) {
-      $(event.target).popover('dispose');
+    hidePopover: function (event) {
+      $(event.target).popover('dispose'); // Now redundant; handle via trigger
     },
-  }
+  },
 }
 </script>
