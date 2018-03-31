@@ -110,6 +110,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             institution=pm.Institution.objects.lookup,
             tournament=self.tournament,
             gender=self.lookup_gender,
+            DELETE=['category', lambda x: x.startswith('available:')],
         )
         adjudicators = self._import(f, pm.Adjudicator, interpreter)
 
@@ -121,6 +122,22 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                     'institution': adjudicator.institution,
                 }
         self._import(f, am.AdjudicatorInstitutionConflict, own_institution_conflict_interpreter)
+
+        content_type = ContentType.objects.get_for_model(pm.Adjudicator)
+
+        def adjudicator_availability_interpreter(lineno, line):
+            availability_columns = [col for col in line if col.startswith('available:')]
+            for col in availability_columns:
+                round_name = col[10:]  # length of 'available:'
+                round = tm.Round.objects.lookup(round_name)
+                if convert_bool(line[col]):
+                    yield {
+                        'content_type': content_type,
+                        'object_id': adjudicators[lineno].id,
+                        'round': round
+                    }
+
+        self._import(f, avm.RoundAvailability, adjudicator_availability_interpreter)
 
     def import_scores(self, f):
         # The base class can only create instances, it can't update existing ones.
