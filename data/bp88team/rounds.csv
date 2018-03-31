@@ -1,15 +1,15 @@
-seq,name,abbreviation,stage,draw_type,silent,feedback_weight,break_category
-1,Round 1,R1,preliminary,random,FALSE,0.3,
-2,Round 2,R2,preliminary,power paired,FALSE,0.5,
-3,Round 3,R3,preliminary,power paired,FALSE,0.6,
-4,Round 4,R4,preliminary,power paired,FALSE,0.7,
-5,Round 5,R5,preliminary,power paired,FALSE,0.7,
-6,Round 6,R6,preliminary,power paired,FALSE,0.7,
-7,Round 7,R7,preliminary,power paired,FALSE,0.7,
-8,Round 8,R8,preliminary,power paired,TRUE,0.7,
-9,Open Quarterfinal,OQF,elimination,elimination,TRUE,0.7,open
-10,Novice Semifinal,NSF,elimination,elimination,TRUE,0.7,novice
-11,Open Semifinal,OSF,elimination,elimination,TRUE,0.7,open
-12,ESL Grand Final,SGF,elimination,elimination,TRUE,0.7,esl
-13,Novice Grand Final,NGF,elimination,elimination,TRUE,0.7,novice
-14,Open Grand Final,OGF,elimination,elimination,TRUE,0.7,open
+name,abbreviation,stage,draw_type,silent,feedback_weight,break_category
+Round 1,R1,preliminary,random,FALSE,0.3,
+Round 2,R2,preliminary,power paired,FALSE,0.5,
+Round 3,R3,preliminary,power paired,FALSE,0.6,
+Round 4,R4,preliminary,power paired,FALSE,0.7,
+Round 5,R5,preliminary,power paired,FALSE,0.7,
+Round 6,R6,preliminary,power paired,FALSE,0.7,
+Round 7,R7,preliminary,power paired,FALSE,0.7,
+Round 8,R8,preliminary,power paired,TRUE,0.7,
+Open Quarterfinal,OQF,elimination,elimination,TRUE,0.7,open
+Novice Semifinal,NSF,elimination,elimination,TRUE,0.7,novice
+Open Semifinal,OSF,elimination,elimination,TRUE,0.7,open
+ESL Grand Final,SGF,elimination,elimination,TRUE,0.7,esl
+Novice Grand Final,NGF,elimination,elimination,TRUE,0.7,novice
+Open Grand Final,OGF,elimination,elimination,TRUE,0.7,open

@@ -68,13 +68,20 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                 Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x)
 
     def import_rounds(self, f):
-        round_interpreter = make_interpreter(
+        interpreter_part = make_interpreter(
             tournament=self.tournament,
             stage=self.lookup_round_stage,
             draw_type=self.lookup_draw_type,
             break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
         )
-        self._import(f, tm.Round, round_interpreter)
+
+        def interpreter(lineno, line):
+            line = interpreter_part(lineno, line)
+            if line.get('seq') is None:
+                line['seq'] = lineno - 1
+            return line
+
+        self._import(f, tm.Round, interpreter)
 
         # Set the round with the lowest known seqno to be the current round.
         self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
