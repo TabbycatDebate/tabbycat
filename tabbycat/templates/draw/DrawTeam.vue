@@ -13,9 +13,7 @@
       </div>
       <div v-else>
         {{ team.short_name }}
-      </div>
-      <div class="text-muted d-flex align-items-center" v-if="roundInfo.roundIsPrelim">
-        <span>{{ liveness }}</span>
+        <span class="text-muted" v-if="roundInfo.roundIsPrelim">{{ liveness }}</span>
       </div>
     </div>
 
