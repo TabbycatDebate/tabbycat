@@ -1,0 +1,4 @@
+name,slug,seq,break_size,is_general,priority,rule
+Open,open,10,8,1,30,aida-2016-australs
+ESL,esl,20,4,0,20,aida-2016-australs
+Novice,novice,30,2,0,10,aida-2016-australs

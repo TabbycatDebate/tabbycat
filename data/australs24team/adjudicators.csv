@@ -1,0 +1,30 @@
+name,email,gender,phone,institution,adj_core,independent,test_score,institution_conflicts,team_conflicts,adj_conflicts
+Porro Goold,PorroGoold@einrot.com,male,+49 0221 49 63 43,Mauville,TRUE,FALSE,5,,,
+Simone Grunewald,SimoneGrunewald@jourrapide.com,female,+31 06-84985326,Celadon,TRUE,FALSE,5,,,
+Satoe Murai,SatoeMurai@einrot.com,female,+61 (08) 8295 0262,Goldenrod,TRUE,FALSE,5,,,Itala Ricci
+Mariko Oonishi,MarikoOonishi@jourrapide.com,female,+1 716-859-2311,Lilycove,FALSE,TRUE,3,,,
+Ellie Barnett,EllieBarnett@armyspy.com,female,+43 0650 631 45 00,Mauville,FALSE,TRUE,5,,,Bao Wang
+Afra Rojas,AfraRojasLeyva@teleworm.us,female,+31 06-51697780,Viridian,FALSE,TRUE,5,Earl's,Lilycove 2,
+Faramond Bracegirdle,FaramondBracegirdle@rhyta.com,male,+1 212-203-5498,Viridian,FALSE,TRUE,4,Rustboro,,
+Cornelia Chubb,CorneliaChubb@fleckens.hu,female,+1 412-270-1322,Viridian,FALSE,TRUE,4,,,
+Flavus Zaragamba,FlavusZaragamba@jourrapide.com,male,+55 (21) 4720-8084,Mauville,FALSE,FALSE,4,,,
+Elanor Fairbairn,ElanorFairbairn@gustr.com,female,+44 070 2142 8007,Celadon,FALSE,FALSE,2,,,
+Tim Bauer,TimBauer@superrito.com,male,+64 (028) 6319-247,Celadon,FALSE,FALSE,3,,,
+Alfonsino Rizzo,AlfonsinoRizzo@fleckens.hu,male,+49 05805 70 57 07,Lilycove,FALSE,FALSE,4,,,
+Masahiko Okumura,MasahikoOkumura@teleworm.us,male,+55 (85) 9377-2995,Rustboro,FALSE,FALSE,4,,Viridian 2,
+Scott Kay,ScottTKay@cuvox.de,male,+34 744 379 445,Goldenrod,FALSE,FALSE,4,,,
+Adam Upfield,AdamUpfield@rhyta.com,male,+1 705-248-3139,Blackthorn,FALSE,FALSE,4,,,
+Brian Crowley,BrianDCrowley@armyspy.com,male,+1 316-350-9521,Blackthorn,FALSE,FALSE,3,Viridian,,Flavus Zaragamba
+Vanessa Maurer,VanessaMaurer@einrot.com,female,+43 0660 514 90 49,Olivine,FALSE,FALSE,2,Fuchsia,,
+Douglas Gomes,DouglasSantosGomes@armyspy.com,male,+61 (08) 8717 2491,Ecruteak,FALSE,FALSE,2,,Celadon 1,
+Miho Higuchi,MihoHiguchi@superrito.com,female,+61 (02) 4076 4783,Goldenrod,FALSE,FALSE,2,,,Brian Crowley
+Bao Wang,BaoWang@jourrapide.com,male,+44 079 5557 7843,Petalburg,FALSE,FALSE,1,,,
+Asfaha Bisrat,AsfahaBisrat@einrot.com,male,+34 731 404 717,Lilycove,FALSE,FALSE,2,Goldenrod,,
+Rosamunda Brockhouse,RosamundaBrockhouse@fleckens.hu,female,+44 070 6538 6840,Earl's,FALSE,FALSE,2,,,
+Lorena Angelo,LorenaAngelo@teleworm.us,female,+55 (21) 3488-2904,Goldenrod,FALSE,FALSE,4,,,
+Marko Dresdner,MarkoDresdner@jourrapide.com,male,+43 0688 264 76 08,Petalburg,FALSE,FALSE,3,Rustboro,,
+Camila Barros,CamilaRibeiroBarros@cuvox.de,female,+27 085 448 2708,Ecruteak,FALSE,FALSE,4,,,
+Angus Knox,AngusKnox@cuvox.de,male,+49 03631 88 82 17,Ecruteak,FALSE,FALSE,4,,,
+André Sousa,AndreBarbosaSousa@armyspy.com,male,+61 (08) 9227 9039,Lilycove,FALSE,FALSE,2,Celadon,,Douglas Gomes
+Itala Ricci,ItalaRicci@armyspy.com,female,+1 250-732-5194,Celadon,FALSE,FALSE,1,,,
+Dong Lin,DongLin@armyspy.com,male,+61 (07) 4981 5133,Ecruteak,FALSE,FALSE,2,,,Tim Bauer

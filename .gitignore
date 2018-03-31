@@ -18,6 +18,7 @@ data/*
 
 # Default data to include
 !data/bp88team/
+!data/australs24team/
 !data/demo/
 !data/demo_simple/
 !data/sandbox/
