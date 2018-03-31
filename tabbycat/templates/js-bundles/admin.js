@@ -11,6 +11,9 @@ if (window.buildData.sentry === true) {
   }).addPlugin(RavenVue, Vue).install();
 }
 
+// Use a polyfill for IE 11 and older versions of other browsers not up to ES6
+require('es6-promise/auto')
+
 // Redefine variables from import so that they can be edited
 var vueComponents = vueBases.baseComponents
 var vueData = vueBases.baseData
