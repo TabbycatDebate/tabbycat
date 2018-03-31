@@ -59,6 +59,7 @@ thead,
 
   .vue-sort-key {
     width: 16px;
+    height: 18px;
     display: inline-block;
   }
 
@@ -66,7 +67,7 @@ thead,
   .feather-chevrons-up,
   .feather-chevrons-down {
     display: none;
-    margin-bottom: -3px; // Align with text
+    margin-bottom: -5px; // Align with text
     margin-right: -4px; // Overwrite the padding as it acts as a spacer
   }
 
@@ -81,7 +82,7 @@ thead,
   }
 
   // When active show the currently active sort order
-  .vue-sort-active.sort-by-asc {
+  .vue-sort-active.sort-by-desc {
 
     .feather-chevrons-down {
       display: inline;
@@ -91,7 +92,7 @@ thead,
     }
   }
 
-  .vue-sort-active.sort-by-desc {
+  .vue-sort-active.sort-by-asc {
 
     .feather-chevrons-up {
       display: inline;
@@ -115,6 +116,9 @@ thead,
 .table > thead > tr > th,
 .draw-container .thead {
   padding-bottom: 12px;
+  font-family: $headings-font-family;
+  text-transform: none;
+  font-weight: normal;
 
   > div {
     padding-bottom: 2px; // Offset tooltip underline to maintain baseline

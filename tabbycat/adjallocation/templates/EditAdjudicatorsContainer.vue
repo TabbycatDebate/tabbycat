@@ -16,9 +16,11 @@
              @click="updateSorting('importance')" data-toggle="tooltip"
              title="The debate's priority. Higher priorities will be allocated
               better adjudicators during auto-allocation." >
-          <span class="tooltip-trigger">Priority</span>
-          <div :class="sortClasses('importance')">
-            <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+          <div class="d-flex align-items-end">
+            <span class="tooltip-trigger">Priority</span>
+            <div :class="sortClasses('importance')">
+              <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+            </div>
           </div>
         </div>
 
@@ -30,17 +32,23 @@
         <template slot="hpanel">
           <div :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
-            <span>Chair</span>
+            <div class="d-flex align-items-end">
+              <span>Chair</span>
+            </div>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
                :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 17: 16)]">
-            <span>Panel</span>
+            <div class="d-flex align-items-end">
+              <span>Panel</span>
+            </div>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
                :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10: 16)]">
-            <span>Trainees</span>
+            <div class="d-flex align-items-end">
+              <span>Trainees</span>
+            </div>
           </div>
         </template>
 

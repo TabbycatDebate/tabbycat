@@ -36,7 +36,7 @@
     <div class="row">
       <div class="col mb-3 mt-3">
 
-          <draw-header :round-info="roundInfo" @resort="updateSorting"
+         <draw-header :round-info="roundInfo" @resort="updateSorting"
                        :sort-key="sortKey" :sort-order="sortOrder">
 
             <div slot="hbracket"></div>
@@ -47,9 +47,11 @@
             <template slot="hteams">
               <div class="vue-sortable thead flex-cell flex-12"
                    v-for="position in teamPositions" @click="updateSorting(position)">
-                <span>{{ position }}</span>
-                <div :class="sortClasses(position)">
-                  <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+                <div class="d-flex align-items-end">
+                  <span>{{ position.toUpperCase() }}</span>
+                  <div :class="sortClasses(position)">
+                    <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+                  </div>
                 </div>
               </div>
             </template>
