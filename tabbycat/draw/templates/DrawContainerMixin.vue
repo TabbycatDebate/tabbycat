@@ -110,9 +110,9 @@ export default {
       if (!_.isUndefined(this.sortKey) && !_.isUndefined(key)) {
         if (this.sortKey.toLowerCase() === key.toLowerCase()) {
           if (this.sortOrder === "asc") {
-            return baseCSS + "vue-sort-active sort-asc"
+            return baseCSS + "vue-sort-active sort-by-desc"
           } else {
-            return baseCSS + "vue-sort-active sort-desc"
+            return baseCSS + "vue-sort-active sort-by-asc"
           }
         }
       }

@@ -20,7 +20,7 @@
   }
 
   .tooltip-trigger {
-    border-bottom: 2px inset $gray-300;
+    border-bottom: 2px solid $gray-300;
   }
 
   .popover span {
@@ -33,7 +33,14 @@
 }
 
 .popover {
-  max-width: 400px;
+  max-width: none; // Bootstrap defaults to 270
+}
+
+@media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
+
+  .popover {
+    max-width: 350px; // Ensure width of popover doesn't exceed screen width
+  }
 }
 
 .popover-body {
