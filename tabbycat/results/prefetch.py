@@ -53,7 +53,7 @@ def populate_confirmed_ballots(debates, motions=False, results=False):
     if results:
         confirmed_ballots = confirmed_ballots.select_related(
             'debate__round__tournament').prefetch_related(
-            'debate__debateadjudicator_set__adjudicator')
+            'debate__debateadjudicator_set__adjudicator__institution')
 
     ballotsubs_by_debate_id = {ballotsub.debate_id: ballotsub for ballotsub in confirmed_ballots}
     for debate in debates:
