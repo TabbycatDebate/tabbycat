@@ -330,7 +330,8 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubs
 
     def get_speakers(self):
         return self.object.speaker_set.select_related(
-            'team', 'team__institution', 'team__tournament').prefetch_related('team__speaker_set')
+            'team', 'team__institution', 'team__tournament'
+        ).prefetch_related('team__speaker_set', 'categories')
 
     def get_page_title(self):
         return _("%(category)s Speaker Standings") % {'category': self.object.name,}
