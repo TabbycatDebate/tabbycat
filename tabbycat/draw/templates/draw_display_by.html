@@ -62,12 +62,18 @@
   {{ block.super }}
   <script>
     function startScrolling() {
+      {% if no_popovers %}
+      $('.hover-target').css("pointer-events", "none")
+      {% endif %}
       console.log('startScrolling');
       $('.table').addClass("hide-hover") // Hide the row highlight effect
       $('.popover').hide() // Hide any currently triggered popovers
       $('#stop_scrolling').show();
     }
     function stopScrolling() {
+      {% if no_popovers %}
+      $('.hover-target').css("pointer-events", "auto")
+      {% endif %}
       console.log('stopScrolling');
       $('html, body').stop()
       $('.table').removeClass("hide-hover")
@@ -75,9 +81,6 @@
     }
     $(document).ready( function() {
       // Disable all popovers (if in the GA view)
-      {% if no_popovers %}
-      $('.hover-target').css("pointer-events", "none")
-      {% endif %}
 
       $('#stop_scrolling').hide();
       $(".scroll-speeds .btn").click(function(event){

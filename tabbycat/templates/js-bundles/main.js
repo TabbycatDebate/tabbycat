@@ -1,7 +1,7 @@
 // The base template with universal or near-universal functionality (imported on all pages)
 
 //------------------------------------------------------------------------------
-// jQuery, Lodash, and Boostrap
+// TCI: jQuery, Lodash, and Boostrap
 //------------------------------------------------------------------------------
 
 var $ = require("jquery");
@@ -37,7 +37,10 @@ $.fn.extend({
   }
 });
 
-// Mount global jquery stuff here
+//------------------------------------------------------------------------------
+// TCI: Mount global jquery stuff here
+//------------------------------------------------------------------------------
+
 $(document).ready(function(){
 
   // Enable hover tooltips for all elements
@@ -82,7 +85,7 @@ $(document).ready(function(){
 });
 
 //------------------------------------------------------------------------------
-// Vue Structure Setup
+// TCI: Vue Structure Setup
 //------------------------------------------------------------------------------
 
 // Setup the main constructs used for custom components
@@ -91,9 +94,7 @@ var vueComponents = {}
 // This is the main data package setout in the django template
 var vueData = window.vueData // We need to mount props from the window itself
 
-//------------------------------------------------------------------------------
 // Vue Shared Components Setup
-//------------------------------------------------------------------------------
 
 // Table-based Views
 import TablesContainer from '../tables/TablesContainer.vue'
@@ -107,9 +108,7 @@ vueComponents['DiversityContainer'] = DiversityContainer
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
 vueComponents['CheckInStatusContainer'] = CheckInStatusContainer
 
-//------------------------------------------------------------------------------
 // Vue Transations Setup
-//------------------------------------------------------------------------------
 
 // Mixin that maps methods in Vue to what django's equivalents; passing args
 var vueTranslationMixin = {
@@ -141,10 +140,7 @@ var vueTranslationMixin = {
   }
 }
 
-//------------------------------------------------------------------------------
 // Expose data for admin/public.js to import
-//------------------------------------------------------------------------------
-
 // For admin modules
 export default {
   baseComponents: vueComponents,
