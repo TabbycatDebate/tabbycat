@@ -95,7 +95,6 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
         """Annotates items with the given QuerySet, using the "metric" field."""
         for item in queryset:
             if item.metric is None:
-                logger.info("Metric %r for %s was None, setting to 0", self.key, item)
                 item.metric = 0
             standings.add_metric(item, self.key, item.metric)
 
