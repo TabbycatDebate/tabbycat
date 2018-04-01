@@ -307,9 +307,15 @@ class BaseStandingsGenerator:
 
         standings = Standings(queryset, rank_filter=self.options["rank_filter"])
 
+        # The original queryset might have filtered out information relevant to
+        # calculating the metrics (e.g., if it filters teams by participation in
+        # a round), so make a new queryset to pass to the metric annotators that
+        # relies on a nested ID selection instead.
+        queryset_for_metrics = queryset.model.objects.filter(id__in=queryset.values_list('id', flat=True))
+
         for annotator in self.metric_annotators:
             logger.debug("Running metric annotator: %s", annotator.name)
-            annotator.run(queryset, standings, round)
+            annotator.run(queryset_for_metrics, standings, round)
         logger.debug("Metric annotators done.")
 
         if self.options["include_filter"]:
