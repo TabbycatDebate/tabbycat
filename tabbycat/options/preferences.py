@@ -827,6 +827,15 @@ class PublicParticipants(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class PublicInstitutionsList(BooleanPreference):
+    help_text = _("Enables the public page listing all institutions in the tournament")
+    verbose_name = _("Enable public view of institutions list")
+    section = public_features
+    name = 'public_institutions_list'
+    default = False
+
+
+@tournament_preferences_registry.register
 class PublicDiversity(BooleanPreference):
     help_text = _("Enables the public page listing diversity statistics")
     verbose_name = _("Enable public view of diversity info")

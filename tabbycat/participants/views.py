@@ -4,7 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy, ngettext
@@ -17,6 +17,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
 from options.utils import use_team_code_names
+from participants.models import Institution
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
@@ -46,7 +47,11 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class BaseParticipantsListView(VueTableTemplateView):
+# ==============================================================================
+# Lists of things
+# ==============================================================================
+
+class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
     page_title = gettext_lazy("Participants")
     page_emoji = '🚌'
@@ -69,15 +74,54 @@ class BaseParticipantsListView(VueTableTemplateView):
         return [adjs_table, speakers_table]
 
 
-class ParticipantsListView(BaseParticipantsListView, AdministratorMixin, TournamentMixin):
-
+class ParticipantsListView(AdministratorMixin, BaseParticipantsListView):
     template_name = 'participants_list.html'
     admin = True
 
 
-class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageMixin, CacheMixin):
-
+class PublicParticipantsListView(PublicTournamentPageMixin, CacheMixin, BaseParticipantsListView):
     public_page_preference = 'public_participants'
+    admin = False
+
+
+class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
+
+    page_title = gettext_lazy("Institutions")
+    page_emoji = '🏫'
+
+    def get_table(self):
+        institutions = Institution.objects.select_related('region').filter(
+            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
+        ).annotate(
+            nteams=Count('team', distinct=True),
+            nadjs=Count('adjudicator', filter=Q(adjudicator__independent=False), distinct=True),
+            nias=Count('adjudicator', filter=Q(adjudicator__independent=True), distinct=True),
+        ).distinct()
+
+        table = TabbycatTableBuilder(view=self, sort_key="code")
+        table.add_column({'key': 'code', 'title': _("Code")}, [i.code for i in institutions])
+        table.add_column({'key': 'name', 'title': _("Full name")}, [i.name for i in institutions])
+        if any(i.region is not None for i in institutions):
+            table.add_column({'key': 'region', 'title': _("Region")},
+                [i.region.name if i.region else "—" for i in institutions])
+        table.add_column({'key': 'nteams', 'title': _("Teams"), 'tooltip': _("Number of teams")},
+            [i.nteams for i in institutions])
+        table.add_column({'key': 'nadjs', 'title': _("Adjs"),
+            'tooltip': _("Number of adjudicators, excluding independents")},
+            [i.nadjs for i in institutions])
+        table.add_column({'key': 'nadjs', 'title': _("IAs"),
+            'tooltip': _("Number of independent adjudicators")},
+            [i.nias for i in institutions])
+        return table
+
+
+class InstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
+    template_name = 'participants_list.html'
+    admin = True
+
+
+class PublicInstitutionsListView(PublicTournamentPageMixin, CacheMixin, BaseInstitutionsListView):
+    public_page_preference = 'public_institutions_list'
     admin = False
 
 

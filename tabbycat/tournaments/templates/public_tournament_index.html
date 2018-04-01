@@ -152,6 +152,12 @@
       {% include "components/item-action.html" with icon="users" %}
     {% endif %}
 
+    {% if pref.public_participants %}
+      {% trans "Institutions" as text %}
+      {% tournamenturl 'participants-public-institutions-list' as url %}
+      {% include "components/item-action.html" with icon="flag" %}
+    {% endif %}
+
     {% if pref.feedback_progress %}
       {% trans "Feedback Progress" as text %}
       {% tournamenturl 'public_feedback_progress' as url %}

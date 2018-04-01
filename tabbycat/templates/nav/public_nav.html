@@ -162,6 +162,11 @@
     <a class="nav-link" href="{% tournamenturl 'participants-public-list' %}">{% trans "Participants" %}</a>
   </li>
 {% endif %}
+{% if pref.public_institutions_list %}
+  <li class="nav-item {% if institutions_nav %}active{% endif %}">
+    <a class="nav-link" href="{% tournamenturl 'participants-public-institutions-list' %}">{% trans "Institutions" %}</a>
+  </li>
+{% endif %}
 {% if pref.feedback_progress %}
   <li class="nav-item {% if feedback_progress_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'public_feedback_progress' %}">{% trans "Feedback Progress" %}</a>

@@ -5,6 +5,10 @@
      href="{% tournamenturl 'participants-list' %}">
     {% trans "Participants List" %}
   </a>
+  <a class="btn btn-outline-primary {% if institutions_nav %}active{% endif %}"
+     href="{% tournamenturl 'participants-institutions-list' %}">
+    {% trans "Institutions" %}
+  </a>
   <a class="btn btn-outline-primary {% if speaker_cats_nav %}active{% endif %}"
      href="{% tournamenturl 'participants-speaker-categories-edit' %}">
     {% trans "Speaker Categories" %}
