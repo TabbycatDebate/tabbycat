@@ -91,16 +91,6 @@ if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar
 
 # These messages don't always work properly with unit tests, so set fail_silently=True
 
-@receiver(user_logged_out)
-def on_user_logged_out(sender, request, **kwargs):
-    if kwargs.get('user'):
-        messages.info(request,
-            _("Later, %(username)s — you were logged out!") % {'username': kwargs['user'].username},
-            fail_silently=True)
-    else: # should never happen, but just in case
-        messages.info(request, _("Later! You were logged out!"), fail_silently=True)
-
-
 @receiver(user_logged_in)
 def on_user_logged_in(sender, request, **kwargs):
     if kwargs.get('user'):
