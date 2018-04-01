@@ -98,7 +98,7 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
             nias=Count('adjudicator', filter=Q(adjudicator__independent=True), distinct=True),
         ).distinct()
 
-        table = TabbycatTableBuilder(view=self, sort_key="code")
+        table = TabbycatTableBuilder(view=self, sort_key='code')
         table.add_column({'key': 'code', 'title': _("Code")}, [i.code for i in institutions])
         table.add_column({'key': 'name', 'title': _("Full name")}, [i.name for i in institutions])
         if any(i.region is not None for i in institutions):
@@ -123,6 +123,23 @@ class InstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
 class PublicInstitutionsListView(PublicTournamentPageMixin, CacheMixin, BaseInstitutionsListView):
     public_page_preference = 'public_institutions_list'
     admin = False
+
+
+class CodeNamesListView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
+
+    template_name = 'participants_list.html'
+    page_title = gettext_lazy("Code Names")
+    page_emoji = '🕵'
+
+    def get_table(self):
+        teams = self.tournament.team_set.select_related('institution')
+        table = TabbycatTableBuilder(view=self, sort_key='code_name')
+        table.add_column(
+            {'key': 'code_name', 'title': _("Code name")},
+            [{'emoji': t.emoji, 'text': t.code_name or "—"} for t in teams]
+        )
+        table.add_team_columns(teams, hide_emoji=True)
+        return table
 
 
 # ==============================================================================

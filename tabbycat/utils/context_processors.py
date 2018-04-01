@@ -36,6 +36,8 @@ def get_menu_highlight(request):
                 menu['participants_nav'] = True
             elif "institutions" in path:
                 menu['institutions_nav'] = True
+            elif "code-names" in path:
+                menu['code_names_nav'] = True
             elif "categories" in path:
                 menu['speaker_cats_nav'] = True
             elif "eligibility" in path:
