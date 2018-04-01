@@ -6,8 +6,13 @@ group: edge
 env:
   global:
     - CC_TEST_REPORTER_ID=c18003eb2d4d191e9ebd68d9c3cf8082ba690eccac12df6660a098a78fc8713b
+    - PGPORT=5433
 addons:
   postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
   # chrome: stable # Re-enable for functional tests if/when they work on Travis
 services:
   - postgresql
