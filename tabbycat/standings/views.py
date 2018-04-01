@@ -234,7 +234,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
         table.add_team_columns([info.speaker.team for info in standings])
 
         scores_headers = [{'key': round.abbreviation, 'title': round.abbreviation} for round in rounds]
-        scores_data = [[metricformat(x) for x in standing.scores] for standing in standings]
+        scores_data = [[metricformat(x) if x is not None else '—' for x in standing.scores] for standing in standings]
         table.add_columns(scores_headers, scores_data)
         table.add_metric_columns(standings, integer_score_columns=self.integer_score_columns(rounds))
 
@@ -262,7 +262,7 @@ class BaseSpeakerStandingsView(BaseStandingsView):
             is_consensus_by_round = [self.tournament.ballots_per_debate(r.stage) == 'per-debate' for r in rounds]
             for info in standings:
                 for i, is_consensus in enumerate(is_consensus_by_round):
-                    if is_consensus and info.scores[i].is_integer():
+                    if is_consensus and info.scores[i] is not None and info.scores[i].is_integer():
                         info.scores[i] = int(info.scores[i])
 
 
