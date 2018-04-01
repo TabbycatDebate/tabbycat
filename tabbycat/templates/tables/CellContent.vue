@@ -21,7 +21,9 @@
     <!-- Standard -->
     <div v-else :data-toggle="cellData.tooltip ? tooltip : ''" :title="cellData.tooltip">
       <span class="tooltip-trigger" v-html="cellData.text"></span>
-      <small v-if="cellData.subtext" v-html="cellData.subtext"></small>
+      <template v-if="cellData.subtext">
+        <br><small v-html="cellData.subtext"></small>
+      </template>
     </div>
 
   </div>

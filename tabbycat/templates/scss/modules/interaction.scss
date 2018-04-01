@@ -32,8 +32,25 @@
   }
 }
 
+// Expand hover target by taking up the cells padding
+td > .touch-target {
+  margin: -8px -4px -8px -4px;
+
+  > .hover-target {
+    padding: 8px 4px; // Transfer padding to the element that triggers hovers
+  }
+}
+
 .popover {
   max-width: none; // Bootstrap defaults to 270
+
+  .list-group-item {
+    padding: 0.5rem 0.75rem;
+  }
+  .bs-tether-element-attached-top::after,
+  .bs-tether-element-attached-top::before{
+    left: 25%;
+  }
 }
 
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {

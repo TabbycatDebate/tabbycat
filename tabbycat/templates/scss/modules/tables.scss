@@ -38,6 +38,9 @@
       border-bottom-color: #ccc;
     }
   }
+  &.hide-hover .hover-target .tooltip-trigger {
+    border-bottom: none;
+  }
 }
 
 //------------------------------------------------------------------------------

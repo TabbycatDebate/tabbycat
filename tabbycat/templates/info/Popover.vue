@@ -1,12 +1,14 @@
 <template>
 
-  <div class="hover-target" @click="showPopover" @mouseenter="showPopover">
+  <v-touch class="touch-target" ref="container" v-on:tap="togglePopOver">
+    <div class="hover-target" @mouseenter="showPopOver">
 
-    <slot>
-      {{ content }}
-    </slot>
+        <slot>
+          {{ content }}
+        </slot>
 
-  </div>
+    </div>
+  </v-touch>
 
 </template>
 
@@ -22,7 +24,26 @@ export default {
   props: {
     cellData: Object,
   },
+  data: function () {
+    return {
+      showingPopOver: false,
+    }
+  },
+  created: function () {
+    // Watch for events on the global event hub
+    this.$eventHub.$on('hideOtherPopOvers', this.responeToGlobalHide)
+  },
   methods: {
+    togglePopOver: function (event) {
+      if (event.pointerType === 'touch') { // Don't response to clicks as taps
+        if (this.showingPopOver) {
+          // Need to give time to taps on links to register
+          setTimeout(() => this.hidePopOver(), 150);
+        } else {
+          this.showPopOver()
+        }
+      }
+    },
     getPopContent: function () {
       // Grab popover content from actual render html back as a string
       // Include the HTML explicitly in the template created problems
@@ -47,24 +68,45 @@ export default {
       }
       return ''
     },
-    showPopover: function (event) {
-      // Popovers are disabled sometimes; e.g. on a scrolling draw page
-      if ($(event.target).hasClass('disable-hover') === false) {
-        $(event.target).popover({
-          animation: true,
-          trigger: 'hover click', // Dismiss handlers
-          placement: 'bottom',
-          html: true,
-          title: this.getPopTitle,
-          content: this.getPopContent,
-          container: event.target, // Must be same as what triggers the event
-          offset: '-25, 0', // Shift so hover is easier
-        })
-        $(event.target).popover('show')
+    showPopOver: function () {
+
+      if (this.showingPopOver) {
+        return // This throws errors in Boostraps popover calls if not caught
+      }
+
+      $(this.$refs.container.$el).popover({
+        animation: false,
+        trigger: 'hover', // Dismiss handlers
+        placement: 'bottom',
+        fallbackPlacement: 'clockwise', // Can't be flip given overlap offsets
+        html: true,
+        title: this.getPopTitle,
+        content: this.getPopContent,
+        container: this.$refs.container.$el, // Must be same as event trigger
+        offset: '0px, -12px', // Shift so hover is easier
+      })
+      $(this.$refs.container.$el).popover('show')
+
+      // Wait until the show/hide actions finish before changing state
+      let self = this
+      $(this.$refs.container.$el).on('shown.bs.popover', () => {
+        self.showingPopOver = true
+        self.$eventHub.$emit('hideOtherPopOvers', self._uid)
+      })
+      $(this.$refs.container.$el).on('hidden.bs.popover', () => {
+        self.showingPopOver = false
+      })
+    },
+    hidePopOver: function () {
+      if (this.showingPopOver) {
+        $(this.$refs.container.$el).popover('dispose');
+        this.showingPopOver = false
       }
     },
-    hidePopover: function (event) {
-      $(event.target).popover('dispose'); // Now redundant; handle via trigger
+    responeToGlobalHide(uid) {
+      if (this._uid !== uid) {
+        this.hidePopOver()
+      }
     },
   },
 }
