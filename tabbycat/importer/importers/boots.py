@@ -5,6 +5,7 @@ import adjallocation.models as am
 import availability.models as avm
 import adjfeedback.models as fm
 import breakqual.models as bm
+import motions.models as mm
 import tournaments.models as tm
 import participants.models as pm
 import venues.models as vm
@@ -30,6 +31,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         'adjudicator_conflicts',
         'team_institution_conflicts',
         'adj_feedback_questions',
+        'motions',
     ]
 
     lookup_round_stage = make_lookup("round stage", {
@@ -279,3 +281,9 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         )
 
         self._import(f, fm.AdjudicatorFeedbackQuestion, interpreter)
+
+    def import_motions(self, f):
+        motions_interpreter = make_interpreter(
+            round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
+        )
+        self._import(f, mm.Motion, motions_interpreter)

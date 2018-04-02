@@ -76,12 +76,19 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
     })
 
     def import_rounds(self, f):
-        round_interpreter = make_interpreter(
+        round_interpreter_part = make_interpreter(
             tournament=self.tournament,
             stage=self.lookup_round_stage,
             draw_type=self.lookup_draw_type,
             break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
         )
+
+        def round_interpreter(lineno, line):
+            line = round_interpreter_part(lineno, line)
+            if line.get('seq') is None:
+                line['seq'] = lineno - 1
+            return line
+
         self._import(f, tm.Round, round_interpreter)
 
         # Set the round with the lowest known seqno to be the current round.
