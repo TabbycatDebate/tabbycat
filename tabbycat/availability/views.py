@@ -149,17 +149,6 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
     template_name = "base_availability.html"
     share_key = None  # The relevant pref to include tournament-less objects
 
-    def get_page_title(self):
-        # Can't construct with concatenation, need entire strings for translation
-        if self.model is Team:
-            return _("Team Availability")
-        elif self.model is Adjudicator:
-            return _("Adjudicator Availability")
-        elif self.model is Venue:
-            return _("Venue Availability")
-        else:
-            return "Availability"  # don't translate, this should never happen
-
     def get_context_data(self, **kwargs):
         kwargs['model'] = self.model._meta.label  # does not get translated
         kwargs['saveURL'] = reverse_round(self.update_view, self.round)
@@ -204,6 +193,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
 
 
 class AvailabilityTypeTeamView(AvailabilityTypeBase):
+    page_title = gettext_lazy("Team Availability")
     page_emoji = '👂'
     model = Team
     sort_key = 'team'
@@ -222,6 +212,7 @@ class AvailabilityTypeTeamView(AvailabilityTypeBase):
 
 
 class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
+    page_title = gettext_lazy("Adjudicator Availability")
     page_emoji = '👂'
     model = Adjudicator
     sort_key = 'name'
@@ -241,6 +232,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
+    page_title = gettext_lazy("Venue Availability")
     page_emoji = '🎪'
     model = Venue
     sort_key = 'venue'
