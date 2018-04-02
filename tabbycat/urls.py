@@ -2,7 +2,7 @@ from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin, messages
 from django.contrib.auth.views import logout as auth_logout
-from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from django.views.generic.base import RedirectView
