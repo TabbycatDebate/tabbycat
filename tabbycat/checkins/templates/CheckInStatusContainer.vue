@@ -52,29 +52,29 @@
         <div class="card-body p-0">
           <div class="row no-gutters">
 
-            <div class="col-2 d-flex flex-nowrap align-items-center">
+            <div class="col-12 col-md-3 col-lg-2 d-flex flex-nowrap align-items-center">
 
               <div class="mr-auto strong my-1 px-2">
                 {{ grouper }}
               </div>
-              <button v-if="scanUrl" class="btn btn-info my-1 px-2 align-self-stretch btn-sm hoverable p-1"
+              <button v-if="scanUrl" class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
                       @click="checkInGroup(entity)">
                 <strong>✓</strong> All
               </button>
 
             </div>
 
-            <div class="col-10 pt-1 pl-1">
+            <div class="col-12 col-md-9 col-lg-10 pt-md-1 pl-md-0 pl-1">
               <transition-group :name="mainTransitions" tag="div" class="row no-gutters">
 
 
                 <div v-for="entity in entity" :key="entity.id"
-                     class="col-lg-3 col-md-3 col-4 check-in-person">
+                     class="col-lg-3 col-md-4 col-6 check-in-person">
                   <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
 
-                    <div :class="['col p-2 text-truncate text-capitalize',
+                    <div :class="['col p-2 text-truncate ',
                                   entity.status ? 'bg-success' : 'bg-secondary',
-                                  entity.type === 'Adjudicator' ? 'font-weight-normal' : '']"
+                                  entity.type === 'Adjudicator' ? 'text-capitalize' : 'text-uppercase']"
                          data-toggle="tooltip" :title="getToolTipForEntity(entity)">
                       {{ entity.name }}
                     </div>
