@@ -1,0 +1,14 @@
+# Ignore this entire directory
+*
+
+# ...except for demonstration and test datasets
+!.gitignore
+!bp88team/
+!australs24team/
+!demo/
+!demo_simple/
+!sandbox/
+!test/
+!presets/
+!fixtures/
+!migrate_fixtures.py

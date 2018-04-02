@@ -13,20 +13,6 @@ tabbycat/static/fonts/
 # Dependencies
 node_modules
 
-# Data to ignore
-data/*
-
-# Default data to include
-!data/bp88team/
-!data/australs24team/
-!data/demo/
-!data/demo_simple/
-!data/sandbox/
-!data/test/
-!data/presets/
-!data/fixtures/
-!data/migrate_fixtures.py
-
 # Docker
 dbdata
 
