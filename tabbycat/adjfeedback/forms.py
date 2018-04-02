@@ -400,7 +400,6 @@ class UpdateAdjudicatorScoresForm(forms.Form):
             records.append((adj, score))
 
         if errors:
-            print(errors)
             raise ValidationError(errors)
 
         if len(records) == 0:
