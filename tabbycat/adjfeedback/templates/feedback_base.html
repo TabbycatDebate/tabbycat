@@ -1,33 +1,37 @@
 {% extends "tables/base_vue_table.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block page-subnav-sections %}
   <div class="btn-group flex-wrap">
     <a class="btn btn-outline-primary {% if feedback_overview_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-overview' %}">
-      Overview
+      {% trans "Overview" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_latest_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-latest' %}">
-      Latest
+      {% trans "Latest" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_source_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-source' %}">
-      Find by Source
+      {% trans "Find by Source" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_target_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-target' %}">
-      Find by Target
+      {% trans "Find by Target" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_progress_nav %}active disabled{% endif %}"
-       href="{% tournamenturl 'feedback_progress' %}">
-      Unsubmitted Feedback
+       href="{% tournamenturl 'adjfeedback-progress' %}">
+      {% trans "Unsubmitted Feedback" %}
+    </a>
+    <a class="btn btn-outline-primary"
+       href="{% tournamenturl 'adjfeedback-update-scores-bulk' %}">
+      {% trans "Bulk Update Scores" %}
     </a>
   </div>
 {% endblock %}
 
 {% block page-subnav-actions %}
   <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-add-index' %}">
-    Add Feedback
+    {% trans "Add Feedback" %}
   </a>
 {% endblock %}

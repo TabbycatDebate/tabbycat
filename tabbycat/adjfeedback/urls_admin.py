@@ -11,7 +11,7 @@ urlpatterns = [
         name='adjfeedback-overview'),
     path('progress/',
         views.FeedbackProgress.as_view(),
-        name='feedback_progress'),
+        name='adjfeedback-progress'),
 
     # Getting/setting values
     path('test/set/',
@@ -55,4 +55,8 @@ urlpatterns = [
         views.AdminAddFeedbackView.as_view(model=Adjudicator),
         name='adjfeedback-add-from-adjudicator'),
 
+    # Updating in bulk
+    path('scores/bulk-update/',
+        views.UpdateAdjudicatorScoresView.as_view(),
+        name='adjfeedback-update-scores-bulk'),
 ]

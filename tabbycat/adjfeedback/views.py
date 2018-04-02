@@ -28,7 +28,7 @@ from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
-from .forms import make_feedback_form_class
+from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
 from .progress import get_feedback_progress
@@ -661,3 +661,36 @@ class FeedbackProgress(AdministratorMixin, BaseFeedbackProgressView):
 
 class PublicFeedbackProgress(PublicTournamentPageMixin, CacheMixin, BaseFeedbackProgressView):
     public_page_preference = 'feedback_progress'
+
+
+# ==============================================================================
+# Update adjudicator scores in bulk
+# ==============================================================================
+
+class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
+    template_name = 'update_adjudicator_scores.html'
+    form_class = UpdateAdjudicatorScoresForm
+    action_log_type = ActionLogEntry.ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES
+
+    def get_context_data(self, **kwargs):
+        sample_adjs = self.tournament.relevant_adjudicators.all()[:3]
+        if len(sample_adjs) == 0:
+            kwargs['no_adjs_in_database'] = True
+            kwargs['sample'] = [("Estella Brandybuck", 5.0), ("Pia Hermansson", 4.0), ("Lucas Sousa", 3.5)]
+        else:
+            kwargs['sample'] = [(adj.name, adj.test_score) for adj in sample_adjs]
+        return super().get_context_data(**kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.tournament
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_tournament('adjfeedback-overview', self.tournament)
+
+    def form_valid(self, form):
+        nupdated = form.save()
+        messages.success(self.request, _("Updated test scores for %(count)d adjudicators.") % {'count': nupdated})
+        self.log_action()
+        return super().form_valid(form)

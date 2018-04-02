@@ -66,6 +66,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_SIMPLE_IMPORT_VENUES       = 'si.venu'
     ACTION_TYPE_SIMPLE_IMPORT_TEAMS        = 'si.team'
     ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS = 'si.adju'
+    ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES  = 'aj.sc.upda'
     ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT    = 'ac.at.edit'
     ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT     = 'ac.aa.edit'
     ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT    = 'ac.ai.edit'
@@ -121,6 +122,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_SIMPLE_IMPORT_VENUES      , _("Imported venues using the simple importer")),
         (ACTION_TYPE_SIMPLE_IMPORT_TEAMS       , _("Imported teams using the simple importer")),
         (ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS, _("Imported adjudicators using the simple importer")),
+        (ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES , _("Updated adjudicator scores in bulk")),
         (ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT   , _("Edited adjudicator-team conflicts")),
         (ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT    , _("Edited adjudicator-adjudicator conflicts")),
         (ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT   , _("Edited adjudicator-institution conflicts")),
