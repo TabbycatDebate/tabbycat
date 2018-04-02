@@ -40,17 +40,17 @@
     {% if type == "teams" %}
 
       {% roundurl 'availability-teams' round as url %}
-      {% trans "Check in teams" as title_text %}
+      {% trans "Mark teams as available" as title_text %}
 
       {% if round.is_break_round %}
-        {% trans "No need to check teams in" as title_text %}
+        {% trans "No need to set team availability" as title_text %}
         {% include "components/item-info.html" with text=title_text type="secondary" %}
-      {% elif pref.teams_in_debate == 'two' and not checkin_info.teams.in_now|divisibleby:2  %}
-        {% trans "There is an uneven number of teams checked in for this round." as text %}
+      {% elif pref.teams_in_debate == 'two' and not availability_info.teams.in_now|divisibleby:2  %}
+        {% trans "There is an uneven number of teams marked as available for this round." as text %}
         {% include "components/item-info.html" with type="danger" %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
-      {% elif pref.teams_in_debate == 'bp' and not checkin_info.teams.in_now|divisibleby:4  %}
-        {% trans "The number of teams checked in for this round is not a multiple of 4." as text %}
+      {% elif pref.teams_in_debate == 'bp' and not availability_info.teams.in_now|divisibleby:4  %}
+        {% trans "The number of teams marked as available for this round is not a multiple of 4." as text %}
         {% include "components/item-info.html" with type="danger" %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
       {% elif info.in_now == 0 and not round.is_break_round %}
@@ -63,14 +63,14 @@
     {% elif type == "adjs" %}
 
       {% roundurl 'availability-adjudicators' round as url %}
-      {% trans "Check in adjudicators" as title_text %}
+      {% trans "Mark adjudicators as available" as title_text %}
 
-      {% if min_adjudicators > checkin_info.adjs.in_now %}
+      {% if min_adjudicators > availability_info.adjs.in_now %}
         {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
         {% blocktrans trimmed asvar text with required_count=min_adjudicators|apnumber count count=min_adjudicators %}
-          There needs to be at least one adjudicator checked in, given the number of debates.
+          There needs to be at least one adjudicator marked as available, given the number of debates.
         {% plural %}
-          There need to be at least {{ required_count }} adjudicators checked in, given the number of debates.
+          There need to be at least {{ required_count }} adjudicators marked as available, given the number of debates.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="danger" %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
@@ -92,15 +92,15 @@
     {% elif type == "venues" %}
 
       {% roundurl 'availability-venues' round as url %}
-      {% trans "Check in venues" as title_text %}
+      {% trans "Mark venues as available" as title_text %}
 
-      {% if min_venues > checkin_info.venues.in_now %}
+      {% if min_venues > availability_info.venues.in_now %}
         {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
         {% blocktrans trimmed asvar text with required_count=min_venues|apnumber count count=min_venues %}
-          There needs to be at least one venue checked in, given the number of
+          There needs to be at least one venue marked as available, given the number of
           debates.
         {% plural %}
-          There need to be at least {{ required_count }} venues checked in, given
+          There need to be at least {{ required_count }} venues marked as available, given
           the number of debates.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="danger" %}

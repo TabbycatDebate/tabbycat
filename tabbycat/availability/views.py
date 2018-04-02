@@ -57,7 +57,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
             kwargs['venues_no_t'] = Venue.objects.filter(tournament__isnull=True).count()
 
         # Order needs to be predictable when iterating through values
-        kwargs['checkin_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
+        kwargs['availability_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
 
         # Check the number of teams/adjudicators is sufficient
         if self.tournament.pref('teams_in_debate') == 'two':
