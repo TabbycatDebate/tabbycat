@@ -47,57 +47,64 @@
 
     <transition-group :name="mainTransitions" tag="div">
       <div v-for="(entity, grouper) in entitiesBySortingSetting"
-           :key="grouper" class="card mt-2">
+           :key="grouper" class="card mt-1">
 
-        <div class="card-header px-1 py-1">
-          <div class="row">
-            <div class="col strong mt-1 pt-1 ml-1">{{ grouper }}</div>
-            <div class="col-auto" v-if="scanUrl">
-              <button class="btn btn-info btn-sm hoverable"
-                      @click="checkInGroup(entity)">
-                Check-In All <strong>✓</strong>
-              </button>
-            </div>
-          </div>
-        </div>
+        <div class="card-body p-0">
+          <div class="row no-gutters">
 
-        <div class="card-body pl-1 pt-1 p-0">
-          <transition-group :name="mainTransitions" tag="div" class="row no-gutters">
+            <div class="col-2 d-flex flex-nowrap align-items-center">
 
-            <div v-for="entity in entity":key="entity.id"
-                 class="col-lg-3 col-md-3 col-6 check-in-person">
-              <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
-
-                <div :class="['col p-2',
-                              entity.status ? 'bg-success' : 'bg-secondary',
-                              entity.type === 'Adjudicator' ? 'text-capitalize' : '']"
-                     data-toggle="tooltip" :title="getToolTipForEntity(entity)">
-                  {{ entity.name }}
-                </div>
-                <a v-if="scanUrl && !entity.status && entity.identifier && !entity.locked"
-                   class="col-auto p-2 btn-info text-center hoverable"
-                   title="Click to check-in manually"
-                   @click="checkInIdentifiers(entity.identifier)">
-                  ✓
-                </a>
-                <div v-if="scanUrl && !entity.status && entity.identifier.length > 0 && entity.locked"
-                     class="col-auto p-2 btn-secondary text-center btn-no-hover">
-                  saving...
-                </div>
-                <div v-if="scanUrl && entity.identifier.length === 0"
-                     class="col-auto p-2 btn-secondary text-white text-center"
-                     data-toggle="tooltip"
-                     title="This person does not have a check-in identifier so can't be checked in">
-                  ?
-                </div>
-                <div v-if="entity.status" class="col-auto p-2 btn-success btn-no-hover text-center">
-                  {{ lastSeenTime(entity.status.time) }}
-                </div>
-
+              <div class="mr-auto strong my-1 px-2">
+                {{ grouper }}
               </div>
+              <button v-if="scanUrl" class="btn btn-info my-1 px-2 align-self-stretch btn-sm hoverable p-1"
+                      @click="checkInGroup(entity)">
+                <strong>✓</strong> All
+              </button>
+
             </div>
 
-          </transition-group>
+            <div class="col-10 pt-1 pl-1">
+              <transition-group :name="mainTransitions" tag="div" class="row no-gutters">
+
+
+                <div v-for="entity in entity" :key="entity.id"
+                     class="col-lg-3 col-md-3 col-4 check-in-person">
+                  <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
+
+                    <div :class="['col p-2 text-truncate text-capitalize',
+                                  entity.status ? 'bg-success' : 'bg-secondary',
+                                  entity.type === 'Adjudicator' ? 'font-weight-normal' : '']"
+                         data-toggle="tooltip" :title="getToolTipForEntity(entity)">
+                      {{ entity.name }}
+                    </div>
+                    <a v-if="scanUrl && !entity.status && entity.identifier && !entity.locked"
+                       class="col-auto p-2 btn-info text-center hoverable"
+                       title="Click to check-in manually"
+                       @click="checkInIdentifiers(entity.identifier)">
+                      ✓
+                    </a>
+                    <div v-if="scanUrl && !entity.status && entity.identifier.length > 0 && entity.locked"
+                         class="col-auto p-2 btn-secondary text-center btn-no-hover">
+                      saving...
+                    </div>
+                    <div v-if="scanUrl && entity.identifier.length === 0"
+                         class="col-auto p-2 btn-secondary text-white text-center"
+                         data-toggle="tooltip"
+                         title="This person does not have a check-in identifier so can't be checked in">
+                      ?
+                    </div>
+                    <div v-if="entity.status" class="col-auto p-2 btn-success btn-no-hover text-center">
+                      {{ lastSeenTime(entity.status.time) }}
+                    </div>
+
+                  </div>
+                </div>
+
+              </transition-group>
+            </div>
+
+          </div>
         </div>
 
       </div>
@@ -108,14 +115,14 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
-import FeatherMixin from '../../templates/tables/FeatherMixin.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 import PeopleStatusMixin from './PeopleStatusMixin.vue'
 import VenuesStatusMixin from './VenuesStatusMixin.vue'
 
-import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],

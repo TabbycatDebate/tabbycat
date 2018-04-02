@@ -2,7 +2,7 @@
 import _ from 'lodash'
 
 export default {
-  data: function() {
+  data: function () {
     return {
       peopleFilterByType: {
         'Adjudicators': false, 'Debaters': false, 'All': true,
@@ -104,14 +104,14 @@ export default {
         if (p.institution === null) {
           return "Unaffiliated"
         } else {
-          return p.institution.name
+          return p.institution.code
         }
       })
       return _.groupBy(sortedByInstitution, function(p) {
         if (p.institution === null) {
           return "Unaffiliated"
         } else {
-          return p.institution.name
+          return p.institution.code
         }
       })
     },
