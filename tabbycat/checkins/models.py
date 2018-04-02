@@ -87,5 +87,5 @@ class Event(models.Model):
 
     def serialize(self):
         event = {'id': self.id, 'identifier': self.identifier.barcode,
-                 'time': self.time.strftime("%a, %d %b %Y %H:%M:%S")}
+                 'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S")}
         return event
