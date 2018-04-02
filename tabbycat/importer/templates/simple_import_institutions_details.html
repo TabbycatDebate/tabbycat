@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load add_field_css static debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🏫</span>{% trans "Add Institutions" context "page title" %}
+{% block head-title %}<span class="emoji">🏫</span> {% trans "Add Institutions" context "page title" %}
 {% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}🏫 {% trans "Add Institutions" context "page title" %}{% endblock %}
+{% block page-title %}{% trans "Add Institutions" context "page title" %}{% endblock %}
 
 {% block content %}
 

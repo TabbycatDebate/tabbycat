@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🏫</span>{% trans "Add Institutions" context "page title" %}
+{% block head-title %}<span class="emoji">🏫</span> {% trans "Add Institutions" context "page title" %}
 {% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}🏫 {% trans "Add Institutions" context "page title" %}{% endblock %}
+{% block page-title %}{% trans "Add Institutions" context "page title" %}{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
   {% csrf_token %}
     <div class="list-group list-group-flush">
 
-      {% include "components/form-title.html" with text="Paste a list of institutions with one institution per line and following the format of: <em>Full Name,Nickname</em>. Teams marked as using an institutional prefix will use the Nickname for this purpose, ie 'MUDS 1'. For example:" %}
+      {% include "components/form-title.html" with text="Paste a list of institutions with one institution per line and following the format of: <code>full name,code</code>. Teams marked as using an institutional prefix will use the institution's code for this purpose, ie 'MUDS 1'. For example:" %}
 
       <div class="list-group-item list-group-item-secondary pt-0 pb-0">
         <pre><code>
