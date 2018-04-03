@@ -11,6 +11,10 @@
        href="{% tournamenturl 'adjfeedback-view-latest' %}">
       {% trans "Latest" %}
     </a>
+    <a class="btn btn-outline-primary {% if feedback_progress_nav %}active disabled{% endif %}"
+       href="{% tournamenturl 'adjfeedback-progress' %}">
+      {% trans "Unsubmitted" %}
+    </a>
     <a class="btn btn-outline-primary {% if feedback_source_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-source' %}">
       {% trans "Find by Source" %}
@@ -18,10 +22,6 @@
     <a class="btn btn-outline-primary {% if feedback_target_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-target' %}">
       {% trans "Find by Target" %}
-    </a>
-    <a class="btn btn-outline-primary {% if feedback_progress_nav %}active disabled{% endif %}"
-       href="{% tournamenturl 'adjfeedback-progress' %}">
-      {% trans "Unsubmitted Feedback" %}
     </a>
     <a class="btn btn-outline-primary"
        href="{% tournamenturl 'adjfeedback-update-scores-bulk' %}">

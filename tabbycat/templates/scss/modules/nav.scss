@@ -89,7 +89,11 @@
     border: 0;
 
     .feather {
-      margin-right: 0.8rem;
+      display: inline-block;
+      width: 31px;
+      padding-right: 13px;
+      margin-right: 0;
+      overflow: hidden; // Stop jitter on mobile
     }
   }
 
@@ -117,7 +121,7 @@
 //------------------------------------------------------------------------------
 
 .circle-icon {
-  @extend .d-none;
+  display: none; // Hide circle icons in main permanent sidebar menu
   @extend .d-md-inline;
 
   z-index: 99; // Float above progress line
@@ -155,9 +159,17 @@
     font-size: 12px;
     padding: 0.75rem 0.4rem;
   }
+
+  .admin-sidebar .list-group-item > .collapse .list-group-item .feather,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item .feather {
+    // width: 30px;
+    padding-right: 12px;
+    padding-left: 1px;
+    padding-top: 3px;
+  }
 }
 
-// Applies just to tablets
+// Applies just to phones
 @include media-breakpoint-up(sm) {
 
   .admin-sidebar .list-group-item a {
@@ -167,7 +179,6 @@
     .feather {
       width: 12px;
       height: 12px;
-      margin-right: 4px;
     }
 
     .feather-chevron-down,
@@ -181,6 +192,28 @@
   .admin-sidebar .collapsing .list-group-item {
     font-size: 10px;
   }
+
+}
+
+
+// Applies just to tablets
+@include media-breakpoint-up(md) {
+
+  .admin-sidebar .list-group-item a .feather {
+    width: 12px;
+    height: 12px;
+    padding-right: 2px;
+    margin-right: 0;
+    padding-bottom: 2px;
+  }
+
+  .admin-sidebar .list-group-item > .collapse .list-group-item .feather,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item .feather {
+    width: 18px;
+    padding-right: 6px;
+    padding-left: 0;
+    padding-top: 0;
+  }
 }
 
 // Applies just to screens
@@ -191,9 +224,9 @@
     padding: 0.5rem 1rem;
 
     .feather {
-      width: 16px;
+      width: 20px;
       height: 16px;
-      margin-right: 8px;
+      padding-right: 4px;
     }
 
     .feather-chevron-down,
@@ -206,10 +239,12 @@
   .admin-sidebar .collapse .list-group-item,
   .admin-sidebar .collapsing .list-group-item {
     font-size: $font-size-sm;
+  }
 
-    .feather {
-      margin-right: 12px; // Align sub text with main text
-    }
+  .admin-sidebar .list-group-item > .collapse .list-group-item .feather,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item .feather {
+    width: 25px;
+    padding-right: 9px;
   }
 }
 
@@ -228,10 +263,6 @@
     z-index: $z_2;
     width: 150px;
     text-align: left;
-
-    .feather {
-      margin-right: 12px;
-    }
   }
 }
 
