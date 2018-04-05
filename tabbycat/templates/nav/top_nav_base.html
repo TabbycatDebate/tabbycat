@@ -6,11 +6,11 @@
   {% if all_tournaments.count > 1 or user.is_authenticated %}
     <div class="nav-item dropdown">
 
-      <a class="navbar-brand dropdown-toggle" id="tournamentdrop"
-         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="{% static 'logo.svg' %}" width="32" height="32" alt="">
+      <button class="btn btn-link mr-2 p-0 navbar-brand dropdown-toggle" id="tournamentdrop"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="{% static 'logo.svg' %}" width="38" height="38" alt="">
         {% if tournament %}{{ tournament }}{% else %}Tabbycat{% endif %}
-      </a>
+      </button>
 
       <div class="dropdown-menu" aria-labelledby="tournamentdrop">
 

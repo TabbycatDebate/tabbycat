@@ -8,13 +8,13 @@
   border-top: 1px solid $navbar-light-border;
 
   .navbar-brand {
+    font-size: 1rem;
 
     &:hover {
       cursor: pointer; // Drop-down links seem to clash with the nav-brand?
     }
 
     img {
-      margin-top: -3px; // Tweak icon spacing
       margin-right: 6px;
       margin-left: -2px;
     }
@@ -109,6 +109,12 @@
 
 .admin-sidebar .tournament-title {
   min-height: 70px;
+
+  .logo-large {
+    margin-left: -4px;
+    margin-right: 1px;
+    margin-bottom: -2px;
+  }
 }
 
 .sidebar-expand {
