@@ -99,7 +99,7 @@ export default {
     },
     hidePopOver: function () {
       if (this.showingPopOver) {
-        $(this.$refs.container.$el).popover('dispose');
+        $(this.$refs.container.$el).tooltip().popover('dispose');
         this.showingPopOver = false
       }
     },
