@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
+"Last-Translator: Nazar Mukhtar <nmukhtar@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: availability/apps.py:7
 msgid "Availability"
-msgstr "موجود "
+msgstr "الوفرة"
 
 #: availability/models.py:15
 msgid "content type"
@@ -28,7 +28,7 @@ msgstr "نوع المحتوى"
 
 #: availability/models.py:16
 msgid "object id"
-msgstr "ID للموضوع "
+msgstr "ID الموضوع "
 
 #: availability/models.py:20
 msgid "round"
@@ -36,19 +36,19 @@ msgstr "جولة"
 
 #: availability/models.py:24
 msgid "round availability"
-msgstr "الجولة موجودة"
+msgstr "الجولة المتوفرة"
 
 #: availability/models.py:25
 msgid "round availabilities"
-msgstr "الجولة موجودة"
+msgstr "الجولة المتوفرة"
 
 #: availability/templates/availability_index.html:11
 msgid "Check In All Breaking Adjs"
-msgstr "التحقق من الفواصل "
+msgstr "التحقق من الحكام المتأهلين "
 
 #: availability/templates/availability_index.html:18
 msgid "Check In Everything"
-msgstr "دخول الجميع"
+msgstr "إدخال كل المعلومات"
 
 #: availability/templates/availability_index.html:25
 #, python-format
@@ -73,34 +73,34 @@ msgstr "إنشاء قرعة"
 
 #: availability/templates/availability_index.html:52
 msgid "The draw cannot be generated until some teams have been checked in."
-msgstr "لا يمكن إنشاء السحب حتى يتم التحقق من بعض الفرق."
+msgstr "لا يمكن إنشاء القرعة حتى يتم التحقق من معلومات بعض الفرق."
 
 #: availability/templates/availability_index.html:57
 msgid ""
 "The draw cannot be generated until some adjudicators have been checked in."
-msgstr "لا يمكن إنشاء السحب حتى يتم التحقق من بعض المحكمين ."
+msgstr "لا يمكن إنشاء القرعة حتى يتم التحقق من معلومات بعض المحكمين ."
 
 #: availability/templates/availability_index.html:62
 msgid "The draw cannot be generated until some venues have been checked in."
-msgstr "لا يمكن إنشاء السحب حتى يتم التحقق من بعض الأماكن."
+msgstr "لا يمكن إنشاء القرعة حتى يتم التحقق من بعض القاعات."
 
 #: availability/templates/availability_index.html:67
 msgid ""
 "There aren't enough venues checked in for the number of debates — the draw "
 "may not generate properly."
-msgstr "لا يوجد اماكن كافية للمناظرة "
+msgstr "لا يوجد اماكن كافية للمناظرة - لا يمكن إنشاء قرعة "
 
 #: availability/templates/availability_index.html:72
 msgid ""
 "There aren't enough adjudicators checked in for the number of debates — the "
 "draw may not generate properly."
-msgstr "لا يوجد حكام يكفون للتحكيم "
+msgstr "لا يوجد عدد كافي من المحكمين- لا يمكن إنشاء القرعة "
 
 #: availability/templates/availability_index.html:77
 msgid ""
 "There is an uneven number of teams checked in — the draw may not generate "
 "properly."
-msgstr ""
+msgstr "عدد الفرق غير زوجي- لا يمكن إنشاء القرعة "
 
 #: availability/templates/availability_index.html:82
 msgid ""
@@ -196,7 +196,7 @@ msgstr "تسجيلات الدخول"
 
 #: availability/templates/base_availability.html:38
 msgid "Check In All Breaking"
-msgstr "تحقق من جميع الفواصل "
+msgstr "تحقق من جميع المتأهلين"
 
 #: availability/templates/base_availability.html:39
 msgid "Copy from Previous"
@@ -204,7 +204,7 @@ msgstr "النسخ من السابق"
 
 #: availability/templates/base_availability.html:40
 msgid "Save Selected"
-msgstr "حفظ التحديد"
+msgstr "حفظ ما تم تحديده"
 
 #: availability/templates/checkin_progress.html:7
 msgid "Teams"
@@ -228,11 +228,11 @@ msgstr "لا حاجة لتسجيل دخول الفرق"
 
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams checked in for this round."
-msgstr "هناك عدد غير متكافئ من الفرق تحقق في لهذه الجولة."
+msgstr "هناك عدد غير متكافئ من الفرق لهذه الجولة."
 
 #: availability/templates/checkin_progress.html:53
 msgid "The number of teams checked in for this round is not a multiple of 4."
-msgstr "عدد فرق التحقق في هذه الجولة ليست متعددة من 4."
+msgstr "عدد فرق في هذه الجولة ليس من مضاعفات 4."
 
 #: availability/templates/checkin_progress.html:59
 msgid "Edit team check-ins"
@@ -348,15 +348,15 @@ msgstr[5] ""
 
 #: availability/views.py:153
 msgid "Team Availability"
-msgstr "الفريق متاح "
+msgstr "الفريق المتوفر "
 
 #: availability/views.py:155
 msgid "Adjudicator Availability"
-msgstr "الحكام متاح "
+msgstr "الحكم المتوفر "
 
 #: availability/views.py:157
 msgid "Venue Availability"
-msgstr "الموقع متاح "
+msgstr "قاعة المناظرة المتوفرة"
 
 #: availability/views.py:177
 msgid "Active Now"
@@ -373,7 +373,7 @@ msgstr "قاعة"
 
 #: availability/views.py:239
 msgid "Display Name (for the draw)"
-msgstr "اسم العرض (للقرعة)"
+msgstr "اعرض الإسم (للقرعة)"
 
 #: availability/views.py:240
 msgid "Categories"
@@ -385,12 +385,12 @@ msgstr "الأولوية"
 
 #: availability/views.py:259
 msgid "Checked in all teams, adjudicators and venues."
-msgstr "دخول جميع الفرق ، الحكام ، المواقع "
+msgstr "دخول جميع الفرق ، الحكام ، القاعات"
 
 #: availability/views.py:266
 msgid "Checked in all breaking adjudicators."
-msgstr "تسجيل دخول المحكمين"
+msgstr "تسجيل دخول المحكمين المتأهلين"
 
 #: availability/views.py:274
 msgid "Checked in all teams, adjudicators and venues from previous round."
-msgstr "دخول جميع الفرق ، الحكام ، المواقع "
+msgstr "دخول جميع الفرق ، الحكام ، القاعات من الجولة السابقة"

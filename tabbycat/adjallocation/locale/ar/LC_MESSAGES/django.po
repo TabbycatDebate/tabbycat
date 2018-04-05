@@ -32,7 +32,7 @@ msgstr "أعضاء لجنة التحكيم"
 
 #: adjallocation/models.py:20
 msgid "trainee"
-msgstr "متدرب"
+msgstr " محكم متدرب"
 
 #: adjallocation/models.py:26
 msgid "debate"
@@ -49,7 +49,7 @@ msgstr "نوع"
 
 #: adjallocation/models.py:31
 msgid "available?"
-msgstr "موجود ؟"
+msgstr "متوفر ؟"
 
 #: adjallocation/models.py:34
 msgid "debate adjudicator"
@@ -93,11 +93,11 @@ msgstr "مؤسسة"
 
 #: adjallocation/models.py:79
 msgid "adjudicator-institution conflict"
-msgstr "تعارض محكم-منتخب"
+msgstr "تعارض محكم-مؤسسة"
 
 #: adjallocation/models.py:80
 msgid "adjudicator-institution conflicts"
-msgstr "تعارضات (محكم-منتخب)"
+msgstr "تعارضات (محكم-مؤسسة)"
 
 #: adjallocation/templates/edit_adjudicators.html:11
 #, python-format
@@ -107,20 +107,20 @@ msgstr "تعديل محكمين للجولة %(round_abbr)s"
 #: adjallocation/templates/edit_conflicts.html:4
 #: adjallocation/templates/edit_conflicts.html:5
 msgid "Adjudicator-Team Conflicts"
-msgstr ""
+msgstr "تعارضات (محكم-فريق)"
 
 #: adjallocation/templates/edit_conflicts.html:7
 #: adjallocation/templates/edit_conflicts.html:11
 msgid "Save Adjudicator-Team Conflicts"
-msgstr ""
+msgstr "حفظ تعارضات (مجكم-فريق)"
 
 #: adjallocation/views.py:141
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
-msgstr "تم إعلان القرعة مسبقا، قم برفعها لإعادة التوزيع التلقائي للمحكمين"
+msgstr "تم إعلان القرعة مسبقا، قم برفعها لإعادة التوزيع التلقائي "
 
 #: adjallocation/views.py:145
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
-msgstr "لم يتم تأكيد القرعة بعد، قم بتأكيدها لإجراء التوزيع التلقائي للمحكمين"
+msgstr "لم يتم تأكيد القرعة بعد، قم بتأكيدها لإجراء التوزيع التلقائي "
 
 #: adjallocation/views.py:194
 msgid "Not all adjudicators specified are associated with the tournament."
@@ -139,4 +139,4 @@ msgstr[5] ""
 
 #: adjallocation/views.py:251
 msgid "No changes were made to adjudicator-team conflicts."
-msgstr ""
+msgstr "لم يتم تغيير لتعارضات (محكم-فريق)"

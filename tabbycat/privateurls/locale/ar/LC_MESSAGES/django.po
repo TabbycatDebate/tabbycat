@@ -24,7 +24,7 @@ msgstr "الفرق"
 
 #: privateurls/apps.py:7
 msgid "Private URL Management"
-msgstr "ادارة الرابط الخاص "
+msgstr "إدارة الرابط الخاص "
 
 #: privateurls/models.py:12
 msgid "ballot"
@@ -40,7 +40,7 @@ msgstr "الحكم المستلم "
 
 #: privateurls/models.py:19
 msgid "recipient speaker"
-msgstr "المتحديث المستلم "
+msgstr "المتحدث المستلم "
 
 #: privateurls/models.py:22
 msgid "URL type"
@@ -48,7 +48,7 @@ msgstr "نوع الرابط "
 
 #: privateurls/models.py:24
 msgid "e-mail address"
-msgstr "البريد الالكتروني"
+msgstr "البريد الإلكتروني"
 
 #: privateurls/models.py:25
 msgid "URL key"
@@ -56,15 +56,15 @@ msgstr "مفتاح الرابط "
 
 #: privateurls/models.py:27
 msgid "timestamp"
-msgstr "الزمن "
+msgstr "الطابع الزمني"
 
 #: privateurls/models.py:30
 msgid "private URL sent mail record"
-msgstr "ارسال التسجيل من خلال الايميل "
+msgstr "إرسال التسجيل من خلال البريد الإلكتروني"
 
 #: privateurls/models.py:31
 msgid "private URL sent mail records"
-msgstr "ارسال التسجيل من خلال الايميل "
+msgstr "إرسال التسجيل من خلال البريد الإلكتروني "
 
 #: privateurls/models.py:39
 msgid "<both adjudicator and speaker>"
@@ -72,7 +72,7 @@ msgstr "<both adjudicator and speaker>"
 
 #: privateurls/models.py:56
 msgid "No recipient (adjudicator or speaker) was specified."
-msgstr "لا يوجد مستلم "
+msgstr "لم يتم تحديد أي مستلم (حكم أو متحدث)"
 
 #: privateurls/models.py:59
 msgid "There was both a recipient adjudicator and a recipient speaker."
@@ -81,7 +81,7 @@ msgstr "كان هناك حكم من الفريق المشارك "
 #: privateurls/templates/ballot_urls_email_list.html:4
 #: privateurls/templates/ballot_urls_email_list.html:5
 msgid "Email Private Ballot URLs"
-msgstr "رابط التصويت عبر الايميل "
+msgstr "رابط التصويت عبر البريد الإلكتروني"
 
 #: privateurls/templates/ballot_urls_email_list.html:14
 #: privateurls/templates/feedback_urls_email_list.html:14
@@ -109,7 +109,8 @@ msgstr ""
 msgid ""
 "The following adjudicators have a URL key but don't have an e-mail address, "
 "so won't get e-mails: %(adjudicators_list)s"
-msgstr "هذا الحكم لدية رابط و لكن لا يمتلك ايميل %(adjudicators_list)s"
+msgstr ""
+"هذا الحكم لدية رابط و لكن لا يمتلك بريد إلكتروني %(adjudicators_list)s"
 
 #: privateurls/templates/ballot_urls_email_list.html:36
 #, python-format
@@ -130,12 +131,12 @@ msgstr[5] ""
 
 #: privateurls/templates/ballot_urls_email_list.html:50
 msgid "Send emails with private ballot URLs to adjudicators"
-msgstr "ارسل ايميل مع رابط التصويت إلى الحكام "
+msgstr "إرسال بريد إلكتروني مع رابط التصويت إلى الحكام "
 
 #: privateurls/templates/feedback_urls_email_list.html:4
 #: privateurls/templates/feedback_urls_email_list.html:5
 msgid "Email Private Feedback URLs"
-msgstr "ارسال ايميل الخاص عن التغذية الراجعة "
+msgstr "إرسال بريد إلكتروني خاص عن التغذية الراجعة "
 
 #: privateurls/templates/feedback_urls_email_list.html:20
 msgid ""
@@ -292,8 +293,8 @@ msgid ""
 "All adjudicators and teams already have private URLs. If you want to delete "
 "them, use the Edit Database area."
 msgstr ""
-"جميع الحكام و المتناظرين لديهم الرابط الخاص بهم ، اذا كنت تريد مسح الروابط "
-"يمكنك ذلك من خلال منطقة التعديل "
+"جميع المحكمين والفرق لديهم بالفعل عناوين URL خاصة. إذا كنت ترغب في حذفها ، "
+"استخدم منطقة تحرير قاعدة البيانات. "
 
 #: privateurls/views.py:131
 #, python-format
@@ -314,16 +315,16 @@ msgstr ""
 #: privateurls/views.py:165
 #, python-format
 msgid "Adjudicators who will be sent e-mails (%(n)s)"
-msgstr "الحكم الذي سيرسل هذا الايميل ( %(n)s )"
+msgstr "الحكم الذي سيرسل هذا البريد الإلكتروني ( %(n)s )"
 
 #: privateurls/views.py:168 privateurls/views.py:216
 msgid "Email"
-msgstr "الايميل "
+msgstr "البريد الإلكتروني"
 
 #: privateurls/views.py:212
 #, python-format
 msgid "Speakers who will be sent e-mails (%(n)s)"
-msgstr "المتناظر الذي سيقوم بارسال هذا الايميل ( %(n)s )"
+msgstr "المتناظر الذي سيقوم بإرسال هذا البريد الإلكتروني ( %(n)s )"
 
 #: privateurls/views.py:240
 #, python-format
@@ -343,13 +344,15 @@ msgstr ""
 
 #: privateurls/views.py:260
 msgid "There was a problem sending private ballot URLs to adjudicators."
-msgstr "هناك خلل في ارسال رابط التصويت للحكام "
+msgstr "هناك خلل في إرسال رابط التصويت للحكام "
 
 #: privateurls/views.py:263
 msgid ""
 "There was a problem connecting to the e-mail server when trying to send "
 "privateballot URLs to adjudicators."
-msgstr "هناك خلل في رباط الايميل مع السيرفر "
+msgstr ""
+"حدثت مشكلة في الاتصال بخادم البريد الإلكتروني عند محاولة إرسال عناوين URL "
+"خاصة إلى المحكمين."
 
 #: privateurls/views.py:268
 #, python-format
@@ -386,7 +389,7 @@ msgstr ""
 
 #: privateurls/views.py:304
 msgid "There was a problem sending private feedback URLs to speakers."
-msgstr "هناك خلل في ارسال الرابط للمتناظريين "
+msgstr "هناك خلل في إرسال الرابط للمتناظريين "
 
 #: privateurls/views.py:307
 #, python-format
@@ -411,7 +414,7 @@ msgstr ""
 
 #: privateurls/views.py:327
 msgid "There was a problem sending private feedback URLs to adjudicators."
-msgstr "هناك خطا في ارسال رابط  التغذية الراجعة "
+msgstr "هناك خطأ في إرسال رابط  التغذية الراجعة "
 
 #. Translators: This goes in the "speakers_phrase" variable in "E-mails with
 #. private feedback URLs were sent..."

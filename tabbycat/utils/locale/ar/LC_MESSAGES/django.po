@@ -20,11 +20,11 @@ msgstr ""
 
 #: utils/forms.py:25
 msgid "E-mail address"
-msgstr "البريد الالكتروني"
+msgstr "عنوان البريد الإلكتروني"
 
 #: utils/tables.py:43
 msgid "No Data Available"
-msgstr "عدم توافر المعلومات"
+msgstr "المعلومات غير متاحة"
 
 #: utils/tables.py:151
 msgid "Ⓒ"
@@ -69,37 +69,37 @@ msgstr ""
 #: utils/tables.py:276
 #, python-format
 msgid "%(team)s won"
-msgstr "%(team)sفاز"
+msgstr "%(team)sفائز"
 
 #: utils/tables.py:281
 #, python-format
 msgid "%(team)s lost"
-msgstr "%(team)s خسر"
+msgstr "%(team)s خاسر"
 
 #: utils/tables.py:286 utils/tables.py:314 utils/tables.py:332
 #, python-format
 msgid "%(team)s—no result"
-msgstr "%(team)s  — لا توجد له نتيجة"
+msgstr "%(team)s  — لا توجد نتيجة"
 
 #: utils/tables.py:294
 #, python-format
 msgid "%(team)s took 1st"
-msgstr "%(team)s أخذ المركز الأول"
+msgstr "%(team)s المركز الأول (1)"
 
 #: utils/tables.py:299
 #, python-format
 msgid "%(team)s took 2nd"
-msgstr "%(team)s المركز الثاني "
+msgstr "%(team)s المركز الثاني (2)"
 
 #: utils/tables.py:304
 #, python-format
 msgid "%(team)s took 3rd"
-msgstr "%(team)s المركز الثالث "
+msgstr "%(team)s المركز الثالث (3)"
 
 #: utils/tables.py:309
 #, python-format
 msgid "%(team)s took 4th"
-msgstr "%(team)s المركز الرابع "
+msgstr "%(team)s المركز الرابع (4)"
 
 #: utils/tables.py:322
 #, python-format
@@ -129,7 +129,7 @@ msgstr "خسر من %(team)s"
 #: utils/tables.py:355
 #, python-format
 msgid "No result for debate against %(team)s"
-msgstr "لا يوجد نتيجة لفريق %(team)s"
+msgstr "لا يوجد نتيجة للفريق %(team)s"
 
 #: utils/tables.py:360 utils/tables.py:425
 #, python-format
@@ -147,7 +147,7 @@ msgstr "المتناظر <strong>%(opp)s</strong>%(speakers)s"
 
 #: utils/tables.py:382
 msgid "Teams in debate:"
-msgstr "الفريق من المناظرة "
+msgstr "فرق المناظرة"
 
 #: utils/tables.py:385
 #, python-format
@@ -205,15 +205,15 @@ msgstr "جولة"
 
 #: utils/tables.py:463 utils/tables.py:629
 msgid "Name"
-msgstr "اسم "
+msgstr "الاسم"
 
 #: utils/tables.py:469 utils/tables.py:607
 msgid "Institution"
-msgstr "منتخب"
+msgstr "مؤسسة"
 
 #: utils/tables.py:475
 msgid "Member of the Adjudication Core"
-msgstr "محكم المناظرة"
+msgstr "عضو في لجنة التحكيم"
 
 #: utils/tables.py:482
 msgid "Independent Adjudicator"
@@ -221,7 +221,7 @@ msgstr "محكم المناظرة"
 
 #: utils/tables.py:490
 msgid "Always Trainee"
-msgstr "المتدربين"
+msgstr "متدرب دائم"
 
 #: utils/tables.py:552
 msgid "Debate Adjudicators"
@@ -249,11 +249,11 @@ msgstr "التقسيمات "
 
 #: utils/tables.py:625
 msgid "Redacted"
-msgstr "حجب "
+msgstr "منقحة"
 
 #: utils/tables.py:649
 msgid "Category"
-msgstr "الفئات"
+msgstr "الفئة"
 
 #: utils/tables.py:676
 #, python-format
@@ -271,11 +271,11 @@ msgstr "القاعة"
 
 #: utils/tables.py:715
 msgid "Date"
-msgstr "الترجمة "
+msgstr "التاريخ"
 
 #: utils/tables.py:715
 msgid "Time"
-msgstr "وقت"
+msgstr "الوقت"
 
 #: utils/tables.py:719
 msgid "Bye"
@@ -287,7 +287,7 @@ msgstr "مؤجل"
 
 #: utils/tables.py:723
 msgid "Forfeit"
-msgstr "المصدر "
+msgstr "حرمان"
 
 #: utils/tables.py:744
 #, python-format
@@ -302,11 +302,11 @@ msgstr[5] ""
 
 #: utils/tables.py:750
 msgid "Teams are from the same institution"
-msgstr "الفرق تقابلت اكثر من مره "
+msgstr "فرق تقابلت أكثر من مرة"
 
 #: utils/tables.py:756
 msgid "Conflicts/Flags"
-msgstr "نفس المنطقة / نفس الجنسية "
+msgstr "تعارضات / أعلام"
 
 #: utils/tables.py:805
 msgid "View/Edit Ballot"

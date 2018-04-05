@@ -56,11 +56,11 @@ msgstr "حفظ التغذية الراجعة"
 
 #: actionlog/models.py:80
 msgid "Edited adjudicator test score"
-msgstr "قام بتعديل درجة محكم"
+msgstr "قام بتعديل إستمارة درجات محكم"
 
 #: actionlog/models.py:81
 msgid "Set adjudicator note"
-msgstr "وضع ملاحظة محكم"
+msgstr "وضع ملاحظات محكم"
 
 #: actionlog/models.py:82
 msgid "Saved adjudicator allocation"
@@ -72,7 +72,7 @@ msgstr "التعيين التلقائي للمحكمين"
 
 #: actionlog/models.py:84
 msgid "Saved a venue manual edit"
-msgstr "قام بتعديل قاعة (غير تلقائي)"
+msgstr "قام بتعديل قاعة (يدويا)"
 
 #: actionlog/models.py:85
 msgid "Auto-allocated venues"
@@ -84,7 +84,7 @@ msgstr "قام بتعديل فئات قاعات المناظرة"
 
 #: actionlog/models.py:87
 msgid "Edited venue constraints"
-msgstr ""
+msgstr "تعديل محددات إختيار القاعات"
 
 #: actionlog/models.py:88
 msgid "Created draw"
@@ -108,11 +108,11 @@ msgstr "قام برفع القرعة"
 
 #: actionlog/models.py:93
 msgid "Saved a matchup manual edit"
-msgstr "قام بحفظ قاعة يدويا"
+msgstr "قام بتعديل توزيع قاعة يدويا"
 
 #: actionlog/models.py:94
 msgid "Saved the sides status of a matchup"
-msgstr "حفظ التقسيمات في المناظرة "
+msgstr "حفظ توزيع موالاة/معلرضة "
 
 #: actionlog/models.py:95
 msgid "Saved divisions"
@@ -124,11 +124,11 @@ msgstr "قام بإضافة/تعديل نص قضية"
 
 #: actionlog/models.py:97
 msgid "Released motions"
-msgstr "قام بإعلان نص قضايا المناظرات"
+msgstr "القضايا المعلنة"
 
 #: actionlog/models.py:98
 msgid "Unreleased motions"
-msgstr "قام بإزالة إعلان قضايا المناظرات"
+msgstr "قضايا غير معلنة بعد"
 
 #: actionlog/models.py:99
 msgid "Edited debate importance"
@@ -140,15 +140,15 @@ msgstr "تغيير حالة الحكم "
 
 #: actionlog/models.py:101
 msgid "Edited break eligibility"
-msgstr "تعديل الحالة "
+msgstr "تعديل حالة الحكم "
 
 #: actionlog/models.py:102
 msgid "Edited break categories"
-msgstr "تعديل الفواصل"
+msgstr "تعديل الفئات المتأهلة "
 
 #: actionlog/models.py:103
 msgid "Generated the team break for all categories"
-msgstr "جميع الفرق و التصانيف "
+msgstr "جميع الفرق و فئات التأهل"
 
 #: actionlog/models.py:104
 msgid "Edited breaking team remarks and updated all team breaks"
@@ -156,11 +156,11 @@ msgstr "تعديل درجات الفرق  و تحديثها "
 
 #: actionlog/models.py:105
 msgid "Edited breaking team remarks and updated this team break"
-msgstr "تعديل درجات الفريق  و تحديثها "
+msgstr "تعديل درجات الفريق المتأهل و تحديثها "
 
 #: actionlog/models.py:106
 msgid "Edited breaking team remarks"
-msgstr "تعديل درجات الفريق "
+msgstr "تعديل درجات الفريق المتأهل"
 
 #: actionlog/models.py:107
 msgid "Set start time"
@@ -168,11 +168,11 @@ msgstr "تحديد وقت البداية"
 
 #: actionlog/models.py:108
 msgid "Advanced the current round to"
-msgstr "الجولة الحالية "
+msgstr "تقديم الجولة الحالية "
 
 #: actionlog/models.py:109
 msgid "Edited teams availability"
-msgstr "قام بتعديل تواجد الفرق"
+msgstr "قام بتعديل الفرق المتوفرة"
 
 #: actionlog/models.py:110
 msgid "Edited adjudicators availability"
@@ -180,7 +180,7 @@ msgstr "قام بتعديل تواجد المحكمين"
 
 #: actionlog/models.py:111
 msgid "Edited venue availability"
-msgstr "قام بتعديل تواجد قاعات المناظرة"
+msgstr "قام بتعديل قاعات المناظرة المتوفرة"
 
 #: actionlog/models.py:112
 msgid "Edited tournament options"
@@ -188,7 +188,7 @@ msgstr "قام بتعديل إعدادات البطولة"
 
 #: actionlog/models.py:113
 msgid "Edited speaker category eligibility"
-msgstr "قام بتعديل استحقاقت فئت المتحدثين"
+msgstr "قام بتعديل استحقاق المتحدثين حسب الفئات"
 
 #: actionlog/models.py:114
 msgid "Edited speaker categories"

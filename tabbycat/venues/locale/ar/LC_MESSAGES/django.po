@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-10 23:23-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: mohamad salman <mmali@qf.org.qa>, 2018\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: venues/apps.py:7
 msgid "Venues"
-msgstr "قاعات المناظرة"
+msgstr "مكان المناظرة"
 
 #: venues/models.py:10 venues/models.py:74
 msgid "name"
@@ -34,17 +34,17 @@ msgstr "الأولوية"
 msgid ""
 "Venues with a higher priority number will be preferred when allocating "
 "venues to debates"
-msgstr "ستفضل القاعات التي لها رقم أولوية أعلى عند تخصيص أماكن للمناظرات"
+msgstr "ستفضل أرقام القاعات التي لها أولوية أعلى عند تخصيص مكان التناظر"
 
 #: venues/models.py:16
 msgid "tournament"
-msgstr "بطولة"
+msgstr "البطولة"
 
 #: venues/models.py:17
 msgid ""
 "Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
-"الأماكن التي لم يتم تعيينها في أي بطولة يمكن أن تكون مشتركة بين البطولات"
+"الأماكن التي لم يتم تخصيصها لأي بطولة يمكن أن تكون مشتركة بين البطولات"
 
 #: venues/models.py:24
 msgid "venue"
@@ -60,11 +60,11 @@ msgstr "لا تعرض اسم المكان"
 
 #: venues/models.py:70
 msgid "Display as prefix"
-msgstr "العرض كالبادئة"
+msgstr "العرض كبادئة"
 
 #: venues/models.py:71
 msgid "Display as suffix"
-msgstr "العرض كالبادئة"
+msgstr "العرض كبادئة"
 
 #: venues/models.py:75
 msgid ""
@@ -72,12 +72,12 @@ msgid ""
 "room\". This name is shown when the category is prefixed or suffixed to a "
 "venue name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
-"اسم الفئة، على سبيل المثال، \"بيربل\"، \"الدخول المجاني بدون خطوة\"، \"كلوز تو تاب روم\". يظهر هذا الاسم عندما تكون الفئة مسبوقة أو ملحقة باسم مكان في السحب، على سبيل المثال، \"بيربل - G05\".\n"
+"اسم الفئة، على سبيل المثال، \"أرجواني\"، \"وصول مجاني\"، \"قريب من غرفة الإدخال\". يظهر هذا الاسم عندما تكون الفئة مسبوقة أو ملحقة باسم المكان في القرعة، على سبيل المثال، \"أرجواني - G05\".\n"
 " "
 
 #: venues/models.py:79
 msgid "description"
-msgstr "الموقع"
+msgstr "الوصف"
 
 #: venues/models.py:80
 msgid ""
@@ -86,12 +86,12 @@ msgid ""
 "when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
 msgstr ""
 "الوصف، كمسند جملة، على سبيل المثال. \"لديه حرية الوصول\"، \"على مقربة من "
-"قاعة الإحاطة\". هذا الوصف يلي \"هذا المكان\" عندما يظهر في تلميحات، على سبيل"
-" المثال، \"هذا المكان قريب من قاعة الإحاطة\"."
+"قاعة المؤتمرات\". هذا الوصف يتبع \"هذا المكان\" عندما يظهر في تلميحات "
+"الأدوات ، على سبيل المثال، \"هذا المكان قريب من قاعة المؤتمرات\"."
 
 #: venues/models.py:88
 msgid "display in venue name"
-msgstr "اعادة تسمية القاعة"
+msgstr "عرض اسم المكان"
 
 #: venues/models.py:89
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
@@ -106,32 +106,32 @@ msgid ""
 "Displays the description in the tooltip for the venue on public pages. The "
 "description, if not blank, will always show on admin pages."
 msgstr ""
-"يعرض الوصف في تلميح الأداة في الصفحات العامة. سيظهر الوصف، إن لم يكن فارغا، "
-"دائما على صفحات المشرف."
+"يعرض الوصف في تلميح الأدوات للمكان على الصفحات العامة. سيظهر الوصف، إن لم "
+"يكن فارغا، دائما على صفحات المشرف."
 
 #: venues/models.py:96
 msgid "venue category"
-msgstr "فئة القاعة"
+msgstr "فئة المكان"
 
 #: venues/models.py:97
 msgid "venue categories"
-msgstr "تصنيف الفئة "
+msgstr "فئات المكان"
 
 #: venues/models.py:127
 msgid "category"
-msgstr "الفئات"
+msgstr "الفئة"
 
 #: venues/models.py:131
 msgid "subject content type"
-msgstr "نوع الموضوع"
+msgstr "نوع محتوى الموضوع"
 
 #: venues/models.py:134
 msgid "subject ID"
-msgstr "الموضوع "
+msgstr "معرف الموضوع "
 
 #: venues/models.py:140
 msgid "venue constraint"
-msgstr "القاعات "
+msgstr "القاعة المقيدة"
 
 #: venues/models.py:141
 msgid "venue constraints"
@@ -140,13 +140,13 @@ msgstr "القاعات المقيدة "
 #: venues/templates/venue_categories_edit.html:4
 #: venues/templates/venue_categories_edit.html:5
 msgid "Venue Categories"
-msgstr "اقاعات المصنفة "
+msgstr "فئات القاعات"
 
 #: venues/templates/venue_categories_edit.html:7
 #: venues/templates/venue_categories_edit.html:22
 #: venues/templates/venue_constraints_edit.html:22
 msgid "Save Venue Categories"
-msgstr "حفظ القاعات المصنفة "
+msgstr "حفظ فئات القاعات"
 
 #: venues/templates/venue_categories_edit.html:11
 msgid ""
@@ -155,7 +155,7 @@ msgid ""
 "specify constraints on venue allocation that require teams, adjudicators or "
 "institutions to be put in a venue in a particular category."
 msgstr ""
-"تسمح لك فئات المكان بتجميع الأماكن معا في \"مناطق\" لعرضها في السحب وجعل "
+"تسمح لك فئات القاعات بتجميع الأماكن معا في \"مناطق\" لعرضها في السحب وجعل "
 "التنقل أسهل للمشاركين و / أو تحديد القيود المفروضة على تخصيص المكان التي "
 "تتطلب فرقا أو محكمين أو مؤسسات يتم وضعها في مكان في فئة معينة."
 
@@ -166,16 +166,16 @@ msgid ""
 "class=\"alert-link\">Edit Database</a> area."
 msgstr ""
 "اذا كنت تريد حذف القاعة ، <a href=\"%(edit_db_url)s\" class=\"alert-"
-"link\">تعديد المتناظرين </a>القاعة "
+"link\">تعديل قاعدة البيانات </a>المنطقة "
 
 #: venues/templates/venue_constraints_edit.html:4
 #: venues/templates/venue_constraints_edit.html:5
 msgid "Venue Constraints"
-msgstr "القاعات"
+msgstr "القاعات المقيدة"
 
 #: venues/templates/venue_constraints_edit.html:7
 msgid "Save Venue Constraints"
-msgstr "حفظ القاعة "
+msgstr "حفظ القاعة المقيدة"
 
 #: venues/templates/venue_constraints_edit.html:11
 msgid ""
@@ -187,9 +187,9 @@ msgid ""
 " which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
 "تفرض قيود المكان على مقدم المكان محاولة إبقاء الفريق أو المحكم المحدد، أو "
-"جميع الفرق (وليس المحكمين) من المؤسسة المحددة، في مكان في فئة معينة. يحلل "
-"حقل \"الأولوية\" القيود المتعارضة: الأولوية العليا لها الأسبقية. يمكنك أيضا "
-"استخدام حقل الأولوية لتحديد قيود \"التفضيل المنخفض\"، والتي يتم اتخاذها إذا "
+"جميع الفرق (ليس المحكمين) من المؤسسة المحددة، في مكان في الفئة المعينة. يحل "
+"مجال \"الأولوية\" القيود المتعارضة: الأولوية العليا لها الأسبقية. يمكنك أيضا"
+" استخدام حقل الأولوية لتحديد قيود \"التفضيل الأقل\"، والتي يتم اتخاذها إذا "
 "كان لا يمكن تلبية قيود ذات أولوية أعلى."
 
 #: venues/utils.py:38 venues/utils.py:50
@@ -228,7 +228,7 @@ msgstr[5] ""
 
 #: venues/views.py:108
 msgid "No changes were made to the venue categories."
-msgstr "لا يمكنك التغيير "
+msgstr "لا يتم إجراء تغييرات على فئات القاعات"
 
 #: venues/views.py:150
 #, python-format

@@ -25,11 +25,11 @@ msgstr "قضايا المناظرة"
 
 #: motions/models.py:9
 msgid "sequence number"
-msgstr "رقم الترتيب"
+msgstr "رقم التسلسل"
 
 #: motions/models.py:10
 msgid "The order in which motions are displayed"
-msgstr "الترتيب التي يتم فيها عرض القضايا"
+msgstr "الترتيب التي يتم فيه عرض القضايا"
 
 #: motions/models.py:12
 msgid "text"
@@ -53,7 +53,7 @@ msgstr "شريحة معلوماتية"
 
 #: motions/models.py:19
 msgid "The information slide for this topic; if it has one"
-msgstr "الشريحة المعلوماتية لهذا الموضوع؛ إن كان يحتوي على واحد"
+msgstr "الشريحة المعلوماتية لهذا الموضوع؛ في حال كان يحتوي على واحد"
 
 #: motions/models.py:21
 msgid "flagged"
@@ -69,7 +69,7 @@ msgstr "جولة"
 
 #: motions/models.py:26
 msgid "divisions"
-msgstr "حفظ التقسيمات "
+msgstr "التقسيمات "
 
 #: motions/models.py:30 motions/models.py:42
 msgid "motion"
@@ -93,7 +93,7 @@ msgstr "تسليم النتائج"
 
 #: motions/models.py:50
 msgid "debate team motion preference"
-msgstr "المتناظر يفضل الموضوع "
+msgstr "فريق المناظرة يفضل المواضيع"
 
 #: motions/models.py:51
 msgid "debate team motion preferences"
@@ -121,7 +121,7 @@ msgstr "حجج ضعيفة جدا "
 
 #: motions/statistics.py:95
 msgid "extremely weak evidence"
-msgstr "حجج ضعيفة للغايا "
+msgstr "حجج ضعيفة للغاية"
 
 #: motions/statistics.py:118
 msgid "balance inconclusive"
@@ -221,7 +221,7 @@ msgstr ""
 
 #: motions/templates/motion_statistics_bp_elim.html:50
 msgid "eliminated"
-msgstr "القضاء"
+msgstr "اقصاء"
 
 #: motions/templates/motion_statistics_bp_elim.html:52
 msgctxt "abbreviation for 'eliminated', used when not enough space"
@@ -265,7 +265,7 @@ msgstr[5] ""
 
 #: motions/templates/motion_statistics_bp_prelim.html:50
 msgid "1st"
-msgstr "المتحدث 1"
+msgstr "المتحدث الأول 1"
 
 #: motions/templates/motion_statistics_bp_prelim.html:52
 msgctxt "used when there isn't enough space to display '1st'"
@@ -274,7 +274,7 @@ msgstr "1"
 
 #: motions/templates/motion_statistics_bp_prelim.html:56
 msgid "2nd"
-msgstr "المتحدث 2"
+msgstr "المتحدث الثاني 2"
 
 #: motions/templates/motion_statistics_bp_prelim.html:58
 msgctxt "used when there isn't enough space to display '2nd'"
@@ -283,7 +283,7 @@ msgstr "2"
 
 #: motions/templates/motion_statistics_bp_prelim.html:62
 msgid "3rd"
-msgstr "المتحدث 3"
+msgstr "المتحدث  الثالث 3"
 
 #: motions/templates/motion_statistics_bp_prelim.html:64
 msgctxt "used when there isn't enough space to display '3rd'"
@@ -292,7 +292,7 @@ msgstr "3"
 
 #: motions/templates/motion_statistics_bp_prelim.html:68
 msgid "4th"
-msgstr "4"
+msgstr "المتحدث الرابع 4"
 
 #: motions/templates/motion_statistics_bp_prelim.html:70
 msgctxt "used when there isn't enough space to display '4th'"
@@ -329,7 +329,7 @@ msgstr[5] ""
 
 #: motions/templates/motion_statistics_twoteam.html:91
 msgid "No teams vetoed this motion"
-msgstr "لا يوجد فرق قام بتصويت لهذه القضية "
+msgstr "لا يوجد فرق قامت بالتصويت لهذه القضية "
 
 #: motions/templates/motions_edit.html:4
 #: motions/templates/motions_edit.html:10
@@ -400,11 +400,11 @@ msgstr[5] ""
 
 #: motions/templates/show.html:40
 msgid "There are no motions for this round entered into Tabbycat."
-msgstr "لا يوجد قضايات في هذه الجولة "
+msgstr "لا يوجد قضايا في هذه الجولة "
 
 #: motions/views.py:97
 msgid "The motion has been saved."
-msgstr "القضايا التي تم حفظها "
+msgstr "القضايا التي لم يتم حفظها "
 
 #: motions/views.py:99
 #, python-format
@@ -434,7 +434,7 @@ msgstr "قضايا تم رفضها "
 
 #: motions/views.py:152
 msgid "Unreleased the motion(s)."
-msgstr "قضايات لم ترفض"
+msgstr "قضايا لم ترفض"
 
 #: motions/views.py:176
 msgid "Motion Statistics"

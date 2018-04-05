@@ -24,11 +24,11 @@ msgstr "حالة "
 
 #: options/models.py:19
 msgid "tournament preference"
-msgstr "تفاصيل البطولة "
+msgstr "تفضيل البطولة"
 
 #: options/models.py:20
 msgid "tournament preferences"
-msgstr "تفاصيل البطولة "
+msgstr "تفضيلات البطولة "
 
 #: options/preferences.py:17 options/templates/preferences_index.html:28
 msgid "Score Rules"
@@ -40,11 +40,11 @@ msgstr "أقل درجة مسموحة للخطابات الأساسية"
 
 #: options/preferences.py:26
 msgid "Minimum speaker score"
-msgstr "أقل درجة المتحدث"
+msgstr "الحد الأدنى من درجة المتحدث"
 
 #: options/preferences.py:32
 msgid "Maximum speaker score"
-msgstr "أعلى درجة المتحدث"
+msgstr "الحد الأعلى من درجة المتحدث"
 
 #: options/preferences.py:33
 msgid "Maximum allowed score for substantive speeches"
@@ -52,13 +52,15 @@ msgstr "أكثر درجة مسموحة للخطابات الأساسية"
 
 #: options/preferences.py:41
 msgid "Speaker score step"
-msgstr "درجات المتحدث "
+msgstr " درجة المتحدث"
 
 #: options/preferences.py:42
 msgid ""
 "Score steps allowed for substantive speeches, e.g. full points (1) or half "
 "points (0.5)"
-msgstr "تسجيل درجات المتحدث ، على سبيل المثال درجة كاملة (1) نصف درجة (0.5) "
+msgstr ""
+"تسجيل درجات المتحدث المسموح بها للخطابات الموضوعية، على سبيل المثال النقاط "
+"الكاملة (1) أو نصف النقاط (0.5)"
 
 #: options/preferences.py:50
 msgid ""
@@ -68,7 +70,7 @@ msgstr ""
 
 #: options/preferences.py:51
 msgid "Maximum margin"
-msgstr "أقصى فرق درجات"
+msgstr "أقصى فرق للدرجات"
 
 #: options/preferences.py:60
 msgid "Minimum allowed score for reply speeches"
@@ -76,11 +78,11 @@ msgstr "أقل درجة مسموحة لخطاب الرد"
 
 #: options/preferences.py:61
 msgid "Minimum reply score"
-msgstr "أقل درجة خطاب رد"
+msgstr "أقل درجة لخطاب رد"
 
 #: options/preferences.py:69
 msgid "Maximum allowed score for reply speeches"
-msgstr "أكثر درجة مسموحة للخطاب الرد"
+msgstr "أكثر درجة مسموحة لخطاب الرد"
 
 #: options/preferences.py:70
 msgid "Maximum reply score"
@@ -95,7 +97,7 @@ msgstr ""
 
 #: options/preferences.py:79
 msgid "Reply score step"
-msgstr "درجات المداخلة "
+msgstr "درجة خطاب الرد"
 
 #: options/preferences.py:87
 msgid "If checked, a team's winning margin includes dissenting adjudicators"
@@ -103,7 +105,7 @@ msgstr "في حالة تحديده ، يشتمل الهامش الفائز با�
 
 #: options/preferences.py:88
 msgid "Margin includes dissenters"
-msgstr "يشمل الهامش المنشقين"
+msgstr "يشمل الهامش المعارضين"
 
 #: options/preferences.py:94 options/templates/preferences_index.html:33
 msgid "Draw Rules"
@@ -113,23 +115,23 @@ msgstr "قوانين القرعة"
 msgid ""
 "The auto-allocator will only take adjudicators at or above this score as "
 "voting panellists"
-msgstr "سيتم توزيع المحكمين  تلقائياً وفقاً لدرجات الاعضاء "
+msgstr "سيتم توزيع المحكمين  تلقائياً وفقاً لدرجات الأعضاء "
 
 #: options/preferences.py:101
 msgid "Minimum adjudicator score to vote"
-msgstr "اقل درجة مُنيحة من قبل الحكام "
+msgstr "أقل درجة منحت من قبل الحكام "
 
 #: options/preferences.py:109
 msgid "Penalty applied by auto-allocator for adjudicator-team conflict"
-msgstr "عقوبة يطبقها التخصيص التلقائي لصراع فريق الحكم"
+msgstr "عقوبة يطبقها التخصيص التلقائي لصراع فريق الحكام"
 
 #: options/preferences.py:110
 msgid "Adjudicator-team conflict penalty"
-msgstr "تعارض محكم-فريق"
+msgstr "تعارض فريق المحكمين"
 
 #: options/preferences.py:118
 msgid "Penalty applied by auto-allocator for adjudicator-team history"
-msgstr "عقوبة يطبقها التخصيص التلقائي لصراع فريق الحكم"
+msgstr "عقوبة يتم تطبيقها بواسطة المُخصّص التلقائي على سجل الفريق القضائي "
 
 #: options/preferences.py:119
 msgid "Adjudicator-team history penalty"
@@ -139,7 +141,7 @@ msgstr "تعارض محكم-فريق"
 msgid ""
 "Penalty applied by conflict avoidance method for teams seeing their own "
 "institution"
-msgstr "عقوبة تطبق بطريقة تجنب الصراع للفرق التي تمثل نفس مؤسسة"
+msgstr "عقوبة تطبق بطريقة تجنب الصراع للفرق التي تمثل نفس المؤسسة"
 
 #: options/preferences.py:128
 msgid "Team institution penalty"
@@ -149,7 +151,7 @@ msgstr "عقوبة فريق المؤسسة "
 msgid ""
 "Penalty applied by conflict avoidance method for teams seeing each other "
 "twice or more"
-msgstr "عقوبة تطبق بطريقة تجنب الصراع للفرق التي تمثل نفس مؤسسة"
+msgstr "عقوبة تطبق بطريقة تجنب الصراع للفرق التي تمثل نفس المؤسسة"
 
 #: options/preferences.py:137
 msgid "Team history penalty"
@@ -163,7 +165,7 @@ msgstr "إذا تم التحديد ، سيحاول السحب تجنب إقرا�
 
 #: options/preferences.py:146
 msgid "Avoid same institution"
-msgstr "تجنب نفس المنتخب "
+msgstr "تجنب نفس المؤسسة"
 
 #: options/preferences.py:154
 msgid ""
@@ -180,15 +182,15 @@ msgstr "كيف يتم حل الأقواس الفردية (انظر الوثائ�
 
 #: options/preferences.py:164
 msgid "Odd bracket resolution method"
-msgstr "اضافة تدقيق "
+msgstr "إضافة تدقيق "
 
 #: options/preferences.py:168
 msgid "Pull up from top"
-msgstr "ترتيب من الاعلى "
+msgstr "ترتيب من الأعلى "
 
 #: options/preferences.py:169
 msgid "Pull up from bottom"
-msgstr "ترتيب من الاسفل "
+msgstr "ترتيب من الأسفل "
 
 #: options/preferences.py:170
 msgid "Pull up from middle"
@@ -204,7 +206,7 @@ msgstr "متوسط المستوى "
 
 #: options/preferences.py:173
 msgid "Intermediate brackets with bubble-up-bubble-down"
-msgstr "متوسط المستوى مع تريب من اعلى إلى اسفل "
+msgstr "متوسط المستوى مع ترتيب من أعلى إلى أسفل "
 
 #: options/preferences.py:174
 msgid "Intermediate 1 (pre-allocated sides)"
@@ -222,7 +224,7 @@ msgstr "كيف يتم حل الأقواس الفردية (انظر الوثائ�
 
 #: options/preferences.py:183
 msgid "Side allocations method"
-msgstr "طريقة توزيع الجوانب "
+msgstr "طريقة توزيع الأطراف"
 
 #: options/preferences.py:187 options/preferences.py:204
 msgid "Random"
@@ -238,7 +240,7 @@ msgstr "المخصصة سلفا"
 
 #: options/preferences.py:190
 msgid "Manually enter from ballot"
-msgstr "ادحال النتائج يدويا ً"
+msgstr "إدخال النتائج يدويا ً"
 
 #: options/preferences.py:197
 msgid ""
@@ -282,7 +284,7 @@ msgstr "طريقة تجنب الصراع"
 
 #: options/preferences.py:219
 msgid "Off"
-msgstr "اطفاء "
+msgstr "إيقاف"
 
 #: options/preferences.py:220
 msgid "One-up-one-down"
@@ -329,7 +331,7 @@ msgstr ""
 
 #: options/preferences.py:255
 msgid "BP position cost"
-msgstr "وضع التكلفة النظام البريطاني "
+msgstr "تكلفة النظام البريطاني "
 
 #: options/preferences.py:259
 msgid "Simple"
@@ -337,7 +339,7 @@ msgstr "بسيط "
 
 #: options/preferences.py:260
 msgid "Rényi entropy"
-msgstr "ادخال النتائج "
+msgstr "إدخال النتائج "
 
 #: options/preferences.py:261
 msgid "Population variance"
@@ -351,7 +353,7 @@ msgstr ""
 
 #: options/preferences.py:271
 msgid "Rényi order (BP)"
-msgstr "ادخال النتائج ( البرلمان البريطاني )"
+msgstr "إدخال النتائج ( البرلمان البريطاني )"
 
 #: options/preferences.py:280
 msgid ""
@@ -396,11 +398,11 @@ msgstr "إخفاء قضايا المناظرة في واجهة المستخدم 
 
 #: options/preferences.py:316
 msgid "No panellist adjudicators"
-msgstr "لا يوجد حكم من اعضاء الفريق "
+msgstr "لا يوجد حكم من أعضاء الفريق "
 
 #: options/preferences.py:324
 msgid "Hide trainee positions in the UI (and don't allocate them)"
-msgstr "إخفاء رائي المتدربين في واجهة المستخدم (وعدم تخصيصها)"
+msgstr "إخفاء مواقف المتدربين في واجهة المستخدم (وعدم تخصيصها)"
 
 #: options/preferences.py:325
 msgid "No trainee adjudicators"
@@ -416,7 +418,7 @@ msgstr "أقل درجة محتملة من الحكم "
 
 #: options/preferences.py:338
 msgid "Minimum adjudicator score"
-msgstr "اقل درجة من الحكم "
+msgstr "أقل درجة من الحكم "
 
 #: options/preferences.py:346
 msgid "Maximum possible adjudicator score that can be given"
@@ -438,7 +440,7 @@ msgstr ""
 
 #: options/preferences.py:360
 msgid "Chairs on panellists and trainees"
-msgstr "رئيس الجلسة من قائمة المدبين "
+msgstr "رئيس الجلسة من قائمة المدربين"
 
 #: options/preferences.py:361
 msgid "Panellists on chairs, chairs on panellists and trainees"
@@ -446,7 +448,7 @@ msgstr ""
 
 #: options/preferences.py:362
 msgid "All adjudicators (including trainees) on each other"
-msgstr "جميع الحكام (بالاضافة إلى المدربين ) "
+msgstr "جميع الحكام (بالإضافة إلى المدربين ) "
 
 #: options/preferences.py:369
 msgid "Expect feedback to be submitted by teams on"
@@ -485,15 +487,15 @@ msgstr ""
 
 #: options/preferences.py:391
 msgid "Show if an adjudicator is a trainee (unaccredited)"
-msgstr "عرض اذا كان المحكم هو مدرب ( غير معتمد ) "
+msgstr "عرض إذا كان المحكم متدرب ( غير معتمد ) "
 
 #: options/preferences.py:392
 msgid "Show unaccredited"
-msgstr "عرض اوامر غير معتمدة "
+msgstr "إظهار غير معتمد"
 
 #: options/preferences.py:400
 msgid "The location to return scoresheets to, printed on pre-printed ballots"
-msgstr "العودة إلى موقع الدرجات و طلب الطباعة المسبق "
+msgstr "العودة إلى موقع الدرجات و طلب الطباعة المسبقة "
 
 #: options/preferences.py:401
 msgid "Score return location"
@@ -511,7 +513,7 @@ msgstr "العودة إلى موقع التغذية الراجعة "
 
 #: options/preferences.py:418
 msgid "Any explanatory text needed to introduce the feedback form"
-msgstr "أي نص توضيحي يجب ان يتم تقديمة  كنموذج للتغذية الراجعة "
+msgstr "أي نص توضيحي يجب أن يتم تقديمة  كنموذج للتغذية الراجعة "
 
 #: options/preferences.py:419
 msgid "Feedback introduction/explanation"
@@ -535,7 +537,7 @@ msgstr "نموذج فريقين "
 
 #: options/preferences.py:439
 msgid "British Parliamentary (four teams)"
-msgstr "البرلمان البريطاني ( اربع فرق ) "
+msgstr "البرلمان البريطاني ( أربع فرق ) "
 
 #: options/preferences.py:446
 msgid ""
@@ -553,7 +555,7 @@ msgstr "بطاقة تصوير لكل حكم "
 
 #: options/preferences.py:452 options/preferences.py:465
 msgid "Consensus ballot (one ballot per debate)"
-msgstr "الاتفاق بالاجماع ( نتيجة واحد لكل مناظرة ) "
+msgstr "الاتفاق بالإجماع ( نتيجة واحد لكل مناظرة ) "
 
 #: options/preferences.py:459
 msgid ""
@@ -635,7 +637,7 @@ msgstr ""
 
 #: options/preferences.py:537
 msgid "Team standings precedence"
-msgstr "ترتيب الفريق الاولوي"
+msgstr "ترتيب الأسبقية للفريق"
 
 #: options/preferences.py:553
 #, python-format
@@ -652,7 +654,7 @@ msgstr "ترتيب الفرق الحالي"
 
 #: options/preferences.py:569 options/templates/preferences_index.html:59
 msgid "Tab Release"
-msgstr "اعلان التاب "
+msgstr "إعلان التاب "
 
 #: options/preferences.py:575
 msgid ""
@@ -662,19 +664,19 @@ msgstr "العرض العام لتاب المتحدثين بعد هذه البط
 
 #: options/preferences.py:576
 msgid "Release team tab to public"
-msgstr "اعلان الفرق من التاب للجمهور"
+msgstr "إعلان الفرق من التاب للجمهور"
 
 #: options/preferences.py:584
 msgid ""
 "Only show scores for the top X teams in the public tab (set to 0 to show all"
 " teams)."
 msgstr ""
-"إظهار النتائج فقط لأعلى المستجيبين X في علامة التبويب العامة (لتعيين 0 "
-"لإظهار جميع المستجيبين)."
+"إظهار النتائج فقط لأعلى المتحدثين X في علامة التبويب العامة (لتعيين 0 لإظهار"
+" جميع المستجيبين)."
 
 #: options/preferences.py:585
 msgid "Top teams cutoff"
-msgstr "فرق القمى "
+msgstr "فرق المداخلات"
 
 #: options/preferences.py:593
 msgid ""
@@ -684,19 +686,19 @@ msgstr "العرض العام لتاب المتحدثين بعد هذه البط
 
 #: options/preferences.py:594
 msgid "Release speaker tab to public"
-msgstr "اعلان المتحدثين من التاب للجمهور "
+msgstr "إعلان المتحدثين من التاب للجمهور "
 
 #: options/preferences.py:602
 msgid ""
 "Only show scores for the top X speakers in the public tab (set to 0 to show "
 "all speakers)."
 msgstr ""
-"إظهار النتائج فقط لأعلى المستجيبين X في علامة التبويب العامة (لتعيين 0 "
-"لإظهار جميع المستجيبين)."
+"إظهار النتائج فقط لأعلى المتحدثين X في علامة التبويب العامة (لتعيين 0 لإظهار"
+" جميع المستجيبين)."
 
 #: options/preferences.py:603
 msgid "Top speakers cutoff"
-msgstr "اعلى مداخلات "
+msgstr "أعلى مداخلات "
 
 #: options/preferences.py:611
 msgid ""
@@ -706,7 +708,7 @@ msgstr "العرض العام لتاب المتحدثين بعد هذه البط
 
 #: options/preferences.py:612
 msgid "Release replies tab to public"
-msgstr "اعلان المداخلات من التاب إلى الجمهور "
+msgstr "إعلان المداخلات من التاب إلى الجمهور "
 
 #: options/preferences.py:620
 msgid ""
@@ -718,7 +720,7 @@ msgstr ""
 
 #: options/preferences.py:621
 msgid "Top replies cutoff"
-msgstr "اعلى مداخلها "
+msgstr "أعلى مداخلة "
 
 #: options/preferences.py:638
 msgid ""
@@ -752,11 +754,11 @@ msgstr "تاب المحكمين لا يعمل "
 
 #: options/preferences.py:663
 msgid "Only shows test score"
-msgstr "اعرف فقط النتيجة التجريبية "
+msgstr "عرض النتيجة التجريبية فقط"
 
 #: options/preferences.py:664
 msgid "Only shows final score"
-msgstr "اعرض فقط  النتيجة الاخيرة "
+msgstr "عرض النتيجة الأخيرة فقط"
 
 #: options/preferences.py:665
 msgid "Shows test, final, and per-round scores"
@@ -874,11 +876,11 @@ msgstr "جميع المناطق ( النتائج ، القرعة ، القضاي
 
 #: options/preferences.py:768
 msgid "Just results entry and draw display"
-msgstr "ادخال النتائج و عرض القرعة "
+msgstr "إدخال النتائج و عرض القرعة "
 
 #: options/preferences.py:769
 msgid "Only results entry"
-msgstr "فقط ادخال النتائج "
+msgstr "إدخال النتائج فقط"
 
 #: options/preferences.py:774 options/templates/preferences_index.html:69
 msgid "Public Features"
@@ -1052,15 +1054,15 @@ msgstr "عرض نتائج القضايا "
 
 #: options/preferences.py:952
 msgid "Whether and how to use code names for teams"
-msgstr "اين و كيف أستخدم أسماء رموز الفرق "
+msgstr "ما إذا كان وكيفية استخدام أسماء الرموز للفرق"
 
 #: options/preferences.py:953
 msgid "Team code names"
-msgstr "أسم رمز الفريق "
+msgstr "اسم رمز الفريق "
 
 #: options/preferences.py:958
 msgid "Do not use code names"
-msgstr "لا تستخدم الاسماء الرمزية  "
+msgstr "لا تستخدم الأسماء الرمزية  "
 
 #: options/preferences.py:959
 msgid "Use real names everywhere, and show code names in tooltips"
@@ -1070,21 +1072,21 @@ msgstr "استخدم الاسم الحقيقي و اعرض الاسم الرمز
 msgid ""
 "Use code names for public; real names with code names in tooltips for admins"
 msgstr ""
-"استخدم الاسم الرمزي للعامة ، و اعرض اسم الحقيقي و الرمزي في حقل الادوات "
+"استخدم الاسم الرمزي للعامة ، و اعرض الاسم الحقيقي و الرمزي في حقل الأدوات "
 "للمدير "
 
 #: options/preferences.py:962
 msgid ""
 "Use code names for public; code names with real names in tooltips for admins"
 msgstr ""
-"استخدم الاسم الرمزي للعامة ، و اعرض اسم الحقيقي و الرمزي في حقل الادوات "
+"استخدم الاسم الرمزي للعامة ، و اعرض الاسم الحقيقي والرمزي في حقل الأدوات "
 "للمدير "
 
 #: options/preferences.py:964
 msgid ""
 "Use code names everywhere; do not use tooltips (real names show in some "
 "admin views)"
-msgstr "استخدم الاسم الرمزي للكل ، و لكن لا تعرضة في قائمة الادوات "
+msgstr "استخدم الاسم الرمزي للكل ، دون عرضه في قائمة الأدوات "
 
 #: options/preferences.py:970
 msgid "Enables emoji in the draw"
@@ -1092,7 +1094,7 @@ msgstr ""
 
 #: options/preferences.py:971
 msgid "Show emoji"
-msgstr "إظهار الايموجي"
+msgstr "إظهار الرمز"
 
 #: options/preferences.py:979
 msgid "In tables listing teams, adds a column showing their institutions"
@@ -1134,7 +1136,7 @@ msgstr ""
 
 #: options/preferences.py:1016
 msgid "Order to display motions"
-msgstr "امر اخفاء القضايا "
+msgstr "إخفاء القضايا "
 
 #: options/preferences.py:1020
 msgid "Earliest round first"
@@ -1158,7 +1160,7 @@ msgstr ""
 
 #: options/preferences.py:1035 options/templates/preferences_index.html:80
 msgid "League Options"
-msgstr "اعدادات الدوري "
+msgstr "إعدادات الدوري "
 
 #: options/preferences.py:1041
 msgid "Enables public interface to see divisions"
@@ -1346,7 +1348,7 @@ msgstr ""
 
 #: options/templates/preferences_index.html:94
 msgid "Manually Set Current Round"
-msgstr "ادخال يدوي للجولة الحالية "
+msgstr "إدخال يدوي للجولة الحالية "
 
 #: options/templates/preferences_index.html:95
 msgid ""
@@ -1426,4 +1428,4 @@ msgstr "خيارات البطولة  ( %(section)s ) حفظت "
 #: options/views.py:108
 #, python-format
 msgid "Tournament options saved according to preset %(name)s."
-msgstr "خيارات البطولة حفظت   و تم ارسالها إلى %(name)s "
+msgstr "خيارات البطولة حفظت  و تم إرسالها إلى %(name)s "

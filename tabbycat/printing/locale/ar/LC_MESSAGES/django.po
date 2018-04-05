@@ -20,7 +20,7 @@ msgstr ""
 
 #: printing/templates/feedback_list.html:5
 msgid "Feedback Forms"
-msgstr "تموذج التغذية الراجعة"
+msgstr "نموذج التغذية الراجعة"
 
 #: printing/templates/feedback_list.html:7
 #, python-format
@@ -31,15 +31,15 @@ msgstr ""
 msgid ""
 "No feedback questions have been added for either teams or adjudicators to "
 "answer."
-msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة "
+msgstr "لم يتم إضافة أي سؤال للتغذية الراجعة "
 
 #: printing/templates/feedback_list.html:16
 msgid "No feedback questions have been added for teams to answer."
-msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة من الفريق"
+msgstr "لم يتم إضافة أي سؤال للتغذية الراجعة من الفريق"
 
 #: printing/templates/feedback_list.html:18
 msgid "No feedback questions have been added for adjudicators to answer."
-msgstr "لم يتم اضافة اي سؤال للتغذية الراجعة من الحكم"
+msgstr "لم يتم إضافة أي سؤال للتغذية الراجعة من الحكم"
 
 #: printing/templates/feedback_list.html:20
 #, python-format
@@ -54,7 +54,7 @@ msgstr ""
 msgid ""
 "There are no feedback sheets available — perhaps adjudicators have not been "
 "allocated?"
-msgstr "لا يوجد استبيان متوفر — "
+msgstr "لا توجد أوراق ملاحظات متاحة — ربما لم يتم تخصيص الحكام؟"
 
 #: printing/templates/printables_list.html:9
 msgid ""
@@ -63,9 +63,9 @@ msgid ""
 "<strong>headers/footers</strong> and turn on <strong>background "
 "graphics</strong>. Works best in Chrome or Safari."
 msgstr ""
-"استخدم كترل + P للطباعة أو الحفظ إلى بدف. تأكد من تعيين<strong> الصفحة "
-"المناسبة </strong>التوجه، لإيقاف <strong>رؤوس / التذييلات </strong>وتشغيل "
-"<strong> باكغروند الرسومات </strong>يعمل بشكل أفضل في كروم أو سفاري."
+"استخدم Ctrl + P للطباعة أو الحفظ إلى PDF. تأكد من تعيين اتجاه <strong>الصفحة"
+" المناسب </strong>، لإيقاف <strong>الرؤوس / التذييلات </strong>وتشغيل "
+"<strong>الرسومات الخلفية</strong>. يعمل بشكل أفضل في Chrome أو Saf"
 
 #: printing/templates/scoresheet_list.html:5
 msgid "Scoresheets"

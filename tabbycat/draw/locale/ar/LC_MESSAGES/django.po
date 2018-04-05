@@ -32,7 +32,7 @@ msgstr[5] ""
 #: draw/admin.py:75
 #, python-format
 msgid "Set result status to %(status)s"
-msgstr "عرض حالة الدرجات %(status)s"
+msgstr "تحديد حالة الدرجات %(status)s"
 
 #: draw/admin.py:85
 #, python-format
@@ -63,7 +63,7 @@ msgstr "قرعة "
 
 #: draw/generator/__init__.py:16
 msgid "Too many swaps"
-msgstr "الكثير من المقايضة "
+msgstr "التبديلات أكثر من اللازم"
 
 #: draw/generator/__init__.py:17
 msgid "One-up-one-down (history)"
@@ -75,7 +75,7 @@ msgstr "من الاول إلى الاخير ( مؤسسة ) "
 
 #: draw/generator/__init__.py:19
 msgid "One-up-one-down (to accommodate)"
-msgstr "من واحد إلى اقل "
+msgstr "من الأول للأخير (لحفظ المساحة)"
 
 #: draw/generator/__init__.py:20
 msgid "Bubble up (history)"
@@ -87,19 +87,19 @@ msgstr "تنازلي (تاريخ)"
 
 #: draw/generator/__init__.py:22
 msgid "Bubble up (institution)"
-msgstr "تصاعدي (مؤسس)"
+msgstr "تصاعدي (مؤسسة)"
 
 #: draw/generator/__init__.py:23
 msgid "Bubble down (institution)"
-msgstr "تنازلي (مؤسس)"
+msgstr "تنازلي (مؤسسة)"
 
 #: draw/generator/__init__.py:24
 msgid "Bubble up (to accommodate)"
-msgstr "تصاعدي"
+msgstr "تصاعدي (لحفظ المساحة)"
 
 #: draw/generator/__init__.py:25
 msgid "Bubble down (to accommodate)"
-msgstr "تنازلي"
+msgstr "تنازلي (لحفظ المساحة)"
 
 #: draw/generator/__init__.py:26
 msgid "Can't bubble up/down"
@@ -107,12 +107,12 @@ msgstr "لا يمكن ترتيب حسب / تصاعدي أو تنازلي"
 
 #: draw/generator/__init__.py:27
 msgid "Pull-up team"
-msgstr "اقوى الفرق"
+msgstr "الفرق الصاعدة"
 
 #: draw/generator/bpelimination.py:36 draw/generator/elimination.py:68
 #, python-format
 msgid "%d debates in the previous round don't have a result."
-msgstr "%dالمتناظر الذي لم يحصل على الدرجات "
+msgstr "%d مناظرة لم توضع درجاتها في الجولات السابقة "
 
 #: draw/generator/bpelimination.py:38
 #, python-format
@@ -184,7 +184,7 @@ msgstr ""
 #: draw/generator/random.py:107
 msgid ""
 "One or more teams had an allocated side that wasn't affirmative or negative."
-msgstr "وكان لفريق واحد أو أكثر جانب مخصص لم يكن إيجابيا أو سلبيا."
+msgstr "موقف الفريق لم يحدد موالاة أو معارضة "
 
 #: draw/manager.py:41
 #, python-format
@@ -218,7 +218,7 @@ msgstr "مؤجل"
 
 #: draw/models.py:29
 msgid "draft"
-msgstr "مشروع"
+msgstr "مسودة"
 
 #: draw/models.py:30
 msgid "confirmed"
@@ -230,19 +230,19 @@ msgstr "جولة"
 
 #: draw/models.py:37
 msgid "venue"
-msgstr "قاعات "
+msgstr "قاعة "
 
 #: draw/models.py:40
 msgid "division"
-msgstr "التقسيمات "
+msgstr "تقسيمة/فئة"
 
 #: draw/models.py:43
 msgid "bracket"
-msgstr "التأهل"
+msgstr "جدول"
 
 #: draw/models.py:45
 msgid "room rank"
-msgstr "مستوى الغرفة "
+msgstr "مستوى القاعة"
 
 #: draw/models.py:48
 msgid "time"
@@ -250,7 +250,7 @@ msgstr "الوقت"
 
 #: draw/models.py:49
 msgid "The time/date of a debate if it is specifically scheduled"
-msgstr "وقت / تاريخ المتاظرة يتماشا مع الجدول "
+msgstr "وقت / تاريخ المتاظرة إذا كان محدد"
 
 #: draw/models.py:55
 msgid "importance"
@@ -262,17 +262,17 @@ msgstr "حالة النتيجة"
 
 #: draw/models.py:59
 msgid "ballot in"
-msgstr "تصويت"
+msgstr "إستمارة تصويت مسلمة"
 
 #: draw/models.py:61
 msgid "sides confirmed"
-msgstr "الجوانب مؤكدة "
+msgstr "المواقف مؤكدة "
 
 #: draw/models.py:62
 msgid ""
 "If unchecked, the sides assigned to teams in this debate are just "
 "placeholders."
-msgstr "اذا لم يتم تحديدها ، فأن أحد الفريقين يحدد الجانب الذي يناسبة "
+msgstr "اذا لم يتم تحديد المواقف، تكون مواقف الفرق حسب أماكنهم "
 
 #: draw/models.py:65 draw/models.py:291
 msgid "debate"
@@ -287,7 +287,7 @@ msgstr "مناظرات"
 #. space.
 #: draw/models.py:85
 msgid " (sides not confirmed)"
-msgstr "( الجوانب لم تكتمل ) "
+msgstr "(لم يتم تأكيد موقفي الفريقين)"
 
 #. Translators: This goes between teams in a debate, e.g. "Auckland 1
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
@@ -305,19 +305,19 @@ msgstr "معارضة"
 
 #: draw/models.py:283
 msgid "opening government"
-msgstr "فتح القضية "
+msgstr "موالاة أولى "
 
 #: draw/models.py:284
 msgid "opening opposition"
-msgstr "اعداد القضية "
+msgstr "معارضة أولى"
 
 #: draw/models.py:285
 msgid "closing government"
-msgstr "اغلاق القضية "
+msgstr "موالاة ثانية"
 
 #: draw/models.py:286
 msgid "closing opposition"
-msgstr "اغلاق المعارضة  "
+msgstr "معارضة ثانية "
 
 #: draw/models.py:293 draw/models.py:406
 msgid "team"
@@ -325,7 +325,7 @@ msgstr "فريق"
 
 #: draw/models.py:295 draw/models.py:408
 msgid "side"
-msgstr "الجوانب "
+msgstr "موقف"
 
 #: draw/models.py:301
 msgid "debate team"
@@ -333,7 +333,7 @@ msgstr "فريق المناظرة"
 
 #: draw/models.py:302
 msgid "debate teams"
-msgstr "فريق المناظرة"
+msgstr "فرق المناظرة"
 
 #: draw/models.py:339 draw/models.py:345
 msgid "result unknown"
@@ -349,11 +349,11 @@ msgstr "خسر"
 
 #: draw/models.py:412
 msgid "team side allocation"
-msgstr "تخصيص الفرق "
+msgstr "تخصيص مواقف الفرق "
 
 #: draw/models.py:413
 msgid "team side allocations"
-msgstr "تخصيص الفرق "
+msgstr "تخصيصات مواقف الفرق "
 
 #. Translators: e.g. "Affirmative: Rank", "Government: Draw strength",
 #. "Opening government: Total speaker score", "Closing opposition: Number of
@@ -374,7 +374,7 @@ msgstr "مستوى المناظرة في هذه القاعة "
 
 #: draw/tables.py:91
 msgid "Bracket of this debate"
-msgstr "قوس هذه المناظرة "
+msgstr "جدول هذه المناظرة "
 
 #: draw/tables.py:160
 msgid "number of pullups before this round"
@@ -390,8 +390,8 @@ msgid ""
 "side history<br>\n"
 "(number of times the team has been on each side before this round)"
 msgstr ""
-"جوانب التاريخ <br>\n"
-"( عدد المرات التي كان الفريق في هذا الجانب قبل هذه الجولة )"
+"تاريخ المواقف <br>\n"
+"( عدد المرات التي كان الفريق في هذا الموقف قبل هذه الجولة )"
 
 #. Translators: Abbreviation for "side history"
 #: draw/tables.py:179
@@ -412,7 +412,7 @@ msgstr "أفضل تحسن ممكن ، غير مستقر "
 
 #: draw/tables.py:247
 msgid "Was imbalanced and still imbalanced"
-msgstr "كان افضل مستقر و مازال غير مستقر "
+msgstr "كان غير مستقر و مازال غير مستقر "
 
 #: draw/tables.py:265
 msgid "Pts"
@@ -424,11 +424,11 @@ msgstr "نقاط"
 
 #: draw/tables.py:274
 msgid "Side"
-msgstr "الجانب"
+msgstr "الموقف"
 
 #: draw/tables.py:275
 msgid "Position this round"
-msgstr "وضع هذه الجولة "
+msgstr "موقف هذه الجولة "
 
 #: draw/tables.py:279
 msgid "Before"
@@ -436,15 +436,15 @@ msgstr "قبل"
 
 #: draw/tables.py:280
 msgid "Side history before this round"
-msgstr "تاريخ الجوانب قبل هذه الجولة "
+msgstr "تاريخ المواقف قبل هذه الجولة "
 
 #: draw/tables.py:284
 msgid "After"
-msgstr "بعد ذلك "
+msgstr "بعد "
 
 #: draw/tables.py:285
 msgid "Side history after this round"
-msgstr "تاريخ الجوانب بعد هذه الجولة "
+msgstr "تاريخ المواقف بعد هذه الجولة "
 
 #: draw/tables.py:295 draw/tables.py:372
 msgid "Cost"
@@ -452,7 +452,7 @@ msgstr "التكلفة "
 
 #: draw/tables.py:295
 msgid "Position cost"
-msgstr "وضع التكلفة "
+msgstr "تكلفة الموقف "
 
 #: draw/tables.py:308
 msgid "Status"
@@ -462,19 +462,19 @@ msgstr "الحالة"
 msgid ""
 "Teams with this many points are permitted in this debate<br>\n"
 "(bracket in bold)"
-msgstr "نقاط الفرق المسموح بها في هذه المناظرة <br>"
+msgstr "الفرق المسموح لها دخول هذه المناظرة لها هذا العدد من الدرجات <br>"
 
 #: draw/tables.py:367
 msgid "side history before this round"
-msgstr "تاريخ الجانب قبل هذه الجولة"
+msgstr "تاريخ الموقف قبل هذه الجولة"
 
 #: draw/tables.py:367
 msgid "Sides"
-msgstr "الجانب "
+msgstr "المواقف"
 
 #: draw/tables.py:372
 msgid "position cost"
-msgstr "وضع التكلفة "
+msgstr "تكلفة الموقف "
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html:5
 msgid ""
@@ -491,10 +491,10 @@ msgid ""
 "don't do this correctly, many pages <strong>will</strong> crash."
 msgstr ""
 "يطلب البرنامج أن يكون لجميع المتناظرين <strong>بالضبط </strong> فريقا واحدا "
-"للمناظرة لكل جانب، ولا فرق مناظرة أخرى، في جميع الأوقات. إذا قمت بحذف أي فرق"
-" . يجب عليك بعد ذلك إما استبدال كل واحد مع فريق جديد في نفس المناظرة . أو "
-"حذف قاعات المناظرة المرتبطة بها. إذا كنت لا تفعل هذا بشكل صحيح، العديد من "
-"الصفحات <strong>سوف </strong> تتأثر ."
+"للمناظرة لكل موقف، ولا فرق مناظرة أخرى، في جميع الأوقات. إذا قمت بحذف أي "
+"فريق . يجب عليك إما استبدال كل فريق بفريق جديد في نفس المناظرة . أو حذف "
+"قاعات المناظرة المرتبطة بها. إذا لم تقوم بهذا بشكل صحيح، العديد من الصفحات "
+"<strong> </strong> سوف تتأثر ."
 
 #: draw/templates/admin/draw/debateteam/delete_warning.html:15
 #: draw/templates/admin/draw/debateteam/edit_warning.html:15
@@ -504,8 +504,8 @@ msgid ""
 "them have exactly one affirmative and one negative team."
 msgstr ""
 "وهذا مصدر شائع للأخطاء. إذا حدث لك، تحقق من المناظرة (تحت قسم رسم في هذه "
-"المنطقة تحرير قاعدة البيانات) والتأكد من أن كل منهم لديهم واحد إيجابي واحد "
-"وفريق سلبي بالضبط."
+"المنطقة تحرير قاعدة البيانات) والتأكد من أن كل منهم لديه موالاة واحدة و "
+"معارضة واحدة تماما."
 
 #: draw/templates/admin/draw/debateteam/edit_warning.html:5
 msgid "WARNING!!! If you are editing debate teams, read this first!"
@@ -518,11 +518,11 @@ msgid ""
 "teams in the database, you must ensure that this remains the case. If you "
 "don't do this correctly, many pages <strong>will</strong> crash."
 msgstr ""
-"يطلب البرنامج أن يكون لجميع المتناظرين <strong>بالضبط </strong> فريقا واحدا "
-"للمناظرة لكل جانب، ولا فرق مناظرة أخرى، في جميع الأوقات. إذا قمت بحذف أي فرق"
-" . يجب عليك بعد ذلك إما استبدال كل واحد مع فريق جديد في نفس المناظرة . أو "
-"حذف قاعات المناظرة المرتبطة بها. إذا كنت لا تفعل هذا بشكل صحيح، العديد من "
-"الصفحات <strong>سوف </strong> تتأثر ."
+"يطلب البرنامج أن يكون لجميع المناظرات <strong>بالضبط </strong> فريقا واحدا "
+"للمناظرة لكل موقف، ولا فرق مناظرة أخرى، في جميع الأوقات. إذا قمت بحذف أي "
+"فريق . يجب عليك إما استبداله بفريق جديد في نفس المناظرة . أو حذف قاعات "
+"المناظرة المرتبطة بها. إذا لم تقم بذلك بشكل صحيح، العديد من الصفحات "
+"<strong>سوف </strong> تتأثر الكثير من الصفحات."
 
 #: draw/templates/draw_alerts_adjudicators.html:6
 #, python-format
@@ -616,7 +616,7 @@ msgstr "تأكيد النتائج"
 
 #: draw/templates/draw_base.html:16
 msgid "Edit Sides/Matchups"
-msgstr "تعديل الجوانب / التوزيع "
+msgstr "تعديل المواقف / التوزيع "
 
 #: draw/templates/draw_base.html:19
 msgid "Redo Draw"
@@ -628,7 +628,7 @@ msgstr "تفاصيل القرعة"
 
 #: draw/templates/draw_base.html:26
 msgid "Position Balance"
-msgstr "وضع الموازنة "
+msgstr "موازنة المواقف "
 
 #: draw/templates/draw_base.html:34 draw/templates/draw_display_admin.html:4
 #: draw/templates/draw_display_admin.html:5
@@ -648,15 +648,15 @@ msgstr "المناظرة تبدأ %(start_time)s"
 
 #: draw/templates/draw_display_admin.html:27
 msgid "Add Start Time"
-msgstr "إضافة وقت البدء"
+msgstr "إضافة وقت ابتداء المناظرة"
 
 #: draw/templates/draw_display_admin.html:32
 msgid "Schedule Debates"
-msgstr "جدول المناظرة "
+msgstr "جدول المناظرات "
 
 #: draw/templates/draw_display_admin.html:39
 msgid "Enter Results"
-msgstr "ادخال النتيجة "
+msgstr "ادخل النتائج "
 
 #: draw/templates/draw_display_admin.html:51
 msgid "Motion Details"
@@ -690,7 +690,7 @@ msgstr ""
 
 #: draw/templates/draw_display_admin.html:70
 msgid "Enter motions"
-msgstr "ادخال القضايا"
+msgstr "ادخل القضايا"
 
 #: draw/templates/draw_display_admin.html:80
 msgid "The motion has been entered."
@@ -706,16 +706,16 @@ msgid ""
 "print in on your ballots (using the links below) or to display it (later) on"
 " the public motions page."
 msgstr ""
-"يجب إضافة اقتراح إذا أردت عرضه على القاعة أو طباعته على أوراق الاقتراع "
-"(باستخدام الروابط أدناه) أو لعرضه (لاحقا) على صفحة الاقتراحات العامة."
+"يجب إضافة قضية إذا أردت عرضه على القاعة أو طباعته على أوراق الاقتراع "
+"(باستخدام الروابط أدناه) أو لعرضه (لاحقا) على صفحة القضايا العامة."
 
 #: draw/templates/draw_display_admin.html:97
 msgid "Enter a motion"
-msgstr "إضافة نص القضية"
+msgstr "أضف نص القضية"
 
 #: draw/templates/draw_display_admin.html:111
 msgid "Release Draw"
-msgstr "إعلان القرعة"
+msgstr "أعلن القرعة"
 
 #: draw/templates/draw_display_admin.html:117
 msgid ""
@@ -727,7 +727,7 @@ msgstr "ليس ثمة شيء للإعلان، لم تقم بإجراء القر�
 msgid ""
 "The draw for this round is still in a draft state. Confirm the draw before "
 "releasing it."
-msgstr "ولا يزال سحب هذه الجولة في مسودة . تأكد من السحب قبل كل شيء."
+msgstr "قرعةهذه الجولة غسر مؤكدة . تأكد من القرعة قبل الإعلان."
 
 #: draw/templates/draw_display_admin.html:127
 msgid "Unrelease draw to public"
@@ -735,7 +735,7 @@ msgstr "عدم إعلان القرعة للجمهور."
 
 #: draw/templates/draw_display_admin.html:132
 msgid "The draw has been released."
-msgstr ""
+msgstr "تم إعلان القرعة"
 
 #: draw/templates/draw_display_admin.html:135
 #, python-format
@@ -796,16 +796,16 @@ msgid ""
 "Your configuration doesn't have a public draw page or feedback/ballot "
 "submissions. There's no reason to release the draw."
 msgstr ""
-"لا تحتوي التهيئة على صفحة سحب عامة أو تعليقات / بطاقات النتائج . ليس هناك "
-"سبب لعرض السحب."
+"لا تحتوي أنظمة البطولة على صفحة قرعة عامة أو تعليقات / بطاقات النتائج . ليس "
+"هناك سبب لعرض القرعة."
 
 #: draw/templates/draw_display_admin.html:191
 msgid "Release Motions"
-msgstr "إعلان القضية"
+msgstr "أعلن القضايا"
 
 #: draw/templates/draw_display_admin.html:192
 msgid "Release motions to public"
-msgstr "إعلان القضية للجمهور."
+msgstr "أعلن القضايا للجمهور."
 
 #: draw/templates/draw_display_admin.html:193
 msgid "Unrelease motions to public"
@@ -813,11 +813,11 @@ msgstr "عدم إعلان القضايا للجمهور."
 
 #: draw/templates/draw_display_admin.html:195
 msgid "Release Motion"
-msgstr "إعلان القضية"
+msgstr "أعلن القضية"
 
 #: draw/templates/draw_display_admin.html:196
 msgid "Release motion to public"
-msgstr "إعلان القضية للجمهور."
+msgstr "اعلن القضية للجمهور."
 
 #: draw/templates/draw_display_admin.html:197
 msgid "Unrelease motion to public"
@@ -838,9 +838,8 @@ msgid ""
 " before debates finish, otherwise ballots will not be able to nominate "
 "vetoes."
 msgstr ""
-"يتم تكوين دورتك للسماح بالحصول على حق النقض والسماح بتقديم بطاقات الاقتراع "
-"من قبل الحكام. تأكد من أنك ستفرج عن الاقتراحات قبل انتهاء المناقشات ، وإلا "
-"لن تتمكن بطاقات الاقتراع من ترشيح حق النقض."
+"يسمح في اهذه البطولة ب التصويت على القضايا/ و تسليم إستمارات الدرجات من "
+"المحكمين، تأكد من إعلان القضايا قبل انتهاء المناظرة ليتمكنوا من التصويت"
 
 #: draw/templates/draw_display_admin.html:219
 msgid ""
@@ -848,20 +847,20 @@ msgid ""
 "public site. You'll need to first release the motion(s) for it to show "
 "there."
 msgstr ""
-"تم تكوين الدورة الخاصة بك لإظهار الحركة (الحركة) لكل جولة على الموقع العام. "
-"ستحتاج إلى إطلاق الحركة (الحركة) أولاً حتى تظهر هناك."
+"هذه البطولة مبرمجة على إعلان القضايا في موقع عام، الرجاء إعلان القضايا "
+"ليتمكن البنامج من عرضها في الموقع العام."
 
 #: draw/templates/draw_display_admin.html:223
 msgid ""
 "Your tournament is not configured to show the motion(s) for each round on "
 "the public site. There's no need to release the motion(s)."
 msgstr ""
-"تم تكوين الدورة الخاصة بك لإظهار الحركة (الحركة) لكل جولة على الموقع العام. "
-"ستحتاج إلى إطلاق الحركة (الحركة) أولاً حتى تظهر هناك."
+"هذه البطولة غير مبرمجة على إعلان القضايا في موقع عام، لا داعي لإعلان "
+"القضايا."
 
 #: draw/templates/draw_display_admin.html:235
 msgid "Motions have been released."
-msgstr "تم إعلان القضية للجمهور."
+msgstr "تم إعلان القضايا للجمهور."
 
 #: draw/templates/draw_display_admin.html:237
 msgid "The motion has been released."
@@ -898,7 +897,7 @@ msgstr "بطيء جداً "
 
 #: draw/templates/draw_display_by.html:35
 msgid "Text Size"
-msgstr "ادخال النص "
+msgstr "حجم النص"
 
 #: draw/templates/draw_display_by.html:38
 msgid "Tiny"
@@ -923,7 +922,7 @@ msgstr "توقف التمرير"
 #: draw/templates/draw_not_released.html:6
 #, python-format
 msgid "The draw for %(round_name)s has yet to be released."
-msgstr "السحب لـ%(round_name)s تم اعلانة "
+msgstr "قرعة ـ%(round_name)s لم يعلن عنها بعد "
 
 #: draw/templates/draw_status_confirmed.html:12
 msgid "Adjudicator Allocations"
@@ -932,7 +931,7 @@ msgstr "تعيين المحكمين"
 #: draw/templates/draw_status_confirmed.html:20
 msgid ""
 "There are currently fewer checked-in adjudicators than there are rooms."
-msgstr "هناك عدد قليل من الحكام الذين قاموا بدخول الغرف "
+msgstr "عدد الحكام المعينين أقل من عدد القاعات "
 
 #: draw/templates/draw_status_confirmed.html:31
 msgid "Allocate adjudicators"
@@ -944,7 +943,7 @@ msgstr "تعديل تعيين الحكم "
 
 #: draw/templates/draw_status_confirmed.html:48
 msgid "Venue Allocations"
-msgstr "قاعات التعيين "
+msgstr "تعيين القاعة"
 
 #: draw/templates/draw_status_confirmed.html:56
 msgid "Allocate venues"
@@ -952,11 +951,11 @@ msgstr "تعيين القاعات "
 
 #: draw/templates/draw_status_confirmed.html:59
 msgid "Edit venue allocation"
-msgstr "تعديل تعيين القاعات "
+msgstr "تعديل تعيين القاعة"
 
 #: draw/templates/draw_status_confirmed.html:74
 msgid "Side Allocations"
-msgstr "تعيين الجانب"
+msgstr "تعيين الموقف"
 
 #: draw/templates/draw_status_confirmed.html:79
 #, python-format
@@ -1016,24 +1015,24 @@ msgstr ""
 
 #: draw/templates/position_balance_break.html:6
 msgid "Position balance reports aren't computed for elimination rounds."
-msgstr "لا يتم حساب تقارير ميزان الموقف لجولات الغير مكتملة ."
+msgstr "لا يوجد الية لموازنة عدد مواقف الفرق في الجولات الإقصائية"
 
 #: draw/templates/position_balance_nonbp.html:6
 msgid ""
 "Position balance reports are only available for British Parliamentary "
 "tournaments."
-msgstr "تقارير ميزان الموقف متاحة فقط للبطولات البرلمانية البريطانية."
+msgstr "تقارير موازنة المواقف متاحة فقط لبطولات البرلماني البريطاني."
 
 #: draw/templates/position_balance_round1.html:6
 msgid ""
 "Position balance reports aren't computed for the first round of a "
 "tournament."
-msgstr "لا يتم حساب تقارير ميزان الموقف للجولة الاولى ."
+msgstr "لا يتم حساب تقارير موازنة الموقف للجولة الاولى ."
 
 #: draw/views.py:65
 #, python-format
 msgid "Draw for %(round)s"
-msgstr "قرعة من %(round)s"
+msgstr "قرعة ل%(round)s"
 
 #: draw/views.py:78
 #, python-format
@@ -1055,7 +1054,7 @@ msgstr "مسودة قرعة"
 
 #: draw/views.py:311
 msgid "No Debates for this Round"
-msgstr "لا يوجد مناظرون لهذه الجولة "
+msgstr "لا توجد مناظرات لهذه الجولة "
 
 #. Translators: e.g. "Affirmative: Break rank"
 #: draw/views.py:363
@@ -1070,11 +1069,11 @@ msgstr "م.ت"
 
 #: draw/views.py:394
 msgid "Draw with Details"
-msgstr "تفاصيل القرعة"
+msgstr "قرعة مع التفاصيل"
 
 #: draw/views.py:402
 msgid "Position Balance Report"
-msgstr "تقرير وضع الموازنة "
+msgstr "تقرير موازنة الموقف "
 
 #: draw/views.py:414
 #, python-format
@@ -1088,20 +1087,20 @@ msgstr ""
 
 #: draw/views.py:448
 msgid "Teams with position imbalances"
-msgstr "الفرق مع وضع الموازنة "
+msgstr "الفرق غير متوازنة المواقف"
 
 #: draw/views.py:449
 msgid "No teams with position imbalances! Hooray!"
-msgstr "لا يوجد فرق في هذا الوضع !"
+msgstr "لا يوجد فرق غير متوازنة المواقف"
 
 #: draw/views.py:452
 msgid "Annotated draw"
-msgstr "مشروع القرعة "
+msgstr "قرعة موضحة"
 
 #: draw/views.py:485
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
-msgstr "لا يمكنك انشاء قرعة لـ%(round)s، هناك قرعة بالفعل "
+msgstr "لا يمكنك انشاء قرعة لـ%(round)s، هناك قرعة سابقة"
 
 #: draw/views.py:493
 #, python-format
@@ -1119,7 +1118,7 @@ msgid ""
 "<p>If this issue persists and you're not sure how to resolve it, please contact the developers.</p>"
 msgstr ""
 "لا يمكن انشاء قرعة بسبب خلل <em>%(message)s</em></p>\n"
-"<p>اذا كان الخلل ليس له علاقة بك ، الرجاء التواصل مع فرق الدعم الفني </p>"
+"<p>اذا كان لم تستطيع حل المشكلة ، الرجاء التواصل مع فرق الدعم الفني </p>"
 
 #: draw/views.py:510
 #, python-format
@@ -1145,11 +1144,11 @@ msgstr "مسح القرعة ، يمكنك الان اعادة انشاء أخر�
 
 #: draw/views.py:575
 msgid "Released the draw."
-msgstr "إعلان القرعة"
+msgstr "اعلنت القرعة"
 
 #: draw/views.py:591
 msgid "Unreleased the draw."
-msgstr "عدم إعلان القرعة للجمهور."
+msgstr "القرعة لم تعلن."
 
 #: draw/views.py:604
 #, python-format
@@ -1160,23 +1159,23 @@ msgstr ""
 
 #: draw/views.py:699
 msgid "Side Pre-Allocations"
-msgstr "تعيين الجانب"
+msgstr "تعيين الموقف الأولي"
 
 #: draw/views.py:837
 msgid "All Draws for All Teams"
-msgstr "قرعة لجميع الفرق"
+msgstr "قرعة جميع الفرق"
 
 #: draw/views.py:852
 #, python-format
 msgid "All Debates for Teams from %(institution)s"
-msgstr "جميع المتناظرن من الفرق من %(institution)s"
+msgstr "جميع المناظرات للفرق من %(institution)s"
 
 #: draw/views.py:871
 msgid ""
 "This venue category does not exist or the URL for it might have changed. Try"
 " finding it again from the homepage."
 msgstr ""
-"فئة المكان هذه غير موجودة أو ربما تغير الرابط الخاص بها  . حاول العثور عليه "
+"فئة القاعة هذه غير موجودة أو ربما تغير الرابط الخاص بها . حاول العثور عليه "
 "مرة أخرى من الصفحة الرئيسية."
 
 #: draw/views.py:878
@@ -1186,4 +1185,4 @@ msgstr "جميع المناظرات في %(venue_category)s"
 
 #: draw/views.py:880
 msgid "Unknown Venue Category"
-msgstr "القاعات غير معروفة "
+msgstr "فئة قاعات غير معروفة "

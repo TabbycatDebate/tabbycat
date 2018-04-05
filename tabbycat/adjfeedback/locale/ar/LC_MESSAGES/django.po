@@ -118,7 +118,7 @@ msgstr "%(name)s(%(round)s%(adjpos)s)"
 
 #: adjfeedback/forms.py:244 adjfeedback/forms.py:305
 msgid "-- Adjudicators --"
-msgstr "-- المحكم --"
+msgstr "-- المحكمين --"
 
 #: adjfeedback/forms.py:258
 msgid "Adjudicator this feedback is about"
@@ -194,11 +194,11 @@ msgstr "اجابة الحكم حول التغذية الراجعة "
 
 #: adjfeedback/models.py:62
 msgid "adjudicator feedback float answer"
-msgstr "اجابة الحكم حول التغذية الراجعة كانت عامة"
+msgstr "اجابة الحكم العامة حول التغذية الراجعة"
 
 #: adjfeedback/models.py:63
 msgid "adjudicator feedback float answers"
-msgstr "اجابة الحكم حول التغذية الراجعة كانت عامة"
+msgstr "اجابة الحكم العامة حول التغذية الراجعة "
 
 #: adjfeedback/models.py:70
 msgid "adjudicator feedback string answer"
@@ -238,7 +238,7 @@ msgstr "نص طويل "
 
 #: adjfeedback/models.py:96
 msgid "select one"
-msgstr "اختيار "
+msgstr "اختيار واحد"
 
 #: adjfeedback/models.py:97
 msgid "select multiple"
@@ -250,7 +250,7 @@ msgstr "دوري"
 
 #: adjfeedback/models.py:124
 msgid "sequence number"
-msgstr "رقم التسلسل "
+msgstr "الرقم المتسلسل "
 
 #: adjfeedback/models.py:127
 msgid ""
@@ -268,7 +268,7 @@ msgstr "سؤال قصير على سبيل المثال \" موافق على ال
 
 #: adjfeedback/models.py:132
 msgid "reference"
-msgstr "معارض "
+msgstr "مرجع "
 
 #: adjfeedback/models.py:133
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
@@ -280,7 +280,7 @@ msgstr "من الحكم "
 
 #: adjfeedback/models.py:137
 msgid "Adjudicators should be asked this question (about other adjudicators)"
-msgstr "سؤال من الحكم "
+msgstr "سؤال حكم عن الاخر"
 
 #: adjfeedback/models.py:139
 msgid "from team"
@@ -316,7 +316,7 @@ msgstr "أعلى قيمة"
 msgid ""
 "Maximum allowed value for numeric fields (ignored for text or boolean "
 "fields)"
-msgstr "الحد الاعلى للقيمة المسموح بها للحقول الرقمية"
+msgstr "الحد الأعلى للقيمة المسموح بها للحقول الرقمية"
 
 #: adjfeedback/models.py:159
 msgid "choices"
@@ -330,11 +330,11 @@ msgstr ""
 
 #: adjfeedback/models.py:165
 msgid "adjudicator feedback question"
-msgstr "سؤال للتعذية الراجعة من المحكم "
+msgstr "سؤال المحكم في التغذية الراجعة"
 
 #: adjfeedback/models.py:166
 msgid "adjudicator feedback questions"
-msgstr "جواب للتعذية الراجعة من المحكم "
+msgstr "جواب للتغذية الراجعة من المحكم "
 
 #: adjfeedback/models.py:219
 msgid "source adjudicator"
@@ -350,15 +350,15 @@ msgstr "التعذية الراجعة من المحكم "
 
 #: adjfeedback/models.py:226
 msgid "adjudicator feedbacks"
-msgstr "التعذية الراجعة من المحكم "
+msgstr "التغذيات الراجعة من المحكم "
 
 #: adjfeedback/models.py:271
 msgid "Either the source adjudicator or source team wasn't specified."
-msgstr "يتم تحديد رئيس الجلسة "
+msgstr ""
 
 #: adjfeedback/models.py:274
 msgid "There was both a source adjudicator and a source team."
-msgstr "كان هناك حكم من الفريق المشارك "
+msgstr ""
 
 #: adjfeedback/models.py:276
 msgid "Adjudicator did not see this debate."
@@ -374,16 +374,16 @@ msgstr "تغذية راجعة "
 
 #: adjfeedback/templates/enter_feedback.html:5
 msgid "Enter Feedback"
-msgstr ""
+msgstr "أدخل التغذية الراجعة"
 
 #: adjfeedback/templates/enter_feedback.html:9
 #, python-format
 msgid "Add Feedback from %(source_name)s"
-msgstr ""
+msgstr "أضف تغذية راجعة من %(source_name)s"
 
 #: adjfeedback/templates/enter_feedback.html:13
 msgid "Add Feedback"
-msgstr ""
+msgstr "أضف تغذية راجعة "
 
 #: adjfeedback/templates/enter_feedback.html:33
 msgid ""
@@ -488,7 +488,7 @@ msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html:57
 msgid "Score Ratio"
-msgstr "الدرجات "
+msgstr "مجال الدرجات "
 
 #: adjfeedback/templates/overview_breakdowns.html:70
 #, python-format
@@ -595,7 +595,7 @@ msgstr "فريق"
 
 #: adjfeedback/views.py:320 adjfeedback/views.py:345
 msgid "Institution"
-msgstr "منتخب"
+msgstr "مؤسسة"
 
 #: adjfeedback/views.py:328
 msgid "An Adjudicator"

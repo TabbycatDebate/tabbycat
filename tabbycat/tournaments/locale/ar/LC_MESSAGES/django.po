@@ -20,19 +20,19 @@ msgstr ""
 
 #: tournaments/apps.py:7
 msgid "Tournaments"
-msgstr "الدوي "
+msgstr "البطولات"
 
 #: tournaments/forms.py:24
 msgid "Number of preliminary rounds"
-msgstr "ارقام الجولات الأولية"
+msgstr "عدد الجولات التمهيدية "
 
 #: tournaments/forms.py:29
 msgid "Number of teams in the open break"
-msgstr "عدد الفرق المتأهله "
+msgstr "عدد الفرق المتأهلة"
 
 #: tournaments/forms.py:30
 msgid "Leave blank if there are no break rounds."
-msgstr "اتركة فارغ طالما لا يوجد جولة اضافية "
+msgstr "اترك المساحة فارغة إذا لم يكن هناك جولة إضافية "
 
 #. Translators: This is the name given to the 'Open Break'.
 #: tournaments/forms.py:55
@@ -45,7 +45,7 @@ msgstr "ترتيب "
 
 #: tournaments/forms.py:81
 msgid "Apply a standard set of settings to match a common debate format"
-msgstr "تطبيق مجموعة قياسية من الإعدادات لمطابقة شكل المناظرة مشترك"
+msgstr "تطبيق مجموعة قياسية من الإعدادات لمطابقة تنسيق المناظرة"
 
 #: tournaments/forms.py:85
 msgid "Public Configuration"
@@ -56,8 +56,8 @@ msgid ""
 "Show non-sensitive information on the public-facing side of this site, like "
 "draws (once released) and the motions of previous rounds"
 msgstr ""
-"عرض معلومات غير حساسة على الجانب الذي يواجه الجمهور من هذا الموقع، مثل سحب "
-"(مرة واحدة صدر) والحركات من الجولات السابقة"
+"تظهر المعلومات غير الحساسة على الجانب المواجه للجمهور من هذا الموقع، مثل "
+"توجه (صدر مرة واحدة) والحركات من الجولات السابقة"
 
 #: tournaments/mixins.py:94
 #, python-format
@@ -65,24 +65,24 @@ msgid ""
 "There's a problem with the data for the tournament %(tournament_name)s. "
 "Please contact a tab director and ask them to set its current round."
 msgstr ""
-"هناك مشكلة في بيانات البطولة%(tournament_name)s يرجى الاتصال بغرفة التاب و "
-"اطلب منهم تعيين الجولة الحالية."
+"هناك مشكلة في بيانات البطولة%(tournament_name)s يرجى الاتصال بغرفة الإدخال "
+"وطلب تعيين الجولة الحالية."
 
 #: tournaments/mixins.py:106
 msgid ""
 "You've been redirected to this page because of a problem with how teams are "
 "assigned to sides in a debate."
 msgstr ""
-"تمت إعادة توجيهك إلى هذه الصفحة بسبب وجود مشكلة في كيفية تعيين الفرق للجوانب"
-" في المناظرة ."
+"تمت إعادة توجيهك إلى هذه الصفحة بسبب وجود مشكلة في كيفية تعيين الفرق في "
+"المناظرة ."
 
 #: tournaments/mixins.py:111
 msgid ""
 "There's a problem with how teams are assigned to sides in a debate. The tab "
 "director will need to resolve this issue."
 msgstr ""
-"هناك مشكلة في كيفية تعيين الفرق إلى الجانبين في النقاش. سيحتاج مدير علامة "
-"التبويب إلى حل هذه المشكلة."
+"هناك مشكلة في كيفية تعيين الفرق للجانبين في المناظرة. سيحتاج مسؤول الإدخال "
+"لحل هذه المشكلة."
 
 #: tournaments/mixins.py:134
 #, python-format
@@ -94,8 +94,8 @@ msgid ""
 "You can't use this as a tournament slug, because it's reserved for a "
 "Tabbycat system URL. Please try another one."
 msgstr ""
-"لا يمكنك استخدام هذه البطولة ، لأنه الرابط محجوز من نظام Tabbycat. يرجى "
-"تجربة رابط أخرى."
+"لا يمكنك استخدامه في البطولة ، لأن الرابط محجوز من نظام Tabbycat. يرجى تجربة"
+" رابط آخر."
 
 #: tournaments/models.py:31 tournaments/models.py:227
 msgid "name"
@@ -105,7 +105,7 @@ msgstr "اسم "
 msgid ""
 "The full name, e.g. \"Australasian Intervarsity Debating Championships "
 "2016\""
-msgstr "الاسم بالكامل ، مثال ذلك \" البطولة الاسترالية للمناظرات 2016  \" "
+msgstr "الاسم الكامل ، مثال على ذلك \" البطولة الاسترالية للمناظرات 2016  \" "
 
 #: tournaments/models.py:34
 msgid "short name"
@@ -113,7 +113,7 @@ msgstr "اسم قصير"
 
 #: tournaments/models.py:35
 msgid "The name used in the menu, e.g. \"Australs 2016\""
-msgstr "أسم يستخدم في القائمة \" استراليا 2016 \" "
+msgstr "الاسم المستخدم في القائمة \" استراليا 2016 \" "
 
 #: tournaments/models.py:37 tournaments/models.py:225
 msgid "sequence number"
@@ -149,11 +149,11 @@ msgstr "مفعل "
 
 #: tournaments/models.py:48 tournaments/models.py:224
 msgid "tournament"
-msgstr "دوري"
+msgstr "البطولة"
 
 #: tournaments/models.py:49
 msgid "tournaments"
-msgstr "دوري"
+msgstr "البطولات"
 
 #. Translators: These are choices for the type of draw a round should have.
 #: tournaments/models.py:201
@@ -166,7 +166,7 @@ msgstr "يدوي"
 
 #: tournaments/models.py:203
 msgid "Round-robin"
-msgstr "جولة"
+msgstr "ذهاب وإياب"
 
 #: tournaments/models.py:204
 msgid "Power-paired"
@@ -187,7 +187,7 @@ msgstr "لا يوجد"
 
 #: tournaments/models.py:218
 msgid "Draft"
-msgstr "مشروع"
+msgstr "مسودة"
 
 #: tournaments/models.py:219
 msgid "Confirmed"
@@ -195,7 +195,7 @@ msgstr "معتمد"
 
 #: tournaments/models.py:220
 msgid "Released"
-msgstr "اعلان "
+msgstr "معلنة"
 
 #: tournaments/models.py:226
 msgid ""
@@ -231,15 +231,15 @@ msgstr "نوع الرسم "
 
 #: tournaments/models.py:234
 msgid "Which draw method to use"
-msgstr "اي قرعة سوف تستخدم "
+msgstr "طريقة القرعة التي سيتم استخدامها"
 
 #: tournaments/models.py:237
 msgid "break category"
-msgstr "الفئة المتأهله "
+msgstr "الفئة المتأهلة"
 
 #: tournaments/models.py:238
 msgid "If elimination round, which break category"
-msgstr "اذا تم التراجع في الجولة ، من الفئة المتأهله "
+msgstr "إذا تم التراجع في الجولة، من الفئة المتأهلة "
 
 #: tournaments/models.py:241
 msgid "draw status"
@@ -247,7 +247,7 @@ msgstr "حالة القرعة "
 
 #: tournaments/models.py:242
 msgid "The status of this round's draw"
-msgstr "حلة القرعة لهذه الجولة "
+msgstr "حالة القرعة لهذه الجولة "
 
 #: tournaments/models.py:245
 msgid "feedback weight"
@@ -274,7 +274,7 @@ msgstr "صامت"
 msgid ""
 "If marked silent, information about this round (such as its results) will "
 "not be shown publicly."
-msgstr "هذه النتيجة صامته ، لا ينبغي اعلن النتيجة للجمهوة "
+msgstr "هذه النتيجة صامتة، (النتيجة مثلا) لا ينبغي إعلانها للجمهور "
 
 #: tournaments/models.py:253
 msgid "motions released"
@@ -298,23 +298,24 @@ msgstr "جولة"
 
 #: tournaments/models.py:259
 msgid "rounds"
-msgstr "جولة"
+msgstr "جولات"
 
 #: tournaments/models.py:272
 msgid ""
 "A round in the elimination stage must have its draw type set to "
 "\"Elimination\"."
-msgstr "جولة من مرحلة التراجع يجب أن تكون القرعة من نوع التراجع "
+msgstr "جولة في مرحلة التراجع يجب أن تكون القرعة من نوع التراجع "
 
 #: tournaments/models.py:275
 msgid ""
 "A round in the preliminary stage cannot have its draw type set to "
 "\"Elimination\"."
-msgstr "جولة من نوع الاولوية لا يمكن ان تمتلك قرعة من نوع التراجع "
+msgstr ""
+"جولة في المرحلة الأولية لا يمكن تعيين نوع القرعة الخاص بها من نوع التراجع"
 
 #: tournaments/models.py:280
 msgid "Elimination rounds must have a break category."
-msgstr "جولات التراجع يجب ان تحضى بتأهل معين "
+msgstr "جولات التراجع يجب أن تحظى بتأهل معين "
 
 #: tournaments/templates/admin/tournaments/tournament/change_form.html:11
 #, python-format
@@ -323,7 +324,7 @@ msgid ""
 "configuration, under <a href=\"%(features_url)s\">Public Features</a>."
 msgstr ""
 "هل تبحث عن رسالة الترحيب؟ \n"
-"تم نقل ذلك إلى انشاء البطولة، تحت خانت <a href=\"%(features_url)s\"> مميزات عامة </a>"
+"تم نقل ذلك إلى إنشاء البطولة، تحت خانة <a href=\"%(features_url)s\"> مميزات عامة </a>"
 
 #: tournaments/templates/admin/tournaments/tournament/change_form.html:15
 msgid ""
@@ -331,11 +332,11 @@ msgid ""
 "configuration, under Public Features."
 msgstr ""
 "هل تبحث عن رسالة الترحيب؟ \n"
-"تم نقل ذلك إلى انشاء البطولة، تحت خانت مميزات عامة "
+"تم نقل ذلك إلى إننشاء البطولة، تحت خانة مميزات عامة "
 
 #: tournaments/templates/assistant_tournament_index.html:4
 msgid "Dashboard"
-msgstr "لوحة القيادة "
+msgstr "لوحة القيادة"
 
 #: tournaments/templates/assistant_tournament_index.html:5
 msgid "Overview"
@@ -344,11 +345,11 @@ msgstr "عرض "
 #: tournaments/templates/assistant_tournament_index.html:8
 #, python-format
 msgid "current round: %(round_name)s, status: %(round_status)s"
-msgstr "الجولة الاولى : %(round_name)s، الحالة : %(round_status)s"
+msgstr "الجولة الأولى : %(round_name)s، الحالة : %(round_status)s"
 
 #: tournaments/templates/blank_site_start.html:20
 msgid "Welcome to Tabbycat!"
-msgstr "مرحبا بك في تابي كات "
+msgstr "مرحبا بك في Tabbycat! "
 
 #: tournaments/templates/blank_site_start.html:23
 msgid ""
@@ -380,7 +381,7 @@ msgstr ""
 
 #: tournaments/templates/blank_site_start.html:40
 msgid "Create Account"
-msgstr "انشاء حساب "
+msgstr "إنشاء حساب "
 
 #: tournaments/templates/configure_tournament.html:5
 #, python-format
@@ -402,7 +403,7 @@ msgstr "ترتيب البطولة %(tournament_name)s"
 
 #: tournaments/templates/create_tournament.html:4
 msgid "Create New Tournament"
-msgstr "انشاء بطولة جديدة "
+msgstr "إنشاء بطولة جديدة "
 
 #: tournaments/templates/create_tournament.html:11
 #, python-format
@@ -414,16 +415,16 @@ msgid ""
 "<a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\"> "
 "Tabbycat licence agreement</a>."
 msgstr ""
-"تابي كات نظام مجاني للاستخدام في المسابقات غير الهادفة للربح وغير الممولة "
-"(على الرغم من تشجيع التبرعات). إذا تم تشغيل بطولتك للربح أو لجمع التبرعات ، "
-"يرجى ملاحظة أن هناك <a href=\"%(donations_url)s\">طلب شراء  </a> لمزيد من "
+"Tabbycat نظام مجاني للاستخدام في المسابقات الغير ربحية وغير الممولة (على "
+"الرغم من تشجيع التبرعات). إذا تم تشغيل بطولتك للربح أو لجمع التبرعات ، يرجى "
+"ملاحظة أن هناك <a href=\"%(donations_url)s\">طلب شراء  </a> لمزيد من "
 "التفاصيل ، راجع <a "
 "href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\">اتفاقية"
 " ترخيص .</a>"
 
 #: tournaments/templates/create_tournament.html:23
 msgid "Just trying out Tabbycat?"
-msgstr "هل تريد الخروج من تابي كات"
+msgstr "هل تريد الخروج من Tabbycat؟"
 
 #: tournaments/templates/create_tournament.html:24
 msgid ""
@@ -433,8 +434,8 @@ msgid ""
 "then be easily deleted later on."
 msgstr ""
 "إذا كنت تتعلم فقط أو تجرب Tabbycat ، فمن الأسهل إنشاء بطولة \"تجريبية\" يتم "
-"إعدادها مسبقًا بمجموعة من (الفرق) (النموذجية) للفرق ، والقضاة ، وأماكن ، وما"
-" شابه ذلك. هذه البطولة التجريبية يمكن بعد ذلك حذفها بسهولة في وقت لاحق."
+"إعدادها مسبقًا بمجموعة من (الفرق) (النموذجية) للفرق ، والحكام، والأماكن ، "
+"وما شابه ذلك. هذه البطولة التجريبية يمكن بعد ذلك حذفها بسهولة في وقت لاحق."
 
 #: tournaments/templates/create_tournament.html:36
 msgid "Load Demo (8-team tournament)"
@@ -446,26 +447,26 @@ msgid ""
 "You already have a tournament set up using this data set. Reloading the data"
 " will delete <strong>all data</strong> from that tourament."
 msgstr ""
-"انت بالفعل لديك بطولة تم أنشائها و تستخدم ، اعادة تحميل البيانات سيسبب بمسح "
-"<strong>كل البيانات </strong>في هذه البطولة "
+"لديك بالفعل دورة تم إعدادها باستخدام مجموعة البيانات هذه. سيؤدي إعادة تحميل "
+"البيانات إلى حذف <strong>كل البيانات </strong>في هذه البطولة"
 
 #: tournaments/templates/create_tournament.html:52
 msgid "Load Demo (24-team tournament)"
-msgstr "تحميل العرض ( بطولة من 24 فريق ) "
+msgstr "تحميل العرض (بطولة من 24 فريق ) "
 
 #: tournaments/templates/create_tournament.html:77
 msgid "Create Tournament"
-msgstr "انشاء بطولة "
+msgstr "إنشاء بطولة "
 
 #: tournaments/templates/create_tournament.html:78
 msgid "Cancel and go back to the site home page"
-msgstr "ألغاء و العودة إلى الصفحة الرئيسية "
+msgstr "إلغاء وعودة إلى الصفحة الرئيسية "
 
 #: tournaments/templates/donations.html:4
 #: tournaments/templates/donations.html:5
 msgctxt "title"
 msgid "Donate to Tabbycat"
-msgstr "التبرع إلى تابي كات "
+msgstr "التبرع إلى Tabbycat"
 
 #: tournaments/templates/donations.html:11
 msgid ""
@@ -525,11 +526,10 @@ msgid ""
 "href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contact"
 " us</a> if you require other options."
 msgstr ""
-"إن تبرعنا المقترح من %(tournament)s ، بناءً على حجمه ، هو 1 دولار %(nteams)s"
-" . أسهل طريقة للتبرع هي <a href=\"http://PayPal.Me/tabbycatproject/0aud\"> "
-"via Paypal </a>، ولكن من فضلك  <a "
+"أسهل طريقة للتبرع هي<a href=\"http://PayPal.Me/tabbycatproject/0aud\"> via "
+"Paypal </a>، يرجى  <a "
 "href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">الاتصال"
-" بنا </a> ."
+" بنا </a> إذا كنت تحتاج إلى خيارات أخرى.ولكن من فضلك."
 
 #: tournaments/templates/fix_debate_teams.html:16
 msgid ""
@@ -537,9 +537,9 @@ msgid ""
 "assigned to each side. When that is not the case, this error occurs. "
 "Usually, this is the result of debates having been manually edited."
 msgstr ""
-"يتطلب Tabbycat دائما ، في كل المناظرة ، يتم تعيين واحد وفريق واحد فقط لكل "
-"جانب. عندما لا يكون هذا هو الحال ، يحدث هذا الخطأ. عادة ، هذا هو نتيجة "
-"المناظرات التي تم تحريرها يدويا."
+"يتطلب Tabbycat دائما ، في كل المناظرة ، تعيين واحد وفريق واحد فقط لكل جانب. "
+"عندما لا يكون هذا هو الحال ، يحدث هذا الخطأ. عادة ، هذا هو نتيجة المناظرات "
+"التي تم تحريرها يدويا."
 
 #: tournaments/templates/fix_debate_teams.html:24
 msgid ""
@@ -551,7 +551,7 @@ msgstr ""
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:33
 msgid "Click the <strong>Fix this debate</strong> button for that debate."
-msgstr "اضغط <strong>تعديل المناظرة </strong> "
+msgstr "اضغط على زر<strong>تعديل المناظرة </strong> في هذه المناظرة"
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:39
@@ -561,15 +561,15 @@ msgid ""
 "find an empty row and use the magnifying glass to select a team. Then set "
 "the new team's <strong>side</strong> accordingly."
 msgstr ""
-"تأكد من أن كل <strong>جانب </strong> التي يجب أن تكون موجودة في المناظرة هو "
-"موجود ولها <strong> فريق </strong> المخصص  إذا كان هناك فريق مفقود، والعثور "
-"على صف فارغ . قم بتعيين فريق جديد و <strong>جانب</strong> له وفقا لذلك."
+"تأكد من أن كل <strong>جانب </strong>  يجب أن يكون موجود في المناظرة وأن يكون"
+" له <strong> فريق </strong> معين.  إذا كان هناك فريق مفقود، يجب العثور على "
+"صف فارغ  وتعيين فريق جديد و <strong>جانب</strong> له مخصص وفقا لذلك."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:48
 msgid ""
 "Ensure that no <strong>side</strong> appears more than once in the debate."
-msgstr "تأكد بعدم ظهور <strong>جانب </strong> اكثر من مره واحدة في المناظرة "
+msgstr "تأكد بعدم ظهور <strong>جانب </strong> أكثر من مره واحدة في المناظرة "
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:55
@@ -582,7 +582,7 @@ msgid ""
 "whatever page you were originally on without the error reoccurring."
 msgstr ""
 "بمجرد إصلاح جميع المناظرات ، يجب أن تكون قادرًا على العودة إلى أي صفحة كنت "
-"في الأصل دون تكرار الخطأ."
+"فيها بالأصل دون تكرار الخطأ."
 
 #: tournaments/templates/fix_debate_teams.html:68
 #, python-format
@@ -591,11 +591,11 @@ msgid ""
 "target=\"_blank\">Debates section of the Edit Database Area</a>."
 msgstr ""
 "يمكنك عرض جميع المناظرات <a href=\"%(edit_debates_url)s\" target=\"_blank\">"
-" مواقع المناظرات و تعديلها </a>"
+" في قسم المناظرات وتعديلها </a>"
 
 #: tournaments/templates/fix_debate_teams.html:82
 msgid "Debate ID"
-msgstr "رقم التعريفي للمناظرة "
+msgstr "الرقم التعريفي للمناظرة "
 
 #: tournaments/templates/fix_debate_teams.html:85
 #, python-format
@@ -604,7 +604,7 @@ msgstr "الفريق ( الفرق ) في %(side_name)s"
 
 #: tournaments/templates/fix_debate_teams.html:90
 msgid "Link to fix this debate"
-msgstr "رابط لتعديل المناظرة "
+msgstr "رابط لتعديل هذه المناظرة "
 
 #: tournaments/templates/fix_debate_teams.html:101
 msgid "No teams"
@@ -612,7 +612,7 @@ msgstr "لا يوجد فرق"
 
 #: tournaments/templates/fix_debate_teams.html:109
 msgid "Multiple teams"
-msgstr "فرق مضاعفة "
+msgstr "فرق متعددة"
 
 #: tournaments/templates/fix_debate_teams.html:120
 msgctxt "button label"
@@ -621,15 +621,15 @@ msgstr "تعديل هذه المناظرة "
 
 #: tournaments/templates/fix_debate_teams.html:127
 msgid "It looks like all debates are in good shape!"
-msgstr "يبدو أن جميع المناظرات في حالة جيدة!"
+msgstr "يبدو أن جميع المناظرات تسير بحالة جيدة!"
 
 #: tournaments/templates/fix_debate_teams.html:128
 msgid ""
 "If you keep getting redirected to this page and you're not sure why, please "
 "contact the developers of Tabbycat."
 msgstr ""
-"إذا استمرت في إعادة توجيهك إلى هذه الصفحة وكنت غير متأكد من السبب، يرجى "
-"الاتصال بمطوري تبيكات."
+"في حالة استمرار إعادة توجيك  إلى هذه الصفحة وكنت غير متأكد من السبب، يرجى "
+"الاتصال بمطوري Tabbycat."
 
 #: tournaments/templates/public_tournament_index.html:5
 #: tournaments/templates/public_tournament_index.html:9
@@ -640,7 +640,7 @@ msgstr "مرحباً في %(tournament_name)s"
 #: tournaments/templates/public_tournament_index.html:18
 msgid ""
 "There is currently no public information available for this tournament."
-msgstr "لا يوجد معلومات عامة لهذه البطولة "
+msgstr "لا يوجد حاليا أي معلومات عامة متاحة لهذه البطولة"
 
 #: tournaments/templates/public_tournament_index.html:36
 msgid "Team Tab"
@@ -670,7 +670,7 @@ msgstr "تاب القضايا "
 #: tournaments/templates/public_tournament_index.html:78
 #: tournaments/templates/public_tournament_index.html:110
 msgid "Sides"
-msgstr "الجانب "
+msgstr "الأطراف"
 
 #: tournaments/templates/public_tournament_index.html:85
 #: tournaments/templates/public_tournament_index.html:170
@@ -684,7 +684,7 @@ msgstr "النتائج"
 
 #: tournaments/templates/public_tournament_index.html:98
 msgid "Divisions"
-msgstr "تقاسيم "
+msgstr "توزيعات"
 
 #: tournaments/templates/public_tournament_index.html:104
 msgid "Motions"
@@ -692,7 +692,7 @@ msgstr "قضايا"
 
 #: tournaments/templates/public_tournament_index.html:116
 msgid "Team Standings"
-msgstr "ترتيب الفرق الحالي"
+msgstr "ترتيب الفرق "
 
 #: tournaments/templates/public_tournament_index.html:123
 #, python-format
@@ -705,7 +705,7 @@ msgstr "الحكام المتأهلون"
 
 #: tournaments/templates/public_tournament_index.html:138
 msgid "Diversity Overview"
-msgstr "عرض التقاسيم"
+msgstr "عرض التوزيع"
 
 #: tournaments/templates/public_tournament_index.html:144
 msgid "Participants"
@@ -717,19 +717,19 @@ msgstr "التغذية الراجعة "
 
 #: tournaments/templates/public_tournament_index.html:156
 msgid "Enter Ballot"
-msgstr "تصويت"
+msgstr "إدخال القرعة"
 
 #: tournaments/templates/public_tournament_index.html:162
 msgid "Enter Feedback"
-msgstr "ادخال التغذية الراجعة "
+msgstr "إدخال التغذية الراجعة "
 
 #: tournaments/templates/public_tournament_index.html:178
 msgid "View All Draws"
-msgstr "عرض جميع القرع"
+msgstr "عرض جميع القرعات"
 
 #: tournaments/templates/public_tournament_index.html:190
 msgid "Adjudication Team"
-msgstr "حكام الفريق "
+msgstr "فريق الحكام"
 
 #: tournaments/templates/public_tournament_index.html:196
 msgid "Tab Team"
@@ -746,9 +746,8 @@ msgid ""
 "<strong>current round</strong> of the tournament "
 "<strong>%(tournament_name)s</strong>."
 msgstr ""
-"لا توجد جولة محددة حاليا. من أجل عمل Tabby Cat ، يرجى تعيين "
-"<strong>الجولةالحالية من البطولة "
-"</strong><strong>%(tournament_name)s</strong>"
+"لا توجد جولة محددة حاليا. من أجل عمل Tabby Cat ، يرجى تعيين <strong>الجولة "
+"الحالية من البطولة </strong><strong>%(tournament_name)s</strong>"
 
 #: tournaments/templates/set_current_round.html:42
 #, python-format
@@ -756,7 +755,7 @@ msgid ""
 "On this page, you can set the <strong>current round</strong> of the "
 "tournament <strong>%(tournament_name)s</strong>."
 msgstr ""
-"من هذه الصفحة يمنك<strong> متابعة الجولة "
+"من هذه الصفحة يمكنك<strong> متابعة الجولة "
 "</strong><strong>%(tournament_name)s</strong>"
 
 #: tournaments/templates/set_current_round.html:53
@@ -766,8 +765,8 @@ msgid ""
 "need to <a href=\"%(round_changelist_url)s\">add rounds and associate them "
 "with this tournament</a> before you can set the current round."
 msgstr ""
-"البطولة <strong>%(tournament_name)s</strong> لا تمتلك جول ، تحتاح إلى <a "
-"href=\"%(round_changelist_url)s\"> اضافة جولات إلى البطولة </a>قبل متابعة "
+"البطولة <strong>%(tournament_name)s</strong> لا تمتلك جولات ، تحتاح إلى <a "
+"href=\"%(round_changelist_url)s\"> إضافة جولات إلى البطولة </a>قبل متابعة "
 "سير الجولة "
 
 #: tournaments/templates/set_current_round.html:84
@@ -797,19 +796,19 @@ msgstr "منطقة عامة لـ<strong>%(tn)s</strong>"
 msgid ""
 "It looks like there aren't any tournaments on this site. Would you like to "
 "create one?"
-msgstr "يبدو أنه لا تتوفر اي بطولة في الموقع ، هل تريد أنشاء واحده ؟ "
+msgstr "يبدو أنه لا تتوفر أي بطولة في هذا الموقع، هل تريد إنشاء واحده ؟ "
 
 #: tournaments/templates/site_index.html:55
 msgid "There are currently no tournaments set up on this site."
-msgstr "لا يوجد اي تتبع للبطولة في الموقع "
+msgstr "لا يوجد أي تتبع للبطولة في الموقع "
 
 #: tournaments/templates/site_index.html:68
 msgid "All Draws by Venue"
-msgstr "جميع القرعة من خلال القاعات "
+msgstr "جميع القرعات من خلال القاعات "
 
 #: tournaments/templates/site_index.html:72
 msgid "All Draws by School"
-msgstr "جميع القرع من خلال المدرسة "
+msgstr "جميع القرعات من خلال المدرسة "
 
 #: tournaments/templates/site_index.html:76
 msgid "All Teams and Divisions"
@@ -821,7 +820,7 @@ msgstr "بطولة جديدة "
 
 #: tournaments/templates/site_index.html:89
 msgid "Edit Database Area"
-msgstr "تعديل البيانات "
+msgstr "تعديل قاعدة البيانات "
 
 #: tournaments/templates/site_index.html:98
 #, python-format
@@ -831,11 +830,11 @@ msgstr "تغيير كلمة السر %(user)s"
 #: tournaments/templates/site_index.html:102
 #, python-format
 msgid "Log Out (%(user)s)"
-msgstr "خروج %(user)s"
+msgstr "تسجيل الخروج %(user)s"
 
 #: tournaments/templates/site_index.html:108
 msgid "Log In as Admin"
-msgstr "دخول المدير "
+msgstr "تسجيل دخول المدير "
 
 #: tournaments/templates/tournament_index.html:8
 #, python-format
@@ -891,17 +890,17 @@ msgstr "استخدم المستورد البسيط لإضافة بياناتك �
 #: tournaments/templates/tournament_index.html:49
 #, python-format
 msgid "Go to the checkins area to begin creating a draw for %(round_name)s"
-msgstr "انتقل إلى منطقة الدخول لبدء السحب لـ%(round_name)s"
+msgstr "انتقل إلى منطقة الدخول لبدء القرعة لـ%(round_name)s"
 
 #: tournaments/templates/tournament_index.html:57
 #, python-format
 msgid "Go to the draw area to allocate adjudicators for %(round_name)s"
-msgstr "انتقل إلى منطقة السحب لبدء توزيع الحكام لـ%(round_name)s"
+msgstr "انتقل إلى منطقة القرعة لبدء توزيع الحكام لـ%(round_name)s"
 
 #: tournaments/templates/tournament_index.html:65
 #, python-format
 msgid "Go to the results area to begin entering ballots for %(round_name)s"
-msgstr "انتقل إلى منطقة النتائج لبدء ادخل النتائج لـ%(round_name)s"
+msgstr "انتقل إلى منطقة النتائج لبدء إدخال النتائج لـ%(round_name)s"
 
 #. Translators: abbreviation for "grand final"
 #: tournaments/utils.py:13
@@ -928,7 +927,7 @@ msgstr "الدور الربع النهائي "
 
 #: tournaments/utils.py:17
 msgid "QF"
-msgstr "د.ن"
+msgstr "ر.ن"
 
 #. Translators: abbreviation for "octofinals"
 #: tournaments/utils.py:19
@@ -967,11 +966,11 @@ msgstr "معارضة"
 
 #: tournaments/utils.py:30
 msgid "affirmative team"
-msgstr "موالاة"
+msgstr "فريق الموالاة"
 
 #: tournaments/utils.py:31
 msgid "negative team"
-msgstr "معارضة"
+msgstr "فريق المعارضة"
 
 #: tournaments/utils.py:32
 msgid "Aff"
@@ -1067,35 +1066,35 @@ msgstr ""
 
 #: tournaments/utils.py:70
 msgid "opening government"
-msgstr ""
+msgstr "الموالاة الأول"
 
 #: tournaments/utils.py:71
 msgid "opening opposition"
-msgstr ""
+msgstr "الموالاة الثاني"
 
 #: tournaments/utils.py:72
 msgid "closing government"
-msgstr ""
+msgstr "المعارضة الأول"
 
 #: tournaments/utils.py:73
 msgid "closing opposition"
-msgstr ""
+msgstr "المعارضة الثاني"
 
 #: tournaments/utils.py:74
 msgid "opening government team"
-msgstr "فريق فتح القضية "
+msgstr "فريق الموالاة الأول"
 
 #: tournaments/utils.py:75
 msgid "opening opposition team"
-msgstr "فريق اعداد القضية "
+msgstr "فريق الموالاة الثاني"
 
 #: tournaments/utils.py:76
 msgid "closing government team"
-msgstr "فريق اغلاق القضية "
+msgstr "فريق المعارضة الأول"
 
 #: tournaments/utils.py:77
 msgid "closing opposition team"
-msgstr "فريق اغلاق المعارضة "
+msgstr "فريق المعارضة الثاني"
 
 #: tournaments/utils.py:78
 msgctxt "BP position"
@@ -1132,7 +1131,7 @@ msgstr "ج%(number)d"
 #. when we don't know what it's called)
 #: tournaments/utils.py:111
 msgid "Unknown break round"
-msgstr "الجولات المتأهله غير معروفة "
+msgstr "الجولات المتأهلة غير معروفة "
 
 #: tournaments/utils.py:111
 msgid "UBR"
@@ -1146,7 +1145,7 @@ msgid ""
 " break."
 msgstr ""
 "تم تقديم الجولة الحالية إلى %(round)s  لقد وصلت إلى نهاية الجولات التمهيدية!"
-" تهانينا! الخطوة التالية هي المتأهلين."
+" تهانينا! الخطوة التالية هي للمتأهلين."
 
 #: tournaments/views.py:158
 #, python-format
@@ -1156,4 +1155,4 @@ msgstr "لقد تقدمت في الجولة %(round)s ، مبروك !"
 #: tournaments/views.py:163
 msgid ""
 "Whoops! Could not advance round, because there's no round after this round!"
-msgstr "لا يمكنك المتبعة ، لانه لا يوجد اي جولة بعد هذه الجولة "
+msgstr "لا يمكنك المتابعة ، لأنه لا يوجد أي جولة بعد هذه الجولة "

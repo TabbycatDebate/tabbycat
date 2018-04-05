@@ -56,24 +56,24 @@ msgstr "الرقم المتسلسل "
 
 #: breakqual/models.py:17
 msgid "The order in which the categories are displayed"
-msgstr "الترتيب التي يتم فيها عرض القضايا"
+msgstr "الترتيب الذي يتم به عرض الفئات "
 
 #: breakqual/models.py:19
 msgid "break size"
-msgstr "المتأهل "
+msgstr "حجم فئة المتأهلين "
 
 #: breakqual/models.py:20
 msgid "Number of breaking teams in this category"
-msgstr "الفرق المتأهله "
+msgstr "عدد الفرق المتأهلة في هذه الفئة "
 
 #: breakqual/models.py:22
 msgid "is general"
-msgstr "عام"
+msgstr "بصورة عامة"
 
 #: breakqual/models.py:23
 msgid ""
 "True if most teams eligible for this category, e.g. Open, False otherwise"
-msgstr "صحيح إذا كانت معظم الفرق مؤهلة لهذه الفئة"
+msgstr "صحيح إذا كانت معظم الفرق مؤهلة لهذه الفئة، غير صحيح في أي حالة أخرى "
 
 #: breakqual/models.py:25
 msgid "priority"
@@ -85,9 +85,8 @@ msgid ""
 "precedence; teams can break into multiple categories if and only if they all"
 " have the same priority"
 msgstr ""
-"إذا كان الفريق ينقسم إلى فئات متعددة، تكون الأولوية للأرقام ذات الأولوية "
-"الأعلى؛ يمكن للفرق أن تنقسم إلى فئات متعددة إذا وفقط إذا كانت جميعها لها نفس"
-" الأولوية"
+"إذا تأهل الفريق  إلى فئات متعددة، تكون الأولوية للأرقام ذات الأولوية الأعلى؛"
+" يمكن للفرق أن تتأهل إلى فئات متعددة فقط إذا كان لجميعها نفس الأولوية"
 
 #: breakqual/models.py:31
 msgid "Standard"
@@ -115,13 +114,13 @@ msgstr ""
 
 #: breakqual/models.py:40
 msgid "rule"
-msgstr "المستوى"
+msgstr "قاعدة"
 
 #: breakqual/models.py:41
 msgid ""
 "Rule for how the break is calculated (most tournaments should use "
 "\"Standard\")"
-msgstr "قاعدة لكيفية حساب الفاصل"
+msgstr "قاعدة كيفية حساب درجات التأهل"
 
 #: breakqual/models.py:44 breakqual/models.py:100
 msgid "breaking teams"
@@ -129,11 +128,11 @@ msgstr "الفرق المتأهله"
 
 #: breakqual/models.py:53 breakqual/models.py:71
 msgid "break category"
-msgstr "الفئة المتأهله "
+msgstr "فئة التأهل"
 
 #: breakqual/models.py:54
 msgid "break categories"
-msgstr "الفئة المتأهله "
+msgstr "فئات التأهل"
 
 #: breakqual/models.py:73
 msgid "team"
@@ -141,15 +140,15 @@ msgstr "فريق"
 
 #: breakqual/models.py:75
 msgid "rank"
-msgstr "المستوى"
+msgstr "الترتيب"
 
 #: breakqual/models.py:77
 msgid "break rank"
-msgstr "كسر المستوى "
+msgstr "ترتيب التأهل"
 
 #: breakqual/models.py:86
 msgid "Capped"
-msgstr "التتويج "
+msgstr "محدود"
 
 #: breakqual/models.py:87
 msgid "Ineligible"
@@ -157,23 +156,23 @@ msgstr "غير مؤهل"
 
 #: breakqual/models.py:88
 msgid "Different break"
-msgstr "التأهل المختلفون "
+msgstr "تأهل مختلف"
 
 #: breakqual/models.py:89
 msgid "Disqualified"
-msgstr "غير مؤهل"
+msgstr "غير متأهل"
 
 #: breakqual/models.py:90
 msgid "Lost coin toss"
-msgstr "خسر "
+msgstr "خسر القرعة"
 
 #: breakqual/models.py:91
 msgid "Withdrawn"
-msgstr "قرعة "
+msgstr "إنسحب"
 
 #: breakqual/models.py:94
 msgid "remark"
-msgstr "اعادة العلامات"
+msgstr "اعادة وضع العلامات"
 
 #: breakqual/models.py:95
 msgid "Used to explain why an otherwise-qualified team didn't break"
@@ -181,12 +180,12 @@ msgstr ""
 
 #: breakqual/models.py:99
 msgid "breaking team"
-msgstr "المتأهلون"
+msgstr "الفرق المتأهلة "
 
 #: breakqual/templates/breaking_index.html:4
 #: breakqual/templates/breaking_index.html:5
 msgid "Breaks"
-msgstr "المتأهلون"
+msgstr "التأهل"
 
 #: breakqual/templates/breaking_index.html:10
 msgid ""
@@ -198,7 +197,7 @@ msgstr ""
 
 #: breakqual/templates/breaking_index.html:29
 msgid "Edit Teams' Eligibility"
-msgstr "تعديل الفرق المتأهلة "
+msgstr "تعديل  إستحقاق الفرق للتأهل"
 
 #: breakqual/templates/breaking_index.html:44
 #: breakqual/templates/breaking_teams.html:4
@@ -214,11 +213,11 @@ msgstr ""
 
 #: breakqual/templates/breaking_index.html:59
 msgid "Teams Eligible"
-msgstr "الفرق مؤهلة"
+msgstr "الفرق المستحقة"
 
 #: breakqual/templates/breaking_index.html:71
 msgid "Breaking"
-msgstr "المتأهلون"
+msgstr "متأهل"
 
 #: breakqual/templates/breaking_index.html:79
 msgid "Excluded"
@@ -230,11 +229,11 @@ msgstr "مؤهل"
 
 #: breakqual/templates/breaking_index.html:99
 msgid "Mark teams as eligible"
-msgstr "درجات الفرق المتأهلة "
+msgstr "حدد الفرق ك \" مستحقة\""
 
 #: breakqual/templates/breaking_index.html:104
 msgid "Generate this break"
-msgstr "التأهل العام"
+msgstr "إنشئ التأهل"
 
 #: breakqual/templates/breaking_index.html:107
 msgid "View this break"
@@ -242,11 +241,11 @@ msgstr "عرض الفرق المتأهلة "
 
 #: breakqual/templates/breaking_teams.html:9
 msgid "publicly visible"
-msgstr "عرض على الجميع "
+msgstr "معروض على الجميع "
 
 #: breakqual/templates/breaking_teams.html:11
 msgid "not publicly visible"
-msgstr "لا تعرض "
+msgstr "غير معروض للجميع"
 
 #: breakqual/templates/breaking_teams.html:27
 msgid "Delete and Regenerate All Breaks"
@@ -254,7 +253,7 @@ msgstr "مسح و اعادة جيمع التأهلات "
 
 #: breakqual/templates/breaking_teams.html:36
 msgid "Generate the Break for All Categories"
-msgstr "جميع الفرق و التصانيف "
+msgstr "إنشئ تأهل لجميع الفرق و الفئات"
 
 #: breakqual/templates/breaking_teams.html:48
 #, python-format
@@ -354,11 +353,11 @@ msgstr ""
 
 #: breakqual/views.py:132
 msgid "Eligible for"
-msgstr "التأهل من "
+msgstr "مستحق ل"
 
 #: breakqual/views.py:133
 msgid "Edit Remark"
-msgstr "تعديل الدرجات "
+msgstr "تعديل الملاحظات"
 
 #: breakqual/views.py:147
 #, python-format
@@ -376,7 +375,7 @@ msgstr ""
 
 #: breakqual/views.py:159
 msgid "Changes to breaking team remarks saved."
-msgstr "تعديل درجات الفريق المتأهله "
+msgstr "تم حفظ تعديل درجات الفريق المتأهله "
 
 #: breakqual/views.py:183
 #, python-format
@@ -390,4 +389,4 @@ msgstr "الحكام المتأهلون"
 
 #: breakqual/views.py:220
 msgid "Break Eligibility"
-msgstr "المتأهلون"
+msgstr "إستحقاق التأهل"

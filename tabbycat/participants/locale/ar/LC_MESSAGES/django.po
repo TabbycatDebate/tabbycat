@@ -38,7 +38,7 @@ msgstr[5] ""
 
 #: participants/admin.py:133 participants/admin.py:200
 msgid "Delete URL key"
-msgstr "حذف مفتاح الرابط "
+msgstr "حذف  عنوان URL"
 
 #: participants/admin.py:195
 #, python-format
@@ -66,7 +66,7 @@ msgstr "منطقة "
 
 #: participants/models.py:25
 msgid "regions"
-msgstr "المناظق "
+msgstr "المناطق "
 
 #. Translators: Change the examples to institutions native to your language;
 #. keep consistent between strings
@@ -80,7 +80,7 @@ msgstr ""
 
 #: participants/models.py:45
 msgid "code"
-msgstr "كود "
+msgstr "الشفرة"
 
 #. Translators: Change the examples to institutions native to your language;
 #. keep consistent between strings
@@ -108,7 +108,7 @@ msgstr "البطولة"
 #. second/foreign language", not "English"
 #: participants/models.py:76
 msgid "Name to be displayed, e.g., \"Novice\", \"ESL\""
-msgstr "الاسم المطلوب عرضه، على سبيل المثال، \"إسل\""
+msgstr "الاسم الذي سيتم عرضه ، على سبيل المثال ، \"المبتدئ\" و \"ESL\""
 
 #: participants/models.py:78
 msgid "slug"
@@ -118,7 +118,7 @@ msgstr "اختصار"
 #. second/foreign language", not "English"
 #: participants/models.py:80
 msgid "Slug for URLs, e.g., \"novice\", \"esl\""
-msgstr "أختصار "
+msgstr "تطبيق Slug لعناوين URL ، على سبيل المثال ، \"novice\" و \"esl\""
 
 #: participants/models.py:82
 msgid "sequence number"
@@ -126,11 +126,11 @@ msgstr "رقم التسلسل "
 
 #: participants/models.py:83
 msgid "The order in which the categories are displayed"
-msgstr "الترتيب التي يتم فيها عرض القضايا"
+msgstr "الترتيب الذي يتم فيها عرض القضايا"
 
 #: participants/models.py:85
 msgid "limit"
-msgstr "اقصى حد "
+msgstr "أقصى حد "
 
 #: participants/models.py:86
 msgid ""
@@ -142,7 +142,7 @@ msgstr ""
 
 #: participants/models.py:88
 msgid "public"
-msgstr "عمومي"
+msgstr "عام"
 
 #: participants/models.py:89
 msgid ""
@@ -156,11 +156,11 @@ msgstr "نقاط المتحدث"
 
 #: participants/models.py:96 participants/models.py:372
 msgid "speaker categories"
-msgstr "نقاط المتحدث"
+msgstr "نقاط المتحدثين"
 
 #: participants/models.py:111
 msgid "e-mail address"
-msgstr "البريد الالكتروني"
+msgstr "البريد الإلكتروني"
 
 #: participants/models.py:113
 msgid "phone"
@@ -174,7 +174,7 @@ msgstr "مستخدم مجهول"
 msgid ""
 "Anonymous persons will have their name and team redacted on public tab "
 "releases"
-msgstr "سيتم تحديد أسماء و الفرق  المجهلون في التاب العامة"
+msgstr "سيتم تحديد أسماء وفريق المجهولين في إصدارات علامات التبويب العامة"
 
 #: participants/models.py:120
 msgid "notes"
@@ -186,7 +186,7 @@ msgstr "ذكر "
 
 #: participants/models.py:126
 msgid "female"
-msgstr "انثى"
+msgstr "أنثى"
 
 #: participants/models.py:127
 msgid "other"
@@ -200,7 +200,7 @@ msgstr "الجنس"
 msgid ""
 "Gender is displayed in the adjudicator allocation interface, and nowhere "
 "else"
-msgstr "سيتم عرض الجنس للحكم ، "
+msgstr "سيتم عرض الجنس في واجهة تخصيص الحكام"
 
 #: participants/models.py:132
 msgid "pronoun"
@@ -211,8 +211,8 @@ msgid ""
 "If printing ballots using Tabbycat, there is the option to pre-print "
 "pronouns"
 msgstr ""
-"في حالة استخدام تابي كات لطباعة ورقة النتائج سيتم استخدم خيار الضمير قبل "
-"الطباعة "
+"في حالة طباعة بطاقات الاقتراع باستخدام Tabbycat ، هناك خيار للضمائر قبل "
+"الطباعة"
 
 #: participants/models.py:136
 msgid "person"
@@ -220,7 +220,7 @@ msgstr "شخص "
 
 #: participants/models.py:137
 msgid "persons"
-msgstr "الاشخاص "
+msgstr "الأشخاص "
 
 #: participants/models.py:156
 msgid "full name/suffix"
@@ -294,7 +294,7 @@ msgstr "مفتاح الرابط "
 
 #: participants/models.py:184
 msgid "break categories"
-msgstr "الفئة المتأهله "
+msgstr "الفئة المتأهلة"
 
 #: participants/models.py:194
 msgid "none"
@@ -318,7 +318,7 @@ msgstr "نوع"
 
 #: participants/models.py:202
 msgid "emoji"
-msgstr "تعابير "
+msgstr "رمز تعبيري"
 
 #: participants/models.py:216 participants/models.py:370
 msgid "team"
@@ -412,7 +412,7 @@ msgstr "الفوز بعد المناظرة "
 
 #: participants/tables.py:33
 msgid "Speaker scores<br>(in speaking order)"
-msgstr "درجات المتحدث <br>(_____)"
+msgstr "درجات المتحدث<br> (حسب ترتيب التحدث)"
 
 #: participants/tables.py:33
 msgid "Speaks"
@@ -427,7 +427,7 @@ msgstr "في هذه الجولة ( %(round_name)s )"
 #: participants/templates/adjudicator_record.html:20
 #: participants/templates/team_record.html:23
 msgid "(Not Released to Public)"
-msgstr "( لم يتم الاعلان ) "
+msgstr "( لم يتم الإعلان ) "
 
 #: participants/templates/adjudicator_record.html:38
 #, python-format
@@ -520,7 +520,7 @@ msgstr "قضايا المناظرة %(seq)s :"
 #: participants/templates/adjudicator_record.html:137
 #: participants/templates/team_record.html:126
 msgid "The motion(s) for this round haven't yet been released."
-msgstr "قصية ( قضايا ) هذه المناظرة لم يتم استلامها "
+msgstr "القضية ( القضايا ) لهذه المناظرة لم يتم استلامها "
 
 #: participants/templates/adjudicator_record.html:148
 #, python-format
@@ -530,7 +530,7 @@ msgstr "%(adj_name)s لن يحكم هذه الجولة "
 #: participants/templates/adjudicator_record.html:159
 #: participants/templates/team_record.html:145
 msgid "The draw for this round hasn't yet been released."
-msgstr "لم يتم اعلان القرعة حتى الان "
+msgstr "لم يتم إعلان القرعة حتى الآن "
 
 #: participants/templates/adjudicator_record.html:176
 #: participants/templates/team_record.html:160

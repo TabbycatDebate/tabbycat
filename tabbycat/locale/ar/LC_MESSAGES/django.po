@@ -24,11 +24,11 @@ msgstr "عربي"
 
 #: settings.py:44
 msgid "English"
-msgstr "انجليزي "
+msgstr "إنجليزي "
 
 #: settings.py:45
 msgid "Spanish"
-msgstr "اسباني "
+msgstr "أسباني "
 
 #: settings.py:46
 msgid "French"
@@ -51,16 +51,16 @@ msgstr ""
 #: templates/admin/style_guide.html:160
 msgctxt "page title"
 msgid "Form Title"
-msgstr "من  الموضوع "
+msgstr "عنوان النموذج"
 
 #: templates/admin/style_guide.html:161
 msgid "Sub Title Title"
-msgstr "الموضوع "
+msgstr "العنوان الفرعي"
 
 #: templates/admin/style_guide.html:197 templates/registration/login.html:61
 msgctxt "button"
 msgid "Log In"
-msgstr "دخول "
+msgstr "تسجيل دخول"
 
 #: templates/admin/style_guide.html:198 templates/registration/login.html:62
 msgctxt "button"
@@ -82,16 +82,16 @@ msgstr ""
 
 #: templates/components/form-errors.html:4
 msgid "Whoops! There was an error with one or more fields."
-msgstr "خلال في الحقول "
+msgstr "حدث خطأ في حقل واحد أو أكثر"
 
 #: templates/components/formset.html:23
 msgid "Save and Add More"
-msgstr "حفظ و اضافة المزيد"
+msgstr "حفظ وإضافة المزيد"
 
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
 #: templates/errors/public_403.html:4 templates/errors/public_403.html:6
 msgid "Permission Denied (403)"
-msgstr "تم رفض "
+msgstr "تم الرفض (403)"
 
 #: templates/errors/assistant_403.html:13
 #, python-format
@@ -134,7 +134,7 @@ msgstr ""
 
 #: templates/footer.html:27
 msgid "Learn more about donating."
-msgstr "تعلم المزيد حول النظام"
+msgstr "إعلم المزيد حول التبرع"
 
 #: templates/footer.html:31
 #, python-format
@@ -186,7 +186,7 @@ msgstr "فيس بوك"
 
 #: templates/footer.html:95
 msgid "Set Up A Copy"
-msgstr "اعداد نسخة "
+msgstr "إعداد نسخة "
 
 #: templates/footer.html:109
 msgid "Change Language"
@@ -231,16 +231,16 @@ msgstr "رابط خاص "
 
 #: templates/nav/admin_nav.html:79
 msgid "Edit Database"
-msgstr "تعديل البيانات "
+msgstr "تعديل قاعدة البيانات "
 
 #: templates/nav/admin_nav.html:89 templates/nav/public_nav.html:138
 msgid "Sides"
-msgstr "الجانب "
+msgstr "الجانبين"
 
 #: templates/nav/admin_nav.html:101 templates/nav/admin_nav.html:154
 #: templates/nav/public_nav.html:128
 msgid "Divisions"
-msgstr "تقاسيم "
+msgstr "تقسيمات"
 
 #: templates/nav/admin_nav.html:110
 msgid "Feedback"
@@ -256,7 +256,7 @@ msgstr "الفرق"
 
 #: templates/nav/admin_nav.html:158
 msgid "Speakers"
-msgstr "متحدث"
+msgstr "متحدثين"
 
 #: templates/nav/admin_nav.html:163
 msgid "Replies"
@@ -265,7 +265,7 @@ msgstr ""
 #: templates/nav/admin_nav.html:168
 #, python-format
 msgid "%(category_name)s Speakers"
-msgstr "%(category_name)sالمتحدث "
+msgstr "%(category_name)sالمتحدثين "
 
 #: templates/nav/admin_nav.html:174 templates/nav/public_nav.html:133
 msgid "Motions"
@@ -273,7 +273,7 @@ msgstr "قضايا"
 
 #: templates/nav/admin_nav.html:177 templates/nav/public_nav.html:148
 msgid "Diversity"
-msgstr "تقاسيم "
+msgstr "تقسيمات"
 
 #: templates/nav/admin_nav.html:190
 msgid "Breaks"
@@ -286,19 +286,19 @@ msgstr ""
 
 #: templates/nav/admin_nav.html:220 templates/nav/top_nav_base.html:92
 msgid "Log Out"
-msgstr "الخروج"
+msgstr "تسجيل الخروج"
 
 #: templates/nav/assistant_nav.html:5
 msgid "Enter Results"
-msgstr "ادخال النتيجة "
+msgstr "إدخال النتيجة "
 
 #: templates/nav/assistant_nav.html:11
 msgid "Check In Ballots"
-msgstr "تاكد من النتيجة "
+msgstr "تأكد من النتيجة "
 
 #: templates/nav/assistant_nav.html:17 templates/nav/public_nav.html:168
 msgid "Enter Feedback"
-msgstr "ادخال التغذية الراجعة "
+msgstr "إدخال التغذية الراجعة "
 
 #: templates/nav/assistant_nav.html:24
 msgid "Display/Print Draw"
@@ -323,11 +323,11 @@ msgstr "نتائج خطابات الرد"
 
 #: templates/nav/public_nav.html:34
 msgid "Adjudicator Tab"
-msgstr "تاب المحكمين "
+msgstr "نتائج المحكمين "
 
 #: templates/nav/public_nav.html:39
 msgid "Motions Tab"
-msgstr "تاب القضايا "
+msgstr "نتائج القضايا "
 
 #: templates/nav/public_nav.html:48
 #, python-format
@@ -360,7 +360,7 @@ msgstr "التغذية الراجعة "
 
 #: templates/nav/public_nav.html:163
 msgid "Enter Ballot"
-msgstr "تصويت"
+msgstr "إدخال التصويت"
 
 #: templates/nav/round_panel.html:28
 msgid "Check-Ins"
@@ -405,11 +405,11 @@ msgstr "دخول "
 #: templates/registration/login.html:29
 msgctxt "page title"
 msgid "Log in to Tabbycat"
-msgstr "دخول إلى تاب"
+msgstr "دخول إلى Tabbycat"
 
 #: templates/registration/login.html:37
 msgid "Your username and password didn't match."
-msgstr "أسم المستخدم و كلمة المرور لا يتطابقان "
+msgstr "اسم المستخدم و كلمة المرور لا يتطابقان "
 
 #: templates/registration/login.html:46
 msgid ""
@@ -443,7 +443,7 @@ msgstr "تغيير كلمة السر "
 
 #: templates/registration/password_change_form.html:20
 msgid "Please enter your old password, then enter a new one."
-msgstr "الرجاء ادخل كلمة السر القديمة و ثم الجديد "
+msgstr "الرجاء إدخال كلمة السر القديمة ومن ثم الجديدة"
 
 #: templates/registration/password_change_form.html:25
 #: templates/registration/password_reset_confirm.html:38
@@ -463,7 +463,7 @@ msgstr "تم تغيير كلمة السر "
 
 #: templates/registration/password_reset_complete.html:16
 msgid "Your password has been reset."
-msgstr "لقد تم اعادة تنصيب كلمة السر "
+msgstr "لقد تم إعادة تنصيب كلمة السر "
 
 #. Translators: This text appears on a button that takes the user to the login
 #. page after a password reset.
@@ -475,23 +475,23 @@ msgstr "الذهاب إلى صفحة الدخول "
 #: templates/registration/password_reset_confirm.html:14
 msgctxt "page title"
 msgid "Password Reset Confirmation"
-msgstr "اعادة انشاء كلمة مرور "
+msgstr "إعادة إنشاء كلمة المرور "
 
 #: templates/registration/password_reset_confirm.html:26
 msgid "Please enter a new password (twice):"
-msgstr "الرجاء ادخل كلمة السر ( مرتين ) "
+msgstr "الرجاء إدخال كلمة السر ( مرتين ) "
 
 #: templates/registration/password_reset_confirm.html:44
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr "تم ارسال رابط تغيير كلمة السر . الرجاء نحديث كلمة السر"
+msgstr "تم إرسال رابط تغيير كلمة السر . الرجاء تحديث كلمة السر"
 
 #: templates/registration/password_reset_done.html:4
 #: templates/registration/password_reset_done.html:5
 msgctxt "page title"
 msgid "Password reset e-mail sent"
-msgstr "تم ارسال كلمة السر إلى الايميل "
+msgstr "تم إرسال كلمة السر إلى البريد الإلكتروني"
 
 #: templates/registration/password_reset_done.html:16
 msgid ""
@@ -539,16 +539,16 @@ msgstr ""
 #: templates/registration/password_reset_form.html:24
 msgctxt "page title"
 msgid "Password Reset"
-msgstr "اعادة تعيين كلمة السر "
+msgstr "إعادة تعيين كلمة السر "
 
 #: templates/registration/password_reset_form.html:27
 msgid ""
 "Enter your e-mail address below, and we'll e-mail you a password reset link."
-msgstr "اكتب ايميلك ليتم ارسال رابط تغيير كلمة السر "
+msgstr "اكتب بريدك الإلكتروني ليتم إرسال رابط تغيير كلمة السر "
 
 #: templates/registration/password_reset_form.html:34
 msgid "Please enter a valid e-mail address."
-msgstr "الرجاء ادخل الايميل "
+msgstr "الرجاء إدخال البريد الإلكتروني "
 
 #: templates/registration/password_reset_form.html:39
 msgid "E-mail address"
