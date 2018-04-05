@@ -3,42 +3,8 @@
 {% tournament_side_names tournament 'abbr' as side_names %}
 
 <div class="{% if pref.motion_vetoes_enabled %}col-sm-6{% else %}col-sm-12{% endif %}">
+
   <div class="row">
-
-    {% if motion.ndebates > 0 %}
-
-      <div class="col text-left">
-        <span class="text-aff d-block d-md-inline pr-md-3">
-          {% blocktrans trimmed with side=side_names.0 count count=motion.aff_wins %}
-            {{ count }} {{ side }} win
-          {% plural %}
-            {{ count }} {{ side }} wins
-          {% endblocktrans %}
-        </span>
-        <span class="text-neg d-block d-md-inline pr-md-3">
-          {% blocktrans trimmed with side=side_names.1 count count=motion.neg_wins %}
-            {{ count }} {{ side }} win
-          {% plural %}
-            {{ count }} {{ side }} wins
-          {% endblocktrans %}
-        </span>
-      </div>
-
-      <div class="col-auto" data-toggle="tooltip" title="{{ motion.χ2_info }}">
-        <span class="text-muted">{{ motion.χ2_label }}</span>
-      </div>
-
-    {% else %}
-
-      <div class="col text-muted">
-        {% trans "No teams debated this motion" %}
-      </div>
-
-    {% endif %}
-
-  </div>
-
-  <div class="row pb-3">
     <div class="col">
 
       <div class="progress">
@@ -56,45 +22,46 @@
 
     </div>
   </div>
+
+  <div class="row pb-3 mt-2">
+    {% if motion.ndebates > 0 %}
+
+      <div class="col text-left h6">
+        <span class="text-aff pr-1 d-md-inline d-block">
+          {% blocktrans trimmed with side=side_names.0 count count=motion.aff_wins %}
+            {{ count }} {{ side }} win
+          {% plural %}
+            {{ count }} {{ side }} wins
+          {% endblocktrans %}
+        </span>
+        <span class="text-neg pr-1 d-md-inline d-block">
+          {% blocktrans trimmed with side=side_names.1 count count=motion.neg_wins %}
+            {{ count }} {{ side }} win
+          {% plural %}
+            {{ count }} {{ side }} wins
+          {% endblocktrans %}
+        </span>
+      </div>
+
+      <div class="col-auto h6 text-muted" data-toggle="tooltip" title="{{ motion.χ2_info }}">
+        {{ motion.χ2_label }}
+      </div>
+
+    {% else %}
+
+      <div class="col text-muted h6">
+        {% trans "No teams debated this motion" %}
+      </div>
+
+    {% endif %}
+  </div>
+
 </div>
 
 {% if pref.motion_vetoes_enabled %}
   <div class="col-sm-6 col">
 
     <div class="row">
-      {% if motion.aff_vetoes or motion.neg_vetoes %}
-
-        <div class="col text-left">
-          <span class="text-aff d-block d-md-inline pr-md-3">
-            {% blocktrans trimmed with side=side_names.0 count count=motion.aff_vetoes %}
-              {{ count }} {{ side }} veto
-            {% plural %}
-              {{ count }} {{ side }} vetoes
-            {% endblocktrans %}
-          </span>
-          <span class="text-neg d-block d-md-inline pr-md-3">
-            {% blocktrans trimmed with side=side_names.1 count count=motion.neg_vetoes %}
-              {{ count }} {{ side }} veto
-            {% plural %}
-              {{ count }} {{ side }} vetoes
-            {% endblocktrans %}
-          </span>
-        </div>
-
-        <div class="col-auto" data-toggle="tooltip" title="{{ motion.veto_χ2_info }}">
-          <span class="text-muted">{{ motion.veto_χ2_label }}</span>
-        </div>
-
-      {% else %}
-
-        <div class="col text-muted">
-          {% trans "No teams vetoed this motion" %}
-        </div>
-
-      {% endif %}
-    </div>
-
-    <div class="row pb-3">
       <div class="col">
         <div class="progress">
           {% if motion.aff_veto_percentage %}
@@ -114,6 +81,39 @@
         </div>
 
       </div>
+    </div>
+
+    <div class="row pb-3 mt-2">
+      {% if motion.aff_vetoes or motion.neg_vetoes %}
+
+        <div class="col text-left h6">
+          <span class="text-aff pr-1 d-md-inline d-block">
+            {% blocktrans trimmed with side=side_names.0 count count=motion.aff_vetoes %}
+              {{ count }} {{ side }} veto
+            {% plural %}
+              {{ count }} {{ side }} vetoes
+            {% endblocktrans %}
+          </span>
+          <span class="text-neg pr-1 d-md-inline d-block">
+            {% blocktrans trimmed with side=side_names.1 count count=motion.neg_vetoes %}
+              {{ count }} {{ side }} veto
+            {% plural %}
+              {{ count }} {{ side }} vetoes
+            {% endblocktrans %}
+          </span>
+        </div>
+
+        <div class="col-auto h6 text-muted" data-toggle="tooltip" title="{{ motion.veto_χ2_info }}">
+          {{ motion.veto_χ2_label }}
+        </div>
+
+      {% else %}
+
+        <div class="col text-muted text-right h6">
+          {% trans "No teams vetoed this motion" %}
+        </div>
+
+      {% endif %}
     </div>
 
   </div>
