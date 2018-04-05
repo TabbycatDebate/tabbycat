@@ -1,12 +1,11 @@
 import logging
-from statistics import mean, StatisticsError
+from statistics import mean
 
-from django.db.models import Avg, Count, Prefetch, Q
+from django.db.models import Count, Prefetch, Q
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
-from draw.models import DebateTeam
 from results.models import SpeakerScoreByAdj
 
 logger = logging.getLogger(__name__)
@@ -82,43 +81,12 @@ def get_feedback_overview(t, adjudicators):
     ).annotate(debates=Count('debateadjudicator'))
     annotated_adjs_by_id = {adj.id: adj for adj in annotated_adjs}
 
-    adjs_with_scores = adjudicators.filter(
-        debateadjudicator__speakerscorebyadj__position__lte=t.last_substantive_position,
-    ).annotate(
-        avg_score=Avg('debateadjudicator__speakerscorebyadj__score'),
-    )
-    avg_scores = {adj.id: adj.avg_score for adj in adjs_with_scores}
-
     for adj in adjudicators:
         annotated_adj = annotated_adjs_by_id[adj.id]
         adj.debates = annotated_adj.debates
         adj.feedback_data = feedback_stats(annotated_adj, rounds)
-        adj.avg_score = avg_scores.get(adj.id, None)  # might not exist, because of the filter
-        adj.avg_margin = compute_avg_margin(annotated_adj)
 
     return adjudicators
-
-
-def compute_avg_margin(adj):
-    """Computes the average margin given by an adjudicator. Assumes
-    adj.debateadj_for_rounds is populated as in get_feedback_overview()."""
-
-    margins = []
-    for da in adj.debateadjs_for_rounds:
-        aff_total = 0
-        neg_total = 0
-        for ssba in da.speakerscorebyadj_set.all():
-            if ssba.debate_team.side == DebateTeam.SIDE_AFF:
-                aff_total += ssba.score
-            elif ssba.debate_team.side == DebateTeam.SIDE_NEG:
-                neg_total += ssba.score
-        margin = abs(aff_total - neg_total)
-        margins.append(margin)
-
-    try:
-        return mean(margins)
-    except StatisticsError:
-        return None
 
 
 def feedback_stats(adj, rounds):

@@ -35,7 +35,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         overall_header = {
             'key': 'score',
-            'title': _('Score'),
+            'icon': 'trending-up',
             'tooltip': 'Current weighted score',
         }
         overall_data = [{
@@ -48,7 +48,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_test_score_columns(self, adjudicators, editable=False):
         test_header = {
             'key': 'test-score',
-            'icon': 'clipboard',
+            'icon': 'file',
             'tooltip': 'Test score result',
         }
         if editable:
@@ -70,8 +70,8 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         nprelims = self.tournament.prelim_rounds().count()
         feedback_head = {
             'key': 'feedback',
-            'title': _('Feedback'),
-            'tooltip': 'Hover over the data points to show the average score received in that round'
+            'title': _('Feedback Per Round'),
+            'tooltip': 'Hover over the data points to show the average score received in that round',
         }
         feedback_graph_data = [{
             'graphData': adj.feedback_data,
@@ -88,7 +88,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'icon': 'zoom-in'
         }
         link_cell = [{
-            'text': 'View<br>Feedback',
+            'text': 'View',
             'class': 'view-feedback',
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})
         } for adj in adjudicators]
@@ -114,17 +114,6 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         adjudications_cell = [{'text': adj.debates} for adj in adjudicators]
         self.add_column(adjudications_head, adjudications_cell)
-
-        avgs_head = {
-            'key': 'avgs',
-            'icon': 'crosshair',
-            'tooltip': 'Average Margin (top) and Average Score (bottom)'
-        }
-        avgs_cell = [{
-            'text': "%0.1f<br>%0.1f" % (adj.avg_margin if adj.avg_margin else 0, adj.avg_score if adj.avg_margin else 0),
-            'tooltip': 'Average Margin (top) and Average Score (bottom)'
-        } for adj in adjudicators]
-        self.add_column(avgs_head, avgs_cell)
 
     def add_feedback_progress_columns(self, progress_list, key="P"):
 

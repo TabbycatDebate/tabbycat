@@ -12,7 +12,7 @@ var d3 = require("d3");
 export default {
   props: {
     cellData: Object,
-    width: { type: Number, default: 320 },
+    width: { type: Number, default: 425 },
     height: { type: Number, default: 55 },
     padding: { type: Number, default: 6 },
   },
