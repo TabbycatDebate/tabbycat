@@ -138,7 +138,7 @@ class BaseDrawManager:
         rrseq = self.get_rrseq()
 
         self._populate_side_history(teams)
-        if options.get("side_allocatons") == "preallocated":
+        if options.get("side_allocations") == "preallocated":
             self._populate_team_side_allocations(teams)
 
         generator_type = self.get_generator_type()

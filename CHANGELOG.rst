@@ -2,12 +2,20 @@
 Change Log
 ==========
 
+2.0.7
+-----
+*Release date: Unreleased*
+
+- Fixed an issue preventing draws with pre-allocate sides generating
+
+
 2.0.6
 -----
 *Release date: 20 March 2018*
 
 - Added reminder to add own-institution conflicts in the Edit Database area
 - Other minor fixes
+
 
 2.0.5
 -----
