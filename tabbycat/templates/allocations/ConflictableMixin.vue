@@ -35,7 +35,7 @@ export default {
     }
   },
   computed: {
-    hasHistoryConflict: function() {
+    hasHistoryConflict: function () {
       // Used for the inline template element showing how long ago the seen was
       if (this.isConflicted.hover.histories) {
         return this.isConflicted.hover.histories
@@ -45,15 +45,15 @@ export default {
         return false
       }
     },
-    conflictableType: function() {
+    conflictableType: function () {
       if (!_.isUndefined(this.team)) { return 'team' }
       if (!_.isUndefined(this.adjudicator)) { return 'adjudicator' }
     },
-    conflictable: function() {
+    conflictable: function () {
       if (!_.isUndefined(this.team)) { return this.team }
       if (!_.isUndefined(this.adjudicator)) { return this.adjudicator }
     },
-    conflictingInstitutionIDs: function() {
+    conflictingInstitutionIDs: function () {
       if (this.conflictableType === 'team') {
         return [this.conflictable.institution.id]
       } else {
@@ -61,13 +61,13 @@ export default {
         return _.map(this.conflictable.conflicts.clashes.institution, 'id')
       }
     },
-    conflictsStatus: function() {
+    conflictsStatus: function () {
       var conflictsCSS = 'conflictable'
       if (this.isHovering) {
         conflictsCSS += " vue-is-hovering"
       }
-      _.forEach(this.isConflicted, function(types, hoverOrPanel) {
-        _.forEach(types, function(status, type) {
+      _.forEach(this.isConflicted, function (types, hoverOrPanel) {
+        _.forEach(types, function (status, type) {
           // Iterate over panel and hover states
           if (status !== false) {
             conflictsCSS += ' ' + hoverOrPanel + '-' + type
@@ -96,7 +96,7 @@ export default {
         }
       }
     },
-    showHoverConflicts: function() {
+    showHoverConflicts: function () {
       this.isHovering = true
       if (this.verboseDebugMode) {
         console.debug('Conflictable showHoverConflicts() for',
@@ -105,7 +105,7 @@ export default {
       // Issue conflict events; typically on beginning hover
       var self = this
       this.forEachConflict(this.conflictable.conflicts,
-        function(conflict, type, clashOrHistory) {
+        function (conflict, type, clashOrHistory) {
           self.sendConflict(conflict, type, type, 'hover', clashOrHistory,
                             self.conflictableType)
         }
@@ -114,12 +114,12 @@ export default {
         this.issueInstitutionalConflictForTeam(true)
       }
     },
-    hideHoverConflicts: function() {
+    hideHoverConflicts: function () {
       this.isHovering = false
       // Issue hide conflict events; typically on ending hover
       var self = this
       this.forEachConflict(this.conflictable.conflicts,
-        function(conflict, type, clashOrHistory) {
+        function (conflict, type, clashOrHistory) {
           self.unsendConflict(conflict, type, type, 'hover', clashOrHistory,
                               self.conflictableType)
         }
@@ -128,7 +128,7 @@ export default {
         this.issueInstitutionalConflictForTeam(false)
       }
     },
-    setConflicts: function(id, hoverOrPanel, clashOrHistory,
+    setConflicts: function (id, hoverOrPanel, clashOrHistory,
                                eventType, conflictType, state, issuerType) {
       // Receive a conflict message from elsewhere and activate the conflict
       if (id !== this.conflictable.id) {
@@ -147,7 +147,7 @@ export default {
       }
       this.isConflicted[hoverOrPanel][conflictType] = state
     },
-    setInstitutionConflicts: function(id, hoverOrPanel, clashOrHistory,
+    setInstitutionConflicts: function (id, hoverOrPanel, clashOrHistory,
                                       eventType, conflictType, state, issuerType) {
       if (this.isHovering === true) {
         return // Don't show institutional conflicts on self (when hovering)
@@ -163,7 +163,7 @@ export default {
         this.isConflicted[hoverOrPanel]['institution'] = state
       }
     },
-    resetConflicts: function(hoverOrPanel) {
+    resetConflicts: function (hoverOrPanel) {
       this.isConflicted[hoverOrPanel]['team'] = false
       this.isConflicted[hoverOrPanel]['histories'] = false
       this.isConflicted[hoverOrPanel]['adjudicator'] = false

@@ -26,12 +26,12 @@
 export default {
   props: { roundInfo: Object, },
   methods: {
-    resetAutoPrioritiesModal: function(button) {
+    resetAutoPrioritiesModal: function (button) {
       $('#confirmAutoPrioritiseModal').modal('hide')
       $.fn.resetButton("#aapb")
       $.fn.resetButton("#aapl")
     },
-    createAutoPriorities: function(type) {
+    createAutoPriorities: function (type) {
       var self = this
       $.fn.loadButton("#aapb")
       $.fn.loadButton("#aapl")

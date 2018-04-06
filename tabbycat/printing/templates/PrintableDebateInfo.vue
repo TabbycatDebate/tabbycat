@@ -101,7 +101,7 @@ export default {
   props: ['ballot', 'roundInfo'],
   components: {PrintableTeamScores},
   methods: {
-    getAdjudicatorInstitution: function(debateAdjudicator) {
+    getAdjudicatorInstitution: function (debateAdjudicator) {
       var institution = debateAdjudicator.adjudicator.institution
       if (!_.isUndefined(institution) && institution !== null) {
         return institution.code
@@ -110,12 +110,12 @@ export default {
       }
     },
   },
-  mounted: function() {
+  mounted: function () {
     var height = 65
     if (this.roundInfo.hasMotions && this.roundInfo.hasVetoes) {
       height = 85 // Blow out the height to the big veto box has space
     }
-    $(".barcode-placeholder").each(function() {
+    $(".barcode-placeholder").each(function () {
       var code = $(this).attr("id")
       $(this).JsBarcode(code, {
         width: 3,
@@ -129,9 +129,9 @@ export default {
     })
   },
   computed: {
-    panellistsExcludingSelf: function() {
+    panellistsExcludingSelf: function () {
       var ballotSource = this.ballot.author
-      var authoringPanellist = _.find(this.ballot.debateAdjudicators, function(panellist) {
+      var authoringPanellist = _.find(this.ballot.debateAdjudicators, function (panellist) {
         return panellist.adjudicator.name === ballotSource
       });
       if (!_.isUndefined(authoringPanellist)) {
@@ -140,7 +140,7 @@ export default {
         return this.ballot.debateAdjudicators
       }
     },
-    motionsAccountingForBlanks: function() {
+    motionsAccountingForBlanks: function () {
       if (this.roundInfo.motions.length > 0) {
         return this.roundInfo.motions
       } else {

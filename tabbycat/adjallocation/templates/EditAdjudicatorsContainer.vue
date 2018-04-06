@@ -93,6 +93,9 @@
 </template>
 
 <script>
+import _ from 'lodash'
+import percentile from 'stats-percentile'
+
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
 import AutoImportanceLogicMixin from '../../templates/allocations/AutoImportanceLogicMixin.vue'
@@ -104,8 +107,6 @@ import DebatePanel from '../../templates/allocations/DebatePanel.vue'
 import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
-import percentile from 'stats-percentile'
-import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
@@ -113,25 +114,25 @@ export default {
   components: { AllocationActions, AllocationIntroModal, DebateImportance,
                 DebatePanel, DraggableAdjudicator },
   props: { showIntroModal: Boolean },
-  created: function() {
+  created: function () {
     // Watch for global conflict highlights
     this.$eventHub.$on('show-conflicts-for', this.setOrUnsetConflicts)
   },
   computed: {
-    unallocatedAdjsByOrder: function() {
+    unallocatedAdjsByOrder: function () {
       if (this.roundInfo.roundIsPrelim === true) {
         return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
       } else {
         return _.sortBy(this.unallocatedItems, ['name'])
       }
     },
-    adjudicatorsById: function() {
+    adjudicatorsById: function () {
       // Override DrawContainer() method to include unallocated
       return _.keyBy(this.adjudicators.concat(this.unallocatedItems), 'id')
     },
-    percentileThresholds: function() {
+    percentileThresholds: function () {
       // For determining feedback rankings
-      var allScores = _.map(this.adjudicatorsById, function(adj) {
+      var allScores = _.map(this.adjudicatorsById, function (adj) {
         return parseFloat(adj.score)
       }).sort()
       var thresholds = []
@@ -145,7 +146,7 @@ export default {
       thresholds.push({'grade': "F", 'cutoff': 0, 'percentile': 10})
       return thresholds
     },
-    adjPositions: function() {
+    adjPositions: function () {
       return this.roundInfo.adjudicatorPositions // Convenience
     },
   },
@@ -154,7 +155,7 @@ export default {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move
         var thisDebate = this.debatesById[payload.debate]
-        var fromPanellist = _.find(thisDebate.debateAdjudicators, function(da) {
+        var fromPanellist = _.find(thisDebate.debateAdjudicators, function (da) {
           return da.adjudicator.id === payload.adjudicator;
         })
         if (assignedPosition === fromPanellist.position) {

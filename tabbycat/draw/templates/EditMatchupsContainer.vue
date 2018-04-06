@@ -111,22 +111,22 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import TeamMovingMixin from '../../templates/ajax/TeamMovingMixin.vue'
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import DraggableTeam from '../../templates/draganddrops/DraggableTeam.vue'
 import DrawSidesStatus from '../../templates/draw/DrawSidesStatus.vue'
 import FindDebateTeamMixin from '../../templates/draw/FindDebateTeamMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [TeamMovingMixin, DrawContainerMixin, FindDebateTeamMixin],
   components: { DraggableTeam, DrawSidesStatus },
   props: ['saveSidesStatusUrl'],
   computed: {
-    unallocatedTeamsByWins: function() {
+    unallocatedTeamsByWins: function () {
       return _.reverse(_.sortBy(this.unallocatedItems, ['wins']))
     },
-    allTeamsById: function() {
+    allTeamsById: function () {
       return _.keyBy(this.teams.concat(this.unallocatedItems), 'id')
     },
   },

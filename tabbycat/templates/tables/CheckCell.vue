@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import AjaxMixin from '../ajax/AjaxMixin.vue'
 import _ from 'lodash'
+import AjaxMixin from '../ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],

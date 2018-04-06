@@ -6,8 +6,8 @@ import _ from 'lodash'
 
 export default {
   computed: {
-    highlightsIdentity: function() {
-      var classString = ""
+    highlightsIdentity: function () {
+      var classString = ''
       var region = this.highlightableObject.region
       if (!_.isUndefined(region) && region !== null) {
         classString += " region-" + region.class
@@ -16,14 +16,14 @@ export default {
       if (!_.isUndefined(gender) && gender !== null) {
         classString += gender
       }
-      _.forEach(this.highlightableObject.break_categories, function(category) {
+      _.forEach(this.highlightableObject.break_categories, function (category) {
         classString += " category-" + category.class
       });
       return classString
     },
-    highlightsStatus: function() {
+    highlightsStatus: function () {
       var highlights = this.highlightableObject.highlights
-      var classString = ""
+      var classString = ''
       if (highlights.region === true) {
         classString += " region-display"
       }
@@ -40,16 +40,16 @@ export default {
     },
   },
   methods: {
-    getGender: function(adjorteam) {
+    getGender: function (adjorteam) {
       if (!_.isUndefined(adjorteam.gender) && adjorteam.gender !== null) {
         return " gender-" + adjorteam.gender
       }
       if (!_.isUndefined(adjorteam.speakers)) {
-        var class_string = ""
-        var men = _.filter(adjorteam.speakers, function(s) {
+        var class_string = ''
+        var men = _.filter(adjorteam.speakers, function (s) {
           return s.gender === "M"
         })
-        var notmen = _.filter(adjorteam.speakers, function(s) {
+        var notmen = _.filter(adjorteam.speakers, function (s) {
           return s.gender === "F" || s.gender === "O"
         })
         if (notmen.length > 0 || men.length > 0) {
@@ -59,7 +59,7 @@ export default {
 
         return class_string
       }
-      return "" // Fallback
+      return '' // Fallback
     }
   }
 }

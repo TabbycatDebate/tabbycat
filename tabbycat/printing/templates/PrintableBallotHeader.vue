@@ -35,13 +35,13 @@ import _ from 'lodash'
 export default {
   props: ['ballot', "roundInfo"],
   methods: {
-    authorPositionWithSoloCheck: function(position) {
+    authorPositionWithSoloCheck: function (position) {
       if (position === 'c') {
-        var panellists = _.filter(this.ballot.debateAdjudicators, function(da) {
+        var panellists = _.filter(this.ballot.debateAdjudicators, function (da) {
           return da.position === "p";
         })
         if (!_.isUndefined(panellists) && panellists.length > 0) {
-          var voters = _.filter(this.ballot.debateAdjudicators, function(da) {
+          var voters = _.filter(this.ballot.debateAdjudicators, function (da) {
             return da.position !== "t";
           })
           return "Chair for Panel of " + voters.length

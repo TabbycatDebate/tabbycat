@@ -1,7 +1,7 @@
 <script>
+import _ from 'lodash'
 // Mainly just handles formatting the object for the slideover
 import SlideOverDiversityMixin from './SlideOverDiversityMixin.vue'
-import _ from 'lodash'
 
 export default {
   data: function () {
@@ -9,7 +9,7 @@ export default {
   },
   mixins: [SlideOverDiversityMixin],
   computed: {
-    ratingsFeature: function() {
+    ratingsFeature: function () {
       var ratings = [{ 'title': this.adjudicator.score + ' Feedback Score',
                        'icon': 'wifi' }]
       // Percentile rankings only on Edit Adjudicators page
@@ -23,7 +23,7 @@ export default {
       }
       return ratings
     },
-    genderFeature: function() {
+    genderFeature: function () {
       var gender = [
         { 'title': this.adjudicator.name + this.genderBrackets(this.adjudicator.gender),
           'class': 'gender-display gender-' + this.adjudicator.gender,
@@ -31,12 +31,12 @@ export default {
       ]
       return gender
     },
-    annotateDataForSlideOver: function() {
+    annotateDataForSlideOver: function () {
       return this.adjudicator
     },
   },
   methods: {
-    formatForSlideOver: function(subject) {
+    formatForSlideOver: function (subject) {
       return {
         'tiers': [{
           'features': [

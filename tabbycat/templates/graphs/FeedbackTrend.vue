@@ -17,17 +17,17 @@ export default {
     padding: { type: Number, default: 6 },
   },
   computed: {
-    graphData: function() {
+    graphData: function () {
       return this.cellData.graphData
     }
   },
-  mounted: function() {
+  mounted: function () {
     if (typeof this.graphData !== 'undefined' && this.graphData.length > 0) {
       initChart(this); // Only init if we have some info
     }
   },
   watch: {
-    graphData: function() {
+    graphData: function () {
       if (typeof this.graphData !== 'undefined' && this.graphData.length > 0) {
         // Just remove and remake it as I cbf figuring out the in place update
         var element = $(this.$el).children(".d3-graph")[0]
@@ -40,18 +40,18 @@ export default {
 
 // returns slope, intercept and r-square of the line
 function leastSquares(xSeries, ySeries) {
-  var reduceSumFunc = function(prev, cur) { return prev + cur; };
+  var reduceSumFunc = function (prev, cur) { return prev + cur; };
 
   var xBar = xSeries.reduce(reduceSumFunc) * 1.0 / xSeries.length;
   var yBar = ySeries.reduce(reduceSumFunc) * 1.0 / ySeries.length;
 
-  var ssXX = xSeries.map(function(d) { return Math.pow(d - xBar, 2); })
+  var ssXX = xSeries.map(function (d) { return Math.pow(d - xBar, 2); })
     .reduce(reduceSumFunc);
 
-  var ssYY = ySeries.map(function(d) { return Math.pow(d - yBar, 2); })
+  var ssYY = ySeries.map(function (d) { return Math.pow(d - yBar, 2); })
     .reduce(reduceSumFunc);
 
-  var ssXY = xSeries.map(function(d, i) { return (d - xBar) * (ySeries[i] - yBar); })
+  var ssXY = xSeries.map(function (d, i) { return (d - xBar) * (ySeries[i] - yBar); })
     .reduce(reduceSumFunc);
 
   var slope = ssXY / ssXX;
@@ -110,7 +110,7 @@ function initChart(vueContext){
   // Create series for regression
   var xLabels = vueContext.graphData.map(function (d) { return d['x']; })
   var xSeries = d3.range(1, xLabels.length + 1);
-	var ySeries = vueContext.graphData.map(function(d) { return parseFloat(d['y']); });
+	var ySeries = vueContext.graphData.map(function (d) { return parseFloat(d['y']); });
 	var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
@@ -127,10 +127,10 @@ function initChart(vueContext){
     trendline.enter()
       .append("line")
       .attr("class", "trendline")
-      .attr("x1", function(d) { return xScale(d[0]); })
-      .attr("y1", function(d) { return yScale(d[1]); })
-      .attr("x2", function(d) { return xScale(d[2]); })
-      .attr("y2", function(d) { return yScale(d[3]); })
+      .attr("x1", function (d) { return xScale(d[0]); })
+      .attr("y1", function (d) { return yScale(d[1]); })
+      .attr("x2", function (d) { return xScale(d[2]); })
+      .attr("y2", function (d) { return yScale(d[3]); })
       .attr("stroke", "#999")
       .attr("stroke-width", 2);
   }
@@ -142,8 +142,8 @@ function initChart(vueContext){
     .attr("cx", function (d) { return xScale (d.x); })
     .attr("cy", function (d) { return yScale (d.y); })
     .attr("r", 5) // Size of circle
-    .attr("class", function(d) { return "hoverable position-display d3-hover-black " + d.position_class})
-    .on("mouseover", function(d, i) {
+    .attr("class", function (d) { return "hoverable position-display d3-hover-black " + d.position_class})
+    .on("mouseover", function (d, i) {
       div.transition()
           .duration(200)
           .style("opacity", .9);
@@ -151,7 +151,7 @@ function initChart(vueContext){
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY - 28) + "px");
     })
-    .on("mouseout", function(d, i) {
+    .on("mouseout", function (d, i) {
       div.transition()
         .duration(500)
         .style("opacity", 0);

@@ -17,19 +17,19 @@ import AjaxMixin from '../ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],
-  data: function() {
+  data: function () {
     return { showTooltip: false, internalImportance: null, initiallySet: false  }
   },
   props: {
     importance: Number, id: Number
   },
-  created: function() {
+  created: function () {
     // We initially sync the internalValue with the value passed in by the parent
     this.internalImportance = this.importance;
     this.initiallySet = true
   },
   computed: {
-    importanceDescription: function() {
+    importanceDescription: function () {
       if (this.internalImportance === 2) {
         return "V.I.P."
       } else if (this.internalImportance === 1) {
@@ -44,14 +44,14 @@ export default {
     }
   },
   watch: {
-    'internalImportance': function() {
+    'internalImportance': function () {
       if (this.internalImportance !== this.importance) {
         // Only update if an actual change has occured
         this.$eventHub.$emit('update-importance', [this.id],
                                                   [this.internalImportance])
       }
     },
-    'importance': function() {
+    'importance': function () {
       if (this.internalImportance !== this.importance) {
         // Only update if an actual change has occured
         this.internalImportance = this.importance

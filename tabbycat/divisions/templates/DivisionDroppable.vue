@@ -41,7 +41,7 @@ export default {
     hasEvenNumbers: function () {
       return (this.teams.length % 2) == 1;
     },
-    venueCategory: function() {
+    venueCategory: function () {
       return this.division.venue_category
     }
   },

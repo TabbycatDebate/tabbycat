@@ -74,29 +74,29 @@ export default {
     roundInfo: Object
   },
   computed: {
-    team: function() {
+    team: function () {
       if (this.dt.team === null) {
         console.log('null')
       } else {
         return this.dt.team
       }
     },
-    teamName: function() {
+    teamName: function () {
       if (this.roundInfo.teamCodes === true) {
         return this.team.code_name
       } else {
         return this.team.short_name
       }
     },
-    speakersList: function() {
-      var speakersList = ""
-      _.forEach(this.dt.team.speakers, function(speaker) {
+    speakersList: function () {
+      var speakersList = ''
+      _.forEach(this.dt.team.speakers, function (speaker) {
         speakersList += speaker.name + ", "
       })
       return speakersList.slice(0, -2);
     },
-    titleCasePosition: function() {
-      var upperWords = _.map(_.words(this.dt.side_name), function(word) {
+    titleCasePosition: function () {
+      var upperWords = _.map(_.words(this.dt.side_name), function (word) {
         return _.upperFirst(word)
       })
       return _.join(upperWords, " ")

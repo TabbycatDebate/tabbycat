@@ -64,10 +64,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 import TablesContainer from './TablesContainer.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin],
@@ -79,14 +79,14 @@ export default {
     this.$eventHub.$on('toggle-checked', this.toggleChecked)
   },
   computed: {
-    checked: function() {
+    checked: function () {
       var checked = {}
-      _.forEach(this.categories, function(category) {
+      _.forEach(this.categories, function (category) {
         checked[category.id] = {}
       })
       // Map Checks in table to a dictionary keyed by id
-      _.forEach(this.tablesData[0].data, function(row) {
-        _.forEach(row, function(column) {
+      _.forEach(this.tablesData[0].data, function (row) {
+        _.forEach(row, function (column) {
           if (!_.isUndefined(column.type)) {
             var break_data = {'type': column.type, 'checked': column.checked }
             checked[column.type][column.id] = break_data;
@@ -97,22 +97,22 @@ export default {
     },
   },
   methods: {
-    saveChecks: function(type) {
+    saveChecks: function (type) {
       var payload = this.checked[type]
       var message = "Checks for " + payload.id + " as " + payload.checked
       this.ajaxSave(this.urls.save, payload, message, null, null, null)
     },
-    toggleChecked: function(id, checked, type) {
+    toggleChecked: function (id, checked, type) {
       this.saveChecks(type)
     },
-    copyFromPrevious: function() {
-      _.forEach(this.tablesData[0].data, function(row) {
+    copyFromPrevious: function () {
+      _.forEach(this.tablesData[0].data, function (row) {
         row[0].checked = row[0].prev
       })
       this.saveChecks(0)
     },
-    setFromCheckIns: function(match) {
-      _.forEach(this.tablesData[0].data, function(row) {
+    setFromCheckIns: function (match) {
+      _.forEach(this.tablesData[0].data, function (row) {
         if (match) {
           row[0].checked = row[0].checked_in
         } else {
@@ -124,9 +124,9 @@ export default {
       })
       this.saveChecks(0)
     },
-    massSelect: function(state, type) {
-      _.forEach(this.tablesData[0].data, function(row) {
-        _.forEach(row, function(column) {
+    massSelect: function (state, type) {
+      _.forEach(this.tablesData[0].data, function (row) {
+        _.forEach(row, function (column) {
           if (column.type === type) {
             column.checked = state
           }

@@ -38,7 +38,7 @@ export default {
     PrintableFeedback, PrintableDebateInfo, PrintableScoresheet
   },
   computed: {
-    showScoring: function() {
+    showScoring: function () {
       if (this.kind === 'Scoresheet') {
         return true
       } else {

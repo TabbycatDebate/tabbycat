@@ -20,7 +20,7 @@ export default {
     'adjudicators': Array
   },
   methods: {
-    getToolTipForPerson: function(entity) {
+    getToolTipForPerson: function (entity) {
       var tt = entity.name + ", a " + entity.type
       if (entity.institution === null) {
         tt += ' of no institutional affiliation'
@@ -29,7 +29,7 @@ export default {
       }
       if (entity.speakers !== null) {
         tt += ' with speakers '
-        _.forEach(entity.speakers, function(speaker) {
+        _.forEach(entity.speakers, function (speaker) {
           var status = speaker.status ? 'Present; id=' : 'Absent; id='
           tt += speaker.name + ' (' + status + ' ' + speaker.identifier[0] + ') '
         })
@@ -38,9 +38,9 @@ export default {
       }
       return tt
     },
-    annotatePeople: function(peopleType) {
+    annotatePeople: function (peopleType) {
       var events = this.events
-      _.forEach(this[peopleType], function(person) {
+      _.forEach(this[peopleType], function (person) {
         person["status"] = _.find(events, ['identifier', person.identifier[0]])
         if (_.isUndefined(person["status"])) {
           person["status"] = false
@@ -50,13 +50,13 @@ export default {
     }
   },
   computed: {
-    annotatedSpeakers: function() {
+    annotatedSpeakers: function () {
       return this.annotatePeople('speakers')
     },
-    annotatedTeams: function() {
+    annotatedTeams: function () {
       var teams = []
       var groupedSpeakers = _.groupBy(this.annotatedSpeakers, 'team')
-      _.forEach(groupedSpeakers, function(teamSpeakers, teamName) {
+      _.forEach(groupedSpeakers, function (teamSpeakers, teamName) {
         var team = {
           'name': teamName, 'id': teamName, 'locked': false, 'type': 'Team',
           'speakers': teamSpeakers, 'institution': teamSpeakers[0].institution,
@@ -66,7 +66,7 @@ export default {
         if (_.filter(team.speakers, ['status', false]).length > 0) {
           team['status'] = false
         } else {
-          var lastCheckedIn = _.sortBy(team.speakers, [function(speaker) {
+          var lastCheckedIn = _.sortBy(team.speakers, [function (speaker) {
             return speaker.status.time
           }]);
           team['status'] = { 'time': lastCheckedIn[0].status.time }
@@ -75,39 +75,39 @@ export default {
       })
       return teams
     },
-    annotatedDebaters: function() {
+    annotatedDebaters: function () {
       if (this.speakerGroupings['Show Speakers']) {
         return this.annotatedSpeakers
       } else {
         return this.annotatedTeams
       }
     },
-    annotatedAdjudicators: function() {
+    annotatedAdjudicators: function () {
       return this.annotatePeople('adjudicators')
     },
-    peopleByType: function() {
+    peopleByType: function () {
       var entities = []
       if (this.filterByType['All'] || this.filterByType['Adjudicators']) {
-        _.forEach(this.annotatedAdjudicators, function(adjudicator) {
+        _.forEach(this.annotatedAdjudicators, function (adjudicator) {
           entities.push(adjudicator)
         })
       }
       if (this.filterByType['All'] || this.filterByType['Debaters']) {
-        _.forEach(this.annotatedDebaters, function(speakerOrTeam) {
+        _.forEach(this.annotatedDebaters, function (speakerOrTeam) {
           entities.push(speakerOrTeam)
         })
       }
       return entities
     },
-    peopleByInstitution: function() {
-      var sortedByInstitution = _.sortBy(this.entitiesSortedByName, function(p) {
+    peopleByInstitution: function () {
+      var sortedByInstitution = _.sortBy(this.entitiesSortedByName, function (p) {
         if (p.institution === null) {
           return "Unaffiliated"
         } else {
           return p.institution.code
         }
       })
-      return _.groupBy(sortedByInstitution, function(p) {
+      return _.groupBy(sortedByInstitution, function (p) {
         if (p.institution === null) {
           return "Unaffiliated"
         } else {

@@ -20,7 +20,7 @@ export default {
     padding: { type: Number, default: 10 },
     graphData: { type: Array,  default: false }
   },
-  mounted: function() {
+  mounted: function () {
     initChart(this.padding, this.height, this.graphData)
   },
   watch: {
@@ -67,10 +67,10 @@ function initChart(pad, height, data) {
     .offset(d3.stackOffsetNone);
 
   var layers = stack(data);
-    xScale.domain(data.map(function(d) {
+    xScale.domain(data.map(function (d) {
       return parseDate(d.time); // x-scale derives from time sequence
     }));
-    yScale.domain([0, d3.max(data, function(d) {
+    yScale.domain([0, d3.max(data, function (d) {
       return d.total; // y-scale is total ballots reported
     })]).nice();
 
@@ -78,20 +78,20 @@ function initChart(pad, height, data) {
     .data(layers)
     .enter().append("g")
     .attr("class", "layer")
-    .style("fill", function(d, i) {
+    .style("fill", function (d, i) {
       return colors[d.key];
     });
 
   layer.selectAll("rect")
-    .data(function(d) { return d; })
+    .data(function (d) { return d; })
     .enter().append("rect")
-      .attr("x", function(d) {
+      .attr("x", function (d) {
         return xScale(parseDate(d.data.time));
       })
-      .attr("y", function(d) {
+      .attr("y", function (d) {
         return yScale(d[1]);
       })
-      .attr("height", function(d) {
+      .attr("height", function (d) {
         return yScale(d[0]) - yScale(d[1]);
       })
       .attr("width", xScale.bandwidth());

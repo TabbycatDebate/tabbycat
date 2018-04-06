@@ -11,32 +11,32 @@ export default {
         data: dataPayload,
         contentType: "application/json",
         dataType: "json",
-        error: function(hxr, textStatus, errorThrown) {
+        error: function (hxr, textStatus, errorThrown) {
           if (showErrorModal === true) {
             self.ajaxError(message, hxr.responseText, textStatus, errorThrown)
           }
           if (failFunction !== null) {
-            failFunction(payload, returnPayload)
+            failfunction (payload, returnPayload)
           }
         },
-        success: function(data, textStatus, xhr) {
+        success: function (data, textStatus, xhr) {
           if (JSON.parse(data)["status"] === 503) {
             // A straight up 503 response doesn't hit error function
-            this.error("", "", "503 Service Unavailable")
+            this.error('', '', "503 Service Unavailable")
           } else {
             self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
             console.debug("AJAX: Saved " + message)
             console.debug('DEBUG: JSON ajaxSave success data:', data)
             var dataResponse = JSON.parse(data)
             if (completeFunction !== null) {
-              completeFunction(dataResponse, payload, returnPayload)
+              completefunction (dataResponse, payload, returnPayload)
             }
           }
         },
         timeout: 15000 // sets timeout to 15 seconds
       });
     },
-    ajaxError: function(message, responseText, textStatus, errorThrown) {
+    ajaxError: function (message, responseText, textStatus, errorThrown) {
       $('#modalAlert').modal();
       $('#modalAlert').find('.modal-header').text('Save Failed: ' + errorThrown)
       $('#modalAlert').find('.modal-header').addClass('text-danger')

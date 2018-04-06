@@ -35,28 +35,28 @@
 export default {
   props: { roundInfo: Object, },
   methods: {
-    resetAutoAllocationModal: function(button) {
+    resetAutoAllocationModal: function (button) {
       $('#confirmAutoAllocationModal').modal('hide')
       $.fn.resetButton(button)
     },
-    createAutoAllocation: function(event) {
+    createAutoAllocation: function (event) {
       var self = this
       $.fn.loadButton(event.target)
       $.post({
         url: this.roundInfo.autoUrl,
         dataType: 'json',
-      }).done(function(data, textStatus, jqXHR) {
+      }).done(function (data, textStatus, jqXHR) {
         // Success handler
         self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
         self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedAdjudicators))
         self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
         self.resetAutoAllocationModal(event.target)
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
-      }).fail(function(response) {
+      }).fail(function (response) {
         // Handle Failure
         // Note: this block duplicated in EditVenuesContainer
         console.debug(JSON.stringify(response)) // Help identify failures in sentry
-        var info = ""
+        var info = ''
         if (response.hasOwnProperty('responseJSON')) {
           info += response.responseJSON.message
         } else {

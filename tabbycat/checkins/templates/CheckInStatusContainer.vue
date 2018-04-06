@@ -126,7 +126,7 @@ import VenuesStatusMixin from './VenuesStatusMixin.vue'
 
 export default {
   mixins: [AjaxMixin, WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],
-  data: function() {
+  data: function () {
     return {
       filterByPresence: {
         'Absent': false, 'Present': false, 'All': true
@@ -141,16 +141,16 @@ export default {
     'assistantUrl': String
   },
   computed: {
-    isForVenues: function() {
+    isForVenues: function () {
       return this.venues === null ? false : true
     },
-    filterByType: function() {
+    filterByType: function () {
       return this.isForVenues ? this.venuesFilterByType : this.peopleFilterByType
     },
-    sortByGroup: function() {
+    sortByGroup: function () {
       return this.isForVenues ? this.venuesSortByGroup : this.peopleSortByGroup
     },
-    mainTransitions: function() {
+    mainTransitions: function () {
       // Don't want the entire list to animate when changing filter effects
       if (this.enableAnimations) {
         return 'animated-list'
@@ -158,33 +158,33 @@ export default {
         return ''
       }
     },
-    entitiesByType: function() {
+    entitiesByType: function () {
       return this.isForVenues ? this.venuesByType : this.peopleByType
     },
-    entitiesByPresence: function() {
+    entitiesByPresence: function () {
       // Filter by status
       if (this.filterByPresence["All"]) {
         return this.entitiesByType
       } else if (this.filterByPresence["Absent"]) {
-        return _.filter(this.entitiesByType, function(p) {
+        return _.filter(this.entitiesByType, function (p) {
           return p["status"] === false
         })
       } else {
-        return _.filter(this.entitiesByType, function(p) {
+        return _.filter(this.entitiesByType, function (p) {
           return p["status"] !== false
         })
       }
     },
-    entitiesSortedByName: function() {
+    entitiesSortedByName: function () {
       return _.sortBy(this.entitiesByPresence, ['name'])
     },
-    entitiesByName: function() {
-      return _.groupBy(this.entitiesSortedByName, function(p) {
+    entitiesByName: function () {
+      return _.groupBy(this.entitiesSortedByName, function (p) {
         return p.name[0]
       })
     },
-    entitiesByTime: function() {
-      var sortedByTime = _.sortBy(this.entitiesSortedByName, function(p) {
+    entitiesByTime: function () {
+      var sortedByTime = _.sortBy(this.entitiesSortedByName, function (p) {
         if (_.isUndefined(p["status"])) {
           return "Thu, 01 Jan 2070 00:00:00 GMT-0400"
         } else {
@@ -192,7 +192,7 @@ export default {
         }
       })
       var self = this
-      return _.groupBy(sortedByTime, function(p) {
+      return _.groupBy(sortedByTime, function (p) {
         if (_.isUndefined(p["status"]) || p["status"] === false) {
           return "Not Checked In"
         } else {
@@ -206,7 +206,7 @@ export default {
         }
       })
     },
-    entitiesBySortingSetting: function() {
+    entitiesBySortingSetting: function () {
       if (this.sortByGroup['By Category'] === true) {
         return this.venuesByCategory
       } else if (this.sortByGroup['By Priority'] === true) {
@@ -221,59 +221,59 @@ export default {
     },
   },
   methods: {
-    clock: function(timeRead) {
+    clock: function (timeRead) {
       var paddedTime = ("0" + timeRead).slice(-2)
       return paddedTime
     },
-    checkInGroup: function(entity) {
+    checkInGroup: function (entity) {
       var identifiersForEntities = _.flatten(_.map(entity, 'identifier'))
       console.log('test', identifiersForEntities)
       this.checkInIdentifiers(identifiersForEntities)
     },
-    checkInIdentifiers: function(barcodeIdentifiers) {
+    checkInIdentifiers: function (barcodeIdentifiers) {
       var message = 'the checkin status of ' + barcodeIdentifiers
       var payload = { 'barcodes': barcodeIdentifiers }
       this.setLocked(barcodeIdentifiers, true)
       this.ajaxSave(this.scanUrl, payload, message, this.passCheckIn, this.failCheckIn, null, false)
     },
-    setLocked: function(identifiers, status) {
-      _.forEach(this.entitiesByType, function(entity) {
+    setLocked: function (identifiers, status) {
+      _.forEach(this.entitiesByType, function (entity) {
         if (_.includes(identifiers, entity.identifier)) {
           console.log('lock', entity.identifier)
           entity.locked = true
         }
       })
     },
-    passCheckIn: function(dataResponse, payload, returnPayload) {
+    passCheckIn: function (dataResponse, payload, returnPayload) {
       this.setLocked(payload.barcodes, false)
     },
-    failCheckIn: function(payload, returnPayload) {
+    failCheckIn: function (payload, returnPayload) {
       var message = 'Failed to check in one or more identifiers: ' + payload.barcodes
       $.fn.showAlert("danger", message, 0)
       this.setLocked(payload.barcodes, false)
     },
-    lastSeenTime: function(timeString) {
+    lastSeenTime: function (timeString) {
       var time = new Date(Date.parse(timeString))
       return this.clock(time.getHours()) + ":" + this.clock(time.getMinutes())
     },
-    getToolTipForEntity: function(entity) {
+    getToolTipForEntity: function (entity) {
       return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
     },
-    setListContext: function(metaKey, selectedKey, selectedValue) {
+    setListContext: function (metaKey, selectedKey, selectedValue) {
       this.enableAnimations = false
       var self = this
-      _.forEach(this[metaKey], function(value, key) {
+      _.forEach(this[metaKey], function (value, key) {
         if (key === selectedKey) {
           self[metaKey][key] = selectedValue
         } else {
           self[metaKey][key] = false
         }
       })
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         self.enableAnimations = true
       })
     },
-    handleSocketMessage: function(payload, socketLabel) {
+    handleSocketMessage: function (payload, socketLabel) {
       console.log('handleSocketMessage', socketLabel, ' : ', payload)
       this.events.push(payload)
     }

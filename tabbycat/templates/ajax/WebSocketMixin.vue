@@ -3,7 +3,7 @@
 // - Optional data/prop of "tournamentSlug" with a tournament slug for the path
 // - Optional data/prop of "roundSeq" with a round sequence ID for the path
 // - a data prop of "sockets" that for all the socket paths to monitor
-// - a handleSocketMessage() function that will handle the different 
+// - a handleSocketMessage() function that will handle the different
 // sockets' messages as appropriate
 
 import { WebSocketBridge } from 'django-channels'
@@ -11,8 +11,8 @@ import _ from 'lodash'
 
 export default {
   props: [ 'tournamentSlug', 'roundSeq'],
-  created: function() {
-    
+  created: function () {
+
     // Check if this is being run over HTTP(S); match the WS(S) procol
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
     var path = "/"
@@ -24,7 +24,7 @@ export default {
     const handleMessage = this.handleSocketMessage
 
     // Setup each websocket connection
-    _.forEach(this.sockets, function(socketLabel) {
+    _.forEach(this.sockets, function (socketLabel) {
 
       // Customise path per-socket
       var socketPath = path + socketLabel + "/"
@@ -37,15 +37,15 @@ export default {
       webSocketBridge.connect(socketPath)
 
       // Listen for messages and pass to the defined handleSocketMessage()
-      webSocketBridge.listen(function(payload) {
+      webSocketBridge.listen(function (payload) {
         handleMessage(payload, socketLabel)
       }.bind(handleMessage));
 
       // Logs
-      // webSocketBridge.socket.addEventListener('open', function() {
+      // webSocketBridge.socket.addEventListener('open', function () {
       //   console.log("Connected to WebSocket path:", socketPath)
       // }.bind(socketPath))
-      // webSocketBridge.socket.addEventListener('close', function() {
+      // webSocketBridge.socket.addEventListener('close', function () {
       //   console.log("Disconnected to WebSocket path:", socketPath)
       // }.bind(socketPath))
 

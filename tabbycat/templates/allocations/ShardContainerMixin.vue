@@ -53,7 +53,7 @@ export default {
       this.sharding.enabled = true
       return null
     },
-    splitDebates: function(debates, desiredSplit) {
+    splitDebates: function (debates, desiredSplit) {
       var splitDebates = []
       var n = desiredSplit
       var size = Math.floor(debates.length / n)

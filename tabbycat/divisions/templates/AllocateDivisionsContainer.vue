@@ -24,11 +24,11 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import DivisionDroppable from  './DivisionDroppable.vue'
 import UnallocatedItemsContainer from  '../../templates/draganddrops/UnallocatedItemsContainer.vue'
 import DraggableTeam from  '../../templates/draganddrops/DraggableTeam.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin],
@@ -41,18 +41,18 @@ export default {
     this.$eventHub.$on('assign-draggable', this.moveToDivision)
   },
   computed: {
-    teamsById: function() {
+    teamsById: function () {
       return _.keyBy(this.teams, 'id')
     },
-    divisionsOrderedByName: function() {
+    divisionsOrderedByName: function () {
       return _.orderBy(this.divisions, 'name')
     },
-    unallocatedTeams: function() {
+    unallocatedTeams: function () {
       return _.filter(this.teams, { 'division': null })
     }
   },
   methods: {
-    teamsInDivision: function(divisionId) {
+    teamsInDivision: function (divisionId) {
       return _.filter(this.teams, { 'division': divisionId })
     },
     moveToDivision(payload, assignedId) {

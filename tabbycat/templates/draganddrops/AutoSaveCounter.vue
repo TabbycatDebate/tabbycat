@@ -10,24 +10,24 @@
 
 <script>
 export default {
-  data: function() { return { lastSaved: false, animationClass: '' } },
+  data: function () { return { lastSaved: false, animationClass: '' } },
   props: { css: String },
-  created: function() {
+  created: function () {
     this.$eventHub.$on('update-saved-counter', this.updateLastSaved)
   },
   methods: {
-    updateLastSaved: function() {
+    updateLastSaved: function () {
       this.lastSaved = new Date()
       this.animationClass = "save-flash"
-      setTimeout(function () { this.animationClass = "" }.bind(this), 5000)
-      setInterval(function(){
+      setTimeout(function () { this.animationClass = '' }.bind(this), 5000)
+      setInterval(function (){
         // Slightly increment to trigger savedAgoDisplay updates
         this.lastSaved = new Date(this.lastSaved.getTime() + 0.001)
       }.bind(this), 1000);
     }
   },
   computed: {
-    savedAgoDisplay: function() {
+    savedAgoDisplay: function () {
       if (!this.lastSaved) { return "No Changes" }
       var savedAgo = Math.abs(new Date() - this.lastSaved) / 1000
       if (savedAgo > 59) {
@@ -36,13 +36,13 @@ export default {
         return "Saved " + parseInt(savedAgo) + "s ago"
       }
     },
-    customClasses: function() {
+    customClasses: function () {
       return this.css
     },
-    hours: function() {
+    hours: function () {
       return this.lastSaved.getHours()
     },
-    minutes: function() {
+    minutes: function () {
       var minutes = String(this.lastSaved.getMinutes())
       if (minutes.length === 1) {
         return '0' + minutes

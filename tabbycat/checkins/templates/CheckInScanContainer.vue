@@ -25,16 +25,15 @@
 </template>
 
 <script>
-import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
-
-import Quagga from 'quagga'
 import _ from 'lodash'
+import Quagga from 'quagga'
+import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],
-  data: function() {
+  data: function () {
     return {
-      barcode: "",
+      barcode: '',
       liveScanning: false,
       scannedResults: [],
     }
@@ -43,7 +42,7 @@ export default {
     'scanUrl': String
   },
   methods: {
-    checkInIdentifier: function(barcodeIdentifier) {
+    checkInIdentifier: function (barcodeIdentifier) {
       var message = 'the checkin status of ' + barcodeIdentifier
       var payload = { 'barcodes': [barcodeIdentifier] }
       this.ajaxSave(this.scanUrl, payload, message,
@@ -58,22 +57,22 @@ export default {
           console.log('Safari autoplay ... needs permission for sound')
         })
       }
-      this.barcode = "" // Reset
+      this.barcode = '' // Reset
       this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
     },
-    finishCheckIn: function(dataResponse, payload, returnPayload) {
+    finishCheckIn: function (dataResponse, payload, returnPayload) {
       var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]
       $.fn.showAlert("success", message, 0)
     },
-    failCheckIn: function(payload, returnPayload) {
+    failCheckIn: function (payload, returnPayload) {
       var message = 'Failed to check in identifier ' + payload.barcodes[0] + '. Maybe it was misspelt?'
       $.fn.showAlert("danger", message, 0)
     },
-    toggleScan: function() {
+    toggleScan: function () {
       this.liveScanning = !this.liveScanning
       // Give time for DOM elements to update
       var self = this
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         if (self.liveScanning) {
           self.streamScan()
           document.getElementById("pageTitle").style.display = 'none'
@@ -83,7 +82,7 @@ export default {
         }
       })
     },
-    streamScan: function() {
+    streamScan: function () {
       var self = this
 
       Quagga.init({
@@ -95,7 +94,7 @@ export default {
         decoder : {
           readers : ["code_128_reader"]
         }
-      }, function(err) {
+      }, function (err) {
         if(err) {
           console.log("Initialization failed due to user camera permissions denial.");
           self.liveScanning = false
@@ -105,7 +104,7 @@ export default {
       });
 
       // Draws over frames as they are shown
-      Quagga.onProcessed(function(result) {
+      Quagga.onProcessed(function (result) {
         var drawingCtx = Quagga.canvas.ctx.overlay,
             drawingCanvas = Quagga.canvas.dom.overlay;
 
@@ -132,7 +131,7 @@ export default {
         }
       })
       // Process a valid result (if it hasn't already been processed
-      Quagga.onDetected(function(result) {
+      Quagga.onDetected(function (result) {
         var code = result.codeResult.code;
         // Check length
         if (code.length === 5) {
@@ -151,7 +150,7 @@ export default {
     },
   },
   watch: {
-    barcode: function(current, old) {
+    barcode: function (current, old) {
       if (current.length >= 5) {
         this.processing = true
         this.checkInIdentifier(current)

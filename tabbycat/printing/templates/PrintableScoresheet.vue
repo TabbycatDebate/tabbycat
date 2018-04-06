@@ -43,10 +43,9 @@
 
 <script>
 import PrintableTeamScores from './PrintableTeamScores.vue'
-import _ from 'lodash'
 
 export default {
   props: ['ballot', 'roundInfo'],
-  components: {PrintableTeamScores},
+  components: { PrintableTeamScores },
 }
 </script>

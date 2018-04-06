@@ -41,7 +41,7 @@ export default {
     tablesData: Array, // Passed down from main.js
     orientation: String, // Passed down from template
   },
-  data: function() {
+  data: function () {
     return { filterKey: '' } // Filter key is internal state
   },
   computed: {
@@ -58,15 +58,15 @@ export default {
       }
       return 'col-md-12'; // Fallback; should be redundant
     },
-    sortableData: function() {
+    sortableData: function () {
       return this.rows // Enables SortableTableMixin
     }
   },
   methods: {
-    getTableId: function(i) {
+    getTableId: function (i) {
       return "tableContainer-" + i
     },
-    updateTableFilters: function() {
+    updateTableFilters: function () {
       this.$eventHub.$emit('update-table-filters', this.filterKey)
     },
   },

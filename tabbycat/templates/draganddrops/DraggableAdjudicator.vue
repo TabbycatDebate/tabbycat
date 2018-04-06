@@ -31,12 +31,12 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import DraggableMixin from '../draganddrops/DraggableMixin.vue'
 import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
 import SlideOverAdjudicatorMixin from '../info/SlideOverAdjudicatorMixin.vue'
 import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
@@ -46,13 +46,13 @@ export default {
     return { debugMode: false }
   },
   computed: {
-    initialledName: function() {
+    initialledName: function () {
       // Translate Joe Blogs into Joe B.
       var names = this.adjudicator.name.split(" ")
       if (names.length > 1) {
         var lastname = names[names.length - 1]
         var lastInitial = lastname[0]
-        var firstNames = this.adjudicator.name.split(" " + lastname).join("")
+        var firstNames = this.adjudicator.name.split(" " + lastname).join('')
         var limit = 10
         if (firstNames.length > limit + 2) {
           firstNames = firstNames.substring(0, limit) + "…"
@@ -61,20 +61,20 @@ export default {
       }
       return names.join(" ")
     },
-    shrunkScore: function() {
+    shrunkScore: function () {
       var score = this.adjudicator.score.split(".")[0]
       score += "<small>." + this.adjudicator.score.split(".")[1] + "</small>"
       return score
     },
-    highlightableObject: function() {
+    highlightableObject: function () {
       return this.adjudicator
     },
-    draggablePayload: function() {
+    draggablePayload: function () {
       return JSON.stringify({ adjudicator: this.adjudicator.id, debate: this.debateId })
     },
-    percentileRanking: function() {
+    percentileRanking: function () {
       var rating = parseFloat(this.adjudicator.score)
-      var rank =  _.find(this.percentiles, function(threshold) {
+      var rank =  _.find(this.percentiles, function (threshold) {
         return rating >= threshold.cutoff
       })
       if (_.isUndefined(rank)) {
@@ -91,10 +91,10 @@ export default {
     }
   },
   methods: {
-    handleDragStart: function(event) {
+    handleDragStart: function (event) {
       // this.$dispatch('started-dragging-team', this);
     },
-    handleDragEnd: function(event) {
+    handleDragEnd: function (event) {
       this.hideHoverConflicts()
       this.hideSlideOver()
     },

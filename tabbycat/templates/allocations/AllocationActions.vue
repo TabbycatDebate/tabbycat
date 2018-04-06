@@ -148,7 +148,7 @@ export default {
       return title.charAt(0).toUpperCase() + title.substr(1)
     },
     toggleHighlight: function (highlight, oldState) {
-      _.forEach(this.highlights, function(value, key) {
+      _.forEach(this.highlights, function (value, key) {
         value.state = false
       });
       highlight.state = !oldState

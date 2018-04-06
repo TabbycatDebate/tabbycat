@@ -64,10 +64,10 @@ export default {
   components: { DraggableVenue },
   props: { venueConstraints: Array },
   computed: {
-    unallocatedVenuesByPriority: function() {
+    unallocatedVenuesByPriority: function () {
       return _.reverse(_.sortBy(this.unallocatedItems, ['priority']))
     },
-    allVenuesById: function() {
+    allVenuesById: function () {
       return _.keyBy(this.venues.concat(this.unallocatedItems), 'id')
     },
   },
@@ -77,7 +77,7 @@ export default {
       var category_ids = _.map(venue.categories, 'id')
       if (category_ids.length > 0) {
         // Match IDs to venue constraint categories
-        return _.filter(this.venueConstraints, function(vc) {
+        return _.filter(this.venueConstraints, function (vc) {
           return _.includes(category_ids, vc.id)
         });
       } else {
@@ -96,24 +96,24 @@ export default {
       }
       this.saveMove(payload.venue, payload.debate, null)
     },
-    createAutoAllocation: function(event) {
+    createAutoAllocation: function (event) {
       var self = this
       $.fn.loadButton(event.target)
       $.post({
         url: this.roundInfo.autoUrl,
         dataType: 'json',
-      }).done(function(data, textStatus, jqXHR) {
+      }).done(function (data, textStatus, jqXHR) {
         // Success handler
         self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
         self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
         self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
         $.fn.resetButton(event.target)
-      }).fail(function(response) {
+      }).fail(function (response) {
         // Handle Failure (or at least log it so we can figure out failure mode)
         // Note: this block duplicated in AllocationModal
         console.debug(JSON.stringify(response))
-        var info = ""
+        var info = ''
         if (response.hasOwnProperty('responseJSON')) {
           info += response.responseJSON.message
         } else {

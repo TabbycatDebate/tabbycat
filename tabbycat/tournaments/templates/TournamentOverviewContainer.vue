@@ -56,10 +56,10 @@
 </template>
 
 <script>
-import UpdatesList from  '../../templates/graphs/UpdatesList.vue'
+import _ from 'lodash'
+import UpdatesList from '../../templates/graphs/UpdatesList.vue'
 import BallotsGraph from '../../templates/graphs/BallotsGraph.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [ WebSocketMixin ],
@@ -70,18 +70,18 @@ export default {
       actionlogs: this.initialActions,
       ballot_results: this.initialBallots,
       ballot_statuses: this.initialGraphData,
-      sockets: ['actionlogs', 'ballot_results', 'ballot_statuses']
+      sockets: ['actionlogs', 'ballot_results', 'ballot_statuses'],
     }
   },
   methods: {
-    handleSocketMessage: function(payload, socketLabel) {
+    handleSocketMessage: function (payload, socketLabel) {
       console.log('handleSocketMessage', socketLabel, ' : ', payload)
       if (socketLabel === 'ballot_statuses') {
         this.ballot_statuses = payload
         return
       }
       // Check for duplicates; do a inline replace if so
-      let duplicateIndex = _.findIndex(this[socketLabel], function(i) {
+      let duplicateIndex = _.findIndex(this[socketLabel], function (i) {
         return i.id == payload.id
       })
       if (duplicateIndex != -1) {

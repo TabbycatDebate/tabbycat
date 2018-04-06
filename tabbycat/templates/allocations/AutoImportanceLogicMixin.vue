@@ -5,12 +5,12 @@ export default {
   // Designed to be applied to a Panel component as a bridge between
   // acting across the entire adj/team pool (for hovers) and instead only
   // focusing it on conflicts within a debate panel / debate teams
-  created: function() {
+  created: function () {
     this.$eventHub.$on('update-importance', this.updateImportance)
     this.$eventHub.$on('assign-all-importances', this.autoAssignImportance)
   },
   methods: {
-    autoAssignImportance: function(assignedType) {
+    autoAssignImportance: function (assignedType) {
       var debatesByType = _.sortBy(this.debates, assignedType)
       var length = debatesByType.length
       var chunkLimits = [0] // Floor value for start of lowest chunk
@@ -68,7 +68,7 @@ export default {
       var debateImportances = _.map(this.debates, 'importance')
       this.updateImportance(debateIDs, debateImportances)
     },
-    updateImportance: function(debateIDs, importances) {
+    updateImportance: function (debateIDs, importances) {
       var payload = { 'priorities': {}}
       for (var i = 0; i < debateIDs.length; i += 1) {
         payload['priorities'][debateIDs[i]] = importances[i]
@@ -77,9 +77,9 @@ export default {
       var message = 'debate IDs ' + debateIDs + '\'s importance'
       this.ajaxSave(url, payload, message, this.processImportanceSaveSuccess, null, null)
     },
-    processImportanceSaveSuccess: function(dataResponse, payload, returnPayload) {
+    processImportanceSaveSuccess: function (dataResponse, payload, returnPayload) {
       var self = this
-      _.forEach(dataResponse, function(importance, debateID) {
+      _.forEach(dataResponse, function (importance, debateID) {
         self.debatesById[parseInt(debateID)]['importance'] = importance
       });
     }

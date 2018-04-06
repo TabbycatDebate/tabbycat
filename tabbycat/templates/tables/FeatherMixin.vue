@@ -1,6 +1,5 @@
 <script>
 import feather from 'feather-icons';
-import _ from 'lodash'
 
 // Provides the rendered version of an icon; for when it needs to update
 // on DOM changes
@@ -8,7 +7,7 @@ import _ from 'lodash'
 
 export default {
   computed: {
-    getFeatherIcon: function() {
+    getFeatherIcon: function () {
       // Need to dynamically update icons once table order changes
       // as they are otherwise tied to the DOM
       if (this.icon) {

@@ -46,14 +46,14 @@ export default {
            HighlightableMixin, ConflictableMixin],
   props: { 'team': Object, 'roundInfo': Object },
   computed: {
-    highlightableObject: function() {
+    highlightableObject: function () {
       return this.team
     },
-    liveness: function() {
+    liveness: function () {
       if (this.team.break_categories === null) {
-        return ""
+        return ''
       }
-      var short_code = ""
+      var short_code = ''
       for (var i = 0; i < this.team.break_categories.length; i++) {
         if ((this.team.break_categories[i].will_break === "live") ||
             (this.team.break_categories[i].will_break === "?")) {

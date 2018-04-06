@@ -53,12 +53,12 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import DrawTeam from '../draw/DrawTeam.vue'
 import DrawVenue from '../draw/DrawVenue.vue'
 import DrawAdjudicator from '../draw/DrawAdjudicator.vue'
 import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
 import FindDebateTeamMixin from '../draw/FindDebateTeamMixin.vue'
-import _ from 'lodash'
 
 export default {
   components: {DrawTeam, DrawVenue, DrawAdjudicator},
@@ -66,7 +66,7 @@ export default {
   props: { debate: Object, roundInfo: Object},
   methods: {
     findDebateTeamInDebateBySide(side, debate) { // Used in Edit Matchups
-      var debateTeam = _.find(debate.debateTeams, function(dt) {
+      var debateTeam = _.find(debate.debateTeams, function (dt) {
         return dt.side === side
       });
       if (!_.isUndefined(debateTeam)) {
