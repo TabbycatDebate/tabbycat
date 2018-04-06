@@ -4,11 +4,10 @@
       <div class="modal-content">
         <div class="modal-body">
           <p class="lead">Sharding will narrow the debates shown here to show a specific subset of the overall draw.</p>
-          <p>When using sharding to allow multiple people to allocate simultaneously <strong>be very sure</strong> that everyone is using the same <em>count</em>, <em>split</em>, and the each person has selected a different shard from the others.</p>
-          <p><em>Top-to-Bottom</em> splitting will sort the draw so the first shard contains debates from the top-most brackets, and the last shard contains debates from the bottom-most brackets.</p>
-          <p><em>Interleave</em> splitting will distribute an even mix of brackets amongst each of the shards</p>
+          <p>When using sharding to allow multiple people to allocate simultaneously <strong>be very sure</strong> that everyone is using the same<em>split</em>, <em>sort</em>, <em>mix</em>, and that each person has selected a different shard from the others.</p>
+          <p><em>Top-to-Bottom</em> mixing will sort the draw so the first shard contains debates from the top-most brackets/priority/liveness, and the last shard contains debates from the bottom-most brackets/priority/liveness. <em>Interleave</em> mixing will distribute an even mix of each characteristic amongst each of the shards</p>
           <div class="text-center">
-            <h4>Shard Count</h4>
+            <h4>Shard Split</h4>
             <div class="btn-group mb-3 btn-group-toggle" role="group">
               <button type="button" @click="setState('split', 'Half')"
                       :class="['btn btn-primary', split === 'Half' ? 'active': '']">
@@ -29,26 +28,43 @@
             </div>
           </div>
           <div class="text-center mt-3">
-            <h4>Shard Split</h4>
+            <h4>Shard Sort</h4>
             <div class="btn-group mb-3 btn-group-toggle" role="group">
-              <button type="button" @click="setState('sort', 'hierarchy')"
-                      :class="['btn btn-primary', sort === 'hierarchy' ? 'active': '']">
+              <button type="button" @click="setState('sort', 'bracket')"
+                      :class="['btn btn-primary', sort === 'bracket' ? 'active': '']">
+                By Bracket
+              </button>
+              <button type="button" @click="setState('sort', 'importance')"
+                      :class="['btn btn-primary', sort === 'importance' ? 'active': '']">
+                By Priority
+              </button>
+              <button type="button" @click="setState('sort', 'liveness')"
+                      :class="['btn btn-primary', sort === 'liveness' ? 'active': '']">
+                By Liveness
+              </button>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <h4>Shard Mix</h4>
+            <div class="btn-group mb-3 btn-group-toggle" role="group">
+              <button type="button" @click="setState('mix', 'hierarchy')"
+                      :class="['btn btn-primary', mix === 'hierarchy' ? 'active': '']">
                 Top-to-Bottom
               </button>
-              <button type="button" @click="setState('sort', 'interleave')"
-                      :class="['btn btn-primary', sort === 'interleave' ? 'active': '']">
+              <button type="button" @click="setState('mix', 'interleave')"
+                      :class="['btn btn-primary', mix === 'interleave' ? 'active': '']">
                 Interleaved
               </button>
             </div>
           </div>
-          <div class="text-center mt-3 mb03">
+          <div class="text-center mt-3 mb-3">
             <h4>Select Shard</h4>
-            <button v-if="split === null || sort === null" class="btn btn-secondary disabled">
-              Select a count and split to open a particular shard
+            <button v-if="split === null || sort === null || mix === null" class="btn btn-secondary disabled">
+              Select a count, sort, and mix to open a particular shard
             </button>
-            <div v-else class="btn-group mb-3" role="group">
+            <div v-else class="btn-group" role="group">
               <button type="button" class="btn btn-success"
-                      @click="openShard(split, sort, shardIdentifier, index)"
+                      @click="openShard(shardIdentifier, index)"
                       v-for="(shardIdentifier, index) in shardOptions">
                 {{ split }} {{ shardIdentifier }}
               </button>
@@ -67,6 +83,7 @@ export default {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
       split: null,
+      mix: null,
       sort: null,
     }
   },
@@ -90,13 +107,13 @@ export default {
       $.fn.resetButton('#shpb')
       $.fn.resetButton('#shpl')
     },
-    openShard: function (split, sort, shardIdentifier, index) {
+    openShard: function (shardIdentifier, index) {
       var self = this
       $.fn.loadButton('#shpb')
       $.fn.loadButton('#shpl')
-      self.$eventHub.$emit('open-shard', split, sort, index)
+      self.$eventHub.$emit('open-shard', this.split, this.mix, this.sort, index)
 
-      $.fn.showAlert('success', `Opened shard ${split} ${shardIdentifier} (sorted by ${sort})`,  10000)
+      $.fn.showAlert('primary', `Opened shard ${this.split} ${shardIdentifier} (sorted by ${this.mix} using ${this.sort})`)
       self.resetShardingModal()
     },
     setState: function (type, state) {

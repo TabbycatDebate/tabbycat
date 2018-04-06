@@ -4,10 +4,13 @@ import _ from 'lodash'
 export default {
   data: function () {
     return {
-      sharding: false,
-      splitNumeric: null,
-      index: null,
-      sort: null,
+      sharding: {
+        enabled: false,
+        splitNumeric: null,
+        index: null,
+        mix: null,
+        sort: null,
+      },
     }
   },
   created: function () {
@@ -18,37 +21,36 @@ export default {
     debatesWithSharding: function () {
       var sortedDebates
 
-      if (!this.sharding) {
+      if (!this.sharding.enabled) {
         return this.debates
       }
       // Order debates by bracket
-      sortedDebates = _.reverse(_.sortBy(this.debates, ['bracket', 'liveness']))
-
+      sortedDebates = _.reverse(_.sortBy(this.debates, this.sharding.sort))
       // Re-order them to be evenly distributed single array if interleaved
-      if (this.sort === 'interleave') {
-        sortedDebates = this.splitDebates(sortedDebates, this.splitNumeric)
-        sortedDebates = this.interleaveShards(sortedDebates)
+      if (this.sharding.mix === 'interleave') {
+        sortedDebates = this.sortInterleaved(sortedDebates, this.sharding.splitNumeric)
+        console.log('interleaveShards', sortedDebates)
       }
-
-      const shardedDebates = this.splitDebates(sortedDebates, this.splitNumeric)
-      console.log('shardedDebates', shardedDebates)
-      return shardedDebates[this.index]
+      // Split up into sub arrays based on nominated shard size / index
+      const shardedDebates = this.splitDebates(sortedDebates, this.sharding.splitNumeric)
+      return shardedDebates[this.sharding.index]
     },
   },
   methods: {
-    setShard: function (split, sort, index) {
+    setShard: function (split, mix, sort, index) {
       if (split === 'Half') {
-        this.splitNumeric = 2
+        this.sharding.splitNumeric = 2
       } else if (split === 'Third') {
-        this.splitNumeric = 3
+        this.sharding.splitNumeric = 3
       } else if (split === 'Quarter') {
-        this.splitNumeric = 4
+        this.sharding.splitNumeric = 4
       } else if (split === 'Fifth') {
-        this.splitNumeric = 5
+        this.sharding.splitNumeric = 5
       }
-      this.sort = sort
-      this.index = index
-      this.sharding = true
+      this.sharding.mix = mix
+      this.sharding.sort = sort
+      this.sharding.index = index
+      this.sharding.enabled = true
       return null
     },
     splitDebates: function(debates, desiredSplit) {
@@ -74,25 +76,26 @@ export default {
       }
       return splitDebates
     },
-    interleaveShards: function (shards) {
+    sortInterleaved: function (debates, desiredSplit) {
       var interleavedDebates = []
+      var j = 0;
       var i;
 
-      console.log('shards', shards)
-      const shardLengths = shards.map((shard) => shard.length)
-      const maxLength = _.max(shardLengths)
-      console.log('maxLength', maxLength)
-
-      for (i = 0; i < maxLength; i += 1) {
-        shards.forEach((shardArray) => {
-          if (shardArray.length > i) {
-            interleavedDebates.push(shardArray[i])
-          }
-        })
+      // Make multidimensional array for each shard
+      for (j = 0; j < desiredSplit; j += 1) {
+        interleavedDebates[j] = []
       }
-      console.log('interleavedDebates', interleavedDebates)
 
-      return interleavedDebates
+      // Split big array equally into shards; evenly distributing large-small
+      j = 0
+      for (i = 0; i < debates.length; i += 1) {
+        interleavedDebates[j].push(debates[i])
+        j += 1
+        if (j >= desiredSplit) {
+          j = 0
+        }
+      }
+      return _.flatten(interleavedDebates)
     },
   },
 }

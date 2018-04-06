@@ -1,11 +1,11 @@
 <template>
   <div class="draw-container allocation-container">
 
-    <allocation-actions :round-info="roundInfo" :sharding="sharding"
+    <allocation-actions :round-info="roundInfo" :sharding="sharding.enabled"
                         :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
-      <div class="mb-3 col allocation-messages" id="messages-container"></div>
+      <div class="mt-3 col allocation-messages" id="messages-container"></div>
     </div>
 
     <div class="mb-3">
@@ -77,7 +77,7 @@
       </debate>
     </div>
 
-    <unallocated-items-container v-if="!sharding">
+    <unallocated-items-container v-if="!sharding.enabled">
       <div v-for="unallocatedAdj in unallocatedAdjsByOrder">
         <draggable-adjudicator :adjudicator="unallocatedAdj"
                                :percentiles="percentileThresholds"
