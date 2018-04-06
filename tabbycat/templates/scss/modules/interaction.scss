@@ -133,6 +133,11 @@ td > .touch-target {
   z-index: auto;
 }
 
+.modal-sl { // For motions page; probably feedback also (want super big modals)
+  @extend .modal-lg;
+  max-width: 910px;
+}
+
 .modal-xl { // For motions page; probably feedback also (want super big modals)
   height: 92vh;
   width: 96vw;

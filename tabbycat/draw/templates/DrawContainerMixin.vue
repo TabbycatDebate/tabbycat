@@ -8,13 +8,14 @@ import DrawHeader from '../../templates/draw/DrawHeader.vue'
 import Debate from '../../templates/draw/Debate.vue'
 import AutoSaveCounter from '../../templates/draganddrops/AutoSaveCounter.vue'
 import DroppableGeneric from '../../templates/draganddrops/DroppableGeneric.vue'
+import ShardContainerMixin from '../../templates/allocations/ShardContainerMixin.vue'
 import SlideOverContainerMixin from '../../templates/info/SlideOverContainerMixin.vue'
 import SlideOver from '../../templates/info/SlideOver.vue'
 import SortableTableMixin from '../../templates/tables/SortableTableMixin.vue'
 import _ from 'lodash'
 
 export default {
-  mixins: [AjaxMixin, SlideOverContainerMixin, SortableTableMixin],
+  mixins: [AjaxMixin, SlideOverContainerMixin, SortableTableMixin, ShardContainerMixin],
   components: {
     DrawHeader, AutoSaveCounter, Debate,
     DroppableGeneric, UnallocatedItemsContainer, SlideOver
@@ -40,7 +41,7 @@ export default {
   },
   computed: {
     sortableData: function() {
-      return this.debates // Enables SortableTableMixin
+      return this.debatesWithSharding // Enables SortableTableMixin
     },
     teams: function() {
       // Return all teams (in debates) as a single array

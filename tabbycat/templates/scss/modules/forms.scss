@@ -78,6 +78,14 @@ label.error {
   font-size: $font-size-sm;
 }
 
+.btn-group .btn-success, .btn-group .btn-primary, .btn-group .btn-secondary {
+  border-right: 3px solid rgba(255, 255, 255, 0.25);
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
 //------------------------------------------------------------------------------
 // Custom Widgets
 //------------------------------------------------------------------------------

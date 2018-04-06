@@ -1,7 +1,7 @@
 <template>
   <div class="draw-container allocation-container">
 
-    <allocation-actions :round-info="roundInfo"
+    <allocation-actions :round-info="roundInfo" :sharding="sharding"
                         :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
@@ -77,7 +77,7 @@
       </debate>
     </div>
 
-    <unallocated-items-container>
+    <unallocated-items-container v-if="!sharding">
       <div v-for="unallocatedAdj in unallocatedAdjsByOrder">
         <draggable-adjudicator :adjudicator="unallocatedAdj"
                                :percentiles="percentileThresholds"

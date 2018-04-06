@@ -9,22 +9,26 @@
         <div class="btn-group btn-group-sm">
           <a :href="roundInfo.backUrl" class="btn btn-outline-primary"
              data-toggle="tooltip" data-placement="bottom" title="Return to Draw">
-            <i data-feather="chevron-left"></i>Back
+            <i data-feather="chevron-left"></i>
           </a>
           <auto-save-counter></auto-save-counter>
         </div>
 
         <div class="btn-group btn-group-sm ml-2">
-          <a class="btn btn-success text-white"
+          <a :class="['btn text-white', sharding ? 'disabled btn-secondary' : 'btn-success']"
              data-toggle="modal" data-target="#confirmAutoPrioritiseModal">
             Auto-Prioritise
           </a>
-        </div>
-
-        <div class="btn-group btn-group-sm ml-2">
-          <a class="btn btn-success text-white"
+          <a :class="['btn text-white', sharding ? 'disabled btn-secondary' : 'btn-success']"
              data-toggle="modal" data-target="#confirmAutoAllocationModal">
             Auto-Allocate
+          </a>
+          <a :class="['btn text-white', sharding ? 'btn-primary' : 'btn-success']"
+             data-toggle="modal" data-target="#confirmShardingModal">
+            <span data-toggle="tooltip" data-placement="bottom"
+             title="Limit this view to a shard (specific subsection) of this draw">
+              <i data-feather="server"></i>
+            </span>
           </a>
         </div>
 
@@ -109,21 +113,23 @@
 
     <auto-allocation-modal :round-info="roundInfo"></auto-allocation-modal>
     <auto-importance-modal :round-info="roundInfo"></auto-importance-modal>
+    <sharding-modal :round-info="roundInfo"></sharding-modal>
 
   </div>
 
 </template>
 
 <script>
+import _ from 'lodash'
 import AutoAllocationModal from '../allocations/AutoAllocationModal.vue'
 import AutoImportanceModal from '../allocations/AutoImportanceModal.vue'
+import ShardingModal from '../allocations/ShardingModal.vue'
 import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
-import _ from 'lodash'
 
 export default {
-  props: { roundInfo: Object, percentiles: Array },
-  components: { AutoAllocationModal, AutoImportanceModal, AutoSaveCounter },
-  data: function() {
+  props: { roundInfo: Object, percentiles: Array, sharding: Boolean },
+  components: { AutoAllocationModal, AutoImportanceModal, ShardingModal, AutoSaveCounter },
+  data: function () {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
       highlights: {
@@ -131,25 +137,25 @@ export default {
         'region': { 'label': 'region', 'state': false },
         'gender': { 'label': 'gender', 'state': false },
         'ranking': { 'label': 'rank', 'state': false },
-      }
+      },
     }
   },
   methods: {
-    showModal: function(modalName) {
+    showModal: function (modalName) {
       $(modalName).modal('show');
     },
-    titleCase: function(title) {
+    titleCase: function (title) {
       return title.charAt(0).toUpperCase() + title.substr(1)
     },
-    toggleHighlight: function(highlight, oldState) {
+    toggleHighlight: function (highlight, oldState) {
       _.forEach(this.highlights, function(value, key) {
         value.state = false
       });
       highlight.state = !oldState
       // Turn off all highlights; toggle the one just clicked
       this.$eventHub.$emit('set-highlights', this.highlights)
-    }
-  }
+    },
+  },
 }
 
 </script>

@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     savedAgoDisplay: function() {
-      if (!this.lastSaved) { return "No changes" }
+      if (!this.lastSaved) { return "No Changes" }
       var savedAgo = Math.abs(new Date() - this.lastSaved) / 1000
       if (savedAgo > 59) {
         return "Saved at " + this.hours + ":" + this.minutes
