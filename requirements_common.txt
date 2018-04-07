@@ -4,7 +4,7 @@
 # Mental note (npm equivalent command):   npm outdated
 
 # Core
-Django==2.0.3                           # pyup: >=2.0,<2.1
+Django==2.0.4                           # pyup: >=2.0,<2.1
 django-appconf==1.0.2                   # Helper for handling app configs
 django-dynamic-preferences==1.5.1       # Settings management
 django-extensions==2.0.6                # For the generate secret command
@@ -31,7 +31,7 @@ django_redis==4.9.0                     # Use redis for cache (on heroku; local 
 # Channels
 git+https://github.com/django/channels.git@db131ca93d93503147e00f51a94ea3d57ead09e3
                                         # Channels (disabled until 2.0.2+)
-channels_redis==2.1.0                   # Channels Layer
+channels_redis==2.1.1                   # Channels Layer
 
 # Misc
 django-debug-toolbar==1.9.1             # Debug; but useful to run in prod sometimes
