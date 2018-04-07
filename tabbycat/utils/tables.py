@@ -741,7 +741,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             times_headers = [_("Date"), _("Time")]
             times_data = []
             for debate in debates:
-                if debate.aff_team.type == Team.TYPE_BYE or debate.neg_team.type == Team.TYPE_BYE:
+                if self.tournament.pref('teams_in_debate') != 'bp' and (debate.aff_team.type == Team.TYPE_BYE or debate.neg_team.type == Team.TYPE_BYE):
                     times_data.append(["", _("Bye")])
                 elif debate.result_status == Debate.STATUS_POSTPONED:
                     times_data.append(["", _("Postponed")])

@@ -140,11 +140,17 @@ class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
-    def get_round(self):
+    def round(self):
         return None
 
     def get_page_title(self):
         return _("All Debates for All Rounds of %(tournament)s") % {'tournament': self.tournament.name}
+
+    def get_page_subtitle(self):
+        return None
+
+    def get_page_emoji(self):
+        return None
 
     def get_draw(self):
         all_rounds = Round.objects.filter(tournament=self.tournament,
