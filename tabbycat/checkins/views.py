@@ -138,7 +138,7 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
             try:
                 item['identifier'] = [venue.checkin_identifier.barcode]
             except ObjectDoesNotExist:
-                item['identifier'] = None
+                item['identifier'] = [None]
             venues.append(item)
         kwargs["venues"] = json.dumps(venues)
 

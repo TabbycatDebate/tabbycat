@@ -78,20 +78,19 @@
                          data-toggle="tooltip" :title="getToolTipForEntity(entity)">
                       {{ entity.name }}
                     </div>
-                    <a v-if="scanUrl && !entity.status && entity.identifier && !entity.locked"
+                    <a v-if="scanUrl && !entity.status && entity.identifier[0] && !entity.locked"
                        class="col-auto p-2 btn-info text-center hoverable"
                        title="Click to check-in manually"
                        @click="checkInIdentifiers(entity.identifier)">
                       ✓
                     </a>
-                    <div v-if="scanUrl && !entity.status && entity.identifier.length > 0 && entity.locked"
+                    <div v-if="scanUrl && !entity.status && entity.identifier[0] && entity.locked"
                          class="col-auto p-2 btn-secondary text-center btn-no-hover">
                       saving...
                     </div>
-                    <div v-if="scanUrl && entity.identifier.length === 0"
+                    <div v-if="scanUrl && !entity.identifier[0]"
                          class="col-auto p-2 btn-secondary text-white text-center"
-                         data-toggle="tooltip"
-                         title="This person does not have a check-in identifier so can't be checked in">
+                         data-toggle="tooltip" title="This person does not have a check-in identifier so can't be checked in">
                       ?
                     </div>
                     <div v-if="entity.status" class="col-auto p-2 btn-success btn-no-hover text-center">
@@ -119,26 +118,24 @@ import _ from 'lodash'
 
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
-
 import PeopleStatusMixin from './PeopleStatusMixin.vue'
 import VenuesStatusMixin from './VenuesStatusMixin.vue'
-
 
 export default {
   mixins: [AjaxMixin, WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],
   data: function () {
     return {
       filterByPresence: {
-        'Absent': false, 'Present': false, 'All': true
+        Absent: false, Present: false, All: true,
       },
       enableAnimations: true,
-      sockets: ['checkins']
+      sockets: ['checkins'],
     }
   },
   props: {
-    'events': Array,
-    'scanUrl': String,
-    'assistantUrl': String
+    events: Array,
+    scanUrl: String,
+    assistantUrl: String,
   },
   computed: {
     isForVenues: function () {
@@ -154,45 +151,42 @@ export default {
       // Don't want the entire list to animate when changing filter effects
       if (this.enableAnimations) {
         return 'animated-list'
-      } else {
-        return ''
       }
+      return ''
     },
     entitiesByType: function () {
       return this.isForVenues ? this.venuesByType : this.peopleByType
     },
     entitiesByPresence: function () {
       // Filter by status
-      if (this.filterByPresence["All"]) {
+      if (this.filterByPresence.All) {
         return this.entitiesByType
-      } else if (this.filterByPresence["Absent"]) {
-        return _.filter(this.entitiesByType, function (p) {
-          return p["status"] === false
-        })
-      } else {
-        return _.filter(this.entitiesByType, function (p) {
-          return p["status"] !== false
+      } else if (this.filterByPresence.Absent) {
+        return _.filter(this.entitiesByType, (p) => {
+          return p.status === false
         })
       }
+      return _.filter(this.entitiesByType, (p) => {
+        return p.status !== false
+      })
     },
     entitiesSortedByName: function () {
       return _.sortBy(this.entitiesByPresence, ['name'])
     },
     entitiesByName: function () {
-      return _.groupBy(this.entitiesSortedByName, function (p) {
+      return _.groupBy(this.entitiesSortedByName, (p) => {
         return p.name[0]
       })
     },
     entitiesByTime: function () {
-      var sortedByTime = _.sortBy(this.entitiesSortedByName, function (p) {
-        if (_.isUndefined(p["status"])) {
-          return "Thu, 01 Jan 2070 00:00:00 GMT-0400"
-        } else {
-          return p.status.time
+      var sortedByTime = _.sortBy(this.entitiesSortedByName, (p) => {
+        if (_.isUndefined(p.status)) {
+          return 'Thu, 01 Jan 2070 00:00:00 GMT-0400'
         }
+        return p.status.time
       })
       var self = this
-      return _.groupBy(sortedByTime, function (p) {
+      return _.groupBy(sortedByTime, (p) => {
         if (_.isUndefined(p["status"]) || p["status"] === false) {
           return "Not Checked In"
         } else {
@@ -222,17 +216,21 @@ export default {
   },
   methods: {
     clock: function (timeRead) {
-      var paddedTime = ("0" + timeRead).slice(-2)
+      var paddedTime = (`0${timeRead}`).slice(-2)
       return paddedTime
     },
     checkInGroup: function (entity) {
       var identifiersForEntities = _.flatten(_.map(entity, 'identifier'))
-      console.log('test', identifiersForEntities)
-      this.checkInIdentifiers(identifiersForEntities)
+      var nonNullIdentifiers = _.filter(identifiersForEntities, (id) => {
+        return id !== null
+      });
+      if (nonNullIdentifiers.length > 0) {
+        this.checkInIdentifiers(nonNullIdentifiers)
+      }
     },
     checkInIdentifiers: function (barcodeIdentifiers) {
       var message = 'the checkin status of ' + barcodeIdentifiers
-      var payload = { 'barcodes': barcodeIdentifiers }
+      var payload = { barcodes: barcodeIdentifiers }
       this.setLocked(barcodeIdentifiers, true)
       this.ajaxSave(this.scanUrl, payload, message, this.passCheckIn, this.failCheckIn, null, false)
     },
@@ -248,8 +246,8 @@ export default {
       this.setLocked(payload.barcodes, false)
     },
     failCheckIn: function (payload, returnPayload) {
-      var message = 'Failed to check in one or more identifiers: ' + payload.barcodes
-      $.fn.showAlert("danger", message, 0)
+      var message = `Failed to check in one or more identifiers: ${payload.barcodes}`
+      $.fn.showAlert('danger', message, 0)
       this.setLocked(payload.barcodes, false)
     },
     lastSeenTime: function (timeString) {
@@ -262,21 +260,21 @@ export default {
     setListContext: function (metaKey, selectedKey, selectedValue) {
       this.enableAnimations = false
       var self = this
-      _.forEach(this[metaKey], function (value, key) {
+      _.forEach(this[metaKey], (value, key) => {
         if (key === selectedKey) {
           self[metaKey][key] = selectedValue
         } else {
           self[metaKey][key] = false
         }
       })
-      this.$nextTick(function () {
+      this.$nextTick(() => {
         self.enableAnimations = true
       })
     },
     handleSocketMessage: function (payload, socketLabel) {
       console.log('handleSocketMessage', socketLabel, ' : ', payload)
       this.events.push(payload)
-    }
-  }
+    },
+  },
 }
 </script>

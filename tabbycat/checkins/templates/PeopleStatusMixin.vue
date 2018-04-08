@@ -5,7 +5,7 @@ export default {
   data: function () {
     return {
       peopleFilterByType: {
-        'Adjudicators': false, 'Debaters': false, 'All': true,
+        Adjudicators: false, Debaters: false, All: true,
       },
       peopleSortByGroup: {
         'By Institution': true, 'By Name': false, 'By Time': false,
@@ -16,25 +16,28 @@ export default {
     }
   },
   props: {
-    'speakers': Array,
-    'adjudicators': Array
+    speakers: Array,
+    adjudicators: Array,
   },
   methods: {
     getToolTipForPerson: function (entity) {
-      var tt = entity.name + ", a " + entity.type
+      var tt = `${entity.name}, a ${entity.type}`
       if (entity.institution === null) {
         tt += ' of no institutional affiliation'
       } else {
-        tt += ' from ' + entity.institution.name
+        tt += ` from ${entity.institution.name}`
       }
       if (entity.speakers !== null) {
         tt += ' with speakers '
-        _.forEach(entity.speakers, function (speaker) {
+        _.forEach(entity.speakers, (speaker) => {
           var status = speaker.status ? 'Present; id=' : 'Absent; id='
-          tt += speaker.name + ' (' + status + ' ' + speaker.identifier[0] + ') '
+          tt += `${speaker.name} (${status} ${speaker.identifier[0]}) `
         })
+      }
+      if (entity.identifier !== null) {
+        tt += ` with identifier of ${entity.identifier[0]}`
       } else {
-        tt += ' with identifier of ' + entity.identifier[0]
+        tt += ' with no assigned identifier '
       }
       return tt
     },
@@ -78,9 +81,8 @@ export default {
     annotatedDebaters: function () {
       if (this.speakerGroupings['Show Speakers']) {
         return this.annotatedSpeakers
-      } else {
-        return this.annotatedTeams
       }
+      return this.annotatedTeams
     },
     annotatedAdjudicators: function () {
       return this.annotatePeople('adjudicators')
@@ -115,6 +117,6 @@ export default {
         }
       })
     },
-  }
+  },
 }
 </script>
