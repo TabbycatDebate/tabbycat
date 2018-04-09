@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
 
-from .emoji import EMOJI_CHOICES
+from .emoji import EMOJI_FIELD_CHOICES
 
 logger = logging.getLogger(__name__)
 
@@ -196,7 +196,8 @@ class Team(models.Model):
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
         verbose_name=_("type"))
 
-    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_CHOICES, # uses null=True to allow multiple teams to have no emoji
+    emoji = models.CharField(max_length=2, default=None, choices=EMOJI_FIELD_CHOICES,
+        blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
 
     class Meta:
