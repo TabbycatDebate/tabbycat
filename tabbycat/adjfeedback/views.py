@@ -5,7 +5,7 @@ import math
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import F, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ungettext
@@ -262,6 +262,23 @@ class LatestFeedbackView(FeedbackCardsView):
             Q(adjudicator__tournament=t) |
             Q(adjudicator__tournament__isnull=True)).order_by(
             '-timestamp')[:30].select_related(
+            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+
+
+class ImportantFeedbackView(FeedbackCardsView):
+    """View displaying the feedback in order of most 'important'."""
+
+    template_name = "feedback_important.html"
+
+    def get_feedback_queryset(self):
+        t = self.get_tournament()
+        return AdjudicatorFeedback.objects.annotate(
+            feedback_importance=F('score') - F('adjudicator__test_score')
+        ).filter(
+            Q(feedback_importance__gt=2) | Q(feedback_importance__lt=-2),
+            Q(adjudicator__tournament=t) |
+            Q(adjudicator__tournament__isnull=True)
+        ).order_by('-timestamp').select_related(
             'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
 
 

@@ -112,6 +112,9 @@
       <a class="list-group-item {% if feedback_latest_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-latest' %}" data-parent="#feedh">
         <i data-feather="clock"></i>Latest
       </a>
+        <a class="list-group-item {% if feedback_important_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
+        <i data-feather="star"></i>Important
+      </a>
       <a class="list-group-item {% if feedback_source_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-by-source' %}" data-parent="#feedh">
         <i data-feather="phone-outgoing"></i>Find by Source
       </a>

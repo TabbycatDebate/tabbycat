@@ -28,7 +28,7 @@ def get_menu_highlight(request):
     menu = {}
     path = request.path
     if "admin" in path:
-        if "options" in path or "participants" in path or "import" in path:
+        if "options" in path or "participants" in path or ("import" in path and "important" not in path):
             menu['options_nav'] = True
             if "options" in path:
                 menu['configuration_nav'] = True
@@ -52,6 +52,8 @@ def get_menu_highlight(request):
             menu['feedback_nav'] = True
             if "latest" in path:
                 menu['feedback_latest_nav'] = True
+            elif "important" in path:
+                menu['feedback_important_nav'] = True
             elif "source" in path:
                 menu['feedback_source_nav'] = True
             elif "target" in path:
