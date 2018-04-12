@@ -1,28 +1,31 @@
+import csv
 import logging
 
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy
+from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
+from importer.forms import ImportValidationError
 from participants.models import Adjudicator, Team
 from results.forms import TournamentPasswordField
 from tournaments.models import Round
 from utils.forms import OptionalChoiceField
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
 from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
 
 ADJUDICATOR_POSITION_NAMES = {
-    AdjudicatorAllocation.POSITION_CHAIR: ugettext_lazy("chair"),
-    AdjudicatorAllocation.POSITION_ONLY: ugettext_lazy("solo"),
-    AdjudicatorAllocation.POSITION_PANELLIST: ugettext_lazy("panellist"),
-    AdjudicatorAllocation.POSITION_TRAINEE: ugettext_lazy("trainee")
+    AdjudicatorAllocation.POSITION_CHAIR: gettext_lazy("chair"),
+    AdjudicatorAllocation.POSITION_ONLY: gettext_lazy("solo"),
+    AdjudicatorAllocation.POSITION_PANELLIST: gettext_lazy("panellist"),
+    AdjudicatorAllocation.POSITION_TRAINEE: gettext_lazy("trainee")
 }
 
 
@@ -50,9 +53,9 @@ class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
         choices = (
             ('1', '--------'),
             # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('2', ugettext_lazy('Yes')),
+            ('2', gettext_lazy('Yes')),
             # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('3', ugettext_lazy('No'))
+            ('3', gettext_lazy('No'))
         )
         # skip the NullBooleanSelect constructor
         super(forms.NullBooleanSelect, self).__init__(attrs, choices)
@@ -330,3 +333,90 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             return self.save_adjudicatorfeedback(**kwargs)
 
     return FeedbackForm
+
+
+# ==============================================================================
+# Update adjudicator scores in bulk
+# ==============================================================================
+
+class UpdateAdjudicatorScoresForm(forms.Form):
+    """Form that takes in a CSV-style list of adjudicators with scores, and
+    saves the scores, overwriting existing ones. Unlike the other forms, this
+    isn't part of a wizard, it just saves directly."""
+
+    scores_raw = forms.CharField(widget=forms.Textarea(attrs={'rows': 20}))
+
+    def __init__(self, tournament, *args, **kwargs):
+        self.tournament = tournament
+        return super().__init__(*args, **kwargs)
+
+    def clean_scores_raw(self):
+        lines = self.cleaned_data['scores_raw'].split('\n')
+        errors = []
+        records = []
+
+        for i, line in enumerate(csv.reader(lines), start=1):
+            errors_in_line = []
+
+            if len(line) < 1:
+                continue # skip blank lines
+            if len(line) < 2:
+                errors_in_line.append(ImportValidationError(i,
+                    _("This line (for %(adjudicator)s) didn't have a score") %
+                    {'adjudicator': line[0]}))
+                continue
+            if len(line) > 2:
+                errors_in_line.append(ImportValidationError(i,
+                    _("This line (for %(adjudicator)s) had too many columns") %
+                    {'adjudicator': line[0]}))
+
+            name, score = [x.strip() for x in line[:2]]
+
+            try:
+                adj = self.tournament.relevant_adjudicators.get(name=name)
+            except Adjudicator.MultipleObjectsReturned:
+                errors_in_line.append(ImportValidationError(i,
+                    _("There are several adjudicators called \"%(adjudicator)s\", so "
+                      "you can't use the bulk importer to update their score. "
+                      "Please do so in the Feedback Overview page instead.") %
+                    {'adjudicator': name}))
+            except Adjudicator.DoesNotExist:
+                errors_in_line.append(ImportValidationError(i,
+                    _("There is no adjudicator in this tournament with the "
+                      "name \"%(adjudicator)s\"") %
+                    {'adjudicator': name}))
+
+            try:
+                score = float(score)
+            except ValueError:
+                errors_in_line.append(ImportValidationError(i,
+                    _("The score for %(adjudicator)s, \"%(score)s\", isn't a number") %
+                    {'adjudicator': name, 'score': score}))
+
+            if errors_in_line:
+                errors.extend(errors_in_line)
+                continue
+
+            records.append((adj, score))
+
+        if errors:
+            raise ValidationError(errors)
+
+        if len(records) == 0:
+            raise ValidationError(_("There were no scores to import."))
+
+        return records
+
+    def save(self):
+        records = self.cleaned_data.get('scores_raw', [])
+        for adj, score in records:
+            adj.test_score = score
+            adj.save()
+
+            AdjudicatorTestScoreHistory.objects.create(
+                adjudicator=adj,
+                round=self.tournament.current_round,
+                score=score
+            )
+
+        return len(records)

@@ -1,4 +1,4 @@
-{% load static i18n debate_tags %}<!DOCTYPE html>
+{% load static statici18n i18n debate_tags %}<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -25,27 +25,20 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
 
 </head>
 
 <body class="{% block body-class %}{% endblock %}">
 
   {% block nav %}
-    {% if 'admin/' not in request.path %}
-      {% include "nav/top_nav_base.html" %}
-    {% elif user.is_authenticated and not user.is_superuser %}
+    {% if user_role != "admin" %}
       {% include "nav/top_nav_base.html" %}
     {% endif %}
   {% endblock nav %}
 
   <div class="container-fluid">
 
-    {% if 'admin/' in request.path and user.is_superuser %}
+    {% if user_role == "admin" %}
       <!-- Fake full height for menu -->
       <div class="row">
         <div class="col-md-2 col-1 float-left pl-0 pr-lg-3 pr-md-3 pr-0 d-none d-sm-block width fake-sidebar">
@@ -62,7 +55,7 @@
     {% endif %}
 
     {% block header %}
-      <div class="row d-print-none {% if 'admin/' in request.path and user.is_superuser %}mb-3{% endif %}">
+      <div class="row d-print-none {% if user_role == "admin" %}mb-md-3{% endif %}" id="pageTitle">
         <div class="col mt-4 mb-3 h3">
 
           {% if page_title %}
@@ -110,7 +103,7 @@
       </div>
     </div>
 
-    {% if 'admin/' in request.path and user.is_superuser %}
+    {% if user_role == "admin" %}
 
         </main>
       </div>
@@ -119,7 +112,7 @@
 
   </div>
 
-  {% if 'admin/' not in request.path or not user.is_superuser %}
+  {% if user_role != "admin" %}
     <footer class="footer">
       <div class="container-fluid">
         {% block footer %}{% include "footer.html" %}{% endblock footer %}
@@ -140,7 +133,7 @@
 
   {% block modals %}
     <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header h4 text-center"></div>
           <div class="modal-body"></div>
@@ -150,6 +143,7 @@
   {% endblock %}
 
   {% block js %}
+  <script src="{% statici18n LANGUAGE_CODE %}"></script>
   {% if user.is_authenticated %}
   <script>
     window.buildData = { // Pass to Raven

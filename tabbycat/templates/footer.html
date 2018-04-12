@@ -9,13 +9,11 @@
       <div class="col-lg-6 col-md-5">
         <h6 class="d-inline-block">
           <img src="{% static 'logo.svg' %}" width="28" height="24" style="margin-top: -14px;">
-          {% if tournament %}
-            {% blocktrans trimmed %}{{ tournament }} runs on {% endblocktrans %}
+          {% if tournament and tabbycat_codename %}
+            {% blocktrans trimmed %}{{ tournament }} runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed %}This site runs on {% endblocktrans %}
+            {% blocktrans trimmed %}This site runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
           {% endif %}
-          Tabbycat
-          {% if tabbycat_version %} {{ tabbycat_version }}{% endif %}{% if tabbycat_codename %} ({{ tabbycat_codename }}){% endif %}
         </h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
@@ -62,6 +60,12 @@
       <div class="col mt-2">
         <ul class="nav justify-content-center">
           <li class="nav-item p-2">
+            <i data-feather="globe"></i>
+            <a class="nav-link p-0 d-inline-block" href="#" data-toggle="modal" data-target="#setLanguageModal">
+              Language / Idioma / Langue / لُغَة
+            </a>
+          </li>
+          <li class="nav-item p-2">
             <i data-feather="github"></i>
             <a class="nav-link p-0 d-inline-block" href="https://github.com/TabbycatDebate/tabbycat/">
               {% trans "GitHub" %}
@@ -98,3 +102,31 @@
   </div>
 </div>
 
+<div class="modal fade" id="setLanguageModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Change Language" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+          <input name="next" type="hidden" value="{{ redirect_to }}">
+          <select name="language" class="custom-select">
+              {% get_current_language as LANGUAGE_CODE %}
+              {% get_available_languages as LANGUAGES %}
+              {% get_language_info_list for LANGUAGES as languages %}
+              {% for language in languages %}
+                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                  {{ language.name_local }} ({{ language.code }})
+                </option>
+              {% endfor %}
+          </select>
+          <input class="btn btn-primary btn-block mt-3" type="submit" value="{% trans "Use this language" %}">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

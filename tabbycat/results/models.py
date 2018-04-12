@@ -4,9 +4,12 @@ from threading import Lock
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
+
+from utils.misc import badge_datetime_format
 
 from .result import DebateResult
+from .utils import readable_ballotsub_result
 
 logger = logging.getLogger(__name__)
 
@@ -134,6 +137,18 @@ class BallotSubmission(Submission):
 
         if self.forfeit is not None and self.forfeit.debate != self.debate:
             raise ValidationError(_("The forfeiter must be a team in the debate."))
+
+    @property
+    def serialize_like_actionlog(self):
+        result_winner, result = readable_ballotsub_result(self)
+        return {
+            'user': result_winner,
+            'id': self.id,
+            'type': result,
+            'param': '',
+            'timestamp': badge_datetime_format(self.timestamp),
+            'confirmed': self.confirmed
+        }
 
 
 class SpeakerScoreByAdj(models.Model):

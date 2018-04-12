@@ -1,6 +1,6 @@
 import logging
 
-from .dynamic_preferences_registry import tournament_preferences_registry
+from .preferences import tournament_preferences_registry
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class PreferencesPreset:
 
 class AustralsPreferences(PreferencesPreset):
     name         = "Australs Rules"
-    description  = ("3 vs 3 with replies, chosen motions, intermediate bubbles, "
+    description  = ("3 vs 3 with replies, chosen motions, intermediate brackets, "
         "one-up-one-down. Compliant with AIDA rules.")
     show_in_list = True
 
@@ -84,7 +84,8 @@ class AustralsPreferences(PreferencesPreset):
     draw_rules__draw_avoid_conflicts           = 'one_up_one_down'
     # Debate Rules
     debate_rules__teams_in_debate              = 'two'
-    debate_rules__ballots_per_debate           = 'per-adj'
+    debate_rules__ballots_per_debate_prelim    = 'per-adj'
+    debate_rules__ballots_per_debate_elim      = 'per-adj'
     debate_rules__substantive_speakers         = 3
     debate_rules__reply_scores_enabled         = True
     debate_rules__motion_vetoes_enabled        = True
@@ -93,7 +94,8 @@ class AustralsPreferences(PreferencesPreset):
     # Standings Rules
     standings__standings_missed_debates        = 2  # TODO= check this
     standings__team_standings_precedence       = ['wins', 'speaks_sum']
-    standings__rank_speakers_by                = 'average' # constitutional
+    standings__speaker_standings_precedence    = ['average'] # constitutional
+    standings__speaker_standings_extra_metrics = ['stdev', 'count']
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -111,7 +113,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     # Debate Rules
     debate_rules__substantive_speakers         = 2
     debate_rules__teams_in_debate              = 'bp'
-    debate_rules__ballots_per_debate           = 'per-debate'
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-debate'
     debate_rules__side_names                   = 'gov-opp'
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = False
@@ -125,9 +128,10 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     draw_rules__bp_position_cost_exponent      = 4.0
     draw_rules__bp_assignment_method           = 'hungarian_preshuffled'
     # Standings Rules
-    standings__standings_missed_debates        = 10 # Speakers always show
+    standings__standings_missed_debates        = -1 # Speakers always show
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
-    standings__rank_speakers_by                = 'total' # Missing debates hurts totals
+    standings__speaker_standings_precedence    = ['total'] # constitutional
+    standings__speaker_standings_extra_metrics = ['stdev']
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
@@ -146,7 +150,8 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
     debate_rules__substantive_speakers         = 2
     debate_rules__side_names                   = 'gov-opp'
     debate_rules__motion_vetoes_enabled        = False
-    debate_rules__ballots_per_debate           = 'per-debate'
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-debate'
     data_entry__enable_motions                 = False
     # Draws
     draw_rules__avoid_same_institution         = False # TBC
@@ -171,8 +176,10 @@ class AustralianEastersPreferences(AustralsPreferences):
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = True
     data_entry__enable_motions                 = True
+    debate_rules__ballots_per_debate_prelim    = 'per-debate'
+    debate_rules__ballots_per_debate_elim      = 'per-adj'
     # Standings Rules
-    standings__rank_speakers_by                = 'average' # constitutional
+    standings__speaker_standings_precedence    = ['average']  # constitutional
 
 
 class NZEastersPreferences(AustralsPreferences):
@@ -292,7 +299,7 @@ class WSDCPreferences(AustralsPreferences):
     draw_rules__avoid_same_institution         = False
     # Standings
     standings__team_standings_precedence       = ['wins', 'num_adjs', 'speaks_avg']
-    standings__rank_speakers_by                = 'average' # Speakers sub in/out
+    standings__speaker_standings_precedence    = ['average']  # speakers sub in/out
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = False
@@ -312,7 +319,8 @@ class WADLPreferences(PreferencesPreset):
     # Standings Rules
     standings__standings_missed_debates        = 0
     standings__team_standings_precedence       = ['points210', 'wbwd', 'margin_avg', 'speaks_avg']
-    standings__rank_speakers_by                = 'average'
+    standings__speaker_standings_precedence    = ['average']
+    standings__speaker_standings_extra_metrics = ['stdev', 'count']
     # Draws
     draw_rules__avoid_same_institution         = False
     draw_rules__avoid_team_history             = False
@@ -337,6 +345,7 @@ class WADLPreferences(PreferencesPreset):
     league_options__enable_debate_scheduling   = True
     league_options__share_adjs                 = True
     league_options__share_venues               = True
+    league_options__hide_adjudicators          = True
     league_options__division_venues            = True
     league_options__duplicate_adjs             = True
     league_options__public_divisions           = True
@@ -377,3 +386,8 @@ class TabRelease(PreferencesPreset):
     public_features__public_results            = True
     public_features__public_breaking_teams     = True
     public_features__public_breaking_adjs      = True
+    # Disable
+    public_features__public_checkins           = False
+    public_features__public_team_standings     = False
+    public_features__public_draw               = False
+    public_features__public_break_categories   = False

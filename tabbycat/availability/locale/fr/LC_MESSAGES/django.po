@@ -1,22 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Tabbycat translations, availability module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-10 18:46+1100\n"
-"PO-Revision-Date: 2017-09-17 10:54-0700\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
+"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
 
 #: availability/apps.py:7
 msgid "Availability"
@@ -24,27 +24,23 @@ msgstr "Disponibilité"
 
 #: availability/models.py:15
 msgid "content type"
-msgstr ""
+msgstr "type de contenu"
 
 #: availability/models.py:16
 msgid "object id"
-msgstr ""
+msgstr "identifiant d'objet"
 
 #: availability/models.py:20
 msgid "round"
-msgstr ""
+msgstr "tour"
 
 #: availability/models.py:24
-#, fuzzy
-#| msgid "Availability"
 msgid "round availability"
-msgstr "Disponibilité"
+msgstr "disponibilité dans un tour"
 
 #: availability/models.py:25
-#, fuzzy
-#| msgid "Venue Availability"
 msgid "round availabilities"
-msgstr "Disponibilité des lieux"
+msgstr "disponibilités dans un tour"
 
 #: availability/templates/availability_index.html:11
 msgid "Check In All Breaking Adjs"
@@ -61,7 +57,7 @@ msgstr "Copier de %(prev_round)s"
 
 #: availability/templates/availability_index.html:40
 msgid "View Draw"
-msgstr "Afficher le tirage"
+msgstr "Voir le tirage"
 
 #: availability/templates/availability_index.html:48
 #: availability/templates/availability_index.html:53
@@ -273,7 +269,7 @@ msgstr "Enregistrement des équipes"
 
 #: availability/templates/checkin_progress.html:46
 msgid "No need to check teams in"
-msgstr ""
+msgstr "Pas de besoin d'enregistrer les équipes"
 
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams checked in for this round."
@@ -285,10 +281,8 @@ msgstr ""
 "Le nombre d'équipes enregistrées pour ce tour n'est pas un multiple de 4."
 
 #: availability/templates/checkin_progress.html:59
-#, fuzzy
-#| msgid "Team Check-Ins"
 msgid "Edit team check-ins"
-msgstr "Enregistrement des équipes"
+msgstr "Modifier la disponibilité des équipes"
 
 #: availability/templates/checkin_progress.html:66
 msgid "Check in adjudicators"
@@ -311,7 +305,7 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html:80
 msgid "Edit adjudicator check-ins"
-msgstr ""
+msgstr "Modifier la disponibilité des juges"
 
 #: availability/templates/checkin_progress.html:87
 msgid "Check in venues"
@@ -332,10 +326,8 @@ msgstr[1] ""
 "nombre de débats."
 
 #: availability/templates/checkin_progress.html:103
-#, fuzzy
-#| msgid "Venue Check-Ins"
 msgid "Edit venue check-ins"
-msgstr "Enregistrement des lieux"
+msgstr "Modifier la disponibilité des lieux"
 
 #: availability/views.py:77
 msgid "no teams are debating"
@@ -375,92 +367,54 @@ msgid_plural "%(nadvancing)s advancing teams are debating this round"
 msgstr[0] "%(nadvancing)s équipe avançante débat dans ce tour"
 msgstr[1] "%(nadvancing)s équipes avançantes débattent dans ce tour"
 
-#: availability/views.py:152
+#: availability/views.py:153
 msgid "Team Availability"
 msgstr "Disponibilité des équipes"
 
-#: availability/views.py:154
+#: availability/views.py:155
 msgid "Adjudicator Availability"
 msgstr "Disponibilité des juges"
 
-#: availability/views.py:156
+#: availability/views.py:157
 msgid "Venue Availability"
 msgstr "Disponibilité des lieux"
 
-#: availability/views.py:173
+#: availability/views.py:177
 msgid "Active Now"
 msgstr "Actif actuellement"
 
-#: availability/views.py:183
+#: availability/views.py:187
 #, python-format
 msgid "Active in %(prev_round)s"
 msgstr "Actif dans %(prev_round)s"
 
-#: availability/views.py:231
+#: availability/views.py:238
 msgid "Venue"
 msgstr "Lieu"
 
-#: availability/views.py:232
+#: availability/views.py:239
 msgid "Display Name (for the draw)"
 msgstr "Nom d'affichage (pour le tirage)"
 
-#: availability/views.py:233
+#: availability/views.py:240
 msgid "Categories"
 msgstr "Catégories"
 
-#: availability/views.py:234
+#: availability/views.py:241
 msgid "Priority"
 msgstr "Priorité"
 
-#: availability/views.py:252
+#: availability/views.py:259
 msgid "Checked in all teams, adjudicators and venues."
 msgstr ""
 "Toutes les équipes, tous les juges et tous les lieux ont été enregistrés."
 
-#: availability/views.py:259
+#: availability/views.py:266
 msgid "Checked in all breaking adjudicators."
 msgstr "Tous les juges qualifiants ont été enregistrés."
 
-#: availability/views.py:267
+#: availability/views.py:274
 msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""
 "Toutes les équipes, tous les juges et tous les lieux du tour précédent ont "
 "été enregistrés."
-
-#~ msgid "Check In Adjs"
-#~ msgstr "Enregistrer les juges"
-
-#~ msgid ""
-#~ "This is an elimination round, but its draw type is <strong>%(draw_type)s</"
-#~ "strong>. This combination isn't allowed — the draw type of elimination "
-#~ "rounds must be either <strong>first elimination</strong> (if it's the "
-#~ "first elimination round in its break category) or <strong>subsequent "
-#~ "elimination</strong>. Please <a href=\"%(change_round_url)s\" class="
-#~ "\"alert-link\"> change this round's draw type in the Edit Database area.</"
-#~ "a>"
-#~ msgstr ""
-#~ "Ce tour est éliminatoire, mais son type de tirage est <strong>"
-#~ "%(draw_type)s</strong>. Cette combinaison n'est pas permise — le type de "
-#~ "tirage de tous les tours éliminatoires doit être soit <strong>premier "
-#~ "éliminatoire</strong> (s'il est le premier tour éliminatoire dans sa "
-#~ "catégorie soit <strong>éliminatoire subséquent</strong>. Veuillez <a href="
-#~ "\"%(change_round_url)s\" class=\"alert-link\">changer le type de tirage "
-#~ "de ce tour dans la zone pour modifier la base de données.</a>"
-
-#~ msgid "Overview"
-#~ msgstr "Aperçu"
-
-#~ msgid ""
-#~ "Saved availabilities. <a href=\"%(index_url)s\" class=\"alert-link\"> "
-#~ "Return to the check-ins overview page?</a>"
-#~ msgstr ""
-#~ "Les disponibilités sont enregistrées. <a href=\"%(index_url)s\" class="
-#~ "\"alert-link\">Retourner à l'aperçu des enregistrements ?</a>"
-
-#~ msgid ""
-#~ "Error saving availabilities. <a href=\"%(index_url)s\" class=\"alert-link"
-#~ "\"> Return to the check-ins overview page?</a>"
-#~ msgstr ""
-#~ "Une erreur s'est produite lors d'enregistrement des disponibilités. <a "
-#~ "href=\"%(index_url)s\" class=\"alert-link\">Retourner à l'aperçu des "
-#~ "enregistrements ?</a>"

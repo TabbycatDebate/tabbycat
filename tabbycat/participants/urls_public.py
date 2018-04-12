@@ -1,24 +1,27 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^list/$',
+    path('list/',
         views.PublicParticipantsListView.as_view(),
         name='participants-public-list'),
+    path('institutions/',
+        views.PublicInstitutionsListView.as_view(),
+        name='participants-public-institutions-list'),
 
-    url(r'^team/(?P<pk>\d+)/$',
+    path('team/<int:pk>/',
         views.PublicTeamRecordView.as_view(),
         name='participants-public-team-record'),
-    url(r'^adjudicator/(?P<pk>\d+)/$',
+    path('adjudicator/<int:pk>/',
         views.PublicAdjudicatorRecordView.as_view(),
         name='participants-public-adjudicator-record'),
 
-    url(r'^team_list/(?P<team_id>\d+)/$',
+    path('team_list/<int:team_id>/',
         views.TeamSpeakersJsonView.as_view(),
         name='participants-team-speakers'),
 
-    url(r'^shifts/(?P<url_key>\w+)/$',
+    path('shifts/<slug:url_key>/',
         views.PublicConfirmShiftView.as_view(),
         name='participants-public-confirm-shift')
 ]

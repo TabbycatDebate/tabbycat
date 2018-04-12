@@ -256,7 +256,7 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
         if tournament is None:
             tournament = team.tournament
         self.enforce_orallist = (tournament.pref("show_splitting_adjudicators") and
-                                 tournament.pref("ballots_per_debate") == 'per-adj')
+                                 tournament.pref("ballots_per_debate_prelim") == 'per-adj')
         self.expect_all_adjs = tournament.pref("feedback_from_teams") == 'all-adjs'
         super().__init__(tournament)
 

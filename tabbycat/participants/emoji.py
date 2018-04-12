@@ -11,14 +11,16 @@ def set_emoji(teams, tournament):
     tournament must be provided as the second argument."""
 
     used_emoji = tournament.team_set.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unused_emoji = [e[0] for e in EMOJI_LIST if e[0] not in used_emoji]
+    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in used_emoji]
 
     if len(teams) > len(unused_emoji):
         teams = teams[:len(unused_emoji)]
     emojis = random.sample(unused_emoji, len(teams))
 
     for team, emoji in zip(teams, emojis):
-        team.emoji = emoji
+        team.emoji = emoji[0]
+        if not team.code_name:
+            team.code_name = emoji[1]
         team.save()
 
 
@@ -27,7 +29,7 @@ def pick_unused_emoji():
     no emoji are left, it returns `None`."""
     from .models import Team
     used_emoji = Team.objects.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unused_emoji = [e[0] for e in EMOJI_LIST if e[0] not in used_emoji]
+    unused_emoji = [e[0] for e in EMOJI_RANDOM_OPTIONS if e[0] not in used_emoji]
 
     try:
         return random.choice(unused_emoji)
@@ -35,1372 +37,1423 @@ def pick_unused_emoji():
         return None
 
 
+def populate_code_names_from_emoji(teams, overwrite=True):
+    """Populates team code names based on existing emoji."""
+    count = 0
+
+    for team in teams:
+        try:
+            new_code_name = EMOJI_NAMES[team.emoji]
+        except KeyError:
+            logger.warning("Unrecognized emoji for team %s: %s (%#x)", team.short_name, team.emoji, ord(team.emoji))
+            continue
+
+        if team.code_name:
+            if team.code_name == new_code_name:
+                continue
+            elif overwrite:
+                logger.info("Team %s already has code name %s, overwriting with %s",
+                    team.short_name, team.code_name, new_code_name)
+            else:
+                logger.info("Team %s already has code name %s, leaving unchanged",
+                    team.short_name, team.code_name)
+                continue
+
+        team.code_name = new_code_name
+        team.save()
+        count += 1
+
+    return count
+
+
 # With thanks to emojipedia.org
 EMOJI_LIST = (
-    # Unicode Version 1.1 (these all render using primitive icons)
-    # DOESNT SHOW ("☺️", "☺️"),  # White Smiling Face
-    # DOESNT SHOW ("☹", ""),  # White Frowning Face
-    # DOESNT SHOW ("☝️", "☝️"),  # White Up Pointing Index
-    # DOESNT SHOW ("✌️", "✌️"),  # Victory Hand
-    # DOESNT SHOW ("✍", ""),  # Writing Hand
-    # DOESNT SHOW ("❤️", "❤️"),  # Heavy Black Heart
-    # DOESNT SHOW ("❣", ""),  # Heavy Heart Exclamation Mark Ornament
-    # DOESNT SHOW ("☠", ""),  # Skull and Crossbones
-    # DOESNT SHOW ("♨️", "♨️"),  # Hot Springs
-    # DOESNT SHOW ("✈️", "✈️"),  # Airplane
-    # DOESNT SHOW ("⌛", "⌛"),  # Hourglass
-    # DOESNT SHOW ("⌚", "⌚"),  # Watch
-    # LAME ("♈", ""),  # Aries
-    # LAME ("♉", ""),  # Taurus
-    # LAME ("♊", ""),  # Gemini
-    # LAME ("♋", ""),  # Cancer
-    # LAME ("♌", ""),  # Leo
-    # LAME ("♍", ""),  # Virgo
-    # LAME ("♎", ""),  # Libra
-    # LAME ("♏", ""),  # Scorpius
-    # LAME ("♐", ""),  # Sagittarius
-    # LAME ("♑", ""),  # Capricorn
-    # LAME ("♒", ""),  # Aquarius
-    # LAME ("♓", ""),  # Pisces
-    # DOESNT SHOW ("☀️", "☀️"),  # Black Sun With Rays
-    # DOESNT SHOW ("☁️", "☁️"),  # Cloud
-    # DOESNT SHOW ("☂", ""),  # Umbrella
-    # DOESNT SHOW ("❄️", "❄️"),  # Snowflake
-    # DOESNT SHOW ("☃", "☃"),  # Snowman
-    # Doesn't show (" Comet", ""),  #
-    # DOESNT SHOW ("♠️", "♠️"),  # Black Spade Suit
-    # DOESNT SHOW ("♥️", "♥️"),  # Black Heart Suit
-    # DOESNT SHOW ("♦️", "♦️"),  # Black Diamond Suit
-    # DOESNT SHOW ("♣️", "♣️"),  # Black Club Suit
-    # LAME ("▶️", ""),  # Black Right-Pointing Triangle
-    # LAME ("◀️", ""),  # Black Left-Pointing Triangle
-    # DOESNT SHOW ("☎️", "☎️"),  # Black Telephone
-    # DOESNT SHOW ("⌨", ""),  # Keyboard
-    # DOESNT SHOW ("✉️", "✉️"),  # Envelope
-    # DOESNT SHOW ("✏️", "✏️"),  # Pencil
-    # DOESNT SHOW ("✒️", "✒️"),  # Black Nib
-    # DOESNT SHOW ("✂️", "✂️"),  # Black Scissors
-    # LAME ("↗️", ""),  # North East Arrow
-    # LAME ("➡️", ""),  # Black Rightwards Arrow
-    # LAME ("↘️", ""),  # South East Arrow
-    # LAME ("↙️", ""),  # South West Arrow
-    # LAME ("↖️", ""),  # North West Arrow
-    # LAME ("↕️", ""),  # Up Down Arrow
-    # LAME ("↔️", ""),  # Left Right Arrow
-    # LAME ("↩️", ""),  # Leftwards Arrow With Hook
-    # LAME ("↪️", ""),  # Rightwards Arrow With Hook
-    # OFFENSIVE ("✡", ""),  # Star of David
-    # OFFENSIVE ("☸", ""),  # Wheel of Dharma
-    # OFFENSIVE ("☯", ""),  # Yin Yang
-    # OFFENSIVE ("✝", ""),  # Latin Cross
-    # OFFENSIVE ("☦", ""),  # Orthodox Cross
-    # OFFENSIVE ("☪", ""),  # Star and Crescent
-    # OFFENSIVE ("☮", ""),  # Peace Symbol
-    # OFFENSIVE ("☢", ""),  # Radioactive Sign
-    # OFFENSIVE ("☣", ""),  # Biohazard Sign
-    # DOESNT SHOW ("☑️", "☑️"),  # Ballot Box With Check
-    # LAME ("✔️", ""),  # Heavy Check Mark
-    # LAME ("✖️", ""),  # Heavy Multiplication X
-    # LAME ("✳️", ""),  # Eight Spoked Asterisk
-    # LAME ("✴️", ""),  # Eight Pointed Black Star
-    # LAME ("❇️", ""),  # Sparkle
-    # DOESNT SHOW ("‼️", "‼️"),  # Double Exclamation Mark
-    # LAME ("〰️", ""),  # Wavy Dash
-    # LAME ("©️", ""),  # Copyright Sign
-    # LAME ("®️", ""),  # Registered Sign
-    # LAME ("™️", ""),  # Trade Mark Sign
-    # LAME ("Ⓜ️", ""),  # Circled Latin Capital Letter M
-    # LAME ("㊗️", ""),  # Circled Ideograph Congratulation
-    # LAME ("㊙️", ""),  # Circled Ideograph Secret
-    # LAME ("▪️", ""),  # Black Small Square
-    # LAME ("▫️", ""),  # White Small Square
-    # Unicode            Version 3.0
-    # ("#⃣️", "#⃣️"),  # Keycap Number Sign
-    # ("*⃣", "*⃣"),  # Keycap Asterisk
-    # ("0⃣️", "0⃣️"),  # Keycap Digit Zero
-    # ("1⃣️", "1⃣️"),  # Keycap Digit One
-    # ("2⃣️", "2⃣️"),  # Keycap Digit Two
-    # LAME ("3⃣️", ""),  # Keycap Digit Three
-    # LAME ("4⃣️", ""),  # Keycap Digit Four
-    # LAME ("5⃣️", ""),  # Keycap Digit Five
-    # LAME ("6⃣️", ""),  # Keycap Digit Six
-    # LAME ("7⃣️", ""),  # Keycap Digit Seven
-    # LAME ("8⃣️", ""),  # Keycap Digit Eight
-    # LAME ("9⃣️", ""),  # Keycap Digit Nine
-    # DOESNT SHOW ("⁉️", "⁉️"),  # Exclamation Question Mark
-    # LAME ("ℹ️", ""),  # Information Source
-    # Unicode     Version 3.2
-    # LAME ("⤴️", ""),  # Arrow Pointing Rightwards Then Curving Upwards
-    # LAME ("⤵️", ""),  # Arrow Pointing Rightwards Then Curving Downwards
-    # DOESNT SHOW ("♻️", "♻️"),  # Black Universal Recycling Symbol
-    # LAME ("〽️", ""),  # Part Alternation Mark
-    # LAME ("◻️", ""),  # White Medium Square
-    # LAME ("◼️", ""),  # Black Medium Square
-    # LAME ("◽", ""),  # White Medium Small Square
-    # LAME ("◾", ""),  # Black Medium Small Square
-    # Unicode    Version 4.0
-    ("☕", "☕"),  # Hot Beverage
-    # DOESN’T SHOW("⚠️", "⚠️"),  # Warning Sign
-    # DOESN’T SHOW ("☔", ""),  # Umbrella With Rain Drops
-    # LAME ("⏏", ""),  # Eject Symbol
-    # LAME ("⬆️", ""),  # Upwards Black Arrow
-    # LAME ("⬇️", ""),  # Downwards Black Arrow
-    # LAME ("⬅️", ""),  # Leftwards Black Arrow
-    # DOESN’T SHOW ("⚡", ""),  # High Voltage Sign
+    # emoji,	include in random choices, description
+    # Use tab not space after first comma, as emoji sometimes have different widths
+
+    # Unicode Version 1.1
+    ("☺️",   False, "White Smiling"),                    # doesn't show
+    ("☹",    False, "White Frowning"),                   # doesn't show
+    ("☝️",   False, "White Up Pointing Index"),          # doesn't show
+    ("✌️",   False, "Victory Hand"),                     # doesn't show
+    ("✍",    False, "Writing Hand"),                     # doesn't show
+    ("❤️",   False, "Heavy Black Heart"),                # doesn't show
+    ("❣",    False, "Heart Exclamation Mark"),           # doesn't show
+    ("☠",    False, "Skull and Crossbones"),             # doesn't show
+    ("♨️",   False, "Hot Springs"),                      # doesn't show
+    ("✈️",   False, "Airplane"),                         # doesn't show
+    ("⌛",    False, "Hourglass"),                        # doesn't show
+    ("⌚",    False, "Watch"),                            # doesn't show
+    ("♈",    False, "Aries"),                            # dull
+    ("♉",    False, "Taurus"),                           # dull
+    ("♊",    False, "Gemini"),                           # dull
+    ("♋",    False, "Cancer"),                           # dull
+    ("♌",    False, "Leo"),                              # dull
+    ("♍",    False, "Virgo"),                            # dull
+    ("♎",    False, "Libra"),                            # dull
+    ("♏",    False, "Scorpius"),                         # dull
+    ("♐",    False, "Sagittarius"),                      # dull
+    ("♑",    False, "Capricorn"),                        # dull
+    ("♒",    False, "Aquarius"),                         # dull
+    ("♓",    False, "Pisces"),                           # dull
+    ("☀️",   False, "Black Sun With Rays"),              # doesn't show
+    ("☁️",   True , "Cloud"),
+    ("☂",    False, "Umbrella"),                         # doesn't show
+    ("❄️",   True , "Snowflake"),
+    ("☃",    False, "Snowman"),                          # doesn't show
+    ("☄️",   False, "Comet"),                            # doesn't show
+    ("♠️",   False, "Spade Suit"),                       # doesn't show
+    ("♥️",   False, "Heart Suit"),                       # doesn't show
+    ("♦️",   False, "Diamond Suit"),                     # doesn't show
+    ("♣️",   False, "Club Suit"),                        # doesn't show
+    ("▶️",   False, "Black Right-Pointing Triangle"),    # dull
+    ("◀️",   False, "Black Left-Pointing Triangle"),     # dull
+    ("☎️",   False, "Black Telephone"),                  # doesn't show
+    ("⌨",    False, "Keyboard"),                         # doesn't show
+    ("✉️",   True , "Envelope"),
+    ("✏️",   False, "Pencil"),                           # doesn't show
+    ("✒️",   False, "Black Nib"),                        # doesn't show
+    ("✂️",   True , "Scissors"),
+    ("↗️",   False, "North East Arrow"),                 # dull
+    ("➡️",   False, "Black Rightwards Arrow"),           # dull
+    ("↘️",   False, "South East Arrow"),                 # dull
+    ("↙️",   False, "South West Arrow"),                 # dull
+    ("↖️",   False, "North West Arrow"),                 # dull
+    ("↕️",   False, "Up Down Arrow"),                    # dull
+    ("↔️",   False, "Left Right Arrow"),                 # dull
+    ("↩️",   False, "Leftwards Arrow With Hook"),        # dull
+    ("↪️",   False, "Rightwards Arrow With Hook"),       # dull
+    ("✡",    False, "Star of David"),                    # potentially offensive
+    ("☸",    False, "Wheel of Dharma"),                  # potentially offensive
+    ("☯",    False, "Yin Yang"),                         # potentially offensive
+    ("✝",    False, "Latin Cross"),                      # potentially offensive
+    ("☦",    False, "Orthodox Cross"),                   # potentially offensive
+    ("☪",    False, "Star and Crescent"),                # potentially offensive
+    ("☮",    False, "Peace Symbol"),                     # potentially offensive
+    ("☢",    False, "Radioactive Sign"),                 # potentially offensive
+    ("☣",    False, "Biohazard Sign"),                   # potentially offensive
+    ("☑️",   False, "Ballot Box With Check"),            # doesn't show
+    ("✔️",   False, "Heavy Check Mark"),                 # dull
+    ("✖️",   False, "Heavy Multiplication X"),           # dull
+    ("✳️",   False, "Eight Spoked Asterisk"),            # dull
+    ("✴️",   False, "Eight Pointed Black Star"),         # dull
+    ("❇️",   False, "Sparkle"),                          # dull
+    ("‼️",   False, "Double Exclamation Mark"),          # doesn't show
+    ("〰️",   False, "Wavy Dash"),                        # dull
+    ("©️",   False, "Copyright Sign"),                   # dull
+    ("®️",   False, "Registered Sign"),                  # dull
+    ("™️",   False, "Trade Mark Sign"),                  # dull
+    ("Ⓜ️",   False, "Capital M"),                        # dull
+    ("㊗️",   False, "Congratulations"),                  # dull
+    ("㊙️",   False, "Secret"),                           # dull
+    ("▪️",   False, "Black Square"),                     # dull
+    ("▫️",   False, "White Square"),                     # dull
+
+    # Unicode Version 3.0
+    ("#⃣️",  False, "Keycap Number Sign"),               # doesn't show
+    ("*⃣",   False, "Keycap Asterisk"),                  # doesn't show
+    ("0⃣️",  False, "Keycap Digit Zero"),                # doesn't show
+    ("1⃣️",  False, "Keycap Digit One"),                 # doesn't show
+    ("2⃣️",  False, "Keycap Digit Two"),                 # doesn't show
+    ("3⃣️",  False, "Keycap Digit Three"),               # doesn't show
+    ("4⃣️",  False, "Keycap Digit Four"),                # doesn't show
+    ("5⃣️",  False, "Keycap Digit Five"),                # doesn't show
+    ("6⃣️",  False, "Keycap Digit Six"),                 # doesn't show
+    ("7⃣️",  False, "Keycap Digit Seven"),               # doesn't show
+    ("8⃣️",  False, "Keycap Digit Eight"),               # doesn't show
+    ("9⃣️",  False, "Keycap Digit Nine"),                # doesn't show
+    ("⁉️",   False, "Exclamation Question Mark"),        # doesn't show
+    ("ℹ️",   False, "Information Source"),               # doesn't show
+
+    # Unicode Version 3.2
+    ("⤴️",   False, "Right-Curve-Up"),                   # dull
+    ("⤵️",   False, "Right-Curve-Down"),                 # dull
+    ("♻️",   False, "Recycling"),                        # doesn't show
+    ("〽️",   False, "Part Alternation Mark"),            # dull
+    ("◻️",   False, "White Medium Square"),              # dull
+    ("◼️",   False, "Black Medium Square"),              # dull
+    ("◽",    False, "White Medium Small Square"),        # dull
+    ("◾",    False, "Black Medium Small Square"),        # dull
+
+    # Unicode Version 4.0
+    ("☕",    True , "Hot Beverage"),
+    ("⚠️",   False, "Warning Sign"),                     # doesn't show
+    ("☔",    False, "Umbrella With Rain Drops"),         # doesn't show
+    ("⏏",    False, "Eject Symbol"),                     # dull
+    ("⬆️",   False, "Upwards Black Arrow"),              # dull
+    ("⬇️",   False, "Downwards Black Arrow"),            # dull
+    ("⬅️",   False, "Leftwards Black Arrow"),            # dull
+    ("⚡",    True , "High Voltage"),
+
     # Unicode Version 4.1
-    # DOESN’T SHOW ("☘", ""),  # Shamrock
-    # DOESN’T SHOW ("⚓", ""),  # Anchor
-    # DOESN’T SHOW ("♿", ""),  # Wheelchair Symbol
-    # DOESN’T SHOW ("⚒", ""),  # Hammer and Pick
-    # DOESN’T SHOW ("⚙", ""),  # Gear
-    # DOESN’T SHOW ("⚗", ""),  # Alembic
-    # USED BY UI ("⚖", ""),  # Scales
-    # DOESN’T SHOW ("⚔", ""),  # Crossed Swords
-    # DOESN’T SHOW ("⚰", ""),  # Coffin
-    # DOESN’T SHOW ("⚱", ""),  # Funeral Urn
-    # DOESN’T SHOW ("⚜", ""),  # Fleur-De-Lis
-    # DOESN’T SHOW ("⚛", ""),  # Atom Symbol
-    # LAME ("⚪", ""),  # Medium White Circle
-    # LAME ("⚫", ""),  # Medium Black Circle
+    ("☘",    False, "Shamrock"),                         # doesn't show
+    ("⚓",    True , "Anchor"),
+    ("♿",    False, "Wheelchair Symbol"),                # doesn't show
+    ("⚒",    False, "Hammer and Pick"),                  # doesn't show
+    ("⚙",    False, "Gear"),                             # doesn't show
+    ("⚗",    False, "Alembic"),                          # doesn't show
+    ("⚖",    False, "Scales"),                           # used by UI
+    ("⚔",    False, "Crossed Swords"),                   # doesn't show
+    ("⚰",    False, "Coffin"),                           # doesn't show
+    ("⚱",    False, "Funeral Urn"),                      # doesn't show
+    ("⚜",    False, "Fleur-De-Lis"),                     # doesn't show
+    ("⚛",    False, "Atom Symbol"),                      # doesn't show
+    ("⚪",    False, "Medium White Circle"),              # dull
+    ("⚫",    False, "Medium Black Circle"),              # dull
+
     # Unicode Version 5.1
-    # LAME ("🀄", ""),  # Mahjong Tile Red Dragon
-    # DOESNT SHOW ("⭐", "⭐"),  # White Medium Star
-    # LAME ("⬛", ""),  # Black Large Square
-    # LAME ("⬜", ""),  # White Large Square
+    ("🀄",    False, "Mahjong Tile Red Dragon"),          # dull
+    ("⭐",    False, "White Medium Star"),                # doesn't show
+    ("⬛",    True , "Black Square"),
+    ("⬜",    True , "White Square"),
+
     # Unicode Version 5.2
-    ("⛑", "⛑"),  # Helmet With White Cross
-    ("⛰", "⛰"),  # Mountain
-    ("⛪", "⛪"),  # Church
-    # LAME ("⛲", ""),  # Fountain
-    # LAME ("⛺", ""),  # Tent
-    # LAME ("⛽", ""),  # Fuel Pump
-    ("⛵", "⛵"),  # Sailboat
-    # LAME ("⛴", ""),  # Ferry
-    ("⛔", "⛔"),  # No Entry
-    ("⛅", "⛅"),  # Sun Behind Cloud
-    ("⛈", "⛈"),  # Thunder Cloud and Rain
-    ("⛱", "⛱"),  # Umbrella on Ground
-    ("⛄", "⛄"),  # Snowman Without Snow
-    ("⚽", "⚽"),  # Soccer Ball
-    # DOESN"T SHOW ("⚾", ""),  # Baseball
-    # LAME ("⛳", ""),  # Flag in Hole
-    ("⛸", ""),  # Ice Skate
-    # LAME ("⛷", ""),  # Skier
-    # LAME ("⛹", ""),  # Person With Ball
-    ("⛏", "⛏"),  # Pick
-    # OFFENSIVE ("⛓", ""),  # Chains
-    # LAME ("⛩", ""),  # Shinto Shrine
-    # LAME ("⭕", ""),  # Heavy Large Circle
-    # LAME ("❗", ""),  # Heavy Exclamation Mark Symbol
-    # LAME ("🅿️", ""),  # Negative Squared Latin Capital Letter P
-    # LAME ("🈯", ""),  # Squared CJK Unified Ideograph-6307
-    # LAME ("🈚", ""),  # Squared CJK Unified Ideograph-7121
+    ("⛑",    True , "Rescue Worker"),
+    ("⛰",    True , "Mountain"),
+    ("⛪",    True , "Church"),
+    ("⛲",    True , "Fountain"),
+    ("⛺",    True , "Tent"),
+    ("⛽",    False, "Fuel Pump"),                        # dull
+    ("⛵",    True , "Sailboat"),
+    ("⛴",    False, "Ferry"),                            # dull
+    ("⛔",    True , "No Entry"),
+    ("⛅",    True , "Overcast"),
+    ("⛈",    True , "Storm"),
+    ("⛱",    True , "Umbrella"),
+    ("⛄",    True , "Snowman"),
+    ("⚽",    True , "Soccer"),
+    ("⚾",    False, "Baseball"),                         # doesn't show
+    ("⛳",    True , "Hole in One"),
+    ("⛸",    True , "Ice Skate"),
+    ("⛷",    False, "Skier"),                            # dull
+    ("⛹",    False, "Person With Ball"),                 # dull
+    ("⛏",    True , "Pick"),
+    ("⛓",    False, "Chains"),                           # potentially offensive
+    ("⛩",    False, "Shinto Shrine"),                    # dull
+    ("⭕",    False, "Heavy Large Circle"),               # dull
+    ("❗",    False, "Heavy Exclamation Mark"),           # dull
+    ("🅿️",   False, "Squared P"),                        # dull
+    ("🈯",    False, "Squared 指 (Finger)"),               # dull
+    ("🈚",    False, "Squared CJK Unified Ideograph-7121"), # dull
+
     # Unicode Version 6.0
-    ("😁", "😁"),  # Grinning Face With Smiling Eyes
-    ("😂", "😂"),  # Face With Tears of Joy
-    # TOO SIMILAR ("😃", ""),  # Smiling Face With Open Mouth
-    ("😄", "😄"),  # Smiling Face With Open Mouth and Smiling Eyes
-    ("😅", ""),  # Smiling Face With Open Mouth and Cold Sweat
-    ("😆", "😆"),  # Smiling Face With Open Mouth and Tightly-Closed Eyes
-    ("😉", "😉"),  # Winking Face
-    ("😊", "😊"),  # Smiling Face With Smiling Eyes
-    # TOO SIMILAR ("😋", ""),  # Face Savouring Delicious Food
-    ("😎", "😎"),  # Smiling Face With Sunglasses
-    ("😍", "😍"),  # Smiling Face With Heart-Shaped Eyes
-    ("😘", "😘"),  # Face Throwing a Kiss
-    # TOO SIMILAR ("😚", ""),  # Kissing Face With Closed Eyes
-    ("😇", "😇"),  # Smiling Face With Halo
-    ("😐", "😐"),  # Neutral Face
-    # TOO SIMILAR ("😶", ""),  # Face Without Mouth
-    ("😏", "😏"),  # Smirking Face
-    ("😣", ""),  # Persevering Face
-    ("😥", "😥"),  # Disappointed but Relieved Face
-    # TOO SIMILAR ("😪", ""),  # Sleepy Face
-    ("😫", ""),  # Tired Face
-    # TOO SIMILAR ("😌", ""),  # Relieved Face
-    ("😜", "😜"),  # Face With Stuck-Out Tongue and Winking Eye
-    # TOO SIMILAR ("😝", ""),  # Face With Stuck-Out Tongue and Tightly-Closed Eyes
-    # TOO SIMILAR ("😒", ""),  # Unamused Face
-    ("😓", ""),  # Face With Cold Sweat
-    ("😔", ""),  # Pensive Face
-    ("😖", "😖"),  # Confounded Face
-    ("😷", "😷"),  # Face With Medical Mask
-    ("😲", "😲"),  # Astonished Face
-    ("😞", "😞"),  # Disappointed Face
-    # TOO SIMILAR ("😤", ""),  # Face With Look of Triumph
-    # TOO SIMILAR ("😢", ""),  # Crying Face
-    ("😭", "😭"),  # Loudly Crying Face
-    # TOO SIMILAR ("😨", ""),  # Fearful Face
-    # TOO SIMILAR ("😩", ""),  # Weary Face
-    ("😰", "😰"),  # Face With Open Mouth and Cold Sweat
-    ("😱", "😱"),  # Face Screaming in Fear
-    ("😳", "😳"),  # Flushed Face
-    ("😵", "😵"),  # Dizzy Face
-    ("😡", "😡"),  # Pouting Face
-    # TOO SIMILAR ("😠", ""),  # Angry Face
-    ("👿", "👿"),  # Imp
-    # TOO SIMILAR ("😈", ""),  # Smiling Face With Horns
-    # LAME ("👦", ""),  # Boy
-    # LAME ("👧", ""),  # Girl
-    # LAME ("👨", ""),  # Man
-    ("👩", "👩"),  # Woman
-    ("👴", "👴"),  # Older Man
-    ("👵", "👵"),  # Older Woman
-    ("👶", "👶"),  # Baby
-    # LAME ("👱", ""),  # Person With Blond Hair
-    ("👮", "👮"),  # Police Officer
-    # OFFENSIVE ("👲", ""),  # Man With Gua Pi Mao
-    # OFFENSIVE ("👳", ""),  # Man With Turban
-    ("👷", "👷"),  # Construction Worker
-    ("👸", "👸"),  # Princess
-    ("💂", "💂"),  # Guardsman
-    ("🎅", "🎅"),  # Father Christmas
-    ("👼", "👼"),  # Baby Angel
-    # USED BY UI ("👯", ""),  # Woman With Bunny Ears // for bulk adding teams and team tab/standings
-    # LAME ("💆", ""),  # Face Massage
-    # LAME ("💇", ""),  # Haircut
-    ("👰", "👰"),  # Bride With Veil
-    # LAME ("🙍", ""),  # Person Frowning
-    # LAME ("🙎", ""),  # Person With Pouting Face
-    ("🙅", "🙅"),  # Face With No Good Gesture
-    ("🙆", "🙆"),  # Face With OK Gesture
-    # USED BY UI ("💁", ""),  # Information Desk Person // for reply standings
-    ("🙋", "🙋"),  # Happy Person Raising One Hand
-    ("🙇", "🙇"),  # Person Bowing Deeply
-    ("🙌", "🙌"),  # Person Raising Both Hands in Celebration
-    ("🙏", "🙏"),  # Person With Folded Hands
-    # LAME ("👤", ""),  # Bust in Silhouette
-    # LAME ("👥", ""),  # Busts in Silhouette
-    # LAME ("🚶", ""),  # Pedestrian
-    # LAME ("🏃", ""),  # Runner
-    ("💃", "💃"),  # Dancer
-    # TOO SIMILAR ("💏", ""),  # Kiss
-    ("💑", "💑"),  # Couple With Heart
-    ("👪", "👪"),  # Family
-    ("👫", "👫"),  # Man and Woman Holding Hands
-    ("👬", "👬"),  # Two Men Holding Hands
-    ("👭", "👭"),  # Two Women Holding Hands
-    ("💪", "💪"),  # Flexed Biceps
-    # LAME ("👈", ""),  # White Left Pointing Backhand Index
-    # LAME ("👉", ""),  # White Right Pointing Backhand Index
-    ("👆", "👆"),  # White Up Pointing Backhand Index
-    # LAME ("👇", ""),  # White Down Pointing Backhand Index
-    ("✊", "✊"),  # Raised Fist
-    ("✋", "✋"),  # Raised Hand
-    ("👊", "👊"),  # Fisted Hand Sign
-    ("👌", "👌"),  # OK Hand Sign
-    ("👍", "👍"),  # Thumbs Up Sign
-    ("👎", "👎"),  # Thumbs Down Sign
-    # USED BY UI ("👋", "👋"),  # Waving Hand Sign // for the welcome pages
-    # LAME ("👏", ""),  # Clapping Hands Sign
-    ("👐", "👐"),  # Open Hands Sign
-    ("💅", "💅"),  # Nail Polish
-    # LAME ("👣", ""),  # Footprints
-    # USED BY UI ("👀", ""),  # Eyes // for the draw pages
-    ("👂", "👂"),  # Ear
-    ("👃", "👃"),  # Nose
-    ("👅", "👅"),  # Tongue
-    ("👄", "👄"),  # Mouth
-    # TOO SIMILAR ("💋", ""),  # Kiss Mark
-    ("💘", "💘"),  # Heart With Arrow
-    # TOO SIMILAR ("💓", ""),  # Beating Heart
-    ("💔", "💔"),  # Broken Heart
-    # TOO SIMILAR ("💕", ""),  # Two Hearts
-    ("💖", "💖"),  # Sparkling Heart
-    # TOO SIMILAR ("💗", ""),  # Growing Heart
-    # TOO SIMILAR ("💙", ""),  # Blue Heart
-    # TOO SIMILAR ("💚", ""),  # Green Heart
-    # TOO SIMILAR ("💛", ""),  # Yellow Heart
-    # TOO SIMILAR ("💜", ""),  # Purple Heart
-    # TOO SIMILAR ("💝", ""),  # Heart With Ribbon
-    # TOO SIMILAR ("💞", ""),  # Revolving Hearts
-    # LAME ("💟", ""),  # Heart Decoration
-    ("💌", "💌"),  # Love Letter
-    ("💧", "💧"),  # Droplet
-    ("💤", ""),  # Sleeping Symbol
-    # LAME ("💢", ""),  # Anger Symbol
-    ("💣", "💣"),  # Bomb
-    ("💥", "💥"),  # Collision Symbol
-    ("💦", "💦"),  # Splashing Sweat Symbol
-    ("💨", "💨"),  # Dash Symbol
-    ("💫", ""),  # Dizzy Symbol
-    # LAME ("💬", ""),  # Speech Balloon
-    # LAME ("💭", ""),  # Thought Balloon
-    ("👓", "👓"),  # Eyeglasses
-    ("👔", "👔"),  # Necktie
-    # LAME ("👕", ""),  # T-Shirt
-    # LAME ("👖", ""),  # Jeans
-    # LAME ("👗", ""),  # Dress
-    # LAME ("👘", ""),  # Kimono
-    ("👙", "👙"),  # Bikini
-    # LAME ("👚", ""),  # Womans Clothes
-    # LAME ("👛", ""),  # Purse
-    ("👜", "👜"),  # Handbag
-    # LAME ("👝", ""),  # Pouch
-    # LAME ("🎒", ""),  # School Satchel
-    # LAME ("👞", ""),  # Mans Shoe
-    ("👟", "👟"),  # Athletic Shoe
-    ("👠", "👠"),  # High-Heeled Shoe
-    # LAME ("👡", ""),  # Womans Sandal
-    # LAME ("👢", ""),  # Womans Boots
-    # USED BY UI ("👑", ""),  # Crown // for the break pages
-    ("👒", "👒"),  # Womans Hat
-    ("🎩", "🎩"),  # Top Hat
-    ("💄", "💄"),  # Lipstick
-    ("💍", "💍"),  # Ring
-    ("💎", "💎"),  # Gem Stone
-    # LAME ("👹", ""),  # Japanese Ogre
-    # LAME ("👺", ""),  # Japanese Goblin
-    ("👻", "👻"),  # Ghost
-    ("💀", "💀"),  # Skull
-    ("👽", "👽"),  # Extraterrestrial Alien
-    ("👾", "👾"),  # Alien Monster
-    ("💩", "💩"),  # Pile of Poo
-    ("🐵", ""),  # Monkey Face
-    ("🙈", ""),  # See-No-Evil Monkey
-    ("🙉", ""),  # Hear-No-Evil Monkey
-    ("🙊", ""),  # Speak-No-Evil Monkey
-    # OFFENSIVE("🐒", ""),  # Monkey
-    ("🐶", "🐶"),  # Dog Face
-    # TOO SIMILAR ("🐕", ""),  # Dog
-    ("🐩", ""),  # Poodle
-    # TOO SIMILAR ("🐺", ""),  # Wolf Face
-    # ("🐱", ""),  # Cat Face // USED BY UI
-    # ("😸", ""),  # Grinning Cat Face With Smiling Eyes // USED BY UI
-    # ("😹", ""),  # Cat Face With Tears of Joy // USED BY UI
-    # ("😺", ""),  # Smiling Cat Face With Open Mouth // USED BY UI
-    # ("😻", ""),  # Smiling Cat Face With Heart-Shaped Eyes // USED BY UI
-    # ("😼", ""),  # Cat Face With Wry Smile // USED BY UI
-    # ("😽", ""),  # Kissing Cat Face With Closed Eyes // USED BY UI
-    # ("😾", ""),  # Pouting Cat Face // USED BY UI
-    # ("😿", ""),  # Crying Cat Face // USED BY UI
-    # ("🙀", ""),  # Weary Cat Face // USED BY UI
-    # LAME ("🐈", ""),  # Cat
-    ("🐯", "🐯"),  # Tiger Face
-    # LAME ("🐅", ""),  # Tiger
-    # LAME ("🐆", ""),  # Leopard
-    ("🐴", "🐴"),  # Horse Face
-    # LAME ("🐎", ""),  # Horse
-    ("🐮", "🐮"),  # Cow Face
-    # LAME ("🐂", ""),  # Ox
-    # LAME ("🐃", ""),  # Water Buffalo
-    # LAME ("🐄", ""),  # Cow
-    ("🐷", "🐷"),  # Pig Face
-    # LAME ("🐖", ""),  # Pig
-    # LAME ("🐗", ""),  # Boar
-    # LAME ("🐽", ""),  # Pig Nose
-    # LAME ("🐏", ""),  # Ram
-    ("🐑", "🐑"),  # Sheep
-    # LAME ("🐐", ""),  # Goat
-    # LAME ("🐪", ""),  # Dromedary Camel
-    # LAME ("🐫", ""),  # Bactrian Camel
-    # LAME ("🐘", ""),  # Elephant
-    ("🐭", "🐭"),  # Mouse Face
-    # LAME ("🐁", ""),  # Mouse
-    # LAME ("🐀", ""),  # Rat
-    ("🐹", "🐹"),  # Hamster Face
-    ("🐰", "🐰"),  # Rabbit Face
-    # LAME ("🐇", ""),  # Rabbit
-    ("🐻", "🐻"),  # Bear Face
-    ("🐨", "🐨"),  # Koala
-    ("🐼", "🐼"),  # Panda Face
-    # LAME ("🐾", ""),  # Paw Prints
-    ("🐔", "🐔"),  # Chicken
-    # LAME ("🐓", ""),  # Rooster
-    # LAME ("🐣", ""),  # Hatching Chick
-    # TOO SIMILAR ("🐤", ""),  # Baby Chick
-    ("🐥", ""),  # Front-Facing Baby Chick
-    ("🐦", "🐦"),  # Bird
-    ("🐧", "🐧"),  # Penguin
-    ("🐸", "🐸"),  # Frog Face
-    # LAME ("🐊", ""),  # Crocodile
-    ("🐢", ""),  # Turtle
-    ("🐍", "🐍"),  # Snake
-    ("🐲", "🐲"),  # Dragon Face
-    # LAME ("🐉", ""),  # Dragon
-    ("🐳", "🐳"),  # Spouting Whale
-    # TOO SIMILAR ("🐋", ""),  # Whale
-    ("🐬", ""),  # Dolphin
-    ("🐟", "🐟"),  # Fish
-    ("🐠", ""),  # Tropical Fish
-    # LAME ("🐡", ""),  # Blowfish
-    ("🐙", "🐙"),  # Octopus
-    ("🐚", "🐚"),  # Spiral Shell
-    ("🐌", ""),  # Snail
-    ("🐛", ""),  # Bug
-    # LAME ("🐜", ""),  # Ant
-    ("🐝", "🐝"),  # Honeybee
-    # LAME ("🐞", ""),  # Lady Beetle
-    ("💐", ""),  # Bouquet
-    ("🌸", "🌸"),  # Cherry Blossom
-    # LAME ("💮", ""),  # White Flower
-    ("🌹", "🌹"),  # Rose
-    # LAME ("🌺", ""),  # Hibiscus
-    ("🌻", "🌻"),  # Sunflower
-    # LAME ("🌼", ""),  # Blossom
-    ("🌷", "🌷"),  # Tulip
-    ("🌱", ""),  # Seedling
-    # LAME ("🌲", ""),  # Evergreen Tree
-    # LAME ("🌳", ""),  # Deciduous Tree
-    ("🌴", ""),  # Palm Tree
-    ("🌵", "🌵"),  # Cactus
-    # LAME ("🌾", ""),  # Ear of Rice
-    ("🌿", ""),  # Herb
-    ("🍀", ""),  # Four Leaf Clover
-    ("🍁", "🍁"),  # Maple Leaf
-    # LAME ("🍂", ""),  # Fallen Leaf
-    # LAME ("🍃", ""),  # Leaf Fluttering in Wind
-    ("🍇", "🍇"),  # Grapes
-    # LAME ("🍈", ""),  # Melon
-    ("🍉", "🍉"),  # Watermelon
-    ("🍊", "🍊"),  # Tangerine
-    ("🍋", "🍋"),  # Lemon
-    ("🍌", "🍌"),  # Banana
-    ("🍍", "🍍"),  # Pineapple
-    ("🍎", "🍎"),  # Red Apple
-    # TOO SIMILAR ("🍏", ""),  # Green Apple
-    # TOO SIMILAR ("🍐", ""),  # Pear
-    ("🍑", "🍑"),  # Peach
-    ("🍒", "🍒"),  # Cherries
-    ("🍓", "🍓"),  # Strawberry
-    ("🍅", "🍅"),  # Tomato
-    ("🍆", "🍆"),  # Aubergine
-    ("🌽", "🌽"),  # Ear of Maize
-    ("🍄", "🍄"),  # Mushroom
-    # LAME ("🌰", ""),  # Chestnut
-    ("🍞", "🍞"),  # Bread
-    # LAME ("🍖", ""),  # Meat on Bone
-    # LAME ("🍗", ""),  # Poultry Leg
-    ("🍔", "🍔"),  # Hamburger
-    ("🍟", ""),  # French Fries
-    ("🍕", "🍕"),  # Slice of Pizza
-    # LAME ("🍲", ""),  # Pot of Food
-    # LAME ("🍱", ""),  # Bento Box
-    # LAME ("🍘", ""),  # Rice Cracker
-    ("🍙", ""),  # Rice Ball
-    # LAME ("🍚", ""),  # Cooked Rice
-    # LAME ("🍛", ""),  # Curry and Rice
-    # LAME ("🍜", ""),  # Steaming Bowl
-    # LAME ("🍝", ""),  # Spaghetti
-    # LAME ("🍠", ""),  # Roasted Sweet Potato
-    # LAME ("🍢", ""),  # Oden
-    # LAME ("🍣", ""),  # Sushi
-    # LAME ("🍤", ""),  # Fried Shrimp
-    # LAME ("🍥", ""),  # Fish Cake With Swirl Design
-    # LAME ("🍡", ""),  # Dango
-    # LAME ("🍦", ""),  # Soft Ice Cream
-    # LAME ("🍧", ""),  # Shaved Ice
-    ("🍨", "🍨"),  # Ice Cream
-    ("🍩", "🍩"),  # Doughnut
-    ("🍪", "🍪"),  # Cookie
-    # LAME ("🎂", ""),  # Birthday Cake
-    ("🍰", "🍰"),  # Shortcake
-    # LAME ("🍫", ""),  # Chocolate Bar
-    # LAME ("🍬", ""),  # Candy
-    ("🍭", "🍭"),  # Lollipop
-    # LAME ("🍮", ""),  # Custard
-    # LAME ("🍯", ""),  # Honey Pot
-    ("🍼", "🍼"),  # Baby Bottle
-    # LAME ("🍵", ""),  # Teacup Without Handle
-    # LAME ("🍶", ""),  # Sake Bottle and Cup
-    ("🍷", "🍷"),  # Wine Glass
-    ("🍸", "🍸"),  # Cocktail Glass
-    ("🍹", "🍹"),  # Tropical Drink
-    ("🍺", "🍺"),  # Beer Mug
-    # TOO SIMILAR ("🍻", ""),  # Clinking Beer Mugs
-    ("🍴", "🍴"),  # Fork and Knife
-    # LAME ("🍳", ""),  # Cooking
-    # LAME ("🌍", ""),  # Earth Globe Europe-Africa
-    # LAME ("🌎", ""),  # Earth Globe Americas
-    # LAME ("🌏", ""),  # Earth Globe Asia-Australia
-    # LAME ("🌐", ""),  # Globe With Meridians
-    ("🌋", "🌋"),  # Volcano
-    # LAME ("🗻", ""),  # Mount Fuji
-    ("🏠", "🏠"),  # House Building
-    # LAME ("🏡", ""),  # House With Garden
-    ("🏢", "🏢"),  # Office Building
-    # TOO SIMILAR ("🏣", ""),  # Japanese Post Office
-    # TOO SIMILAR ("🏤", ""),  # European Post Office
-    ("🏥", ""),  # Hospital
-    # TOO SIMILAR ("🏦", ""),  # Bank
-    # TOO SIMILAR ("🏨", ""),  # Hotel
-    ("🏩", "🏩"),  # Love Hotel
-    # TOO SIMILAR ("🏪", ""),  # Convenience Store
-    # TOO SIMILAR ("🏫", ""),  # School
-    # TOO SIMILAR ("🏬", ""),  # Department Store
-    # TOO SIMILAR ("🏭", ""),  # Factory
-    # TOO SIMILAR ("🏯", ""),  # Japanese Castle
-    ("🏰", ""),  # European Castle
-    # TOO SIMILAR ("💒", ""),  # Wedding
-    # TOO SIMILAR ("🗼", ""),  # Tokyo Tower
-    # TOO SIMILAR ("🗽", ""),  # Statue of Liberty
-    # TOO SIMILAR ("🗾", ""),  # Silhouette of Japan
-    # TOO SIMILAR ("🌁", ""),  # Foggy
-    # TOO SIMILAR ("🌃", ""),  # Night With Stars
-    # TOO SIMILAR ("🌄", ""),  # Sunrise Over Mountains
-    # TOO SIMILAR ("🌅", ""),  # Sunrise
-    # TOO SIMILAR ("🌆", ""),  # Cityscape at Dusk
-    # TOO SIMILAR ("🌇", ""),  # Sunset Over Buildings
-    # TOO SIMILAR ("🌉", ""),  # Bridge at Night
-    ("🌊", "🌊"),  # Water Wave
-    # LAME ("🗿", ""),  # Moyai
-    # LAME ("🌌", ""),  # Milky Way
-    # LAME ("🎠", ""),  # Carousel Horse
-    ("🎡", ""),  # Ferris Wheel
-    ("🎢", ""),  # Roller Coaster
-    # LAME ("💈", ""),  # Barber Pole
-    # USED BY THE UI ("🎪", ""),  # Circus Tent // venue checkins/adding
-    # LAME ("🎭", ""),  # Performing Arts
-    ("🎨", "🎨"),  # Artist Palette
-    # LAME ("🎰", ""),  # Slot Machine
-    # LAME ("🚂", ""),  # Steam Locomotive
-    ("🚃", "🚃"),  # Railway Car
-    ("🚄", "🚄"),  # High-Speed Train
-    # TOO SIMILAR ("🚅", ""),  # High-Speed Train With Bullet Nose
-    # TOO SIMILAR ("🚆", ""),  # Train
-    # TOO SIMILAR ("🚇", ""),  # Metro
-    # TOO SIMILAR ("🚈", ""),  # Light Rail
-    # TOO SIMILAR ("🚉", ""),  # Station
-    # TOO SIMILAR ("🚊", ""),  # Tram
-    ("🚝", "🚝"),  # Monorail
-    # TOO SIMILAR ("🚞", ""),  # Mountain Railway
-    # TOO SIMILAR ("🚋", ""),  # Tram Car
-    # TOO SIMILAR ("🚌", ""),  # Bus
-    ("🚍", "🚍"),  # Oncoming Bus
-    # TOO SIMILAR ("🚎", ""),  # Trolleybus
-    # TOO SIMILAR ("🚏", ""),  # Bus Stop
-    # TOO SIMILAR ("🚐", ""),  # Minibus
-    # TOO SIMILAR ("🚑", ""),  # Ambulance
-    # TOO SIMILAR ("🚒", ""),  # Fire Engine
-    # TOO SIMILAR ("🚓", ""),  # Police Car
-    ("🚔", "🚔"),  # Oncoming Police Car
-    # TOO SIMILAR ("🚕", ""),  # Taxi
-    # TOO SIMILAR ("🚖", ""),  # Oncoming Taxi
-    # TOO SIMILAR ("🚗", ""),  # Automobile
-    ("🚘", "🚘"),  # Oncoming Automobile
-    # TOO SIMILAR ("🚙", ""),  # Recreational Vehicle
-    # TOO SIMILAR ("🚚", ""),  # Delivery Truck
-    # TOO SIMILAR ("🚛", ""),  # Articulated Lorry
-    # TOO SIMILAR ("🚜", ""),  # Tractor
-    ("🚲", "🚲"),  # Bicycle
-    # TOO SIMILAR ("🚳", ""),  # No Bicycles
-    ("🚨", "🚨"),  # Police Cars Revolving Light
-    # TOO SIMILAR ("🔱", ""),  # Trident Emblem
-    ("🚣", "🚣"),  # Rowboat
-    # LAME ("🚤", ""),  # Speedboat
-    # LAME ("🚢", ""),  # Ship
-    # LAME ("💺", ""),  # Seat
-    ("🚁", "🚁"),  # Helicopter
-    # LAME ("🚟", ""),  # Suspension Railway
-    # LAME ("🚠", ""),  # Mountain Cableway
-    # LAME ("🚡", ""),  # Aerial Tramway
-    ("🚀", "🚀"),  # Rocket
-    # LAME ("🏧", ""),  # Automated Teller Machine
-    # LAME ("🚮", ""),  # Put Litter in Its Place Symbol
-    # LAME ("🚥", ""),  # Horizontal Traffic Light
-    ("🚦", "🚦"),  # Vertical Traffic Light
-    ("🚧", "🚧"),  # Construction Sign
-    ("🚫", "🚫"),  # No Entry Sign
-    # LAME ("🚭", ""),  # No Smoking Symbol
-    # LAME ("🚯", ""),  # Do Not Litter Symbol
-    # LAME ("🚰", ""),  # Potable Water Symbol
-    # LAME ("🚱", ""),  # Non-Potable Water Symbol
-    ("🚷", "🚷"),  # No Pedestrians
-    # LAME ("🚸", ""),  # Children Crossing
-    # LAME ("🚹", ""),  # Mens Symbol
-    # LAME ("🚺", ""),  # Womens Symbol
-    ("🚻", "🚻"),  # Restroom
-    # LAME ("🚼", ""),  # Baby Symbol
-    # LAME ("🚾", ""),  # Water Closet
-    # LAME ("🛂", ""),  # Passport Control
-    # LAME ("🛃", ""),  # Customs
-    # LAME ("🛄", ""),  # Baggage Claim
-    # LAME ("🛅", ""),  # Left Luggage
-    # LAME ("🚪", ""),  # Door
-    ("🚽", "🚽"),  # Toilet
-    ("🚿", "🚿"),  # Shower
-    ("🛀", "🛀"),  # Bath
-    # LAME ("🛁", ""),  # Bathtub
-    ("⏳", "⏳"),  # Hourglass With Flowing Sand
-    # USED IN UI (tournaments overview) ("⏰", "⏰"),  # Alarm Clock
-    # LAME ("⏱", ""),  # Stopwatch
-    # LAME ("⏲", ""),  # Timer Clock
-    # LAME ("🕛", ""),  # Clock Face Twelve O'Clock
-    # LAME ("🕧", ""),  # Clock Face Twelve-Thirty
-    # LAME ("🕐", ""),  # Clock Face One O'Clock
-    # LAME ("🕜", ""),  # Clock Face One-Thirty
-    # LAME ("🕑", ""),  # Clock Face Two O'Clock
-    # LAME ("🕝", ""),  # Clock Face Two-Thirty
-    # LAME ("🕒", ""),  # Clock Face Three O'Clock
-    # LAME ("🕞", ""),  # Clock Face Three-Thirty
-    # LAME ("🕓", ""),  # Clock Face Four O'Clock
-    # LAME ("🕟", ""),  # Clock Face Four-Thirty
-    # LAME ("🕔", ""),  # Clock Face Five O'Clock
-    # LAME ("🕠", ""),  # Clock Face Five-Thirty
-    # LAME ("🕕", ""),  # Clock Face Six O'Clock
-    # LAME ("🕡", ""),  # Clock Face Six-Thirty
-    # LAME ("🕖", ""),  # Clock Face Seven O'Clock
-    # LAME ("🕢", ""),  # Clock Face Seven-Thirty
-    # LAME ("🕗", ""),  # Clock Face Eight O'Clock
-    # LAME ("🕣", ""),  # Clock Face Eight-Thirty
-    # LAME ("🕘", ""),  # Clock Face Nine O'Clock
-    # LAME ("🕤", ""),  # Clock Face Nine-Thirty
-    # LAME ("🕙", ""),  # Clock Face Ten O'Clock
-    # LAME ("🕥", ""),  # Clock Face Ten-Thirty
-    # LAME ("🕚", ""),  # Clock Face Eleven O'Clock
-    # LAME ("🕦", ""),  # Clock Face Eleven-Thirty
-    # LAME ("⛎", ""),  # Ophiuchus
-    ("🌑", "🌑"),  # New Moon Symbol
-    # LAME ("🌒", ""),  # Waxing Crescent Moon Symbol
-    # LAME ("🌓", ""),  # First Quarter Moon Symbol
-    # LAME ("🌔", ""),  # Waxing Gibbous Moon Symbol
-    ("🌕", "🌕"),  # Full Moon Symbol
-    # LAME ("🌖", ""),  # Waning Gibbous Moon Symbol
-    ("🌗", "🌗"),  # Last Quarter Moon Symbol
-    # LAME ("🌘", ""),  # Waning Crescent Moon Symbol
-    # LAME ("🌙", ""),  # Crescent Moon
-    # OFFENSIVE("🌚", ""),  # New Moon With Face
-    # LAME ("🌛", ""),  # First Quarter Moon With Face
-    # LAME ("🌜", ""),  # Last Quarter Moon With Face
-    # LAME ("🌝", ""),  # Full Moon With Face
-    ("🌞", "🌞"),  # Sun With Face
-    # LAME ("🌀", ""),  # Cyclone
-    ("🌈", "🌈"),  # Rainbow
-    ("🌂", "🌂"),  # Closed Umbrella
-    ("🌟", "🌟"),  # Glowing Star
-    # LAME ("🌠", ""),  # Shooting Star
-    ("🔥", "🔥"),  # Fire
-    ("🎃", "🎃"),  # Jack-O-Lantern
-    ("🎄", "🎄"),  # Christmas Tree
-    # LAME ("🎆", ""),  # Fireworks
-    # LAME ("🎇", ""),  # Firework Sparkler
-    # LAME ("✨", ""),  # Sparkles
-    ("🎈", "🎈"),  # Balloon
-    ("🎉", "🎉"),  # Party Popper
-    # LAME ("🎊", ""),  # Confetti Ball
-    # LAME ("🎋", ""),  # Tanabata Tree
-    # LAME ("🎌", ""),  # Crossed Flags
-    # LAME ("🎍", ""),  # Pine Decoration
-    # LAME ("🎎", ""),  # Japanese Dolls
-    # LAME ("🎏", ""),  # Carp Streamer
-    # LAME ("🎐", ""),  # Wind Chime
-    # LAME ("🎑", ""),  # Moon Viewing Ceremony
-    ("🎓", "🎓"),  # Graduation Cap
-    ("🎯", "🎯"),  # Direct Hit
-    # LAME ("🎴", ""),  # Flower Playing Cards
-    ("🎀", "🎀"),  # Ribbon
-    # LAME ("🎁", ""),  # Wrapped Present
-    # LAME ("🎫", ""),  # Ticket
-    ("🏀", "🏀"),  # Basketball and Hoop
-    ("🏈", "🏈"),  # American Football
-    # TOO SIMILAR ("🏉", ""),  # Rugby Football
-    ("🎾", "🎾"),  # Tennis Racquet and Ball
-    ("🎱", "🎱"),  # Billiards
-    # TOO SIMILAR ("🎳", ""),  # Bowling
-    # LAME ("🎣", ""),  # Fishing Pole and Fish
-    # LAME ("🎽", ""),  # Running Shirt With Sash
-    # LAME ("🎿", ""),  # Ski and Ski Boot
-    # LAME ("🏂", ""),  # Snowboarder
-    # LAME ("🏄", ""),  # Surfer
-    # LAME ("🏇", ""),  # Horse Racing
-    ("🏊", ""),  # Swimmer
-    # LAME ("🚴", ""),  # Bicyclist
-    # LAME ("🚵", ""),  # Mountain Bicyclist
-    # USED BY UI ("🏆", ""),  # Trophy // for adding new tournament/list of tournaments
-    ("🎮", "🎮"),  # Video Game
-    ("🎲", "🎲"),  # Game Die
-    # LAME ("🃏", ""),  # Playing Card Black Joker
-    # LAME ("🔇", ""),  # Speaker With Cancellation Stroke
-    # LAME ("🔈", ""),  # Speaker
-    # LAME ("🔉", ""),  # Speaker With One Sound Wave
-    # LAME ("🔊", ""),  # Speaker With Three Sound Waves
-    # USED BY UI ("📢", ""),  # Public Address Loudspeaker // for public config settings
-    ("📣", "📣"),  # Cheering Megaphone
-    ("📯", ""),  # Postal Horn
-    ("🔔", "🔔"),  # Bell
-    # ("🔕", ""),  # Bell With Cancellation Stroke
-    # LAME ("🔀", ""),  # Twisted Rightwards Arrows
-    # LAME ("🔁", ""),  # Clockwise Rightwards and Leftwards Open Circle Arrows
-    # LAME ("🔂", ""),  # Clockwise Rightwards and Leftwards Open Circle Arrows With Circled One Overlay
-    # LAME ("⏩", ""),  # Black Right-Pointing Double Triangle
-    # LAME ("⏭", ""),  # Black Right-Pointing Double Triangle With Vertical Bar
-    # LAME ("⏯", ""),  # Black Right-Pointing Triangle With Double Vertical Bar
-    # LAME ("⏪", ""),  # Black Left-Pointing Double Triangle
-    # LAME ("⏮", ""),  # Black Left-Pointing Double Triangle With Vertical Bar
-    # LAME ("🔼", ""),  # Up-Pointing Small Red Triangle
-    # LAME ("⏫", ""),  # Black Up-Pointing Double Triangle
-    # LAME ("🔽", ""),  # Down-Pointing Small Red Triangle
-    # LAME ("⏬", ""),  # Black Down-Pointing Double Triangle
-    # LAME ("🎼", ""),  # Musical Score
-    # LAME ("🎵", ""),  # Musical Note
-    ("🎶", "🎶"),  # Multiple Musical Notes
-    ("🎤", "🎤"),  # Microphone
-    # LAME ("🎧", ""),  # Headphone
-    # LAME ("🎷", ""),  # Saxophone
-    # LAME ("🎸", ""),  # Guitar
-    ("🎹", "🎹"),  # Musical Keyboard
-    ("🎺", "🎺"),  # Trumpet
-    ("🎻", "🎻"),  # Violin
-    ("📻", "📻"),  # Radio
-    ("📱", "📱"),  # Mobile Phone
-    # LAME ("📳", ""),  # Vibration Mode
-    # LAME ("📴", ""),  # Mobile Phone Off
-    # TOO SIMILAR ("📲", ""),  # Mobile Phone With Rightwards Arrow at Left
-    # LAME ("📵", ""),  # No Mobile Phones
-    ("📞", "📞"),  # Telephone Receiver
-    # LAME ("🔟", ""),  # Keycap Ten
-    # LAME ("📶", ""),  # Antenna With Bars
-    # LAME ("📟", ""),  # Pager
-    # LAME ("📠", ""),  # Fax Machine
-    ("🔋", "🔋"),  # Battery
-    ("🔌", "🔌"),  # Electric Plug
-    # LAME ("💻", ""),  # Personal Computer
-    # LAME ("💽", ""),  # Minidisc
-    ("💾", "💾"),  # Floppy Disk
-    ("💿", "💿"),  # Optical Disc
-    # LAME ("📀", ""),  # DVD
-    # LAME ("🎥", ""),  # Movie Camera
-    # LAME ("🎦", ""),  # Cinema
-    ("🎬", "🎬"),  # Clapper Board
-    # USED BY UI ("📺", ""),  # Television
-    ("📷", "📷"),  # Camera
-    # LAME ("📹", ""),  # Video Camera
-    # LAME ("📼", ""),  # Videocassette
-    # LAME ("🔅", ""),  # Low Brightness Symbol
-    # LAME ("🔆", ""),  # High Brightness Symbol
-    ("🔍", "🔍"),  # Left-Pointing Magnifying Glass
-    # LAME ("🔎", ""),  # Right-Pointing Magnifying Glass
-    # LAME ("🔬", ""),  # Microscope
-    ("🔭", "🔭"),  # Telescope
-    # LAME ("📡", ""),  # Satellite Antenna
-    ("💡", "💡"),  # Electric Light Bulb
-    # LAME ("🔦", ""),  # Electric Torch
-    # LAME ("🏮", ""),  # Izakaya Lantern
-    # TOO SIMILAR ("📔", ""),  # Notebook With Decorative Cover
-    ("📕", "📕"),  # Closed Book
-    # TOO SIMILAR ("📖", ""),  # Open Book
-    # TOO SIMILAR ("📗", ""),  # Green Book
-    # TOO SIMILAR ("📘", ""),  # Blue Book
-    # TOO SIMILAR ("📙", ""),  # Orange Book
-    # TOO SIMILAR ("📚", ""),  # Books
-    # TOO SIMILAR ("📓", ""),  # Notebook
-    # TOO SIMILAR ("📒", ""),  # Ledger
-    # TOO SIMILAR ("📃", ""),  # Page With Curl
-    # TOO SIMILAR ("📜", ""),  # Scroll
-    # TOO SIMILAR ("📄", ""),  # Page Facing Up
-    ("📰", "📰"),  # Newspaper
-    # TOO SIMILAR ("📑", ""),  # Bookmark Tabs
-    # TOO SIMILAR ("🔖", ""),  # Bookmark
-    ("💰", "💰"),  # Money Bag
-    # TOO SIMILAR ("💴", ""),  # Banknote With Yen Sign
-    # TOO SIMILAR ("💵", ""),  # Banknote With Dollar Sign
-    # TOO SIMILAR ("💶", ""),  # Banknote With Euro Sign
-    # TOO SIMILAR ("💷", ""),  # Banknote With Pound Sign
-    ("💸", "💸"),  # Money With Wings
-    # LAME ("💱", ""),  # Currency Exchange
-    # LAME ("💲", ""),  # Heavy Dollar Sign
-    # LAME ("💳", ""),  # Credit Card
-    # LAME ("💹", ""),  # Chart With Upwards Trend and Yen Sign
-    # LAME ("📧", ""),  # E-Mail Symbol
-    # LAME ("📨", ""),  # Incoming Envelope
-    # LAME ("📩", ""),  # Envelope With Downwards Arrow Above
-    # LAME ("📤", ""),  # Outbox Tray
-    # LAME ("📥", ""),  # Inbox Tray
-    ("📦", ""),  # Package
-    ("📫", "📫"),  # Closed Mailbox With Raised Flag
-    # LAME ("📪", ""),  # Closed Mailbox With Lowered Flag
-    # LAME ("📬", ""),  # Open Mailbox With Raised Flag
-    # LAME ("📭", ""),  # Open Mailbox With Lowered Flag
-    # LAME ("📮", ""),  # Postbox
-    # LAME ("📝", ""),  # Memo
-    ("💼", "💼"),  # Briefcase
-    # LAME ("📁", ""),  # File Folder
-    # LAME ("📂", ""),  # Open File Folder
-    ("📅", "📅"),  # Calendar
-    # LAME ("📆", ""),  # Tear-Off Calendar
-    # LAME ("📇", ""),  # Card Index
-    # LAME ("📈", ""),  # Chart With Upwards Trend
-    # LAME ("📉", ""),  # Chart With Downwards Trend
-    # LAME ("📊", ""),  # Bar Chart
-    # LAME ("📋", ""),  # Clipboard
-    # LAME ("📌", ""),  # Pushpin
-    # LAME ("📍", ""),  # Round Pushpin
-    ("📎", ""),  # Paperclip
-    ("📏", "📏"),  # Straight Ruler
-    ("📐", "📐"),  # Triangular Ruler
-    # LAME ("📛", ""),  # Name Badge
-    # USED BY UI ("🔒", ""),  # Lock // Logout page
-    # USED BY UI ("🔓", ""),  # Open Lock // Login page
-    # ("🔏", ""),  # Lock With Ink Pen
-    # ("🔐", ""),  # Closed Lock With Key
-    ("🔑", "🔑"),  # Key
-    # LAME ("🔨", ""),  # Hammer
-    # USED BY UI ("🔧", ""),  # Wrench // for tournament config link
-    ("🔩", "🔩"),  # Nut and Bolt
-    # LAME ("🔗", ""),  # Link Symbol
-    # OFFENSIVE ("💉", ""),  # Syringe
-    ("💊", ""),  # Pill
-    ("🔪", "🔪"),  # Hocho
-    ("🔫", "🔫"),  # Pistol
-    ("🚬", "🚬"),  # Smoking Symbol
-    ("🏁", ""),  # Chequered Flag
-    # LAME ("🚩", ""),  # Triangular Flag on Post
-    # LAME ("🇦🇫", ""),  # Flag for Afghanistan
-    # LAME ("🇦🇽", ""),  # Flag for Åland Islands
-    # LAME ("🇦🇱", ""),  # Flag for Albania
-    # LAME ("🇩🇿", ""),  # Flag for Algeria
-    # LAME ("🇦🇸", ""),  # Flag for American Samoa
-    # LAME ("🇦🇩", ""),  # Flag for Andorra
-    # LAME ("🇦🇴", ""),  # Flag for Angola
-    # LAME ("🇦🇮", ""),  # Flag for Anguilla
-    # ("🇦🇶", "🇦🇶"),  # Flag for Antarctica
-    # LAME ("🇦🇬", ""),  # Flag for Antigua & Barbuda
-    # LAME ("🇦🇷", ""),  # Flag for Argentina
-    # LAME ("🇦🇲", ""),  # Flag for Armenia
-    # LAME ("🇦🇼", ""),  # Flag for Aruba
-    # LAME ("🇦🇨", ""),  # Flag for Ascension Island
-    # ("🇦🇺", "🇦🇺"),  # Flag for Australia
-    # ("🇦🇹", "🇦🇹"),  # Flag for Austria
-    # LAME ("🇦🇿", ""),  # Flag for Azerbaijan
-    # LAME ("🇧🇸", ""),  # Flag for Bahamas
-    # LAME ("🇧🇭", ""),  # Flag for Bahrain
-    # LAME ("🇧🇩", ""),  # Flag for Bangladesh
-    # LAME ("🇧🇧", ""),  # Flag for Barbados
-    # LAME ("🇧🇾", ""),  # Flag for Belarus
-    # LAME ("🇧🇪", ""),  # Flag for Belgium
-    # LAME ("🇧🇿", ""),  # Flag for Belize
-    # LAME ("🇧🇯", ""),  # Flag for Benin
-    # LAME ("🇧🇲", ""),  # Flag for Bermuda
-    # LAME ("🇧🇹", ""),  # Flag for Bhutan
-    # LAME ("🇧🇴", ""),  # Flag for Bolivia
-    # LAME ("🇧🇦", ""),  # Flag for Bosnia & Herzegovina
-    # LAME ("🇧🇼", ""),  # Flag for Botswana
-    # LAME ("🇧🇻", ""),  # Flag for Bouvet Island
-    # ("🇧🇷", "🇧🇷"),  # Flag for Brazil
-    # LAME ("🇮🇴", ""),  # Flag for British Indian Ocean Territory
-    # LAME ("🇻🇬", ""),  # Flag for British Virgin Islands
-    # LAME ("🇧🇳", ""),  # Flag for Brunei
-    # LAME ("🇧🇬", ""),  # Flag for Bulgaria
-    # LAME ("🇧🇫", ""),  # Flag for Burkina Faso
-    # LAME ("🇧🇮", ""),  # Flag for Burundi
-    # LAME ("🇰🇭", ""),  # Flag for Cambodia
-    # LAME ("🇨🇲", ""),  # Flag for Cameroon
-    # ("🇨🇦", "🇨🇦"),  # Flag for Canada
-    # LAME ("🇮🇨", ""),  # Flag for Canary Islands
-    # LAME ("🇨🇻", ""),  # Flag for Cape Verde
-    # LAME ("🇧🇶", ""),  # Flag for Caribbean Netherlands
-    # LAME ("🇰🇾", ""),  # Flag for Cayman Islands
-    # LAME ("🇨🇫", ""),  # Flag for Central African Republic
-    # LAME ("🇪🇦", ""),  # Flag for Ceuta & Melilla
-    # LAME ("🇹🇩", ""),  # Flag for Chad
-    # ("🇨🇱", "🇨🇱"),  # Flag for Chile
-    # ("🇨🇳", "🇨🇳"),  # Flag for China
-    # LAME ("🇨🇽", ""),  # Flag for Christmas Island
-    # LAME ("🇨🇵", ""),  # Flag for Clipperton Island
-    # LAME ("🇨🇨", ""),  # Flag for Cocos Islands
-    # LAME ("🇨🇴", ""),  # Flag for Colombia
-    # LAME ("🇰🇲", ""),  # Flag for Comoros
-    # LAME ("🇨🇬", ""),  # Flag for Congo - Brazzaville
-    # LAME ("🇨🇩", ""),  # Flag for Congo - Kinshasa
-    # LAME ("🇨🇰", ""),  # Flag for Cook Islands
-    # LAME ("🇨🇷", ""),  # Flag for Costa Rica
-    # LAME ("🇨🇮", ""),  # Flag for Côte D’Ivoire
-    # LAME ("🇭🇷", ""),  # Flag for Croatia
-    # LAME ("🇨🇺", ""),  # Flag for Cuba
-    # LAME ("🇨🇼", ""),  # Flag for Curaçao
-    # LAME ("🇨🇾", ""),  # Flag for Cyprus
-    # ("🇨🇿", "🇨🇿"),  # Flag for Czech Republic
-    # ("🇩🇰", "🇩🇰"),  # Flag for Denmark
-    # LAME ("🇩🇬", ""),  # Flag for Diego Garcia
-    # LAME ("🇩🇯", ""),  # Flag for Djibouti
-    # LAME ("🇩🇲", ""),  # Flag for Dominica
-    # LAME ("🇩🇴", ""),  # Flag for Dominican Republic
-    # LAME ("🇪🇨", ""),  # Flag for Ecuador
-    # ("🇪🇬", "🇪🇬"),  # Flag for Egypt
-    # LAME ("🇸🇻", ""),  # Flag for El Salvador
-    # LAME ("🇬🇶", ""),  # Flag for Equatorial Guinea
-    # LAME ("🇪🇷", ""),  # Flag for Eritrea
-    # LAME ("🇪🇪", ""),  # Flag for Estonia
-    # LAME ("🇪🇹", ""),  # Flag for Ethiopia
-    # ("🇪🇺", "🇪🇺"),  # Flag for European Union
-    # LAME ("🇫🇰", ""),  # Flag for Falkland Islands
-    # LAME ("🇫🇴", ""),  # Flag for Faroe Islands
-    # LAME ("🇫🇯", ""),  # Flag for Fiji
-    # LAME ("🇫🇮", ""),  # Flag for Finland
-    # ("🇫🇷", "🇫🇷"),  # Flag for France
-    # LAME ("🇬🇫", ""),  # Flag for French Guiana
-    # LAME ("🇵🇫", ""),  # Flag for French Polynesia
-    # LAME ("🇹🇫", ""),  # Flag for French Southern Territories
-    # LAME ("🇬🇦", ""),  # Flag for Gabon
-    # LAME ("🇬🇲", ""),  # Flag for Gambia
-    # LAME ("🇬🇪", ""),  # Flag for Georgia
-    # ("🇩🇪", "🇩🇪"),  # Flag for Germany
-    # LAME ("🇬🇭", ""),  # Flag for Ghana
-    # LAME ("🇬🇮", ""),  # Flag for Gibraltar
-    # ("🇬🇷", "🇬🇷"),  # Flag for Greece
-    # LAME ("🇬🇱", ""),  # Flag for Greenland
-    # LAME ("🇬🇩", ""),  # Flag for Grenada
-    # LAME ("🇬🇵", ""),  # Flag for Guadeloupe
-    # LAME ("🇬🇺", ""),  # Flag for Guam
-    # LAME ("🇬🇹", ""),  # Flag for Guatemala
-    # LAME ("🇬🇬", ""),  # Flag for Guernsey
-    # LAME ("🇬🇳", ""),  # Flag for Guinea
-    # LAME ("🇬🇼", ""),  # Flag for Guinea-Bissau
-    # LAME ("🇬🇾", ""),  # Flag for Guyana
-    # LAME ("🇭🇹", ""),  # Flag for Haiti
-    # LAME ("🇭🇲", ""),  # Flag for Heard & McDonald Islands
-    # LAME ("🇭🇳", ""),  # Flag for Honduras
-    # LAME ("🇭🇰", ""),  # Flag for Hong Kong
-    # LAME ("🇭🇺", ""),  # Flag for Hungary
-    # LAME ("🇮🇸", ""),  # Flag for Iceland
-    # ("🇮🇳", "🇮🇳"),  # Flag for India
-    # ("🇮🇩", "🇮🇩"),  # Flag for Indonesia
-    # ("🇮🇷", "🇮🇷"),  # Flag for Iran
-    # ("🇮🇶", "🇮🇶"),  # Flag for Iraq
-    # ("🇮🇪", "🇮🇪"),  # Flag for Ireland
-    # LAME ("🇮🇲", ""),  # Flag for Isle of Man
-    # LAME ("🇮🇱", ""),  # Flag for Israel
-    # ("🇮🇹", "🇮🇹"),  # Flag for Italy
-    # LAME ("🇯🇲", ""),  # Flag for Jamaica
-    # ("🇯🇵", "🇯🇵"),  # Flag for Japan
-    # LAME ("🇯🇪", ""),  # Flag for Jersey
-    # LAME ("🇯🇴", ""),  # Flag for Jordan
-    # LAME ("🇰🇿", ""),  # Flag for Kazakhstan
-    # LAME ("🇰🇪", ""),  # Flag for Kenya
-    # LAME ("🇰🇮", ""),  # Flag for Kiribati
-    # LAME ("🇽🇰", ""),  # Flag for Kosovo
-    # LAME ("🇰🇼", ""),  # Flag for Kuwait
-    # LAME ("🇰🇬", ""),  # Flag for Kyrgyzstan
-    # LAME ("🇱🇦", ""),  # Flag for Laos
-    # LAME ("🇱🇻", ""),  # Flag for Latvia
-    # LAME ("🇱🇧", ""),  # Flag for Lebanon
-    # LAME ("🇱🇸", ""),  # Flag for Lesotho
-    # LAME ("🇱🇷", ""),  # Flag for Liberia
-    # LAME ("🇱🇾", ""),  # Flag for Libya
-    # LAME ("🇱🇮", ""),  # Flag for Liechtenstein
-    # LAME ("🇱🇹", ""),  # Flag for Lithuania
-    # LAME ("🇱🇺", ""),  # Flag for Luxembourg
-    # LAME ("🇲🇴", ""),  # Flag for Macau
-    # LAME ("🇲🇰", ""),  # Flag for Macedonia
-    # LAME ("🇲🇬", ""),  # Flag for Madagascar
-    # LAME ("🇲🇼", ""),  # Flag for Malawi
-    # LAME ("🇲🇾", ""),  # Flag for Malaysia
-    # LAME ("🇲🇻", ""),  # Flag for Maldives
-    # LAME ("🇲🇱", ""),  # Flag for Mali
-    # LAME ("🇲🇹", ""),  # Flag for Malta
-    # LAME ("🇲🇭", ""),  # Flag for Marshall Islands
-    # LAME ("🇲🇶", ""),  # Flag for Martinique
-    # LAME ("🇲🇷", ""),  # Flag for Mauritania
-    # LAME ("🇲🇺", ""),  # Flag for Mauritius
-    # LAME ("🇾🇹", ""),  # Flag for Mayotte
-    # ("🇲🇽", "🇲🇽"),  # Flag for Mexico
-    # LAME ("🇫🇲", ""),  # Flag for Micronesia
-    # LAME ("🇲🇩", ""),  # Flag for Moldova
-    # LAME ("🇲🇨", ""),  # Flag for Monaco
-    # LAME ("🇲🇳", ""),  # Flag for Mongolia
-    # LAME ("🇲🇪", ""),  # Flag for Montenegro
-    # LAME ("🇲🇸", ""),  # Flag for Montserrat
-    # LAME ("🇲🇦", ""),  # Flag for Morocco
-    # LAME ("🇲🇿", ""),  # Flag for Mozambique
-    # LAME ("🇲🇲", ""),  # Flag for Myanmar
-    # LAME ("🇳🇦", ""),  # Flag for Namibia
-    # LAME ("🇳🇷", ""),  # Flag for Nauru
-    # LAME ("🇳🇵", ""),  # Flag for Nepal
-    # LAME ("🇳🇱", ""),  # Flag for Netherlands
-    # LAME ("🇳🇨", ""),  # Flag for New Caledonia
-    # ("🇳🇿", "🇳🇿"),  # Flag for New Zealand
-    # LAME ("🇳🇮", ""),  # Flag for Nicaragua
-    # LAME ("🇳🇪", ""),  # Flag for Niger
-    # LAME ("🇳🇬", ""),  # Flag for Nigeria
-    # LAME ("🇳🇺", ""),  # Flag for Niue
-    # LAME ("🇳🇫", ""),  # Flag for Norfolk Island
-    # LAME ("🇲🇵", ""),  # Flag for Northern Mariana Islands
-    # LAME ("🇰🇵", ""),  # Flag for North Korea
-    # ("🇳🇴", "🇳🇴"),  # Flag for Norway
-    # LAME ("🇴🇲", ""),  # Flag for Oman
-    # LAME ("🇵🇰", ""),  # Flag for Pakistan
-    # LAME ("🇵🇼", ""),  # Flag for Palau
-    # ("🇵🇸", "🇵🇸"),  # Flag for Palestinian Territories
-    # LAME ("🇵🇦", ""),  # Flag for Panama
-    # LAME ("🇵🇬", ""),  # Flag for Papua New Guinea
-    # LAME ("🇵🇾", ""),  # Flag for Paraguay
-    # ("🇵🇪", "🇵🇪"),  # Flag for Peru
-    # LAME ("🇵🇭", ""),  # Flag for Philippines
-    # LAME ("🇵🇳", ""),  # Flag for Pitcairn Islands
-    # LAME ("🇵🇱", ""),  # Flag for Poland
-    # LAME ("🇵🇹", ""),  # Flag for Portugal
-    # LAME ("🇵🇷", ""),  # Flag for Puerto Rico
-    # LAME ("🇶🇦", ""),  # Flag for Qatar
-    # LAME ("🇷🇪", ""),  # Flag for Réunion
-    # LAME ("🇷🇴", ""),  # Flag for Romania
-    # ("🇷🇺", "🇷🇺"),  # Flag for Russia
-    # LAME ("🇷🇼", ""),  # Flag for Rwanda
-    # LAME ("🇼🇸", ""),  # Flag for Samoa
-    # LAME ("🇸🇲", ""),  # Flag for San Marino
-    # LAME ("🇸🇹", ""),  # Flag for São Tomé & Príncipe
-    # LAME ("🇸🇦", ""),  # Flag for Saudi Arabia
-    # LAME ("🇸🇳", ""),  # Flag for Senegal
-    # LAME ("🇷🇸", ""),  # Flag for Serbia
-    # LAME ("🇸🇨", ""),  # Flag for Seychelles
-    # LAME ("🇸🇱", ""),  # Flag for Sierra Leone
-    # LAME ("🇸🇬", ""),  # Flag for Singapore
-    # LAME ("🇸🇽", ""),  # Flag for Sint Maarten
-    # LAME ("🇸🇰", ""),  # Flag for Slovakia
-    # LAME ("🇸🇮", ""),  # Flag for Slovenia
-    # LAME ("🇸🇧", ""),  # Flag for Solomon Islands
-    # LAME ("🇸🇴", ""),  # Flag for Somalia
-    # ("🇿🇦", "🇿🇦"),  # Flag for South Africa
-    # LAME ("🇬🇸", ""),  # Flag for South Georgia & South Sandwich Islands
-    # ("🇰🇷", "🇰🇷"),  # Flag for South Korea
-    # LAME ("🇸🇸", ""),  # Flag for South Sudan
-    # ("🇪🇸", "🇪🇸"),  # Flag for Spain
-    # LAME ("🇱🇰", ""),  # Flag for Sri Lanka
-    # LAME ("🇧🇱", ""),  # Flag for St. Barthélemy
-    # LAME ("🇸🇭", ""),  # Flag for St. Helena
-    # LAME ("🇰🇳", ""),  # Flag for St. Kitts & Nevis
-    # LAME ("🇱🇨", ""),  # Flag for St. Lucia
-    # LAME ("🇲🇫", ""),  # Flag for St. Martin
-    # LAME ("🇵🇲", ""),  # Flag for St. Pierre & Miquelon
-    # LAME ("🇻🇨", ""),  # Flag for St. Vincent & Grenadines
-    # LAME ("🇸🇩", ""),  # Flag for Sudan
-    # LAME ("🇸🇷", ""),  # Flag for Suriname
-    # LAME ("🇸🇯", ""),  # Flag for Svalbard & Jan Mayen
-    # LAME ("🇸🇿", ""),  # Flag for Swaziland
-    # ("🇸🇪", "🇸🇪"),  # Flag for Sweden
-    # ("🇨🇭", "🇨🇭"),  # Flag for Switzerland
-    # LAME ("🇸🇾", ""),  # Flag for Syria
-    # LAME ("🇹🇼", ""),  # Flag for Taiwan
-    # LAME ("🇹🇯", ""),  # Flag for Tajikistan
-    # LAME ("🇹🇿", ""),  # Flag for Tanzania
-    # LAME ("🇹🇭", ""),  # Flag for Thailand
-    # LAME ("🇹🇱", ""),  # Flag for Timor-Leste
-    # LAME ("🇹🇬", ""),  # Flag for Togo
-    # LAME ("🇹🇰", ""),  # Flag for Tokelau
-    # LAME ("🇹🇴", ""),  # Flag for Tonga
-    # LAME ("🇹🇹", ""),  # Flag for Trinidad & Tobago
-    # LAME ("🇹🇦", ""),  # Flag for Tristan Da Cunha
-    # LAME ("🇹🇳", ""),  # Flag for Tunisia
-    # ("🇹🇷", "🇹🇷"),  # Flag for Turkey
-    # LAME ("🇹🇲", ""),  # Flag for Turkmenistan
-    # LAME ("🇹🇨", ""),  # Flag for Turks & Caicos Islands
-    # LAME ("🇹🇻", ""),  # Flag for Tuvalu
-    # LAME ("🇺🇬", ""),  # Flag for Uganda
-    # LAME ("🇺🇦", ""),  # Flag for Ukraine
-    # LAME ("🇦🇪", ""),  # Flag for United Arab Emirates
-    # ("🇬🇧", "🇬🇧"),  # Flag for United Kingdom
-    # ("🇺🇸", "🇺🇸"),  # Flag for United States
-    # LAME ("🇺🇾", ""),  # Flag for Uruguay
-    # LAME ("🇺🇲", ""),  # Flag for U.S. Outlying Islands
-    # LAME ("🇻🇮", ""),  # Flag for U.S. Virgin Islands
-    # LAME ("🇺🇿", ""),  # Flag for Uzbekistan
-    # LAME ("🇻🇺", ""),  # Flag for Vanuatu
-    # ("🇻🇦", "🇻🇦"),  # Flag for Vatican City
-    # LAME ("🇻🇪", ""),  # Flag for Venezuela
-    # ("🇻🇳", "🇻🇳"),  # Flag for Vietnam
-    # LAME ("🇼🇫", ""),  # Flag for Wallis & Futuna
-    # LAME ("🇪🇭", ""),  # Flag for Western Sahara
-    # LAME ("🇾🇪", ""),  # Flag for Yemen
-    # LAME ("🇿🇲", ""),  # Flag for Zambia
-    # LAME ("🇿🇼", ""),  # Flag for Zimbabwe
-    # LAME ("🔃", ""),  # Clockwise Downwards and Upwards Open Circle Arrows
-    # LAME ("🔄", ""),  # Anticlockwise Downwards and Upwards Open Circle Arrows
-    # LAME ("🔙", ""),  # Back With Leftwards Arrow Above
-    # LAME ("🔚", ""),  # End With Leftwards Arrow Above
-    # LAME ("🔛", ""),  # On With Exclamation Mark With Left Right Arrow Above
-    # LAME ("🔜", ""),  # Soon With Rightwards Arrow Above
-    # LAME ("🔝", ""),  # Top With Upwards Arrow Above
-    # LAME ("🔰", ""),  # Japanese Symbol for Beginner
-    ("🔮", "🔮"),  # Crystal Ball
-    # LAME ("🔯", ""),  # Six Pointed Star With Middle Dot
-    # LAME ("✅", ""),  # White Heavy Check Mark
-    ("❌", "❌"),  # Cross Mark
-    # LAME ("❎", ""),  # Negative Squared Cross Mark
-    # LAME ("➕", ""),  # Heavy Plus Sign
-    # LAME ("➖", ""),  # Heavy Minus Sign
-    # LAME ("➗", ""),  # Heavy Division Sign
-    # LAME ("➰", ""),  # Curly Loop
-    # LAME ("➿", ""),  # Double Curly Loop
-    ("❓", "❓"),  # Black Question Mark Ornament
-    # TOO SIMILAR ("❔", ""),  # White Question Mark Ornament
-    # TOO SIMILAR ("❕", ""),  # White Exclamation Mark Ornament
-    # USED BY UI ("💯", ""),  # Hundred Points Symbol // Speaker tab
-    ("🔞", "🔞"),  # No One Under Eighteen Symbol
-    # LAME ("🔠", ""),  # Input Symbol for Latin Capital Letters
-    # LAME ("🔡", ""),  # Input Symbol for Latin Small Letters
-    # LAME ("🔢", ""),  # Input Symbol for Numbers
-    # LAME ("🔣", ""),  # Input Symbol for Symbols
-    # LAME ("🔤", ""),  # Input Symbol for Latin Letters
-    # LAME ("🅰️", ""),  # Negative Squared Latin Capital Letter A
-    # LAME ("🆎", ""),  # Negative Squared AB
-    # LAME ("🅱️", ""),  # Negative Squared Latin Capital Letter B
-    # LAME ("🆑", ""),  # Squared CL
-    ("🆒", "🆒"),  # Squared Cool
-    # LAME ("🆓", ""),  # Squared Free
-    # LAME ("🆔", ""),  # Squared ID
-    # LAME ("🆕", ""),  # Squared New
-    # LAME ("🆖", ""),  # Squared NG
-    # LAME ("🅾️", ""),  # Negative Squared Latin Capital Letter O
-    ("🆗", "🆗"),  # Squared OK
-    ("🆘", "🆘"),  # Squared SOS
-    # LAME ("🆙", ""),  # Squared Up With Exclamation Mark
-    # LAME ("🆚", ""),  # Squared Vs
-    # LAME ("🈁", ""),  # Squared Katakana Koko
-    # LAME ("🈂️", ""),  # Squared Katakana Sa
-    # LAME ("🈷️", ""),  # Squared CJK Unified Ideograph-6708
-    # LAME ("🈶", ""),  # Squared CJK Unified Ideograph-6709
-    # LAME ("🉐", ""),  # Circled Ideograph Advantage
-    # LAME ("🈹", ""),  # Squared CJK Unified Ideograph-5272
-    # LAME ("🈲", ""),  # Squared CJK Unified Ideograph-7981
-    # LAME ("🉑", ""),  # Circled Ideograph Accept
-    # LAME ("🈸", ""),  # Squared CJK Unified Ideograph-7533
-    # LAME ("🈴", ""),  # Squared CJK Unified Ideograph-5408
-    # LAME ("🈳", ""),  # Squared CJK Unified Ideograph-7a7a
-    # LAME ("🈺", ""),  # Squared CJK Unified Ideograph-55b6
-    # LAME ("🈵", ""),  # Squared CJK Unified Ideograph-6e80
-    # LAME ("🔶", ""),  # Large Orange Diamond
-    # LAME ("🔷", ""),  # Large Blue Diamond
-    # LAME ("🔸", ""),  # Small Orange Diamond
-    # LAME ("🔹", ""),  # Small Blue Diamond
-    # LAME ("🔺", ""),  # Up-Pointing Red Triangle
-    # LAME ("🔻", ""),  # Down-Pointing Red Triangle
-    # LAME ("💠", ""),  # Diamond Shape With a Dot Inside
-    # LAME ("🔘", ""),  # Radio Button
-    # LAME ("🔲", ""),  # Black Square Button
-    # LAME ("🔳", ""),  # White Square Button
-    # LAME ("🔴", ""),  # Large Red Circle
-    # LAME ("🔵", ""),  # Large Blue Circle
-    # Unicode    Version 6.1
-    # TOO SIMILAR ("😀", ""),  # Grinning Face
-    # TOO SIMILAR ("😗", ""),  # Kissing Face
-    ("😙", "😙"),  # Kissing Face With Smiling Eyes
-    ("😑", "😑"),  # Expressionless Face
-    ("😮", "😮"),  # Face With Open Mouth
-    # TOO SIMILAR ("😯", ""),  # Hushed Face
-    ("😴", "😴"),  # Sleeping Face
-    ("😛", "😛"),  # Face With Stuck-Out Tongue
-    # TOO SIMILAR ("😕", ""),  # Confused Face
-    # TOO SIMILAR ("😟", ""),  # Worried Face
-    # TOO SIMILAR ("😦", ""),  # Frowning Face With Open Mouth
-    ("😧", "😧"),  # Anguished Face
-    ("😬", "😬"),  # Grimacing Face
-    # Unicode    Version 7.0
-    # TOO SIMILAR ("🙂", ""),  # Slightly Smiling Face
-    # TOO SIMILAR ("🙁", ""),  # Slightly Frowning Face
-    ("🕵", "🕵"),  # Sleuth or Spy
-    # LAME ("🗣", ""),  # Speaking Head in Silhouette
-    # LAME ("🕴", ""),  # Man in Business Suit Levitating
-    ("🖕", "🖕"),  # Reversed Hand With Middle Finger Extended
-    ("🖖", "🖖"),  # Raised Hand With Part Between Middle and Ring Fingers
-    # TOO SIMILAR ("🖐", ""),  # Raised Hand With Fingers Splayed
-    ("👁", "👁"),  # Eye
-    # LAME ("🕳", ""),  # Hole
-    # LAME ("🗯", ""),  # Right Anger Bubble
-    ("🕶", "🕶"),  # Dark Sunglasses
-    ("🛍", "🛍"),  # Shopping Bags
-    ("🐿", "🐿"),  # Chipmunk
-    ("🕊", "🕊"),  # Dove of Peace
-    ("🕷", "🕷"),  # Spider
-    # LAME ("🕸", ""),  # Spider Web
-    # LAME ("🏵", ""),  # Rosette
-    ("🌶", "🌶"),  # Hot Pepper
-    # LAME ("🍽", ""),  # Fork and Knife With Plate
-    # LAME ("🗺", ""),  # World Map
-    # LAME ("🏔", ""),  # Snow Capped Mountain
-    ("🏕", ""),  # Camping
-    # LAME ("🏖", ""),  # Beach With Umbrella
-    # LAME ("🏜", ""),  # Desert
-    # LAME ("🏝", ""),  # Desert Island
-    # LAME ("🏞", ""),  # National Park
-    # LAME ("🏟", ""),  # Stadium
-    ("🏛", "🏛"),  # Classical Building
-    # LAME ("🏗", ""),  # Building Construction
-    # LAME ("🏘", ""),  # House Buildings
-    # LAME ("🏙", ""),  # Cityscape
-    # LAME ("🏚", ""),  # Derelict House Building
-    # LAME ("🖼", ""),  # Frame With Picture
-    ("🛢", "🛢"),  # Oil Drum
-    # LAME ("🛣", ""),  # Motorway
-    # LAME ("🛤", ""),  # Railway Track
-    # LAME ("🛳", ""),  # Passenger Ship
-    ("🛥", ""),  # Motor Boat
-    ("🛩", ""),  # Small Airplane
-    # LAME ("🛫", ""),  # Airplane Departure
-    # LAME ("🛬", ""),  # Airplane Arriving
-    # LAME ("🛰", ""),  # Satellite
-    ("🛎", "🛎"),  # Bellhop Bell
-    # LAME ("🛌", ""),  # Sleeping Accommodation
-    # LAME ("🛏", ""),  # Bed
-    # LAME ("🛋", ""),  # Couch and Lamp
-    ("🕰", "🕰"),  # Mantelpiece Clock
-    ("🌡", "🌡"),  # Thermometer
-    ("🌤", "🌤"),  # White Sun With Small Cloud
-    # LAME ("🌥", ""),  # White Sun Behind Cloud
-    # LAME ("🌦", ""),  # White Sun Behind Cloud With Rain
-    ("🌧", "🌧"),  # Cloud With Rain
-    # LAME ("🌨", ""),  # Cloud With Snow
-    ("🌩", "🌩"),  # Cloud With Lightning
-    ("🌪", "🌪"),  # Cloud With Tornado
-    # LAME ("🌫", "🌫"),  # Fog
-    ("🌬", "🌬"),  # Wind Blowing Face
-    ("🎖", "🎖"),  # Military Medal
-    ("🎗", "🎗"),  # Reminder Ribbon
-    ("🎞", "🎞"),  # Film Frames
-    # LAME ("🎟", ""),  # Admission Tickets
-    # LAME ("🏷", "🏷"),  # Label
-    # LAME ("🏌", ""),  # Golfer
-    ("🏋", ""),  # Weight Lifter
-    # LAME ("🏎", ""),  # Racing Car
-    # LAME ("🏍", ""),  # Racing Motorcycle
-    ("🏅", "🏅"),  # Sports Medal
-    ("🕹", "🕹"),  # Joystick
-    # LAME ("⏸", ""),  # Double Vertical Bar
-    # LAME ("⏹", ""),  # Black Square for Stop
-    # LAME ("⏺", ""),  # Black Circle for Record
-    ("🎙", "🎙"),  # Studio Microphone
-    # LAME ("🎚", ""),  # Level Slider
-    # LAME ("🎛", ""),  # Control Knobs
-    ("🖥", "🖥"),  # Desktop Computer
-    ("🖨", "🖨"),  # Printer
-    # LAME ("🖱", ""),  # Three Button Mouse
-    ("🖲", "🖲"),  # Trackball
-    # LAME ("📽", ""),  # Film Projector
-    ("📸", ""),  # Camera With Flash
-    ("🕯", "🕯"),  # Candle
-    ("🗞", ""),  # Rolled-Up Newspaper
-    # LAME ("🗳", ""),  # Ballot Box With Ballot
-    ("🖋", "🖋"),  # Lower Left Fountain Pen
-    # LAME ("🖊", ""),  # Lower Left Ballpoint Pen
-    # LAME ("🖌", ""),  # Lower Left Paintbrush
-    # LAME ("🖍", ""),  # Lower Left Crayon
-    # USED BY UI ("🗂", ""),  # Card Index Dividers
-    # LAME ("🗒", ""),  # Spiral Note Pad
-    # LAME ("🗓", ""),  # Spiral Calendar Pad
-    # LAME ("🖇", ""),  # Linked Paperclips
-    # LAME ("🗃", ""),  # Card File Box
-    # LAME ("🗄", ""),  # File Cabinet
-    ("🗑", "🗑"),  # Wastebasket
-    # LAME ("🗝", ""),  # Old Key
-    ("🛠", ""),  # Hammer and Wrench
-    # LAME ("🗜", ""),  # Compression
-    ("🗡", "🗡"),  # Dagger Knife
-    ("🛡", "🛡"),  # Shield
-    ("🏳", "🏳"),  # Waving White Flag
-    ("🏴", "🏴"),  # Waving Black Flag
-    # LAME ("🕉", ""),  # Om Symbol
-    # LAME ("🗨", ""),  # Left Speech Bubble
-    # Unicode    Version 8.0
-    ("🤗", "🤗"),  # Hugging Face
-    ("🤔", "🤔"),  # Thinking Face
-    ("🙄", "🙄"),  # Face With Rolling Eyes
-    ("🤐", "🤐"),  # Zipper-Mouth Face
-    ("🤓", "🤓"),  # Nerd Face
-    ("🙃", "🙃"),  # Upside-Down Face
-    ("🤒", "🤒"),  # Face With Thermometer
-    ("🤕", "🤕"),  # Face With Head-Bandage
-    ("🤑", "🤑"),  # Money-Mouth Face
-    # LAME ("🏻", ""),  # Emoji Modifier Fitzpatrick Type-1-2
-    # LAME ("🏼", ""),  # Emoji Modifier Fitzpatrick Type-3
-    # LAME ("🏽", ""),  # Emoji Modifier Fitzpatrick Type-4
-    # LAME ("🏾", ""),  # Emoji Modifier Fitzpatrick Type-5
-    # LAME ("🏿", ""),  # Emoji Modifier Fitzpatrick Type-6
-    ("🤘", "🤘"),  # Sign of the Horns
-    ("📿", "📿"),  # Prayer Beads
-    ("🤖", "🤖"),  # Robot Face
-    ("🦁", "🦁"),  # Lion Face
-    ("🦄", "🦄"),  # Unicorn Face
-    # LAME ("🦃", ""),  # Turkey
-    ("🦀", "🦀"),  # Crab
-    ("🦂", ""),  # Scorpion
-    ("🧀", "🧀"),  # Cheese Wedge
-    ("🌭", "🌭"),  # Hot Dog
-    ("🌮", "🌮"),  # Taco
-    # LAME ("🌯", ""),  # Burrito
-    ("🍿", "🍿"),  # Popcorn
-    ("🍾", "🍾"),  # Bottle With Popping Cork
-    # LAME ("🏺", ""),  # Amphora
-    # LAME ("🛐", ""),  # Place of Worship
-    # OFFENSIVE ("🕋", ""),  # Kaaba
-    # OFFENSIVE ("🕌", ""),  # Mosque
-    # OFFENSIVE ("🕍", ""),  # Synagogue
-    # OFFENSIVE ("🕎", ""),  # Menorah With Nine Branches
-    ("🏏", "🏏"),  # Cricket Bat and Ball
-    ("🏐", "🏐"),  # Volleyball
-    # TOO SIMILAR ("🏑", ""),  # Field Hockey Stick and Ball
-    # TOO SIMILAR ("🏒", ""),  # Ice Hockey Stick and Puck
-    ("🏓", "🏓"),  # Table Tennis Paddle and Ball
-    # TOO SIMILAR ("🏸", ""),  # Badminton Racquet and Shuttlecock
-    ("🏹", "🏹"),  # Bow and Arrow
+    ("😁",    False, "Smiling Eyes"),                     # too similar to another
+    ("😂",    True , "Tears of Joy"),
+    ("😃",    False, "Smiling Face With Open Mouth"),     # too similar to another
+    ("😄",    False, "Smiling Face With Open Mouth and Smiling Eyes"), # too similar to another
+    ("😅",    False, "Cold Sweat"),                       # too similar to another
+    ("😆",    True , "Closed Eyes"),
+    ("😉",    True , "Winky"),
+    ("😊",    True , "Smiling Eyes"),
+    ("😋",    False, "Face Savouring Delicious Food"),    # too similar to another
+    ("😎",    True , "Sunglasses"),
+    ("😍",    True , "Heart Eyes"),
+    ("😘",    True , "Kissy"),
+    ("😚",    False, "Kissing Face With Closed Eyes"),    # too similar to another
+    ("😇",    True , "Halo"),
+    ("😐",    True , "Neutral"),
+    ("😶",    False, "Face Without Mouth"),               # too similar to another
+    ("😏",    True , "Smirking"),
+    ("😣",    True , "Persevering"),
+    ("😥",    True , "Disappointed"),
+    ("😪",    False, "Sleepy"),                           # too similar to another
+    ("😫",    False, "Tired"),                            # too similar to another
+    ("😌",    False, "Relieved"),                         # too similar to another
+    ("😜",    True , "Tongue Out"),
+    ("😝",    False, "Tongue Out Closed Eyes"),           # too similar to another
+    ("😒",    False, "Unamused"),                         # too similar to another
+    ("😓",    True , "Cold Sweat"),
+    ("😔",    False, "Pensive"),                          # too similar to another
+    ("😖",    True , "Confounded"),
+    ("😷",    True , "Medical Mask"),
+    ("😲",    True , "Astonished"),
+    ("😞",    False, "Disappointed"),                     # too similar to another
+    ("😤",    False, "Face With Look of Triumph"),        # too similar to another
+    ("😢",    False, "Crying"),                           # too similar to another
+    ("😭",    True , "Sobbing"),
+    ("😨",    False, "Fearful"),                          # too similar to another
+    ("😩",    False, "Weary"),                            # too similar to another
+    ("😰",    False, "Open Mouth Cold Sweat"),            # too similar to another
+    ("😱",    True , "Screaming"),
+    ("😳",    True , "Flushed"),
+    ("😵",    True , "Dizzy"),
+    ("😡",    True , "Pouting"),
+    ("😠",    False, "Angry"),                            # too similar to another
+    ("👿",    False, "Imp"),                              # potentially offensive
+    ("😈",    False, "Smiling Face With Horns"),          # too similar to another
+    ("👦",    False, "Boy"),                              # dull
+    ("👧",    False, "Girl"),                             # dull
+    ("👨",    False, "Generic Man"),                      # potentially offensive
+    ("👩",    False, "Generic Woman"),                    # potentially offensive
+    ("👴",    False, "Older Man"),                        # potentially offensive
+    ("👵",    False, "Older Woman"),                      # potentially offensive
+    ("👶",    True , "Baby"),
+    ("👱",    False, "Person With Blond Hair"),           # dull
+    ("👮",    False, "Police Officer"),                   # potentially offensive
+    ("👲",    False, "Man With Gua Pi Mao"),              # potentially offensive
+    ("👳",    False, "Man With Turban"),                  # potentially offensive
+    ("👷",    False, "Trade Worker"),                     # potentially offensive
+    ("👸",    False, "Princess"),                         # potentially offensive
+    ("💂",    False, "Guardsman"),                        # potentially offensive
+    ("🎅",    False, "Santa Claus"),                      # potentially offensive
+    ("👼",    False, "Baby Angel"),                       # potentially offensive
+    ("👯",    False, "Bunny Women"),                      # potentially offensive
+    ("💆",    False, "Face Massage"),                     # dull
+    ("💇",    False, "Haircut"),                          # dull
+    ("👰",    False, "Bride"),                            # potentially offensive
+    ("🙍",    False, "Person Frowning"),                  # dull
+    ("🙎",    False, "Person With Pouting"),              # dull
+    ("🙅",    True , "Block Gesture"),
+    ("🙆",    True , "OK Gesture"),
+    ("💁",    False, "Sass Gesture"),                     # used in UI: reply standings
+    ("🙋",    True , "Raised Hand"),
+    ("🙇",    True , "Deep Bow"),
+    ("🙌",    True , "Praise Hands"),
+    ("🙏",    False, "Prayer Hands"),                     # potenmtially offensive
+    ("👤",    False, "Bust in Silhouette"),               # dull
+    ("👥",    False, "Busts in Silhouette"),              # dull
+    ("🚶",    False, "Pedestrian"),                       # dull
+    ("🏃",    False, "Runner"),                           # dull
+    ("💃",    False, "Dancer"),                           # potentially offensive
+    ("💏",    False, "Kiss"),                             # potentially offensive
+    ("💑",    False, "Heteronormative Couple"),           # potentially offensive
+    ("👪",    False, "Hetero Family"),                    # potentially offensive
+    ("👫",    False, "Man & Woman"),                      # potentially offensive
+    ("👬",    False, "Two Men"),                          # potentially offensive
+    ("👭",    False, "Two Women"),                        # potentially offensive
+    ("💪",    False, "Biceps"),                           # potentially offensive
+    ("👈",    False, "Left Pointing Backhand"),           # dull
+    ("👉",    False, "Right Pointing Backhand"),          # dull
+    ("👆",    True , "Pointing Hand"),
+    ("👇",    False, "Down Pointing Backhand"),           # dull
+    ("✊",    True , "Power Hand"),
+    ("✋",    True , "Palm Hand"),
+    ("👊",    True , "Fist Hand"),
+    ("👌",    True , "OK Hand"),
+    ("👍",    True , "Thumbs Up"),
+    ("👎",    True , "Thumbs Down"),
+    ("👋",    False, "Waving Hand Sign"),                 # used by UI: for the welcome pages
+    ("👏",    True , "Clappy Hands"),
+    ("👐",    False, "Open Hands Sign"),                  # dull
+    ("💅",    True , "Nail Polish"),
+    ("👣",    True , "Footprints"),
+    ("👀",    True , "Eyes"),
+    ("👂",    True , "Ear"),
+    ("👃",    True , "Nose"),
+    ("👅",    True , "Lick"),
+    ("👄",    True , "Mouth"),
+    ("💋",    False, "Kiss Mark"),                        # too similar to another
+    ("💘",    True , "Cupid Arrow"),
+    ("💓",    False, "Beating Heart"),                    # too similar to another
+    ("💔",    True , "Broken Heart"),
+    ("💕",    False, "Two Hearts"),                       # too similar to another
+    ("💖",    True , "Sparkling Heart"),
+    ("💗",    False, "Growing Heart"),                    # too similar to another
+    ("💙",    False, "Blue Heart"),                       # too similar to another
+    ("💚",    False, "Green Heart"),                      # too similar to another
+    ("💛",    False, "Yellow Heart"),                     # too similar to another
+    ("💜",    False, "Purple Heart"),                     # too similar to another
+    ("💝",    False, "Heart With Ribbon"),                # too similar to another
+    ("💞",    False, "Revolving Hearts"),                 # too similar to another
+    ("💟",    False, "Heart Decoration"),                 # dull
+    ("💌",    True , "Love Letter"),
+    ("💧",    True , "Droplet"),
+    ("💤",    True , "ZZZ"),
+    ("💢",    False, "Anger"),                            # used by UI: splitting adjudicators
+    ("💣",    True , "Bomb"),
+    ("💥",    True , "Explosion"),
+    ("💦",    True , "Splashing"),
+    ("💨",    True , "Dash"),
+    ("💫",    True , "Shooting Star"),
+    ("💬",    True , "Speech Bubble"),
+    ("💭",    True , "Thought Bubble"),
+    ("👓",    True , "Eyeglasses"),
+    ("👔",    True , "Necktie"),
+    ("👕",    False, "T-Shirt"),                          # dull
+    ("👖",    True , "Jeans"),
+    ("👗",    False, "Dress"),                            # dull
+    ("👘",    False, "Kimono"),                           # dull
+    ("👙",    False, "Bikini"),                           # potentially offensive
+    ("👚",    False, "Womans Clothes"),                   # dull
+    ("👛",    False, "Purse"),                            # dull
+    ("👜",    True , "Handbag"),
+    ("👝",    False, "Pouch"),                            # dull
+    ("🎒",    True , "Backpack"),
+    ("👞",    False, "Mans Shoe"),                        # dull
+    ("👟",    True , "Running Shoe"),
+    ("👠",    True , "Heels"),
+    ("👡",    False, "Womans Sandal"),                    # dull
+    ("👢",    False, "Womans Boots"),                     # dull
+    ("👑",    True , "Crown"),
+    ("👒",    False, "Lady's Hat"),                       # potentially offensive
+    ("🎩",    True , "Top Hat"),
+    ("💄",    True , "Lipstick"),
+    ("💍",    True , "Ring"),
+    ("💎",    True , "Gem"),
+    ("👹",    False, "Japanese Ogre"),                    # dull
+    ("👺",    False, "Japanese Goblin"),                  # dull
+    ("👻",    True , "Ghost"),
+    ("💀",    True , "Skull"),
+    ("👽",    True , "Alien"),
+    ("👾",    True , "Space Invader"),
+    ("💩",    False, "Pile of Poo"),                      # potentially offensive
+    ("🐵",    False, "Monkey"),                           # potentially offensive
+    ("🙈",    True , "See No Evil"),
+    ("🙉",    True , "Hear No Evil"),
+    ("🙊",    True , "Speak No Evil"),
+    ("🐒",    False, "Monkey"),                           # potentially offensive
+    ("🐶",    True , "Dog"),
+    ("🐕",    False, "Dog"),                              # dull
+    ("🐩",    False, "Poodle"),                           # dull
+    ("🐺",    True , "Wolf"),
+    ("🐱",    False, "Cat"),                              # is a cat
+    ("😸",    False, "Grinning Cat with Smiling Eyes"),   # is a cat
+    ("😹",    False, "Cat with Tears of Joy"),            # is a cat
+    ("😺",    False, "Smiling Cat with Open Mouth"),      # is a cat
+    ("😻",    False, "Smiling Cat with Heart Eyes"),      # is a cat
+    ("😼",    False, "Cat with Wry Smile"),               # is a cat
+    ("😽",    False, "Kissing Cat with Closed Eyes"),     # is a cat
+    ("😾",    False, "Pouting Cat Face"),                 # is a cat
+    ("😿",    False, "Crying Cat Face"),                  # is a cat
+    ("🙀",    False, "Weary Cat Face"),                   # is a cat
+    ("🐈",    False, "Cat"),                              # dull
+    ("🐯",    True , "Tiger"),
+    ("🐅",    False, "Tiger"),                            # dull
+    ("🐆",    False, "Leopard"),                          # dull
+    ("🐴",    True , "Horse"),
+    ("🐎",    False, "Horse"),                            # too similar to another
+    ("🐮",    True , "Cow"),
+    ("🐂",    False, "Ox"),                               # dull
+    ("🐃",    False, "Water Buffalo"),                    # dull
+    ("🐄",    False, "Cow"),                              # dull
+    ("🐷",    False, "Pig"),                              # potentially offensive
+    ("🐖",    False, "Pig"),                              # dull
+    ("🐗",    False, "Boar"),                             # dull
+    ("🐽",    False, "Pig Nose"),                         # dull
+    ("🐏",    False, "Ram"),                              # dull
+    ("🐑",    True , "Sheep"),
+    ("🐐",    False, "Goat"),                             # dull
+    ("🐪",    False, "Dromedary Camel"),                  # dull
+    ("🐫",    False, "Bactrian Camel"),                   # dull
+    ("🐘",    False, "Elephant"),                         # dull
+    ("🐭",    True , "Mouse"),
+    ("🐁",    False, "Mouse"),                            # dull
+    ("🐀",    False, "Rat"),                              # dull
+    ("🐹",    True , "Hamster"),
+    ("🐰",    True , "Rabbit"),
+    ("🐇",    False, "Rabbit"),                           # dull
+    ("🐻",    True , "Bear"),
+    ("🐨",    True , "Koala"),
+    ("🐼",    True , "Panda"),
+    ("🐾",    True , "Paw Prints"),
+    ("🐔",    True , "Chicken"),
+    ("🐓",    False, "Rooster"),                          # dull
+    ("🐣",    True , "Hatching Chick"),
+    ("🐤",    True , "Chick"),
+    ("🐥",    False, "Front-Facing Baby Chick"),          # too similar to another
+    ("🐦",    True , "Bird"),
+    ("🐧",    True , "Penguin"),
+    ("🐸",    True , "Frog"),
+    ("🐊",    False, "Crocodile"),                        # dull
+    ("🐢",    True , "Turtle"),
+    ("🐍",    True , "Snake"),
+    ("🐲",    True , "Dragon"),
+    ("🐉",    False, "Dragon"),                           # dull
+    ("🐳",    True , "Whale"),
+    ("🐋",    False, "Whale"),                            # too similar to another
+    ("🐬",    True , "Dolphin"),
+    ("🐟",    False, "Fish"),                             # too similar to another
+    ("🐠",    True , "Fish"),
+    ("🐡",    False, "Blowfish"),                         # dull
+    ("🐙",    True , "Octopus"),
+    ("🐚",    True , "Shell"),
+    ("🐌",    True , "Snail"),
+    ("🐛",    True , "Bug"),
+    ("🐜",    True , "Ant"),
+    ("🐝",    True , "Honeybee"),
+    ("🐞",    False, "Lady Beetle"),                      # dull
+    ("💐",    True , "Bouquet"),
+    ("🌸",    True , "Sakura"),
+    ("💮",    False, "White Flower"),                     # dull
+    ("🌹",    True , "Rose"),
+    ("🌺",    False, "Hibiscus"),                         # dull
+    ("🌻",    True , "Sunflower"),
+    ("🌼",    False, "Blossom"),                          # dull
+    ("🌷",    True , "Tulip"),
+    ("🌱",    True , "Seedling"),
+    ("🌲",    True , "Evergreen Tree"),
+    ("🌳",    True , "Deciduous Tree"),
+    ("🌴",    True , "Palm Tree"),
+    ("🌵",    True , "Cactus"),
+    ("🌾",    False, "Ear of Rice"),                      # dull
+    ("🌿",    True , "Herb"),
+    ("🍀",    True , "Clover"),
+    ("🍁",    True , "Maple Leaf"),
+    ("🍂",    False, "Fallen Leaf"),                      # dull
+    ("🍃",    True , "Blown Leaves"),
+    ("🍇",    True , "Grapes"),
+    ("🍈",    False, "Melon"),                            # dull
+    ("🍉",    True , "Watermelon"),
+    ("🍊",    False, "Tangerine"),                        # too similar to another
+    ("🍋",    True , "Lemon"),
+    ("🍌",    True , "Banana"),
+    ("🍍",    True , "Pineapple"),
+    ("🍎",    True , "Red Apple"),
+    ("🍏",    False, "Green Apple"),                      # too similar to another
+    ("🍐",    False, "Pear"),                             # too similar to another
+    ("🍑",    True , "Peach"),
+    ("🍒",    True , "Cherries"),
+    ("🍓",    True , "Strawberry"),
+    ("🍅",    False, "Tomato"),                           # too similar to another
+    ("🍆",    True , "Eggplant"),
+    ("🌽",    True , "Corn"),
+    ("🍄",    True , "Mushroom"),
+    ("🌰",    True , "Chestnut"),
+    ("🍞",    True , "Bread"),
+    ("🍖",    False, "Meat on Bone"),                     # dull
+    ("🍗",    False, "Poultry Leg"),                      # dull
+    ("🍔",    True , "Hamburger"),
+    ("🍟",    True , "Fries"),
+    ("🍕",    True , "Pizza"),
+    ("🍲",    False, "Pot of Food"),                      # dull
+    ("🍱",    False, "Bento Box"),                        # dull
+    ("🍘",    False, "Rice Cracker"),                     # dull
+    ("🍙",    True , "Rice Ball"),
+    ("🍚",    False, "Cooked Rice"),                      # dull
+    ("🍛",    False, "Curry and Rice"),                   # dull
+    ("🍜",    False, "Steaming Bowl"),                    # dull
+    ("🍝",    True , "Spaghetti"),
+    ("🍠",    True , "Sweet Potato"),
+    ("🍢",    False, "Oden"),                             # dull
+    ("🍣",    False, "Sushi"),                            # dull
+    ("🍤",    False, "Fried Shrimp"),                     # dull
+    ("🍥",    False, "Fish Cake With Swirl Design"),      # dull
+    ("🍡",    False, "Dango"),                            # dull
+    ("🍦",    False, "Soft Ice Cream"),                   # dull
+    ("🍧",    False, "Shaved Ice"),                       # dull
+    ("🍨",    False, "Ice Cream"),                        # dull
+    ("🍩",    True , "Doughnut"),
+    ("🍪",    True , "Cookie"),
+    ("🎂",    False, "Birthday Cake"),                    # dull
+    ("🍰",    True , "Shortcake"),
+    ("🍫",    True , "Chocolate Bar"),
+    ("🍬",    True , "Candy"),
+    ("🍭",    True , "Lollipop"),
+    ("🍮",    False, "Custard"),                          # dull
+    ("🍯",    False, "Honey Pot"),                        # dull
+    ("🍼",    True , "Baby Bottle"),
+    ("🍵",    False, "Teacup Without Handle"),            # dull
+    ("🍶",    False, "Sake Bottle and Cup"),              # dull
+    ("🍷",    False, "Wine Glass"),                       # potentially offensive
+    ("🍸",    False, "Cocktail Glass"),                   # potentially offensive
+    ("🍹",    False, "Tropical Drink"),                   # potentially offensive
+    ("🍺",    False, "Beer"),                             # potentially offensive
+    ("🍻",    False, "Clinking Beer Mugs"),               # potentially offensive
+    ("🍴",    True , "Fork & Knife"),
+    ("🍳",    False, "Cooking"),                          # dull
+    ("🌍",    False, "Earth Globe Europe-Africa"),        # dull
+    ("🌎",    False, "Earth Globe Americas"),             # dull
+    ("🌏",    False, "Earth Globe Asia-Australia"),       # dull
+    ("🌐",    False, "Globe With Meridians"),             # dull
+    ("🌋",    True , "Volcano"),
+    ("🗻",    False, "Mount Fuji"),                       # too similar to another
+    ("🏠",    True , "House"),
+    ("🏡",    False, "House With Garden"),                # dull
+    ("🏢",    True , "Office"),
+    ("🏣",    False, "Japanese Post Office"),             # too similar to another
+    ("🏤",    False, "European Post Office"),             # too similar to another
+    ("🏥",    True , "Hospital"),
+    ("🏦",    False, "Bank"),                             # too similar to another
+    ("🏨",    False, "Hotel"),                            # too similar to another
+    ("🏩",    False, "Love Hotel"),                       # too similar to another
+    ("🏪",    False, "Convenience Store"),                # too similar to another
+    ("🏫",    False, "School"),                           # too similar to another
+    ("🏬",    False, "Department Store"),                 # too similar to another
+    ("🏭",    False, "Factory"),                          # too similar to another
+    ("🏯",    False, "Japanese Castle"),                  # too similar to another
+    ("🏰",    True , "Castle"),
+    ("💒",    False, "Wedding"),                          # too similar to another
+    ("🗼",    False, "Tokyo Tower"),                      # too similar to another
+    ("🗽",    False, "Statue of Liberty"),                # too similar to another
+    ("🗾",    False, "Silhouette of Japan"),              # too similar to another
+    ("🌁",    False, "Foggy"),                            # too similar to another
+    ("🌃",    False, "Night With Stars"),                 # too similar to another
+    ("🌄",    False, "Sunrise Over Mountains"),           # too similar to another
+    ("🌅",    False, "Sunrise"),                          # too similar to another
+    ("🌆",    False, "Cityscape at Dusk"),                # too similar to another
+    ("🌇",    False, "Sunset Over Buildings"),            # too similar to another
+    ("🌉",    False, "Bridge at Night"),                  # too similar to another
+    ("🌊",    True , "Big Wave"),
+    ("🗿",    False, "Moyai"),                            # dull
+    ("🌌",    True , "Milky Way"),
+    ("🎠",    True , "Carousel Horse"),
+    ("🎡",    True , "Ferris Wheel"),
+    ("🎢",    True , "Roller Coaster"),
+    ("💈",    False, "Barber Pole"),                      # dull
+    ("🎪",    False, "Circus Tent"),                      # used in UI: venue checkins
+    ("🎭",    False, "Performing Arts"),                  # dull
+    ("🎨",    True , "Palette"),
+    ("🎰",    False, "Slot Machine"),                     # dull
+    ("🚂",    False, "Steam Locomotive"),                 # dull
+    ("🚃",    True , "Railcar"),
+    ("🚄",    True , "Fast Train"),
+    ("🚅",    False, "Fast Train with Bullet Nose"),      # too similar to another
+    ("🚆",    False, "Train"),                            # too similar to another
+    ("🚇",    False, "Metro"),                            # too similar to another
+    ("🚈",    False, "Light Rail"),                       # too similar to another
+    ("🚉",    False, "Station"),                          # too similar to another
+    ("🚊",    False, "Tram"),                             # too similar to another
+    ("🚝",    True , "Monorail"),
+    ("🚞",    False, "Mountain Railway"),                 # too similar to another
+    ("🚋",    False, "Tram Car"),                         # too similar to another
+    ("🚌",    False, "Bus"),                              # too similar to another
+    ("🚍",    True , "Bus"),
+    ("🚎",    False, "Trolleybus"),                       # too similar to another
+    ("🚏",    False, "Bus Stop"),                         # too similar to another
+    ("🚐",    False, "Minibus"),                          # too similar to another
+    ("🚑",    False, "Ambulance"),                        # too similar to another
+    ("🚒",    False, "Fire Engine"),                      # too similar to another
+    ("🚓",    False, "Police Car"),                       # too similar to another
+    ("🚔",    True , "Police Car"),
+    ("🚕",    False, "Taxi"),                             # too similar to another
+    ("🚖",    False, "Oncoming Taxi"),                    # too similar to another
+    ("🚗",    False, "Automobile"),                       # too similar to another
+    ("🚘",    True , "Automobile"),
+    ("🚙",    False, "Recreational Vehicle"),             # too similar to another
+    ("🚚",    False, "Delivery Truck"),                   # too similar to another
+    ("🚛",    False, "Articulated Lorry"),                # too similar to another
+    ("🚜",    False, "Tractor"),                          # too similar to another
+    ("🚲",    True , "Bicycle"),
+    ("🚳",    False, "No Bicycles"),                      # too similar to another
+    ("🚨",    True , "Alert Light"),
+    ("🔱",    False, "Trident Emblem"),                   # too similar to another
+    ("🚣",    True , "Rowboat"),
+    ("🚤",    True , "Speedboat"),
+    ("🚢",    False, "Ship"),                             # dull
+    ("💺",    False, "Seat"),                             # dull
+    ("🚁",    True , "Helicopter"),
+    ("🚟",    False, "Suspension Railway"),               # dull
+    ("🚠",    True , "Mountain Tram"),
+    ("🚡",    False, "Aerial Tramway"),                   # dull
+    ("🚀",    True , "Rocket"),
+    ("🏧",    False, "ATM"),                              # dull
+    ("🚮",    False, "Put Litter in Its Place"),          # dull
+    ("🚥",    False, "Horizontal Traffic Light"),         # dull
+    ("🚦",    True , "Traffic Light"),
+    ("🚧",    True , "Hazard Sign"),
+    ("🚫",    True , "Prohibited"),
+    ("🚭",    False, "No Smoking"),                       # dull
+    ("🚯",    False, "Do Not Litter"),                    # dull
+    ("🚰",    True , "Potable Water"),
+    ("🚱",    False, "Non-Potable Water"),                # dull
+    ("🚷",    True , "No Pedestrians"),
+    ("🚸",    False, "Children Crossing"),                # dull
+    ("🚹",    False, "Mens Symbol"),                      # dull
+    ("🚺",    False, "Womens Symbol"),                    # dull
+    ("🚻",    False, "Restroom"),                         # potentially offensive
+    ("🚼",    False, "Baby Symbol"),                      # dull
+    ("🚾",    False, "Water Closet"),                     # dull
+    ("🛂",    False, "Passport Control"),                 # dull
+    ("🛃",    False, "Customs"),                          # dull
+    ("🛄",    False, "Baggage Claim"),                    # dull
+    ("🛅",    False, "Left Luggage"),                     # dull
+    ("🚪",    False, "Door"),                             # dull
+    ("🚽",    False, "Toilet"),                           # potentially offensive
+    ("🚿",    True , "Shower"),
+    ("🛀",    True , "Bath"),
+    ("🛁",    False, "Bathtub"),                          # dull
+    ("⏳",    True , "Hourglass"),
+    ("⏰",    True , "Alarm Clock"),
+    ("⏱",    False, "Stopwatch"),                        # dull
+    ("⏲",    False, "Timer Clock"),                      # dull
+    ("🕛",    False, "Twelve O'Clock"),                   # dull
+    ("🕧",    False, "Half Past Twelve"),                 # dull
+    ("🕐",    False, "One O'Clock"),                      # dull
+    ("🕜",    False, "Half Past One"),                    # dull
+    ("🕑",    False, "Two O'Clock"),                      # dull
+    ("🕝",    False, "Half Past Two"),                    # dull
+    ("🕒",    False, "Three O'Clock"),                    # dull
+    ("🕞",    False, "Half Past Three"),                  # dull
+    ("🕓",    False, "Four O'Clock"),                     # dull
+    ("🕟",    False, "Half Past Four"),                   # dull
+    ("🕔",    False, "Five O'Clock"),                     # dull
+    ("🕠",    False, "Half Past Five"),                   # dull
+    ("🕕",    False, "Six O'Clock"),                      # dull
+    ("🕡",    False, "Half Past Six"),                    # dull
+    ("🕖",    False, "Seven O'Clock"),                    # dull
+    ("🕢",    False, "Half Past Seven"),                  # dull
+    ("🕗",    False, "Eight O'Clock"),                    # dull
+    ("🕣",    False, "Half Past Eight"),                  # dull
+    ("🕘",    False, "Nine O'Clock"),                     # dull
+    ("🕤",    False, "Half Past Nine"),                   # dull
+    ("🕙",    False, "Ten O'Clock"),                      # dull
+    ("🕥",    False, "Half Past Ten"),                    # dull
+    ("🕚",    False, "Eleven O'Clock"),                   # dull
+    ("🕦",    False, "Half Past Eleven"),                 # dull
+    ("⛎",    False, "Ophiuchus"),                        # dull
+    ("🌑",    True , "New Moon"),
+    ("🌒",    False, "Waxing Crescent"),                  # dull
+    ("🌓",    False, "First Quarter Moon Symbol"),        # dull
+    ("🌔",    False, "Waxing Gibbous"),                   # dull
+    ("🌕",    True , "Full Moon"),
+    ("🌖",    False, "Waning Gibbous"),                   # dull
+    ("🌗",    True , "Half Moon"),
+    ("🌘",    False, "Waning Crescent"),                  # dull
+    ("🌙",    False, "Crescent Moon"),                    # dull
+    ("🌚",    False, "New Moon With Face"),               # potentially offensive
+    ("🌛",    False, "First Quarter Moon With Face"),     # dull
+    ("🌜",    False, "Last Quarter Moon With Face"),      # dull
+    ("🌝",    False, "Full Moon With Face"),              # dull
+    ("🌞",    True , "Sun"),
+    ("🌀",    False, "Cyclone"),                          # dull
+    ("🌈",    True , "Rainbow"),
+    ("🌂",    False, "Umbrella"),                         # dull
+    ("🌟",    True , "Glowing Star"),
+    ("🌠",    False, "Shooting Star"),                    # dull
+    ("🔥",    True , "Fire"),
+    ("🎃",    True , "Jack-O-Lantern"),
+    ("🎄",    True , "Christmas Tree"),
+    ("🎆",    True , "Fireworks"),
+    ("🎇",    False, "Firework Sparkler"),                # dull
+    ("✨",    False, "Sparkles"),                         # dull
+    ("🎈",    True , "Balloon"),
+    ("🎉",    True , "Party Popper"),
+    ("🎊",    False, "Confetti Ball"),                    # dull
+    ("🎋",    False, "Tanabata Tree"),                    # dull
+    ("🎌",    False, "Crossed Flags"),                    # dull
+    ("🎍",    False, "Pine Decoration"),                  # dull
+    ("🎎",    False, "Japanese Dolls"),                   # dull
+    ("🎏",    False, "Carp Streamer"),                    # dull
+    ("🎐",    False, "Wind Chime"),                       # dull
+    ("🎑",    False, "Moon Viewing Ceremony"),            # dull
+    ("🎓",    True , "Graduation Cap"),
+    ("🎯",    True , "Bullseye"),
+    ("🎴",    False, "Flower Playing Cards"),             # dull
+    ("🎀",    True , "Ribbon"),
+    ("🎁",    False, "Wrapped Present"),                  # dull
+    ("🎫",    False, "Ticket"),                           # dull
+    ("🏀",    True , "Basketball"),
+    ("🏈",    True , "American Football"),
+    ("🏉",    False, "Rugby Ball"),                       # too similar to another
+    ("🎾",    True , "Tennis"),
+    ("🎱",    True , "Billiards"),
+    ("🎳",    False, "Bowling"),                          # too similar to another
+    ("🎣",    False, "Fishing Pole and Fish"),            # dull
+    ("🎽",    False, "Running Shirt With Sash"),          # dull
+    ("🎿",    False, "Ski and Ski Boot"),                 # dull
+    ("🏂",    False, "Snowboarder"),                      # dull
+    ("🏄",    False, "Surfer"),                           # dull
+    ("🏇",    False, "Horse Racing"),                     # dull
+    ("🏊",    True , "Swimmer"),
+    ("🚴",    False, "Bicyclist"),                        # dull
+    ("🚵",    False, "Mountain Bicyclist"),               # dull
+    ("🏆",    False, "Trophy"),                           # used by UI: create new tournament
+    ("🎮",    True , "Video Game"),
+    ("🎲",    True , "Dice"),
+    ("🃏",    False, "Playing Card Black Joker"),         # dull
+    ("🔇",    False, "Speaker With Cancellation Stroke"), # dull
+    ("🔈",    False, "Speaker"),                          # dull
+    ("🔉",    False, "Speaker With One Sound Wave"),      # dull
+    ("🔊",    False, "Speaker With Three Sound Waves"),   # dull
+    ("📢",    False, "Public Address Loudspeaker"),       # used by UI: public config settings
+    ("📣",    True , "Megaphone"),
+    ("📯",    True , "Horn"),
+    ("🔔",    True , "Bell"),
+    ("🔕",    False, "No Bells"),                         # dull
+    ("🔀",    False, "Shuffle"),                          # dull
+    ("🔁",    False, "Repeat"),                           # dull
+    ("🔂",    False, "Repeat Once"),                      # dull
+    ("⏩",    False, "Fast Forward"),                     # dull
+    ("⏭",    False, "Next Track"),                       # dull
+    ("⏯",    False, "Play/Pause"),                       # dull
+    ("⏪",    False, "Rewind"),                           # dull
+    ("⏮",    False, "Previous Track"),                   # dull
+    ("🔼",    False, "Up-Pointing Small Red Triangle"),   # dull
+    ("⏫",    False, "Up to Top"),                        # dull
+    ("🔽",    False, "Down-Pointing Small Red Triangle"), # dull
+    ("⏬",    False, "Down to Bottom"),                   # dull
+    ("🎼",    True , "Musical Score"),
+    ("🎵",    False, "Musical Note"),                     # dull
+    ("🎶",    True , "Music Notes"),
+    ("🎤",    True , "Microphone"),
+    ("🎧",    True , "Headphone"),
+    ("🎷",    True , "Saxophone"),
+    ("🎸",    True , "Guitar"),
+    ("🎹",    True , "Keyboard"),
+    ("🎺",    True , "Trumpet"),
+    ("🎻",    True , "Violin"),
+    ("📻",    True , "Boom Box"),
+    ("📱",    True , "Mobile Phone"),
+    ("📳",    False, "Vibration Mode"),                   # dull
+    ("📴",    False, "Mobile Phone Off"),                 # dull
+    ("📲",    False, "Download to Phone"),                # too similar to another
+    ("📵",    False, "No Mobile Phones"),                 # dull
+    ("📞",    True , "Telephone"),
+    ("🔟",    False, "Keycap Ten"),                       # dull
+    ("📶",    False, "Antenna With Bars"),                # dull
+    ("📟",    True , "Pager"),
+    ("📠",    True , "Fax Machine"),
+    ("🔋",    True , "Battery"),
+    ("🔌",    True , "Plug"),
+    ("💻",    False, "Personal Computer"),                # dull
+    ("💽",    False, "Minidisc"),                         # dull
+    ("💾",    True , "Floppy"),
+    ("💿",    True , "Compact Disc"),
+    ("📀",    False, "DVD"),                              # dull
+    ("🎥",    False, "Movie Camera"),                     # dull
+    ("🎦",    False, "Cinema"),                           # dull
+    ("🎬",    True , "Clapperboard"),
+    ("📺",    True , "Television"),
+    ("📷",    True , "Camera"),
+    ("📹",    False, "Video Camera"),                     # dull
+    ("📼",    False, "Videocassette"),                    # dull
+    ("🔅",    False, "Low Brightness Symbol"),            # dull
+    ("🔆",    False, "High Brightness Symbol"),           # dull
+    ("🔍",    True , "Magnifying Glass"),
+    ("🔎",    False, "Right-Pointing Magnifying Glass"),  # dull
+    ("🔬",    True , "Microscope"),
+    ("🔭",    True , "Telescope"),
+    ("📡",    False, "Satellite Dish"),                   # dull
+    ("💡",    True , "Light Bulb"),
+    ("🔦",    False, "Electric Torch"),                   # dull
+    ("🏮",    False, "Izakaya Lantern"),                  # dull
+    ("📔",    False, "Notebook With Decorative Cover"),   # too similar to another
+    ("📕",    True , "Closed Book"),
+    ("📖",    False, "Open Book"),                        # too similar to another
+    ("📗",    False, "Green Book"),                       # too similar to another
+    ("📘",    False, "Blue Book"),                        # too similar to another
+    ("📙",    False, "Orange Book"),                      # too similar to another
+    ("📚",    False, "Books"),                            # too similar to another
+    ("📓",    False, "Notebook"),                         # too similar to another
+    ("📒",    False, "Ledger"),                           # too similar to another
+    ("📃",    False, "Page With Curl"),                   # too similar to another
+    ("📜",    False, "Scroll"),                           # too similar to another
+    ("📄",    False, "Page Facing Up"),                   # too similar to another
+    ("📰",    True , "Newspaper"),
+    ("📑",    False, "Bookmark Tabs"),                    # too similar to another
+    ("🔖",    False, "Bookmark"),                         # too similar to another
+    ("💰",    True , "Money Bag"),
+    ("💴",    False, "Banknote With Yen Sign"),           # too similar to another
+    ("💵",    False, "Banknote With Dollar Sign"),        # too similar to another
+    ("💶",    False, "Banknote With Euro Sign"),          # too similar to another
+    ("💷",    False, "Banknote With Pound Sign"),         # too similar to another
+    ("💸",    True , "Flying Money"),
+    ("💱",    False, "Currency Exchange"),                # dull
+    ("💲",    False, "Heavy Dollar Sign"),                # dull
+    ("💳",    False, "Credit Card"),                      # dull
+    ("💹",    False, "Upwards Trend in Yen"),             # dull
+    ("📧",    False, "E-Mail Symbol"),                    # dull
+    ("📨",    False, "Incoming Envelope"),                # dull
+    ("📩",    False, "Going Into Envelope"),              # dull
+    ("📤",    False, "Outbox Tray"),                      # dull
+    ("📥",    False, "Inbox Tray"),                       # dull
+    ("📦",    True , "Package"),
+    ("📫",    True , "Mailbox"),
+    ("📪",    False, "Closed Mailbox With Lowered Flag"), # dull
+    ("📬",    False, "Open Mailbox With Raised Flag"),    # dull
+    ("📭",    False, "Open Mailbox With Lowered Flag"),   # dull
+    ("📮",    False, "Postbox"),                          # dull
+    ("📝",    False, "Memo"),                             # dull
+    ("💼",    True , "Briefcase"),
+    ("📁",    False, "File Folder"),                      # dull
+    ("📂",    False, "Open File Folder"),                 # dull
+    ("📅",    True , "Calendar"),
+    ("📆",    False, "Tear-Off Calendar"),                # dull
+    ("📇",    True , "Card Index"),
+    ("📈",    False, "Upwards Trend"),                    # dull
+    ("📉",    False, "Downwards Trend"),                  # dull
+    ("📊",    False, "Bar Chart"),                        # dull
+    ("📋",    False, "Clipboard"),                        # dull
+    ("📌",    True , "Pushpin"),
+    ("📍",    False, "Round Pushpin"),                    # dull
+    ("📎",    True , "Paperclip"),
+    ("📏",    True , "Straight Ruler"),
+    ("📐",    True , "Triangle Ruler"),
+    ("📛",    False, "Name Badge"),                       # dull
+    ("🔒",    True , "Lock"),
+    ("🔓",    False, "Open Lock"),                        # too similar to another
+    ("🔏",    False, "Lock With Ink Pen"),                # too similar to another
+    ("🔐",    False, "Closed Lock With Key"),             # too similar to another
+    ("🔑",    True , "Key"),
+    ("🔨",    True , "Hammer"),
+    ("🔧",    True , "Spanner"),
+    ("🔩",    True , "Calipers"),
+    ("🔗",    False, "Link Symbol"),                      # dull
+    ("💉",    True , "Syringe"),
+    ("💊",    True , "Pill"),
+    ("🔪",    True , "Chef Knife"),
+    ("🔫",    True , "Pistol"),
+    ("🚬",    True , "Durry"),
+    ("🏁",    True , "Chequered Flag"),
+    ("🚩",    False, "Triangular Flag on Post"),          # dull
+    ("🇦🇫",   False, "Afghanistan"),                      # national flag
+    ("🇦🇽",   False, "Åland Islands"),                    # national flag
+    ("🇦🇱",   False, "Albania"),                          # national flag
+    ("🇩🇿",   False, "Algeria"),                          # national flag
+    ("🇦🇸",   False, "American Samoa"),                   # national flag
+    ("🇦🇩",   False, "Andorra"),                          # national flag
+    ("🇦🇴",   False, "Angola"),                           # national flag
+    ("🇦🇮",   False, "Anguilla"),                         # national flag
+    ("🇦🇶",   False, "Antarctica"),                       # national flag
+    ("🇦🇬",   False, "Antigua & Barbuda"),                # national flag
+    ("🇦🇷",   False, "Argentina"),                        # national flag
+    ("🇦🇲",   False, "Armenia"),                          # national flag
+    ("🇦🇼",   False, "Aruba"),                            # national flag
+    ("🇦🇨",   False, "Ascension Island"),                 # national flag
+    ("🇦🇺",   False, "Australia"),                        # national flag
+    ("🇦🇹",   False, "Austria"),                          # national flag
+    ("🇦🇿",   False, "Azerbaijan"),                       # national flag
+    ("🇧🇸",   False, "Bahamas"),                          # national flag
+    ("🇧🇭",   False, "Bahrain"),                          # national flag
+    ("🇧🇩",   False, "Bangladesh"),                       # national flag
+    ("🇧🇧",   False, "Barbados"),                         # national flag
+    ("🇧🇾",   False, "Belarus"),                          # national flag
+    ("🇧🇪",   False, "Belgium"),                          # national flag
+    ("🇧🇿",   False, "Belize"),                           # national flag
+    ("🇧🇯",   False, "Benin"),                            # national flag
+    ("🇧🇲",   False, "Bermuda"),                          # national flag
+    ("🇧🇹",   False, "Bhutan"),                           # national flag
+    ("🇧🇴",   False, "Bolivia"),                          # national flag
+    ("🇧🇦",   False, "Bosnia & Herzegovina"),             # national flag
+    ("🇧🇼",   False, "Botswana"),                         # national flag
+    ("🇧🇻",   False, "Bouvet Island"),                    # national flag
+    ("🇧🇷",   False, "Brazil"),                           # national flag
+    ("🇮🇴",   False, "British Indian Ocean Territory"),   # national flag
+    ("🇻🇬",   False, "British Virgin Islands"),           # national flag
+    ("🇧🇳",   False, "Brunei"),                           # national flag
+    ("🇧🇬",   False, "Bulgaria"),                         # national flag
+    ("🇧🇫",   False, "Burkina Faso"),                     # national flag
+    ("🇧🇮",   False, "Burundi"),                          # national flag
+    ("🇰🇭",   False, "Cambodia"),                         # national flag
+    ("🇨🇲",   False, "Cameroon"),                         # national flag
+    ("🇨🇦",   False, "Canada"),                           # national flag
+    ("🇮🇨",   False, "Canary Islands"),                   # national flag
+    ("🇨🇻",   False, "Cape Verde"),                       # national flag
+    ("🇧🇶",   False, "Caribbean Netherlands"),            # national flag
+    ("🇰🇾",   False, "Cayman Islands"),                   # national flag
+    ("🇨🇫",   False, "Central African Republic"),         # national flag
+    ("🇪🇦",   False, "Ceuta & Melilla"),                  # national flag
+    ("🇹🇩",   False, "Chad"),                             # national flag
+    ("🇨🇱",   False, "Chile"),                            # national flag
+    ("🇨🇳",   False, "China"),                            # national flag
+    ("🇨🇽",   False, "Christmas Island"),                 # national flag
+    ("🇨🇵",   False, "Clipperton Island"),                # national flag
+    ("🇨🇨",   False, "Cocos Islands"),                    # national flag
+    ("🇨🇴",   False, "Colombia"),                         # national flag
+    ("🇰🇲",   False, "Comoros"),                          # national flag
+    ("🇨🇬",   False, "Congo - Brazzaville"),              # national flag
+    ("🇨🇩",   False, "Congo - Kinshasa"),                 # national flag
+    ("🇨🇰",   False, "Cook Islands"),                     # national flag
+    ("🇨🇷",   False, "Costa Rica"),                       # national flag
+    ("🇨🇮",   False, "Côte D’Ivoire"),                    # national flag
+    ("🇭🇷",   False, "Croatia"),                          # national flag
+    ("🇨🇺",   False, "Cuba"),                             # national flag
+    ("🇨🇼",   False, "Curaçao"),                          # national flag
+    ("🇨🇾",   False, "Cyprus"),                           # national flag
+    ("🇨🇿",   False, "Czech Republic"),                   # national flag
+    ("🇩🇰",   False, "Denmark"),                          # national flag
+    ("🇩🇬",   False, "Diego Garcia"),                     # national flag
+    ("🇩🇯",   False, "Djibouti"),                         # national flag
+    ("🇩🇲",   False, "Dominica"),                         # national flag
+    ("🇩🇴",   False, "Dominican Republic"),               # national flag
+    ("🇪🇨",   False, "Ecuador"),                          # national flag
+    ("🇪🇬",   False, "Egypt"),                            # national flag
+    ("🇸🇻",   False, "El Salvador"),                      # national flag
+    ("🇬🇶",   False, "Equatorial Guinea"),                # national flag
+    ("🇪🇷",   False, "Eritrea"),                          # national flag
+    ("🇪🇪",   False, "Estonia"),                          # national flag
+    ("🇪🇹",   False, "Ethiopia"),                         # national flag
+    ("🇪🇺",   False, "European Union"),                   # national flag
+    ("🇫🇰",   False, "Falkland Islands"),                 # national flag
+    ("🇫🇴",   False, "Faroe Islands"),                    # national flag
+    ("🇫🇯",   False, "Fiji"),                             # national flag
+    ("🇫🇮",   False, "Finland"),                          # national flag
+    ("🇫🇷",   False, "France"),                           # national flag
+    ("🇬🇫",   False, "French Guiana"),                    # national flag
+    ("🇵🇫",   False, "French Polynesia"),                 # national flag
+    ("🇹🇫",   False, "French Southern Territories"),      # national flag
+    ("🇬🇦",   False, "Gabon"),                            # national flag
+    ("🇬🇲",   False, "Gambia"),                           # national flag
+    ("🇬🇪",   False, "Georgia"),                          # national flag
+    ("🇩🇪",   False, "Germany"),                          # national flag
+    ("🇬🇭",   False, "Ghana"),                            # national flag
+    ("🇬🇮",   False, "Gibraltar"),                        # national flag
+    ("🇬🇷",   False, "Greece"),                           # national flag
+    ("🇬🇱",   False, "Greenland"),                        # national flag
+    ("🇬🇩",   False, "Grenada"),                          # national flag
+    ("🇬🇵",   False, "Guadeloupe"),                       # national flag
+    ("🇬🇺",   False, "Guam"),                             # national flag
+    ("🇬🇹",   False, "Guatemala"),                        # national flag
+    ("🇬🇬",   False, "Guernsey"),                         # national flag
+    ("🇬🇳",   False, "Guinea"),                           # national flag
+    ("🇬🇼",   False, "Guinea-Bissau"),                    # national flag
+    ("🇬🇾",   False, "Guyana"),                           # national flag
+    ("🇭🇹",   False, "Haiti"),                            # national flag
+    ("🇭🇲",   False, "Heard & McDonald Islands"),         # national flag
+    ("🇭🇳",   False, "Honduras"),                         # national flag
+    ("🇭🇰",   False, "Hong Kong"),                        # national flag
+    ("🇭🇺",   False, "Hungary"),                          # national flag
+    ("🇮🇸",   False, "Iceland"),                          # national flag
+    ("🇮🇳",   False, "India"),                            # national flag
+    ("🇮🇩",   False, "Indonesia"),                        # national flag
+    ("🇮🇷",   False, "Iran"),                             # national flag
+    ("🇮🇶",   False, "Iraq"),                             # national flag
+    ("🇮🇪",   False, "Ireland"),                          # national flag
+    ("🇮🇲",   False, "Isle of Man"),                      # national flag
+    ("🇮🇱",   False, "Israel"),                           # national flag
+    ("🇮🇹",   False, "Italy"),                            # national flag
+    ("🇯🇲",   False, "Jamaica"),                          # national flag
+    ("🇯🇵",   False, "Japan"),                            # national flag
+    ("🇯🇪",   False, "Jersey"),                           # national flag
+    ("🇯🇴",   False, "Jordan"),                           # national flag
+    ("🇰🇿",   False, "Kazakhstan"),                       # national flag
+    ("🇰🇪",   False, "Kenya"),                            # national flag
+    ("🇰🇮",   False, "Kiribati"),                         # national flag
+    ("🇽🇰",   False, "Kosovo"),                           # national flag
+    ("🇰🇼",   False, "Kuwait"),                           # national flag
+    ("🇰🇬",   False, "Kyrgyzstan"),                       # national flag
+    ("🇱🇦",   False, "Laos"),                             # national flag
+    ("🇱🇻",   False, "Latvia"),                           # national flag
+    ("🇱🇧",   False, "Lebanon"),                          # national flag
+    ("🇱🇸",   False, "Lesotho"),                          # national flag
+    ("🇱🇷",   False, "Liberia"),                          # national flag
+    ("🇱🇾",   False, "Libya"),                            # national flag
+    ("🇱🇮",   False, "Liechtenstein"),                    # national flag
+    ("🇱🇹",   False, "Lithuania"),                        # national flag
+    ("🇱🇺",   False, "Luxembourg"),                       # national flag
+    ("🇲🇴",   False, "Macau"),                            # national flag
+    ("🇲🇰",   False, "Macedonia"),                        # national flag
+    ("🇲🇬",   False, "Madagascar"),                       # national flag
+    ("🇲🇼",   False, "Malawi"),                           # national flag
+    ("🇲🇾",   False, "Malaysia"),                         # national flag
+    ("🇲🇻",   False, "Maldives"),                         # national flag
+    ("🇲🇱",   False, "Mali"),                             # national flag
+    ("🇲🇹",   False, "Malta"),                            # national flag
+    ("🇲🇭",   False, "Marshall Islands"),                 # national flag
+    ("🇲🇶",   False, "Martinique"),                       # national flag
+    ("🇲🇷",   False, "Mauritania"),                       # national flag
+    ("🇲🇺",   False, "Mauritius"),                        # national flag
+    ("🇾🇹",   False, "Mayotte"),                          # national flag
+    ("🇲🇽",   False, "Mexico"),                           # national flag
+    ("🇫🇲",   False, "Micronesia"),                       # national flag
+    ("🇲🇩",   False, "Moldova"),                          # national flag
+    ("🇲🇨",   False, "Monaco"),                           # national flag
+    ("🇲🇳",   False, "Mongolia"),                         # national flag
+    ("🇲🇪",   False, "Montenegro"),                       # national flag
+    ("🇲🇸",   False, "Montserrat"),                       # national flag
+    ("🇲🇦",   False, "Morocco"),                          # national flag
+    ("🇲🇿",   False, "Mozambique"),                       # national flag
+    ("🇲🇲",   False, "Myanmar"),                          # national flag
+    ("🇳🇦",   False, "Namibia"),                          # national flag
+    ("🇳🇷",   False, "Nauru"),                            # national flag
+    ("🇳🇵",   False, "Nepal"),                            # national flag
+    ("🇳🇱",   False, "Netherlands"),                      # national flag
+    ("🇳🇨",   False, "New Caledonia"),                    # national flag
+    ("🇳🇿",   False, "New Zealand"),                      # national flag
+    ("🇳🇮",   False, "Nicaragua"),                        # national flag
+    ("🇳🇪",   False, "Niger"),                            # national flag
+    ("🇳🇬",   False, "Nigeria"),                          # national flag
+    ("🇳🇺",   False, "Niue"),                             # national flag
+    ("🇳🇫",   False, "Norfolk Island"),                   # national flag
+    ("🇲🇵",   False, "Northern Mariana Islands"),         # national flag
+    ("🇰🇵",   False, "North Korea"),                      # national flag
+    ("🇳🇴",   False, "Norway"),                           # national flag
+    ("🇴🇲",   False, "Oman"),                             # national flag
+    ("🇵🇰",   False, "Pakistan"),                         # national flag
+    ("🇵🇼",   False, "Palau"),                            # national flag
+    ("🇵🇸",   False, "Palestinian Territories"),          # national flag
+    ("🇵🇦",   False, "Panama"),                           # national flag
+    ("🇵🇬",   False, "Papua New Guinea"),                 # national flag
+    ("🇵🇾",   False, "Paraguay"),                         # national flag
+    ("🇵🇪",   False, "Peru"),                             # national flag
+    ("🇵🇭",   False, "Philippines"),                      # national flag
+    ("🇵🇳",   False, "Pitcairn Islands"),                 # national flag
+    ("🇵🇱",   False, "Poland"),                           # national flag
+    ("🇵🇹",   False, "Portugal"),                         # national flag
+    ("🇵🇷",   False, "Puerto Rico"),                      # national flag
+    ("🇶🇦",   False, "Qatar"),                            # national flag
+    ("🇷🇪",   False, "Réunion"),                          # national flag
+    ("🇷🇴",   False, "Romania"),                          # national flag
+    ("🇷🇺",   False, "Russia"),                           # national flag
+    ("🇷🇼",   False, "Rwanda"),                           # national flag
+    ("🇼🇸",   False, "Samoa"),                            # national flag
+    ("🇸🇲",   False, "San Marino"),                       # national flag
+    ("🇸🇹",   False, "São Tomé & Príncipe"),              # national flag
+    ("🇸🇦",   False, "Saudi Arabia"),                     # national flag
+    ("🇸🇳",   False, "Senegal"),                          # national flag
+    ("🇷🇸",   False, "Serbia"),                           # national flag
+    ("🇸🇨",   False, "Seychelles"),                       # national flag
+    ("🇸🇱",   False, "Sierra Leone"),                     # national flag
+    ("🇸🇬",   False, "Singapore"),                        # national flag
+    ("🇸🇽",   False, "Sint Maarten"),                     # national flag
+    ("🇸🇰",   False, "Slovakia"),                         # national flag
+    ("🇸🇮",   False, "Slovenia"),                         # national flag
+    ("🇸🇧",   False, "Solomon Islands"),                  # national flag
+    ("🇸🇴",   False, "Somalia"),                          # national flag
+    ("🇿🇦",   False, "South Africa"),                     # national flag
+    ("🇬🇸",   False, "South Georgia & South Sandwich Islands"), # national flag
+    ("🇰🇷",   False, "South Korea"),                      # national flag
+    ("🇸🇸",   False, "South Sudan"),                      # national flag
+    ("🇪🇸",   False, "Spain"),                            # national flag
+    ("🇱🇰",   False, "Sri Lanka"),                        # national flag
+    ("🇧🇱",   False, "St. Barthélemy"),                   # national flag
+    ("🇸🇭",   False, "St. Helena"),                       # national flag
+    ("🇰🇳",   False, "St. Kitts & Nevis"),                # national flag
+    ("🇱🇨",   False, "St. Lucia"),                        # national flag
+    ("🇲🇫",   False, "St. Martin"),                       # national flag
+    ("🇵🇲",   False, "St. Pierre & Miquelon"),            # national flag
+    ("🇻🇨",   False, "St. Vincent & Grenadines"),         # national flag
+    ("🇸🇩",   False, "Sudan"),                            # national flag
+    ("🇸🇷",   False, "Suriname"),                         # national flag
+    ("🇸🇯",   False, "Svalbard & Jan Mayen"),             # national flag
+    ("🇸🇿",   False, "Swaziland"),                        # national flag
+    ("🇸🇪",   False, "Sweden"),                           # national flag
+    ("🇨🇭",   False, "Switzerland"),                      # national flag
+    ("🇸🇾",   False, "Syria"),                            # national flag
+    ("🇹🇼",   False, "Taiwan"),                           # national flag
+    ("🇹🇯",   False, "Tajikistan"),                       # national flag
+    ("🇹🇿",   False, "Tanzania"),                         # national flag
+    ("🇹🇭",   False, "Thailand"),                         # national flag
+    ("🇹🇱",   False, "Timor-Leste"),                      # national flag
+    ("🇹🇬",   False, "Togo"),                             # national flag
+    ("🇹🇰",   False, "Tokelau"),                          # national flag
+    ("🇹🇴",   False, "Tonga"),                            # national flag
+    ("🇹🇹",   False, "Trinidad & Tobago"),                # national flag
+    ("🇹🇦",   False, "Tristan Da Cunha"),                 # national flag
+    ("🇹🇳",   False, "Tunisia"),                          # national flag
+    ("🇹🇷",   False, "Turkey"),                           # national flag
+    ("🇹🇲",   False, "Turkmenistan"),                     # national flag
+    ("🇹🇨",   False, "Turks & Caicos Islands"),           # national flag
+    ("🇹🇻",   False, "Tuvalu"),                           # national flag
+    ("🇺🇬",   False, "Uganda"),                           # national flag
+    ("🇺🇦",   False, "Ukraine"),                          # national flag
+    ("🇦🇪",   False, "United Arab Emirates"),             # national flag
+    ("🇬🇧",   False, "United Kingdom"),                   # national flag
+    ("🇺🇸",   False, "United States"),                    # national flag
+    ("🇺🇾",   False, "Uruguay"),                          # national flag
+    ("🇺🇲",   False, "U.S. Outlying Islands"),            # national flag
+    ("🇻🇮",   False, "U.S. Virgin Islands"),              # national flag
+    ("🇺🇿",   False, "Uzbekistan"),                       # national flag
+    ("🇻🇺",   False, "Vanuatu"),                          # national flag
+    ("🇻🇦",   False, "Vatican City"),                     # national flag
+    ("🇻🇪",   False, "Venezuela"),                        # national flag
+    ("🇻🇳",   False, "Vietnam"),                          # national flag
+    ("🇼🇫",   False, "Wallis & Futuna"),                  # national flag
+    ("🇪🇭",   False, "Western Sahara"),                   # national flag
+    ("🇾🇪",   False, "Yemen"),                            # national flag
+    ("🇿🇲",   False, "Zambia"),                           # national flag
+    ("🇿🇼",   False, "Zimbabwe"),                         # national flag
+    ("🔃",    False, "Clockwise Arrows"),                 # dull
+    ("🔄",    False, "Anticlockwise Arrows"),             # dull
+    ("🔙",    False, "Back"),                             # dull
+    ("🔚",    False, "End"),                              # dull
+    ("🔛",    False, "On"),                               # dull
+    ("🔜",    False, "Soon"),                             # dull
+    ("🔝",    False, "Top"),                              # dull
+    ("🔰",    False, "Beginner"),                         # dull
+    ("🔮",    True , "Crystal Ball"),
+    ("🔯",    False, "Six Pointed Star With Middle Dot"), # dull
+    ("✅",    False, "White Heavy Check Mark"),           # dull
+    ("❌",    True , "Cross"),
+    ("❎",    False, "Negative Squared Cross Mark"),      # dull
+    ("➕",    False, "Heavy Plus Sign"),                  # dull
+    ("➖",    False, "Heavy Minus Sign"),                 # dull
+    ("➗",    False, "Heavy Division Sign"),              # dull
+    ("➰",    False, "Curly Loop"),                       # dull
+    ("➿",    False, "Double Curly Loop"),                # dull
+    ("❓",    True , "Question"),
+    ("❔",    False, "White Question Mark Ornament"),     # too similar to another
+    ("❕",    False, "White Exclamation Mark Ornament"),  # too similar to another
+    ("💯",    False, "Hundred Points Symbol"),            # used by UI: speaker tab
+    ("🔞",    False, "Over Eighteen"),                    # dull
+    ("🔠",    False, "Latin Capital Letters"),            # dull
+    ("🔡",    False, "Latin Small Letters"),              # dull
+    ("🔢",    False, "Numbers"),                          # dull
+    ("🔣",    False, "Symbols"),                          # dull
+    ("🔤",    False, "Latin Letters"),                    # dull
+    ("🅰️",   False, "Squared A"),                        # dull
+    ("🆎",    False, "Squared AB"),                       # dull
+    ("🅱️",   False, "Squared B"),                        # dull
+    ("🆑",    False, "Squared CL"),                       # dull
+    ("🆒",    True , "Cool Square"),
+    ("🆓",    False, "Squared Free"),                     # dull
+    ("🆔",    False, "Squared ID"),                       # dull
+    ("🆕",    True , "New Square"),
+    ("🆖",    False, "Squared NG"),                       # dull
+    ("🅾️",   False, "Squared O"),                        # dull
+    ("🆗",    True , "OK Square"),
+    ("🆘",    True , "SOS Square"),
+    ("🆙",    False, "Squared Up!"),                      # dull
+    ("🆚",    False, "Squared Vs"),                       # dull
+    ("🈁",    False, "Squared Katakana Koko"),            # dull
+    ("🈂️",   False, "Squared Katakana Sa"),              # dull
+    ("🈷️",   False, "Squared 月 (Moon)"),                 # dull
+    ("🈶",    False, "Squared 有 (Have)"),                 # dull
+    ("🉐",    False, "Circled Ideograph Advantage"),      # dull
+    ("🈹",    False, "Squared CJK Unified Ideograph-5272"), # dull
+    ("🈲",    False, "Squared CJK Unified Ideograph-7981"), # dull
+    ("🉑",    False, "Circled 可 (Accept)"),               # dull
+    ("🈸",    False, "Squared CJK Unified Ideograph-7533"), # dull
+    ("🈴",    False, "Squared CJK Unified Ideograph-5408"), # dull
+    ("🈳",    False, "Squared CJK Unified Ideograph-7a7a"), # dull
+    ("🈺",    False, "Squared CJK Unified Ideograph-55b6"), # dull
+    ("🈵",    False, "Squared CJK Unified Ideograph-6e80"), # dull
+    ("🔶",    False, "Large Orange Diamond"),             # used by UI
+    ("🔷",    False, "Large Blue Diamond"),               # dull
+    ("🔸",    False, "Small Orange Diamond"),             # dull
+    ("🔹",    False, "Small Blue Diamond"),               # dull
+    ("🔺",    False, "Up-Pointing Red Triangle"),         # dull
+    ("🔻",    False, "Down-Pointing Red Triangle"),       # dull
+    ("💠",    False, "Diamond Shape With a Dot Inside"),  # dull
+    ("🔘",    False, "Radio Button"),                     # dull
+    ("🔲",    False, "Black Square Button"),              # dull
+    ("🔳",    False, "White Square Button"),              # dull
+    ("🔴",    False, "Large Red Circle"),                 # dull
+    ("🔵",    False, "Large Blue Circle"),                # dull
+
+    # Unicode Version 6.1
+    ("😀",    False, "Grinning"),                         # too similar to another
+    ("😗",    False, "Kissing"),                          # too similar to another
+    ("😙",    True , "Smooch"),
+    ("😑",    True , "True Neutral"),
+    ("😮",    True , "Stunned"),
+    ("😯",    False, "Hushed"),                           # too similar to another
+    ("😴",    True , "Sleeping"),
+    ("😛",    False, "Tongue"),                           # too similar to another
+    ("😕",    False, "Confused"),                         # too similar to another
+    ("😟",    False, "Worried"),                          # too similar to another
+    ("😦",    False, "Frowning Face With Open Mouth"),    # too similar to another
+    ("😧",    True , "Anguished"),
+    ("😬",    True , "Grimacing"),
+
+    # Unicode Version 7.0
+    ("🙂",    False, "Slightly Smiling"),                 # too similar to another
+    ("🙁",    False, "Slightly Frowning"),                # too similar to another
+    ("🕵",    True , "Spy"),
+    ("🗣",    False, "Speaking Head in Silhouette"),      # dull
+    ("🕴",    False, "Man in Business Suit Levitating"),  # dull
+    ("🖕",    False, "Middle Finger"),                    # potentially offensive
+    ("🖖",    True , "Vulcan Hand"),
+    ("🖐",    False, "Raised Hand With Fingers Splayed"), # too similar to another
+    ("👁",    False, "Eye"),                              # too similar to another
+    ("🕳",    False, "Hole"),                             # dull
+    ("🗯",    False, "Right Anger Bubble"),               # dull
+    ("🕶",    True , "Dark Sunglasses"),
+    ("🛍",    True , "Shopping Bags"),
+    ("🐿",    True , "Chipmunk"),
+    ("🕊",    True , "Peace Dove"),
+    ("🕷",    True , "Spider"),
+    ("🕸",    True , "Spider Web"),
+    ("🏵",    True , "Rosette"),
+    ("🌶",    True , "Hot Pepper"),
+    ("🍽",    False, "Fork and Knife With Plate"),        # dull
+    ("🗺",    False, "World Map"),                        # dull
+    ("🏔",    False, "Snow Capped Mountain"),             # dull
+    ("🏕",    False, "Camping"),                          # too similar to another
+    ("🏖",    False, "Beach With Umbrella"),              # dull
+    ("🏜",    False, "Desert"),                           # dull
+    ("🏝",    False, "Desert Island"),                    # dull
+    ("🏞",    False, "National Park"),                    # dull
+    ("🏟",    False, "Stadium"),                          # dull
+    ("🏛",    True , "Architecture"),
+    ("🏗",    False, "Building Construction"),            # dull
+    ("🏘",    False, "House Buildings"),                  # dull
+    ("🏙",    False, "Cityscape"),                        # dull
+    ("🏚",    False, "Derelict House Building"),          # dull
+    ("🖼",    False, "Frame With Picture"),               # dull
+    ("🛢",    True , "Oil Drum"),
+    ("🛣",    False, "Motorway"),                         # dull
+    ("🛤",    False, "Railway Track"),                    # dull
+    ("🛳",    False, "Passenger Ship"),                   # dull
+    ("🛥",    True , "Motor Boat"),
+    ("🛩",    True , "Airplane"),
+    ("🛫",    False, "Airplane Departure"),               # dull
+    ("🛬",    False, "Airplane Arriving"),                # dull
+    ("🛰",    False, "Satellite"),                        # dull
+    ("🛎",    True , "Service Bell"),
+    ("🛌",    False, "Sleeping Accommodation"),           # dull
+    ("🛏",    False, "Bed"),                              # dull
+    ("🛋",    False, "Couch and Lamp"),                   # dull
+    ("🕰",    True , "Mantelpiece"),
+    ("🌡",    True , "Thermometer"),
+    ("🌤",    False, "Small Cloud"),                      # dull
+    ("🌥",    False, "White Sun Behind Cloud"),           # dull
+    ("🌦",    False, "White Sun Behind Cloud With Rain"), # dull
+    ("🌧",    False, "Cloud With Rain"),                  # dull
+    ("🌨",    False, "Cloud With Snow"),                  # dull
+    ("🌩",    True , "Lightning"),
+    ("🌪",    True , "Tornado"),
+    ("🌫",    False, "Fog"),                              # dull
+    ("🌬",    True , "Blowing"),
+    ("🎖",    True , "Medal"),
+    ("🎗",    False, "Ribbon"),                           # too similar to another
+    ("🎞",    True , "Film"),
+    ("🎟",    False, "Admission Tickets"),                # dull
+    ("🏷",    True , "Label"),
+    ("🏌",    False, "Golfer"),                           # dull
+    ("🏋",    True , "Lifting"),
+    ("🏎",    False, "Racing Car"),                       # dull
+    ("🏍",    False, "Racing Motorcycle"),                # dull
+    ("🏅",    False, "Medal"),                            # too similar to another
+    ("🕹",    True , "Joystick"),
+    ("⏸",    False, "Double Vertical Bar"),              # dull
+    ("⏹",    False, "Black Square for Stop"),            # dull
+    ("⏺",    False, "Black Circle for Record"),          # dull
+    ("🎙",    False, "Microphone"),                       # too similar to another
+    ("🎚",    False, "Level Slider"),                     # dull
+    ("🎛",    False, "Control Knobs"),                    # dull
+    ("🖥",    True , "Desktop"),
+    ("🖨",    True , "Printer"),
+    ("🖱",    False, "Three Button Mouse"),               # dull
+    ("🖲",    True , "Trackball"),
+    ("📽",    False, "Film Projector"),                   # dull
+    ("📸",    False, "Camera With Flash"),                # too similar to another
+    ("🕯",    True , "Candle"),
+    ("🗞",    False, "Newspaper"),                        # too similar to another
+    ("🗳",    False, "Ballot Box With Ballot"),           # dull
+    ("🖋",    True , "Fancy Pen"),
+    ("🖊",    False, "Lower Left Ballpoint Pen"),         # dull
+    ("🖌",    False, "Lower Left Paintbrush"),            # dull
+    ("🖍",    False, "Lower Left Crayon"),                # dull
+    ("🗂",    False, "Card Index Dividers"),              # used by UI
+    ("🗒",    False, "Spiral Note Pad"),                  # dull
+    ("🗓",    False, "Spiral Calendar Pad"),              # dull
+    ("🖇",    False, "Linked Paperclips"),                # dull
+    ("🗃",    False, "Card File Box"),                    # dull
+    ("🗄",    False, "File Cabinet"),                     # dull
+    ("🗑",    True , "Wastebasket"),
+    ("🗝",    False, "Old Key"),                          # dull
+    ("🛠",    True , "Hammer Spanner"),
+    ("🗜",    False, "Compression"),                      # dull
+    ("🗡",    True , "Dagger"),
+    ("🛡",    True , "Shield"),
+    ("🏳",    True , "White Flag"),
+    ("🏴",    True , "Black Flag"),
+    ("🕉",    False, "Om Symbol"),                        # dull
+    ("🗨",    False, "Left Speech Bubble"),               # dull
+
+    # Unicode Version 8.0
+    ("🤗",    True , "Hugging"),
+    ("🤔",    True , "Thinking"),
+    ("🙄",    True , "Rolling Eyes"),
+    ("🤐",    True , "Hushed"),
+    ("🤓",    True , "Nerd"),
+    ("🙃",    True , "Upside Down"),
+    ("🤒",    True , "Sick"),
+    ("🤕",    True , "Hurt"),
+    ("🤑",    True , "Money"),
+    ("🏻",    False, "Emoji Modifier 1-2"),               # dull
+    ("🏼",    False, "Emoji Modifier 3"),                 # dull
+    ("🏽",    False, "Emoji Modifier 4"),                 # dull
+    ("🏾",    False, "Emoji Modifier 5"),                 # dull
+    ("🏿",    False, "Emoji Modifier 6"),                 # dull
+    ("🤘",    True , "Rock On"),
+    ("📿",    True , "Prayer Beads"),
+    ("🤖",    True , "Robot"),
+    ("🦁",    True , "Lion"),
+    ("🦄",    True , "Unicorn"),
+    ("🦃",    True , "Turkey"),
+    ("🦀",    True , "Crab"),
+    ("🦂",    True , "Scorpion"),
+    ("🧀",    True , "Cheese"),
+    ("🌭",    True , "Hot Dog"),
+    ("🌮",    True , "Taco"),
+    ("🌯",    True , "Burrito"),
+    ("🍿",    True , "Popcorn"),
+    ("🍾",    True , "Popping Cork"),
+    ("🏺",    False, "Amphora"),                          # dull
+    ("🛐",    False, "Place of Worship"),                 # dull
+    ("🕋",    False, "Kaaba"),                            # potentially offensive
+    ("🕌",    False, "Mosque"),                           # potentially offensive
+    ("🕍",    False, "Synagogue"),                        # potentially offensive
+    ("🕎",    False, "Menorah"),                          # potentially offensive
+    ("🏏",    True , "Cricket"),
+    ("🏐",    True , "Volleyball"),
+    ("🏑",    False, "Field Hockey"),                     # too similar to another
+    ("🏒",    False, "Ice Hockey"),                       # too similar to another
+    ("🏓",    True , "Table Tennis"),
+    ("🏸",    False, "Badminton"),                        # too similar to another
+    ("🏹",    True , "Archer"),
+
     # Unicode Version 9.0
-    ("🤣", "🤣"),     # Rolling on the Floor Laughing
-    ("🤤", "🤤"),     # Drooling Face
-    ("🤢", "🤢"),     # Nauseated Face
-    ("🤧", "🤧"),     # Sneezing Face
-    ("🤠", "🤠"),     # Cowboy Hat Face
-    ("🤡", "🤡"),     # Clown Face
-    ("🤥", "🤥"),     # Lying Face
-    ("🤴", "🤴"),     # Prince
-    ("🤵", "🤵"),     # Man in Tuxedo
-    ("🤰", "🤰"),     # Pregnant Woman
-    ("🤶", "🤶"),     # Mrs. Claus
-    ("🤦", "🤦"),     # Person Facepalming
-    ("🤷", "🤷"),     # Person Shrugging
-    ("🕺", "🕺"),     # Man Dancing
-    ("🤺", "🤺"),     # Person Fencing
-    ("🤸", "🤸"),     # Person Cartwheeling
-    # LAME ("🤼", "🤼"),     # People Wrestling
-    # LAME ("🤽", "🤽"),     # Person Playing Water Polo
-    # LAME ("🤾", "🤾"),     # Person Playing Handball
-    ("🤹", "🤹"),     # Person Juggling
-    ("🤳", "🤳"),     # Selfie
-    ("🤞", "🤞"),     # Crossed Fingers
-    ("🤙", "🤙"),     # Call Me Hand
-    ("🤛", "🤛"),     # Left-Facing Fist
-    ("🤜", "🤜"),     # Right-Facing Fist
-    ("🤚", "🤚"),     # Raised Back of Hand
-    ("🤝", "🤝"),     # Handshake
-    ("🖤", "🖤"),     # Black Heart
-    # TOO SIMILAR ("🦍", "🦍"),     # Gorilla
-    ("🦊", "🦊"),     # Fox Face
-    ("🦌", "🦌"),     # Deer
-    # TOO SIMILAR ("🦏", "🦏"),     # Rhinoceros
-    ("🦇", "🦇"),     # Bat
-    ("🦅", "🦅"),     # Eagle
-    ("🦆", "🦆"),     # Duck
-    ("🦉", "🦉"),     # Owl
-    ("🦎", "🦎"),     # Lizard
-    ("🦈", "🦈"),     # Shark
-    ("🦐", "🦐"),     # Shrimp
-    ("🦑", "🦑"),     # Squid
-    ("🦋", "🦋"),     # Butterfly
-    ("🥀", "🥀"),     # Wilted Flower
-    ("🥝", "🥝"),     # Kiwi Fruit
-    ("🥑", "🥑"),     # Avocado
-    ("🥔", "🥔"),     # Potato
-    ("🥕", "🥕"),     # Carrot
-    ("🥒", "🥒"),     # Cucumber
-    ("🥜", "🥜"),     # Peanuts
-    ("🥐", "🥐"),     # Croissant
-    ("🥖", "🥖"),     # Baguette Bread
-    ("🥞", "🥞"),     # Pancakes
-    # LAME ("🥓", "🥓"),     # Bacon
-    ("🥙", "🥙"),     # Stuffed Flatbread
-    ("🥚", "🥚"),     # Egg
-    # LAME ("🥘", "🥘"),     # Shallow Pan of Food
-    ("🥗", "🥗"),     # Green Salad
-    ("🥛", "🥛"),     # Glass of Milk
-    ("🥂", "🥂"),     # Clinking Glasses
-    ("🥃", "🥃"),     # Tumbler Glass
-    ("🥄", "🥄"),     # Spoon
-    # LAME ("🛴", "🛴"),     # Kick Scooter
-    # LAME ("🛵", "🛵"),     # Motor Scooter
-    # LAME ("🛑", "🛑"),     # Stop Sign
-    ("🛶", "🛶"),     # Canoe
-    # LAME ("🥇", "🥇"),     # 1st Place Medal
-    # LAME ("🥈", "🥈"),     # 2nd Place Medal
-    # LAME ("🥉", "🥉"),     # 3rd Place Medal
-    ("🥊", "🥊"),     # Boxing Glove
-    ("🥋", "🥋"),     # Martial Arts Uniform
-    ("🥅", "🥅"),     # Goal Net
-    ("🥁", "🥁"),     # Drum
-    ("🛒", "🛒"),     # Shopping Cart
+    ("🤣",    True , "ROFL Face"),
+    ("🤤",    True , "Drooling"),
+    ("🤢",    True , "Nauseated"),
+    ("🤧",    True , "Sneezing"),
+    ("🤠",    True , "Cowboy"),
+    ("🤡",    True , "Clown"),
+    ("🤥",    True , "Lying"),
+    ("🤴",    False, "Prince"),                           # potentially offensive
+    ("🤵",    False, "Tuxedo Man"),                       # potentially offensive
+    ("🤰",    False, "Pregnant"),                         # potentially offensive
+    ("🤶",    False, "Mrs. Claus"),                       # potentially offensive
+    ("🤦",    True , "Facepalm"),
+    ("🤷",    True , "Shrugging"),
+    ("🕺",    False, "Man Dancing"),                      # potentially offensive
+    ("🤺",    True , "Fencing"),
+    ("🤸",    True , "Cartwheeling"),
+    ("🤼",    True , "Wrestling"),
+    ("🤽",    False, "Water Polo"),                       # dull
+    ("🤾",    False, "Handball"),                         # dull
+    ("🤹",    True , "Juggling"),
+    ("🤳",    True , "Selfie"),
+    ("🤞",    True , "Fingers Crossed"),
+    ("🤙",    True , "Call Me Hand"),
+    ("🤛",    False, "Left-Facing Fist"),                 # too similar to another
+    ("🤜",    False, "Right-Facing Fist"),                # too similar to another
+    ("🤚",    False, "Raised Back of Hand"),              # too similar to another
+    ("🤝",    True , "Handshake"),
+    ("🖤",    True , "Black Heart"),
+    ("🦍",    False, "Gorilla"),                          # too similar to another
+    ("🦊",    True , "Fox"),
+    ("🦌",    False, "Deer"),                             # too similar to another
+    ("🦏",    False, "Rhinoceros"),                       # too similar to another
+    ("🦇",    True , "Bat"),
+    ("🦅",    True , "Eagle"),
+    ("🦆",    True , "Duck"),
+    ("🦉",    True , "Owl"),
+    ("🦎",    True , "Lizard"),
+    ("🦈",    True , "Shark"),
+    ("🦐",    True , "Shrimp"),
+    ("🦑",    True , "Squid"),
+    ("🦋",    True , "Butterfly"),
+    ("🥀",    False, "Wilted Flower"),                    # dull
+    ("🥝",    True , "Kiwifruit"),
+    ("🥑",    True , "Avocado"),
+    ("🥔",    True , "Potato"),
+    ("🥕",    True , "Carrot"),
+    ("🥒",    True , "Cucumber"),
+    ("🥜",    True , "Peanuts"),
+    ("🥐",    True , "Croissant"),
+    ("🥖",    True , "Baguette"),
+    ("🥞",    True , "Pancakes"),
+    ("🥓",    False, "Bacon"),                            # potentially offensive
+    ("🥙",    False, "Stuffed Flatbread"),                # dull
+    ("🥚",    True , "Egg"),
+    ("🥘",    False, "Shallow Pan of Food"),              # dull
+    ("🥗",    True , "Green Salad"),
+    ("🥛",    True , "Milk Glass"),
+    ("🥂",    False, "Clinking Glasses"),                 # dull
+    ("🥃",    True , "Tumbler"),
+    ("🥄",    True , "Spoon"),
+    ("🛴",    True , "Kick Scooter"),
+    ("🛵",    True , "Motor Scooter"),
+    ("🛑",    False, "Stop Sign"),                        # dull
+    ("🛶",    True , "Canoe"),
+    ("🥇",    False, "Gold Medal"),                       # dull
+    ("🥈",    False, "Silver Medal"),                     # dull
+    ("🥉",    False, "Bronze Medal"),                     # dull
+    ("🥊",    True , "Boxing Glove"),
+    ("🥋",    True , "Martial Artist"),
+    ("🥅",    True , "Goal Net"),
+    ("🥁",    True , "Drum"),
+    ("🛒",    True , "Shopping Cart"),
 )
+
+# The field choices are the permissible values
+EMOJI_FIELD_CHOICES = [(emoji, emoji) for emoji, _, _ in EMOJI_LIST]
+
+# The random options are a reduced set
+EMOJI_RANDOM_OPTIONS = [(emoji, name) for emoji, include, name in EMOJI_LIST if include]
+
+EMOJI_NAMES = {emoji: name for emoji, _, name in EMOJI_LIST}

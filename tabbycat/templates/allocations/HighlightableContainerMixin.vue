@@ -4,19 +4,25 @@
 import _ from 'lodash'
 
 export default {
-  created: function() {
+  created: function () {
     this.$eventHub.$on('set-highlights', this.setHighlights)
   },
   methods: {
     setHighlights(highlights) {
-      _.forEach(this.teams, function(item) {
-        item.highlights = highlights
+      // Highlights come in as more expansive dictionary;
+      // reduce them back to a simple key/state
+      var simpleHighlights = _.mapValues(highlights, function (highlight) {
+        return highlight.state;
+      });
+      console.log(simpleHighlights)
+      _.forEach(this.teams, function (item) {
+        item.highlights = simpleHighlights
       })
-      _.forEach(this.adjudicators, function(item) {
-        item.highlights = highlights
+      _.forEach(this.adjudicators, function (item) {
+        item.highlights = simpleHighlights
       })
-      _.forEach(this.unallocatedItems, function(item) {
-        item.highlights = highlights
+      _.forEach(this.unallocatedItems, function (item) {
+        item.highlights = simpleHighlights
       })
     }
   }

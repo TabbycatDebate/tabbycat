@@ -18,13 +18,15 @@
                    :sort-key="sortKey" :sort-order="sortOrder">
         <div @click="updateSorting('venue')" slot="hvenue"
              class="vue-sortable thead flex-cell flex-12 ">
-          <span>Venue </span>
-          <div :class="sortClasses('venue')">
-            <span class="sorting-placeholder-for-width"></span>
-            <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+          <div class="d-flex align-items-end">
+            <span>Venue </span>
+            <div :class="sortClasses('venue')">
+              <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+            </div>
           </div>
         </div>
       </draw-header>
+
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
         <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
@@ -52,20 +54,20 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import VenueMovingMixin from '../../templates/ajax/VenueMovingMixin.vue'
 import DraggableVenue from '../../templates/draganddrops/DraggableVenue.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [VenueMovingMixin, DrawContainerMixin],
   components: { DraggableVenue },
   props: { venueConstraints: Array },
   computed: {
-    unallocatedVenuesByPriority: function() {
+    unallocatedVenuesByPriority: function () {
       return _.reverse(_.sortBy(this.unallocatedItems, ['priority']))
     },
-    allVenuesById: function() {
+    allVenuesById: function () {
       return _.keyBy(this.venues.concat(this.unallocatedItems), 'id')
     },
   },
@@ -75,7 +77,7 @@ export default {
       var category_ids = _.map(venue.categories, 'id')
       if (category_ids.length > 0) {
         // Match IDs to venue constraint categories
-        return _.filter(this.venueConstraints, function(vc) {
+        return _.filter(this.venueConstraints, function (vc) {
           return _.includes(category_ids, vc.id)
         });
       } else {
@@ -94,23 +96,29 @@ export default {
       }
       this.saveMove(payload.venue, payload.debate, null)
     },
-    createAutoAllocation: function(event) {
+    createAutoAllocation: function (event) {
       var self = this
       $.fn.loadButton(event.target)
       $.post({
         url: this.roundInfo.autoUrl,
         dataType: 'json',
-      }).done(function(data, textStatus, jqXHR) {
+      }).done(function (data, textStatus, jqXHR) {
         // Success handler
         self.$eventHub.$emit('update-allocation', JSON.parse(data.debates))
         self.$eventHub.$emit('update-unallocated', JSON.parse(data.unallocatedVenues))
         self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
         $.fn.resetButton(event.target)
-      }).fail(function(response) {
+      }).fail(function (response) {
         // Handle Failure (or at least log it so we can figure out failure mode)
+        // Note: this block duplicated in AllocationModal
         console.debug(JSON.stringify(response))
-        var info = response.responseJSON.message
+        var info = ''
+        if (response.hasOwnProperty('responseJSON')) {
+          info += response.responseJSON.message
+        } else {
+          info += "status code " + response["status"] + " because " + response["statusText"]
+        }
         $.fn.showAlert('danger', 'Auto Allocation failed: ' + info, 0)
         $.fn.resetButton(event.target)
       })

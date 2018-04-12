@@ -4,7 +4,7 @@ from operator import itemgetter
 import random
 import logging
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from .metrics import RepeatedMetricAnnotator
 
@@ -140,6 +140,7 @@ class Standings:
         self._rank_limit = None
 
         self.metric_keys = list()
+        self.metric_ascending = list()
         self.ranking_keys = list()
         self._metric_specs = list()
         self._ranking_specs = list()
@@ -206,8 +207,9 @@ class Standings:
         except KeyError as e:
             raise ValueError("{!r} isn't in these standings.".format(e.args[0]))
 
-    def record_added_metric(self, key, name, abbr, icon):
+    def record_added_metric(self, key, name, abbr, icon, ascending):
         self.metric_keys.append(key)
+        self.metric_ascending.append(ascending)
         self._metric_specs.append((key, name, abbr, icon))
 
     def record_added_ranking(self, key, name, abbr, icon):
@@ -224,11 +226,25 @@ class Standings:
         if tiebreak_func:
             tiebreak_func(self._standings)
 
+        metricitemgetter = itemgetter(*precedence)
+
+        # Like standings.metrics.metricgetter, but negates metrics ranked in ascending order
+        if len(precedence) == 1 and self.metric_ascending[0]:
+            def metrics_for_ranking(info):
+                return -metricitemgetter(info.metrics)
+        elif len(precedence) == 1 and not self.metric_ascending[0]:
+            def metrics_for_ranking(info):
+                return metricitemgetter(info.metrics)
+        else:
+            def metrics_for_ranking(info):
+                metrics = metricitemgetter(info.metrics)
+                return tuple(-x if asc else x for x, asc in zip(metrics, self.metric_ascending))
+
         try:
-            self._standings.sort(key=lambda x: itemgetter(*precedence)(x.metrics), reverse=True)
+            self._standings.sort(key=metrics_for_ranking, reverse=True)
         except TypeError:
             for info in self.infos.values():
-                logger.info("%30s %s", info.instance, itemgetter(*precedence)(info.metrics))
+                logger.info("%30s %s", info.instance, metrics_for_ranking(info))
             raise
 
         if self.rank_filter:
@@ -291,9 +307,15 @@ class BaseStandingsGenerator:
 
         standings = Standings(queryset, rank_filter=self.options["rank_filter"])
 
+        # The original queryset might have filtered out information relevant to
+        # calculating the metrics (e.g., if it filters teams by participation in
+        # a round), so make a new queryset to pass to the metric annotators that
+        # relies on a nested ID selection instead.
+        queryset_for_metrics = queryset.model.objects.filter(id__in=queryset.values_list('id', flat=True))
+
         for annotator in self.metric_annotators:
             logger.debug("Running metric annotator: %s", annotator.name)
-            annotator.run(queryset, standings, round)
+            annotator.run(queryset_for_metrics, standings, round)
         logger.debug("Metric annotators done.")
 
         if self.options["include_filter"]:
@@ -380,6 +402,8 @@ class BaseStandingsGenerator:
         choices = []
         for key, annotator in cls.metric_annotator_classes.items():
             if not ranked_only and annotator.ranked_only:
+                continue
+            if not annotator.listed:
                 continue
             if hasattr(annotator, 'choice_name'):
                 choice_name = annotator.choice_name.capitalize()

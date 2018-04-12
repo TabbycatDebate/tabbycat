@@ -1,5 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from venues.models import VenueConstraint
 
@@ -43,7 +43,7 @@ def venue_conflicts_display(debates):
                 _add_constraint_message(debate, team.institution, venue,
                     _("Venue constraint of %(team)s met (%(category)s, via institution %(institution)s)"),
                     _("Venue does not meet any constraint of institution %(institution)s (%(team)s)"),
-                    {'instititution': team.institution.code, 'team': team.short_name})
+                    {'institution': team.institution.code, 'team': team.short_name})
 
         for adjudicator in debate.adjudicators.all():
             _add_constraint_message(debate, adjudicator, venue,

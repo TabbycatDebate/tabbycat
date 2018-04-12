@@ -1,14 +1,15 @@
 from itertools import islice, zip_longest
 
 from django.utils.html import format_html
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 from participants.utils import get_side_history
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
 from utils.tables import TabbycatTableBuilder
 
 from .generator.bphungarian import BPHungarianDrawGenerator
+from .utils import annotate_npullups
 
 
 class BaseDrawTableBuilder(TabbycatTableBuilder):
@@ -59,16 +60,21 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
         all_sides_confirmed = all(debate.sides_confirmed for debate in debates)  # should already be fetched
 
         for i, side in enumerate(self.tournament.sides, start=1):
-            side_abbr = get_side_name(self.tournament, side, 'abbr')
+            # For BP team names are often longer than the full position label
+            if self.tournament.pref('teams_in_debate') == 'bp':
+                side_name = get_side_name(self.tournament, side, 'abbr')
+            else:
+                side_name = get_side_name(self.tournament, side, 'full')
 
             team_data = []
             for debate, hl in zip_longest(debates, highlight):
                 team = debate.get_team(side)
-                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbr
+                subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
                 team_data.append(self._team_cell(team, subtext=subtext, hide_emoji=False, highlight=team == hl))
 
-            key = side_abbr if all_sides_confirmed else _("Team %(num)d") % {'num': i}
-            self.add_column(key, team_data)
+            title = side_name if all_sides_confirmed else _("Team %(num)d") % {'num': i}
+            header = {'key': side, 'title': title}
+            self.add_column(header, team_data)
 
 
 class AdminDrawTableBuilder(PublicDrawTableBuilder):
@@ -76,7 +82,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
     def add_room_rank_columns(self, debates):
         header = {
-            'key': _("Room rank"),
+            'key': "room-rank",
             'icon': 'bar-chart-2',
             'tooltip': _("Room rank of this debate"),
         }
@@ -84,7 +90,7 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
 
     def add_debate_bracket_columns(self, debates):
         header = {
-            'key': _("Bracket"),
+            'key': "bracket",
             'icon': 'bar-chart-2',
             'tooltip': _("Bracket of this debate"),
         }
@@ -147,6 +153,23 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
             return x[0] or 99999
         return self._add_debate_standing_columns(debates, standings, 'iterrankings',
                 'rankings_info', rankingformat, formatsort)
+
+    def add_number_of_pullups_columns(self, debates, round):
+        # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
+        teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
+        all_teams = [team for d in debates for team in d.teams]
+        annotate_npullups(all_teams, until=round)
+
+        for i, (side, teams) in enumerate(zip(self.tournament.sides, teams_by_side)):
+            name = _("number of pullups before this round")
+            # Translators: Abbreviation for "side history"
+            abbr = _("PU")
+            header = self._prepend_side_header(side, name, abbr)
+            cells = [{'text': str(team.npullups)} for team in teams]
+            if i == 0:
+                for cell in cells:
+                    cell['class'] = 'highlight-col'
+            self.add_column(header, cells)
 
     def add_debate_side_history_columns(self, debates, round):
         # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
@@ -222,15 +245,15 @@ class BasePositionBalanceReportTableBuilder(BaseDrawTableBuilder):
 class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBuilder):
 
     STATUSES = {
-        "regression": ugettext_lazy("Went from balanced to imbalanced"),
-        "resolved": ugettext_lazy("Went from imbalanced to balanced"),
-        "improving": ugettext_lazy("Best improvement possible, still imbalanced"),
-        "still-bad": ugettext_lazy("Was imbalanced and still imbalanced"),
+        "regression": gettext_lazy("Went from balanced to imbalanced"),
+        "resolved": gettext_lazy("Went from imbalanced to balanced"),
+        "improving": gettext_lazy("Best improvement possible, still imbalanced"),
+        "still-bad": gettext_lazy("Was imbalanced and still imbalanced"),
     }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.sort_key = _("Cost")
+        self.sort_key = "cost"
 
     def build(self, draw, teams, side_histories_before, side_histories_now, standings):
         self.side_histories_before = side_histories_before
@@ -243,7 +266,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
 
         # Points
         infos = self.standings.get_standings(teams)
-        header = {'key': _("Pts"), 'tooltip': _("Points")}
+        header = {'key': "pts", 'title': _("Pts"), 'tooltip': _("Points")}
         self.add_column(header, [info.metrics['points'] for info in infos])
 
         # Sides
@@ -252,15 +275,18 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         sides = [sides_lookup[team.id] for team in teams]
         poses = [self.tournament.sides.index(side) for side in sides]  # used later
         names = {side: get_side_name(self.tournament, side, 'abbr') for side in self.tournament.sides}
-        header = {'key': _("Side"), 'tooltip': _("Position this round")}
+        header = {'key': "side", 'title': _("Side"),
+                  'tooltip': _("Position this round")}
         self.add_column(header, [names[side] for side in sides])
 
         # Side counts before and now
-        header = {'key': _("Before"), 'tooltip': _("Side history before this round")}
+        header = {'key': "before", 'title': _("Before"),
+                  'tooltip': _("Side history before this round")}
         cells = self._side_history_by_team(self.side_histories_before, teams)
         self.add_column(header, cells)
 
-        header = {'key': _("After"), 'tooltip': _("Side history after this round")}
+        header = {'key': "after", 'title': _("After"),
+                  'tooltip': _("Side history after this round")}
         side_histories_now_highlighted = []
         for team, pos in zip(teams, poses):
             history = [str(x) for x in self.side_histories_now[team.id]]
@@ -270,7 +296,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         self.add_column(header, side_histories_now_highlighted)
 
         # Position cost
-        header = {'key': _("Cost"), 'tooltip': _("Position cost")}
+        header = {'key': "cost", 'title': _("Cost"), 'tooltip': _("Position cost")}
         cells = [metricformat(self.get_position_cost(pos, team)) for pos, team in zip(poses, teams)]
         self.add_column(header, cells)
 
@@ -283,7 +309,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
                 'sort': sort,
                 'class': 'text-' + style
             })
-        self.add_column(_("Status"), cells)
+        self.add_column({'key': 'status', 'title': _("Status")}, cells)
 
         # Sort by points as secondary sort (will be sorted by cost in Vue)
         self.data.sort(key=lambda x: x[1]['sort'], reverse=True)
@@ -320,7 +346,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             strs[0] = "<strong>%s</strong>" % strs[0]
             cells.append(", ".join(strs))
         header = {
-            'key': _("Room"),
+            'key': "room",
             'icon': "bar-chart",
             'tooltip': _("Teams with this many points are permitted in this debate<br>\n(bracket in bold)"),
         }
@@ -338,7 +364,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
 
         # Points of team
         infos = self.standings.get_standings(teams)
-        header = {'key': _("Pts"), 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
+        header = {'key': "pts", 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
         self.add_column(header, [info.metrics['points'] for info in infos])
 
         # Side history after last round

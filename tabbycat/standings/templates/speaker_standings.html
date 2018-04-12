@@ -2,24 +2,43 @@
 {% load debate_tags i18n %}
 
 {% block page-alerts %}
-  <div class="alert alert-info">
-    {% if pref.rank_speakers_by == 'average' %}
-      {% trans "Note that speakers are being sorted by their <strong>average score</strong>." %}
-    {% elif pref.rank_speakers_by == 'total' %}
-      {% blocktrans trimmed %}
-        Note that speakers are being sorted by their <strong>total score</strong>.
-        Any speaker who misses a single debate will be severely punished in these rankings.
-      {% endblocktrans %}
-    {% endif %}
-    {% blocktrans trimmed with count=pref.standings_missed_debates %}
-      Also, speakers can miss up to {{ count }} debates before they are omitted from
+  {% if pref.speaker_standings_precedence.0 == 'average' %}
+    {% trans "Speakers are ranked by their <strong>average score</strong>." as p1 %}
+  {% elif pref.speaker_standings_precedence.0 == 'total' %}
+    {% blocktrans trimmed asvar p1 %}
+      Speakers are ranked by their <strong>total score</strong>.
+      Any speaker who misses a single debate will be severely punished in these rankings.
+    {% endblocktrans %}
+  {% endif %}
+
+  {% if pref.standings_missed_debates > 0 %}
+    {% blocktrans trimmed with count=pref.standings_missed_debates asvar p2 %}
+      Speakers can miss up to {{ count }} debates before they are omitted from
       the speaker tab.
     {% endblocktrans %}
-    {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
-    {% blocktrans trimmed %}
-      These settings can be changed in the
+  {% else %}
+    {% trans "All speakers appear in these standings, no matter how many debates they've missed." as p2 %}
+  {% endif %}
+
+  {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+  {% blocktrans trimmed asvar p3 %}
+    These settings can be changed in the
+    <a href="{{ standings_config_url }}" class="alert-link">Standings section
+    of this tournament's configuration</a>.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+
+  {% if 'count' not in pref.speaker_standings_precedence and 'count' not in pref.speaker_standings_extra_metrics and pref.standings_missed_debates > 0 %}
+    {% blocktrans trimmed asvar message %}
+      Enforcing the limit on the number of missed debates requires the "number
+      of speeches given" metric to be included in the speaker standings
+      calculations, so it's been automatically added. To remove this warning
+      message, add <strong>Number of speeches given</strong> to the
+      <strong>Speaker standings extra metrics</strong> in the
       <a href="{{ standings_config_url }}" class="alert-link">Standings section
       of this tournament's configuration</a>.
     {% endblocktrans %}
-  </div>
+    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
+  {% endif %}
+
 {% endblock %}

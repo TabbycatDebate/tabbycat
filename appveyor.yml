@@ -16,7 +16,7 @@ build: false
 
 # Set python version to not be the default (2.7.X)
 environment:
-  nodejs_version: "6" # Match install instructions
+  nodejs_version: "8" # Match install instructions
   matrix:
     - PYTHON: "C:\\Python35" # Match install instructions
       PYTHON_VERSION: "3.5.3"
@@ -60,7 +60,9 @@ install:
   - cd c:\projects\tabbycat
   - python -m pip install -U pip
   - pip install -r requirements_common.txt
+  - pip install pypiwin32 # Extra dependency for channels/twisted on Windows
   - npm install
+  - npm -g install gulp-cli # Needs to be available to then use 'gulp' command later
 
 # before_test:
   # - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
@@ -69,8 +71,8 @@ test_script:
   - cd c:\projects\tabbycat
   - copy tabbycat\local_settings.example tabbycat\local_settings.py # Need to use local build opt
   # Update local connection settings
-   # Test gulp building
-  - npm run gulp build
+  # Test gulp building
+  - gulp build
   - python tabbycat/manage.py collectstatic
   # Test Docker Building
   # This fails at apt-get; apparently something to do with

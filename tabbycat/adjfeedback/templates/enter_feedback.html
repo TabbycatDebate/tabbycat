@@ -2,16 +2,24 @@
 
 {% load add_field_css i18n %}
 
-{% block page-title %}🙅Enter Feedback{% endblock %}
+{% block page-title %}🙅 {% trans "Enter Feedback" %}{% endblock %}
 {% block head-title %}
-  <span class="emoji">🙅</span>Add Feedback {% if source_name %}from {{ source_name }}{% endif %}
+  <span class="emoji">🙅</span>
+  {% if source_name %}
+    {% blocktrans trimmed %}
+      Add Feedback from {{ source_name }}
+    {% endblocktrans %}
+  {% else %}
+    {% trans "Add Feedback" %}
+  {% endif %}
 {% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block content %}
 
-  {% if tournament.current_round.seq == 1 and tournament.current_round.draw_status != tournament.current_round.STATUS_RELEASED %}
-    {% include "components/alert.html" with type="info" message="There are no feedback options because no rounds have been released to the public yet. Check back when they have!" %}
+  {% if no_rounds_released %} {# only set for public views #}
+    {% trans "There are no feedback options because no rounds have been released to the public yet. Check back when they have!" as message %}
+    {% include "components/alert.html" with type="info" %}
   {% endif %}
 
   <form id="feedbackForm" method="POST">
@@ -38,6 +46,7 @@
 
         </div>
 
+        {% trans "When submitting this form your IP address will be stored for logging purposes." as subtitle %}
         {% include "components/form-submit.html" with title="Save Feedback" %}
 
       </div>

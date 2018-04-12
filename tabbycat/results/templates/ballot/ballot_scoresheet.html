@@ -1,4 +1,4 @@
-{% load add_field_css debate_tags i18n %}
+{% load add_field_css debate_tags i18n team_name_for_data_entry %}
 
 <div class="card pr-0 mr-0 m-2 position" {% if forloop.parentloop.first %}id="team-{{ team.team.id }}"{% endif %}>
   <div class="list-group list-group-flush">
@@ -7,7 +7,7 @@
       <div class="row">
         <!-- team-name class used by unknown sides switcher -->
         <div class="col mr-auto card-title pl-md-2 pl-1 {{ team.side_code }}-team-name">
-          {{ team.team.short_name }}
+          {% team_name_for_data_entry team.team use_team_code_names %}
         </div>
         <div class="col-auto card-subtitle text-muted text-right pt-2 pr-md-2 pr-1">
           <h6>{{ team.side_code }}</h6>

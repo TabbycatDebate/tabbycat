@@ -3,12 +3,13 @@
 //------------------------------------------------------------------------------
 
 // Actionable elements (buttons, navs) should be distinct
-.btn {
-  padding: 10px 12px;
+.btn .feather {
+  margin-bottom: -3px;
+}
 
-  .feather {
-    margin-bottom: -3px;
-  }
+// Fix bad inheritance
+.list-group-item .btn .feather {
+  margin-right: 0;
 }
 
 // Same as .btn; but .btn-link removes this radius for some reason
@@ -77,13 +78,12 @@ label.error {
   font-size: $font-size-sm;
 }
 
-// Special Polyfill for Safari (needs tweaking from the default styles in lib)
-.polyfilling {
-  margin-top: 0 !important;
-  margin-left: 0 !important;
-  z-index: $z_2;
-  padding: 10px;
-  border-color: $gray-600;
+.btn-group .btn-success, .btn-group .btn-primary, .btn-group .btn-secondary {
+  border-right: 3px solid rgba(255, 255, 255, 0.25);
+
+  &:last-child {
+    border-right: none;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -99,6 +99,12 @@ label.error {
     float: left;
     width: 46%;
   }
+}
+
+// Welcome message box
+#id_public_features__welcome_message_iframe {
+  padding: 0;
+  border: none;
 }
 
 // IE Horizontal choice/radio options; align form elements & text horizontally

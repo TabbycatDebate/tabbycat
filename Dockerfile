@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED 1
 # Setup Node/NPM
 RUN apt-get update
 RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash && apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash && apt-get install -y nodejs
 
 # Copy all our files into the baseimage and cd to that directory
 RUN mkdir /tcd
@@ -27,5 +27,6 @@ RUN npm install
 
 # Compile all the static files
 RUN npm rebuild node-sass
-RUN npm run gulp build
+RUN npm -g install gulp-cli # Needed for the gulp command to then work
+RUN gulp build
 RUN python ./tabbycat/manage.py collectstatic --no-input

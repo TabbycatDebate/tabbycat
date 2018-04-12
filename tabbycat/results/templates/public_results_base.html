@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{# Contains the title for error pages. #}
+{% block head-title %}{% blocktrans trimmed with round_name=round.name %}
+  Results for {{ round_name }}
+{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktrans trimmed with round_name=round.name %}
+  Results for {{ round_name }}
+{% endblocktrans %}{% endblock %}

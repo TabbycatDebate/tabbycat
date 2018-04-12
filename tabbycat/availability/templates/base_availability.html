@@ -24,7 +24,8 @@
        roundInfo: {
         'seq': {{ round.seq }},
         'break': '{{ round.is_break_round }}',
-        'model': '{{ model }}'
+        'model': '{{ model }}',
+        'prev': '{{ round.prev.abbreviation }}',
       },
       categories: [{id: 0, name: 'Availability'}],
       urls: {

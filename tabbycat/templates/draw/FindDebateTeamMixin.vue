@@ -5,7 +5,7 @@ export default {
   // This is shared between both Debate.vue and EditMachupsContaier.vue
   methods: {
     findDebateTeamInDebateBySide(side, debate) {
-      var debateTeam = _.find(debate.debateTeams, function(dt) {
+      var debateTeam = _.find(debate.debateTeams, function (dt) {
         return dt.side === side
       });
       if (!_.isUndefined(debateTeam)) {
@@ -23,7 +23,7 @@ export default {
       }
     },
     findDebateTeamInDebateByTeam(team, debate) {
-      var debateTeam = _.find(debate.debateTeams, function(dt) {
+      var debateTeam = _.find(debate.debateTeams, function (dt) {
         if (dt.team !== null) {
           return dt.team.id === team.id
         } else {

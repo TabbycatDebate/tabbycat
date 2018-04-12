@@ -8,9 +8,9 @@
           ({{ authorPositionWithSoloCheck(ballot.authorPosition) }})
         </span>
         <span v-if="ballot.target">on {{ ballot.target }}
-          <span v-if="ballot.targetPosition === 'C' || ballot.targetPosition === 'o'">(Chair)</span>
-          <span v-if="ballot.targetPosition === 'P'">(Panellist)</span>
-          <span v-if="ballot.targetPosition === 'T'">(Trainee)</span>
+          <span v-if="ballot.targetPosition === 'c' || ballot.targetPosition === 'o'">(Chair)</span>
+          <span v-if="ballot.targetPosition === 'p'">(Panellist)</span>
+          <span v-if="ballot.targetPosition === 't'">(Trainee)</span>
         </span>
       </h2>
     </div>
@@ -18,7 +18,7 @@
       <div class="db-flex-static db-align-vertical-end">
         <h2>Venue:</h2>
         <span class="db-padding-horizontal db-fill-in"
-              style="width: 200px; margin: 0 3px 0 5px; display: inline-block">
+              style="width: 185px; margin: 0 3px 0 5px; display: inline-block">
         </span>
       </div>
     </template>
@@ -35,21 +35,24 @@ import _ from 'lodash'
 export default {
   props: ['ballot', "roundInfo"],
   methods: {
-    authorPositionWithSoloCheck: function(position) {
-      if (position === 'C') {
-        var panellists = _.filter(this.ballot.debateAdjudicators, function(da) {
-          return da.position === "P";
+    authorPositionWithSoloCheck: function (position) {
+      if (position === 'c') {
+        var panellists = _.filter(this.ballot.debateAdjudicators, function (da) {
+          return da.position === "p";
         })
         if (!_.isUndefined(panellists) && panellists.length > 0) {
-          return "Chair of Panel"
+          var voters = _.filter(this.ballot.debateAdjudicators, function (da) {
+            return da.position !== "t";
+          })
+          return "Chair for Panel of " + voters.length
         } else {
           return "Solo Chair"
         }
-      } else if (position === 'O') {
+      } else if (position === 'o') {
         return "Solo Chair"
-      } else if (position === 'P') {
+      } else if (position === 'p') {
         return "Panellist"
-      } else if (position === 'T') {
+      } else if (position === 't') {
         return "Trainee"
       } else if (position === 'TEAM') {
         return "Team"

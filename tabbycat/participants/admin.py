@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.utils.translation import ungettext
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy as _
 
 from draw.models import TeamSideAllocation
 from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
@@ -31,6 +31,7 @@ class RegionAdmin(admin.ModelAdmin):
 @admin.register(Institution)
 class InstitutionAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'region')
+    list_select_related = ('region',)
     ordering = ('name', )
     search_fields = ('name', )
 
@@ -107,8 +108,8 @@ class TeamAdmin(admin.ModelAdmin):
     actions = ['delete_url_key']
 
     def get_queryset(self, request):
-        return super(TeamAdmin, self).get_queryset(request).prefetch_related(
-            'institution', 'division')
+        # can't use select_related, because TeamManager always puts a select_related on this
+        return super().get_queryset(request).select_related('tournament')
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         if db_field.name == 'emoji' and kwargs.get("initial") is None:
@@ -123,7 +124,7 @@ class TeamAdmin(admin.ModelAdmin):
 
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
-        message = ungettext(
+        message = ngettext(
             "%(count)d team had its URL key removed.",
             "%(count)d teams had their URL keys removed.",
             updated
@@ -139,7 +140,11 @@ class TeamAdmin(admin.ModelAdmin):
 class AdjudicatorConflictInline(admin.TabularInline):
     model = AdjudicatorConflict
     extra = 1
-    verbose_name_plural = "Adjudicator team conflicts"
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'team':
+            kwargs["queryset"] = Team.objects.select_related('tournament')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
@@ -173,16 +178,21 @@ class AdjudicatorForm(forms.ModelForm):
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'trainee',
-                    'independent', 'adj_core', 'gender')
+                    'independent', 'adj_core', 'gender', 'test_score')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'name', 'institution')
+    list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
     inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
     actions = ['delete_url_key']
 
+    def get_queryset(self, request):
+        # can't use select_related, because TeamManager always puts a select_related on this
+        return super().get_queryset(request).select_related('tournament')
+
     def delete_url_key(self, request, queryset):
         updated = queryset.update(url_key=None)
-        message = ungettext(
+        message = ngettext(
             "%(count)d adjudicator had their URL key removed.",
             "%(count)d adjudicators had their URL keys removed.",
             updated

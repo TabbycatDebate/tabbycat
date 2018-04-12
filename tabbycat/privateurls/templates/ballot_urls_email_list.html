@@ -10,6 +10,13 @@
 
 {% block content %}
 
+  {% if 'k' in tabbycat_version %}
+    {% blocktrans trimmed asvar message %}
+      Because you deployed the 'Tabbykitten' edition of Tabbycat your Heroku instance probably doesn't have the addon necessary to to send emails. You'll need to verify your Heroku account and install the <a href="https://elements.heroku.com/addons/sendgrid">SendGrid plugin manually.</a>
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='danger' %}
+  {% endif %}
+
   {% blocktrans trimmed asvar p1 %}
     Review the list of adjudicators who are due to be sent an email with their private ballot URL, then click the button at the bottom of the page to send the emails.
   {% endblocktrans %}

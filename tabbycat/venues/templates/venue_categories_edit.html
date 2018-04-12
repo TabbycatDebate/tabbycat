@@ -1,19 +1,13 @@
-{% extends "base_formset.html" %}
+{% extends "base.html" %}
 {% load add_field_css debate_tags i18n %}
 
 {% block head-title %}<span class="emoji">🏪</span> {% trans "Venue Categories" %}{% endblock %}
 {% block page-title %}🏪{% trans "Venue Categories" %}{% endblock %}
 
-{% block save-button-text %}{% trans "Save Venue Categories" %}{% endblock %}
-
 {% block content %}
 
   {% blocktrans trimmed asvar p1 %}
-    Venue categories allow you to
-    <ul>
-      <li>group venues together into "zones" to display in the draw and make navigation easier for participants, and/or</li>
-      <li>specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.</li>
-    </ul>
+    Venue categories allow you to group venues together into "zones" to display in the draw and make navigation easier for participants, and/or specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category.
   {% endblocktrans %}
 
   {% url 'admin:venues_venuecategory_changelist' as edit_db_url %}
@@ -23,6 +17,7 @@
 
   {% include "components/explainer-card.html" with type="info" %}
 
-  {{ block.super }}
+  {% trans "Save Venue Categories" as save_text %}
+  {% include "components/formset.html" with double=True %}
 
 {% endblock content %}

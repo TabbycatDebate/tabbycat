@@ -29,47 +29,48 @@ export default {
   mixins: [DroppableMixin],
   data: function () {
     return {
-      height: null, minHeight: 51, maxHeight: 400, // Defualt to null
+      height: null,
+      minHeight: 51,
+      maxHeight: 400, // Defualt to null
       startPosition: null,
     }
   },
   mounted: function () {
-    this.height = this.$refs.resizeableElement.clientHeight
+    this.height = this.boundedHeight(this.$refs.resizeableElement.clientHeight)
   },
   methods: {
-    handleDrop: function(event) {
+    handleDrop: function (event) {
       this.$eventHub.$emit('unassign-draggable', event)
     },
-    resizeStart: function(event) {
+    resizeStart: function (event) {
       event.preventDefault()
       this.startPosition = event.clientY
       window.addEventListener('mousemove', this.resizeMotion);
       window.addEventListener('mouseup', this.resizeEnd);
     },
-    resizeMotion: function(event) {
+    resizeMotion: function (event) {
       event.preventDefault()
-      var pos = event.clientY
-      var moved = (pos - this.startPosition) * 0.03
-      var newSize = this.height - moved
+      const pos = event.clientY
+      const moved = (pos - this.startPosition) * 0.03
+      const newSize = this.height - moved
       this.height = this.boundedHeight(newSize)
       if (this.height > this.maxHeight) {
         this.resizeEnd(event)
       }
     },
-    resizeEnd: function(event) {
+    resizeEnd: function (event) {
       event.preventDefault()
       window.removeEventListener('mousemove', this.resizeMotion);
       window.removeEventListener('mouseup', this.resizeEnd);
     },
-    boundedHeight: function(height) {
+    boundedHeight: function (height) {
       if (height > this.maxHeight) {
         return this.maxHeight
       } else if (height < this.minHeight) {
         return this.minHeight
-      } else {
-        return height
       }
-    }
-  }
+      return height
+    },
+  },
 }
 </script>

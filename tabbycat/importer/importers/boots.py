@@ -1,18 +1,38 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
 import adjallocation.models as am
+import availability.models as avm
 import adjfeedback.models as fm
 import breakqual.models as bm
+import motions.models as mm
 import tournaments.models as tm
 import participants.models as pm
 import venues.models as vm
 from participants.emoji import set_emoji
 
-from .base import BaseTournamentDataImporter, make_interpreter, make_lookup
+from .base import BaseTournamentDataImporter, convert_bool, make_interpreter, make_lookup
 
 
 class BootsTournamentDataImporter(BaseTournamentDataImporter):
     """Boots: Added for British Parliamentary convenience."""
+
+    order = [
+        'break_categories',
+        'rounds',
+        'institutions',
+        'speaker_categories',
+        'adjudicators',
+        'scores',
+        'teams',
+        'venues',
+        'team_conflicts',
+        'institution_conflicts',
+        'adjudicator_conflicts',
+        'team_institution_conflicts',
+        'adj_feedback_questions',
+        'motions',
+    ]
 
     lookup_round_stage = make_lookup("round stage", {
         ("preliminary", "p"): tm.Round.STAGE_PRELIMINARY,
@@ -33,35 +53,51 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         ("other", "o"): pm.Person.GENDER_OTHER,
     })
 
-    order = [
-        'break_categories',
-        'rounds',
-        'institutions',
-        'speaker_categories',
-        'adjudicators',
-        'scores',
-        'teams',
-        'venues',
-        'team_conflicts',
-        'institution_conflicts',
-        'team_institution_conflicts',
-    ]
+    lookup_feedback_answer_type = make_lookup("feedback answer type", {
+        ("checkbox"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_CHECKBOX,
+        ("yes no select", "yesno"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_BOOLEAN_SELECT,
+        ("integer textbox", "int", "integer"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_TEXTBOX,
+        ("integer scale", "scale"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
+        ("float"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_FLOAT,
+        ("text"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_TEXT,
+        ("textbox", "long text", "longtext"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT,
+        ("select single", "single select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_SINGLE_SELECT,
+        ("select multiple", "multiple select"): fm.AdjudicatorFeedbackQuestion.ANSWER_TYPE_MULTIPLE_SELECT,
+    })
+
+    def _adj_lookup(self, x):
+        return pm.Adjudicator.objects.get(
+                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x)
 
     def import_rounds(self, f):
-        round_interpreter = make_interpreter(
+        interpreter_part = make_interpreter(
             tournament=self.tournament,
             stage=self.lookup_round_stage,
             draw_type=self.lookup_draw_type,
             break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
         )
-        self._import(f, tm.Round, round_interpreter)
+
+        def interpreter(lineno, line):
+            line = interpreter_part(lineno, line)
+            if line.get('seq') is None:
+                line['seq'] = lineno - 1
+            return line
+
+        self._import(f, tm.Round, interpreter)
 
         # Set the round with the lowest known seqno to be the current round.
         self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
         self.tournament.save()
 
-    def import_institutions(self, f):
-        self._import(f, pm.Institution)
+    def import_institutions(self, f, auto_create_regions=True):
+        if auto_create_regions:
+            def region_interpreter(lineno, line):
+                if line.get('region'):
+                    return {'name': line['region']}  # otherwise return None
+            self._import(f, pm.Region, region_interpreter, expect_unique=False)
+
+        interpreter = make_interpreter(region=lambda x: pm.Region.objects.get(name=x))
+        self._import(f, pm.Institution, interpreter)
 
     def import_break_categories(self, f):
         interpreter = make_interpreter(tournament=self.tournament)
@@ -76,6 +112,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             institution=pm.Institution.objects.lookup,
             tournament=self.tournament,
             gender=self.lookup_gender,
+            DELETE=['category', lambda x: x.startswith('available:')],
         )
         adjudicators = self._import(f, pm.Adjudicator, interpreter)
 
@@ -88,14 +125,29 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                 }
         self._import(f, am.AdjudicatorInstitutionConflict, own_institution_conflict_interpreter)
 
+        content_type = ContentType.objects.get_for_model(pm.Adjudicator)
+
+        def adjudicator_availability_interpreter(lineno, line):
+            availability_columns = [col for col in line if col.startswith('available:')]
+            for col in availability_columns:
+                round_name = col[10:]  # length of 'available:'
+                round = tm.Round.objects.lookup(round_name)
+                if convert_bool(line[col]):
+                    yield {
+                        'content_type': content_type,
+                        'object_id': adjudicators[lineno].id,
+                        'round': round
+                    }
+
+        self._import(f, avm.RoundAvailability, adjudicator_availability_interpreter)
+
     def import_scores(self, f):
         # The base class can only create instances, it can't update existing ones.
         # To get around this, we create the histories first, and then set the scores
         # on adjudicators.
         interpreter = make_interpreter(
             round=None,
-            adjudicator=lambda x: pm.Adjudicator.objects.get(
-                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+            adjudicator=self._adj_lookup,
         )
         histories = self._import(f, fm.AdjudicatorTestScoreHistory, interpreter)
 
@@ -148,8 +200,10 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         self._import(f, pm.Speaker.categories.through, speaker_category_interpreter)
 
     def import_venues(self, f, auto_create_categories=True):
-        interpreter = make_interpreter(tournament=self.tournament, DELETE=['category'])
-        self._import(f, vm.Venue, interpreter)
+        interpreter = make_interpreter(tournament=self.tournament,
+            DELETE=['category', lambda x: x.startswith('available:')])
+
+        venues = self._import(f, vm.Venue, interpreter)
 
         if auto_create_categories:
             def venue_category_interpreter(lineno, line):
@@ -162,26 +216,47 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             if line.get('category'):
                 return {
                     'venuecategory': vm.VenueCategory.objects.get(name=line['category']),
-                    'venue': vm.Venue.objects.get(name=line['name'])
+                    'venue': venues[lineno],
                 }
 
         self._import(f, vm.VenueCategory.venues.through, venue_category_venue_interpreter)
 
+        content_type = ContentType.objects.get_for_model(vm.Venue)
+
+        def venue_availability_interpreter(lineno, line):
+            availability_columns = [col for col in line if col.startswith('available:')]
+            for col in availability_columns:
+                round_name = col[10:]  # length of 'available:'
+                round = tm.Round.objects.lookup(round_name)
+                if convert_bool(line[col]):
+                    yield {
+                        'content_type': content_type,
+                        'object_id': venues[lineno].id,
+                        'round': round
+                    }
+
+        self._import(f, avm.RoundAvailability, venue_availability_interpreter)
+
     def import_team_conflicts(self, f):
         interpreter = make_interpreter(
             team=lambda x: pm.Team.objects.lookup(name=x, tournament=self.tournament),
-            adjudicator=lambda x: pm.Adjudicator.objects.get(
-                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+            adjudicator=self._adj_lookup,
         )
         self._import(f, am.AdjudicatorConflict, interpreter)
 
     def import_institution_conflicts(self, f):
         interpreter = make_interpreter(
             institution=pm.Institution.objects.lookup,
-            adjudicator=lambda x: pm.Adjudicator.objects.get(
-                Q(tournament=self.tournament) | Q(tournament__isnull=True), name=x),
+            adjudicator=self._adj_lookup,
         )
         self._import(f, am.AdjudicatorInstitutionConflict, interpreter)
+
+    def import_adjudicator_conflicts(self, f):
+        interpreter = make_interpreter(
+            adjudicator=self._adj_lookup,
+            conflict_adjudicator=self._adj_lookup,
+        )
+        self._import(f, am.AdjudicatorAdjudicatorConflict, interpreter)
 
     def import_team_institution_conflicts(self, f):
         """Adds team conflicts for all adjudicators for the listed institution.
@@ -198,3 +273,17 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator': adj,
                 }
         self._import(f, am.AdjudicatorConflict, interpreter)
+
+    def import_adj_feedback_questions(self, f):
+        interpreter = make_interpreter(
+            tournament=self.tournament,
+            answer_type=self.lookup_feedback_answer_type,
+        )
+
+        self._import(f, fm.AdjudicatorFeedbackQuestion, interpreter)
+
+    def import_motions(self, f):
+        motions_interpreter = make_interpreter(
+            round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
+        )
+        self._import(f, mm.Motion, motions_interpreter)

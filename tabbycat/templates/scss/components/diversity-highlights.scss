@@ -11,17 +11,29 @@
   &.category-0 {
     @include hover-highlights($break-cat-1);
   }
+  &.category-0-disabled {
+    @include outline-highlights($break-cat-1);
+  }
 
   &.category-1 {
     @include hover-highlights($break-cat-2);
+  }
+  &.category-1-disabled {
+    @include outline-highlights($break-cat-2);
   }
 
   &.category-2 {
     @include hover-highlights($break-cat-3);
   }
+  &.category-2-disabled {
+    @include outline-highlights($break-cat-3);
+  }
 
   &.category-3 {
     @include hover-highlights($break-cat-4);
+  }
+  &.category-4-disabled {
+    @include outline-highlights($break-cat-4);
   }
 }
 

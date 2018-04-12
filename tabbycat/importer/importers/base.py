@@ -12,6 +12,18 @@ NON_FIELD_ERRORS = '__all__'
 DUPLICATE_INFO = 19  # Logging level just below INFO
 logging.addLevelName(DUPLICATE_INFO, 'DUPLICATE_INFO')
 
+TRUE_VALUES = ('true', 'yes', 't', 'y', '1')
+FALSE_VALUES = ('false', 'no', 'f', 'n', '0')
+
+
+def convert_bool(value):
+    if value.lower() in TRUE_VALUES:
+        return True
+    elif value.lower() in FALSE_VALUES:
+        return False
+    else:
+        raise ValueError('Invalid boolean value: %s' % (value,))
+
 
 def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
     """Convenience function for building an interpreter. The default interpreter
@@ -19,8 +31,14 @@ def make_interpreter(DELETE=[], **kwargs):  # noqa: N803
     removes blank values."""
     def interpreter(lineno, line):
         # remove blank and unwanted values
-        line = {fieldname: value for fieldname, value in line.items()
-                if value != '' and value is not None and fieldname not in DELETE}
+        line = {
+            fieldname: value for fieldname, value in line.items() if (
+                value != '' and
+                value is not None and
+                fieldname not in DELETE and
+                not any(callable(delete) and delete(fieldname) for delete in DELETE)
+            )
+        }
 
         # populate interpreted values
         for fieldname, interpret in kwargs.items():
@@ -194,6 +212,9 @@ class BaseTournamentDataImporter(object):
         if expect_unique is None:
             expect_unique = self.expect_unique
         skipped_because_existing = 0
+        boolean_fields = [field.name for field in model._meta.get_fields()
+                          if hasattr(field, 'get_internal_type') and
+                          field.get_internal_type() == 'BooleanField']
 
         for lineno, line in enumerate(reader, start=2):
 
@@ -223,6 +244,19 @@ class BaseTournamentDataImporter(object):
 
             # Create the instances
             for itemno, kwargs in enumerate(kwargs_list, start=1):
+
+                # Extra conversion for booleans (Django's BooleanField.to_python() is too restrictive)
+                boolean_error = False
+                for fieldname in kwargs:
+                    if fieldname in boolean_fields:
+                        try:
+                            kwargs[fieldname] = convert_bool(kwargs[fieldname])
+                        except ValueError as e:
+                            errors.add(lineno, model, str(e))
+                            boolean_error = True
+                if boolean_error:
+                    continue
+
                 description = model.__name__ + "(" + ", ".join(["%s=%r" % args for args in kwargs.items()]) + ")"
 
                 # Check if it's a duplicate

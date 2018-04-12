@@ -31,7 +31,7 @@ export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverTeamMixin],
   props: { 'team': Object, 'debateId': null, 'roundInfo': Object },
   computed: {
-    titleWithLimit: function() {
+    titleWithLimit: function () {
       var limit = 15
       if (this.team.short_name.length > limit + 2) {
         return this.team.short_name.substring(0, limit) + "…"
@@ -39,13 +39,13 @@ export default {
         return this.team.short_name
       }
     },
-    draggablePayload: function() {
+    draggablePayload: function () {
       return JSON.stringify({ team: this.team.id, debate: this.debateId })
     }
   },
   methods: {
-    handleDragStart: function(event) {},
-    handleDragEnd: function(event) {},
+    handleDragStart: function (event) {},
+    handleDragEnd: function (event) {},
   }
 }
 </script>

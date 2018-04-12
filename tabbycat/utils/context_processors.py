@@ -26,7 +26,7 @@ def debate_context(request):
 
 def get_menu_highlight(request):
     menu = {}
-    path = request.path
+    path = request.path.split('/')
     if "admin" in path:
         if "options" in path or "participants" in path or ("import" in path and "important" not in path):
             menu['options_nav'] = True
@@ -34,6 +34,10 @@ def get_menu_highlight(request):
                 menu['configuration_nav'] = True
             elif "list" in path:
                 menu['participants_nav'] = True
+            elif "institutions" in path:
+                menu['institutions_nav'] = True
+            elif "code-names" in path:
+                menu['code_names_nav'] = True
             elif "categories" in path:
                 menu['speaker_cats_nav'] = True
             elif "eligibility" in path:
@@ -75,8 +79,6 @@ def get_menu_highlight(request):
                 menu['standings_speaker_nav'] = True
             elif "reply" in path:
                 menu['standings_reply_nav'] = True
-            elif "motions" in path:
-                menu['feedback_motions_nav'] = True
             elif "diversity" in path:
                 menu['standings_diversity_nav'] = True
             else:
@@ -93,7 +95,7 @@ def get_menu_highlight(request):
             elif "motions" in path:
                 menu['motions_nav'] = True
             elif "checkin" in path:
-                menu['checkins_nav'] = True
+                menu['ballot_checkins_nav'] = True
             elif "results" in path:
                 menu['results_nav'] = True
 
@@ -106,46 +108,64 @@ def get_menu_highlight(request):
             else:
                 menu['break_overview_nav'] = True
 
+        elif "checkins" in path:
+            menu['checkins_nav'] = True
+            if "scan" in path:
+                menu['checkins_scans'] = True
+            elif "status" and "people" in path:
+                menu['checkins_people_statuses'] = True
+            elif "status" and "venues" in path:
+                menu['checkins_venues_statuses'] = True
+            elif "identifiers" in path:
+                menu['checkins_ids'] = True
+
         elif "overview" in path:
             return {"overview_nav": True} # Other sections have overviews; go after
-        elif "sides" in request.path:
+        elif "sides" in path:
             return {'sides_nav': True}
-        elif "division_allocations" in request.path:
+        elif "division_allocations" in path:
             return {'divisions_nav': True}
+        elif "motions/statistics" in path:
+            menu['motions_statistics_nav'] = True
+
     else: # PUBLIC
-        if "display" in request.path:
+        if "participants" in path and "list" in path:
+            return {'participants_nav': True}
+        elif "participants" in path and "institutions" in path:
+            return {'institutions_nav': True}
+        elif "display" in path:
             return {'display_nav': True}
-        elif "break" in request.path:
+        elif "break" in path:
             return {'break_nav': True}
-        elif "draw" in request.path:
+        elif "draw" in path:
             return {'draw_nav': True}
-        elif "motions" in request.path:
+        elif "motions" in path:
             return {'motions_nav': True}
-        elif "diversity" in request.path:
+        elif "diversity" in path:
             return {'diversity_nav': True}
-        elif "motions" in request.path:
-            return {'motions_nav': True}
-        elif "overview" in request.path:
+        elif "overview" in path:
             return {'overview_nav': True}
-        elif "results" in request.path and "add" in request.path:
+        elif "results" in path and "add" in path:
             return {'enter_ballots_nav': True}
-        elif "feedback" in request.path and "add" in request.path:
+        elif "feedback" in path and "add" in path:
             return {'enter_feedback_nav': True}
-        elif "results" in request.path and "admin" in request.path:
+        elif "results" in path and "admin" in path:
             return {'ballots_nav': True}
-        elif "results" in request.path:
+        elif "results" in path:
             return {'results_nav': True}
-        elif "standings" in request.path:
+        elif "checkins" in path:
+            return {'checkins_status': True}
+        elif "standings" in path:
             return {'standings_nav': True}
-        elif "tab" in request.path and "team" in request.path:
+        elif "tab" in path and "team" in path:
             return {'tab_team_nav': True}
-        elif "tab" in request.path and "speaker" in request.path:
+        elif "tab" in path and "speaker" in path:
             return {'tab_speaker_nav': True}
-        elif "tab" in request.path and "pros" in request.path:
+        elif "tab" in path and "pros" in path:
             return {'tab_pros_nav': True}
-        elif "tab" in request.path and "novices" in request.path:
+        elif "tab" in path and "novices" in path:
             return {'tab_novices_nav': True}
-        elif "tab" in request.path and "replies" in request.path:
+        elif "tab" in path and "replies" in path:
             return {'tab_replies_nav': True}
 
     return menu  # Context processors must return a dict

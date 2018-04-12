@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from draw.models import Debate
 from participants.models import Team
@@ -13,10 +13,8 @@ class ResultsTableBuilder(TabbycatTableBuilder):
     def get_status_meta(self, debate):
         if any(team.type == Team.TYPE_BYE for team in debate.teams):
             return "fast-forward", "", 5, _("Bye Debate")
-        elif debate.result_status == Debate.STATUS_NONE and not debate.ballot_in:
+        elif debate.result_status == Debate.STATUS_NONE:
             return "x", "text-danger", 0, _("No Ballot")
-        elif debate.result_status == Debate.STATUS_NONE and debate.ballot_in:
-            return "inbox", "text-primary", 1, _("Ballot is In")
         elif debate.result_status == Debate.STATUS_DRAFT:
             return "circle", "text-info", 2, _("Ballot is Unconfirmed")
         elif debate.result_status == Debate.STATUS_CONFIRMED:
@@ -26,7 +24,25 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         else:
             raise ValueError('Debate has no discernable status')
 
-    def add_ballot_status_columns(self, debates, key="Status"):
+    def add_ballot_check_in_columns(self, debates, key):
+
+        status_header = {
+            'key': key,
+            'tooltip': _("Whether this debate's ballot has been checked-in"),
+            'icon': "compass",
+        }
+        status_cells = []
+        for debate in debates:
+            cell = {
+                'icon': 'check' if debate.checked_in else 'x',
+                'class': 'text-primary' if debate.checked_in else 'text-muted',
+                'sort': 1 if debate.checked_in else 0,
+                'tooltip': debate.checked_tooltip
+            }
+            status_cells.append(cell)
+        self.add_column(status_header, status_cells)
+
+    def add_ballot_status_columns(self, debates, key):
 
         status_header = {
             'key': key,
@@ -55,7 +71,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             if not self.admin and ballotsub.discarded:
                 continue
 
-            link = reverse_tournament('results-ballotset-edit',
+            link = reverse_tournament('results-ballotset-edit' if self.admin else 'results-assistant-ballotset-edit',
                                       self.tournament,
                                       kwargs={'pk': ballotsub.id})
             ballotsubs_info += "<a href=" + link + " class='text-nowrap'>"
@@ -83,7 +99,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             ballotsubs_info += "</small>"
 
         if all(x.discarded for x in ballotsubmissions):
-            link = reverse_tournament('results-ballotset-new',
+            link = reverse_tournament('results-ballotset-new' if self.admin else 'results-assistant-ballotset-new',
                                       self.tournament,
                                       kwargs={'debate_id': debate.id})
             ballotsubs_info += "<a href=" + link + ">" + _("Enter Ballot")  + "</a>"
@@ -97,7 +113,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         self.add_column(entry_header, entry_cells)
 
         if self.tournament.pref('enable_postponements'):
-            postpones_header = {'key': _("Postpone")}
+            postpones_header = {'title': _("Postpone"), 'key': "postpone"}
             postpones_cells = []
             for debate in debates:
                 if debate.result_status == Debate.STATUS_POSTPONED:

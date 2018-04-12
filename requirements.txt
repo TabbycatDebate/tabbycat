@@ -3,15 +3,8 @@
 # Importing the base requirements
 -r requirements_common.txt
 
-# Base Heroku Requirements (from the toolbelt)
-dj-database-url==0.4.2
+# Base Heroku Requirements
+dj-database-url==0.5.0                  # From the heroku toolbelt
 
-# Mem-Caching
-pylibmc==1.5.2
-django-pylibmc==0.6.1
-
-# Monitoring (note the required heroku add-on is not added by default)
-newrelic
-
-# Emailing
-sendgrid
+# Misc
+sendgrid==5.3.0                         # Emailing

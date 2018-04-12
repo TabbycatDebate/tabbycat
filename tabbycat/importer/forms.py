@@ -5,7 +5,7 @@ from itertools import zip_longest
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
@@ -145,7 +145,13 @@ class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
     """Also provides for the boolean 'shared' field, which indicates that the
     adjudicator should not be attached to a tournament."""
 
-    shared = forms.BooleanField(initial=False, required=False)
+    shared_pref_name = None
+
+    def __init__(self, tournament, *args, **kwargs):
+        super().__init__(tournament, *args, **kwargs)
+
+        if self.shared_pref_name is None or tournament.pref(self.shared_pref_name):
+            self.fields['shared'] = forms.BooleanField(initial=False, required=False)
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -156,6 +162,8 @@ class SharedBetweenTournamentsObjectForm(BaseTournamentObjectDetailsForm):
 
 
 class VenueDetailsForm(SharedBetweenTournamentsObjectForm):
+
+    shared_pref_name = 'share_venues'
 
     class Meta:
         model = Venue
@@ -200,7 +208,8 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
     """Adds provision for a textarea input for speakers."""
 
     speakers = forms.CharField(required=True, label=_("Speakers' names")) # widget is set in form constructor
-    emails = forms.CharField(required=False, label=_("Speakers' email addresses")) # widget is set in form constructor
+    emails = forms.CharField(required=False, label=_("Speakers' email addresses"),
+        help_text=_("Optional, useful to include if distributing private URLs, list in same order as speakers' names")) # widget is set in form constructor
     short_reference = forms.CharField(widget=forms.HiddenInput, required=False) # doesn't actually do anything, just placeholder to avoid validation failure
 
     class Meta:
@@ -226,16 +235,17 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         nspeakers = tournament.pref('substantive_speakers')
         self.fields['speakers'].widget = forms.Textarea(attrs={'rows': nspeakers,
                 'placeholder': _("One speaker's name per line")})
+        self.fields['speakers'].help_text = _("Can be separated by newlines, tabs or commas")
         self.initial.setdefault('speakers', "\n".join(
                 _("Speaker %d") % i for i in range(1, nspeakers+1)))
         self.fields['emails'].widget = forms.Textarea(attrs={'rows': nspeakers,
-                'placeholder': _("Optional, one email address per line in same order as speakers' names.\n"
-                    "Used for private URL distribution.")})
+                'placeholder': "\n".join(_("speaker%d@example.edu") % i for i in range(1, nspeakers+1))})
 
     @staticmethod
     def _split_lines(data):
         """Split into list of names or emails; removing blank lines."""
-        items = data.split('\n')
+        items = data.replace('\t', '\n').replace(',', '\n')
+        items = items.split('\n')
         items = [item.strip() for item in items]
         items = [item for item in items if item]
         return items
@@ -308,12 +318,23 @@ class TeamDetailsFormSet(forms.BaseModelFormSet):
 
 class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitutionObjectDetailsForm):
 
+    shared_pref_name = 'share_adjs'
+
     class Meta:
         model = Adjudicator
         fields = ('name', 'test_score', 'institution', 'email')
         labels = {
             'test_score': _("Rating"),
         }
+
+    def clean_test_score(self):
+        test_score = self.cleaned_data['test_score']
+        min_score = self.tournament.pref('adj_min_score')
+        max_score = self.tournament.pref('adj_max_score')
+        if test_score < min_score or max_score < test_score:
+            self.add_error('test_score', _("This value must be between %(min)d and %(max)d.") %
+                {'min': min_score, 'max': max_score})
+        return test_score
 
     def save(self, commit=True):
         adj = super().save(commit=commit)

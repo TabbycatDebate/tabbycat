@@ -1,14 +1,18 @@
 <template>
   <div>
 
-    <div class="row" v-if="roundStatus === 'R' || roundStatus === 'C'">
+    <div class="row" v-if="ballot_statuses && ballot_statuses.length > 0">
 
       <div class="col">
         <div class="card mt-3">
           <div class="card-body">
-            <h5 class="mb-2 text-center">Ballots Status</h5>
-            <ballots-graph :poll-url="ballotsUrl"></ballots-graph>
+            <h5 class="mb-0 text-center">Ballots Status</h5>
           </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item text-secondary">
+              <ballots-graph :graph-data="ballot_statuses"></ballots-graph>
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -22,10 +26,11 @@
             <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="action in latestActions" :key="action.id"
+            <updates-list v-for="action in actionlogs" :key="action.id"
                           :item="action"></updates-list>
-            <li class="list-group-item text-secondary" v-if="!latestActions">Loading...</li>
-            <li class="list-group-item text-secondary" v-if="latestActions.length === 0">No Actions Yet</li>
+            <li class="list-group-item text-secondary" v-if="actionlogs.length === 0">
+              No Actions Yet
+            </li>
           </ul>
         </div>
       </div>
@@ -36,80 +41,59 @@
             <h5 class="mb-0">Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="result in latestResults" :key="result.id"
-                          :item="result"></updates-list>
-            <li class="list-group-item text-secondary" v-if="!latestResults">Loading...</li>
-            <li class="list-group-item text-secondary" v-if="latestResults.length === 0">No Results Yet</li>
+            <updates-list v-for="ballot in ballot_results" :key="ballot.id"
+                          :item="ballot"></updates-list>
+            <li class="list-group-item text-secondary" v-if="ballot_results.length === 0">
+              No Results Yet
+            </li>
           </ul>
         </div>
       </div>
+
     </div>
 
   </div>
 </template>
 
 <script>
-import UpdatesList from  '../../templates/graphs/UpdatesList.vue'
+import _ from 'lodash'
+import UpdatesList from '../../templates/graphs/UpdatesList.vue'
 import BallotsGraph from '../../templates/graphs/BallotsGraph.vue'
+import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 export default {
-  mixins: [],
+  mixins: [ WebSocketMixin ],
   components: { UpdatesList, BallotsGraph },
-  props: [ 'actionsUrl', 'resultsUrl', 'ballotsUrl', 'roundStatus'],
-  data: function() {
+  props: [ 'tournamentSlug', 'initialActions', 'initialBallots', 'initialGraphData'],
+  data: function () {
     return {
-      latestActions: false,
-      latestResults: false,
-      pollFrequency: 30000, // 30 seconds
+      actionlogs: this.initialActions,
+      ballot_results: this.initialBallots,
+      ballot_statuses: this.initialGraphData,
+      sockets: ['actionlogs', 'ballot_results', 'ballot_statuses'],
     }
   },
-  created: function() {
-    this.updateActions()
-    this.updateResults()
-  },
   methods: {
-    updateActions: function() {
-      this.fetchData(this.actionsUrl, 'actions');
-    },
-    updateResults: function() {
-      this.fetchData(this.resultsUrl, 'results');
-    },
-    fetchData: function (apiURL, resource) {
-      var xhr = new XMLHttpRequest()
-      var self = this
-      xhr.open('GET', apiURL)
-      xhr.onload = function () {
-        if (xhr.status == 403) {
-          console.debug('DEBUG: JSON TournamentOverview fetchData gave 403 error');
-          if (resource === 'actions') {
-            self.latestActions = [{ "user": "Log in to resume updates." }]
-            setTimeout(self.updateActions, self.pollFrequency);
-          } else {
-            self.latestResults = [{ "user": "Log in to resume updates." }]
-            setTimeout(self.updateResults, self.pollFrequency);
-          }
-        } else {
-          console.debug('DEBUG: JSON TournamentOverview fetchData onload:', xhr.responseText);
-          // We just catch all parsing errors below because these are often thrown
-          // by a 503 error being issues; typically due to unrelated factors
-          // (e.g. a round not being set). Errors in constructing the list
-          // should be flagged by the backend itself.
-          if (resource === 'actions') {
-            try {
-              self.latestActions = JSON.parse(xhr.responseText);
-            } finally {
-              setTimeout(self.updateActions, self.pollFrequency);
-            }
-          } else {
-            try {
-              self.latestResults = JSON.parse(xhr.responseText);
-            } finally {
-              setTimeout(self.updateResults, self.pollFrequency);
-            }
-          }
+    handleSocketMessage: function (payload, socketLabel) {
+      console.log('handleSocketMessage', socketLabel, ' : ', payload)
+      if (socketLabel === 'ballot_statuses') {
+        this.ballot_statuses = payload
+        return
+      }
+      // Check for duplicates; do a inline replace if so
+      let duplicateIndex = _.findIndex(this[socketLabel], function (i) {
+        return i.id == payload.id
+      })
+      if (duplicateIndex != -1) {
+        this[socketLabel][duplicateIndex] = payload
+      } else {
+        // Add new item to front
+        this[socketLabel].unshift(payload)
+        // Remove last item if at the limit
+        if (this[socketLabel].length >= 15) {
+          this[socketLabel].pop()
         }
       }
-      xhr.send()
     }
   }
 }

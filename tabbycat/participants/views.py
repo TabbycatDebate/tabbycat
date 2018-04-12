@@ -4,11 +4,11 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import ugettext_lazy, ungettext
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy, ngettext
+from django.utils.translation import gettext as _
 from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
@@ -16,13 +16,15 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
+from options.utils import use_team_code_names
+from participants.models import Institution
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin, CacheMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -45,35 +47,99 @@ class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class BaseParticipantsListView(VueTableTemplateView):
+# ==============================================================================
+# Lists of things
+# ==============================================================================
 
-    page_title = ugettext_lazy("Participants")
+class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
+
+    page_title = gettext_lazy("Participants")
     page_emoji = '🚌'
 
     def get_tables(self):
-        t = self.get_tournament()
-
-        adjudicators = t.adjudicator_set.select_related('institution')
-        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key=_("Name"))
+        adjudicators = self.tournament.adjudicator_set.select_related('institution')
+        adjs_table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         adjs_table.add_adjudicator_columns(adjudicators)
 
-        speakers = Speaker.objects.filter(team__tournament=t).select_related(
+        speakers = Speaker.objects.filter(team__tournament=self.tournament).select_related(
                 'team', 'team__institution').prefetch_related('team__speaker_set', 'categories')
-        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key=_("Team"))
+        if use_team_code_names(self.tournament, self.admin):
+            speakers = speakers.order_by('team__code_name')
+        else:
+            speakers = speakers.order_by('team__short_name')
+        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="team")
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
         return [adjs_table, speakers_table]
 
 
-class ParticipantsListView(BaseParticipantsListView, SuperuserRequiredMixin, TournamentMixin):
+class ParticipantsListView(AdministratorMixin, BaseParticipantsListView):
+    template_name = 'participants_list.html'
+    admin = True
+
+
+class PublicParticipantsListView(PublicTournamentPageMixin, CacheMixin, BaseParticipantsListView):
+    public_page_preference = 'public_participants'
+    admin = False
+
+
+class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
+
+    page_title = gettext_lazy("Institutions")
+    page_emoji = '🏫'
+
+    def get_table(self):
+        institutions = Institution.objects.select_related('region').filter(
+            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
+        ).annotate(
+            nteams=Count('team', distinct=True),
+            nadjs=Count('adjudicator', filter=Q(adjudicator__independent=False), distinct=True),
+            nias=Count('adjudicator', filter=Q(adjudicator__independent=True), distinct=True),
+        ).distinct()
+
+        table = TabbycatTableBuilder(view=self, sort_key='code')
+        table.add_column({'key': 'code', 'title': _("Code")}, [i.code for i in institutions])
+        table.add_column({'key': 'name', 'title': _("Full name")}, [i.name for i in institutions])
+        if any(i.region is not None for i in institutions):
+            table.add_column({'key': 'region', 'title': _("Region")},
+                [i.region.name if i.region else "—" for i in institutions])
+        table.add_column({'key': 'nteams', 'title': _("Teams"), 'tooltip': _("Number of teams")},
+            [i.nteams for i in institutions])
+        table.add_column({'key': 'nadjs', 'title': _("Adjs"),
+            'tooltip': _("Number of adjudicators, excluding independents")},
+            [i.nadjs for i in institutions])
+        table.add_column({'key': 'nadjs', 'title': _("IAs"),
+            'tooltip': _("Number of independent adjudicators")},
+            [i.nias for i in institutions])
+        return table
+
+
+class InstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
+    template_name = 'participants_list.html'
+    admin = True
+
+
+class PublicInstitutionsListView(PublicTournamentPageMixin, CacheMixin, BaseInstitutionsListView):
+    public_page_preference = 'public_institutions_list'
+    admin = False
+
+
+class CodeNamesListView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
 
     template_name = 'participants_list.html'
+    page_title = gettext_lazy("Code Names")
+    page_emoji = '🕵'
 
-
-class PublicParticipantsListView(BaseParticipantsListView, PublicTournamentPageMixin, CacheMixin):
-
-    public_page_preference = 'public_participants'
+    def get_table(self):
+        teams = self.tournament.team_set.select_related('institution')
+        table = TabbycatTableBuilder(view=self, sort_key='code_name')
+        table.add_column(
+            {'key': 'code_name', 'title': _("Code name")},
+            [{'emoji': t.emoji, 'text': t.code_name or "—"} for t in teams]
+        )
+        table.add_team_columns(teams, hide_emoji=True)
+        return table
 
 
 # ==============================================================================
@@ -84,9 +150,13 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
 
     allow_null_tournament = True
 
+    def use_team_code_names(self):
+        return use_team_code_names(self.tournament, self.admin)
+
     def get_context_data(self, **kwargs):
         kwargs['admin_page'] = self.admin
-        kwargs['draw_released'] = self.get_tournament().current_round.draw_status == Round.STATUS_RELEASED
+        kwargs['draw_released'] = self.tournament.current_round.draw_status == Round.STATUS_RELEASED
+        kwargs['use_code_names'] = self.use_team_code_names()
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -100,14 +170,16 @@ class BaseTeamRecordView(BaseRecordView):
     template_name = 'team_record.html'
 
     def get_page_title(self):
-        return _("Record for %(name)s") % {'name': self.object.long_name}
+        # This has to be in Python so that the emoji can be team-dependent.
+        name = self.object.code_name if self.use_team_code_names() else self.object.long_name
+        return _("Record for %(name)s") % {'name': name}
 
     def get_page_emoji(self):
-        if self.get_tournament().pref('show_emoji'):
+        if self.tournament.pref('show_emoji'):
             return self.object.emoji
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         try:
             kwargs['debateteam'] = self.object.debateteam_set.select_related(
@@ -116,13 +188,14 @@ class BaseTeamRecordView(BaseRecordView):
         except ObjectDoesNotExist:
             kwargs['debateteam'] = None
 
+        kwargs['team_short_name'] = self.object.code_name if self.use_team_code_names() else self.object.short_name
         kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, tournament)
 
         return super().get_context_data(**kwargs)
 
     def get_table(self):
         """On team record pages, the table is the results table."""
-        tournament = self.get_tournament()
+        tournament = self.tournament
         teamscores = TeamScore.objects.filter(
             debate_team__team=self.object,
             ballot_submission__confirmed=True,
@@ -149,7 +222,7 @@ class BaseTeamRecordView(BaseRecordView):
         populate_opponents([ts.debate_team for ts in teamscores])
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TeamResultTableBuilder(view=self, title="Results", sort_key="Round")
+        table = TeamResultTableBuilder(view=self, title=_("Results"), sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
@@ -176,11 +249,9 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return _("Record for %(name)s") % {'name': self.object.name}
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-
         try:
             kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round=tournament.current_round
+                debate__round=self.tournament.current_round
             ).select_related(
                 'debate__round'
             ).prefetch_related(
@@ -189,13 +260,12 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         except ObjectDoesNotExist:
             kwargs['debateadjudications'] = None
 
-        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, tournament)
+        kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, self.tournament)
 
         return super().get_context_data(**kwargs)
 
     def get_table(self):
         """On adjudicator record pages, the table is the previous debates table."""
-        tournament = self.get_tournament()
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=self.object,
         ).select_related(
@@ -206,33 +276,33 @@ class BaseAdjudicatorRecordView(BaseRecordView):
             'debate__debateteam_set__team__speaker_set',
             'debate__round__motion_set',
         )
-        if not self.admin and not tournament.pref('all_results_released'):
+        if not self.admin and not self.tournament.pref('all_results_released'):
             debateadjs = debateadjs.filter(
                 debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False,
-                debate__round__seq__lt=tournament.current_round.seq,
+                debate__round__seq__lt=self.tournament.current_round.seq,
             )
         debates = [da.debate for da in debateadjs]
         populate_wins(debates)
         populate_confirmed_ballots(debates, motions=True, results=True)
 
-        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="Round")
+        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="round")
         table.add_round_column([debate.round for debate in debates])
         table.add_debate_results_columns(debates)
         table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
 
-        if self.admin or tournament.pref('public_motions'):
+        if self.admin or self.tournament.pref('public_motions'):
             table.add_debate_motion_column(debates)
 
         table.add_debate_ballot_link_column(debates)
         return table
 
 
-class TeamRecordView(SuperuserRequiredMixin, BaseTeamRecordView):
+class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
     admin = True
 
 
-class AdjudicatorRecordView(SuperuserRequiredMixin, BaseAdjudicatorRecordView):
+class AdjudicatorRecordView(AdministratorMixin, BaseAdjudicatorRecordView):
     admin = True
 
 
@@ -250,7 +320,7 @@ class PublicAdjudicatorRecordView(PublicTournamentPageMixin, BaseAdjudicatorReco
 # Speaker categories
 # ==============================================================================
 
-class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, ModelFormSetView):
+class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
     # The tournament is included in the form as a hidden input so that
     # uniqueness checks will work. Since this is a superuser form, they can
     # access all tournaments anyway, so tournament forgery wouldn't be a
@@ -270,17 +340,17 @@ class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, Tourname
         }
 
     def get_formset_queryset(self):
-        return SpeakerCategory.objects.filter(tournament=self.get_tournament())
+        return SpeakerCategory.objects.filter(tournament=self.tournament)
 
     def get_formset_kwargs(self):
         return {
-            'initial': [{'tournament': self.get_tournament()}] * 2,
+            'initial': [{'tournament': self.tournament}] * 2,
         }
 
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            message = ungettext("Saved speaker category: %(list)s",
+            message = ngettext("Saved speaker category: %(list)s",
                 "Saved speaker categories: %(list)s",
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
@@ -288,14 +358,14 @@ class EditSpeakerCategoriesView(LogActionMixin, SuperuserRequiredMixin, Tourname
         else:
             messages.success(self.request, _("No changes were made to the speaker categories."))
         if "add_more" in self.request.POST:
-            return redirect_tournament('participants-speaker-categories-edit', self.get_tournament())
+            return redirect_tournament('participants-speaker-categories-edit', self.tournament)
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('participants-list', self.get_tournament())
+        return reverse_tournament('participants-list', self.tournament)
 
 
-class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin, VueTableTemplateView):
+class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     # form_class = forms.SpeakerCategoryEligibilityForm
     template_name = 'edit_speaker_eligibility.html'
@@ -303,16 +373,15 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
     page_emoji = '🍯'
 
     def get_table(self):
-        t = self.get_tournament()
         table = TabbycatTableBuilder(view=self, sort_key='team')
-        speakers = Speaker.objects.filter(team__tournament=t).select_related(
+        speakers = Speaker.objects.filter(team__tournament=self.tournament).select_related(
             'team', 'team__institution').prefetch_related('categories')
         table.add_speaker_columns(speakers, categories=False)
         table.add_team_columns([speaker.team for speaker in speakers])
-        speaker_categories = self.get_tournament().speakercategory_set.all()
+        speaker_categories = self.tournament.speakercategory_set.all()
 
         for sc in speaker_categories:
-            table.add_column(sc.name, [{
+            table.add_column({'key': sc.name, 'title': sc.name}, [{
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,
@@ -321,15 +390,15 @@ class EditSpeakerCategoryEligibilityView(SuperuserRequiredMixin, TournamentMixin
         return table
 
     def get_context_data(self, **kwargs):
-        speaker_categories = self.get_tournament().speakercategory_set.all()
+        speaker_categories = self.tournament.speakercategory_set.all()
         json_categories = [bc.serialize for bc in speaker_categories]
         kwargs["speaker_categories"] = json.dumps(json_categories)
         kwargs["speaker_categories_length"] = speaker_categories.count()
-        kwargs["save"] = reverse_tournament('participants-speaker-update-eligibility', self.get_tournament())
+        kwargs["save"] = reverse_tournament('participants-speaker-update-eligibility', self.tournament)
         return super().get_context_data(**kwargs)
 
 
-class UpdateEligibilityEditView(LogActionMixin, SuperuserRequiredMixin, View):
+class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
 
     def set_category_eligibility(self, speaker, sent_status):
@@ -378,7 +447,7 @@ class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, ModelFormSetView)
 
     def get_success_url(self):
         return reverse_tournament('participants-public-confirm-shift',
-                self.get_tournament(), kwargs={'url_key': self.object.url_key})
+                self.tournament, kwargs={'url_key': self.object.url_key})
 
     def get_formset_queryset(self):
         return self.object.debateadjudicator_set.all()

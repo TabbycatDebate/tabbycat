@@ -2,26 +2,26 @@
 
 <div class="btn-group flex-wrap">
 
-  <a class="btn btn-outline-primary {% if standings_overview_nav %}active disabled{% endif %}"
+  <a class="btn btn-outline-primary {% if standings_overview_nav %}active{% endif %}"
      href="{% roundurl 'standings-index' current_round %}">
     {% trans "Overview" %}
   </a>
-  <a class="btn btn-outline-primary {% if standings_team_nav %}active disabled{% endif %}"
+  <a class="btn btn-outline-primary {% if standings_team_nav %}active{% endif %}"
      href="{% roundurl 'standings-team' current_round %}">
     {% trans "Teams" %}
   </a>
   {% if pref.enable_divisions %}
-  <a class="btn btn-outline-primary {% if standings_division_nav %}active disabled{% endif %}"
+  <a class="btn btn-outline-primary {% if standings_division_nav %}active{% endif %}"
      href="{% roundurl 'standings-division' current_round %}">
     {% trans "Divisions" %}
   </a>
   {% endif %}
-  <a class="btn btn-outline-primary {% if standings_speaker_nav %}active disabled{% endif %}"
+  <a class="btn btn-outline-primary {% if standings_speaker_nav %}active{% endif %}"
      href="{% roundurl 'standings-speaker' current_round %}">
     {% trans "Speakers" %}
   </a>
   {% if pref.reply_scores_enabled %}
-    <a class="btn btn-outline-primary {% if standings_reply_nav %}active disabled{% endif %}"
+    <a class="btn btn-outline-primary {% if standings_reply_nav %}active{% endif %}"
        href="{% roundurl 'standings-reply' current_round %}">
       {% trans "Replies" %}
     </a>
@@ -39,11 +39,11 @@
 
 <div class="btn-group">
 
-  <a class="btn btn-outline-primary {% if feedback_motions_nav %}active disabled{% endif %}"
-     href="{% roundurl 'standings-motion' current_round %}">
-    {% trans "Motions Balance" %}
+  <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}"
+     href="{% tournamenturl 'motions-statistics' %}">
+    {% trans "Motion Statistics" %}
   </a>
-  <a class="btn btn-outline-primary {% if standings_diversity_nav %}active disabled{% endif %}"
+  <a class="btn btn-outline-primary {% if standings_diversity_nav %}active{% endif %}"
      href="{% roundurl 'standings-diversity' current_round %}">
     {% trans "Diversity Overview" %}
   </a>

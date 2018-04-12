@@ -1,11 +1,11 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
-    seq = models.IntegerField(
+    seq = models.IntegerField(default=1,
         verbose_name=_("sequence number"),
         help_text=_("The order in which motions are displayed"))
     text = models.TextField(max_length=500,

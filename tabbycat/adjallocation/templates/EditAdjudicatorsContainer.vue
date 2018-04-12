@@ -1,11 +1,11 @@
 <template>
   <div class="draw-container allocation-container">
 
-    <allocation-actions :round-info="roundInfo"
+    <allocation-actions :round-info="roundInfo" :sharding="sharding.enabled"
                         :percentiles="percentileThresholds"></allocation-actions>
 
     <div class="row">
-      <div class="mb-3 col allocation-messages" id="messages-container"></div>
+      <div class="mt-3 col allocation-messages" id="messages-container"></div>
     </div>
 
     <div class="mb-3">
@@ -16,10 +16,11 @@
              @click="updateSorting('importance')" data-toggle="tooltip"
              title="The debate's priority. Higher priorities will be allocated
               better adjudicators during auto-allocation." >
-          <span class="tooltip-trigger">Priority</span>
-          <div :class="sortClasses('importance')">
-            <span class="sorting-placeholder-for-width"></span>
-            <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+          <div class="d-flex align-items-end">
+            <span class="tooltip-trigger">Priority</span>
+            <div :class="sortClasses('importance')">
+              <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+            </div>
           </div>
         </div>
 
@@ -31,17 +32,23 @@
         <template slot="hpanel">
           <div :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
-            <span>Chair</span>
+            <div class="d-flex align-items-end">
+              <span>Chair</span>
+            </div>
           </div>
           <div v-if="adjPositions.indexOf('P') !== -1"
                :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 17: 16)]">
-            <span>Panel</span>
+            <div class="d-flex align-items-end">
+              <span>Panel</span>
+            </div>
           </div>
           <div v-if="adjPositions.indexOf('T') !== -1"
                :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10: 16)]">
-            <span>Trainees</span>
+            <div class="d-flex align-items-end">
+              <span>Trainees</span>
+            </div>
           </div>
         </template>
 
@@ -70,7 +77,7 @@
       </debate>
     </div>
 
-    <unallocated-items-container>
+    <unallocated-items-container v-if="!sharding.enabled">
       <div v-for="unallocatedAdj in unallocatedAdjsByOrder">
         <draggable-adjudicator :adjudicator="unallocatedAdj"
                                :percentiles="percentileThresholds"
@@ -79,47 +86,53 @@
     </unallocated-items-container>
 
     <slide-over :subject="slideOverSubject"></slide-over>
+    <allocation-intro-modal :show-intro-modal="showIntroModal"
+                            :round-info="roundInfo"></allocation-intro-modal>
 
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
+import percentile from 'stats-percentile'
+
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
+import AutoImportanceLogicMixin from '../../templates/allocations/AutoImportanceLogicMixin.vue'
 import HighlightableContainerMixin from '../../templates/allocations/HighlightableContainerMixin.vue'
 import AllocationActions from '../../templates/allocations/AllocationActions.vue'
+import AllocationIntroModal from '../../templates/allocations/AllocationIntroModal.vue'
 import DebateImportance from '../../templates/allocations/DebateImportance.vue'
 import DebatePanel from '../../templates/allocations/DebatePanel.vue'
 import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
-import percentile from 'stats-percentile'
-import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           HighlightableContainerMixin],
-  components: { AllocationActions, DebateImportance, DebatePanel, DraggableAdjudicator },
-  created: function() {
-    this.$eventHub.$on('update-importance', this.updateImportance)
+           AutoImportanceLogicMixin, HighlightableContainerMixin],
+  components: { AllocationActions, AllocationIntroModal, DebateImportance,
+                DebatePanel, DraggableAdjudicator },
+  props: { showIntroModal: Boolean },
+  created: function () {
     // Watch for global conflict highlights
     this.$eventHub.$on('show-conflicts-for', this.setOrUnsetConflicts)
   },
   computed: {
-    unallocatedAdjsByOrder: function() {
+    unallocatedAdjsByOrder: function () {
       if (this.roundInfo.roundIsPrelim === true) {
         return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
       } else {
         return _.sortBy(this.unallocatedItems, ['name'])
       }
     },
-    adjudicatorsById: function() {
+    adjudicatorsById: function () {
       // Override DrawContainer() method to include unallocated
       return _.keyBy(this.adjudicators.concat(this.unallocatedItems), 'id')
     },
-    percentileThresholds: function() {
+    percentileThresholds: function () {
       // For determining feedback rankings
-      var allScores = _.map(this.adjudicatorsById, function(adj) {
+      var allScores = _.map(this.adjudicatorsById, function (adj) {
         return parseFloat(adj.score)
       }).sort()
       var thresholds = []
@@ -133,7 +146,7 @@ export default {
       thresholds.push({'grade': "F", 'cutoff': 0, 'percentile': 10})
       return thresholds
     },
-    adjPositions: function() {
+    adjPositions: function () {
       return this.roundInfo.adjudicatorPositions // Convenience
     },
   },
@@ -142,7 +155,7 @@ export default {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move
         var thisDebate = this.debatesById[payload.debate]
-        var fromPanellist = _.find(thisDebate.debateAdjudicators, function(da) {
+        var fromPanellist = _.find(thisDebate.debateAdjudicators, function (da) {
           return da.adjudicator.id === payload.adjudicator;
         })
         if (assignedPosition === fromPanellist.position) {
@@ -157,22 +170,6 @@ export default {
       }
       this.saveMove(payload.adjudicator, payload.debate)
     },
-    updateImportance: function(debateID, importance) {
-      var debate = _.find(this.debates, { 'id': debateID })
-      if (_.isUndefined(debate)) {
-        this.ajaxError("Debate\'s importance", "", "Couldnt find debate to update")
-      }
-      var url = this.roundInfo.updateImportanceURL
-      var message = 'debate ' + debate.id + '\'s importance'
-      var payload = { debate_id: debate.id, importance: importance }
-      this.ajaxSave(url, payload, message, this.processImportanceSaveSuccess, null, null)
-    },
-    processImportanceSaveSuccess: function(dataResponse, payload, returnPayload) {
-      var debateIndex = _.findIndex(this.debates, { 'id': payload.debate_id})
-      if (debateIndex !== -1) {
-        this.debates[debateIndex].importance = payload.importance
-      }
-    }
   }
 }
 </script>

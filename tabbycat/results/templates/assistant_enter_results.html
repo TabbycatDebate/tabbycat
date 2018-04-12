@@ -1,6 +1,18 @@
 {% extends "enter_results.html" %}
 {% load static debate_tags i18n %}
 
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'results-assistant-round-list' %}">
+    <i data-feather="chevron-left"></i>
+    {% trans "Back to All Results" %}
+  </a>
+  {% if not new %}
+    <a class="btn btn-primary" href="{% tournamenturl 'results-assistant-ballotset-new' debate.id %}">
+      {% trans "Create a new ballot set for this debate" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   <form id="resultsForm" action="." method="POST">
     {% csrf_token %}
@@ -24,8 +36,14 @@
           <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
           <input id="id_discarded" type="hidden" name="discarded" value="False" />
           <input id="id_confirmed" type="hidden" name="confirmed" value="True" />
-          <input id="correct" {% if request.user == ballotsub.submitter %}disabled="disabled"{% endif %} class="btn {% if request.user != ballotsub.submitter %}btn-success{% endif %} btn-block" type="submit" value="{% trans "Confirm results" %}" tabindex="{{ form.nexttabindex }}" />
-          <input id="incorrect" class="btn btn-danger btn-block" type="button" value="{% trans "Results are incorrect" %}" tabindex="{{ form.nexttabindex|add:1 }}" />
+          <div class="row">
+            <div class="col">
+              <input id="correct" {% if request.user == ballotsub.submitter %}disabled="disabled"{% endif %} class="btn {% if request.user != ballotsub.submitter %}btn-success{% endif %} btn-block" type="submit" value="{% trans "Confirm results" %}" tabindex="{{ form.nexttabindex }}" />
+            </div>
+            <div class="col">
+              <input id="incorrect" class="btn btn-danger btn-block" type="button" value="{% trans "Results are incorrect" %}" tabindex="{{ form.nexttabindex|add:1 }}" />
+            </div>
+          </div>
         {% endif %}
       </div>
     </div>

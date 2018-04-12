@@ -204,7 +204,7 @@ Importing data: participants
 
 - Check you have emails/phone numbers included in your data that will be imported (presuming your tabbing software supports this) there are useful to have on hand later for either emailing out information or quickly following up errant adjudicators.
 - Often, the easiest way to prepare registration data for tab imports is to create new tabs in the registration spreadsheet, and use referencing to automatically order and arrange their data into the format your tab software wants. If the registration data changes significantly this will also make it easier to re-import things.
-- Often some adjudicators, typically local independents, may not be available for all rounds. Try and find out who this affects and when; once data has been imported you can :ref:`pre-check these adjudicators in and out of rounds <check-ins>` (if your tab software supports this; otherwise note it for later).
+- Often some adjudicators, typically local independents, may not be available for all rounds. Try and find out who this affects and when; once data has been imported you can :ref:`pre-check these adjudicators in and out of rounds <availability>` (if your tab software supports this; otherwise note it for later).
 - Remember that the swing team(s) probably also need to be imported into the tab.
 
 Data import: rooms
@@ -213,7 +213,7 @@ Data import: rooms
 .. rst-class:: spaced-list
 
 - Ideally you want not just a list of rooms, but also of their types and categories — i.e. what building a room is in and/or it will be coded so that participants can find it.
-- You want to know if access to some rooms is conditional; i.e. if some rooms are only available for some rounds. Again, if your tab software supports it you can :ref:`record this availability information into the system <check-ins>` (once data is imported) otherwise you can note it for later.
+- You want to know if access to some rooms is conditional; i.e. if some rooms are only available for some rounds. Again, if your tab software supports it you can :ref:`record this availability information into the system <availability>` (once data is imported) otherwise you can note it for later.
 - Registration should have collected information about accessibility requirements; they should be imported into your tab software (if it :ref:`supports automatically matching accessibility requirements <venue-constraints>`) or note for later. In general you will also want to use a similar process to ensure that members of the adjudication core are assigned rooms that are close to the tab room.
 - You also want some idea of priority; that is to say if some rooms are inconvenient (and you have more rooms than you need) they should be marked as a low priority so they will be allocated only if needed. Again, this might be automatically done by your tab software or something you will need to note and manually change after each draw is made.
 

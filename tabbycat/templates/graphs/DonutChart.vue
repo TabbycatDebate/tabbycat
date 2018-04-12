@@ -22,13 +22,13 @@ export default {
     padding: { type: Number, default: 1 },
     regions: Array,
   },
-  mounted: function() {
+  mounted: function () {
     if (this.graphData !== undefined && this.total > 0) {
       InitChart(this); // Only init if we have some info
     }
   },
   computed: {
-    total: function() {
+    total: function () {
       var total = 0;
       for (var i = 0; i < this.graphData.length; i++) {
         total += this.graphData[i].count;
@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    colorclass: function(label) {
+    colorclass: function (label) {
       if (this.regions == null) {
         return "gender-display gender-" + label.toLowerCase();
       } else {
@@ -55,7 +55,7 @@ export default {
         return this.regions[label -1].name;
       }
     },
-    percentage: function(quantity) {
+    percentage: function (quantity) {
       return " (" + Math.round(quantity / this.total * 100) + "%)";
     }
   }
@@ -66,11 +66,11 @@ function InitChart(vueContext){
 
   // Female - Male - Other - Unknown
 
-  var pie = d3.layout.pie()
-      .value(function(d) { return d.count; })
+  var pie = d3.pie()
+      .value(function (d) { return d.count; })
       .sort(null);
 
-  var arc = d3.svg.arc()
+  var arc = d3.arc()
       .innerRadius(vueContext.radius - (vueContext.radius / 2))
       .outerRadius(vueContext.radius - vueContext.padding * 2);
 
@@ -83,14 +83,14 @@ function InitChart(vueContext){
   var path = svg.selectAll("path")
       .data(pie(vueContext.graphData.reverse()))
     .enter().append("path")
-      .attr("class", function(d, i) { return "d3-hoverable " + vueContext.colorclass(vueContext.graphData[i].label); })
+      .attr("class", function (d, i) { return "hoverable " + vueContext.colorclass(vueContext.graphData[i].label); })
       .attr("d", arc)
 
   var tooltip = d3.select("body").append("div")
     .attr("class", "d3-tooltip tooltip")
     .style("opacity", 0);
 
-  path.on('mouseover', function(d, i) {
+  path.on('mouseover', function (d, i) {
     tooltip.html("<div class='tooltip-inner'>" +
       vueContext.graphData[i].count + " " +
       vueContext.percentage(vueContext.graphData[i].count) +
@@ -103,7 +103,7 @@ function InitChart(vueContext){
     d3.select(this).style('opacity', 0.5);
   });
 
-  path.on('mouseout', function(d) {
+  path.on('mouseout', function (d) {
     tooltip.style('opacity', 0)
     d3.select(this).style('opacity', 1);
   });

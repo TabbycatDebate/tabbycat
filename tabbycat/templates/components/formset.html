@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<form method="POST">
+  {% csrf_token %}
+
+  <div class="card mt-3">
+
+    {% if formset.errors %}
+      {% include "components/form-errors.html" with errors=formset.non_form_errors %}
+    {% endif %}
+    {{ formset.management_form }}
+
+    {% for form in formset %}
+      {% include "components/form-main.html" %}
+    {% endfor %}
+
+    <div class="list-group-item pt-3 pb-3">
+      <div class="row">
+        <div class="col">
+          <input class="btn btn-block btn-success" type="submit" name="submit" value="{{ save_text }}" />
+        </div>
+        <div class="col mt-md-0 mt-3">
+          <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>

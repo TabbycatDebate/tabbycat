@@ -55,11 +55,13 @@ formats too. If you're looking for a general overview of the software, check out
    features/adjudicator-allocation
    features/backups
    features/breaks
+   features/check-ins
    features/data-entry
    features/draw-generation
    features/draw-generation-bp
    features/printing
    features/standings-rules
+   features/team-code-names
    features/data-importers
    features/user-accounts
    features/venue-constraints

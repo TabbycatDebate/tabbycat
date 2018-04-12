@@ -15,24 +15,13 @@
 
   {% if unchanged_preferences|length > 0 %}
 
-    <ul class="list-group">
-      <li class="list-group-item">
-        <h4>{% trans "Preferences that will not change" %} ({{ unchanged_preferences|length }})</h4>
-      </li>
-      {% for preference in unchanged_preferences %}
-        <li class="list-group-item">
-          <span class="badge badge-secondary">{{ preference.new_value }}</span>
-          <span data-toggle="tooltip" title="{{ preference.help_text }}">
-            {{ preference.name }}
-          </span>
-        </li>
-      {% endfor %}
-    </ul>
+    {% trans "Preferences that will not change" as title %}
+    {% include "preferences_state.html" with preferences=unchanged_preferences no_change=True %}
 
   {% endif %}
 
   {% trans "Preferences that will change" as title %}
-  {% include "preferences_changed.html" with preferences=changed_preferences %}
+  {% include "preferences_state.html" with preferences=changed_preferences %}
 
   <div class="card mt-3">
     <ul class="list-group list-group-flush">

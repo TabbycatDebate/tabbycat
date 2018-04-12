@@ -7,7 +7,7 @@ from participants.models import Adjudicator, Speaker
 class PublicParticipantsViewTestCase(ConditionalTableViewTestsMixin, TestCase):
 
     view_toggle = 'public_features__public_participants'
-    view_name = 'public_participants'
+    view_name = 'participants-public-list'
 
     def table_data_a(self):
         # Check number of adjs matches

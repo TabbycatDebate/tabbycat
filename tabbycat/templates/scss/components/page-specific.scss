@@ -1,5 +1,22 @@
 //------------------------------------------------------------------------------
-// Checkins
+// Checkins Statis
+//------------------------------------------------------------------------------
+
+.animated-list-enter-active {
+  transition: all .3s ease;
+}
+
+.animated-list-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.animated-list-enter, .animated-list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+//------------------------------------------------------------------------------
+// Availabilities Overview
 //------------------------------------------------------------------------------
 
 .progress {
@@ -16,6 +33,26 @@
 .progress-empty span {
   color: #000; // If its showing 0/x make the text visible and not flush
   margin-left: 10px;
+}
+
+//------------------------------------------------------------------------------
+// Check-In Scanner
+//------------------------------------------------------------------------------
+
+.scan-container {
+  position: relative;
+
+  video, canvas {
+    max-width: 60%;
+    width: 60%;
+    margin: 0 20%;
+  }
+}
+
+.drawingBuffer {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 //------------------------------------------------------------------------------
@@ -44,6 +81,14 @@
 
 .progress-bar-co {
   background-color: $co;
+}
+
+.progress-bar-advancing {
+  background-color: $green;
+}
+
+.progress-bar-eliminated {
+  background-color: $red;
 }
 
 .text-aff {

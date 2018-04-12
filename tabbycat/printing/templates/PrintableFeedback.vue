@@ -32,19 +32,19 @@
 </template>
 
 <script>
-import PrintableFeedbackQuestion from './PrintableFeedbackQuestion.vue'
 import _ from 'lodash'
+import PrintableFeedbackQuestion from './PrintableFeedbackQuestion.vue'
 
 export default {
   components: { PrintableFeedbackQuestion },
   computed: {
-    questionsOrderedBySeq: function() {
+    questionsOrderedBySeq: function () {
       return _.orderBy(this.roundInfo.questions, 'seq', ['asc'])
     },
-    adjQuestions: function() {
+    adjQuestions: function () {
       return _.filter(this.questionsOrderedBySeq, ['from_adj', true])
     },
-    teamQuestions: function() {
+    teamQuestions: function () {
       return _.filter(this.questionsOrderedBySeq, ['from_team', true])
     },
   },

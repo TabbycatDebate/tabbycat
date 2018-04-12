@@ -3,6 +3,9 @@
 
 {% block page-subnav-sections %}{% endblock %}<!-- No need for searching -->
 
+{# Note "team_short_name" is set by the View to be the team's code name if code
+names are relevant, or to the team's real name if it is not. #}
+
 {% block content %}
 
   <div class="card-deck">
@@ -35,11 +38,11 @@
                     {% team_record_link debateteam.opponent.team admin_page as opponent %}
 
                     {% if debate.sides_confirmed %}
-                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+                      {% blocktrans trimmed with team_name=team_short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
                         {{ team_name }} is debating as the <strong>{{ side }}</strong> team against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% else %}
-                      {% blocktrans trimmed with team_name=team.short_name venue=debate.venue.display_name|default:venue_tba %}
+                      {% blocktrans trimmed with team_name=team_short_name venue=debate.venue.display_name|default:venue_tba %}
                         {{ team_name }} is debating against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% endif %}
@@ -48,11 +51,11 @@
                   {% elif pref.teams_in_debate == 'bp' %}
 
                     {% if debate.sides_confirmed %}
-                      {% blocktrans trimmed with team_name=team.short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+                      {% blocktrans trimmed with team_name=team_short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
                         {{ team_name }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% else %}
-                      {% blocktrans trimmed with team_name=team.short_name venue=debate.venue.display_name|default:venue_tba %}
+                      {% blocktrans trimmed with team_name=team_short_name venue=debate.venue.display_name|default:venue_tba %}
                         {{ team_name }} is debating in <strong>{{ venue }}</strong>.
                       {% endblocktrans %}
                     {% endif %}
@@ -76,7 +79,7 @@
                       {% if dt != debateteam %}
                         {% team_record_link dt.team admin_page %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% else %} {# elif dt == debateteam #}
-                        {{ dt.team.short_name }}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
+                        {% if use_code_names %}{{ dt.team.code_name }}{% else %}{{ dt.team.short_name }}{% endif %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% endif %} {# dt != debateteam #}
                       {% if debate.sides_confirmed %} ({{ dt.get_side_name }}){% if not forloop.last %},{% endif %}{% endif %}
                     {% endfor %}
@@ -130,7 +133,7 @@
             {% else %} {# elif not debateteam #}
               <div class="list-group-item">
                 <em>
-                  {% blocktrans trimmed with team_name=team.short_name %}
+                  {% blocktrans trimmed with team_name=team_short_name %}
                     {{ team_name }} does not have a debate this round.
                   {% endblocktrans %}
                 </em>
@@ -154,16 +157,23 @@
           <div class="list-group-item">
             <h4 class="card-title mb-0">
               {# Just call it 'name' since this string is also used with adjudicators #}
-              {% blocktrans trimmed with name=team.short_name %}
+              {% blocktrans trimmed with name=team_short_name %}
                 About {{ name }}
               {% endblocktrans %}
             </h4>
           </div>
 
-          {% if team.reference != team.short_reference %}
+          {% if not use_code_names and team.short_name != team.long_name %}
             <div class="list-group-item">
               <strong>{% trans "Full name:" %}</strong>
               {{ team.long_name }}
+            </div>
+          {% endif %}
+
+          {% if not use_code_names and team.code_name and pref.team_code_names != 'off' %}
+            <div class="list-group-item">
+              <strong>{% trans "Code name:" %}</strong>
+              {{ team.code_name }}
             </div>
           {% endif %}
 
@@ -190,7 +200,7 @@
             </div>
           {% endif %} {# pref.public_break_categories or admin_page #}
 
-          {% if team.institution %}
+          {% if team.institution and pref.show_team_institutions %}
             <div class="list-group-item">
               <strong>{% trans "Institution:" %}</strong>
               {{ team.institution.name }}
@@ -211,11 +221,11 @@
   </div>
 
   {% if pref.feedback_progress or admin_page %}
-    {% include "feedback_progress_panel.html" with participant_name=team.short_name %}
+    {% include "feedback_progress_panel.html" with participant_name=team_short_name %}
   {% endif %}
 
   {% if pref.public_results or admin_page %}
-    <div class="mt-3">
+    <div class="mt-md-4">
       {{ block.super }} {# this is the Vue table, which is populated with previous results #}
     </div>
   {% endif %}

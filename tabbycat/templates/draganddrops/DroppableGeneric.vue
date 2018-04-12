@@ -17,12 +17,12 @@ import FeatherMixin from '../tables/FeatherMixin.vue'
 
 export default {
   mixins: [DroppableMixin, FeatherMixin],
-  props: { assignmentId: Number, assignmentPosition: String, extraCss: "" },
-  data: function() {
+  props: { assignmentId: Number, assignmentPosition: String, extraCss: '' },
+  data: function () {
     return { 'icon': 'loader' }
   },
   methods: {
-    handleDrop: function(event) {
+    handleDrop: function (event) {
       this.$eventHub.$emit('assign-draggable', event, this.assignmentId, this.assignmentPosition)
     }
   }

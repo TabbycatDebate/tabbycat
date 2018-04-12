@@ -38,14 +38,14 @@
 export default {
   props: ['roundInfo', 'showScoring'],
   methods: {
-    getDisplayNumber: function(number) {
+    getDisplayNumber: function (number) {
       if (number % 1 === 0) {
         return Math.round(number)
       } else {
         return number
       }
     },
-    getDisplayStep: function(number) {
+    getDisplayStep: function (number) {
       if (number % 1 === 0) {
         return "no ½ marks"
       } else if (number % 0.5 === 0) {

@@ -1,0 +1,1086 @@
+# Tabbycat translations, results module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: results/apps.py:7 results/templates/public_results_index.html:4
+#: results/templates/public_results_index.html:5 results/views.py:101
+msgid "Results"
+msgstr "النتائج"
+
+#: results/forms.py:44
+msgid "That password isn't correct."
+msgstr "كلمة المرور خاطئة"
+
+#: results/forms.py:76
+msgid "Please enter a whole number."
+msgstr "الرجاء إدخال عدد صحيح (دون كسور)"
+
+#: results/forms.py:78
+#, python-format
+msgid "Please enter a multiple of %s."
+msgstr "الرجاء ادخال أحد مضاعفات العدد %s"
+
+#: results/forms.py:157
+msgid "The ballot set can't be both discarded and confirmed."
+msgstr "لا يمكن أن تكون النتيجة محذوفة ومؤكدة"
+
+#: results/forms.py:163
+msgid ""
+"The debate status can't be confirmed unless one of the ballot sets is "
+"confirmed."
+msgstr "لا يمكن تأكيد النتيجة إلا عند وجود نتيجة واحدة مؤكدة على الأقل"
+
+#: results/forms.py:292
+msgid "---------"
+msgstr "---------"
+
+#: results/forms.py:294 results/forms.py:296
+#, python-format
+msgid "%(aff_team)s affirmed, %(neg_team)s negated"
+msgstr "%(aff_team)s مولاة، %(neg_team)s معارضة"
+
+#: results/forms.py:313
+#, python-format
+msgid "%(side_abbr)s's motion veto"
+msgstr "%(side_abbr)sتصويت القضايا"
+
+#: results/forms.py:330
+msgid "Mark as a duplicate speech"
+msgstr "وضع كخطاب مكرر"
+
+#: results/forms.py:336
+#, python-format
+msgid "Forfeit by the %(side)s"
+msgstr "هزيمة من قبل %(side)s"
+
+#: results/forms.py:479
+#, python-format
+msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
+msgstr "المتحدث %(speaker)s لا يظهر على الفريق %(team)s"
+
+#: results/forms.py:493
+#, python-format
+msgid "%(speaker)s appears to have given %(count)d substantive speech."
+msgid_plural ""
+"%(speaker)s appears to have given %(count)d substantive speeches."
+msgstr[0] "المحدث %(speaker)s لم يلق أية خطابات رئيسية %(count)d"
+msgstr[1] "المتحدث %(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[2] "المتحدث%(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[3] "المتحدث%(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[4] "المتحدث %(speaker)s ألقى خطاب رئيسي %(count)d مرات"
+msgstr[5] "المتحدث %(speaker)s ألقى %(count)d خطابات رئيسية"
+
+#: results/forms.py:510
+msgid "The last substantive speaker and reply speaker can't be the same."
+msgstr "لا بد أن يكون خطاب المتحدث الثالث وخطاب رد من شخصين مختلفين."
+
+#: results/forms.py:517
+msgid "The reply speaker for this team did not give a substantive speech."
+msgstr "خطاب الرد للفريق لم يكن موضوعي "
+
+#: results/forms.py:676
+msgid "The total scores for the teams are the same (i.e. a draw)."
+msgstr "مجموع نتائج الفرقين متساويين. (تعادل)"
+
+#: results/forms.py:685
+#, python-format
+msgid "The total scores for the following teams are the same: %(teams)s"
+msgstr "مجموع نقاط الفرقين التاليين متساوية: %(teams)s"
+
+#: results/forms.py:695
+#, python-format
+msgid ""
+"The margin (%(margin).1f) exceeds the maximum allowable margin "
+"(%(max_margin).1f)."
+msgstr "الهوامش ( %(margin).1f تجاوز الوقت المحدد ) (%(max_margin).1f )"
+
+#: results/forms.py:772
+#, python-format
+msgid ""
+"The total scores for the teams are the same (i.e. a draw) for adjudicator "
+"%(adj)s."
+msgstr "مجموع نتائج الفرقين متساويين (تعادل) من قبل المحكم %(adj)s."
+
+#: results/forms.py:780
+#, python-format
+msgid ""
+"The margin (%(margin).1f) in the ballot of adjudicator %(adj)s exceeds the "
+"maximum allowable margin (%(max_margin).1f)."
+msgstr ""
+"هوامش(%(margin).1f ) في النتائج قام الحكم %(adj)s بوضع بتجاوز الحد الاقصى ( "
+"%(max_margin).1f )"
+
+#: results/forms.py:812
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr "%(team)s(%(side)s)"
+
+#: results/forms.py:826
+msgid ""
+"Sides for this debate are not confirmed. You can't save a result for this "
+"debate until the sides have been confirmed in the draw."
+msgstr ""
+"لم يتم تأكيد الجانبين لهذه المناقشة. لا يمكنك حفظ نتيجة لهذه المناقشة حتى "
+"يتم تأكيد الجوانب في القرعة."
+
+#: results/forms.py:833
+msgid "There must be exactly two teams advancing."
+msgstr "يجب أن يكون هناك فريقان يتقدمان."
+
+#: results/models.py:30
+msgid "Tab room"
+msgstr "غرفة التحكم"
+
+#: results/models.py:31
+msgid "Public"
+msgstr "عمومي"
+
+#: results/models.py:34
+msgid "timestamp"
+msgstr "الزمن "
+
+#: results/models.py:36
+msgid "version"
+msgstr "الإصدار"
+
+#: results/models.py:38
+msgid "submitter type"
+msgstr "نوع المقدم "
+
+#: results/models.py:40
+msgid "confirmed"
+msgstr "مؤكدة"
+
+#: results/models.py:45
+msgid "submitter"
+msgstr "المقدم "
+
+#: results/models.py:48
+msgid "confirmer"
+msgstr "مؤكدة"
+
+#: results/models.py:50
+msgid "confirm timestamp"
+msgstr "تأكيد النتائج"
+
+#: results/models.py:52
+msgid "IP address"
+msgstr "عنوان ال IP"
+
+#: results/models.py:89
+msgid "A tab room ballot must have a user associated."
+msgstr "يجب أن تكون النتائج في غرفة التاب "
+
+#: results/models.py:97
+msgid "debate"
+msgstr "مناظرة"
+
+#: results/models.py:99
+msgid "motion"
+msgstr "نص قضية"
+
+#: results/models.py:101
+msgid "copied from"
+msgstr "نسخة  من "
+
+#: results/models.py:103
+msgid "discarded"
+msgstr "حذف "
+
+#: results/models.py:105 results/models.py:213
+msgid "forfeit"
+msgstr "المصدر "
+
+#: results/models.py:109 results/models.py:157 results/models.py:195
+#: results/models.py:241
+msgid "ballot submission"
+msgstr "تسليم النتائج"
+
+#: results/models.py:110
+msgid "ballot submissions"
+msgstr "تسليم النتائج"
+
+#: results/models.py:129
+#, python-format
+msgid ""
+"Debate is in round %(round)d but motion (%(motion)s) is from round "
+"%(motion_round)d"
+msgstr ""
+"مناظرة في هذه الجولة %(round)d و لكن القضية (%(motion)s ) من الجولة "
+"%(motion_round)d"
+
+#: results/models.py:136
+msgid "A ballot can't be both confirmed and discarded!"
+msgstr "لا يمكن أن تكون النتيجة معتمدة ومؤكدة"
+
+#: results/models.py:139
+msgid "The forfeiter must be a team in the debate."
+msgstr "المنسحب يجب أن يكون فرق في المناظرة "
+
+#: results/models.py:159
+msgid "debate adjudicator"
+msgstr "محكم المناظرة"
+
+#: results/models.py:161 results/models.py:197 results/models.py:243
+msgid "debate team"
+msgstr "فريق المناظرة"
+
+#: results/models.py:162 results/models.py:206 results/models.py:246
+msgid "score"
+msgstr "نقطة"
+
+#: results/models.py:163 results/models.py:247
+msgid "position"
+msgstr "الموقع "
+
+#: results/models.py:169
+msgid "speaker score by adjudicator"
+msgstr "درجة المتحدث من الحكم "
+
+#: results/models.py:170
+msgid "speaker scores by adjudicator"
+msgstr "نقاط المتحدثين"
+
+#: results/models.py:184
+msgid ""
+"The debate team, debate adjudicator and ballot submission must all relate to"
+" the same debate."
+msgstr ""
+"يجب أن يتوافق كل من فريق المناظرة و محكم المناظرة بالإضافة إلى ورقة النتائج "
+"لنفس المناظرة "
+
+#: results/models.py:200
+msgid "points"
+msgstr "نقاط"
+
+#: results/models.py:202
+msgid "win"
+msgstr "فوز"
+
+#: results/models.py:204
+msgid "margin"
+msgstr "هوامش "
+
+#: results/models.py:208
+msgid "votes given"
+msgstr "تم التصويت "
+
+#: results/models.py:210
+msgid "votes possible"
+msgstr "إمكانية التصويت "
+
+#: results/models.py:218
+msgid "team score"
+msgstr "نتيجة الفريق"
+
+#: results/models.py:219
+msgid "team scores"
+msgstr "نتائج الفريق"
+
+#: results/models.py:245
+msgid "speaker"
+msgstr "متحدث"
+
+#: results/models.py:249
+msgid "ghost"
+msgstr "ظل "
+
+#: results/models.py:250
+msgid ""
+"If checked, this score does not count towards the speaker tab. This is "
+"typically checked for speeches where someone spoke twice to make up for an "
+"absent teammate (sometimes known as \"iron-person\" or \"iron-man\" "
+"speeches)."
+msgstr ""
+"في حالة تحديده ، لا يتم احتساب هذه الدرجة في علامة تاب المتحدث. يتم فحص هذا "
+"عادة الخطاب حيث يتحدث شخص ما مرتين لتعويض زميله الغائب (الذي يعرف أحيانا "
+"باسم خطاب \"الشخص الحديدي\" أو خطاب \"الرجل الحديدي\")."
+
+#: results/models.py:259
+msgid "speaker score"
+msgstr "نقاط المتحدث"
+
+#: results/models.py:260
+msgid "speaker scores"
+msgstr "نقاط المتحدثين"
+
+#: results/models.py:269
+msgid "The debate team and speaker must be from the same team."
+msgstr "يجب أن يكون فريق المناظرة والمحدثون من نفس الفريق "
+
+#: results/models.py:272
+msgid "The ballot submission and debate team must relate to the same debate."
+msgstr "يجب أن يكون فريق المناظرة و النتيجة  من نفس المناظرة "
+
+#: results/tables.py:15
+msgid "Bye Debate"
+msgstr "مناظرة إضافية "
+
+#: results/tables.py:17
+msgid "No Ballot"
+msgstr "بدون تصويت "
+
+#: results/tables.py:19
+msgid "Ballot is In"
+msgstr "تصويت"
+
+#: results/tables.py:21
+msgid "Ballot is Unconfirmed"
+msgstr "التصويت غير مكتمل "
+
+#: results/tables.py:23
+msgid "Ballot is Confirmed"
+msgstr "اكتملت النتيجة "
+
+#: results/tables.py:25
+msgid "Debate was Postponed"
+msgstr "تم تأجيل المناظرة "
+
+#: results/tables.py:33
+msgid "Status of this debate's ballot"
+msgstr "حالة نتيجة المناظرة"
+
+#: results/tables.py:64
+#, python-format
+msgid "Re-edit v%(version)d"
+msgstr "إعادة التعديل %(version)d"
+
+#: results/tables.py:66
+#, python-format
+msgid "Edit v%(version)d"
+msgstr "تعديل %(version)d"
+
+#: results/tables.py:68
+#, python-format
+msgid "Review v%(version)d"
+msgstr "%(version)dمراجعة "
+
+#. Translators: This comes after a link to edit the ballot and before the line
+#. indicating its author. Please mind the leading and trailing spaces.
+#: results/tables.py:74
+msgid " discarded; "
+msgstr "حذف "
+
+#: results/tables.py:79
+#, python-format
+msgid " added by %(user)s"
+msgstr "إضافة إلى %(user)s"
+
+#: results/tables.py:81
+#, python-format
+msgid " a public submission from %(ip_address)s"
+msgstr "تسليم من %(ip_address)s"
+
+#: results/tables.py:89 results/templates/public_add_ballot.html:4
+#: results/templates/public_add_ballot_unreleased.html:4
+#: results/templates/public_add_ballot_unreleased.html:5
+msgid "Enter Ballot"
+msgstr "إدخال التصويت"
+
+#: results/tables.py:100 results/tables.py:106
+msgid "Postpone"
+msgstr "مؤجل"
+
+#: results/tables.py:104
+msgid "Unpostpone"
+msgstr "غير مؤجل "
+
+#: results/templates/admin_results.html:6
+msgid "Display Draw"
+msgstr "عرض القرعة"
+
+#: results/templates/admin_results.html:9
+msgid "Check In Ballots"
+msgstr "تأكد من النتيجة "
+
+#: results/templates/admin_results.html:16
+msgid "Advance to Next Round"
+msgstr "الانتقال إلى الجولة القادمة "
+
+#: results/templates/admin_results.html:27
+#, python-format
+msgid ""
+"This tournament's configuration is set to <strong>British "
+"Parliamentary</strong> with <strong>one ballot per voting "
+"adjudicator</strong>. This combination isn't allowed: BP tournaments must "
+"use consensus ballots. Results can't be entered while this configuration is "
+"in place. Please <a href=\"%(debate_rules_url)s\">revise this tournament's "
+"configuration</a> before you try to enter results."
+msgstr ""
+"يتم تعيين تكوين هذه البطولة على <strong>البرلمان البريطاني </strong>من خلال \n"
+"<strong> تحكيم شخص لكل جهه </strong> . هذه المجموعة غير مسموح بها: يجب أن تستخدم النظام البريطاني في إقرارات الإجماع. لا يمكن إدخال النتائج أثناء وجود هذا الاعدادات. من فضلك ، راجع  <a href=\"%(debate_rules_url)s\"> اعدادات هذه البطولة </a>  قبل محاولة إدخال النتائج."
+
+#: results/templates/admin_results.html:35
+#, python-format
+msgid ""
+"Currently there are no motions entered for this round, so debate results "
+"cannot be entered. <a href=\"%(motions_url)s\" class=\"alert-link\">Add "
+"Motions.</a>"
+msgstr ""
+"لا توجد حاليًا أي حركات تم إدخالها لهذه الجولة ، لذلك لا يمكن إدخال نتائج النقاش. \n"
+"<a href=\"%(motions_url)s\" class=\"alert-link\"> اضافة القضايا </a>"
+
+#: results/templates/assistant_enter_results.html:7
+#: results/templates/enter_results.html:27
+msgid "Back to All Results"
+msgstr "العودة إلى جميع النتائج"
+
+#: results/templates/assistant_enter_results.html:11
+#: results/templates/enter_results.html:31
+msgid "Create a new ballot set for this debate"
+msgstr "إنشاء صفحة نتائج جديدة لهذه المناظرة "
+
+#: results/templates/assistant_enter_results.html:33
+msgid "You can't confirm this ballot set because you entered it."
+msgstr "لا يمكن اعتماد النتيجة لأنك قمت بإدخالها "
+
+#: results/templates/assistant_enter_results.html:41
+msgid "Confirm results"
+msgstr "تأكيد النتائج"
+
+#: results/templates/assistant_enter_results.html:44
+msgid "Results are incorrect"
+msgstr "النتائج غير صحيحة "
+
+#: results/templates/assistant_results.html:4
+#: results/templates/assistant_results.html:5
+msgid "Enter Results"
+msgstr "إدخال النتائج"
+
+#: results/templates/assistant_results.html:12
+msgid ""
+"This tournament's configuration is set to <strong>British "
+"Parliamentary</strong> with <strong>one ballot per voting "
+"adjudicator</strong>. This combination isn't allowed: BP tournaments must "
+"use consensus ballots. Results can't be entered while this configuration is "
+"in place. Please ask an administrator to change this configuration."
+msgstr ""
+"يتم تعيين تكوين هذه البطولة على <strong>البرلمان البريطاني </strong> مع "
+"<strong>بطاقة اقتراع من شخصين لكل مرشحتحكيم </strong> هذه المجموعة غير مسموح"
+" بها: يجب أن تستخدم نظام البرلمان البريطاني في الإقرارات الإجماع. لا يمكن "
+"إدخال النتائج أثناء وجود هذا الاعدادات . من فضلك اطلب من مسؤول لتغيير هذه "
+"الاعدادات ."
+
+#: results/templates/assistant_results.html:19
+msgid ""
+"Currently there are no motions entered for this round, so debate results "
+"cannot be entered. Please ask an administrator to add motions."
+msgstr ""
+"لا توجد حاليًا أي حركات تم إدخالها لهذه الجولة ، لذلك لا يمكن إدخال نتائج "
+"المناظرة . من فضلك اطلب من مسؤول لإضافة حركات."
+
+#: results/templates/assistant_results.html:29
+#, python-format
+msgid ""
+"One debate does not have its sides confirmed. Results for this debate cannot"
+" be entered until its side allocations are marked as confirmed."
+msgid_plural ""
+"%(ndebates)s debate do not have their sides confirmed. Results for these "
+"debates cannot be entered until their side allocations are marked as "
+"confirmed."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: results/templates/assistant_results.html:40
+#, python-format
+msgid ""
+"One debate has a panel with an even number of voting adjudicators. If the "
+"adjudicators split evenly, the debate will be awarded to the team for which "
+"the chair voted."
+msgid_plural ""
+"%(num_even_panel)s debates have panels with an even number of voting "
+"adjudicators. If the adjudicators split evenly, the debate will be awarded "
+"to the team for which the chair voted."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: results/templates/assistant_results.html:58
+msgid "Unknown"
+msgstr "مجهول "
+
+#: results/templates/assistant_results.html:63
+msgid "Checked In"
+msgstr "تم التأكد "
+
+#: results/templates/assistant_results.html:68
+msgid "Unconfirmed"
+msgstr "غير معتمد"
+
+#: results/templates/assistant_results.html:73
+msgid "Confirmed"
+msgstr "مؤكدة"
+
+#: results/templates/assistant_results.html:79
+msgid "Postponed"
+msgstr "مؤجل"
+
+#: results/templates/assistant_results.html:83
+msgid "Ballot Statuses"
+msgstr "حالة التصويت "
+
+#: results/templates/assistant_results.html:111
+msgid "Postponing…"
+msgstr "مؤجل..."
+
+#: results/templates/assistant_results.html:121
+msgid "Unpostponing…"
+msgstr "غير مؤجل ..."
+
+#: results/templates/ballot/ballot_debate_info.html:6
+msgid "Debate Information"
+msgstr "معلومات المناظرة "
+
+#: results/templates/ballot/ballot_debate_info.html:41
+msgid ""
+"There were no speakers who spoke multiple times (i.e. no 'Iron' person "
+"speeches)"
+msgstr "لم يكن هناك متحدثون يتحدثون عدة مرات "
+
+#: results/templates/ballot/ballot_debate_info.html:44
+msgid ""
+"There were speakers who spoke multiple times (i.e. one or more 'Iron' person"
+" speeches)"
+msgstr "كان هناك متحدثون يتحدثون عدة مرات"
+
+#: results/templates/ballot/ballot_scoresheet.html:28
+msgid "Result"
+msgstr "النتيجة"
+
+#: results/templates/ballot/ballot_scoresheet.html:28
+msgid "Rank"
+msgstr "المستوى"
+
+#: results/templates/ballot/ballot_speaks.html:19
+msgid ""
+"Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-"
+"manning' you would typically mark only the lesser of their scores as a "
+"duplicate."
+msgstr ""
+"إخفاء الكلمات المكررة من علامة تاب المتحدث. إذا كان المتحدث \"تحدث بخطاب "
+"الرجل الحديدي \" ، فستميز عادةً بأقل عدد من علامات كنسخة طبق الأصل."
+
+#: results/templates/ballot/bp_elimination_ballot.html:6
+#: results/templates/ballot/standard_ballot_set.html:6
+msgid ""
+"There are some problems with this scoresheet. Please review and correct "
+"them."
+msgstr "هناك بعض المشاكل في الاستمارة يرجى مراجعتها  "
+
+#: results/templates/ballot/bp_elimination_ballot.html:12
+msgid "Advancing Teams"
+msgstr "تقدم الفرق"
+
+#: results/templates/ballot/other_ballots_list.html:9
+#, python-format
+msgid "There is %(number)s existing ballot set for this debate."
+msgid_plural "There are %(number)s existing ballot sets for this debate."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: results/templates/ballot/other_ballots_list.html:19
+#, python-format
+msgid "There are %(number)s ballot sets for this debate."
+msgstr "هناك %(number)s من صفحة النتائج لهذه المناظرة "
+
+#: results/templates/ballot/other_ballots_list.html:29
+msgid "This ballot set is <strong>confirmed</strong>."
+msgstr "هذه النتيجة <strong>مؤكدة</strong>"
+
+#: results/templates/ballot/other_ballots_list.html:34
+msgid "This ballot set is <strong>discarded</strong>."
+msgstr "هذه النتيجة <strong>مؤكدة</strong>"
+
+#: results/templates/ballot/other_ballots_list.html:49
+msgid "CURRENTLY VIEWING"
+msgstr "عرض حاليا "
+
+#: results/templates/ballot/other_ballots_list.html:52
+#, python-format
+msgid "Version <strong>%(version)s</strong>,"
+msgstr "الإصدار <strong>%(version)s</strong>"
+
+#: results/templates/ballot/other_ballots_list.html:57
+#, python-format
+msgid "entered by <strong>%(submitter)s</strong>,"
+msgstr "إدخال من <strong>%(submitter)s</strong>"
+
+#: results/templates/ballot/other_ballots_list.html:61
+#, python-format
+msgid "submitted from the public form on %(ip_address)s,"
+msgstr "تم تقديمها من العام إلى %(ip_address)s"
+
+#: results/templates/ballot/other_ballots_list.html:66
+#, python-format
+msgid "%(timestamp)s (%(timeago)s ago),"
+msgstr "%(timestamp)s(%(timeago)s قبل )"
+
+#: results/templates/ballot/other_ballots_list.html:71
+#, python-format
+msgid "confirmed by <strong>%(confirmer)s</strong>"
+msgstr "تم اعتمادها من قبل <strong>%(confirmer)s</strong>"
+
+#: results/templates/ballot/other_ballots_list.html:75
+msgid "confirmed by <strong>unknown confirmer</strong>"
+msgstr "تم اعتمادها من قبل <strong>مجهول </strong>"
+
+#: results/templates/ballot/other_ballots_list.html:77
+msgid "unconfirmed"
+msgstr "غير معتمد"
+
+#: results/templates/ballot/other_ballots_list.html:81
+msgid "(discarded)"
+msgstr "حذف "
+
+#: results/templates/ballot/other_ballots_list.html:85
+#, python-format
+msgid "<em>(identical to version %(others)s)</em>"
+msgid_plural "<em>(identical to versions %(others)s)</em>"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: results/templates/ballot/standard_ballot_set.html:19
+#, python-format
+msgid "Ballot from %(name)s (%(institution)s)"
+msgstr "النتيجة من %(name)s(%(institution)s)"
+
+#: results/templates/ballot/standard_ballot_set.html:23
+#, python-format
+msgid "Ballot from %(name)s"
+msgstr "نتيجة من %(name)s"
+
+#: results/templates/ballot/standard_ballot_set.html:31
+#: results/templates/public_ballot_set.html:50
+msgid "Scoresheet"
+msgstr "ورقة النتائج "
+
+#: results/templates/ballot/standard_ballot_set.html:44
+msgid "Assign sides before entering scores"
+msgstr "تعيين الجانبين قبل الدخول إلى النتائج"
+
+#: results/templates/ballot/standard_ballot_set.html:68
+msgid "Forfeits"
+msgstr "المصدر "
+
+#: results/templates/ballot_checkin.html:13
+msgid ""
+"To check in a ballot start to type the ballot's <strong>venue</strong>. Then"
+" hit enter to select the correct venue, then enter again to search for the "
+"ballot."
+msgstr ""
+
+#: results/templates/enter_results.html:6
+#, python-format
+msgid "New Ballot Set for %(debate_name)s"
+msgstr "نتيجة جديدة %(debate_name)s"
+
+#: results/templates/enter_results.html:10
+#, python-format
+msgid "Edit Ballot Set for %(debate_name)s"
+msgstr "تعديل النتيجة %(debate_name)s"
+
+#: results/templates/enter_results.html:17
+#: results/templates/public_enter_results.html:14
+#, python-format
+msgid "%(round)s @ %(venue_category)s %(venue)s"
+msgstr "%(venue)s%(round)s@%(venue_category)s"
+
+#: results/templates/enter_results.html:39
+msgid ""
+"This debate has a panel with an even number of voting adjudicators. If the "
+"adjudicators split evenly, the debate will be awarded to the team for which "
+"the chair voted."
+msgstr ""
+"تحتوي هذه المناقشة على لجنة بها عدد زوجي من حكام التصويت. إذا انقسم المحكمون"
+" بالتساوي ، فسيتم منح فريق المناظرة الذي صوت له رئيس الجلسة ."
+
+#: results/templates/enter_results.html:62
+msgid "Ballot Status"
+msgstr "حالة النتيجة "
+
+#: results/templates/enter_results.html:63
+msgid "only the confirmed ballot set will affect this debate's result"
+msgstr "سيتم اعتماد النتيجة بعد الانتهاء من نتائج المتناظرين "
+
+#: results/templates/enter_results.html:79
+msgid "Debate Status"
+msgstr "حالة المناظرة "
+
+#: results/templates/enter_results.html:82
+msgid "all debates must be confirmed to advance to the next round"
+msgstr "جميع المناظرات يجب اعتمادها قبل الانتقال إلى الجولة التالية "
+
+#: results/templates/enter_results.html:92
+msgid "Save Ballot"
+msgstr "حفظ النتيجة"
+
+#: results/templates/enter_results.html:95
+msgid "Cancel Entry"
+msgstr "إلغاء الإدخال"
+
+#: results/templates/includes/public_enter_results_info.html:4
+#, python-format
+msgid ""
+"The URL of this page is personalised to you, %(adj_name)s. <strong>Do not "
+"share it with anyone:</strong> anyone who knows this URL can submit results "
+"for your debates. If you bookmark this page and return here after each "
+"debate, it will always show the debate that you just adjudicated."
+msgstr ""
+"الرابط الخاص بك لهذه الصفحة ، %(adj_name)s<strong> رجاءا لا تقم بمشاركة هذا "
+"الرابط لاي شخص ، </strong> اي شخص يمتلك هذا الرابط سيقوم بادخال النتائج تحت "
+"اسمك ، في حالة حفظك لهذا الرابط و العودة أليه مره أخرى في اي وقت ستتمكن من "
+"عرض جميع المناظرات التي قمت بتحكيمها "
+
+#: results/templates/public_add_ballot.html:5
+msgid "Who are you?"
+msgstr "من أنت ؟"
+
+#: results/templates/public_add_ballot.html:6
+msgid "(click your name on this list)"
+msgstr "( تحقق من وجود اسمك في القائمة ) "
+
+#: results/templates/public_add_ballot_unreleased.html:8
+#, python-format
+msgid "The draw and/or motions for %(round_name)s have yet to be released."
+msgstr ""
+
+#: results/templates/public_ballot_set.html:5
+#: results/templates/public_ballot_set.html:8
+#, python-format
+msgid "Ballot for %(matchup)s"
+msgstr "نتيجة لـ %(matchup)s"
+
+#: results/templates/public_ballot_set.html:22
+#, python-format
+msgid "Return to Results for %(round_name)s"
+msgstr "العودة إلى النتائج ، من %(round_name)s"
+
+#: results/templates/public_ballot_set.html:46
+#, python-format
+msgid "From %(name)s (%(institution)s)"
+msgstr "من %(name)s(%(institution)s)"
+
+#: results/templates/public_enter_results.html:5
+#: results/templates/public_enter_results.html:8
+#, python-format
+msgid "Enter Results for %(debate_name)s"
+msgstr "إدخال النتيجة لـ %(debate_name)s"
+
+#: results/templates/public_enter_results.html:22
+#, python-format
+msgid ""
+"%(adj_name)s, note that you must enter <strong>all of the ballots</strong> "
+"from your panel, not just your own!"
+msgstr ""
+
+#: results/templates/public_enter_results.html:30
+#, python-format
+msgid ""
+"This form has already been submitted <strong>once</strong>. Please contact a"
+" tab official after submitting your form."
+msgid_plural ""
+"This form has already been submitted <strong>%(nsubmissions)s</strong> "
+"times. Please contact a tab official after submitting your form."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: results/templates/public_enter_results.html:71
+msgid ""
+"When submitting this form your IP address will be stored for logging "
+"purposes."
+msgstr "عند إرسال هذا النموذج سيتم تخزين عنوان IP الخاص بك لأغراض التسجيل."
+
+#: results/templates/public_enter_results_error.html:4
+#: results/templates/public_enter_results_error.html:5
+msgid "No Result to Enter"
+msgstr "لا يوجد نتيجة للادخال "
+
+#: results/templates/public_results_base.html:5
+#: results/templates/public_results_base.html:8
+#: results/templates/public_results_index.html:14
+#, python-format
+msgid "Results for %(round_name)s"
+msgstr "نتيجة من %(round_name)s"
+
+#: results/templates/public_results_for_round.html:7
+msgid "View by Team"
+msgstr "عرض من خلال الفرق "
+
+#: results/templates/public_results_for_round.html:10
+msgid "View by Debate"
+msgstr "عرض من خلال المناظرة "
+
+#: results/templates/public_results_not_available.html:7
+#, python-format
+msgid "The results for %(round_name)s aren't yet available"
+msgstr "النتائج لـ%(round_name)s، غير متوفرة "
+
+#: results/templates/public_results_silent.html:7
+#, python-format
+msgid "%(round_name)s is a silent round"
+msgstr "%(round_name)sأنها جولة صامته "
+
+#. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
+#: results/utils.py:80
+#, python-format
+msgid "%(team_name)s as %(side_abbr)s"
+msgstr "%(team_name)s كـ%(side_abbr)s"
+
+#: results/utils.py:98
+#, python-format
+msgid "%(winner)s (%(winner_side)s) won"
+msgstr "%(winner)s( %(winner_side)s ) الفائز "
+
+#: results/utils.py:103
+#, python-format
+msgid "vs %(loser)s (%(loser_side)s)"
+msgstr "ضد %(loser)s(%(loser_side)s)"
+
+#: results/utils.py:118
+#, python-format
+msgid "Advancing: %(advancing_list)s<br>\n"
+msgstr ""
+
+#: results/utils.py:122
+#, python-format
+msgid "Eliminated: %(eliminated_list)s"
+msgstr "%(eliminated_list)sإقصاء "
+
+#: results/utils.py:132
+#, python-format
+msgid "1st: %(first_team)s<br>\n"
+msgstr "الاول %(first_team)s<br>\n"
+
+#: results/utils.py:134
+#, python-format
+msgid ""
+"2nd: %(second_team)s<br>\n"
+"3rd: %(third_team)s<br>\n"
+"4th: %(fourth_team)s"
+msgstr ""
+"الثاني %(second_team)s\n"
+"الثالث %(third_team)s\n"
+"الرابع %(fourth_team)s"
+
+#: results/utils.py:145
+#, python-format
+msgid "Error with result for %(debate)s"
+msgstr "خطأ في نتيجة %(debate)s"
+
+#: results/utils.py:213
+msgid "1st"
+msgstr "المتحدث 1"
+
+#: results/utils.py:214
+msgid "2nd"
+msgstr "المتحدث 2"
+
+#: results/utils.py:215
+msgid "3rd"
+msgstr "المتحدث 3"
+
+#: results/utils.py:216
+msgid "4th"
+msgstr "المتحدث 4"
+
+#: results/utils.py:217
+msgid "5th"
+msgstr "المتحدث 5"
+
+#: results/utils.py:218
+msgid "6th"
+msgstr "المتحدث 6"
+
+#: results/utils.py:219
+msgid "7th"
+msgstr "المتحدث 7 "
+
+#: results/utils.py:220
+msgid "8th"
+msgstr "المتحدث 8 "
+
+#. Translators: Abbreviation for Prime Minister
+#: results/utils.py:226
+msgid "PM"
+msgstr ""
+
+#. Translators: Abbreviation for Deputy Prime Minister
+#: results/utils.py:228
+msgid "DPM"
+msgstr ""
+
+#. Translators: Abbreviation for Leader of the Opposition
+#: results/utils.py:230
+msgid "LO"
+msgstr ""
+
+#. Translators: Abbreviation for Deputy Leader of the Opposition
+#: results/utils.py:232
+msgid "DLO"
+msgstr ""
+
+#. Translators: Abbreviation for Member for the Government
+#: results/utils.py:234
+msgid "MG"
+msgstr ""
+
+#. Translators: Abbreviation for Government Whip
+#: results/utils.py:236
+msgid "GW"
+msgstr ""
+
+#. Translators: Abbreviation for Member for the Opposition
+#: results/utils.py:238
+msgid "MO"
+msgstr ""
+
+#. Translators: Abbreviation for Opposition Whip
+#: results/utils.py:240
+msgid "OW"
+msgstr ""
+
+#: results/utils.py:260
+msgid "Reply"
+msgstr "الرد "
+
+#: results/views.py:236 results/views.py:238
+msgid " vs "
+msgstr "ضد "
+
+#: results/views.py:322
+#, python-format
+msgid "Ballot set for %(debate)s added."
+msgstr "تم إضافة نتيجة لـ %(debate)s"
+
+#: results/views.py:337
+#, python-format
+msgid ""
+"Whoops! The debate %(debate)s doesn't have a chair, so you can't enter "
+"results for it."
+msgstr "المناظرة %(debate)s ليس لها رئيس جلسة لا يمكنك اضافة نتيجة لها "
+
+#: results/views.py:343
+#, python-format
+msgid ""
+"Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't"
+" enter results for it."
+msgstr "المناظرة %(debate)s ليس لها جوانت معتمدة ، لا يمكنك اضافة نتيجة لها "
+
+#: results/views.py:375
+#, python-format
+msgid "Ballot set for %(matchup)s discarded."
+msgstr "نتيجة لـ %(matchup)s تم حذفها "
+
+#: results/views.py:377
+#, python-format
+msgid "Ballot set for %(matchup)s confirmed."
+msgstr "نتيجة لـ %(matchup)s تم اعتمدها "
+
+#: results/views.py:379
+#, python-format
+msgid "Edits to ballot set for %(matchup)s saved."
+msgstr "التعديل لنتيجة لـ %(matchup)s تم حفظها "
+
+#: results/views.py:411
+#, python-format
+msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
+msgstr "شكراً %(user)s ! نتيجتك لـ %(debate)s تم تسجيلها "
+
+#: results/views.py:423
+msgid "The draw for this round hasn't been released yet."
+msgstr "لم يتم إعلان القرعة لهذه الجولة  حتى الان "
+
+#: results/views.py:427
+msgid "The motions for this round haven't been released yet."
+msgstr "لم يتم إعلان القضايا لهذه الجولة حتى الان "
+
+#: results/views.py:432
+msgid "It looks like you don't have a debate this round."
+msgstr "يبدو أنك لا تمتلك مناظرة في هذه الجولة "
+
+#: results/views.py:434
+msgid ""
+"It looks like you're assigned to two or more debates this round. Please "
+"contact a tab room official."
+msgstr ""
+"يبدو بأنك مكلف في تحكيم مناظرتين او اكثر ، يرجى التواصل مع غرفة التاب "
+
+#: results/views.py:442
+msgid ""
+"Your debate doesn't have a chair, so you can't enter results for it. Please "
+"contact a tab room official."
+msgstr ""
+"مناظرتك لا تمتلك رئيس جلسة ، لا يمكنك ادخال النتائج ، الرجاء التواصل مع غرفة"
+" التاب "
+
+#: results/views.py:447
+msgid ""
+"It looks like the sides for this debate haven't yet been confirmed, so you "
+"can't enter results for it. Please contact a tab room official."
+msgstr ""
+"يبدو بأن الجوانب لهذه المناظرة لم يتم اعتمدها ، لا يمكنك إدخال النتائج ، "
+"الرجاء التواصل مع غرفة التاب "
+
+#: results/views.py:528 results/views.py:541
+msgid "There aren't any venues with that name."
+msgstr "لا يوجد قاعة تحت هذا الاسم "
+
+#: results/views.py:546
+#, python-format
+msgid "There wasn't a debate in venue %(venue_name)s this round."
+msgstr "لا يوجد مناظرة في قاعة %(venue_name)s في هذه الجولة "
+
+#: results/views.py:549
+#, python-format
+msgid ""
+"There appear to be multiple debates in venue %(venue_name)s this round."
+msgstr "يبدو بأن هناك مناظرات في نفس القاعة %(venue_name)s في هذه الجولة "
+
+#: results/views.py:553
+#, python-format
+msgid "The ballot for venue %(venue_name)s has already been checked in."
+msgstr "النتيحة لـقاعة %(venue_name)s تم التأكد منها "
+
+#: results/views.py:676
+#, python-format
+msgid "Add result from %(adjudicator)s"
+msgstr "إضافة نتيجة من %(adjudicator)s"
+
+#: results/views.py:680
+msgid "Adjudicator"
+msgstr "محكم"

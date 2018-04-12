@@ -18,7 +18,7 @@ export default {
     this.$eventHub.$on('unset-slideover', this.unsetSlideover)
   },
   methods: {
-    setSlideover: function(object, annotateMethod, annotateObject) {
+    setSlideover: function (object, annotateMethod, annotateObject) {
       var info = object
       if (annotateMethod) {
         var extraFeatures = this[annotateMethod](annotateObject)
@@ -28,10 +28,10 @@ export default {
       }
       this.slideOverSubject = info
     },
-    unsetSlideover: function() {
+    unsetSlideover: function () {
       this.slideOverSubject = null
     },
-    addConflictsAnnotation: function(item) {
+    addConflictsAnnotation: function (item) {
       return {
         'features': [
           this.getClashesForSlideOver(item),
@@ -44,18 +44,18 @@ export default {
       var names = name.split(" ")
       if (names.length > 1) {
         var lastname = names[names.length - 1]
-        var firstNames = name.split(" " + lastname).join("")
+        var firstNames = name.split(" " + lastname).join('')
         return firstNames + " " + lastname[0]
       }
       return names.join(" ")
     },
-    getClashesForSlideOver: function(item) {
+    getClashesForSlideOver: function (item) {
       var clashes = item.conflicts.clashes
       if (_.isUndefined(clashes) || !clashes) { return [] }
       var formattedClashes = []
       var self = this
-      _.forEach(clashes, function(clashesList, clashesType) {
-        _.forEach(clashesList, function(clash) {
+      _.forEach(clashes, function (clashesList, clashesType) {
+        _.forEach(clashesList, function (clash) {
           var clashName = false
           if (clashesType === 'team') {
             if (!_.isUndefined(self.teamsById[clash.id])) {
@@ -84,13 +84,13 @@ export default {
       })
       return formattedClashes
     },
-    getHistoriesForSlideOver: function(item) {
+    getHistoriesForSlideOver: function (item) {
       var histories = item.conflicts.histories
       if (_.isUndefined(histories) || !histories) { return [] }
       var formattedHistories = []
       var self = this
-      _.forEach(histories, function(historiesList, historiesType) {
-        _.forEach(historiesList, function(history) {
+      _.forEach(histories, function (historiesList, historiesType) {
+        _.forEach(historiesList, function (history) {
           if (historiesType === 'team') {
             if (_.isUndefined(self.teamsById[history.id])) {
               var historyName = false // Saw someone not in current draw
@@ -123,7 +123,7 @@ export default {
       }
 
       // Order by rounds;
-      var histories = _.sortBy(formattedHistories, [function(h) {
+      var histories = _.sortBy(formattedHistories, [function (h) {
         return h.ago
       }])
 
@@ -133,7 +133,7 @@ export default {
         'class': histories[0].ago > 2 ? ' visible-lg-block' : ' '
       })
 
-      _.forEach(histories, function(history, i) {
+      _.forEach(histories, function (history, i) {
         if (_.isUndefined(history['icon'])) {
           if (!_.isUndefined(histories[i + 1])) {
             if (histories[i + 1].ago !== history.ago) {

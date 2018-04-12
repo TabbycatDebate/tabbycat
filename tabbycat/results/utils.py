@@ -1,11 +1,151 @@
+import logging
+import datetime
 from itertools import combinations
 
 from django.db.models import Count
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from draw.models import Debate
 from tournaments.utils import get_side_name
+
+logger = logging.getLogger(__name__)
+
+
+def graphable_debate_statuses(ballots, round):
+    # For each debate, find (a) the first non-discarded submission time, and
+    # (b) the last confirmed confirmation time. (Note that this means when
+    # a ballot is discarded, the graph will change retrospectively.)
+    total_debates = round.debate_set.count()
+
+    # These two dictionaries record when a particular debate was first
+    # entered or drafted. These can then be compared to given time intervals
+    drafts = {}
+    confirmations = {}
+    for ballot in ballots:
+        d_id = ballot.debate_id
+        if ballot.timestamp and (d_id not in drafts or drafts[d_id] > ballot.timestamp):
+            drafts[d_id] = ballot.timestamp
+        if ballot.confirmed and ballot.confirm_timestamp and (d_id not in confirmations or
+                confirmations[d_id] < ballot.confirm_timestamp):
+            confirmations[d_id] = ballot.confirm_timestamp
+
+    # Collate timestamps into a single list.
+    timestamps = [t for t in drafts.values()] + [t for t in confirmations.values()]
+    if len(timestamps) == 0:
+        return []
+    timestamps = sorted(timestamps) # Order by time
+
+    # Create the spaced intervals
+    intervals = 20 # IE numbner of bars on the graph
+    start_of_entry = timestamps[0]
+    end_of_entry = timestamps[-1]
+    time_span = end_of_entry - start_of_entry
+    minutes_span_interval = (time_span.total_seconds() / 60.0) / intervals
+
+    intervals_with_stats = []
+    for i in range(0, intervals):
+        delta = (i * minutes_span_interval) + minutes_span_interval
+        interval_time = start_of_entry + datetime.timedelta(minutes=delta)
+
+        # Count up the number of drafts at this point by reviewing timestamps
+        interval_stat = {"time": interval_time.isoformat(),
+                         "total": total_debates,
+                         "none": total_debates, "draft": 0, "confirmed": 0}
+
+        # Count up the number of confirms/drafts at this point
+        recorded_ids = []
+        for dID, timestamp in confirmations.items():
+            if timestamp <= interval_time:
+                interval_stat['confirmed'] += 1
+                interval_stat['none'] -= 1
+                recorded_ids.append(dID)
+
+        for dID, timestamp in drafts.items():
+            if dID not in recorded_ids:
+                if drafts[dID] <= interval_time:
+                    interval_stat['draft'] += 1
+                    interval_stat['none'] -= 1
+
+        intervals_with_stats.append(interval_stat)
+
+    return intervals_with_stats
+
+
+def readable_ballotsub_result(ballotsub):
+    """ Make a human-readable representation of a debate result """
+
+    def format_dt(dt, t):
+        # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
+        return _("%(team_name)s as %(side_abbr)s") % {
+            'team_name': dt.team.short_name,
+            'side_abbr': dt.get_side_name(t, 'abbr')
+        }
+
+    t = ballotsub.debate.round.tournament
+    team_scores = ballotsub.teamscore_set.all()
+
+    try:
+        if t.pref('teams_in_debate') == 'two':
+            winner = None
+            loser = None
+            for teamscore in team_scores:
+                if teamscore.win:
+                    winner = teamscore.debate_team
+                else:
+                    loser = teamscore.debate_team
+
+            result_winner = _("%(winner)s (%(winner_side)s) won")
+            result_winner = result_winner % {
+                'winner': winner.team.short_name,
+                'winner_side': winner.get_side_name(t, 'abbr'),
+            }
+            result = _("vs %(loser)s (%(loser_side)s)")
+            result = result % {
+                'loser': loser.team.short_name,
+                'loser_side': loser.get_side_name(t, 'abbr'),
+            }
+
+        elif ballotsub.debate.round.is_break_round:
+            advancing = []
+            eliminated = []
+            for teamscore in team_scores:
+                if teamscore.win:
+                    advancing.append(teamscore.debate_team)
+                else:
+                    eliminated.append(teamscore.debate_team)
+
+            result_winner = _("Advancing: %(advancing_list)s<br>\n")
+            result_winner = result_winner % {
+                'advancing_list': ", ".join(format_dt(dt, t) for dt in advancing)
+            }
+            result = _("Eliminated: %(eliminated_list)s")
+            result = result % {
+                'eliminated_list': ", ".join(format_dt(dt, t) for dt in eliminated),
+            }
+
+        else:  # BP preliminary round
+            ordered = [None] * 4
+            for teamscore in team_scores:
+                ordered[teamscore.points] = teamscore.debate_team
+
+            result_winner = _("1st: %(first_team)s<br>\n")
+            result_winner = result_winner % {'first_team':  format_dt(ordered[3], t)}
+            result = _("2nd: %(second_team)s<br>\n"
+                       "3rd: %(third_team)s<br>\n"
+                       "4th: %(fourth_team)s")
+            result = result % {
+                'second_team': format_dt(ordered[2], t),
+                'third_team':  format_dt(ordered[1], t),
+                'fourth_team': format_dt(ordered[0], t),
+            }
+
+    except (IndexError, AttributeError):
+        logger.exception("Error constructing latest result string")
+        result_winner = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
+        result = ""
+
+    return result_winner, result
 
 
 def set_float_or_int(number, step_value):
@@ -34,11 +174,6 @@ def get_result_status_stats(round):
     for item in query:
         stats[item['result_status']] = item['result_status__count']
 
-    # separately, count ballot-in debates and subtract from the 'None' count
-    ballot_in = round.debate_set.filter(result_status=Debate.STATUS_NONE, ballot_in=True).count()
-    stats['B'] = ballot_in
-    stats[Debate.STATUS_NONE] -= ballot_in
-
     return stats
 
 
@@ -65,39 +200,35 @@ def populate_identical_ballotsub_lists(ballotsubs):
         ballotsub.identical_ballotsub_versions.sort()
 
 
-def ballot_checkin_number_left(round):
-    return Debate.objects.filter(round=round, ballot_in=False).count()
-
-
 _ORDINALS = {
-    1: ugettext_lazy("1st"),
-    2: ugettext_lazy("2nd"),
-    3: ugettext_lazy("3rd"),
-    4: ugettext_lazy("4th"),
-    5: ugettext_lazy("5th"),
-    6: ugettext_lazy("6th"),
-    7: ugettext_lazy("7th"),
-    8: ugettext_lazy("8th"),
+    1: gettext_lazy("1st"),
+    2: gettext_lazy("2nd"),
+    3: gettext_lazy("3rd"),
+    4: gettext_lazy("4th"),
+    5: gettext_lazy("5th"),
+    6: gettext_lazy("6th"),
+    7: gettext_lazy("7th"),
+    8: gettext_lazy("8th"),
 }
 
 
 _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Prime Minister
-    [ugettext_lazy("PM"),
+    [gettext_lazy("PM"),
     # Translators: Abbreviation for Deputy Prime Minister
-     ugettext_lazy("DPM")],
+     gettext_lazy("DPM")],
     # Translators: Abbreviation for Leader of the Opposition
-    [ugettext_lazy("LO"),
+    [gettext_lazy("LO"),
     # Translators: Abbreviation for Deputy Leader of the Opposition
-     ugettext_lazy("DLO")],
+     gettext_lazy("DLO")],
     # Translators: Abbreviation for Member for the Government
-    [ugettext_lazy("MG"),
+    [gettext_lazy("MG"),
     # Translators: Abbreviation for Government Whip
-     ugettext_lazy("GW")],
+     gettext_lazy("GW")],
     # Translators: Abbreviation for Member for the Opposition
-    [ugettext_lazy("MO"),
+    [gettext_lazy("MO"),
     # Translators: Abbreviation for Opposition Whip
-     ugettext_lazy("OW")]
+     gettext_lazy("OW")]
 ]
 
 

@@ -1,6 +1,6 @@
 <script>
-import MovingMixin from '../ajax/MovingMixin.vue'
 import _ from 'lodash'
+import MovingMixin from '../ajax/MovingMixin.vue'
 
 export default {
   mixins: [MovingMixin],
@@ -9,7 +9,7 @@ export default {
       return true
     },
     getPanellist(debate, adjudicator=false, position=false) {
-      var potentialPanellist = _.find(debate.debateAdjudicators, function(panellist) {
+      var potentialPanellist = _.find(debate.debateAdjudicators, function (panellist) {
         if (adjudicator) { return panellist.adjudicator.id === adjudicator.id }
         if (position) { return panellist.position === position }
       })
@@ -18,7 +18,7 @@ export default {
       }
     },
     removefromPanel(debate, adjudicator) {
-      var adjIndex = _.findIndex(debate.debateAdjudicators, function(panellist) {
+      var adjIndex = _.findIndex(debate.debateAdjudicators, function (panellist) {
         return panellist.adjudicator.id == adjudicator.id;
       });
       debate.debateAdjudicators.splice(adjIndex, 1)

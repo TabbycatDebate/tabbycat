@@ -1,5 +1,5 @@
 from django.db.models import Aggregate, Avg, Case, CharField, Count, F, Value, When
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
@@ -29,7 +29,7 @@ STATISTICS_MAP = {
 
 def _gender_group(gender_field):
     return Case(
-        When(**{'%s__in' % gender_field: [Person.GENDER_FEMALE, Person.GENDER_OTHER], 'then': Value('N')}),
+        When(**{'%s__in' % gender_field: (Person.GENDER_FEMALE, Person.GENDER_OTHER), 'then': Value('N')}),
         When(**{gender_field: Person.GENDER_MALE, 'then': Value('M')}),
         default=Value('-'),
         output_field=CharField(),
@@ -87,7 +87,7 @@ def compile_gender_counts(title, queryset, gender_field):
 
 
 def compile_grouped_counts(title, queryset, group_field, group_values, group_labels):
-    counts = queryset.values(group=group_field).annotate(count=Count(group_field))
+    counts = queryset.values(group=group_field).annotate(count=Count(Value(1)))  # Count counts records, value doesn't matter
     counts = {d['group']: d['count'] for d in counts}
     result = {'title': title}
     result['data'] = _group_data(lambda group: counts[group], group_values, group_labels)
@@ -95,7 +95,7 @@ def compile_grouped_counts(title, queryset, group_field, group_values, group_lab
 
 
 def compile_grouped_gender_counts(titles, queryset, gender_field, group_field, group_values):
-    counts = queryset.values(group_field, gender_group=_gender_group(gender_field)).annotate(count=Count(gender_field))
+    counts = queryset.values(group_field, gender_group=_gender_group(gender_field)).annotate(count=Count(Value(1)))
     counts = {(d[group_field], d['gender_group']): d['count'] for d in counts}
     results = []
     for title, group in zip(titles, group_values):
@@ -148,7 +148,7 @@ def get_diversity_data_sets(t, for_public):
                     speakers.exclude(categories=sc), 'gender'))
 
     if Team.objects.exclude(institution__region__isnull=True).exists():
-        data_sets['speakers_region'].append(compile_grouped_counts(_("All"), speakers,
+        data_sets['speakers_region'].append(compile_grouped_counts(_("All Speakers"), speakers,
                 F('team__institution__region__id'), region_values, region_labels))
 
         if t.pref('public_breaking_teams') is True or for_public is False:
@@ -163,7 +163,7 @@ def get_diversity_data_sets(t, for_public):
     adjudicators = t.adjudicator_set.all()
 
     if adjudicators.count() > 0:
-        data_sets['adjudicators_gender'].append(compile_gender_counts(_("All"), adjudicators, 'gender'))
+        data_sets['adjudicators_gender'].append(compile_gender_counts(_("All Adjudicators"), adjudicators, 'gender'))
 
     if Adjudicator.objects.filter(tournament=t).filter(independent=True).exists():
         data_sets['adjudicators_gender'].append(compile_gender_counts(_("Indies"),

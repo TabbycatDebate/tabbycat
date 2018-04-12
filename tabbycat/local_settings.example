@@ -2,21 +2,24 @@ LOCAL_SETTINGS = True
 from settings import *
 
 # ==============================================================================
-# Database Settings
+# Settings that you should specify
 # ==============================================================================
 
-SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
-DATABASES           = {
+DATABASES = {
     'default': {
-        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-        'NAME'    : 'postgres',
-        'USER'    : 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST':     'localhost',
-        'PORT':     '5432',
+        'ENGINE'      : 'django.db.backends.postgresql',
+        'NAME'        : '',  # put your PostgreSQL database's name in here
+        'USER'        : '',  # put your PostgreSQL login role's user name in here
+        'PASSWORD'    : '',  # put your PostgreSQL login role's password in here
+        'HOST'        : 'localhost',
+        'PORT'        : '5432',
         'CONN_MAX_AGE': 600,
     }
 }
+
+# Replace this with your time zone, as defined in the IANA time zone database:
+# https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List
+TIME_ZONE = 'Australia/Melbourne'
 
 # ==============================================================================
 # Overwrites main settings
@@ -26,7 +29,7 @@ ADMINS              = ()
 MANAGERS            = ADMINS
 DEBUG               = True
 DEBUG_ASSETS        = True
-TIME_ZONE           = 'Australia/Melbourne'
+SECRET_KEY          = '#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ==============================================================================
 # Django-specific Modules
@@ -69,20 +72,30 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
-# Django Gulp (development aid; helps live-reload front-end assets)
+# Redis
 # ==============================================================================
 
-ENABLE_DJANGO_GULP = False # True requires requirements_development install
+USE_REDIS_LOCALLY = False
 
-if ENABLE_DJANGO_GULP:
-    # Need to be before whitenoise/static etc so it can't be appended as usual
-    modified_apps = list(INSTALLED_APPS)
-    modified_apps.insert(5, 'django_gulp') # [5] is just before whitenoise
-    INSTALLED_APPS = tuple(modified_apps)
-
-    # collectstatic always runs GULP_PRODUCTION_COMMAND, even on debug
-    GULP_PRODUCTION_COMMAND = "npm run gulp build -- --development"
-    GULP_DEVELOP_COMMAND = "npm run gulp watch -- --development"
+# Option to run channels/cache on Redis locally (requires redis install)
+if USE_REDIS_LOCALLY:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("localhost", 6379)],
+            },
+        },
+    }
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        }
+    }
 
 # ==============================================================================
 # Debug Toolbar (development aid; helps diagnose queries and performance)
@@ -91,31 +104,5 @@ if ENABLE_DJANGO_GULP:
 ENABLE_DEBUG_TOOLBAR = False # True requires requirements_development install
 
 if ENABLE_DEBUG_TOOLBAR:
-    MIDDLEWARE += [
-        'debug_toolbar.middleware.DebugToolbarMiddleware',
-    ]
-
-    INSTALLED_APPS += (
-        'debug_toolbar',
-    )
-
-    DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
-    DEBUG_TOOLBAR_PANELS = (
-        'debug_toolbar.panels.versions.VersionsPanel',
-        'debug_toolbar.panels.timer.TimerPanel',
-        'debug_toolbar.panels.settings.SettingsPanel',
-        'debug_toolbar.panels.headers.HeadersPanel',
-        'debug_toolbar.panels.request.RequestPanel',
-        'debug_toolbar.panels.sql.SQLPanel',
-        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-        'debug_toolbar.panels.templates.TemplatesPanel',
-        'debug_toolbar.panels.cache.CachePanel',
-        'debug_toolbar.panels.signals.SignalsPanel',
-        'debug_toolbar.panels.logging.LoggingPanel',
-        #'debug_toolbar.panels.redirects.RedirectsPanel',
-    )
-
-    DEBUG_TOOLBAR_CONFIG = {
-        'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
-    }
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
+    INSTALLED_APPS += ('debug_toolbar',)

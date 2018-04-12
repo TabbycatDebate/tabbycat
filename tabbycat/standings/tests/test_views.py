@@ -2,20 +2,20 @@ import logging
 
 from django.test import TestCase
 
-from utils.tests import ConditionalTournamentViewBasicCheckMixin, suppress_logs
+from utils.tests import ConditionalTournamentViewLoadTest, suppress_logs
 
 
-class PublicDiversityViewTest(ConditionalTournamentViewBasicCheckMixin, TestCase):
+class PublicDiversityViewTest(ConditionalTournamentViewLoadTest, TestCase):
     view_name = 'standings-public-diversity'
     view_toggle = 'public_features__public_diversity'
 
 
-class PublicTeamStandingsViewTest(ConditionalTournamentViewBasicCheckMixin, TestCase):
+class PublicTeamStandingsViewTest(ConditionalTournamentViewLoadTest, TestCase):
     view_name = 'standings-public-teams-current'
     view_toggle = 'public_features__public_team_standings'
 
 
-class PublicRepliesTabViewTest(ConditionalTournamentViewBasicCheckMixin, TestCase):
+class PublicRepliesTabViewTest(ConditionalTournamentViewLoadTest, TestCase):
     view_name = 'standings-public-tab-replies'
     view_toggle = 'tab_release__replies_tab_released'
 
@@ -26,8 +26,3 @@ class PublicRepliesTabViewTest(ConditionalTournamentViewBasicCheckMixin, TestCas
     def test_unset_preference(self):
         with suppress_logs('standings.metrics', logging.INFO):
             super().test_unset_preference()
-
-
-class PublicMotionsTabViewTest(ConditionalTournamentViewBasicCheckMixin, TestCase):
-    view_name = 'standings-public-tab-motions'
-    view_toggle = 'tab_release__motion_tab_released'

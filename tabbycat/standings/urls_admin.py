@@ -1,34 +1,31 @@
-from django.conf.urls import url
+from django.urls import include, path
 
 from . import views
 
 urlpatterns = [
+    path('round/<int:round_seq>/', include([
+        path('',
+            views.StandingsIndexView.as_view(),
+            name='standings-index'),
+        path('team/',
+            views.TeamStandingsView.as_view(),
+            name='standings-team'),
+        path('division/',
+            views.DivisionStandingsView.as_view(),
+            name='standings-division'),
 
-    url(r'^$',
-        views.StandingsIndexView.as_view(),
-        name='standings-index'),
-    url(r'^team/$',
-        views.TeamStandingsView.as_view(),
-        name='standings-team'),
-    url(r'^division/$',
-        views.DivisionStandingsView.as_view(),
-        name='standings-division'),
+        path('speaker/',
+            views.SpeakerStandingsView.as_view(),
+            name='standings-speaker'),
+        path('speaker/<slug:category>/',
+            views.SpeakerCategoryStandingsView.as_view(),
+            name='standings-speaker-category'),
+        path('reply/',
+            views.ReplyStandingsView.as_view(),
+            name='standings-reply'),
 
-    url(r'^speaker/$',
-        views.SpeakerStandingsView.as_view(),
-        name='standings-speaker'),
-    url(r'^speaker/(?P<category>\w+)/$',
-        views.SpeakerCategoryStandingsView.as_view(),
-        name='standings-speaker-category'),
-    url(r'^reply/$',
-        views.ReplyStandingsView.as_view(),
-        name='standings-reply'),
-
-    url(r'^motions/$',
-        views.MotionStandingsView.as_view(),
-        name='standings-motion'),
-    url(r'^diversity/$',
-        views.DiversityStandingsView.as_view(),
-        name='standings-diversity'),
-
+        path('diversity/',
+            views.DiversityStandingsView.as_view(),
+            name='standings-diversity'),
+    ])),
 ]

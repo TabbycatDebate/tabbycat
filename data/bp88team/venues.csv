@@ -1,25 +1,26 @@
-name,priority,category
-"01",10,Apple
-"02",10,Apple
-"03",10,Apple
-"G01",10,Banana
-"G02",10,Banana
-"G03",10,Banana
-"G04",10,Coconut
-"G05",10,Coconut
-"G06",10,Coconut
-"G08",10,Coconut
-"103",20,Date
-"104",20,Date
-"205",20,Date
-"308",20,Date
-"4.01",30,Feijoa
-"4.03",30,Feijoa
-"Basement A",30,Kiwifruit
-"Basement B",30,Kiwifruit
-"Z08",40,Close to tab
-"Z09",40,Close to tab
-"Z10",40,Close to tab
-"Main Hall",10,(Accessible)
-"Sub Hall",20,(Accessible)
-"Outside",10,
+name,priority
+East 102,80
+East 105,80
+East 107,80
+East 110,80
+East 111,80
+East G03,82
+North 211,70
+North 213,70
+North B02,90
+North B15,90
+North G01,100
+North G02,100
+North G05,100
+South 107,50
+South 201,50
+South 202,50
+South 211,50
+West 102,60
+West 103,60
+West 105,60
+West 107,60
+West 211,60
+West 213,60
+Central Auditorium,40
+Eastern Auditorium,42

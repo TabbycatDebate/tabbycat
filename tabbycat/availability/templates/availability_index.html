@@ -8,14 +8,14 @@
       <form method="POST" action="{% roundurl 'availability-checkin-breaking-adjudicators' %}">
         {% csrf_token %}
         <button class="btn btn-primary " type="submit">
-          {% trans "Check In All Breaking Adjs" %}
+          {% trans "Mark All Breaking Adjs as Available" %}
         </button>
       </form>
     {% else %}
       <form method="POST" action="{% roundurl 'availability-checkin-all' %}">
         {% csrf_token %}
         <button class="btn btn-primary " type="submit">
-          {% trans "Check In Everything" %}
+          {% trans "Mark Everything as Available" %}
         </button>
       </form>
       {% if round.prev %}
@@ -23,7 +23,7 @@
           {% csrf_token %}
           <button class="btn btn-primary " type="submit">
             {% blocktrans trimmed with prev_round=round.prev.abbreviation %}
-              Copy from {{ prev_round }}
+              Copy Availability from {{ prev_round }}
             {% endblocktrans %}
           </button>
         </form>
@@ -47,39 +47,39 @@
         this may lead to a draw that fails or is incorrect">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif checkin_info.teams.in_now == 0 %}
+    {% elif availability_info.teams.in_now == 0 %}
       <button class="btn btn-danger disabled"
-        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some teams have been checked in." %}">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some teams have been marked as available." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif checkin_info.adjs.in_now == 0 %}
+    {% elif availability_info.adjs.in_now == 0 %}
       <button class="btn btn-danger disabled"
-        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some adjudicators have been checked in." %}">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some adjudicators have been marked as available." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif checkin_info.venues.in_now == 0 %}
+    {% elif availability_info.venues.in_now == 0 %}
       <button class="btn btn-danger disabled"
-        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been checked in." %}">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been marked as available." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif min_venues > checkin_info.venues.in_now %}
+    {% elif min_venues > availability_info.venues.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% trans "There aren't enough venues checked in for the number of debates — the draw may not generate properly." %}">
+        data-toggle="tooltip" title="{% trans "There aren't enough venues marked as available for the number of debates — the draw may not generate properly." %}">
          {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
        </button>
-    {% elif min_adjudicators > checkin_info.adjs.in_now %}
+    {% elif min_adjudicators > availability_info.adjs.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% trans "There aren't enough adjudicators checked in for the number of debates — the draw may not generate properly." %}">
+        data-toggle="tooltip" title="{% trans "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif pref.teams_in_debate == 'two' and not checkin_info.teams.in_now|divisibleby:2  %}
+    {% elif pref.teams_in_debate == 'two' and not availability_info.teams.in_now|divisibleby:2  %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% trans "There is an uneven number of teams checked in — the draw may not generate properly." %}">
+        data-toggle="tooltip" title="{% trans "There is an uneven number of teams marked as available — the draw may not generate properly." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
-    {% elif pref.teams_in_debate == 'bp' and not checkin_info.teams.in_now|divisibleby:4  %}
+    {% elif pref.teams_in_debate == 'bp' and not availability_info.teams.in_now|divisibleby:4  %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% trans "The number of teams checked in is not a multiple of 4 — the draw may not generate properly." %}">
+        data-toggle="tooltip" title="{% trans "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% else %}
@@ -169,7 +169,7 @@
     </div>
   {% endif %}
 
-  {% if round.is_break_round and not round.prev.is_break_round and checkin_info.teams.total == 0 %}
+  {% if round.is_break_round and not round.prev.is_break_round and availability_info.teams.total == 0 %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
@@ -181,7 +181,7 @@
     </div>
   {% endif %}
 
-  {% if round.is_break_round and checkin_info.teams.total == 1 %}
+  {% if round.is_break_round and availability_info.teams.total == 1 %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
       {% blocktrans trimmed with break_category=round.break_category.name %}
@@ -199,7 +199,7 @@
 {% block content %}
 
   <div class="row">
-    {% for type, info in checkin_info.items %}
+    {% for type, info in availability_info.items %}
       <div class="col-md-4 mb-3">
         {% include 'checkin_progress.html' %}
       </div>

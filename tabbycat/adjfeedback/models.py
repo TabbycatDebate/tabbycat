@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
@@ -117,7 +117,6 @@ class AdjudicatorFeedbackQuestion(models.Model):
         AdjudicatorFeedbackBooleanAnswer:
         [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
     }
-    CHOICE_SEPARATOR = "//"
 
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
@@ -151,9 +150,15 @@ class AdjudicatorFeedbackQuestion(models.Model):
     max_value = models.FloatField(blank=True, null=True,
         verbose_name=_("maximum value"),
         help_text=_("Maximum allowed value for numeric fields (ignored for text or boolean fields)"))
+
+    CHOICE_SEPARATOR = "//"  # This is hard-coded into the help text string below
+    # We can't insert the CHOICE_SEPARATOR using string formatting because the below must be
+    # translated lazily, and string formatting isn't compatible with lazy objects. (It can be
+    # done with django.utils.text.format_lazy(), but this uses {}-style formating, not %-style.)
     choices = models.CharField(max_length=500, blank=True,
         verbose_name=_("choices"),
-        help_text=_("Permissible choices for select one/multiple fields, separated by %r (ignored for other fields)" % CHOICE_SEPARATOR))
+        help_text=_("Permissible choices for select one/multiple fields, separated by '//' "
+                    "(ignored for other fields)"))
 
     class Meta:
         unique_together = [('tournament', 'reference'), ('tournament', 'seq')]
@@ -263,10 +268,10 @@ class AdjudicatorFeedback(Submission):
     def clean(self):
         if not (self.source_adjudicator or self.source_team):
             raise ValidationError(
-                ugettext("Either the source adjudicator or source team wasn't specified."))
+                gettext("Either the source adjudicator or source team wasn't specified."))
         if self.source_adjudicator and self.source_team:
             raise ValidationError(
-                ugettext("There was both a source adjudicator and a source team."))
+                gettext("There was both a source adjudicator and a source team."))
         if self.adjudicator not in self.debate.adjudicators:
-            raise ValidationError(ugettext("Adjudicator did not see this debate."))
+            raise ValidationError(gettext("Adjudicator did not see this debate."))
         return super(AdjudicatorFeedback, self).clean()

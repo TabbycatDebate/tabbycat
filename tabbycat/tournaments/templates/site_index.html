@@ -9,20 +9,34 @@
 {% for tournament in tournaments %}
   <div class="list-group mt-2">
 
-    {% if user.is_authenticated %}
-      {% if user.is_superuser %}
-        {% blocktrans trimmed asvar text with tn=tournament.name %}
-          Admin area for <strong>{{ tn }}</strong>
-        {% endblocktrans %}
-      {% else %}
-        {% blocktrans trimmed asvar text with tn=tournament.name %}
-          Assistant area for <strong>{{ tn }}</strong>
-        {% endblocktrans %}
-      {% endif %}
-      {% include "components/item-action.html" with icon="settings" url=tournament.get_absolute_url%}
+    {% url 'tournament-admin-home' tournament_slug=tournament.slug as admin_url %}
+    {% url 'tournament-assistant-home' tournament_slug=tournament.slug as assistant_url %}
+    {% url 'tournament-public-index' tournament_slug=tournament.slug as public_url %}
+
+    {% if user.is_superuser %}
+      {% blocktrans trimmed asvar text with tn=tournament.name %}
+        Administrator area for <strong>{{ tn }}</strong>
+      {% endblocktrans %}
+      {% include "components/item-action.html" with icon="settings" url=admin_url %}
     {% endif %}
 
-    {% include "components/item-action.html" with text=tournament.name icon="award" url=tournament.get_public_url%}
+    {% if user.is_authenticated %}
+      {% blocktrans trimmed asvar text with tn=tournament.name %}
+        Assistant area for <strong>{{ tn }}</strong>
+      {% endblocktrans %}
+     {% include "components/item-action.html" with icon="pocket" url=assistant_url %}
+
+      {% blocktrans trimmed asvar text with tn=tournament.name %}
+        Public area for <strong>{{ tn }}</strong>
+      {% endblocktrans %}
+      {% include "components/item-action.html" with icon="globe" url=public_url %}
+
+    {% else %}
+
+      {% include "components/item-action.html" with text=tournament.name icon="award" url=public_url%}
+
+    {% endif %}
+
 
   </div>
 {% empty %}
@@ -52,15 +66,15 @@
   <div class="list-group mt-2">
 
     {% trans "All Draws by Venue" as text %}
-    {% url 'all_tournaments-all-venues' as url %}
+    {% url 'all-tournaments-all-venues' as url %}
     {% include "components/item-action.html" with icon="map" %}
 
     {% trans "All Draws by School" as text %}
-    {% url 'all_tournaments-all-institutions' as url %}
+    {% url 'all-tournaments-all-institutions' as url %}
     {% include "components/item-action.html" with icon="home" %}
 
     {% trans "All Teams and Divisions" as text %}
-    {% url 'all_tournaments-all-teams' as url %}
+    {% url 'all-tournaments-all-teams' as url %}
     {% include "components/item-action.html" with icon="users" %}
 
   </div>

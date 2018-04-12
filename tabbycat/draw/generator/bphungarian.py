@@ -5,7 +5,7 @@ from collections import Counter
 from math import log2
 from statistics import pvariance
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 import munkres
 
 from .common import BaseBPDrawGenerator, DrawUserError

@@ -8,7 +8,8 @@
           :division="division"
           :save-venue-category-url="saveVenueCategoryUrl"
           :teams="teamsInDivision(division.id)"
-          :vcs="venueCategories">
+          :vcs="venueCategories"
+          :round-info="roundInfo">
         </division-droppable>
       </div>
     </div>
@@ -23,16 +24,16 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import DivisionDroppable from  './DivisionDroppable.vue'
 import UnallocatedItemsContainer from  '../../templates/draganddrops/UnallocatedItemsContainer.vue'
 import DraggableTeam from  '../../templates/draganddrops/DraggableTeam.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [AjaxMixin],
   components: { DraggableTeam, DivisionDroppable, UnallocatedItemsContainer },
-  props: ['teams', 'divisions', 'venueCategories',
+  props: ['teams', 'divisions', 'venueCategories', 'roundInfo',
           'saveDivisionsUrl', 'saveVenueCategoryUrl'],
   created: function () {
     // Watch for events on the global event hub
@@ -40,19 +41,19 @@ export default {
     this.$eventHub.$on('assign-draggable', this.moveToDivision)
   },
   computed: {
-    teamsById: function() {
-      return _.keyBy(this.debateTeams, 'id')
+    teamsById: function () {
+      return _.keyBy(this.teams, 'id')
     },
-    divisionsOrderedByName: function() {
+    divisionsOrderedByName: function () {
       return _.orderBy(this.divisions, 'name')
     },
-    unallocatedTeams: function() {
-      return _.filter(this.debateTeams, { 'division': null })
+    unallocatedTeams: function () {
+      return _.filter(this.teams, { 'division': null })
     }
   },
   methods: {
-    teamsInDivision: function(divisionId) {
-      return _.filter(this.debateTeams, { 'division': divisionId })
+    teamsInDivision: function (divisionId) {
+      return _.filter(this.teams, { 'division': divisionId })
     },
     moveToDivision(payload, assignedId) {
       this.teamsById[payload.team].division = assignedId

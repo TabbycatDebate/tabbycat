@@ -1,0 +1,26 @@
+name,priority,category
+KK104,80,Apple
+KK106,80,Apple
+KK125,80,Apple
+KK130,80,Apple
+KK138,80,Apple
+KK007,82,Apple
+NL212,70,Banana
+NL217,70,Banana
+NL019,90,Banana
+NL142,90,Close to tab
+NL143,100,Close to tab
+NL244,100,Banana
+NL260,100,Banana
+WB102,50,Coconut
+WB300,50,Coconut
+WB301,50,Coconut
+WB400,50,Coconut
+AG001,60,Accessible
+AG003,60,Accessible
+AG110,60,Date
+AG207,60,Date
+AG218,60,Date
+AG219,60,Date
+Grand Auditorium,40,Auditorium
+Lower Auditorium,42,Auditorium

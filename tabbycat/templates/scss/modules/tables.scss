@@ -6,7 +6,6 @@
   overflow-x: scroll;
 
   .card-title {
-    padding-left: 12px;
     margin-top: -8px;
   }
 
@@ -39,6 +38,9 @@
       border-bottom-color: #ccc;
     }
   }
+  &.hide-hover .hover-target .tooltip-trigger {
+    border-bottom: none;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -56,85 +58,49 @@ thead,
 }
 
 .vue-sortable {
-  min-width: 46px; // Must accomodate sorting arrows
 
   .vue-sort-key {
-    display: inline; // VIP
-
-    .sorting-placeholder-for-width { // Prevent tables from jumping on hover
-      width: 18px;
-      margin-left: -6px;
-      display: inline-block;
-    }
-
-    .feather {
-      margin-left: -6px;
-    }
+    width: 16px;
+    height: 18px;
+    display: inline-block;
   }
 
   // By default don't show if not hovering or active
   .feather-chevrons-up,
   .feather-chevrons-down {
     display: none;
-  }
-
-  .vue-sort-active {
-
-    .sorting-placeholder-for-width {
-      display: none;
-    }
-  }
-
-  // When active show the currently active sort order
-  .sort-by-desc .feather-chevrons-down {
-    display: inline;
-  }
-
-  .sort-by-asc .feather-chevrons-up {
-    display: inline;
+    margin-bottom: -5px; // Align with text
+    margin-right: -4px; // Overwrite the padding as it acts as a spacer
   }
 
   &:hover {
     @extend .text-primary;
-
     cursor: pointer;
+
     // By default; if not sorting is active; show sort-desc
-    .vue-sort-key {
-
-      .sorting-placeholder-for-width {
-        display: none;
-      }
-
-      .feather-chevrons-down {
-        display: none;
-      }
-
-      .feather-chevrons-up {
-        display: inline;
-      }
+    .vue-sort-key .feather-chevrons-up {
+      display: inline;
     }
+  }
 
-    // When hovering over active sorting show the sorting order a click activates
-    .sort-by-desc {
+  // When active show the currently active sort order
+  .vue-sort-active.sort-by-desc {
 
-      .feather-chevrons-down {
-        display: none;
-      }
-
-      .feather-chevrons-up {
-        display: inline;
-      }
+    .feather-chevrons-down {
+      display: inline;
     }
+    .feather-chevrons-up {
+      display: none;
+    }
+  }
 
-    .sort-by-asc {
+  .vue-sort-active.sort-by-asc {
 
-      .feather-chevrons-down {
-        display: inline;
-      }
-
-      .feather-chevrons-up {
-        display: none;
-      }
+    .feather-chevrons-up {
+      display: inline;
+    }
+    .feather-chevrons-down {
+      display: none;
     }
   }
 }
@@ -152,21 +118,34 @@ thead,
 .table > thead > tr > th,
 .draw-container .thead {
   padding-bottom: 12px;
+  font-family: $headings-font-family;
+  text-transform: none;
+  font-weight: normal;
+
+  > div {
+    padding-bottom: 2px; // Offset tooltip underline to maintain baseline
+  }
+  .tooltip-trigger {
+    margin-bottom: -4px; // Un-Offset tooltip underline
+    padding-bottom: 2px; // Offset tooltip underline
+  }
 }
 
 // Icons in headers
-.table > thead > tr > th .feather,
-.draw-container .thead .feather {
-  width: 18px;
-  height: 18px; // Need to match font size of header text
-  padding-bottom: 4px; // Space out the underline
-  margin-bottom: -6px;
+.table > thead > tr > th .header-icon,
+.draw-container .thead .header-icon {
+  width: 16px;
+  height: 16px; // Need to match font size of header text
   box-sizing: initial;
+  margin-right: -2px; // Bring sort icon closer
+  margin-bottom: 1px;
 
   &.tooltip-trigger {
-    padding-bottom: 2px;
+    padding-bottom: 3px;
+    margin-bottom: -4px; // Un-Offset tooltip underline
   }
 }
+
 
 .draw-container .thead .feather {
   margin-top: -4px;
@@ -188,6 +167,10 @@ thead,
 
 .team-name {
   min-width: 125px; // BP team cells need a good width when using abbreviations
+
+  .emoji {
+    padding-right: 2px;
+  }
 }
 
 .venue-name {
@@ -215,10 +198,6 @@ thead,
   &.highlight-col {
     border-left: 2px dotted $droppable-bg;
   }
-
-  .form-check-label input {
-    margin-top: -10px;
-  }
 }
 
 //------------------------------------------------------------------------------
@@ -227,10 +206,6 @@ thead,
 
 // For Phones
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
-
-  .team-name .emoji {
-    display: block; // Fix ugly wrapping and make names easier to identify
-  }
 
   .table > tbody > tr > th,
   .table > tbody > tr > td {

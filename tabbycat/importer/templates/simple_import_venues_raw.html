@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🎪</span>{% trans "Add Venues" context "page title" %}
+{% block head-title %}<span class="emoji">🎪</span> {% trans "Add Venues" context "page title" %}
 {% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}🎪 {% trans "Add Venues" context "page title" %}{% endblock %}
+{% block page-title %}{% trans "Add Venues" context "page title" %}{% endblock %}
 
 {% block content %}
 
@@ -12,8 +12,7 @@
   {% csrf_token %}
 
     <div class="list-group-item text-info">
-      Paste a list of venues with one venue per line and following the format of:
-      <em>Name,Priority</em>. For example:
+      {% trans "Paste a list of venues with one venue per line and following the format of: <code>name,priority</code>. For example:" %}
     </div>
 
     <div class="list-group-item list-group-item-secondary pb-0">
@@ -24,11 +23,13 @@
 
     <div class="list-group-item pb-3 pt-3">
 
-      {% csrf_token %}
       {{ wizard.management_form }}
 
       {% if wizard.form.venues_raw.errors %}
-        {% include "components/form-errors.html" with errors=wizard.form.venues_raw.errors %}
+        <div class="alert alert-danger">
+          <p>{% trans "There are some problems with the data on this form:" %}</p>
+          {{ wizard.form.venues_raw.errors }}
+        </div>
       {% endif %}
 
       <div class="form-group">
@@ -41,6 +42,5 @@
     {% include "components/form-submit.html" %}
 
 </form>
-</code>
 
 {% endblock content %}

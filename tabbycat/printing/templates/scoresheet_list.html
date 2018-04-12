@@ -1,5 +1,5 @@
 {% extends "printables_list.html" %}
-{% load i18n %}
+{% load i18n l10n %}
 
 {% block head-title %}
   {% trans "Scoresheets" %}
@@ -30,7 +30,7 @@ Printable Scoresheets for {{ round_name }}
   <style>
     @media print {
       @page {
-        size: A4 landscape;
+        size: landscape;
       }
     }
   </style>
@@ -39,8 +39,8 @@ Printable Scoresheets for {{ round_name }}
       // Strings to Fill In
       roundInfo: {
         tournamentName: '{{ tournament.short_name }}',
-        returnLocation: '{{ pref.feedback_return_location }}',
-        votingBallots: {% if pref.ballots_per_debate == 'per-adj' %}true{% else %}false{% endif %},
+        returnLocation: '{{ pref.score_return_location }}',
+        votingBallots: {% if round.ballots_per_debate == 'per-adj' %}true{% else %}false{% endif %},
         // Formatting
         showTabRoomRow: true,
         showEmoji: {% if pref.show_emoji %}true{% else %}false{% endif %},
@@ -57,13 +57,14 @@ Printable Scoresheets for {{ round_name }}
         showTabRoomRow: true,
         showInfoRow: false,
         showPronouns: true,
-        substantiveMin: '{{ pref.score_min }}',
-        substantiveMax: '{{ pref.score_max }}',
-        substantiveStep: '{{ pref.score_step }}',
-        replyMin: '{{ pref.reply_score_min }}',
-        replyMax: '{{ pref.reply_score_max }}',
-        replyStep: '{{ pref.reply_score_step }}',
+        substantiveMin: '{{ pref.score_min|unlocalize }}',
+        substantiveMax: '{{ pref.score_max|unlocalize }}',
+        substantiveStep: '{{ pref.score_step|unlocalize }}',
+        replyMin: '{{ pref.reply_score_min|unlocalize }}',
+        replyMax: '{{ pref.reply_score_max|unlocalize }}',
+        replyStep: '{{ pref.reply_score_step|unlocalize }}',
         motions: {{ motions|safe }},
+        teamCodes: {{ use_team_code_names|lower }},
       },
       // From Django
       ballots: {{ ballots|safe }},

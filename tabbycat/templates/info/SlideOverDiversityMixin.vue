@@ -4,14 +4,14 @@ import _ from 'lodash'
 
 export default {
   methods: {
-    genderBrackets: function(gender) {
+    genderBrackets: function (gender) {
       if (gender) {
         return '(' + gender + ')'
       } else {
         return ''
       }
     },
-    institutionDetailForSlideOver: function(adjorteam) {
+    institutionDetailForSlideOver: function (adjorteam) {
       if (adjorteam.institution !== null) {
         var title = adjorteam.institution.name
         var css = ''

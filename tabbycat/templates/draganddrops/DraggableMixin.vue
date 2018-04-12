@@ -12,10 +12,10 @@
 // else they wont be remove upon a drop
 
 export default {
-  data: function() { return { isDragging: false, isHovering: false }},
+  data: function () { return { isDragging: false, isHovering: false }},
   props: { locked: false },
   computed: {
-    draggableClasses: function() {
+    draggableClasses: function () {
       var draggableCSS = "vue-draggable btn btn-sm "
       if (this.isHovering) {
         draggableCSS += "vue-is-hovering "
@@ -30,7 +30,7 @@ export default {
     },
   },
   methods: {
-    dragStart: function(event) {
+    dragStart: function (event) {
       if (this.locked) {
         event.preventDefault() // Firefox needs this
         return
@@ -44,7 +44,7 @@ export default {
         this.handleDragStart(event);
       }
     },
-    dragEnd: function(event) {
+    dragEnd: function (event) {
       this.$nextTick(function () {
         this.isDragging = false;
         this.isHovering = false;

@@ -1,12 +1,15 @@
-round,seq,reference,text
-R1,1,Valentine’s Day,This House regrets the existence of Valentine's Day
-R2,1,Apple,This House would not buy Apple
-R3,1,Lego and Barbie,This House would rather play with Lego than Barbie
-R4,1,Tomatoes,This House believes that tomatoes are a fruit
-R5,1,Indecent exposure,This House would make an exception to laws forbidding indecent exposure for days with hot temperatures
-R6,1,Cash,This House would stop using cash
-R7,1,Esperanto,This House would make Esperanto mandatory in all schools in the world
-R8,1,Metric system,This House would impose trade sanctions on countries that do not use the metric system
-OQF,1,Timeouts,This House would ban timeouts in all team sports
-OSF,1,Local films,This House would require every citizen to watch a film produced in their country every year
-OGF,1,Internet,This House regrets our reliance on the internet
+round,reference,text
+R1,World maps,This House would require all world maps to be drawn using equal-area projections
+R2,Tomatoes,This House believes that tomatoes are a fruit
+R3,Harry Potter,This House believes that Harry Potter should have married Luna Lovegood
+R4,Valentine’s Day,This House regrets the existence of Valentine's Day
+R5,Cash,This House would stop using cash
+R6,Timeouts,This House would abolish timeouts in all team sports
+R7,Esperanto,This House would make Esperanto mandatory in all schools in the world
+R8,Local films,This House would require every citizen to watch a film produced in their country every year
+OQF,Indecent exposure,This House would make an exception to laws forbidding indecent exposure for hot days
+NSF,Apple,This House would not buy Apple
+OSF,Oxford comma,This House would always use the Oxford comma
+SGF,Metric system,This House would impose trade sanctions on countries that do not use the metric system
+NGF,Internet,This House regrets our reliance on the internet
+OGF,Time zones,This House believes that the world should use a single time zone

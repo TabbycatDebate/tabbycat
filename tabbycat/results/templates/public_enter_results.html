@@ -2,11 +2,11 @@
 {% load debate_tags add_field_css humanize static i18n %}
 
 
-{% block page-title %}{% blocktrans trimmed with matchup=debate.matchup %}
-  Enter Results for {{ matchup }}
+{% block page-title %}{% blocktrans trimmed %}
+  Enter Results for {{ debate_name }}
 {% endblocktrans %}{% endblock %}
-{% block head-title %}{% blocktrans trimmed with matchup=debate.matchup %}
-  Enter Results for {{ matchup }}
+{% block head-title %}{% blocktrans trimmed %}
+  Enter Results for {{ debate_name }}
 {% endblocktrans %}{% endblock %}
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
@@ -67,6 +67,9 @@
         <input id="id_discarded" type="hidden" name="discarded" />
         <input id="id_confirmed" type="hidden" name="confirmed" />
         <input class="save btn btn-success btn-block " type="submit" value="Submit Ballot(s)" tabindex="{{ form.nexttabindex }}"/>
+        <div class="text-center pt-3 small text-muted">
+          {% trans "When submitting this form your IP address will be stored for logging purposes." %}
+        </div>
       </div>
     </div>
 

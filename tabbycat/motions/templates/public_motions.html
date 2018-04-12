@@ -15,14 +15,16 @@
         {% include "components/form-title.html" with title=round.name %}
         {% if round.motions_released %}
           {% for motion in round.motion_set.all %}
-            <li class="list-group-item">
-              {{ motion.text }}
+            <li class="list-group-item d-flex flex-column flex-md-row">
+              <div class="mr-auto pr-3">{{ motion.text }}</div>
               {% if motion.info_slide %}
-                <span class="h6 badge badge-light text-secondary hover-target float-md-right d-block mb-0 mt-md-1 mt-2"
-                      data-toggle="modal" data-target="#info_{{ motion.id }}">
-                  {% trans "View Info Slide" %}
-                </span>
-                {% include 'motions_info.html' %}
+                <div>
+                  <button class="btn btn-sm btn-secondary mt-md-0 mt-3 mb-1 btn-block"
+                          data-toggle="modal" data-target="#info_{{ motion.id }}">
+                    {% trans "View Info Slide" %}
+                  </button>
+                  {% include 'motions_info.html' %}
+                </div>
               {% endif %}
             </li>
           {% empty %}

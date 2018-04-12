@@ -1,0 +1,262 @@
+# Tabbycat translations, venues module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: venues/apps.py:7
+msgid "Venues"
+msgstr "مكان المناظرة"
+
+#: venues/models.py:10 venues/models.py:74
+msgid "name"
+msgstr "الاسم"
+
+#: venues/models.py:12 venues/models.py:128
+msgid "priority"
+msgstr "الأولوية"
+
+#: venues/models.py:13
+msgid ""
+"Venues with a higher priority number will be preferred when allocating "
+"venues to debates"
+msgstr "ستفضل أرقام القاعات التي لها أولوية أعلى عند تخصيص مكان التناظر"
+
+#: venues/models.py:16
+msgid "tournament"
+msgstr "البطولة"
+
+#: venues/models.py:17
+msgid ""
+"Venues not assigned to any tournament can be shared between tournaments"
+msgstr ""
+"الأماكن التي لم يتم تخصيصها لأي بطولة يمكن أن تكون مشتركة بين البطولات"
+
+#: venues/models.py:24
+msgid "venue"
+msgstr "قاعة"
+
+#: venues/models.py:25 venues/models.py:84
+msgid "venues"
+msgstr "قاعات "
+
+#: venues/models.py:69
+msgid "Don't display in venue name"
+msgstr "لا تعرض اسم المكان"
+
+#: venues/models.py:70
+msgid "Display as prefix"
+msgstr "العرض كبادئة"
+
+#: venues/models.py:71
+msgid "Display as suffix"
+msgstr "العرض كبادئة"
+
+#: venues/models.py:75
+msgid ""
+"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab "
+"room\". This name is shown when the category is prefixed or suffixed to a "
+"venue name in the draw, e.g., \"Purple – G05\"."
+msgstr ""
+"اسم الفئة، على سبيل المثال، \"أرجواني\"، \"وصول مجاني\"، \"قريب من غرفة الإدخال\". يظهر هذا الاسم عندما تكون الفئة مسبوقة أو ملحقة باسم المكان في القرعة، على سبيل المثال، \"أرجواني - G05\".\n"
+" "
+
+#: venues/models.py:79
+msgid "description"
+msgstr "الوصف"
+
+#: venues/models.py:80
+msgid ""
+"Description, as the predicate of a sentence, e.g. \"has step-free access\", "
+"\"is close to the briefing hall\". This description follows \"This venue\" "
+"when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
+msgstr ""
+"الوصف، كمسند جملة، على سبيل المثال. \"لديه حرية الوصول\"، \"على مقربة من "
+"قاعة المؤتمرات\". هذا الوصف يتبع \"هذا المكان\" عندما يظهر في تلميحات "
+"الأدوات ، على سبيل المثال، \"هذا المكان قريب من قاعة المؤتمرات\"."
+
+#: venues/models.py:88
+msgid "display in venue name"
+msgstr "عرض اسم المكان"
+
+#: venues/models.py:89
+msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
+msgstr ""
+
+#: venues/models.py:91
+msgid "display in public tooltip"
+msgstr "تلميح عام"
+
+#: venues/models.py:92
+msgid ""
+"Displays the description in the tooltip for the venue on public pages. The "
+"description, if not blank, will always show on admin pages."
+msgstr ""
+"يعرض الوصف في تلميح الأدوات للمكان على الصفحات العامة. سيظهر الوصف، إن لم "
+"يكن فارغا، دائما على صفحات المشرف."
+
+#: venues/models.py:96
+msgid "venue category"
+msgstr "فئة المكان"
+
+#: venues/models.py:97
+msgid "venue categories"
+msgstr "فئات المكان"
+
+#: venues/models.py:127
+msgid "category"
+msgstr "الفئة"
+
+#: venues/models.py:131
+msgid "subject content type"
+msgstr "نوع محتوى الموضوع"
+
+#: venues/models.py:134
+msgid "subject ID"
+msgstr "معرف الموضوع "
+
+#: venues/models.py:140
+msgid "venue constraint"
+msgstr "القاعة المقيدة"
+
+#: venues/models.py:141
+msgid "venue constraints"
+msgstr "القاعات المقيدة "
+
+#: venues/templates/venue_categories_edit.html:4
+#: venues/templates/venue_categories_edit.html:5
+msgid "Venue Categories"
+msgstr "فئات القاعات"
+
+#: venues/templates/venue_categories_edit.html:7
+#: venues/templates/venue_categories_edit.html:22
+#: venues/templates/venue_constraints_edit.html:22
+msgid "Save Venue Categories"
+msgstr "حفظ فئات القاعات"
+
+#: venues/templates/venue_categories_edit.html:11
+msgid ""
+"Venue categories allow you to group venues together into \"zones\" to "
+"display in the draw and make navigation easier for participants, and/or "
+"specify constraints on venue allocation that require teams, adjudicators or "
+"institutions to be put in a venue in a particular category."
+msgstr ""
+"تسمح لك فئات القاعات بتجميع الأماكن معا في \"مناطق\" لعرضها في السحب وجعل "
+"التنقل أسهل للمشاركين و / أو تحديد القيود المفروضة على تخصيص المكان التي "
+"تتطلب فرقا أو محكمين أو مؤسسات يتم وضعها في مكان في فئة معينة."
+
+#: venues/templates/venue_categories_edit.html:16
+#, python-format
+msgid ""
+"If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
+"class=\"alert-link\">Edit Database</a> area."
+msgstr ""
+"اذا كنت تريد حذف القاعة ، <a href=\"%(edit_db_url)s\" class=\"alert-"
+"link\">تعديل قاعدة البيانات </a>المنطقة "
+
+#: venues/templates/venue_constraints_edit.html:4
+#: venues/templates/venue_constraints_edit.html:5
+msgid "Venue Constraints"
+msgstr "القاعات المقيدة"
+
+#: venues/templates/venue_constraints_edit.html:7
+msgid "Save Venue Constraints"
+msgstr "حفظ القاعة المقيدة"
+
+#: venues/templates/venue_constraints_edit.html:11
+msgid ""
+"Venue constraints tell the venue allocator to try to keep the specified team"
+" or adjudicator, or all teams (but not adjudicators) from the specified "
+"institution, in a venue in the given category. The \"priority\" field "
+"resolves conflicting constraints: the higher priority takes precedence. You "
+"can also use the priority field to specify \"lower-preference\" constraints,"
+" which are taken if a higher-priority constraint couldn't be met."
+msgstr ""
+"تفرض قيود المكان على مقدم المكان محاولة إبقاء الفريق أو المحكم المحدد، أو "
+"جميع الفرق (ليس المحكمين) من المؤسسة المحددة، في مكان في الفئة المعينة. يحل "
+"مجال \"الأولوية\" القيود المتعارضة: الأولوية العليا لها الأسبقية. يمكنك أيضا"
+" استخدام حقل الأولوية لتحديد قيود \"التفضيل الأقل\"، والتي يتم اتخاذها إذا "
+"كان لا يمكن تلبية قيود ذات أولوية أعلى."
+
+#: venues/utils.py:38 venues/utils.py:50
+#, python-format
+msgid "Venue constraint of %(name)s met (%(category)s)"
+msgstr ""
+
+#: venues/utils.py:39 venues/utils.py:51
+#, python-format
+msgid "Venue does not meet any constraint of %(name)s"
+msgstr ""
+
+#: venues/utils.py:44
+#, python-format
+msgid ""
+"Venue constraint of %(team)s met (%(category)s, via institution "
+"%(institution)s)"
+msgstr ""
+
+#: venues/utils.py:45
+#, python-format
+msgid ""
+"Venue does not meet any constraint of institution %(institution)s (%(team)s)"
+msgstr ""
+
+#: venues/views.py:102
+#, python-format
+msgid "Saved venue category: %(list)s"
+msgid_plural "Saved venue categories: %(list)s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: venues/views.py:108
+msgid "No changes were made to the venue categories."
+msgstr "لا يتم إجراء تغييرات على فئات القاعات"
+
+#: venues/views.py:150
+#, python-format
+msgid "%s (Adjudicator)"
+msgstr ""
+
+#: venues/views.py:153
+#, python-format
+msgid "%s (Team)"
+msgstr ""
+
+#: venues/views.py:156
+#, python-format
+msgid "%s (Institution)"
+msgstr ""
+
+#: venues/views.py:159
+#, python-format
+msgid "%s (Division)"
+msgstr ""
+
+#: venues/views.py:167
+#, python-format
+msgid "Saved %(count)d venue constraint."
+msgid_plural "Saved %(count)d venue constraints."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""

@@ -1,12 +1,12 @@
 <script>
-import MovingMixin from '../ajax/MovingMixin.vue'
 import _ from 'lodash'
+import MovingMixin from '../ajax/MovingMixin.vue'
 
 export default {
   mixins: [MovingMixin],
   methods: {
     debateCheckIfShouldSave(debate) {
-      var presentTeams = _.filter(debate.debateTeams, function(dt) {
+      var presentTeams = _.filter(debate.debateTeams, function (dt) {
         return dt.team !== null;
       })
       if (presentTeams.length === this.roundInfo.teamPositions.length) {

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static debate_tags add_field_css i18n %}
+
+{% block head-title %}<span class="emoji">🔟</span> {% trans "Update Adjudicator Scores" context "page title" %}
+{% endblock %}
+{% block page-title %}{% trans "Update Adjudicator Scores" context "page title" %}{% endblock %}
+
+{% block page-alerts %}
+  {% if no_adjs_in_database %}
+    {% tournamenturl 'importer-simple-institutions' as import_url %}
+    {% blocktrans trimmed asvar message %}
+      There aren't any adjudicators in this tournament, so you can't
+      update any scores. You might want to
+      <a href="{{ import_url }}" class="alert-link">import some adjudicators</a>
+      first.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+  <form action="." method="POST">
+  {% csrf_token %}
+
+    <div class="list-group-item text-info">
+    {% blocktrans trimmed %}
+      Paste a list of adjudicators' names and their new scores, in the format:
+      <code>adjudicator,score</code>. For example:
+    {% endblocktrans %}
+    </div>
+
+    <div class="list-group-item list-group-item-secondary pb-0">
+<pre><code>{% for adj, score in sample %}{{ adj }},{{ score }}
+{% endfor %}</code></pre>
+    </div>
+
+    <div class="list-group-item text-info">
+      {% trans "The adjudicators' names must match their names in the tab system exactly." %}
+    </div>
+
+    <div class="list-group-item pb-3 pt-3">
+
+        {% if form.scores_raw.errors %}
+          <div class="alert alert-danger">
+            <p>{% trans "There are some problems with the data on this form:" %}</p>
+            {{ form.scores_raw.errors }}
+          </div>
+        {% endif %}
+
+      <div class="form-group">
+        {{ form.scores_raw|addcss:"form-control" }}
+      </div>
+
+    </div>
+
+    {% trans "Submit" as title %}
+    {% include "components/form-submit.html" %}
+
+</form>
+
+{% endblock content %}

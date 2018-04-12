@@ -2,6 +2,64 @@
 Change Log
 ==========
 
+2.1.0 (Japanese Bobtail)
+------------------------
+*Release date: TBA*
+
+- Added an introductory modal for the Edit Adjudicators interface to help outline how the workflow operates
+- Added an automated method for assigning importances to debates using their bracket or 'liveness'. This should allow smaller tournaments to more easily assign importances and save time for larger tournaments that do so
+- Added the ability to switch between using 'team codes' and standard team names
+    - By default team codes are set to match that team's emoji, but team codes are editable and can be imported like standard data
+    - Team codes can be swapped in an out for standard team names at will, with precise control over the contexts in which either is used — i.e. in public-facing pages, in admin-facing pages, in tooltips, etc/
+- Added a range of 'check-in' functionality
+    - This includes barcode assignment, printing, and scanning. Scanning methods are optimised both for manual entry, entry with barcodes scanners, and for a 'live' scanning view that uses your phone's camera!
+    - This includes new people and venue status pages that show an overview of check-in status and allow for easy manual check-ins; ideal for a roll-calls!. This page can also be made public
+    - Ballot check-ins have been converted to this new method, and now all printed ballots will contain the barcodes needed to scan them
+    - Venue check-ins have been added alongside the standard 'person' check-ins to allow you to track a room's status at the start of the day or round-by-round
+- Added (partial) translation support
+    - Users can now use a button in the footer to switch the site's language into French, Spanish, or Arabic. By default Tabbycat should also match your browser's language and so automatically apply those languages if it matches.
+    - Our translations are generously provided by volunteers, but (so far) do not cover all of the interface text within Tabbycat. If you were interested in helping to translate new or existing languages please get in touch!
+- Added a new (beta) feature: allocation 'sharding'
+    - Sharding allows you to split up the Adjudicator Allocation screen into a defined subset of the draw. This has been designed so that you can have multiple computers doing allocations simultaneously; allowing the adjudication core to split itself and tackle allocations in parallel.
+    - Shards can be assigned into defined fractions (i.e. halves or fiths) according to specific criteria (i.e. bracket or priority) and following either a top-to-bottom sorting or a mixed sorting that ensures each bracket has an even proportion of each criteria.
+- Added draw pull-up option: pull up from middle
+- Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far
+- Added the ability to have different 'ballots-per-debates' for in/out rounds; accommodating tournaments like Australian Easters that use consensus for preliminary rounds but voting for elimination rounds.
+- Added time zone support to the locations where times are displayed
+- Administrators can now view pages as if they were Assistants; allowing them to (for example) use the data entry forms that enforce double-checking without needed to create a separate account
+- Fixed χ² test in motion statistics, and refactored and moved motion statistics page
+- Teams, like adjudicators, no longer need to have an institution
+- Added page allowing update of adjudicator scores in bulk
+- Made speaker standings more configurable
+    - Second-order metrics can now be specified
+    - Added trimmed mean (also known as high-low drop)
+    - Added ability to set no limit for number of missed debates
+    - Standard deviation is now the population standard deviation (was previously sample), and
+      ranks in ascending order if used to rank speakers.
+- Quality of life improvements
+    - Added a 'liveness' calculator for BP
+    - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
+    - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
+    - Added "appellant" and "respondent" to the side name options
+    - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
+    - The "shared" checkbox in the simple importer is now hidden unless the relevant tournament option is enabled
+    - Current team standings page now shows silent round results if "Release all round results to public" is set
+    - The Consensus vs Voting options for how ballots work has not been split into two settings: one for preliminary rounds and one for elimination rounds
+    - Speaker scores now show as integers (without decimals) where the tournament format would not allow decimals.
+    - Added a page showing a list of institutions in the tournament
+- Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
+    - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis' to any instances being upgraded
+    - Locally: You should recreate your local_settings.py from the example file
+- Upgraded to Django 2.0
+    - Converted most raw SQL queries to use the new ``filter`` keyword in annotations
+
+2.0.6
+-----
+*Release date: 20 March 2018*
+
+- Added reminder to add own-institution conflicts in the Edit Database area
+- Other minor fixes
+
 2.0.5
 -----
 *Release date: 7 February 2018*

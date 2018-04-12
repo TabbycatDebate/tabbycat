@@ -10,7 +10,7 @@ from django.views.generic.base import TemplateView, View
 
 from participants.models import Institution, Team
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from utils.mixins import CacheMixin, SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin, CacheMixin
 from utils.views import PostOnlyRedirectView
 from venues.models import VenueCategory, VenueConstraint
 
@@ -26,7 +26,7 @@ class PublicDivisionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
     template_name = "public_divisions.html"
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         divisions = Division.objects.filter(tournament=t).all().select_related('venue_category')
         divisions = sorted(divisions, key=lambda x: x.name)
         if len(divisions) > 0:
@@ -41,11 +41,11 @@ class PublicDivisionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class DivisionsAllocatorView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class DivisionsAllocatorView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "division_allocations.html"
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         teams = Team.objects.filter(tournament=t).all()
         teams_json = []
         for team in teams:
@@ -77,15 +77,16 @@ class DivisionsAllocatorView(SuperuserRequiredMixin, TournamentMixin, TemplateVi
         kwargs["divisions"] = json.dumps(list(divisions.values(
             'id', 'name', 'venue_category', 'venue_category__name')))
         kwargs["venue_categories"] = json.dumps(venue_categories)
+        kwargs['round_info'] = json.dumps(t.current_round.serialize())
 
         return super().get_context_data(**kwargs)
 
 
-class CreateByesView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class CreateByesView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         divisions = Division.objects.filter(tournament=t)
         Team.objects.filter(tournament=t, type=Team.TYPE_BYE).delete()
         for division in divisions:
@@ -105,11 +106,11 @@ class CreateByesView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectVi
         return super().post(request, *args, **kwargs)
 
 
-class CreateDivisionView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class CreateDivisionView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         division = Division.objects.create(name="temporary_name", tournament=t)
         division.save()
         division.name = "%s" % division.id
@@ -117,11 +118,11 @@ class CreateDivisionView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedire
         return super().post(request, *args, **kwargs)
 
 
-class CreateDivisionAllocationView(SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class CreateDivisionAllocationView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
     tournament_redirect_pattern_name = 'division_allocations'
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         teams = list(Team.objects.filter(tournament=t))
         institutions = Institution.objects.all()
         venue_categories = VenueCategory.objects.all()
@@ -137,7 +138,7 @@ class CreateDivisionAllocationView(SuperuserRequiredMixin, TournamentMixin, Post
         return super().post(request, *args, **kwargs)
 
 
-class SetDivisionVenueCategoryView(TournamentMixin, SuperuserRequiredMixin, View):
+class SetDivisionVenueCategoryView(TournamentMixin, AdministratorMixin, View):
 
     def post(self, request, *args, **kwargs):
         posted_data = json.loads(self.request.body)
@@ -152,11 +153,10 @@ class SetDivisionVenueCategoryView(TournamentMixin, SuperuserRequiredMixin, View
         return JsonResponse(json.dumps(posted_data), safe=False)
 
 
-class SetTeamDivisionView(TournamentMixin, SuperuserRequiredMixin, View):
+class SetTeamDivisionView(TournamentMixin, AdministratorMixin, View):
 
     def post(self, request, *args, **kwargs):
         posted_data = json.loads(self.request.body)
-        print(posted_data)
         team = Team.objects.get(pk=int(posted_data['team']))
         if posted_data['division'] is None:
             team.division = None
@@ -167,7 +167,7 @@ class SetTeamDivisionView(TournamentMixin, SuperuserRequiredMixin, View):
         return JsonResponse(json.dumps(posted_data), safe=False)
 
 
-class SetDivisionTimeView(TournamentMixin, SuperuserRequiredMixin, View):
+class SetDivisionTimeView(TournamentMixin, AdministratorMixin, View):
 
     def post(self, request, *args, **kwargs):
         division = Division.objects.get(pk=int(self.request.POST['division']))

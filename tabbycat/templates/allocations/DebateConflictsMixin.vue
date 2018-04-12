@@ -1,6 +1,6 @@
 <script>
-import ConflictUtilitiesMixin from './ConflictUtilitiesMixin.vue'
 import _ from 'lodash'
+import ConflictUtilitiesMixin from './ConflictUtilitiesMixin.vue'
 
 export default {
   // Designed to be applied to a Panel component as a bridge between
@@ -11,9 +11,9 @@ export default {
     return { debugMode: false }
   },
   watch: {
-    filteredConflicts: function() {
+    filteredConflicts: function () {
       // Re-calculate all conflicts when the master conflicts dictionary changes
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         // MUST wait for all data to finish resolving when panel info has been
         // updated before recalculating conflicts
         this.deactivatePanelConflicts()
@@ -21,26 +21,26 @@ export default {
       })
     }
   },
-  mounted: function() {
-    this.$nextTick(function() {
+  mounted: function () {
+    this.$nextTick(function () {
       // MUST to wait for DOM to resolve on initial load before calculating
       // the conflicts
       this.activatePanelConflicts()
     })
   },
   computed: {
-    teams: function() {
-      return _.map(this.panelTeams, function(dt) { return dt.team })
+    teams: function () {
+      return _.map(this.panelTeams, function (dt) { return dt.team })
     },
-    adjudicators: function() {
-      return _.map(this.panelAdjudicators, function(da) { return da.adjudicator })
+    adjudicators: function () {
+      return _.map(this.panelAdjudicators, function (da) { return da.adjudicator })
     },
-    allConflicts: function() {
+    allConflicts: function () {
       // Create an array of conflicts gathered from each team or adjudicator
-      var allConflicts = _.map(this.adjudicators, function(adj) {
+      var allConflicts = _.map(this.adjudicators, function (adj) {
         return adj.conflicts
       })
-      _.forEach(this.teams, function(team) {
+      _.forEach(this.teams, function (team) {
         // Remove any institutional conflicts coming from teams; only via adjs
         var teamConflicts = _.clone(team.conflicts)
         delete teamConflicts.clashes.institution
@@ -50,7 +50,7 @@ export default {
       })
       return allConflicts
     },
-    filteredConflicts: function() {
+    filteredConflicts: function () {
       // Traverse the combined conflicts object and delete those not relevant
       // to the panel. This allows us to (later) activate all the leftovers
       var subset = {
@@ -58,9 +58,9 @@ export default {
         'histories': { 'adjudicator': [], 'institution': [], 'team': [] }
       }
       var self = this
-      _.forEach(this.allConflicts, function(adjOrTeamsConflicts) {
+      _.forEach(this.allConflicts, function (adjOrTeamsConflicts) {
         // For all of the panel conflicts
-        self.forEachConflict(adjOrTeamsConflicts, function(conflict, type, clashOrHistory) {
+        self.forEachConflict(adjOrTeamsConflicts, function (conflict, type, clashOrHistory) {
           // Drill down into each adj/teams conflicts and filter out those
           // that cannot apply to the panel as-is
           if (self.checkIfInPanel(conflict, type, clashOrHistory)) {
@@ -74,28 +74,28 @@ export default {
     },
   },
   methods: {
-    deactivatePanelConflicts: function() {
+    deactivatePanelConflicts: function () {
       // Turn off all conflicts that might remain from previous panellists who
       // have been moved on
       var self = this
       if (this.debugMode) {
         console.log('Deactivate panel conflicts for', this.debateId);
       }
-      _.forEach(this.adjudicatorIds, function(id, da) {
+      _.forEach(this.adjudicatorIds, function (id, da) {
         self.resetConflictsFor('adjudicator', id, 'panel')
       })
-      _.forEach(this.teamIds, function(id, dt) {
+      _.forEach(this.teamIds, function (id, dt) {
         self.resetConflictsFor('team', id, 'panel')
       })
     },
-    activatePanelConflicts: function() {
+    activatePanelConflicts: function () {
       // Turn on all conflicts by activating what hs been set by
       // filteredPanelConflicts(). Calls/happens when a panel updates
       var self = this
       if (this.debugMode) {
         console.log('Activate panel conflicts for', this.debateId);
       }
-      this.forEachConflict(this.filteredConflicts, function(conflict, type, clashOrHistory) {
+      this.forEachConflict(this.filteredConflicts, function (conflict, type, clashOrHistory) {
         if (type === 'institution') {
           self.activatePanelWithInstitutionalConflict(conflict) // See below
         } else {
@@ -103,7 +103,7 @@ export default {
         }
       })
     },
-    activatePanelWithInstitutionalConflict: function(conflict) {
+    activatePanelWithInstitutionalConflict: function (conflict) {
       // For institutional conflicts within a panel we want to send them
       // out in a targetted fashion (unlike for say hover-overs where we
       // can do a global broadcast by institutional ID); that is to say we
@@ -111,13 +111,13 @@ export default {
       // target those items specifically
       var self = this
 
-      var teamsMatches = _.filter(this.teams, function(team) {
+      var teamsMatches = _.filter(this.teams, function (team) {
         if (team.institution !== null) {
           return team.institution.id === conflict.id;
         }
       });
       // Find teams of the same institution as the conflict
-      _.forEach(teamsMatches, function(team) {
+      _.forEach(teamsMatches, function (team) {
         if (team.institution.id === conflict.id) {
           self.sendConflict(team, 'team',       'institution', 'panel', 'clashes')
         }
@@ -127,7 +127,7 @@ export default {
       // we are checking. We have to loop over the adj in questions actual
       // institutional conflicts; not just their current institution as
       // its a many to many relationship
-      var adjsMatches = _.filter(this.adjudicators, function(adj) {
+      var adjsMatches = _.filter(this.adjudicators, function (adj) {
         var adjudicatorsInstitutions = adj.conflicts.clashes.institution
         var institutionIDs = _.map(adjudicatorsInstitutions, 'id');
         if (institutionIDs.indexOf(conflict.id) !== -1) {
@@ -139,12 +139,12 @@ export default {
 
       // Unlike with teams; adj-adj institution conflicts require co-presence
       if (adjsMatches.length > 1 || teamsMatches.length > 0) {
-        _.forEach(adjsMatches, function(adj) {
+        _.forEach(adjsMatches, function (adj) {
           self.sendConflict(adj, 'adjudicator', 'institution', 'panel', 'clashes')
         })
       }
     },
-    checkIfInPanel: function(conflict, type, clashOrHistory) {
+    checkIfInPanel: function (conflict, type, clashOrHistory) {
       // For a given conflict from a team/adj check if it can actually apply
       // to the panel
       if (type === 'institution') {

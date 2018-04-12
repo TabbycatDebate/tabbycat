@@ -7,23 +7,11 @@ __pycache__/
 tabbycat/staticfiles/
 tabbycat/static/css/
 tabbycat/static/js/
+tabbycat/static/jsi18n/
 tabbycat/static/fonts/
 
 # Dependencies
 node_modules
-
-# Data to ignore
-data/*
-
-# Default data to include
-!data/bp88team/
-!data/demo/
-!data/demo_simple/
-!data/sandbox/
-!data/test/
-!data/presets/
-!data/fixtures/
-!data/migrate_fixtures.py
 
 # Docker
 dbdata
@@ -72,7 +60,8 @@ pip-log.txt
 nosetests.xml
 
 # Translations
-*.mo
+# Include these because they can't be compiled on Heroku
+# *.mo
 
 # Mr Developer
 .mr.developer.cfg

@@ -36,7 +36,7 @@
 {% endif %}
 {% if pref.motion_tab_released > 0 %}
   <li class="nav-item {% if motions_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'standings-public-tab-motions' %}">{% trans "Motions Tab" %}</a>
+    <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
   </li>
 {% endif %}
 
@@ -45,7 +45,9 @@
   {% if pref.show_all_draws == 0 %}
     <li class="nav-item {% if draw_nav %}active{% endif %}">
       <a class="nav-link" href="{% tournamenturl 'draw-public-current-round' %}">
-        Draw for {{ current_round.name }}
+        {% blocktrans trimmed with round_name=current_round.name %}
+          Draw for {{ round_name }}
+        {% endblocktrans %}
       </a>
     </li>
   {% endif %}
@@ -72,6 +74,15 @@
       </div>
     </li>
   {% endif %}
+{% endif %}
+
+<!-- CHECK INS -->
+{% if pref.public_checkins  %}
+  <li class="nav-item {% if checkins_status %}active{% endif %}">
+    <a class="nav-link" href="{% tournamenturl 'public-checkin-status' %}">
+      {% trans "Check-Ins" %}
+    </a>
+  </li>
 {% endif %}
 
 <!-- RESULTS RELEASES -->
@@ -149,6 +160,11 @@
 {% if pref.public_participants %}
   <li class="nav-item {% if participants_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'participants-public-list' %}">{% trans "Participants" %}</a>
+  </li>
+{% endif %}
+{% if pref.public_institutions_list %}
+  <li class="nav-item {% if institutions_nav %}active{% endif %}">
+    <a class="nav-link" href="{% tournamenturl 'participants-public-institutions-list' %}">{% trans "Institutions" %}</a>
   </li>
 {% endif %}
 {% if pref.feedback_progress %}
