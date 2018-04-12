@@ -7,7 +7,7 @@
           <strong>{{ teamName }}</strong>
           <small>({{ speakersList }})</small>
         </div>
-        <div class="db-flex-static text-uppercase">
+        <div class="db-flex-static">
           {{ titleCasePosition }}
         </div>
       </div>
