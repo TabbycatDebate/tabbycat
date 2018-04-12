@@ -1,0 +1,21 @@
+{% extends "feedback_base.html" %}
+{% load debate_tags %}
+
+{% block head-title %}Important Feedback{% endblock %}
+{% block page-title %}Important Feedback{% endblock %}
+
+{% block content %}
+  <div class="card-columns">
+
+    {% for feedback in feedbacks %}
+      {% include 'feedback_card.html' %}
+    {% endfor %}
+
+  </div>
+
+  {% if not feedbacks %}
+    <!-- Can't use empty as card-columns div messes up the alert -->
+    {% include "components/alert.html" with type="info" message="No feedback has been submitted yet" %}
+  {% endif %}
+
+{% endblock content %}
