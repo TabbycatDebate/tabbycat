@@ -17,12 +17,12 @@
 
 .db-page-portrait, {
   width: 100%;
-  height: 342mm; // For some reason needs to be larger than the page
+  min-height: 380mm; // For some reason needs to be larger than the page
 }
 
 .db-page-landscape {
   width: 100%;
-  min-height: 190mm;
+  min-height: 188mm;
 }
 
 // PADDING
