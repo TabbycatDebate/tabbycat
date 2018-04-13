@@ -13,8 +13,8 @@ class RandomPairingsMixin:
     Classes using this mixin must define self.TEAMS_PER_DEBATE.
     """
 
-    def make_random_pairings(self, teams):
-        teams = list(teams)  # Make a copy
+    def make_random_pairings(self):
+        teams = list(self.teams)  # Make a copy
         random.shuffle(teams)
         args = [iter(teams)] * self.TEAMS_PER_DEBATE  # recipe from Python itertools docs
         pairings = [self.pairing_class(teams=t, bracket=0, room_rank=0) for t in zip(*args)]
@@ -39,12 +39,12 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
     DEFAULT_OPTIONS = {"max_swap_attempts": 20, "avoid_conflicts": "off"}
 
     def generate(self):
-        self._draw = self.make_random_pairings(self.teams)
+        self._draw = self.make_random_pairings()
         self.avoid_conflicts(self._draw)  # Operates in-place
         self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
 
-    def _make_initial_pairings(self):
+    def make_random_pairings(self):
         teams = list(self.teams)  # Make a copy
         random.shuffle(teams)
         debates = len(teams) // 2
@@ -96,7 +96,7 @@ class RandomWithAllocatedSidesDrawGenerator(RandomDrawGenerator):
         super(RandomWithAllocatedSidesDrawGenerator, self).__init__(*args, **kwargs)
         self.check_teams_for_attribute("allocated_side", choices=["aff", "neg"])
 
-    def _make_initial_pairings(self):
+    def make_random_pairings(self):
         aff_teams = [t for t in self.teams if t.allocated_side == "aff"]
         neg_teams = [t for t in self.teams if t.allocated_side == "neg"]
 
@@ -121,5 +121,5 @@ class RandomBPDrawGenerator(RandomPairingsMixin, BaseBPDrawGenerator):
     DEFAULT_OPTIONS = {}
 
     def generate(self):
-        self._draw = self.make_random_pairings(self.teams)
+        self._draw = self.make_random_pairings()
         return self._draw
