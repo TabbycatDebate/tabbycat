@@ -40,28 +40,26 @@
       {% endif %}
     </div>
     {% for item in feedback.items %}
-      {% if item.answer %}
-        <div class="list-group-item small">
-          {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
-            {% if item.answer %}
-              <i data-feather="check" class="text-success"></i>
-            {% else %}
-              <i data-feather="x" class="text-danger"></i>
-            {% endif %}
-            <span title="{{ item.question.text }}" class="text-heading" data-toggle="tooltip">
-              {{ item.question.reference }}
-            </span>
-          {% elif item.question.answer_type == 'f' %}
-            <span class="text-secondary">{{ item.question.text }}</span>
-            <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>
-          {% elif item.question.answer_type == 'tl' %}
-            <div class="text-heading">{{ item.answer }}</div>
+      <div class="list-group-item small">
+        {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
+          {% if item.answer %}
+            <i data-feather="check" class="text-success"></i>
           {% else %}
-            <span class="text-secondary">{{ item.question.text }}</span>
-            <div class="text-heading">{{ item.answer }}</div>
+            <i data-feather="x" class="text-danger"></i>
           {% endif %}
-        </div>
-      {% endif %}
+          <span title="{{ item.question.text }}" class="text-heading" data-toggle="tooltip">
+            {{ item.question.reference }}
+          </span>
+        {% elif item.question.answer_type == 'f' %}
+          <span class="text-secondary">{{ item.question.text }}</span>
+          <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>
+        {% elif item.question.answer_type == 'tl' %}
+          <div class="text-heading">{{ item.answer }}</div>
+        {% else %}
+          <span class="text-secondary">{{ item.question.text }}</span>
+          <div class="text-heading">{{ item.answer }}</div>
+        {% endif %}
+      </div>
     {% endfor %}
     <div class="list-group-item text-secondary small">
       <em>Submitted {{ feedback.timestamp|naturaltime }}</em>
