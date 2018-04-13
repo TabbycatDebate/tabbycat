@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from options.utils import use_team_code_names
 from participants.models import Speaker
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
@@ -80,6 +81,13 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
     def get_context_data(self, **kwargs):
 
+        for_admin = True
+        if hasattr(self, '_user_role') and self._user_role == 'public':
+            for_admin = False
+
+        team_codes = use_team_code_names(self.tournament, admin=for_admin)
+        kwargs["team_codes"] = json.dumps(team_codes)
+
         adjudicators = []
         for adj in self.tournament.relevant_adjudicators.all().select_related('institution', 'checkin_identifier'):
             try:
@@ -103,7 +111,8 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
             speakers.append({
                 'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
-                'identifier': [code], 'team': speaker.team.short_name, 'locked': False,
+                'identifier': [code], 'locked': False,
+                'team': speaker.team.code_name if team_codes else speaker.team.short_name,
                 'institution': speaker.team.institution.serialize if speaker.team.institution else None,
             })
         kwargs["speakers"] = json.dumps(speakers)

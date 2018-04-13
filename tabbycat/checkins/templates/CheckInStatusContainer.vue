@@ -136,6 +136,7 @@ export default {
     events: Array,
     scanUrl: String,
     assistantUrl: String,
+    teamCodes: Boolean,
   },
   computed: {
     isForVenues: function () {
