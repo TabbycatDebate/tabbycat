@@ -3,8 +3,7 @@ import logging
 import math
 
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import F, Q
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -203,6 +202,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
 class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
     """Base class for views displaying feedback as cards."""
+    template_name = "feedback_cards_list.html"
 
     def get_score_thresholds(self):
         tournament = self.tournament
@@ -216,16 +216,24 @@ class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
         }
 
     def get_feedbacks(self):
-        questions = self.tournament.adj_feedback_questions
-        feedbacks = self.get_feedback_queryset()
+        feedbacks = self.get_feedback_queryset().select_related(
+            'adjudicator', 'source_adjudicator', 'source_team')
+
+        # Can't prefetch an abstract model effectively; so get all answer ...
+        questions = list(self.tournament.adj_feedback_questions)
+        for question in questions:
+            question.answers = list(question.answer_set.values())
+
         for feedback in feedbacks:
             feedback.items = []
+            # ...and stitch them together manually
             for question in questions:
-                try:
-                    answer = question.answer_set.get(feedback=feedback).answer
-                except ObjectDoesNotExist:
-                    continue
-                feedback.items.append({'question': question, 'answer': answer})
+                for answer in question.answers:
+                    if answer['feedback_id'] == feedback.id:
+                        feedback.items.append({'question': question,
+                                               'answer': answer['answer']})
+                        break # Should only be one match
+
         return feedbacks
 
     def get_feedback_queryset(self):
@@ -239,17 +247,33 @@ class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
 
 class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
-
-    template_name = "feedback_latest.html"
+    page_title = 'Latest Feedback'
+    page_subtitle = '(30 most recent)'
+    page_emoji = '🕗 '
 
     def get_feedback_queryset(self):
         t = self.tournament
         return AdjudicatorFeedback.objects.filter(
             Q(adjudicator__tournament=t) |
             Q(adjudicator__tournament__isnull=True)
-        ).order_by('-timestamp')[:30].select_related(
-            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team'
-        )
+        ).order_by('-timestamp')[:30]
+
+
+class ImportantFeedbackView(FeedbackCardsView):
+    """View displaying the feedback in order of most 'important'."""
+    page_title = 'Important Feedback'
+    page_subtitle = '(rating was much higher/lower than expected)'
+    page_emoji = '⁉️'
+
+    def get_feedback_queryset(self):
+        t = self.get_tournament()
+        return AdjudicatorFeedback.objects.annotate(
+            feedback_importance=F('score') - F('adjudicator__test_score')
+        ).filter(
+            Q(feedback_importance__gt=2) | Q(feedback_importance__lt=-2),
+            Q(adjudicator__tournament=t) |
+            Q(adjudicator__tournament__isnull=True)
+        ).order_by('-timestamp')
 
 
 class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView):

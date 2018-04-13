@@ -25,8 +25,7 @@ h6,
 }
 
 .badge {
-  font-family: monospace; // Want evenly aligned labels
-  font-size: 100%; // Compensate for smaller mono sizes
+  font-family: $font-family-monospace; // Want evenly aligned labels
 }
 
 //------------------------------------------------------------------------------
