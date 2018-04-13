@@ -44,11 +44,12 @@ export default {
         })
         thresholds.push(boundary.bracket)
       }
+      thresholds = _.uniq(thresholds)
 
       var grouped = _.groupBy(this.debates, function (debate) {
-        for (var j = 0; j < 3; j += 1)
+        for (var j = 0; j < thresholds.length; j += 1)
           if (debate.bracket <= thresholds[j])
-            return j - 2;
+            return j - thresholds.length + 1;
         return 1;
       })
 
