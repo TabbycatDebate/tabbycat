@@ -5,8 +5,7 @@ import math
 from django.contrib import messages
 from django.db.models import F, Q
 from django.http import JsonResponse
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
@@ -30,6 +29,7 @@ from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
+from .prefetch import populate_debate_adjudicators
 from .progress import get_feedback_progress
 
 logger = logging.getLogger(__name__)
@@ -116,7 +116,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
 
 class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
 
-    page_title = 'Feedback Overview'
+    page_title = gettext_lazy("Feedback Overview")
     page_emoji = '🙅'
     for_public = False
     sort_key = 'score'
@@ -136,7 +136,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
 
 class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
     template_name = "feedback_base.html"
-    page_title = 'Find Feedback on Adjudicator'
+    page_title = gettext_lazy("Find Feedback on Adjudicator")
     page_emoji = '🔍'
 
     def get_table(self):
@@ -157,7 +157,7 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
 class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = "feedback_base.html"
-    page_title = 'Find Feedback'
+    page_title = gettext_lazy("Find Feedback")
     page_emoji = '🔍'
 
     def get_tables(self):
@@ -200,26 +200,14 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
         return [team_table, adj_table]
 
 
-class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
-    """Base class for views displaying feedback as cards."""
-    template_name = "feedback_cards_list.html"
-
-    def get_score_thresholds(self):
-        tournament = self.tournament
-        min_score = tournament.pref('adj_min_score')
-        max_score = tournament.pref('adj_max_score')
-        score_range = max_score - min_score
-        return {
-            'low_score'     : min_score + score_range / 10,
-            'medium_score'  : min_score + score_range / 5,
-            'high_score'    : max_score - score_range / 10,
-        }
+class FeedbackMixin(TournamentMixin):
 
     def get_feedbacks(self):
-        feedbacks = self.get_feedback_queryset().select_related(
-            'adjudicator', 'source_adjudicator', 'source_team')
+        feedbacks = self.get_feedback_queryset()
 
-        # Can't prefetch an abstract model effectively; so get all answer ...
+        populate_debate_adjudicators(feedbacks)
+
+        # Can't prefetch an abstract model effectively; so get all answers...
         questions = list(self.tournament.adj_feedback_questions)
         for question in questions:
             question.answers = list(question.answer_set.values())
@@ -237,7 +225,30 @@ class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
         return feedbacks
 
     def get_feedback_queryset(self):
-        raise NotImplementedError()
+        return AdjudicatorFeedback.objects.filter(
+            Q(adjudicator__tournament=self.tournament) |
+            Q(adjudicator__tournament__isnull=True)
+        ).select_related(
+            'adjudicator',
+            'source_adjudicator__debate__round',
+            'source_team__debate__round',
+        )
+
+
+class FeedbackCardsView(FeedbackMixin, AdministratorMixin, TournamentMixin, TemplateView):
+    """Base class for views displaying feedback as cards."""
+    template_name = "feedback_cards_list.html"
+
+    def get_score_thresholds(self):
+        tournament = self.tournament
+        min_score = tournament.pref('adj_min_score')
+        max_score = tournament.pref('adj_max_score')
+        score_range = max_score - min_score
+        return {
+            'low_score'     : min_score + score_range / 10,
+            'medium_score'  : min_score + score_range / 5,
+            'high_score'    : max_score - score_range / 10,
+        }
 
     def get_context_data(self, **kwargs):
         kwargs['feedbacks'] = self.get_feedbacks()
@@ -247,32 +258,27 @@ class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
 
 class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
-    page_title = 'Latest Feedback'
-    page_subtitle = '(30 most recent)'
+    page_title = gettext_lazy("Latest Feedback")
+    page_subtitle = gettext_lazy("(30 most recent)")
     page_emoji = '🕗 '
 
     def get_feedback_queryset(self):
-        t = self.tournament
-        return AdjudicatorFeedback.objects.filter(
-            Q(adjudicator__tournament=t) |
-            Q(adjudicator__tournament__isnull=True)
-        ).order_by('-timestamp')[:30]
+        queryset = super().get_feedback_queryset()
+        return queryset.order_by('-timestamp')[:30]
 
 
 class ImportantFeedbackView(FeedbackCardsView):
     """View displaying the feedback in order of most 'important'."""
-    page_title = 'Important Feedback'
-    page_subtitle = '(rating was much higher/lower than expected)'
+    page_title = gettext_lazy("Important Feedback")
+    page_subtitle = gettext_lazy("(rating was much higher/lower than expected)")
     page_emoji = '⁉️'
 
     def get_feedback_queryset(self):
-        t = self.get_tournament()
-        return AdjudicatorFeedback.objects.annotate(
+        queryset = super().get_feedback_queryset()
+        return queryset.annotate(
             feedback_importance=F('score') - F('adjudicator__test_score')
         ).filter(
             Q(feedback_importance__gt=2) | Q(feedback_importance__lt=-2),
-            Q(adjudicator__tournament=t) |
-            Q(adjudicator__tournament__isnull=True)
         ).order_by('-timestamp')
 
 
@@ -294,8 +300,9 @@ class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView)
         return super().get(request, *args, **kwargs)
 
     def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
         kwargs = {self.adjfeedback_filter_field: self.object}
-        return AdjudicatorFeedback.objects.filter(**kwargs).order_by('-timestamp')
+        return queryset.filter(**kwargs).order_by('-timestamp')
 
 
 class FeedbackOnAdjudicatorView(FeedbackFromSourceView):
@@ -647,7 +654,7 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
 
 class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
-    page_title = 'Feedback Progress'
+    page_title = gettext_lazy("Feedback Progress")
     page_subtitle = ''
     page_emoji = '🆘'
 

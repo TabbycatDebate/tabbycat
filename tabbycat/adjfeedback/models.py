@@ -249,11 +249,13 @@ class AdjudicatorFeedback(Submission):
 
     @cached_property
     def debate_adjudicator(self):
-        try:
-            return self.adjudicator.debateadjudicator_set.get(
-                debate=self.debate)
-        except DebateAdjudicator.DoesNotExist:
-            return None
+        if not hasattr(self, '_debateadj'):
+            try:
+                self._debateadj = self.adjudicator.debateadjudicator_set.get(
+                    debate=self.debate)
+            except DebateAdjudicator.DoesNotExist:
+                self._debateadj = None
+        return self._debateadj
 
     @property
     def round(self):

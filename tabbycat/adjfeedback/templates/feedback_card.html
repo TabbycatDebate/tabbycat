@@ -38,7 +38,7 @@
           From {{ source }} <span class="text-secondary">their {{ relationship }}</span>
         {% endblocktrans %}
       {% elif feedback.source_team %}
-        {% blocktrans trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display.lower%}
+        {% blocktrans trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display.lower %}
           From {{ source }} <span class="text-secondary">who {{ relationship }}</span>
         {% endblocktrans %}
       {% else %}
