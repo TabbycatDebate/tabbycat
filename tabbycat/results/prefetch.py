@@ -19,10 +19,13 @@ def populate_wins(debates):
     This can be used for efficiency, since it retrieves all of the
     information in bulk in a single SQL query. Operates in-place.
     """
-
     debateteams = [dt for debate in debates for dt in debate.debateteam_set.all()]
+    populate_wins_for_debateteams(debateteams)
 
-    teamscores = TeamScore.objects.filter(debate_team__debate__in=debates, ballot_submission__confirmed=True)
+
+def populate_wins_for_debateteams(debateteams):
+
+    teamscores = TeamScore.objects.filter(debate_team__in=debateteams, ballot_submission__confirmed=True)
     teamscores_by_debateteam_id = {teamscore.debate_team_id: teamscore for teamscore in teamscores}
 
     for debateteam in debateteams:

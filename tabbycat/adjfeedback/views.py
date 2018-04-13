@@ -17,6 +17,7 @@ from participants.models import Adjudicator, Team
 from participants.prefetch import populate_feedback_scores
 from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
+from results.prefetch import populate_wins_for_debateteams
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
@@ -207,6 +208,7 @@ class FeedbackMixin(TournamentMixin):
         feedbacks = self.get_feedback_queryset()
 
         populate_debate_adjudicators(feedbacks)
+        populate_wins_for_debateteams([f.source_team for f in feedbacks if f.source_team is not None])
 
         # Can't prefetch an abstract model effectively; so get all answers...
         questions = list(self.tournament.adj_feedback_questions)
@@ -231,8 +233,10 @@ class FeedbackMixin(TournamentMixin):
             Q(adjudicator__tournament__isnull=True)
         ).select_related(
             'adjudicator',
+            'source_adjudicator__adjudicator',
             'source_adjudicator__debate__round',
             'source_team__debate__round',
+            'source_team__team',
         )
 
 
