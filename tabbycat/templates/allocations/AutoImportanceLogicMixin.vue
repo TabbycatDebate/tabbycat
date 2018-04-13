@@ -32,17 +32,17 @@ export default {
 
       _.forOwn(counts, function (count, bracket) {
         cumfreq += count
-        brackets.push({bracket: _.parseInt(bracket), count: count, cumfreq: cumfreq})
+        brackets.push({points: _.parseInt(bracket), count: count, cumfreq: cumfreq})
       })
 
       var targetSize = this.debates.length / 4
       var thresholds = []
       for (var i = 1; i < 4; i += 1) {
-        var boundary = _.minBy(brackets, function(o) {
-          var diff = o.cumfreq - i * targetSize
+        var boundary = _.minBy(brackets, function(bracket) {
+          var diff = bracket.cumfreq - i * targetSize
           return Math.abs(diff) + ((diff > 0) ? 0.1 : 0)  // bias towards lower side, if two are equidistant
         })
-        thresholds.push(boundary.bracket)
+        thresholds.push(boundary.points)
       }
       thresholds = _.uniq(thresholds)
 
