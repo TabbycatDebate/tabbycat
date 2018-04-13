@@ -1,10 +1,11 @@
 import json
 import logging
 import math
+import csv
 
 from django.contrib import messages
 from django.db.models import Count, F, Q
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.translation import gettext as _, gettext_lazy, ngettext, ngettext_lazy
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
@@ -793,3 +794,75 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
             nupdated) % {'count': nupdated})
         self.log_action()
         return super().form_valid(form)
+
+
+# ==============================================================================
+# CSV dumps
+# ==============================================================================
+# These are a stopgap while we develop a proper API for this.
+
+class BaseCsvView(View):
+
+    def get_filename(self):
+        return self.filename
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = "attachment; filename=\"" + self.get_filename() + "\""
+
+        writer = csv.writer(response)
+        self.write_rows(writer)
+
+        return response
+
+
+class AdjudicatorScoresCsvView(TournamentMixin, BaseCsvView):
+    filename = "scores.csv"
+
+    def write_rows(self, writer):
+        writer.writerow(["id", "name", "test_score"])
+        for adj in self.tournament.adjudicator_set.all():
+            writer.writerow([adj.id, adj.name, adj.test_score])
+
+
+class AdjudicatorFeedbackCsvView(FeedbackMixin, TournamentMixin, BaseCsvView):
+    filename = "feedback.csv"
+
+    def get_feedback_queryset(self):
+        return super().get_feedback_queryset().filter(confirmed=True)
+
+    def write_rows(self, writer):
+        headers = [
+            "round.seq", "round.abbreviation",
+            "adjudicator.id", "adjudicator.name", "adjudicator.type",
+            "source_adjudicator.id","source_adjudicator.name", "source_adjudicator.type",
+            "source_team.id", "source_team.short_name", "source_team.result",
+            "score"
+        ]
+        question_references = [q.reference for q in self.tournament.adj_feedback_questions]
+        headers.extend(question_references)
+        writer.writerow(headers)
+
+        feedbacks = self.get_feedbacks()
+        for f in feedbacks:
+            row = [f.round.seq, f.round.abbreviation,
+                f.adjudicator.id, f.adjudicator.name, f.debate_adjudicator.get_type_display()]
+
+            if f.source_adjudicator:
+                adj = f.source_adjudicator.adjudicator
+                row.extend([adj.id, adj.name, f.source_adjudicator.get_type_display()])
+            else:
+                row.extend([""] * 3)
+
+            if f.source_team:
+                team = f.source_team.team
+                row.extend([team.id, team.short_name, f.source_team.get_result_display()])
+            else:
+                row.extend([""] * 3)
+
+            row.append(f.score)
+
+            answers = {q['question'].reference: q['answer'] for q in f.items}
+            row.extend([answers.get(ref, '') for ref in question_references])
+
+            writer.writerow(row)
