@@ -7,63 +7,57 @@ export default {
   // focusing it on conflicts within a debate panel / debate teams
   created: function () {
     this.$eventHub.$on('update-importance', this.updateImportance)
-    this.$eventHub.$on('assign-all-importances', this.autoAssignImportance)
+    this.$eventHub.$on('assign-importance-by-liveness', this.autoAssignImportanceByLiveness)
+    this.$eventHub.$on('assign-importance-by-bracket', this.autoAssignImportanceByBracket)
   },
   methods: {
-    autoAssignImportance: function (assignedType) {
-      var debatesByType = _.sortBy(this.debates, assignedType)
-      var length = debatesByType.length
-      var chunkLimits = [0] // Floor value for start of lowest chunk
+    autoAssignImportanceByLiveness: function() {
+      for (var i = 0; i < this.debates.length; i += 1) {
+        var debate = this.debates[i]
+        if (debate.nliveteams > 0)
+          debate.importance = 1    // some teams live
+        else if (debate.nsafeteams > 0)
+          debate.importance = 0    // all teams safe
+        else
+          debate.importance = -2   // all teams dead
+      }
+      var debateIDs = _.map(this.debates, 'id')
+      var debateImportances = _.map(this.debates, 'importance')
+      this.updateImportance(debateIDs, debateImportances)
+    },
+    autoAssignImportanceByBracket: function() {
+      var counts = _.countBy(this.debates, 'bracket')
+      var brackets = []
+      var cumfreq = 0
 
-      // Assign proportions; account for cases where too few debates for 1/3rds
-      if (length <= 2) {
-        chunkLimits.push(debatesByType[1][assignedType])
-      } else if (length === 3) {
-        chunkLimits.push(debatesByType[1][assignedType], debatesByType[2][assignedType])
-      } else {
-        // Determine the values that define the upper and lower limit of each span
-        var chunks = [0.25, 0.5, 0.75]
-        for (var i = 0; i < chunks.length; i += 1) {
-          var splitIndex = Math.floor(length * chunks[i]) - 1
-          var splitThreshold = Math.ceil(debatesByType[splitIndex][assignedType])
-          chunkLimits.push(splitThreshold) // Brackets can be at 0; but already
+      _.forOwn(counts, function (count, bracket) {
+        cumfreq += count
+        brackets.push({bracket: _.parseInt(bracket), count: count, cumfreq: cumfreq})
+      })
+
+      var targetSize = this.debates.length / 4
+      var thresholds = []
+      for (var i = 1; i < 4; i += 1) {
+        var boundary = _.minBy(brackets, function(o) {
+          var diff = o.cumfreq - i * targetSize
+          return Math.abs(diff) + ((diff > 0) ? 0.1 : 0)  // bias towards lower side, if two are equidistant
+        })
+        thresholds.push(boundary.bracket)
+      }
+
+      var grouped = _.groupBy(this.debates, function (debate) {
+        for (var j = 0; j < 3; j += 1)
+          if (debate.bracket <= thresholds[j])
+            return j - 2;
+        return 1;
+      })
+
+      _.forOwn(grouped, function (debates, importance) {
+        for (var debate of debates) {
+          debate.importance = _.parseInt(importance)
         }
-      }
-      chunkLimits.push(debatesByType[length - 1][assignedType] + 1) // ceiling
+      })
 
-      // Create a dictionary of upper/lower limits for each span used to group
-      var chunkSpans = []
-      for (var i = 0; i < chunkLimits.length - 1; i += 1) {
-        chunkSpans.push({ 'start': chunkLimits[i], 'end': chunkLimits[i + 1] })
-      }
-
-      // Sometimes brackets can start and end at the same number which creates
-      // skewed distributions (no debates in that 1/4); this helps compensate
-      var increaser = 0
-      for (var i = 0; i < chunkSpans.length; i += 1) {
-        chunkSpans[i]['start'] = chunkSpans[i]['start'] + increaser
-        chunkSpans[i]['end'] = chunkSpans[i]['end'] + increaser
-        if (chunkSpans[i]['start'] === chunkSpans[i]['end']) {
-          increaser += 1
-          chunkSpans[i]['end'] += increaser
-        }
-      }
-
-      // Actually assign the importances
-      for (var j = 0; j < this.debates.length; j += 1) {
-        var debate = this.debates[j]
-        if (_.inRange(debate[assignedType], chunkSpans[0].start, chunkSpans[0].end)) {
-          debate.importance = -2
-        } else if (_.inRange(debate[assignedType], chunkSpans[1].start, chunkSpans[1].end)) {
-          debate.importance = -1
-        } else if (_.inRange(debate[assignedType], chunkSpans[2].start, chunkSpans[2].end)) {
-          debate.importance = 0
-        } else if (_.inRange(debate[assignedType], chunkSpans[3].start, chunkSpans[3].end)) {
-          debate.importance = 1
-        }
-      }
-
-      // Save the results
       var debateIDs = _.map(this.debates, 'id')
       var debateImportances = _.map(this.debates, 'importance')
       this.updateImportance(debateIDs, debateImportances)
