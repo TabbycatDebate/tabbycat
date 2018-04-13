@@ -28,6 +28,9 @@ urlpatterns = [
     path('latest/',
         views.LatestFeedbackView.as_view(),
         name='adjfeedback-view-latest'),
+    path('important',
+        views.ImportantFeedbackView.as_view(),
+        name='adjfeedback-view-important'),
     path('source/list/',
         views.FeedbackBySourceView.as_view(),
         name='adjfeedback-view-by-source'),
@@ -59,4 +62,12 @@ urlpatterns = [
     path('scores/bulk-update/',
         views.UpdateAdjudicatorScoresView.as_view(),
         name='adjfeedback-update-scores-bulk'),
+
+    # CSV views
+    path('csv/scores.csv',
+        views.AdjudicatorScoresCsvView.as_view(),
+        name='adjfeedback-csv-scores'),
+    path('csv/feedback.csv',
+        views.AdjudicatorFeedbackCsvView.as_view(),
+        name='adjfeedback-csv-feedback'),
 ]

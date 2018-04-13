@@ -368,7 +368,9 @@ class DrawForDragAndDropMixin(RoundMixin):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
         for debate in serialised_draw:
             break_thresholds = self.break_thresholds
-            liveness = 0
+            nlivecategories = 0
+            nliveteams = 0
+            nsafeteams = 0
             for dt in debate['debateTeams']:
                 team = dt['team']
                 if not team:
@@ -376,14 +378,20 @@ class DrawForDragAndDropMixin(RoundMixin):
                 team = self.annotate_break_classes(team, break_thresholds)
                 team = self.annotate_region_classes(team)
                 if team['break_categories'] is not None:
-                    for c in team['break_categories']:
-                        if c['will_break'] == 'live' or c['will_break'] == '?':
-                            liveness += 1
+                    statuses = [c['will_break'] for c in team['break_categories']]
+                    team_live_categories = statuses.count('live') + statuses.count('?')
+                    nlivecategories += team_live_categories
+                    if team_live_categories > 0:
+                        nliveteams += 1
+                    elif statuses.count('safe') > 0:  # only safe if live nowhere
+                        nsafeteams += 1
 
             for da in debate['debateAdjudicators']:
                 da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
 
-            debate['liveness'] = liveness
+            debate['liveness'] = nlivecategories
+            debate['nliveteams'] = nliveteams
+            debate['nsafeteams'] = nsafeteams
 
         return serialised_draw
 
@@ -396,11 +404,9 @@ class DrawForDragAndDropMixin(RoundMixin):
         return round_info
 
     def get_draw(self):
-        round = self.round
-
         # The use-case for prefetches here is so intense that we'll just implement
         # a separate one (as opposed to use Round.debate_set_with_prefetches())
-        draw = round.debate_set.select_related('round__tournament').prefetch_related(
+        draw = self.round.debate_set.select_related('round__tournament', 'venue').prefetch_related(
             Prefetch('debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution__region')),
             Prefetch('debateteam_set',
@@ -410,6 +416,7 @@ class DrawForDragAndDropMixin(RoundMixin):
                     Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
                 )),
             'debateteam_set__team__break_categories',
+            'venue__venuecategory_set',
         )
         populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
         populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])

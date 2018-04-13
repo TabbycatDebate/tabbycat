@@ -1,14 +1,13 @@
 {% extends "feedback_base.html" %}
 {% load debate_tags %}
 
-{% block head-title %}Latest Feedback{% endblock %}
-{% block page-title %}Latest Feedback{% endblock %}
-
 {% block content %}
-  <div class="card-columns">
+  <div class="row">
 
     {% for feedback in feedbacks %}
-      {% include 'feedback_card.html' %}
+      <div class="col-md-6 col-12 mb-4">
+        {% include 'feedback_card.html' %}
+      </div>
     {% endfor %}
 
   </div>

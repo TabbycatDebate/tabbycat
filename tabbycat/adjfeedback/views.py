@@ -1,13 +1,12 @@
 import json
 import logging
 import math
+import csv
 
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
-from django.http import JsonResponse
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.db.models import F, Q
+from django.http import HttpResponse, JsonResponse
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
@@ -18,6 +17,7 @@ from participants.models import Adjudicator, Team
 from participants.prefetch import populate_feedback_scores
 from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
+from results.prefetch import populate_wins_for_debateteams
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
@@ -31,6 +31,7 @@ from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
+from .prefetch import populate_debate_adjudicators
 from .progress import get_feedback_progress
 
 logger = logging.getLogger(__name__)
@@ -117,7 +118,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
 
 class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
 
-    page_title = 'Feedback Overview'
+    page_title = gettext_lazy("Feedback Overview")
     page_emoji = '🙅'
     for_public = False
     sort_key = 'score'
@@ -137,7 +138,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
 
 class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
     template_name = "feedback_base.html"
-    page_title = 'Find Feedback on Adjudicator'
+    page_title = gettext_lazy("Find Feedback on Adjudicator")
     page_emoji = '🔍'
 
     def get_table(self):
@@ -158,7 +159,7 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
 class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = "feedback_base.html"
-    page_title = 'Find Feedback'
+    page_title = gettext_lazy("Find Feedback")
     page_emoji = '🔍'
 
     def get_tables(self):
@@ -201,8 +202,47 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
         return [team_table, adj_table]
 
 
-class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
+class FeedbackMixin(TournamentMixin):
+
+    def get_feedbacks(self):
+        feedbacks = self.get_feedback_queryset()
+
+        populate_debate_adjudicators(feedbacks)
+        populate_wins_for_debateteams([f.source_team for f in feedbacks if f.source_team is not None])
+
+        # Can't prefetch an abstract model effectively; so get all answers...
+        questions = list(self.tournament.adj_feedback_questions)
+        for question in questions:
+            question.answers = list(question.answer_set.values())
+
+        for feedback in feedbacks:
+            feedback.items = []
+            # ...and stitch them together manually
+            for question in questions:
+                for answer in question.answers:
+                    if answer['feedback_id'] == feedback.id:
+                        feedback.items.append({'question': question,
+                                               'answer': answer['answer']})
+                        break # Should only be one match
+
+        return feedbacks
+
+    def get_feedback_queryset(self):
+        return AdjudicatorFeedback.objects.filter(
+            Q(adjudicator__tournament=self.tournament) |
+            Q(adjudicator__tournament__isnull=True)
+        ).select_related(
+            'adjudicator',
+            'source_adjudicator__adjudicator',
+            'source_adjudicator__debate__round',
+            'source_team__debate__round',
+            'source_team__team',
+        )
+
+
+class FeedbackCardsView(FeedbackMixin, AdministratorMixin, TournamentMixin, TemplateView):
     """Base class for views displaying feedback as cards."""
+    template_name = "feedback_cards_list.html"
 
     def get_score_thresholds(self):
         tournament = self.tournament
@@ -215,22 +255,6 @@ class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
             'high_score'    : max_score - score_range / 10,
         }
 
-    def get_feedbacks(self):
-        questions = self.tournament.adj_feedback_questions
-        feedbacks = self.get_feedback_queryset()
-        for feedback in feedbacks:
-            feedback.items = []
-            for question in questions:
-                try:
-                    answer = question.answer_set.get(feedback=feedback).answer
-                except ObjectDoesNotExist:
-                    continue
-                feedback.items.append({'question': question, 'answer': answer})
-        return feedbacks
-
-    def get_feedback_queryset(self):
-        raise NotImplementedError()
-
     def get_context_data(self, **kwargs):
         kwargs['feedbacks'] = self.get_feedbacks()
         kwargs['score_thresholds'] = self.get_score_thresholds()
@@ -239,17 +263,28 @@ class FeedbackCardsView(AdministratorMixin, TournamentMixin, TemplateView):
 
 class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
-
-    template_name = "feedback_latest.html"
+    page_title = gettext_lazy("Latest Feedback")
+    page_subtitle = gettext_lazy("(30 most recent)")
+    page_emoji = '🕗 '
 
     def get_feedback_queryset(self):
-        t = self.tournament
-        return AdjudicatorFeedback.objects.filter(
-            Q(adjudicator__tournament=t) |
-            Q(adjudicator__tournament__isnull=True)
-        ).order_by('-timestamp')[:30].select_related(
-            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team'
-        )
+        queryset = super().get_feedback_queryset()
+        return queryset.order_by('-timestamp')[:30]
+
+
+class ImportantFeedbackView(FeedbackCardsView):
+    """View displaying the feedback in order of most 'important'."""
+    page_title = gettext_lazy("Important Feedback")
+    page_subtitle = gettext_lazy("(rating was much higher/lower than expected)")
+    page_emoji = '⁉️'
+
+    def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
+        return queryset.annotate(
+            feedback_importance=F('score') - F('adjudicator__test_score')
+        ).filter(
+            Q(feedback_importance__gt=2) | Q(feedback_importance__lt=-2),
+        ).order_by('-timestamp')
 
 
 class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView):
@@ -270,8 +305,9 @@ class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView)
         return super().get(request, *args, **kwargs)
 
     def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
         kwargs = {self.adjfeedback_filter_field: self.object}
-        return AdjudicatorFeedback.objects.filter(**kwargs).order_by('-timestamp')
+        return queryset.filter(**kwargs).order_by('-timestamp')
 
 
 class FeedbackOnAdjudicatorView(FeedbackFromSourceView):
@@ -623,7 +659,7 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
 
 class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
-    page_title = 'Feedback Progress'
+    page_title = gettext_lazy("Feedback Progress")
     page_subtitle = ''
     page_emoji = '🆘'
 
@@ -694,3 +730,75 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
         messages.success(self.request, _("Updated test scores for %(count)d adjudicators.") % {'count': nupdated})
         self.log_action()
         return super().form_valid(form)
+
+
+# ==============================================================================
+# CSV dumps
+# ==============================================================================
+# These are a stopgap while we develop a proper API for this.
+
+class BaseCsvView(View):
+
+    def get_filename(self):
+        return self.filename
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = "attachment; filename=\"" + self.get_filename() + "\""
+
+        writer = csv.writer(response)
+        self.write_rows(writer)
+
+        return response
+
+
+class AdjudicatorScoresCsvView(TournamentMixin, BaseCsvView):
+    filename = "scores.csv"
+
+    def write_rows(self, writer):
+        writer.writerow(["id", "name", "test_score"])
+        for adj in self.tournament.adjudicator_set.all():
+            writer.writerow([adj.id, adj.name, adj.test_score])
+
+
+class AdjudicatorFeedbackCsvView(FeedbackMixin, TournamentMixin, BaseCsvView):
+    filename = "feedback.csv"
+
+    def get_feedback_queryset(self):
+        return super().get_feedback_queryset().filter(confirmed=True)
+
+    def write_rows(self, writer):
+        headers = [
+            "round.seq", "round.abbreviation",
+            "adjudicator.id", "adjudicator.name", "adjudicator.type",
+            "source_adjudicator.id","source_adjudicator.name", "source_adjudicator.type",
+            "source_team.id", "source_team.short_name", "source_team.result",
+            "score"
+        ]
+        question_references = [q.reference for q in self.tournament.adj_feedback_questions]
+        headers.extend(question_references)
+        writer.writerow(headers)
+
+        feedbacks = self.get_feedbacks()
+        for f in feedbacks:
+            row = [f.round.seq, f.round.abbreviation,
+                f.adjudicator.id, f.adjudicator.name, f.debate_adjudicator.get_type_display()]
+
+            if f.source_adjudicator:
+                adj = f.source_adjudicator.adjudicator
+                row.extend([adj.id, adj.name, f.source_adjudicator.get_type_display()])
+            else:
+                row.extend([""] * 3)
+
+            if f.source_team:
+                team = f.source_team.team
+                row.extend([team.id, team.short_name, f.source_team.get_result_display()])
+            else:
+                row.extend([""] * 3)
+
+            row.append(f.score)
+
+            answers = {q['question'].reference: q['answer'] for q in f.items}
+            row.extend([answers.get(ref, '') for ref in question_references])
+
+            writer.writerow(row)

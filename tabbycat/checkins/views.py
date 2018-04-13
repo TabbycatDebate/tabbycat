@@ -40,18 +40,25 @@ class CheckInScanView(JsonDataResponsePostView, TournamentMixin):
 
     def post_data(self):
         barcode_ids = json.loads(self.body)['barcodes']
+        barcode_ids = [b for b in barcode_ids if b is not None]
+        events = []
         for barcode in barcode_ids:
             try:
                 identifier = Identifier.objects.get(barcode=barcode)
                 event = Event.objects.create(identifier=identifier,
                                              tournament=self.tournament)
-                return json.dumps({'ids': barcode_ids,
-                                   'time': event.time.strftime('%H:%M:%S')})
+                events.append(event)
             except ObjectDoesNotExist:
                 # Only raise an error for single check-ins as for multi-check-in
                 # events its from the Status page so is clear what fails or not
                 if len(barcode_ids) == 1:
                     raise BadJsonRequestError("Identifier doesn't exist")
+
+        if len(events) > 0:
+            return json.dumps({'ids': barcode_ids,
+                               'time': events[0].time.strftime('%H:%M:%S')})
+        else:
+            raise BadJsonRequestError("No identifiers exist for given barcodes")
 
 
 class AdminCheckInScanView(AdministratorMixin, CheckInScanView):
