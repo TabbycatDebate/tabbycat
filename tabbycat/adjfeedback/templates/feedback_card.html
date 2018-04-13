@@ -24,7 +24,7 @@
         {% endblocktrans %}
       </span>
       {% blocktrans trimmed with adj=feedback.adjudicator.name as=feedback.debate_adjudicator.get_type_display %}
-        On {{ adj }} as <span class="text-secondary">as {{ as }}</span>
+        On {{ adj }} <span class="text-secondary">as {{ as }}</span>
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
