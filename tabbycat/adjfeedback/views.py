@@ -249,6 +249,7 @@ class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
     page_title = 'Latest Feedback'
     page_subtitle = '(30 most recent)'
+    page_emoji = '🕗 '
 
     def get_feedback_queryset(self):
         t = self.tournament
@@ -262,6 +263,7 @@ class ImportantFeedbackView(FeedbackCardsView):
     """View displaying the feedback in order of most 'important'."""
     page_title = 'Important Feedback'
     page_subtitle = '(rating was much higher/lower than expected)'
+    page_emoji = '⁉️'
 
     def get_feedback_queryset(self):
         t = self.get_tournament()
