@@ -1451,7 +1451,7 @@ EMOJI_LIST = (
 )
 
 # The field choices are the permissible values
-EMOJI_FIELD_CHOICES = [(emoji, emoji) for emoji, _, _ in EMOJI_LIST]
+EMOJI_FIELD_CHOICES = [(emoji, emoji + " " + name) for emoji, _, name in EMOJI_LIST]
 
 # The random options are a reduced set
 EMOJI_RANDOM_OPTIONS = [(emoji, name) for emoji, include, name in EMOJI_LIST if include]
