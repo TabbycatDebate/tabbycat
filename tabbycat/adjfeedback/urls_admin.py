@@ -62,4 +62,12 @@ urlpatterns = [
     path('scores/bulk-update/',
         views.UpdateAdjudicatorScoresView.as_view(),
         name='adjfeedback-update-scores-bulk'),
+
+    # CSV views
+    path('csv/scores.csv',
+        views.AdjudicatorScoresCsvView.as_view(),
+        name='adjfeedback-csv-scores'),
+    path('csv/feedback.csv',
+        views.AdjudicatorFeedbackCsvView.as_view(),
+        name='adjfeedback-csv-feedback'),
 ]
