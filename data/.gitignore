@@ -1,10 +1,11 @@
 # Ignore this entire directory
-*
+/*
 
 # ...except for demonstration and test datasets
 !.gitignore
 !bp88team/
 !australs24team/
+!minimal8team/
 !demo/
 !demo_simple/
 !sandbox/

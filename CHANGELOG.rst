@@ -53,12 +53,21 @@ Change Log
 - Upgraded to Django 2.0
     - Converted most raw SQL queries to use the new ``filter`` keyword in annotations
 
+
+2.0.7
+-----
+*Release date: 13 April 2018*
+
+- Fixed an issue preventing draws with pre-allocate sides generating
+
+
 2.0.6
 -----
 *Release date: 20 March 2018*
 
 - Added reminder to add own-institution conflicts in the Edit Database area
 - Other minor fixes
+
 
 2.0.5
 -----
