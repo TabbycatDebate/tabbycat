@@ -4,7 +4,7 @@ Change Log
 
 2.0.7
 -----
-*Release date: Unreleased*
+*Release date: 13 April 2018*
 
 - Fixed an issue preventing draws with pre-allocate sides generating
 
