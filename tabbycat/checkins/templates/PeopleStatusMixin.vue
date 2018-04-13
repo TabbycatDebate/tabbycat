@@ -19,6 +19,13 @@ export default {
     speakers: Array,
     adjudicators: Array,
   },
+  created: function () {
+    if (this.teamCodes) {
+      // If using team codes remove the ability to sort by institution
+      this.peopleSortByGroup['By Name'] = true
+      delete this.peopleSortByGroup['By Institution']
+    }
+  },
   methods: {
     getToolTipForPerson: function (entity) {
       var tt = `${entity.name}, a ${entity.type}`
