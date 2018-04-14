@@ -126,10 +126,14 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
     template_name = 'feedback_overview.html'
 
     def annotate_table(self, table, adjudicators):
+        feedback_weight = self.tournament.current_round.feedback_weight
+        scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
+
         table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
-        table.add_weighted_score_columns(adjudicators)
+        table.add_weighted_score_columns(adjudicators, scores)
         table.add_test_score_columns(adjudicators, editable=True)
+        table.add_score_difference_columns(adjudicators, scores)
         table.add_feedback_graphs(adjudicators)
         table.add_feedback_link_columns(adjudicators)
         table.add_feedback_misc_columns(adjudicators)

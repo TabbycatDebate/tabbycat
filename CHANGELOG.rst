@@ -41,6 +41,7 @@ Change Log
     - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
     - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
     - Added "appellant" and "respondent" to the side name options
+    - Added a column to the feedback overview page that displays the current difference between an adjudicator's test score and current weighted score
     - Added an 'important feedback' page that highlights feedback significantly above or below an adjudicator's test score
     - Added a means to bulk-import adjudicator scores (for example from a CSV) to make it easier to work with external feedback processing
     - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines

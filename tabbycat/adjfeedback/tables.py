@@ -29,10 +29,16 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         self.add_column(breaking_header, breaking_data)
 
-    def add_weighted_score_columns(self, adjudicators):
-        feedback_weight = self.tournament.current_round.feedback_weight
-        scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
+    @staticmethod
+    def get_formatted_adj_score(score, strong=False):
+        if score is None:
+            return 'N/A'
+        if strong is True:
+            return '<strong>%0.1f</strong>' % score
+        else:
+            return '%0.1f' % score
 
+    def add_weighted_score_columns(self, adjudicators, scores):
         overall_header = {
             'key': 'score',
             'icon': 'trending-up',
@@ -40,7 +46,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         overall_data = [{
             'sort': scores[adj],
-            'text': '<strong>%0.1f</strong>' % scores[adj] if scores[adj] is not None else 'N/A',
+            'text': self.get_formatted_adj_score(scores[adj], True),
             'tooltip': 'This adjudicator\'s current rating.',
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
@@ -53,18 +59,31 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         }
         if editable:
             test_data = [{
-                'text': '%0.1f' % adj.test_score if adj.test_score is not None else 'N/A',
+                'text': self.get_formatted_adj_score(adj.test_score),
                 'modal': adj.id,
                 'class': 'edit-test-score',
                 'tooltip': 'Click to edit test score',
             } for adj in adjudicators]
         else:
             test_data = [{
-                'text': '%0.1f' % adj.test_score if adj.test_score is not None else 'N/A',
+                'text': self.get_formatted_adj_score(adj.test_score),
                 'tooltip': 'Assigned test score',
             } for adj in adjudicators]
 
         self.add_column(test_header, test_data)
+
+    def add_score_difference_columns(self, adjudicators, scores):
+        diff_header = {
+            'key': 'score-difference',
+            'icon': 'maximize-2',
+            'tooltip': 'The current difference between an adjudicator\'s test score and current score',
+        }
+        diff_data = [{
+            'text': self.get_formatted_adj_score(scores[adj] - adj.test_score),
+            'tooltip': 'The difference between this adjudicator\'s test score and current score',
+        } for adj in adjudicators]
+
+        self.add_column(diff_header, diff_data)
 
     def add_feedback_graphs(self, adjudicators):
         nprelims = self.tournament.prelim_rounds().count()
