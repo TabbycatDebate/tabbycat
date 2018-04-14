@@ -41,6 +41,7 @@ Change Log
     - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
     - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
     - Added "appellant" and "respondent" to the side name options
+    - Added a column to the feedback overview page that displays the current difference between an adjudicator's test score and current weighted score
     - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines
     - The "shared" checkbox in the simple importer is now hidden unless the relevant tournament option is enabled
     - Current team standings page now shows silent round results if "Release all round results to public" is set
