@@ -24,7 +24,7 @@ export default {
             this.error('', '', '503 Service Unavailable')
           } else {
             self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-            console.debug('AJAX: Saved ' + message)
+            console.info('AJAX: Saved ' + message)
             console.debug('DEBUG: JSON ajaxSave success data:', data)
             var dataResponse = JSON.parse(data)
             if (completeFunction !== null) {
