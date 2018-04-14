@@ -186,19 +186,16 @@ export default {
         }
         return p.status.time
       })
-      var self = this
       return _.groupBy(sortedByTime, (p) => {
-        if (_.isUndefined(p["status"]) || p["status"] === false) {
-          return "Not Checked In"
-        } else {
-          var time = new Date(Date.parse(p.status.time))
-          var hours = self.clock(time.getHours())
-          if (time.getMinutes() < 30) {
-            return hours + ":00" + " - " + hours + ":29"
-          } else {
-            return hours + ":30" + " - " + hours + ":59"
-          }
+        var time = new Date(Date.parse(p.status.time))
+        var hours = this.clock(time.getHours())
+        if (_.isUndefined(p.status) || p.status === false) {
+          return 'Not Checked In'
         }
+        if (time.getMinutes() < 30) {
+          return `${hours}:00 - ${hours}:29`
+        }
+        return `${hours}:30 - ${hours}:59`
       })
     },
     entitiesBySortingSetting: function () {
@@ -208,11 +205,12 @@ export default {
         return this.venuesByPriority
       } else if (this.sortByGroup['By Name'] === true) {
         return this.entitiesByName
-      } else if(this.sortByGroup['By Institution'] === true) {
+      } else if (this.sortByGroup['By Institution'] === true) {
         return this.peopleByInstitution
-      } else if(this.sortByGroup['By Time'] === true) {
+      } else if (this.sortByGroup['By Time'] === true) {
         return this.entitiesByTime
       }
+      return this.entitiesByTime
     },
   },
   methods: {
@@ -230,15 +228,14 @@ export default {
       }
     },
     checkInIdentifiers: function (barcodeIdentifiers) {
-      var message = 'the checkin status of ' + barcodeIdentifiers
+      var message = `the checkin status of ${barcodeIdentifiers}`
       var payload = { barcodes: barcodeIdentifiers }
       this.setLocked(barcodeIdentifiers, true)
       this.ajaxSave(this.scanUrl, payload, message, this.passCheckIn, this.failCheckIn, null, false)
     },
     setLocked: function (identifiers, status) {
-      _.forEach(this.entitiesByType, function (entity) {
+      _.forEach(this.entitiesByType, (entity) => {
         if (_.includes(identifiers, entity.identifier)) {
-          console.log('lock', entity.identifier)
           entity.locked = true
         }
       })
@@ -253,27 +250,25 @@ export default {
     },
     lastSeenTime: function (timeString) {
       var time = new Date(Date.parse(timeString))
-      return this.clock(time.getHours()) + ":" + this.clock(time.getMinutes())
+      return `${this.clock(time.getHours())}:${this.clock(time.getMinutes())}`
     },
     getToolTipForEntity: function (entity) {
       return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
     },
     setListContext: function (metaKey, selectedKey, selectedValue) {
       this.enableAnimations = false
-      var self = this
       _.forEach(this[metaKey], (value, key) => {
         if (key === selectedKey) {
-          self[metaKey][key] = selectedValue
+          this[metaKey][key] = selectedValue
         } else {
-          self[metaKey][key] = false
+          this[metaKey][key] = false
         }
       })
       this.$nextTick(() => {
-        self.enableAnimations = true
+        this.enableAnimations = true
       })
     },
     handleSocketMessage: function (payload, socketLabel) {
-      console.log('handleSocketMessage', socketLabel, ' : ', payload)
       this.events.push(payload)
     },
   },

@@ -44,46 +44,47 @@ export default {
       return tt
     },
     annotatePeople: function (peopleType) {
-      var events = this.events
-      _.forEach(this[peopleType], function (person) {
-        person["status"] = _.find(events, ['identifier', person.identifier[0]])
-        if (_.isUndefined(person["status"])) {
-          person["status"] = false
+      _.forEach(this[peopleType], (person) => {
+        person.status = _.find(this.events, ['identifier', person.identifier[0]])
+        if (_.isUndefined(person.status)) {
+          person.status = false
         }
       })
       return this[peopleType]
-    }
+    },
   },
   computed: {
     annotatedSpeakers: function () {
-      if (!this.teamCodes) {
-        return this.annotatePeople('speakers')
-      }
       var speakers = this.annotatePeople('speakers')
-      _.forEach(speakers, function (speaker) {
-        speaker.institution = { code: "Anonymous (due to team codes)", name: "Anon" }
-      })
+      if (this.teamCodes) {
+        _.forEach(speakers, (speaker) => {
+          speaker.institution = { code: 'Anonymous (due to team codes)', name: 'Anon' }
+        })
+      }
       return speakers
     },
     annotatedTeams: function () {
       var teams = []
       var groupedSpeakers = _.groupBy(this.annotatedSpeakers, 'team')
-      var usingTeamCodes = this.teamCodes
-      _.forEach(groupedSpeakers, function (teamSpeakers, teamName) {
-        var institution = teamSpeakers[0].institution
+      _.forEach(groupedSpeakers, (teamSpeakers, teamName) => {
+        const institution = teamSpeakers[0].institution
         var team = {
-          'name': teamName, 'id': teamName, 'locked': false, 'type': 'Team',
-          'speakers': teamSpeakers, 'institution': institution,
-          'identifier': _.flatten(_.map(teamSpeakers, 'identifier'))
+          name: teamName,
+          id: teamName,
+          locked: false,
+          type: 'Team',
+          speakers: teamSpeakers,
+          institution: institution,
+          identifier: _.flatten(_.map(teamSpeakers, 'identifier')),
         }
         // Show as green if everyone in
         if (_.filter(team.speakers, ['status', false]).length > 0) {
-          team['status'] = false
+          team.status = false
         } else {
-          var lastCheckedIn = _.sortBy(team.speakers, [function (speaker) {
+          const lastCheckedIn = _.sortBy(team.speakers, [function (speaker) {
             return speaker.status.time
           }]);
-          team['status'] = { 'time': lastCheckedIn[0].status.time }
+          team.status = { time: lastCheckedIn[0].status.time }
         }
         teams.push(team)
       })
@@ -98,39 +99,37 @@ export default {
     annotatedAdjudicators: function () {
       _.forEach(this.adjudicators, (adjudicator) => {
         if (adjudicator.independent) {
-          adjudicator.institution = { code: "Independent", name: "Independent" }
+          adjudicator.institution = { code: 'Independent', name: 'Independent' }
         }
       })
       return this.annotatePeople('adjudicators')
     },
     peopleByType: function () {
       var entities = []
-      if (this.filterByType['All'] || this.filterByType['Adjudicators']) {
-        _.forEach(this.annotatedAdjudicators, function (adjudicator) {
+      if (this.filterByType.All || this.filterByType.Adjudicators) {
+        _.forEach(this.annotatedAdjudicators, (adjudicator) => {
           entities.push(adjudicator)
         })
       }
-      if (this.filterByType['All'] || this.filterByType['Debaters']) {
-        _.forEach(this.annotatedDebaters, function (speakerOrTeam) {
+      if (this.filterByType.All || this.filterByType.Debaters) {
+        _.forEach(this.annotatedDebaters, (speakerOrTeam) => {
           entities.push(speakerOrTeam)
         })
       }
       return entities
     },
     peopleByInstitution: function () {
-      var sortedByInstitution = _.sortBy(this.entitiesSortedByName, function (p) {
+      var sortedByInstitution = _.sortBy(this.entitiesSortedByName, (p) => {
         if (p.institution === null) {
-          return "Unaffiliated"
-        } else {
-          return p.institution.code
+          return 'Unaffiliated'
         }
+        return p.institution.code
       })
-      return _.groupBy(sortedByInstitution, function (p) {
+      return _.groupBy(sortedByInstitution, (p) => {
         if (p.institution === null) {
-          return "Unaffiliated"
-        } else {
-          return p.institution.code
+          return 'Unaffiliated'
         }
+        return p.institution.code
       })
     },
   },
