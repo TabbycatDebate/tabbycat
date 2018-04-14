@@ -56,7 +56,14 @@ export default {
   },
   computed: {
     annotatedSpeakers: function () {
-      return this.annotatePeople('speakers')
+      if (!this.teamCodes) {
+        return this.annotatePeople('speakers')
+      }
+      var speakers = this.annotatePeople('speakers')
+      _.forEach(speakers, function (speaker) {
+        speaker.institution = { code: "Anonymous (due to team codes)", name: "Anon" }
+      })
+      return speakers
     },
     annotatedTeams: function () {
       var teams = []
@@ -64,9 +71,6 @@ export default {
       var usingTeamCodes = this.teamCodes
       _.forEach(groupedSpeakers, function (teamSpeakers, teamName) {
         var institution = teamSpeakers[0].institution
-        if (usingTeamCodes) {
-          institution = { code: "Anonymous (due to team codes)", name: "Anon" }
-        }
         var team = {
           'name': teamName, 'id': teamName, 'locked': false, 'type': 'Team',
           'speakers': teamSpeakers, 'institution': institution,
