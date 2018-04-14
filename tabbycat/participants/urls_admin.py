@@ -4,14 +4,15 @@ from . import views
 
 urlpatterns = [
     path('list/',
-        views.ParticipantsListView.as_view(),
+        views.AdminParticipantsListView.as_view(),
         name='participants-list'),
     path('institutions/',
-        views.InstitutionsListView.as_view(),
+        views.AdminInstitutionsListView.as_view(),
         name='participants-institutions-list'),
     path('code-names/',
-        views.CodeNamesListView.as_view(),
+        views.AdminCodeNamesListView.as_view(),
         name='participants-code-names-list'),
+
     path('eligibility/',
         views.EditSpeakerCategoryEligibilityView.as_view(),
         name='participants-speaker-eligibility'),
@@ -21,6 +22,7 @@ urlpatterns = [
     path('categories/',
         views.EditSpeakerCategoriesView.as_view(),
         name='participants-speaker-categories-edit'),
+
     path('team/<int:pk>/',
         views.TeamRecordView.as_view(),
         name='participants-team-record'),

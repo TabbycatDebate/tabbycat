@@ -27,7 +27,7 @@ def debate_context(request):
 def get_menu_highlight(request):
     menu = {}
     path = request.path.split('/')
-    if "admin" in path:
+    if "admin" in path or "assistant" in path:
         if "options" in path or "participants" in path or ("import" in path and "important" not in path):
             menu['options_nav'] = True
             if "options" in path:

@@ -24,7 +24,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import AdministratorMixin, CacheMixin
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -67,15 +67,20 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
             speakers = speakers.order_by('team__code_name')
         else:
             speakers = speakers.order_by('team__short_name')
-        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="team")
+        speakers_table = TabbycatTableBuilder(view=self, title=_("Speakers"),
+                sort_key="team", admin=self.admin)
         speakers_table.add_speaker_columns(speakers)
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
         return [adjs_table, speakers_table]
 
 
-class ParticipantsListView(AdministratorMixin, BaseParticipantsListView):
+class AdminParticipantsListView(AdministratorMixin, BaseParticipantsListView):
     template_name = 'participants_list.html'
+    admin = True
+
+
+class AssistantParticipantsListView(AssistantMixin, BaseParticipantsListView):
     admin = True
 
 
@@ -115,8 +120,12 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
         return table
 
 
-class InstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
+class AdminInstitutionsListView(AdministratorMixin, BaseInstitutionsListView):
     template_name = 'participants_list.html'
+    admin = True
+
+
+class AssistantInstitutionsListView(AssistantMixin, BaseInstitutionsListView):
     admin = True
 
 
@@ -125,14 +134,13 @@ class PublicInstitutionsListView(PublicTournamentPageMixin, CacheMixin, BaseInst
     admin = False
 
 
-class CodeNamesListView(TournamentMixin, AdministratorMixin, VueTableTemplateView):
+class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
 
-    template_name = 'participants_list.html'
     page_title = gettext_lazy("Code Names")
     page_emoji = '🕵'
 
     def get_table(self):
-        teams = self.tournament.team_set.select_related('institution')
+        teams = self.tournament.team_set.select_related('institution').prefetch_related('speaker_set')
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
@@ -140,6 +148,14 @@ class CodeNamesListView(TournamentMixin, AdministratorMixin, VueTableTemplateVie
         )
         table.add_team_columns(teams, hide_emoji=True)
         return table
+
+
+class AdminCodeNamesListView(AdministratorMixin, BaseCodeNamesListView):
+    template_name = 'participants_list.html'
+
+
+class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
+    pass
 
 
 # ==============================================================================
@@ -375,7 +391,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key='team')
         speakers = Speaker.objects.filter(team__tournament=self.tournament).select_related(
-            'team', 'team__institution').prefetch_related('categories')
+            'team', 'team__institution').prefetch_related('categories', 'team__speaker_set')
         table.add_speaker_columns(speakers, categories=False)
         table.add_team_columns([speaker.team for speaker in speakers])
         speaker_categories = self.tournament.speakercategory_set.all()
