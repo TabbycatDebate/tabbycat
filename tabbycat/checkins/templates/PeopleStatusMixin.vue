@@ -19,22 +19,17 @@ export default {
     speakers: Array,
     adjudicators: Array,
   },
-  created: function () {
-    if (this.teamCodes) {
-      // If using team codes remove the ability to sort by institution
-      this.peopleSortByGroup['By Name'] = true
-      delete this.peopleSortByGroup['By Institution']
-    }
-  },
   methods: {
     getToolTipForPerson: function (entity) {
       var tt = `${entity.name}, a ${entity.type}`
-      if (entity.institution === null) {
-        tt += ' of no institutional affiliation'
-      } else {
-        tt += ` from ${entity.institution.name}`
+      if (!this.teamCodes && entity.type !== 'Team') {
+        if (entity.institution === null) {
+          tt += ' of no institutional affiliation'
+        } else {
+          tt += ` from ${entity.institution.name}`
+        }
       }
-      if (entity.speakers !== null) {
+      if (entity.speakers !== null && entity.type === 'Team') {
         tt += ' with speakers '
         _.forEach(entity.speakers, (speaker) => {
           var status = speaker.status ? 'Present; id=' : 'Absent; id='
@@ -66,10 +61,15 @@ export default {
     annotatedTeams: function () {
       var teams = []
       var groupedSpeakers = _.groupBy(this.annotatedSpeakers, 'team')
+      var usingTeamCodes = this.teamCodes
       _.forEach(groupedSpeakers, function (teamSpeakers, teamName) {
+        var institution = teamSpeakers[0].institution
+        if (usingTeamCodes) {
+          institution = { code: "Anonymous (due to team codes)", name: "Anon" }
+        }
         var team = {
           'name': teamName, 'id': teamName, 'locked': false, 'type': 'Team',
-          'speakers': teamSpeakers, 'institution': teamSpeakers[0].institution,
+          'speakers': teamSpeakers, 'institution': institution,
           'identifier': _.flatten(_.map(teamSpeakers, 'identifier'))
         }
         // Show as green if everyone in
@@ -92,6 +92,11 @@ export default {
       return this.annotatedTeams
     },
     annotatedAdjudicators: function () {
+      _.forEach(this.adjudicators, (adjudicator) => {
+        if (adjudicator.independent) {
+          adjudicator.institution = { code: "Independent", name: "Independent" }
+        }
+      })
       return this.annotatePeople('adjudicators')
     },
     peopleByType: function () {

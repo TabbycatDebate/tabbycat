@@ -126,7 +126,7 @@ export default {
   data: function () {
     return {
       filterByPresence: {
-        Absent: false, Present: false, All: true,
+        Absent: true, Present: false, All: false,
       },
       enableAnimations: true,
       sockets: ['checkins'],
