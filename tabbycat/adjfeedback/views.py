@@ -816,7 +816,7 @@ class BaseCsvView(View):
         return response
 
 
-class AdjudicatorScoresCsvView(TournamentMixin, BaseCsvView):
+class AdjudicatorScoresCsvView(TournamentMixin, AdministratorMixin, BaseCsvView):
     filename = "scores.csv"
 
     def write_rows(self, writer):
@@ -825,7 +825,7 @@ class AdjudicatorScoresCsvView(TournamentMixin, BaseCsvView):
             writer.writerow([adj.id, adj.name, adj.test_score])
 
 
-class AdjudicatorFeedbackCsvView(FeedbackMixin, TournamentMixin, BaseCsvView):
+class AdjudicatorFeedbackCsvView(FeedbackMixin, AdministratorMixin, TournamentMixin, BaseCsvView):
     filename = "feedback.csv"
 
     def get_feedback_queryset(self):
