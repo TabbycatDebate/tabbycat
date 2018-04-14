@@ -104,7 +104,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
             adjudicators.append({
                 'id': adj.id, 'name': adj.name, 'type': 'Adjudicator',
-                'identifier': [code], 'locked': False,
+                'identifier': [code], 'locked': False, 'independent': adj.independent,
                 'institution': adj.institution.serialize if adj.institution else None,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
