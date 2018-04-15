@@ -15,11 +15,11 @@
         {% include "components/form-title.html" with title=round.name %}
         {% if round.motions_released %}
           {% for motion in round.motion_set.all %}
-            <li class="list-group-item d-flex flex-column flex-md-row">
-              <div class="mr-auto pr-3">{{ motion.text }}</div>
+            <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center">
+              <div class="mr-auto pr-3 lead">{{ motion.text }}</div>
               {% if motion.info_slide %}
-                <div>
-                  <button class="btn btn-sm btn-secondary mt-md-0 mt-3 mb-1 btn-block"
+                <div class="pt-md-0 pt-2">
+                  <button class="btn btn-sm btn-secondary btn-block"
                           data-toggle="modal" data-target="#info_{{ motion.id }}">
                     {% trans "View Info Slide" %}
                   </button>
