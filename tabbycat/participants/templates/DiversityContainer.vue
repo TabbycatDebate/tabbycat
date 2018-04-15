@@ -6,14 +6,14 @@
         <h5 class="card-title mb-4" v-text="gettext('Speaker Demographics')"></h5>
         <donut-chart v-for="set in graphsData.speakers_gender"
                      :graph-data="set.data" :title="set.title"
-                     :key="set.title"></donut-chart>
+                     :key="'gender-' + set.title"></donut-chart>
         <p v-if="graphsData.speakers_gender.length === 0"
            v-text="gettext('No Gender Information')">
         </p>
         <hr>
         <donut-chart v-for="set in graphsData.speakers_categories"
                      :graph-data="set.data" :title="set.title"
-                     :key="set.title"></donut-chart>
+                     :key="'categories-' + set.title"></donut-chart>
         <p v-if="graphsData.speakers_categories.length === 0"
            v-text="gettext('No Speaker Categories Information')">
         </p>
@@ -21,7 +21,7 @@
         <donut-chart v-for="set in graphsData.speakers_region"
                      :graph-data="set.data" :title="set.title"
                      :regions="graphsData.regions"
-                     :key="set.title"></donut-chart>
+                     :key="'region-' + set.title"></donut-chart>
         <p v-if="graphsData.speakers_region.length === 0"
            v-text="gettext('No Region Information')">
         </p>
@@ -39,12 +39,12 @@
         </h6>
         <hr>
         <text-display v-for="set in graphsData.speakers_results"
-                      :set="set" :key="set.title"></text-display>
+                      :set="set" :key="'speakers-' + set.title"></text-display>
         <p v-if="graphsData.speakers_results.length === 0"
            v-text="gettext('No Gender Information')">
         </p>
         <text-display v-for="set in graphsData.detailed_speakers_results"
-                      :set="set" :key="set.title"></text-display>
+                      :set="set" :key="'dspeakers-' + set.title"></text-display>
         <p v-if="graphsData.detailed_speakers_results.length === 0"
            v-text="gettext('No Region Information')">
         </p>
@@ -56,14 +56,14 @@
         <h5 class="card-title mb-4" v-text="gettext('Adjudicator Demographics')"></h5>
         <donut-chart v-for="set in graphsData.adjudicators_gender"
                      :graph-data="set.data" :title="set.title"
-                     :key="set.title"></donut-chart>
+                     :key="'demo-' + set.title"></donut-chart>
         <p v-if="graphsData.adjudicators_gender.length === 0"
            v-text="gettext('No Gender Information')">
         </p>
         <hr>
         <donut-chart v-for="set in graphsData.adjudicators_position"
                      :graph-data="set.data" :title="set.title"
-                     :key="set.title"></donut-chart>
+                     :key="'position-' + set.title"></donut-chart>
         <p v-if="graphsData.adjudicators_position.length === 0"
            v-text="gettext('No Position Information')">
         </p>
@@ -71,7 +71,7 @@
         <donut-chart v-for="set in graphsData.adjudicators_region"
                      :graph-data="set.data" :title="set.title"
                      :regions="graphsData.regions"
-                     :key="set.title"></donut-chart>
+                     :key="'region-' + set.title"></donut-chart>
         <p v-if="graphsData.adjudicators_region.length === 0"
            v-text="gettext('No Region Information')">
         </p>
@@ -89,12 +89,12 @@
         </h6>
         <hr>
         <text-display v-for="set in graphsData.adjudicators_results"
-                      :set="set" :key="set.title"></text-display>
+                      :set="set" :key="'adjs-' + set.title"></text-display>
         <p v-if="graphsData.adjudicators_results.length === 0"
            v-text="gettext('No Adjudicator Ratings Information')">
         </p>
         <text-display v-for="set in graphsData.detailed_adjudicators_results"
-                      :set="set" :key="set.title"></text-display>
+                      :set="set" :key="'dadjs-' + set.title"></text-display>
         <p v-if="graphsData.detailed_adjudicators_results.length === 0"
            v-text="gettext('No Adjudicator-Adjudicator Feedback Information')">
         </p>
