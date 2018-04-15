@@ -134,9 +134,11 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
         table.add_weighted_score_columns(adjudicators, scores)
         table.add_test_score_columns(adjudicators, editable=True)
         table.add_score_difference_columns(adjudicators, scores)
+        table.add_score_variance_columns(adjudicators)
         table.add_feedback_graphs(adjudicators)
         table.add_feedback_link_columns(adjudicators)
-        table.add_feedback_misc_columns(adjudicators)
+        if self.tournament.pref('enable_adj_notes'):
+            table.add_feedback_note_columns(adjudicators)
         return table
 
 
