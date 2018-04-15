@@ -13,10 +13,15 @@ def debate_context(request):
     }
 
     if hasattr(request, 'tournament'):
+        current_round = request.tournament.get_current_round_cached
+        # If cache is unavailable the cached method fails; provide fallback
+        if current_round is None:
+            current_round = request.tournament.current_round
+
         context.update({
             'tournament': request.tournament,
             'pref': request.tournament.preferences.by_name(),
-            'current_round': request.tournament.get_current_round_cached,
+            'current_round': current_round,
         })
         if hasattr(request, 'round'):
             context['round'] = request.round
