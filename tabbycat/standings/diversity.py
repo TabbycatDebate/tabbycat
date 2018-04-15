@@ -163,7 +163,7 @@ def get_diversity_data_sets(t, for_public):
     adjudicators = t.adjudicator_set.all()
 
     if adjudicators.count() > 0:
-        data_sets['adjudicators_gender'].append(compile_gender_counts(_("All Adjudicators"), adjudicators, 'gender'))
+        data_sets['adjudicators_gender'].append(compile_gender_counts(_("All"), adjudicators, 'gender'))
 
     if Adjudicator.objects.filter(tournament=t).filter(independent=True).exists():
         data_sets['adjudicators_gender'].append(compile_gender_counts(_("Indies"),
