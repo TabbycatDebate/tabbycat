@@ -156,6 +156,7 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
                 item['identifier'] = [None]
             venues.append(item)
         kwargs["venues"] = json.dumps(venues)
+        kwargs["team_codes"] = json.dumps(False)
 
         return super().get_context_data(**kwargs)
 
