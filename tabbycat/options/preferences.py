@@ -945,7 +945,7 @@ class FeedbackProgress(BooleanPreference):
 
 @tournament_preferences_registry.register
 class TournamentStaff(LongStringPreference):
-    help_text = _("List of tournament staff, to be displayed on the tournament home page")
+    help_text = _("List of tournament staff, to be displayed on the tournament home page. Leave this blank or with the default text if you want to not show this information.")
     verbose_name = _("Tournament staff")
     section = public_features
     name = 'tournament_staff'
