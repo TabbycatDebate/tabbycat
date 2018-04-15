@@ -1,3 +1,5 @@
+from django.contrib import admin
+
 """ General utilities for extending filters/lists in the admin area """
 
 # ==============================================================================
@@ -41,3 +43,12 @@ class TabbycatModelAdminFieldsMixin:
     def get_confirmed(self, obj):
         return obj.ballot_submission.confirmed
     get_confirmed.short_description = 'Confirmed'
+
+
+def custom_titled_filter(title):
+    class Wrapper(admin.RelatedFieldListFilter):
+        def __new__(cls, *args, **kwargs):
+            instance = admin.FieldListFilter.create(*args, **kwargs)
+            instance.title = title
+            return instance
+    return Wrapper
