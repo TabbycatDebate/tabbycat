@@ -8,4 +8,3 @@ dj-database-url==0.5.0                  # From the heroku toolbelt
 
 # Misc
 sendgrid==5.3.0                         # Emailing
-scout-apm                               # Performance monitoring

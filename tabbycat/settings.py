@@ -92,7 +92,8 @@ TABBYCAT_APPS = (
 )
 
 INSTALLED_APPS = (
-    'jet',
+    # Scout should be listed first
+    'scout_apm.django', 'jet' if os.environ.get('SCOUT_MONITOR') is True else 'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -248,6 +249,12 @@ for app in TABBYCAT_APPS:
     }
 
 # ==============================================================================
+# Scout
+# ==============================================================================
+
+SCOUT_NAME = "Tabbycat"
+
+# ==============================================================================
 # Sentry
 # ==============================================================================
 
@@ -263,14 +270,6 @@ if 'DATABASE_URL' in os.environ and not DEBUG:
 
     # Custom implementation makes the user ID the e-mail address, rather than the primary key
     SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
-
-# ==============================================================================
-# Scout
-# ==============================================================================
-
-if 'SCOUT_MONITOR' in os.environ:
-    INSTALLED_APPS += ('scout_apm.django',)
-    SCOUT_NAME = "Tabbycat"
 
 # ==============================================================================
 # Messages
