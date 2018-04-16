@@ -1,3 +1,11 @@
+import logging
+
+from django.utils.translation import gettext as _
+
+from utils.views import BadJsonRequestError
+
+logger = logging.getLogger(__name__)
+
 
 def allocate_adjudicators(round, alloc_class):
     if round.draw_status != round.STATUS_CONFIRMED:
@@ -19,6 +27,12 @@ class Allocator(object):
         self.tournament = round.tournament
         self.debates = list(debates)
         self.adjudicators = adjudicators
+        if len(self.adjudicators) == 0:
+            info = _("""There are no available adjudicators. Ensure there are
+                        adjudicators who have been marked as available for this
+                        round before auto-allocating.""")
+            logger.info(info)
+            raise BadJsonRequestError(info)
 
     def allocate(self):
         raise NotImplementedError
