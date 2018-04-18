@@ -6,12 +6,29 @@ from django.utils.translation import ngettext
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
-from .models import AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackStringAnswer
+from .models import (AdjudicatorFeedback, AdjudicatorFeedbackQuestion,
+    AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer,
+    AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackStringAnswer,
+    AdjudicatorTestScoreHistory)
 
 
 # ==============================================================================
-# Adjudicator Feedback Questions
+# Adjudicator test score histories
+# ==============================================================================
+
+@admin.register(AdjudicatorTestScoreHistory)
+class AdjudicatorTestScoreHistoryAdmin(admin.ModelAdmin):
+    list_display = ('adjudicator', 'round', 'score', 'timestamp')
+    list_filter  = ('adjudicator', 'round')
+    ordering     = ('timestamp',)
+    search_fields = ('adjudicator__name', 'adjudicator__institution__code')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('round__tournament', 'adjudicator__institution')
+
+
+# ==============================================================================
+# Adjudicator feedback questions
 # ==============================================================================
 
 @admin.register(AdjudicatorFeedbackQuestion)
@@ -23,7 +40,7 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 
 
 # ==============================================================================
-# Adjudicator Feedback Answers
+# Adjudicator feedback answers
 # ==============================================================================
 
 @admin.register(AdjudicatorFeedbackBooleanAnswer)
