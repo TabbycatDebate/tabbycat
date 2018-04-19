@@ -16,7 +16,7 @@ django-statici18n==1.7.0                # Compile translations files as static f
 django-summernote==0.8.8.6              # WYSIWYG editor
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
-raven==6.6.0                            # Client for Sentry error tracking
+raven                                   # Client for Sentry error tracking
 
 # Database
 psycopg2==2.7.4                         # For Django to talk to postgres
@@ -29,7 +29,7 @@ whitenoise==3.3.1                       # Static file serving
 django_redis==4.9.0                     # Use redis for cache (on heroku; local optional)
 
 # Channels
-channels==2.1.0                         # Channels
+channels==2.1.1                         # Channels
 channels_redis==2.1.1                   # Channels Layer
 
 # Misc

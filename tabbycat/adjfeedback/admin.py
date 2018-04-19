@@ -6,9 +6,8 @@ from django.utils.translation import ngettext
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
 
-from .models import (AdjudicatorFeedback, AdjudicatorFeedbackQuestion,
-    AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer,
-    AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackStringAnswer,
+from .models import (AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer,
+    AdjudicatorFeedbackQuestion, AdjudicatorFeedbackStringAnswer,
     AdjudicatorTestScoreHistory)
 
 
