@@ -5,7 +5,7 @@ export default {
   data: function () {
     return {
       peopleFilterByType: {
-        Adjudicators: false, Debaters: false, All: true,
+        All: true, Adjudicators: false, Debaters: false,
       },
       peopleSortByGroup: {
         'By Institution': true, 'By Name': false, 'By Time': false,

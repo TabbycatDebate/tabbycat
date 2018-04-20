@@ -8,7 +8,7 @@
         <button v-for="(optionState, optionKey) in this.filterByPresence" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('filterByPresence', optionKey, !optionState)">
-          {{ optionKey }}
+          {{ stats[optionKey] }} {{ optionKey }}
         </button>
       </div>
 
@@ -126,7 +126,7 @@ export default {
   data: function () {
     return {
       filterByPresence: {
-        Absent: true, Present: false, All: false,
+        All: false, Absent: true, Present: false,
       },
       enableAnimations: true,
       sockets: ['checkins'],
@@ -139,6 +139,23 @@ export default {
     teamCodes: Boolean,
   },
   computed: {
+    statsAbsent: function () {
+      return 0
+    },
+    statsPresent: function () {
+      return 0
+    },
+    stats: function () {
+      return {
+        Absent: _.filter(this.entitiesByType, (p) => {
+          return p.status === false
+        }).length,
+        Present: _.filter(this.entitiesByType, (p) => {
+          return p.status !== false
+        }).length,
+        All: '',
+      }
+    },
     isForVenues: function () {
       return this.venues === null ? false : true
     },
