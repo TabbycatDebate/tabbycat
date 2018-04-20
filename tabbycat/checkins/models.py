@@ -24,9 +24,9 @@ class Identifier(models.Model):
 
     instance_attr = None
 
-    validate_alphanumeric = RegexValidator(r'^[0-9]{5}$',
-        message=_("The barcode must be exactly 6 alphanumeric characters."))
-    barcode = models.CharField(unique=True, max_length=5,
+    validate_alphanumeric = RegexValidator(r'^[0-9]{4,20}$',
+        message=_("The barcode must contain between 4 and 20 digits."))
+    barcode = models.CharField(unique=True, max_length=20,
         validators=[validate_alphanumeric], default=generate_identifier,
         verbose_name=_("barcode"))
 
