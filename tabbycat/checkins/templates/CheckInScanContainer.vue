@@ -58,7 +58,10 @@ export default {
         })
       }
       this.barcode = '' // Reset
-      this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
+      if (!this.liveScanning) {
+        console.log('scan scan')
+        this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
+      }
     },
     finishCheckIn: function (dataResponse, payload, returnPayload) {
       var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]

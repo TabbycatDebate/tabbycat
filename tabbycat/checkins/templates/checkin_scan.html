@@ -13,6 +13,11 @@
 
 {% block content %}
 
+  <div class="d-none d-md-block">
+    {% trans "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as as a keyboard) or scan from a webcam or phone camera using the button below." as message %}
+    {% include "components/alert.html" with type="info" %}
+  </div>
+
   <div id="vueMount">
     <check-in-scan-container :scan-url="scanUrl"></check-in-scan-container>
   </div>
