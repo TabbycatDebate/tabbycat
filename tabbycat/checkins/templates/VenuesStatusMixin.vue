@@ -55,13 +55,13 @@ export default {
     venuesByCategory: function () {
       var sortedByCategory = _.sortBy(this.entitiesSortedByName, (v) => {
         if (v.categories.length === 0) {
-          return 'No Categories'
+          return 'Uncategorised'
         }
         return v.categories[0].name
       })
       return _.groupBy(sortedByCategory, (v) => {
         if (v.categories.length === 0) {
-          return 'No Categories'
+          return 'Uncategorised'
         }
         return v.categories[0].name
       })
