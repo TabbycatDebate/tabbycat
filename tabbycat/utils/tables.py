@@ -425,7 +425,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if ts.points is not None:
                 place = places.get(ts.points, "??")
                 cell['text'] = place
-                cell['popover']['title'] = _("Took %(place)s") % {'place': place}
+                cell['popover']['title'] = _("Placed %(place)s") % {'place': place}
             else:
                 cell['text'] = "–"
                 cell['popover']['title'] = _("No result for debate")

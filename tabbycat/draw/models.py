@@ -322,24 +322,24 @@ class DebateTeam(models.Model):
             return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
 
     def get_result_display(self):
-
-        if self.win is None:
-            if self.points is 3:
-                return "Placed 1st"
-            elif self.points is 2:
-                return "Placed 2nd"
-            elif self.points is 1:
-                return "Placed 3rd"
-            elif self.points is 0:
-                return "Placed 4th"
+        if self.team.tournament.pref('teams_in_debate') == 'bp':
+            if self.points == 3:
+                return gettext("placed 1st")
+            elif self.points == 2:
+                return gettext("placed 2nd")
+            elif self.points == 1:
+                return gettext("placed 3rd")
+            elif self.points == 0:
+                return gettext("placed 4th")
             else:
                 return gettext("result unknown")
-        elif self.win is True:
-            return gettext("Won")
-        elif self.win is False:
-            return gettext("Lost")
         else:
-            return gettext("result unknown")
+            if self.win is True:
+                return gettext("won")
+            elif self.win is False: # not None
+                return gettext("lost")
+            else:
+                return gettext("result unknown")
 
     @property
     def win(self):
