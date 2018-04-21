@@ -81,10 +81,18 @@ class Debate(models.Model):
             # 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
             # space.
             return teams_list + gettext(" (sides not confirmed)")
+
+        try:
+            # This can sometimes arise during the call to self.round.tournament.sides
+            # if preferences aren't loaded correctly, which happens in `manage.py shell`.
+            sides = self.round.tournament.sides
+        except IndexError:
+            return self._teams_and_sides_display()  # fallback
+
         try:
             # Translators: This goes between teams in a debate, e.g. "Auckland 1
             # vs Vic Wellington 1". Mind the leading and trailing spaces.
-            return gettext(" vs ").join(self.get_team(side).short_name for side in self.round.tournament.sides)
+            return gettext(" vs ").join(self.get_team(side).short_name for side in sides)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             return self._teams_and_sides_display()
 
