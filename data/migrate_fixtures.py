@@ -71,7 +71,7 @@ def print_yellow(message):
 
 
 if args.unmigrate:
-    unmigrations = [spec.split("/") for spec in args.unmigrate]
+    unmigrations = [tuple(spec.split("/")) for spec in args.unmigrate]
     run_command(["git", "checkout", args.new_commit])
 else:
     print_yellow("Figuring out the migration difference is...")
