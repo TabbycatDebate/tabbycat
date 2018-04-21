@@ -7,7 +7,7 @@
 Django==2.0.4                           # pyup: >=2.0,<2.1
 django-appconf==1.0.2                   # Helper for handling app configs
 django-dynamic-preferences==1.5.1       # Settings management
-django-extensions==2.0.6                # For the generate secret command
+django-extensions==2.0.7                # For the generate secret command
 django-formtools==2.1                   # Form wizards
 django-ipware==2.0.2                    # IP Address logging
 django-jet==1.0.7                       # Admin Backend
