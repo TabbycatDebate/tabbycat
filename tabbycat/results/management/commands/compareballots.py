@@ -1,7 +1,7 @@
 from utils.management.base import TournamentCommand
 from draw.models import Debate
 from results.models import BallotSubmission
-from tournaments.models import Tournament
+from tournaments.models import Round, Tournament
 
 
 class Command(TournamentCommand):
@@ -21,11 +21,12 @@ class Command(TournamentCommand):
     def handle_tournament(self, tournament, **options):
 
         compare_tournament = Tournament.objects.get(slug=options['compare'])
+        debates = Debate.objects.filter(round__tournament=tournament, round__stage=Round.STAGE_PRELIMINARY)
 
         no_original = 0
         no_check = 0
 
-        for debate in Debate.objects.filter(round__tournament=tournament):
+        for debate in debates:
             if not debate.confirmed_ballot:
                 no_original += 1
                 continue
