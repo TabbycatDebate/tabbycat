@@ -3,13 +3,14 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Prefetch
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
+from breakqual.models import BreakCategory
 from motions.models import Motion
 from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
@@ -417,11 +418,18 @@ class BaseTeamStandingsView(BaseStandingsView):
     page_title = gettext_lazy("Team Standings")
     page_emoji = '👯'
 
+    def get_teams(self):
+        return self.tournament.team_set.exclude(type=Team.TYPE_BYE)
+
     def get_standings(self):
         if self.round is None:
             raise StandingsError(_("The tab can't be displayed because all rounds so far in this tournament are silent."))
 
-        teams = self.tournament.team_set.exclude(type=Team.TYPE_BYE).select_related('institution').prefetch_related('speaker_set')
+        teams = self.get_teams()
+        teams = teams.select_related('institution').prefetch_related('speaker_set',
+            Prefetch('break_categories',
+                queryset=BreakCategory.objects.filter(is_general=False),
+                to_attr='break_categories_nongeneral'))
         metrics = self.tournament.pref('team_standings_precedence')
         extra_metrics = self.tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
@@ -499,6 +507,47 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
     def show_ballots(self):
         return self.tournament.pref('ballots_released')
+
+
+class BaseBreakCategoryStandingsView(SingleObjectFromTournamentMixin, BaseTeamStandingsView):
+    """Team standings view for a break category."""
+
+    model = BreakCategory
+    slug_url_kwarg = 'category'
+
+    def get_teams(self):
+        return self.object.team_set.all()
+
+    def get_page_title(self):
+        return _("%(category)s Team Standings") % {'category': self.object.name}
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+
+class BreakCategoryStandingsView(AdministratorMixin, BaseBreakCategoryStandingsView):
+    """Superuser team standings view for a break category."""
+    rankings = ('rank',)
+
+    def show_ballots(self):
+        return True
+
+
+class PublicBreakCategoryTabView(PublicTabMixin, BaseBreakCategoryStandingsView):
+    """Public view for the team tab for a break category."""
+    public_page_preference = 'break_category_tabs_released'
+    rankings = ('rank',)
+
+    def show_ballots(self):
+        return self.tournament.pref('ballots_released')
+
+    def get_tab_limit(self):
+        return self.object.limit
+
+    def get_page_title(self):
+        title = _("%(category)s Team Tab") % {'category': self.object.name}
+        return self.append_limit(title)
 
 
 # ==============================================================================

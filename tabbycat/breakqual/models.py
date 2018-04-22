@@ -26,6 +26,9 @@ class BreakCategory(models.Model):
         help_text=_("If a team breaks in multiple categories, higher priority "
             "numbers take precedence; teams can break into multiple categories "
             "if and only if they all have the same priority"))
+    limit = models.IntegerField(default=0,
+        verbose_name=_("limit"),
+        help_text=_("At most this many teams will be shown on the public tab for this category, or use 0 for no limit"))
 
     BREAK_QUALIFICATION_CHOICES = [
         ('standard', _("Standard")),

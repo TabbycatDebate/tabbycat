@@ -609,6 +609,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)
 
     def add_team_columns(self, teams, show_break_categories=False, show_emoji=True, key=None):
+        """If `show_break_categories` is True, each team must be annotated with
+        a `break_categories_nongeneral` attribute, which typically looks like this:
+            Prefetch('break_categories', queryset=BreakCategory.objects.filter(is_general=False),
+                to_attr='break_categories_nongeneral')
+        """
 
         team_data = [self._team_cell(team, show_emoji=show_emoji)
                      if not getattr(team, 'anonymise', False)
@@ -622,7 +627,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if show_break_categories and self.tournament.breakcategory_set.filter(is_general=False).exists():
             self.add_column(
                 {'key': 'categories', 'title': _("Categories")},
-                [", ".join(bc.name for bc in team.break_categories.filter(is_general=False)) for team in teams]
+                [", ".join(bc.name for bc in getattr(team, 'break_categories_nongeneral', []))
+                    for team in teams]
             )
 
         if self.tournament.pref('show_team_institutions'):

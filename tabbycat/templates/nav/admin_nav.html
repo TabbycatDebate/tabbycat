@@ -188,6 +188,13 @@
       <a class="list-group-item {% if standings_team_nav %}active{% endif %}" href="{% roundurl 'standings-team' current_round %}">
         <i data-feather="users"></i>{% trans "Teams" %}
       </a>
+      {% for category in tournament.break_categories_nongeneral %}
+        <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
+          <i data-feather="users"></i>{% blocktrans trimmed with category_name=category.name %}
+            {{ category_name }} Teams
+          {% endblocktrans %}
+        </a>
+      {% endfor %}
       {% if pref.enable_divisions %}
       <a class="list-group-item {% if standings_division_nav %}active{% endif %}" href="{% roundurl 'standings-division' current_round %}">
         <i data-feather="layers"></i>{% trans "Divisions" %}

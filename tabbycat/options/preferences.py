@@ -649,6 +649,15 @@ class RepliesTabReleaseLimit(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class BreakCategoryTabsReleased(BooleanPreference):
+    help_text = "Enables public display of tabs for teams in each break category. Intended for use after the tournament."
+    verbose_name = "Release break (team) category tabs to public"
+    section = tab_release
+    name = "break_category_tabs_released"
+    default = False
+
+
+@tournament_preferences_registry.register
 class SpeakerCategoryTabsReleased(BooleanPreference):
     help_text = "Enables public display of those speaker category tabs that are marked to be public. Intended for use after the tournament."
     verbose_name = "Release speaker category tabs to public"

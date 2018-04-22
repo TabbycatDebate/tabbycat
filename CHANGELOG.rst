@@ -30,6 +30,7 @@ Change Log
 - Fixed χ² test in motion statistics, and refactored and moved motion statistics page
 - Teams, like adjudicators, no longer need to have an institution
 - Added page allowing update of adjudicator scores in bulk
+- Added break categories to team standings, and new team standings pages for break categories
 - Made speaker standings more configurable
     - Second-order metrics can now be specified
     - Added trimmed mean (also known as high-low drop)

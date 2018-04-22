@@ -6,7 +6,18 @@
     <a class="nav-link" href="{% tournamenturl 'standings-public-tab-team' %}">{% trans "Team Tab" %}</a>
   </li>
 {% endif %}
-{% if pref.speaker_tab_released > 0 %}
+{% if pref.break_category_tabs_released %}
+  {% for category in tournament.break_categories_nongeneral %}
+    <li>
+      <a class="nav-link" href="{% tournamenturl 'standings-public-tab-break-category' category=category.slug %}">
+        {% blocktrans trimmed with category_name=category.name %}
+          {{ category_name }} Teams
+        {% endblocktrans %}
+      </a>
+    </li>
+  {% endfor %}
+{% endif %}
+{% if pref.speaker_tab_released %}
   <li class="nav-item {% if tab_speaker_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'standings-public-tab-speaker' %}">{% trans "Speaker Tab" %}</a>
   </li>
@@ -17,7 +28,7 @@
       <li>
         <a class="nav-link" href="{% tournamenturl 'standings-public-tab-speaker-category' category=category.slug %}">
           {% blocktrans trimmed with category_name=category.name %}
-            {{ category_name }} Tab
+            {{ category_name }} Speakers
           {% endblocktrans %}
         </a>
       </li>
