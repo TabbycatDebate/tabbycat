@@ -594,7 +594,9 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     def annotate_table(self, table, adjudicators):
         table.add_adjudicator_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'final' or self.tournament.pref('adjudicators_tab_shows') == 'all':
-            table.add_weighted_score_columns(adjudicators)
+            feedback_weight = self.tournament.current_round.feedback_weight
+            scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
+            table.add_weighted_score_columns(adjudicators, scores)
         if self.tournament.pref('adjudicators_tab_shows') == 'test' or self.tournament.pref('adjudicators_tab_shows') == 'all':
             table.add_test_score_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'all':
