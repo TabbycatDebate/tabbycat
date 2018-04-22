@@ -132,7 +132,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
             {'key': 'code_name', 'title': _("Code name")},
             [{'emoji': t.emoji, 'text': t.code_name or "—"} for t in teams]
         )
-        table.add_team_columns(teams, hide_emoji=True)
+        table.add_team_columns(teams, show_emoji=False)
         return table
 
 

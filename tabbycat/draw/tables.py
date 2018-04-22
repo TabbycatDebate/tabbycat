@@ -70,7 +70,7 @@ class PublicDrawTableBuilder(BaseDrawTableBuilder):
             for debate, hl in zip_longest(debates, highlight):
                 team = debate.get_team(side)
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_name
-                team_data.append(self._team_cell(team, subtext=subtext, hide_emoji=False, highlight=team == hl))
+                team_data.append(self._team_cell(team, subtext=subtext, show_emoji=True, highlight=team == hl))
 
             title = side_name if all_sides_confirmed else _("Team %(num)d") % {'num': i}
             header = {'key': side, 'title': title}
@@ -356,7 +356,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         teams = [debate.get_team(side) for debate in self.debates]
         side_abbr = get_side_name(self.tournament, side, 'abbr')
 
-        self.add_team_columns(teams, key=side_abbr, hide_emoji=True)
+        self.add_team_columns(teams, key=side_abbr, show_emoji=False)
 
         # Highlight the team column
         for row in self.data:

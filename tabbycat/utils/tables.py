@@ -242,10 +242,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return {'text': '', 'link': False}
 
-    def _team_cell(self, team, hide_emoji=True, subtext=None, highlight=False):
+    def _team_cell(self, team, show_emoji=False, subtext=None, highlight=False):
         cell = {
             'text': self._team_short_name(team),
-            'emoji': team.emoji if self.tournament.pref('show_emoji') and not hide_emoji else None,
+            'emoji': team.emoji if show_emoji and self.tournament.pref('show_emoji') else None,
             'sort': self._team_short_name(team),
             'class': 'team-name',
             'popover': {'title': self._team_long_name(team), 'content': []}
@@ -472,8 +472,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } for round in rounds]
         self.add_column(header, data)
 
-    def add_adjudicator_columns(self, adjudicators, hide_institution=False,
-            hide_metadata=False, subtext=None):
+    def add_adjudicator_columns(self, adjudicators, show_institutions=True,
+            show_metadata=True, subtext=None):
 
         adj_data = []
         for adj in adjudicators:
@@ -485,14 +485,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             adj_data.append(cell)
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, adj_data)
 
-        if self.tournament.pref('show_adjudicator_institutions') and not hide_institution:
+        if show_institutions and self.tournament.pref('show_adjudicator_institutions'):
             self.add_column({
                 'key': "institution",
                 'icon': 'home',
                 'tooltip': _("Institution"),
             }, [adj.institution.code if adj.institution else self.BLANK_TEXT for adj in adjudicators])
 
-        if not hide_metadata:
+        if show_metadata:
             adjcore_header = {
                 'key': 'adjcore',
                 'tooltip': _("Member of the Adjudication Core"),
@@ -608,10 +608,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
         } if motion else self.BLANK_TEXT for motion in motions]
         self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)
 
-    def add_team_columns(self, teams, break_categories=False, hide_emoji=False,
-                         show_divisions=True, hide_institution=False, key=None):
+    def add_team_columns(self, teams, show_break_categories=False, show_emoji=True, key=None):
 
-        team_data = [self._team_cell(team, hide_emoji=hide_emoji)
+        team_data = [self._team_cell(team, show_emoji=show_emoji)
                      if not getattr(team, 'anonymise', False)
                      else self.BLANK_TEXT for team in teams]
         if key:
@@ -620,13 +619,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
             header = {'key': 'team', 'tooltip': _("Team"), 'icon': 'users'}
         self.add_column(header, team_data)
 
-        if break_categories:
+        if show_break_categories and self.tournament.breakcategory_set.filter(is_general=False).exists():
             self.add_column(
                 {'key': 'categories', 'title': _("Categories")},
-                [", ".join(bc.name for bc in team.break_categories) for team in teams]
+                [", ".join(bc.name for bc in team.break_categories.filter(is_general=False)) for team in teams]
             )
 
-        if self.tournament.pref('show_team_institutions') and not hide_institution:
+        if self.tournament.pref('show_team_institutions'):
             self.add_column({
                 'key': "institution",
                 'icon': 'home',
@@ -637,7 +636,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 else self.BLANK_TEXT for team in teams
             ])
 
-        if show_divisions and self.tournament.pref('enable_divisions'):
+        if self.tournament.pref('enable_divisions'):
             self.add_column({
                 'key': "division",
                 'icon': 'layers',
@@ -889,7 +888,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 team = debate.get_team(side)
 
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbrs[side]
-                cell = self._team_cell(team, hide_emoji=True, subtext=subtext)
+                cell = self._team_cell(team, show_emoji=False, subtext=subtext)
 
                 if self.tournament.pref('teams_in_debate') == 'two':
                     cell = self._result_cell_class_two(debateteam.win, cell)

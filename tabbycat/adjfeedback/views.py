@@ -128,7 +128,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
         feedback_weight = self.tournament.current_round.feedback_weight
         scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
 
-        table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
+        table.add_adjudicator_columns(adjudicators, show_institutions=False, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
         table.add_weighted_score_columns(adjudicators, scores)
         table.add_test_score_columns(adjudicators, editable=True)
@@ -684,7 +684,7 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
             sort_key="owed", sort_order="desc")
         adjudicators = [progress.adjudicator for progress in adjs_progress]
-        adjs_table.add_adjudicator_columns(adjudicators, hide_metadata=True)
+        adjs_table.add_adjudicator_columns(adjudicators, show_metadata=False)
         adjs_table.add_feedback_progress_columns(adjs_progress)
 
         teams_table = FeedbackTableBuilder(view=self, title="From Teams",
