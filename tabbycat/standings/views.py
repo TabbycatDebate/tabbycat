@@ -447,7 +447,7 @@ class BaseTeamStandingsView(BaseStandingsView):
             return table
 
         table.add_ranking_columns(standings)
-        table.add_team_columns([info.team for info in standings])
+        table.add_team_columns([info.team for info in standings], show_break_categories=True)
 
         table.add_standings_results_columns(standings, rounds, self.show_ballots())
         table.add_metric_columns(standings, integer_score_columns=self.integer_score_columns(rounds))
