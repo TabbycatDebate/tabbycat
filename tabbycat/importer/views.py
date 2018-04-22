@@ -1,8 +1,10 @@
 import logging
 
 from django.contrib import messages
+from django.core import management
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
 from django.views.generic import TemplateView
 
@@ -12,10 +14,15 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Team
+from tournaments.models import Tournament
 from tournaments.mixins import TournamentMixin
+from utils.misc import redirect_tournament
 from utils.mixins import AdministratorMixin
+from utils.views import PostOnlyRedirectView
 from venues.models import Venue
 
+from .management.commands import importtournament
+from .importers import TournamentDataImporterError
 from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
                     ImportVenuesRawForm, NumberForEachInstitutionForm,
                     TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
@@ -196,3 +203,28 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
 
     def get_message(self, count):
         return ngettext("Added %(count)d adjudicator.", "Added %(count)d adjudicators.", count)
+
+
+class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
+
+    def post(self, request, *args, **kwargs):
+        source = request.POST.get("source", "")
+
+        try:
+            management.call_command(importtournament.Command(), source,
+                                    force=True, strict=False)
+        except TournamentDataImporterError as e:
+            messages.error(self.request, mark_safe(
+                "<p>There were one or more errors creating the demo tournament. "
+                "Before retrying, please delete the existing demo tournament "
+                "<strong>and</strong> the institutions in the Edit Database Area.</p>"
+                "<p><i>Technical information: The errors are as follows:"
+                "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"
+            ))
+            logger.error("Error importing demo tournament: " + str(e))
+        else:
+            messages.success(self.request, "Created new demo tournament. You "
+                "can now configure it below.")
+
+        new_tournament = Tournament.objects.get(slug=source)
+        return redirect_tournament('tournament-configure', tournament=new_tournament)
