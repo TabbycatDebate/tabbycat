@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core import management
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
 from django.views.generic import TemplateView
@@ -222,6 +223,7 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
                 "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"
             ))
             logger.error("Error importing demo tournament: " + str(e))
+            return redirect('tabbycat-index')
         else:
             messages.success(self.request, "Created new demo tournament. You "
                 "can now configure it below.")
