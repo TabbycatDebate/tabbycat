@@ -204,6 +204,12 @@ class BaseSpeakerStandingsView(BaseStandingsView):
             raise StandingsError(_("The tab can't be displayed because all rounds so far in this tournament are silent."))
 
         speakers = self.get_speakers()
+        speakers = speakers.select_related(
+            'team', 'team__institution', 'team__tournament'
+        ).prefetch_related(
+            'team__speaker_set', 'categories'
+        )
+
         metrics, extra_metrics = self.get_metrics()
         rank_filter = self.get_rank_filter()
         generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics, rank_filter=rank_filter)
@@ -275,13 +281,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
     page_emoji = '💯'
 
     def get_speakers(self):
-        return Speaker.objects.filter(
-            team__tournament=self.tournament
-        ).select_related(
-            'team', 'team__institution', 'team__tournament'
-        ).prefetch_related(
-            'team__speaker_set', 'categories'
-        )
+        return Speaker.objects.filter(team__tournament=self.tournament)
 
     def get_metrics(self):
         metrics = self.tournament.pref('speaker_standings_precedence')
@@ -321,9 +321,7 @@ class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsVi
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
     page_title = gettext_lazy("Speaker Tab")
     public_page_preference = 'speaker_tab_released'
-
-    def get_tab_limit(self):
-        return self.tournament.pref('speaker_tab_limit')
+    public_limit_preference = 'speaker_tab_limit'
 
 
 class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiveSpeakerStandingsView):
@@ -333,12 +331,10 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubs
     slug_url_kwarg = 'category'
 
     def get_speakers(self):
-        return self.object.speaker_set.select_related(
-            'team', 'team__institution', 'team__tournament'
-        ).prefetch_related('team__speaker_set', 'categories')
+        return self.object.speaker_set.all()
 
     def get_page_title(self):
-        return _("%(category)s Speaker Standings") % {'category': self.object.name,}
+        return _("%(category)s Speaker Standings") % {'category': self.object.name}
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -356,7 +352,7 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
         return self.object.limit
 
     def get_page_title(self):
-        title = _("%(category)s Speaker Tab") % {'category': self.object.name,}
+        title = _("%(category)s Speaker Tab") % {'category': self.object.name}
         return self.append_limit(title)
 
     def get(self, request, *args, **kwargs):
@@ -377,9 +373,8 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
             raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
         return Speaker.objects.filter(
             team__tournament=self.tournament,
-            speakerscore__position=self.tournament.reply_position).select_related(
-            'team', 'team__institution', 'team__tournament').prefetch_related(
-            'team__speaker_set').distinct()
+            speakerscore__position=self.tournament.reply_position
+        ).distinct()
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
