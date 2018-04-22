@@ -109,6 +109,9 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         "<p>The tab director will need to resolve this issue.</p>"
     )
 
+    def get_page_subtitle(self):
+        return _("as of %(round)s") % {'round': self.round.name}
+
     def get_rounds(self):
         """Returns all of the rounds that should be included in the tab."""
         return self.tournament.prelim_rounds(until=self.round).order_by('seq')
