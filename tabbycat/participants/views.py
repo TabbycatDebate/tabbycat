@@ -1,7 +1,6 @@
 import json
 import logging
 
-from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Prefetch, Q
@@ -24,7 +23,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
+from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -32,19 +31,6 @@ from .models import Adjudicator, Speaker, SpeakerCategory, Team
 from .tables import TeamResultTableBuilder
 
 logger = logging.getLogger(__name__)
-
-
-class TeamSpeakersJsonView(CacheMixin, SingleObjectFromTournamentMixin, View):
-
-    model = Team
-    pk_url_kwarg = 'team_id'
-    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
-
-    def get(self, request, *args, **kwargs):
-        team = self.get_object()
-        speakers = team.speakers
-        data = {i: "<li>" + speaker.name + "</li>" for i, speaker in enumerate(speakers)}
-        return JsonResponse(data, safe=False)
 
 
 # ==============================================================================

@@ -17,10 +17,6 @@ urlpatterns = [
         views.PublicAdjudicatorRecordView.as_view(),
         name='participants-public-adjudicator-record'),
 
-    path('team_list/<int:team_id>/',
-        views.TeamSpeakersJsonView.as_view(),
-        name='participants-team-speakers'),
-
     path('shifts/<slug:url_key>/',
         views.PublicConfirmShiftView.as_view(),
         name='participants-public-confirm-shift')
