@@ -135,7 +135,10 @@
           return false;
         });
       });
+    });
 
+    $(document).keypress(function (e) {
+      $("#table-search").focus();
     });
   </script>
 {% endblock %}
