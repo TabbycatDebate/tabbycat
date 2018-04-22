@@ -31,7 +31,7 @@ from tournaments.mixins import (CrossTournamentPageMixin, CurrentRoundMixin,
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from tournaments.utils import get_side_name
-from utils.mixins import AdministratorMixin, CacheMixin
+from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
@@ -114,7 +114,7 @@ class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
 # Viewing Draw (Public)
 # ==============================================================================
 
-class PublicDrawForRoundView(PublicTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
+class PublicDrawForRoundView(PublicTournamentPageMixin, BasePublicDrawTableView):
 
     public_page_preference = 'public_draw'
 
@@ -137,7 +137,7 @@ class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
     pass
 
 
-class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
+class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def round(self):
@@ -796,7 +796,7 @@ class SaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
 # Cross-Tournament Draw Views
 # ==============================================================================
 
-class AllTournamentsAllInstitutionsView(CrossTournamentPageMixin, CacheMixin, TemplateView):
+class AllTournamentsAllInstitutionsView(CrossTournamentPageMixin, TemplateView):
     public_page_preference = 'enable_mass_draws'
     template_name = 'public_all_tournament_institutions.html'
 
@@ -805,7 +805,7 @@ class AllTournamentsAllInstitutionsView(CrossTournamentPageMixin, CacheMixin, Te
         return super().get_context_data(**kwargs)
 
 
-class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, TemplateView):
+class AllTournamentsAllVenuesView(CrossTournamentPageMixin, TemplateView):
     public_page_preference = 'enable_mass_draws'
     template_name = 'public_all_tournament_venues.html'
 
@@ -814,7 +814,7 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, CacheMixin, Template
         return super().get_context_data(**kwargs)
 
 
-class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
+class AllDrawsForAllTeamsView(CrossTournamentPageMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_page_title(self):
@@ -826,7 +826,7 @@ class AllDrawsForAllTeamsView(CrossTournamentPageMixin, CacheMixin, BasePublicDr
         return draw
 
 
-class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
+class AllDrawsForInstitutionView(CrossTournamentPageMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_institution(self):
@@ -845,7 +845,7 @@ class AllDrawsForInstitutionView(CrossTournamentPageMixin, CacheMixin, BasePubli
         return draw
 
 
-class AllDrawsForVenueView(CrossTournamentPageMixin, CacheMixin, BasePublicDrawTableView):
+class AllDrawsForVenueView(CrossTournamentPageMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_venue_category(self):

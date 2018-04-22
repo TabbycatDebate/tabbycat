@@ -22,7 +22,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
 from tournaments.models import Round
 
 from utils.misc import reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
+from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -420,7 +420,7 @@ class AssistantAddFeedbackIndexView(AssistantMixin, BaseAddFeedbackIndexView):
                 self.tournament, kwargs={'source_id': team.id})
 
 
-class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
+class PublicAddFeedbackIndexView(PublicTournamentPageMixin, BaseAddFeedbackIndexView):
     """View for the index page for public users to add feedback. The index page
     lists all possible sources; public users should then choose themselves."""
 
@@ -700,7 +700,7 @@ class FeedbackProgress(AdministratorMixin, BaseFeedbackProgressView):
     template_name = 'feedback_base.html'
 
 
-class PublicFeedbackProgress(PublicTournamentPageMixin, CacheMixin, BaseFeedbackProgressView):
+class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView):
     public_page_preference = 'feedback_progress'
 
 

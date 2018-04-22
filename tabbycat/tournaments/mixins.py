@@ -23,7 +23,7 @@ from participants.models import Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
-from utils.mixins import AssistantMixin, TabbycatPageTitlesMixin
+from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
 
 
 from .models import Round, Tournament
@@ -218,7 +218,7 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
             return self.render_page_disabled_error_page()
 
 
-class PublicTournamentPageMixin(TournamentAccessControlledPageMixin):
+class PublicTournamentPageMixin(TournamentAccessControlledPageMixin, CacheMixin):
     """Mixin for views that show public tournament pages that can be enabled and
     disabled by a tournament preference.
 

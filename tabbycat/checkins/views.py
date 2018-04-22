@@ -10,7 +10,7 @@ from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
 from participants.models import Speaker
 from utils.misc import reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
+from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
@@ -151,8 +151,7 @@ class AssistantCheckInPeopleStatusView(AssistantMixin, CheckInPeopleStatusView):
     scan_view = 'assistant-checkin-scan'
 
 
-class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CacheMixin,
-                                    CheckInPeopleStatusView):
+class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CheckInPeopleStatusView):
     public_page_preference = 'public_checkins'
 
 

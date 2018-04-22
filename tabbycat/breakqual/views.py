@@ -10,7 +10,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.models import Team
 from utils.misc import reverse_tournament
-from utils.mixins import AdministratorMixin, CacheMixin
+from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
@@ -24,7 +24,7 @@ from . import forms
 logger = logging.getLogger(__name__)
 
 
-class PublicBreakIndexView(PublicTournamentPageMixin, CacheMixin, TemplateView):
+class PublicBreakIndexView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_results'
     template_name = 'public_break_index.html'
 
@@ -71,7 +71,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
         return super().get(request, *args, **kwargs)
 
 
-class PublicBreakingTeamsView(PublicTournamentPageMixin, CacheMixin, BaseBreakingTeamsView):
+class PublicBreakingTeamsView(PublicTournamentPageMixin, BaseBreakingTeamsView):
     public_page_preference = 'public_breaking_teams'
 
 
@@ -212,7 +212,7 @@ class AdminBreakingAdjudicatorsView(AdministratorMixin, BaseBreakingAdjudicators
     template_name = 'breaking_adjs.html'
 
 
-class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, CacheMixin, BaseBreakingAdjudicatorsView):
+class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, BaseBreakingAdjudicatorsView):
     public_page_preference = 'public_breaking_adjs'
 
 

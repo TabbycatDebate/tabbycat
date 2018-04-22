@@ -84,7 +84,7 @@ class AssistantParticipantsListView(AssistantMixin, BaseParticipantsListView):
     admin = True
 
 
-class PublicParticipantsListView(PublicTournamentPageMixin, CacheMixin, BaseParticipantsListView):
+class PublicParticipantsListView(PublicTournamentPageMixin, BaseParticipantsListView):
     public_page_preference = 'public_participants'
     admin = False
 
@@ -129,7 +129,7 @@ class AssistantInstitutionsListView(AssistantMixin, BaseInstitutionsListView):
     admin = True
 
 
-class PublicInstitutionsListView(PublicTournamentPageMixin, CacheMixin, BaseInstitutionsListView):
+class PublicInstitutionsListView(PublicTournamentPageMixin, BaseInstitutionsListView):
     public_page_preference = 'public_institutions_list'
     admin = False
 
