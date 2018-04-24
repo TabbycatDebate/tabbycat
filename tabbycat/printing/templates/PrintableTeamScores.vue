@@ -19,9 +19,6 @@
       <div class="db-align-vertical-center db-padding-horizontal db-flex-item">
         <small>Speaker's First and Last Name</small>
       </div>
-      <div v-if="roundInfo.showPronouns" class="db-align-vertical-center db-flex-item-fwxl">
-        <small>Pronoun</small>
-      </div>
       <div class="db-align-vertical-center db-padding-horizontal db-flex-item-fwxl">
         <small>Score</small>
       </div>
@@ -32,7 +29,6 @@
         {{ pos }}
       </div>
       <div class="db-padding-horizontal db-fill-in db-flex-item"></div>
-      <div v-if="roundInfo.showPronouns" class="db-padding-horizontal db-fill-in db-flex-item-fwxl"></div>
       <div class="db-padding-horizontal db-fill-in db-flex-item-fwxl"></div>
     </div>
 

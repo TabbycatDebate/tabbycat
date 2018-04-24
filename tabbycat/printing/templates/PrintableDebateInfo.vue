@@ -32,7 +32,7 @@
       <!-- No choice -->
       <section v-if="!roundInfo.hasMotions && roundInfo.motions.length > 0"
                class="db-bordered db-flex-row db-flex-item-1 py-2">
-        <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text">
+        <div class="db-padding-horizontal db-align-vertical-center db-vertical-center-text pr-2">
           <span>The motion is <em>{{ roundInfo.motions[0].text }}.</em></span>
         </div>
       </section>
