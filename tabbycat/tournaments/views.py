@@ -202,9 +202,9 @@ class CreateTournamentView(AdministratorMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         demo_datasets = [
-            ('minimal8team', _("8-team basic tournament")),
-            ('australs24team', _("24-team Australs tournament")),
-            ('bp88team', _("88-team BP tournament")),
+            ('minimal8team', _("8-team generic dataset")),
+            ('australs24team', _("24-team Australs dataset")),
+            ('bp88team', _("88-team BP dataset")),
         ]
         kwargs['demo_datasets'] = demo_datasets
         demo_slugs = [slug for slug, _ in demo_datasets]
