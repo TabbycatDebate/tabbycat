@@ -15,14 +15,14 @@
 
     </div>
 
-    <div v-if="ballot.venue === '' || ballot.venue === null" class="db-flex-item" >
-      Venue:
+    <div v-if="ballot.venue === '' || ballot.venue === null" class="ml-auto" >
+      <span v-if="ballot.barcode">ID {{ ballot.barcode }}, </span>Venue:
       <span class="db-padding-horizontal db-fill-in"
-            style="width: 185px; margin: 0 3px 0 5px; display: inline-block">
+            style="width: 232px; margin: 0 3px 0 5px; display: inline-block">
       </span>
     </div>
 
-    <div v-else class="ml-auto">
+    <div v-else class="ml-auto ">
       <span v-if="ballot.barcode">ID {{ ballot.barcode }}, </span>
       {{ ballot.venue.display_name }}
     </div>

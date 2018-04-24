@@ -24,6 +24,25 @@
         <div class="db-fill-in db-flex-item-3 d-flex"></div>
       </div>
 
+      <div v-if="roundInfo.showDigits"
+           class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border">
+        <div class="db-flex-item-2 db-padding-horizontal">
+          Circle the last digit of the {{ pos }}'s score:
+        </div>
+        <div class="db-flex-item-3 d-flex">
+          <div class="flex-fill text-center"><span class="db-circle">0</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">1</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">2</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">3</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">4</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">5</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">6</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">7</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">8</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">9</span></div>
+        </div>
+      </div>
+
     </template>
 
     <div class="db-flex-item-3 db-flex-row db-bottom-border"><!-- Totals -->
@@ -55,27 +74,8 @@
       </div>
     </div>
 
-    <template v-for="pos in this.dt.positions">
-      <div class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border">
-        <div class="db-flex-item-2 db-padding-horizontal">
-          Circle the last digit of the {{ pos }}'s score:
-        </div>
-        <div class="db-flex-item-3 d-flex">
-          <div class="flex-fill text-center"><span class="db-circle">0</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">1</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">2</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">3</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">4</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">5</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">6</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">7</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">8</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">9</span></div>
-        </div>
-      </div>
-    </template>
-
-    <div class="db-flex-item-2 align-items-center d-flex pr-1 small">
+    <div v-if="roundInfo.showDigits"
+         class="db-flex-item-2 align-items-center d-flex pr-1 small">
       <div class="db-flex-item-2 db-padding-horizontal">
         Circle the last digit of the team's total:
       </div>

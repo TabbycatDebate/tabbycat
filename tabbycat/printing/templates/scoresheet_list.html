@@ -49,6 +49,7 @@ Printable Scoresheets for {{ round_name }}
         hasReplies: {% if pref.reply_scores_enabled %}true{% else %}false{% endif %},
         isBP: {% if pref.teams_in_debate == 'two' %}false{% else %}true{% endif %},
         speakersCount: {{ pref.substantive_speakers }},
+        showDigits: {% if pref.ballots_confirm_digits %}true{% else %}false{% endif %},
         // Rules
         infoText: 'Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.',
         hasMotions: {% if pref.enable_motions %}true{% else %}false{% endif %},
