@@ -1,61 +1,96 @@
 <template>
   <div class="db-flex-column db-bordered db-flex-item-half">
 
-    <div class="db-flex-item-3 db-flex-row db-bottom-border">
-      <div class="db-padding-horizontal db-flex-item db-align-vertical-center">
-        <div class="db-flex-item-1">
-          <strong>{{ teamName }}</strong>
-          <small>({{ speakersList }})</small>
-        </div>
-        <div class="db-flex-static">
-          {{ titleCasePosition }}
-        </div>
+    <div class="db-flex-item-2 db-flex-row db-bottom-border">
+      <div class="db-padding-horizontal flex-grow-1 db-align-vertical-center">
+        <strong>{{ titleCasePosition }}, {{ teamName }}</strong>
+      </div>
+      <div class="db-padding-horizontal db-align-vertical-center">
+        <small>{{ speakersList }}</small>
       </div>
       <div class="db-padding-horizontal db-flex-static "></div>
     </div>
 
-    <div class="db-flex-item-2 db-flex-row db-bottom-border"><!-- Keys -->
-      <div class="db-align-vertical-center db-left-text db-flex-item-fwm"></div>
-      <div class="db-align-vertical-center db-padding-horizontal db-flex-item">
-        <small>Speaker's First and Last Name</small>
+    <template v-for="pos in this.dt.positions">
+
+      <div class="db-flex-item-3 db-flex-row db-bottom-border">
+        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
+          {{ pos }}:
+        </div>
+        <div class="db-fill-in db-flex-item-9 d-flex"></div>
+        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
+          <span>Score:</span>
+        </div>
+        <div class="db-fill-in db-flex-item-3 d-flex"></div>
       </div>
-      <div class="db-align-vertical-center db-padding-horizontal db-flex-item-fwxl">
-        <small>Score</small>
+
+    </template>
+
+    <div class="db-flex-item-3 db-flex-row db-bottom-border"><!-- Totals -->
+      <template v-if="roundInfo.isBP">
+        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
+          Rank:
+        </div>
+        <div class="db-flex-item-7 db-flex-row">
+          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
+            <span class="db-circle text-monospace">1st</span>
+          </div>
+          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
+            <span class="db-circle text-monospace">2nd</span>
+          </div>
+          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
+            <span class="db-circle text-monospace">3rd</span>
+          </div>
+          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
+            <span class="db-circle text-monospace">4th</span>
+          </div>
+        </div>
+        <div class="db-flex-item-1"><!-- Spacing --></div>
+      </template>
+      <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
+        <span>Total:</span>
+      </div>
+      <div class="db-fill-in db-flex-item-3 d-flex">
+
       </div>
     </div>
 
-    <div class="db-flex-item-3 db-flex-row db-bottom-border" v-for="pos in this.dt.positions"><!-- Speakers -->
-      <div class="db-align-vertical-center db-right-text db-flex-item-fwm">
-        {{ pos }}
+    <template v-for="pos in this.dt.positions">
+      <div class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border">
+        <div class="db-flex-item-2 db-padding-horizontal">
+          Circle the last digit of the {{ pos }}'s score:
+        </div>
+        <div class="db-flex-item-3 d-flex">
+          <div class="flex-fill text-center"><span class="db-circle">0</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">1</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">2</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">3</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">4</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">5</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">6</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">7</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">8</span></div>
+          <div class="flex-fill text-center"><span class="db-circle">9</span></div>
+        </div>
       </div>
-      <div class="db-padding-horizontal db-fill-in db-flex-item"></div>
-      <div class="db-padding-horizontal db-fill-in db-flex-item-fwxl"></div>
-    </div>
+    </template>
 
-    <div class="db-flex-item-3 db-flex-row"><!-- Totals -->
-      <div class="db-align-vertical-center db-right-text"
-           :class="{ 'db-flex-item-fws': !roundInfo.isBP, 'db-flex-item-fwm': roundInfo.isBP }">
-        <span v-if="roundInfo.isBP">Rank</span>
+    <div class="db-flex-item-2 align-items-center d-flex pr-1 small">
+      <div class="db-flex-item-2 db-padding-horizontal">
+        Circle the last digit of the team's total:
       </div>
-      <div class="db-padding-horizontal db-flex-item db-flex-row">
-        <template v-if="roundInfo.isBP">
-          <div class="db-flex-item-1  db-align-vertical-center db-align-horizontal-center">
-            <span class="db-fill-in">1st</span>
-          </div>
-          <div class="db-flex-item-1  db-align-vertical-center db-align-horizontal-center">
-            <span class="db-fill-in">2nd</span>
-          </div>
-          <div class="db-flex-item-1  db-align-vertical-center db-align-horizontal-center">
-            <span class="db-fill-in">3rd</span>
-          </div>
-          <div class="db-flex-item-1  db-align-vertical-center db-align-horizontal-center">
-            <span class="db-fill-in">4th</span>
-          </div>
-          <div class="db-flex-item-1"></div>
-        </template>
+      <div class="db-flex-item-3 d-flex">
+        <div class="flex-fill text-center"><span class="db-circle">0</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">1</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">2</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">3</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">4</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">5</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">6</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">7</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">8</span></div>
+        <div class="flex-fill text-center"><span class="db-circle">9</span></div>
       </div>
-      <div class="db-padding-horizontal db-align-vertical-center db-flex-item-fwxl db-right-text">Total Score</div>
-      <div class="db-padding-horizontal db-fill-in db-flex-item-fwxl"></div>
     </div>
 
   </div>

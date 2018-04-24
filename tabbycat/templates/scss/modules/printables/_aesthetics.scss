@@ -6,6 +6,12 @@ $fill-in-line-spacing: 45px;
   border-bottom: $fill-in-line-height solid #ccc;
 }
 
+.db-circle {
+  background: #eee;
+  border-radius: 10px;
+  padding: 3px 6px;
+}
+
 .db-bordered {
   border: 1px solid #ccc;
   border-radius: 5px;
