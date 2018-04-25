@@ -49,6 +49,10 @@ class SquashedWhitenoiseStorage(CompressedManifestStaticFilesStorage):
         except SuspiciousFileOperation:
             # Triggers within jet CSS files link to images outside path
             return name
+        except ValueError:
+            # Seems to happen as a byproduct of other errors when using daphne
+            # So to prevent doubling up of the error; supress it
+            pass
 
 
 def badge_datetime_format(timestamp):

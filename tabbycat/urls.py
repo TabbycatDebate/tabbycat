@@ -9,6 +9,7 @@ from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
 
 import tournaments.views
+from importer.views import LoadDemoView
 
 admin.autodiscover()
 
@@ -29,7 +30,7 @@ urlpatterns = [
         tournaments.views.CreateTournamentView.as_view(),
         name='tournament-create'),
     path('load-demo/',
-        tournaments.views.LoadDemoView.as_view(),
+        LoadDemoView.as_view(),
         name='load-demo'),
 
     # Top Level Pages

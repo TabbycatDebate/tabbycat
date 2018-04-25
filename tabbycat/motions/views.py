@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
 from django.forms.models import modelformset_factory
@@ -185,3 +186,4 @@ class MotionStatisticsView(AdministratorMixin, BaseMotionStatisticsView):
 class PublicMotionStatisticsView(PublicTournamentPageMixin, BaseMotionStatisticsView):
     public_page_preference = 'motion_tab_released'
     template_name = 'public_motion_statistics.html'
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT

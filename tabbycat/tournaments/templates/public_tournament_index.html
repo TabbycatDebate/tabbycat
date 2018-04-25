@@ -38,10 +38,20 @@
       {% include "components/item-action.html" with icon="users" %}
     {% endif %}
 
+    {% if pref.break_category_tabs_released > 0 %}
+      {% for category in tournament.break_categories_nongeneral %}
+        {% blocktrans asvar text trimmed with category_name=category.name %}
+          {{ category_name }} Team Tab
+        {% endblocktrans %}
+        {% tournamenturl 'standings-public-tab-speaker-category' category=category.slug as url %}
+        {% include "components/item-action.html" with icon="users" %}
+      {% endfor %}
+    {% endif %}
+
     {% if pref.speaker_tab_released > 0 %}
       {% trans "Speaker Tab" as text %}
       {% tournamenturl 'standings-public-tab-speaker' as url %}
-      {% include "components/item-action.html" with icon="speaker" %}
+      {% include "components/item-action.html" with icon="user" %}
     {% endif %}
 
     {% if pref.speaker_category_tabs_released > 0 %}
@@ -51,7 +61,7 @@
             {{ category_name }} Speaker Tab
           {% endblocktrans %}
           {% tournamenturl 'standings-public-tab-speaker-category' category=category.slug as url %}
-          {% include "components/item-action.html" with icon="speaker" %}
+          {% include "components/item-action.html" with icon="user" %}
         {% endif %}
       {% endfor %}
     {% endif %}

@@ -21,7 +21,7 @@ from tournaments.mixins import (CurrentRoundMixin, PublicTournamentPageMixin, Ro
                                 TournamentMixin)
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
+from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -489,7 +489,7 @@ class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
 # Other public views
 # ==============================================================================
 
-class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
+class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
     """Public view showing the confirmed ballots for a debate as scoresheets."""
 
     model = Debate
@@ -527,7 +527,7 @@ class PublicBallotScoresheetsView(CacheMixin, PublicTournamentPageMixin, SingleO
         return super().get(self, request, *args, **kwargs)
 
 
-class PublicBallotSubmissionIndexView(CacheMixin, PublicTournamentPageMixin, VueTableTemplateView):
+class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplateView):
     """Public view listing all debate-adjudicators for the current round, as
     links for them to enter their ballots."""
 

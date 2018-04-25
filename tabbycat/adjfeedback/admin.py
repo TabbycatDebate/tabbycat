@@ -4,12 +4,30 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
 from draw.models import DebateTeam
+from utils.admin import custom_titled_filter
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
+from .models import (AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer,
+    AdjudicatorFeedbackQuestion, AdjudicatorFeedbackStringAnswer,
+    AdjudicatorTestScoreHistory)
 
 
 # ==============================================================================
-# Adjudicator Feedback Questions
+# Adjudicator test score histories
+# ==============================================================================
+
+@admin.register(AdjudicatorTestScoreHistory)
+class AdjudicatorTestScoreHistoryAdmin(admin.ModelAdmin):
+    list_display = ('adjudicator', 'round', 'score', 'timestamp')
+    list_filter  = ('adjudicator', 'round')
+    ordering     = ('timestamp',)
+    search_fields = ('adjudicator__name', 'adjudicator__institution__code')
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('round__tournament', 'adjudicator__institution')
+
+
+# ==============================================================================
+# Adjudicator feedback questions
 # ==============================================================================
 
 @admin.register(AdjudicatorFeedbackQuestion)
@@ -21,8 +39,36 @@ class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
 
 
 # ==============================================================================
-# Adjudicator Feedback Answers
+# Adjudicator feedback answers
 # ==============================================================================
+
+@admin.register(AdjudicatorFeedbackBooleanAnswer)
+@admin.register(AdjudicatorFeedbackFloatAnswer)
+@admin.register(AdjudicatorFeedbackIntegerAnswer)
+@admin.register(AdjudicatorFeedbackStringAnswer)
+class AdjudicatorFeedbackAnswerAdmin(admin.ModelAdmin):
+    list_display = ('question', 'get_target', 'get_source', 'answer', 'feedback')
+    list_filter  = (
+        'question', 'answer',
+        ('feedback__adjudicator__name', custom_titled_filter(_('target'))),
+        ('feedback__source_adjudicator__adjudicator__name', custom_titled_filter(_('source adjudicator'))),
+        ('feedback__source_team__team__short_name', custom_titled_filter(_('source team'))),
+    )
+
+    def get_target(self, obj):
+        return obj.feedback.adjudicator.name
+
+    def get_source(self, obj):
+        if obj.feedback.source_team and obj.feedback.source_adjudicator:
+            return "<ERROR: both source team and source adjudicator>"
+        elif obj.feedback.source_team:
+            return obj.feedback.source_team.team.short_name
+        elif obj.feedback.source_adjudicator:
+            return obj.feedback.source_adjudicator.adjudicator.name
+
+    get_target.short_description = _("Target")
+    get_source.short_description = _("Source")
+
 
 class BaseAdjudicatorFeedbackAnswerInline(admin.TabularInline):
     model = None  # Must be set by subclasses
@@ -60,7 +106,12 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             'score', 'source_adjudicator__adjudicator__name',
             'source_team__team__short_name', 'source_team__team__long_name')
     raw_id_fields = ('source_team',)
-    list_filter   = (RoundListFilter, 'adjudicator')
+    list_filter   = (
+        RoundListFilter,
+        ('adjudicator', custom_titled_filter(_('target'))),
+        ('source_adjudicator__adjudicator__name', custom_titled_filter(_('source adjudicator'))),
+        ('source_team__team__short_name', custom_titled_filter(_('source team'))),
+    )
     actions       = ('mark_as_confirmed', 'mark_as_unconfirmed')
 
     def get_queryset(self, request):

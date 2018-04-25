@@ -34,7 +34,10 @@ export default {
 
       // Open the connection
       const webSocketBridge = new WebSocketBridge()
-      webSocketBridge.connect(socketPath)
+      webSocketBridge.connect(socketPath, undefined, {
+        autoReconnectMS: 10000, // Wait 10s inbetween attempts
+        stopReconnectingAfter: 21000, // Doesn't seem to work
+      })
 
       // Listen for messages and pass to the defined handleSocketMessage()
       webSocketBridge.listen(function (payload) {

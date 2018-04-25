@@ -4,6 +4,7 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
+from django.db import IntegrityError
 from django.db.models import Min, Q
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
@@ -326,9 +327,13 @@ class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin,
         try:
             utils.set_availability_by_id(self.model, active_ids, self.round)
             self.log_action()
-
+        except IntegrityError:
+            message = """ of an integrity error when issuing the availability
+                update — this typically means that the availability for an
+                adjudicator has already been set to be what was saved"""
+            return JsonResponse({'status': 'false', 'message': message}, status=500)
         except:
-            message = "Error handling availability updates"
+            message = " an error handling availability updates"
             logger.exception(message)
             return JsonResponse({'status': 'false', 'message': message}, status=500)
 

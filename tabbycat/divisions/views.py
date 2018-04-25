@@ -10,7 +10,7 @@ from django.views.generic.base import TemplateView, View
 
 from participants.models import Institution, Team
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
-from utils.mixins import AdministratorMixin, CacheMixin
+from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView
 from venues.models import VenueCategory, VenueConstraint
 
@@ -21,7 +21,7 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicDivisionsView(PublicTournamentPageMixin, CacheMixin, TemplateView):
+class PublicDivisionsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_divisions'
     template_name = "public_divisions.html"
 

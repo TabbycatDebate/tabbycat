@@ -85,6 +85,19 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
 
         self.add_column(diff_header, diff_data)
 
+    def add_score_variance_columns(self, adjudicators):
+        diff_header = {
+            'key': 'score-variance',
+            'icon': 'bar-chart-2',
+            'tooltip': 'The standard deviation of this adjudicator\'s current scores; with larger numbers meaning less consistent feedback scores.',
+        }
+        diff_data = [{
+            'text': '%0.1f' % adj.feedback_variance if adj.feedback_variance is not None else '',
+            'tooltip': 'The standard deviation of this adjudicator\'s current scores',
+        } for adj in adjudicators]
+
+        self.add_column(diff_header, diff_data)
+
     def add_feedback_graphs(self, adjudicators):
         nprelims = self.tournament.prelim_rounds().count()
         feedback_head = {
@@ -104,35 +117,27 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_link_columns(self, adjudicators):
         link_head = {
             'key': 'view-feedback',
-            'icon': 'zoom-in'
+            'icon': 'eye'
         }
         link_cell = [{
-            'text': 'View',
+            'text': 'View %s<br>feedbacks' % adj.debates,
             'class': 'view-feedback',
+            'sort': adj.debates,
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)
 
-    def add_feedback_misc_columns(self, adjudicators):
-        if self.tournament.pref('enable_adj_notes'):
-            note_head = {
-                'key': 'no',
-                'icon': 'tablet'
-            }
-            note_cell = [{
-                'text': 'Edit<br>Note',
-                'class': 'edit-note',
-                'modal': str(adj.id) + '===' + str(adj.notes)
-            } for adj in adjudicators]
-            self.add_column(note_head, note_cell)
-
-        adjudications_head = {
-            'key': 'debates-done',
-            'icon': 'eye',
-            'tooltip': 'Debates adjudicated'
+    def add_feedback_note_columns(self, adjudicators):
+        note_head = {
+            'key': 'no',
+            'icon': 'tablet'
         }
-        adjudications_cell = [{'text': adj.debates} for adj in adjudicators]
-        self.add_column(adjudications_head, adjudications_cell)
+        note_cell = [{
+            'text': 'Edit<br>Note',
+            'class': 'edit-note',
+            'modal': str(adj.id) + '===' + str(adj.notes)
+        } for adj in adjudicators]
+        self.add_column(note_head, note_cell)
 
     def add_feedback_progress_columns(self, progress_list, key="P"):
 

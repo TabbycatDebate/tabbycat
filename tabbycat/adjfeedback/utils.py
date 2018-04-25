@@ -1,5 +1,5 @@
 import logging
-from statistics import mean
+from statistics import mean, stdev
 
 from django.db.models import Count, Prefetch, Q
 
@@ -85,8 +85,18 @@ def get_feedback_overview(t, adjudicators):
         annotated_adj = annotated_adjs_by_id[adj.id]
         adj.debates = annotated_adj.debates
         adj.feedback_data = feedback_stats(annotated_adj, rounds)
+        adj.feedback_variance = feedback_variance(annotated_adj, rounds)
 
     return adjudicators
+
+
+def feedback_variance(adj, rounds):
+    feedback_scores = [fb.score for fb in adj.adjfeedback_for_rounds]
+    feedback_scores.append(adj.test_score)
+    if len(feedback_scores) > 1:
+        return stdev(feedback_scores)
+    else:
+        return None
 
 
 def feedback_stats(adj, rounds):

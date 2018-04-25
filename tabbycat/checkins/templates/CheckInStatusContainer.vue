@@ -8,7 +8,7 @@
         <button v-for="(optionState, optionKey) in this.filterByPresence" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('filterByPresence', optionKey, !optionState)">
-          {{ optionKey }}
+          {{ stats[optionKey] }} {{ optionKey }}
         </button>
       </div>
 
@@ -81,7 +81,7 @@
                     <a v-if="scanUrl && !entity.status && entity.identifier[0] && !entity.locked"
                        class="col-auto p-2 btn-info text-center hoverable"
                        title="Click to check-in manually"
-                       @click="checkInIdentifiers(entity.identifier)">
+                       @click="checkInIdentifiers(entity.identifier, true)">
                       ✓
                     </a>
                     <div v-if="scanUrl && !entity.status && entity.identifier[0] && entity.locked"
@@ -93,7 +93,9 @@
                          data-toggle="tooltip" title="This person does not have a check-in identifier so can't be checked in">
                       ?
                     </div>
-                    <div v-if="entity.status" class="col-auto p-2 btn-success btn-no-hover text-center">
+                    <div v-if="entity.status" title="Click to undo a check-in"
+                         class="col-auto p-2 btn-success hoverable text-center"
+                         @click="checkInIdentifiers(entity.identifier, false)">
                       {{ lastSeenTime(entity.status.time) }}
                     </div>
 
@@ -126,19 +128,39 @@ export default {
   data: function () {
     return {
       filterByPresence: {
-        Absent: true, Present: false, All: false,
+        All: false, Absent: true, Present: false,
       },
       enableAnimations: true,
       sockets: ['checkins'],
+      // Keep internal copy as events needs to be mutated by the websocket
+      // pushed changes and the data is never updated by the parent
+      events: this.initialEvents,
     }
   },
   props: {
-    events: Array,
+    initialEvents: Array,
     scanUrl: String,
     assistantUrl: String,
     teamCodes: Boolean,
   },
   computed: {
+    statsAbsent: function () {
+      return 0
+    },
+    statsPresent: function () {
+      return 0
+    },
+    stats: function () {
+      return {
+        Absent: _.filter(this.entitiesByType, (p) => {
+          return p.status === false
+        }).length,
+        Present: _.filter(this.entitiesByType, (p) => {
+          return p.status !== false
+        }).length,
+        All: '',
+      }
+    },
     isForVenues: function () {
       return this.venues === null ? false : true
     },
@@ -224,12 +246,13 @@ export default {
         return id !== null
       });
       if (nonNullIdentifiers.length > 0) {
-        this.checkInIdentifiers(nonNullIdentifiers)
+        this.checkInIdentifiers(nonNullIdentifiers, true)
       }
     },
-    checkInIdentifiers: function (barcodeIdentifiers) {
-      var message = `the checkin status of ${barcodeIdentifiers}`
-      var payload = { barcodes: barcodeIdentifiers }
+    checkInIdentifiers: function (barcodeIdentifiers, setStatus) {
+      var message = `the checkin status of ${barcodeIdentifiers} to ${setStatus}`
+      var type = this.isForVenues ? 'venues' : 'people'
+      var payload = { barcodes: barcodeIdentifiers, status: setStatus, type: type }
       this.setLocked(barcodeIdentifiers, true)
       this.ajaxSave(this.scanUrl, payload, message, this.passCheckIn, this.failCheckIn, null, false)
     },
@@ -268,8 +291,15 @@ export default {
         this.enableAnimations = true
       })
     },
-    handleSocketMessage: function (payload, socketLabel) {
-      this.events.push(payload)
+    handleSocketMessage: function (payload) {
+      if (payload.created === true) {
+        this.events.push(payload)
+      } else {
+        // Revoked checkins; remove all items that match the payload identifier
+        this.events = _.filter(this.events, function (event) {
+          return event.identifier !== payload.identifier
+        })
+      }
     },
   },
 }

@@ -4,19 +4,19 @@
 // TCI: jQuery, Lodash, and Boostrap
 //------------------------------------------------------------------------------
 
-var $ = require("jquery");
-global.jQuery = $; // Set for bootstrap
-window.$ = $; // Set for browser window
+var $ = require("jquery")
+global.jQuery = $ // Set for bootstrap
+window.$ = $ // Set for browser window
 
 // Hover over options Needs to come before bootstrap
-import Popper from 'popper.js';
-window.Popper = Popper;
+import Popper from 'popper.js'
+window.Popper = Popper
 
 // Import bootstrap javascript plugins
-require("bootstrap");
+require("bootstrap")
 
 // Icons
-import feather from 'feather-icons';
+import feather from 'feather-icons'
 
 // Add alerts programmatically
 $.fn.extend({
@@ -28,11 +28,11 @@ $.fn.extend({
       }, timeout);
     }
   },
-  loadButton: function(button, triggeredForm) {
+  loadButton: function (button, triggeredForm) {
     // Can't use disable attr as some submission button need to pass their value
     $('button').prop('disabled', true);
   },
-  resetButton: function(button) {
+  resetButton: function (button) {
     $('button').prop('disabled', false);
   }
 });
@@ -41,7 +41,7 @@ $.fn.extend({
 // TCI: Mount global jquery stuff here
 //------------------------------------------------------------------------------
 
-$(document).ready(function(){
+$(document).ready(function (){
 
   // Enable hover tooltips for all elements
   $('[data-toggle=tooltip]').tooltip({
@@ -78,10 +78,22 @@ $(document).ready(function(){
       $.fn.loadButton(triggeredButton, triggeredForm);
     }
   });
+
   // Auto disable submit buttons for buttons that POST
   $('.submit-disable').click(function(event){
     $.fn.loadButton(event.target);
   });
+
+  // Focus '/' on table search
+  if ($("#table-search").length) {
+    $(document).keypress(function (e) {
+      if (e.which == 47) {
+        $("#table-search").focus()
+        e.preventDefault() // Stop the keystroke
+      }
+    })
+  }
+
 });
 
 //------------------------------------------------------------------------------

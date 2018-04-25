@@ -190,6 +190,9 @@ class Tournament(models.Model):
     def adj_feedback_questions(self):
         return self.adjudicatorfeedbackquestion_set.order_by("seq")
 
+    def break_categories_nongeneral(self):
+        return self.breakcategory_set.exclude(is_general=True)
+
     # --------------------------------------------------------------------------
     # Cached
     # --------------------------------------------------------------------------

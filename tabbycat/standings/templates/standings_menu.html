@@ -10,6 +10,14 @@
      href="{% roundurl 'standings-team' current_round %}">
     {% trans "Teams" %}
   </a>
+  {% for category in tournament.break_categories_nongeneral %}
+    <a class="btn btn-outline-primary"
+       href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
+      {% blocktrans trimmed with category_name=category.name %}
+        {{ category_name }} Teams
+      {% endblocktrans %}
+    </a>
+  {% endfor %}
   {% if pref.enable_divisions %}
   <a class="btn btn-outline-primary {% if standings_division_nav %}active{% endif %}"
      href="{% roundurl 'standings-division' current_round %}">

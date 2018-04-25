@@ -22,6 +22,7 @@ Change Log
 - Added a new (beta) feature: allocation 'sharding'
     - Sharding allows you to split up the Adjudicator Allocation screen into a defined subset of the draw. This has been designed so that you can have multiple computers doing allocations simultaneously; allowing the adjudication core to split itself and tackle allocations in parallel.
     - Shards can be assigned into defined fractions (i.e. halves or fiths) according to specific criteria (i.e. bracket or priority) and following either a top-to-bottom sorting or a mixed sorting that ensures each bracket has an even proportion of each criteria.
+- Added an option to show a "Confirm Digits" option to pre-printed ballots that asks adjudicators to confirm their scores in a manner that may help clarify instances or bad handwriting. This can be enabled in the "Data Entry" settings area.
 - Added draw pull-up option: pull up from middle
 - Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far
 - Added the ability to have different 'ballots-per-debates' for in/out rounds; accommodating tournaments like Australian Easters that use consensus for preliminary rounds but voting for elimination rounds.
@@ -30,6 +31,7 @@ Change Log
 - Fixed χ² test in motion statistics, and refactored and moved motion statistics page
 - Teams, like adjudicators, no longer need to have an institution
 - Added page allowing update of adjudicator scores in bulk
+- Added break categories to team standings, and new team standings pages for break categories
 - Made speaker standings more configurable
     - Second-order metrics can now be specified
     - Added trimmed mean (also known as high-low drop)
@@ -41,7 +43,7 @@ Change Log
     - Added a "☆" indicator to more obviously liveness in the edit adjudicators screen
     - Added WYSIWYG editor for tournament welcome message, and moved it to tournament configuration
     - Added "appellant" and "respondent" to the side name options
-    - Added a column to the feedback overview page that displays the current difference between an adjudicator's test score and current weighted score
+    - Added a two new columns to the feedback overview page: one that displays the current difference between an adjudicator's test score and their current weighted score; another the displays the standard deviation of an adjudicator's feedback scores
     - Added an 'important feedback' page that highlights feedback significantly above or below an adjudicator's test score
     - Added a means to bulk-import adjudicator scores (for example from a CSV) to make it easier to work with external feedback processing
     - Speakers and speaker's emails in the simple importer can now be separated by commas or tabs in addition to new lines

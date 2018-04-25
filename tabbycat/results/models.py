@@ -97,8 +97,6 @@ class BallotSubmission(Submission):
         verbose_name=_("debate"))
     motion = models.ForeignKey('motions.Motion', models.SET_NULL, blank=True, null=True,
         verbose_name=_("motion"))
-    copied_from = models.ForeignKey('BallotSubmission', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("copied from"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
     forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True,

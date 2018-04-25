@@ -6,13 +6,11 @@ from threading import Lock
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
-from django.core import management
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
@@ -20,8 +18,6 @@ from django.views.generic.edit import CreateView, FormView, UpdateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
-from importer.management.commands import importtournament
-from importer.importers import TournamentDataImporterError
 from results.models import BallotSubmission
 from results.utils import graphable_debate_statuses
 from tournaments.models import Round
@@ -205,35 +201,19 @@ class CreateTournamentView(AdministratorMixin, CreateView):
     template_name = "create_tournament.html"
 
     def get_context_data(self, **kwargs):
-        kwargs["preexisting_small_demo"] = Tournament.objects.filter(slug="demo_simple").exists()
-        kwargs["preexisting_large_demo"] = Tournament.objects.filter(slug="demo").exists()
+        demo_datasets = [
+            ('minimal8team', _("8-team generic dataset")),
+            ('australs24team', _("24-team Australs dataset")),
+            ('bp88team', _("88-team BP dataset")),
+        ]
+        kwargs['demo_datasets'] = demo_datasets
+        demo_slugs = [slug for slug, _ in demo_datasets]
+        kwargs['preexisting'] = Tournament.objects.filter(slug__in=demo_slugs).values_list('slug', flat=True)
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
         t = Tournament.objects.order_by('id').last()
         return reverse_tournament('tournament-configure', tournament=t)
-
-
-class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
-
-    def post(self, request, *args, **kwargs):
-        source = request.POST.get("source", "")
-
-        try:
-            management.call_command(importtournament.Command(), source,
-                                    force=True, strict=False)
-        except TournamentDataImporterError as e:
-            messages.error(self.request, mark_safe("<p>There were one or more errors creating the demo tournament. "
-                "Before retrying, please delete the existing demo tournament <strong>and</strong> "
-                "the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:"
-                "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"))
-            logger.error("Error importing demo tournament: " + str(e))
-        else:
-            messages.success(self.request, "Created new demo tournament. You "
-                "can now configure it below.")
-
-        new_tournament = Tournament.objects.order_by('id').last()
-        return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
 
 
 class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):

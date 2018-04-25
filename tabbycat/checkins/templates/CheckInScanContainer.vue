@@ -39,17 +39,18 @@ export default {
     }
   },
   props: {
-    'scanUrl': String
+    scanUrl: String,
   },
   methods: {
     checkInIdentifier: function (barcodeIdentifier) {
-      var message = 'the checkin status of ' + barcodeIdentifier
-      var payload = { 'barcodes': [barcodeIdentifier] }
-      this.ajaxSave(this.scanUrl, payload, message,
-                    this.finishCheckIn, this.failCheckIn, null, false)
-
+      var message = `the checkin status of ${barcodeIdentifier}`
+      var payload = { barcodes: [barcodeIdentifier], status: true }
+      this.ajaxSave(
+        this.scanUrl, payload, message, this.finishCheckIn, this.failCheckIn,
+        null, false,
+      )
       // Audio Problem
-      var promise = document.getElementById('finishedScanSound').play();
+      var promise = document.getElementById('finishedScanSound').play()
       if (promise !== undefined) {
         promise.catch(error => {
           // Auto-play was prevented
@@ -58,7 +59,9 @@ export default {
         })
       }
       this.barcode = '' // Reset
-      this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
+      if (!this.liveScanning) {
+        this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
+      }
     },
     finishCheckIn: function (dataResponse, payload, returnPayload) {
       var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]

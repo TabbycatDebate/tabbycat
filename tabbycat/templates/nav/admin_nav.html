@@ -188,20 +188,21 @@
       <a class="list-group-item {% if standings_team_nav %}active{% endif %}" href="{% roundurl 'standings-team' current_round %}">
         <i data-feather="users"></i>{% trans "Teams" %}
       </a>
+      {% for category in tournament.break_categories_nongeneral %}
+        <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
+          <i data-feather="users"></i>{% blocktrans trimmed with category_name=category.name %}
+            {{ category_name }} Teams
+          {% endblocktrans %}
+        </a>
+      {% endfor %}
       {% if pref.enable_divisions %}
       <a class="list-group-item {% if standings_division_nav %}active{% endif %}" href="{% roundurl 'standings-division' current_round %}">
         <i data-feather="layers"></i>{% trans "Divisions" %}
       </a>
       {% endif %}
       <a class="list-group-item {% if standings_speaker_nav %}active{% endif %}" href="{% roundurl 'standings-speaker' current_round %}">
-        <i data-feather="speaker"></i>{% trans "Speakers" %}
+        <i data-feather="user"></i>{% trans "Speakers" %}
       </a>
-      {% if pref.reply_scores_enabled %}
-        <a class="list-group-item {% if standings_reply_nav %}active{% endif %}"
-           href="{% roundurl 'standings-reply' current_round %}">
-          <i data-feather="users"></i>{% trans "Replies" %}
-        </a>
-      {% endif %}
       {% for category in tournament.speakercategory_set.all %}
         <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
           <i data-feather="user"></i>{% blocktrans trimmed with category_name=category.name %}
@@ -209,6 +210,12 @@
           {% endblocktrans %}
         </a>
       {% endfor %}
+      {% if pref.reply_scores_enabled %}
+        <a class="list-group-item {% if standings_reply_nav %}active{% endif %}"
+           href="{% roundurl 'standings-reply' current_round %}">
+          <i data-feather="speaker"></i>{% trans "Replies" %}
+        </a>
+      {% endif %}
       <a class="list-group-item {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-statistics'  %}">
         <i data-feather="crosshair"></i>{% trans "Motions" %}
       </a>

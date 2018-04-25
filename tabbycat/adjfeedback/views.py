@@ -1,11 +1,10 @@
 import json
 import logging
 import math
-import csv
 
 from django.contrib import messages
 from django.db.models import F, Q
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
@@ -23,7 +22,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
 from tournaments.models import Round
 
 from utils.misc import reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
+from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
@@ -129,14 +128,16 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
         feedback_weight = self.tournament.current_round.feedback_weight
         scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
 
-        table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
+        table.add_adjudicator_columns(adjudicators, show_institutions=False, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
         table.add_weighted_score_columns(adjudicators, scores)
         table.add_test_score_columns(adjudicators, editable=True)
         table.add_score_difference_columns(adjudicators, scores)
+        table.add_score_variance_columns(adjudicators)
         table.add_feedback_graphs(adjudicators)
         table.add_feedback_link_columns(adjudicators)
-        table.add_feedback_misc_columns(adjudicators)
+        if self.tournament.pref('enable_adj_notes'):
+            table.add_feedback_note_columns(adjudicators)
         return table
 
 
@@ -419,7 +420,7 @@ class AssistantAddFeedbackIndexView(AssistantMixin, BaseAddFeedbackIndexView):
                 self.tournament, kwargs={'source_id': team.id})
 
 
-class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
+class PublicAddFeedbackIndexView(PublicTournamentPageMixin, BaseAddFeedbackIndexView):
     """View for the index page for public users to add feedback. The index page
     lists all possible sources; public users should then choose themselves."""
 
@@ -683,7 +684,7 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
             sort_key="owed", sort_order="desc")
         adjudicators = [progress.adjudicator for progress in adjs_progress]
-        adjs_table.add_adjudicator_columns(adjudicators, hide_metadata=True)
+        adjs_table.add_adjudicator_columns(adjudicators, show_metadata=False)
         adjs_table.add_feedback_progress_columns(adjs_progress)
 
         teams_table = FeedbackTableBuilder(view=self, title="From Teams",
@@ -699,7 +700,7 @@ class FeedbackProgress(AdministratorMixin, BaseFeedbackProgressView):
     template_name = 'feedback_base.html'
 
 
-class PublicFeedbackProgress(PublicTournamentPageMixin, CacheMixin, BaseFeedbackProgressView):
+class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView):
     public_page_preference = 'feedback_progress'
 
 
@@ -734,75 +735,3 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
         messages.success(self.request, _("Updated test scores for %(count)d adjudicators.") % {'count': nupdated})
         self.log_action()
         return super().form_valid(form)
-
-
-# ==============================================================================
-# CSV dumps
-# ==============================================================================
-# These are a stopgap while we develop a proper API for this.
-
-class BaseCsvView(View):
-
-    def get_filename(self):
-        return self.filename
-
-    def get(self, request, *args, **kwargs):
-        response = HttpResponse(content_type='text/csv; charset=utf-8')
-        response['Content-Disposition'] = "attachment; filename=\"" + self.get_filename() + "\""
-
-        writer = csv.writer(response)
-        self.write_rows(writer)
-
-        return response
-
-
-class AdjudicatorScoresCsvView(TournamentMixin, BaseCsvView):
-    filename = "scores.csv"
-
-    def write_rows(self, writer):
-        writer.writerow(["id", "name", "test_score"])
-        for adj in self.tournament.adjudicator_set.all():
-            writer.writerow([adj.id, adj.name, adj.test_score])
-
-
-class AdjudicatorFeedbackCsvView(FeedbackMixin, TournamentMixin, BaseCsvView):
-    filename = "feedback.csv"
-
-    def get_feedback_queryset(self):
-        return super().get_feedback_queryset().filter(confirmed=True)
-
-    def write_rows(self, writer):
-        headers = [
-            "round.seq", "round.abbreviation",
-            "adjudicator.id", "adjudicator.name", "adjudicator.type",
-            "source_adjudicator.id","source_adjudicator.name", "source_adjudicator.type",
-            "source_team.id", "source_team.short_name", "source_team.result",
-            "score"
-        ]
-        question_references = [q.reference for q in self.tournament.adj_feedback_questions]
-        headers.extend(question_references)
-        writer.writerow(headers)
-
-        feedbacks = self.get_feedbacks()
-        for f in feedbacks:
-            row = [f.round.seq, f.round.abbreviation,
-                f.adjudicator.id, f.adjudicator.name, f.debate_adjudicator.get_type_display()]
-
-            if f.source_adjudicator:
-                adj = f.source_adjudicator.adjudicator
-                row.extend([adj.id, adj.name, f.source_adjudicator.get_type_display()])
-            else:
-                row.extend([""] * 3)
-
-            if f.source_team:
-                team = f.source_team.team
-                row.extend([team.id, team.short_name, f.source_team.get_result_display()])
-            else:
-                row.extend([""] * 3)
-
-            row.append(f.score)
-
-            answers = {q['question'].reference: q['answer'] for q in f.items}
-            row.extend([answers.get(ref, '') for ref in question_references])
-
-            writer.writerow(row)

@@ -72,7 +72,7 @@ export default {
 
       // Saving
       var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
-      var message = ' move of adj ' + adjudicator.name + ' to ' + toPosition + ' '
+      var message = 'move of adj ' + adjudicator.name + ' to ' + toPosition + ' '
       this.postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
                                movedAdjsById, message)
     }

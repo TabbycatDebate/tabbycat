@@ -10,7 +10,7 @@ from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
 from participants.models import Speaker
 from utils.misc import reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin
+from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
@@ -41,22 +41,38 @@ class CheckInScanView(JsonDataResponsePostView, TournamentMixin):
     def post_data(self):
         barcode_ids = json.loads(self.body)['barcodes']
         barcode_ids = [b for b in barcode_ids if b is not None]
+        status = json.loads(self.body)['status']
         events = []
         for barcode in barcode_ids:
             try:
                 identifier = Identifier.objects.get(barcode=barcode)
-                event = Event.objects.create(identifier=identifier,
-                                             tournament=self.tournament)
-                events.append(event)
+                if status is True: # If checking-in someone
+                    event = Event.objects.create(identifier=identifier,
+                                                 tournament=self.tournament)
+                    events.append(event)
+                else:
+                    # If undoing/revoking a check-in
+                    if json.loads(self.body)['type'] == 'people':
+                        window = 'checkin_window_people'
+                    else:
+                        window = 'checkin_window_venues'
+
+                    events = get_unexpired_checkins(self.tournament, window)
+                    events.filter(identifier=identifier).delete()
+
             except ObjectDoesNotExist:
                 # Only raise an error for single check-ins as for multi-check-in
-                # events its from the Status page so is clear what fails or not
+                # events via the status page its clear what has failed or not
                 if len(barcode_ids) == 1:
                     raise BadJsonRequestError("Identifier doesn't exist")
 
-        if len(events) > 0:
-            return json.dumps({'ids': barcode_ids,
-                               'time': events[0].time.strftime('%H:%M:%S')})
+        if status is True:
+            time = events[0].time.strftime('%H:%M:%S')
+        else:
+            time = False
+
+        if len(events) > 0 or status is False:
+            return json.dumps({'ids': barcode_ids, 'time': time})
         else:
             raise BadJsonRequestError("No identifiers exist for given barcodes")
 
@@ -135,8 +151,7 @@ class AssistantCheckInPeopleStatusView(AssistantMixin, CheckInPeopleStatusView):
     scan_view = 'assistant-checkin-scan'
 
 
-class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CacheMixin,
-                                    CheckInPeopleStatusView):
+class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CheckInPeopleStatusView):
     public_page_preference = 'public_checkins'
 
 
@@ -156,6 +171,7 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
                 item['identifier'] = [None]
             venues.append(item)
         kwargs["venues"] = json.dumps(venues)
+        kwargs["team_codes"] = json.dumps(False)
 
         return super().get_context_data(**kwargs)
 

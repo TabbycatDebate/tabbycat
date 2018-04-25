@@ -92,7 +92,8 @@ TABBYCAT_APPS = (
 )
 
 INSTALLED_APPS = (
-    'jet',
+    # Scout should be listed first
+    'scout_apm.django', 'jet' if os.environ.get('SCOUT_MONITOR') is True else 'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -158,16 +159,10 @@ TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake'
     }
 }
 
-# Use a db backed cache for sessions unless the app is retired (no db writes)
-if 'RETIRED' in os.environ:
-    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-    SESSION_CACHE_ALIAS = "default"
-else:
-    SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
 # Static Files and Compilation
@@ -246,6 +241,12 @@ for app in TABBYCAT_APPS:
         'handlers': ['console', 'sentry'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
+
+# ==============================================================================
+# Scout
+# ==============================================================================
+
+SCOUT_NAME = "Tabbycat"
 
 # ==============================================================================
 # Sentry
@@ -342,6 +343,7 @@ if os.environ.get('REDIS_URL', ''):
                 "LOCATION": os.environ.get('REDIS_URL'),
                 "OPTIONS": {
                     "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
                 }
             }
         }

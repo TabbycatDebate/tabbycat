@@ -407,9 +407,6 @@ class BaseBallotSetForm(BaseResultForm):
             order.append('motion')
             order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
-        order.append('ghost') # Dummy item; as input is created on the front end
-        self.irontabindex = len(order) # Set the tab index it would have had
-
         for side, pos in product(self.sides, self.positions):
             order.append(self._fieldname_speaker(side, pos))
 

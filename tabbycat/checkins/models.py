@@ -8,7 +8,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 def generate_identifier():
-    new_id = ''.join([random.choice(digits) for n in range(5)])
+    # First number should not be 0 so it is easier import into Excel etc
+    numbers = [str(random.choice([1,2,3,4,5,6,7,8,9]))]
+    numbers.extend([str(random.choice(digits)) for n in range(4)])
+    new_id = ''.join(numbers)
     if Identifier.objects.filter(barcode=new_id).count() == 0:
         return new_id
     else:
@@ -21,9 +24,9 @@ class Identifier(models.Model):
 
     instance_attr = None
 
-    validate_alphanumeric = RegexValidator(r'^[0-9]{5}$',
-        message=_("The barcode must be exactly 6 alphanumeric characters."))
-    barcode = models.CharField(unique=True, max_length=5,
+    validate_alphanumeric = RegexValidator(r'^[0-9]{4,20}$',
+        message=_("The barcode must contain between 4 and 20 digits."))
+    barcode = models.CharField(unique=True, max_length=20,
         validators=[validate_alphanumeric], default=generate_identifier,
         verbose_name=_("barcode"))
 

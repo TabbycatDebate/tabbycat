@@ -4,6 +4,10 @@ from math import exp
 
 from munkres import Munkres
 
+from django.utils.translation import gettext as _
+
+from utils.views import BadJsonRequestError
+
 from .allocation import AdjudicatorAllocation
 from .allocator import Allocator
 
@@ -103,6 +107,15 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
         # Divide into solos, panellists and trainees
         n_debates = len(self.debates)
         n_voting = len(voting)
+
+        if len(voting) == 0:
+            info = _("""There are no adjudicators who have are able to panel or
+                        chair. This usually means that you need to go to the
+                        Draw Rules section of the Configuration area and
+                        decrease the "Minimum adjudicator score to vote" setting
+                        in order to allow some adjudicators to be allocated.""")
+            logger.info(info)
+            raise BadJsonRequestError(info)
 
         if self.no_panellists:
             solos = voting[:n_debates]
@@ -219,6 +232,15 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
         else:
             trainees = [a for a in self.adjudicators if a not in voting]
             trainees.sort(key=lambda a: a._normalized_score, reverse=True)
+
+        if len(voting) == 0:
+            info = _("""There are no adjudicators who have are able to panel or
+                        chair. This usually means that you need to go to the
+                        Draw Rules section of the Configuration area and
+                        decrease the "Minimum adjudicator score to vote" setting
+                        in order to allow some adjudicators to be allocated.""")
+            logger.info(info)
+            raise BadJsonRequestError(info)
 
         # Divide debates into solo-chaired debates and panel debates
         debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))

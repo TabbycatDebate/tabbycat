@@ -248,15 +248,6 @@ class Team(models.Model):
             return None
         return institution.region
 
-    @property
-    def break_categories_nongeneral(self):
-        return self.break_categories.exclude(is_general=True)
-
-    @property
-    def break_categories_str(self):
-        categories = self.break_categories_nongeneral
-        return ", ".join(c.name for c in categories) if categories else ""
-
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam
         try:

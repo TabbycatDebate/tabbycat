@@ -23,7 +23,7 @@
                 <span class="mr-auto">{% trans "With identifiers" %}</span>
                 <strong>{{ check_info.in }}/{{ check_info.total }}</strong>
               </div>
-              {% include "components/progress-bar.html" with value=check_info.in total=check_info.total type="info" %}
+              {% include "components/progress-bar.html" with value=check_info.in total=check_info.total type="success" %}
             </div>
 
             {% if check_info.in > 0 %}

@@ -215,6 +215,7 @@ class MotionBPStatsCalculator:
         self.elim_motions = Motion.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_ELIMINATION,
+            round__debate__ballotsubmission__confirmed=True,
         ).order_by('round__seq').select_related('round')
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()

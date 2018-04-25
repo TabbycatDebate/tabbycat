@@ -3,13 +3,14 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Prefetch
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
+from breakqual.models import BreakCategory
 from motions.models import Motion
 from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
@@ -109,6 +110,9 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         "<p>The tab director will need to resolve this issue.</p>"
     )
 
+    def get_page_subtitle(self):
+        return _("as of %(round)s") % {'round': self.round.name}
+
     def get_rounds(self):
         """Returns all of the rounds that should be included in the tab."""
         return self.tournament.prelim_rounds(until=self.round).order_by('seq')
@@ -200,6 +204,12 @@ class BaseSpeakerStandingsView(BaseStandingsView):
             raise StandingsError(_("The tab can't be displayed because all rounds so far in this tournament are silent."))
 
         speakers = self.get_speakers()
+        speakers = speakers.select_related(
+            'team', 'team__institution', 'team__tournament'
+        ).prefetch_related(
+            'team__speaker_set', 'categories'
+        )
+
         metrics, extra_metrics = self.get_metrics()
         rank_filter = self.get_rank_filter()
         generator = SpeakerStandingsGenerator(metrics, self.rankings, extra_metrics, rank_filter=rank_filter)
@@ -271,13 +281,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
     page_emoji = '💯'
 
     def get_speakers(self):
-        return Speaker.objects.filter(
-            team__tournament=self.tournament
-        ).select_related(
-            'team', 'team__institution', 'team__tournament'
-        ).prefetch_related(
-            'team__speaker_set', 'categories'
-        )
+        return Speaker.objects.filter(team__tournament=self.tournament)
 
     def get_metrics(self):
         metrics = self.tournament.pref('speaker_standings_precedence')
@@ -317,9 +321,7 @@ class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsVi
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
     page_title = gettext_lazy("Speaker Tab")
     public_page_preference = 'speaker_tab_released'
-
-    def get_tab_limit(self):
-        return self.tournament.pref('speaker_tab_limit')
+    public_limit_preference = 'speaker_tab_limit'
 
 
 class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubstantiveSpeakerStandingsView):
@@ -329,12 +331,10 @@ class BaseSpeakerCategoryStandingsView(SingleObjectFromTournamentMixin, BaseSubs
     slug_url_kwarg = 'category'
 
     def get_speakers(self):
-        return self.object.speaker_set.select_related(
-            'team', 'team__institution', 'team__tournament'
-        ).prefetch_related('team__speaker_set', 'categories')
+        return self.object.speaker_set.all()
 
     def get_page_title(self):
-        return _("%(category)s Speaker Standings") % {'category': self.object.name,}
+        return _("%(category)s Speaker Standings") % {'category': self.object.name}
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -352,7 +352,7 @@ class PublicSpeakerCategoryTabView(PublicTabMixin, BaseSpeakerCategoryStandingsV
         return self.object.limit
 
     def get_page_title(self):
-        title = _("%(category)s Speaker Tab") % {'category': self.object.name,}
+        title = _("%(category)s Speaker Tab") % {'category': self.object.name}
         return self.append_limit(title)
 
     def get(self, request, *args, **kwargs):
@@ -373,9 +373,8 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
             raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
         return Speaker.objects.filter(
             team__tournament=self.tournament,
-            speakerscore__position=self.tournament.reply_position).select_related(
-            'team', 'team__institution', 'team__tournament').prefetch_related(
-            'team__speaker_set').distinct()
+            speakerscore__position=self.tournament.reply_position
+        ).distinct()
 
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
@@ -414,11 +413,18 @@ class BaseTeamStandingsView(BaseStandingsView):
     page_title = gettext_lazy("Team Standings")
     page_emoji = '👯'
 
+    def get_teams(self):
+        return self.tournament.team_set.exclude(type=Team.TYPE_BYE)
+
     def get_standings(self):
         if self.round is None:
             raise StandingsError(_("The tab can't be displayed because all rounds so far in this tournament are silent."))
 
-        teams = self.tournament.team_set.exclude(type=Team.TYPE_BYE).select_related('institution').prefetch_related('speaker_set')
+        teams = self.get_teams()
+        teams = teams.select_related('institution').prefetch_related('speaker_set',
+            Prefetch('break_categories',
+                queryset=BreakCategory.objects.filter(is_general=False),
+                to_attr='break_categories_nongeneral'))
         metrics = self.tournament.pref('team_standings_precedence')
         extra_metrics = self.tournament.pref('team_standings_extra_metrics')
         generator = TeamStandingsGenerator(metrics, self.rankings, extra_metrics)
@@ -447,7 +453,7 @@ class BaseTeamStandingsView(BaseStandingsView):
             return table
 
         table.add_ranking_columns(standings)
-        table.add_team_columns([info.team for info in standings])
+        table.add_team_columns([info.team for info in standings], show_break_categories=True)
 
         table.add_standings_results_columns(standings, rounds, self.show_ballots())
         table.add_metric_columns(standings, integer_score_columns=self.integer_score_columns(rounds))
@@ -496,6 +502,47 @@ class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
 
     def show_ballots(self):
         return self.tournament.pref('ballots_released')
+
+
+class BaseBreakCategoryStandingsView(SingleObjectFromTournamentMixin, BaseTeamStandingsView):
+    """Team standings view for a break category."""
+
+    model = BreakCategory
+    slug_url_kwarg = 'category'
+
+    def get_teams(self):
+        return self.object.team_set.all()
+
+    def get_page_title(self):
+        return _("%(category)s Team Standings") % {'category': self.object.name}
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+
+class BreakCategoryStandingsView(AdministratorMixin, BaseBreakCategoryStandingsView):
+    """Superuser team standings view for a break category."""
+    rankings = ('rank',)
+
+    def show_ballots(self):
+        return True
+
+
+class PublicBreakCategoryTabView(PublicTabMixin, BaseBreakCategoryStandingsView):
+    """Public view for the team tab for a break category."""
+    public_page_preference = 'break_category_tabs_released'
+    rankings = ('rank',)
+
+    def show_ballots(self):
+        return self.tournament.pref('ballots_released')
+
+    def get_tab_limit(self):
+        return self.object.limit
+
+    def get_page_title(self):
+        title = _("%(category)s Team Tab") % {'category': self.object.name}
+        return self.append_limit(title)
 
 
 # ==============================================================================
@@ -594,7 +641,9 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
     def annotate_table(self, table, adjudicators):
         table.add_adjudicator_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'final' or self.tournament.pref('adjudicators_tab_shows') == 'all':
-            table.add_weighted_score_columns(adjudicators)
+            feedback_weight = self.tournament.current_round.feedback_weight
+            scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
+            table.add_weighted_score_columns(adjudicators, scores)
         if self.tournament.pref('adjudicators_tab_shows') == 'test' or self.tournament.pref('adjudicators_tab_shows') == 'all':
             table.add_test_score_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'all':

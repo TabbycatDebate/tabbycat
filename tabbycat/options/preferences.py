@@ -397,24 +397,6 @@ class ShowUnaccredited(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class ScoreReturnLocation(StringPreference):
-    help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
-    verbose_name = _("Score return location")
-    section = feedback
-    name = 'score_return_location'
-    default = 'TBA'
-
-
-@tournament_preferences_registry.register
-class FeedbackReturnLocation(StringPreference):
-    help_text = _("The location to return feedback to, printed on pre-printed feedback forms")
-    verbose_name = _("Feedback return location")
-    section = feedback
-    name = 'feedback_return_location'
-    default = 'TBA'
-
-
-@tournament_preferences_registry.register
 class FeedbackIntroduction(StringPreference):
     help_text = _("Any explanatory text needed to introduce the feedback form")
     verbose_name = _("Feedback introduction/explanation")
@@ -649,6 +631,15 @@ class RepliesTabReleaseLimit(IntegerPreference):
 
 
 @tournament_preferences_registry.register
+class BreakCategoryTabsReleased(BooleanPreference):
+    help_text = "Enables public display of tabs for teams in each break category. Intended for use after the tournament."
+    verbose_name = "Release break (team) category tabs to public"
+    section = tab_release
+    name = "break_category_tabs_released"
+    default = False
+
+
+@tournament_preferences_registry.register
 class SpeakerCategoryTabsReleased(BooleanPreference):
     help_text = "Enables public display of those speaker category tabs that are marked to be public. Intended for use after the tournament."
     verbose_name = "Release speaker category tabs to public"
@@ -812,6 +803,32 @@ class CheckInWindowVenues(FloatPreference):
     default = 2.0
 
 
+@tournament_preferences_registry.register
+class BallotsConfirmDigits(BooleanPreference):
+    help_text = _("Whether the printed scoresheets should show the 'circle digits' prompt to help check bad handwriting")
+    verbose_name = _("Ballot Digit Checks")
+    section = data_entry
+    name = 'ballots_confirm_digits'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ScoreReturnLocation(StringPreference):
+    help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
+    verbose_name = _("Score return location")
+    section = data_entry
+    name = 'score_return_location'
+    default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class FeedbackReturnLocation(StringPreference):
+    help_text = _("The location to return feedback to, printed on pre-printed feedback forms")
+    verbose_name = _("Feedback return location")
+    section = data_entry
+    name = 'feedback_return_location'
+    default = 'TBA'
+
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))
 # ==============================================================================
@@ -945,7 +962,7 @@ class FeedbackProgress(BooleanPreference):
 
 @tournament_preferences_registry.register
 class TournamentStaff(LongStringPreference):
-    help_text = _("List of tournament staff, to be displayed on the tournament home page")
+    help_text = _("List of tournament staff, to be displayed on the tournament home page. Leave this blank or with the default text if you want to not show this information.")
     verbose_name = _("Tournament staff")
     section = public_features
     name = 'tournament_staff'

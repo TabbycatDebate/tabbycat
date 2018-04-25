@@ -28,7 +28,7 @@ def populate_url_keys(queryset, length=8, num_attempts=10):
             try:
                 instance.save()
             except IntegrityError:
-                logger.warning("URL key was not unique, trying again (%d of %d", i, num_attempts)
+                logger.warning("URL key was not unique, trying again (%d of %d)", i, num_attempts)
                 continue
             else:
                 break
