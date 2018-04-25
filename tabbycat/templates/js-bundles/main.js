@@ -94,6 +94,15 @@ $(document).ready(function (){
     })
   }
 
+  // Set Sidebar Properties
+  $('a.list-group-item').filter(function(index, elem){
+    return window.location.href.endsWith($(elem).attr('href'));
+  }).addClass('active');
+  var list_groups = $('.list-group-item.d-inline-block:not(.main-menu-item)').filter(function(index, elem){
+    return $(elem).find('a.list-group-item.active').length
+  });
+  list_groups.children('a').attr('aria-expanded', 'true');
+  list_groups.children('div').addClass('show');
 });
 
 //------------------------------------------------------------------------------

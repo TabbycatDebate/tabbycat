@@ -2,7 +2,7 @@
 
 <div class="list-group border-0 card text-center text-md-left" id="sidebar" data-children=".list-group-item">
 
-  <div class="list-group-item d-inline-block">
+  <div class="list-group-item d-inline-block main-menu-item">
     <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
        class="tournament-title d-flex justify-content-between align-items-center">
       <div>
@@ -46,35 +46,33 @@
 
   <div class="list-group-item d-inline-block">
     <a href="{% tournamenturl 'tournament-admin-home' %}" data-parent="#sidebar"
-       class="collapsed {% if overview_nav %}active{% endif %}">
+       class="collapsed">
       <i data-feather="monitor"></i>
       <span class="d-none d-md-inline">{% trans "Overview" %}</span>
     </a>
   </div>
 
   <div class="list-group-item d-inline-block">
-    <a href="#setuph" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
-       class="{% if options_nav %}active{% endif %}">
+    <a href="#setuph" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false">
        <i data-feather="briefcase"></i>
        <span class="d-none d-md-inline">{% trans "Setup" %}</span>
        <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
        <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
     </a>
-    <div class="collapse {% if options_nav %}show{% endif %}" id="setuph">
+    <div class="collapse" id="setuph">
       <a href="{% tournamenturl 'options-tournament-index' %}"
-         class="list-group-item {% if configuration_nav %}active{% endif %}" data-parent="#setuph">
+         class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="settings"></i>{% trans "Configuration" %}
       </a>
-      <a href="{% tournamenturl 'importer-simple-index' %}"
-         class="list-group-item {% if import_nav %}active{% endif %}" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="upload-cloud"></i>{% trans "Import Data" %}
+      <a href="{% tournamenturl 'importer-simple-index' %}" class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="download-cloud"></i>{% trans "Import Data" %}
       </a>
       <a href="{% tournamenturl 'participants-list' %}"
-         class="list-group-item {% if participants_nav %}active{% endif %}" data-parent="#setuph">
+         class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="user"></i>{% trans "Participants" %}
       </a>
       <a href="{% tournamenturl 'privateurls-list' %}"
-         class="list-group-item {% if private_urls_nav %}active{% endif %}"
+         class="list-group-item"
          data-parent="#rh{{ r.id }}">
         <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}
       </a>
@@ -88,7 +86,7 @@
   {% if pref.side_allocations_enabled == 'preallocated' %}
     <div class="list-group-item d-inline-block">
       <a href="{% tournamenturl 'draw-side-allocations' %}" data-parent="#sidebar"
-        class="collapsed {% if sides_nav %}active{% endif %}">
+        class="collapsed">
         <i data-feather="shuffle"></i>
         <span class="d-none d-md-inline">{% trans "Sides" %}</span>
       </a>
@@ -98,7 +96,7 @@
   {% if pref.enable_divisions %}
     <div class="list-group-item d-inline-block">
       <a href="{% tournamenturl 'division_allocations' %}" data-parent="#sidebar"
-         class="collapsed {% if divisions_nav %}active{% endif %}">
+         class="collapsed">
         <span class="circle-icon icon-container">
           <i data-feather="layers"></i>
         </span>
@@ -137,30 +135,29 @@
   </div>
 
   <div class="list-group-item d-inline-block">
-    <a href="#feedh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
-       class="{% if feedback_nav %}active{% endif %}">
+    <a href="#feedh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false" class="collapsed">
       <i data-feather="message-circle"></i>
       <span class="d-none d-md-inline">{% trans "Feedback" %}</span>
       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
       <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
     </a>
-    <div class="collapse {% if feedback_nav %}show{% endif %}" id="feedh">
-      <a class="list-group-item {% if feedback_overview_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-overview' %}" data-parent="#feedh">
+    <div class="collapse" id="feedh">
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-overview' %}" data-parent="#feedh">
         <i data-feather="maximize"></i>{% trans "Overview" %}
       </a>
-      <a class="list-group-item {% if feedback_latest_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-latest' %}" data-parent="#feedh">
+        <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-latest' %}" data-parent="#feedh">
         <i data-feather="clock"></i>{% trans "Latest" %}
       </a>
-        <a class="list-group-item {% if feedback_important_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
+        <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
         <i data-feather="star"></i>Important
       </a>
-      <a class="list-group-item {% if feedback_source_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-by-source' %}" data-parent="#feedh">
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-by-source' %}" data-parent="#feedh">
         <i data-feather="phone-outgoing"></i>{% trans "Find by Source" %}
       </a>
-      <a class="list-group-item {% if feedback_target_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-view-by-target' %}" data-parent="#feedh">
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-by-target' %}" data-parent="#feedh">
         <i data-feather="phone-incoming"></i>{% trans "Find by Target" %}
       </a>
-      <a class="list-group-item {% if feedback_progress_nav %}active{% endif %}" href="{% tournamenturl 'adjfeedback-progress' %}" data-parent="#feedh">
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-progress' %}" data-parent="#feedh">
         <i data-feather="x-circle"></i>{% trans "Unsubmitted" %}
       </a>
       <a class="list-group-item" href="{% tournamenturl 'adjfeedback-add-index' %}">
@@ -174,18 +171,18 @@
 
   <div class="list-group-item d-inline-block">
     <a href="#standh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
-       data-parent="#sidebar" class="collapsed {% if standings_nav %}active{% endif %}">
+       data-parent="#sidebar" class="collapsed">
       <i data-feather="bar-chart-2"></i>
       <span class="d-none d-md-inline">{% trans "Standings" %}</span>
       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
       <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
     </a>
-    <div class="collapse {% if standings_nav %}show{% endif %}" id="standh">
+    <div class="collapse" id="standh">
       <a href="{% roundurl 'standings-index' current_round %}"
-         class="list-group-item {% if standings_overview_nav %}active{% endif %}" data-parent="#setuph">
+         class="list-group-item" data-parent="#setuph">
         <i data-feather="maximize"></i>{% trans "Overview" %}
       </a>
-      <a class="list-group-item {% if standings_team_nav %}active{% endif %}" href="{% roundurl 'standings-team' current_round %}">
+      <a class="list-group-item" href="{% roundurl 'standings-team' current_round %}">
         <i data-feather="users"></i>{% trans "Teams" %}
       </a>
       {% for category in tournament.break_categories_nongeneral %}
@@ -196,15 +193,15 @@
         </a>
       {% endfor %}
       {% if pref.enable_divisions %}
-      <a class="list-group-item {% if standings_division_nav %}active{% endif %}" href="{% roundurl 'standings-division' current_round %}">
+      <a class="list-group-item" href="{% roundurl 'standings-division' current_round %}">
         <i data-feather="layers"></i>{% trans "Divisions" %}
       </a>
       {% endif %}
-      <a class="list-group-item {% if standings_speaker_nav %}active{% endif %}" href="{% roundurl 'standings-speaker' current_round %}">
+      <a class="list-group-item" href="{% roundurl 'standings-speaker' current_round %}">
         <i data-feather="user"></i>{% trans "Speakers" %}
       </a>
       {% for category in tournament.speakercategory_set.all %}
-        <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
+        <a class="list-group-item" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
           <i data-feather="user"></i>{% blocktrans trimmed with category_name=category.name %}
             {{ category_name }} Speakers
           {% endblocktrans %}
@@ -216,10 +213,10 @@
           <i data-feather="speaker"></i>{% trans "Replies" %}
         </a>
       {% endif %}
-      <a class="list-group-item {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-statistics'  %}">
+      <a class="list-group-item" href="{% tournamenturl 'motions-statistics'  %}">
         <i data-feather="crosshair"></i>{% trans "Motions" %}
       </a>
-      <a class="list-group-item {% if standings_diversity_nav %}active{% endif %}" href="{% roundurl 'standings-diversity' current_round %}">
+      <a class="list-group-item" href="{% roundurl 'standings-diversity' current_round %}">
         <i data-feather="globe"></i>{% trans "Diversity" %}
       </a>
     </div>
@@ -231,14 +228,14 @@
 
         <div class="list-group-item d-inline-block">
           <a href="#breakh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
-             class="collapsed {% if break_nav %}active{% endif %}">
+             class="collapsed">
             <i data-feather="target"></i>
             <span class="d-none d-md-inline">{% trans "Breaks" %}</span>
             <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
             <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
           </a>
-          <div class="collapse {% if break_nav %}show{% endif %}" id="breakh">
-            <a class="list-group-item {% if break_overview_nav %}active{% endif %}"
+          <div class="collapse" id="breakh">
+            <a class="list-group-item"
                href="{% tournamenturl 'breakqual-index' %}">
               <i data-feather="maximize"></i>{% trans "Overview" %}
             </a>
@@ -247,7 +244,7 @@
                 <i data-feather="pie-chart"></i>{% blocktrans trimmed with category_name=category.name %}{{ category_name }}{% endblocktrans %}
               </a>
             {% endfor %}
-            <a class="list-group-item {% if break_adjudicators_nav %}active{% endif %}" href="{% tournamenturl 'breakqual-adjudicators' %}">
+            <a class="list-group-item" href="{% tournamenturl 'breakqual-adjudicators' %}">
               <i data-feather="shield"></i>{% trans "Adjudicators" %}
             </a>
           </div>
