@@ -397,24 +397,6 @@ class ShowUnaccredited(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class ScoreReturnLocation(StringPreference):
-    help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
-    verbose_name = _("Score return location")
-    section = feedback
-    name = 'score_return_location'
-    default = 'TBA'
-
-
-@tournament_preferences_registry.register
-class FeedbackReturnLocation(StringPreference):
-    help_text = _("The location to return feedback to, printed on pre-printed feedback forms")
-    verbose_name = _("Feedback return location")
-    section = feedback
-    name = 'feedback_return_location'
-    default = 'TBA'
-
-
-@tournament_preferences_registry.register
 class FeedbackIntroduction(StringPreference):
     help_text = _("Any explanatory text needed to introduce the feedback form")
     verbose_name = _("Feedback introduction/explanation")
@@ -820,6 +802,32 @@ class CheckInWindowVenues(FloatPreference):
     verbose_name = _("Check-In Window (Venues)")
     default = 2.0
 
+
+@tournament_preferences_registry.register
+class BallotsConfirmDigits(BooleanPreference):
+    help_text = _("Whether the printed scoresheets should show the 'circle digits' prompt to help check bad handwriting")
+    verbose_name = _("Ballot Digit Checks")
+    section = data_entry
+    name = 'ballots_confirm_digits'
+    default = False
+
+
+@tournament_preferences_registry.register
+class ScoreReturnLocation(StringPreference):
+    help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
+    verbose_name = _("Score return location")
+    section = data_entry
+    name = 'score_return_location'
+    default = 'TBA'
+
+
+@tournament_preferences_registry.register
+class FeedbackReturnLocation(StringPreference):
+    help_text = _("The location to return feedback to, printed on pre-printed feedback forms")
+    verbose_name = _("Feedback return location")
+    section = data_entry
+    name = 'feedback_return_location'
+    default = 'TBA'
 
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))

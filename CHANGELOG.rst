@@ -22,6 +22,7 @@ Change Log
 - Added a new (beta) feature: allocation 'sharding'
     - Sharding allows you to split up the Adjudicator Allocation screen into a defined subset of the draw. This has been designed so that you can have multiple computers doing allocations simultaneously; allowing the adjudication core to split itself and tackle allocations in parallel.
     - Shards can be assigned into defined fractions (i.e. halves or fiths) according to specific criteria (i.e. bracket or priority) and following either a top-to-bottom sorting or a mixed sorting that ensures each bracket has an even proportion of each criteria.
+- Added an option to show a "Confirm Digits" option to pre-printed ballots that asks adjudicators to confirm their scores in a manner that may help clarify instances or bad handwriting. This can be enabled in the "Data Entry" settings area.
 - Added draw pull-up option: pull up from middle
 - Added new draw option: choose pull-up from teams who have been pulled up the fewest times so far
 - Added the ability to have different 'ballots-per-debates' for in/out rounds; accommodating tournaments like Australian Easters that use consensus for preliminary rounds but voting for elimination rounds.
