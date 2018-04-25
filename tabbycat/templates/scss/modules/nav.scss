@@ -26,6 +26,19 @@
   margin-right: 5px;
 }
 
+.navbar .dropdown-menu .dropdown-item {
+  color: $navbar-light-color; // Keep consistent with top level
+  background: none;
+
+  &:hover {
+    color: theme-color("primary"); // Keep consistent with top level
+  }
+  // Override standard dropdown highlights
+  &.active, &:focus {
+    color: $navbar-light-active-color;
+  }
+}
+
 //------------------------------------------------------------------------------
 // Admin Sidebar Customisation
 //------------------------------------------------------------------------------
