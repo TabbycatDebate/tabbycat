@@ -342,6 +342,9 @@ class DrawForDragAndDropMixin(RoundMixin):
 
     def annotate_region_classes(self, adj_or_team):
         """Same as above, but for regions"""
+        if len(self.regions) == 0:
+            return adj_or_team
+
         regions_seq = {}
         for i, r in enumerate(self.regions):
             regions_seq[r.id] = i
