@@ -18,10 +18,6 @@
       :ballot="ballot"
       :round-info="roundInfo"></printable-feedback>
 
-    <printable-ballot-footer v-if="kind === 'Feedback'"
-      :round-info="roundInfo"
-      :show-scoring="showScoring"></printable-ballot-footer>
-
   </section>
 </template>
 

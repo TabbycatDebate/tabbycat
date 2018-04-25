@@ -11,25 +11,25 @@
 
       <div v-if="question.type === 'bs' || question.type === 'bc'" class="db-flex-item db-flex-row">
         <div class="db-align-horizontal-center db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
-          <span class="db-fill-in">Yes</span>
+          <span class="db-circle">Yes</span>
         </div>
         <div v-if="question.type === 'bc'" class="db-align-horizontal-center db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
-          <span class="db-fill-in">Unsure</span>
+          <span class="db-circle">Unsure</span>
         </div>
         <div class="db-align-horizontal-center db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
-          <span class="db-fill-in">No</span>
+          <span class="db-circle">No</span>
         </div>
       </div>
 
       <div v-if="question.type === 'ss' || question.type === 'ms'" class="db-flex-item db-flex-row">
         <div v-for="choice in question.choice_options" class="db-align-horizontal-center db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
-          <span class="db-fill-in db-padding-horizontal">{{ choice }}</span>
+          <span class="db-circle db-padding-horizontal">{{ choice }}</span>
         </div>
       </div>
 
       <div v-if="question.type === 'is' || question.type === 'i' || question.type === 'f'" class="db-flex-item db-flex-row">
         <div v-for="choice in question.choice_options" class="db-align-horizontal-center db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
-          <span class="db-fill-in">{{ choice }}</span>
+          <span class="db-circle">{{ choice }}</span>
         </div>
       </div>
 

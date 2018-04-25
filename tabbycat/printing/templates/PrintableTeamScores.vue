@@ -17,7 +17,7 @@
         <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
           {{ pos }}:
         </div>
-        <div class="db-fill-in db-flex-item-9 d-flex"></div>
+        <div class="db-fill-in db-flex-item-8 d-flex"></div>
         <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
           <span>Score:</span>
         </div>
@@ -47,10 +47,10 @@
 
     <div class="db-flex-item-3 db-flex-row db-bottom-border"><!-- Totals -->
       <template v-if="roundInfo.isBP">
-        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
-          Rank:
+        <div class="db-flex-item-2 align-items-center d-flex small db-padding-horizontal">
+          Circle Rank:
         </div>
-        <div class="db-flex-item-7 db-flex-row">
+        <div class="db-flex-item-6 db-flex-row">
           <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
             <span class="db-circle text-monospace">1st</span>
           </div>
@@ -65,6 +65,9 @@
           </div>
         </div>
         <div class="db-flex-item-1"><!-- Spacing --></div>
+      </template>
+      <template v-else>
+        <div class="db-flex-item-9 db-padding-horizontal"><!-- Spacing --></div>
       </template>
       <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
         <span>Total:</span>

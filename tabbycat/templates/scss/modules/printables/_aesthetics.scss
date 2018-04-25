@@ -2,8 +2,11 @@
 $fill-in-line-height: 3px;
 $fill-in-line-spacing: 45px;
 
+$border-color: #f4f4f4;
+$fill-in-color: #ccc;
+
 .db-fill-in {
-  border-bottom: $fill-in-line-height solid #ccc;
+  border-bottom: $fill-in-line-height solid $fill-in-color;
 }
 
 .db-circle {
@@ -13,12 +16,12 @@ $fill-in-line-spacing: 45px;
 }
 
 .db-bordered {
-  border: 1px solid #ccc;
+  border: 1px solid $border-color;
   border-radius: 5px;
 }
 
 .db-bottom-border {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid $border-color;
 }
 
 .db-page {
