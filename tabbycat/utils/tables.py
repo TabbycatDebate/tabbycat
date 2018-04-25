@@ -521,7 +521,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         def construct_text(adjs_data):
             adjs_list = []
             for a in adjs_data:
-                adj_str = a['adj'].name
+                adj_str = '<span class="d-inline-block">' + a['adj'].name
                 symbol = self.ADJ_SYMBOLS.get(a['position'])
                 if symbol:
                     adj_str += " " + symbol
@@ -529,6 +529,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     adj_str += " <span class='text-danger'>💢</span>"
                 if a['adj'] == highlight_adj:
                     adj_str = "<strong>" + adj_str + "</strong>"
+                adj_str += '</span>'
                 adjs_list.append(adj_str)
             return ', '.join(adjs_list)
 
