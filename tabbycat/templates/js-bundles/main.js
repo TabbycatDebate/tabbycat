@@ -101,13 +101,16 @@ $(document).ready(function (){
     $('a.list-group-item').filter(function (index, elem) {
       return currentUrl.endsWith($(elem).attr('href'))
     }).addClass('active')
-    // Expand the sidebar if an item within the relevant section is active
-    const menuSectionClass = '.list-group-item.d-inline-block:not(.main-menu-item)';
-    const listGroups = $(menuSectionClass).filter(function(index, elem) {
-      return $(elem).find('a.list-group-item.active').length
-    })
-    listGroups.children('a').attr('aria-expanded', 'true')
-    listGroups.children('div').addClass('show')
+    // Expand sidebar if an item within a section is active (if not on mobile)
+    let isMobile = window.matchMedia("only screen and (max-width: 576px)");
+    if (!isMobile.matches) {
+      const menuSectionClass = '.list-group-item.d-inline-block:not(.main-menu-item)';
+      const listGroups = $(menuSectionClass).filter(function(index, elem) {
+        return $(elem).find('a.list-group-item.active').length
+      })
+      listGroups.children('a').attr('aria-expanded', 'true')
+      listGroups.children('div').addClass('show')
+    }
   } else {
     // For assistant and public navs
     $('#collapsed-main-nav a').filter(function (index, elem) {
