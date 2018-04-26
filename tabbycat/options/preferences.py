@@ -814,7 +814,7 @@ class BallotsConfirmDigits(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ScoreReturnLocation(StringPreference):
-    help_text = _("The location to return scoresheets to, printed on pre-printed ballots")
+    help_text = _("The location to return scoresheets to, printed on pre-printed ballots. Set to 'TBA' to hide.")
     verbose_name = _("Score return location")
     section = data_entry
     name = 'score_return_location'
@@ -823,7 +823,7 @@ class ScoreReturnLocation(StringPreference):
 
 @tournament_preferences_registry.register
 class FeedbackReturnLocation(StringPreference):
-    help_text = _("The location to return feedback to, printed on pre-printed feedback forms")
+    help_text = _("The location to return feedback to, printed on pre-printed feedback forms. Set to 'TBA' to hide.")
     verbose_name = _("Feedback return location")
     section = data_entry
     name = 'feedback_return_location'
