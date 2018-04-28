@@ -93,6 +93,21 @@ class BaseHungarianAllocator(Allocator):
                 allocation_by_debate[debate].trainees.append(trainee)
                 logger.info("allocating to %s: %s (t)", debate, trainee)
 
+    def check_matrix_exists(self, n_debates, n_voting):
+        if n_voting == 0:
+            info = _("There are no adjudicators eligible to be a chair or "
+                     "panellist. This usually means that you need to go to the "
+                     "Draw Rules section of the Configuration area and "
+                     "decrease the \"Minimum adjudicator score to vote\" setting "
+                     "in order to allow some adjudicators to be allocated.")
+            logger.info("No adjudicators able to panel or chair")
+            raise BadJsonRequestError(info)
+        if n_debates == 0:
+            info = _("There are no debates for this round. "
+                     "Maybe you haven't created a draw yet?")
+            logger.info("No debates available for allocator")
+            raise BadJsonRequestError(info)
+
 
 class VotingHungarianAllocator(BaseHungarianAllocator):
 
@@ -107,19 +122,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
         n_debates = len(self.debates)
         n_voting = len(voting)
 
-        if len(voting) == 0:
-            info = _("""There are no adjudicators who have are able to panel or
-                        chair. This usually means that you need to go to the
-                        Draw Rules section of the Configuration area and
-                        decrease the "Minimum adjudicator score to vote" setting
-                        in order to allow some adjudicators to be allocated.""")
-            logger.info(info)
-            raise BadJsonRequestError(info)
-        if n_debates == 0:
-            info = _("""There are no debates for this round so no allocation can
-                        be made. Maybe you have not created a draw yet?""")
-            logger.info(info)
-            raise BadJsonRequestError(info)
+        self.check_matrix_exists(n_debates, n_voting)
 
         if self.no_panellists:
             solos = voting[:n_debates]
@@ -237,19 +240,7 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
             trainees = [a for a in self.adjudicators if a not in voting]
             trainees.sort(key=lambda a: a._normalized_score, reverse=True)
 
-        if len(voting) == 0:
-            info = _("""There are no adjudicators who have are able to panel or
-                        chair. This usually means that you need to go to the
-                        Draw Rules section of the Configuration area and
-                        decrease the "Minimum adjudicator score to vote" setting
-                        in order to allow some adjudicators to be allocated.""")
-            logger.info(info)
-            raise BadJsonRequestError(info)
-        if n_debates == 0:
-            info = _("""There are no debates for this round so no allocation can
-                        be made. Maybe you have not created a draw yet?""")
-            logger.info(info)
-            raise BadJsonRequestError(info)
+        self.check_matrix_exists(n_debates, n_voting)
 
         # Divide debates into solo-chaired debates and panel debates
         debates_sorted = sorted(self.debates, key=lambda d: (-d.importance, d.room_rank))
