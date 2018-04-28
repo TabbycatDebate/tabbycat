@@ -40,9 +40,8 @@ class BaseHungarianAllocator(Allocator):
         score_range = self.max_score - score_min
 
         for adj in adjudicators:
-            score = adj.weighted_score(self.feedback_weight)
-            # Normalize the adj score to a 0-5 range
-            adj._normalized_score = (score - score_min) / score_range * 5
+            adj._weighted_score = adj.weighted_score(self.feedback_weight)  # used in min_voting_score filter
+            adj._normalized_score = (adj._weighted_score - score_min) / score_range * 5  # to 0-5 range
 
         ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
         if ntoolarge > 0:
@@ -100,7 +99,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
     def run_allocation(self):
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._normalized_score >= self.min_voting_score and not a.trainee]
+        voting = [a for a in self.adjudicators if a._weighted_score >= self.min_voting_score and not a.trainee]
         random.shuffle(voting)
         voting.sort(key=lambda a: a._normalized_score, reverse=True)
 
@@ -223,7 +222,7 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
     def run_allocation(self):
 
         # Sort voting adjudicators in descending order by score
-        voting = [a for a in self.adjudicators if a._normalized_score >= self.min_voting_score and not a.trainee]
+        voting = [a for a in self.adjudicators if a._weighted_score >= self.min_voting_score and not a.trainee]
         random.shuffle(voting)
         voting.sort(key=lambda a: a._normalized_score, reverse=True)
 
