@@ -116,6 +116,11 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                         in order to allow some adjudicators to be allocated.""")
             logger.info(info)
             raise BadJsonRequestError(info)
+        if n_debates == 0:
+            info = _("""There are no debates for this round so no allocation can
+                        be made. Maybe you have not created a draw yet?""")
+            logger.info(info)
+            raise BadJsonRequestError(info)
 
         if self.no_panellists:
             solos = voting[:n_debates]
@@ -239,6 +244,11 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
                         Draw Rules section of the Configuration area and
                         decrease the "Minimum adjudicator score to vote" setting
                         in order to allow some adjudicators to be allocated.""")
+            logger.info(info)
+            raise BadJsonRequestError(info)
+        if n_debates == 0:
+            info = _("""There are no debates for this round so no allocation can
+                        be made. Maybe you have not created a draw yet?""")
             logger.info(info)
             raise BadJsonRequestError(info)
 
