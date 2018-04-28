@@ -135,14 +135,7 @@
           return false;
         });
       });
-    });
 
-    // Jump to search box on "/"
-    $(document).keypress(function (e) {
-      if (e.key == "/" && !$("#table-search").is(":focus")) {
-        $("#table-search").focus();
-        return false;
-      }
     });
   </script>
 {% endblock %}
