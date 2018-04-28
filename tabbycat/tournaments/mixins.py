@@ -333,6 +333,11 @@ class DrawForDragAndDropMixin(RoundMixin):
             breaks_seq = {}
             for i, r in enumerate(self.break_categories):
                 breaks_seq[r.id] = i
+            # Very rarely teams can have BCs even after they were deleted
+            # In which case it seems best to not calculate a class/liveness
+            if not breaks_seq:
+                return serialised_team
+
             for bc in serialised_team['break_categories']:
                 bc['class'] = breaks_seq[bc['id']]
                 points = serialised_team['points']
