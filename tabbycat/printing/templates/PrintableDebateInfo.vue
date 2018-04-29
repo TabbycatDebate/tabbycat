@@ -33,7 +33,7 @@
             <strong>{{ getDisplayStep(roundInfo.replyStep) }}</strong>.
           </span>
 
-          <span v-if="roundInfo.returnLocation !== ''">
+          <span v-if="roundInfo.returnLocation !== 'TBA'">
             Return ballots to {{ roundInfo.returnLocation }}.
           </span>
 

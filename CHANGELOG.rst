@@ -52,6 +52,7 @@ Change Log
     - The Consensus vs Voting options for how ballots work has not been split into two settings: one for preliminary rounds and one for elimination rounds
     - Speaker scores now show as integers (without decimals) where the tournament format would not allow decimals.
     - Added a page showing a list of institutions in the tournament
+    - On the assistant "enter results" page, pressing "/" jumps to the "Find in Table" box, so data entry can be done entirely from your keyboard.
 - Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
     - On Heroku: You should remove the memcachier plugin and instead add 'heroku-redis' to any instances being upgraded
     - Locally: You should recreate your local_settings.py from the example file

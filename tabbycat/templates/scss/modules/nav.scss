@@ -26,6 +26,19 @@
   margin-right: 5px;
 }
 
+.navbar .dropdown-menu .dropdown-item {
+  color: $navbar-light-color; // Keep consistent with top level
+  background: none;
+
+  &:hover {
+    color: theme-color("primary"); // Keep consistent with top level
+  }
+  // Override standard dropdown highlights
+  &.active, &:focus {
+    color: $navbar-light-active-color;
+  }
+}
+
 //------------------------------------------------------------------------------
 // Admin Sidebar Customisation
 //------------------------------------------------------------------------------
@@ -163,34 +176,32 @@
   .admin-sidebar .list-group-item a,
   .admin-sidebar .list-group-item .tournament-areas-title {
     font-size: 12px;
-    padding: 0.75rem 0.4rem;
-  }
-
-  .admin-sidebar .list-group-item > .collapse .list-group-item .feather,
-  .admin-sidebar .list-group-item > .collapsing .list-group-item .feather {
-    // width: 30px;
-    padding-right: 12px;
-    padding-left: 1px;
-    padding-top: 3px;
-  }
-}
-
-// Applies just to phones
-@include media-breakpoint-up(sm) {
-
-  .admin-sidebar .list-group-item a {
-    font-size: 12px;
-    padding: 0.5rem 0.6rem;
+    padding: 0.75rem 0.25rem;
 
     .feather {
       width: 12px;
       height: 12px;
+      margin-right: 0;
     }
 
     .feather-chevron-down,
     .feather-chevron-up {
       margin-top: 2px;
       margin-right: 0;
+    }
+
+  }
+
+  .admin-sidebar .list-group-item > .collapse .list-group-item,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item {
+    font-size: 12px;
+
+    .feather {
+      padding-right: 8px;
+      padding-top: 3px;
+      padding-left: 2px;
+      width: 26px;
+      height: 16px;
     }
   }
 
@@ -201,24 +212,38 @@
 
 }
 
-
 // Applies just to tablets
 @include media-breakpoint-up(md) {
 
-  .admin-sidebar .list-group-item a .feather {
-    width: 12px;
-    height: 12px;
-    padding-right: 2px;
-    margin-right: 0;
-    padding-bottom: 2px;
+  .admin-sidebar .list-group-item a {
+    font-size: 12px;
+    padding: 0.5rem 0.5rem;
+
+    .feather {
+      width: 12px;
+      height: 12px;
+      padding-right: 2px;
+      margin-right: 0;
+      padding-bottom: 2px;
+    }
   }
 
-  .admin-sidebar .list-group-item > .collapse .list-group-item .feather,
-  .admin-sidebar .list-group-item > .collapsing .list-group-item .feather {
-    width: 18px;
-    padding-right: 6px;
-    padding-left: 0;
-    padding-top: 0;
+  .admin-sidebar .list-group-item > .collapse .list-group-item,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item {
+    font-size: 11px;
+    padding-top: 0.5rem 0.25rem;
+
+    .feather {
+      width: 16px;
+      padding-right: 6px;
+      padding-left: 0;
+      padding-top: 2px;
+    }
+  }
+
+  .admin-sidebar .collapse a.list-group-item,
+  .admin-sidebar .collapsing a.list-group-item {
+    font-size: 14px;
   }
 }
 
@@ -247,10 +272,15 @@
     font-size: $font-size-sm;
   }
 
-  .admin-sidebar .list-group-item > .collapse .list-group-item .feather,
-  .admin-sidebar .list-group-item > .collapsing .list-group-item .feather {
-    width: 25px;
-    padding-right: 9px;
+  .admin-sidebar .list-group-item > .collapse .list-group-item,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item {
+    font-size: 14px;
+
+    .feather {
+      width: 25px;
+      padding-right: 9px;
+      height: 18px;
+    }
   }
 }
 
