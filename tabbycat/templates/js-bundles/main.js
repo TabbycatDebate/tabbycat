@@ -87,7 +87,7 @@ $(document).ready(function (){
   // Focus '/' on table search
   if ($("#table-search").length) {
     $(document).keypress(function (e) {
-      if (e.which == 47) {
+      if ((e.which == 47 || e.key == "/") && !$("#table-search").is(":focus")) {
         $("#table-search").focus()
         e.preventDefault() // Stop the keystroke
       }
