@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,13 +133,7 @@ msgstr ""
 msgid "Venue Categories"
 msgstr ""
 
-#: venues/templates/venue_categories_edit.html:7
-#: venues/templates/venue_categories_edit.html:22
-#: venues/templates/venue_constraints_edit.html:22
-msgid "Save Venue Categories"
-msgstr ""
-
-#: venues/templates/venue_categories_edit.html:11
+#: venues/templates/venue_categories_edit.html:9
 msgid ""
 "Venue categories allow you to group venues together into \"zones\" to "
 "display in the draw and make navigation easier for participants, and/or "
@@ -147,11 +141,15 @@ msgid ""
 "institutions to be put in a venue in a particular category."
 msgstr ""
 
-#: venues/templates/venue_categories_edit.html:16
+#: venues/templates/venue_categories_edit.html:14
 #, python-format
 msgid ""
 "If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
 "class=\"alert-link\">Edit Database</a> area."
+msgstr ""
+
+#: venues/templates/venue_categories_edit.html:20
+msgid "Save Venue Categories"
 msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:4
@@ -159,11 +157,7 @@ msgstr ""
 msgid "Venue Constraints"
 msgstr ""
 
-#: venues/templates/venue_constraints_edit.html:7
-msgid "Save Venue Constraints"
-msgstr ""
-
-#: venues/templates/venue_constraints_edit.html:11
+#: venues/templates/venue_constraints_edit.html:9
 msgid ""
 "Venue constraints tell the venue allocator to try to keep the specified team "
 "or adjudicator, or all teams (but not adjudicators) from the specified "
@@ -171,6 +165,10 @@ msgid ""
 "resolves conflicting constraints: the higher priority takes precedence. You "
 "can also use the priority field to specify \"lower-preference\" constraints, "
 "which are taken if a higher-priority constraint couldn't be met."
+msgstr ""
+
+#: venues/templates/venue_constraints_edit.html:20
+msgid "Save Venue Constraints"
 msgstr ""
 
 #: venues/utils.py:38 venues/utils.py:50
@@ -196,38 +194,38 @@ msgid ""
 "Venue does not meet any constraint of institution %(institution)s (%(team)s)"
 msgstr ""
 
-#: venues/views.py:102
+#: venues/views.py:110
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: venues/views.py:108
+#: venues/views.py:116
 msgid "No changes were made to the venue categories."
 msgstr ""
 
-#: venues/views.py:150
+#: venues/views.py:168
 #, python-format
 msgid "%s (Adjudicator)"
 msgstr ""
 
-#: venues/views.py:153
+#: venues/views.py:171
 #, python-format
 msgid "%s (Team)"
 msgstr ""
 
-#: venues/views.py:156
+#: venues/views.py:174
 #, python-format
 msgid "%s (Institution)"
 msgstr ""
 
-#: venues/views.py:159
+#: venues/views.py:177
 #, python-format
 msgid "%s (Division)"
 msgstr ""
 
-#: venues/views.py:167
+#: venues/views.py:185
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."

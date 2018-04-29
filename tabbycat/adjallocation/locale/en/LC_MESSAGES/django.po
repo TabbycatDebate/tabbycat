@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,8 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: adjallocation/allocator.py:31
+msgid ""
+"There are no available adjudicators. Ensure there are adjudicators who have "
+"been marked as available for this round before auto-allocating."
+msgstr ""
+
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
+msgstr ""
+
+#: adjallocation/hungarian.py:98
+msgid ""
+"There are no adjudicators eligible to be a chair or panellist. This usually "
+"means that you need to go to the Draw Rules section of the Configuration "
+"area and decrease the \"Minimum adjudicator score to vote\" setting in order "
+"to allow some adjudicators to be allocated."
+msgstr ""
+
+#: adjallocation/hungarian.py:106
+msgid ""
+"There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr ""
 
 #: adjallocation/models.py:18
@@ -103,35 +122,92 @@ msgstr ""
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr ""
 
-#: adjallocation/templates/edit_conflicts.html:4
-#: adjallocation/templates/edit_conflicts.html:5
-msgid "Adjudicator-Team Conflicts"
-msgstr ""
-
-#: adjallocation/templates/edit_conflicts.html:7
-#: adjallocation/templates/edit_conflicts.html:11
-msgid "Save Adjudicator-Team Conflicts"
-msgstr ""
-
-#: adjallocation/views.py:141
+#: adjallocation/views.py:140
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:145
+#: adjallocation/views.py:144
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 
-#: adjallocation/views.py:194
+#: adjallocation/views.py:193
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr ""
 
-#: adjallocation/views.py:245
+#: adjallocation/views.py:259
+msgid "Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:260
+msgid "Save Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:271
 #, python-format
 msgid "Saved %(count)d adjudicator-team conflict."
 msgid_plural "Saved %(count)d adjudicator-team conflicts."
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjallocation/views.py:251
+#: adjallocation/views.py:277
+#, python-format
+msgid "Deleted %(count)d adjudicator-team conflict."
+msgid_plural "Deleted %(count)d adjudicator-team conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:282
 msgid "No changes were made to adjudicator-team conflicts."
+msgstr ""
+
+#: adjallocation/views.py:289
+msgid "Adjudicator-Adjudicator Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:290
+msgid "Save Adjudicator-Adjudicator Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:305
+#, python-format
+msgid "Saved %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:311
+#, python-format
+msgid "Deleted %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:316
+msgid "No changes were made to adjudicator-adjudicator conflicts."
+msgstr ""
+
+#: adjallocation/views.py:323
+msgid "Adjudicator-Institution Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:324
+msgid "Save Adjudicator-Institution Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:332
+#, python-format
+msgid "Saved %(count)d adjudicator-institution conflict."
+msgid_plural "Saved %(count)d adjudicator-institution conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:338
+#, python-format
+msgid "Deleted %(count)d adjudicator-institution conflict."
+msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:343
+msgid "No changes were made to adjudicator-institution conflicts."
 msgstr ""

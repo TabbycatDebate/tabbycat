@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"PO-Revision-Date: 2018-04-29 10:38-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.7\n"
 
 #: importer/forms.py:20
 #, python-format
@@ -48,7 +48,7 @@ msgstr "Il n’y avait pas d’institutions à importer."
 
 #: importer/forms.py:111
 msgid "There were no venues to import."
-msgstr "Il n’y avait pas de lieux à importer."
+msgstr "Il n’y avait pas de salles à importer."
 
 #: importer/forms.py:210
 msgid "Speakers' names"
@@ -207,6 +207,7 @@ msgstr ""
 
 #: importer/templates/simple_import_adjudicators_numbers.html:32
 #: importer/templates/simple_import_institutions_raw.html:30
+#: importer/templates/simple_import_venues_raw.html:30
 msgid "There are some problems with the data on this form:"
 msgstr ""
 "Des problèmes en lien avec les données sur ce formulaire sont apparus :"
@@ -253,12 +254,27 @@ msgstr ""
 msgid "Add Venues"
 msgstr ""
 
-#: importer/templates/simple_import_index.html:33
+#: importer/templates/simple_import_index.html:36
 msgid "Add/Edit Venue Categories"
 msgstr ""
 
-#: importer/templates/simple_import_index.html:37
+#: importer/templates/simple_import_index.html:40
 msgid "Add/Edit Venue Constraints"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:47
+#, fuzzy
+#| msgctxt "page title"
+#| msgid "Add Adjudicators"
+msgid "Add/Edit Adjudicator-Team Conflicts"
+msgstr "Addition de juges"
+
+#: importer/templates/simple_import_index.html:51
+msgid "Add/Edit Adjudicator-Adjudicator Conflicts"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:55
+msgid "Add/Edit Adjudicator-Institution Conflicts"
 msgstr ""
 
 #: importer/templates/simple_import_institutions_details.html:4
@@ -274,7 +290,7 @@ msgid "Save All Institutions"
 msgstr "Enregistrer toutes les Institutions"
 
 #: importer/templates/simple_import_institutions_raw.html:41
-#: importer/templates/simple_import_venues_raw.html:40
+#: importer/templates/simple_import_venues_raw.html:41
 msgid "Next Step"
 msgstr "Étape suivante"
 
@@ -318,7 +334,7 @@ msgstr ""
 #: importer/templates/simple_import_venues_raw.html:6
 msgctxt "page title"
 msgid "Add Venues"
-msgstr "Addition de lieux"
+msgstr "Addition de salles"
 
 #: importer/templates/simple_import_venues_details.html:16
 msgid ""
@@ -338,9 +354,15 @@ msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:43
 msgid "Save All Venues"
-msgstr "Enregistrer tous les lieux"
+msgstr "Enregistrer tous les salles"
 
-#: importer/views.py:94
+#: importer/templates/simple_import_venues_raw.html:15
+msgid ""
+"Paste a list of venues with one venue per line and following the format of: "
+"<code>name,priority</code>. For example:"
+msgstr ""
+
+#: importer/views.py:102
 #, fuzzy, python-format
 #| msgctxt "page title"
 #| msgid "Add Institutions"
@@ -349,26 +371,26 @@ msgid_plural "Added %(count)d institutions."
 msgstr[0] "Addition d'institutions"
 msgstr[1] "Addition d'institutions"
 
-#: importer/views.py:115
+#: importer/views.py:123
 #, python-format
 msgid "Added %(count)d venue."
 msgid_plural "Added %(count)d venues."
 msgstr[0] ""
 msgstr[1] ""
 
-#: importer/views.py:172
+#: importer/views.py:180
 #, python-format
 msgid "Added %(count)d team."
 msgid_plural "Added %(count)d teams."
 msgstr[0] ""
 msgstr[1] ""
 
-#: importer/views.py:194
+#: importer/views.py:201
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr "Juge %(number)d"
 
-#: importer/views.py:199
+#: importer/views.py:206
 #, fuzzy, python-format
 #| msgctxt "page title"
 #| msgid "Add Adjudicators"
