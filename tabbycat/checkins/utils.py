@@ -36,7 +36,7 @@ def generate_identifiers(queryset, length=6, num_attempts=10):
             try:
                 klass.objects.create(identifier=identifier, **{attr: instance})
             except IntegrityError:
-                logger.warning("Identifier was not unique, trying again (%d of %d", i, num_attempts)
+                logger.warning("Identifier was not unique, trying again (%d of %d)", i, num_attempts)
                 continue
             else:
                 break
@@ -77,38 +77,41 @@ def single_checkin(instance, events):
     instance.checked_in = False
     try:
         identifier = instance.checkin_identifier
-        instance.checked_tooltip = _('Not checked-in (barcode %s)') % identifier.barcode
+        instance.checked_tooltip = _("Not checked-in (barcode %(barcode)s)") % {'barcode': identifier.barcode}
     except ObjectDoesNotExist:
         identifier = None
-        instance.checked_tooltip = _('Not checked-in; no barcode assigned')
+        instance.checked_tooltip = _("Not checked-in; no barcode assigned")
 
     if identifier:
         instance.time = next((e['time'] for e in events if e['identifier__barcode'] == identifier.barcode), None)
         if instance.time:
             instance.checked_in = True
             instance.checked_icon = 'check'
-            instance.checked_tooltip = _('Checked-in at %s') % instance.time.strftime('%H:%M')
+            instance.checked_tooltip = _("Checked-in at %(time)s") % {'time': instance.time.strftime('%H:%M')}
     return instance
 
 
 def multi_checkin(team, events, t):
     team.checked_icon = ''
     team.checked_in = False
-    team.checked_tooltip = ''
+    tooltips = []
 
     for speaker in team.speaker_set.all():
         speaker = single_checkin(speaker, events)
         if speaker.checked_in:
-            team.checked_tooltip += _("%s checked-in at %s. ") % (speaker.name, speaker.time.strftime('%H:%M'))
+            tooltip = _("%(speaker)s checked-in at %(time)s.") % {'speaker': speaker.name, 'time': speaker.time.strftime('%H:%M')}
         else:
-            team.checked_tooltip += _("%s is missing. ") % speaker.name
+            tooltip = _("%(speaker)s is missing.") % {'speaker': speaker.name}
+        tooltips.append(tooltip)
+
+    team.checked_tooltip = " ".join(tooltips)
 
     check_ins = sum(s.checked_in for s in team.speaker_set.all())
-    substantives = t.pref('substantive_speakers')
-    if check_ins >= substantives:
+    nsubstantives = t.pref('substantive_speakers')
+    if check_ins >= nsubstantives:
         team.checked_in = True
         team.checked_icon = 'check'
-    elif check_ins == substantives - 1:
+    elif check_ins == nsubstantives - 1:
         team.checked_in = True
         team.checked_icon = 'shuffle'
 
