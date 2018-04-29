@@ -44,13 +44,6 @@ class RandomDrawGenerator(RandomPairingsMixin, BasePairDrawGenerator):
         self.allocate_sides(self._draw)  # Operates in-place
         return self._draw
 
-    def make_random_pairings(self):
-        teams = list(self.teams)  # Make a copy
-        random.shuffle(teams)
-        debates = len(teams) // 2
-        pairings = [Pairing(teams=t, bracket=0, room_rank=0) for t in zip(teams[:debates], teams[debates:])]
-        return pairings
-
     def avoid_conflicts(self, pairings):
         # Don't swap sides! The child class RandomDrawWithSideConstraints assumes
         # that in this algorithm, affs will stay affs and negs will stay negs.
