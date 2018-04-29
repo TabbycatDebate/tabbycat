@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -70,7 +70,7 @@ msgid ""
 "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
 "<strong>page orientation</strong>, to turn off "
 "<strong>headers/footers</strong> and turn on <strong>background "
-"graphics</strong>. Works best in Chrome or Safari."
+"graphics</strong>. Works best in Chrome."
 msgstr ""
 
 #: printing/templates/scoresheet_list.html:5
@@ -87,14 +87,14 @@ msgid ""
 "There are no scoresheets available — perhaps the round has not been drawn?"
 msgstr ""
 
-#: printing/views.py:87
+#: printing/views.py:90
 msgid "Overall Score"
 msgstr ""
 
-#: printing/views.py:115
+#: printing/views.py:117 printing/views.py:225 printing/views.py:238
 msgid "Unaffiliated"
 msgstr ""
 
-#: printing/views.py:128 printing/views.py:132
+#: printing/views.py:130 printing/views.py:134
 msgid "Team"
 msgstr "Equipo"

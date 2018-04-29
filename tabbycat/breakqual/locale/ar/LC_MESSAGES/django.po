@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: mohamad salman <mmali@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -88,97 +88,107 @@ msgstr ""
 "إذا تأهل الفريق  إلى فئات متعددة، تكون الأولوية للأرقام ذات الأولوية الأعلى؛"
 " يمكن للفرق أن تتأهل إلى فئات متعددة فقط إذا كان لجميعها نفس الأولوية"
 
-#: breakqual/models.py:31
-msgid "Standard"
-msgstr "اساسي"
-
-#: breakqual/models.py:32
-msgid "AIDA 1996"
+#: breakqual/models.py:30
+msgid "limit"
 msgstr ""
 
-#: breakqual/models.py:33
-msgid "AIDA 2016 (Easters)"
+#: breakqual/models.py:31
+msgid ""
+"At most this many teams will be shown on the public tab for this category, "
+"or use 0 for no limit"
 msgstr ""
 
 #: breakqual/models.py:34
-msgid "AIDA 2016 (Australs)"
-msgstr ""
+msgid "Standard"
+msgstr "اساسي"
 
 #: breakqual/models.py:35
-msgid "WADL division winners first"
+msgid "AIDA 1996"
 msgstr ""
 
 #: breakqual/models.py:36
+msgid "AIDA 2016 (Easters)"
+msgstr ""
+
+#: breakqual/models.py:37
+msgid "AIDA 2016 (Australs)"
+msgstr ""
+
+#: breakqual/models.py:38
+msgid "WADL division winners first"
+msgstr ""
+
+#: breakqual/models.py:39
 msgid "WADL division winners guaranteed"
 msgstr ""
 
-#: breakqual/models.py:40
+#: breakqual/models.py:43
 msgid "rule"
 msgstr "قاعدة"
 
-#: breakqual/models.py:41
+#: breakqual/models.py:44
 msgid ""
 "Rule for how the break is calculated (most tournaments should use "
 "\"Standard\")"
 msgstr "قاعدة كيفية حساب درجات التأهل"
 
-#: breakqual/models.py:44 breakqual/models.py:100
+#: breakqual/models.py:47 breakqual/models.py:103
 msgid "breaking teams"
 msgstr "الفرق المتأهله"
 
-#: breakqual/models.py:53 breakqual/models.py:71
+#: breakqual/models.py:56 breakqual/models.py:74
 msgid "break category"
 msgstr "فئة التأهل"
 
-#: breakqual/models.py:54
+#: breakqual/models.py:57
 msgid "break categories"
 msgstr "فئات التأهل"
 
-#: breakqual/models.py:73
+#: breakqual/models.py:76
 msgid "team"
 msgstr "فريق"
 
-#: breakqual/models.py:75
+#: breakqual/models.py:78
 msgid "rank"
 msgstr "الترتيب"
 
-#: breakqual/models.py:77
+#: breakqual/models.py:80
 msgid "break rank"
 msgstr "ترتيب التأهل"
 
-#: breakqual/models.py:86
+#: breakqual/models.py:89
 msgid "Capped"
 msgstr "محدود"
 
-#: breakqual/models.py:87
+#: breakqual/models.py:90
 msgid "Ineligible"
 msgstr "غير مؤهل"
 
-#: breakqual/models.py:88
+#: breakqual/models.py:91
 msgid "Different break"
 msgstr "تأهل مختلف"
 
-#: breakqual/models.py:89
+#: breakqual/models.py:92
 msgid "Disqualified"
 msgstr "غير متأهل"
 
-#: breakqual/models.py:90
+#: breakqual/models.py:93
 msgid "Lost coin toss"
 msgstr "خسر القرعة"
 
-#: breakqual/models.py:91
+#: breakqual/models.py:94
 msgid "Withdrawn"
 msgstr "إنسحب"
 
-#: breakqual/models.py:94
+#: breakqual/models.py:97
 msgid "remark"
 msgstr "اعادة وضع العلامات"
 
-#: breakqual/models.py:95
+#: breakqual/models.py:98
 msgid "Used to explain why an otherwise-qualified team didn't break"
 msgstr ""
 
-#: breakqual/models.py:99
+#: breakqual/models.py:102
 msgid "breaking team"
 msgstr "الفرق المتأهلة "
 
@@ -278,13 +288,13 @@ msgstr ""
 #, python-format
 msgid ""
 "To edit the break use the remarks in the right-hand column. Any team with a "
-"remark will be excluded from this break (the break generator will insert "
-"sometimes insert its own remarks). Then, click the appropriate Save Remarks "
-"and Update button below. If you have complicated break rules (for example, "
-"if some teams are allowed to choose their preferred category) then you may "
-"have to update remarks a few times to get the correct break. As a last "
-"resort, you can <a href=\"%(url)s\"> edit the breaking teams list directly "
-"in the Edit Database area</a>."
+"remark will be excluded from this break (the break generator will sometimes "
+"insert its own remarks). Then, click the appropriate Save Remarks and Update"
+" button below. If you have complicated break rules (for example, if some "
+"teams are allowed to choose their preferred category) then you may have to "
+"update remarks a few times to get the correct break. As a last resort, you "
+"can <a href=\"%(url)s\"> edit the breaking teams list directly in the Edit "
+"Database area</a>."
 msgstr ""
 
 #: breakqual/templates/breaking_teams.html:85
@@ -351,42 +361,42 @@ msgid ""
 "%(message)s"
 msgstr ""
 
-#: breakqual/views.py:132
+#: breakqual/views.py:133
 msgid "Eligible for"
 msgstr "مستحق ل"
 
-#: breakqual/views.py:133
+#: breakqual/views.py:137
 msgid "Edit Remark"
 msgstr "تعديل الملاحظات"
 
-#: breakqual/views.py:147
+#: breakqual/views.py:153
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for the "
 "following break categories: %(categories)s."
 msgstr ""
 
-#: breakqual/views.py:154
+#: breakqual/views.py:160
 #, python-format
 msgid ""
 "Changes to breaking team remarks saved and teams break updated for break "
 "category %(category)s."
 msgstr ""
 
-#: breakqual/views.py:159
+#: breakqual/views.py:165
 msgid "Changes to breaking team remarks saved."
 msgstr "تم حفظ تعديل درجات الفريق المتأهله "
 
-#: breakqual/views.py:183
+#: breakqual/views.py:189
 #, python-format
 msgid ""
 "Teams break generated for the following break categories: %(categories)s."
 msgstr ""
 
-#: breakqual/views.py:196
+#: breakqual/views.py:202
 msgid "Breaking Adjudicators"
 msgstr "الحكام المتأهلون"
 
-#: breakqual/views.py:220
+#: breakqual/views.py:226
 msgid "Break Eligibility"
 msgstr "إستحقاق التأهل"

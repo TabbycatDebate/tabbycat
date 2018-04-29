@@ -5,7 +5,14 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
+  django.pluralidx = function(n) {
+    var v=(n > 1);
+    if (typeof(v) == 'boolean') {
+      return v ? 1 : 0;
+    } else {
+      return v;
+    }
+  };
   
 
   /* gettext library */
@@ -34,7 +41,6 @@
     "December": "D\u00e9cembre",
     "February": "F\u00e9vrier",
     "Filter": "Filtrer",
-    "Find in Table": "Chercher dans la table",
     "Hide": "Masquer",
     "January": "Janvier",
     "July": "Juillet",

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -213,6 +213,7 @@ msgstr ""
 
 #: importer/templates/simple_import_adjudicators_numbers.html:32
 #: importer/templates/simple_import_institutions_raw.html:30
+#: importer/templates/simple_import_venues_raw.html:30
 msgid "There are some problems with the data on this form:"
 msgstr "هنالك مشاكل مع البينات الموجودة على هذا النموذج:"
 
@@ -257,13 +258,25 @@ msgstr "إضافة محكمين"
 msgid "Add Venues"
 msgstr "إضافة قاعات المناظرة"
 
-#: importer/templates/simple_import_index.html:33
+#: importer/templates/simple_import_index.html:36
 msgid "Add/Edit Venue Categories"
 msgstr "إضافة/تعديل فئات القاعات"
 
-#: importer/templates/simple_import_index.html:37
+#: importer/templates/simple_import_index.html:40
 msgid "Add/Edit Venue Constraints"
 msgstr "إضافة/تعديل قيود القاعات"
+
+#: importer/templates/simple_import_index.html:47
+msgid "Add/Edit Adjudicator-Team Conflicts"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:51
+msgid "Add/Edit Adjudicator-Adjudicator Conflicts"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:55
+msgid "Add/Edit Adjudicator-Institution Conflicts"
+msgstr ""
 
 #: importer/templates/simple_import_institutions_details.html:4
 #: importer/templates/simple_import_institutions_details.html:6
@@ -278,7 +291,7 @@ msgid "Save All Institutions"
 msgstr "حفظ جميع المنتخبات"
 
 #: importer/templates/simple_import_institutions_raw.html:41
-#: importer/templates/simple_import_venues_raw.html:40
+#: importer/templates/simple_import_venues_raw.html:41
 msgid "Next Step"
 msgstr "الخطوة التالية"
 
@@ -351,7 +364,13 @@ msgstr ""
 msgid "Save All Venues"
 msgstr "حفظ جميع القاعات"
 
-#: importer/views.py:94
+#: importer/templates/simple_import_venues_raw.html:15
+msgid ""
+"Paste a list of venues with one venue per line and following the format of: "
+"<code>name,priority</code>. For example:"
+msgstr ""
+
+#: importer/views.py:102
 #, python-format
 msgid "Added %(count)d institution."
 msgid_plural "Added %(count)d institutions."
@@ -362,7 +381,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: importer/views.py:115
+#: importer/views.py:123
 #, python-format
 msgid "Added %(count)d venue."
 msgid_plural "Added %(count)d venues."
@@ -373,7 +392,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: importer/views.py:172
+#: importer/views.py:180
 #, python-format
 msgid "Added %(count)d team."
 msgid_plural "Added %(count)d teams."
@@ -384,12 +403,12 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: importer/views.py:194
+#: importer/views.py:201
 #, python-format
 msgid "Adjudicator %(number)d"
 msgstr "محكم رقم %(number)d"
 
-#: importer/views.py:199
+#: importer/views.py:206
 #, python-format
 msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."

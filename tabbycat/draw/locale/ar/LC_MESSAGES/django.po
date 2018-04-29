@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -57,7 +57,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: draw/apps.py:7 draw/views.py:279 draw/views.py:282
+#: draw/apps.py:7 draw/views.py:282 draw/views.py:285
 msgid "Draw"
 msgstr "قرعة "
 
@@ -175,13 +175,13 @@ msgid ""
 "metric to be an integer (typically points or wins)."
 msgstr ""
 
-#: draw/generator/random.py:104
+#: draw/generator/random.py:97
 #, python-format
 msgid ""
 "There were %(aff_count)d affirmative teams but %(neg_count)d negative teams."
 msgstr ""
 
-#: draw/generator/random.py:107
+#: draw/generator/random.py:100
 msgid ""
 "One or more teams had an allocated side that wasn't affirmative or negative."
 msgstr "موقف الفريق لم يحدد موالاة أو معارضة "
@@ -224,7 +224,7 @@ msgstr "مسودة"
 msgid "confirmed"
 msgstr "مؤكد"
 
-#: draw/models.py:35 draw/models.py:404
+#: draw/models.py:35 draw/models.py:409
 msgid "round"
 msgstr "جولة"
 
@@ -261,97 +261,109 @@ msgid "result status"
 msgstr "حالة النتيجة"
 
 #: draw/models.py:59
-msgid "ballot in"
-msgstr "إستمارة تصويت مسلمة"
-
-#: draw/models.py:61
 msgid "sides confirmed"
 msgstr "المواقف مؤكدة "
 
-#: draw/models.py:62
+#: draw/models.py:60
 msgid ""
 "If unchecked, the sides assigned to teams in this debate are just "
 "placeholders."
 msgstr "اذا لم يتم تحديد المواقف، تكون مواقف الفرق حسب أماكنهم "
 
-#: draw/models.py:65 draw/models.py:291
+#: draw/models.py:63 draw/models.py:296
 msgid "debate"
 msgstr "مناظرة"
 
-#: draw/models.py:66
+#: draw/models.py:64
 msgid "debates"
 msgstr "مناظرات"
 
 #. Translators: This is appended to a list of teams, e.g. "Auckland
 #. 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
 #. space.
-#: draw/models.py:85
+#: draw/models.py:83
 msgid " (sides not confirmed)"
 msgstr "(لم يتم تأكيد موقفي الفريقين)"
 
 #. Translators: This goes between teams in a debate, e.g. "Auckland 1
 #. vs Vic Wellington 1". Mind the leading and trailing spaces.
-#: draw/models.py:89
+#: draw/models.py:95
 msgid " vs "
 msgstr "ضد"
 
-#: draw/models.py:281
+#: draw/models.py:286
 msgid "affirmative"
 msgstr "موالاة"
 
-#: draw/models.py:282
+#: draw/models.py:287
 msgid "negative"
 msgstr "معارضة"
 
-#: draw/models.py:283
+#: draw/models.py:288
 msgid "opening government"
 msgstr "موالاة أولى "
 
-#: draw/models.py:284
+#: draw/models.py:289
 msgid "opening opposition"
 msgstr "معارضة أولى"
 
-#: draw/models.py:285
+#: draw/models.py:290
 msgid "closing government"
 msgstr "موالاة ثانية"
 
-#: draw/models.py:286
+#: draw/models.py:291
 msgid "closing opposition"
 msgstr "معارضة ثانية "
 
-#: draw/models.py:293 draw/models.py:406
+#: draw/models.py:298 draw/models.py:411
 msgid "team"
 msgstr "فريق"
 
-#: draw/models.py:295 draw/models.py:408
+#: draw/models.py:300 draw/models.py:413
 msgid "side"
 msgstr "موقف"
 
-#: draw/models.py:301
+#: draw/models.py:306
 msgid "debate team"
 msgstr "فريق المناظرة"
 
-#: draw/models.py:302
+#: draw/models.py:307
 msgid "debate teams"
 msgstr "فرق المناظرة"
 
-#: draw/models.py:339 draw/models.py:345
+#: draw/models.py:335
+msgid "placed 1st"
+msgstr ""
+
+#: draw/models.py:337
+msgid "placed 2nd"
+msgstr ""
+
+#: draw/models.py:339
+msgid "placed 3rd"
+msgstr ""
+
+#: draw/models.py:341
+msgid "placed 4th"
+msgstr ""
+
+#: draw/models.py:343 draw/models.py:350
 msgid "result unknown"
 msgstr "النتيجة غير معروفة "
 
-#: draw/models.py:341
-msgid "Won"
-msgstr "فاز"
+#: draw/models.py:346
+msgid "won"
+msgstr ""
 
-#: draw/models.py:343
-msgid "Lost"
-msgstr "خسر"
+#: draw/models.py:348
+msgid "lost"
+msgstr ""
 
-#: draw/models.py:412
+#: draw/models.py:417
 msgid "team side allocation"
 msgstr "تخصيص مواقف الفرق "
 
-#: draw/models.py:413
+#: draw/models.py:418
 msgid "team side allocations"
 msgstr "تخصيصات مواقف الفرق "
 
@@ -363,29 +375,29 @@ msgstr "تخصيصات مواقف الفرق "
 msgid "%(side_name)s: %(metric_name)s"
 msgstr "%(side_name)s:%(metric_name)s"
 
-#: draw/tables.py:71
+#: draw/tables.py:75
 #, python-format
 msgid "Team %(num)d"
 msgstr "الفريق%(num)d"
 
-#: draw/tables.py:83
+#: draw/tables.py:87
 msgid "Room rank of this debate"
 msgstr "مستوى المناظرة في هذه القاعة "
 
-#: draw/tables.py:91
+#: draw/tables.py:95
 msgid "Bracket of this debate"
 msgstr "جدول هذه المناظرة "
 
-#: draw/tables.py:160
+#: draw/tables.py:164
 msgid "number of pullups before this round"
 msgstr "عدد السحوبات قبل هذه الجولة "
 
 #. Translators: Abbreviation for "side history"
-#: draw/tables.py:162
+#: draw/tables.py:166
 msgid "PU"
 msgstr "PU"
 
-#: draw/tables.py:177
+#: draw/tables.py:181
 msgid ""
 "side history<br>\n"
 "(number of times the team has been on each side before this round)"
@@ -394,85 +406,85 @@ msgstr ""
 "( عدد المرات التي كان الفريق في هذا الموقف قبل هذه الجولة )"
 
 #. Translators: Abbreviation for "side history"
-#: draw/tables.py:179
+#: draw/tables.py:183
 msgid "SH"
 msgstr "SH"
 
-#: draw/tables.py:244
+#: draw/tables.py:248
 msgid "Went from balanced to imbalanced"
 msgstr "ترتيب من متوازن إلى غير متوازن"
 
-#: draw/tables.py:245
+#: draw/tables.py:249
 msgid "Went from imbalanced to balanced"
 msgstr "ترتيب من غير متوازن إلى متوازن"
 
-#: draw/tables.py:246
+#: draw/tables.py:250
 msgid "Best improvement possible, still imbalanced"
 msgstr "أفضل تحسن ممكن ، غير مستقر "
 
-#: draw/tables.py:247
+#: draw/tables.py:251
 msgid "Was imbalanced and still imbalanced"
 msgstr "كان غير مستقر و مازال غير مستقر "
 
-#: draw/tables.py:265
+#: draw/tables.py:269
 msgid "Pts"
 msgstr "PTS"
 
-#: draw/tables.py:265 draw/tables.py:363
+#: draw/tables.py:269 draw/tables.py:367
 msgid "Points"
 msgstr "نقاط"
 
-#: draw/tables.py:274
+#: draw/tables.py:278
 msgid "Side"
 msgstr "الموقف"
 
-#: draw/tables.py:275
+#: draw/tables.py:279
 msgid "Position this round"
 msgstr "موقف هذه الجولة "
 
-#: draw/tables.py:279
+#: draw/tables.py:283
 msgid "Before"
 msgstr "قبل"
 
-#: draw/tables.py:280
+#: draw/tables.py:284
 msgid "Side history before this round"
 msgstr "تاريخ المواقف قبل هذه الجولة "
 
-#: draw/tables.py:284
+#: draw/tables.py:288
 msgid "After"
 msgstr "بعد "
 
-#: draw/tables.py:285
+#: draw/tables.py:289
 msgid "Side history after this round"
 msgstr "تاريخ المواقف بعد هذه الجولة "
 
-#: draw/tables.py:295 draw/tables.py:372
+#: draw/tables.py:299 draw/tables.py:376
 msgid "Cost"
 msgstr "التكلفة "
 
-#: draw/tables.py:295
+#: draw/tables.py:299
 msgid "Position cost"
 msgstr "تكلفة الموقف "
 
-#: draw/tables.py:308
+#: draw/tables.py:312
 msgid "Status"
 msgstr "الحالة"
 
-#: draw/tables.py:347
+#: draw/tables.py:351
 msgid ""
 "Teams with this many points are permitted in this debate<br>\n"
 "(bracket in bold)"
 msgstr "الفرق المسموح لها دخول هذه المناظرة لها هذا العدد من الدرجات <br>"
 
-#: draw/tables.py:367
+#: draw/tables.py:371
 msgid "side history before this round"
 msgstr "تاريخ الموقف قبل هذه الجولة"
 
-#: draw/tables.py:367
+#: draw/tables.py:371
 msgid "Sides"
 msgstr "المواقف"
 
-#: draw/tables.py:372
+#: draw/tables.py:376
 msgid "position cost"
 msgstr "تكلفة الموقف "
 
@@ -992,7 +1004,8 @@ msgstr ""
 #, python-format
 msgid ""
 "A draw for %(round_name)s hasn't yet been generated. To generate one, go to "
-"the <a href=\"%(checkins_url)s\" class=\"alert-link\">Check-Ins section</a>."
+"the <a href=\"%(availability_url)s\" class=\"alert-link\">Availability "
+"section</a>."
 msgstr ""
 
 #: draw/templates/position_balance.html:6
@@ -1039,20 +1052,20 @@ msgstr "قرعة ل%(round)s"
 msgid "debates start at %(time)s"
 msgstr "المناظرة تبدأ %(time)s"
 
-#: draw/views.py:150
+#: draw/views.py:147
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
 msgstr "جميع المناظرات لجميع جولات بطولة %(tournament)s"
 
-#: draw/views.py:274
+#: draw/views.py:277
 msgid "No Draw"
 msgstr "لا قرعة "
 
-#: draw/views.py:276
+#: draw/views.py:279
 msgid "Draft Draw"
 msgstr "مسودة قرعة"
 
-#: draw/views.py:311
+#: draw/views.py:312
 msgid "No Debates for this Round"
 msgstr "لا توجد مناظرات لهذه الجولة "
 
@@ -1067,42 +1080,42 @@ msgstr "%(side_name)s مستوى التأهل "
 msgid "BR"
 msgstr "م.ت"
 
-#: draw/views.py:394
+#: draw/views.py:393
 msgid "Draw with Details"
 msgstr "قرعة مع التفاصيل"
 
-#: draw/views.py:402
+#: draw/views.py:401
 msgid "Position Balance Report"
 msgstr "تقرير موازنة الموقف "
 
-#: draw/views.py:414
+#: draw/views.py:412
 #, python-format
 msgid "Rényi entropy of order %(order)s"
 msgstr ""
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
-#: draw/views.py:417
+#: draw/views.py:415
 msgid " (<i>i.e.</i>, Shannon entropy)"
 msgstr ""
 
-#: draw/views.py:448
+#: draw/views.py:444
 msgid "Teams with position imbalances"
 msgstr "الفرق غير متوازنة المواقف"
 
-#: draw/views.py:449
+#: draw/views.py:445
 msgid "No teams with position imbalances! Hooray!"
 msgstr "لا يوجد فرق غير متوازنة المواقف"
 
-#: draw/views.py:452
+#: draw/views.py:448
 msgid "Annotated draw"
 msgstr "قرعة موضحة"
 
-#: draw/views.py:485
+#: draw/views.py:479
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr "لا يمكنك انشاء قرعة لـ%(round)s، هناك قرعة سابقة"
 
-#: draw/views.py:493
+#: draw/views.py:487
 #, python-format
 msgid ""
 "<p>The draw could not be created, for the following reason: <em>%(message)s</em></p>\n"
@@ -1111,7 +1124,7 @@ msgstr ""
 "<p>لا يمكن أنشاء قرعة للاسباب التالية : <em>%(message)s</em></p>\n"
 "<p>الرجاء قم بحل المشكلة لأنشاء القرعة </p>"
 
-#: draw/views.py:501
+#: draw/views.py:495
 #, python-format
 msgid ""
 "The draw could not be created, because the following error occurred: <em>%(message)s</em></p>\n"
@@ -1120,7 +1133,7 @@ msgstr ""
 "لا يمكن انشاء قرعة بسبب خلل <em>%(message)s</em></p>\n"
 "<p>اذا كان لم تستطيع حل المشكلة ، الرجاء التواصل مع فرق الدعم الفني </p>"
 
-#: draw/views.py:510
+#: draw/views.py:504
 #, python-format
 msgid ""
 "<p>The team standings could not be generated, because the following error occurred: <em>%(message)s</em></p>\n"
@@ -1129,7 +1142,7 @@ msgstr ""
 "<p>لم يتم ترتيب الفرق بسبب الخلل التالي : <em>%(message)s</em></p>\n"
 "<p> هناك مستخدم يقوم بترتيب الفرق في الوقت الحالي ، و هذا يمنع الحصول على القرعة </p>"
 
-#: draw/views.py:526
+#: draw/views.py:520
 msgid ""
 "Venues were not auto-allocated because there are one or more adjudicator "
 "venue constraints. You should run venue allocations after allocating "
@@ -1138,39 +1151,39 @@ msgstr ""
 "لم يتم تخصيص الأماكن بشكل تلقائي نظرا لوجود قيود على مكان واحد أو أكثر. يجب "
 "تشغيل تخصيصات المكان بعد تخصيص المحكمين."
 
-#: draw/views.py:555
+#: draw/views.py:547
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr "مسح القرعة ، يمكنك الان اعادة انشاء أخرى "
 
-#: draw/views.py:575
+#: draw/views.py:566
 msgid "Released the draw."
 msgstr "اعلنت القرعة"
 
-#: draw/views.py:591
+#: draw/views.py:581
 msgid "Unreleased the draw."
 msgstr "القرعة لم تعلن."
 
-#: draw/views.py:604
+#: draw/views.py:594
 #, python-format
 msgid ""
 "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
 "a colon, for example: \"13:57\"."
 msgstr ""
 
-#: draw/views.py:699
+#: draw/views.py:685
 msgid "Side Pre-Allocations"
 msgstr "تعيين الموقف الأولي"
 
-#: draw/views.py:837
+#: draw/views.py:821
 msgid "All Draws for All Teams"
 msgstr "قرعة جميع الفرق"
 
-#: draw/views.py:852
+#: draw/views.py:836
 #, python-format
 msgid "All Debates for Teams from %(institution)s"
 msgstr "جميع المناظرات للفرق من %(institution)s"
 
-#: draw/views.py:871
+#: draw/views.py:855
 msgid ""
 "This venue category does not exist or the URL for it might have changed. Try"
 " finding it again from the homepage."
@@ -1178,11 +1191,11 @@ msgstr ""
 "فئة القاعة هذه غير موجودة أو ربما تغير الرابط الخاص بها . حاول العثور عليه "
 "مرة أخرى من الصفحة الرئيسية."
 
-#: draw/views.py:878
+#: draw/views.py:862
 #, python-format
 msgid "All Debates at %(venue_category)s"
 msgstr "جميع المناظرات في %(venue_category)s"
 
-#: draw/views.py:880
+#: draw/views.py:864
 msgid "Unknown Venue Category"
 msgstr "فئة قاعات غير معروفة "
