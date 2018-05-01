@@ -141,7 +141,7 @@ def readable_ballotsub_result(ballotsub):
             }
 
     except (IndexError, AttributeError):
-        logger.exception("Error constructing latest result string")
+        logger.warning("Error constructing latest result string", exc_info=True)
         result_winner = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
         result = ""
 
