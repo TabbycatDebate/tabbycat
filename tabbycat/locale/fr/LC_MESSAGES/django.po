@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-29 10:27-0700\n"
-"PO-Revision-Date: 2018-02-07 23:23-0800\n"
+"PO-Revision-Date: 2018-05-05 01:34-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.7\n"
 
 #: checkins/apps.py:7 templates/nav/admin_nav.html:113
 #: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:93
@@ -29,61 +29,59 @@ msgstr ""
 
 #: checkins/models.py:31
 msgid "barcode"
-msgstr ""
+msgstr "code-barres"
 
 #: checkins/models.py:45
 msgid "person"
-msgstr ""
+msgstr "personne"
 
 #: checkins/models.py:48
 msgid "person identifier"
-msgstr ""
+msgstr "identifiant de personne"
 
 #: checkins/models.py:49
 msgid "person identifiers"
-msgstr ""
+msgstr "identifiants de personnes"
 
 #: checkins/models.py:57
 msgid "debate"
-msgstr ""
+msgstr "débat"
 
 #: checkins/models.py:60
 msgid "debate identifier"
-msgstr ""
+msgstr "identifiant de débat"
 
 #: checkins/models.py:61
 msgid "debate identifiers"
-msgstr ""
+msgstr "identifiants de débats"
 
 #: checkins/models.py:72
 msgid "venue identifier"
-msgstr ""
+msgstr "identifiant de salle"
 
 #: checkins/models.py:73
 msgid "venue identifiers"
-msgstr ""
+msgstr "identifiants de salles"
 
 #: checkins/models.py:80
 msgid "identifier"
-msgstr ""
+msgstr "identifiant"
 
 #: checkins/models.py:83
 msgid "check-in time"
-msgstr ""
+msgstr "heure d’arrivée"
 
 #: checkins/models.py:85
-#, fuzzy
-#| msgid "%(tournament)s runs on"
 msgid "tournament"
-msgstr "%(tournament)s fonctionne sur"
+msgstr "tournoi"
 
 #: checkins/models.py:88
 msgid "check-in event"
-msgstr ""
+msgstr "événement d'arrivée"
 
 #: checkins/models.py:89
 msgid "check-in events"
-msgstr ""
+msgstr "événements d'arrivée"
 
 #: checkins/templates/checkin_ids.html:6
 msgid ""
@@ -91,6 +89,9 @@ msgid ""
 "\"http://tabbycat.readthedocs.io/en/latest/features/check-ins.html\" target="
 "\"_blank\">documentation</a>."
 msgstr ""
+"Vous pouvez lire davantage des enregistrements et leur fonctionnement dans "
+"notre <a href=\"http://tabbycat.readthedocs.io/en/latest/features/check-ins."
+"html\" target=\"_blank\">documentation</a>."
 
 #: checkins/templates/checkin_ids.html:23
 msgid "With identifiers"
@@ -192,7 +193,7 @@ msgstr "Juges"
 
 #: checkins/views.py:226
 msgid "Venues"
-msgstr ""
+msgstr "Salles"
 
 #: checkins/views.py:267
 #, python-format
@@ -201,7 +202,7 @@ msgstr ""
 
 #: checkins/views.py:274
 msgid "Identifiers"
-msgstr ""
+msgstr "Identifiants"
 
 #: settings.py:43
 msgid "Arabic"
@@ -413,15 +414,15 @@ msgstr "Utiliser cette langue"
 
 #: templates/nav/admin_nav.html:33
 msgid "Admin Area"
-msgstr ""
+msgstr "Zone administrative"
 
 #: templates/nav/admin_nav.html:37
 msgid "Assistant Area"
-msgstr ""
+msgstr "Zone d'assistants"
 
 #: templates/nav/admin_nav.html:41
 msgid "Public Area"
-msgstr ""
+msgstr "Zone publique"
 
 #: templates/nav/admin_nav.html:51 templates/nav/admin_nav.html:146
 #: templates/nav/admin_nav.html:183 templates/nav/admin_nav.html:240
@@ -434,7 +435,7 @@ msgstr "Configuration"
 
 #: templates/nav/admin_nav.html:65
 msgid "Configuration"
-msgstr "Configuration"
+msgstr "Paramétrage"
 
 #: templates/nav/admin_nav.html:68
 msgid "Import Data"
@@ -476,25 +477,23 @@ msgstr "Commentaires"
 
 #: templates/nav/admin_nav.html:149
 msgid "Latest"
-msgstr ""
+msgstr "Récents"
 
 #: templates/nav/admin_nav.html:155
 msgid "Find by Source"
-msgstr ""
+msgstr "Trouver par source"
 
 #: templates/nav/admin_nav.html:158
 msgid "Find by Target"
-msgstr ""
+msgstr "Trouver par cible"
 
 #: templates/nav/admin_nav.html:161
 msgid "Unsubmitted"
-msgstr ""
+msgstr "Non soumis"
 
 #: templates/nav/admin_nav.html:164
-#, fuzzy
-#| msgid "Feedback"
 msgid "Add Feedback"
-msgstr "Commentaires"
+msgstr "Saisir commentaires"
 
 #: templates/nav/admin_nav.html:167
 msgid "Bulk Update"
@@ -509,10 +508,9 @@ msgid "Teams"
 msgstr "Équipes"
 
 #: templates/nav/admin_nav.html:190 templates/nav/public_nav.html:13
-#, fuzzy, python-format
-#| msgid "%(category_name)s Tab"
+#, python-format
 msgid "%(category_name)s Teams"
-msgstr "Tab des orateurs %(category_name)s"
+msgstr "Équipes %(category_name)s"
 
 #: templates/nav/admin_nav.html:205 templates/nav/public_nav.html:30
 #, python-format
@@ -553,22 +551,20 @@ msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
 #: templates/nav/assistant_nav.html:22
-#, fuzzy
-#| msgid "Participants"
 msgid "Participants List"
-msgstr "Participants"
+msgstr "Liste de participants"
 
 #: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:177
 msgid "Institutions"
-msgstr ""
+msgstr "Institutions"
 
 #: templates/nav/assistant_nav.html:29
 msgid "Code Names"
-msgstr ""
+msgstr "Noms de code"
 
 #: templates/nav/assistant_nav.html:45
 msgid "View Identifiers"
-msgstr ""
+msgstr "Voir les identifiants"
 
 #: templates/nav/assistant_nav.html:51
 msgid "Venue's Status"
@@ -629,7 +625,7 @@ msgstr "Saisie d'un bulletin"
 
 #: templates/nav/round_panel.html:27
 msgid "Availability"
-msgstr ""
+msgstr "Disponibilité"
 
 #: templates/nav/round_panel.html:37
 msgid "Draw"
@@ -861,28 +857,15 @@ msgid "Welcome! You just logged in!"
 msgstr "Bienvenue ! Vous venez de vous connecter !"
 
 #: users/admin.py:19
-#, fuzzy
-#| msgid ""
-#| "Users with Staff status can view and edit the Edit Database area. This is "
-#| "potentially dangerous and should be reserved for the actual Tab "
-#| "Director(s)."
 msgid ""
 "Users with staff status can view and edit the Edit Database area. This is "
 "potentially dangerous and should be reserved for the actual tab director(s)."
 msgstr ""
 "Les utilisateurs ayant le status équipe peuvent voir et modifier la zone "
 "pour modifier la base de données. Ces droits sont potentiellement dangereux "
-"et devront être réservés aux directeurs de la tabulation."
+"et devront être réservés aux directeurs de tabulation."
 
 #: users/admin.py:22
-#, fuzzy
-#| msgid ""
-#| "Superusers have full access all areas of Tabbycat necessary to run a "
-#| "tournament. Users who are not Superusers are still able to perform data-"
-#| "entry tasks such as adding results and feedback but can't access "
-#| "confidential areas such as the Breaks and Feedback sections. Members of "
-#| "the adjudication core are generally given Superuser status if they know "
-#| "what they are doing."
 msgid ""
 "Superusers have full access all areas of Tabbycat necessary to run a "
 "tournament. Users who are not superusers are still able to perform data "
