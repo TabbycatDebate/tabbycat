@@ -77,13 +77,10 @@ def readable_ballotsub_result(ballotsub):
 
     def format_dt(dt, t):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-        if dt is None:
-            return _("Unknown Team and Side")
-        else:
-            return _("%(team_name)s as %(side_abbr)s") % {
-                'team_name': dt.team.short_name,
-                'side_abbr': dt.get_side_name(t, 'abbr')
-            }
+        return _("%(team_name)s as %(side_abbr)s") % {
+            'team_name': dt.team.short_name,
+            'side_abbr': dt.get_side_name(t, 'abbr')
+        }
 
     t = ballotsub.debate.round.tournament
     team_scores = ballotsub.teamscore_set.all()
