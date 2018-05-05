@@ -8,7 +8,7 @@
 # Can run management commands with
 # $ docker-compose run web /code/manage.py whatever
 
-version: '2.1'
+version: '3'
 
 services:
   db:

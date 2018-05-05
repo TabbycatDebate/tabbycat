@@ -1,0 +1,1 @@
+These files are blank placeholders so collectstatic works; delete/replace if summernote is removed or updates it CSS paths to work.
