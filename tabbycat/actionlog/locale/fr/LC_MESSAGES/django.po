@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"PO-Revision-Date: 2018-04-29 10:28-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,260 +16,291 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.7\n"
 
 #: actionlog/apps.py:7
 msgid "Action Log"
 msgstr "Journal des actions"
 
-#: actionlog/models.py:72
+#: actionlog/models.py:78
 msgid "Discarded ballot set"
 msgstr "Rejet d'un ensemble de bulletins de vote"
 
-#: actionlog/models.py:73
+#: actionlog/models.py:79
 msgid "Checked in ballot set"
 msgstr "Enregistrement de la présence d'un ensemble de bulletins de vote"
 
-#: actionlog/models.py:74
+#: actionlog/models.py:80
 msgid "Created ballot set"
 msgstr "Création d'un ensemble de bulletins de vote"
 
-#: actionlog/models.py:75
+#: actionlog/models.py:81
 msgid "Edited ballot set"
 msgstr "Modification d'un ensemble de bulletins de vote"
 
-#: actionlog/models.py:76
+#: actionlog/models.py:82
 msgid "Confirmed ballot set"
 msgstr "Confirmation d'un ensemble de bulletins de vote"
 
-#: actionlog/models.py:77
+#: actionlog/models.py:83
 msgid "Submitted ballot set from the public form"
 msgstr ""
 "Soumission d'un ensemble de bulletins de vote de la formulaire publique"
 
-#: actionlog/models.py:78
+#: actionlog/models.py:84
 msgid "Submitted feedback from the public form"
 msgstr "Soumission d'un commentaire de la formulaire publique"
 
-#: actionlog/models.py:79
+#: actionlog/models.py:85
 msgid "Saved feedback"
 msgstr "Enregistrement d'un commentaire"
 
-#: actionlog/models.py:80
+#: actionlog/models.py:86
 msgid "Edited adjudicator test score"
 msgstr "Modification note d'examen de juge"
 
-#: actionlog/models.py:81
+#: actionlog/models.py:87
 msgid "Set adjudicator note"
 msgstr "Définition d'une note pour un juge"
 
-#: actionlog/models.py:82
+#: actionlog/models.py:88
 msgid "Saved adjudicator allocation"
 msgstr "Enregistrement de l'attribution des juges"
 
-#: actionlog/models.py:83
+#: actionlog/models.py:89
 msgid "Auto-allocated adjudicators"
 msgstr "Attribution automatique des juges"
 
-#: actionlog/models.py:84
+#: actionlog/models.py:90
 msgid "Saved a venue manual edit"
-msgstr "Enregistrement d'une modification d'un lieu"
+msgstr "Enregistrement d'une modification d'une salle"
 
-#: actionlog/models.py:85
+#: actionlog/models.py:91
 msgid "Auto-allocated venues"
-msgstr "Attribution automatique des lieux"
+msgstr "Attribution automatique des salles"
 
-#: actionlog/models.py:86
+#: actionlog/models.py:92
 msgid "Edited venue categories"
-msgstr "Modification des catégories de lieux"
+msgstr "Modification des catégories de salles"
 
-#: actionlog/models.py:87
-#, fuzzy
-#| msgid "Edited venue categories"
+#: actionlog/models.py:93
 msgid "Edited venue constraints"
-msgstr "Modification des catégories de lieux"
+msgstr "Modification des contraintes de salle"
 
-#: actionlog/models.py:88
+#: actionlog/models.py:94
 msgid "Created draw"
 msgstr "Création d'un tirage"
 
-#: actionlog/models.py:89
+#: actionlog/models.py:95
 msgid "Confirmed draw"
 msgstr "Confirmation d'un tirage"
 
-#: actionlog/models.py:90
+#: actionlog/models.py:96
 msgid "Regenerated draw"
 msgstr "Régénération d'un tirage"
 
-#: actionlog/models.py:91
+#: actionlog/models.py:97
 msgid "Released draw"
 msgstr "Publication d'un tirage"
 
-#: actionlog/models.py:92
+#: actionlog/models.py:98
 msgid "Unreleased draw"
 msgstr "Dépublication d'un tirage"
 
-#: actionlog/models.py:93
+#: actionlog/models.py:99
 msgid "Saved a matchup manual edit"
 msgstr "Enregistrement d'une modification manuelle d'un appariement"
 
-#: actionlog/models.py:94
+#: actionlog/models.py:100
 msgid "Saved the sides status of a matchup"
 msgstr "Enregistrement du statut des côtés d'un appariement"
 
-#: actionlog/models.py:95
+#: actionlog/models.py:101
 msgid "Saved divisions"
 msgstr "Enregistrement des divisions"
 
-#: actionlog/models.py:96
+#: actionlog/models.py:102
 msgid "Added/edited motion"
 msgstr "Ajout/Modification d'une motion"
 
-#: actionlog/models.py:97
+#: actionlog/models.py:103
 msgid "Released motions"
 msgstr "Publication des motions"
 
-#: actionlog/models.py:98
+#: actionlog/models.py:104
 msgid "Unreleased motions"
 msgstr "Dépublication des motions"
 
-#: actionlog/models.py:99
+#: actionlog/models.py:105
 msgid "Edited debate importance"
 msgstr "Modification de l'importance d'un débat"
 
-#: actionlog/models.py:100
+#: actionlog/models.py:106
 msgid "Changed adjudicator breaking status"
 msgstr "Changement du statut de qualification d'un(e) juge"
 
-#: actionlog/models.py:101
+#: actionlog/models.py:107
 msgid "Edited break eligibility"
 msgstr "Modification d'admissibilité pour la qualification"
 
-#: actionlog/models.py:102
+#: actionlog/models.py:108
 msgid "Edited break categories"
 msgstr "Modification des catégories de qualification"
 
-#: actionlog/models.py:103
+#: actionlog/models.py:109
 msgid "Generated the team break for all categories"
 msgstr "Génération de la qualification des équipes pour toutes les catégories"
 
-#: actionlog/models.py:104
+#: actionlog/models.py:110
 msgid "Edited breaking team remarks and updated all team breaks"
 msgstr ""
 "Modification des remarques d'une équipe qualifiant et mise à jour de toutes "
 "les qualifications des équipes"
 
-#: actionlog/models.py:105
+#: actionlog/models.py:111
 msgid "Edited breaking team remarks and updated this team break"
 msgstr ""
 "Modification des remarques d'une équipe qualifiant et mise à jour de cette "
 "qualification des équipes"
 
-#: actionlog/models.py:106
+#: actionlog/models.py:112
 msgid "Edited breaking team remarks"
 msgstr "Modification des remarques d'une équipe qualifiant"
 
-#: actionlog/models.py:107
+#: actionlog/models.py:113
 msgid "Set start time"
 msgstr "Définition de l'heure de début"
 
-#: actionlog/models.py:108
+#: actionlog/models.py:114
 msgid "Advanced the current round to"
 msgstr "Avancement du tour actuel à"
 
-#: actionlog/models.py:109
+#: actionlog/models.py:115
 msgid "Edited teams availability"
 msgstr "Modification de la disponibilité des équipes"
 
-#: actionlog/models.py:110
+#: actionlog/models.py:116
 msgid "Edited adjudicators availability"
 msgstr "Modification de la disponibilité des juges"
 
-#: actionlog/models.py:111
+#: actionlog/models.py:117
 msgid "Edited venue availability"
-msgstr "Modification de la disponibilité des lieux"
+msgstr "Modification de la disponibilité des salles"
 
-#: actionlog/models.py:112
+#: actionlog/models.py:118
 msgid "Edited tournament options"
 msgstr "Modification des options du tournoi"
 
-#: actionlog/models.py:113
+#: actionlog/models.py:119
 msgid "Edited speaker category eligibility"
 msgstr "Modification d'admissibilité pour les catégories d'orateur"
 
-#: actionlog/models.py:114
+#: actionlog/models.py:120
 msgid "Edited speaker categories"
 msgstr "Modification des catégories d'orateur"
 
-#: actionlog/models.py:115
+#: actionlog/models.py:121
 msgid "Imported institutions using the simple importer"
 msgstr ""
 
-#: actionlog/models.py:116
+#: actionlog/models.py:122
 msgid "Imported venues using the simple importer"
 msgstr ""
 
-#: actionlog/models.py:117
+#: actionlog/models.py:123
 msgid "Imported teams using the simple importer"
 msgstr ""
 
-#: actionlog/models.py:118
+#: actionlog/models.py:124
 #, fuzzy
 #| msgid "Edited adjudicator test score"
 msgid "Imported adjudicators using the simple importer"
 msgstr "Modification note d'examen de juge"
 
-#: actionlog/models.py:119
+#: actionlog/models.py:125
+#, fuzzy
+#| msgid "Edited adjudicator test score"
+msgid "Updated adjudicator scores in bulk"
+msgstr "Modification note d'examen de juge"
+
+#: actionlog/models.py:126
 #, fuzzy
 #| msgid "Edited adjudicator test score"
 msgid "Edited adjudicator-team conflicts"
 msgstr "Modification note d'examen de juge"
 
-#: actionlog/models.py:123
+#: actionlog/models.py:127
+#, fuzzy
+#| msgid "Edited adjudicator test score"
+msgid "Edited adjudicator-adjudicator conflicts"
+msgstr "Modification note d'examen de juge"
+
+#: actionlog/models.py:128
+#, fuzzy
+#| msgid "Edited adjudicator test score"
+msgid "Edited adjudicator-institution conflicts"
+msgstr "Modification note d'examen de juge"
+
+#: actionlog/models.py:129
+msgid "Generated check in identifiers for speakers"
+msgstr ""
+
+#: actionlog/models.py:130
+#, fuzzy
+#| msgid "Generated the team break for all categories"
+msgid "Generated check in identifiers for adjudicators"
+msgstr "Génération de la qualification des équipes pour toutes les catégories"
+
+#: actionlog/models.py:131
+msgid "Generated check in identifiers for venues"
+msgstr ""
+
+#: actionlog/models.py:135
 msgid "type"
 msgstr "type"
 
-#: actionlog/models.py:125
+#: actionlog/models.py:137
 msgid "timestamp"
 msgstr "horodatage"
 
-#: actionlog/models.py:128
+#: actionlog/models.py:140
 msgid "user"
 msgstr "utilisateur"
 
-#: actionlog/models.py:130
+#: actionlog/models.py:142
 msgid "IP address"
 msgstr "adresse IP"
 
-#: actionlog/models.py:134
+#: actionlog/models.py:146
 msgid "tournament"
 msgstr "tournoi"
 
-#: actionlog/models.py:136
+#: actionlog/models.py:148
 msgid "round"
 msgstr "tour"
 
-#: actionlog/models.py:140
+#: actionlog/models.py:152
 msgid "content type"
 msgstr "type de contenu"
 
-#: actionlog/models.py:142
+#: actionlog/models.py:154
 msgid "object ID"
 msgstr "identifiant d'objet"
 
-#: actionlog/models.py:148
+#: actionlog/models.py:160
 msgid "action log"
 msgstr "journal des actions"
 
-#: actionlog/models.py:149
+#: actionlog/models.py:161
 msgid "action log entries"
 msgstr "entrées du journal des actions"
 
-#: actionlog/models.py:157
+#: actionlog/models.py:169
 msgid "All log entries require at least one of a user and an IP address."
 msgstr ""
 "Toutes les entrées de journal nécessitent au moins un utilisateur ou une "
 "adresse IP."
 
-#: actionlog/models.py:190
+#: actionlog/models.py:202
 msgid "anonymous"
 msgstr "anonyme"

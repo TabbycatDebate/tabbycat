@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -167,7 +167,7 @@ msgid "Save Motion Assignments"
 msgstr "حفظ القضايا المقترحة "
 
 #: motions/templates/motion_statistics.html:30
-#: motions/templates/public_motions.html:23
+#: motions/templates/public_motions.html:24
 msgid "View Info Slide"
 msgstr "عرض المولاة و المعارضة "
 
@@ -299,8 +299,8 @@ msgctxt "used when there isn't enough space to display '4th'"
 msgid "4"
 msgstr "4"
 
-#: motions/templates/motion_statistics_twoteam.html:12
-#: motions/templates/motion_statistics_twoteam.html:19
+#: motions/templates/motion_statistics_twoteam.html:31
+#: motions/templates/motion_statistics_twoteam.html:38
 #, python-format
 msgid "%(count)s %(side)s win"
 msgid_plural "%(count)s %(side)s wins"
@@ -311,12 +311,12 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/templates/motion_statistics_twoteam.html:34
+#: motions/templates/motion_statistics_twoteam.html:53
 msgid "No teams debated this motion"
 msgstr "لا يوجد فرق تناظر في هذه القضية "
 
-#: motions/templates/motion_statistics_twoteam.html:69
-#: motions/templates/motion_statistics_twoteam.html:76
+#: motions/templates/motion_statistics_twoteam.html:91
+#: motions/templates/motion_statistics_twoteam.html:98
 #, python-format
 msgid "%(count)s %(side)s veto"
 msgid_plural "%(count)s %(side)s vetoes"
@@ -327,7 +327,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/templates/motion_statistics_twoteam.html:91
+#: motions/templates/motion_statistics_twoteam.html:113
 msgid "No teams vetoed this motion"
 msgstr "لا يوجد فرق قامت بالتصويت لهذه القضية "
 
@@ -360,19 +360,19 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/templates/public_motions.html:29
+#: motions/templates/public_motions.html:31
 msgid "There are no motions available for this round."
 msgstr "لا يوجد قضايا في هذه الجولة "
 
 #. Translators: Used when there are expected to be several motions per round
 #. (e.g. Australs)
-#: motions/templates/public_motions.html:33
+#: motions/templates/public_motions.html:35
 msgid "The motions for this round have not been released."
 msgstr "القضايا التي تم رفضها في هذه الجولة "
 
 #. Translators: Used when there is expected to be one motion per round (e.g.
 #. WUDC)
-#: motions/templates/public_motions.html:36
+#: motions/templates/public_motions.html:38
 msgid "The motion for this round has not been released."
 msgstr "القضايا التي تم رفضها في هذه الجولة "
 
@@ -402,11 +402,11 @@ msgstr[5] ""
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "لا يوجد قضايا في هذه الجولة "
 
-#: motions/views.py:97
+#: motions/views.py:95
 msgid "The motion has been saved."
 msgstr "القضايا التي لم يتم حفظها "
 
-#: motions/views.py:99
+#: motions/views.py:97
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
@@ -417,7 +417,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/views.py:104
+#: motions/views.py:102
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
@@ -428,14 +428,14 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/views.py:145
+#: motions/views.py:143
 msgid "Released the motion(s)."
 msgstr "قضايا تم رفضها "
 
-#: motions/views.py:152
+#: motions/views.py:150
 msgid "Unreleased the motion(s)."
 msgstr "قضايا لم ترفض"
 
-#: motions/views.py:176
+#: motions/views.py:174
 msgid "Motion Statistics"
 msgstr "إحصائيات القضية"

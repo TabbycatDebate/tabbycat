@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -18,20 +18,21 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: standings/base.py:279
+#: standings/base.py:295
 msgid "The same metric would be added twice:"
 msgstr ""
 
-#: standings/base.py:280
+#: standings/base.py:296
 msgid "The same ranking would be added twice:"
 msgstr ""
 
-#: standings/base.py:348
+#: standings/base.py:370
 #, python-format
 msgid "Unrecognized metric code: \"%(code)s\""
 msgstr ""
 
-#: standings/diversity.py:136 standings/diversity.py:187
+#: standings/diversity.py:136 standings/diversity.py:166
+#: standings/diversity.py:187
 msgid "All"
 msgstr "الكل"
 
@@ -48,10 +49,6 @@ msgstr "ليس من %(category)s"
 #: standings/diversity.py:151
 msgid "All Speakers"
 msgstr "جميع المتحدثين"
-
-#: standings/diversity.py:166
-msgid "All Adjudicators"
-msgstr "جميع المحكمين"
 
 #: standings/diversity.py:169
 msgid "Indies"
@@ -130,151 +127,167 @@ msgstr "%(num)d متوسط المتناظر "
 msgid "Average Finals Score"
 msgstr "متوسط درجات النهائي "
 
-#: standings/speakers.py:68 standings/speakers.py:100
+#: standings/speakers.py:50 standings/speakers.py:116
 msgid "total"
 msgstr "المجموع"
 
-#: standings/speakers.py:69 standings/speakers.py:101
+#: standings/speakers.py:51 standings/speakers.py:117
 msgid "Total"
 msgstr "المجموع"
 
-#: standings/speakers.py:76 standings/speakers.py:109
+#: standings/speakers.py:58 standings/speakers.py:126
 msgid "average"
 msgstr "متوسط"
 
-#: standings/speakers.py:77 standings/speakers.py:110
+#: standings/speakers.py:59 standings/speakers.py:127
 msgid "Avg"
 msgstr "المتوسط"
 
-#: standings/speakers.py:84 standings/speakers.py:118
+#: standings/speakers.py:66
+msgid "trimmed mean (high-low drop)"
+msgstr ""
+
+#: standings/speakers.py:67
+msgid "Trim"
+msgstr ""
+
+#: standings/speakers.py:99 standings/speakers.py:136
 msgid "standard deviation"
 msgstr "الانحراف المعياري"
 
-#: standings/speakers.py:85 standings/speakers.py:119
+#: standings/speakers.py:100 standings/speakers.py:137
 msgid "Stdev"
 msgstr "Stdev"
 
-#: standings/speakers.py:92
-msgid "speeches given"
-msgstr "خطاب الدخول "
+#: standings/speakers.py:108
+msgid "number of speeches given"
+msgstr ""
 
-#: standings/speakers.py:93 standings/speakers.py:128
+#: standings/speakers.py:109 standings/speakers.py:148
 msgid "Num"
 msgstr "رقم"
 
-#: standings/speakers.py:127
+#: standings/speakers.py:147
 msgid "replies given"
 msgstr "خطاب الرد "
 
-#: standings/teams.py:82 standings/teams.py:113
+#: standings/teams.py:64 standings/teams.py:96
 msgid "points"
 msgstr "نقاط"
 
-#: standings/teams.py:83 standings/teams.py:114
+#: standings/teams.py:65 standings/teams.py:97
 msgid "Pts"
 msgstr "Pts"
 
-#: standings/teams.py:85
+#: standings/teams.py:67
 msgid "Points (2/1/0)"
 msgstr "النقاط (2/1/0)"
 
-#: standings/teams.py:123
+#: standings/teams.py:106
 msgid "wins"
 msgstr "عدد مرات الفوز"
 
-#: standings/teams.py:124 standings/views.py:511
+#: standings/teams.py:107 standings/views.py:589
 msgid "Wins"
 msgstr "عدد مرات الفوز"
 
-#: standings/teams.py:134
+#: standings/teams.py:117
 msgid "total speaker score"
 msgstr "مجموع نقاط المتحدث "
 
-#: standings/teams.py:135
+#: standings/teams.py:118
 msgid "Spk"
 msgstr "متحدث"
 
-#: standings/teams.py:144
+#: standings/teams.py:127
 msgid "average speaker score"
 msgstr "متوسط نقاط المتحدثين"
 
-#: standings/teams.py:145
+#: standings/teams.py:128
 msgid "ASS"
 msgstr "ASS"
 
-#: standings/teams.py:155
+#: standings/teams.py:138
+msgid "speaker score standard deviation"
+msgstr ""
+
+#: standings/teams.py:139
+msgid "SSD"
+msgstr ""
+
+#: standings/teams.py:150
 msgid "sum of margins"
 msgstr "جمع فرق الدرجات "
 
-#: standings/teams.py:156
+#: standings/teams.py:151
 msgid "Marg"
 msgstr "Marg"
 
-#: standings/teams.py:165
+#: standings/teams.py:160
 msgid "average margin"
 msgstr "متوسط فرق الدرجات "
 
-#: standings/teams.py:166
+#: standings/teams.py:161
 msgid "AWM"
 msgstr "AWM"
 
-#: standings/teams.py:176
+#: standings/teams.py:171
 msgid "draw strength"
 msgstr "رسم بياني للقوى"
 
-#: standings/teams.py:177
+#: standings/teams.py:172
 msgid "DS"
 msgstr "DS"
 
-#: standings/teams.py:220
+#: standings/teams.py:210
 msgid "number of adjudicators who voted for this team"
 msgstr "عدد المحكمين الذين صوتوا لصالح هذا الفريق"
 
-#: standings/teams.py:221
+#: standings/teams.py:211
 msgid "Ballots"
 msgstr "تصويت"
 
-#: standings/teams.py:222
+#: standings/teams.py:212
 msgid "votes/ballots carried"
 msgstr "التصويت / النتائج "
 
-#: standings/teams.py:246
+#: standings/teams.py:237
 msgid "number of firsts"
 msgstr "عدد الأوائل"
 
-#: standings/teams.py:247
+#: standings/teams.py:238
 msgid "1sts"
 msgstr "1st"
 
-#: standings/teams.py:256
+#: standings/teams.py:247
 msgid "number of seconds"
 msgstr "عدد الثواني"
 
-#: standings/teams.py:257
+#: standings/teams.py:248
 msgid "2nds"
 msgstr "2nd"
 
-#: standings/teams.py:269
+#: standings/teams.py:260
 msgid "Who-beat-whom"
 msgstr "من أفضل من "
 
-#: standings/teams.py:270
+#: standings/teams.py:261
 msgid "WBW"
 msgstr "WBW"
 
-#: standings/teams.py:271
+#: standings/teams.py:262
 msgid "who-beat-whom"
 msgstr "من أفضل من "
 
-#: standings/teams.py:316
+#: standings/teams.py:307
 msgid "Who-beat-whom (in division)"
 msgstr "من أفضل من ( في الأقسام )"
 
-#: standings/teams.py:317
+#: standings/teams.py:308
 msgid "WBWD"
 msgstr "WBWD"
 
-#: standings/teams.py:318
+#: standings/teams.py:309
 msgid "who-beat-whom (in divisions)"
 msgstr "من أفضل من ( في الأقسام )"
 
@@ -306,28 +319,30 @@ msgstr ""
 msgid "There aren't any rounds for which results are available."
 msgstr "لم يتم إدخال النتائج لأية جولات بعد."
 
-#: standings/templates/speaker_standings.html:7
-msgid ""
-"Note that speakers are being sorted by their <strong>average score</strong>."
-msgstr "ملاحظة : سيتم فرز المتناظرين حسب <strong>متوسط الدرجات </strong>"
-
-#: standings/templates/speaker_standings.html:9
-msgid ""
-"Note that speakers are being sorted by their <strong>total score</strong>. "
-"Any speaker who misses a single debate will be severely punished in these "
-"rankings."
+#: standings/templates/speaker_standings.html:6
+msgid "Speakers are ranked by their <strong>average score</strong>."
 msgstr ""
-"ملاحظة : سيتم فرز المتناظرين حسب <strong> درجاتهم </strong> . أي متناظر لم "
-"يقم بالتناظر أو قام بالانسحاب لن يتم عرض مستواه "
 
-#: standings/templates/speaker_standings.html:14
+#: standings/templates/speaker_standings.html:8
+msgid ""
+"Speakers are ranked by their <strong>total score</strong>. Any speaker who "
+"misses a single debate will be severely punished in these rankings."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:15
 #, python-format
 msgid ""
-"Also, speakers can miss up to %(count)s debates before they are omitted from"
-" the speaker tab."
-msgstr "بالإضافة يمكن للمتناظر أن يفقد %(count)s قبل دخول الدرجات إلى التاب "
+"Speakers can miss up to %(count)s debates before they are omitted from the "
+"speaker tab."
+msgstr ""
 
-#: standings/templates/speaker_standings.html:19
+#: standings/templates/speaker_standings.html:20
+msgid ""
+"All speakers appear in these standings, no matter how many debates they've "
+"missed."
+msgstr ""
+
+#: standings/templates/speaker_standings.html:24
 #, python-format
 msgid ""
 "These settings can be changed in the <a href=\"%(standings_config_url)s\" "
@@ -336,6 +351,18 @@ msgid ""
 msgstr ""
 "يمكنك تغيير الإعدادات <a href=\"%(standings_config_url)s\" class=\"alert-"
 "link\">في خانة إعدادات البطولة </a>"
+
+#: standings/templates/speaker_standings.html:32
+#, python-format
+msgid ""
+"Enforcing the limit on the number of missed debates requires the \"number of"
+" speeches given\" metric to be included in the speaker standings "
+"calculations, so it's been automatically added. To remove this warning "
+"message, add <strong>Number of speeches given</strong> to the "
+"<strong>Speaker standings extra metrics</strong> in the <a "
+"href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of "
+"this tournament's configuration</a>."
+msgstr ""
 
 #: standings/templates/standings_diversity.html:31
 #: standings/templates/standings_diversity.html:42
@@ -359,37 +386,42 @@ msgid "Teams"
 msgstr "الفرق"
 
 #: standings/templates/standings_menu.html:16
+#, python-format
+msgid "%(category_name)s Teams"
+msgstr ""
+
+#: standings/templates/standings_menu.html:24
 msgid "Divisions"
 msgstr "التقسيمات "
 
-#: standings/templates/standings_menu.html:21
+#: standings/templates/standings_menu.html:29
 msgid "Speakers"
 msgstr "المتناظرين"
 
-#: standings/templates/standings_menu.html:26
+#: standings/templates/standings_menu.html:34
 msgid "Replies"
 msgstr "الردود"
 
-#: standings/templates/standings_menu.html:32
+#: standings/templates/standings_menu.html:40
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr "%(category_name)sالمتحدث "
 
-#: standings/templates/standings_menu.html:44
+#: standings/templates/standings_menu.html:52
 msgid "Motion Statistics"
 msgstr "إحصائيات القضية"
 
-#: standings/templates/standings_menu.html:48
+#: standings/templates/standings_menu.html:56
 msgid "Diversity Overview"
 msgstr "عرض التقاسيم"
 
-#: standings/views.py:92
+#: standings/views.py:97
 #, python-format
 msgid ""
 "<p>There was an error generating the standings: <em>%(message)s</em></p>"
 msgstr "<p>هناك خلل في إعداد الترتيب :   <em>    %(message)s    </em> </p>"
 
-#: standings/views.py:97
+#: standings/views.py:102
 #, python-format
 msgid ""
 "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
@@ -401,68 +433,83 @@ msgstr ""
 "=\"alert-link\"> تحت الإعدادات </a> في حالة عدم قدرتك على إصلاح المشكلة "
 "يمكنك الاتصال بالمطور . </p>"
 
-#: standings/views.py:105
+#: standings/views.py:110
 msgid "<p>The tab director will need to resolve this issue.</p>"
 msgstr "<p> على غرفة العمليات معالجة هذا العطل</p>"
 
+#: standings/views.py:114
+#, python-format
+msgid "as of %(round)s"
+msgstr ""
+
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:169
+#: standings/views.py:179
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s( أفضل %(limit)d فقط )"
 
-#: standings/views.py:196 standings/views.py:392
+#: standings/views.py:204 standings/views.py:421
 msgid ""
 "The tab can't be displayed because all rounds so far in this tournament are "
 "silent."
 msgstr "لا يمكن إظهار النتائج لأن كافة جولات البطولة جولات صامتة."
 
-#: standings/views.py:253
+#: standings/views.py:280
 msgid "Speaker Standings"
 msgstr "ترتيب المتحدث"
 
-#: standings/views.py:289
+#: standings/views.py:322
 msgid "Speaker Tab"
 msgstr "النتائج المتحدث"
 
-#: standings/views.py:307
+#: standings/views.py:337
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr "%(category)sترتيب المتحدثين "
 
-#: standings/views.py:325
+#: standings/views.py:355
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr "نتائج المتحدث %(category)s"
 
-#: standings/views.py:338
+#: standings/views.py:368
 msgid "Reply Speaker Standings"
 msgstr "ترتيب متحدث خطاب الرد"
 
-#: standings/views.py:344
+#: standings/views.py:373
 msgid "Reply speeches aren't enabled in this tournament."
 msgstr "خطابات الرد غير ممكنة في هذه البطولة"
 
-#: standings/views.py:372
+#: standings/views.py:401
 msgid "Reply Speaker Tab"
 msgstr "النتائج متحدثي خطاب الرد"
 
-#: standings/views.py:384
+#: standings/views.py:413
 msgid "Team Standings"
 msgstr "ترتيب الفرق "
 
-#: standings/views.py:449
+#: standings/views.py:488
 msgid "Division Standings"
 msgstr "ترتيب التقسيمات"
 
-#: standings/views.py:459
+#: standings/views.py:498
 msgid "Team Tab"
 msgstr "النتائج حسب الفرق"
 
-#: standings/views.py:475
+#: standings/views.py:517
+#, python-format
+msgid "%(category)s Team Standings"
+msgstr ""
+
+#: standings/views.py:544
+#, python-format
+msgid "%(category)s Team Tab"
+msgstr ""
+
+#: standings/views.py:555
 msgid "Current Team Standings"
 msgstr "ترتيب الفرق الحالي"
 
-#: standings/views.py:511
+#: standings/views.py:589
 msgid "Points"
 msgstr ""

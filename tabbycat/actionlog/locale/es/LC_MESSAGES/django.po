@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
@@ -22,247 +22,271 @@ msgstr ""
 msgid "Action Log"
 msgstr "Registro de Acciones"
 
-#: actionlog/models.py:72
+#: actionlog/models.py:78
 msgid "Discarded ballot set"
 msgstr "Ha descartado un conjunto de ballots"
 
-#: actionlog/models.py:73
+#: actionlog/models.py:79
 msgid "Checked in ballot set"
 msgstr "Ha revisado un conjunto de ballots"
 
-#: actionlog/models.py:74
+#: actionlog/models.py:80
 msgid "Created ballot set"
 msgstr "Ha creado un conjunto de ballots"
 
-#: actionlog/models.py:75
+#: actionlog/models.py:81
 msgid "Edited ballot set"
 msgstr "Ha editado un conjunto de ballots"
 
-#: actionlog/models.py:76
+#: actionlog/models.py:82
 msgid "Confirmed ballot set"
 msgstr "Ha confirmado un conjunto de ballots"
 
-#: actionlog/models.py:77
+#: actionlog/models.py:83
 msgid "Submitted ballot set from the public form"
 msgstr "Ha entregado balotas desde el formulario publico"
 
-#: actionlog/models.py:78
+#: actionlog/models.py:84
 msgid "Submitted feedback from the public form"
 msgstr "Ha entregado feedback desde el formulario publico"
 
-#: actionlog/models.py:79
+#: actionlog/models.py:85
 msgid "Saved feedback"
 msgstr "Ha guardado feedback"
 
-#: actionlog/models.py:80
+#: actionlog/models.py:86
 msgid "Edited adjudicator test score"
 msgstr "Ha editado el puntaje del examen de jueces"
 
-#: actionlog/models.py:81
+#: actionlog/models.py:87
 msgid "Set adjudicator note"
 msgstr "Ha puesto un puntaje al juez"
 
-#: actionlog/models.py:82
+#: actionlog/models.py:88
 msgid "Saved adjudicator allocation"
 msgstr "Asignación de jueces guardada"
 
-#: actionlog/models.py:83
+#: actionlog/models.py:89
 msgid "Auto-allocated adjudicators"
 msgstr "Ha asignado a los jueces automaticamente"
 
-#: actionlog/models.py:84
+#: actionlog/models.py:90
 msgid "Saved a venue manual edit"
 msgstr "Ha guardado la edición manual de una sala"
 
-#: actionlog/models.py:85
+#: actionlog/models.py:91
 msgid "Auto-allocated venues"
 msgstr "Ha asignado las salas automaticamente"
 
-#: actionlog/models.py:86
+#: actionlog/models.py:92
 msgid "Edited venue categories"
 msgstr "Ha editado las categorías de sala"
 
-#: actionlog/models.py:87
+#: actionlog/models.py:93
 msgid "Edited venue constraints"
 msgstr ""
 
-#: actionlog/models.py:88
+#: actionlog/models.py:94
 msgid "Created draw"
 msgstr "Ha creado el cuadro"
 
-#: actionlog/models.py:89
+#: actionlog/models.py:95
 msgid "Confirmed draw"
 msgstr "Ha confirmado el cuadro"
 
-#: actionlog/models.py:90
+#: actionlog/models.py:96
 msgid "Regenerated draw"
 msgstr "Ha regenerado el cuadro"
 
-#: actionlog/models.py:91
+#: actionlog/models.py:97
 msgid "Released draw"
 msgstr "Ha publicado el cuadro"
 
-#: actionlog/models.py:92
+#: actionlog/models.py:98
 msgid "Unreleased draw"
 msgstr "Ha despublicado el cuadro"
 
-#: actionlog/models.py:93
+#: actionlog/models.py:99
 msgid "Saved a matchup manual edit"
 msgstr "Ha guardado la edición manual de un enfrentamiento"
 
-#: actionlog/models.py:94
+#: actionlog/models.py:100
 msgid "Saved the sides status of a matchup"
 msgstr "Ha guardado el estatus de los lados de un enfrentamiento"
 
-#: actionlog/models.py:95
+#: actionlog/models.py:101
 msgid "Saved divisions"
 msgstr "Ha guardado las divisiones"
 
-#: actionlog/models.py:96
+#: actionlog/models.py:102
 msgid "Added/edited motion"
 msgstr "Ha añadido/editado la moción"
 
-#: actionlog/models.py:97
+#: actionlog/models.py:103
 msgid "Released motions"
 msgstr "Ha publicado las mociones"
 
-#: actionlog/models.py:98
+#: actionlog/models.py:104
 msgid "Unreleased motions"
 msgstr "Ha despublicado las mociones"
 
-#: actionlog/models.py:99
+#: actionlog/models.py:105
 msgid "Edited debate importance"
 msgstr "Ha editado la importancia del debate"
 
-#: actionlog/models.py:100
+#: actionlog/models.py:106
 msgid "Changed adjudicator breaking status"
 msgstr "Ha cambiado el estatus de break del juez"
 
-#: actionlog/models.py:101
+#: actionlog/models.py:107
 msgid "Edited break eligibility"
 msgstr "Ha editado la elegibilidad para el break"
 
-#: actionlog/models.py:102
+#: actionlog/models.py:108
 msgid "Edited break categories"
 msgstr "Ha editados las categorías del break"
 
-#: actionlog/models.py:103
+#: actionlog/models.py:109
 msgid "Generated the team break for all categories"
 msgstr "Ha generado el break de equipos para todas las categorías"
 
-#: actionlog/models.py:104
+#: actionlog/models.py:110
 msgid "Edited breaking team remarks and updated all team breaks"
 msgstr ""
 "Ha editado los comentarios del equipo que pasa el break y ha actualizado el "
 "break de todos los equipos"
 
-#: actionlog/models.py:105
+#: actionlog/models.py:111
 msgid "Edited breaking team remarks and updated this team break"
 msgstr ""
 "Ha editado los comentarios del equipo que pasa el break y ha actualizado el "
 "break de este equipo"
 
-#: actionlog/models.py:106
+#: actionlog/models.py:112
 msgid "Edited breaking team remarks"
 msgstr "Ha editado los comentarios del equipo que pasa el break"
 
-#: actionlog/models.py:107
+#: actionlog/models.py:113
 msgid "Set start time"
 msgstr "Ha configurado el tiempo de inicio"
 
-#: actionlog/models.py:108
+#: actionlog/models.py:114
 msgid "Advanced the current round to"
 msgstr "Ha avanzado la ronda presente a"
 
-#: actionlog/models.py:109
+#: actionlog/models.py:115
 msgid "Edited teams availability"
 msgstr "Ha editado la disponibilidad de los equipos"
 
-#: actionlog/models.py:110
+#: actionlog/models.py:116
 msgid "Edited adjudicators availability"
 msgstr "Ha editado la disponibilidad de los jueces"
 
-#: actionlog/models.py:111
+#: actionlog/models.py:117
 msgid "Edited venue availability"
 msgstr "Ha editado la disponibilidad de salas"
 
-#: actionlog/models.py:112
+#: actionlog/models.py:118
 msgid "Edited tournament options"
 msgstr "Ha editado las opciones del torneo"
 
-#: actionlog/models.py:113
+#: actionlog/models.py:119
 msgid "Edited speaker category eligibility"
 msgstr "Ha editado la elegibilidad para las categorías de orador"
 
-#: actionlog/models.py:114
+#: actionlog/models.py:120
 msgid "Edited speaker categories"
 msgstr "Ha editado las categorías de orador"
 
-#: actionlog/models.py:115
+#: actionlog/models.py:121
 msgid "Imported institutions using the simple importer"
 msgstr ""
 
-#: actionlog/models.py:116
+#: actionlog/models.py:122
 msgid "Imported venues using the simple importer"
 msgstr ""
 
-#: actionlog/models.py:117
+#: actionlog/models.py:123
 msgid "Imported teams using the simple importer"
 msgstr ""
 
-#: actionlog/models.py:118
+#: actionlog/models.py:124
 msgid "Imported adjudicators using the simple importer"
 msgstr ""
 
-#: actionlog/models.py:119
+#: actionlog/models.py:125
+msgid "Updated adjudicator scores in bulk"
+msgstr ""
+
+#: actionlog/models.py:126
 msgid "Edited adjudicator-team conflicts"
 msgstr ""
 
-#: actionlog/models.py:123
+#: actionlog/models.py:127
+msgid "Edited adjudicator-adjudicator conflicts"
+msgstr ""
+
+#: actionlog/models.py:128
+msgid "Edited adjudicator-institution conflicts"
+msgstr ""
+
+#: actionlog/models.py:129
+msgid "Generated check in identifiers for speakers"
+msgstr ""
+
+#: actionlog/models.py:130
+msgid "Generated check in identifiers for adjudicators"
+msgstr ""
+
+#: actionlog/models.py:131
+msgid "Generated check in identifiers for venues"
+msgstr ""
+
+#: actionlog/models.py:135
 msgid "type"
 msgstr "tipo"
 
-#: actionlog/models.py:125
+#: actionlog/models.py:137
 msgid "timestamp"
 msgstr "marca de tiempo"
 
-#: actionlog/models.py:128
+#: actionlog/models.py:140
 msgid "user"
 msgstr "usuario"
 
-#: actionlog/models.py:130
+#: actionlog/models.py:142
 msgid "IP address"
 msgstr "dirección IP"
 
-#: actionlog/models.py:134
+#: actionlog/models.py:146
 msgid "tournament"
 msgstr "torneo"
 
-#: actionlog/models.py:136
+#: actionlog/models.py:148
 msgid "round"
 msgstr "ronda"
 
-#: actionlog/models.py:140
+#: actionlog/models.py:152
 msgid "content type"
 msgstr "tipo de contenido"
 
-#: actionlog/models.py:142
+#: actionlog/models.py:154
 msgid "object ID"
 msgstr "ID del objeto"
 
-#: actionlog/models.py:148
+#: actionlog/models.py:160
 msgid "action log"
 msgstr "registro de acciones"
 
-#: actionlog/models.py:149
+#: actionlog/models.py:161
 msgid "action log entries"
 msgstr "entradas en el registro de acciones"
 
-#: actionlog/models.py:157
+#: actionlog/models.py:169
 msgid "All log entries require at least one of a user and an IP address."
 msgstr ""
 "Todos los registros requieren al menos uno de un usuario y una dirección IP."
 
-#: actionlog/models.py:190
+#: actionlog/models.py:202
 msgid "anonymous"
 msgstr "anónimo"

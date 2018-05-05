@@ -28,9 +28,9 @@ class Allocator(object):
         self.debates = list(debates)
         self.adjudicators = adjudicators
         if len(self.adjudicators) == 0:
-            info = _("""There are no available adjudicators. Ensure there are
-                        adjudicators who have been marked as available for this
-                        round before auto-allocating.""")
+            info = _("There are no available adjudicators. Ensure there are "
+                     "adjudicators who have been marked as available for this "
+                     "round before auto-allocating.")
             logger.info(info)
             raise BadJsonRequestError(info)
 

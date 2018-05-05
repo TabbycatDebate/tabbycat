@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -244,7 +244,7 @@ msgstr ""
 msgid "All participants already have private URLs."
 msgstr ""
 
-#: privateurls/views.py:74 privateurls/views.py:91
+#: privateurls/views.py:74 privateurls/views.py:94
 msgid "no URL"
 msgstr ""
 
@@ -252,33 +252,33 @@ msgstr ""
 msgid "Teams"
 msgstr ""
 
-#: privateurls/views.py:82 privateurls/views.py:98 privateurls/views.py:217
-#: privateurls/views.py:225
+#: privateurls/views.py:83 privateurls/views.py:102 privateurls/views.py:230
+#: privateurls/views.py:240
 msgid "Feedback URL"
 msgstr ""
 
-#: privateurls/views.py:96
+#: privateurls/views.py:99
 msgid "Adjudicators"
 msgstr ""
 
-#: privateurls/views.py:99 privateurls/views.py:185
+#: privateurls/views.py:106 privateurls/views.py:194
 msgid "Ballot URL"
 msgstr ""
 
-#: privateurls/views.py:122
+#: privateurls/views.py:131
 msgid ""
 "All adjudicators and teams already have private URLs. If you want to delete "
 "them, use the Edit Database area."
 msgstr ""
 
-#: privateurls/views.py:131
+#: privateurls/views.py:140
 #, python-format
 msgid ""
 "Private URLs were generated for all %(nblank_adjs)d adjudicators and all "
 "%(nblank_teams)d teams."
 msgstr ""
 
-#: privateurls/views.py:137
+#: privateurls/views.py:146
 #, python-format
 msgid ""
 "Private URLs were generated for %(nblank_adjs)d adjudicators and "
@@ -287,26 +287,26 @@ msgid ""
 "intact."
 msgstr ""
 
-#: privateurls/views.py:165
+#: privateurls/views.py:174
 #, python-format
 msgid "Adjudicators who will be sent e-mails (%(n)s)"
 msgstr ""
 
-#: privateurls/views.py:168 privateurls/views.py:216
+#: privateurls/views.py:177 privateurls/views.py:226
 msgid "Email"
 msgstr ""
 
-#: privateurls/views.py:212
+#: privateurls/views.py:221
 #, python-format
 msgid "Speakers who will be sent e-mails (%(n)s)"
 msgstr ""
 
-#: privateurls/views.py:240
+#: privateurls/views.py:255
 #, python-format
 msgid "Your personal ballot submission URL for %(tournament)s"
 msgstr ""
 
-#: privateurls/views.py:242
+#: privateurls/views.py:257
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -321,17 +321,17 @@ msgid ""
 "%(url)s"
 msgstr ""
 
-#: privateurls/views.py:260
+#: privateurls/views.py:275
 msgid "There was a problem sending private ballot URLs to adjudicators."
 msgstr ""
 
-#: privateurls/views.py:263
+#: privateurls/views.py:278
 msgid ""
 "There was a problem connecting to the e-mail server when trying to send "
 "privateballot URLs to adjudicators."
 msgstr ""
 
-#: privateurls/views.py:268
+#: privateurls/views.py:283
 #, python-format
 msgid ""
 "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator."
@@ -340,12 +340,12 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: privateurls/views.py:283
+#: privateurls/views.py:298
 #, python-format
 msgid "Your team's feedback submission URL for %(tournament)s"
 msgstr ""
 
-#: privateurls/views.py:285
+#: privateurls/views.py:300
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -360,16 +360,16 @@ msgid ""
 "%(url)s"
 msgstr ""
 
-#: privateurls/views.py:304
+#: privateurls/views.py:319
 msgid "There was a problem sending private feedback URLs to speakers."
 msgstr ""
 
-#: privateurls/views.py:307
+#: privateurls/views.py:322
 #, python-format
 msgid "Your personal feedback submission URL for %(tournament)s"
 msgstr ""
 
-#: privateurls/views.py:309
+#: privateurls/views.py:324
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -384,12 +384,12 @@ msgid ""
 "%(url)s"
 msgstr ""
 
-#: privateurls/views.py:327
+#: privateurls/views.py:342
 msgid "There was a problem sending private feedback URLs to adjudicators."
 msgstr ""
 
 #. Translators: This goes in the "speakers_phrase" variable in "E-mails with private feedback URLs were sent..."
-#: privateurls/views.py:332
+#: privateurls/views.py:347
 #, python-format
 msgid "%(nspeakers)d speaker"
 msgid_plural "%(nspeakers)d speakers"
@@ -397,14 +397,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Translators: This goes in the "adjudicators_phrase" variable in "E-mails with private feedback URLs were sent..."
-#: privateurls/views.py:335
+#: privateurls/views.py:350
 #, python-format
 msgid "%(nadjudicators)d adjudicator"
 msgid_plural "%(nadjudicators)d adjudicators"
 msgstr[0] ""
 msgstr[1] ""
 
-#: privateurls/views.py:337
+#: privateurls/views.py:352
 #, python-format
 msgid ""
 "E-mails with private feedback URLs were sent to %(speakers_phrase)s and "

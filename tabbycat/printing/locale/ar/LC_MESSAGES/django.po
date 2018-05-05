@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 23:23-0800\n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -61,11 +61,8 @@ msgid ""
 "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
 "<strong>page orientation</strong>, to turn off "
 "<strong>headers/footers</strong> and turn on <strong>background "
-"graphics</strong>. Works best in Chrome or Safari."
+"graphics</strong>. Works best in Chrome."
 msgstr ""
-"استخدم Ctrl + P للطباعة أو الحفظ إلى PDF. تأكد من تعيين اتجاه <strong>الصفحة"
-" المناسب </strong>، لإيقاف <strong>الرؤوس / التذييلات </strong>وتشغيل "
-"<strong>الرسومات الخلفية</strong>. يعمل بشكل أفضل في Chrome أو Saf"
 
 #: printing/templates/scoresheet_list.html:5
 msgid "Scoresheets"
@@ -81,14 +78,14 @@ msgid ""
 "There are no scoresheets available — perhaps the round has not been drawn?"
 msgstr "لم تتوفر نموذج درجات لهذه الجولة — "
 
-#: printing/views.py:87
+#: printing/views.py:90
 msgid "Overall Score"
 msgstr "مجموع الدرجات"
 
-#: printing/views.py:115
+#: printing/views.py:117 printing/views.py:225 printing/views.py:238
 msgid "Unaffiliated"
 msgstr "غير منتسبين"
 
-#: printing/views.py:128 printing/views.py:132
+#: printing/views.py:130 printing/views.py:134
 msgid "Team"
 msgstr "فريق"
