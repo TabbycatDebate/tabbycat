@@ -162,7 +162,7 @@
       {% include "components/item-action.html" with icon="users" %}
     {% endif %}
 
-    {% if pref.public_participants %}
+    {% if pref.public_institutions_list %}
       {% trans "Institutions" as text %}
       {% tournamenturl 'participants-public-institutions-list' as url %}
       {% include "components/item-action.html" with icon="flag" %}
