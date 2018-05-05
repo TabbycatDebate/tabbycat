@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2018\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +104,7 @@ msgstr ""
 #: tournaments/mixins.py:142
 #, python-format
 msgid "for %(round)s"
-msgstr ""
+msgstr "para %(round)s"
 
 #: tournaments/models.py:25
 msgid ""
@@ -124,7 +124,7 @@ msgstr ""
 
 #: tournaments/models.py:35
 msgid "short name"
-msgstr ""
+msgstr "nombre corto"
 
 #: tournaments/models.py:36
 msgid "The name used in the menu, e.g. \"Australs 2016\""
@@ -132,7 +132,7 @@ msgstr ""
 
 #: tournaments/models.py:38 tournaments/models.py:253
 msgid "sequence number"
-msgstr ""
+msgstr "número de secuencia"
 
 #: tournaments/models.py:39
 msgid ""
@@ -142,7 +142,7 @@ msgstr ""
 
 #: tournaments/models.py:41
 msgid "slug"
-msgstr ""
+msgstr "slug"
 
 #: tournaments/models.py:42
 msgid "The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""
@@ -342,12 +342,12 @@ msgstr ""
 
 #: tournaments/templates/assistant_tournament_index.html:5
 msgid "Overview"
-msgstr ""
+msgstr "Visión general"
 
 #: tournaments/templates/assistant_tournament_index.html:8
 #, python-format
 msgid "current round: %(round_name)s, status: %(round_status)s"
-msgstr ""
+msgstr "ronda actual: %(round_name)s, situación: %(round_status)s"
 
 #: tournaments/templates/blank_site_start.html:20
 msgid "Welcome to Tabbycat!"
@@ -380,7 +380,7 @@ msgstr "Crear cuenta"
 #: tournaments/templates/configure_tournament.html:5
 #, python-format
 msgid "Configure Tournament %(tournament_name)s"
-msgstr ""
+msgstr "Configurar torneo %(tournament_name)s"
 
 #: tournaments/templates/configure_tournament.html:20
 msgid ""
@@ -395,7 +395,7 @@ msgstr "Configurar Torneo"
 
 #: tournaments/templates/create_tournament.html:4
 msgid "Create New Tournament"
-msgstr ""
+msgstr "Crear un Torneo Nuevo"
 
 #: tournaments/templates/create_tournament.html:11
 #, python-format
@@ -407,6 +407,12 @@ msgid ""
 "<a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\"> "
 "Tabbycat licence agreement</a>."
 msgstr ""
+"Tabbycat es gratis para utilizar para los torneos sin fines de lucro y sin "
+"fines de racaudación de fondos. Si su torneo tiene fines de lucro o "
+"racaudación de fondos, obsérverse que <a href=\"%(donations_url)s\">un pago "
+"es necesario</a>. Para más detalles, ve el <a "
+"href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\">acuerdo"
+" de licencia de Tabbycat</a>."
 
 #: tournaments/templates/create_tournament.html:23
 msgid "Just trying out Tabbycat?"
@@ -587,21 +593,21 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:36
 msgid "Team Tab"
-msgstr ""
+msgstr "Tabla de equipos"
 
 #: tournaments/templates/public_tournament_index.html:43
 #, python-format
 msgid "%(category_name)s Team Tab"
-msgstr ""
+msgstr "Tabla de equipos de %(category_name)s"
 
 #: tournaments/templates/public_tournament_index.html:52
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Tabla de oradores"
 
 #: tournaments/templates/public_tournament_index.html:60
 #, python-format
 msgid "%(category_name)s Speaker Tab"
-msgstr ""
+msgstr "Tabla de oradores de %(category_name)s"
 
 #: tournaments/templates/public_tournament_index.html:70
 msgid "Replies Tab"
@@ -609,11 +615,11 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:76
 msgid "Adjudicator Tab"
-msgstr ""
+msgstr "Tabla de jueces"
 
 #: tournaments/templates/public_tournament_index.html:82
 msgid "Motions Tab"
-msgstr ""
+msgstr "Tabla de mociones"
 
 #: tournaments/templates/public_tournament_index.html:88
 #: tournaments/templates/public_tournament_index.html:126
@@ -624,7 +630,7 @@ msgstr ""
 #: tournaments/templates/public_tournament_index.html:192
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr ""
+msgstr "Emparejamientos para %(round_name)s"
 
 #: tournaments/templates/public_tournament_index.html:102
 msgid "Check-Ins"
@@ -644,7 +650,7 @@ msgstr "Mociones"
 
 #: tournaments/templates/public_tournament_index.html:132
 msgid "Team Standings"
-msgstr ""
+msgstr "Clasificación de equipos"
 
 #: tournaments/templates/public_tournament_index.html:139
 #, python-format
@@ -661,11 +667,11 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:160
 msgid "Participants"
-msgstr ""
+msgstr "Participantes"
 
 #: tournaments/templates/public_tournament_index.html:166
 msgid "Institutions"
-msgstr ""
+msgstr "Instituciones"
 
 #: tournaments/templates/public_tournament_index.html:172
 msgid "Feedback Progress"
@@ -724,12 +730,12 @@ msgstr "¡Bienvenido!"
 #: tournaments/templates/site_index.html:17
 #, python-format
 msgid "Administrator area for <strong>%(tn)s</strong>"
-msgstr ""
+msgstr "Área de administrador para  <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:24
 #, python-format
 msgid "Assistant area for <strong>%(tn)s</strong>"
-msgstr "Área de asistencia para  <strong>%(tn)s</strong>"
+msgstr "Área de ayudantes para  <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:29
 #, python-format

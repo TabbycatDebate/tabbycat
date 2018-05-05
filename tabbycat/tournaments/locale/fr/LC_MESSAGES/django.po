@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-29 10:27-0700\n"
-"PO-Revision-Date: 2018-02-20 08:13-0800\n"
+"PO-Revision-Date: 2018-05-05 14:30-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.7\n"
 
 #: tournaments/apps.py:7
 msgid "Tournaments"
@@ -45,10 +45,8 @@ msgid "Agree?"
 msgstr ""
 
 #: tournaments/forms.py:43
-#, fuzzy
-#| msgid "Tournaments"
 msgid "Comments"
-msgstr "Tournois"
+msgstr "Commentaires"
 
 #. Translators: This is the name given to the 'Open Break'.
 #: tournaments/forms.py:57
@@ -468,18 +466,25 @@ msgid ""
 "adjudicators, venues, and the like. You can then delete this demo tournament "
 "later on, or deploy a new instance for your real tournament."
 msgstr ""
+"Si vous apprenez ou jouez avec Tabbycat, il est plus facile de créer un "
+"tournoi démonstratif qui est prérempli d'un ensemble faux (mais typique) "
+"d'équipes, de juges, de salles et autres. Vous pouvez ensuite supprimer ce "
+"tournoi démonstratif, ou vous pouvez déployer une instance nouvelle pour "
+"votre tournoi réel."
 
 #: tournaments/templates/create_tournament.html:38
-#, fuzzy, python-format
+#, python-format
 #| msgid "Round %(number)d"
 msgid "Load %(name)s"
-msgstr "Tour %(number)d"
+msgstr "Charger %(name)s"
 
 #: tournaments/templates/create_tournament.html:45
 msgid ""
 "You already have a tournament set up using this data set. Reloading the data "
 "will delete <strong>all data</strong> from that tourament."
 msgstr ""
+"Vous avez déjà un tournoi utilisant cet ensemble de données. Le rechargement "
+"de ces données supprimera <strong>toutes les données</strong> de ce tournoi."
 
 #: tournaments/templates/create_tournament.html:65
 msgid "Create Tournament"
@@ -491,8 +496,6 @@ msgstr "Annuler et revenir à la page d’accueil du site"
 
 #: tournaments/templates/donations.html:4
 #: tournaments/templates/donations.html:5
-#, fuzzy
-#| msgid "Donate to Tabbycat"
 msgctxt "title"
 msgid "Donate to Tabbycat"
 msgstr "Donations à Tabbycat"
@@ -657,34 +660,33 @@ msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:36
 msgid "Team Tab"
-msgstr "Tab des équipes"
+msgstr "Classement des équipes"
 
 #: tournaments/templates/public_tournament_index.html:43
-#, fuzzy, python-format
-#| msgid "%(category_name)s Speaker Tab"
+#, python-format
 msgid "%(category_name)s Team Tab"
-msgstr "Tab des orateurs %(category_name)s"
+msgstr "Classement des équipes %(category_name)s"
 
 #: tournaments/templates/public_tournament_index.html:52
 msgid "Speaker Tab"
-msgstr "Tab des orateurs"
+msgstr "Classement des orateurs"
 
 #: tournaments/templates/public_tournament_index.html:60
 #, python-format
 msgid "%(category_name)s Speaker Tab"
-msgstr "Tab des orateurs %(category_name)s"
+msgstr "Classement des orateurs %(category_name)s"
 
 #: tournaments/templates/public_tournament_index.html:70
 msgid "Replies Tab"
-msgstr "Tab des discours de résponse"
+msgstr "Classement des discours de résponse"
 
 #: tournaments/templates/public_tournament_index.html:76
 msgid "Adjudicator Tab"
-msgstr "Tab des juges"
+msgstr "Classement des juges"
 
 #: tournaments/templates/public_tournament_index.html:82
 msgid "Motions Tab"
-msgstr "Tab des motions"
+msgstr "Classement des motions"
 
 #: tournaments/templates/public_tournament_index.html:88
 #: tournaments/templates/public_tournament_index.html:126
@@ -699,7 +701,7 @@ msgstr "Tirage de %(round_name)s"
 
 #: tournaments/templates/public_tournament_index.html:102
 msgid "Check-Ins"
-msgstr ""
+msgstr "Enregistrements"
 
 #: tournaments/templates/public_tournament_index.html:108
 msgid "Results"
@@ -755,10 +757,8 @@ msgid "View All Draws"
 msgstr "Afficher le tirage"
 
 #: tournaments/templates/public_tournament_index.html:211
-#, fuzzy
-#| msgid "Tournaments"
 msgid "Tournament Staff"
-msgstr "Tournois"
+msgstr "Personnel du tournoi"
 
 #: tournaments/templates/set_current_round.html:33
 #, python-format
@@ -792,15 +792,14 @@ msgid "Welcome!"
 msgstr "Bienvenue&nbsp;!"
 
 #: tournaments/templates/site_index.html:17
-#, fuzzy, python-format
-#| msgid "Admin area for <strong>%(tn)s</strong>"
+#, python-format
 msgid "Administrator area for <strong>%(tn)s</strong>"
-msgstr "Zone administrative de <strong>%(tn)s</strong>"
+msgstr "Zone d'administrateur de <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:24
 #, python-format
 msgid "Assistant area for <strong>%(tn)s</strong>"
-msgstr "Zone pour les assistants de <strong>%(tn)s</strong>"
+msgstr "Zone des assistants de <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:29
 #, python-format
@@ -1076,22 +1075,18 @@ msgid "appellant team"
 msgstr ""
 
 #: tournaments/utils.py:63
-#, fuzzy
-#| msgid "government team"
 msgid "respondent team"
-msgstr "équipe du gouvernement"
+msgstr ""
 
 #: tournaments/utils.py:64
-#, fuzzy
 #| msgid "Opp"
 msgid "App"
-msgstr "Opp"
+msgstr ""
 
 #: tournaments/utils.py:65
-#, fuzzy
 #| msgid "Results"
 msgid "Res"
-msgstr "Résultats"
+msgstr ""
 
 #: tournaments/utils.py:70
 msgid "opening government"
@@ -1190,15 +1185,15 @@ msgstr ""
 
 #: tournaments/views.py:205
 msgid "8-team generic dataset"
-msgstr ""
+msgstr "données génériques à 8 équipes"
 
 #: tournaments/views.py:206
 msgid "24-team Australs dataset"
-msgstr ""
+msgstr "données à 24 équipes d'Australs"
 
 #: tournaments/views.py:207
 msgid "88-team BP dataset"
-msgstr ""
+msgstr "données à 88 équipes de PB"
 
 #~ msgid "Load Demo (8-team tournament)"
 #~ msgstr "Charger la démo (tournoi à 8 équipes)"

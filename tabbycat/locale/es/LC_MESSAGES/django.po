@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-29 10:27-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 #: checkins/apps.py:7 templates/nav/admin_nav.html:113
 #: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:93
 msgid "Check-Ins"
-msgstr ""
+msgstr "Chequeo"
 
 #: checkins/models.py:28
 msgid "The barcode must contain between 4 and 20 digits."
@@ -28,43 +29,43 @@ msgstr ""
 
 #: checkins/models.py:31
 msgid "barcode"
-msgstr ""
+msgstr "código de barras"
 
 #: checkins/models.py:45
 msgid "person"
-msgstr ""
+msgstr "persona"
 
 #: checkins/models.py:48
 msgid "person identifier"
-msgstr ""
+msgstr "identificador de persona"
 
 #: checkins/models.py:49
 msgid "person identifiers"
-msgstr ""
+msgstr "identificadores de persona"
 
 #: checkins/models.py:57
 msgid "debate"
-msgstr ""
+msgstr "debate"
 
 #: checkins/models.py:60
 msgid "debate identifier"
-msgstr ""
+msgstr "identificador de debate"
 
 #: checkins/models.py:61
 msgid "debate identifiers"
-msgstr ""
+msgstr "identificadores de debate"
 
 #: checkins/models.py:72
 msgid "venue identifier"
-msgstr ""
+msgstr "identificador de sala"
 
 #: checkins/models.py:73
 msgid "venue identifiers"
-msgstr ""
+msgstr "identificadores de sala"
 
 #: checkins/models.py:80
 msgid "identifier"
-msgstr ""
+msgstr "identificador"
 
 #: checkins/models.py:83
 msgid "check-in time"
@@ -72,7 +73,7 @@ msgstr ""
 
 #: checkins/models.py:85
 msgid "tournament"
-msgstr ""
+msgstr "torneo"
 
 #: checkins/models.py:88
 msgid "check-in event"
@@ -180,16 +181,16 @@ msgstr ""
 
 #: checkins/views.py:216 templates/nav/admin_nav.html:201
 msgid "Speakers"
-msgstr ""
+msgstr "Oradores"
 
 #: checkins/views.py:221 templates/nav/admin_nav.html:248
 #: templates/nav/public_nav.html:137
 msgid "Adjudicators"
-msgstr ""
+msgstr "Jueces"
 
 #: checkins/views.py:226
 msgid "Venues"
-msgstr ""
+msgstr "Salas"
 
 #: checkins/views.py:267
 #, python-format
@@ -202,19 +203,19 @@ msgstr ""
 
 #: settings.py:43
 msgid "Arabic"
-msgstr ""
+msgstr "árabe"
 
 #: settings.py:44
 msgid "English"
-msgstr ""
+msgstr "inglés"
 
 #: settings.py:45
 msgid "Spanish"
-msgstr ""
+msgstr "español"
 
 #: settings.py:46
 msgid "French"
-msgstr ""
+msgstr "francés"
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -242,12 +243,12 @@ msgstr ""
 #: templates/admin/style_guide.html:197 templates/registration/login.html:61
 msgctxt "button"
 msgid "Log In"
-msgstr ""
+msgstr "Inciar sesión"
 
 #: templates/admin/style_guide.html:198 templates/registration/login.html:62
 msgctxt "button"
 msgid "I forgot my password"
-msgstr ""
+msgstr "Olvidé mi contraseña"
 
 #: templates/base.html:12
 #, python-format
@@ -255,12 +256,16 @@ msgid ""
 "The tab for %(tournament_name)s runs on Tabbycat, an open-source tab system "
 "for a variety of parliamentary debating formats"
 msgstr ""
+"El tab de %(tournament_name)s funciona con Tabbycat, un sistema de código "
+"abierto de tab para una variedad de formatos de debate parlamentario"
 
 #: templates/base.html:16
 msgid ""
 "This tab runs on Tabbycat, an open-source tab system for a variety of "
 "parliamentary debating formats"
 msgstr ""
+"Este tab funciona con Tabbycat, un sistema de código abierto de tab para una"
+" variedad de formatos de debate parlamentario"
 
 #: templates/components/form-errors.html:4
 msgid "Whoops! There was an error with one or more fields."
@@ -273,7 +278,7 @@ msgstr ""
 #: templates/errors/assistant_403.html:4 templates/errors/assistant_403.html:6
 #: templates/errors/public_403.html:4 templates/errors/public_403.html:6
 msgid "Permission Denied (403)"
-msgstr ""
+msgstr "Permiso denegado (403)"
 
 #: templates/errors/assistant_403.html:13
 #, python-format
@@ -294,18 +299,25 @@ msgstr ""
 msgid ""
 "%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
+"%(tournament)s funciona con Tabbycat %(tabbycat_version)s "
+"(%(tabbycat_codename)s)"
 
 #: templates/footer.html:17
 #, python-format
 msgid ""
 "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
+"Este sitio funciona con Tabbycat %(tabbycat_version)s "
+"(%(tabbycat_codename)s)"
 
 #: templates/footer.html:21
 msgid ""
 "Tabbycat is an open-source project developed by volunteers, and is free to "
 "use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
+"Tabbycat es un proyecto de código abierto, desarrollado por voluntarios, y "
+"es gratis para utilizar para tabular los torneos sin fines de lucro y sin "
+"fines de recaudación de fondos."
 
 #: templates/footer.html:25
 #, python-format
@@ -313,10 +325,12 @@ msgid ""
 "For a tournament of this size, we suggest a donation of "
 "<strong>$%(amount)s</strong>."
 msgstr ""
+"Por un torneo de este tamaño, sugerimos una donación de <strong>A$ "
+"%(amount)s</strong>."
 
 #: templates/footer.html:29
 msgid "Learn more about donating."
-msgstr ""
+msgstr "Aprender más sobre las donaciones."
 
 #: templates/footer.html:33
 #, python-format
@@ -324,6 +338,8 @@ msgid ""
 "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or "
 "organisations</a> are much appreciated."
 msgstr ""
+"<a href=\"%(donations_link)s\">Las donaciones a Tabbycat provenientes de "
+"particulares o organaziciones</a> son muy apreciadas."
 
 #: templates/footer.html:41
 msgid "Still timing debates with the stopwatch app?"
@@ -352,56 +368,56 @@ msgstr ""
 
 #: templates/footer.html:73
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: templates/footer.html:79
 msgid "Documentation"
-msgstr ""
+msgstr "Documentación"
 
 #: templates/footer.html:85
 msgid "Support"
-msgstr ""
+msgstr "Apoyo"
 
 #: templates/footer.html:91
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #: templates/footer.html:97
 msgid "Set Up A Copy"
-msgstr ""
+msgstr "Instalar una copia"
 
 #: templates/footer.html:111
 msgid "Change Language"
-msgstr ""
+msgstr "Cambiar de idioma"
 
 #: templates/footer.html:129
 msgid "Use this language"
-msgstr ""
+msgstr "Utilizar este idioma"
 
 #: templates/nav/admin_nav.html:33
 msgid "Admin Area"
-msgstr ""
+msgstr "Área de administración"
 
 #: templates/nav/admin_nav.html:37
 msgid "Assistant Area"
-msgstr ""
+msgstr "Área de ayudantes"
 
 #: templates/nav/admin_nav.html:41
 msgid "Public Area"
-msgstr ""
+msgstr "Área pública"
 
 #: templates/nav/admin_nav.html:51 templates/nav/admin_nav.html:146
 #: templates/nav/admin_nav.html:183 templates/nav/admin_nav.html:240
 msgid "Overview"
-msgstr ""
+msgstr "Visión general"
 
 #: templates/nav/admin_nav.html:58
 msgid "Setup"
-msgstr ""
+msgstr "Configuración"
 
 #: templates/nav/admin_nav.html:65
 msgid "Configuration"
-msgstr ""
+msgstr "Opciones"
 
 #: templates/nav/admin_nav.html:68
 msgid "Import Data"
@@ -410,15 +426,15 @@ msgstr ""
 #: templates/nav/admin_nav.html:72 templates/nav/assistant_nav.html:18
 #: templates/nav/public_nav.html:172
 msgid "Participants"
-msgstr ""
+msgstr "Participantes"
 
 #: templates/nav/admin_nav.html:77
 msgid "Private URLs"
-msgstr ""
+msgstr "URLs privadas"
 
 #: templates/nav/admin_nav.html:81
 msgid "Edit Database"
-msgstr ""
+msgstr "Editar el base de datos"
 
 #: templates/nav/admin_nav.html:91 templates/nav/public_nav.html:157
 msgid "Sides"
@@ -467,21 +483,21 @@ msgstr ""
 
 #: templates/nav/admin_nav.html:176 templates/nav/public_nav.html:162
 msgid "Standings"
-msgstr ""
+msgstr "Clasificación"
 
 #: templates/nav/admin_nav.html:186
 msgid "Teams"
-msgstr ""
+msgstr "Equipos"
 
 #: templates/nav/admin_nav.html:190 templates/nav/public_nav.html:13
 #, python-format
 msgid "%(category_name)s Teams"
-msgstr ""
+msgstr "Equipos de %(category_name)s"
 
 #: templates/nav/admin_nav.html:205 templates/nav/public_nav.html:30
 #, python-format
 msgid "%(category_name)s Speakers"
-msgstr ""
+msgstr "Oradores de %(category_name)s"
 
 #: templates/nav/admin_nav.html:213
 msgid "Replies"
@@ -489,44 +505,44 @@ msgstr ""
 
 #: templates/nav/admin_nav.html:217 templates/nav/public_nav.html:152
 msgid "Motions"
-msgstr ""
+msgstr "Mociones"
 
 #: templates/nav/admin_nav.html:220 templates/nav/public_nav.html:167
 msgid "Diversity"
-msgstr ""
+msgstr "Diversidad"
 
 #: templates/nav/admin_nav.html:233
 msgid "Breaks"
-msgstr ""
+msgstr "Break"
 
 #: templates/nav/admin_nav.html:244
 #, python-format
 msgid "%(category_name)s"
-msgstr ""
+msgstr "%(category_name)s"
 
 #: templates/nav/admin_nav.html:263 templates/nav/top_nav_base.html:92
 msgid "Log Out"
-msgstr ""
+msgstr "Desconectarse"
 
 #: templates/nav/assistant_nav.html:5
 msgid "Enter Results"
-msgstr ""
+msgstr "Entrar resultados "
 
 #: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:192
 msgid "Enter Feedback"
-msgstr ""
+msgstr "Entrar retroalimentación"
 
 #: templates/nav/assistant_nav.html:22
 msgid "Participants List"
-msgstr ""
+msgstr "Lista de Participantes"
 
 #: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:177
 msgid "Institutions"
-msgstr ""
+msgstr "Instituciones"
 
 #: templates/nav/assistant_nav.html:29
 msgid "Code Names"
-msgstr ""
+msgstr "Nombres en clave"
 
 #: templates/nav/assistant_nav.html:45
 msgid "View Identifiers"
@@ -542,11 +558,11 @@ msgstr ""
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
-msgstr ""
+msgstr "Tabla de equipos"
 
 #: templates/nav/public_nav.html:22
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Tabla de oradores"
 
 #: templates/nav/public_nav.html:40
 msgid "Replies Tab"
@@ -554,15 +570,15 @@ msgstr ""
 
 #: templates/nav/public_nav.html:45
 msgid "Adjudicator Tab"
-msgstr ""
+msgstr "Tabla de jueces"
 
 #: templates/nav/public_nav.html:50
 msgid "Motions Tab"
-msgstr ""
+msgstr "Tabla de mociones"
 
 #: templates/nav/public_nav.html:60
 msgid "Draws"
-msgstr ""
+msgstr "Emparejamientos"
 
 #: templates/nav/public_nav.html:73
 msgid "View All"
@@ -571,15 +587,15 @@ msgstr ""
 #: templates/nav/public_nav.html:81
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr ""
+msgstr "Emparejamientos para %(round_name)s"
 
 #: templates/nav/public_nav.html:103 templates/nav/round_panel.html:57
 msgid "Results"
-msgstr ""
+msgstr "Resultados"
 
 #: templates/nav/public_nav.html:125
 msgid "Break"
-msgstr ""
+msgstr "Break"
 
 #: templates/nav/public_nav.html:182
 msgid "Feedback Progress"
@@ -591,11 +607,11 @@ msgstr ""
 
 #: templates/nav/round_panel.html:27
 msgid "Availability"
-msgstr ""
+msgstr "Disponibilidad"
 
 #: templates/nav/round_panel.html:37
 msgid "Draw"
-msgstr ""
+msgstr "Emparejamientos"
 
 #: templates/nav/round_panel.html:48
 msgid "Display"
@@ -604,35 +620,35 @@ msgstr ""
 #: templates/nav/top_nav_base.html:22
 #, python-format
 msgid "Administrator area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Área de administrador para  <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html:31
 #, python-format
 msgid "Assistant area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Área de ayudantes para  <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html:40
 #, python-format
 msgid "Public area for <strong>%(tournament)s</strong>"
-msgstr ""
+msgstr "Área pública para  <strong>%(tournament)s</strong>"
 
 #: templates/nav/top_nav_base.html:52
 msgid "Site Home"
-msgstr ""
+msgstr "Inicio del sitio"
 
 #: templates/nav/top_nav_base.html:96
 msgid "Login"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #: templates/registration/login.html:4
 msgctxt "page title"
 msgid "Login"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #: templates/registration/login.html:29
 msgctxt "page title"
 msgid "Log in to Tabbycat"
-msgstr ""
+msgstr "Iniciar sesión para Tabbycat"
 
 #: templates/registration/login.html:37
 msgid "Your username and password didn't match."
