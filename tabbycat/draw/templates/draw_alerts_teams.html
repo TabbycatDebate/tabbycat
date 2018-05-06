@@ -3,10 +3,10 @@
 {% with duplicates=round.duplicate_team_names %}
 
   {% if duplicates %}
-    {% blocktrans trimmed asvar text with teams=duplicates|join:", " count nadjs=duplicates|length %}
+    {% blocktrans trimmed asvar text with teams=duplicates|join:", " count nteams=duplicates|length %}
       <strong>{{ teams }}</strong> is competing in multiple debates.
     {% plural %}
-      The following <strong>{{ nadjs }}</strong> teams are competing in multiple debates: <strong>{{ teams }}</strong>
+      The following <strong>{{ nteams }}</strong> teams are competing in multiple debates: <strong>{{ teams }}</strong>
     {% endblocktrans %}
     {% include "components/item-info.html" with type="danger" %}
   {% endif %}
