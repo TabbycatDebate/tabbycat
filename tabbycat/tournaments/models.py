@@ -347,6 +347,12 @@ class Round(models.Model):
                 debate__count__gt=1)
 
     @cached_property
+    def duplicate_team_names(self):
+        from participants.models import Team
+        return Team.objects.filter(debateteam__debate__round=self).annotate(
+            Count('debateteam')).filter(debateteam__count__gt=1).values_list('short_name', flat=True)
+
+    @cached_property
     def num_debates_without_chair(self):
         """Returns the number of debates in the round that lack a chair, or have
         more than one chair."""

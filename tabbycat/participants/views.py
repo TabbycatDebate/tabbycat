@@ -184,11 +184,11 @@ class BaseTeamRecordView(BaseRecordView):
         tournament = self.tournament
 
         try:
-            kwargs['debateteam'] = self.object.debateteam_set.select_related(
-                'debate__round').prefetch_related('debate__round__motion_set').get(
+            kwargs['debateteams'] = self.object.debateteam_set.select_related(
+                'debate__round').prefetch_related('debate__round__motion_set').filter(
                 debate__round=tournament.current_round)
         except ObjectDoesNotExist:
-            kwargs['debateteam'] = None
+            kwargs['debateteams'] = None
 
         kwargs['team_short_name'] = self.object.code_name if self.use_team_code_names() else self.object.short_name
         kwargs['feedback_progress'] = FeedbackProgressForTeam(self.object, tournament)

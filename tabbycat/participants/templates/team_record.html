@@ -26,7 +26,23 @@ names are relevant, or to the team's real name if it is not. #}
           </div>
 
           {% if draw_released or admin_page %}
-            {% if debateteam %}
+            {% if debateteams|length > 1 %}
+              <div class="list-group-item">
+                <em>
+                  {# This is never in the singular, it's just needed to make pluralization work with i18n. #}
+                  {% blocktrans trimmed with team_name=team_short_name count ndebates=debateteams|length %}
+                    It looks like {{ team_name }} is competing in {{ ndebates }} debate this round.
+                  {% plural %}
+                    It looks like {{ team_name }} is competing in {{ ndebates }} debates this round.
+                  {% endblocktrans %}
+                  {% if not admin_page %}
+                    {% trans "If this is an error, please contact a tab director immediately." %}
+                  {% endif %}
+                </em>
+              </div>
+            {% endif %}
+
+            {% for debateteam in debateteams %}
               {% with debate=debateteam.debate %}
 
                 {# Position, opponent and venue #}
@@ -130,7 +146,7 @@ names are relevant, or to the team's real name if it is not. #}
 
               {% endwith %}
 
-            {% else %} {# elif not debateteam #}
+            {% empty %} {# elif not debateteam #}
               <div class="list-group-item">
                 <em>
                   {% blocktrans trimmed with team_name=team_short_name %}
@@ -138,7 +154,7 @@ names are relevant, or to the team's real name if it is not. #}
                   {% endblocktrans %}
                 </em>
               </div>
-            {% endif %} {# debateteam #}
+            {% endfor %} {# debateteam #}
 
           {% else %} {# elif not (draw_released or admin_page) #}
             <div class="list-group-item">

@@ -1,6 +1,12 @@
 {% extends "draw_base.html" %}
 {% load humanize static debate_tags i18n %}
 
+{% block page-alerts %}
+  <div class="mb-3">
+    {% include "draw_alerts_teams.html" %}
+  </div>
+{% endblock %}
+
 {% block content %}
 
   <div class="row mb-4">
