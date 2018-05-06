@@ -630,7 +630,7 @@ msgstr ""
 #: tournaments/templates/public_tournament_index.html:192
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr "Emparejamientos para %(round_name)s"
+msgstr "Enfrentamientos para %(round_name)s"
 
 #: tournaments/templates/public_tournament_index.html:102
 msgid "Check-Ins"

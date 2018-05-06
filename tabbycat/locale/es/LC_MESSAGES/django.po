@@ -554,7 +554,7 @@ msgstr ""
 
 #: templates/nav/assistant_nav.html:59
 msgid "Display/Print Draw"
-msgstr ""
+msgstr "Mostrar los enfrentamientos"
 
 #: templates/nav/public_nav.html:6
 msgid "Team Tab"
@@ -578,7 +578,7 @@ msgstr "Tabla de mociones"
 
 #: templates/nav/public_nav.html:60
 msgid "Draws"
-msgstr "Emparejamientos"
+msgstr "Enfrentamientos"
 
 #: templates/nav/public_nav.html:73
 msgid "View All"
@@ -587,7 +587,7 @@ msgstr ""
 #: templates/nav/public_nav.html:81
 #, python-format
 msgid "Draw for %(round_name)s"
-msgstr "Emparejamientos para %(round_name)s"
+msgstr "Enfrentamientos para %(round_name)s"
 
 #: templates/nav/public_nav.html:103 templates/nav/round_panel.html:57
 msgid "Results"
@@ -611,7 +611,7 @@ msgstr "Disponibilidad"
 
 #: templates/nav/round_panel.html:37
 msgid "Draw"
-msgstr "Emparejamientos"
+msgstr "Enfrentamientos"
 
 #: templates/nav/round_panel.html:48
 msgid "Display"
