@@ -273,11 +273,11 @@ class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
             )
         except SMTPException:
             messages.error(request, _("There was a problem sending private ballot URLs to adjudicators."))
-        except ConnectionError:
+        except ConnectionError as e:
             messages.error(request, _(
-                "There was a problem connecting to the e-mail server when trying to send private"
-                "ballot URLs to adjudicators."
-            ))
+                "There was a problem connecting to the e-mail server when trying to send private "
+                "ballot URLs to adjudicators: %(error)s"
+            ) % {'error': str(e)})
         else:
             messages.success(request, ngettext(
                 "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator.",
@@ -318,6 +318,12 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
         except SMTPException:
             messages.error(request, _("There was a problem sending private feedback URLs to speakers."))
             success = False
+        except ConnectionError as e:
+            messages.error(request, _(
+                "There was a problem connecting to the e-mail server when trying to send private "
+                "feedback URLs to speakers: %(error)s"
+            ) % {'error': str(e)})
+            success = False
 
         subject = _("Your personal feedback submission URL for %(tournament)s")
         message = _(
@@ -340,6 +346,12 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
             )
         except SMTPException:
             messages.error(request, _("There was a problem sending private feedback URLs to adjudicators."))
+            success = False
+        except ConnectionError as e:
+            messages.error(request, _(
+                "There was a problem connecting to the e-mail server when trying to send private "
+                "feedback URLs to adjudicators: %(error)s"
+            ) % {'error': str(e)})
             success = False
 
         if success:
