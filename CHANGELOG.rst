@@ -19,7 +19,7 @@ Change Log
 - Added (partial) translations in French, Spanish and Arabic
     - Users can now use a link in the footer to switch the site's language into French, Spanish, or Arabic. By default Tabbycat should also match your browser's language and so automatically apply those languages if it matches.
     - Our translations are generously provided by volunteers, but (so far) do not cover all of the interface text within Tabbycat. If you're interested in helping to translate new or existing languages please get in touch!
-    - Thanks to the excellent team at QatarDebate for contributing the Arabic translations, and to Hernando, Alejandro, Zoe and Julián for contributing the Spanish translations.
+    - Thanks to the excellent team at QatarDebate for contributing the Arabic translations, and to Alejandro, Hernando, Julian and Zoe for contributing the Spanish translations.
 - Added a new (beta) feature: allocation 'sharding'
     - Sharding allows you to split up the Adjudicator Allocation screen into a defined subset of the draw. This has been designed so that you can have multiple computers doing allocations simultaneously; allowing the adjudication core to split itself and tackle allocations in parallel.
     - Shards can be assigned into defined fractions (i.e. halves or fiths) according to specific criteria (i.e. bracket or priority) and following either a top-to-bottom sorting or a mixed sorting that ensures each bracket has an even proportion of each criteria.
