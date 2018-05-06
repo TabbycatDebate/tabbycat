@@ -523,6 +523,10 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
+        # Check that who-beat-whom isn't listed first
+        if value[0] in ["wbw", "wbwd"]:
+            raise ValidationError(_("Who-beat-whom can't be listed as the first metric"))
+
 
 @tournament_preferences_registry.register
 class TeamStandingsExtraMetrics(MultiValueChoicePreference):
