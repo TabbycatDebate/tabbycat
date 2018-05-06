@@ -70,11 +70,12 @@ As discussed earlier in *User identification*; Tabbie2's e-ballots are tied to u
     - On the other hand, the Hungarian algorithm can't account for relationships between adjudicators on a panel, so adjudicator-adjudicator conflicts aren't considered by Tabbycat's algorithm (though they are highlighted in the interface).
     - Tabbycat's cost function is simpler and more naive. On the other hand, Tabbie2's is more complicated and can be rather opaque (even if you read its source code).
     - Tabbie2 allows for single-gender panels to be charged an additional cost. Tabbycat's algorithm doesn't, but the interface does provide a way to easily check for this visually.
-    - Tabbie2 automatically calculates the importance of a room based on its bracket (team points). In Tabbycat, debate importance is configurable, allowing the adjudication core to specify which rooms are the most important, on a five-point scale. This allows more flexibility in directing the auto-allocator, by (for example) allowing you to prioritise live rooms over safe rooms to the degree you desire, but it also means you have to set the prioritisation yourself.
+    - Tabbie2 automatically calculates the importance of a room based on its bracket (team points). In Tabbycat, debate importance can be assigned for all debates automatically based on on a room's bracket or the quantity of live break categories inside it. Instead of — or subsequent to — automatic classification any importance  value can be manually tweaked as desired. These options mean there is a greater flexibility in determining which debates the allocation algorithm should prioritise.
 
 **Adjudicator allocation interface**. While both interfaces use drag and drop interactions, and allow for color highlights to help identify adjudicators by gender, region, and feedback rating, Tabbycat's allocation interface was designed to be usable on both small screens and projectors, and has a number of extra features that can help inform allocations. These features include:
 
     - Clashes are shown directly in the interface when they apply, but dragging an adjudicator will also show you the potential conflicts that would occur if they were relocated in a new panel. This can make it much easier to avoid creating new clashes when shifting adjudicators around the draw.
+    - An inline display of an estimate of whether a team is 'live' for each of their break categories — i.e. whether they are 'safe' (have enough points to break); 'dead' (cannot gain enough points to break); or 'live' (still in contention).
     - 'History' conflicts (where an adjudicator has seen a team before, or previously was on a panel with another judge) are displayed so they can be avoided.
     - Each adjudicator is present as occupying a particular position (chair, panellist, trainee) rather than having those positions calculated automatically.
     - Chairs can be 'swapped' by dragging adjudicators on top of each other, and an 'unallocated' area can be used to view and store adjudicators that have not been allocated.
@@ -101,9 +102,7 @@ Other considerations
 
 **Documentation**. Tabbycat has `relatively extensive documentation <http://tabbycat.readthedocs.io/en/stable/>`_ that can be useful for learning how to use a particular feature or understanding what is happening at a technical level.
 
-**Hosting location**. Tabbycat recommends using Heroku, an established cloud platform service for deploying web applications. Heroku is in turn hosted on Amazon Web Services (AWS). Both Heroku and AWS are highly reliable and widely used; downtime for both has historically been (at worst) less than 0.05% over an annual period.
-
-Tabbie2 is hosted on `Uberspace <https://uberspace.de/>`_; a pay-what-you-want web hosting service. To the best of our knowledge, uptime statistics are not available.
+**Hosting location**. Tabbycat recommends using Heroku, an established cloud platform service for deploying web applications. Heroku is in turn hosted on Amazon Web Services (AWS). Both Heroku and AWS are highly reliable and widely used; downtime for both has historically been (at worst) less than 0.05% over an annual period. Tabbie2 is hosted on `Uberspace <https://uberspace.de/>`_; a pay-what-you-want web hosting service. To the best of our knowledge, uptime statistics are not available.
 
 **Multi-format support**. If you are interested in tabbing both four- and two- team formats there may be some value in using and learning Tabbycat as it will let you use the same software in both settings.
 
@@ -162,7 +161,7 @@ Other considerations
 Comparison with hand tabbing
 ----------------------------
 
-Hand tabbing is easy, until it isn't. Traditionally, using a spreadsheet has been the go-to option for smallish tournaments because, hey, you're pretty handy with Excel, right? Making draws in spreadsheets (or on paper) seems like a pretty approachable task; ultimately it's all cells and formulae and numbers, unlike the more arcane underpinnings of actual tab software.
+Hand tabbing is easy, until it isn't. Traditionally, using a spreadsheet has been the go-to option for smallish tournaments because, hey, you're pretty handy with Excel, right? Making draws in spreadsheets (or on paper) seems like a pretty approachable task; ultimately it's all cells and formulae and numbers unlike the more arcane underpinnings of actual tab software.
 
 However, hand tabbing does require you to have a good working knowledge of how your format's rules work and how your spreadsheet software of choice can be made to work them. That process might be easy for you, or it might not be. But, either way, we'd like to think that Tabbycat offers a better alternative to hand-tabbing; regardless of how well you can actually hand-tab. The setup costs of creating a copy of Tabbycat are pretty low and you can speed through the process of draw creation, adjudicator allocation, and result entry at a pace. It's still not going to be as fast a spreadsheet for a small tournament, but we think it's getting pretty close. And in exchange for a little speed you get a much stronger guarantee of your draws being correct, options for online data entry, a more comprehensive and shareable final tab, and much more. Give it a shot!
 
