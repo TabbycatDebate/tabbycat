@@ -32,6 +32,10 @@ parser.add_argument(
     help="Heroku Postgres plan (default hobby-dev)")
 
 parser.add_argument(
+    "--web-dynos", type=str, default="1:free",
+    help="Web dyno specification, passed to heroku ps:scale web=[], e.g. 1:free, 1:hobby, 2:Standard-1X")
+
+parser.add_argument(
     "--import-tournament", type=str, metavar="IMPORT_DIR",
     help="Also run the importtournament command, importing from IMPORT_DIR")
 
@@ -129,7 +133,7 @@ def get_git_push_spec():
     exit(1)
 
 # Create the app with addons
-addons = ["memcachier", "papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
+addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create"]
 if addons:
     command.extend(["--addons", ",".join(addons)])
@@ -139,6 +143,9 @@ output = get_output_from_command(command)
 match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
+
+# Add the redis app (it needs a config flag)
+run_heroku_command(["addons:create", "heroku-redis:hobby-dev", "--maxmemory_policy", "allkeys-lru"])
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "heroku/python"])
@@ -169,10 +176,13 @@ else:
 push_spec = get_git_push_spec()
 run_command(["git", "push", remote_name, push_spec])
 
+# Scale dynos (by default it only adds 1 web dyno)
+run_heroku_command(["ps:scale", "web=%s" % args.web_dynos])
+
 # Make secret key
 command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])
 secret_key = get_output_from_command(command)
-secret_key = secret_key.strip().split()[0].strip()  # turn command output into string of just the key
+secret_key = secret_key.strip().split()[-1].strip()  # turn command output into string of just the key
 print_yellow("Made secret key: \"%s\"" % secret_key)
 command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
 run_heroku_command(command)

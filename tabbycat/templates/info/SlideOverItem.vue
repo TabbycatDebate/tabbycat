@@ -8,14 +8,14 @@
 </template>
 
 <script>
-import FeatherMixin from '../tables/FeatherMixin.vue'
 import _ from 'lodash'
+import FeatherMixin from '../tables/FeatherMixin.vue'
 
 export default {
   mixins: [ FeatherMixin ],
   props: { item: Object },
   computed: {
-    icon: function() {
+    icon: function () {
       if (!_.isUndefined(this.item.icon)) {
         return this.item.icon
       } else {

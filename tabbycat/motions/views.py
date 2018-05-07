@@ -1,27 +1,29 @@
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
 from django.forms.models import modelformset_factory
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin
+from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
+                                PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from utils.misc import redirect_round
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
 from .models import Motion
 from .forms import ModelAssignForm
+from .statistics import MotionStatistics
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_motions'
 
     def using_division_motions(self):
-        tournament = self.get_tournament()
-        return tournament.pref('enable_divisions') and tournament.pref('enable_division_motions')
+        return self.tournament.pref('enable_divisions') and self.tournament.pref('enable_division_motions')
 
     def get_template_names(self):
         if self.using_division_motions():
@@ -30,22 +32,21 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
             return ['public_motions.html']
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        order_by = 'seq' if tournament.pref('public_motions_order') == 'forward' else '-seq'
+        order_by = 'seq' if self.tournament.pref('public_motions_order') == 'forward' else '-seq'
 
         # Include rounds whether *either* motions are released *or* it's this
         # round or a previous round. The template checks motion_released again
         # and displays a "not released" message if motions are not released.
         filter_q = Q(motions_released=True)
         if not self.using_division_motions():
-            filter_q |= Q(seq__lte=tournament.current_round.seq)
+            filter_q |= Q(seq__lte=self.tournament.current_round.seq)
 
-        kwargs['rounds'] = tournament.round_set.filter(filter_q).order_by(
+        kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
                 order_by).prefetch_related('motion_set')
         return super().get_context_data(**kwargs)
 
 
-class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelFormSetView):
+class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
     # See also: participants.views.PublicConfirmShiftView.
@@ -55,17 +56,16 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
-        tournament = self.get_tournament()
         excludes = ['round', 'id']
 
-        if not tournament.pref('enable_flagged_motions'):
+        if not self.tournament.pref('enable_flagged_motions'):
             excludes.append('flagged')
 
-        if not tournament.pref('enable_divisions'):
+        if not self.tournament.pref('enable_divisions'):
             excludes.append('divisions')
 
         nexisting = self.get_formset_queryset().count()
-        if tournament.pref('enable_motions'):
+        if self.tournament.pref('enable_motions'):
             delete = True
             extras = max(3 - nexisting, 0)
         else:
@@ -76,13 +76,13 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
         return dict(can_delete=delete, extra=extras, exclude=excludes)
 
     def get_formset_queryset(self):
-        return self.get_round().motion_set.all()
+        return self.round.motion_set.all()
 
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
-        round = self.get_round()
+        round = self.round
         for i, motion in enumerate(motions, start=1):
-            if not self.get_tournament().pref('enable_motions'):
+            if not self.tournament.pref('enable_motions'):
                 motion.seq = i
             motion.round = round
             motion.save()
@@ -91,28 +91,28 @@ class EditMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, ModelF
             motion.delete()
 
         count = len(motions)
-        if not self.get_tournament().pref('enable_motions') and count == 1:
+        if not self.tournament.pref('enable_motions') and count == 1:
             messages.success(self.request, _("The motion has been saved."))
         elif count > 0:
-            messages.success(self.request, ungettext("%(count)d motion has been saved.",
+            messages.success(self.request, ngettext("%(count)d motion has been saved.",
                 "%(count)d motions have been saved.", count) % {'count': count})
 
         count = len(formset.deleted_objects)
         if count > 0:
-            messages.success(self.request, ungettext("%(count)d motion has been deleted.",
+            messages.success(self.request, ngettext("%(count)d motion has been deleted.",
                 "%(count)d motions have been deleted.", count) % {'count': count})
 
         return redirect_round('draw-display', round)
 
 
-class AssignMotionsView(SuperuserRequiredMixin, RoundMixin, ModelFormSetView):
+class AssignMotionsView(AdministratorMixin, RoundMixin, ModelFormSetView):
 
     template_name = 'assign.html'
     formset_factory_kwargs = dict(extra=0, fields=['divisions'])
     formset_model = Motion
 
     def get_formset_queryset(self):
-        return self.get_round().motion_set.all()
+        return self.round.motion_set.all()
 
     def get_formset_class(self):
         return modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
@@ -120,15 +120,15 @@ class AssignMotionsView(SuperuserRequiredMixin, RoundMixin, ModelFormSetView):
     def formset_valid(self, formset):
         formset.save()  # Should be checking for validity but on a deadline and was buggy
         messages.success(self.request, 'Those motion assignments have been saved.')
-        return redirect_round('motions-edit', self.get_round())
+        return redirect_round('motions-edit', self.round)
 
 
-class BaseReleaseMotionsView(SuperuserRequiredMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
+class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'draw-display'
 
     def post(self, request, *args, **kwargs):
-        round = self.get_round()
+        round = self.round
         round.motions_released = self.motions_released
         round.save()
         self.log_action()
@@ -150,12 +150,40 @@ class UnreleaseMotionsView(BaseReleaseMotionsView):
     message_text = _("Unreleased the motion(s).")
 
 
-class DisplayMotionsView(OptionalAssistantTournamentPageMixin, RoundMixin, TemplateView):
+class BaseDisplayMotionsView(RoundMixin, TemplateView):
 
-    assistant_page_permissions = ['all_areas']
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = self.get_round().motion_set.all()
-        kwargs['infos'] = self.get_round().motion_set.exclude(info_slide="")
+        kwargs['motions'] = self.round.motion_set.all()
+        kwargs['infos'] = self.round.motion_set.exclude(info_slide="")
         return super().get_context_data(**kwargs)
+
+
+class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
+    pass
+
+
+class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDisplayMotionsView):
+    assistant_page_permissions = ['all_areas']
+
+
+class BaseMotionStatisticsView(TournamentMixin, TemplateView):
+
+    template_name = 'motion_statistics.html'
+    page_title = gettext_lazy("Motion Statistics")
+    page_emoji = '💭'
+
+    def get_context_data(self, **kwargs):
+        kwargs['statistics'] = MotionStatistics(self.tournament)
+        return super().get_context_data(**kwargs)
+
+
+class MotionStatisticsView(AdministratorMixin, BaseMotionStatisticsView):
+    pass
+
+
+class PublicMotionStatisticsView(PublicTournamentPageMixin, BaseMotionStatisticsView):
+    public_page_preference = 'motion_tab_released'
+    template_name = 'public_motion_statistics.html'
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT

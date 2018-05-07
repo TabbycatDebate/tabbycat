@@ -1,7 +1,12 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.PublicMotionsView.as_view(), name='motions-public'),
+    path('',
+        views.PublicMotionsView.as_view(),
+        name='motions-public'),
+    path('statistics/',
+        views.PublicMotionStatisticsView.as_view(),
+        name='motions-public-statistics'),
 ]

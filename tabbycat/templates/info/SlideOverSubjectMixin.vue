@@ -10,21 +10,21 @@ export default {
     return { annotationMethodName: null }
   },
   methods: {
-    showSlideOver: function(event, subject) {
+    showSlideOver: function (event, subject) {
       var slide = this.formatForSlideOver(subject)
       var annotationCall = this.annotationMethodName
       var annotationItem = this.annotateDataForSlideOver
       this.$eventHub.$emit('set-slideover', slide, annotationCall, annotationItem)
     },
-    hideSlideOver: function(event) {
+    hideSlideOver: function (event) {
       this.$eventHub.$emit('unset-slideover')
     },
-    formatForSlideOver: function(subject) {
+    formatForSlideOver: function (subject) {
       return subject // Children should override
     },
   },
   computed: {
-    annotateDataForSlideOver: function() {
+    annotateDataForSlideOver: function () {
       return null  // Children should return an object that can be used by
                   // annotateMethodForSlideOver; such as a conflictable adj
     }

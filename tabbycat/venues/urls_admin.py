@@ -1,23 +1,23 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
 
-    url(r'^round/(?P<round_seq>\d+)/edit/$',
+    path('round/<int:round_seq>/edit/',
         views.EditVenuesView.as_view(),
         name='venues-edit'),
-    url(r'^round/(?P<round_seq>\d+)/save/$',
+    path('round/<int:round_seq>/save/',
         views.SaveVenuesView.as_view(),
         name='save-debate-venues'),
-    url(r'^round/(?P<round_seq>\d+)/autoallocate/$',
+    path('round/<int:round_seq>/autoallocate/',
         views.AutoAllocateVenuesView.as_view(),
         name='venues-auto-allocate'),
 
-    url(r'^categories/$',
+    path('categories/',
         views.VenueCategoriesView.as_view(),
         name='venues-categories'),
-    url(r'^constraints/$',
+    path('constraints/',
         views.VenueConstraintsView.as_view(),
         name='venues-constraints'),
 ]

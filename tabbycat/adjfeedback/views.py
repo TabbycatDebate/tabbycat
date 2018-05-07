@@ -2,57 +2,38 @@ import json
 import logging
 import math
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import F, Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from options.utils import use_team_code_names, use_team_code_names_data_entry
 from participants.models import Adjudicator, Team
 from participants.prefetch import populate_feedback_scores
+from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
+from results.prefetch import populate_wins_for_debateteams
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
+from tournaments.models import Round
 
 from utils.misc import reverse_tournament
-from utils.mixins import (CacheMixin, SuperuserOrTabroomAssistantTemplateResponseMixin,
-                          SuperuserRequiredMixin)
-from utils.views import JsonDataResponseView, PostOnlyRedirectView, VueTableTemplateView
+from utils.mixins import AdministratorMixin, AssistantMixin
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
-from .forms import make_feedback_form_class
+from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
-from .utils import get_feedback_overview, parse_feedback
+from .utils import get_feedback_overview
+from .prefetch import populate_debate_adjudicators
 from .progress import get_feedback_progress
 
 logger = logging.getLogger(__name__)
-
-
-class GetAdjScores(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
-
-    def get_data(self):
-        feedback_weight = self.get_tournament().current_round.feedback_weight
-        data = {}
-        for adj in Adjudicator.objects.all():
-            data[adj.id] = adj.weighted_score(feedback_weight)
-        return data
-
-
-class GetAdjFeedbackJSON(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
-
-    def get_data(self):
-        adjudicator = get_object_or_404(Adjudicator, pk=self.kwargs['pk'])
-        feedback = adjudicator.get_feedback().filter(confirmed=True)
-        questions = self.get_tournament().adj_feedback_questions
-        data = [parse_feedback(f, questions) for f in feedback]
-        return data
 
 
 class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
@@ -60,7 +41,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
 
     def get_adjudicators(self):
         if not hasattr(self, '_adjudicators'):
-            t = self.get_tournament()
+            t = self.tournament
             if t.pref('share_adjs'):
                 self._adjudicators = Adjudicator.objects.filter(Q(tournament=t) | Q(tournament__isnull=True))
             else:
@@ -69,7 +50,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         return self._adjudicators
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
         adjudicators = self.get_adjudicators()
         weight = t.current_round.feedback_weight
         scores = [a.weighted_score(weight) for a in adjudicators]
@@ -124,7 +105,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         return super().get_context_data(**kwargs)
 
     def get_table(self):
-        t = self.get_tournament()
+        t = self.tournament
         adjudicators = self.get_adjudicators()
         # Gather stats necessary to construct the graphs
         adjudicators = get_feedback_overview(t, adjudicators)
@@ -134,58 +115,64 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
         return table
 
 
-class FeedbackOverview(LoginRequiredMixin, BaseFeedbackOverview):
+class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
 
-    page_title = 'Feedback Overview'
+    page_title = gettext_lazy("Feedback Overview")
     page_emoji = '🙅'
     for_public = False
-    sort_key = 'Score'
+    sort_key = 'score'
     sort_order = 'desc'
     template_name = 'feedback_overview.html'
 
     def annotate_table(self, table, adjudicators):
-        table.add_adjudicator_columns(adjudicators, hide_institution=True, subtext='institution')
+        feedback_weight = self.tournament.current_round.feedback_weight
+        scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
+
+        table.add_adjudicator_columns(adjudicators, show_institutions=False, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
-        table.add_weighted_score_columns(adjudicators)
+        table.add_weighted_score_columns(adjudicators, scores)
         table.add_test_score_columns(adjudicators, editable=True)
+        table.add_score_difference_columns(adjudicators, scores)
+        table.add_score_variance_columns(adjudicators)
         table.add_feedback_graphs(adjudicators)
         table.add_feedback_link_columns(adjudicators)
-        table.add_feedback_misc_columns(adjudicators)
+        if self.tournament.pref('enable_adj_notes'):
+            table.add_feedback_note_columns(adjudicators)
         return table
 
 
-class FeedbackByTargetView(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
+class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
     template_name = "feedback_base.html"
-    page_title = 'Find Feedback on Adjudicator'
+    page_title = gettext_lazy("Find Feedback on Adjudicator")
     page_emoji = '🔍'
 
     def get_table(self):
-        tournament = self.get_tournament()
-        table = TabbycatTableBuilder(view=self, sort_key="Name")
+        tournament = self.tournament
+        table = TabbycatTableBuilder(view=self, sort_key="name")
         table.add_adjudicator_columns(tournament.adjudicator_set.all())
         feedback_data = []
         for adj in tournament.adjudicator_set.all():
             count = adj.adjudicatorfeedback_set.count()
             feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
             })
-        table.add_column("Feedbacks", feedback_data)
+        table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, feedback_data)
         return table
 
 
-class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplateView):
+class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = "feedback_base.html"
-    page_title = 'Find Feedback'
+    page_title = gettext_lazy("Find Feedback")
     page_emoji = '🔍'
 
     def get_tables(self):
-        tournament = self.get_tournament()
+        tournament = self.tournament
 
         teams = tournament.team_set.all()
         team_table = TabbycatTableBuilder(
-            view=self, title='From Teams', sort_key='Team')
+            view=self, title='From Teams', sort_key='team')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
@@ -193,16 +180,16 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
                 source_team__team=team).select_related(
                 'source_team__team').count()
             team_feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-team',
                                            tournament,
                                            kwargs={'pk': team.id}),
             })
-        team_table.add_column("Feedbacks", team_feedback_data)
+        team_table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, team_feedback_data)
 
         adjs = tournament.adjudicator_set.all()
         adj_table = TabbycatTableBuilder(
-            view=self, title='From Adjudicators', sort_key='Name')
+            view=self, title='From Adjudicators', sort_key='name')
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
@@ -210,21 +197,60 @@ class FeedbackBySourceView(LoginRequiredMixin, TournamentMixin, VueTableTemplate
                 source_adjudicator__adjudicator=adj).select_related(
                 'source_adjudicator__adjudicator').count()
             adj_feedback_data.append({
-                'text': ungettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
+                'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-adjudicator',
                                            tournament,
                                            kwargs={'pk': adj.id}),
             })
-        adj_table.add_column("Feedbacks", adj_feedback_data)
+        adj_table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, adj_feedback_data)
 
         return [team_table, adj_table]
 
 
-class FeedbackCardsView(LoginRequiredMixin, TournamentMixin, TemplateView):
+class FeedbackMixin(TournamentMixin):
+
+    def get_feedbacks(self):
+        feedbacks = self.get_feedback_queryset()
+
+        populate_debate_adjudicators(feedbacks)
+        populate_wins_for_debateteams([f.source_team for f in feedbacks if f.source_team is not None])
+
+        # Can't prefetch an abstract model effectively; so get all answers...
+        questions = list(self.tournament.adj_feedback_questions)
+        for question in questions:
+            question.answers = list(question.answer_set.values())
+
+        for feedback in feedbacks:
+            feedback.items = []
+            # ...and stitch them together manually
+            for question in questions:
+                for answer in question.answers:
+                    if answer['feedback_id'] == feedback.id:
+                        feedback.items.append({'question': question,
+                                               'answer': answer['answer']})
+                        break # Should only be one match
+
+        return feedbacks
+
+    def get_feedback_queryset(self):
+        return AdjudicatorFeedback.objects.filter(
+            Q(adjudicator__tournament=self.tournament) |
+            Q(adjudicator__tournament__isnull=True)
+        ).select_related(
+            'adjudicator',
+            'source_adjudicator__adjudicator',
+            'source_adjudicator__debate__round',
+            'source_team__debate__round',
+            'source_team__team',
+        )
+
+
+class FeedbackCardsView(FeedbackMixin, AdministratorMixin, TournamentMixin, TemplateView):
     """Base class for views displaying feedback as cards."""
+    template_name = "feedback_cards_list.html"
 
     def get_score_thresholds(self):
-        tournament = self.get_tournament()
+        tournament = self.tournament
         min_score = tournament.pref('adj_min_score')
         max_score = tournament.pref('adj_max_score')
         score_range = max_score - min_score
@@ -234,22 +260,6 @@ class FeedbackCardsView(LoginRequiredMixin, TournamentMixin, TemplateView):
             'high_score'    : max_score - score_range / 10,
         }
 
-    def get_feedbacks(self):
-        questions = self.get_tournament().adj_feedback_questions
-        feedbacks = self.get_feedback_queryset()
-        for feedback in feedbacks:
-            feedback.items = []
-            for question in questions:
-                try:
-                    answer = question.answer_set.get(feedback=feedback).answer
-                except ObjectDoesNotExist:
-                    continue
-                feedback.items.append({'question': question, 'answer': answer})
-        return feedbacks
-
-    def get_feedback_queryset(self):
-        raise NotImplementedError()
-
     def get_context_data(self, **kwargs):
         kwargs['feedbacks'] = self.get_feedbacks()
         kwargs['score_thresholds'] = self.get_score_thresholds()
@@ -258,16 +268,28 @@ class FeedbackCardsView(LoginRequiredMixin, TournamentMixin, TemplateView):
 
 class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
-
-    template_name = "feedback_latest.html"
+    page_title = gettext_lazy("Latest Feedback")
+    page_subtitle = gettext_lazy("(30 most recent)")
+    page_emoji = '🕗 '
 
     def get_feedback_queryset(self):
-        t = self.get_tournament()
-        return AdjudicatorFeedback.objects.filter(
-            Q(adjudicator__tournament=t) |
-            Q(adjudicator__tournament__isnull=True)).order_by(
-            '-timestamp')[:30].select_related(
-            'adjudicator', 'source_adjudicator__adjudicator', 'source_team__team')
+        queryset = super().get_feedback_queryset()
+        return queryset.order_by('-timestamp')[:30]
+
+
+class ImportantFeedbackView(FeedbackCardsView):
+    """View displaying the feedback in order of most 'important'."""
+    page_title = gettext_lazy("Important Feedback")
+    page_subtitle = gettext_lazy("(rating was much higher/lower than expected)")
+    page_emoji = '⁉️'
+
+    def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
+        return queryset.annotate(
+            feedback_importance=F('score') - F('adjudicator__test_score')
+        ).filter(
+            Q(feedback_importance__gt=2) | Q(feedback_importance__lt=-2),
+        ).order_by('-timestamp')
 
 
 class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView):
@@ -288,8 +310,9 @@ class FeedbackFromSourceView(SingleObjectFromTournamentMixin, FeedbackCardsView)
         return super().get(request, *args, **kwargs)
 
     def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
         kwargs = {self.adjfeedback_filter_field: self.object}
-        return AdjudicatorFeedback.objects.filter(**kwargs).order_by('-timestamp')
+        return queryset.filter(**kwargs).order_by('-timestamp')
 
 
 class FeedbackOnAdjudicatorView(FeedbackFromSourceView):
@@ -318,74 +341,102 @@ class FeedbackFromAdjudicatorView(FeedbackFromSourceView):
     allow_null_tournament = True
 
 
-class GetAdjFeedback(LoginRequiredMixin, TournamentMixin, JsonDataResponseView):
+class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
 
-    def parse_feedback(self, f, questions):
+    def get_tables(self):
+        tournament = self.tournament
 
-        if f.source_team:
-            source_annotation = " (" + f.source_team.get_result_display() + ")"
-        elif f.source_adjudicator:
-            source_annotation = " (" + f.source_adjudicator.get_type_display() + ")"
+        use_code_names = use_team_code_names_data_entry(self.tournament, self.tabroom)
+        teams_table = TabbycatTableBuilder(view=self, sort_key="team", title=_("A Team"))
+        add_link_data = [{
+            'text': team_name_for_data_entry(team, use_code_names),
+            'link': self.get_from_team_link(team)
+        } for team in tournament.team_set.all()]
+        header = {'key': 'team', 'title': _("Team")}
+        teams_table.add_column(header, add_link_data)
+
+        if tournament.pref('show_team_institutions'):
+            teams_table.add_column({
+                'key': 'institution',
+                'icon': 'home',
+                'tooltip': _("Institution"),
+            }, [team.institution.code if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
+
+        if tournament.pref('share_adjs'):
+            adjudicators = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True))
         else:
-            source_annotation = ""
+            adjudicators = tournament.adjudicator_set.all()
 
-        data = [
-            str(f.round.abbreviation),
-            str(str(f.version) + (f.confirmed and "*" or "")),
-            f.debate.bracket,
-            f.debate.matchup,
-            str(str(f.source) + source_annotation),
-            f.score,
-        ]
-        for question in questions:
-            try:
-                data.append(question.answer_set.get(feedback=f).answer)
-            except ObjectDoesNotExist:
-                data.append("-")
-        data.append(f.confirmed)
-        return data
-
-    def get_data(self):
-        t = self.get_tournament()
-        adj = get_object_or_404(Adjudicator, pk=int(self.request.GET['id']))
-        feedback = adj.get_feedback().filter(confirmed=True)
-        questions = t.adj_feedback_questions
-
-        data = [self.parse_feedback(f, questions) for f in feedback]
-        data = [parse_feedback(f, questions) for f in feedback]
-        return {'aaData': data}
-
-
-class BaseAddFeedbackIndexView(TournamentMixin, TemplateView):
-
-    def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        if not tournament.pref('share_adjs'):
-            kwargs['adjudicators'] = tournament.adjudicator_set.all().order_by('name')
+        adjs_table = TabbycatTableBuilder(view=self, sort_key="adjudicator", title=_("An Adjudicator"))
+        if tournament.pref('share_adjs'):
+            adjudicators = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True))
         else:
-            Adjudicator.objects.all().order_by('name')
+            adjudicators = tournament.adjudicator_set.all()
 
-        kwargs['teams'] = tournament.team_set.all()
-        return super().get_context_data(**kwargs)
+        add_link_data = [{
+            'text': adj.name,
+            'link': self.get_from_adj_link(adj),
+        } for adj in adjudicators]
+        header = {'key': 'adjudicator', 'title': _("Adjudicator")}
+        adjs_table.add_column(header, add_link_data)
+
+        if tournament.pref('show_adjudicator_institutions'):
+            adjs_table.add_column({
+                'key': 'institution',
+                'icon': 'home',
+                'tooltip': _("Institution"),
+            }, [adj.institution.code if adj.institution else TabbycatTableBuilder.BLANK_TEXT for adj in adjudicators])
+
+        return [teams_table, adjs_table]
 
 
-class TabroomAddFeedbackIndexView(SuperuserOrTabroomAssistantTemplateResponseMixin, BaseAddFeedbackIndexView):
-    """View for the index page for tabroom officials to add feedback. The index
+class AdminAddFeedbackIndexView(AdministratorMixin, BaseAddFeedbackIndexView):
+    """View for the index page for administrators to add feedback. The index
     page lists all possible sources; officials should then choose the author
     of the feedback."""
+    template_name = 'add_feedback.html'
+    tabroom = True
 
-    superuser_template_name = 'add_feedback.html'
-    assistant_template_name = 'assistant_add_feedback.html'
+    def get_from_adj_link(self, adj):
+        return reverse_tournament('adjfeedback-add-from-adjudicator',
+                self.tournament, kwargs={'source_id': adj.id})
+
+    def get_from_team_link(self, team):
+        return reverse_tournament('adjfeedback-add-from-team',
+                self.tournament, kwargs={'source_id': team.id})
 
 
-class PublicAddFeedbackIndexView(CacheMixin, PublicTournamentPageMixin, BaseAddFeedbackIndexView):
+class AssistantAddFeedbackIndexView(AssistantMixin, BaseAddFeedbackIndexView):
+    """As for AdminAddFeedbackIndexView, but for assistants."""
+    template_name = 'assistant_add_feedback.html'
+    tabroom = True
+
+    def get_from_adj_link(self, adj):
+        return reverse_tournament('adjfeedback-assistant-add-from-adjudicator',
+                self.tournament, kwargs={'source_id': adj.id})
+
+    def get_from_team_link(self, team):
+        return reverse_tournament('adjfeedback-assistant-add-from-team',
+                self.tournament, kwargs={'source_id': team.id})
+
+
+class PublicAddFeedbackIndexView(PublicTournamentPageMixin, BaseAddFeedbackIndexView):
     """View for the index page for public users to add feedback. The index page
     lists all possible sources; public users should then choose themselves."""
 
     template_name = 'public_add_feedback.html'
+    tabroom = False
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'public'
+
+    def get_from_adj_link(self, team):
+        return reverse_tournament('adjfeedback-public-add-from-adjudicator-pk',
+                self.tournament, kwargs={'source_id': team.id})
+
+    def get_from_team_link(self, team):
+        return reverse_tournament('adjfeedback-public-add-from-team-pk',
+                self.tournament, kwargs={'source_id': team.id})
 
 
 class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormView):
@@ -397,7 +448,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
     action_log_content_object_attr = 'adj_feedback'
 
     def get_form_class(self):
-        return make_feedback_form_class(self.object, self.get_tournament(),
+        return make_feedback_form_class(self.object, self.tournament,
                 self.get_submitter_fields(), **self.feedback_form_class_kwargs)
 
     def form_valid(self, form):
@@ -419,8 +470,9 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         if isinstance(self.object, Adjudicator):
             self.source_name = self.object.name
         elif isinstance(self.object, Team):
-            self.source_name = self.object.short_name
+            self.source_name = self.get_team_short_name(self.object)
         else:
+            logger.error("self.object was neither an Adjudicator nor a Team")
             self.source_name = "<ERROR>"
 
     def get(self, request, *args, **kwargs):
@@ -432,7 +484,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         return super().post(request, *args, **kwargs)
 
 
-class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, BaseAddFeedbackView):
+class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackView):
     """View for tabroom officials to add feedback."""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SAVE
@@ -443,6 +495,10 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, B
         'use_tournament_password': False,
     }
 
+    def get_team_short_name(self, team):
+        use_code_names = use_team_code_names_data_entry(self.tournament, tabroom=True)
+        return team_name_for_data_entry(team, use_code_names)
+
     def form_valid(self, form):
         result = super().form_valid(form)
         messages.success(self.request, "Feedback from {} on {} added.".format(
@@ -450,7 +506,15 @@ class TabroomAddFeedbackView(TabroomSubmissionFieldsMixin, LoginRequiredMixin, B
         return result
 
     def get_success_url(self):
-        return reverse_tournament('adjfeedback-add-index', self.get_tournament())
+        return reverse_tournament('adjfeedback-add-index', self.tournament)
+
+
+class AdminAddFeedbackView(AdministratorMixin, BaseTabroomAddFeedbackView):
+    pass
+
+
+class AssistantAddFeedbackView(AssistantMixin, BaseTabroomAddFeedbackView):
+    pass
 
 
 class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMixin, BaseAddFeedbackView):
@@ -470,9 +534,18 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
             self.source_name, self.adj_feedback.adjudicator.name))
         return result
 
+    def get_context_data(self, **kwargs):
+        kwargs['no_rounds_released'] = not self.tournament.round_set.filter(
+                draw_status=Round.STATUS_RELEASED).exists()
+        return super().get_context_data(**kwargs)
+
 
 class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is a randomised one."""
+
+    def get_team_short_name(self, team):
+        # It's a private URL, so always show the team's real name.
+        return team.short_name
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'private-urls'
@@ -481,16 +554,22 @@ class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Pub
         # Redirect to non-cached page: their original private URL
         if isinstance(self.object, Adjudicator):
             return reverse_tournament('adjfeedback-public-add-from-adjudicator-randomised',
-                self.get_tournament(), kwargs={'url_key': self.object.url_key})
+                self.tournament, kwargs={'url_key': self.object.url_key})
         elif isinstance(self.object, Team):
             return reverse_tournament('adjfeedback-public-add-from-team-randomised',
-                self.get_tournament(), kwargs={'url_key': self.object.url_key})
+                self.tournament, kwargs={'url_key': self.object.url_key})
         else:
             raise ValueError("Private feedback source is not of a valid type")
 
 
 class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
     """View for public users to add feedback, where the URL is by object ID."""
+
+    tabroom = False
+
+    def get_team_short_name(self, team):
+        use_code_names = use_team_code_names(self.tournament, admin=False)
+        return team.code_name if use_code_names else team.short_name
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_feedback') == 'public'
@@ -499,10 +578,10 @@ class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):
         # Redirect to non-cached page: the public feedback form
         if isinstance(self.object, Adjudicator):
             return reverse_tournament('adjfeedback-public-add-from-adjudicator-pk',
-                self.get_tournament(), kwargs={'source_id': self.object.id})
+                self.tournament, kwargs={'source_id': self.object.id})
         elif isinstance(self.object, Team):
             return reverse_tournament('adjfeedback-public-add-from-team-pk',
-                self.get_tournament(), kwargs={'source_id': self.object.id})
+                self.tournament, kwargs={'source_id': self.object.id})
         else:
             raise ValueError("Public feedback source is not of a valid type")
 
@@ -511,7 +590,7 @@ class AdjudicatorActionError(RuntimeError):
     pass
 
 
-class BaseAdjudicatorActionView(LogActionMixin, SuperuserRequiredMixin, TournamentMixin, PostOnlyRedirectView):
+class BaseAdjudicatorActionView(LogActionMixin, AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
 
     tournament_redirect_pattern_name = 'adjfeedback-overview'
     action_log_content_object_attr = 'adjudicator'
@@ -550,13 +629,13 @@ class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
         adjudicator.save()
 
         atsh = AdjudicatorTestScoreHistory(
-            adjudicator=adjudicator, round=self.get_tournament().current_round,
+            adjudicator=adjudicator, round=self.tournament.current_round,
             score=score)
         atsh.save()
         self.atsh = atsh
 
 
-class SetAdjudicatorBreakingStatusView(SuperuserRequiredMixin, TournamentMixin, LogActionMixin, View):
+class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogActionMixin, View):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATOR_BREAK_SET
 
@@ -585,13 +664,13 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
 
 class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
-    page_title = 'Feedback Progress'
+    page_title = gettext_lazy("Feedback Progress")
     page_subtitle = ''
     page_emoji = '🆘'
 
     def get_feedback_progress(self):
         if not hasattr(self, "_feedback_progress_result"):
-            self._feedback_progress_result = get_feedback_progress(self.get_tournament())
+            self._feedback_progress_result = get_feedback_progress(self.tournament)
         return self._feedback_progress_result
 
     def get_page_subtitle(self):
@@ -603,13 +682,13 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         teams_progress, adjs_progress = self.get_feedback_progress()
 
         adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
-            sort_key="Owed", sort_order="desc")
+            sort_key="owed", sort_order="desc")
         adjudicators = [progress.adjudicator for progress in adjs_progress]
-        adjs_table.add_adjudicator_columns(adjudicators, hide_metadata=True)
+        adjs_table.add_adjudicator_columns(adjudicators, show_metadata=False)
         adjs_table.add_feedback_progress_columns(adjs_progress)
 
         teams_table = FeedbackTableBuilder(view=self, title="From Teams",
-            sort_key="Owed", sort_order="desc")
+            sort_key="owed", sort_order="desc")
         teams = [progress.team for progress in teams_progress]
         teams_table.add_team_columns(teams)
         teams_table.add_feedback_progress_columns(teams_progress)
@@ -617,9 +696,42 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         return [adjs_table, teams_table]
 
 
-class FeedbackProgress(SuperuserRequiredMixin, BaseFeedbackProgressView):
+class FeedbackProgress(AdministratorMixin, BaseFeedbackProgressView):
     template_name = 'feedback_base.html'
 
 
-class PublicFeedbackProgress(PublicTournamentPageMixin, CacheMixin, BaseFeedbackProgressView):
+class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView):
     public_page_preference = 'feedback_progress'
+
+
+# ==============================================================================
+# Update adjudicator scores in bulk
+# ==============================================================================
+
+class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, TournamentMixin, FormView):
+    template_name = 'update_adjudicator_scores.html'
+    form_class = UpdateAdjudicatorScoresForm
+    action_log_type = ActionLogEntry.ACTION_TYPE_UPDATE_ADJUDICATOR_SCORES
+
+    def get_context_data(self, **kwargs):
+        sample_adjs = self.tournament.relevant_adjudicators.all()[:3]
+        if len(sample_adjs) == 0:
+            kwargs['no_adjs_in_database'] = True
+            kwargs['sample'] = [("Estella Brandybuck", 5.0), ("Pia Hermansson", 4.0), ("Lucas Sousa", 3.5)]
+        else:
+            kwargs['sample'] = [(adj.name, adj.test_score) for adj in sample_adjs]
+        return super().get_context_data(**kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.tournament
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_tournament('adjfeedback-overview', self.tournament)
+
+    def form_valid(self, form):
+        nupdated = form.save()
+        messages.success(self.request, _("Updated test scores for %(count)d adjudicators.") % {'count': nupdated})
+        self.log_action()
+        return super().form_valid(form)

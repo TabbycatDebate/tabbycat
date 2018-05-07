@@ -4,24 +4,24 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.utils.text import slugify
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView
 from dynamic_preferences.views import PreferenceFormView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
-from utils.mixins import SuperuserRequiredMixin
+from utils.mixins import AdministratorMixin
 from utils.misc import reverse_tournament
 
 from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
-from .dynamic_preferences_registry import tournament_preferences_registry
+from .preferences import tournament_preferences_registry
 
 logger = logging.getLogger(__name__)
 
 
-class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "preferences_index.html"
 
     def get_preset_options(self):
@@ -44,7 +44,7 @@ class TournamentConfigIndexView(SuperuserRequiredMixin, TournamentMixin, Templat
         return super().get_context_data(**kwargs)
 
 
-class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
+class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
     registry = tournament_preferences_registry
     section = None
     template_name = "preferences_section_set.html"
@@ -56,16 +56,15 @@ class TournamentPreferenceFormView(SuperuserRequiredMixin, LogActionMixin, Tourn
         return super().form_valid(*args, **kwargs)
 
     def get_success_url(self):
-        return reverse_tournament('options-tournament-index', self.get_tournament())
+        return reverse_tournament('options-tournament-index', self.tournament)
 
     def get_form_class(self, *args, **kwargs):
-        tournament = self.get_tournament()
         section = self.kwargs.get('section', None)
-        form_class = tournament_preference_form_builder(instance=tournament, section=section)
+        form_class = tournament_preference_form_builder(instance=self.tournament, section=section)
         return form_class
 
 
-class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "preferences_presets_confirm.html"
 
     def get_selected_preset(self):
@@ -80,9 +79,8 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
         return selected_presets[0]
 
     def get_context_data(self, **kwargs):
-        t = self.get_tournament()
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, t)
+        preset_preferences = get_preferences_data(selected_preset, self.tournament)
         kwargs["preset_title"] = selected_preset.name
         kwargs["preset_name"] = self.kwargs["preset_name"]
         kwargs["changed_preferences"] = [p for p in preset_preferences if p['changed']]
@@ -96,15 +94,14 @@ class ConfirmTournamentPreferencesView(SuperuserRequiredMixin, TournamentMixin, 
             return ["preferences_presets_complete.html"]
 
     def save_presets(self):
-        t = self.get_tournament()
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, t)
+        preset_preferences = get_preferences_data(selected_preset, self.tournament)
 
         for pref in preset_preferences:
-            t.preferences[pref['key']] = pref['new_value']
+            self.tournament.preferences[pref['key']] = pref['new_value']
 
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
-                user=self.request.user, tournament=t, content_object=t)
+                user=self.request.user, tournament=self.tournament, content_object=self.tournament)
         messages.success(self.request, _("Tournament options saved according to preset "
                 "%(name)s.") % {'name': selected_preset.name})
 

@@ -1,70 +1,76 @@
-{% load humanize %}
+{% load humanize i18n %}
 
 <div class="card">
   <div class="list-group list-group-flush">
 
-    <div class="list-group-item h5 mb-0">
+    {% if not feedback.confirmed %}
+      <div class="list-group-item list-group-item-dark h6" data-toggle="tooltip"
+           title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has done submitted several times on the same person.' %}">
+      {% trans "Unconfirmed; will not affect this adjudicator's score." %}
+      </div>
+    {% endif %}
+    <div class="list-group-item h5">
       <span class="badge float-right
             {% if feedback.score <= score_thresholds.low_score %}badge-danger
             {% elif feedback.score <= score_thresholds.medium_score %}badge-warning
             {% elif feedback.score > score_thresholds.high_score %}badge-success
-            {% else %}badge-primary{% endif %}">
+            {% else %}badge-primary{% endif %}" data-toggle="tooltip"
+            title="{% trans "The score given in this piece of feedback." %}">
         {{ feedback.score }}
       </span>
-      On {{ feedback.adjudicator.name }}
-      <span class="text-secondary small">
-        <br>as {{ feedback.debate_adjudicator.get_type_display }}
+      <span class="badge mr-2 badge-light float-right" data-toggle="tooltip">
+        {% blocktrans trimmed with test=feedback.adjudicator.test_score %}
+          Test {{ test }}
+        {% endblocktrans %}
       </span>
+      {% blocktrans trimmed with adj=feedback.adjudicator.name as=feedback.debate_adjudicator.get_type_display %}
+        On {{ adj }} <span class="text-secondary">as {{ as }}</span>
+      {% endblocktrans %}
     </div>
-    {% if not feedback.confirmed %}
-      <div class="list-group-item text-info" data-toggle="tooltip"
-        title="This is most likely because the team or adjudicator who submitted
-         this feedback has done submitted several times on the same person.">
-        This feedback is not confirmed; it will not affect this adjudicator's score.
-      </div>
-    {% endif %}
-    <div class="list-group-item h6">
-      From
+    <div class="list-group-item h5">
+      <span class="badge badge-info float-right">
+        {% blocktrans trimmed with rname=feedback.round.abbreviation %}
+          In {{ rname }}
+        {% endblocktrans %}
+      </span>
       {% if feedback.source_adjudicator %}
-        <span class="badge badge-secondary float-right">
-          {{ feedback.source_adjudicator.get_type_display }} in {{ feedback.round.abbreviation }}
-        </span>
-        <strong>{{ feedback.source_adjudicator.adjudicator.name }}</strong>
+        {% blocktrans trimmed with source=feedback.source_adjudicator.adjudicator.name relationship=feedback.source_adjudicator.get_type_display %}
+          From {{ source }} <span class="text-secondary">their {{ relationship }}</span>
+        {% endblocktrans %}
       {% elif feedback.source_team %}
-        <span class="badge badge-secondary float-right">
-          {{ feedback.source_team.get_result_display }} in {{ feedback.round.abbreviation }}
-        </span>
-        <strong>{{ feedback.source_team.team.short_name }}</strong>
+        {% blocktrans trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display %}
+          From {{ source }} <span class="text-secondary">who {{ relationship }}</span>
+        {% endblocktrans %}
       {% else %}
-        unknown
+        {% trans "From unknown" %}
       {% endif %}
     </div>
     {% for item in feedback.items %}
-      {% if item.answer %}
-        <div class="list-group-item small">
-          {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
-            {% if item.answer %}
-              <i data-feather="check" class="text-success"></i>
-            {% else %}
-              <i data-feather="x" class="text-danger"></i>
-            {% endif %}
-            <span title="{{ item.question.text }}" class="text-heading" data-toggle="tooltip">
-              {{ item.question.reference }}
-            </span>
-          {% elif item.question.answer_type == 'f' %}
-            <span class="text-secondary">{{ item.question.text }}</span>
-            <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>
-          {% elif item.question.answer_type == 'tl' %}
-            <div class="text-heading">{{ item.answer }}</div>
+      <div class="list-group-item small">
+        {% if item.question.answer_type == 'bc' or item.question.answer_type == 'bs' %}
+          {% if item.answer %}
+            <i data-feather="check" class="text-success"></i>
           {% else %}
-            <span class="text-secondary">{{ item.question.text }}</span>
-            <div class="text-heading">{{ item.answer }}</div>
+            <i data-feather="x" class="text-danger"></i>
           {% endif %}
-        </div>
-      {% endif %}
+          <span title="{{ item.question.text }}" class="text-heading" data-toggle="tooltip">
+            {{ item.question.reference }}
+          </span>
+        {% elif item.question.answer_type == 'f' %}
+          <span class="text-secondary">{{ item.question.text }}</span>
+          <div class="text-heading">{{ item.answer|floatformat:"2" }}</div>
+        {% elif item.question.answer_type == 'tl' %}
+          <div class="text-heading">{{ item.answer }}</div>
+        {% else %}
+          <span class="text-secondary">{{ item.question.text }}</span>
+          <div class="text-heading">{{ item.answer }}</div>
+        {% endif %}
+      </div>
     {% endfor %}
     <div class="list-group-item text-secondary small">
-      <em>Submitted {{ feedback.timestamp|naturaltime }}</em>
+      {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
+        Submitted {{ time }}
+      {% endblocktrans %}
     </div>
 
   </div>

@@ -1,0 +1,7 @@
+name,abbreviation,stage,draw_type,silent,break_category
+Round 1,R1,preliminary,random,FALSE,
+Round 2,R2,preliminary,power paired,FALSE,
+Round 3,R3,preliminary,power paired,FALSE,
+Round 4,R4,preliminary,power paired,TRUE,
+Semifinal,SF,elimination,elimination,TRUE,open
+Final,GF,elimination,elimination,TRUE,open

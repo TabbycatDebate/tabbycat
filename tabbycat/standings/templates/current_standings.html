@@ -2,17 +2,20 @@
 {% load i18n %}
 
 {% block content %}
+  {% if not pref.all_results_released %}
+    {% trans "It also excludes silent rounds (if any)." as silent_round_sentence %}
+  {% endif %}
   {% if pref.teams_in_debate == 'bp' %}
     {% blocktrans trimmed asvar p1 %}
       This list is sorted by team points, then alphabetically by team name. It
-      does not indicate each team's ranking within each bracket. It also
-      excludes silent rounds (if any).
+      does not indicate each team's ranking within each bracket.
+      {{ silent_round_sentence }}
     {% endblocktrans %}
   {% else %}
     {% blocktrans trimmed asvar p1 %}
       This list is sorted by number of wins, then alphabetically by team name.
-      It does not indicate each team's ranking within each bracket. It also
-      excludes silent rounds (if any).
+      It does not indicate each team's ranking within each bracket.
+      {{ silent_round_sentence }}
     {% endblocktrans %}
   {% endif %}
   {% include "components/explainer-card.html" with type="info" %}

@@ -90,6 +90,28 @@ Project Structure
     - All other folders are the Django apps that contain specific views, models, and templates for functions such as ``draw`` generation/display, or recording ``results``. Each has sub-folders for tests and templates.
 - In the root directory there are a number of files defining our python and javascript dependencies, core configuration files, and key documents like the ``README``
 
+Translations
+============
+
+The backend's translation files can be updated from the ``tabbycat`` directory using one or more of the supporting language codes (see settings.py)::
+
+    $ dj makemessages -l es
+    
+To do more than one language, just specify ``-l`` multiple times, _e.g._ ``-les -lar``.
+
+These can then be compiled using::
+
+    $ dj compilemessages -l es
+
+As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files should not be compiled; their sole purpose is to provide a source language for Transifex.
+
+The frontend's translation files are manually updated in ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``. These can then compiled to javascript bundles using::
+
+    $ dj compilemessages -l es        # or whichever language(s) you want to update
+    $ dj compilejsi18n -l es
+
+These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of a gulp task.
+
 Release Checklist
 =================
 

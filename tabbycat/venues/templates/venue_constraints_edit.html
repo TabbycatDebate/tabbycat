@@ -17,39 +17,8 @@
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
-
-  <form method="POST">
-    {% csrf_token %}
-
-
-    {% if formset.errors %}
-      {% include "components/form-errors.html" with errors=formset.non_form_errors %}
-    {% endif %}
-
-    <div class="card mt-3">
-      <div class="list-group list-group-flush">
-
-        {{ formset.management_form }}
-
-        {% for form in formset %}
-          {% include "components/form-main.html" with double=True %}
-        {% endfor %}
-
-        <div class="list-group-item">
-          <div class="row">
-            <div class="col-md-6">
-              <input class="btn btn-block btn-success" type="submit" name="submit" value="{% trans 'Save Venue Constraints' %}" />
-            </div>
-            <div class="col-md-6">
-              <input class="btn btn-block btn-primary" type="submit" name="add_more" value="{% trans 'Save and Add More' %}" />
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </form>
+  {% trans "Save Venue Constraints" as save_text %}
+  {% include "components/formset.html" with quadruple=True %}
 
 {% endblock content %}
 

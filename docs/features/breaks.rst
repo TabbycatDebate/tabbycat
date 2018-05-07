@@ -127,11 +127,7 @@ it in *rounds.csv* if using `importtournament`, or adding them under
 following fields correctly:
 
 - *Break category* must be set to the relevant break category.
-- *Stage* must be set to "Elimination".
-- The **first** elimination round must have its *draw type* set to
-  "First elimination".
-- **All other** elimination rounds must have their draw types set to
-  "Subsequent elimination".
+- *Stage* and *draw type* must both be set to "Elimination".
 
 3. Setting break eligibility
 ----------------------------
@@ -171,13 +167,13 @@ Creating draws for break rounds
 ===============================
 
 Creating a draw for a break round proceeds as normal, except that the team
-check-in process is skipped. Instead, when you visit the check-ins page for that
-round it will have automatically determined which teams should be debating based
-upon the determined break for that category. Once a draw has been generated it
-will then use the relevant break ranks to create the matchups (ie 1st-breaking
-vs 16th-breaking, 2nd vs 15th, *etc.*). Subsequent break rounds will then also
-automatically determine matchups based on the previous round's results and the
-initial break ranks of each team.
+availability process is skipped. Instead, when you visit the availability page
+for that round it will have automatically determined which teams should be
+debating based upon the determined break for that category. Once a draw has been
+generated it will then use the relevant break ranks to create the matchups (ie
+1st-breaking vs 16th-breaking, 2nd vs 15th, *etc.*). Subsequent break rounds
+will then also automatically determine matchups based on the previous round's
+results and room ranks.
 
 If the "break size" of a break category is not a power of 2, it will treat the
 first break round as a partial-elimination draw and only create a draw for the

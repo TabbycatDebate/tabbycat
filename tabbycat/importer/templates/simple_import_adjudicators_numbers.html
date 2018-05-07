@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static debate_tags add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">👯</span>{% trans 'Add Adjudicators' context 'page title' %}
+{% block head-title %}<span class="emoji">👯</span> {% trans 'Add Adjudicators' context 'page title' %}
 {% blocktrans trimmed with step=wizard.steps.step1 count=wizard.steps.count %}(Step {{ step }} of {{ count }}){% endblocktrans %}{% endblock %}
-{% block page-title %}👯 {% trans 'Add Adjudicators' context 'page title' %}{% endblock %}
+{% block page-title %}{% trans 'Add Adjudicators' context 'page title' %}{% endblock %}
 
 {% block content %}
 

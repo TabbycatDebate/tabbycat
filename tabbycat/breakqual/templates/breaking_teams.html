@@ -64,7 +64,7 @@
 
     {% url 'admin:breakqual_breakingteam_changelist' as url %}
     {% blocktrans trimmed asvar p1 %}
-      To edit the break use the remarks in the right-hand column. Any team with a remark will be excluded from this break (the break generator will insert sometimes insert its own remarks). Then, click the appropriate Save Remarks and Update button below. If you have complicated break rules (for example, if some teams are allowed to choose their preferred category) then you may have to update remarks a few times to get the correct break. As a last resort, you can <a href="{{ url }}"> edit the breaking teams list directly in the Edit Database area</a>.
+      To edit the break use the remarks in the right-hand column. Any team with a remark will be excluded from this break (the break generator will sometimes insert its own remarks). Then, click the appropriate Save Remarks and Update button below. If you have complicated break rules (for example, if some teams are allowed to choose their preferred category) then you may have to update remarks a few times to get the correct break. As a last resort, you can <a href="{{ url }}"> edit the breaking teams list directly in the Edit Database area</a>.
     {% endblocktrans %}
     {% include "components/explainer-card.html" with type="info" %}
 
@@ -130,5 +130,12 @@
   </form>
 {% else %}
   <div id="vueMount"></div><!-- Prevent unfound item error for Vue -->
+  {% tournamenturl 'breakqual-edit-eligibility' as url %}
+  {% blocktrans trimmed asvar text with count=category.team_set.count %}
+    There are <strong>{{ count }} teams marked as eligible</strong> for this
+    category. Would you like to add more eligible teams?
+  {% endblocktrans %}
+  {% include "components/item-action.html" with type="primary" url=url to_complete=true %}
+
 {% endif %}
 {% endblock content %}

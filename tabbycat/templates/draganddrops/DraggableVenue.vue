@@ -32,7 +32,7 @@ export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverVenueMixin],
   props: { 'venue': Object, 'debateId': null },
   computed: {
-    titleWithLimit: function() {
+    titleWithLimit: function () {
       var limit = 30
       if (this.venue.name.length > limit + 2) {
         return this.venue.name.substring(0, limit) + "…"
@@ -40,15 +40,15 @@ export default {
         return this.venue.name
       }
     },
-    draggablePayload: function() {
+    draggablePayload: function () {
       return JSON.stringify({ venue: this.venue.id, debate: this.debateId })
     }
   },
   methods: {
-    handleDragStart: function(event) {
+    handleDragStart: function (event) {
       // this.$dispatch('started-dragging-venue', this);
     },
-    handleDragEnd: function(event) {
+    handleDragEnd: function (event) {
       // this.$dispatch('stopped-dragging-venue');
     },
   }

@@ -6,27 +6,24 @@ from threading import Lock
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core import management
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
-from importer.management.commands import importtournament
-from importer.importers import TournamentDataImporterError
+from results.models import BallotSubmission
+from results.utils import graphable_debate_statuses
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import CacheMixin, SuperuserRequiredMixin, TabbycatPageTitlesMixin
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
@@ -64,62 +61,91 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
 
-class TournamentAdminHomeView(LoginRequiredMixin, TournamentMixin, TemplateView):
-    template_name = "tournament_index.html"
+class TournamentDashboardHomeView(TournamentMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs["round"] = tournament.current_round
+        t = self.tournament
+        updates = 15 # Number of items to fetch
+
+        kwargs["round"] = t.current_round
+        kwargs["tournament_slug"] = t.slug
         kwargs["readthedocs_version"] = settings.READTHEDOCS_VERSION
-        kwargs["blank"] = not (tournament.team_set.exists() or tournament.adjudicator_set.exists() or tournament.venue_set.exists())
+        kwargs["blank"] = not (t.team_set.exists() or t.adjudicator_set.exists() or t.venue_set.exists())
+
+        actions = ActionLogEntry.objects.filter(tournament=t).prefetch_related(
+                    'content_object', 'user').order_by('-timestamp')[:updates]
+        kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
+
+        subs = BallotSubmission.objects.filter(
+            debate__round__tournament=t, confirmed=True).prefetch_related(
+            'teamscore_set__debate_team',
+            'teamscore_set__debate_team__team').select_related(
+            'debate__round').order_by('-timestamp')[:updates]
+        subs = [bs.serialize_like_actionlog for bs in subs]
+        kwargs["initialBallots"] = json.dumps(subs)
+
+        status = t.current_round.draw_status
+        if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
+            ballots = BallotSubmission.objects.filter(debate__round=t.current_round,
+                                                      discarded=False)
+            stats = graphable_debate_statuses(ballots, t.current_round)
+            kwargs["initialGraphData"] = json.dumps(stats)
+        else:
+            kwargs["initialGraphData"] = json.dumps([])
+
         return super().get_context_data(**kwargs)
 
 
-class RoundAdvanceConfirmView(SuperuserRequiredMixin, RoundMixin, TemplateView):
+class TournamentAssistantHomeView(AssistantMixin, TournamentDashboardHomeView):
+    template_name = 'assistant_tournament_index.html'
+
+
+class TournamentAdminHomeView(AdministratorMixin, TournamentDashboardHomeView):
+    template_name = 'tournament_index.html'
+
+
+class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
     template_name = 'round_advance_check.html'
 
     def get(self, request, *args, **kwargs):
-        round = self.get_round()
-        current_round = self.get_tournament().current_round
-        if round != current_round:
+        current_round = self.tournament.current_round
+        if self.round != current_round:
             messages.error(self.request, "You are trying to advance from {this_round} but "
                 "the current round is {current_round} — advance to {this_round} first!".format(
-                    this_round=round.name, current_round=current_round.name))
-            return redirect_round('results-round-list', self.get_tournament().current_round)
+                    this_round=self.round.name, current_round=current_round.name))
+            return redirect_round('results-round-list', current_round)
         else:
             return super().get(self, request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        kwargs['num_unconfirmed'] = self.get_round().debate_set.filter(
+        kwargs['num_unconfirmed'] = self.round.debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
         return super().get_context_data(**kwargs)
 
 
-class RoundAdvanceView(RoundMixin, SuperuserRequiredMixin, LogActionMixin, PostOnlyRedirectView):
+class RoundAdvanceView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE
     round_redirect_pattern_name = 'results-round-list' # standard redirect is only on error
 
     def post(self, request, *args, **kwargs):
-        tournament = self.get_tournament()
-
         # Advance relative to the round of the view, not the current round, so
         # that in times of confusion, going back then clicking again won't advance
         # twice.
-        next_round = tournament.round_set.filter(seq__gt=self.get_round().seq).order_by('seq').first()
+        next_round = self.tournament.round_set.filter(seq__gt=self.round.seq).order_by('seq').first()
 
         if next_round:
-            tournament.current_round = next_round
-            tournament.save()
+            self.tournament.current_round = next_round
+            self.tournament.save()
             self.log_action(round=next_round, content_object=next_round)
 
             if (next_round.stage == Round.STAGE_ELIMINATION and
-                    self.get_round().stage == Round.STAGE_PRELIMINARY):
+                    self.round.stage == Round.STAGE_PRELIMINARY):
                 messages.success(request, _("The current round has been advanced to %(round)s. "
                         "You've made it to the end of the preliminary rounds! Congratulations! "
                         "The next step is to generate the break.") % {'round': next_round.name})
-                return redirect_tournament('breakqual-index', tournament)
+                return redirect_tournament('breakqual-index', self.tournament)
             else:
                 messages.success(request, _("The current round has been advanced to %(round)s. "
                     "Woohoo! Keep it up!") % {'round': next_round.name})
@@ -167,7 +193,7 @@ class BlankSiteStartView(FormView):
         return super().form_valid(form)
 
 
-class CreateTournamentView(SuperuserRequiredMixin, CreateView):
+class CreateTournamentView(AdministratorMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
@@ -175,8 +201,14 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
     template_name = "create_tournament.html"
 
     def get_context_data(self, **kwargs):
-        kwargs["preexisting_small_demo"] = Tournament.objects.filter(slug="demo_simple").exists()
-        kwargs["preexisting_large_demo"] = Tournament.objects.filter(slug="demo").exists()
+        demo_datasets = [
+            ('minimal8team', _("8-team generic dataset")),
+            ('australs24team', _("24-team Australs dataset")),
+            ('bp88team', _("88-team BP dataset")),
+        ]
+        kwargs['demo_datasets'] = demo_datasets
+        demo_slugs = [slug for slug, _ in demo_datasets]
+        kwargs['preexisting'] = Tournament.objects.filter(slug__in=demo_slugs).values_list('slug', flat=True)
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
@@ -184,40 +216,18 @@ class CreateTournamentView(SuperuserRequiredMixin, CreateView):
         return reverse_tournament('tournament-configure', tournament=t)
 
 
-class LoadDemoView(SuperuserRequiredMixin, PostOnlyRedirectView):
-
-    def post(self, request, *args, **kwargs):
-        source = request.POST.get("source", "")
-
-        try:
-            management.call_command(importtournament.Command(), source,
-                                    force=True, strict=False)
-        except TournamentDataImporterError as e:
-            messages.error(self.request, mark_safe("<p>There were one or more errors creating the demo tournament. "
-                "Before retrying, please delete the existing demo tournament <strong>and</strong> "
-                "the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:"
-                "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"))
-            logger.error("Error importing demo tournament: " + str(e))
-        else:
-            messages.success(self.request, "Created new demo tournament. You "
-                "can now configure it below.")
-
-        new_tournament = Tournament.objects.order_by('id').last()
-        return redirect(reverse_tournament('tournament-configure', tournament=new_tournament))
-
-
-class ConfigureTournamentView(SuperuserRequiredMixin, UpdateView, TournamentMixin):
+class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
     model = Tournament
     form_class = TournamentConfigureForm
     template_name = "configure_tournament.html"
     slug_url_kwarg = 'tournament_slug'
 
     def get_success_url(self):
-        t = self.get_tournament()
+        t = self.tournament
         return reverse_tournament('tournament-admin-home', tournament=t)
 
 
-class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
+class SetCurrentRoundView(AdministratorMixin, UpdateView):
     model = Tournament
     form_class = SetCurrentRoundForm
     template_name = 'set_current_round.html'
@@ -254,28 +264,27 @@ class SetCurrentRoundView(SuperuserRequiredMixin, UpdateView):
         return context
 
 
-class FixDebateTeamsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = "fix_debate_teams.html"
 
     def get_incomplete_debates(self):
-        tournament = self.get_tournament()
         annotations = {  # annotates with the number of DebateTeams on each side in the debate
             side: RawSQL("""
                 SELECT DISTINCT COUNT('a')
                 FROM draw_debateteam
                 WHERE draw_debate.id = draw_debateteam.debate_id
                 AND draw_debateteam.side = %s""", (side,))
-            for side in tournament.sides
+            for side in self.tournament.sides
         }
-        debates = Debate.objects.filter(round__tournament=tournament)
+        debates = Debate.objects.filter(round__tournament=self.tournament)
         debates = debates.prefetch_related('debateteam_set__team').annotate(**annotations)
 
         # A debate is incomplete if there isn't exactly one team on each side
-        incomplete_debates = debates.filter(~Q(**{side: 1 for side in tournament.sides}))
+        incomplete_debates = debates.filter(~Q(**{side: 1 for side in self.tournament.sides}))
 
         # Finally, go through and populate lists of teams on each side
         for debate in incomplete_debates:
-            debate.teams_on_each_side = OrderedDict((side, []) for side in tournament.sides)
+            debate.teams_on_each_side = OrderedDict((side, []) for side in self.tournament.sides)
             for dt in debate.debateteam_set.all():
                 try:
                     debate.teams_on_each_side[dt.side].append(dt.team)
@@ -285,8 +294,7 @@ class FixDebateTeamsView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
         return incomplete_debates
 
     def get_context_data(self, **kwargs):
-        tournament = self.get_tournament()
-        kwargs['side_names'] = [get_side_name(tournament, side, 'full') for side in tournament.sides]
+        kwargs['side_names'] = [get_side_name(self.tournament, side, 'full') for side in self.tournament.sides]
         kwargs['incomplete_debates'] = self.get_incomplete_debates()
         return super().get_context_data(**kwargs)
 
@@ -312,7 +320,7 @@ class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
 # Base classes for other apps
 # ==============================================================================
 
-class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
+class BaseSaveDragAndDropDebateJsonView(AdministratorMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
     """For AJAX issued updates which post a Debate dictionary; which is then
     modified and return back via a JSON response"""
     allows_creation = False
@@ -330,7 +338,7 @@ class BaseSaveDragAndDropDebateJsonView(SuperuserRequiredMixin, RoundMixin, LogA
         and returns it. If the debate doesn't exist and `self.allows_creation`
         is False, it raises a BadJsonRequestError.
         """
-        r = self.get_round()
+        r = self.round
         try:
             return Debate.objects.get(round=r, pk=id)
         except Debate.DoesNotExist:

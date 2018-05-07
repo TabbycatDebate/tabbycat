@@ -5,6 +5,16 @@
      href="{% tournamenturl 'participants-list' %}">
     {% trans "Participants List" %}
   </a>
+  <a class="btn btn-outline-primary {% if institutions_nav %}active{% endif %}"
+     href="{% tournamenturl 'participants-institutions-list' %}">
+    {% trans "Institutions" %}
+  </a>
+  {% if pref.team_code_names != 'off' %}
+    <a class="btn btn-outline-primary {% if code_names_nav %}active{% endif %}"
+       href="{% tournamenturl 'participants-code-names-list' %}">
+      {% trans "Code Names" %}
+    </a>
+  {% endif %}
   <a class="btn btn-outline-primary {% if speaker_cats_nav %}active{% endif %}"
      href="{% tournamenturl 'participants-speaker-categories-edit' %}">
     {% trans "Speaker Categories" %}

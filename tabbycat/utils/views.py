@@ -4,7 +4,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.encoding import force_text
@@ -108,8 +108,14 @@ class VueTableTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         tables = self.get_tables()
+
+        tables_dicts = []
+        for table in tables:
+            if table:
+                tables_dicts.append(table.jsondict())
+        kwargs["tables_data"] = json.dumps(tables_dicts)
+
         kwargs["tables_count"] = list(range(len(tables)))
-        kwargs["tables_data"] = json.dumps([table.jsondict() for table in tables])
         kwargs["tables_orientation"] = self.tables_orientation
         return super().get_context_data(**kwargs)
 

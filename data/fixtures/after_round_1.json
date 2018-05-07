@@ -11,7 +11,7 @@
         "email": "",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2017-09-07T18:36:20.997",
+        "date_joined": "2017-09-07T08:36:20.997Z",
         "groups": [],
         "user_permissions": []
     }
@@ -28,7 +28,7 @@
         "email": "",
         "is_staff": false,
         "is_active": true,
-        "date_joined": "2017-09-07T18:36:34.295",
+        "date_joined": "2017-09-07T08:36:34.295Z",
         "groups": [],
         "user_permissions": []
     }
@@ -692,7 +692,7 @@
         "adjudicator": 73,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.054"
+        "timestamp": "2017-09-07T08:36:04.054Z"
     }
 },
 {
@@ -702,7 +702,7 @@
         "adjudicator": 74,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.059"
+        "timestamp": "2017-09-07T08:36:04.059Z"
     }
 },
 {
@@ -712,7 +712,7 @@
         "adjudicator": 75,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.061"
+        "timestamp": "2017-09-07T08:36:04.061Z"
     }
 },
 {
@@ -722,7 +722,7 @@
         "adjudicator": 76,
         "round": null,
         "score": 1.0,
-        "timestamp": "2017-09-07T18:36:04.063"
+        "timestamp": "2017-09-07T08:36:04.063Z"
     }
 },
 {
@@ -732,7 +732,7 @@
         "adjudicator": 78,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.065"
+        "timestamp": "2017-09-07T08:36:04.065Z"
     }
 },
 {
@@ -742,7 +742,7 @@
         "adjudicator": 79,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.067"
+        "timestamp": "2017-09-07T08:36:04.067Z"
     }
 },
 {
@@ -752,7 +752,7 @@
         "adjudicator": 80,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.069"
+        "timestamp": "2017-09-07T08:36:04.069Z"
     }
 },
 {
@@ -762,7 +762,7 @@
         "adjudicator": 81,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.071"
+        "timestamp": "2017-09-07T08:36:04.071Z"
     }
 },
 {
@@ -772,7 +772,7 @@
         "adjudicator": 83,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.072"
+        "timestamp": "2017-09-07T08:36:04.072Z"
     }
 },
 {
@@ -782,7 +782,7 @@
         "adjudicator": 84,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.074"
+        "timestamp": "2017-09-07T08:36:04.074Z"
     }
 },
 {
@@ -792,7 +792,7 @@
         "adjudicator": 85,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.076"
+        "timestamp": "2017-09-07T08:36:04.076Z"
     }
 },
 {
@@ -802,7 +802,7 @@
         "adjudicator": 86,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.078"
+        "timestamp": "2017-09-07T08:36:04.078Z"
     }
 },
 {
@@ -812,7 +812,7 @@
         "adjudicator": 87,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.079"
+        "timestamp": "2017-09-07T08:36:04.079Z"
     }
 },
 {
@@ -822,7 +822,7 @@
         "adjudicator": 88,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.081"
+        "timestamp": "2017-09-07T08:36:04.081Z"
     }
 },
 {
@@ -832,7 +832,7 @@
         "adjudicator": 89,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.083"
+        "timestamp": "2017-09-07T08:36:04.083Z"
     }
 },
 {
@@ -842,7 +842,7 @@
         "adjudicator": 90,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.085"
+        "timestamp": "2017-09-07T08:36:04.085Z"
     }
 },
 {
@@ -852,7 +852,7 @@
         "adjudicator": 91,
         "round": null,
         "score": 1.0,
-        "timestamp": "2017-09-07T18:36:04.087"
+        "timestamp": "2017-09-07T08:36:04.087Z"
     }
 },
 {
@@ -862,7 +862,7 @@
         "adjudicator": 93,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.089"
+        "timestamp": "2017-09-07T08:36:04.089Z"
     }
 },
 {
@@ -872,7 +872,7 @@
         "adjudicator": 94,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.090"
+        "timestamp": "2017-09-07T08:36:04.090Z"
     }
 },
 {
@@ -882,7 +882,7 @@
         "adjudicator": 95,
         "round": null,
         "score": 3.0,
-        "timestamp": "2017-09-07T18:36:04.092"
+        "timestamp": "2017-09-07T08:36:04.092Z"
     }
 },
 {
@@ -892,7 +892,7 @@
         "adjudicator": 96,
         "round": null,
         "score": 2.0,
-        "timestamp": "2017-09-07T18:36:04.094"
+        "timestamp": "2017-09-07T08:36:04.094Z"
     }
 },
 {
@@ -902,7 +902,7 @@
         "adjudicator": 97,
         "round": null,
         "score": 4.0,
-        "timestamp": "2017-09-07T18:36:04.096"
+        "timestamp": "2017-09-07T08:36:04.096Z"
     }
 },
 {
@@ -912,7 +912,7 @@
         "adjudicator": 98,
         "round": null,
         "score": 3.0,
-        "timestamp": "2017-09-07T18:36:04.098"
+        "timestamp": "2017-09-07T08:36:04.098Z"
     }
 },
 {
@@ -922,7 +922,7 @@
         "adjudicator": 99,
         "round": null,
         "score": 5.0,
-        "timestamp": "2017-09-07T18:36:04.100"
+        "timestamp": "2017-09-07T08:36:04.100Z"
     }
 },
 {
@@ -1178,7 +1178,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1195,7 +1194,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1212,7 +1210,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1229,7 +1226,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1246,7 +1242,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1263,7 +1258,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1280,7 +1274,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1297,7 +1290,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1314,7 +1306,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1331,7 +1322,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1348,7 +1338,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1365,7 +1354,6 @@
         "flags": "",
         "importance": 0,
         "result_status": "C",
-        "ballot_in": false,
         "sides_confirmed": true
     }
 },
@@ -1616,6 +1604,7 @@
         "seq": 1,
         "text": "This House would abolish national days",
         "reference": "National days",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -1628,6 +1617,7 @@
         "seq": 2,
         "text": "This House regrets the existence of Valentine's Day",
         "reference": "Valentine\u2019s Day",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -1640,6 +1630,7 @@
         "seq": 3,
         "text": "This House would rename Christmas with a name that is religiously neutral",
         "reference": "Christmas",
+        "info_slide": "",
         "flagged": false,
         "round": 1,
         "divisions": []
@@ -1652,6 +1643,7 @@
         "seq": 1,
         "text": "This House would not buy Apple",
         "reference": "Apple",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -1664,6 +1656,7 @@
         "seq": 2,
         "text": "This House would end all research and development tax credits for highly profitable technology companies",
         "reference": "R&D tax credit",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -1676,6 +1669,7 @@
         "seq": 3,
         "text": "This House regrets the rise of computer science at the expense of the humanities",
         "reference": "Computer science",
+        "info_slide": "",
         "flagged": false,
         "round": 2,
         "divisions": []
@@ -1688,6 +1682,7 @@
         "seq": 1,
         "text": "This House would favour creativity over intelligence",
         "reference": "Creativity and intelligence",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -1700,6 +1695,7 @@
         "seq": 2,
         "text": "This House believes that field hockey is better than ice hockey",
         "reference": "Hockey",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -1712,6 +1708,7 @@
         "seq": 3,
         "text": "This House would rather play with Lego than Barbie",
         "reference": "Lego and Barbie",
+        "info_slide": "",
         "flagged": false,
         "round": 3,
         "divisions": []
@@ -1724,6 +1721,7 @@
         "seq": 1,
         "text": "This House would stop importing bananas from Latin America",
         "reference": "Bananas",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -1736,6 +1734,7 @@
         "seq": 2,
         "text": "This House believes that tomatoes are a fruit",
         "reference": "Tomatoes",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -1748,6 +1747,7 @@
         "seq": 3,
         "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
         "reference": "Pesticide labelling",
+        "info_slide": "",
         "flagged": false,
         "round": 4,
         "divisions": []
@@ -1760,6 +1760,7 @@
         "seq": 1,
         "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
         "reference": "Indecent exposure",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -1772,6 +1773,7 @@
         "seq": 2,
         "text": "This House regrets the development of different fashion lines for men and women",
         "reference": "Gender and fashion",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -1784,6 +1786,7 @@
         "seq": 3,
         "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
         "reference": "Flip-flops",
+        "info_slide": "",
         "flagged": false,
         "round": 7,
         "divisions": []
@@ -1796,6 +1799,7 @@
         "seq": 1,
         "text": "This House would stop using cash",
         "reference": "Cash",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -1808,6 +1812,7 @@
         "seq": 2,
         "text": "This House supports Bitcoin",
         "reference": "Bitcoin",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -1820,6 +1825,7 @@
         "seq": 3,
         "text": "This House would allow private organisations to compete in providing currency",
         "reference": "Private currency",
+        "info_slide": "",
         "flagged": false,
         "round": 10,
         "divisions": []
@@ -2020,11 +2026,9 @@
     "pk": 1,
     "fields": {
         "name": "Georgia Crawford",
-        "barcode_id": null,
         "email": "georgiacrawford@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2035,11 +2039,9 @@
     "pk": 2,
     "fields": {
         "name": "Wanda Griffin",
-        "barcode_id": null,
         "email": "wandagriffin@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2050,11 +2052,9 @@
     "pk": 3,
     "fields": {
         "name": "Helen Keller",
-        "barcode_id": null,
         "email": "helenkeller@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2065,11 +2065,9 @@
     "pk": 4,
     "fields": {
         "name": "Russell Warren",
-        "barcode_id": null,
         "email": "russellwarren@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2080,11 +2078,9 @@
     "pk": 5,
     "fields": {
         "name": "Angel Rhodes",
-        "barcode_id": null,
         "email": "angelrhodes@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": "they"
@@ -2095,11 +2091,9 @@
     "pk": 6,
     "fields": {
         "name": "Terry Henderson",
-        "barcode_id": null,
         "email": "terryhenderson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2110,11 +2104,9 @@
     "pk": 7,
     "fields": {
         "name": "Kyle Ruiz",
-        "barcode_id": null,
         "email": "kyleruiz@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2125,11 +2117,9 @@
     "pk": 8,
     "fields": {
         "name": "Randolph Lambert",
-        "barcode_id": null,
         "email": "randolphlambert@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": ""
@@ -2140,11 +2130,9 @@
     "pk": 9,
     "fields": {
         "name": "Sergio Pittman",
-        "barcode_id": null,
         "email": "sergiopittman@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2155,11 +2143,9 @@
     "pk": 10,
     "fields": {
         "name": "Earnest Becker",
-        "barcode_id": null,
         "email": "earnestbecker@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2170,11 +2156,9 @@
     "pk": 11,
     "fields": {
         "name": "Ellis Rowe",
-        "barcode_id": null,
         "email": "ellisrowe@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2185,11 +2169,9 @@
     "pk": 12,
     "fields": {
         "name": "Robin Roberson",
-        "barcode_id": null,
         "email": "robinroberson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2200,11 +2182,9 @@
     "pk": 13,
     "fields": {
         "name": "Gwen Newman",
-        "barcode_id": null,
         "email": "gwennewman@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2215,11 +2195,9 @@
     "pk": 14,
     "fields": {
         "name": "Robyn Caldwell",
-        "barcode_id": null,
         "email": "robyncaldwell@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": ""
@@ -2230,11 +2208,9 @@
     "pk": 15,
     "fields": {
         "name": "Angie Holt",
-        "barcode_id": null,
         "email": "angieholt@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2245,11 +2221,9 @@
     "pk": 16,
     "fields": {
         "name": "Melvin Jordan",
-        "barcode_id": null,
         "email": "melvinjordan@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2260,11 +2234,9 @@
     "pk": 17,
     "fields": {
         "name": "Gladys Burke",
-        "barcode_id": null,
         "email": "gladysburke@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": ""
@@ -2275,11 +2247,9 @@
     "pk": 18,
     "fields": {
         "name": "Patty Saunders",
-        "barcode_id": null,
         "email": "pattysaunders@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2290,11 +2260,9 @@
     "pk": 19,
     "fields": {
         "name": "Thomas Pierce",
-        "barcode_id": null,
         "email": null,
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2305,11 +2273,9 @@
     "pk": 20,
     "fields": {
         "name": "Stella Lindsey",
-        "barcode_id": null,
         "email": "stellalindsey@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2320,11 +2286,9 @@
     "pk": 21,
     "fields": {
         "name": "Adrian May",
-        "barcode_id": null,
         "email": "adrianmay@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2335,11 +2299,9 @@
     "pk": 22,
     "fields": {
         "name": "Taylor Brown",
-        "barcode_id": null,
         "email": "taylorbrown@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": ""
@@ -2350,11 +2312,9 @@
     "pk": 23,
     "fields": {
         "name": "Bethany Chambers",
-        "barcode_id": null,
         "email": "bethanychambers@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2365,11 +2325,9 @@
     "pk": 24,
     "fields": {
         "name": "Pamela Bryan",
-        "barcode_id": null,
         "email": "pamelabryan@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2380,11 +2338,9 @@
     "pk": 25,
     "fields": {
         "name": "Janet Nunez",
-        "barcode_id": null,
         "email": "janetnunez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2395,11 +2351,9 @@
     "pk": 26,
     "fields": {
         "name": "Owen Chandler",
-        "barcode_id": null,
         "email": "owenchandler@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": ""
@@ -2410,11 +2364,9 @@
     "pk": 27,
     "fields": {
         "name": "Lillie Rodriquez",
-        "barcode_id": null,
         "email": "lillierodriquez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2425,11 +2377,9 @@
     "pk": 28,
     "fields": {
         "name": "Rufus Dennis",
-        "barcode_id": null,
         "email": "rufusdennis@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2440,11 +2390,9 @@
     "pk": 29,
     "fields": {
         "name": "Marty Love",
-        "barcode_id": null,
         "email": "martylove@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2455,11 +2403,9 @@
     "pk": 30,
     "fields": {
         "name": "Shelia Wright",
-        "barcode_id": null,
         "email": "sheliawright@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2470,11 +2416,9 @@
     "pk": 31,
     "fields": {
         "name": "Clark Mills",
-        "barcode_id": null,
         "email": "clarkmills@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2485,11 +2429,9 @@
     "pk": 32,
     "fields": {
         "name": "Randy Carroll",
-        "barcode_id": null,
         "email": "randycarroll@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2500,11 +2442,9 @@
     "pk": 33,
     "fields": {
         "name": "Casey Sparks",
-        "barcode_id": null,
         "email": "caseysparks@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2515,11 +2455,9 @@
     "pk": 34,
     "fields": {
         "name": "Candace Bowen",
-        "barcode_id": null,
         "email": "candacebowen@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2530,11 +2468,9 @@
     "pk": 35,
     "fields": {
         "name": "Jaime Long",
-        "barcode_id": null,
         "email": "jaimelong@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2545,11 +2481,9 @@
     "pk": 36,
     "fields": {
         "name": "Leon Hall",
-        "barcode_id": null,
         "email": "leonhall@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2560,11 +2494,9 @@
     "pk": 37,
     "fields": {
         "name": "Morris Nichols",
-        "barcode_id": null,
         "email": "morrisnichols@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2575,11 +2507,9 @@
     "pk": 38,
     "fields": {
         "name": "Benjamin Padilla",
-        "barcode_id": null,
         "email": "benjaminpadilla@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2590,11 +2520,9 @@
     "pk": 39,
     "fields": {
         "name": "Phil Lyons",
-        "barcode_id": null,
         "email": "phillyons@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2605,11 +2533,9 @@
     "pk": 40,
     "fields": {
         "name": "Clay Holland",
-        "barcode_id": null,
         "email": "clayholland@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2620,11 +2546,9 @@
     "pk": 41,
     "fields": {
         "name": "Elena Cobb",
-        "barcode_id": null,
         "email": "elenacobb@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2635,11 +2559,9 @@
     "pk": 42,
     "fields": {
         "name": "Shawn Torres",
-        "barcode_id": null,
         "email": "shawntorres@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2650,11 +2572,9 @@
     "pk": 43,
     "fields": {
         "name": "Willis Carson",
-        "barcode_id": null,
         "email": "williscarson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2665,11 +2585,9 @@
     "pk": 44,
     "fields": {
         "name": "Wendell Nelson",
-        "barcode_id": null,
         "email": "wendellnelson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2680,11 +2598,9 @@
     "pk": 45,
     "fields": {
         "name": "Felicia Welch",
-        "barcode_id": null,
         "email": "feliciawelch@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2695,11 +2611,9 @@
     "pk": 46,
     "fields": {
         "name": "Cory Meyer",
-        "barcode_id": null,
         "email": "corymeyer@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2710,11 +2624,9 @@
     "pk": 47,
     "fields": {
         "name": "Stacy Frazier",
-        "barcode_id": null,
         "email": "stacyfrazier@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2725,11 +2637,9 @@
     "pk": 48,
     "fields": {
         "name": "Claire Dunn",
-        "barcode_id": null,
         "email": "clairedunn@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2740,11 +2650,9 @@
     "pk": 49,
     "fields": {
         "name": "Eloise Munoz",
-        "barcode_id": null,
         "email": null,
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2755,11 +2663,9 @@
     "pk": 50,
     "fields": {
         "name": "Patricia Palmer",
-        "barcode_id": null,
         "email": "patriciapalmer@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2770,11 +2676,9 @@
     "pk": 51,
     "fields": {
         "name": "Stewart Day",
-        "barcode_id": null,
         "email": "stewartday@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2785,11 +2689,9 @@
     "pk": 52,
     "fields": {
         "name": "Timmy Craig",
-        "barcode_id": null,
         "email": "timmycraig@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2800,11 +2702,9 @@
     "pk": 53,
     "fields": {
         "name": "Patrick Kelly",
-        "barcode_id": null,
         "email": "patrickkelly@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2815,11 +2715,9 @@
     "pk": 54,
     "fields": {
         "name": "Kristopher Hayes",
-        "barcode_id": null,
         "email": null,
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2830,11 +2728,9 @@
     "pk": 55,
     "fields": {
         "name": "Andy Lane",
-        "barcode_id": null,
         "email": "andylane@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2845,11 +2741,9 @@
     "pk": 56,
     "fields": {
         "name": "Scott Mcdonald",
-        "barcode_id": null,
         "email": "scottmcdonald@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2860,11 +2754,9 @@
     "pk": 57,
     "fields": {
         "name": "Charlene Cortez",
-        "barcode_id": null,
         "email": "charlenecortez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2875,11 +2767,9 @@
     "pk": 58,
     "fields": {
         "name": "Leigh Holmes",
-        "barcode_id": null,
         "email": "leighholmes@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": ""
@@ -2890,11 +2780,9 @@
     "pk": 59,
     "fields": {
         "name": "Alma Spencer",
-        "barcode_id": null,
         "email": "almaspencer@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -2905,11 +2793,9 @@
     "pk": 60,
     "fields": {
         "name": "Winston Castro",
-        "barcode_id": null,
         "email": null,
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2920,11 +2806,9 @@
     "pk": 61,
     "fields": {
         "name": "Emilio Simmons",
-        "barcode_id": null,
         "email": "emiliosimmons@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2935,11 +2819,9 @@
     "pk": 62,
     "fields": {
         "name": "Ron Delgado",
-        "barcode_id": null,
         "email": "rondelgado@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": "he"
@@ -2950,11 +2832,9 @@
     "pk": 63,
     "fields": {
         "name": "Nadine Barber",
-        "barcode_id": null,
         "email": "nadinebarber@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -2965,11 +2845,9 @@
     "pk": 64,
     "fields": {
         "name": "Gail Adkins",
-        "barcode_id": null,
         "email": "gailadkins@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": "he"
@@ -2980,11 +2858,9 @@
     "pk": 65,
     "fields": {
         "name": "Willard Walton",
-        "barcode_id": null,
         "email": "willardwalton@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": ""
@@ -2995,11 +2871,9 @@
     "pk": 66,
     "fields": {
         "name": "Jackie Peterson",
-        "barcode_id": null,
         "email": "jackiepeterson@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3010,11 +2884,9 @@
     "pk": 67,
     "fields": {
         "name": "Terry Thornton",
-        "barcode_id": null,
         "email": "terrythornton@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": "they"
@@ -3025,11 +2897,9 @@
     "pk": 68,
     "fields": {
         "name": "Norman Rodgers",
-        "barcode_id": null,
         "email": "normanrodgers@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3040,11 +2910,9 @@
     "pk": 69,
     "fields": {
         "name": "Mattie Lee",
-        "barcode_id": null,
         "email": "mattielee@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": "they"
@@ -3055,11 +2923,9 @@
     "pk": 70,
     "fields": {
         "name": "Woodrow Harvey",
-        "barcode_id": null,
         "email": "woodrowharvey@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3070,11 +2936,9 @@
     "pk": 71,
     "fields": {
         "name": "Javier Chavez",
-        "barcode_id": null,
         "email": "javierchavez@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": ""
@@ -3085,11 +2949,9 @@
     "pk": 72,
     "fields": {
         "name": "Janie Daniels",
-        "barcode_id": null,
         "email": "janiedaniels@fakemail.com",
         "phone": "",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3100,11 +2962,9 @@
     "pk": 73,
     "fields": {
         "name": "Levi Flores",
-        "barcode_id": null,
         "email": "leviflores@fakemail.com",
         "phone": "(400) 258-4262",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3115,11 +2975,9 @@
     "pk": 74,
     "fields": {
         "name": "Boyd Pierce",
-        "barcode_id": null,
         "email": "boydpierce@fakemail.com",
         "phone": "(645) 106-7743",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3130,11 +2988,9 @@
     "pk": 75,
     "fields": {
         "name": "Eunice Mcbride",
-        "barcode_id": null,
         "email": "eunicemcbride@fakemail.com",
         "phone": "(549) 309-9187",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3145,11 +3001,9 @@
     "pk": 76,
     "fields": {
         "name": "Ramona Cobb",
-        "barcode_id": null,
         "email": "ramonacobb@fakemail.com",
         "phone": "(440) 487-5776",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3160,11 +3014,9 @@
     "pk": 77,
     "fields": {
         "name": "Justin Ford",
-        "barcode_id": null,
         "email": "justinford@fakemail.com",
         "phone": "(618) 921-9188",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3175,11 +3027,9 @@
     "pk": 78,
     "fields": {
         "name": "Luis Bennett",
-        "barcode_id": null,
         "email": "luisbennett@fakemail.com",
         "phone": "(730) 097-8797",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3190,11 +3040,9 @@
     "pk": 79,
     "fields": {
         "name": "Mandy Estrada",
-        "barcode_id": null,
         "email": "mandyestrada@fakemail.com",
         "phone": "(559) 299-0471",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3205,11 +3053,9 @@
     "pk": 80,
     "fields": {
         "name": "Leigh Mcgee",
-        "barcode_id": null,
         "email": "leighmcgee@fakemail.com",
         "phone": "(844) 760-9302",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3220,11 +3066,9 @@
     "pk": 81,
     "fields": {
         "name": "Jacqueline Freeman",
-        "barcode_id": null,
         "email": "jacquelinefreeman@fakemail.com",
         "phone": "(297) 916-1716",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3235,11 +3079,9 @@
     "pk": 82,
     "fields": {
         "name": "Holly Howard",
-        "barcode_id": null,
         "email": null,
         "phone": "(958) 783-2610",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3250,11 +3092,9 @@
     "pk": 83,
     "fields": {
         "name": "Pedro Burgess",
-        "barcode_id": null,
         "email": "pedroburgess@fakemail.com",
         "phone": "(854) 441-0104",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": ""
@@ -3265,11 +3105,9 @@
     "pk": 84,
     "fields": {
         "name": "Kristy Carr",
-        "barcode_id": null,
         "email": "kristycarr@fakemail.com",
         "phone": "(644) 607-3297",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3280,11 +3118,9 @@
     "pk": 85,
     "fields": {
         "name": "Wilma Vaughn",
-        "barcode_id": null,
         "email": "wilmavaughn@fakemail.com",
         "phone": "(398) 759-9537",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3295,11 +3131,9 @@
     "pk": 86,
     "fields": {
         "name": "Virginia Mccarthy",
-        "barcode_id": null,
         "email": "virginiamccarthy@fakemail.com",
         "phone": "(455) 177-0459",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3310,11 +3144,9 @@
     "pk": 87,
     "fields": {
         "name": "Tasha Jenkins",
-        "barcode_id": null,
         "email": "tashajenkins@fakemail.com",
         "phone": "(875) 519-9891",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "",
         "pronoun": ""
@@ -3325,11 +3157,9 @@
     "pk": 88,
     "fields": {
         "name": "Toby Wong",
-        "barcode_id": null,
         "email": null,
         "phone": "(404) 641-5999",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3340,11 +3170,9 @@
     "pk": 89,
     "fields": {
         "name": "Jo Allen",
-        "barcode_id": null,
         "email": "joallen@fakemail.com",
         "phone": "(761) 993-2983",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3355,11 +3183,9 @@
     "pk": 90,
     "fields": {
         "name": "Billy Griffin",
-        "barcode_id": null,
         "email": "billygriffin@fakemail.com",
         "phone": "(430) 532-2939",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3370,11 +3196,9 @@
     "pk": 91,
     "fields": {
         "name": "Angela Reed",
-        "barcode_id": null,
         "email": "angelareed@fakemail.com",
         "phone": "(936) 500-1228",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3385,11 +3209,9 @@
     "pk": 92,
     "fields": {
         "name": "Hugo Lewis",
-        "barcode_id": null,
         "email": "hugolewis@fakemail.com",
         "phone": "(422) 585-9609",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "they"
@@ -3400,11 +3222,9 @@
     "pk": 93,
     "fields": {
         "name": "Cassandra Wilson",
-        "barcode_id": null,
         "email": "cassandrawilson@fakemail.com",
         "phone": "(604) 306-2084",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3415,11 +3235,9 @@
     "pk": 94,
     "fields": {
         "name": "George Willis",
-        "barcode_id": null,
         "email": "georgewillis@fakemail.com",
         "phone": "(222) 204-5944",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "M",
         "pronoun": "he"
@@ -3430,11 +3248,9 @@
     "pk": 95,
     "fields": {
         "name": "Jamie Hodges",
-        "barcode_id": null,
         "email": "jamiehodges@fakemail.com",
         "phone": "(737) 122-6102",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3445,11 +3261,9 @@
     "pk": 96,
     "fields": {
         "name": "Bennie Rodriguez",
-        "barcode_id": null,
         "email": "bennierodriguez@fakemail.com",
         "phone": "(537) 641-2175",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3460,11 +3274,9 @@
     "pk": 97,
     "fields": {
         "name": "Allison Martin",
-        "barcode_id": null,
         "email": "allisonmartin@fakemail.com",
         "phone": "(525) 384-2715",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3475,11 +3287,9 @@
     "pk": 98,
     "fields": {
         "name": "Kristi Elliott",
-        "barcode_id": null,
         "email": "kristielliott@fakemail.com",
         "phone": "(790) 289-5430",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3490,11 +3300,9 @@
     "pk": 99,
     "fields": {
         "name": "Pearl Graves",
-        "barcode_id": null,
         "email": null,
         "phone": "(317) 721-2439",
         "anonymous": false,
-        "checkin_message": "",
         "notes": null,
         "gender": "F",
         "pronoun": "she"
@@ -3506,6 +3314,7 @@
     "fields": {
         "reference": "Custom Team Name",
         "short_reference": "Custom Team Name",
+        "code_name": "",
         "short_name": "Custom Team Name",
         "long_name": "Custom Team Name",
         "institution": 1,
@@ -3524,6 +3333,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Caltech 2",
         "long_name": "California Institute of Technology 2",
         "institution": 1,
@@ -3542,6 +3352,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Caltech 3",
         "long_name": "California Institute of Technology 3",
         "institution": 1,
@@ -3560,6 +3371,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Columbia 1",
         "long_name": "Columbia University 1",
         "institution": 2,
@@ -3578,6 +3390,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Cornell 1",
         "long_name": "Cornell University 1",
         "institution": 3,
@@ -3596,6 +3409,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Harvard 1",
         "long_name": "Harvard University 1",
         "institution": 4,
@@ -3614,6 +3428,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Harvard 2",
         "long_name": "Harvard University 2",
         "institution": 4,
@@ -3632,6 +3447,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Johns Hopkins 1",
         "long_name": "Johns Hopkins University 1",
         "institution": 5,
@@ -3650,6 +3466,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "MIT 1",
         "long_name": "Massachusetts Institute of Technology 1",
         "institution": 6,
@@ -3668,6 +3485,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "MIT 2",
         "long_name": "Massachusetts Institute of Technology 2",
         "institution": 6,
@@ -3686,6 +3504,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Princeton 1",
         "long_name": "Princeton University 1",
         "institution": 7,
@@ -3704,6 +3523,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Princeton 2",
         "long_name": "Princeton University 2",
         "institution": 7,
@@ -3722,6 +3542,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Stanford 1",
         "long_name": "Stanford University 1",
         "institution": 8,
@@ -3740,6 +3561,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Stanford 2",
         "long_name": "Stanford University 2",
         "institution": 8,
@@ -3758,6 +3580,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Stanford 3",
         "long_name": "Stanford University 3",
         "institution": 8,
@@ -3776,6 +3599,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Berkeley 1",
         "long_name": "University of California, Berkeley 1",
         "institution": 9,
@@ -3794,6 +3618,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Chicago 1",
         "long_name": "University of Chicago 1",
         "institution": 10,
@@ -3812,6 +3637,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Chicago 2",
         "long_name": "University of Chicago 2",
         "institution": 10,
@@ -3830,6 +3656,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Chicago 3",
         "long_name": "University of Chicago 3",
         "institution": 10,
@@ -3848,6 +3675,7 @@
     "fields": {
         "reference": "1",
         "short_reference": "1",
+        "code_name": "",
         "short_name": "Pennsylvania 1",
         "long_name": "University of Pennsylvania 1",
         "institution": 11,
@@ -3866,6 +3694,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Pennsylvania 2",
         "long_name": "University of Pennsylvania 2",
         "institution": 11,
@@ -3884,6 +3713,7 @@
     "fields": {
         "reference": "Special Name",
         "short_reference": "Special Name",
+        "code_name": "",
         "short_name": "Special Name",
         "long_name": "Special Name",
         "institution": 13,
@@ -3902,6 +3732,7 @@
     "fields": {
         "reference": "2",
         "short_reference": "2",
+        "code_name": "",
         "short_name": "Yale 2",
         "long_name": "Yale University 2",
         "institution": 13,
@@ -3920,6 +3751,7 @@
     "fields": {
         "reference": "3",
         "short_reference": "3",
+        "code_name": "",
         "short_name": "Yale 3",
         "long_name": "Yale University 3",
         "institution": 13,
@@ -5034,7 +4866,7 @@
     "model": "results.ballotsubmission",
     "pk": 1,
     "fields": {
-        "timestamp": "2017-09-07T18:36:34.410",
+        "timestamp": "2017-09-07T08:36:34.410Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5046,7 +4878,6 @@
         "ip_address": null,
         "debate": 7,
         "motion": 3,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5055,7 +4886,7 @@
     "model": "results.ballotsubmission",
     "pk": 2,
     "fields": {
-        "timestamp": "2017-09-07T18:36:34.634",
+        "timestamp": "2017-09-07T08:36:34.634Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5067,7 +4898,6 @@
         "ip_address": null,
         "debate": 3,
         "motion": 2,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5076,7 +4906,7 @@
     "model": "results.ballotsubmission",
     "pk": 3,
     "fields": {
-        "timestamp": "2017-09-07T18:36:34.910",
+        "timestamp": "2017-09-07T08:36:34.910Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5088,7 +4918,6 @@
         "ip_address": null,
         "debate": 11,
         "motion": 2,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5097,7 +4926,7 @@
     "model": "results.ballotsubmission",
     "pk": 4,
     "fields": {
-        "timestamp": "2017-09-07T18:36:35.160",
+        "timestamp": "2017-09-07T08:36:35.160Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5109,7 +4938,6 @@
         "ip_address": null,
         "debate": 1,
         "motion": 1,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5118,7 +4946,7 @@
     "model": "results.ballotsubmission",
     "pk": 5,
     "fields": {
-        "timestamp": "2017-09-07T18:36:35.525",
+        "timestamp": "2017-09-07T08:36:35.525Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5130,7 +4958,6 @@
         "ip_address": null,
         "debate": 5,
         "motion": 1,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5139,7 +4966,7 @@
     "model": "results.ballotsubmission",
     "pk": 6,
     "fields": {
-        "timestamp": "2017-09-07T18:36:35.864",
+        "timestamp": "2017-09-07T08:36:35.864Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5151,7 +4978,6 @@
         "ip_address": null,
         "debate": 6,
         "motion": 2,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5160,7 +4986,7 @@
     "model": "results.ballotsubmission",
     "pk": 7,
     "fields": {
-        "timestamp": "2017-09-07T18:36:36.206",
+        "timestamp": "2017-09-07T08:36:36.206Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5172,7 +4998,6 @@
         "ip_address": null,
         "debate": 9,
         "motion": 1,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5181,7 +5006,7 @@
     "model": "results.ballotsubmission",
     "pk": 8,
     "fields": {
-        "timestamp": "2017-09-07T18:36:36.525",
+        "timestamp": "2017-09-07T08:36:36.525Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5193,7 +5018,6 @@
         "ip_address": null,
         "debate": 4,
         "motion": 2,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5202,7 +5026,7 @@
     "model": "results.ballotsubmission",
     "pk": 9,
     "fields": {
-        "timestamp": "2017-09-07T18:36:36.875",
+        "timestamp": "2017-09-07T08:36:36.875Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5214,7 +5038,6 @@
         "ip_address": null,
         "debate": 8,
         "motion": 3,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5223,7 +5046,7 @@
     "model": "results.ballotsubmission",
     "pk": 10,
     "fields": {
-        "timestamp": "2017-09-07T18:36:37.191",
+        "timestamp": "2017-09-07T08:36:37.191Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5235,7 +5058,6 @@
         "ip_address": null,
         "debate": 12,
         "motion": 2,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5244,7 +5066,7 @@
     "model": "results.ballotsubmission",
     "pk": 11,
     "fields": {
-        "timestamp": "2017-09-07T18:36:37.651",
+        "timestamp": "2017-09-07T08:36:37.651Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5256,7 +5078,6 @@
         "ip_address": null,
         "debate": 10,
         "motion": 1,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -5265,7 +5086,7 @@
     "model": "results.ballotsubmission",
     "pk": 12,
     "fields": {
-        "timestamp": "2017-09-07T18:36:38.121",
+        "timestamp": "2017-09-07T08:36:38.121Z",
         "version": 1,
         "submitter_type": "T",
         "confirmed": true,
@@ -5277,7 +5098,6 @@
         "ip_address": null,
         "debate": 2,
         "motion": 1,
-        "copied_from": null,
         "discarded": false,
         "forfeit": null
     }
@@ -8387,7 +8207,6 @@
         "seq": null,
         "slug": "demo",
         "current_round": 2,
-        "welcome_msg": "",
         "active": true
     }
 },

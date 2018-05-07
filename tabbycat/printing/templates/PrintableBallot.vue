@@ -5,6 +5,11 @@
       :ballot="ballot"
       :round-info="roundInfo"></printable-ballot-header>
 
+    <printable-debate-info
+      :ballot="ballot"
+      :round-info="roundInfo"
+      :show-scoring="showScoring"></printable-debate-info>
+
     <printable-scoresheet v-if="kind === 'Scoresheet'"
       :ballot="ballot"
       :round-info="roundInfo"></printable-scoresheet>
@@ -13,33 +18,30 @@
       :ballot="ballot"
       :round-info="roundInfo"></printable-feedback>
 
-    <printable-ballot-footer v-if="roundInfo.showTabRoomRow"
-      :round-info="roundInfo"
-      :show-scoring="showScoring"></printable-ballot-footer>
-
   </section>
 </template>
 
 <script>
 import PrintableBallotHeader from './PrintableBallotHeader.vue'
-import PrintableBallotFooter from './PrintableBallotFooter.vue'
+import PrintableDebateInfo from './PrintableDebateInfo.vue'
 import PrintableFeedback from './PrintableFeedback.vue'
 import PrintableScoresheet from './PrintableScoresheet.vue'
 
 export default {
   props: ['ballot', 'kind', 'roundInfo'],
   components: {
-    PrintableBallotHeader, PrintableBallotFooter,
-    PrintableFeedback, PrintableScoresheet
+    PrintableBallotHeader,
+    PrintableDebateInfo,
+    PrintableFeedback,
+    PrintableScoresheet,
   },
   computed: {
-    showScoring: function() {
+    showScoring: function () {
       if (this.kind === 'Scoresheet') {
         return true
-      } else {
-        return false
       }
-    }
-  }
+      return false
+    },
+  },
 }
 </script>

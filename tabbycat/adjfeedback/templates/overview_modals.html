@@ -1,7 +1,7 @@
 {% load debate_tags i18n %}
 
 <div class="modal fade" id="edit-test-score" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
       <form id="testScoreForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-test-score' %}">
         <div class="modal-body pb-0 pt-0">
@@ -42,7 +42,7 @@
 
 {% if pref.enable_adj_notes > 0 %}
   <div class="modal fade" id="edit-note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
+    <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
         <div class="modal-header  text-center">
           <h3>Edit Note</h3>

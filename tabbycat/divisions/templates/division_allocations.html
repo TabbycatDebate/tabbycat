@@ -6,6 +6,7 @@
 {% block page-title %}Allocate Divisions{% endblock %}
 
 {% block page-subnav-sections %}
+  <!-- DISABLED UNTIL WORKING
   <form method="POST" action="{% tournamenturl 'create_division_allocation' %}">
     {% csrf_token %}
     <button class="btn btn-primary " type="submit">
@@ -18,12 +19,15 @@
       Auto-Allocate Bye Teams
     </button>
   </form>
-  <div class="btn btn-inactive text-muted">Preference:</div>
-  <div class="btn-group btn-group-sm">
-    <div class="btn btn-success" disabled="disabled">1/2</div>
-    <div class="btn btn-primary" disabled="disabled">3/4</div>
-    <div class="btn btn-warning" disabled="disabled">5+</div>
-    <div class="btn btn-danger" disabled="disabled">NA</div>
+   -->
+  <div>
+    <div class="btn btn-inactive text-muted">Preference:</div>
+    <div class="btn-group">
+      <div class="btn btn-success" disabled="disabled">1/2</div>
+      <div class="btn btn-primary" disabled="disabled">3/4</div>
+      <div class="btn btn-warning" disabled="disabled">5+</div>
+      <div class="btn btn-danger" disabled="disabled">NA</div>
+    </div>
   </div>
 {% endblock %}
 
@@ -42,6 +46,7 @@
 
   <allocate-divisions-container :teams="teams" :divisions="divisions"
                                 :venue-categories="venueCategories"
+                                :round-info="roundInfo"
                                 :save-divisions-url="saveDivisionsUrl"
                                 :save-venue-category-url="saveVenueCategoryUrl">
   </allocate-divisions-container>
@@ -56,6 +61,7 @@
       teams: {{ teams | safe }},
       divisions: {{ divisions | safe }},
       venueCategories: {{ venue_categories | safe }},
+      roundInfo: {{ round_info | safe }},
       saveDivisionsUrl: '{% tournamenturl 'set_team_division' %}',
       saveVenueCategoryUrl: '{% tournamenturl 'set_division_venue_category' %}'
     }

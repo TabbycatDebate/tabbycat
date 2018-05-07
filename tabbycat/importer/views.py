@@ -1,19 +1,29 @@
 import logging
 
 from django.contrib import messages
+from django.core import management
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext as _
+from django.shortcuts import redirect
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _, ngettext
 from django.views.generic import TemplateView
 
 from formtools.wizard.views import SessionWizardView
 
+from actionlog.mixins import LogActionMixin
+from actionlog.models import ActionLogEntry
 from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Team
+from tournaments.models import Tournament
 from tournaments.mixins import TournamentMixin
-from utils.mixins import SuperuserRequiredMixin
+from utils.misc import redirect_tournament
+from utils.mixins import AdministratorMixin
+from utils.views import PostOnlyRedirectView
 from venues.models import Venue
 
+from .management.commands import importtournament
+from .importers import TournamentDataImporterError
 from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
                     ImportVenuesRawForm, NumberForEachInstitutionForm,
                     TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
@@ -21,13 +31,11 @@ from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
 logger = logging.getLogger(__name__)
 
 
-# TODO: add log actions for all of these?
-
-class ImporterSimpleIndexView(SuperuserRequiredMixin, TournamentMixin, TemplateView):
+class ImporterSimpleIndexView(AdministratorMixin, TournamentMixin, TemplateView):
     template_name = 'simple_import_index.html'
 
 
-class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizardView):
+class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, SessionWizardView):
     """Common functionality for the import wizard views. In particular, this
     class implements functionality for a "details" step that is initialized
     with data from the previous step. The details step shows a ModelFormSet
@@ -68,10 +76,14 @@ class BaseImportWizardView(SuperuserRequiredMixin, TournamentMixin, SessionWizar
             form.save_as_new = True
         return form
 
+    def get_message(self, count):
+        raise NotImplementedError
+
     def done(self, form_list, form_dict, **kwargs):
         self.instances = form_dict[self.DETAILS_STEP].save()
-        messages.success(self.request, _("Added %(count)d %(model_plural)s.") % {
-                'count': len(self.instances), 'model_plural': self.model._meta.verbose_name_plural})
+        count = len(self.instances)
+        messages.success(self.request, self.get_message(count) % {'count': count})
+        self.log_action()
         return HttpResponseRedirect(self.get_redirect_url())
 
 
@@ -81,9 +93,13 @@ class ImportInstitutionsWizardView(BaseImportWizardView):
         ('raw', ImportInstitutionsRawForm),
         ('details', modelformset_factory(Institution, fields=('name', 'code'), extra=0)),
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_INSTITUTIONS
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['institutions_raw']
+
+    def get_message(self, count):
+        return ngettext("Added %(count)d institution.", "Added %(count)d institutions.", count)
 
 
 class ImportVenuesWizardView(BaseImportWizardView):
@@ -92,15 +108,19 @@ class ImportVenuesWizardView(BaseImportWizardView):
         ('raw', ImportVenuesRawForm),
         ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0))
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_VENUES
 
     def get_form_kwargs(self, step):
         if step == 'details':
-            return {'form_kwargs': {'tournament': self.get_tournament()}}
+            return {'form_kwargs': {'tournament': self.tournament}}
         else:
             return super().get_form_kwargs(step)
 
     def get_details_form_initial(self):
         return self.get_cleaned_data_for_step('raw')['venues_raw']
+
+    def get_message(self, count):
+        return ngettext("Added %(count)d venue.", "Added %(count)d venues.", count)
 
 
 class BaseImportByInstitutionWizardView(BaseImportWizardView):
@@ -110,7 +130,7 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
         if step == 'numbers':
             return {'institutions': Institution.objects.all()}
         elif step == 'details':
-            return {'form_kwargs': {'tournament': self.get_tournament()}}
+            return {'form_kwargs': {'tournament': self.tournament}}
 
     def make_initial_data(self, number, institution_id):
         if number is None:  # occurs when field was left blank
@@ -145,6 +165,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
         ('numbers', NumberForEachInstitutionForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_TEAMS
 
     def get_details_instance_initial(self, i):
         return {'reference': str(i), 'use_institution_prefix': True}
@@ -152,8 +173,11 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     def done(self, form_list, form_dict, **kwargs):
         # Also set emoji on teams
         redirect = super().done(form_list, form_dict, **kwargs)
-        set_emoji(self.instances, self.get_tournament())
+        set_emoji(self.instances, self.tournament)
         return redirect
+
+    def get_message(self, count):
+        return ngettext("Added %(count)d team.", "Added %(count)d teams.", count)
 
 
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
@@ -162,6 +186,47 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
         ('numbers', NumberForEachInstitutionForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
+    action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
+
+    def get_default_test_score(self):
+        """Returns the midpoint of the configured allowable score range."""
+        if not hasattr(self, "_default_test_score"):
+            min_score = self.tournament.pref('adj_min_score')
+            max_score = self.tournament.pref('adj_max_score')
+            self._default_test_score = (min_score + max_score) / 2
+        return self._default_test_score
 
     def get_details_instance_initial(self, i):
-        return {'name': _("Adjudicator %(number)d") % {'number': i}, 'test_score': 2.5}
+        return {
+            'name': _("Adjudicator %(number)d") % {'number': i},
+            'test_score': self.get_default_test_score()
+        }
+
+    def get_message(self, count):
+        return ngettext("Added %(count)d adjudicator.", "Added %(count)d adjudicators.", count)
+
+
+class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
+
+    def post(self, request, *args, **kwargs):
+        source = request.POST.get("source", "")
+
+        try:
+            management.call_command(importtournament.Command(), source,
+                                    force=True, strict=False)
+        except TournamentDataImporterError as e:
+            messages.error(self.request, mark_safe(
+                "<p>There were one or more errors creating the demo tournament. "
+                "Before retrying, please delete the existing demo tournament "
+                "<strong>and</strong> the institutions in the Edit Database Area.</p>"
+                "<p><i>Technical information: The errors are as follows:"
+                "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"
+            ))
+            logger.error("Error importing demo tournament: " + str(e))
+            return redirect('tabbycat-index')
+        else:
+            messages.success(self.request, "Created new demo tournament. You "
+                "can now configure it below.")
+
+        new_tournament = Tournament.objects.get(slug=source)
+        return redirect_tournament('tournament-configure', tournament=new_tournament)

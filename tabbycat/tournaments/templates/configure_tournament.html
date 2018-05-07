@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% load add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🏆</span>{% trans "Configure Tournament "%}{{ tournament.short_name }}{% endblock %}
+{% block head-title %}<span class="emoji">🏆</span>
+  {% blocktrans trimmed with tournament_name=tournament.short_name %}
+    Configure Tournament {{ tournament_name }}
+  {% endblocktrans %}
+{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
 {% block body-class %}override-sidebar-offset{% endblock %}
 

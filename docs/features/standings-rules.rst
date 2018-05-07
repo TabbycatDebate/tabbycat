@@ -4,13 +4,13 @@
 Standings Rules
 ===============
 
-Team Standings Rules
+Team standings rules
 ====================
 
 In Tabbycat, you can choose how teams are ranked in the team standings. For
 example, at Australs, teams are ranked first on the number of wins, and second
 on their total speaker score. The setting that specifies how teams are ranked is
-called the *team standings precedence*. The team standings precedence is used:
+called the **team standings precedence**. The team standings precedence is used:
 
 - When displaying the team tab,
 - Whenever a power-paired draw is generated, and
@@ -21,6 +21,9 @@ When you choose the team standings precedence, you choose from a list of
 metric, then by the second metric, and so on. You must choose at least one
 metric, and you can choose up to eight. Teams tied on all metrics will have the
 same rank.
+
+If you like, you can also choose **team standings extra metrics**, which are
+metrics that will be shown in the team standings, but not used to rank teams.
 
 .. list-table::
   :header-rows: 1
@@ -49,6 +52,12 @@ same rank.
     - The average total speaker score over all debates the team has had, not
       counting debates where they or their opponents forfeited.
 
+  * - Speaker score standard deviation
+    - The standard deviation of total speaker scores over all debates the team
+      has had, not counting debates where they or their opponents forfeited.
+      This metric is ranked in ascending order (smaller standard deviations
+      ranked higher).
+
   * - Sum of margins
     - The sum of all margins. Wins are positive, losses are negative.
 
@@ -72,6 +81,14 @@ same rank.
       team is recorded as gaining 1.2. This also means that solo adjudicators
       are always worth three votes.
 
+  * - Number of firsts
+    - The number of debates in which the team came first. Only makes sense for
+      British Parliamentary.
+
+  * - Number of seconds
+    - The number of debates in which the team came second. Only makes sense for
+      British Parliamentary.
+
   * - Who-beat-whom
     - If there are exactly two teams tied on all metrics earlier in the
       precedence than this one, then check if the teams have faced each other.
@@ -90,13 +107,61 @@ same rank.
       That is, the metric applies whenever there are exactly two teams from the
       same division exactly tied.
 
-.. note:: Some debugging information is printed to the logs when some of these metrics are invoked.
+
+Speaker standings rules
+=======================
+
+The speaker standings precedence is only used in speaker standings (*i.e.*, it
+doesn't affect the operation of the tournament). As for team standings, the
+**speaker standings precedence** specifies which metrics are used to rank
+speakers, with the second metric tie-breaking the first, the third tie-breaking
+the second, and so on. The **speaker standings extra metrics** are metrics
+that will be shown in the speaker standings, but won't be used to rank speakers.
+
+.. list-table::
+  :header-rows: 1
+  :stub-columns: 1
+  :widths: 25 75
+
+  * - Metric
+    - Description
+
+  * - Total
+    - The sum of all speaker scores attained by the speaker. Note that if a
+      speaker misses a round, they'll typically be relegated to the bottom of
+      the speaker standings by this metric.
+
+  * - Average
+    - The average of all speaker scores attained by the speaker.
+
+  * - Trimmed mean
+    - The average speaker score after excluding their highest and lowest speaker
+      scores. Also known as the *high-low drop*, *truncated mean* or *Olympic
+      average*.
+
+      If the speaker has only one or two scores, this metric just returns the
+      average of those scores, without excluding any.
+
+  * - Standard deviation
+    - The standard deviation of all speaker scores attained by the speaker.
+      This metric is ranked in ascending order (smaller standard deviations
+      ranked higher).
+
+  * - Average speaker score
+    - The average total speaker score over all debates the team has had, not
+      counting debates where they or their opponents forfeited.
+
+  * - Number of speeches given
+    - The number of speaker scores associated with the speaker. (In tournaments
+      where teams can rotate speakers, this may not be all rounds.) This metric
+      is normally used as an "extra" (unranked) metric, because it'd be weird
+      to rank by number of speeches given, but you can if you want to.
 
 
-Motions Standings Test
-======================
+Motion balance
+==============
 
-The motions tab and motions standings page applies a statistical test to estimate the degree to which a motion is imbalanced. This is calculated by first making an underlying assumption that a motion is generally fair. This will be our null hypothesis: that, for a given motion, affirmative teams won the same number of times as negative teams.
+The motion balance page applies a statistical test to estimate the degree to which a motion is imbalanced. This is calculated by first making an underlying assumption that a motion is generally fair. This will be our null hypothesis: that, for a given motion, affirmative teams won the same number of times as negative teams.
 
 Our chi-squared test will then be centred around disproving this hypothesis. If we disprove the hypothesis, we say that, in the context of this tournament and this draw, the motion ended up being unbalanced. However (technically speaking) if we fail to reject the null hypothesis, we would conclude that there is insufficient evidence to suggest that the motion was unbalanced in the context of this tournament.
 

@@ -1,14 +1,17 @@
 import logging
 from itertools import product
 
+from asgiref.sync import AsyncToSync
+from channels.layers import get_channel_layer
 from django import forms
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
+from .consumers import BallotResultConsumer, BallotStatusConsumer
 from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
                      ForfeitDebateResult, VotingDebateResult)
 from .utils import side_and_position_names
@@ -185,6 +188,25 @@ class BaseResultForm(forms.Form):
 
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
+
+        # 5. Notify the websocket Latest Results consumer if result is 'final'
+        if self.ballotsub.confirmed:
+            if self.debate.result_status is self.debate.STATUS_CONFIRMED:
+                slug = self.debate.round.tournament.slug
+                group_name = BallotResultConsumer.group_prefix + "_" + slug
+                AsyncToSync(get_channel_layer().group_send)(group_name, {
+                    "type": "broadcast",
+                    "data": self.ballotsub.serialize_like_actionlog
+                })
+
+        # 6. Notify the websocket Ballots Status if result is for current round
+        if self.debate.round == self.debate.round.tournament.current_round:
+            slug = self.debate.round.tournament.slug
+            group_name = BallotStatusConsumer.group_prefix + "_" + slug
+            AsyncToSync(get_channel_layer().group_send)(group_name, {
+                "type": "broadcast",
+                "data": BallotStatusConsumer.get_data(self.debate.round)
+            })
 
         return self.ballotsub
 
@@ -385,9 +407,6 @@ class BaseBallotSetForm(BaseResultForm):
             order.append('motion')
             order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
-        order.append('ghost') # Dummy item; as input is created on the front end
-        self.irontabindex = len(order) # Set the tab index it would have had
-
         for side, pos in product(self.sides, self.positions):
             order.append(self._fieldname_speaker(side, pos))
 
@@ -467,7 +486,7 @@ class BaseBallotSetForm(BaseResultForm):
             for speaker, positions in speaker_positions.items():
                 if len(positions) > 1:
                     # Translators: count is always at least 2
-                    message = ungettext(
+                    message = ngettext(
                         "%(speaker)s appears to have given %(count)d substantive speech.",  # never used, needed for i18n
                         "%(speaker)s appears to have given %(count)d substantive speeches.",
                         len(positions)

@@ -84,7 +84,7 @@ def add_speaker_round_results(standings, rounds, tournament, replies=False):
         speaker_scores = speaker_scores.filter(position__lte=tournament.last_substantive_position)
 
     for info in standings:
-        info.scores = ['—'] * len(rounds)
+        info.scores = [None] * len(rounds)
 
     round_lookup = {r: i for i, r in enumerate(rounds)}
     for ss in speaker_scores:

@@ -44,6 +44,11 @@
                 {% blocktrans trimmed with category_name=category.name %}
                   {{ category_name }} Break
                 {% endblocktrans %}
+              {% blocktrans trimmed with size=category.break_size %}
+              <span class="badge float-right badge-light">
+                {{ size }} Spots
+              </span>
+              {% endblocktrans %}
               </h4>
             </div>
 
@@ -64,7 +69,7 @@
                 <div class="list-group-item">
                   <div class="d-flex justify-content-end">
                     <span class="mr-auto">{% trans "Breaking" %}</span>
-                    <strong>{{ category.breaking }}/{{ teams_in_tournament }}</strong>
+                    <strong>{{ category.breaking }}</strong>
                   </div>
                   {% include "components/progress-bar.html" with value=category.breaking type="success" %}
                 </div>
@@ -72,17 +77,17 @@
                 <div class="list-group-item">
                   <div class="d-flex justify-content-end">
                     <span class="mr-auto">{% trans "Excluded" %}</span>
-                    <strong>{{ category.excluded }}/{{ teams_in_tournament }}</strong>
+                    <strong>{{ category.excluded }}</strong>
                   </div>
                   {% include "components/progress-bar.html" with value=category.excluded type="warning" %}
                 </div>
 
                 <div class="list-group-item">
                   <div class="d-flex justify-content-end">
-                    <span class="mr-auto">{% trans "Not breaking" %}</span>
-                    <strong>{{ category.nonbreaking }}/{{ teams_in_tournament }}</strong>
+                    <span class="mr-auto">{% trans "Eligible" %}</span>
+                    <strong>{{ category.eligible }}</strong>
                   </div>
-                  {% include "components/progress-bar.html" with value=category.nonbreaking type="primary" %}
+                  {% include "components/progress-bar.html" with value=category.eligible type="info" %}
                 </div>
 
               {% endwith %}

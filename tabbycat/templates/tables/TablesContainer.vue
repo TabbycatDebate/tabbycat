@@ -5,17 +5,19 @@
       <div class="input-group">
         <input class="form-control" id="table-search" type="search"
                v-model="filterKey" @keyup="updateTableFilters"
-               placeholder="Find in Table">
-        <span class="input-group-addon">
-          <i data-feather="search"></i>
-        </span>
+               :placeholder="gettext('Find in Table')">
+        <div class="input-group-append">
+          <span class="input-group-text"><i data-feather="search"></i></span>
+        </div>
       </div>
     </div>
 
     <div class="col mb-3" v-for="(table, i) in tablesData" :class="tableClass">
       <div class="card table-container" :id="getTableId(i)">
         <div class="card-body">
-          <h4 class="card-title" v-if="table.title">{{ table.title }}</h4>
+          <h4 class="card-title pt-3 pt-sm-0 pl-md-0 pl-1" v-if="table.title">
+            {{ table.title }}
+          </h4>
           <smart-table
             :table-headers="table.head" :table-content="table.data"
             :table-class="table.class"
@@ -39,7 +41,7 @@ export default {
     tablesData: Array, // Passed down from main.js
     orientation: String, // Passed down from template
   },
-  data: function() {
+  data: function () {
     return { filterKey: '' } // Filter key is internal state
   },
   computed: {
@@ -56,15 +58,15 @@ export default {
       }
       return 'col-md-12'; // Fallback; should be redundant
     },
-    sortableData: function() {
+    sortableData: function () {
       return this.rows // Enables SortableTableMixin
     }
   },
   methods: {
-    getTableId: function(i) {
+    getTableId: function (i) {
       return "tableContainer-" + i
     },
-    updateTableFilters: function() {
+    updateTableFilters: function () {
       this.$eventHub.$emit('update-table-filters', this.filterKey)
     },
   },

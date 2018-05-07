@@ -4,7 +4,7 @@
 User Accounts
 =============
 
-For obvious reasons, user logins are required to data entry and administrative functions. There are (conceptually) four levels of access:
+For obvious reasons, user logins are required to data entry and administrative functions. Conceptually, there are four levels of access:
 
 .. list-table::
   :header-rows: 1
@@ -19,47 +19,59 @@ For obvious reasons, user logins are required to data entry and administrative f
   * - Public
     - The public
     - Publicly available information.
-    - Viewing things, and submitting new ballots/feedback if that function is enabled.
+    - Viewing things, and submitting new ballots/feedback if electronic submission is permitted by the tournament.
 
   * - Assistant
     - Data entry helpers
-    - Specialised data entry (ballots and feedback).
-    - Entering and confirming ballots and feedback.
+    - The assistant area
+    - Entering, confirming and printing ballots and feedback, checking in ballots and people, and displaying the draw.
 
   * - Superuser
-    - Adjudication core
-    - The Tabbycat admin interface.
-    - Generating draws, editing ballots, feedback and adjudicator scores, checking in ballots and people.
+    - Chief adjudicators
+    - The administrator and assistant areas
+    - Generating draws, allocating adjudicators and venues, and editing ballots, feedback and adjudicator scores.
 
-  * - Staff
+  * - Staff and superuser
     - Tab director
-    - The Tabbycat admin and edit database interfaces.
+    - The administrator, assistant and Edit Database areas
     - Editing the database directly.
+
+If a user account on the tab system belongs to someone who is also a participant in the tournament (*e.g.*, a chief adjudicator), these two capacities are completely separate. User accounts are only used to regulate access to administrative functions. Tabbycat doesn't know about any relationship between user accounts, and who is participating in the tournament.
 
 Account roles
 =============
 
-If the adjudication core and tab directors will be helping with data entry, you should create a "assistant" account for them as well. These people will then have two accounts each: one with assistant access, which is used for data entry, and one with superuser access, which is used for everything else.
+You should create an account for each person who needs to access the tab system. When you create an account in the Edit Database area, there are checkboxes for **Superuser status** and **Staff access**. Superusers have access to the administrator area, and staff have access to the Edit Database area. You should grant permissions as follows:
 
-Specifically, the Tabbycat admin interface should **not**, in general, actually be used for data entry. That interface doesn't include some checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm a ballot or edit a score.
+- Tab directors should get both superuser and staff status.
+- Chief adjudicators and their deputies should get superuser status, but not staff status.
+- Tab assistants (helping only with data entry) should get neither superuser nor staff status.
 
-The **Edit Database** interface should certainly not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course.
+Tournament participants (other than tab staff) do not need an account. Everything they need to know can be accessed without an account. If you're using electronic ballots or electronic feedback, they access these using a URL that only they know (see :ref:`private-urls`).
+
+When doing data entry, users with superuser status should use the **assistant area**. The administrator area is intended for managing the tournament, and doesn't include someand should **not** in general be used for data entry. Specifically, the administrator area lacks checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm or modify a ballot.
+
+The **Edit Database** interface should not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course.
+
+.. note:: In theory, you could grant an account staff status but not superuser status. But then they'd be allowed to edit the database, but not run the tournament, which would be weird.
 
 Adding accounts
 ===============
 
 To add an account:
 
-1. Go to *BASE_URL/admin/auth/user/* and click "Add user" in the top right.
+1. Go to the Edit Database area of the site.
 
-2. Ask the user to enter a username and password.
+2. Under **Authentication and Authorization**, click the **Add** link next to **Users**.
+
+3. Ask the user to enter a username, password and possibly email address.
 
    - Only they should know what the password is.
    - If you're hosting on the internet, all passwords should be at least moderately strong!
-   - Passwords are stored as hashes, not as raw passwords, so it's (in theory, practically) impossible for you to figure out what their password is.
+   - Passwords are not stored as raw passwords, so you can't figure out what their password is.
+   - The email address is optional.
+   - This email address is only used to reset their password if they forget it, and has nothing to do with the email address that Tabbycat uses to send emails to tournament participants (*e.g.* private URL links).
 
-3. What you do next depends on what sort of account you're creating:
+4. If they are being assigned superuser and/or staff status, check the relevant boxes.
 
-   - If this is an assistant account, click "Save" or "Save and add another". (Any account not marked staff or superuser is an assistant account.)
-   - If they're being assigned superuser and/or staff privileges, then click "Save and continue editing", and check the appropriate boxes before clicking "Save".
-   - If you also wanted their names to be associated with their accounts, click "Save and continue editing" and fill out the relevant fields. But their names *etc.* aren't used for anything by Tabbycat.
+5. Click "Save" or "Save and add another".

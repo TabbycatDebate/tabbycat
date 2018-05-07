@@ -1,41 +1,43 @@
 <template>
-  <table class="table table-responsive-md" :class="tableClass">
+  <div class="table-responsive-md">
+    <table class="table" :class="tableClass">
 
-    <thead>
-      <tr>
-        <th v-for="header in headers" @resort="updateSorting"
-            :header="header"
-            :sort-key="sortKey"
-            :sort-order="sortOrder"
-            is="smartHeader">
-        </th>
-      </tr>
-    </thead>
+      <thead>
+        <tr>
+          <th v-for="header in headers" @resort="updateSorting"
+              :header="header"
+              :sort-key="sortKey"
+              :sort-order="sortOrder"
+              is="smartHeader">
+          </th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
-        <td class="empty-cell text-center text-muted">
-          {{ emptyTitle }}
-        </td>
-      </tr>
-      <tr v-for="row in dataFilteredByKey">
-        <td v-for="(cellData, cellIndex) in row"
-          :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
-          :cell-data="cellData">
-        </td>
-      </tr>
-    </tbody>
+      <tbody>
+        <tr v-if="typeof tableHeaders === 'undefined' || rows.length === 0">
+          <td class="empty-cell text-center text-muted">
+            {{ emptyTitle }}
+          </td>
+        </tr>
+        <tr v-for="row in dataFilteredByKey">
+          <td v-for="(cellData, cellIndex) in row"
+            :is="cellData['component'] ? cellData['component'] : 'SmartCell'"
+            :cell-data="cellData">
+          </td>
+        </tr>
+      </tbody>
 
-  </table>
+    </table>
+  </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import SortableTableMixin from '../tables/SortableTableMixin.vue'
 import FeedbackTrend from '../graphs/FeedbackTrend.vue'
 import CheckCell from '../tables/CheckCell.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [SortableTableMixin],
@@ -43,7 +45,7 @@ export default {
   props: { tableHeaders: Array, tableContent: Array, tableClass: String,
            emptyTitle: String },
   computed: {
-    rows: function() {
+    rows: function () {
       var rows = []
       for (var i = 0; i < this.tableContent.length; i++) {
         // For each row and cell type push it to the master list
@@ -55,7 +57,7 @@ export default {
       };
       return rows;
     },
-    headers: function() {
+    headers: function () {
       // For each cell in the rows push its head value to a consolidated list
       var headers = [];
       if (typeof(this.tableContent[0]) !== 'undefined') { // Check table is not empty
@@ -65,7 +67,7 @@ export default {
       }
       return headers
     },
-    sortableData: function() {
+    sortableData: function () {
       return this.rows // Enables SortableTableMixin
     },
   },

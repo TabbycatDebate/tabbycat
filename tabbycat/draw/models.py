@@ -2,8 +2,8 @@ import logging
 
 from django.db import models
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
 
 from tournaments.utils import get_side_name
 
@@ -55,8 +55,6 @@ class Debate(models.Model):
         verbose_name=_("importance"))
     result_status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_NONE,
         verbose_name=_("result status"))
-    ballot_in = models.BooleanField(default=False,
-        verbose_name=_("ballot in"))
     sides_confirmed = models.BooleanField(default=True,
         verbose_name=_("sides confirmed"),
         help_text=_("If unchecked, the sides assigned to teams in this debate are just placeholders."))
@@ -82,11 +80,19 @@ class Debate(models.Model):
             # Translators: This is appended to a list of teams, e.g. "Auckland
             # 1, Vic Wellington 1 (sides not confirmed)". Mind the leading
             # space.
-            return teams_list + ugettext(" (sides not confirmed)")
+            return teams_list + gettext(" (sides not confirmed)")
+
+        try:
+            # This can sometimes arise during the call to self.round.tournament.sides
+            # if preferences aren't loaded correctly, which happens in `manage.py shell`.
+            sides = self.round.tournament.sides
+        except IndexError:
+            return self._teams_and_sides_display()  # fallback
+
         try:
             # Translators: This goes between teams in a debate, e.g. "Auckland 1
             # vs Vic Wellington 1". Mind the leading and trailing spaces.
-            return ugettext(" vs ").join(self.get_team(side).short_name for side in self.round.tournament.sides)
+            return gettext(" vs ").join(self.get_team(side).short_name for side in sides)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             return self._teams_and_sides_display()
 
@@ -251,14 +257,13 @@ class Debate(models.Model):
             yield sdt
 
     def serialize(self):
-        round = self.round
         debate = {'id': self.id, 'bracket': self.bracket,
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
         debate['debateTeams'] = list(self.serial_debateteams_ordered())
         debate['debateAdjudicators'] = [{
             'position': position,
-            'adjudicator': adj.serialize(round=round),
+            'adjudicator': adj.serialize(round=self.round),
         } for adj, position in self.adjudicators.with_debateadj_types()]
         debate['sidesConfirmed'] = self.sides_confirmed
         return debate
@@ -325,24 +330,24 @@ class DebateTeam(models.Model):
             return [DRAW_FLAG_DESCRIPTIONS.get(f, f) for f in self.flags.split(",")]
 
     def get_result_display(self):
-
-        if self.win is None:
-            if self.points is 3:
-                return "Placed 1st"
-            elif self.points is 2:
-                return "Placed 2nd"
-            elif self.points is 1:
-                return "Placed 3rd"
-            elif self.points is 0:
-                return "Placed 4th"
+        if self.team.tournament.pref('teams_in_debate') == 'bp':
+            if self.points == 3:
+                return gettext("placed 1st")
+            elif self.points == 2:
+                return gettext("placed 2nd")
+            elif self.points == 1:
+                return gettext("placed 3rd")
+            elif self.points == 0:
+                return gettext("placed 4th")
             else:
-                return ugettext("result unknown")
-        elif self.win is True:
-            return ugettext("Won")
-        elif self.win is False:
-            return ugettext("Lost")
+                return gettext("result unknown")
         else:
-            return ugettext("result unknown")
+            if self.win is True:
+                return gettext("won")
+            elif self.win is False: # not None
+                return gettext("lost")
+            else:
+                return gettext("result unknown")
 
     @property
     def win(self):

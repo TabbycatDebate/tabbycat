@@ -224,7 +224,9 @@
   {% endif %}
 
   {% if pref.public_results or admin_page %}
-    {{ block.super }} {# this is the Vue table, which is populated with previous debates #}
+    <div class="mt-md-4">
+      {{ block.super }} {# this is the Vue table, which is populated with previous debates #}
+    </div>
   {% endif %}
 
 {% endblock content %}

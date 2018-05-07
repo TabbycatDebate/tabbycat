@@ -1,0 +1,21 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{# New in Japanese Bobtail. Remove this file after release of Khao Manee. #}
+
+{% block after_related_objects %}
+  <div style="background-color: #d0dbe6; padding: 15px 15px 5px; margin-bottom: 20px; border-radius: 4px;">
+    <p>
+      {% if original %}
+        {% url 'options-tournament-section' section='public_features' tournament_slug=original.slug as features_url %}
+        {% blocktrans trimmed %}
+          Looking for the welcome message? That's been moved to the tournament configuration, under <a href="{{ features_url }}">Public Features</a>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed %}
+          Looking for the welcome message? That's moved to the tournament configuration, under Public Features.
+        {% endblocktrans %}
+      {% endif %}
+    </p>
+  </div>
+{% endblock %}

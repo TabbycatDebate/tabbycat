@@ -1,7 +1,7 @@
 import logging
 import random
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from participants.utils import get_side_history
 from tournaments.models import Round
@@ -10,6 +10,7 @@ from standings.teams import TeamStandingsGenerator
 from .models import Debate, DebateTeam
 from .generator import BPEliminationResultPairing, DrawGenerator, DrawUserError, ResultPairing
 from .generator.utils import ispow2
+from .utils import annotate_npullups
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,7 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "avoid_conflicts"       : "draw_rules__draw_avoid_conflicts",
     "odd_bracket"           : "draw_rules__draw_odd_bracket",
     "pairing_method"        : "draw_rules__draw_pairing_method",
+    "pullup_restriction"    : "draw_rules__draw_pullup_restriction",
     "pullup"                : "draw_rules__bp_pullup_distribution",
     "position_cost"         : "draw_rules__bp_position_cost",
     "assignment_method"     : "draw_rules__bp_assignment_method",
@@ -171,16 +173,23 @@ class PowerPairedDrawManager(BaseDrawManager):
     def get_relevant_options(self):
         options = super().get_relevant_options()
         if self.teams_in_debate == 'two':
-            options.extend(["avoid_conflicts", "odd_bracket", "pairing_method", "side_allocations"])
+            options.extend([
+                "avoid_conflicts", "odd_bracket", "pairing_method",
+                "pullup_restriction", "side_allocations"
+            ])
         elif self.teams_in_debate == 'bp':
             options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])
         return options
 
     def get_teams(self):
         """Get teams in ranked order."""
+        teams = super().get_teams()
+        if self.round.tournament.pref('draw_pullup_restriction') == 'least_to_date':
+            annotate_npullups(teams, self.round.prev)
+
         metrics = self.round.tournament.pref('team_standings_precedence')
         generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
-        standings = generator.generate(super().get_teams(), round=self.round.prev)
+        standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []
         for standing in standings:

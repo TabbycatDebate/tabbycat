@@ -75,61 +75,63 @@
 <div class="card table-container mt-3">
   <div class="card-body">
 
-    <table class="table table-responsive-md">
-      <thead>
-        <tr>
-          <th>{% trans "Debate ID" %}</th>
-          {% for side_name in side_names %}
-            <th>
-              {% blocktrans trimmed %}
-                Team(s) on {{ side_name }}
-              {% endblocktrans %}
-            </th>
-          {% endfor %}
-          <th>{% trans "Link to fix this debate" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for debate in incomplete_debates %}
+    <div class="table-responsive-md">
+      <table class="table">
+        <thead>
           <tr>
-            <td><strong>{{ debate.id }}</strong></td>
-            {% for teams_on_side in debate.teams_on_each_side.values %}
-              {% with nteams=teams_on_side|length %}
-                {% if nteams == 0 %}
-                  <td class="text-danger">
-                    <strong>{% trans "No teams" %}</strong>
-                  </td>
-                {% elif nteams == 1 %}
-                  <td>
-                    {{ teams_on_side.0.short_name }}
-                  </td>
-                {% else %}
-                  <td class="text-danger">
-                    <strong>{% trans "Multiple teams" %}</strong><br>
-                    {% for team in teams_on_side %}
-                      {{ team.short_name }}<br>
-                    {% endfor %}
-                  </td>
-                {% endif %}
-              {% endwith %}
+            <th>{% trans "Debate ID" %}</th>
+            {% for side_name in side_names %}
+              <th>
+                {% blocktrans trimmed %}
+                  Team(s) on {{ side_name }}
+                {% endblocktrans %}
+              </th>
             {% endfor %}
-            <td>
-              <a href="{% url 'admin:draw_debate_change' debate.id %}#/tab/inline_0/"
-                 class="btn btn-block btn-success" target="_blank">
-                 {% trans "Fix this debate" context "button label" %}
-              </a>
-            </td>
+            <th>{% trans "Link to fix this debate" %}</th>
           </tr>
-        {% empty %}
-          <tr>
-            <td colspan="{{ side_names|length|add:2 }}" class="text-center table-success">
-              <p>{% trans "It looks like all debates are in good shape!" %}</p>
-              <p>{% trans "If you keep getting redirected to this page and you're not sure why, please contact the developers of Tabbycat." %}</p>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for debate in incomplete_debates %}
+            <tr>
+              <td><strong>{{ debate.id }}</strong></td>
+              {% for teams_on_side in debate.teams_on_each_side.values %}
+                {% with nteams=teams_on_side|length %}
+                  {% if nteams == 0 %}
+                    <td class="text-danger">
+                      <strong>{% trans "No teams" %}</strong>
+                    </td>
+                  {% elif nteams == 1 %}
+                    <td>
+                      {{ teams_on_side.0.short_name }}
+                    </td>
+                  {% else %}
+                    <td class="text-danger">
+                      <strong>{% trans "Multiple teams" %}</strong><br>
+                      {% for team in teams_on_side %}
+                        {{ team.short_name }}<br>
+                      {% endfor %}
+                    </td>
+                  {% endif %}
+                {% endwith %}
+              {% endfor %}
+              <td>
+                <a href="{% url 'admin:draw_debate_change' debate.id %}#/tab/inline_0/"
+                   class="btn btn-block btn-success" target="_blank">
+                   {% trans "Fix this debate" context "button label" %}
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="{{ side_names|length|add:2 }}" class="text-center table-success">
+                <p>{% trans "It looks like all debates are in good shape!" %}</p>
+                <p>{% trans "If you keep getting redirected to this page and you're not sure why, please contact the developers of Tabbycat." %}</p>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

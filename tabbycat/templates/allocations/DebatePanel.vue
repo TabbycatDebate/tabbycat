@@ -24,10 +24,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
 import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
 import DebateConflictsMixin from '../allocations/DebateConflictsMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [DebateConflictsMixin],
@@ -35,22 +35,22 @@ export default {
   props: ['panelAdjudicators', 'adjPositions', 'panelTeams', 'debateId',
           'percentiles', 'locked', 'roundInfo'],
   computed: {
-    adjudicatorIds: function() {
-      return _.map(this.panelAdjudicators, function(da) {
+    adjudicatorIds: function () {
+      return _.map(this.panelAdjudicators, function (da) {
         return da.adjudicator.id
       })
     },
-    teamIds: function() {
-      return _.map(this.panelTeams, function(dt) {
+    teamIds: function () {
+      return _.map(this.panelTeams, function (dt) {
         return dt.team.id
       })
     },
   },
   methods: {
-    getAdjudicatorsByPosition: function(panelAdjudicators, position) {
+    getAdjudicatorsByPosition: function (panelAdjudicators, position) {
       return _.filter(panelAdjudicators, { 'position': position })
     },
-    getCSSForPosition: function(position) {
+    getCSSForPosition: function (position) {
       var css = 'flex-horizontal '
       var adjs = this.getAdjudicatorsByPosition(this.panelAdjudicators, position).length
       if ((position === "C" && adjs === 0) || (position === "P" && adjs % 2 != 0)) {

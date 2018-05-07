@@ -1,6 +1,5 @@
 <script>
 import MovingMixin from '../ajax/MovingMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [MovingMixin],

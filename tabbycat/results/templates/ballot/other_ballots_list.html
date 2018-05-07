@@ -38,7 +38,11 @@
   {% for other in all_ballotsubs %}
     <li class="list-group-item small">
       {% if other != ballotsub %}
-        <a href="{% tournamenturl 'results-ballotset-edit' other.id %}">
+        {% if user_role == "admin" %}
+          <a href="{% tournamenturl 'results-ballotset-edit' other.id %}">
+        {% else %}
+          <a href="{% tournamenturl 'results-assistant-ballotset-edit' other.id %}">
+        {% endif %}
       {% endif %}
 
         {% if other == ballotsub %}

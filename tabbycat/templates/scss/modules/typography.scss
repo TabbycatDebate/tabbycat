@@ -5,7 +5,8 @@
 // Primary Typeface
 @font-face {
   font-family: 'Inter-UI-Regular';
-  src: url('/static/fonts/Inter-UI-Regular.woff2') format('woff2'), url('/static/fonts/Inter-UI-Regular.woff') format('woff');
+  src: url('/static/fonts/Inter-UI-Regular.woff2') format('woff2'),
+       url('/static/fonts/Inter-UI-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -21,6 +22,10 @@ h6,
   font-family: $headings-font-family;
   font-weight: $headings-font-weight;
   color: $headings-color;
+}
+
+.badge {
+  font-family: $font-family-monospace; // Want evenly aligned labels
 }
 
 //------------------------------------------------------------------------------

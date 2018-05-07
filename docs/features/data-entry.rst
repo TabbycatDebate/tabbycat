@@ -9,7 +9,7 @@ Ballot check-in
 
 For tournaments that require it, there is a "ballot check-in" page that can be used to record the arrival of ballots to the tab room. When there's a missing ballot, it can help establish whether the ballot never made it to the tab room, or whether it's probably floating around in the room forgotten. Also, it can help enforce early checks that panels return the correct number of ballots to the room.
 
-To get to the ballot check-in, click the relevant round in the menu of the admin interface, and then click "Results" and then "Ballot Check-In". This requires superuser privileges.
+To get to the ballot check-in, click the relevant round in the menu of the admin area, and then click "Results" and then "Ballot Check-In". This requires superuser privileges.
 
 There's no adverse effect from not using the ballot check-in. Data enterers will still be able to enter and confirmed ballots, even if not checked in.
 
@@ -28,7 +28,7 @@ Most tab rooms run some sort of check system to ensure data is entered accuratel
 
 As a general principle, Tabbycat requires all ballots to be looked at by two people. The first person enters the data from the ballot, and the second person checks it. The second person isn't allowed to modify the data—they either confirm it or reject it, and if they reject it, then the whole process starts again. This is by design: to be confirmed, the *same* data must have been seen by at least two people.
 
-.. caution:: The Tabbycat admin interface does **not** work like this. It's designed to be flexible, so allows you to edit, confirm or unconfirm any ballot at any time. For this reason, you should **not** use the Tabbycat admin interface for general data entry. If a tab director or adjudication core member will be entering data, they should have a separate account for this purpose.
+.. caution:: The administrator area does **not** work like this. It's designed to be flexible, so allows you to edit, confirm or unconfirm any ballot at any time. For this reason, you should use the **assistant** area to enter ballots, even if you have a superuser account.
 
 .. tip::
 
@@ -59,6 +59,9 @@ Online entry
 ============
 
 There are two methods of allowing ballots and feedback to be submitted online. Both are set in the **Data Entry** page of each tournament's **Configuration** section and can be set independently; both in whether each can be submitted online at all and in which method of online submission are available.
+
+
+.. _private-urls:
 
 Private URLs
 ------------

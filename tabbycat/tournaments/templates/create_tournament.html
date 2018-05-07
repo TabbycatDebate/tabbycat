@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% load add_field_css i18n %}
 
-{% block head-title %}<span class="emoji">🏆</span>{% trans "Create New Tournament "%}{% endblock %}
+{% block head-title %}<span class="emoji">🏆</span>{% trans "Create New Tournament"%}{% endblock %}
 {% block page-title %}Tabbycat{% endblock %}
-
-{% block nav %}{% endblock %}
+{% block sidebar %}{% endblock %} {# Need to override sidebar manually it will crash when no tournaments are present. Ideally this would be handled with the Mixins but this is a relatively unique view as it is part of Tournaments but is admin-only and thus shown with the sidebar #}
 
 {% block content %}
 
@@ -23,46 +22,34 @@
 
       <strong>{% trans "Just trying out Tabbycat?" %}</strong>
       {% blocktrans trimmed %}
-        If you are just learning or playing around with Tabbycat it's easiest
-        to create a 'demo' tournament that is prepopulated with a fake (but typical)
-        set of teams, adjudicators, venues, and the like.
-        This demo tournament can then be easily deleted later on.
+        If you're learning or playing around with Tabbycat, it's easiest to
+        create a demo tournament that is prepopulated with a fake (but typical)
+        set of teams, adjudicators, venues, and the like. You can then delete
+        this demo tournament later on, or deploy a new instance for your real
+        tournament.
       {% endblocktrans %}
 
       <div class="row mt-3">
-        <div class="col col-md-6">
-          <form action="{% url 'load-demo' %}" method="POST">
-            <input type="hidden" name="source" value="demo_simple">
-            <button type="submit" class="btn btn-info btn-block">
-              {% trans "Load Demo (10-team tournament)" %}
-            </button>
-          </form>
-          {% if preexisting_small_demo %}
-            <div class="alert alert-warning mt-3 mb-0 small">
-              {% blocktrans trimmed %}
-                You already have a tournament set up using this data set. Reloading
-                the data will delete <strong>all data</strong> from that tourament.
-              {% endblocktrans %}
-            </div>
-          {% endif %}
-        </div>
-        <div class="col col-md-6 mt-md-0 mt-3">
-          <form action="{% url 'load-demo' %}" method="POST">
-            <input type="hidden" name="source" value="demo">
-            <button type="submit" class="btn btn-info btn-block">
-              {% trans "Load Demo (24-team tournament)" %}
-            </button>
-          </form>
-          {% if preexisting_large_demo %}
-            <div class="alert alert-warning mt-3 mb-0 small">
-              <i data-feather="alert-circle"></i>
-              {% blocktrans trimmed %}
-                You already have a tournament set up using this data set. Reloading
-                the data will delete <strong>all data</strong> from that tourament.
-              {% endblocktrans %}
-            </div>
-          {% endif %}
-        </div>
+        {% for slug, name in demo_datasets %}
+          <div class="col col-md-4">
+            <form action="{% url 'load-demo' %}" method="POST">
+              <input type="hidden" name="source" value="{{ slug }}">
+              <button type="submit" class="btn btn-info btn-block">
+                {% blocktrans trimmed %}
+                  Load {{ name }}
+                {% endblocktrans %}
+              </button>
+            </form>
+            {% if slug in preexisting %}
+              <div class="alert alert-warning mt-3 mb-0 small">
+                {% blocktrans trimmed %}
+                  You already have a tournament set up using this data set. Reloading
+                  the data will delete <strong>all data</strong> from that tourament.
+                {% endblocktrans %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
       </div>
 
     </div>

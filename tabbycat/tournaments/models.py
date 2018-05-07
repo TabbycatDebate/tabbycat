@@ -1,13 +1,13 @@
-from warnings import warn
-
 from django.db import models
 from django.db.models import Count, Prefetch, Q
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
+from utils.misc import reverse_round
 
 import logging
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts',   # System
     'start', 'create', 'load-demo', # Setup Wizards
     'draw', 'participants', 'favicon.ico',  # Cross-Tournament app's view roots
-    '__debug__', 'static', 'donations', 'style']  # Misc
+    '__debug__', 'static', 'donations', 'style', 'i18n', 'jsi18n']  # Misc
 
 
 def validate_tournament_slug(value):
@@ -43,9 +43,6 @@ class Tournament(models.Model):
     current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='current_tournament',
         verbose_name=_("current round"),
         help_text=_("Must be set for the tournament to start! (Set after rounds are inputted)"))
-    welcome_msg = models.TextField(blank=True, null=True, default="",
-        verbose_name=_("welcome message"),
-        help_text=_("Text/html entered here shows on the homepage for this tournament"))
     active = models.BooleanField(verbose_name=_("active"), default=True)
 
     class Meta:
@@ -113,26 +110,43 @@ class Tournament(models.Model):
             speaker_positions = speaker_positions + 1
         return list(range(1, speaker_positions))
 
+    def ballots_per_debate(self, stage):
+        """Returns the 'ballots per debate' setting for the stage of the
+        tournament given. Callers can use this to avoid querying the round's
+        tournament repeatedly."""
+        if stage == Round.STAGE_PRELIMINARY:
+            return self.pref('ballots_per_debate_prelim')
+        elif stage == Round.STAGE_ELIMINATION:
+            return self.pref('ballots_per_debate_elim')
+        else:
+            raise ValueError("Unrecognized stage: %r" % (stage,))
+
+    def integer_scores(self, stage):
+        """Returns True if all total speaker scores will be integers, at least
+        according to tournament preferences. Callers should still check that
+        the value in question is in fact an integer before casting."""
+        if self.ballots_per_debate(stage) == 'per-adj':
+            return False
+        if not self.pref('score_step').is_integer():
+            return False
+        if (self.pref('reply_scores_enabled') and
+                not self.pref('reply_score_step').is_integer()):
+            return False
+        return True
+
     # --------------------------------------------------------------------------
     # Permalinks
     # --------------------------------------------------------------------------
 
-    @models.permalink
     def get_absolute_url(self):
-        return ('tournament-admin-home', [self.slug])
+        return reverse('tournament-admin-home', kwargs={'tournament_slug': self.slug})
 
-    @models.permalink
     def get_public_url(self):
-        return ('tournament-public-index', [self.slug])
+        return reverse('tournament-public-index', kwargs={'tournament_slug': self.slug})
 
     # --------------------------------------------------------------------------
     # Convenience querysets
     # --------------------------------------------------------------------------
-
-    @cached_property
-    def teams(self):
-        warn('Tournament.teams is deprecated, use Tournament.team_set instead.', stacklevel=2)
-        return self.team_set
 
     @property
     def relevant_adjudicators(self):
@@ -175,6 +189,9 @@ class Tournament(models.Model):
     @cached_property
     def adj_feedback_questions(self):
         return self.adjudicatorfeedbackquestion_set.order_by("seq")
+
+    def break_categories_nongeneral(self):
+        return self.breakcategory_set.exclude(is_general=True)
 
     # --------------------------------------------------------------------------
     # Cached
@@ -293,6 +310,25 @@ class Round(models.Model):
         if errors:
             raise ValidationError(errors)
 
+    def serialize(self):
+        adjudicator_positions = ["C"]
+        if not self.tournament.pref('no_panellist_position'):
+            adjudicator_positions += "P"
+        if not self.tournament.pref('no_trainee_position'):
+            adjudicator_positions += "T"
+
+        round_info = {
+            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
+            'adjudicatorDoubling': self.tournament.pref('duplicate_adjs'),
+            'teamsInDebate': self.tournament.pref('teams_in_debate'),
+            'teamPositions': self.tournament.sides,
+            'backUrl': reverse_round('draw', self),
+            'roundName' : self.abbreviation,
+            'roundSeq' : self.seq,
+            'roundIsPrelim' : not self.is_break_round,
+        }
+        return round_info
+
     # --------------------------------------------------------------------------
     # Checks for potential errors
     # --------------------------------------------------------------------------
@@ -309,6 +345,12 @@ class Round(models.Model):
         from venues.models import Venue
         return Venue.objects.filter(debate__round=self).annotate(Count('debate')).filter(
                 debate__count__gt=1)
+
+    @cached_property
+    def duplicate_team_names(self):
+        from participants.models import Team
+        return Team.objects.filter(debateteam__debate__round=self).annotate(
+            Count('debateteam')).filter(debateteam__count__gt=1).values_list('short_name', flat=True)
 
     @cached_property
     def num_debates_without_chair(self):
@@ -350,22 +392,19 @@ class Round(models.Model):
     # --------------------------------------------------------------------------
 
     def get_draw(self, ordering=('venue__name',)):
-        warn("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.", stacklevel=2)
-        related = ('venue',)
-        if self.tournament.pref('enable_divisions'):
-            related += ('division', 'division__venue_category')
-        return self.debate_set.order_by(*ordering).select_related(*related)
+        # Deprecated fully 8/3/2018, remove after 8/4/2018
+        raise RuntimeError("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.")
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, wins=False,
-            results=False, venues=True, institutions=False):
+            results=False, venues=True, institutions=False, check_ins=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
         from adjallocation.models import DebateAdjudicator
         from draw.models import DebateTeam
         from participants.models import Speaker
-        from results.prefetch import populate_confirmed_ballots, populate_wins
+        from results.prefetch import populate_confirmed_ballots, populate_wins, populate_checkins
 
         debates = self.debate_set.all()
         if filter_kwargs:
@@ -381,6 +420,8 @@ class Round(models.Model):
             debates = debates.select_related('division', 'division__venue_category')
         if venues:
             debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
+        if check_ins:
+            debates = debates.select_related('checkin_identifier')
 
         if teams or wins or institutions or speakers:
             debateteam_prefetch_queryset = DebateTeam.objects.select_related('team')
@@ -400,6 +441,8 @@ class Round(models.Model):
             populate_confirmed_ballots(debates, motions=True, results=True)
         if wins:
             populate_wins(debates)
+        if check_ins:
+            populate_checkins(debates, self.tournament)
 
         return debates
 
@@ -448,3 +491,7 @@ class Round(models.Model):
     @property
     def motions_good_for_public(self):
         return self.motions_released or not self.motion_set.exists()
+
+    @property
+    def ballots_per_debate(self):
+        return self.tournament.ballots_per_debate(self.stage)

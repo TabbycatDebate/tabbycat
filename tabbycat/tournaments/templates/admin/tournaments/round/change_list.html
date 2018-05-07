@@ -1,0 +1,10 @@
+{% extends "admin/change_list.html" %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    #changelist td.field-feedback_weight input {
+      width: 6em;  // only needs to be wide enough to hold a number
+    }
+  </style>
+{% endblock %}

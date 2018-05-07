@@ -4,26 +4,35 @@
 # Mental note (npm equivalent command):   npm outdated
 
 # Core
-
-Django==1.11.7
+Django==2.0.5                           # pyup: >=2.0,<2.1
 django-appconf==1.0.2                   # Helper for handling app configs
-django-dynamic-preferences==1.4.1       # Settings management
-django-extensions==1.9.7                # For the generate secret command
+django-dynamic-preferences==1.5.1       # Settings management
+django-extensions==2.0.7                # For the generate secret command
 django-formtools==2.1                   # Form wizards
-django-ipware==1.1.6                    # IP Address logging
-django-jet==1.0.6                       # Admin Backend
-django-gfklookupwidget==1.0.5           # Replaces object_id field with a search link
+django-ipware==2.1.0                    # IP Address logging
+django-jet==1.0.7                       # Admin Backend
+django-gfklookupwidget==1.0.6           # Replaces object_id field with a search link
+django-statici18n==1.7.0                # Compile translations files as static file
+django-summernote==0.8.8.6              # WYSIWYG editor
 munkres==1.0.12                         # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
-raven==6.3.0                            # Client for Sentry error tracking
-selenium==3.7.0                         # Functional testing (in here for CI tests)
+raven==6.7.0                                   # Client for Sentry error tracking
 
 # Database
-
-psycopg2==2.7.3.2                       # For Django to talk to postgres
+psycopg2==2.7.4                         # For Django to talk to postgres
 sqlparse==0.2.4                         # Parsing SQL statements
 
 # Pipeline
-
 whitenoise==3.3.1                       # Static file serving
-waitress==1.1.0                         # For web serving
+
+# Cache
+django_redis==4.9.0                     # Use redis for cache (on heroku; local optional)
+
+# Channels
+channels==2.1.1                         # Channels
+channels_redis==2.1.1                   # Channels Layer
+
+# Misc
+django-debug-toolbar==1.9.1             # Debug; but useful to run in prod sometimes
+scout-apm==1.1.1                               # Performance monitoring
+ipython==6.3.1

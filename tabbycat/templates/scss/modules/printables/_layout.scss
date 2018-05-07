@@ -10,14 +10,19 @@
   overflow: hidden; // Seemingly needed
 }
 
+// Default Chrome margins = 12mm? For Safari = 17mm? Screw Safari
+// A4         = 210   x 297
+// Letter     = 215.9 x 279.4 mm
+// Compatible = 170   x 239
+
 .db-page-portrait, {
-  height: 277mm;
   width: 100%;
+  min-height: 380mm; // For some reason needs to be larger than the page
 }
 
 .db-page-landscape {
-  width: 277mm;
-  height: 175mm;
+  width: 100%;
+  min-height: 188mm;
 }
 
 // PADDING
@@ -76,11 +81,19 @@
 }
 
 .db-flex-item-8 {
-  flex: 10;
+  flex: 8;
+}
+
+.db-flex-item-9 {
+  flex: 9;
 }
 
 .db-flex-item-10 {
   flex: 10;
+}
+
+.db-flex-item-11 {
+  flex: 11;
 }
 
 .db-flex-item-20 {

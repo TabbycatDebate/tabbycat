@@ -7,6 +7,7 @@
 // Boostrap Type
 //------------------------------------------------------------------------------
 
+// Family
 $font-family-sans-serif:  "Inter-UI-Regular", -apple-system,
   BlinkMacSystemFont, "Segoe UI", Roboto,
   "Helvetica Neue", Arial, sans-serif,
@@ -14,8 +15,11 @@ $font-family-sans-serif:  "Inter-UI-Regular", -apple-system,
   "Segoe UI Symbol" !default;
 $headings-font-family:    -apple-system, BlinkMacSystemFont, "Helvetica Neue",
   Arial, sans-serif;
-$headings-font-weight:    700;
+
+// Sizing
 $font-size-base:          1rem; // Usually 16px;
+$line-height-base:        1.375; // Usually 1.5; this maps to 16px > 22px
+$headings-font-weight:    700;
 
 //------------------------------------------------------------------------------
 // Bootstrap Color Overrides
@@ -58,8 +62,11 @@ $theme-colors: (
 // Bootstrap Layout Details Overrides
 //------------------------------------------------------------------------------
 
-$border-radius:             0.25rem !default;
-$border-radius-lg:          0.3rem !default;
-$border-radius-sm:          0.2rem !default;
+$border-radius:             0.25rem;
+$border-radius-lg:          0.3rem;
+$border-radius-sm:          0.2rem;
+
+$input-btn-padding-y:       0.625rem;
+$input-btn-padding-y-sm:    0.3125rem;
 
 $navbar-light-hover-color:  $purple;

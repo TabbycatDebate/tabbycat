@@ -1,6 +1,5 @@
 {% extends "standings_base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load debate_tags static i18n %}
 
 {% block page-title %}🗃Diversity Overview{% endblock %}
 {% block head-title %}<span class="emoji">🗃</span>Diversity Overview{% endblock %}
@@ -29,18 +28,18 @@
   <div class="d-lg-flex justify-content-lg-between mb-4">
     <div class="nav nav-pills btn-group">
       <button class="btn btn-outline-secondary h6">
-        Key
+        {% trans "Key" %}
       </button>
       <button class="btn btn-primary gender-display gender-nm h6">
-        Non-cis male identifying
+        {% trans "Non-cis male identifying" %}
       </button>
       <button class="btn btn-primary gender-display gender-male h6">
-        Male identifying
+        {% trans "Male identifying" %}
       </button>
     </div>
     <div class="nav nav-pills btn-group mt-md-0 mt-3">
       <button class="btn btn-outline-secondary h6">
-        Key
+        {% trans "Key" %}
       </button>
       {% for r in regions %}
         <button class="btn btn-primary region-display region-{{ r.seq }} h6">

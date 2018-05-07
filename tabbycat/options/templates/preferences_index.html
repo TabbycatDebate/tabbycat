@@ -4,6 +4,19 @@
 {% block page-title %}{% trans "Configuration" %}{% endblock %}
 {% block head-title %}<span class="emoji">🔧</span> {% trans "Configuration" %}{% endblock %}
 
+{% block page-alerts %}
+  {% if pref.team_code_names != 'off' and pref.team_code_names != 'all-tooltips' and pref.show_team_institutions %}
+    {% tournamenturl 'options-tournament-section' section='ui_options' as ui_url %}
+    {% blocktrans trimmed asvar message %}
+      You both have team code names enabled, and team institutions showing on public pages.
+      If your objective in enabling team code names is to obscure team institutions, this
+      probably defeats the purpose of code names. You can edit these settings in the
+      <a href="{{ ui_url }}" class="alert-link">UI Options section</a>.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
 <div class="row">
@@ -49,7 +62,7 @@
 
       {% tournamenturl 'options-tournament-section' section='data_entry' as url %}
       {% trans "Data Entry" as title %}
-      {% trans "How ballots and feedback are entered, including online submission options" as description %}
+      {% trans "How ballots, feedback, and check-ins are entered, including online submission options" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📝" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='public_features' as url %}

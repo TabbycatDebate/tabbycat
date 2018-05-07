@@ -7,11 +7,11 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from utils.managers import LookupByNameFieldsMixin
 
-from .emoji import EMOJI_LIST
+from .emoji import EMOJI_FIELD_CHOICES
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +106,6 @@ class SpeakerCategory(models.Model):
 class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,
         verbose_name=_("name"))
-    barcode_id = models.IntegerField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True,
         verbose_name=_("e-mail address"))
     phone = models.CharField(max_length=40, blank=True,
@@ -115,7 +114,6 @@ class Person(models.Model):
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
 
-    checkin_message = models.TextField(blank=True)
     notes = models.TextField(blank=True, null=True,
         verbose_name=_("notes"))
 
@@ -158,6 +156,9 @@ class Team(models.Model):
     short_reference = models.CharField(blank=True, max_length=35,
         verbose_name=_("short name/suffix"),
         help_text=_("The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)"))
+    code_name = models.CharField(blank=True, max_length=150,
+        verbose_name=_("code name"),
+        help_text=_("Name used to obscure institutional identity on public-facing pages"))
 
     short_name = models.CharField(editable=False, max_length=50,
         verbose_name=_("short name"),
@@ -195,10 +196,9 @@ class Team(models.Model):
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
         verbose_name=_("type"))
 
-    emoji = models.CharField(max_length=2, blank=True, null=True, default=None, choices=EMOJI_LIST, # uses null=True to allow multiple teams to have no emoji
+    emoji = models.CharField(max_length=2, default=None, choices=EMOJI_FIELD_CHOICES,
+        blank=True, null=True,   # uses null=True to allow multiple teams to have no emoji
         verbose_name=_("emoji"))
-
-    construct_emoji = None # historical reference for migration 0026_auto_20170416_2332
 
     class Meta:
         unique_together = [
@@ -247,15 +247,6 @@ class Team(models.Model):
         if institution is None:
             return None
         return institution.region
-
-    @property
-    def break_categories_nongeneral(self):
-        return self.break_categories.exclude(is_general=True)
-
-    @property
-    def break_categories_str(self):
-        categories = self.break_categories_nongeneral
-        return ", ".join(c.name for c in categories) if categories else ""
 
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam
@@ -349,7 +340,8 @@ class Team(models.Model):
         super().save(*args, **kwargs)
 
     def serialize(self):
-        team = {'id': self.id, 'short_name': self.short_name, 'long_name': self.long_name}
+        team = {'id': self.id, 'short_name': self.short_name,
+                'long_name': self.long_name, 'code_name': self.code_name}
         team['emoji'] = self.emoji
         team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize if self.institution else None
@@ -375,6 +367,11 @@ class Speaker(Person):
 
     def __str__(self):
         return str(self.name)
+
+    def serialize(self):
+        speaker = {'id': self.id, 'name': self.name, 'team': self.team.short_name}
+        speaker['institution'] = self.institution.serialize if self.institution else None
+        return speaker
 
 
 class AdjudicatorManager(models.Manager):

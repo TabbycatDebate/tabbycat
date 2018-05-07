@@ -69,23 +69,24 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     of the returned instance. The caller can do so by checking the `.is_voting`
     attribute of the returned instance.
     """
+    r = ballotsub.debate.round
     tournament = kwargs.pop('tournament', None)
     if tournament is None:
         tournament = ballotsub.debate.round.tournament
-    ballots_per_debate = tournament.pref('ballots_per_debate')
     teams_in_debate = tournament.pref('teams_in_debate')
-    if ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
+
+    if r.ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
         return VotingDebateResult(ballotsub, *args, **kwargs)
-    elif ballots_per_debate == 'per-debate' and teams_in_debate == 'two':
+    elif r.ballots_per_debate == 'per-debate' and teams_in_debate == 'two':
         return ConsensusDebateResult(ballotsub, *args, **kwargs)
-    elif ballots_per_debate == 'per-debate' and teams_in_debate == 'bp':
-        if ballotsub.debate.round.is_break_round:
+    elif r.ballots_per_debate == 'per-debate' and teams_in_debate == 'bp':
+        if r.is_break_round:
             return BPEliminationDebateResult(ballotsub, *args, **kwargs)
         else:
             return BPDebateResult(ballotsub, *args, **kwargs)
     else:
         raise ValueError("Invalid combination for 'ballots_per_debate' and 'teams_in_debate' preferences: %s, %s" %
-                (ballots_per_debate, teams_in_debate))
+                (r.ballots_per_debate, teams_in_debate))
 
 
 class BaseDebateResult:

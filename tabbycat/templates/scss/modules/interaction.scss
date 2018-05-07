@@ -2,6 +2,12 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
+// Generic 'contains action'
+.hoverable:hover {
+  cursor: pointer;
+}
+
+// Specific styling for tooltips/popovers
 [data-toggle='tooltip'],
 [data-toggle="popover"],
 .hover-target {
@@ -14,7 +20,7 @@
   }
 
   .tooltip-trigger {
-    border-bottom: 2px inset $gray-300;
+    border-bottom: 2px solid $gray-300;
   }
 
   .popover span {
@@ -26,8 +32,32 @@
   }
 }
 
+// Expand hover target by taking up the cells padding
+td > .touch-target {
+  margin: -8px -4px -8px -4px;
+
+  > .hover-target {
+    padding: 8px 4px; // Transfer padding to the element that triggers hovers
+  }
+}
+
 .popover {
-  max-width: 400px;
+  max-width: none; // Bootstrap defaults to 270
+
+  .list-group-item {
+    padding: 0.5rem 0.75rem;
+  }
+  .bs-tether-element-attached-top::after,
+  .bs-tether-element-attached-top::before{
+    left: 25%;
+  }
+}
+
+@media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
+
+  .popover {
+    max-width: 350px; // Ensure width of popover doesn't exceed screen width
+  }
 }
 
 .popover-body {
@@ -98,8 +128,14 @@
 // Modals
 //------------------------------------------------------------------------------
 
-.modal {
-  z-index: $z_1;
+// Addressses flickering issue in https://github.com/twbs/bootstrap/issues/25206
+.list-group-item, .list-group-item:hover {
+  z-index: auto;
+}
+
+.modal-sl { // For motions page; probably feedback also (want super big modals)
+  @extend .modal-lg;
+  max-width: 910px;
 }
 
 .modal-xl { // For motions page; probably feedback also (want super big modals)

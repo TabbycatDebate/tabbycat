@@ -1,0 +1,42 @@
+
+<div class="card mt-3">
+
+  <div class="card-body text-info border-info">
+    <h4 class="card-title mb-0">
+      <i data-feather="edit"></i> {{ title }} ({{ preferences|length }})
+    </h4>
+  </div>
+
+  <ul class="list-group list-group-flush">
+
+    {% for preference in preferences %}
+      <li class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-md col-12 h5">
+            {{ preference.name }}
+            {% if not no_change %}
+              <br><small><em>{{ preference.help_text }}</em></small>
+            {% endif %}
+          </div>
+          <div class="col-md-auto col-12">
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button"
+                  class="btn btn-outline-{% if no_change %}primary{% else %}danger{% endif %}">
+                {{ preference.current_value }}{% if preference.current_value %}&nbsp;{% endif %}
+              </button>
+              <button type="button" class="btn btn-outline-secondary">
+                <i data-feather="chevron-right"></i>
+              </button>
+              <button type="button"
+                  class="btn btn-outline-{% if no_change %}primary{% else %}success{% endif %}">
+                {% if preference.new_value %}&nbsp;{% endif %}{{ preference.new_value }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+
+  </ul>
+
+</div>

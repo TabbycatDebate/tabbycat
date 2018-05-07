@@ -1,10 +1,10 @@
-import math
 import logging
 
-from django.db.models import Count, Sum
-from django.db.models.expressions import RawSQL
+from django.db.models import Count, Q, Sum
 
 from standings.teams import TeamStandingsGenerator
+
+from .liveness import liveness_bp, liveness_twoteam
 
 logger = logging.getLogger(__name__)
 
@@ -38,29 +38,11 @@ def get_breaking_teams(category, prefetch=(), rankings=('rank',)):
     return standings
 
 
-def get_scores(bc):
-    teams = bc.team_set.filter(
-        debateteam__teamscore__ballot_submission__confirmed=True
-    ).annotate(score=Sum('debateteam__teamscore__points'))
-    scores = sorted([team.score for team in teams], reverse=True)
-    return scores
-
-
 def breakcategories_with_counts(tournament):
-    breaking = RawSQL("""
-        SELECT DISTINCT COUNT(breakqual_breakingteam.id) FROM breakqual_breakingteam
-        WHERE breakqual_breakcategory.id = breakqual_breakingteam.break_category_id
-        AND breakqual_breakingteam.break_rank IS NOT NULL
-    """, ())
-    excluded = RawSQL("""
-        SELECT DISTINCT COUNT(breakqual_breakingteam.id) FROM breakqual_breakingteam
-        WHERE breakqual_breakcategory.id = breakqual_breakingteam.break_category_id
-        AND breakqual_breakingteam.break_rank IS NULL
-    """, ())
     categories = tournament.breakcategory_set.annotate(
         eligible=Count('team', distinct=True),
-        breaking=breaking,
-        excluded=excluded
+        breaking=Count('breakingteam', filter=Q(breakingteam__break_rank__isnull=False), distinct=True),
+        excluded=Count('breakingteam', filter=Q(breakingteam__break_rank__isnull=True), distinct=True),
     )
     for category in categories:
         category.nonbreaking = category.eligible - category.breaking
@@ -72,10 +54,8 @@ def liveness(self, team, teams_count, prelims, current_round):
 
     # The actual calculation should be shifed to be a cached method on
     # the relevant break category
-
     highest_liveness = 3
     for bc in team.break_categories.all():
-        # print(bc.name, bc.break_size)
         import random
         status = random.choice([1,2,3])
         highest_liveness = 3
@@ -97,101 +77,45 @@ def liveness(self, team, teams_count, prelims, current_round):
     return live_info
 
 
-def determine_liveness(thresholds, wins):
+def determine_liveness(thresholds, points):
     """ Thresholds should be calculated using calculate_live_thresholds."""
     safe, dead = thresholds
-    if wins >= safe:
+    if points is None:
+        points = 0 # For when a results-less team (i.e. swings) is subbing in
+
+    if safe is None and dead is None:
+        return '?'
+    elif points >= safe:
         return 'safe'
-    elif wins <= dead:
+    elif points <= dead:
         return 'dead'
     else:
         return 'live'
 
 
 def calculate_live_thresholds(bc, tournament, round):
-    """ Create array of binomial coefficients, then create arrays of raw decimal
-    data, upper bounds, and lower bounds. Contributed by Thevesh Theva and
-    his work on the debatebreaker.blogspot.com.au blog and app"""
+    total_teams = tournament.team_set.count()
+    total_rounds = tournament.prelim_rounds().count()
 
-    def factorial(n):
-        if n == 0:
-            return 1
-        else:
-            return n * factorial(n-1)
-
-    current_round = round.seq
-    break_spots = bc.break_size
-    total_teams = bc.team_set.count()
-    total_rounds = tournament.prelim_rounds(until=round).count()
-    break_cat_scores = get_scores(bc) if not bc.is_general else None
-
-    # Create array of binomial coefficients, then create arrays of raw
-    # decimal data, upper bounds, and lower bounds
-    coefficients = []
-    for i in range(0, total_rounds + 1):
-        coeff = (factorial(total_rounds) / (factorial(i) * factorial(total_rounds - i)))
-        coefficients.append(coeff)
-
-    originals = []
-    for i in range(0,total_rounds + 1):
-        originals.append((total_teams / (2.0**total_rounds) * coefficients[i]))
-
-    ceilings = []
-    floors = []
-    for i in range(0, total_rounds + 1):
-        ceilings.append(math.ceil(originals[i]))
-        floors.append(math.floor(originals[i]))
-
-    # Now, we create the cumulative totals for each number of wins.
-    # This is the data we'll work with.
-    sum_o = []
-    sum_u = []
-    sum_d = []
-    sum_o.insert(0, originals[0])
-    sum_u.insert(0, ceilings[0])
-    sum_d.insert(0, floors[0])
-
-    for i in range(1, total_rounds + 1):
-        sum_o.append(originals[i] + sum_o[i-1])
-        sum_u.append(ceilings[i] + sum_u[i-1])
-        sum_d.append(floors[i] + sum_d[i-1])
-
-    # We now have complete data sets, and can compute the safe score and dead
-    # scores for any category we want.
-    if bc.is_general:
-        high_bound = 0
-        for i in range(0, total_rounds + 1):
-            if sum_u[i] <= break_spots:
-                high_bound = total_rounds-i
-
-        low_bound = 0
-        for i in range(0, total_rounds + 1):
-            if sum_d[i] <= break_spots:
-                low_bound = total_rounds-i-1
-
-        safe = high_bound
-        dead = low_bound - (total_rounds - (current_round - 1)) - 1
-        return safe, dead
+    if not bc.is_general:
+        team_scores = bc.team_set.filter(
+            debateteam__debate__round__seq__lt=round.seq,
+            debateteam__teamscore__ballot_submission__confirmed=True,
+        ).annotate(score=Sum('debateteam__teamscore__points')).values_list('score', flat=True)
+        team_scores = list(team_scores)
+        team_scores += [0] * (bc.team_set.count() - len(team_scores))
     else:
-        # The safe score for the ESL/EFL category is trick. First, we get a best
-        # possible apriori safe score using the  earlier binomial distribution.
-        safe = 0
-        for i in range(0, total_rounds + 1):
-            if sum_u[i] <= break_spots:
-                safe = total_rounds-i
+        team_scores = None
 
-        if len(break_cat_scores) <= break_spots:
-            return 0, 0
+    if bc.break_size <= 1 or total_teams == 0:
+        return None, None # Bad input
+    elif tournament.pref('teams_in_debate') == 'bp':
+        safe, dead = liveness_bp(bc.is_general, round.seq, bc.break_size,
+                            total_teams, total_rounds, team_scores)
+    else:
+        safe, dead = liveness_twoteam(bc.is_general, round.seq, bc.break_size,
+                              total_teams, total_rounds, team_scores)
 
-        # Now, we improve upon our safe score using the actual data.
-        # Check if teams in breaking range can still be 'caught'by the team just
-        # outside breaking range. This gives us the best possible safe score.
-        for i in range(0, break_spots + 1):
-            if break_cat_scores[i] - break_cat_scores[break_spots] > total_rounds - current_round + 1:
-                safe = break_cat_scores[i]
-
-        # The dead score for the ESL category is easy to calculate.
-        # This function just defines the score such that a team can no longer
-        # 'catch' a team in the last breaking spot.
-        dead = break_cat_scores[break_spots-1] - (total_rounds - current_round + 1) - 1
-        return safe, dead
+    logger.info("Liveness in %s R%d/%d with break size %d, %d teams: safe at %d, dead at %d",
+        tournament.short_name, round.seq, total_rounds, bc.break_size, total_teams, safe, dead)
+    return safe, dead

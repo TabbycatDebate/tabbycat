@@ -4,12 +4,12 @@ import _ from 'lodash'
 
 export default {
   props: { defaultSortKey: '', defaultSortOrder: '' },
-  data: function() {
+  data: function () {
     // Sort Key/Order need to be internal state; only passed on by
     // the parent for their default values
     return { sortKey: '', sortOrder: '', filterKey: '' }
   },
-  created: function() {
+  created: function () {
     // Set default sort orders and sort keys if they are given
     if (this.defaultSortKey) {
       this.sortKey = this.defaultSortKey
@@ -21,7 +21,7 @@ export default {
     this.$eventHub.$on('update-table-filters', this.updateFiltering)
   },
   methods: {
-    updateSorting: function(newSortKey) {
+    updateSorting: function (newSortKey) {
       if (this.sortKey === newSortKey) {
         // If sorting by the same key then flip the sort order
         this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc"
@@ -30,12 +30,12 @@ export default {
         this.sortOrder = "desc"
       }
     },
-    updateFiltering: function(filterKey) {
+    updateFiltering: function (filterKey) {
       this.filterKey = filterKey
     }
   },
   computed: {
-    dataOrderedByKey: function() {
+    dataOrderedByKey: function () {
       // Find the index of the cell matching the sortKey within each row
       var key = this.sortKey.toLowerCase()
       // Tables with no data have no headers
@@ -43,7 +43,7 @@ export default {
         return this.sortableData;
       }
       // Identify header matching to sort key
-      var orderedHeaderIndex = _.findIndex(this.headers, function(header) {
+      var orderedHeaderIndex = _.findIndex(this.headers, function (header) {
         return header.key.toLowerCase() == key;
       });
       // If no matches found log an error (asynchronously so table will render)
@@ -55,7 +55,7 @@ export default {
       // Sort the array of rows based on the value of the cell index
       // For DrawContainer row is the debate dictionary
       var self = this
-      return _.orderBy(this.sortableData, function(row) {
+      return _.orderBy(this.sortableData, function (row) {
         var cellData = self.getSortableProperty(row, orderedHeaderIndex)
         if (_.isString(cellData)) {
           return _.lowerCase(cellData)
@@ -64,7 +64,7 @@ export default {
         }
       }, this.sortOrder)
     },
-    dataFilteredByKey: function() {
+    dataFilteredByKey: function () {
       if (this.filterKey === '') {
         return this.dataOrderedByKey
       }
@@ -72,10 +72,10 @@ export default {
       if (filterKey.length < 3) {
         return this.dataOrderedByKey; // Filtering is CPU heavy for low chars
       } else {
-        return _.filter(this.dataOrderedByKey, function(row) {
+        return _.filter(this.dataOrderedByKey, function (row) {
           // Filter through all rows; within each row check...
           var rowContainsMatch = false
-          _.forEach(row, function(cell) {
+          _.forEach(row, function (cell) {
             // ...and see if  has cells whose text-string contains filterKey
             if (_.includes(_.lowerCase(cell.text), _.lowerCase(filterKey))) {
               rowContainsMatch = true

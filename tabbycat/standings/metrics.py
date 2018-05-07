@@ -10,8 +10,6 @@ import logging
 
 from operator import itemgetter
 
-from django.db.models.expressions import RawSQL
-
 logger = logging.getLogger(__name__)
 
 
@@ -22,7 +20,8 @@ def metricgetter(*items):
      - After `f = metricgetter("a")`, the call `f(x)` returns `x.metrics["a"]`.
      - After `g = metricgetter(4, 9)`, the call `g(x)` returns `(x.metrics[4], x.metrics[9])`.
     """
-    return lambda x: itemgetter(*items)(x.metrics)
+    metricitemgetter = itemgetter(*items)
+    return lambda x: metricitemgetter(x.metrics)
 
 
 class BaseMetricAnnotator:
@@ -43,9 +42,11 @@ class BaseMetricAnnotator:
     icon = None
     ranked_only = False
     repeatable = False
+    listed = True
+    ascending = False  # if True, this metric is sorted in ascending order, not descending
 
     def run(self, queryset, standings, round=None):
-        standings.record_added_metric(self.key, self.name, self.abbr, self.icon)
+        standings.record_added_metric(self.key, self.name, self.abbr, self.icon, self.ascending)
         self.annotate(queryset, standings, round)
 
     def annotate(self, queryset, standings, round=None):
@@ -81,32 +82,22 @@ class RepeatedMetricAnnotator(BaseMetricAnnotator):
 class QuerySetMetricAnnotator(BaseMetricAnnotator):
     """Base class for annotators that metrics based on conditional aggregations."""
 
-    @staticmethod
-    def get_annotation_metric_query_str():
-        raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation_metric_query_str().")
+    def get_annotation(self, round):
+        raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation().")
 
-    def get_annotation_metric_query_args(self):
-        raise NotImplementedError("Subclasses of QuerySetMetricAnnotator must implement get_annotation_metric_query_args().")
-
-    @classmethod
-    def get_annotated_queryset(cls, queryset, column_name, *args, **kwargs):
-        """Returns a QuerySet annotated with the metric given. All positional
-        arguments from the third onwards, and all keyword arguments, are passed
-        to get_annotation_metric_query_str()."""
-        query = cls.get_annotation_metric_query_str(*args, **kwargs)
-        logger.info("Running query in %s: %s", cls.__name__, query)
-        sql = RawSQL(query, ())
-        return queryset.annotate(**{column_name: sql}).distinct()
+    def get_annotated_queryset(self, queryset, column_name, round=None):
+        """Returns a QuerySet annotated with the metric given."""
+        annotation = self.get_annotation(round=round)
+        logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation.as_sql))
+        return queryset.annotate(**{column_name: annotation}).distinct()
 
     def annotate_with_queryset(self, queryset, standings, round=None):
         """Annotates items with the given QuerySet, using the "metric" field."""
         for item in queryset:
             if item.metric is None:
-                logger.info("Metric %r for %s was None, setting to 0", self.key, item)
                 item.metric = 0
             standings.add_metric(item, self.key, item.metric)
 
     def annotate(self, queryset, standings, round=None):
-        args = self.get_annotation_metric_query_args(round)
-        queryset = self.get_annotated_queryset(queryset, "metric", *args)
+        queryset = self.get_annotated_queryset(queryset, "metric", round)
         self.annotate_with_queryset(queryset, standings, round)

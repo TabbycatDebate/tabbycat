@@ -1,0 +1,412 @@
+# Tabbycat translations, privateurls module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: privateurls/admin.py:18
+msgid "Team"
+msgstr ""
+
+#: privateurls/apps.py:7
+msgid "Private URL Management"
+msgstr ""
+
+#: privateurls/models.py:12
+msgid "ballot"
+msgstr ""
+
+#: privateurls/models.py:13
+msgid "feedback"
+msgstr ""
+
+#: privateurls/models.py:17
+msgid "recipient adjudicator"
+msgstr ""
+
+#: privateurls/models.py:19
+msgid "recipient speaker"
+msgstr ""
+
+#: privateurls/models.py:22
+msgid "URL type"
+msgstr ""
+
+#: privateurls/models.py:24
+msgid "e-mail address"
+msgstr ""
+
+#: privateurls/models.py:25
+msgid "URL key"
+msgstr ""
+
+#: privateurls/models.py:27
+msgid "timestamp"
+msgstr ""
+
+#: privateurls/models.py:30
+msgid "private URL sent mail record"
+msgstr ""
+
+#: privateurls/models.py:31
+msgid "private URL sent mail records"
+msgstr ""
+
+#: privateurls/models.py:39
+msgid "<both adjudicator and speaker>"
+msgstr ""
+
+#: privateurls/models.py:56
+msgid "No recipient (adjudicator or speaker) was specified."
+msgstr ""
+
+#: privateurls/models.py:59
+msgid "There was both a recipient adjudicator and a recipient speaker."
+msgstr ""
+
+#: privateurls/templates/ballot_urls_email_list.html:4
+#: privateurls/templates/ballot_urls_email_list.html:5
+msgid "Email Private Ballot URLs"
+msgstr ""
+
+#: privateurls/templates/ballot_urls_email_list.html:14
+#: privateurls/templates/feedback_urls_email_list.html:14
+msgid ""
+"Because you deployed the 'Tabbykitten' edition of Tabbycat your Heroku "
+"instance probably doesn't have the addon necessary to to send emails. You'll "
+"need to verify your Heroku account and install the <a href=\"https://"
+"elements.heroku.com/addons/sendgrid\">SendGrid plugin manually.</a>"
+msgstr ""
+
+#: privateurls/templates/ballot_urls_email_list.html:20
+msgid ""
+"Review the list of adjudicators who are due to be sent an email with their "
+"private ballot URL, then click the button at the bottom of the page to send "
+"the emails."
+msgstr ""
+
+#: privateurls/templates/ballot_urls_email_list.html:26
+#: privateurls/templates/feedback_urls_email_list.html:34
+#, python-format
+msgid ""
+"The following adjudicators have a URL key but don't have an e-mail address, "
+"so won't get e-mails: %(adjudicators_list)s"
+msgstr ""
+
+#: privateurls/templates/ballot_urls_email_list.html:36
+#, python-format
+msgid ""
+"%(nadjs)s adjudicator who has already had their ballot URL sent to them is "
+"excluded from the below list. You can review the sent mail records in the <a "
+"href=\"%(sent_mail_records_url)s\">Edit Database area</a>."
+msgid_plural ""
+"%(nadjs)s adjudicators who have already had their ballot URLs sent to them "
+"are excluded from the below list. You can review the sent mail records in "
+"the <a href=\"%(sent_mail_records_url)s\">Edit Database area</a>."
+msgstr[0] ""
+msgstr[1] ""
+
+#: privateurls/templates/ballot_urls_email_list.html:50
+msgid "Send emails with private ballot URLs to adjudicators"
+msgstr ""
+
+#: privateurls/templates/feedback_urls_email_list.html:4
+#: privateurls/templates/feedback_urls_email_list.html:5
+msgid "Email Private Feedback URLs"
+msgstr ""
+
+#: privateurls/templates/feedback_urls_email_list.html:20
+msgid ""
+"Review the list of speakers and adjudicators who are due to be sent an email "
+"with their private feedback URL, then click the button at the bottom of the "
+"page to send the emails."
+msgstr ""
+
+#: privateurls/templates/feedback_urls_email_list.html:26
+#, python-format
+msgid ""
+"The following speakers have a URL key but don't have an e-mail address, so "
+"won't get e-mails: %(speakers_list)s"
+msgstr ""
+
+#: privateurls/templates/feedback_urls_email_list.html:44
+#, python-format
+msgid "%(nspeakers)s speaker"
+msgid_plural "%(nspeakers)s speakers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: privateurls/templates/feedback_urls_email_list.html:49
+#, python-format
+msgid "%(nadjs)s adjudicator"
+msgid_plural "%(nadjs)s adjudicators"
+msgstr[0] ""
+msgstr[1] ""
+
+#: privateurls/templates/feedback_urls_email_list.html:54
+#, python-format
+msgid ""
+"%(speaker_phrase)s and %(adjudicator_phrase)s who have already had their "
+"feedback URLs sent to them are excluded from the below list. You can review "
+"the sent mail records in the <a href=\"%(sent_mail_records_url)s\">Edit "
+"Database area</a>."
+msgstr ""
+
+#: privateurls/templates/feedback_urls_email_list.html:65
+msgid "Send emails with private feedback URLs to speakers and adjudicators"
+msgstr ""
+
+#: privateurls/templates/private_urls.html:17
+msgid ""
+"The private URLs for ballot and/or feedback submission from participants are "
+"given below."
+msgstr ""
+
+#: privateurls/templates/private_urls.html:19
+msgid ""
+"Private URLs are used to allow participants to submit ballots and/or "
+"feedback online. You should use them if you have a means of distributing "
+"crazy-looking URLs to participants, and are too worried about fraud to use a "
+"publicly accessible page where <em>anyone</em> can enter <em>any</em> "
+"submission. The URLs will look something like this:"
+msgstr ""
+
+#: privateurls/templates/private_urls.html:31
+msgid ""
+"Anyone with the URL can access the relevant data entry page. The idea is "
+"that it's hard to guess another key (the random-looking string), so you "
+"should make each URL accessible only to the team or adjudicator in question. "
+"<a href=\"http://tabbycat.readthedocs.io/en/latest/features/data-entry."
+"html#private-urls\"> Read more about private URLs.</a>"
+msgstr ""
+
+#: privateurls/templates/private_urls.html:47
+#, python-format
+msgid ""
+"Neither <strong>participant ballot submissions</strong> nor "
+"<strong>participant feedback submissions</strong> are configured to be from "
+"private URLs. Any generated URLs will not work unless you configure those "
+"settings accordingly on the <a href=\"%(data_entry_options_url)s"
+"\">tournament configuration page</a>."
+msgstr ""
+
+#: privateurls/templates/private_urls.html:67
+msgid "There are no private URLs assigned."
+msgstr ""
+
+#: privateurls/templates/private_urls.html:73
+#: privateurls/templates/private_urls_nav.html:33
+#: privateurls/templates/private_urls_nav.html:40
+msgid "Generate Private URLs"
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:6
+msgid "View URLs"
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:11
+msgid "Print Feedback URLs"
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:15
+msgid "Print Ballot URLs"
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:21
+msgid "Email Feedback URLs"
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:25
+msgid "Email Ballot URLs"
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:32
+msgid ""
+"This button only generates private URLs for participants who do not already "
+"have one."
+msgstr ""
+
+#: privateurls/templates/private_urls_nav.html:39
+msgid "All participants already have private URLs."
+msgstr ""
+
+#: privateurls/views.py:74 privateurls/views.py:94
+msgid "no URL"
+msgstr ""
+
+#: privateurls/views.py:80
+msgid "Teams"
+msgstr ""
+
+#: privateurls/views.py:83 privateurls/views.py:102 privateurls/views.py:230
+#: privateurls/views.py:240
+msgid "Feedback URL"
+msgstr ""
+
+#: privateurls/views.py:99
+msgid "Adjudicators"
+msgstr ""
+
+#: privateurls/views.py:106 privateurls/views.py:194
+msgid "Ballot URL"
+msgstr ""
+
+#: privateurls/views.py:131
+msgid ""
+"All adjudicators and teams already have private URLs. If you want to delete "
+"them, use the Edit Database area."
+msgstr ""
+
+#: privateurls/views.py:140
+#, python-format
+msgid ""
+"Private URLs were generated for all %(nblank_adjs)d adjudicators and all "
+"%(nblank_teams)d teams."
+msgstr ""
+
+#: privateurls/views.py:146
+#, python-format
+msgid ""
+"Private URLs were generated for %(nblank_adjs)d adjudicators and "
+"%(nblank_teams)d teams. The already-existing private URLs for "
+"%(nexisting_adjs)d adjudicators and %(nexisting_teams)d teams were left "
+"intact."
+msgstr ""
+
+#: privateurls/views.py:174
+#, python-format
+msgid "Adjudicators who will be sent e-mails (%(n)s)"
+msgstr ""
+
+#: privateurls/views.py:177 privateurls/views.py:226
+msgid "Email"
+msgstr ""
+
+#: privateurls/views.py:221
+#, python-format
+msgid "Speakers who will be sent e-mails (%(n)s)"
+msgstr ""
+
+#: privateurls/views.py:255
+#, python-format
+msgid "Your personal ballot submission URL for %(tournament)s"
+msgstr ""
+
+#: privateurls/views.py:257
+#, python-format
+msgid ""
+"Hi %(name)s,\n"
+"\n"
+"At %(tournament)s, we are using an online ballot system. You can submit your "
+"ballots at the following URL. This URL is unique to you — do not share it "
+"with anyone, as anyone who knows it can submit ballots on your behalf. This "
+"URL will not change throughout this tournament, so we suggest bookmarking "
+"it.\n"
+"\n"
+"Your personal private ballot submission URL is:\n"
+"%(url)s"
+msgstr ""
+
+#: privateurls/views.py:275
+msgid "There was a problem sending private ballot URLs to adjudicators."
+msgstr ""
+
+#: privateurls/views.py:278
+msgid ""
+"There was a problem connecting to the e-mail server when trying to send "
+"privateballot URLs to adjudicators."
+msgstr ""
+
+#: privateurls/views.py:283
+#, python-format
+msgid ""
+"E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator."
+msgid_plural ""
+"E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicators."
+msgstr[0] ""
+msgstr[1] ""
+
+#: privateurls/views.py:298
+#, python-format
+msgid "Your team's feedback submission URL for %(tournament)s"
+msgstr ""
+
+#: privateurls/views.py:300
+#, python-format
+msgid ""
+"Hi %(name)s,\n"
+"\n"
+"At %(tournament)s, we are using an online adjudicator feedback system. As "
+"part of %(team)s, you can submit your feedback at the following URL. This "
+"URL is unique to you — do not share it with anyone, as anyone who knows it "
+"can submit feedback on your team's behalf. This URL will not change "
+"throughout this tournament, so we suggest bookmarking it.\n"
+"\n"
+"Your team's private feedback submission URL is:\n"
+"%(url)s"
+msgstr ""
+
+#: privateurls/views.py:319
+msgid "There was a problem sending private feedback URLs to speakers."
+msgstr ""
+
+#: privateurls/views.py:322
+#, python-format
+msgid "Your personal feedback submission URL for %(tournament)s"
+msgstr ""
+
+#: privateurls/views.py:324
+#, python-format
+msgid ""
+"Hi %(name)s,\n"
+"\n"
+"At %(tournament)s, we are using an online adjudicator feedback system. You "
+"can submit your feedback at the following URL. This URL is unique to you — "
+"do not share it with anyone, as anyone who knows it can submit feedback on "
+"your behalf. This URL will not change throughout this tournament, so we "
+"suggest bookmarking it.\n"
+"\n"
+"Your personal private feedback submission URL is:\n"
+"%(url)s"
+msgstr ""
+
+#: privateurls/views.py:342
+msgid "There was a problem sending private feedback URLs to adjudicators."
+msgstr ""
+
+#. Translators: This goes in the "speakers_phrase" variable in "E-mails with private feedback URLs were sent..."
+#: privateurls/views.py:347
+#, python-format
+msgid "%(nspeakers)d speaker"
+msgid_plural "%(nspeakers)d speakers"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Translators: This goes in the "adjudicators_phrase" variable in "E-mails with private feedback URLs were sent..."
+#: privateurls/views.py:350
+#, python-format
+msgid "%(nadjudicators)d adjudicator"
+msgid_plural "%(nadjudicators)d adjudicators"
+msgstr[0] ""
+msgstr[1] ""
+
+#: privateurls/views.py:352
+#, python-format
+msgid ""
+"E-mails with private feedback URLs were sent to %(speakers_phrase)s and "
+"%(adjudicators_phrase)s."
+msgstr ""

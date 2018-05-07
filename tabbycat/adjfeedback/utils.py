@@ -1,7 +1,7 @@
 import logging
+from statistics import mean, stdev
 
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import Count, Prefetch, Q
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
@@ -27,7 +27,7 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 
     `feedback_paths` can be used to avoid unnecessary tournament lookups,
     and should be one of the available options in
-    options.dynamic_preferences_registry.FeedbackPaths.choices.
+    options.preferences.FeedbackPaths.choices.
 
     `debate` can be used to avoid unnecessary database hits populating
     AdjudicatorAllocation, and should be equal to debateadj.debate.
@@ -57,135 +57,79 @@ def expected_feedback_targets(debateadj, feedback_paths=None, debate=None):
 
 
 def get_feedback_overview(t, adjudicators):
+    """Collates feedback statistics for the feedback overview."""
 
-    rounds = list(t.prelim_rounds(until=t.current_round))
-    debate_adjudicators = DebateAdjudicator.objects.filter(debate__round__tournament=t).select_related('adjudicator')
-    all_feedbacks = AdjudicatorFeedback.objects.filter(
-                        Q(source_adjudicator__debate__round__in=rounds) |
-                        Q(source_team__debate__round__in=rounds), confirmed=True).select_related(
-                        'adjudicator', 'source_adjudicator', 'source_team',
-                        'source_adjudicator__debate__round',
-                        'source_team__debate__round').exclude(
-                        source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
+    rounds = list(t.prelim_rounds(until=t.current_round))  # force to list for performance in next querysets
 
-    all_scores = SpeakerScoreByAdj.objects.filter(
-                        ballot_submission__confirmed=True,
-                        debate_adjudicator__debate__round__in=rounds).select_related(
-                        'debate_adjudicator__adjudicator', 'ballot_submission').exclude(
-                        position=t.reply_position)
+    annotated_adjs = adjudicators.filter(id__in=[adj.id for adj in adjudicators]).prefetch_related(
+        Prefetch('adjudicatorfeedback_set', to_attr='adjfeedback_for_rounds',
+            queryset=AdjudicatorFeedback.objects.filter(
+                Q(source_adjudicator__debate__round__in=rounds) | Q(source_team__debate__round__in=rounds),
+                confirmed=True,
+            ).exclude(
+                source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE
+            ).select_related('source_adjudicator__debate__round', 'source_team__debate__round')
+        ),
+        Prefetch('debateadjudicator_set', to_attr='debateadjs_for_rounds',
+            queryset=DebateAdjudicator.objects.filter(
+                debate__round__in=rounds).select_related('debate__round')),
+        Prefetch('debateadjs_for_rounds__speakerscorebyadj_set',
+            queryset=SpeakerScoreByAdj.objects.filter(
+                debate_adjudicator__debate__round__in=rounds
+            ).select_related('debate_team')
+        ),
+    ).annotate(debates=Count('debateadjudicator'))
+    annotated_adjs_by_id = {adj.id: adj for adj in annotated_adjs}
 
     for adj in adjudicators:
-        # Gather feedback scores for graphs
-        adj_feedbacks = [f for f in all_feedbacks if f.adjudicator == adj]
-        adj_adjudications = [a for a in debate_adjudicators if a.adjudicator == adj]
-        adj_scores = [s for s in all_scores if s.debate_adjudicator.adjudicator == adj]
-
-        # Gather a dict of round-by-round feedback for the graph
-        adj.feedback_data = feedback_stats(adj, rounds, adj_feedbacks, debate_adjudicators)
-        # Sum up remaining stats
-        adj = scoring_stats(adj, adj_scores, adj_adjudications)
+        annotated_adj = annotated_adjs_by_id[adj.id]
+        adj.debates = annotated_adj.debates
+        adj.feedback_data = feedback_stats(annotated_adj, rounds)
+        adj.feedback_variance = feedback_variance(annotated_adj, rounds)
 
     return adjudicators
 
 
-def feedback_stats(adj, rounds, feedbacks, all_debate_adjudicators):
-
-    # Start off with their test scores
-    feedback_data = [{'x': 0, 'y': adj.test_score, 'position': "Test Score"}]
-
-    for r in rounds:
-        # Filter all the feedback to focus on this particular rouond
-        adj_round_feedbacks = [f for f in feedbacks if (f.source_adjudicator and f.source_adjudicator.debate.round == r)]
-        adj_round_feedbacks.extend([f for f in feedbacks if (f.source_team and f.source_team.debate.round == r)])
-
-        if len(adj_round_feedbacks) > 0:
-            debates = [fb.source_team.debate for fb in adj_round_feedbacks if fb.source_team]
-            debates.extend([fb.source_adjudicator.debate for fb in adj_round_feedbacks if fb.source_adjudicator])
-            adj_da = next((da for da in all_debate_adjudicators if (da.adjudicator == adj and da.debate == debates[0])), None)
-            if adj_da:
-                if adj_da.type == adj_da.TYPE_CHAIR:
-                    adj_type = "Chair"
-                elif adj_da.type == adj_da.TYPE_PANEL:
-                    adj_type = "Panellist"
-                elif adj_da.type == adj_da.TYPE_TRAINEE:
-                    adj_type = "Trainee"
-
-                total_score = [f.score for f in adj_round_feedbacks]
-                average_score = round(sum(total_score) / len(total_score), 2)
-
-                # Creating the object list for the graph
-                feedback_data.append({
-                    'x': r.seq,
-                    'y': average_score,
-                    'position': adj_type,
-                })
-
-    return feedback_data
-
-
-def scoring_stats(adj, scores, adjudications):
-    adj.debates = len(adjudications)
-    adj.avg_score = None
-    adj.avg_margin = None
-
-    if len(scores) == 0 or len(adjudications) == 0:
-        return adj
-
-    adj.avg_score = sum(s.score for s in scores) / len(scores)
-    # Figure out average margin by summing speaks (post splitting them in 2)
-    ballot_ids = [s.ballot_submission for s in scores]
-    ballot_ids = sorted(set([b.id for b in ballot_ids])) # Deduplicate
-    ballot_margins = []
-
-    for id in ballot_ids:
-        # For each unique ballot id make an array of all its scores
-        ballot_scores = [s.score for s in scores if s.ballot_submission.id == id]
-        speakers = int(len(ballot_scores) / 2)
-
-        # Get the team totals by summing each half of the scores array
-        aff_pts = sum(ballot_scores[:speakers])
-        neg_pts = sum(ballot_scores[speakers:])
-        # The margin is the largest team pt difference - the smallest
-        ballot_margins.append(max(aff_pts, neg_pts) - min(aff_pts, neg_pts))
-
-    if ballot_margins:
-        # print('%s has %s margins %s' % (adj, len(ballot_margins), ballot_margins))
-        adj.avg_margin = sum(ballot_margins) / len(ballot_margins)
-
-    return adj
-
-
-def parse_feedback(feedback, questions):
-
-    if feedback.source_team:
-        source_annotation = " (" + feedback.source_team.get_result_display() + ")"
-    elif feedback.source_adjudicator:
-        source_annotation = " (" + feedback.source_adjudicator.get_type_display() + ")"
+def feedback_variance(adj, rounds):
+    feedback_scores = [fb.score for fb in adj.adjfeedback_for_rounds]
+    feedback_scores.append(adj.test_score)
+    if len(feedback_scores) > 1:
+        return stdev(feedback_scores)
     else:
-        source_annotation = ""
+        return None
 
-    data = {
-        'round': feedback.round.abbreviation,
-        'version': str(feedback.version) + (feedback.confirmed and "*" or ""),
-        'bracket': feedback.debate.bracket,
-        'matchup': feedback.debate.matchup,
-        'source': feedback.source,
-        'source_note': source_annotation,
-        'score': feedback.score,
-        'questions': []
+
+def feedback_stats(adj, rounds):
+    """Collates the feedback statistics for an adjudicator. Assumes
+    adj.adjfeedback_for_rounds and adj.debateadj_for_rounds are populated as in
+    get_feedback_overview()."""
+
+    adj_classes = {  # Do not translate
+        DebateAdjudicator.TYPE_CHAIR: "chair",
+        DebateAdjudicator.TYPE_PANEL: "panellist",
+        DebateAdjudicator.TYPE_TRAINEE: "trainee",
     }
 
-    for question in questions:
-        q = {
-            'reference': question.reference,
-            'text': question.text,
-            'name': question.name
-        }
-        try:
-            q['answer'] = question.answer_set.get(feedback=feedback).answer
-        except ObjectDoesNotExist:
-            q['answer'] = "-"
+    # Start with test score
+    feedback_data = [{'x': 0, 'y': adj.test_score, 'position': "Test Score"}]
 
-        data['questions'].append(q)
+    # Sort into rounds
+    feedback_by_round = {r: [] for r in rounds}
+    for fb in adj.adjfeedback_for_rounds:
+        feedback_by_round[fb.round].append(fb)
 
-    return data
+    debateadjs_by_round = dict.fromkeys(rounds, None)
+    for da in adj.debateadjs_for_rounds:
+        debateadjs_by_round[da.debate.round] = da
+
+    for r in rounds:
+        scores = [fb.score for fb in feedback_by_round[r]]
+        if scores:
+            feedback_data.append({
+                'x': r.seq,
+                'y': round(mean(scores), 2),  # average score
+                'position_class': adj_classes[debateadjs_by_round[r].type],
+                'position': debateadjs_by_round[r].get_type_display(),
+            })
+
+    return feedback_data

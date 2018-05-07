@@ -1,26 +1,28 @@
 <template>
   <div :class="['card', { 'panel-danger': hasEvenNumbers }]">
 
-    <div class="panel-heading text-center">
-      <h5 class="panel-title">
+    <div class="card-body text-center pt-2 p-0">
+      <h5 class="card-title">
         D{{ division.name }} <small>({{ teams.length }} teams)</small>
       </h5>
-    </div>
 
-    <droppable-generic :assignment-id="division.id"
-                       :extra-css="'card-body division-droppable'">
-      <draggable-team v-for="team in teams" :key="team.id":team="team">
-      </draggable-team>
-    </droppable-generic>
+      <droppable-generic :assignment-id="division.id"
+                         :extra-css="'card-body division-droppable'">
+        <draggable-team v-for="team in teams" :round-info="roundInfo"
+                       :key="team.id" :team="team">
+        </draggable-team>
+      </droppable-generic>
 
-    <div class="panel-footer division-footer">
-      <select name="select" class="btn-sm"
-              v-model="division.venue_category"  v-if="vcs.length > 0">
-        <option></option>
-        <option v-for="vc in vcs" :value="vc.id">
-          At {{ vc.name }} (capacity for {{ vc.total_capacity }} teams)
-        </option>
-      </select>
+      <div class="panel-footer division-footer">
+        <select name="select" class="custom-select custom-select-sm"
+                v-model="division.venue_category"  v-if="vcs.length > 0">
+          <option></option>
+          <option v-for="vc in vcs" :value="vc.id">
+            At {{ vc.name }} (capacity for {{ vc.total_capacity }} teams)
+          </option>
+        </select>
+      </div>
+
     </div>
 
   </div>
@@ -34,12 +36,12 @@ import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 export default {
   mixins: [AjaxMixin],
   components: { DroppableGeneric, DraggableTeam },
-  props: [ 'division', 'vcs', 'teams', 'saveVenueCategoryUrl'],
+  props: [ 'division', 'vcs', 'teams', 'saveVenueCategoryUrl', 'roundInfo'],
   computed: {
     hasEvenNumbers: function () {
-      return (this.debateTeams.length % 2) == 1;
+      return (this.teams.length % 2) == 1;
     },
-    venueCategory: function() {
+    venueCategory: function () {
       return this.division.venue_category
     }
   },

@@ -1,0 +1,11 @@
+name,abbreviation,stage,draw_type,silent,feedback_weight,break_category
+Round 1,R1,preliminary,random,FALSE,0.3,
+Round 2,R2,preliminary,power paired,FALSE,0.5,
+Round 3,R3,preliminary,power paired,FALSE,0.6,
+Round 4,R4,preliminary,power paired,TRUE,0.7,
+Open Quarterfinal,OQF,elimination,elimination,TRUE,0.7,open
+ESL Semifinal,SSF,elimination,elimination,TRUE,0.7,esl
+Open Semifinal,OSF,elimination,elimination,TRUE,0.7,open
+ESL Grand Final,SGF,elimination,elimination,TRUE,0.7,esl
+Novice Grand Final,NGF,elimination,elimination,TRUE,0.7,novice
+Open Grand Final,OGF,elimination,elimination,TRUE,0.7,open

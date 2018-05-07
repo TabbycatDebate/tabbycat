@@ -1,32 +1,47 @@
 {
-    "name": "Tabbycat",
-    "description": "Debating tournament tabulation software for two-team parliamentary formats",
-    "repository": "https://github.com/TabbycatDebate/tabbycat",
-    "keywords": ["debate", "debating"],
-    "website": "https://tabbycat.readthedocs.io/",
-    "addons": [
-        "memcachier",
-        "papertrail",
-        "sendgrid:starter",
-        "heroku-postgresql:hobby-dev"
-    ],
-    "env": {
-        "DJANGO_SECRET_KEY": {
-            "description": "A secret key for cryptographic signing of user sessions.",
-            "generator": "secret"
-        },
-        "TAB_DIRECTOR_EMAIL": {
-          "description": "Your email address. Tabbycat's developers may need to contact you to help diagnose any unexpected errors.",
-          "value": ""
-        },
-        "DISABLE_COLLECTSTATIC": {
-          "description": "Leave this as-is.",
-          "value": "1"
-        }
+  "name": "Tabbycat",
+  "description": "Debating tournament tabulation software for two-team parliamentary formats",
+  "repository": "https://github.com/TabbycatDebate/tabbycat",
+  "keywords": ["debate", "debating"],
+  "website": "https://tabbycat.readthedocs.io/",
+  "addons": [
+    "papertrail",
+    "sendgrid:starter",
+    "heroku-postgresql:hobby-dev",
+    {
+      "plan": "heroku-redis:hobby-dev",
+      "options": {
+        "maxmemory-policy": "allkeys-lru"
+      }
+    }
+  ],
+  "env": {
+    "DJANGO_SECRET_KEY": {
+        "description": "A secret key for cryptographic signing of user sessions.",
+        "generator": "secret"
     },
-    "buildpacks": [
-        {"url": "heroku/nodejs"},
-        {"url": "heroku/python"}
-    ],
-    "success_url": "/start/"
+    "TAB_DIRECTOR_EMAIL": {
+      "description": "Your email address. Tabbycat's developers may need to contact you to help diagnose any unexpected errors.",
+      "value": ""
+    },
+    "TIME_ZONE": {
+      "description": "The time zone name in the IANA tz database for the tournament's location. Examples: America/Los_Angeles, Europe/Dublin, Africa/Johannesburg. You can look up yours in the 'TZ*' column at http://wikipedia.org/wiki/List_of_tz_database_time_zones#List",
+      "value": "Australia/Melbourne"
+    },
+    "DISABLE_COLLECTSTATIC": {
+      "description": "Leave this as-is.",
+      "value": "1"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {"url": "heroku/nodejs"},
+    {"url": "heroku/python"}
+  ],
+  "success_url": "/start/"
 }

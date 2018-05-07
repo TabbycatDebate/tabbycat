@@ -25,7 +25,7 @@ export default {
   components: { Popover, CellContent },
   props: { cellData: Object },
   computed: {
-    canSupportPopover: function() {
+    canSupportPopover: function () {
       if (typeof this.cellData['popover'] !== 'undefined') {
         if (this.cellData['popover'].hasOwnProperty('content')) {
           return true

@@ -1,12 +1,14 @@
 import os
 
 from django.contrib.messages import constants as messages
+from django.utils.translation import gettext_lazy as _
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==============================================================================
-# Overwritten in Local
+# Overwritten in local_settings.py
 # ==============================================================================
 
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
@@ -15,20 +17,39 @@ DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 DEBUG_ASSETS = DEBUG
 
 # ==============================================================================
-# Global Settings
+# Version
 # ==============================================================================
 
-MEDIA_URL = '/media/'
-TIME_ZONE = 'Australia/Melbourne'
-LANGUAGE_CODE = 'en'
-USE_I18N = True
+TABBYCAT_VERSION = '2.1.0'
+TABBYCAT_CODENAME = 'Japanese Bobtail'
+READTHEDOCS_VERSION = 'v2.1.0'
 
-TABBYCAT_VERSION = '2.0.7'
-TABBYCAT_CODENAME = 'Iberian Lynx'
-READTHEDOCS_VERSION = 'v2.0.7'
+# ==============================================================================
+# Internationalization and Localization
+# ==============================================================================
+
+USE_I18N = True
+USE_TZ = True
+USE_L10N = True
+LANGUAGE_CODE = 'en'
+TIME_ZONE = os.environ.get('TIME_ZONE', 'Australia/Melbourne')
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
+]
+
+# Languages that should be available in the switcher
+LANGUAGES = [
+    ('ar', _('Arabic')),
+    ('en', _('English')),
+    ('es', _('Spanish')),
+    ('fr', _('French'))
+]
+
+STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
+
+FORMAT_MODULE_PATH = [
+    'utils.formats',
 ]
 
 # ==============================================================================
@@ -39,51 +60,58 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # User language preferences
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.DebateMiddleware'
 ]
 
-TABBYCAT_APPS = ('actionlog',
-                 'adjallocation',
-                 'adjfeedback',
-                 'availability',
-                 'breakqual',
-                 'divisions',
-                 'draw',
-                 'motions',
-                 'options',
-                 'participants',
-                 'printing',
-                 'privateurls',
-                 'results',
-                 'tournaments',
-                 'venues',
-                 'utils',
-                 'users',
-                 'standings',
-                 'importer', )
+TABBYCAT_APPS = (
+    'actionlog',
+    'adjallocation',
+    'adjfeedback',
+    'availability',
+    'breakqual',
+    'checkins',
+    'divisions',
+    'draw',
+    'motions',
+    'options',
+    'participants',
+    'printing',
+    'privateurls',
+    'results',
+    'tournaments',
+    'venues',
+    'utils',
+    'users',
+    'standings',
+    'importer'
+)
 
 INSTALLED_APPS = (
-    'jet',
+    # Scout should be listed first
+    'scout_apm.django', 'jet' if os.environ.get('SCOUT_MONITOR') is True else 'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'channels', # For Websockets / real-time connections (above whitenoise)
     'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_summernote',  # Keep above our apps; as we unregister an admin model
     'django.contrib.messages') \
     + TABBYCAT_APPS + (
     'dynamic_preferences',
-    'dynamic_preferences.users.apps.UserPreferencesConfig',
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
-    'formtools')
+    'formtools',
+    'statici18n' # Compile js translations as static file; saving requests
+)
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -107,7 +135,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',  # for Jet
                 'utils.context_processors.debate_context',  # for tournament config vars
-                'utils.context_processors.get_menu_highlight',  # for navigation highlights
+                'django.template.context_processors.i18n'  # for serving static language translations
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
@@ -130,15 +158,10 @@ TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake'
     }
 }
 
-# Use a db backed cache for sessions unless the app is retired (no db writes)
-if 'RETIRED' in os.environ:
-    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-else:
-    SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
 # Static Files and Compilation
@@ -175,12 +198,6 @@ if os.environ.get('SENDGRID_USERNAME', ''):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'except_importer_base': {
-            '()': 'utils.logging.ExceptFilter',
-            'name': 'importer.importers.base',
-        },
-    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
@@ -189,7 +206,6 @@ LOGGING = {
         'sentry': {
             'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'filters': ['except_importer_base'],
         },
     },
     'loggers': {
@@ -224,6 +240,12 @@ for app in TABBYCAT_APPS:
         'handlers': ['console', 'sentry'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
+# ==============================================================================
+
+# Scout
+# ==============================================================================
+
+SCOUT_NAME = "Tabbycat"
 
 # ==============================================================================
 # Sentry
@@ -247,6 +269,36 @@ if 'DATABASE_URL' in os.environ and not DEBUG:
 # ==============================================================================
 
 MESSAGE_TAGS = {messages.ERROR: 'danger', }
+
+# ==============================================================================
+# Summernote (WYSWIG)
+# ==============================================================================
+
+SUMMERNOTE_CONFIG = {
+    'width': '100%',
+    'height': '480',
+    'toolbar': [
+        ['style', ['bold', 'italic', 'underline', 'fontsize', 'color', 'clear']],
+        ['para', ['ul', 'ol']],
+        ['insert', ['link', 'picture', 'video', 'hr']],
+        ['misc', ['undo', 'redo', 'codeview']],
+        ['help', ['help']]
+    ],
+    'disable_upload': True,
+    'iframe': True, # When django-summernote supports Bootstrap4 change this
+}
+
+# ==============================================================================
+# Channels
+# ==============================================================================
+
+ASGI_APPLICATION = "routing.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 # ==============================================================================
 # Heroku
@@ -281,33 +333,29 @@ ALLOWED_HOSTS = ['*']
 if 'TAB_DIRECTOR_EMAIL' in os.environ:
     TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
 
-# Memcache Services
-if os.environ.get('MEMCACHIER_SERVERS', ''):
+# Redis Services
+if os.environ.get('REDIS_URL', ''):
     try:
-        os.environ['MEMCACHE_SERVERS'] = os.environ[
-            'MEMCACHIER_SERVERS'].replace(',', ';')
-        os.environ['MEMCACHE_USERNAME'] = os.environ['MEMCACHIER_USERNAME']
-        os.environ['MEMCACHE_PASSWORD'] = os.environ['MEMCACHIER_PASSWORD']
         CACHES = {
-            'default': {
-                'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
-                'TIMEOUT': 36000,
-                'BINARY': True,
-                'OPTIONS': {  # Maps to pylibmc "behaviors"
-                    # Enable faster IO
-                    'no_block': True,
-                    'tcp_nodelay': True,
-                },
-                # Timeout for set/get requests
-                '_poll_timeout': 2000,
+            "default": {
+                "BACKEND": "django_redis.cache.RedisCache",
+                "LOCATION": os.environ.get('REDIS_URL'),
+                "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
+                }
             }
+        }
+        CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
+                "CONFIG": {
+                    "hosts": [os.environ.get('REDIS_URL')],
+                },
+            },
         }
     except:
-        CACHES = {
-            'default': {
-                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-            }
-        }
+        pass
 
 # ==============================================================================
 # Travis CI
@@ -318,7 +366,7 @@ FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
 if os.environ.get('TRAVIS', '') == 'true':
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.postgresql',
             'USER': 'postgres',
             'PASSWORD': '',
             'HOST': 'localhost',
@@ -327,14 +375,51 @@ if os.environ.get('TRAVIS', '') == 'true':
     }
 
 # ==============================================================================
+# Debug Toolbar
+# ==============================================================================
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+)
+
+DEBUG_TOOLBAR_CONFIG = {
+    'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
+    'SHOW_COLLAPSED': True
+}
+
+# Must default to false; usually overridden in local_settings
+ENABLE_DEBUG_TOOLBAR = False
+
+# That said provide a flag to turn it on in Heroku
+if 'DEBUG_TOOLBAR' in os.environ and bool(int(os.environ['DEBUG_TOOLBAR'])):
+    ENABLE_DEBUG_TOOLBAR = True
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
+    INSTALLED_APPS += ('debug_toolbar',)
+    # Override check for internal IPs (and DEBUG=1) on Heroku
+    DEBUG_TOOLBAR_CONFIG['SHOW_TOOLBAR_CALLBACK'] = 'settings.show_toolbar'
+
+
+def show_toolbar(request):
+    return request.user.is_staff
+
+# ==============================================================================
 # Local Overrides and Docker
 # ==============================================================================
 
 # Hide league-related configuration options unless explicitly enabled
 LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
-
-# Must default to false; potentially overridden in local_settings
-ENABLE_DEBUG_TOOLBAR = False
 
 if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
     DEBUG = True # Just to be sure

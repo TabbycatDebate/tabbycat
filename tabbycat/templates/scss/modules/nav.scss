@@ -8,13 +8,13 @@
   border-top: 1px solid $navbar-light-border;
 
   .navbar-brand {
+    font-size: 1rem;
 
     &:hover {
       cursor: pointer; // Drop-down links seem to clash with the nav-brand?
     }
 
     img {
-      margin-top: -3px; // Tweak icon spacing
       margin-right: 6px;
       margin-left: -2px;
     }
@@ -24,6 +24,19 @@
 .navbar .dropdown-item .feather {
   margin-bottom: -3px;
   margin-right: 5px;
+}
+
+.navbar .dropdown-menu .dropdown-item {
+  color: $navbar-light-color; // Keep consistent with top level
+  background: none;
+
+  &:hover {
+    color: theme-color("primary"); // Keep consistent with top level
+  }
+  // Override standard dropdown highlights
+  &.active, &:focus {
+    color: $navbar-light-active-color;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -79,6 +92,7 @@
   }
 }
 
+
 // Sub menu items
 .admin-sidebar .list-group-item > .collapse,
 .admin-sidebar .list-group-item > .collapsing {
@@ -88,13 +102,32 @@
     border: 0;
 
     .feather {
-      margin-right: 0.8rem;
+      display: inline-block;
+      width: 31px;
+      padding-right: 13px;
+      margin-right: 0;
+      overflow: hidden; // Stop jitter on mobile
     }
   }
+
+  // Heading item used to organise a tournament's admin/assistant/public links
+  .tournament-areas-title {
+    color: $sidebar-muted-text;
+    font-weight: bold;
+    font-family: $headings-font-family;
+    padding-left: 16px;
+  }
+
 }
 
 .admin-sidebar .tournament-title {
   min-height: 70px;
+
+  .logo-large {
+    margin-left: -4px;
+    margin-right: 1px;
+    margin-bottom: -2px;
+  }
 }
 
 .sidebar-expand {
@@ -107,7 +140,7 @@
 //------------------------------------------------------------------------------
 
 .circle-icon {
-  @extend .d-none;
+  display: none; // Hide circle icons in main permanent sidebar menu
   @extend .d-md-inline;
 
   z-index: 99; // Float above progress line
@@ -140,23 +173,15 @@
 // Applies just to phones
 @include media-breakpoint-up(xs) {
 
-  .admin-sidebar .list-group-item a {
+  .admin-sidebar .list-group-item a,
+  .admin-sidebar .list-group-item .tournament-areas-title {
     font-size: 12px;
-    padding: 0.75rem 0.4rem;
-  }
-}
-
-// Applies just to tablets
-@include media-breakpoint-up(sm) {
-
-  .admin-sidebar .list-group-item a {
-    font-size: 12px;
-    padding: 0.5rem 0.6rem;
+    padding: 0.75rem 0.25rem;
 
     .feather {
       width: 12px;
       height: 12px;
-      margin-right: 4px;
+      margin-right: 0;
     }
 
     .feather-chevron-down,
@@ -164,11 +189,61 @@
       margin-top: 2px;
       margin-right: 0;
     }
+
+  }
+
+  .admin-sidebar .list-group-item > .collapse .list-group-item,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item {
+    font-size: 12px;
+
+    .feather {
+      padding-right: 8px;
+      padding-top: 3px;
+      padding-left: 2px;
+      width: 26px;
+      height: 16px;
+    }
   }
 
   .admin-sidebar .collapse .list-group-item,
   .admin-sidebar .collapsing .list-group-item {
     font-size: 10px;
+  }
+
+}
+
+// Applies just to tablets
+@include media-breakpoint-up(md) {
+
+  .admin-sidebar .list-group-item a {
+    font-size: 12px;
+    padding: 0.5rem 0.5rem;
+
+    .feather {
+      width: 12px;
+      height: 12px;
+      padding-right: 2px;
+      margin-right: 0;
+      padding-bottom: 2px;
+    }
+  }
+
+  .admin-sidebar .list-group-item > .collapse .list-group-item,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item {
+    font-size: 11px;
+    padding-top: 0.5rem 0.25rem;
+
+    .feather {
+      width: 16px;
+      padding-right: 6px;
+      padding-left: 0;
+      padding-top: 2px;
+    }
+  }
+
+  .admin-sidebar .collapse a.list-group-item,
+  .admin-sidebar .collapsing a.list-group-item {
+    font-size: 14px;
   }
 }
 
@@ -180,9 +255,9 @@
     padding: 0.5rem 1rem;
 
     .feather {
-      width: 16px;
+      width: 20px;
       height: 16px;
-      margin-right: 8px;
+      padding-right: 4px;
     }
 
     .feather-chevron-down,
@@ -195,9 +270,16 @@
   .admin-sidebar .collapse .list-group-item,
   .admin-sidebar .collapsing .list-group-item {
     font-size: $font-size-sm;
+  }
+
+  .admin-sidebar .list-group-item > .collapse .list-group-item,
+  .admin-sidebar .list-group-item > .collapsing .list-group-item {
+    font-size: 14px;
 
     .feather {
-      margin-right: 12px; // Align sub text with main text
+      width: 25px;
+      padding-right: 9px;
+      height: 18px;
     }
   }
 }
@@ -217,10 +299,6 @@
     z-index: $z_2;
     width: 150px;
     text-align: left;
-
-    .feather {
-      margin-right: 12px;
-    }
   }
 }
 

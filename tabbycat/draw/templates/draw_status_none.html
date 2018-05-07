@@ -2,10 +2,10 @@
 {% load debate_tags i18n %}
 
 {% block page-alerts %}
-  {% roundurl 'availability-index' as checkins_url %}
+  {% roundurl 'availability-index' as availability_url %}
   {% blocktrans trimmed asvar message with round_name=round.name %}
     A draw for {{ round_name }} hasn't yet been generated. To generate one, go
-    to the <a href="{{ checkins_url }}" class="alert-link">Check-Ins section</a>.
+    to the <a href="{{ availability_url }}" class="alert-link">Availability section</a>.
   {% endblocktrans %}
   {% include 'components/alert.html' with type="warning" %}
 {% endblock %}

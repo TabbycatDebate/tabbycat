@@ -1,25 +1,22 @@
 // The base template with universal or near-universal functionality (imported on all pages)
 
 //------------------------------------------------------------------------------
-// jQuery, Lodash, and Boostrap
+// TCI: jQuery, Lodash, and Boostrap
 //------------------------------------------------------------------------------
 
-var $ = require("jquery");
-global.jQuery = $; // Set for bootstrap
-window.$ = $; // Set for browser window
+var $ = require('jquery')
+global.jQuery = $ // Set for bootstrap
+window.$ = $ // Set for browser window
 
 // Hover over options Needs to come before bootstrap
-import Popper from 'popper.js';
-window.Popper = Popper;
+import Popper from 'popper.js'
+window.Popper = Popper
 
 // Import bootstrap javascript plugins
-require("bootstrap");
+require('bootstrap')
 
 // Icons
-import feather from 'feather-icons';
-
-// Polyfill Safari support for datalists (ballot checkins + constraints import)
-require("datalist-polyfill");
+import feather from 'feather-icons'
 
 // Add alerts programmatically
 $.fn.extend({
@@ -31,28 +28,33 @@ $.fn.extend({
       }, timeout);
     }
   },
-  loadButton: function(button, triggeredForm) {
+  loadButton: function (button, triggeredForm) {
     // Can't use disable attr as some submission button need to pass their value
     $('button').prop('disabled', true);
   },
-  resetButton: function(button) {
+  resetButton: function (button) {
     $('button').prop('disabled', false);
-  }
+  },
 });
 
-// Mount global jquery stuff here
-$(document).ready(function(){
+//------------------------------------------------------------------------------
+// TCI: Mount global jquery stuff here
+//------------------------------------------------------------------------------
+
+$(document).ready(function (){
 
   // Enable hover tooltips for all elements
   $('[data-toggle=tooltip]').tooltip({
     'html': true
   });
+
   // Feather shim for icons
   feather.replace();
+
   // Remove the pre-expanded sidebar states for mobile (they overlap)
   if ($(window).width() < 768) {
     $("#sidebar .collapse").removeClass("show");
-  };
+  }
 
   // Auto disable submit buttons for forms upon submission (prevent double-sub)
   $('form').submit(function(event) {
@@ -76,15 +78,58 @@ $(document).ready(function(){
       $.fn.loadButton(triggeredButton, triggeredForm);
     }
   });
+
   // Auto disable submit buttons for buttons that POST
   $('.submit-disable').click(function(event){
     $.fn.loadButton(event.target);
   });
 
+  // Focus '/' on table search
+  if ($("#table-search").length) {
+    $(document).keypress(function (e) {
+      if ((e.which == 47 || e.key == "/") && !$("#table-search").is(":focus")) {
+        $("#table-search").focus()
+        e.preventDefault() // Stop the keystroke
+      }
+    })
+  }
+
+  // Set Highlights on Navigation Elements
+  var currentUrl = window.location.href;
+  if ($('.admin-sidebar').length) {
+    // For admin area
+    $('a.list-group-item').filter(function (index, elem) {
+      return currentUrl.endsWith($(elem).attr('href'))
+    }).addClass('active')
+    // Expand sidebar if an item within a section is active (if not on mobile)
+    let isMobile = window.matchMedia("only screen and (max-width: 576px)");
+    if (!isMobile.matches) {
+      const menuSectionClass = '.list-group-item.d-inline-block:not(.main-menu-item)';
+      const listGroups = $(menuSectionClass).filter(function(index, elem) {
+        return $(elem).find('a.list-group-item.active').length
+      })
+      listGroups.children('a').attr('aria-expanded', 'true')
+      listGroups.children('div').addClass('show')
+    }
+  } else {
+    // For assistant and public navs
+    $('#collapsed-main-nav a').filter(function (index, elem) {
+      if (currentUrl.endsWith($(elem).attr('href'))) {
+        $(this).addClass('active')
+        const parentMenuItem = $(this).parent().parent()
+        console.log('parent', parentMenuItem)
+        if (parentMenuItem.hasClass('dropdown')) {
+          console.log('test')
+          $(parentMenuItem, '> .nav-link').addClass('active')
+        }
+      }
+    })
+  }
+
 });
 
 //------------------------------------------------------------------------------
-// Vue Structure Setup
+// TCI: Vue Structure Setup
 //------------------------------------------------------------------------------
 
 // Setup the main constructs used for custom components
@@ -93,9 +138,7 @@ var vueComponents = {}
 // This is the main data package setout in the django template
 var vueData = window.vueData // We need to mount props from the window itself
 
-//------------------------------------------------------------------------------
 // Vue Shared Components Setup
-//------------------------------------------------------------------------------
 
 // Table-based Views
 import TablesContainer from '../tables/TablesContainer.vue'
@@ -105,12 +148,46 @@ vueComponents['TablesContainer'] = TablesContainer
 import DiversityContainer from  '../../participants/templates/DiversityContainer.vue'
 vueComponents['DiversityContainer'] = DiversityContainer
 
-//------------------------------------------------------------------------------
-// Expose data for admin/public.js to import
-//------------------------------------------------------------------------------
+// Checkin Statuses
+import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
+vueComponents['CheckInStatusContainer'] = CheckInStatusContainer
 
+// Vue Transations Setup
+
+// Mixin that maps methods in Vue to what django's equivalents; passing args
+var vueTranslationMixin = {
+  methods: {
+    gettext: function() {
+      return window.gettext.apply(this, arguments)
+    },
+    ngettext: function() {
+      return window.ngettext.apply(this, arguments)
+    },
+    interpolate: function() {
+      return window.interpolate.apply(this, arguments)
+    },
+    get_format: function() {
+      return window.get_format.apply(this, arguments)
+    },
+    gettext_noop: function() {
+      return window.gettext_noop.apply(this, arguments)
+    },
+    pgettext: function() {
+      return window.pgettext.apply(this, arguments)
+    },
+    npgettext: function() {
+      return window.npgettext.apply(this, arguments)
+    },
+    pluralidx: function() {
+      return window.pluralidx.apply(this, arguments)
+    }
+  }
+}
+
+// Expose data for admin/public.js to import
 // For admin modules
 export default {
   baseComponents: vueComponents,
   baseData: vueData,
+  vueTranslationMixin: vueTranslationMixin
 }

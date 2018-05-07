@@ -2,12 +2,13 @@
 
 import logging
 
-from django.db.models import Prefetch, Sum
-from django.db.models.expressions import RawSQL
-from django.utils.translation import ugettext_lazy as _
+from django.db.models import Avg, Count, FloatField, Func, Prefetch, Q, StdDev, Sum
+from django.db.models.functions import Cast
+from django.utils.translation import gettext_lazy as _
 
 from draw.models import DebateTeam
 from draw.prefetch import populate_opponents
+from participants.models import Team
 from tournaments.models import Round
 from results.models import TeamScore
 
@@ -16,6 +17,12 @@ from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator,
 from .ranking import BasicRankAnnotator, DivisionRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
 
 logger = logging.getLogger(__name__)
+
+
+class NullIf(Func):
+    """NULLIF() function in SQL. This implementation doesn't vet arguments, so
+    it's a little fragile when used incorrectly - use with care."""
+    function = 'NULLIF'
 
 
 # ==============================================================================
@@ -32,48 +39,23 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     exclude_forfeits = False
     where_value = None
 
-    @staticmethod
-    def get_annotation_metric_query_str(field, function, round=None, exclude_forfeits=False, where_value=None):
-        """Returns a string, being an SQL query that can be passed into RawSQL()."""
-        # This is what might be more concisely expressed, if it were permissible
-        # in Django, as:
-        # teams = teams.annotate_if(
-        #     models.Sum('debateteam__teamscore__{field:s}'),
-        #     condition={"debateteam__teamscore__ballot_submission__confirmed": True,
-        #         "debateteam__debate__round__stage": Round.STAGE_PRELIMINARY}
-        # )
-        #
-        # That is, it adds up the relevant field on *confirmed* ballots for each
-        # team and adds them as columns to the table it returns. The standings
-        # include only preliminary rounds.
+    def get_field(self):
+        """Subclasses with complicated fields override this method."""
+        return 'debateteam__teamscore__' + self.field
 
-        query = """
-            SELECT DISTINCT {function}({field:s})
-            FROM results_teamscore
-            JOIN results_ballotsubmission ON results_teamscore.ballot_submission_id = results_ballotsubmission.id
-            JOIN draw_debateteam ON results_teamscore.debate_team_id = draw_debateteam.id
-            JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
-            JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
-            WHERE results_ballotsubmission.confirmed = TRUE
-            AND draw_debateteam.team_id = participants_team.id
-            AND tournaments_round.stage = '""" + str(Round.STAGE_PRELIMINARY) + "\'"
-
+    def get_annotation(self, round=None):
+        annotation_filter = Q(
+            debateteam__teamscore__ballot_submission__confirmed=True,
+            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+        )
         if round is not None:
-            query += """
-            AND tournaments_round.seq <= {round:d}""".format(round=round.seq)
+            annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+        if self.exclude_forfeits:
+            annotation_filter &= Q(debateteam__teamscore__forfeit=False)
+        if self.where_value is not None:
+            annotation_filter &= Q(**{self.get_field(): self.where_value})
 
-        if exclude_forfeits:
-            query += """
-            AND results_teamscore.forfeit = FALSE"""
-
-        if where_value is not None:
-            query += """
-            AND {field:s} = """ + str(where_value)
-
-        return query.format(field=field, function=function)
-
-    def get_annotation_metric_query_args(self, round):
-        return (self.field, self.function, round, self.exclude_forfeits, self.where_value)
+        return self.function(self.get_field(), filter=annotation_filter)
 
 
 class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -84,27 +66,28 @@ class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
     choice_name = _("Points (2/1/0)")
 
-    def annotate(self, queryset, standings, round=None):
-        # Includes forfeits
-        wins_query = self.get_annotation_metric_query_str("win", "COUNT", round, False, "TRUE")
-        # Excludes forfeits
-        losses_query = self.get_annotation_metric_query_str("win", "COUNT", round, True, "FALSE")
-        query = "({wins}) * 2 + ({losses})".format(wins=wins_query, losses=losses_query)
-        sql = RawSQL(query, ())
-        logger.info("Running query: " + query)
-        queryset = queryset.annotate(metric=sql).distinct()
+    class WinsIncludingForfeits(TeamScoreQuerySetMetricAnnotator):
+        function = Count
+        field = 'win'
+        exclude_forfeits = False
+        where_value = True
 
-        # Calculate bye debates
-        bye_points = 2 # Byes worth 2 points for WADL
-        from draw.models import Debate
-        from participants.models import Team
-        debates_with_byes = Debate.objects.filter(debateteam__team__type=Team.TYPE_BYE,
-                                                  round__stage=Round.STAGE_PRELIMINARY)
-        for item in queryset:
-            byes = debates_with_byes.filter(debateteam__team=item).count()
-            wins_including_byes = item.metric + byes * bye_points
-            # Manually implement annotate_with_queryset()
-            standings.add_metric(item, self.key, wins_including_byes)
+    class LossesExcludingForfeits(TeamScoreQuerySetMetricAnnotator):
+        function = Count
+        field = 'win'
+        exclude_forfeits = True
+        where_value = False
+
+    def get_annotation(self, round=None):
+        wins = self.WinsIncludingForfeits().get_annotation(round)
+        losses = self.LossesExcludingForfeits().get_annotation(round)
+
+        bye_filter = Q(debateteam__team__type=Team.TYPE_BYE,
+                debateteam__debate__round__stage=Round.STAGE_PRELIMINARY)
+        if round is not None:
+            bye_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+        byes = Count('debateteam', filter=bye_filter)
+        return wins * 2 + byes * 2 + losses
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -113,7 +96,7 @@ class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("points")
     abbr = _("Pts")
 
-    function = "SUM"
+    function = Sum
     field = "points"
 
 
@@ -123,9 +106,9 @@ class WinsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("wins")
     abbr = _("Wins")
 
-    function = "COUNT"
+    function = Count
     field = "win"
-    where_value = "TRUE"
+    where_value = True
 
 
 class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -134,7 +117,7 @@ class TotalSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("total speaker score")
     abbr = _("Spk")
 
-    function = "SUM"
+    function = Sum
     field = "score"
 
 
@@ -145,7 +128,19 @@ class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     abbr = _("ASS")
     exclude_forfeits = True
 
-    function = "AVG"
+    function = Avg
+    field = "score"
+
+
+class SpeakerScoreStandardDeviationMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total speaker score."""
+    key = "speaks_stddev"
+    name = _("speaker score standard deviation")
+    abbr = _("SSD")
+    exclude_forfeits = True
+    ascending = True
+
+    function = StdDev
     field = "score"
 
 
@@ -155,7 +150,7 @@ class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("sum of margins")
     abbr = _("Marg")
 
-    function = "SUM"
+    function = Sum
     field = "margin"
 
 
@@ -165,7 +160,7 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("average margin")
     abbr = _("AWM")
 
-    function = "AVG"
+    function = Avg
     field = "margin"
     exclude_forfeits = True
 
@@ -181,15 +176,14 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
             return
 
         logger.info("Running points query for draw strength:")
-        points_queryset = TeamScoreQuerySetMetricAnnotator.get_annotated_queryset(
-            queryset[0].tournament.team_set.all(), "points", "points", "SUM", round)
 
+        prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
         if round is not None:
-            prefetch_queryset = DebateTeam.objects.filter(debate__round__seq__lte=round.seq)
-        else:
-            prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
-        points_queryset = points_queryset.prefetch_related(Prefetch('debateteam_set',
-                queryset=prefetch_queryset, to_attr='debateteams'))
+            prefetch_queryset = prefetch_queryset.filter(debate__round__seq__lte=round.seq)
+
+        points_queryset = PointsMetricAnnotator().get_annotated_queryset(
+                queryset[0].tournament.team_set.all(), 'points', round).prefetch_related(
+                Prefetch('debateteam_set',queryset=prefetch_queryset, to_attr='debateteams'))
         points_queryset_teams = {team.id: team for team in points_queryset}
         points_queryset_debateteams = {team.id: list(team.debateteams) for team in points_queryset}
 
@@ -216,14 +210,15 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("number of adjudicators who voted for this team")
     abbr = _("Ballots")
     choice_name = _("votes/ballots carried")
-    function = "SUM"
+    function = Sum
 
     def __init__(self, adjs_per_debate=3):
         self.adjs_per_debate = 3
 
-    @property
-    def field(self):
-        return "CAST(votes_given AS float) / NULLIF(votes_possible, 0) * {:d}".format(self.adjs_per_debate)
+    def get_field(self):
+        return (Cast('debateteam__teamscore__votes_given', FloatField()) /
+            NullIf('debateteam__teamscore__votes_possible', 0, output_field=FloatField()) *
+            self.adjs_per_debate)
 
     def annotate(self, queryset, standings, round=None):
         super().annotate(queryset, standings, round)
@@ -242,7 +237,7 @@ class NumberOfFirstsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("number of firsts")
     abbr = _("1sts")
 
-    function = "COUNT"
+    function = Count
     field = "points"
     where_value = 3
 
@@ -252,7 +247,7 @@ class NumberOfSecondsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     name = _("number of seconds")
     abbr = _("2nds")
 
-    function = "COUNT"
+    function = Count
     field = "points"
     where_value = 2
 
@@ -354,6 +349,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "wins"          : WinsMetricAnnotator,
         "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
         "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
+        "speaks_stddev" : SpeakerScoreStandardDeviationMetricAnnotator,
         "draw_strength" : DrawStrengthMetricAnnotator,
         "margin_sum"    : SumMarginMetricAnnotator,
         "margin_avg"    : AverageMarginMetricAnnotator,

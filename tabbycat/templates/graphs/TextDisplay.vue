@@ -31,10 +31,10 @@ export default {
     set: Object,
   },
   methods: {
-    round: function(value) {
+    round: function (value) {
       return parseFloat(Math.round(value * 100) / 100).toFixed(2);
     },
-    offset: function(value) {
+    offset: function (value) {
       if (value > this.set.datum) {
         return "+" + this.round(value - this.set.datum)
       } else if (value < this.set.datum) {

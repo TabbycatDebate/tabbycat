@@ -1,0 +1,801 @@
+# Tabbycat translations, adjfeedback module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
+"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: adjfeedback/admin.py:53 adjfeedback/admin.py:111
+msgid "target"
+msgstr ""
+
+#: adjfeedback/admin.py:54 adjfeedback/admin.py:112 adjfeedback/models.py:219
+msgid "source adjudicator"
+msgstr ""
+
+#: adjfeedback/admin.py:55 adjfeedback/admin.py:113 adjfeedback/models.py:221
+msgid "source team"
+msgstr ""
+
+#: adjfeedback/admin.py:69
+msgid "Target"
+msgstr ""
+
+#: adjfeedback/admin.py:70 adjfeedback/admin.py:134
+msgid "Source"
+msgstr "الدرجات "
+
+#: adjfeedback/admin.py:152
+#, python-format
+msgid ""
+"1 feedback submission was marked as confirmed. Note that this may have "
+"caused other feedback submissions to be marked as unconfirmed."
+msgid_plural ""
+"%(count)d feedback submissions were marked as confirmed. Note that this may "
+"have caused other feedback submissions to be marked as unconfirmed."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/admin.py:164
+#, python-format
+msgid ""
+"1 feedback submission was not marked as confirmed, probably because other "
+"feedback submissions that conflict with it were also marked as confirmed."
+msgid_plural ""
+"%(count)d feedback submissions were not marked as confirmed, probably "
+"because other feedback submissions that conflict with them were also marked "
+"as confirmed."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/admin.py:177
+#, python-format
+msgid "1 feedback submission was marked as unconfirmed."
+msgid_plural "%(count)d feedback submissions were marked as unconfirmed."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/apps.py:7
+msgid "Adjudicator Feedback"
+msgstr "التعذية الراجعة من المحكم "
+
+#: adjfeedback/forms.py:25
+msgid "chair"
+msgstr "رئيس الجلسة"
+
+#: adjfeedback/forms.py:26
+msgid "solo"
+msgstr "فردي "
+
+#: adjfeedback/forms.py:27
+msgid "panellist"
+msgstr "محكم"
+
+#: adjfeedback/forms.py:28
+msgid "trainee"
+msgstr "محكم متدرب "
+
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
+#: adjfeedback/forms.py:56
+msgid "Yes"
+msgstr "نعم "
+
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
+#: adjfeedback/forms.py:58
+msgid "No"
+msgstr "لا"
+
+#. Translators: Please leave this blank, it should be left for the base Django
+#. translations.
+#: adjfeedback/forms.py:73 adjfeedback/forms.py:82
+msgid "This field is required."
+msgstr "هذه الخانة مطلوبة "
+
+#: adjfeedback/forms.py:168
+#, python-format
+msgid "Overall score (%(min)d=worst; %(max)d=best)"
+msgstr "مجموع الدرجات ( %(min)d= سيء ; %(max)d = أفضل ) "
+
+#. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2",
+#. adjpos="chair"
+#. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round
+#. 3", adjpos="panellist"
+#: adjfeedback/forms.py:230 adjfeedback/forms.py:287
+#, python-format
+msgid "%(name)s (%(round)s %(adjpos)s)"
+msgstr "%(name)s(%(round)s%(adjpos)s)"
+
+#: adjfeedback/forms.py:247 adjfeedback/forms.py:308
+msgid "-- Adjudicators --"
+msgstr "-- المحكمين --"
+
+#: adjfeedback/forms.py:261
+msgid "Adjudicator this feedback is about"
+msgstr "راي الحكم حول التغذية الراجعة "
+
+#: adjfeedback/forms.py:284
+#, python-format
+msgid "%(name)s (%(round)s)"
+msgstr "%(name)s(%(round)s)"
+
+#: adjfeedback/forms.py:290
+#, python-format
+msgid "%(name)s (%(round)s — chair gave oral)"
+msgstr ""
+
+#: adjfeedback/forms.py:292
+#, python-format
+msgid "%(name)s (%(round)s — chair rolled, this panellist gave oral)"
+msgstr "%(name)s(%(round)s— رئيس الجلسة )"
+
+#: adjfeedback/forms.py:365
+#, python-format
+msgid "This line (for %(adjudicator)s) didn't have a score"
+msgstr ""
+
+#: adjfeedback/forms.py:370
+#, python-format
+msgid "This line (for %(adjudicator)s) had too many columns"
+msgstr ""
+
+#: adjfeedback/forms.py:379
+#, python-format
+msgid ""
+"There are several adjudicators called \"%(adjudicator)s\", so you can't use "
+"the bulk importer to update their score. Please do so in the Feedback "
+"Overview page instead."
+msgstr ""
+
+#: adjfeedback/forms.py:385
+#, python-format
+msgid ""
+"There is no adjudicator in this tournament with the name \"%(adjudicator)s\""
+msgstr ""
+
+#: adjfeedback/forms.py:393
+#, python-format
+msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
+msgstr ""
+
+#: adjfeedback/forms.py:406
+msgid "There were no scores to import."
+msgstr ""
+
+#: adjfeedback/models.py:13 adjfeedback/models.py:214
+msgid "adjudicator"
+msgstr "محكم "
+
+#: adjfeedback/models.py:16
+msgid "round"
+msgstr "جولة"
+
+#: adjfeedback/models.py:17 adjfeedback/models.py:215
+msgid "score"
+msgstr "درجة "
+
+#: adjfeedback/models.py:18
+msgid "timestamp"
+msgstr "الزمن "
+
+#: adjfeedback/models.py:21
+msgid "adjudicator test score history"
+msgstr "تاريخ درجات الحكم "
+
+#: adjfeedback/models.py:22
+msgid "adjudicator test score histories"
+msgstr "تواريخ درجات الحكم"
+
+#: adjfeedback/models.py:30
+msgid "question"
+msgstr "سؤال "
+
+#: adjfeedback/models.py:32
+msgid "feedback"
+msgstr "تغذية راجعة "
+
+#: adjfeedback/models.py:43 adjfeedback/models.py:51 adjfeedback/models.py:59
+#: adjfeedback/models.py:67
+msgid "answer"
+msgstr "جواب "
+
+#: adjfeedback/models.py:46
+msgid "adjudicator feedback boolean answer"
+msgstr "اجابة الحكم حول التغذية الراجعة "
+
+#: adjfeedback/models.py:47
+msgid "adjudicator feedback boolean answers"
+msgstr "اجابة الحكم حول التغذية الراجعة "
+
+#: adjfeedback/models.py:54
+msgid "adjudicator feedback integer answer"
+msgstr "اجابة الحكم حول التغذية الراجعة "
+
+#: adjfeedback/models.py:55
+msgid "adjudicator feedback integer answers"
+msgstr "اجابة الحكم حول التغذية الراجعة "
+
+#: adjfeedback/models.py:62
+msgid "adjudicator feedback float answer"
+msgstr "اجابة الحكم العامة حول التغذية الراجعة"
+
+#: adjfeedback/models.py:63
+msgid "adjudicator feedback float answers"
+msgstr "اجابة الحكم العامة حول التغذية الراجعة "
+
+#: adjfeedback/models.py:70
+msgid "adjudicator feedback string answer"
+msgstr "اجابة الحكم حول التغذية الراجعة "
+
+#: adjfeedback/models.py:71
+msgid "adjudicator feedback string answers"
+msgstr "اجابة الحكم حول التغذية الراجعة "
+
+#: adjfeedback/models.py:89
+msgid "checkbox"
+msgstr "صندوق الاختيارات "
+
+#: adjfeedback/models.py:90
+msgid "yes/no (dropdown)"
+msgstr "نعم/لا"
+
+#: adjfeedback/models.py:91
+msgid "integer (textbox)"
+msgstr ""
+
+#: adjfeedback/models.py:92
+msgid "integer scale"
+msgstr ""
+
+#: adjfeedback/models.py:93
+msgid "float"
+msgstr "عام "
+
+#: adjfeedback/models.py:94 adjfeedback/models.py:126
+msgid "text"
+msgstr "نص"
+
+#: adjfeedback/models.py:95
+msgid "long text"
+msgstr "نص طويل "
+
+#: adjfeedback/models.py:96
+msgid "select one"
+msgstr "اختيار واحد"
+
+#: adjfeedback/models.py:97
+msgid "select multiple"
+msgstr "اختيار متعدد "
+
+#: adjfeedback/models.py:122
+msgid "tournament"
+msgstr "دوري"
+
+#: adjfeedback/models.py:124
+msgid "sequence number"
+msgstr "الرقم المتسلسل "
+
+#: adjfeedback/models.py:127
+msgid ""
+"The question displayed to participants, e.g., \"Did you agree with the "
+"decision?\""
+msgstr "السؤال المعروض على المشاركين، على سبيل المثال، \"هل توافق على القرار؟\""
+
+#: adjfeedback/models.py:129
+msgid "name"
+msgstr "اسم "
+
+#: adjfeedback/models.py:130
+msgid "A short name for the question, e.g., \"Agree with decision\""
+msgstr "سؤال قصير على سبيل المثال \" موافق على القرار \" "
+
+#: adjfeedback/models.py:132
+msgid "reference"
+msgstr "مرجع "
+
+#: adjfeedback/models.py:133
+msgid "Code-compatible reference, e.g., \"agree_with_decision\""
+msgstr ""
+
+#: adjfeedback/models.py:136
+msgid "from adjudicator"
+msgstr "من الحكم "
+
+#: adjfeedback/models.py:137
+msgid "Adjudicators should be asked this question (about other adjudicators)"
+msgstr "سؤال حكم عن الاخر"
+
+#: adjfeedback/models.py:139
+msgid "from team"
+msgstr "من الفريق "
+
+#: adjfeedback/models.py:140
+msgid "Teams should be asked this question"
+msgstr "سؤال الفريق "
+
+#: adjfeedback/models.py:143
+msgid "answer type"
+msgstr "نوع الجواب "
+
+#: adjfeedback/models.py:145
+msgid "required"
+msgstr "مطلوب "
+
+#: adjfeedback/models.py:148
+msgid "minimum value"
+msgstr "أقل قيمة"
+
+#: adjfeedback/models.py:149
+msgid ""
+"Minimum allowed value for numeric fields (ignored for text or boolean "
+"fields)"
+msgstr "الحد الأدنى للقيمة المسموح بها للحقول الرقمية"
+
+#: adjfeedback/models.py:151
+msgid "maximum value"
+msgstr "أعلى قيمة"
+
+#: adjfeedback/models.py:152
+msgid ""
+"Maximum allowed value for numeric fields (ignored for text or boolean "
+"fields)"
+msgstr "الحد الأعلى للقيمة المسموح بها للحقول الرقمية"
+
+#: adjfeedback/models.py:159
+msgid "choices"
+msgstr "أختيارات "
+
+#: adjfeedback/models.py:160
+msgid ""
+"Permissible choices for select one/multiple fields, separated by '//' "
+"(ignored for other fields)"
+msgstr ""
+
+#: adjfeedback/models.py:165
+msgid "adjudicator feedback question"
+msgstr "سؤال المحكم في التغذية الراجعة"
+
+#: adjfeedback/models.py:166
+msgid "adjudicator feedback questions"
+msgstr "جواب للتغذية الراجعة من المحكم "
+
+#: adjfeedback/models.py:225
+msgid "adjudicator feedback"
+msgstr "التعذية الراجعة من المحكم "
+
+#: adjfeedback/models.py:226
+msgid "adjudicator feedbacks"
+msgstr "التغذيات الراجعة من المحكم "
+
+#: adjfeedback/models.py:273
+msgid "Either the source adjudicator or source team wasn't specified."
+msgstr ""
+
+#: adjfeedback/models.py:276
+msgid "There was both a source adjudicator and a source team."
+msgstr ""
+
+#: adjfeedback/models.py:278
+msgid "Adjudicator did not see this debate."
+msgstr "الحكم لم يشاهد هذه المناظرة "
+
+#: adjfeedback/tables.py:105
+msgid "Feedback Per Round"
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html:5
+msgid "Enter Feedback"
+msgstr "أدخل التغذية الراجعة"
+
+#: adjfeedback/templates/enter_feedback.html:9
+#, python-format
+msgid "Add Feedback from %(source_name)s"
+msgstr "أضف تغذية راجعة من %(source_name)s"
+
+#: adjfeedback/templates/enter_feedback.html:13
+#: adjfeedback/templates/feedback_base.html:39
+msgid "Add Feedback"
+msgstr "أضف تغذية راجعة "
+
+#: adjfeedback/templates/enter_feedback.html:21
+msgid ""
+"There are no feedback options because no rounds have been released to the "
+"public yet. Check back when they have!"
+msgstr ""
+
+#: adjfeedback/templates/enter_feedback.html:34
+msgid ""
+"There are some problems with this feedback submission. Please review and "
+"correct them."
+msgstr "هناك بعض المشاكل في التغذية الراجعة يرجى مراجعتهم "
+
+#: adjfeedback/templates/enter_feedback.html:49
+msgid ""
+"When submitting this form your IP address will be stored for logging "
+"purposes."
+msgstr "عند إرسال هذا النموذج سيتم تخزين عنوان IP الخاص بك لأغراض التسجيل."
+
+#: adjfeedback/templates/feedback_base.html:8
+msgid "Overview"
+msgstr ""
+
+#: adjfeedback/templates/feedback_base.html:12
+msgid "Latest"
+msgstr ""
+
+#: adjfeedback/templates/feedback_base.html:16
+msgid "Unsubmitted"
+msgstr ""
+
+#: adjfeedback/templates/feedback_base.html:24
+msgid "Find by Source"
+msgstr ""
+
+#: adjfeedback/templates/feedback_base.html:28
+msgid "Find by Target"
+msgstr ""
+
+#: adjfeedback/templates/feedback_base.html:32
+msgid "Bulk Update Scores"
+msgstr ""
+
+#: adjfeedback/templates/feedback_by_source.html:12
+#, python-format
+msgid "%(source_name)s hasn't submitted any feedback yet."
+msgstr ""
+
+#: adjfeedback/templates/feedback_by_source.html:17
+#, python-format
+msgid "%(source_name)s hasn't received any feedback yet."
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:8
+msgid ""
+"This is most likely because the team or adjudicator who submitted this "
+"feedback has done submitted several times on the same person."
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:9
+msgid "Unconfirmed; will not affect this adjudicator's score."
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:18
+msgid "The score given in this piece of feedback."
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:22
+#, python-format
+msgid "Test %(test)s"
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:26
+#, python-format
+msgid "On %(adj)s <span class=\"text-secondary\">as %(as)s</span>"
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:32
+#, python-format
+msgid "In %(rname)s"
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:37
+#, python-format
+msgid ""
+"From %(source)s <span class=\"text-secondary\">their %(relationship)s</span>"
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:41
+#, python-format
+msgid "From %(source)s <span class=\"text-secondary\">who %(relationship)s</span>"
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:45
+msgid "From unknown"
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:71
+#, python-format
+msgid "Submitted %(time)s"
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html:10
+#, python-format
+msgid ""
+"The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback "
+"configuration</a> allows and expects only chairs to submit feedback (on "
+"their panellists and trainees)."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html:14
+#, python-format
+msgid ""
+"The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback "
+"configuration</a> allows and expects both chairs and panellists to submit "
+"feedback on each other, and also chairs to submit on trainees."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html:20
+#, python-format
+msgid ""
+"The current <a href=\"%(option_url)s\" class=\"alert-link\">feedback "
+"configuration</a> allows and expects all adjudicators (including trainees) "
+"to submit feedback on every other member of the panel (including trainees)."
+msgstr ""
+
+#: adjfeedback/templates/feedback_overview.html:31
+#, python-format
+msgid ""
+"There is <strong>%(nadjs_outside_range)s adjudicator</strong> with a score "
+"<strong>outside the permitted range</strong> of adjudicator scores, which is"
+" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
+" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
+" class=\"alert-link\"> feedback settings</a>."
+msgid_plural ""
+"There are <strong>%(nadjs_outside_range)s adjudicators</strong> with scores "
+"<strong>outside the permitted range</strong> of adjudicator scores, which is"
+" currently set as %(min_score)s to %(max_score)s. This can cause adjudicator"
+" auto-allocation to behave in unexpected ways. If you'd like to use a wider "
+"score range, you can configure this in <a href=\"%(feedback_settings_url)s\""
+" class=\"alert-link\"> feedback settings</a>."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:13
+#, python-format
+msgid ""
+"%(count)s adjudicator currently has a score equal to or above %(min)s and "
+"below %(max)s. That is %(percent)s%% of the adjudicator pool."
+msgid_plural ""
+"%(count)s adjudicators currently have a score equal to or above %(min)s and "
+"below %(max)s. That is %(percent)s%% of the adjudicator pool."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:27
+#, python-format
+msgid "Score Distributions (range is %(min_score)s–%(max_score)s)"
+msgstr ""
+
+#: adjfeedback/templates/overview_breakdowns.html:43
+msgid "Test"
+msgstr "تجربة "
+
+#: adjfeedback/templates/overview_breakdowns.html:49
+msgid "Feedback"
+msgstr "تغذية راجعة "
+
+#: adjfeedback/templates/overview_breakdowns.html:53
+#, python-format
+msgid ""
+"The proportion of an adjudicator's score determined by feedback vs the test "
+"is set on a per-round basis. This is the mix for the current round "
+"(%(round)s)."
+msgstr ""
+
+#: adjfeedback/templates/overview_breakdowns.html:57
+msgid "Score Ratio"
+msgstr "مجال الدرجات "
+
+#: adjfeedback/templates/overview_breakdowns.html:70
+#, python-format
+msgid ""
+"There is %(c_chairs)s debate per round, so there needs to be %(c_chairs)s "
+"chair."
+msgid_plural ""
+"There are %(c_chairs)s debates per round, so there need to be %(c_chairs)s "
+"chairs."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:76
+#, python-format
+msgid ""
+"There is %(c_debates)s debate per round, but only %(c_chairs)s above the "
+"minimum voting score."
+msgid_plural ""
+"There are %(c_debates)s debates per round, but only %(c_chairs)s above the "
+"minimum voting score."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:83
+#, python-format
+msgid "%(c_chairs)s chair"
+msgid_plural "%(c_chairs)s chairs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:93
+msgid ""
+"All adjudicators with a score high enough to vote, but who aren't allocated "
+"as chairs, are allocated as panellists by the auto-allocator."
+msgstr ""
+"ويتم تخصيص جميع المحكمين الذين يحصلون على درجة عالية بما فيه الكفاية "
+"للتصويت، "
+
+#: adjfeedback/templates/overview_breakdowns.html:97
+#, python-format
+msgid "%(c_panellists)s panellist"
+msgid_plural "%(c_panellists)s panellists"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:107
+#, python-format
+msgid ""
+"Adjudicators are allocated as trainees by the auto-allocator if their score "
+"is less than the 'minimum voting score' (currently %(min_voting)s) set in "
+"this tournament's Draw Rules configuration."
+msgstr ""
+
+#: adjfeedback/templates/overview_breakdowns.html:112
+#, python-format
+msgid "%(c_trainees)s trainee"
+msgid_plural "%(c_trainees)s trainees"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/templates/overview_breakdowns.html:121
+#, python-format
+msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
+msgstr ""
+
+#: adjfeedback/templates/update_adjudicator_scores.html:4
+#: adjfeedback/templates/update_adjudicator_scores.html:6
+msgctxt "page title"
+msgid "Update Adjudicator Scores"
+msgstr ""
+
+#: adjfeedback/templates/update_adjudicator_scores.html:11
+#, python-format
+msgid ""
+"There aren't any adjudicators in this tournament, so you can't update any "
+"scores. You might want to <a href=\"%(import_url)s\" class=\"alert-"
+"link\">import some adjudicators</a> first."
+msgstr ""
+
+#: adjfeedback/templates/update_adjudicator_scores.html:28
+msgid ""
+"Paste a list of adjudicators' names and their new scores, in the format: "
+"<code>adjudicator,score</code>. For example:"
+msgstr ""
+
+#: adjfeedback/templates/update_adjudicator_scores.html:40
+msgid ""
+"The adjudicators' names must match their names in the tab system exactly."
+msgstr ""
+
+#: adjfeedback/templates/update_adjudicator_scores.html:47
+msgid "There are some problems with the data on this form:"
+msgstr ""
+
+#: adjfeedback/templates/update_adjudicator_scores.html:58
+msgid "Submit"
+msgstr ""
+
+#: adjfeedback/views.py:120
+msgid "Feedback Overview"
+msgstr ""
+
+#: adjfeedback/views.py:146
+msgid "Find Feedback on Adjudicator"
+msgstr ""
+
+#: adjfeedback/views.py:157 adjfeedback/views.py:183 adjfeedback/views.py:200
+#, python-format
+msgid "%(count)d feedback"
+msgid_plural "%(count)d feedbacks"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: adjfeedback/views.py:160 adjfeedback/views.py:188 adjfeedback/views.py:205
+msgid "Feedbacks"
+msgstr ""
+
+#: adjfeedback/views.py:167
+msgid "Find Feedback"
+msgstr ""
+
+#: adjfeedback/views.py:271
+msgid "Latest Feedback"
+msgstr ""
+
+#: adjfeedback/views.py:272
+msgid "(30 most recent)"
+msgstr ""
+
+#: adjfeedback/views.py:282
+msgid "Important Feedback"
+msgstr ""
+
+#: adjfeedback/views.py:283
+msgid "(rating was much higher/lower than expected)"
+msgstr ""
+
+#: adjfeedback/views.py:350
+msgid "A Team"
+msgstr "فريق"
+
+#: adjfeedback/views.py:355
+msgid "Team"
+msgstr "فريق"
+
+#: adjfeedback/views.py:362 adjfeedback/views.py:387
+msgid "Institution"
+msgstr "مؤسسة"
+
+#: adjfeedback/views.py:370
+msgid "An Adjudicator"
+msgstr "محكم"
+
+#: adjfeedback/views.py:380
+msgid "Adjudicator"
+msgstr "محكم "
+
+#: adjfeedback/views.py:667
+msgid "Feedback Progress"
+msgstr ""
+
+#: adjfeedback/views.py:735
+#, python-format
+msgid "Updated test scores for %(count)d adjudicators."
+msgstr ""

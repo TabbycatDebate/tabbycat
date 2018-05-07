@@ -36,7 +36,7 @@
     <div class="row">
       <div class="col mb-3 mt-3">
 
-          <draw-header :round-info="roundInfo" @resort="updateSorting"
+         <draw-header :round-info="roundInfo" @resort="updateSorting"
                        :sort-key="sortKey" :sort-order="sortOrder">
 
             <div slot="hbracket"></div>
@@ -47,10 +47,11 @@
             <template slot="hteams">
               <div class="vue-sortable thead flex-cell flex-12"
                    v-for="position in teamPositions" @click="updateSorting(position)">
-                <span>{{ position }}</span>
-                <div :class="sortClasses(position)">
-                  <span class="sorting-placeholder-for-width"></span>
-                  <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+                <div class="d-flex align-items-end">
+                  <span>{{ position.toUpperCase() }}</span>
+                  <div :class="sortClasses(position)">
+                    <i data-feather="chevrons-down"></i><i data-feather="chevrons-up"></i>
+                  </div>
                 </div>
               </div>
             </template>
@@ -110,22 +111,22 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import TeamMovingMixin from '../../templates/ajax/TeamMovingMixin.vue'
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import DraggableTeam from '../../templates/draganddrops/DraggableTeam.vue'
 import DrawSidesStatus from '../../templates/draw/DrawSidesStatus.vue'
 import FindDebateTeamMixin from '../../templates/draw/FindDebateTeamMixin.vue'
-import _ from 'lodash'
 
 export default {
   mixins: [TeamMovingMixin, DrawContainerMixin, FindDebateTeamMixin],
   components: { DraggableTeam, DrawSidesStatus },
   props: ['saveSidesStatusUrl'],
   computed: {
-    unallocatedTeamsByWins: function() {
+    unallocatedTeamsByWins: function () {
       return _.reverse(_.sortBy(this.unallocatedItems, ['wins']))
     },
-    allTeamsById: function() {
+    allTeamsById: function () {
       return _.keyBy(this.teams.concat(this.unallocatedItems), 'id')
     },
   },

@@ -1,18 +1,18 @@
 <script>
-import AjaxMixin from '../ajax/AjaxMixin.vue'
 import _ from 'lodash'
+import AjaxMixin from '../ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],
   methods: {
-    niceNameForDebate: function(debateId) {
+    niceNameForDebate: function (debateId) {
       if (debateId === 'unused') {
         return 'unused'
       }
       var debate = this.debatesById[debateId]
       // Used for debugging
       var niceName = "debate " + debate.id + " ("
-      _.forEach(debate.debateTeams, function(dt) {
+      _.forEach(debate.debateTeams, function (dt) {
         if (dt.team !== null) {
           niceName += dt.team.short_name + ", "
         }
@@ -65,14 +65,14 @@ export default {
     postModifiedDebates(debatesToSave, addToUnused, removeFromUnused, reallocateToPanel, messageStart) {
       var self = this
       // Lock the debate and unused items to prevent edits
-      _.forEach(debatesToSave, function(debateToSave) {
+      _.forEach(debatesToSave, function (debateToSave) {
         self.setLocked(debateToSave, self.debatesById, true)
       })
-      _.forEach(removeFromUnused, function(itemToUse) {
+      _.forEach(removeFromUnused, function (itemToUse) {
         self.setLocked(itemToUse, self.unallocatedById, true)
       })
       // Issue an AJAX request for each debate
-      _.forEach(debatesToSave, function(debateToSave) {
+      _.forEach(debatesToSave, function (debateToSave) {
         var message = messageStart + self.niceNameForDebate(debateToSave.id)
         self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message,
                       self.processSaveSuccess, self.processSaveFailure,
@@ -81,7 +81,7 @@ export default {
                         'reallocateToPanel': reallocateToPanel })
       })
     },
-    processSaveSuccess: function(dataResponse, savedDebate, returnPayload) {
+    processSaveSuccess: function (dataResponse, savedDebate, returnPayload) {
       // Replace old debate object with new one
       var oldDebateIndex = _.findIndex(this.debates, { 'id': savedDebate.id})
       if (oldDebateIndex !== -1) {
@@ -98,7 +98,7 @@ export default {
           newDebate.liveness = savedDebate.liveness
 
           // For teams they dont change so we can use the global variable
-          newDebate.debateTeams = _.map(newDebate.debateTeams, function(dt) {
+          newDebate.debateTeams = _.map(newDebate.debateTeams, function (dt) {
             if (dt.team !== null) {
               var id = dt.team.id
               if (_.has(self.teamsById, id)) {
@@ -112,7 +112,7 @@ export default {
 
           // For adjudicators we saved/stored a list of all adjs when saving and need to restore
           var originalAdjsById = returnPayload.reallocateToPanel
-          newDebate.debateAdjudicators = _.map(newDebate.debateAdjudicators, function(da) {
+          newDebate.debateAdjudicators = _.map(newDebate.debateAdjudicators, function (da) {
             var id = da.adjudicator.id
             if (_.has(originalAdjsById, id)) {
               da.adjudicator = originalAdjsById[id]
@@ -130,18 +130,18 @@ export default {
         console.warn("    VUE: Shouldn't happen; couldnt find old debates position")
       }
       // Remove/add relevant items to unused area
-      _.forEach(returnPayload.addToUnused, function(unusedItem) {
+      _.forEach(returnPayload.addToUnused, function (unusedItem) {
         self.unallocatedItems.push(unusedItem)
         unusedItem.locked = false
       })
-      _.forEach(returnPayload.removeFromUnused, function(usedItem) {
+      _.forEach(returnPayload.removeFromUnused, function (usedItem) {
         self.unallocatedItems.splice(self.unallocatedItems.indexOf(usedItem), 1)
       })
     },
-    processSaveFailure: function(unsavedDebate, returnPayload) {
+    processSaveFailure: function (unsavedDebate, returnPayload) {
       this.setLocked(unsavedDebate, this.debatesById, false)
       var self = this
-      _.forEach(returnPayload.removeFromUnused, function(itemToUse) {
+      _.forEach(returnPayload.removeFromUnused, function (itemToUse) {
         self.setLocked(itemToUse, self.unallocatedById, false)
       })
     }
