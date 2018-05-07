@@ -4,7 +4,7 @@ Change Log
 
 2.1.0 (Japanese Bobtail)
 ------------------------
-*Release date: TBA*
+*Release date: 7 May 2018
 
 - Added an introductory modal for the adjudicator allocation page to help outline how the features and workflow operate
 - Added an automated method for assigning importances to debates using their bracket or 'liveness'. This should allow smaller tournaments to more easily assign importances and save time for larger tournaments that do so
@@ -17,7 +17,7 @@ Change Log
     - Ballot check-ins have been converted to this new method, and now all printed ballots will contain the barcodes needed to scan them
     - Venue check-ins have been added alongside the standard 'person' check-ins to allow you to track a room's status at the start of the day or round-by-round
 - Added (partial) translations in French, Spanish and Arabic
-    - Users can now use a link in the footer to switch the site's language into French, Spanish, or Arabic. By default Tabbycat should also match your browser's language and so automatically apply those languages if it matches.
+    - Users can now use a link in the footer to switch the site's language into French, Spanish, or Arabic. By default Tabbycat should also match your browser's language and so automatically apply those languages if it matches
     - Our translations are generously provided by volunteers, but (so far) do not cover all of the interface text within Tabbycat. If you're interested in helping to translate new or existing languages please get in touch!
     - Thanks to the excellent team at QatarDebate for contributing the Arabic translations, and to Alejandro, Hernando, Julian and Zoe for contributing the Spanish translations.
 - Added a new (beta) feature: allocation 'sharding'
