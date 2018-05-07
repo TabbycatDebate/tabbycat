@@ -96,7 +96,7 @@ Translations
 The backend's translation files can be updated from the ``tabbycat`` directory using one or more of the supporting language codes (see settings.py)::
 
     $ dj makemessages -l es
-    
+
 To do more than one language, just specify ``-l`` multiple times, _e.g._ ``-les -lar``.
 
 These can then be compiled using::
@@ -131,6 +131,5 @@ Release Checklist
 9. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
 10. Back-merge ``master`` to the ``kitten`` branch
 11. Back-merge ``develop`` to the in-progress feature branches
-12. Push ``master`` to the release pipeline repository
-13. Issue a formal release with change notes on GitHub
-14. Post change notes on the Facebook page/group
+12. Issue a formal release with change notes on GitHub
+13. Post change notes on the Facebook page/group
