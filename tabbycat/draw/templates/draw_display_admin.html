@@ -144,7 +144,7 @@
             {% include "components/item-info.html" with type="warning" %}
           {% endif %}
 
-          {% include "components/item-action.html" with type="primary" id="triggerReleaseDrawForm" url="" text=release_text %}
+          {% include "components/item-action.html" with to_complete=True id="triggerReleaseDrawForm" url="" text=release_text %}
 
         {% else %}
 
@@ -249,7 +249,7 @@
           {% endif %}
 
 
-          {% include "components/item-action.html" with type="primary" id="triggerReleaseMotionsForm" url="" text=unrelease_text %}
+          {% include "components/item-action.html" with to_complete=True id="triggerReleaseMotionsForm" url="" text=unrelease_text %}
 
         {% endif %}
       </div>

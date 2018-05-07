@@ -396,7 +396,7 @@ msgstr "Utilizar este idioma"
 
 #: templates/nav/admin_nav.html:33
 msgid "Admin Area"
-msgstr "Área de administración"
+msgstr "Área de administrador"
 
 #: templates/nav/admin_nav.html:37
 msgid "Assistant Area"
@@ -417,7 +417,7 @@ msgstr "Configuración"
 
 #: templates/nav/admin_nav.html:65
 msgid "Configuration"
-msgstr "Opciones"
+msgstr "Parámetros"
 
 #: templates/nav/admin_nav.html:68
 msgid "Import Data"

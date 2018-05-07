@@ -140,6 +140,7 @@ class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BasePublicDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
+    @property
     def round(self):
         return None
 
