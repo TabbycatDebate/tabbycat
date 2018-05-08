@@ -9,7 +9,7 @@ flake8-quotes==1.0.0                    # Flake plugin for quotes
 pep8-naming==0.5.0                      # Flake plugin for naming conventions
 selenium==3.11.0                        # Functional testing (in here for CI tests)
 chromedriver_installer==0.0.6           # Functional testing Chrome interface
-transifex-client==3.0.4                 # Translations
+transifex-client==0.13.3                # Translations
 
 # Documentation Dependencies
 -r docs/requirements.txt                # Import Sphinx dependencies
