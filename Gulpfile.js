@@ -133,6 +133,10 @@ gulp.task('jsi18n-compile', function() {
   gulp.src(['tabbycat/locale/jsi18n/es/djangojs.js'])
     .pipe(isProduction ? uglify() : gutil.noop())
     .pipe(gulp.dest(outputDir + '/jsi18n/es/'))
+  // JA
+  gulp.src(['tabbycat/locale/jsi18n/ja/djangojs.js'])
+    .pipe(isProduction ? uglify() : gutil.noop())
+    .pipe(gulp.dest(outputDir + '/jsi18n/ja/'))
 });
 
 gulp.task("js-compile", function() {
