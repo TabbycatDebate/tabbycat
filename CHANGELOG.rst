@@ -8,6 +8,7 @@ Change Log
 *Release date: TBA*
 
 - The Scan Identifiers page now orders check-ins from top to bottom
+- The Scan Identifiers now plays different sounds for failed check-ins
 
 
 2.1.0 (Japanese Bobtail)

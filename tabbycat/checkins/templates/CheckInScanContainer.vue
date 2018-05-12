@@ -49,8 +49,15 @@ export default {
         this.scanUrl, payload, message, this.finishCheckIn, this.failCheckIn,
         null, false,
       )
+      this.barcode = '' // Reset
+      if (!this.liveScanning) {
+        this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
+      }
+    },
+    playSound: function (elementID) {
       // Audio Problem
-      var promise = document.getElementById('finishedScanSound').play()
+      var promise = document.getElementById(elementID).play()
+      console.log(promise)
       if (promise !== undefined) {
         promise.catch(error => {
           // Auto-play was prevented
@@ -58,18 +65,16 @@ export default {
           console.log('Safari autoplay ... needs permission for sound')
         })
       }
-      this.barcode = '' // Reset
-      if (!this.liveScanning) {
-        this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
-      }
     },
     finishCheckIn: function (dataResponse, payload, returnPayload) {
       var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]
-      $.fn.showAlert("success", message, 0)
+      $.fn.showAlert('success', message, 0)
+      this.playSound('finishedScanSound')
     },
     failCheckIn: function (payload, returnPayload) {
       var message = 'Failed to check in identifier ' + payload.barcodes[0] + '. Maybe it was misspelt?'
-      $.fn.showAlert("danger", message, 0)
+      $.fn.showAlert('danger', message, 0)
+      this.playSound('failedScanSound')
     },
     toggleScan: function () {
       this.liveScanning = !this.liveScanning
