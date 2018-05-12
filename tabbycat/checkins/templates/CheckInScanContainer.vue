@@ -8,12 +8,21 @@
              class="form-control" ref="entry" autofocus>
     </div>
     <div class="list-group-item pb-3">
-      <button v-if="!liveScanning" class="btn btn-block btn-success" @click="toggleScan">
-        Scan Using Camera
-      </button>
-      <button v-if="liveScanning" class="btn btn-block btn-danger" @click="toggleScan">
-        Stop Camera Scan
-      </button>
+      <div class="d-flex">
+        <div class="flex-fill pr-2">
+          <button v-if="!liveScanning" class="btn btn-block btn-success" @click="toggleScan">
+            Scan Using Camera
+          </button>
+          <button v-if="liveScanning" class="btn btn-block btn-danger" @click="toggleScan">
+            Stop Camera Scan
+          </button>
+        </div>
+        <div v-if="!sound" class="flex-fill pl-2">
+          <button class="btn btn-block btn-success" @click="unMute">
+            Turn On Sounds
+          </button>
+        </div>
+      </div>
       <div id="scanCanvas" v-if="liveScanning"
            class="scan-container ml-auto mt-3 mr-auto">
       </div>
@@ -36,6 +45,7 @@ export default {
       barcode: '',
       liveScanning: false,
       scannedResults: [],
+      sound: false,
     }
   },
   props: {
@@ -53,6 +63,11 @@ export default {
       if (!this.liveScanning) {
         this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
       }
+    },
+    unMute: function(event) {
+      document.getElementById('finishedScanSound').muted = false
+      document.getElementById('failedScanSound').muted = false
+      this.sound = true
     },
     playSound: function (elementID) {
       // Audio Problem

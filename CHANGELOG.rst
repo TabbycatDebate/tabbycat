@@ -9,6 +9,7 @@ Change Log
 
 - The Scan Identifiers page now orders check-ins from top to bottom
 - The Scan Identifiers now plays different sounds for failed check-ins
+- The Scan Identifiers now has a toggle for sounds; allowing it to work in browsers like Safari that block auto-playing audio
 
 
 2.1.0 (Japanese Bobtail)
