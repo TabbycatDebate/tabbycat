@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+
+2.1.1
+-----
+*Release date: TBA*
+
+- The Scan Identifiers page now orders check-ins from top to bottom
+
+
 2.1.0 (Japanese Bobtail)
 ------------------------
 *Release date: 7 May 2018*
