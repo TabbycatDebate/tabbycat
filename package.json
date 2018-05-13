@@ -16,7 +16,7 @@
     "babel-runtime": "^6.26.0",
     "babelify": "^8.0.0",
     "bootstrap": "^4.1.1",
-    "browserify": "^16.1.1",
+    "browserify": "^16.2.2",
     "d3": "^5.1.0",
     "django-channels": "^1.1.8",
     "envify": "^4.1.0",
