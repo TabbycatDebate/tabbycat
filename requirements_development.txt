@@ -7,7 +7,7 @@ flake8==3.5.0                           # For testing/linting
 flake8-import-order==0.17.1             # Flake plugin for import order
 flake8-quotes==1.0.0                    # Flake plugin for quotes
 pep8-naming==0.6.1                      # Flake plugin for naming conventions
-selenium==3.11.0                        # Functional testing (in here for CI tests)
+selenium==3.12.0                        # Functional testing (in here for CI tests)
 chromedriver_installer==0.0.6           # Functional testing Chrome interface
 transifex-client==0.13.3                # Translations
 
