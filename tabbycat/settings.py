@@ -20,9 +20,9 @@ DEBUG_ASSETS = DEBUG
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.1.0'
+TABBYCAT_VERSION = '2.1.1'
 TABBYCAT_CODENAME = 'Japanese Bobtail'
-READTHEDOCS_VERSION = 'v2.1.0'
+READTHEDOCS_VERSION = 'v2.1.1'
 
 # ==============================================================================
 # Internationalization and Localization
