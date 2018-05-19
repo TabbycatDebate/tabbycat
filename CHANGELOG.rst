@@ -2,9 +2,19 @@
 Change Log
 ==========
 
+
+2.1.1
+-----
+*Release date: 19 May 2018*
+
+- The Scan Identifiers page now orders check-ins from top to bottom
+- The Scan Identifiers now plays different sounds for failed check-ins
+- The Scan Identifiers now has a toggle for sounds; allowing it to work in browsers like Safari that block auto-playing audio
+
+
 2.1.0 (Japanese Bobtail)
 ------------------------
-*Release date: 7 May 2018
+*Release date: 7 May 2018*
 
 - Added an introductory modal for the adjudicator allocation page to help outline how the features and workflow operate
 - Added an automated method for assigning importances to debates using their bracket or 'liveness'. This should allow smaller tournaments to more easily assign importances and save time for larger tournaments that do so

@@ -20,9 +20,9 @@ DEBUG_ASSETS = DEBUG
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.1.0'
+TABBYCAT_VERSION = '2.1.1'
 TABBYCAT_CODENAME = 'Japanese Bobtail'
-READTHEDOCS_VERSION = 'v2.1.0'
+READTHEDOCS_VERSION = 'v2.1.1'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -162,7 +162,7 @@ CACHES = {
     }
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # ==============================================================================
 # Static Files and Compilation
@@ -241,8 +241,8 @@ for app in TABBYCAT_APPS:
         'handlers': ['console', 'sentry'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
-
 # ==============================================================================
+
 # Scout
 # ==============================================================================
 

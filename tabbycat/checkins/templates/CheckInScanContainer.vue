@@ -8,12 +8,21 @@
              class="form-control" ref="entry" autofocus>
     </div>
     <div class="list-group-item pb-3">
-      <button v-if="!liveScanning" class="btn btn-block btn-success" @click="toggleScan">
-        Scan Using Camera
-      </button>
-      <button v-if="liveScanning" class="btn btn-block btn-danger" @click="toggleScan">
-        Stop Camera Scan
-      </button>
+      <div class="d-flex">
+        <div class="flex-fill pr-2">
+          <button v-if="!liveScanning" class="btn btn-block btn-success" @click="toggleScan">
+            Scan Using Camera
+          </button>
+          <button v-if="liveScanning" class="btn btn-block btn-danger" @click="toggleScan">
+            Stop Camera Scan
+          </button>
+        </div>
+        <div v-if="!sound" class="flex-fill pl-2">
+          <button class="btn btn-block btn-success" @click="unMute">
+            Turn On Sounds
+          </button>
+        </div>
+      </div>
       <div id="scanCanvas" v-if="liveScanning"
            class="scan-container ml-auto mt-3 mr-auto">
       </div>
@@ -36,6 +45,7 @@ export default {
       barcode: '',
       liveScanning: false,
       scannedResults: [],
+      sound: false,
     }
   },
   props: {
@@ -49,8 +59,20 @@ export default {
         this.scanUrl, payload, message, this.finishCheckIn, this.failCheckIn,
         null, false,
       )
+      this.barcode = '' // Reset
+      if (!this.liveScanning) {
+        this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
+      }
+    },
+    unMute: function(event) {
+      document.getElementById('finishedScanSound').muted = false
+      document.getElementById('failedScanSound').muted = false
+      this.sound = true
+    },
+    playSound: function (elementID) {
       // Audio Problem
-      var promise = document.getElementById('finishedScanSound').play()
+      var promise = document.getElementById(elementID).play()
+      console.log(promise)
       if (promise !== undefined) {
         promise.catch(error => {
           // Auto-play was prevented
@@ -58,18 +80,16 @@ export default {
           console.log('Safari autoplay ... needs permission for sound')
         })
       }
-      this.barcode = '' // Reset
-      if (!this.liveScanning) {
-        this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
-      }
     },
     finishCheckIn: function (dataResponse, payload, returnPayload) {
       var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]
-      $.fn.showAlert("success", message, 0)
+      $.fn.showAlert('success', message, 0)
+      this.playSound('finishedScanSound')
     },
     failCheckIn: function (payload, returnPayload) {
       var message = 'Failed to check in identifier ' + payload.barcodes[0] + '. Maybe it was misspelt?'
-      $.fn.showAlert("danger", message, 0)
+      $.fn.showAlert('danger', message, 0)
+      this.playSound('failedScanSound')
     },
     toggleScan: function () {
       this.liveScanning = !this.liveScanning
