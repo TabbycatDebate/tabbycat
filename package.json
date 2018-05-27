@@ -23,7 +23,7 @@
     "es6-promise": "^4.2.4",
     "eslint": "^4.19.1",
     "event-stream": "^3.3.4",
-    "feather-icons": "^4.7.0",
+    "feather-icons": "^4.7.3",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.9.4",
     "gulp-concat": "^2.6.1",
