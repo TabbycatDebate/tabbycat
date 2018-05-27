@@ -30,7 +30,7 @@ django_redis==4.9.0                     # Use redis for cache (on heroku; local 
 
 # Channels
 channels==2.1.1                         # Channels
-channels_redis==2.1.1                   # Channels Layer
+channels_redis==2.2.1                   # Channels Layer
 
 # Misc
 django-debug-toolbar==1.9.1             # Debug; but useful to run in prod sometimes
