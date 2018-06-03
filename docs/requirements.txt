@@ -1,5 +1,5 @@
 # Documentation Dependencies
 
-sphinx==1.7.4
+sphinx==1.7.5
 sphinx-autobuild==0.7.1
 sphinx_rtd_theme==0.3.1
