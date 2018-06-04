@@ -156,7 +156,9 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['motions'] = self.round.motion_set.all()
+        kwargs['motions_length'] = sum(len(i.text) for i in kwargs['motions'])
         kwargs['infos'] = self.round.motion_set.exclude(info_slide="")
+        kwargs['infos_length'] = sum(len(i.info_slide) for i in kwargs['infos'])
         return super().get_context_data(**kwargs)
 
 
