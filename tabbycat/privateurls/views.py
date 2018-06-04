@@ -187,6 +187,7 @@ class EmailBallotUrlsView(BaseEmailRandomisedUrlsView):
     def get_context_data(self, **kwargs):
         kwargs['nadjudicators_already_sent'] = self.get_adjudicators_to_email(
             PrivateUrlSentMailRecord.URL_TYPE_BALLOT, already_sent=True).count()
+        kwargs['tournament'] = self.tournament
         return super().get_context_data(**kwargs)
 
     def get_table(self):
@@ -207,6 +208,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
         kwargs['nadjudicators_already_sent'] = self.get_adjudicators_to_email(
             PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK, already_sent=True).count()
         kwargs['nspeakers_already_sent'] = self.get_speakers_to_email(already_sent=True).count()
+        kwargs['tournament'] = self.tournament
         return super().get_context_data(**kwargs)
 
     def get_speakers_table(self):
@@ -252,16 +254,8 @@ class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
 
         tournament = self.tournament
 
-        subject = _("Your personal ballot submission URL for %(tournament)s")
-        message = _(
-            "Hi %(name)s,\n\n"
-            "At %(tournament)s, we are using an online ballot system. You can submit "
-            "your ballots at the following URL. This URL is unique to you — do not share it with "
-            "anyone, as anyone who knows it can submit ballots on your behalf. This URL "
-            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
-            "Your personal private ballot submission URL is:\n"
-            "%(url)s"
-        )
+        subject = request.POST['subject']
+        message = request.POST['message']
         adjudicators = self.get_adjudicators_to_email(PrivateUrlSentMailRecord.URL_TYPE_BALLOT)
 
         try:
@@ -295,17 +289,8 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
         tournament = self.tournament
         success = True
 
-        subject = _("Your team's feedback submission URL for %(tournament)s")
-        message = _(
-            "Hi %(name)s,\n\n"
-            "At %(tournament)s, we are using an online adjudicator feedback system. As part of "
-            "%(team)s, you can submit your feedback at the following URL. This URL is unique "
-            "to you — do not share it with anyone, as anyone who knows it can submit feedback on "
-            "your team's behalf. This URL will not change throughout this tournament, so we "
-            "suggest bookmarking it.\n\n"
-            "Your team's private feedback submission URL is:\n"
-            "%(url)s"
-        )
+        subject = request.POST['subject_teams']
+        message = request.POST['message_teams']
         speakers = self.get_speakers_to_email()
 
         try:
@@ -325,16 +310,8 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
             ) % {'error': str(e)})
             success = False
 
-        subject = _("Your personal feedback submission URL for %(tournament)s")
-        message = _(
-            "Hi %(name)s,\n\n"
-            "At %(tournament)s, we are using an online adjudicator feedback system. You can submit "
-            "your feedback at the following URL. This URL is unique to you — do not share it with "
-            "anyone, as anyone who knows it can submit feedback on your behalf. This URL "
-            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
-            "Your personal private feedback submission URL is:\n"
-            "%(url)s"
-        )
+        subject = request.POST['subject_judges']
+        message = request.POST['message_judges']
         adjudicators = self.get_adjudicators_to_email(PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK)
 
         try:

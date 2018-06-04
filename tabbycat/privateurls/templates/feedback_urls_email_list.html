@@ -59,11 +59,60 @@
 
   {{ block.super }}
 
-  <form action="{% tournamenturl 'privateurls-email-feedback-send' %}" method="POST" class="mb-3">
-    {% csrf_token %}
-    <button class="btn btn-success btn-block" type="submit">
-      {% trans "Send emails with private feedback URLs to speakers and adjudicators" %}
-    </button>
-  </form>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{% trans "Email message" %}</h4>
+    </div>
+    <div class="list-group list-group-flush">
+      <form action="{% tournamenturl 'privateurls-email-feedback-send' %}" method="POST" class="mb-3">
+        {% csrf_token %}
+        <div class="list-group-item">
+          <div class="form-group">
+            <label for="id_subject_teams">{% trans "Subject line for teams" %}</label>
+            <input type="text" name="subject_teams" id="id_subject_teams" class="form-control" value="{% blocktrans trimmed %}Your team's feedback submission URL for {{ tournament }}{% endblocktrans %}">
+          </div>
+          <div class="form-group">
+            <label for="id_message_teams">{% trans "Message content" %}</label>
+            <textarea id="id_message_teams" name="message_teams" cols="40" rows="10" class="form-control">
+{% blocktrans %}Hi %name,
+
+At {{ tournament }}, we are using an online adjudicator feedback system. As part of %team, you can submit your feedback at the following URL. This URL is unique to you — do not share it with anyone, as anyone who knows it can submit feedback on your team's behalf. This URL will not change throughout this tournament, so we suggest bookmarking it.
+
+Your team's private feedback submission URL is:
+%url{% endblocktrans %}
+            </textarea>
+            <div class="text-center small text-muted">
+              {% blocktrans trimmed %}Use '%name', '%team', and '%url' as placeholders for the debater's name, their team, and their private URL, respectively in the message body.{% endblocktrans %}
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="form-group">
+            <label for="id_subject_judges">{% trans "Subject line for judges" %}</label>
+            <input type="text" name="subject_judges" id="id_subject_judges" class="form-control" value="{% blocktrans trimmed %}Your personal feedback submission URL for {{ tournament }}{% endblocktrans %}">
+          </div>
+          <div class="form-group">
+            <label for="id_message_judges">{% trans "Message content" %}</label>
+            <textarea id="id_message_judges" name="message_judges" cols="40" rows="10" class="form-control">
+{% blocktrans %}Hi %name,
+
+At {{ tournament }}, we are using an online adjudicator feedback system. You can submit your feedback at the following URL. This URL is unique to you — do not share it with anyone, as anyone who knows it can submit feedback on your behalf. This URL will not change throughout this tournament, so we suggest bookmarking it.
+
+Your personal private feedback submission URL is:
+%url{% endblocktrans %}
+            </textarea>
+            <div class="text-center small text-muted">
+              {% blocktrans trimmed %}Use '%name' and '%url' as placeholders for the judge's name and their private URL, respectively in the message body.{% endblocktrans %}
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <button class="btn btn-success btn-block" type="submit">
+            {% trans "Send emails with private ballot URLs to adjudicators" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
 {% endblock content %}
