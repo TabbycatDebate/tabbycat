@@ -11,15 +11,8 @@
   <div class="container-fluid d-flex align-items-center justify-content-center"
        style="width: 100%; height: 95vh;">
     <div>
-      <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#motionPop">
-        {% blocktrans trimmed with round_name=round.name count nmotions=motions|length %}
-          Reveal Motion for {{ round_name }}
-        {% plural %}
-          Reveal Motions for {{ round_name }}
-        {% endblocktrans %}
-      </button>
       {% if infos %}
-        <button class="btn btn-lg btn-info btn-block mt-5" data-toggle="modal" data-target="#infoPop">
+        <button class="btn btn-lg btn-info btn-block mb-5" data-toggle="modal" data-target="#infoPop">
           {% blocktrans trimmed with round_name=round.name count ninfos=infos|length %}
             Reveal Info Slide for {{ round_name }}
           {% plural %}
@@ -27,6 +20,13 @@
           {% endblocktrans %}
         </button>
       {% endif %}
+      <button class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#motionPop">
+        {% blocktrans trimmed with round_name=round.name count nmotions=motions|length %}
+          Reveal Motion for {{ round_name }}
+        {% plural %}
+          Reveal Motions for {{ round_name }}
+        {% endblocktrans %}
+      </button>
     </div>
   </div>
 
@@ -84,7 +84,7 @@
               <div class="display-4 col d-flex align-items-center">
                 <p>
                   {% if motions|length > 1 %}
-                    <span class="text-muted">{{ forloop.counter }}.</span>
+                    <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
                   <small>{{ info.info_slide }}</small>
                 </p>
