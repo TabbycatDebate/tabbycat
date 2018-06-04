@@ -32,7 +32,8 @@
 
   <div class="modal fade" id="motionPop" tabindex="-1" role="dialog" aria-labelledby="motionPop" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-      <div class="modal-content">
+      <div class="modal-content {% if motions_length > 400 %}display-6{% elif motions_length > 300 %}display-5{% elif motions_length > 160 %}display-4{% elif motions_length > 130 %}display-3{% else %}display-2{% endif %}">
+
         {% if motions|length == 0 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center">
@@ -43,7 +44,7 @@
 
         {% elif motions|length == 1 %}
 
-          <div class="modal-body d-flex align-items-center justify-content-center text-center {% if motions.0.text|length > 380 %}display-6{% elif motions.0.text|length > 280 %}display-5{% elif motions.0.text|length > 220 %}display-4{% elif motions.0.text|length > 150 %}display-3{% else %}display-2{% endif %}">
+          <div class="modal-body d-flex align-items-center justify-content-center text-center">
             {{ motions.0.text }}
           </div>
 
@@ -51,7 +52,7 @@
 
           <div class="modal-body d-flex flex-column">
             {% for m in motions %}
-              <div class="display-4 col d-flex align-items-center">
+              <div class="col d-flex align-items-center">
                 <div>
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ forloop.counter }}.</span>
@@ -69,11 +70,11 @@
 
   <div class="modal fade" id="infoPop" tabindex="-1" role="dialog" aria-labelledby="infoPop" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-      <div class="modal-content">
+      <div class="modal-content {% if infos_length > 380 %}display-6{% elif infos_length > 280 %}display-5{% elif infos_length > 160 %}display-4{% elif infos_length > 130 %}display-3{% else %}display-2{% endif %}">
 
         {% if infos|length == 1 %}
 
-          <div class="modal-body display-4 d-flex align-items-center justify-content-center text-center">
+          <div class="modal-body d-flex align-items-center justify-content-center text-center">
             <small>{{ infos.0.info_slide }}</small>
           </div>
 
@@ -81,7 +82,7 @@
 
           <div class="modal-body d-flex flex-column">
             {% for info in infos %}
-              <div class="display-4 col d-flex align-items-center">
+              <div class="col d-flex align-items-center">
                 <p>
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ info.seq }}.</span>
