@@ -1,11 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from dynamic_preferences.models import PerInstancePreferenceModel
-from dynamic_preferences.registries import PerInstancePreferenceRegistry, preference_models
 
 from tournaments.models import Tournament
 
-tournament_preferences_registry = PerInstancePreferenceRegistry()
+from .registries import tournament_preferences_registry
 
 
 class TournamentPreferenceModel(PerInstancePreferenceModel):
@@ -18,7 +17,3 @@ class TournamentPreferenceModel(PerInstancePreferenceModel):
         app_label = "options"
         verbose_name = _("tournament preference")
         verbose_name_plural = _("tournament preferences")
-
-
-preference_models.register(TournamentPreferenceModel,
-                           tournament_preferences_registry)
