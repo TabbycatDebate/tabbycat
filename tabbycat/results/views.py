@@ -28,8 +28,9 @@ from utils.tables import TabbycatTableBuilder
 from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
+from .result import DebateResult
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, populate_identical_ballotsub_lists
+from .utils import get_result_status_stats, populate_identical_ballotsub_lists, send_email_to_adjs
 
 logger = logging.getLogger(__name__)
 
@@ -273,6 +274,8 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             self.ballotsub.save()
         self.add_success_message()
         self.round = self.ballotsub.debate.round  # for LogActionMixin
+
+        send_email_to_adjs(DebateResult(self.ballotsub).as_dicts(), self.ballotsub.debate)
         return super().form_valid(form)
 
     def populate_objects(self):

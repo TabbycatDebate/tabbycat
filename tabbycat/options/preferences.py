@@ -833,6 +833,28 @@ class FeedbackReturnLocation(StringPreference):
     name = 'feedback_return_location'
     default = 'TBA'
 
+
+@tournament_preferences_registry.register
+class BallotEmailSubjectLine(StringPreference):
+    help_text = _("The subject line for emails sent to adjudicators with their submitted ballot. "
+                  "Use '%debate' as a placeholder for the associated debate")
+    verbose_name = _("Ballot receipt subject line")
+    section = data_entry
+    name = 'ballot_email_subject'
+    default = "Your ballot for %debate has been received"
+
+
+@tournament_preferences_registry.register
+class BallotEmailMessageBody(LongStringPreference):
+    help_text = _("The message body for emails sent to adjudicators with their submitted ballot. "
+                  "Use '%debate' as a placeholder for the associated debate, '%user' for the adjudicator, "
+                  "and '%scores' for the ballot values.")
+    verbose_name = _("Ballot receipt message")
+    section = data_entry
+    name = 'ballot_email_message'
+    default = "Hi %user,\n\nYour ballot for %debate has been successfully received, with these scores:\n\n%scores\n\nIf there are any problems, please contact the tab team."
+
+
 # ==============================================================================
 public_features = Section('public_features', verbose_name=_("Public Features"))
 # ==============================================================================
