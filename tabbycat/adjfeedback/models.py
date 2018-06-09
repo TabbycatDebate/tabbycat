@@ -220,6 +220,10 @@ class AdjudicatorFeedback(Submission):
     source_team = models.ForeignKey('draw.DebateTeam', models.CASCADE, blank=True, null=True,
         verbose_name=_("source team"))
 
+    ignored = models.BooleanField(default=False,
+        verbose_name=_("ignored"),
+        help_text=_("Whether the feedback should affect the judge's score"))
+
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]
         verbose_name = _("adjudicator feedback")

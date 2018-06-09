@@ -9,6 +9,11 @@
       {% trans "Unconfirmed; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
+    {% if feedback.ignored %}
+      <div class="list-group-item list-group-item-dark h6" data-toggle="tooltip">
+      {% trans "Ignored; will not affect this adjudicator's score." %}
+      </div>
+    {% endif %}
     <div class="list-group-item h5">
       <span class="badge float-right
             {% if feedback.score <= score_thresholds.low_score %}badge-danger

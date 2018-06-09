@@ -493,6 +493,7 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
         'enforce_required': False,
         'include_unreleased_draws': True,
         'use_tournament_password': False,
+        'ignored_option': True,
     }
 
     def get_team_short_name(self, team):
@@ -526,6 +527,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
         'enforce_required': True,
         'include_unreleased_draws': False,
         'use_tournament_password': True,
+        'ignored_option': False
     }
 
     def form_valid(self, form):

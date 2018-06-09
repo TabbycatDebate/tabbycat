@@ -114,6 +114,7 @@ class BaseFeedbackForm(forms.Form):
     _use_tournament_password = False
     _confirm_on_submit = False
     _enforce_required = True
+    _ignored_option = False
     question_filter = dict()
 
     def __init__(self, *args, **kwargs):
@@ -176,6 +177,9 @@ class BaseFeedbackForm(forms.Form):
         if self._use_tournament_password and self._tournament.pref('public_use_password'):
             self.fields['password'] = TournamentPasswordField(tournament=self._tournament)
 
+        if self._ignored_option:
+            self.fields['ignored'] = forms.BooleanField(label=_("Ignored"), required=False)
+
     def save_adjudicatorfeedback(self, **kwargs):
         """Saves the question fields and returns the AdjudicatorFeedback.
         To be called by save() of child classes."""
@@ -188,6 +192,7 @@ class BaseFeedbackForm(forms.Form):
             af.confirmed = True
 
         af.score = self.cleaned_data['score']
+        af.ignored = self.cleaned_data['ignored']
         af.save()
 
         for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
@@ -220,7 +225,7 @@ def make_feedback_form_class(source, tournament, *args, **kwargs):
 
 def make_feedback_form_class_for_adj(source, tournament, submission_fields, confirm_on_submit=False,
                                      enforce_required=True, include_unreleased_draws=False,
-                                     use_tournament_password=False):
+                                     use_tournament_password=False, ignored_option=False):
     """Constructs a FeedbackForm class specific to the given source adjudicator.
     Parameters are as for make_feedback_form_class."""
 
@@ -255,6 +260,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         _use_tournament_password = use_tournament_password  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
+        _ignored_option = ignored_option
         question_filter = dict(from_adj=True)
 
         target = RequiredTypedChoiceField(choices=choices, coerce=BaseFeedbackForm.coerce_target,
@@ -273,7 +279,7 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
 def make_feedback_form_class_for_team(source, tournament, submission_fields, confirm_on_submit=False,
                                       enforce_required=True, include_unreleased_draws=False,
-                                      use_tournament_password=False):
+                                      use_tournament_password=False, ignored_option=False):
     """Constructs a FeedbackForm class specific to the given source team.
     Parameters are as for make_feedback_form_class."""
 
@@ -320,6 +326,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
         _use_tournament_password = use_tournament_password  # BaseFeedbackForm setting
         _confirm_on_submit = confirm_on_submit
         _enforce_required = enforce_required
+        _ignored_option = ignored_option
         question_filter = dict(from_team=True)
 
         target = RequiredTypedChoiceField(choices=choices, coerce=BaseFeedbackForm.coerce_target)
