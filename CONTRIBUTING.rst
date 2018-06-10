@@ -24,7 +24,8 @@ Getting started with development
 ================================
 
 - To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
-- Generally we prefer that features and bug fixes are submitted as pull requests on their own branch (as described in the  `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_). Submitting against `develop` (but not `master`) is fine for small fixes and changes.
+- Please submit pull requests for features and bug fixes against `develop` (but not `master`).
+- We broadly use the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_).
 - We use Django's testing tools — it would be great if new features came with unit tests
 
     - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
