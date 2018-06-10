@@ -145,3 +145,10 @@ tournament progresses.
 .. note:: A participant's test score can, in conjunction with feedback weight, also be used as a manual override for an adjudicator's overall ranking. At several tournaments, adjudication cores have set every round's feedback weight to 0, and manually adjusted an adjudicator's test score in response to feedback they have received and reviewed. In this way complete control over every adjudicator's overall score can be exerted.
 
 .. note:: If feedback from trainee adjudicators is enabled, any scores that they submit in their feedback are not counted towards that adjudicator's overall score.
+
+Ignoring/Discarding feedback
+============================
+
+There are some cases where feedback should be discarded or ignored, but there are some differences between the two. Discarded feedback is mostly due to having another piece of feedback that supersedes the discarded ones. Ignored feedback is different as it still counts the affected feedback as submitted, just inconsequential, ignored in the adjudicator's score calculation.
+
+Feedback can be marked as discarded in the database view, under the ``confirmed`` field. It can also be marked as ignored in the same view. Controls to reverse these designations are also available there. To mark feedback as ignored, an option is available in the administrator's and assistant's feedback adding form, as well in the form of a toggle link at the bottom of each card.

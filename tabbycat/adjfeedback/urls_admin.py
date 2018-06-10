@@ -62,4 +62,9 @@ urlpatterns = [
     path('scores/bulk-update/',
         views.UpdateAdjudicatorScoresView.as_view(),
         name='adjfeedback-update-scores-bulk'),
+
+    # Ignoring/Recognizing
+    path('ignore/<int:feedback_id>',
+        views.AdminIgnoreFeedbackView.as_view(),
+        name='adjfeedback-admin-ignore-feedback'),
 ]
