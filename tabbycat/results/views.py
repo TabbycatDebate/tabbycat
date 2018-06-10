@@ -1,5 +1,6 @@
 import datetime
 import logging
+from smtplib import SMTPException
 
 from django.contrib import messages
 from django.db import ProgrammingError
@@ -266,16 +267,23 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         # Default implementation does nothing.
         pass
 
+    def send_email_receipts(self):
+        # For proper error handling for admin/assistants, overwrite this
+        send_email_to_adjs(DebateResult(self.ballotsub).as_dicts(), self.debate)
+
     def form_valid(self, form):
         self.ballotsub = form.save()
         if self.ballotsub.confirmed:
             self.ballotsub.confirmer = self.request.user
             self.ballotsub.confirm_timestamp = datetime.datetime.now()
             self.ballotsub.save()
+
+            if self.tournament.pref('enable_ballot_receipts'):
+                self.send_email_receipts()
+
         self.add_success_message()
         self.round = self.ballotsub.debate.round  # for LogActionMixin
 
-        send_email_to_adjs(DebateResult(self.ballotsub).as_dicts(), self.ballotsub.debate)
         return super().form_valid(form)
 
     def populate_objects(self):
@@ -298,7 +306,23 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return super().post(request, *args, **kwargs)
 
 
-class AdministratorBallotSetMixin(AdministratorMixin):
+class BallotEmailWithStatusMixin:
+    def send_email_receipts(self):
+        success = True
+        try:
+            send_email_to_adjs(DebateResult(self.ballotsub).as_dicts(), self.debate)
+        except SMTPException:
+            messages.error(self.request, _("There was a problem sending ballot receipts to adjudicators."))
+            success = False
+        except ConnectionError:
+            messages.error(self.request, _("There was a problem connecting to the e-mail server when trying to send ballot receipts to adjudicators."))
+            success = False
+
+        if success:
+            messages.success(self.request, _("Email receipts sent successfully."))
+
+
+class AdministratorBallotSetMixin(BallotEmailWithStatusMixin, AdministratorMixin):
     template_name = 'enter_results.html'
     tabroom = True
 
@@ -306,7 +330,7 @@ class AdministratorBallotSetMixin(AdministratorMixin):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
 
 
-class AssistantBallotSetMixin(AssistantMixin):
+class AssistantBallotSetMixin(BallotEmailWithStatusMixin, AssistantMixin):
     template_name = 'assistant_enter_results.html'
     tabroom = True
 
