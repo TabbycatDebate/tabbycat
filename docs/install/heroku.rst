@@ -237,6 +237,8 @@ By default, Heroku will automatically create a SendGrid account for you. For sma
 
 If you're running a large tournament, you may wish to use your own SendGrid account instead. The free tier probably won't suffice after the trial period, but the Essentials tier should be more than adequate. If you're a student and have the `GitHub Education Pack <https://education.github.com/pack>`_, you might find the SendGrid plan here useful.
 
+If you set up and use your own SendGrid account, you can remove the SendGrid add-on from your Heroku app. The add-on is only necessary if you wish to use Heroku's auto-created SendGrid account.
+
 To set up your app to use your own SendGrid account:
 
 .. rst-class:: spaced-list
