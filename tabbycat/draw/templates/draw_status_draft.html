@@ -3,12 +3,14 @@
 
 {% block page-subnav-sections %}
   <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-danger">
-    <i data-feather="chevron-left"></i> {% trans "Reject Draw" %}
+    <i data-feather="chevron-left"></i> {% trans "Delete Draw" %}
+  </a>
+  <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary">
+    {% trans "Edit Sides/Matchups" %}
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
-  <button class="invisible"></button>
   <form id="confirmForm" method="POST" action="{% roundurl 'draw-confirm' %}">
     {% csrf_token %}
     <button id="confirmDraw" class="btn btn-success" type="submit">

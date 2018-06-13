@@ -35,7 +35,7 @@
 
 {% block page-subnav-actions %}
 
-  {% if round.draw_status == round.STATUS_CONFIRMED or round.draw_status == round.STATUS_RELEASED %}
+  {% if round.draw_status != round.STATUS_NONE %}
     <a class="btn btn-outline-success " href="{% roundurl 'draw' round %}">
       {% trans "View Draw" %} <i data-feather="chevron-right"></i>
     </a>
