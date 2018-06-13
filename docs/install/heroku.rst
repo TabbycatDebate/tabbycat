@@ -229,3 +229,27 @@ Time zone
 ---------
 
 If you want to change the time zone you nominated during deployment, you can do so by going to the `Heroku Dashboard <https://dashboard.heroku.com/>`_, clicking on your app, going to the **Settings** tab, clicking **Reveal Config Vars** and changing the value of the ``TIME_ZONE`` variable. This value must be one of the names in the IANA tz database, *e.g.* ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``.  You can find a `list of these on Wikipedia <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in the 'TZ\*' column.
+
+SendGrid account details
+------------------------
+
+By default, Heroku will automatically create a SendGrid account for you. For small tournaments, this should work fine. For larger ones, though, SendGrid typically doesn't allow new accounts to send so many emails without additional vetting. This vetting is separate to the verification you did for your Heroku account, and as far as we're aware, it can't be done until you send your first email, by which time it's probably too late.
+
+If you're running a large tournament, you may wish to use your own SendGrid account instead. The free tier probably won't suffice after the trial period, but the Essentials tier should be more than adequate. If you're a student and have the `GitHub Education Pack <https://education.github.com/pack>`_, you might find the SendGrid plan here useful.
+
+To set up your app to use your own SendGrid account:
+
+.. rst-class:: spaced-list
+
+1. `Sign up for a SendGrid account <https://sendgrid.com/pricing/>`_, if you don't already have one.
+
+2. `Create an API key <https://app.sendgrid.com/settings/api_keys>`_ in your SendGrid account.
+
+  There are `instructions for how to do this in the SendGrid documentation <https://sendgrid.com/docs/User_Guide/Settings/api_keys.html>`_. The only permission that is needed is the "Mail Send" permission, so you can turn off all others if you want to be safe.
+
+3. Set the following config vars in Heroku Dashboard (or using the Heroku CLI, if you have it):
+
+  - ``SENDGRID_USERNAME`` should be set to ``apikey`` (not your username).
+  - ``SENDGRID_PASSWORD`` should be set to your API key, which will start with ``SG*******``.
+
+  .. warning:: The `Heroku SendGrid instructions <https://devcenter.heroku.com/articles/sendgrid#setup-api-key-environment-variable>`_ to do something with ``SENDGRID_API_KEY`` are **incorrect**. We figured this out by contacting SendGrid support staff. Use these the above config vars instead.
