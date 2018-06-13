@@ -291,7 +291,8 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         teams = Team.objects.filter(debateteam__debate__round=self.round)
         side_histories_before = get_side_history(teams, self.tournament.sides, self.round.prev.seq)
         side_histories_now = get_side_history(teams, self.tournament.sides, self.round.seq)
-        generator = TeamStandingsGenerator(('points',), ())
+        metrics = self.tournament.pref('team_standings_precedence')
+        generator = TeamStandingsGenerator(metrics[0:1], ())
         standings = generator.generate(teams, round=self.round.prev)
         draw_table = PositionBalanceReportDrawTableBuilder(view=self)
         draw_table.build(draw, teams, side_histories_before, side_histories_now, standings)
@@ -438,7 +439,8 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
         teams = Team.objects.filter(debateteam__debate__round=self.round)
         side_histories_before = get_side_history(teams, self.tournament.sides, self.round.prev.seq)
         side_histories_now = get_side_history(teams, self.tournament.sides, self.round.seq)
-        generator = TeamStandingsGenerator(('points',), ())
+        metrics = self.tournament.pref('team_standings_precedence')
+        generator = TeamStandingsGenerator(metrics[0:1], ())
         standings = generator.generate(teams, round=self.round.prev)
 
         summary_table = PositionBalanceReportSummaryTableBuilder(view=self,

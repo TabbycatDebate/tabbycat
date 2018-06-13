@@ -1,5 +1,11 @@
 {% extends "tables/base_vue_table.html" %}
-{% load debate_tags i18n %}
+{% load debate_tags i18n standingsformat %}
+
+{% block page-subnav-sections %}
+  <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-danger">
+    <i data-feather="chevron-left"></i> {% trans "Reject Draw" %}
+  </a>
+{% endblock %}
 
 {% block page-subnav-actions %}
   <button class="invisible"></button>
@@ -11,28 +17,42 @@
   </form>
 {% endblock %}
 
+{% block page-alerts %}
+  {% if pref.teams_in_debate == 'bp' and pref.team_standings_precedence.0 != 'points' %}
+    {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+    {% blocktrans trimmed asvar message with metric=pref.team_standings_precedence.0|teammetricname %}
+      Brackets are formed using the first metric in the team standings precedence, which is currently
+      set to <strong>{{ metric }}</strong>, rather than team points, which is the more usual convention.
+      If this isn't what you wanted, you can
+      <a href="{{ standings_config_url }}" class="alert-link">change the team standings precedence
+      in the standings configuration page</a>.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="info" icon='alert-circle' %}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
-{% if round.is_break_round %}
-  {% blocktrans trimmed asvar p1 %}
-    Tabbycat assigns sides in elimination rounds randomly. However, because in elimination rounds, many tournaments draw lots for sides in front of an audience, the sides are marked as "unconfirmed", so that it doesn't look like sides have been pre-assigned. After you confirm the draw, you'll need to confirm sides on the "Edit Sides/Matchups" page, even if you wish to accept Tabbycat's random assignment.
-  {% endblocktrans %}
-  {% include "components/explainer-card.html" with type="warning" %}
-{% endif %}
-
-{% if round.draw_status == 'D' and round.prev and not round.is_break_round and pref.teams_in_debate == 'bp' and highlighted_cells_exist %}
+  {% if round.is_break_round %}
     {% blocktrans trimmed asvar p1 %}
-      Highlighted cells relate to changes in position balance, as follows:
-      <ul>
-        <li>Red cells indicates that the team could not be allocated a position that maintains
-        position balance.</li>
-        <li>Yellow cells indicate that the team was previously imbalanced, and is given the best position
-         possible in this draw, but is nonetheless still imbalanced.</li>
-        <li>Green cells indicate that the team's previous imbalance is resolved with this draw.</li>
-      </ul>
+      Tabbycat assigns sides in elimination rounds randomly. However, because in elimination rounds, many tournaments draw lots for sides in front of an audience, the sides are marked as "unconfirmed", so that it doesn't look like sides have been pre-assigned. After you confirm the draw, you'll need to confirm sides on the "Edit Sides/Matchups" page, even if you wish to accept Tabbycat's random assignment.
     {% endblocktrans %}
-    {% include "components/explainer-card.html" with type="info" %}
-{% endif %}
+    {% include "components/explainer-card.html" with type="warning" %}
+  {% endif %}
 
-{{ block.super }}
+  {% if round.draw_status == 'D' and round.prev and not round.is_break_round and pref.teams_in_debate == 'bp' and highlighted_cells_exist %}
+      {% blocktrans trimmed asvar p1 %}
+        Highlighted cells relate to changes in position balance, as follows:
+        <ul>
+          <li>Red cells indicates that the team could not be allocated a position that maintains
+          position balance.</li>
+          <li>Yellow cells indicate that the team was previously imbalanced, and is given the best position
+           possible in this draw, but is nonetheless still imbalanced.</li>
+          <li>Green cells indicate that the team's previous imbalance is resolved with this draw.</li>
+        </ul>
+      {% endblocktrans %}
+      {% include "components/explainer-card.html" with type="info" %}
+  {% endif %}
+
+  {{ block.super }}
 {% endblock %}
