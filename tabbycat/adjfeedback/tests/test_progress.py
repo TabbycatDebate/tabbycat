@@ -292,11 +292,23 @@ class TestFeedbackProgress(TestCase):
         self.assertAlmostEqual(progress.coverage(), coverage)
         return progress
 
-    def test_team_progress_all_good(self):
+    def test_team_progress_all_good_orallist(self):
         self._create_team_progress_dataset(0, 4, 6)
         self.assertTeamProgress('orallist', True, 0, 3, 3, 3, 0, 1.0)
-        self.assertTeamProgress('all-adjs', True, 0, 7, 7, 7, 0, 1.0)
         self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
+
+    def test_team_progress_all_good_all_adjs(self):
+        debate1 = self._create_debate((0, 1), (0, 1, 2), "nnn")
+        debate2 = self._create_debate((0, 2), (3, 4, 5), "ann")
+        debate3 = self._create_debate((0, 3), (6,), "a")
+        self._create_feedback(self._dt(debate1, 0), 0)
+        self._create_feedback(self._dt(debate1, 0), 1)
+        self._create_feedback(self._dt(debate1, 0), 2)
+        self._create_feedback(self._dt(debate2, 0), 3)
+        self._create_feedback(self._dt(debate2, 0), 4)
+        self._create_feedback(self._dt(debate2, 0), 5)
+        self._create_feedback(self._dt(debate3, 0), 6)
+        self.assertTeamProgress('all-adjs', True, 0, 7, 7, 7, 0, 1.0)
         self.assertTeamProgress('all-adjs', False, 0, 7, 7, 7, 0, 1.0)
 
     def test_team_progress_no_submissions(self):
