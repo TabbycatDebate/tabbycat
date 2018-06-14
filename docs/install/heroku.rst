@@ -254,4 +254,4 @@ To set up your app to use your own SendGrid account:
   - ``SENDGRID_USERNAME`` should be set to ``apikey`` (not your username).
   - ``SENDGRID_PASSWORD`` should be set to your API key, which will start with ``SG*******``.
 
-  .. warning:: The `Heroku SendGrid instructions <https://devcenter.heroku.com/articles/sendgrid#setup-api-key-environment-variable>`_ to do something with ``SENDGRID_API_KEY`` are **incorrect**. We figured this out by contacting SendGrid support staff. Use these the above config vars instead.
+  .. warning:: The `Heroku SendGrid instructions <https://devcenter.heroku.com/articles/sendgrid#setup-api-key-environment-variable>`_ to do something with ``SENDGRID_API_KEY`` are **incorrect**. We figured this out by contacting SendGrid support staff. Use the above config vars instead.
