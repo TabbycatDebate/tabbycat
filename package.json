@@ -34,7 +34,7 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^3.0.0",
-    "gulp-uglify-es": "^1.0.1",
+    "gulp-uglify-es": "^1.0.4",
     "gulp-util": "^3.0.8",
     "inter-ui": "^2.5.1",
     "jquery": "^3.3.0",
