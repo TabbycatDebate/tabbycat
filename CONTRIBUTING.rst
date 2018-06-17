@@ -35,6 +35,10 @@ Getting started with development
 
     $ pip install -r 'requirements_development.txt'
 
+- The email backend should be changed in ``local_settings.py`` to display sent messages in ``STDOUT``, not by real email. Insert::
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 Style guide
 ===========
 

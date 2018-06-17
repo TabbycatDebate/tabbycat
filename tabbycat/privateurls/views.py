@@ -2,6 +2,7 @@ import logging
 from smtplib import SMTPException
 
 from django.contrib import messages
+from django.views.generic.edit import FormView
 from django.db.models import Exists, OuterRef, Q
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -14,6 +15,7 @@ from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
+from .forms import MassBallotEmailForm, MassFeedbackEmailForm
 from .utils import populate_url_keys, send_randomised_url_emails
 
 logger = logging.getLogger(__name__)
@@ -180,9 +182,27 @@ class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
         return table
 
 
-class EmailBallotUrlsView(BaseEmailRandomisedUrlsView):
+class EmailBallotUrlsView(BaseEmailRandomisedUrlsView, FormView):
 
     template_name = 'ballot_urls_email_list.html'
+    form_class = MassBallotEmailForm
+
+    def get_success_url(self):
+        return reverse_tournament('privateurls-email-ballot', self.tournament)
+
+    def get_initial(self):
+        default = {}
+        default['subject_line'] = _("Your personal ballot submission URL for %(tour)s") % {'tour': self.tournament}
+        default['message_body'] = _(
+            "Hi %%name,\n\n"
+            "At %(tour)s, we are using an online ballot system. You can submit "
+            "your ballots at the following URL. This URL is unique to you — do not share it with "
+            "anyone, as anyone who knows it can submit ballots on your behalf. This URL "
+            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
+            "Your personal private ballot submission URL is:\n"
+            "%%url"
+        ) % {'tour': self.tournament}
+        return default
 
     def get_context_data(self, **kwargs):
         kwargs['nadjudicators_already_sent'] = self.get_adjudicators_to_email(
@@ -193,10 +213,68 @@ class EmailBallotUrlsView(BaseEmailRandomisedUrlsView):
         return self.get_adjudicators_table(PrivateUrlSentMailRecord.URL_TYPE_BALLOT,
             'results-public-ballotset-new-randomised', _("Ballot URL"))
 
+    def form_valid(self, form):
+        adjudicators = self.get_adjudicators_to_email(PrivateUrlSentMailRecord.URL_TYPE_BALLOT)
 
-class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
+        try:
+            nadjudicators = send_randomised_url_emails(
+                self.request, self.tournament, adjudicators,
+                'results-public-ballotset-new-randomised',
+                lambda adj: adj.url_key, 'adjudicator', PrivateUrlSentMailRecord.URL_TYPE_BALLOT,
+                form.cleaned_data['subject_line'], form.cleaned_data['message_body']
+            )
+        except SMTPException:
+            messages.error(self.request, _("There was a problem sending private ballot URLs to adjudicators."))
+        except ConnectionError as e:
+            messages.error(self.request, _(
+                "There was a problem connecting to the e-mail server when trying to send private "
+                "ballot URLs to adjudicators: %(error)s"
+            ) % {'error': str(e)})
+        else:
+            messages.success(self.request, ngettext(
+                "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator.",
+                "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicators.",
+                nadjudicators
+            ) % {'nadjudicators': nadjudicators})
+
+        return super().form_valid(form)
+
+
+class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView, FormView):
 
     template_name = 'feedback_urls_email_list.html'
+    form_class = MassFeedbackEmailForm
+
+    def get_success_url(self):
+        return reverse_tournament('privateurls-email-feedback', self.tournament)
+
+    def get_initial(self):
+        default = {}
+
+        default['team_subject'] = _("Your team's feedback submission URL for %(tour)s") % {'tour': self.tournament}
+        default['team_message'] = _(
+            "Hi %%name,\n\n"
+            "At %(tour)s, we are using an online adjudicator feedback system. As part of "
+            "%%team, you can submit your feedback at the following URL. This URL is unique "
+            "to you — do not share it with anyone, as anyone who knows it can submit feedback on "
+            "your team's behalf. This URL will not change throughout this tournament, so we "
+            "suggest bookmarking it.\n\n"
+            "Your team's private feedback submission URL is:\n"
+            "%%url"
+        ) % {'tour': self.tournament}
+
+        default['judge_subject'] = _("Your personal feedback submission URL for %(tour)s") % {'tour': self.tournament}
+        default['judge_message'] = _(
+            "Hi %%name,\n\n"
+            "At %(tour)s, we are using an online adjudicator feedback system. You can submit "
+            "your feedback at the following URL. This URL is unique to you — do not share it with "
+            "anyone, as anyone who knows it can submit feedback on your behalf. This URL "
+            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
+            "Your personal private feedback submission URL is:\n"
+            "%%url"
+        ) % {'tour': self.tournament}
+
+        return default
 
     def get_context_data(self, **kwargs):
         kwargs['speakers_no_email'] = Speaker.objects.filter(
@@ -240,115 +318,41 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView):
                 'adjfeedback-public-add-from-adjudicator-randomised', _("Feedback URL"))
         return [speaker_table, adjudicator_table]
 
-
-class BaseConfirmEmailRandomisedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
-
-    tournament_redirect_pattern_name = 'privateurls-list'
-
-
-class ConfirmEmailBallotUrlsView(BaseConfirmEmailRandomisedUrlsView):
-
-    def post(self, request, *args, **kwargs):
-
-        tournament = self.tournament
-
-        subject = _("Your personal ballot submission URL for %(tournament)s")
-        message = _(
-            "Hi %(name)s,\n\n"
-            "At %(tournament)s, we are using an online ballot system. You can submit "
-            "your ballots at the following URL. This URL is unique to you — do not share it with "
-            "anyone, as anyone who knows it can submit ballots on your behalf. This URL "
-            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
-            "Your personal private ballot submission URL is:\n"
-            "%(url)s"
-        )
-        adjudicators = self.get_adjudicators_to_email(PrivateUrlSentMailRecord.URL_TYPE_BALLOT)
-
-        try:
-            nadjudicators = send_randomised_url_emails(
-                request, tournament, adjudicators,
-                'results-public-ballotset-new-randomised',
-                lambda adj: adj.url_key, 'adjudicator', PrivateUrlSentMailRecord.URL_TYPE_BALLOT,
-                subject, message
-            )
-        except SMTPException:
-            messages.error(request, _("There was a problem sending private ballot URLs to adjudicators."))
-        except ConnectionError as e:
-            messages.error(request, _(
-                "There was a problem connecting to the e-mail server when trying to send private "
-                "ballot URLs to adjudicators: %(error)s"
-            ) % {'error': str(e)})
-        else:
-            messages.success(request, ngettext(
-                "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator.",
-                "E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicators.",
-                nadjudicators
-            ) % {'nadjudicators': nadjudicators})
-
-        return super().post(request, *args, **kwargs)
-
-
-class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
-
-    def post(self, request, *args, **kwargs):
-
-        tournament = self.tournament
+    def form_valid(self, form):
         success = True
-
-        subject = _("Your team's feedback submission URL for %(tournament)s")
-        message = _(
-            "Hi %(name)s,\n\n"
-            "At %(tournament)s, we are using an online adjudicator feedback system. As part of "
-            "%(team)s, you can submit your feedback at the following URL. This URL is unique "
-            "to you — do not share it with anyone, as anyone who knows it can submit feedback on "
-            "your team's behalf. This URL will not change throughout this tournament, so we "
-            "suggest bookmarking it.\n\n"
-            "Your team's private feedback submission URL is:\n"
-            "%(url)s"
-        )
         speakers = self.get_speakers_to_email()
 
         try:
             nspeakers = send_randomised_url_emails(
-                request, tournament, speakers,
+                self.request, self.tournament, speakers,
                 'adjfeedback-public-add-from-team-randomised',
                 lambda speaker: speaker.team.url_key, 'speaker', PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK,
-                subject, message
+                form.cleaned_data['team_subject'], form.cleaned_data['team_message']
             )
         except SMTPException:
-            messages.error(request, _("There was a problem sending private feedback URLs to speakers."))
+            messages.error(self.request, _("There was a problem sending private feedback URLs to speakers."))
             success = False
         except ConnectionError as e:
-            messages.error(request, _(
+            messages.error(self.request, _(
                 "There was a problem connecting to the e-mail server when trying to send private "
                 "feedback URLs to speakers: %(error)s"
             ) % {'error': str(e)})
             success = False
 
-        subject = _("Your personal feedback submission URL for %(tournament)s")
-        message = _(
-            "Hi %(name)s,\n\n"
-            "At %(tournament)s, we are using an online adjudicator feedback system. You can submit "
-            "your feedback at the following URL. This URL is unique to you — do not share it with "
-            "anyone, as anyone who knows it can submit feedback on your behalf. This URL "
-            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
-            "Your personal private feedback submission URL is:\n"
-            "%(url)s"
-        )
         adjudicators = self.get_adjudicators_to_email(PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK)
 
         try:
             nadjudicators = send_randomised_url_emails(
-                request, tournament, adjudicators,
+                self.request, self.tournament, adjudicators,
                 'adjfeedback-public-add-from-adjudicator-randomised',
                 lambda adj: adj.url_key, 'adjudicator', PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK,
-                subject, message
+                form.cleaned_data['judge_subject'], form.cleaned_data['judge_message']
             )
         except SMTPException:
-            messages.error(request, _("There was a problem sending private feedback URLs to adjudicators."))
+            messages.error(self.request, _("There was a problem sending private feedback URLs to adjudicators."))
             success = False
         except ConnectionError as e:
-            messages.error(request, _(
+            messages.error(self.request, _(
                 "There was a problem connecting to the e-mail server when trying to send private "
                 "feedback URLs to adjudicators: %(error)s"
             ) % {'error': str(e)})
@@ -361,9 +365,9 @@ class ConfirmEmailFeedbackUrlsView(BaseConfirmEmailRandomisedUrlsView):
             # Translators: This goes in the "adjudicators_phrase" variable in "E-mails with private feedback URLs were sent..."
             adjudicators_phrase = ngettext("%(nadjudicators)d adjudicator",
                 "%(nadjudicators)d adjudicators", nadjudicators) % {'nadjudicators': nadjudicators}
-            messages.success(request, _("E-mails with private feedback URLs were sent to "
+            messages.success(self.request, _("E-mails with private feedback URLs were sent to "
                 "%(speakers_phrase)s and %(adjudicators_phrase)s.") % {
                 'speakers_phrase': speakers_phrase, 'adjudicators_phrase': adjudicators_phrase
             })
 
-        return super().post(request, *args, **kwargs)
+        return super().form_valid(form)

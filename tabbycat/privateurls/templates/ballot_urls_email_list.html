@@ -44,11 +44,28 @@
 
   {{ block.super }}
 
-  <form action="{% tournamenturl 'privateurls-email-ballot-send' %}" method="POST" class="mb-3">
-    {% csrf_token %}
-    <button class="btn btn-success btn-block" type="submit">
-      {% trans "Send emails with private ballot URLs to adjudicators" %}
-    </button>
-  </form>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{% trans "Email message" %}</h4>
+    </div>
+    <div class="list-group list-group-flush">
+      <form method="POST" class="mb-3">
+        {% csrf_token %}
+        <div class="list-group-item">
+          {{ form.non_field_errors }}
+          {% for field in form.visible_fields %}
+          <div class="form-group">
+            {% include "components/form-field.html" %}
+          </div>
+          {% endfor %}
+        </div>
+        <div class="list-group-item">
+          <button class="btn btn-success btn-block" type="submit">
+            {% trans "Send emails with private ballot URLs to adjudicators" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
 {% endblock content %}

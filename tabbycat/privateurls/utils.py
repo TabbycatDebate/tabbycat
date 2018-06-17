@@ -54,13 +54,10 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
         path = reverse_tournament(url_name, tournament, kwargs={'url_key': url_key})
         url = request.build_absolute_uri(path)
 
-        formatted_subject = subject % {'tournament': tournament.short_name}
-        formatted_message = message % {
-            'name': instance.name,
-            'tournament': tournament.short_name,
-            'team': instance.team.short_name if hasattr(instance, 'team') else None,
-            'url': url,
-        }
+        formatted_subject = subject
+        formatted_message = message.replace('%name', instance.name).replace('%url', url)
+        if hasattr(instance, 'team'):
+            formatted_message = formatted_message.replace('%team', instance.team.short_name)
 
         messages.append((formatted_subject, formatted_message, settings.DEFAULT_FROM_EMAIL, [email]))
 
