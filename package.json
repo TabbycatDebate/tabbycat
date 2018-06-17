@@ -68,6 +68,6 @@
     "postcss-selector-parser": "^4.0.0",
     "stylelint": "^9.2.0",
     "stylelint-config-standard": "^18.2.0",
-    "stylelint-scss": "^3.1.0"
+    "stylelint-scss": "^3.1.3"
   }
 }
