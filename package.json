@@ -17,7 +17,7 @@
     "babelify": "^8.0.0",
     "bootstrap": "^4.1.1",
     "browserify": "^16.1.1",
-    "d3": "^5.4.0",
+    "d3": "^5.5.0",
     "django-channels": "^1.1.8",
     "envify": "^4.1.0",
     "es6-promise": "^4.2.4",
