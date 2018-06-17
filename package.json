@@ -64,7 +64,7 @@
   "devDependencies": {
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-html": "^4.0.2",
-    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-import": "^2.12.0",
     "postcss-selector-parser": "^4.0.0",
     "stylelint": "^9.2.0",
     "stylelint-config-standard": "^18.2.0",
