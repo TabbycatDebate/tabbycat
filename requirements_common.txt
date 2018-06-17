@@ -29,7 +29,7 @@ whitenoise==3.3.1                       # Static file serving
 django_redis==4.9.0                     # Use redis for cache (on heroku; local optional)
 
 # Channels
-channels==2.1.1                         # Channels
+channels==2.1.2                         # Channels
 channels_redis==2.2.1                   # Channels Layer
 
 # Misc
