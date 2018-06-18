@@ -69,7 +69,10 @@
         <input class="save btn btn-success btn-block " type="submit" value="Submit Ballot(s)" tabindex="{{ form.nexttabindex }}"/>
         <div class="text-center pt-3 small text-muted">
           {% trans "When submitting this form your IP address will be stored for logging purposes." %}
-          {% trans "Emails will be sent to adjudicators to validate their responses." %}
+          {% if pref.enable_ballot_receipts %}
+            <br />
+            {% trans "Emails will be sent to adjudicators when the ballot is confirmed." %}
+          {% endif %}
         </div>
       </div>
     </div>

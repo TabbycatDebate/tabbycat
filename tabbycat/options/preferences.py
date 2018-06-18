@@ -1278,19 +1278,19 @@ class EnableEmailBallotReceipts(BooleanPreference):
 @tournament_preferences_registry.register
 class BallotEmailSubjectLine(StringPreference):
     help_text = _("The subject line for emails sent to adjudicators with their submitted ballot. "
-                  "Use '%debate' as a placeholder for the associated debate")
+                  "Use '<DEBATE>' as a placeholder for the associated debate")
     verbose_name = _("Ballot receipt subject line")
     section = email
     name = 'ballot_email_subject'
-    default = "Your ballot for %debate has been received"
+    default = "Your ballot for <DEBATE> has been received"
 
 
 @tournament_preferences_registry.register
 class BallotEmailMessageBody(LongStringPreference):
     help_text = _("The message body for emails sent to adjudicators with their submitted ballot. "
-                  "Use '%debate' as a placeholder for the associated debate, '%user' for the adjudicator, "
-                  "and '%scores' for the ballot values.")
+                  "Use '<DEBATE>' as a placeholder for the associated debate, '<USER>' for the adjudicator, "
+                  "and '<SCORES>' for the ballot values.")
     verbose_name = _("Ballot receipt message")
     section = email
     name = 'ballot_email_message'
-    default = "Hi %user,\n\nYour ballot for %debate has been successfully received, with these scores:\n\n%scores\n\nIf there are any problems, please contact the tab team."
+    default = "Hi <USER>,\n\nYour ballot for <DEBATE> has been successfully received, with these scores:\n\n<SCORES>\n\nIf there are any problems, please contact the tab team."

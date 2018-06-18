@@ -31,7 +31,7 @@ from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .result import DebateResult
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, populate_identical_ballotsub_lists, send_email_to_adjs
+from .utils import get_result_status_stats, populate_identical_ballotsub_lists, send_ballot_receipt_emails_to_adjudicators
 
 logger = logging.getLogger(__name__)
 
@@ -269,7 +269,12 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
     def send_email_receipts(self):
         # For proper error handling for admin/assistants, overwrite this
-        send_email_to_adjs(DebateResult(self.ballotsub).as_dicts(), self.debate)
+        try:
+            send_ballot_receipt_emails_to_adjudicators(DebateResult(self.ballotsub).as_dicts(), self.debate)
+        except (SMTPException, ConnectionError):
+            return False
+        else:
+            return True
 
     def form_valid(self, form):
         self.ballotsub = form.save()
@@ -279,7 +284,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             self.ballotsub.save()
 
             if self.tournament.pref('enable_ballot_receipts'):
-                self.send_email_receipts()
+                self.email_receipts_sent = self.send_email_receipts()
 
         self.add_success_message()
         self.round = self.ballotsub.debate.round  # for LogActionMixin
@@ -308,21 +313,19 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
 class BallotEmailWithStatusMixin:
     def send_email_receipts(self):
-        success = True
         try:
-            send_email_to_adjs(DebateResult(self.ballotsub).as_dicts(), self.debate)
+            send_ballot_receipt_emails_to_adjudicators(DebateResult(self.ballotsub).as_dicts(), self.debate)
         except SMTPException:
             messages.error(self.request, _("There was a problem sending ballot receipts to adjudicators."))
-            success = False
+            return False
         except ConnectionError:
             messages.error(self.request, _("There was a problem connecting to the e-mail server when trying to send ballot receipts to adjudicators."))
-            success = False
+            return False
+        else:
+            return True
 
-        if success:
-            messages.success(self.request, _("Email receipts sent successfully."))
 
-
-class AdministratorBallotSetMixin(BallotEmailWithStatusMixin, AdministratorMixin):
+class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'enter_results.html'
     tabroom = True
 
@@ -330,7 +333,7 @@ class AdministratorBallotSetMixin(BallotEmailWithStatusMixin, AdministratorMixin
         return reverse_round('results-round-list', self.ballotsub.debate.round)
 
 
-class AssistantBallotSetMixin(BallotEmailWithStatusMixin, AssistantMixin):
+class AssistantBallotSetMixin(AssistantMixin):
     template_name = 'assistant_enter_results.html'
     tabroom = True
 
@@ -338,7 +341,7 @@ class AssistantBallotSetMixin(BallotEmailWithStatusMixin, AssistantMixin):
         return reverse_tournament('results-assistant-round-list', self.tournament)
 
 
-class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
+class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BallotEmailWithStatusMixin, BaseBallotSetView):
 
     model = Debate
     tournament_field_name = 'round__tournament'
@@ -347,7 +350,10 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
     pk_url_kwarg = 'debate_id'
 
     def add_success_message(self):
-        messages.success(self.request, _("Ballot set for %(debate)s added.") % {'debate': self.debate.matchup})
+        message = _("Ballot set for %(debate)s added.") % {'debate': self.debate.matchup}
+        if getattr(self, 'email_receipts_sent', False):
+            message += _(" Email receipts sent.")
+        messages.success(self.request, message)
 
     def get_error_url(self):
         return self.get_success_url()
@@ -379,7 +385,7 @@ class AssistantNewBallotSetView(AssistantBallotSetMixin, BaseNewBallotSetView):
     pass
 
 
-class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
+class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BallotEmailWithStatusMixin, BaseBallotSetView):
 
     model = BallotSubmission
     tournament_field_name = 'debate__round__tournament'
@@ -403,6 +409,10 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
             message = _("Ballot set for %(matchup)s confirmed.")
         else:
             message = _("Edits to ballot set for %(matchup)s saved.")
+
+        if getattr(self, 'email_receipts_sent', False):
+            message += _(" Email receipts sent.")
+
         messages.success(self.request, message % {'matchup': self.debate.matchup})
 
     def populate_objects(self):
