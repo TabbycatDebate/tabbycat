@@ -55,9 +55,9 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
         url = request.build_absolute_uri(path)
 
         formatted_subject = subject
-        formatted_message = message.replace('%name', instance.name).replace('%url', url)
+        formatted_message = message.replace('<NAME>', instance.name).replace('<URL>', url)
         if hasattr(instance, 'team'):
-            formatted_message = formatted_message.replace('%team', instance.team.short_name)
+            formatted_message = formatted_message.replace('<TEAM>', instance.team.short_name)
 
         messages.append((formatted_subject, formatted_message, settings.DEFAULT_FROM_EMAIL, [email]))
 

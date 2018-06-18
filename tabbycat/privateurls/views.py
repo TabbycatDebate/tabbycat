@@ -194,13 +194,13 @@ class EmailBallotUrlsView(BaseEmailRandomisedUrlsView, FormView):
         default = {}
         default['subject_line'] = _("Your personal ballot submission URL for %(tour)s") % {'tour': self.tournament}
         default['message_body'] = _(
-            "Hi %%name,\n\n"
+            "Hi <NAME>,\n\n"
             "At %(tour)s, we are using an online ballot system. You can submit "
             "your ballots at the following URL. This URL is unique to you — do not share it with "
             "anyone, as anyone who knows it can submit ballots on your behalf. This URL "
             "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
             "Your personal private ballot submission URL is:\n"
-            "%%url"
+            "<URL>"
         ) % {'tour': self.tournament}
         return default
 
@@ -253,25 +253,25 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView, FormView):
 
         default['team_subject'] = _("Your team's feedback submission URL for %(tour)s") % {'tour': self.tournament}
         default['team_message'] = _(
-            "Hi %%name,\n\n"
+            "Hi <NAME>,\n\n"
             "At %(tour)s, we are using an online adjudicator feedback system. As part of "
-            "%%team, you can submit your feedback at the following URL. This URL is unique "
+            "<TEAM>, you can submit your feedback at the following URL. This URL is unique "
             "to you — do not share it with anyone, as anyone who knows it can submit feedback on "
             "your team's behalf. This URL will not change throughout this tournament, so we "
             "suggest bookmarking it.\n\n"
             "Your team's private feedback submission URL is:\n"
-            "%%url"
+            "<URL>"
         ) % {'tour': self.tournament}
 
         default['judge_subject'] = _("Your personal feedback submission URL for %(tour)s") % {'tour': self.tournament}
         default['judge_message'] = _(
-            "Hi %%name,\n\n"
+            "Hi <NAME>,\n\n"
             "At %(tour)s, we are using an online adjudicator feedback system. You can submit "
             "your feedback at the following URL. This URL is unique to you — do not share it with "
             "anyone, as anyone who knows it can submit feedback on your behalf. This URL "
             "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
             "Your personal private feedback submission URL is:\n"
-            "%%url"
+            "<URL>"
         ) % {'tour': self.tournament}
 
         return default
