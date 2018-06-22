@@ -143,7 +143,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
         verbose_name=_("answer type"))
     required = models.BooleanField(default=True,
         verbose_name=_("required"),
-        help_text="Whether participants are required to fill out this field")
+        help_text=_("Whether participants are required to fill out this field"))
     min_value = models.FloatField(blank=True, null=True,
         verbose_name=_("minimum value"),
         help_text=_("Minimum allowed value for numeric fields (ignored for text or boolean fields)"))
@@ -219,6 +219,10 @@ class AdjudicatorFeedback(Submission):
         verbose_name=_("source adjudicator"))
     source_team = models.ForeignKey('draw.DebateTeam', models.CASCADE, blank=True, null=True,
         verbose_name=_("source team"))
+
+    ignored = models.BooleanField(default=False,
+        verbose_name=_("ignored"),
+        help_text=_("Whether the feedback should affect the judge's score"))
 
     class Meta:
         unique_together = [('adjudicator', 'source_adjudicator', 'source_team', 'version')]

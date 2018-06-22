@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db.models import F, Q
 from django.http import JsonResponse
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import RedirectView, TemplateView, View
 from django.views.generic.edit import FormView
 
 from actionlog.mixins import LogActionMixin
@@ -493,6 +493,7 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
         'enforce_required': False,
         'include_unreleased_draws': True,
         'use_tournament_password': False,
+        'ignored_option': True,
     }
 
     def get_team_short_name(self, team):
@@ -526,6 +527,7 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMix
         'enforce_required': True,
         'include_unreleased_draws': False,
         'use_tournament_password': True,
+        'ignored_option': False
     }
 
     def form_valid(self, form):
@@ -702,6 +704,31 @@ class FeedbackProgress(AdministratorMixin, BaseFeedbackProgressView):
 
 class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView):
     public_page_preference = 'feedback_progress'
+
+
+class IgnoreFeedbackView(SingleObjectFromTournamentMixin, RedirectView):
+    model = AdjudicatorFeedback
+    pk_url_kwarg = 'feedback_id'
+    allow_null_tournament = False
+    private_url = True
+    tournament_field_name = 'adjudicator__tournament'
+
+    def get_redirect_url(self, *args, **kwargs):
+        self.object = self.get_object()
+
+        self.object.ignored = False if self.object.ignored else True
+        self.object.save()
+
+        # Make message
+        source = self.object.source_adjudicator.adjudicator.name if self.object.source_adjudicator else self.object.source_team.team.short_name
+        result = _("ignored") if self.object.ignored else _("recognized")
+        messages.success(self.request, _("Feedback for %(adj)s from %(source)s is now %(result)s.")
+            % {'adj': self.object.adjudicator.name, 'source': source, 'result': result})
+        return reverse_tournament('adjfeedback-overview', self.object.adjudicator.tournament)
+
+
+class AdminIgnoreFeedbackView(AdministratorMixin, IgnoreFeedbackView):
+    pass
 
 
 # ==============================================================================

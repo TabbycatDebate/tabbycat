@@ -66,6 +66,7 @@ def get_feedback_overview(t, adjudicators):
             queryset=AdjudicatorFeedback.objects.filter(
                 Q(source_adjudicator__debate__round__in=rounds) | Q(source_team__debate__round__in=rounds),
                 confirmed=True,
+                ignored=False,
             ).exclude(
                 source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE
             ).select_related('source_adjudicator__debate__round', 'source_team__debate__round')

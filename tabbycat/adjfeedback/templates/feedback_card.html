@@ -1,4 +1,4 @@
-{% load humanize i18n %}
+{% load debate_tags humanize i18n %}
 
 <div class="card">
   <div class="list-group list-group-flush">
@@ -7,6 +7,12 @@
       <div class="list-group-item list-group-item-dark h6" data-toggle="tooltip"
            title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has done submitted several times on the same person.' %}">
       {% trans "Unconfirmed; will not affect this adjudicator's score." %}
+      </div>
+    {% endif %}
+    {% if feedback.ignored %}
+      <div class="list-group-item list-group-item-dark h6" data-toggle="tooltip"
+           title="{% trans 'The feedback is counted for the adjudicator, but is not taken into account when calculating scores.' %}">
+      {% trans "Ignored; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
     <div class="list-group-item h5">
@@ -71,6 +77,15 @@
       {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
         Submitted {{ time }}
       {% endblocktrans %}
+      <span class="float-right">
+        <a href="{% tournamenturl 'adjfeedback-admin-ignore-feedback' feedback_id=feedback.id %}">
+          {% if feedback.ignored %}
+            Recognize
+          {% else %}
+            Ignore
+          {% endif %}
+        </a>
+        </span>
     </div>
 
   </div>
