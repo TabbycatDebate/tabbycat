@@ -1294,3 +1294,34 @@ class BallotEmailMessageBody(LongStringPreference):
     section = email
     name = 'ballot_email_message'
     default = "Hi <USER>,\n\nYour ballot for <DEBATE> has been successfully received, with these scores:\n\n<SCORES>\n\nIf there are any problems, please contact the tab team."
+
+
+@tournament_preferences_registry.register
+class PointsEmailSubjectLine(StringPreference):
+    help_text = _("The subject line for emails sent to speakers with their team points. "
+                  "Use '<TOURN>' as a placeholder for the tournament, '<POINTS>' for the team points, "
+                  "and '<TEAM>' for the associated team.")
+    verbose_name = _("Team points subject line")
+    section = email
+    name = 'team_points_email_subject'
+    default = "Your current number of wins for <TEAM> (<TOURN>): <POINTS>"
+
+
+@tournament_preferences_registry.register
+class PointsEmailMessageBody(LongStringPreference):
+    help_text = _("The message body for emails sent to speakers with their team points. "
+                  "Use '<TOURN>' as a placeholder for the tournament, '<POINTS>' for the team points, "
+                  "'<USER>' for the speaker, and '<TEAM>' for the associated team.")
+    verbose_name = _("Team points subject line")
+    section = email
+    name = 'team_points_email_message'
+    default = "Hi <USER>,\n\nYour team (<TEAM>) currently has <POINTS> wins in the <TOURN>."
+
+
+@tournament_preferences_registry.register
+class PointsEmailLinkText(StringPreference):
+    help_text = _("The text introducing the link to the current standings in the team points emails.")
+    verbose_name = _("Team points standings link text")
+    section = email
+    name = 'team_points_email_link_text'
+    default = "To consult the current team standings, visit:"

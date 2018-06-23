@@ -13,6 +13,18 @@
     <i data-feather="chevron-left"></i>Enter Results
   </a>
 
+  <form action="{% roundurl 'tournament-send-standings-emails' %}" method="POST">
+    {% csrf_token %}
+    <button class="btn btn-outline-primary active" id="sendPointsEmails" type="submit">
+      Email Team
+      {% if pref.teams_in_debate == "two" %}
+        Wins/Losses
+      {% else %}
+        Points
+      {% endif %}
+    </button>
+  </form>
+
   <form action="{% roundurl 'tournament-advance-round' %}" method="POST">
     {% csrf_token %}
     <button class="btn {{increment_ok|yesno:"btn-success,btn-danger"}}" id="createDraw" type="submit">
