@@ -75,6 +75,11 @@
       {% trans "Small tweaks in what information is presented by the interface" as description %}
       {% include "components/item-action.html" with type="primary" emoji="💻" text=title extra=description %}
 
+      {% tournamenturl 'options-tournament-section' section='email' as url %}
+      {% trans "Email Sending" as title %}
+      {% trans "Configures when to send email messages" as description %}
+      {% include "components/item-action.html" with type="primary" emoji="📧" text=title extra=description %}
+
       {% if show_leagues %}
         {% tournamenturl 'options-tournament-section' section='league_options' as url %}
         {% trans "League Options" as title %}

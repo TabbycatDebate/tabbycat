@@ -95,6 +95,11 @@
               <a class="btn btn-primary btn-block btn-danger" href="{% roundurl 'results-round-list' debate.round %}" tabindex="{{ form.nexttabindex|add:1 }}">{% trans "Cancel Entry" %}</a>
             </div>
           </div>
+          <div class="text-center pt-3 small text-muted">
+            {% if pref.enable_ballot_receipts %}
+              {% trans "Emails will be sent to adjudicators when the ballot is confirmed." %}
+            {% endif %}
+          </div>
         </div>
 
       </div>
