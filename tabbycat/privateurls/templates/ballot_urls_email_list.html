@@ -54,9 +54,7 @@
         <div class="list-group-item">
           {{ form.non_field_errors }}
           {% for field in form.visible_fields %}
-          <div class="form-group">
             {% include "components/form-field.html" %}
-          </div>
           {% endfor %}
         </div>
         <div class="list-group-item">
