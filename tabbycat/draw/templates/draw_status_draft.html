@@ -31,6 +31,17 @@
     {% endblocktrans %}
     {% include "components/alert.html" with type="info" icon='alert-circle' %}
   {% endif %}
+
+  {% if round.draw_type == round.DRAW_MANUAL and round.debate_set.count == 0 %}
+    {% roundurl 'draw-matchups-edit' round as edit_matchups_url %}
+    {% blocktrans trimmed asvar message %}
+      The draw type for this round is set to <strong>manual</strong>, so Tabbycat has just made a
+      blank draw. Head on over to
+      <a href="{{ edit_matchups_url }}" class="alert-link">Edit Sides/Matchups</a>
+      to fill it in.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="info" icon='alert-circle' %}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
