@@ -168,7 +168,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         - If `view` is specified, then `tournament` and `admin` are inferred
           from `view`. This option is provided for convenience.
         """
-        if 'tournament' not in kwargs and hasattr(view, 'get_tournament'):
+        if 'tournament' not in kwargs and hasattr(view, 'tournament'):
             self.tournament = view.tournament
         else:
             self.tournament = kwargs.get('tournament')
