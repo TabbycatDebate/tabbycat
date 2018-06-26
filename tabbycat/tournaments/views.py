@@ -20,6 +20,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from participants.models import Team
+from participants.prefetch import populate_win_counts
 from results.models import BallotSubmission
 from results.utils import graphable_debate_statuses
 from tournaments.models import Round
@@ -163,6 +164,7 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
 
     def post(self, request, *args, **kwargs):
         active_teams = Team.objects.filter(debateteam__debate__round=self.round)
+        populate_win_counts(active_teams)
 
         try:
             send_standings_emails(self.tournament, active_teams, request)

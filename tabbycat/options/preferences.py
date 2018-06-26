@@ -1278,44 +1278,44 @@ class EnableEmailBallotReceipts(BooleanPreference):
 @tournament_preferences_registry.register
 class BallotEmailSubjectLine(StringPreference):
     help_text = _("The subject line for emails sent to adjudicators with their submitted ballot. "
-                  "Use '<DEBATE>' as a placeholder for the associated debate")
+                  "Use '{{ DEBATE }}' as a placeholder for the associated debate")
     verbose_name = _("Ballot receipt subject line")
     section = email
     name = 'ballot_email_subject'
-    default = "Your ballot for <DEBATE> has been received"
+    default = "Your ballot for {{ DEBATE }} has been received"
 
 
 @tournament_preferences_registry.register
 class BallotEmailMessageBody(LongStringPreference):
     help_text = _("The message body for emails sent to adjudicators with their submitted ballot. "
-                  "Use '<DEBATE>' as a placeholder for the associated debate, '<USER>' for the adjudicator, "
-                  "and '<SCORES>' for the ballot values.")
+                  "Use '{{ DEBATE }}' as a placeholder for the associated debate, '{{ USER }}' for the adjudicator, "
+                  "and '{{ SCORES }}' for the ballot values.")
     verbose_name = _("Ballot receipt message")
     section = email
     name = 'ballot_email_message'
-    default = "Hi <USER>,\n\nYour ballot for <DEBATE> has been successfully received, with these scores:\n\n<SCORES>\n\nIf there are any problems, please contact the tab team."
+    default = "Hi {{ USER }},\n\nYour ballot for {{ DEBATE }} has been successfully received, with these scores:\n\n{{ SCORES }}\n\nIf there are any problems, please contact the tab team."
 
 
 @tournament_preferences_registry.register
 class PointsEmailSubjectLine(StringPreference):
     help_text = _("The subject line for emails sent to speakers with their team points. "
-                  "Use '<TOURN>' as a placeholder for the tournament, '<POINTS>' for the team points, "
-                  "and '<TEAM>' for the associated team.")
+                  "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ POINTS }}' for the team points, "
+                  "and '{{ TEAM }}' for the associated team.")
     verbose_name = _("Team points subject line")
     section = email
     name = 'team_points_email_subject'
-    default = "Your current number of wins for <TEAM> (<TOURN>): <POINTS>"
+    default = "Your current number of wins for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}"
 
 
 @tournament_preferences_registry.register
 class PointsEmailMessageBody(LongStringPreference):
     help_text = _("The message body for emails sent to speakers with their team points. "
-                  "Use '<TOURN>' as a placeholder for the tournament, '<POINTS>' for the team points, "
-                  "'<USER>' for the speaker, and '<TEAM>' for the associated team.")
-    verbose_name = _("Team points subject line")
+                  "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ POINTS }}' for the team points, "
+                  "'{{ USER }}' for the speaker, and '{{ TEAM }}' for the associated team.")
+    verbose_name = _("Team points message")
     section = email
     name = 'team_points_email_message'
-    default = "Hi <USER>,\n\nYour team (<TEAM>) currently has <POINTS> wins in the <TOURN>."
+    default = "Hi {{ USER }},\n\nYour team ({{ TEAM }}) currently has {{ POINTS }} wins in the {{ TOURN }}."
 
 
 @tournament_preferences_registry.register

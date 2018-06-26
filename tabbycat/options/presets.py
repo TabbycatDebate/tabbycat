@@ -136,8 +136,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
     # Email Sending
-    email__team_points_email_subject           = 'Your current number of points for <TEAM> (<TOURN>): <POINTS>'
-    email__team_points_email_message           = "Hi <USER>,\n\nYour team (<TEAM>) currently has <POINTS> points in the <TOURN>.\n\n<URL>"
+    email__team_points_email_subject           = 'Your current number of points for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}'
+    email__team_points_email_message           = "Hi {{ USER }},\n\nYour team ({{ TEAM }}) currently has {{ POINTS }} points in the {{ TOURN }}.\n\n{{ URL }}"
 
 
 class CanadianParliamentaryPreferences(PreferencesPreset):
