@@ -13,7 +13,7 @@ DATABASES = {
         'PASSWORD'    : '',  # put your PostgreSQL login role's password in here
         'HOST'        : 'localhost',
         'PORT'        : '5432',
-        'CONN_MAX_AGE': 600,
+        'CONN_MAX_AGE': None,
     }
 }
 
