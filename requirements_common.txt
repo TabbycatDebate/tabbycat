@@ -29,10 +29,10 @@ whitenoise==3.3.1                       # Static file serving
 django_redis==4.9.0                     # Use redis for cache (on heroku; local optional)
 
 # Channels
-channels==2.1.1                         # Channels
-channels_redis==2.1.1                   # Channels Layer
+channels==2.1.2                         # Channels
+channels_redis==2.2.1                   # Channels Layer
 
 # Misc
 django-debug-toolbar==1.9.1             # Debug; but useful to run in prod sometimes
-scout-apm==1.1.1                               # Performance monitoring
+scout-apm==1.1.8                        # Performance monitoring
 ipython==6.3.1
