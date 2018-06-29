@@ -37,6 +37,7 @@ formats too. If you're looking for a general overview of the software, check out
    use/starting-a-tournament
    use/running-a-tournament
    use/finishing-a-tournament
+   use/scaling
 
 .. toctree::
    :maxdepth: 1
