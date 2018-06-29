@@ -179,6 +179,8 @@ STATICFILES_FINDERS = (
 
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
+# Serve files that must be at root (robots; favicon) from this folder
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'static/root')
 
 # ==============================================================================
 # Logging

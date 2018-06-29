@@ -68,10 +68,6 @@ urlpatterns = [
     path('accounts/',
         include('django.contrib.auth.urls')),
 
-    # Favicon for old browsers that ignore <head> links and always load via root
-    path('favicon\.ico',
-        RedirectView.as_view(url='/static/favicon.ico')),
-
     # Tournament URLs
     path('<slug:tournament_slug>/',
         include('tournaments.urls')),
