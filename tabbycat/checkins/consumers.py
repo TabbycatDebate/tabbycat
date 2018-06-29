@@ -3,12 +3,12 @@ from channels.layers import get_channel_layer
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
-from utils.consumers import TournamentConsumer, WSLoginRequiredMixin
+from utils.consumers import TournamentConsumer, WSPublicAccessMixin
 
 from .models import Event
 
 
-class CheckInEventConsumer(TournamentConsumer, WSLoginRequiredMixin):
+class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
 
     group_prefix = 'checkins'
 
