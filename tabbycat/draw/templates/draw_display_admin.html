@@ -130,8 +130,12 @@
           {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
           {% if pref.public_draw %}
-            {% trans "The draw has been released." as text %}
+            {% trans "The draw has been released publicly." as text %}
             {% include "components/item-info.html" with type="" %}
+
+            {% trans "View public draw page" as text %}
+            {% roundurl 'draw-public-for-round' current_round as public_link %}
+            {% include "components/item-action.html" with type="primary" url=public_link icon="eye" %}
           {% elif pref.participant_ballots != 'off' or pref.participant_feedback != 'off' %}
             {% blocktrans trimmed asvar text %}
               You have released the draw, so ballots and/or feedback can be submitted from the public forms (if enabled). However, the draw itself will not show to the public unless the "public view of draw" setting is enabled in <a class="alert-link" href="{{ alert_link }}"> this tournament's configuration</a>.
@@ -233,11 +237,14 @@
           {# "and" takes precedence over "or" #}
           {% if pref.public_motions or pref.participant_ballots != 'off' and pref.enable_motions or pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
             {% if pref.enable_motions or pref.motion_vetoes_enabled %}
-              {% trans "Motions have been released." as text %}
+              {% trans "Motions have been released publicly." as text %}
             {% else %}
-              {% trans "The motion has been released." as text %}
+              {% trans "The motion has been released publicly." as text %}
             {% endif %}
             {% include "components/item-info.html" with type="" %}
+            {% trans "View public motions page" as text %}
+            {% roundurl 'draw-public-for-round' current_round as public_link %}
+            {% include "components/item-action.html" with type="primary" url=public_link icon="eye" %}
           {% else %}
             {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
             {% blocktrans trimmed asvar text %}
