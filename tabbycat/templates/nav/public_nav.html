@@ -75,7 +75,7 @@
         {% endif %}
       </div>
     </li>
-  {% else %}
+  {% elif current_round.draw_status == current_round.STATUS_RELEASED %}
     <li class="nav-item {% if draw_nav %}active{% endif %}">
       <a class="nav-link" href="{% tournamenturl 'draw-public-current-round' %}">
         {% blocktrans trimmed with round_name=current_round.name %}
