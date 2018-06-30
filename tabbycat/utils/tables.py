@@ -147,8 +147,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
     Tabbycat."""
 
     ADJ_SYMBOLS = {
-        AdjudicatorAllocation.POSITION_CHAIR: _("Ⓒ"),
-        AdjudicatorAllocation.POSITION_TRAINEE: _("Ⓣ"),
+        AdjudicatorAllocation.POSITION_CHAIR: _("ⓒ"),
+        AdjudicatorAllocation.POSITION_ONLY: _("ⓒ"),
+        AdjudicatorAllocation.POSITION_TRAINEE: _("ⓣ"),
     }
 
     ADJ_POSITION_NAMES = {
@@ -521,17 +522,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
         def construct_text(adjs_data):
             adjs_list = []
             for a in adjs_data:
-                adj_str = '<span class="d-inline-block">' + a['adj'].name
+                adj_str = '<span class="d-inline">' + a['adj'].name
                 symbol = self.ADJ_SYMBOLS.get(a['position'])
                 if symbol:
-                    adj_str += " " + symbol
+                    adj_str += "<i class='adj-symbol'>%s</i>" % symbol
                 if a.get('split', False):
                     adj_str += " <span class='text-danger'>💢</span>"
                 if a['adj'] == highlight_adj:
                     adj_str = "<strong>" + adj_str + "</strong>"
                 adj_str += '</span>'
                 adjs_list.append(adj_str)
-            return ', '.join(adjs_list)
+            return "<div class='clearfix pt-1 pb-1 d-block d-md-none'> \
+                    </div><span class='d-none d-md-inline'>, </span>".join(adjs_list)
 
         def construct_popover(adjs_data):
             popover_data = []
