@@ -57,6 +57,7 @@ FORMAT_MODULE_PATH = [
 # ==============================================================================
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
