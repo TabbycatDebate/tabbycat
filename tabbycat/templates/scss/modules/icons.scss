@@ -25,9 +25,10 @@ span.emoji {
 //------------------------------------------------------------------------------
 
 .adj-symbol {
-  @extend .text-muted;
   @extend .text-monospace;
+  color: $gray-700; // not black; but not too gray
   font-style: normal;
+  font-weight: bold; // ensure it shows on flakey projectors
   margin-left: 2px;
 }
 
