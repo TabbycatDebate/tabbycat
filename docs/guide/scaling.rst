@@ -1,12 +1,12 @@
 .. _scaling:
 
-=================
-Scaling on Heroku
-=================
+===============================
+Scaling & Performance on Heroku
+===============================
 
 If you expect your tournament to gain lots of traffic — either because it has a lot of participants or will be followed by lots of people not in attendance — there are a number of strategies to ensure that your Tabbycat site will perform despite this attention.
 
-By default a Tabbycat installation runs on Heroku's free tier. This a resource-constrained environment that has limited capacity to serve high amounts of traffic; particularly during 'bursty' events such as a draw or tab release.
+By default a Tabbycat installation runs on Heroku's free tier. This a resource-constrained environment that has limited capacity to serve high amounts of traffic; particularly during 'bursty' events such as a draw or tab release. For tournaments Australs-size and up the amount of scaling needing is typically minor, however if the site is slow you want to be able to do so quickly and with confidence so knowing what to do and how to do it ahead of time can be critical.
 
 Improving performance will typically require paying for higher levels of Heroku services, however note that these are billed on a per-minute (not monthly) basis. If you make use of any upgrades mentioned below you will only be billed for the actual duration used — i.e. if an upgrade is listed at $100/month, but you only use it for 4 hours, the final bill will be around $0.5. As such you can make use of high-performing resources just when they are needed, or even over the (relatively) brief period of time a tournament runs, without needing to pay the full monthly price of maintain the resource indefinitely.
 
@@ -17,7 +17,7 @@ Introduction to Scaling
 
 Heroku's primary resource is that of a 'Dyno'. Each dyno can be thought of as a 'copy' of your app. Running a greater number of copies will in general improve the ability of your site to cope with traffic.
 
-Dynos can be scaling by adding more dynos 'horizontally' or by adding faster dynos 'vertically'. In general horizontally should be the first and most effective port of call — typically the problem with traffic is one of *concurrency* (lots of people want information all at once). Faster dynos will help with this too, but not as much as having more dynos. Upgrading this dyno types is generally only required if you need additional memory (as described below) or as a last resort.
+Dynos can be scaling by adding more dynos 'horizontally' or by adding faster dynos 'vertically'. In general horizontally should be the first and most effective port of call — typically the problem with traffic is one of *concurrency* (lots of people want information all at once). In order to increase the number of dynos you first need to be using at least the Standard 1X level of dyno. Faster dynos will help with this too, but not as much as having more dynos. Upgrading this dyno types is generally only required if you need additional memory (as described below) or as a last resort.
 
 Before proceeding with this guide, especially if you are uncertain about how much traffic your tournament will get, a crucial step is upgrading your existing 'Free' dyno to be a 'Hobby'. This will enable a "Metrics" tab on your Heroku dashboard that provides statistics which are crucial to understanding how your site is performing and how to improve said performance.
 
@@ -40,9 +40,9 @@ Once you have upgraded your Dyno to a 'Hobby' dyno the metrics tab provides a nu
     - Closely related to this is the Throughput tab which shows how many pages your site is serving a second. Normally this is not particularly interesting, however note that the red part of the bar graph shows the amount of failed page requests. Like the Response Time graph this shows serious issues with the site — normally this red portion should be well below 1rps (and ideally 0rps). If it is above 0.5 it represents a site that is producing a significant number of errors.
     - You can verify if pages are not being served to users by checking the Events chart and looking for H12 errors. If these are occuring you probably want to add more dynos as described below. A large amount of H13 errors can also be a cause for concern.
 - Memory Usage tab
-    - It is very rare that Tabbycat sites will hit the memory limits of the Free or Hobby level dynos. If the graph is approaching the dashed line you may want to restart the dynos and see if that resolves it.
+    - It is very rare that Tabbycat sites will hit the memory limits of the Free or Hobby level dynos — its almost always hovering around 256mb of the (standard dyno) limit of 512mb. If the graph is approaching the dashed line you may want to restart the dynos and see if that resolves it.
     - *You can confirm that memory limits are causing the app to fail by checking for the presence of R14 errors in the Events chart*
-    - *If it continues to come very close to that memory limit you will want to upgrade your dynos to the Standard-level dynos which have increased memory.*
+    - *If it continues to come very close to that memory limit you will want to upgrade your dynos to the higher level dynos which have increased memory.*
 - Dyno Load tab
     - This graph shows how well your dynos are being utilised. It is scaled relative to the total number of dynos you are running (or have run previously). So if you have 10 dynos and the bar graph is near the '10' this shows that each dyno is being utilised 100% (either 100% on average over a 1-minute period or 100% max over a 1-minute period)
     - Generally if this bar graph is hitting the top it will represent a site that is slow or failing to load pages — if each dyno is busy it can't serve a new page until it is finished, and this can compound.
