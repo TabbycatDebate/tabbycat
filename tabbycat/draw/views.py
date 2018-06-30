@@ -5,6 +5,7 @@ import unicodedata
 from itertools import product
 from math import floor
 
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
@@ -75,7 +76,9 @@ class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
     def get_page_subtitle(self):
         round = self.round
         if round and round.starts_at:
-            return _("debates start at %(time)s") % {'time': round.starts_at.strftime('%H:%M')}
+            return _("debates start at %(time)s (in %(time_zone)s)") % {
+                     'time': round.starts_at.strftime('%H:%M'),
+                     'time_zone': settings.TIME_ZONE}
         else:
             return ''
 
