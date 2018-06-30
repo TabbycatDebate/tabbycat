@@ -269,6 +269,8 @@ class Team(models.Model):
 
     @property
     def wins_count(self):
+        """Callers using this property for many teams should prefetch them
+        using `populate_win_counts()` in the `participants.prefetch` module."""
         try:
             return self._wins_count
         except AttributeError:
@@ -279,6 +281,10 @@ class Team(models.Model):
 
     @property
     def points_count(self):
+        """Callers using this property for many teams should prefetch them
+        using `populate_win_counts()` in the `participants.prefetch` module.
+        (That's not a typo -- that function populates both `_wins_count` and
+        `_points`.)"""
         try:
             return self._points
         except AttributeError:
