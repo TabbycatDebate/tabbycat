@@ -8,7 +8,10 @@
         <button v-for="(optionState, optionKey) in this.filterByPresence" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('filterByPresence', optionKey, !optionState)">
-          {{ stats[optionKey] }} {{ optionKey }}
+          <span v-if="optionKey == 'All'">All</span>
+          <i v-if="optionKey == 'Absent'" data-feather="x"></i>
+          <i v-if="optionKey == 'Present'" data-feather="check"></i>
+          {{ stats[optionKey] }}
         </button>
       </div>
 
@@ -24,11 +27,12 @@
         <button v-for="(optionState, optionKey) in this.speakerGroupings" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('speakerGroupings', optionKey, !optionState)">
-          {{ optionKey }}
+          By {{ optionKey }}
         </button>
       </div>
 
       <div class="btn-group mb-md-0 mb-3">
+        <div class="btn btn-outline-primary disabled">Order</div>
         <button v-for="(optionState, optionKey) in this.sortByGroup" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('sortByGroup', optionKey, !optionState)">
@@ -221,15 +225,15 @@ export default {
       })
     },
     entitiesBySortingSetting: function () {
-      if (this.sortByGroup['By Category'] === true) {
+      if (this.sortByGroup['Category'] === true) {
         return this.venuesByCategory
-      } else if (this.sortByGroup['By Priority'] === true) {
+      } else if (this.sortByGroup['Priority'] === true) {
         return this.venuesByPriority
-      } else if (this.sortByGroup['By Name'] === true) {
+      } else if (this.sortByGroup['Name'] === true) {
         return this.entitiesByName
-      } else if (this.sortByGroup['By Institution'] === true) {
+      } else if (this.sortByGroup['Institution'] === true) {
         return this.peopleByInstitution
-      } else if (this.sortByGroup['By Time'] === true) {
+      } else if (this.sortByGroup['Time'] === true) {
         return this.entitiesByTime
       }
       return this.entitiesByTime

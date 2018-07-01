@@ -6,7 +6,7 @@ export default {
     return {
       venuesFilterByType: null,
       venuesSortByGroup: {
-        'By Category': true, 'By Name': false, 'By Time': false, 'By Priority': false,
+        'Category': true, 'Name': false, 'Time': false, 'Priority': false,
       },
     }
   },

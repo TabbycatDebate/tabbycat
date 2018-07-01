@@ -8,10 +8,10 @@ export default {
         All: true, Adjudicators: false, Debaters: false,
       },
       peopleSortByGroup: {
-        'By Institution': true, 'By Name': false, 'By Time': false,
+        'Institution': true, 'Name': false, 'Time': false,
       },
       speakerGroupings: {
-        'Show Speakers': false, 'Show Teams': true,
+        'Speaker': false, 'Team': true,
       },
     }
   },
@@ -91,7 +91,7 @@ export default {
       return teams
     },
     annotatedDebaters: function () {
-      if (this.speakerGroupings['Show Speakers']) {
+      if (this.speakerGroupings['Speakers']) {
         return this.annotatedSpeakers
       }
       return this.annotatedTeams
