@@ -6,7 +6,7 @@
     {% trans "View URLs" %}
   </a>
   <div class="btn-group">
-    <div class="btn btn-outline-primary disabled">Print</div>
+    <div class="btn btn-outline-primary disabled">{% trans "Print" %}</div>
     <a class="btn btn-outline-primary"
        href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
       {% trans "Feedback URLs" %}
@@ -17,7 +17,7 @@
     </a>
   </div>
   <div class="btn-group">
-    <div class="btn btn-outline-primary disabled">Email</div>
+    <div class="btn btn-outline-primary disabled">{% trans "Email" %}</div>
     <a class="btn btn-outline-primary {% if email_feedback_nav %}active{% endif %}"
        href="{% tournamenturl 'privateurls-email-feedback' %}">
       {% trans "Feedback URLs" %}

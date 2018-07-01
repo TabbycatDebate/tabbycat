@@ -14,7 +14,7 @@
 </div>
 
 <div class="btn-group flex-wrap">
-  <div class="btn btn-outline-primary disabled">Teams</div>
+  <div class="btn btn-outline-primary disabled">{% trans "Teams" %}</div>
   <a class="btn btn-outline-primary {% if standings_team_nav %}active{% endif %}"
      href="{% roundurl 'standings-team' current_round %}">
     {% trans "All" %}
@@ -30,7 +30,7 @@
 </div>
 
 <div class="btn-group flex-wrap">
-  <div class="btn btn-outline-primary disabled">Speakers</div>
+  <div class="btn btn-outline-primary disabled">{% trans "Speakers" %}</div>
   <a class="btn btn-outline-primary {% if standings_speaker_nav %}active{% endif %}"
      href="{% roundurl 'standings-speaker' current_round %}">
     {% trans "All" %}
