@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,166 +100,166 @@ msgstr ""
 msgid "for %(round)s"
 msgstr ""
 
-#: tournaments/models.py:25
+#: tournaments/models.py:26
 msgid ""
 "You can't use this as a tournament slug, because it's reserved for a "
 "Tabbycat system URL. Please try another one."
 msgstr ""
 
-#: tournaments/models.py:32 tournaments/models.py:255
+#: tournaments/models.py:33 tournaments/models.py:256
 msgid "name"
 msgstr ""
 
-#: tournaments/models.py:33
+#: tournaments/models.py:34
 msgid ""
 "The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""
 msgstr ""
 
-#: tournaments/models.py:35
+#: tournaments/models.py:36
 msgid "short name"
 msgstr ""
 
-#: tournaments/models.py:36
+#: tournaments/models.py:37
 msgid "The name used in the menu, e.g. \"Australs 2016\""
 msgstr ""
 
-#: tournaments/models.py:38 tournaments/models.py:253
+#: tournaments/models.py:39 tournaments/models.py:254
 msgid "sequence number"
 msgstr ""
 
-#: tournaments/models.py:39
+#: tournaments/models.py:40
 msgid ""
 "A number that determines the relative order in which tournaments are "
 "displayed on the homepage."
 msgstr ""
 
-#: tournaments/models.py:41
+#: tournaments/models.py:42
 msgid "slug"
 msgstr ""
 
-#: tournaments/models.py:42
+#: tournaments/models.py:43
 msgid ""
 "The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""
 msgstr ""
 
-#: tournaments/models.py:44
+#: tournaments/models.py:45
 msgid "current round"
 msgstr ""
 
-#: tournaments/models.py:45
+#: tournaments/models.py:46
 msgid ""
 "Must be set for the tournament to start! (Set after rounds are inputted)"
 msgstr ""
 
-#: tournaments/models.py:46
+#: tournaments/models.py:47
 msgid "active"
 msgstr ""
 
-#: tournaments/models.py:49 tournaments/models.py:252
+#: tournaments/models.py:50 tournaments/models.py:253
 msgid "tournament"
 msgstr ""
 
-#: tournaments/models.py:50
+#: tournaments/models.py:51
 msgid "tournaments"
 msgstr ""
 
 #. Translators: These are choices for the type of draw a round should have.
-#: tournaments/models.py:229
+#: tournaments/models.py:230
 msgid "Random"
 msgstr ""
 
-#: tournaments/models.py:230
+#: tournaments/models.py:231
 msgid "Manual"
 msgstr ""
 
-#: tournaments/models.py:231
+#: tournaments/models.py:232
 msgid "Round-robin"
 msgstr ""
 
-#: tournaments/models.py:232
+#: tournaments/models.py:233
 msgid "Power-paired"
 msgstr ""
 
-#: tournaments/models.py:233 tournaments/models.py:238
+#: tournaments/models.py:234 tournaments/models.py:239
 msgid "Elimination"
 msgstr ""
 
-#: tournaments/models.py:237
+#: tournaments/models.py:238
 msgid "Preliminary"
 msgstr ""
 
 #. Translators: These are choices for the status of the draw for a round.
-#: tournaments/models.py:245
+#: tournaments/models.py:246
 msgid "None"
 msgstr ""
 
-#: tournaments/models.py:246
+#: tournaments/models.py:247
 msgid "Draft"
 msgstr ""
 
-#: tournaments/models.py:247
+#: tournaments/models.py:248
 msgid "Confirmed"
 msgstr ""
 
-#: tournaments/models.py:248
+#: tournaments/models.py:249
 msgid "Released"
 msgstr ""
 
-#: tournaments/models.py:254
+#: tournaments/models.py:255
 msgid ""
 "A number that determines the order of the round, should count consecutively "
 "from 1 for the first round"
 msgstr ""
 
-#: tournaments/models.py:255
+#: tournaments/models.py:256
 msgid "e.g. \"Round 1\""
 msgstr ""
 
-#: tournaments/models.py:256
+#: tournaments/models.py:257
 msgid "abbreviation"
 msgstr ""
 
-#: tournaments/models.py:256
+#: tournaments/models.py:257
 msgid "e.g. \"R1\""
 msgstr ""
 
-#: tournaments/models.py:258
+#: tournaments/models.py:259
 msgid "stage"
 msgstr ""
 
-#: tournaments/models.py:259
+#: tournaments/models.py:260
 msgid "Preliminary = inrounds, elimination = outrounds"
 msgstr ""
 
-#: tournaments/models.py:261
+#: tournaments/models.py:262
 msgid "draw type"
 msgstr ""
 
-#: tournaments/models.py:262
+#: tournaments/models.py:263
 msgid "Which draw method to use"
 msgstr ""
 
-#: tournaments/models.py:265
+#: tournaments/models.py:266
 msgid "break category"
 msgstr ""
 
-#: tournaments/models.py:266
+#: tournaments/models.py:267
 msgid "If elimination round, which break category"
 msgstr ""
 
-#: tournaments/models.py:269
+#: tournaments/models.py:270
 msgid "draw status"
 msgstr ""
 
-#: tournaments/models.py:270
+#: tournaments/models.py:271
 msgid "The status of this round's draw"
 msgstr ""
 
-#: tournaments/models.py:273
+#: tournaments/models.py:274
 msgid "feedback weight"
 msgstr ""
 
-#: tournaments/models.py:275
+#: tournaments/models.py:276
 #, no-python-format
 msgid ""
 "The extent to which each adjudicator's overall score depends on feedback vs "
@@ -268,51 +268,51 @@ msgid ""
 msgstr ""
 
 #. Translators: A silent round is a round for which results are not disclosed once the round is over.
-#: tournaments/models.py:278
+#: tournaments/models.py:279
 msgid "silent"
 msgstr ""
 
-#: tournaments/models.py:279
+#: tournaments/models.py:280
 msgid ""
 "If marked silent, information about this round (such as its results) will "
 "not be shown publicly."
 msgstr ""
 
-#: tournaments/models.py:281
+#: tournaments/models.py:282
 msgid "motions released"
 msgstr ""
 
-#: tournaments/models.py:282
+#: tournaments/models.py:283
 msgid ""
 "Whether motions will appear on the public website, assuming that feature is "
 "turned on"
 msgstr ""
 
-#: tournaments/models.py:283
+#: tournaments/models.py:284
 msgid "starts at"
 msgstr ""
 
-#: tournaments/models.py:286
+#: tournaments/models.py:287
 msgid "round"
 msgstr ""
 
-#: tournaments/models.py:287
+#: tournaments/models.py:288
 msgid "rounds"
 msgstr ""
 
-#: tournaments/models.py:300
+#: tournaments/models.py:301
 msgid ""
 "A round in the elimination stage must have its draw type set to \"Elimination"
 "\"."
 msgstr ""
 
-#: tournaments/models.py:303
+#: tournaments/models.py:304
 msgid ""
 "A round in the preliminary stage cannot have its draw type set to "
 "\"Elimination\"."
 msgstr ""
 
-#: tournaments/models.py:308
+#: tournaments/models.py:309
 msgid "Elimination rounds must have a break category."
 msgstr ""
 
@@ -606,74 +606,79 @@ msgid "Motions Tab"
 msgstr ""
 
 #: tournaments/templates/public_tournament_index.html:88
-#: tournaments/templates/public_tournament_index.html:126
+#: tournaments/templates/public_tournament_index.html:133
 msgid "Sides"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:95
-#: tournaments/templates/public_tournament_index.html:192
+#: tournaments/templates/public_tournament_index.html:96
+#: tournaments/templates/public_tournament_index.html:199
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:102
+#: tournaments/templates/public_tournament_index.html:101
+#, python-format
+msgid "%(round_name)s's draw has yet to be released"
+msgstr ""
+
+#: tournaments/templates/public_tournament_index.html:109
 msgid "Check-Ins"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:108
+#: tournaments/templates/public_tournament_index.html:115
 msgid "Results"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:114
+#: tournaments/templates/public_tournament_index.html:121
 msgid "Divisions"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:120
+#: tournaments/templates/public_tournament_index.html:127
 msgid "Motions"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:132
+#: tournaments/templates/public_tournament_index.html:139
 msgid "Team Standings"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:139
+#: tournaments/templates/public_tournament_index.html:146
 #, python-format
 msgid "%(category_name)s Break"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:148
+#: tournaments/templates/public_tournament_index.html:155
 msgid "Breaking Adjudicators"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:154
+#: tournaments/templates/public_tournament_index.html:161
 msgid "Diversity Overview"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:160
+#: tournaments/templates/public_tournament_index.html:167
 msgid "Participants"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:166
+#: tournaments/templates/public_tournament_index.html:173
 msgid "Institutions"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:172
+#: tournaments/templates/public_tournament_index.html:179
 msgid "Feedback Progress"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:178
+#: tournaments/templates/public_tournament_index.html:185
 msgid "Enter Ballot"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:184
+#: tournaments/templates/public_tournament_index.html:191
 msgid "Enter Feedback"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:200
+#: tournaments/templates/public_tournament_index.html:207
 msgid "View All Draws"
 msgstr ""
 
-#: tournaments/templates/public_tournament_index.html:211
+#: tournaments/templates/public_tournament_index.html:218
 msgid "Tournament Staff"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -25,6 +25,38 @@ msgstr "Équipe"
 #: privateurls/apps.py:7
 msgid "Private URL Management"
 msgstr "Gestion des URLs privées"
+
+#: privateurls/forms.py:8
+msgid "Message"
+msgstr ""
+
+#: privateurls/forms.py:15
+msgid "'<URL>' must be present in the email body"
+msgstr ""
+
+#: privateurls/forms.py:21
+msgid "Subject"
+msgstr ""
+
+#: privateurls/forms.py:23 privateurls/forms.py:34
+msgid ""
+"Use '<NAME>' and '<URL>' as placeholders for the judge's name and their "
+"private URL, respectively in the message body."
+msgstr ""
+
+#: privateurls/forms.py:28
+msgid "Subject for team emails"
+msgstr ""
+
+#: privateurls/forms.py:30
+msgid ""
+"Use '<NAME>', '<TEAM>', and '<URL>' as placeholders for the judge's name, "
+"team's name, and their private URL, respectively in the message body."
+msgstr ""
+
+#: privateurls/forms.py:32
+msgid "Subject for judge emails"
+msgstr ""
 
 #: privateurls/models.py:12
 msgid "ballot"
@@ -132,7 +164,13 @@ msgstr[1] ""
 "envoyés dans <a href=\"%(sent_mail_records_url)s\">la zone pour modifier la "
 "base de données</a>."
 
-#: privateurls/templates/ballot_urls_email_list.html:50
+#: privateurls/templates/ballot_urls_email_list.html:49
+#: privateurls/templates/feedback_urls_email_list.html:64
+msgid "Email message"
+msgstr ""
+
+#: privateurls/templates/ballot_urls_email_list.html:62
+#: privateurls/templates/feedback_urls_email_list.html:78
 msgid "Send emails with private ballot URLs to adjudicators"
 msgstr "Envoyer aux juges les courriels avec les URLs privées de bulletins"
 
@@ -178,10 +216,6 @@ msgid ""
 "Database area</a>."
 msgstr ""
 
-#: privateurls/templates/feedback_urls_email_list.html:65
-msgid "Send emails with private feedback URLs to speakers and adjudicators"
-msgstr ""
-
 #: privateurls/templates/private_urls.html:17
 msgid ""
 "The private URLs for ballot and/or feedback submission from participants are "
@@ -221,8 +255,6 @@ msgid "There are no private URLs assigned."
 msgstr "Il n'y a aucune URL privée."
 
 #: privateurls/templates/private_urls.html:73
-#: privateurls/templates/private_urls_nav.html:33
-#: privateurls/templates/private_urls_nav.html:40
 msgid "Generate Private URLs"
 msgstr "Générer les URLs privées"
 
@@ -230,23 +262,47 @@ msgstr "Générer les URLs privées"
 msgid "View URLs"
 msgstr "Voir les URLs"
 
-#: privateurls/templates/private_urls_nav.html:11
-msgid "Print Feedback URLs"
-msgstr "Imprimer les URLs pour les commentaires"
+#: privateurls/templates/private_urls_nav.html:9
+msgctxt "prefix for print feedback/ballot URLs buttons (intended as verb)"
+msgid "Print"
+msgstr ""
 
-#: privateurls/templates/private_urls_nav.html:15
-msgid "Print Ballot URLs"
-msgstr "Imprimer les URLs pour les bulletins"
+#: privateurls/templates/private_urls_nav.html:12
+#, fuzzy
+#| msgid "Feedback URL"
+msgctxt "button, after 'Print' prefix"
+msgid "Feedback URLs"
+msgstr "URL pour les commentaires"
 
-#: privateurls/templates/private_urls_nav.html:21
-msgid "Email Feedback URLs"
-msgstr "Envoyer les URLs pours les commentaires"
+#: privateurls/templates/private_urls_nav.html:16
+#, fuzzy
+#| msgid "Ballot URL"
+msgctxt "button, after 'Print' prefix"
+msgid "Ballot URLs"
+msgstr "URL pour les bulletins"
 
-#: privateurls/templates/private_urls_nav.html:25
-msgid "Email Ballot URLs"
-msgstr "Envoyer les URLs pours les bulletins"
+#: privateurls/templates/private_urls_nav.html:20
+#, fuzzy
+#| msgid "Email"
+msgctxt "prefix for email feedback/ballot URLs buttons (intended as verb)"
+msgid "Email"
+msgstr "Courriel"
 
-#: privateurls/templates/private_urls_nav.html:32
+#: privateurls/templates/private_urls_nav.html:23
+#, fuzzy
+#| msgid "Feedback URL"
+msgctxt "button, after 'Email' prefix"
+msgid "Feedback URLs"
+msgstr "URL pour les commentaires"
+
+#: privateurls/templates/private_urls_nav.html:27
+#, fuzzy
+#| msgid "Ballot URL"
+msgctxt "button, after 'Email' prefix"
+msgid "Ballot URLs"
+msgstr "URL pour les bulletins"
+
+#: privateurls/templates/private_urls_nav.html:34
 msgid ""
 "This button only generates private URLs for participants who do not already "
 "have one."
@@ -254,45 +310,52 @@ msgstr ""
 "Ce bouton ne générera les URLs privées que pour les participants qui n'en "
 "ont pas déjà un."
 
-#: privateurls/templates/private_urls_nav.html:39
+#: privateurls/templates/private_urls_nav.html:35
+#: privateurls/templates/private_urls_nav.html:42
+#, fuzzy
+#| msgid "Generate Private URLs"
+msgid "Generate URLs"
+msgstr "Générer les URLs privées"
+
+#: privateurls/templates/private_urls_nav.html:41
 msgid "All participants already have private URLs."
 msgstr "Tous les participants ont déjà leurs URLs privées."
 
-#: privateurls/views.py:74 privateurls/views.py:94
+#: privateurls/views.py:76 privateurls/views.py:96
 msgid "no URL"
 msgstr "pas de URL"
 
-#: privateurls/views.py:80
+#: privateurls/views.py:82
 msgid "Teams"
 msgstr "Équipes"
 
-#: privateurls/views.py:83 privateurls/views.py:102 privateurls/views.py:230
-#: privateurls/views.py:240
+#: privateurls/views.py:85 privateurls/views.py:104 privateurls/views.py:308
+#: privateurls/views.py:318
 msgid "Feedback URL"
 msgstr "URL pour les commentaires"
 
-#: privateurls/views.py:99
+#: privateurls/views.py:101
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: privateurls/views.py:106 privateurls/views.py:194
+#: privateurls/views.py:108 privateurls/views.py:214
 msgid "Ballot URL"
 msgstr "URL pour les bulletins"
 
-#: privateurls/views.py:131
+#: privateurls/views.py:133
 msgid ""
 "All adjudicators and teams already have private URLs. If you want to delete "
 "them, use the Edit Database area."
 msgstr ""
 
-#: privateurls/views.py:140
+#: privateurls/views.py:142
 #, python-format
 msgid ""
 "Private URLs were generated for all %(nblank_adjs)d adjudicators and all "
 "%(nblank_teams)d teams."
 msgstr ""
 
-#: privateurls/views.py:146
+#: privateurls/views.py:148
 #, python-format
 msgid ""
 "Private URLs were generated for %(nblank_adjs)d adjudicators and "
@@ -301,117 +364,46 @@ msgid ""
 "intact."
 msgstr ""
 
-#: privateurls/views.py:174
+#: privateurls/views.py:176
 #, python-format
 msgid "Adjudicators who will be sent e-mails (%(n)s)"
 msgstr ""
 
-#: privateurls/views.py:177 privateurls/views.py:226
+#: privateurls/views.py:179 privateurls/views.py:304
 msgid "Email"
 msgstr "Courriel"
 
-#: privateurls/views.py:221
-#, python-format
-msgid "Speakers who will be sent e-mails (%(n)s)"
+#: privateurls/views.py:195
+#, fuzzy, python-format
+#| msgid "Your personal feedback submission URL for %(tournament)s"
+msgid "Your personal ballot submission URL for %(tour)s"
 msgstr ""
+"Votre URL personnelle pour la soumission des commentaires à %(tournament)s"
 
-#: privateurls/views.py:255
-#, python-format
-msgid "Your personal ballot submission URL for %(tournament)s"
-msgstr ""
-
-#: privateurls/views.py:257
-#, python-format
+#: privateurls/views.py:197
+#, fuzzy, python-format
+#| msgid ""
+#| "Hi %(name)s,\n"
+#| "\n"
+#| "At %(tournament)s, we are using an online adjudicator feedback system. "
+#| "You can submit your feedback at the following URL. This URL is unique to "
+#| "you — do not share it with anyone, as anyone who knows it can submit "
+#| "feedback on your behalf. This URL will not change throughout this "
+#| "tournament, so we suggest bookmarking it.\n"
+#| "\n"
+#| "Your personal private feedback submission URL is:\n"
+#| "%(url)s"
 msgid ""
-"Hi %(name)s,\n"
+"Hi <NAME>,\n"
 "\n"
-"At %(tournament)s, we are using an online ballot system. You can submit your "
+"At %(tour)s, we are using an online ballot system. You can submit your "
 "ballots at the following URL. This URL is unique to you — do not share it "
 "with anyone, as anyone who knows it can submit ballots on your behalf. This "
 "URL will not change throughout this tournament, so we suggest bookmarking "
 "it.\n"
 "\n"
 "Your personal private ballot submission URL is:\n"
-"%(url)s"
-msgstr ""
-
-#: privateurls/views.py:275
-msgid "There was a problem sending private ballot URLs to adjudicators."
-msgstr ""
-
-#: privateurls/views.py:278
-#, fuzzy
-#| msgid "There was a problem sending private feedback URLs to adjudicators."
-msgid ""
-"There was a problem connecting to the e-mail server when trying to send "
-"privateballot URLs to adjudicators."
-msgstr ""
-"Une erreur s'est produit lors de l'envoi aux juges des URLs privées pour les "
-"commentaires."
-
-#: privateurls/views.py:283
-#, python-format
-msgid ""
-"E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator."
-msgid_plural ""
-"E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicators."
-msgstr[0] ""
-msgstr[1] ""
-
-#: privateurls/views.py:298
-#, python-format
-msgid "Your team's feedback submission URL for %(tournament)s"
-msgstr ""
-
-#: privateurls/views.py:300
-#, python-format
-msgid ""
-"Hi %(name)s,\n"
-"\n"
-"At %(tournament)s, we are using an online adjudicator feedback system. As "
-"part of %(team)s, you can submit your feedback at the following URL. This "
-"URL is unique to you — do not share it with anyone, as anyone who knows it "
-"can submit feedback on your team's behalf. This URL will not change "
-"throughout this tournament, so we suggest bookmarking it.\n"
-"\n"
-"Your team's private feedback submission URL is:\n"
-"%(url)s"
-msgstr ""
-"Bonjour %(name)s,\n"
-"\n"
-"A %(tournament)s, nous utiliserons un système en ligne pour les commentaires "
-"sur les juges. En tant que membre de %(team)s, vous pouvez soumettre vos "
-"commentaires à l'URL ci-dessous. Cette URL est uniquement la vôtre — ne la "
-"partagez avec personne, car quiconque le sait peut soumettre les "
-"commentaires au nom de votre équipe. Cette URL ne changera jamais pendant ce "
-"tournoi, donc nous vous suggérons de l'enregistrer dans vos favoris.\n"
-"\n"
-"La URL privée de votre équipe pour la soumission des commentaires est:\n"
-"%(url)s"
-
-#: privateurls/views.py:319
-msgid "There was a problem sending private feedback URLs to speakers."
-msgstr ""
-
-#: privateurls/views.py:322
-#, python-format
-msgid "Your personal feedback submission URL for %(tournament)s"
-msgstr ""
-"Votre URL personnelle pour la soumission des commentaires à %(tournament)s"
-
-#: privateurls/views.py:324
-#, python-format
-msgid ""
-"Hi %(name)s,\n"
-"\n"
-"At %(tournament)s, we are using an online adjudicator feedback system. You "
-"can submit your feedback at the following URL. This URL is unique to you — "
-"do not share it with anyone, as anyone who knows it can submit feedback on "
-"your behalf. This URL will not change throughout this tournament, so we "
-"suggest bookmarking it.\n"
-"\n"
-"Your personal private feedback submission URL is:\n"
-"%(url)s"
+"<URL>"
 msgstr ""
 "Bonjour %(name)s,\n"
 "\n"
@@ -425,14 +417,154 @@ msgstr ""
 "Votre URL privée et personnelle pour la soumission des commentaires est:\n"
 "%(url)s"
 
-#: privateurls/views.py:342
+#: privateurls/views.py:227
+msgid "There was a problem sending private ballot URLs to adjudicators."
+msgstr ""
+
+#: privateurls/views.py:230
+#, fuzzy, python-format
+#| msgid "There was a problem sending private feedback URLs to adjudicators."
+msgid ""
+"There was a problem connecting to the e-mail server when trying to send "
+"private ballot URLs to adjudicators: %(error)s"
+msgstr ""
+"Une erreur s'est produit lors de l'envoi aux juges des URLs privées pour les "
+"commentaires."
+
+#: privateurls/views.py:235
+#, python-format
+msgid ""
+"E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicator."
+msgid_plural ""
+"E-mails with private ballot URLs were sent to %(nadjudicators)d adjudicators."
+msgstr[0] ""
+msgstr[1] ""
+
+#: privateurls/views.py:254
+#, fuzzy, python-format
+#| msgid "Your personal feedback submission URL for %(tournament)s"
+msgid "Your team's feedback submission URL for %(tour)s"
+msgstr ""
+"Votre URL personnelle pour la soumission des commentaires à %(tournament)s"
+
+#: privateurls/views.py:256
+#, fuzzy, python-format
+#| msgid ""
+#| "Hi %(name)s,\n"
+#| "\n"
+#| "At %(tournament)s, we are using an online adjudicator feedback system. As "
+#| "part of %(team)s, you can submit your feedback at the following URL. This "
+#| "URL is unique to you — do not share it with anyone, as anyone who knows "
+#| "it can submit feedback on your team's behalf. This URL will not change "
+#| "throughout this tournament, so we suggest bookmarking it.\n"
+#| "\n"
+#| "Your team's private feedback submission URL is:\n"
+#| "%(url)s"
+msgid ""
+"Hi <NAME>,\n"
+"\n"
+"At %(tour)s, we are using an online adjudicator feedback system. As part of "
+"<TEAM>, you can submit your feedback at the following URL. This URL is "
+"unique to you — do not share it with anyone, as anyone who knows it can "
+"submit feedback on your team's behalf. This URL will not change throughout "
+"this tournament, so we suggest bookmarking it.\n"
+"\n"
+"Your team's private feedback submission URL is:\n"
+"<URL>"
+msgstr ""
+"Bonjour %(name)s,\n"
+"\n"
+"A %(tournament)s, nous utiliserons un système en ligne pour les commentaires "
+"sur les juges. En tant que membre de %(team)s, vous pouvez soumettre vos "
+"commentaires à l'URL ci-dessous. Cette URL est uniquement la vôtre — ne la "
+"partagez avec personne, car quiconque le sait peut soumettre les "
+"commentaires au nom de votre équipe. Cette URL ne changera jamais pendant ce "
+"tournoi, donc nous vous suggérons de l'enregistrer dans vos favoris.\n"
+"\n"
+"La URL privée de votre équipe pour la soumission des commentaires est:\n"
+"%(url)s"
+
+#: privateurls/views.py:266
+#, fuzzy, python-format
+#| msgid "Your personal feedback submission URL for %(tournament)s"
+msgid "Your personal feedback submission URL for %(tour)s"
+msgstr ""
+"Votre URL personnelle pour la soumission des commentaires à %(tournament)s"
+
+#: privateurls/views.py:268
+#, fuzzy, python-format
+#| msgid ""
+#| "Hi %(name)s,\n"
+#| "\n"
+#| "At %(tournament)s, we are using an online adjudicator feedback system. "
+#| "You can submit your feedback at the following URL. This URL is unique to "
+#| "you — do not share it with anyone, as anyone who knows it can submit "
+#| "feedback on your behalf. This URL will not change throughout this "
+#| "tournament, so we suggest bookmarking it.\n"
+#| "\n"
+#| "Your personal private feedback submission URL is:\n"
+#| "%(url)s"
+msgid ""
+"Hi <NAME>,\n"
+"\n"
+"At %(tour)s, we are using an online adjudicator feedback system. You can "
+"submit your feedback at the following URL. This URL is unique to you — do "
+"not share it with anyone, as anyone who knows it can submit feedback on your "
+"behalf. This URL will not change throughout this tournament, so we suggest "
+"bookmarking it.\n"
+"\n"
+"Your personal private feedback submission URL is:\n"
+"<URL>"
+msgstr ""
+"Bonjour %(name)s,\n"
+"\n"
+"A %(tournament)s, nous utiliserons un système en ligne pour les commentaires "
+"surs les juges. Vous pouvez soumettre vos commentaires à l'URL ci-dessous. "
+"Cette URL est uniquement la vôtre — ne la partagez avec personne, car "
+"quiconque le sait peut soumettre les commentaires en votre nom. Cette URL ne "
+"changera jamais pendant ce tournoi, donc nous vous suggérons de "
+"l'enregistrer dans vos favoris.\n"
+"\n"
+"Votre URL privée et personnelle pour la soumission des commentaires est:\n"
+"%(url)s"
+
+#: privateurls/views.py:299
+#, python-format
+msgid "Speakers who will be sent e-mails (%(n)s)"
+msgstr ""
+
+#: privateurls/views.py:333
+msgid "There was a problem sending private feedback URLs to speakers."
+msgstr ""
+
+#: privateurls/views.py:337
+#, fuzzy, python-format
+#| msgid "There was a problem sending private feedback URLs to adjudicators."
+msgid ""
+"There was a problem connecting to the e-mail server when trying to send "
+"private feedback URLs to speakers: %(error)s"
+msgstr ""
+"Une erreur s'est produit lors de l'envoi aux juges des URLs privées pour les "
+"commentaires."
+
+#: privateurls/views.py:352
 msgid "There was a problem sending private feedback URLs to adjudicators."
 msgstr ""
 "Une erreur s'est produit lors de l'envoi aux juges des URLs privées pour les "
 "commentaires."
 
+#: privateurls/views.py:356
+#, fuzzy, python-format
+#| msgid "There was a problem sending private feedback URLs to adjudicators."
+msgid ""
+"There was a problem connecting to the e-mail server when trying to send "
+"private feedback URLs to adjudicators: %(error)s"
+msgstr ""
+"Une erreur s'est produit lors de l'envoi aux juges des URLs privées pour les "
+"commentaires."
+
 #. Translators: This goes in the "speakers_phrase" variable in "E-mails with private feedback URLs were sent..."
-#: privateurls/views.py:347
+#: privateurls/views.py:363
 #, python-format
 msgid "%(nspeakers)d speaker"
 msgid_plural "%(nspeakers)d speakers"
@@ -440,14 +572,14 @@ msgstr[0] "%(nspeakers)d orateur"
 msgstr[1] "%(nspeakers)d orateurs"
 
 #. Translators: This goes in the "adjudicators_phrase" variable in "E-mails with private feedback URLs were sent..."
-#: privateurls/views.py:350
+#: privateurls/views.py:366
 #, python-format
 msgid "%(nadjudicators)d adjudicator"
 msgid_plural "%(nadjudicators)d adjudicators"
 msgstr[0] "%(nadjudicators)d juge"
 msgstr[1] "%(nadjudicators)d juges"
 
-#: privateurls/views.py:352
+#: privateurls/views.py:368
 #, python-format
 msgid ""
 "E-mails with private feedback URLs were sent to %(speakers_phrase)s and "
@@ -455,6 +587,24 @@ msgid ""
 msgstr ""
 "Les courriels avec les URLs privées pour les commentaires ont été envoyés à "
 "%(speakers_phrase)s et %(adjudicators_phrase)s."
+
+#, fuzzy
+#~| msgid "Email"
+#~ msgctxt "prefix for email feedback/ballot URLs buttons"
+#~ msgid "Email"
+#~ msgstr "Courriel"
+
+#~ msgid "Print Feedback URLs"
+#~ msgstr "Imprimer les URLs pour les commentaires"
+
+#~ msgid "Print Ballot URLs"
+#~ msgstr "Imprimer les URLs pour les bulletins"
+
+#~ msgid "Email Feedback URLs"
+#~ msgstr "Envoyer les URLs pours les commentaires"
+
+#~ msgid "Email Ballot URLs"
+#~ msgstr "Envoyer les URLs pours les bulletins"
 
 #~ msgid "Name"
 #~ msgstr "Nom"

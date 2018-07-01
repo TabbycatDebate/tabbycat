@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -337,50 +337,50 @@ msgstr ""
 msgid "The motion for this round has not been released."
 msgstr ""
 
-#: motions/templates/show.html:15
-#, python-format
-msgid "Reveal Motion for %(round_name)s"
-msgid_plural "Reveal Motions for %(round_name)s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: motions/templates/show.html:23
+#: motions/templates/show.html:16
 #, python-format
 msgid "Reveal Info Slide for %(round_name)s"
 msgid_plural "Reveal Info Slides for %(round_name)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/templates/show.html:40
+#: motions/templates/show.html:24
+#, python-format
+msgid "Reveal Motion for %(round_name)s"
+msgid_plural "Reveal Motions for %(round_name)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: motions/templates/show.html:41
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr ""
 
-#: motions/views.py:95
+#: motions/views.py:101
 msgid "The motion has been saved."
 msgstr ""
 
-#: motions/views.py:97
+#: motions/views.py:103
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/views.py:102
+#: motions/views.py:108
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: motions/views.py:143
+#: motions/views.py:149
 msgid "Released the motion(s)."
 msgstr ""
 
-#: motions/views.py:150
+#: motions/views.py:156
 msgid "Unreleased the motion(s)."
 msgstr ""
 
-#: motions/views.py:174
+#: motions/views.py:182
 msgid "Motion Statistics"
 msgstr ""

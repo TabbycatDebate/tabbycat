@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,8 @@ msgid "Unrecognized metric code: \"%(code)s\""
 msgstr ""
 
 #: standings/diversity.py:136 standings/diversity.py:166
-#: standings/diversity.py:187
+#: standings/diversity.py:187 standings/templates/standings_menu.html:20
+#: standings/templates/standings_menu.html:36
 msgid "All"
 msgstr ""
 
@@ -186,7 +187,7 @@ msgstr ""
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:107 standings/views.py:589
+#: standings/teams.py:107 standings/views.py:590
 msgid "Wins"
 msgstr ""
 
@@ -291,7 +292,9 @@ msgid "who-beat-whom (in divisions)"
 msgstr ""
 
 #: standings/templates/current_standings.html:6
-msgid "It also excludes silent rounds (if any)."
+msgid ""
+"It also excludes results from silent rounds (if any) and from the current "
+"round."
 msgstr ""
 
 #: standings/templates/current_standings.html:9
@@ -370,42 +373,38 @@ msgstr ""
 msgid "Male identifying"
 msgstr ""
 
-#: standings/templates/standings_menu.html:7
+#: standings/templates/standings_menu.html:6
 msgid "Overview"
 msgstr ""
 
 #: standings/templates/standings_menu.html:11
-msgid "Teams"
-msgstr ""
-
-#: standings/templates/standings_menu.html:16
-#, python-format
-msgid "%(category_name)s Teams"
-msgstr ""
-
-#: standings/templates/standings_menu.html:24
 msgid "Divisions"
 msgstr ""
 
-#: standings/templates/standings_menu.html:29
+#: standings/templates/standings_menu.html:17
+msgid "Teams"
+msgstr ""
+
+#: standings/templates/standings_menu.html:25
+#: standings/templates/standings_menu.html:41
+#, python-format
+msgid "%(category_name)s"
+msgstr ""
+
+#: standings/templates/standings_menu.html:33
 msgid "Speakers"
 msgstr ""
 
-#: standings/templates/standings_menu.html:34
+#: standings/templates/standings_menu.html:49
 msgid "Replies"
 msgstr ""
 
-#: standings/templates/standings_menu.html:40
-#, python-format
-msgid "%(category_name)s Speakers"
+#: standings/templates/standings_menu.html:58
+msgid "Motions"
 msgstr ""
 
-#: standings/templates/standings_menu.html:52
-msgid "Motion Statistics"
-msgstr ""
-
-#: standings/templates/standings_menu.html:56
-msgid "Diversity Overview"
+#: standings/templates/standings_menu.html:62
+msgid "Diversity"
 msgstr ""
 
 #: standings/views.py:97
@@ -500,6 +499,6 @@ msgstr ""
 msgid "Current Team Standings"
 msgstr ""
 
-#: standings/views.py:589
+#: standings/views.py:590
 msgid "Points"
 msgstr ""

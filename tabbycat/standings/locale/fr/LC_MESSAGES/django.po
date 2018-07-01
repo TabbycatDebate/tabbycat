@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: 2018-02-06 09:43-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -32,7 +32,8 @@ msgid "Unrecognized metric code: \"%(code)s\""
 msgstr ""
 
 #: standings/diversity.py:136 standings/diversity.py:166
-#: standings/diversity.py:187
+#: standings/diversity.py:187 standings/templates/standings_menu.html:20
+#: standings/templates/standings_menu.html:36
 msgid "All"
 msgstr ""
 
@@ -189,7 +190,7 @@ msgstr ""
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:107 standings/views.py:589
+#: standings/teams.py:107 standings/views.py:590
 msgid "Wins"
 msgstr ""
 
@@ -294,7 +295,11 @@ msgid "who-beat-whom (in divisions)"
 msgstr ""
 
 #: standings/templates/current_standings.html:6
-msgid "It also excludes silent rounds (if any)."
+#, fuzzy
+#| msgid "It also excludes silent rounds (if any)."
+msgid ""
+"It also excludes results from silent rounds (if any) and from the current "
+"round."
 msgstr "Elle exclut aussi les tours silencieux (le cas échéant)."
 
 #: standings/templates/current_standings.html:9
@@ -381,43 +386,43 @@ msgstr ""
 msgid "Male identifying"
 msgstr ""
 
-#: standings/templates/standings_menu.html:7
+#: standings/templates/standings_menu.html:6
 msgid "Overview"
 msgstr "Aperçu"
 
 #: standings/templates/standings_menu.html:11
-msgid "Teams"
-msgstr "Équipes"
-
-#: standings/templates/standings_menu.html:16
-#, fuzzy, python-format
-#| msgid "%(category_name)s Speakers"
-msgid "%(category_name)s Teams"
-msgstr "Orateurs de la catégorie %(category_name)s"
-
-#: standings/templates/standings_menu.html:24
 msgid "Divisions"
 msgstr "Divisions"
 
-#: standings/templates/standings_menu.html:29
+#: standings/templates/standings_menu.html:17
+msgid "Teams"
+msgstr "Équipes"
+
+#: standings/templates/standings_menu.html:25
+#: standings/templates/standings_menu.html:41
+#, fuzzy, python-format
+#| msgid "%(category_name)s Speakers"
+msgid "%(category_name)s"
+msgstr "Orateurs de la catégorie %(category_name)s"
+
+#: standings/templates/standings_menu.html:33
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: standings/templates/standings_menu.html:34
+#: standings/templates/standings_menu.html:49
 msgid "Replies"
 msgstr "Résponses"
 
-#: standings/templates/standings_menu.html:40
-#, python-format
-msgid "%(category_name)s Speakers"
-msgstr "Orateurs de la catégorie %(category_name)s"
+#: standings/templates/standings_menu.html:58
+#, fuzzy
+#| msgid "Motions Tab"
+msgid "Motions"
+msgstr "Tab des motions"
 
-#: standings/templates/standings_menu.html:52
-msgid "Motion Statistics"
-msgstr "Statistiques des motions"
-
-#: standings/templates/standings_menu.html:56
-msgid "Diversity Overview"
+#: standings/templates/standings_menu.html:62
+#, fuzzy
+#| msgid "Diversity Overview"
+msgid "Diversity"
 msgstr "Aperçu de la diversité"
 
 #: standings/views.py:97
@@ -516,12 +521,15 @@ msgstr "Tab des orateurs de la catégorie %(category)s"
 msgid "Current Team Standings"
 msgstr "Classement actuel des équipes"
 
-#: standings/views.py:589
+#: standings/views.py:590
 msgid "Points"
 msgstr "Points"
 
+#~ msgid "%(category_name)s Speakers"
+#~ msgstr "Orateurs de la catégorie %(category_name)s"
+
+#~ msgid "Motion Statistics"
+#~ msgstr "Statistiques des motions"
+
 #~ msgid "Motions Balance"
 #~ msgstr "Équilibre des motions"
-
-#~ msgid "Motions Tab"
-#~ msgstr "Tab des motions"

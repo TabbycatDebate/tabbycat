@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: 2018-05-07 01:32-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -219,6 +219,10 @@ msgstr "espagnol"
 #: settings.py:46
 msgid "French"
 msgstr "français"
+
+#: settings.py:47
+msgid "Japanese"
+msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -847,12 +851,12 @@ msgstr "Retour à la page de connexion"
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr "Réinitialisation de mot de passe sur le site Tabbycat à %(domain)s"
 
-#: urls.py:99
+#: urls.py:94
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr "Salut, %(username)s — vous venez de vous connecter!"
 
-#: urls.py:102
+#: urls.py:97
 msgid "Welcome! You just logged in!"
 msgstr "Bienvenue ! Vous venez de vous connecter !"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -339,50 +339,50 @@ msgstr "Les motions de ce tour n'ont pas encore été publiées."
 msgid "The motion for this round has not been released."
 msgstr "La motion de ce tour n'a pas encore été publiée."
 
-#: motions/templates/show.html:15
-#, python-format
-msgid "Reveal Motion for %(round_name)s"
-msgid_plural "Reveal Motions for %(round_name)s"
-msgstr[0] "Révéler la motion de %(round_name)s"
-msgstr[1] "Révéler les motions de %(round_name)s"
-
-#: motions/templates/show.html:23
+#: motions/templates/show.html:16
 #, python-format
 msgid "Reveal Info Slide for %(round_name)s"
 msgid_plural "Reveal Info Slides for %(round_name)s"
 msgstr[0] "Révéler la diapositive d'information de %(round_name)s"
 msgstr[1] "Révéler les diapositives d'information de %(round_name)s"
 
-#: motions/templates/show.html:40
+#: motions/templates/show.html:24
+#, python-format
+msgid "Reveal Motion for %(round_name)s"
+msgid_plural "Reveal Motions for %(round_name)s"
+msgstr[0] "Révéler la motion de %(round_name)s"
+msgstr[1] "Révéler les motions de %(round_name)s"
+
+#: motions/templates/show.html:41
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "Aucune motion pour ce tour a été enregistrée dans Tabbycat."
 
-#: motions/views.py:95
+#: motions/views.py:101
 msgid "The motion has been saved."
 msgstr "La motion a été enregistrée."
 
-#: motions/views.py:97
+#: motions/views.py:103
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
 msgstr[0] "%(count)d motions a été enregistrée."
 msgstr[1] "%(count)d motions ont été enregistrées."
 
-#: motions/views.py:102
+#: motions/views.py:108
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
 msgstr[0] "%(count)d motions a été supprimée."
 msgstr[1] "%(count)d motions ont été supprimées."
 
-#: motions/views.py:143
+#: motions/views.py:149
 msgid "Released the motion(s)."
 msgstr "Vous avez publié la ou les motions."
 
-#: motions/views.py:150
+#: motions/views.py:156
 msgid "Unreleased the motion(s)."
 msgstr "Vous avez dépublié la ou les motions."
 
-#: motions/views.py:174
+#: motions/views.py:182
 msgid "Motion Statistics"
 msgstr ""
