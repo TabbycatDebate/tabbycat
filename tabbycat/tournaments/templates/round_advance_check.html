@@ -1,26 +1,25 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load i18n debate_tags %}
 
-{% block page-title %}Confirm Round Advance{% endblock %}
+{% block page-title %}{% trans "Confirm Round Advance" as page_title %}{% endblock %}
 {% block head-title %}
-  <span class="emoji">🙏</span>Confirm Round Advance
+  <span class="emoji">🙏</span>{{ page_title }}
 {% endblock %}
-{% block sub-title %}for {{ round.name }}{% endblock %}
+{% block sub-title %}{% blocktrans trimmed %}for {{ round.name }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-actions %}
 
   <a href="{% roundurl 'results-round-list' %}" class="btn btn-outline-primary">
-    <i data-feather="chevron-left"></i>Enter Results
+    <i data-feather="chevron-left"></i>{% trans "Enter Results" %}
   </a>
 
   <form action="{% roundurl 'tournament-send-standings-emails' %}" method="POST">
     {% csrf_token %}
     <button class="btn btn-outline-primary active" id="sendPointsEmails" type="submit">
-      Email Team
       {% if pref.teams_in_debate == "two" %}
-        Wins/Losses
+        {% trans "Email Team Wins/Losses" %}
       {% else %}
-        Points
+        {% trans "Email Team Points" %}
       {% endif %}
     </button>
   </form>
@@ -29,10 +28,10 @@
     {% csrf_token %}
     <button class="btn {{increment_ok|yesno:"btn-success,btn-danger"}}" id="createDraw" type="submit">
       {% if increment_ok %}
-        Advance to Next Round
+        {% trans "Advance to Next Round" %}
         <i data-feather="chevron-right"></i>
       {% else %}
-        Advance Anyway
+        {% trans "Advance Anyway" %}
         <i data-feather="chevron-right"></i>
       {% endif %}
     </button>
@@ -45,31 +44,32 @@
   {% if increment_ok %}
     <div class="alert alert-success">
       <i data-feather="alert-circle"></i>
-      It looks like all the ballots from {{ round.name }} are confirmed, you should be good to go.
+      {% blocktrans trimmed %}It looks like all the ballots from {{ round.name }} are confirmed, you should be good to go.{% endblocktrans %}
     </div>
   {% else %}
     <div class="alert alert-danger">
       <i data-feather="alert-circle"></i>
-      There are still {{ num_unconfirmed }}
+      {% blocktrans trimmed %}There are still {{ num_unconfirmed }}
       ballots that are not confirmed. You should <strong>not</strong>
-      proceed to the next round until all ballots are confirmed.
+      proceed to the next round until all ballots are confirmed.{% endblocktrans %}
     </div>
   {% endif %}
 
   {% if pref.public_results > 0 %}
     <div class="alert alert-info">
       <i data-feather="alert-circle"></i>
-      The "show public results" setting is on and this round
+      {% trans 'The "show public results" setting is on and this round' %}
       {% if round.silent %}
-        <strong>is marked as a silent round</strong>, so <strong>no results
-        will show on the public page</strong> when you advance.
+        {% blocktrans trimmed %}<strong>is marked as a silent round</strong>, so <strong>no results
+        will show on the public page</strong> when you advance.{% endblocktrans %}
       {% else %}
-        <strong>is not marked as a silent round</strong> so the <strong>results
-        will show on the public</strong> page when you advance.
+        {% blocktrans trimmed %}<strong>is not marked as a silent round</strong> so the <strong>results
+        will show on the public</strong> page when you advance.{% endblocktrans %}
       {% endif %}
-      A round can be marked/unmarked as silent in the
-      <a href="{% url 'admin:index' %}">edit database area</a>
-       under <em>Tournaments > Rounds</em>.
+      {% url 'admin:index' as admin_url %}
+      {% blocktrans trimmed %}A round can be marked/unmarked as silent in the
+      <a href="{{ admin_url }}">edit database area</a>
+       under <em>Tournaments > Rounds</em>.{% endblocktrans %}
     </div>
   {% endif %}
 

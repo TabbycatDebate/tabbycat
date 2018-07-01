@@ -60,7 +60,7 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
 
         formatted_message = message.render(Context(variables))
         formatted_subject = subject.render(Context(variables))
-        messages.append((subject, formatted_message, settings.DEFAULT_FROM_EMAIL, [email]))
+        messages.append((formatted_subject, formatted_message, settings.DEFAULT_FROM_EMAIL, [email]))
 
         record = PrivateUrlSentMailRecord(email=email, url_key=url_key, url_type=url_type)
         setattr(record, record_attrname, instance)
