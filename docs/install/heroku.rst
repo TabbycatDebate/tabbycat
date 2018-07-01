@@ -193,6 +193,8 @@ Heroku options you may want to change
 
 If you have a large tournament, you may want to customize your Heroku app. This section provides some guidance on upgrades and settings you may wish to consider. Some of these configurations require you to have the `Heroku Command Line Interface (CLI) <https://devcenter.heroku.com/articles/heroku-cli>`_ installed.
 
+.. _db-upgrades:
+
 Upgrading your database size
 ----------------------------
 
