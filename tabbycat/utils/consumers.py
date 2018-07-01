@@ -19,6 +19,12 @@ class WSSuperUserRequiredMixin():
         return self.scope["user"].is_superuser
 
 
+class WSPublicAccessMixin():
+
+    def is_authenticated(self):
+        return True
+
+
 class TournamentConsumer(JsonWebsocketConsumer):
     """For a channel consumer specific to a tournament and whose path includes
     a tournament_slug. Must provide a group_prefix that serves as a stream_name

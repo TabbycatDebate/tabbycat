@@ -58,12 +58,19 @@ FORMAT_MODULE_PATH = [
 # ==============================================================================
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # User language preferences
+    # User language preferences; must be after Session
+    'django.middleware.locale.LocaleMiddleware',
+    # Set Etags; i.e. cached requests not on network; must precede Common
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # Must be after SessionMiddleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # Must be after SessionMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.DebateMiddleware'
@@ -180,6 +187,8 @@ STATICFILES_FINDERS = (
 
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
+# Serve files that must be at root (robots; favicon) from this folder
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'static/root')
 
 # ==============================================================================
 # Logging
