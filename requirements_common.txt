@@ -34,5 +34,5 @@ channels_redis==2.2.1                   # Channels Layer
 
 # Misc
 django-debug-toolbar==1.9.1             # Debug; but useful to run in prod sometimes
-scout-apm==1.1.4                               # Performance monitoring
+scout-apm==1.1.8                               # Performance monitoring
 ipython==6.3.1
