@@ -6,25 +6,25 @@
     {% trans "View URLs" %}
   </a>
   <div class="btn-group">
-    <div class="btn btn-outline-primary disabled">{% trans "Print" %}</div>
+    <div class="btn btn-outline-primary disabled">{% trans "Print" context "prefix for print feedback/ballot URLs buttons (intended as verb)" %}</div>
     <a class="btn btn-outline-primary"
        href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
-      {% trans "Feedback URLs" %}
+      {% trans "Feedback URLs" context "button, after 'Print' prefix" %}
     </a>
     <a class="btn btn-outline-primary"
        href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
-      {% trans "Ballot URLs" %}
+      {% trans "Ballot URLs" context "button, after 'Print' prefix" %}
     </a>
   </div>
   <div class="btn-group">
-    <div class="btn btn-outline-primary disabled">{% trans "Email" %}</div>
+    <div class="btn btn-outline-primary disabled">{% trans "Email" context "prefix for email feedback/ballot URLs buttons (intended as verb)" %}</div>
     <a class="btn btn-outline-primary {% if email_feedback_nav %}active{% endif %}"
        href="{% tournamenturl 'privateurls-email-feedback' %}">
-      {% trans "Feedback URLs" %}
+      {% trans "Feedback URLs" context "button, after 'Email' prefix" %}
     </a>
     <a class="btn btn-outline-primary {% if email_ballot_nav %}active{% endif %}"
        href="{% tournamenturl 'privateurls-email-ballot' %}">
-      {% trans "Ballot URLs" %}
+      {% trans "Ballot URLs" context "button, after 'Email' prefix" %}
     </a>
   </div>
   {% if blank_exists %}
