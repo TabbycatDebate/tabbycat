@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-01 01:45-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-07-01 01:49-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -17,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.7\n"
 
 #: privateurls/admin.py:18
 msgid "Team"
@@ -265,42 +265,32 @@ msgstr "Voir les URLs"
 #: privateurls/templates/private_urls_nav.html:9
 msgctxt "prefix for print feedback/ballot URLs buttons (intended as verb)"
 msgid "Print"
-msgstr ""
+msgstr "Imprimer les URLs pour"
 
 #: privateurls/templates/private_urls_nav.html:12
-#, fuzzy
-#| msgid "Feedback URL"
 msgctxt "button, after 'Print' prefix"
 msgid "Feedback URLs"
-msgstr "URL pour les commentaires"
+msgstr "commentaires"
 
 #: privateurls/templates/private_urls_nav.html:16
-#, fuzzy
-#| msgid "Ballot URL"
 msgctxt "button, after 'Print' prefix"
 msgid "Ballot URLs"
-msgstr "URL pour les bulletins"
+msgstr "bulletins"
 
 #: privateurls/templates/private_urls_nav.html:20
-#, fuzzy
-#| msgid "Email"
 msgctxt "prefix for email feedback/ballot URLs buttons (intended as verb)"
 msgid "Email"
-msgstr "Courriel"
+msgstr "Envoyer les URLs pour"
 
 #: privateurls/templates/private_urls_nav.html:23
-#, fuzzy
-#| msgid "Feedback URL"
 msgctxt "button, after 'Email' prefix"
 msgid "Feedback URLs"
-msgstr "URL pour les commentaires"
+msgstr "commentaires"
 
 #: privateurls/templates/private_urls_nav.html:27
-#, fuzzy
-#| msgid "Ballot URL"
 msgctxt "button, after 'Email' prefix"
 msgid "Ballot URLs"
-msgstr "URL pour les bulletins"
+msgstr "bulletins"
 
 #: privateurls/templates/private_urls_nav.html:34
 msgid ""
@@ -312,10 +302,8 @@ msgstr ""
 
 #: privateurls/templates/private_urls_nav.html:35
 #: privateurls/templates/private_urls_nav.html:42
-#, fuzzy
-#| msgid "Generate Private URLs"
 msgid "Generate URLs"
-msgstr "Générer les URLs privées"
+msgstr "Générer URLs"
 
 #: privateurls/templates/private_urls_nav.html:41
 msgid "All participants already have private URLs."
@@ -448,18 +436,7 @@ msgstr ""
 "Votre URL personnelle pour la soumission des commentaires à %(tournament)s"
 
 #: privateurls/views.py:256
-#, fuzzy, python-format
-#| msgid ""
-#| "Hi %(name)s,\n"
-#| "\n"
-#| "At %(tournament)s, we are using an online adjudicator feedback system. As "
-#| "part of %(team)s, you can submit your feedback at the following URL. This "
-#| "URL is unique to you — do not share it with anyone, as anyone who knows "
-#| "it can submit feedback on your team's behalf. This URL will not change "
-#| "throughout this tournament, so we suggest bookmarking it.\n"
-#| "\n"
-#| "Your team's private feedback submission URL is:\n"
-#| "%(url)s"
+#, python-format
 msgid ""
 "Hi <NAME>,\n"
 "\n"
@@ -472,17 +449,17 @@ msgid ""
 "Your team's private feedback submission URL is:\n"
 "<URL>"
 msgstr ""
-"Bonjour %(name)s,\n"
+"Bonjour <NAME>,\n"
 "\n"
-"A %(tournament)s, nous utiliserons un système en ligne pour les commentaires "
-"sur les juges. En tant que membre de %(team)s, vous pouvez soumettre vos "
+"A %(tour)s, nous utiliserons un système en ligne pour les commentaires sur "
+"les juges. En tant que membre de <TEAM>, vous pouvez soumettre vos "
 "commentaires à l'URL ci-dessous. Cette URL est uniquement la vôtre — ne la "
 "partagez avec personne, car quiconque le sait peut soumettre les "
 "commentaires au nom de votre équipe. Cette URL ne changera jamais pendant ce "
 "tournoi, donc nous vous suggérons de l'enregistrer dans vos favoris.\n"
 "\n"
 "La URL privée de votre équipe pour la soumission des commentaires est:\n"
-"%(url)s"
+"<URL>"
 
 #: privateurls/views.py:266
 #, fuzzy, python-format
