@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Prefetch, Q
@@ -73,6 +74,7 @@ class AssistantParticipantsListView(AssistantMixin, BaseParticipantsListView):
 class PublicParticipantsListView(PublicTournamentPageMixin, BaseParticipantsListView):
     public_page_preference = 'public_participants'
     admin = False
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
 class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
@@ -118,6 +120,7 @@ class AssistantInstitutionsListView(AssistantMixin, BaseInstitutionsListView):
 class PublicInstitutionsListView(PublicTournamentPageMixin, BaseInstitutionsListView):
     public_page_preference = 'public_institutions_list'
     admin = False
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
 class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):

@@ -58,7 +58,6 @@ class PublicSiteIndexView(TemplateView):
 
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
-    cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
 
 class TournamentDashboardHomeView(TournamentMixin, TemplateView):

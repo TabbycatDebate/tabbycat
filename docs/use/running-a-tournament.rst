@@ -67,7 +67,7 @@ Once you're happy with your adjudicator allocation, you're ready to start the ro
 
 2. **Release to public.** If you're using the public draw function (where the draw is posted publicly to your Tabbycat website) use the **Release to Public** button to allow the page to display.
 
-  .. tip:: To avoid the site from being overloaded by anxious refreshers, we recommend that large tournaments not release the draw to the public until after it's been seen by general assembly.
+  .. tip:: To avoid the site from being overloaded by anxious refreshers, we recommend that large tournaments not release the draw to the public until after it's been seen by general assembly. That said, note that due to caching there can be a delay of up to 1 minute between when a draw is released and when it first shows up on the public site.
 
 .. _releasing-the-motions:
 
