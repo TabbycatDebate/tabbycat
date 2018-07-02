@@ -554,6 +554,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
     public_page_preference = 'public_team_standings'
     page_title = gettext_lazy("Current Team Standings")
     page_emoji = '🌟'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
     def get_rounds(self):
         if not hasattr(self, '_rounds'):
