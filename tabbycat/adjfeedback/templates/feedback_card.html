@@ -4,13 +4,13 @@
   <div class="list-group list-group-flush">
 
     {% if not feedback.confirmed %}
-      <div class="list-group-item list-group-item-dark h6" data-toggle="tooltip"
+      <div class="list-group-item list-group-item-dark h6 text-light" data-toggle="tooltip"
            title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has done submitted several times on the same person.' %}">
       {% trans "Unconfirmed; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
     {% if feedback.ignored %}
-      <div class="list-group-item list-group-item-dark h6" data-toggle="tooltip"
+      <div class="list-group-item list-group-item-dark h6 text-light" data-toggle="tooltip"
            title="{% trans 'The feedback is counted for the adjudicator, but is not taken into account when calculating scores.' %}">
       {% trans "Ignored; will not affect this adjudicator's score." %}
       </div>
@@ -73,19 +73,21 @@
         {% endif %}
       </div>
     {% endfor %}
-    <div class="list-group-item text-secondary small">
-      {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
-        Submitted {{ time }}
-      {% endblocktrans %}
-      <span class="float-right">
-        <a href="{% tournamenturl 'adjfeedback-admin-ignore-feedback' feedback_id=feedback.id %}">
-          {% if feedback.ignored %}
-            Recognize
-          {% else %}
-            Ignore
-          {% endif %}
-        </a>
-        </span>
+    <div class="list-group-item text-secondary">
+      <span class="pt-3 small">
+        {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
+          Submitted {{ time }}
+        {% endblocktrans %}
+      </span>
+      <span class="float-right" data-toggle="tooltip"
+            title="{% trans 'Ignored feedback is counted as having been submitted, but does not affect this adjudicator\'s score.' %}">
+        <form method="POST" action="{% tournamenturl 'adjfeedback-ignore-feedback' feedback.id %}"      class='text-secondary'>
+          {% csrf_token %}
+          <button type="submit" class="btn btn-link text-muted p-0">
+            <small>{% if feedback.ignored %}Un-ignore{% else %}Ignore{% endif %}</small>
+          </button>
+        </form>
+      </span>
     </div>
 
   </div>
