@@ -494,10 +494,19 @@ standings = Section('standings', verbose_name=_("Standings"))
 
 @tournament_preferences_registry.register
 class StandingsMissedDebates(IntegerPreference):
-    help_text = _("The number of debates a speaker can miss and still be on the speaker tab (-1 means no limit)")
-    verbose_name = _("Debates missable for standings eligibility")
+    help_text = _("The number of substantive speeches a speaker can miss and still be on the speaker tab (-1 means no limit)")
+    verbose_name = _("Speeches missable for standings eligibility")
     section = standings
     name = 'standings_missed_debates'
+    default = -1
+
+
+@tournament_preferences_registry.register
+class StandingsMissedReplies(IntegerPreference):
+    help_text = _("The number of reply speeches a speaker can miss and still be on the replies tab (-1 means no limit)")
+    verbose_name = _("Replies missable for standings eligibility")
+    section = standings
+    name = 'standings_missed_replies'
     default = -1
 
 
