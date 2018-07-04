@@ -105,7 +105,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',
             'score', 'source_adjudicator__adjudicator__name',
             'source_team__team__short_name', 'source_team__team__long_name')
-    raw_id_fields = ('source_team',)
+    raw_id_fields = ('source_team', 'adjudicator', 'source_team', 'source_adjudicator')
     list_filter   = (
         RoundListFilter,
         ('adjudicator', custom_titled_filter(_('target'))),

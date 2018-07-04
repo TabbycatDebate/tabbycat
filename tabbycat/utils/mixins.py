@@ -61,9 +61,9 @@ class AssistantMixin(LoginRequiredMixin, ContextMixin):
 
 
 class CacheMixin:
-    """Mixin for views that cache the page."""
+    """Mixin for views that cache the page and need to update quickly."""
 
-    cache_timeout = settings.PUBLIC_PAGE_CACHE_TIMEOUT
+    cache_timeout = settings.PUBLIC_FAST_CACHE_TIMEOUT
 
     @method_decorator(cache_page(cache_timeout))
     def dispatch(self, *args, **kwargs):

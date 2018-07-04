@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
@@ -27,6 +28,7 @@ logger = logging.getLogger(__name__)
 class PublicBreakIndexView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_results'
     template_name = 'public_break_index.html'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
 class AdminBreakIndexView(AdministratorMixin, TournamentMixin, TemplateView):
@@ -73,6 +75,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
 
 class PublicBreakingTeamsView(PublicTournamentPageMixin, BaseBreakingTeamsView):
     public_page_preference = 'public_breaking_teams'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
 class GenerateBreakMixin:
@@ -214,6 +217,7 @@ class AdminBreakingAdjudicatorsView(AdministratorMixin, BaseBreakingAdjudicators
 
 class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, BaseBreakingAdjudicatorsView):
     public_page_preference = 'public_breaking_adjs'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
 # ==============================================================================

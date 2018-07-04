@@ -44,8 +44,10 @@ parser.add_argument(
     help="Print commands, don't run them.")
 
 config_group = parser.add_argument_group("heroku configuration settings")
-config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
-                          help="Set the public page cache timeout to TIMEOUT")
+config_group.add_argument("--fast-cache-timeout", type=int, default=None, metavar="TIMEOUT",
+                          help="Set the faster public page cache timeout to TIMEOUT")
+config_group.add_argument("--slow-cache-timeout", type=int, default=None, metavar="TIMEOUT",
+                          help="Set the slower public page cache timeout to TIMEOUT")
 config_group.add_argument("--tab-cache-timeout", type=int, default=None, metavar="TIMEOUT",
                           help="Set the tab page cache timeout to TIMEOUT")
 config_group.add_argument("--enable-debug", action="store_true", default=False,
@@ -158,8 +160,10 @@ run_heroku_command(command)
 # Set config variables
 command = ["config:add"]
 command.append("DEBUG=1" if args.enable_debug else "DEBUG=0")
-if args.public_cache_timeout:
-    command.append("PUBLIC_PAGE_CACHE_TIMEOUT=%d" % args.public_cache_timeout)
+if args.fast_cache_timeout:
+    command.append("PUBLIC_FAST_CACHE_TIMEOUT=%d" % args.fast_cache_timeout)
+if args.slow_cache_timeout:
+    command.append("PUBLIC_SLOW_CACHE_TIMEOUT=%d" % args.slow_cache_timeout)
 if args.tab_cache_timeout:
     command.append("TAB_PAGES_CACHE_TIMEOUT=%d" % args.tab_cache_timeout)
 

@@ -2,6 +2,7 @@ import datetime
 import logging
 from smtplib import SMTPException
 
+from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
@@ -40,6 +41,7 @@ class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
 
     template_name = 'public_results_index.html'
     public_page_preference = 'public_results'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
     def get_context_data(self, **kwargs):
         kwargs["rounds"] = self.tournament.round_set.filter(
@@ -111,6 +113,7 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     page_title = gettext_lazy("Results")
     page_emoji = '💥'
     default_view = 'team'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
     def get_table(self):
         view_type = self.request.session.get('results_view', self.default_view)

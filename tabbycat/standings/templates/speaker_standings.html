@@ -2,6 +2,7 @@
 {% load debate_tags i18n %}
 
 {% block page-alerts %}
+
   {% if pref.speaker_standings_precedence.0 == 'average' %}
     {% trans "Speakers are ranked by their <strong>average score</strong>." as p1 %}
   {% elif pref.speaker_standings_precedence.0 == 'total' %}
