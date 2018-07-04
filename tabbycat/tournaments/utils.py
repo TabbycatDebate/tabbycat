@@ -1,12 +1,20 @@
 import itertools
+import logging
+from smtplib import SMTPException
 
+from django.core.mail import send_mass_mail
+from django.conf import settings
 from django.db.models import Max
+from django.template import Context, Template
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext, pgettext_lazy
 
+from utils.misc import reverse_tournament
+
 from .models import Round
 
+logger = logging.getLogger(__name__)
 
 BREAK_ROUND_NAMES = [
     # Translators: abbreviation for "grand final"
@@ -174,3 +182,41 @@ aff_abbr = _get_side_name('aff_abbr')
 neg_abbr = _get_side_name('neg_abbr')
 aff_team = _get_side_name('aff_team')
 neg_team = _get_side_name('neg_team')
+
+
+def send_standings_emails(tournament, teams, request):
+    messages = []
+
+    subject_temp = Template(tournament.pref('team_points_email_subject'))
+    message_temp = Template(tournament.pref('team_points_email_message'))
+
+    context = {'TOURN': str(tournament)}
+
+    message_link = ''
+    if tournament.pref('public_team_standings'):
+        url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', tournament))
+        message_link += "\n\n" + tournament.pref('team_points_email_link_text') + "\n" + url
+
+    for team in teams:
+        context['POINTS'] = str(team.points_count)
+        context['TEAM'] = team.short_name
+
+        subject = subject_temp.render(Context(context))
+
+        for speaker in team.speakers:
+            if speaker.email is None:
+                continue
+
+            context['USER'] = speaker.name
+
+            message = message_temp.render(Context(context)) + message_link
+            messages.append((subject, message, settings.DEFAULT_FROM_EMAIL, [speaker.email]))
+
+    try:
+        send_mass_mail(messages, fail_silently=False)
+    except SMTPException:
+        logger.exception("Failed to send team points e-mails")
+        raise
+    except ConnectionError:
+        logger.exception("Connection error sending team points e-mails")
+        raise

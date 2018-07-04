@@ -4,6 +4,7 @@ from smtplib import SMTPException
 from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.db.models import Exists, OuterRef, Q
+from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
@@ -194,13 +195,13 @@ class EmailBallotUrlsView(BaseEmailRandomisedUrlsView, FormView):
         default = {}
         default['subject_line'] = _("Your personal ballot submission URL for %(tour)s") % {'tour': self.tournament}
         default['message_body'] = _(
-            "Hi <NAME>,\n\n"
+            "Hi {{ NAME }},\n\n"
             "At %(tour)s, we are using an online ballot system. You can submit "
             "your ballots at the following URL. This URL is unique to you — do not share it with "
             "anyone, as anyone who knows it can submit ballots on your behalf. This URL "
             "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
             "Your personal private ballot submission URL is:\n"
-            "<URL>"
+            "{{ URL }}"
         ) % {'tour': self.tournament}
         return default
 
@@ -221,7 +222,7 @@ class EmailBallotUrlsView(BaseEmailRandomisedUrlsView, FormView):
                 self.request, self.tournament, adjudicators,
                 'results-public-ballotset-new-randomised',
                 lambda adj: adj.url_key, 'adjudicator', PrivateUrlSentMailRecord.URL_TYPE_BALLOT,
-                form.cleaned_data['subject_line'], form.cleaned_data['message_body']
+                Template(form.cleaned_data['subject_line']), Template(form.cleaned_data['message_body'])
             )
         except SMTPException:
             messages.error(self.request, _("There was a problem sending private ballot URLs to adjudicators."))
@@ -253,25 +254,25 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView, FormView):
 
         default['team_subject'] = _("Your team's feedback submission URL for %(tour)s") % {'tour': self.tournament}
         default['team_message'] = _(
-            "Hi <NAME>,\n\n"
+            "Hi {{ NAME }},\n\n"
             "At %(tour)s, we are using an online adjudicator feedback system. As part of "
-            "<TEAM>, you can submit your feedback at the following URL. This URL is unique "
+            "{{ TEAM }}, you can submit your feedback at the following URL. This URL is unique "
             "to you — do not share it with anyone, as anyone who knows it can submit feedback on "
             "your team's behalf. This URL will not change throughout this tournament, so we "
             "suggest bookmarking it.\n\n"
             "Your team's private feedback submission URL is:\n"
-            "<URL>"
+            "{{ URL }}"
         ) % {'tour': self.tournament}
 
         default['judge_subject'] = _("Your personal feedback submission URL for %(tour)s") % {'tour': self.tournament}
         default['judge_message'] = _(
-            "Hi <NAME>,\n\n"
+            "Hi {{ NAME }},\n\n"
             "At %(tour)s, we are using an online adjudicator feedback system. You can submit "
             "your feedback at the following URL. This URL is unique to you — do not share it with "
             "anyone, as anyone who knows it can submit feedback on your behalf. This URL "
             "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
             "Your personal private feedback submission URL is:\n"
-            "<URL>"
+            "{{ URL }}"
         ) % {'tour': self.tournament}
 
         return default
@@ -327,7 +328,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView, FormView):
                 self.request, self.tournament, speakers,
                 'adjfeedback-public-add-from-team-randomised',
                 lambda speaker: speaker.team.url_key, 'speaker', PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK,
-                form.cleaned_data['team_subject'], form.cleaned_data['team_message']
+                Template(form.cleaned_data['team_subject']), Template(form.cleaned_data['team_message'])
             )
         except SMTPException:
             messages.error(self.request, _("There was a problem sending private feedback URLs to speakers."))
@@ -346,7 +347,7 @@ class EmailFeedbackUrlsView(BaseEmailRandomisedUrlsView, FormView):
                 self.request, self.tournament, adjudicators,
                 'adjfeedback-public-add-from-adjudicator-randomised',
                 lambda adj: adj.url_key, 'adjudicator', PrivateUrlSentMailRecord.URL_TYPE_FEEDBACK,
-                form.cleaned_data['judge_subject'], form.cleaned_data['judge_message']
+                Template(form.cleaned_data['judge_subject']), Template(form.cleaned_data['judge_message'])
             )
         except SMTPException:
             messages.error(self.request, _("There was a problem sending private feedback URLs to adjudicators."))

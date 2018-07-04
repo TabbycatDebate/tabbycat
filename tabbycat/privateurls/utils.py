@@ -6,6 +6,7 @@ from smtplib import SMTPException
 from django.core.mail import send_mass_mail
 from django.conf import settings
 from django.db import IntegrityError
+from django.template import Context
 
 from utils.misc import reverse_tournament
 
@@ -50,15 +51,15 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
     for instance in queryset:
         url_key = url_key_function(instance)
         email = instance.email
-
         path = reverse_tournament(url_name, tournament, kwargs={'url_key': url_key})
         url = request.build_absolute_uri(path)
 
-        formatted_subject = subject
-        formatted_message = message.replace('<NAME>', instance.name).replace('<URL>', url)
+        variables = {'NAME': instance.name, 'URL': url}
         if hasattr(instance, 'team'):
-            formatted_message = formatted_message.replace('<TEAM>', instance.team.short_name)
+            variables['TEAM'] = instance.team.short_name
 
+        formatted_message = message.render(Context(variables))
+        formatted_subject = subject.render(Context(variables))
         messages.append((formatted_subject, formatted_message, settings.DEFAULT_FROM_EMAIL, [email]))
 
         record = PrivateUrlSentMailRecord(email=email, url_key=url_key, url_type=url_type)

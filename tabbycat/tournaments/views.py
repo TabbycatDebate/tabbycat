@@ -1,6 +1,7 @@
 import json
 import logging
 from collections import OrderedDict
+from smtplib import SMTPException
 from threading import Lock
 
 from django.conf import settings
@@ -18,6 +19,8 @@ from django.views.generic.edit import CreateView, FormView, UpdateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
+from participants.models import Team
+from participants.prefetch import populate_win_counts
 from results.models import BallotSubmission
 from results.utils import graphable_debate_statuses
 from tournaments.models import Round
@@ -29,7 +32,7 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyR
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
-from .utils import get_side_name
+from .utils import get_side_name, send_standings_emails
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -154,6 +157,22 @@ class RoundAdvanceView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyR
             messages.error(request, _("Whoops! Could not advance round, because there's no round "
                 "after this round!"))
             return super().post(request, *args, **kwargs)
+
+
+class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
+
+    def post(self, request, *args, **kwargs):
+        active_teams = Team.objects.filter(debateteam__debate__round=self.round)
+        populate_win_counts(active_teams)
+
+        try:
+            send_standings_emails(self.tournament, active_teams, request)
+        except (ConnectionError, SMTPException):
+            messages.error(request, _("Team point emails could not be sent."))
+        else:
+            messages.success(request, _("Team point emails have been sent to the speakers."))
+
+        return redirect_round('tournament-advance-round-check', self.round)
 
 
 class BlankSiteStartView(FormView):

@@ -6,6 +6,7 @@ from smtplib import SMTPException
 from django.core.mail import send_mass_mail
 from django.conf import settings
 from django.db.models import Count
+from django.template import Context, Template
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
@@ -260,12 +261,14 @@ def side_and_position_names(tournament):
 def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
 
     messages = []
-    scores = ''
 
     round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(debate.round.tournament),
                                                              'round': debate.round.name, 'room': debate.venue.name}
-    subject = debate.round.tournament.pref('ballot_email_subject').replace('<DEBATE>', round_name)
-    message = debate.round.tournament.pref('ballot_email_message').replace('<DEBATE>', round_name)
+    subject = Template(debate.round.tournament.pref('ballot_email_subject'))
+    message = Template(debate.round.tournament.pref('ballot_email_message'))
+
+    context = {'DEBATE': round_name}
+    format_subject = subject.render(Context(context))
 
     for ballot in ballots:
         judge = ballot['adjudicator'] if 'adjudicator' in ballot else debate.debateadjudicator_set.get(type="C")
@@ -273,16 +276,18 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
         if judge.email is None:
             continue
 
-        message_split = message.replace('<USER>', judge.name).split('<SCORES>')
-
+        scores = ''
         for team in ballot['teams']:
             scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team['team'].short_name}
 
             for speaker in team['speakers']:
                 scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
 
-        messages.append((subject, message_split[0] + scores + message_split[1], settings.DEFAULT_FROM_EMAIL, [judge.email]))
-        scores = ''
+        context['USER'] = judge.name
+        context['SCORES'] = scores
+
+        format_message = message.render(Context(context))
+        messages.append((format_subject, format_message, settings.DEFAULT_FROM_EMAIL, [judge.email]))
 
     try:
         send_mass_mail(messages, fail_silently=False)
