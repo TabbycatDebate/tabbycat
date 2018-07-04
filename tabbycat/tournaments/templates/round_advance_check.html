@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load i18n debate_tags %}
 
-{% block page-title %}{% trans "Confirm Round Advance" as page_title %}{% endblock %}
+{% block page-title %}{% trans "Confirm Round Advance" %}{% endblock %}
 {% block head-title %}
-  <span class="emoji">🙏</span>{{ page_title }}
+  <span class="emoji">🙏</span> {% trans "Confirm Round Advance" %}
 {% endblock %}
 {% block sub-title %}{% blocktrans trimmed %}for {{ round.name }}{% endblocktrans %}{% endblock %}
 
@@ -42,35 +42,43 @@
 {% block page-alerts %}
 
   {% if increment_ok %}
-    <div class="alert alert-success">
-      <i data-feather="alert-circle"></i>
-      {% blocktrans trimmed %}It looks like all the ballots from {{ round.name }} are confirmed, you should be good to go.{% endblocktrans %}
-    </div>
+    {% blocktrans trimmed with round_name=round.name asvar message %}
+      All ballots from {{ round_name }} are confirmed. You should be good to go!
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='success' icon='alert-circle' %}
   {% else %}
-    <div class="alert alert-danger">
-      <i data-feather="alert-circle"></i>
-      {% blocktrans trimmed %}There are still {{ num_unconfirmed }}
-      ballots that are not confirmed. You should <strong>not</strong>
-      proceed to the next round until all ballots are confirmed.{% endblocktrans %}
-    </div>
+    {% blocktrans trimmed count num_unconfirmed=num_unconfirmed asvar message %}
+      There is still {{ num_unconfirmed }} ballot that is not confirmed.
+      You should <strong>not</strong> proceed to the next round until all
+      ballots are confirmed.
+    {% plural %}
+      There are still {{ num_unconfirmed }} ballots that are not confirmed.
+      You should <strong>not</strong> proceed to the next round until all
+      ballots are confirmed.
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
   {% endif %}
 
-  {% if pref.public_results > 0 %}
-    <div class="alert alert-info">
-      <i data-feather="alert-circle"></i>
-      {% trans 'The "show public results" setting is on and this round' %}
-      {% if round.silent %}
-        {% blocktrans trimmed %}<strong>is marked as a silent round</strong>, so <strong>no results
-        will show on the public page</strong> when you advance.{% endblocktrans %}
-      {% else %}
-        {% blocktrans trimmed %}<strong>is not marked as a silent round</strong> so the <strong>results
-        will show on the public</strong> page when you advance.{% endblocktrans %}
-      {% endif %}
-      {% url 'admin:index' as admin_url %}
-      {% blocktrans trimmed %}A round can be marked/unmarked as silent in the
-      <a href="{{ admin_url }}">edit database area</a>
-       under <em>Tournaments > Rounds</em>.{% endblocktrans %}
-    </div>
+  {% if pref.public_results %}
+    {% url 'admin:tournaments_round_changelist' as round_changelist_url %}
+    {% if round.silent %}
+      {% blocktrans trimmed asvar message %}
+        The "show public results" setting is on and this round is marked as a
+        <strong>silent</strong> round, so results will <strong>not</strong>
+        show on the public page when you advance. You can mark or unmark rounds
+        as silent in the
+        <a href="{{ round_changelist_url }}">Edit Database area</a>.
+      {% endblocktrans %}
+    {% else %}
+      {% blocktrans trimmed asvar message %}
+        The "show public results" setting is on and this round is
+        <strong>not</strong> marked as a silent round so the <strong>results
+        <u>will</u> show on the public page</strong> when you advance. You can
+        mark or unmark rounds as silent in the
+        <a href="{{ round_changelist_url }}">Edit Database area</a>.
+      {% endblocktrans %}
+    {% endif %}
+    {% include 'components/alert.html' with type='info' icon='alert-circle' %}
   {% endif %}
 
 {% endblock %}
