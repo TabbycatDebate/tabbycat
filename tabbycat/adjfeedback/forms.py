@@ -192,7 +192,10 @@ class BaseFeedbackForm(forms.Form):
             af.confirmed = True
 
         af.score = self.cleaned_data['score']
-        af.ignored = self.cleaned_data['ignored']
+
+        if self._ignored_option:
+            af.ignored = self.cleaned_data['ignored']
+
         af.save()
 
         for question in self._tournament.adj_feedback_questions.filter(**self.question_filter):
