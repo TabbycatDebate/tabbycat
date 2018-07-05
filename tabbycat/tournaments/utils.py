@@ -2,14 +2,15 @@ import itertools
 import logging
 from smtplib import SMTPException
 
-from django.core.mail import send_mass_mail
-from django.conf import settings
+from django.core.mail import get_connection
 from django.db.models import Max
 from django.template import Context, Template
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext, pgettext_lazy
 
+from notifications.models import MessageSentRecord
+from notifications.utils import TournamentEmailMessage
 from utils.misc import reverse_tournament
 
 from .models import Round
@@ -184,7 +185,7 @@ aff_team = _get_side_name('aff_team')
 neg_team = _get_side_name('neg_team')
 
 
-def send_standings_emails(tournament, teams, request):
+def send_standings_emails(tournament, teams, request, round):
     messages = []
 
     subject_temp = Template(tournament.pref('team_points_email_subject'))
@@ -210,13 +211,15 @@ def send_standings_emails(tournament, teams, request):
             context['USER'] = speaker.name
 
             message = message_temp.render(Context(context)) + message_link
-            messages.append((subject, message, settings.DEFAULT_FROM_EMAIL, [speaker.email]))
+            messages.append(TournamentEmailMessage(subject, message, tournament, round, MessageSentRecord.EVENT_TYPE_POINTS, speaker))
 
     try:
-        send_mass_mail(messages, fail_silently=False)
+        get_connection().send_messages(messages)
     except SMTPException:
         logger.exception("Failed to send team points e-mails")
         raise
     except ConnectionError:
         logger.exception("Connection error sending team points e-mails")
         raise
+    else:
+        MessageSentRecord.objects.bulk_create([message.as_model() for message in messages])

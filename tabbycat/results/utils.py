@@ -3,14 +3,15 @@ import datetime
 from itertools import combinations
 from smtplib import SMTPException
 
-from django.core.mail import send_mass_mail
-from django.conf import settings
+from django.core.mail import get_connection
 from django.db.models import Count
 from django.template import Context, Template
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from draw.models import Debate
+from notifications.models import MessageSentRecord
+from notifications.utils import TournamentEmailMessage
 from tournaments.utils import get_side_name
 
 logger = logging.getLogger(__name__)
@@ -287,13 +288,15 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
         context['SCORES'] = scores
 
         format_message = message.render(Context(context))
-        messages.append((format_subject, format_message, settings.DEFAULT_FROM_EMAIL, [judge.email]))
+        messages.append(TournamentEmailMessage(format_subject, format_message, debate.round.tournament, debate.round, MessageSentRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge))
 
     try:
-        send_mass_mail(messages, fail_silently=False)
+        get_connection().send_messages(messages)
     except SMTPException:
         logger.exception("Failed to send ballot receipt e-mails")
         raise
     except ConnectionError:
         logger.exception("Connection error sending ballot receipt e-mails")
         raise
+    else:
+        MessageSentRecord.objects.bulk_create([message.as_model() for message in messages])
