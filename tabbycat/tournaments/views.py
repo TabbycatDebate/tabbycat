@@ -82,7 +82,7 @@ class TournamentDashboardHomeView(TournamentMixin, TemplateView):
             debate__round__tournament=t, confirmed=True).prefetch_related(
             'teamscore_set__debate_team',
             'teamscore_set__debate_team__team').select_related(
-            'debate__round').order_by('-timestamp')[:updates]
+            'debate__round__tournament').order_by('-timestamp')[:updates]
         subs = [bs.serialize_like_actionlog for bs in subs]
         kwargs["initialBallots"] = json.dumps(subs)
 
