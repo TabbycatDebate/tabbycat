@@ -103,6 +103,9 @@ class BaseDrawManager:
     def _make_debates(self, pairings):
         random.shuffle(pairings)  # to avoid IDs indicating room ranks
 
+        debates = {}
+        debateteams = []
+
         for pairing in pairings:
             debate = Debate(round=self.round)
             debate.division = pairing.division
@@ -112,11 +115,19 @@ class BaseDrawManager:
             if (self.round.tournament.pref('draw_side_allocations') == "manual-ballot" or
                     self.round.is_break_round):
                 debate.sides_confirmed = False
-            debate.save()
+            debates[pairing] = debate
 
+        Debate.objects.bulk_create(debates.values())
+        logger.debug("Created %d debates", len(debates))
+
+        for pairing, debate in debates.items():
             for team, side in zip(pairing.teams, self.round.tournament.sides):
-                DebateTeam.objects.create(debate=debate, team=team, side=side,
-                        flags=",".join(pairing.get_team_flags(team)))
+                flags = ",".join(pairing.get_team_flags(team))
+                dt = DebateTeam(debate=debate, team=team, side=side, flags=flags)
+                debateteams.append(dt)
+
+        DebateTeam.objects.bulk_create(debateteams)
+        logger.debug("Created %d debate teams", len(debateteams))
 
     def delete(self):
         self.round.debate_set.all().delete()
