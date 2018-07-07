@@ -231,22 +231,28 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
             else:
                 authors = [(debate.adjudicators.chair, debate.adjudicators.POSITION_CHAIR)]
 
+            blank_author_dict = {
+                'author': "_______________________________________________",
+                'authorInstitution': "",
+                'authorPosition': "",
+            }
+
             # Add a ballot for each author
             for author, pos in authors:
-                ballot_dict = {
-                    'author': author.name,
-                    'authorInstitution': author.institution.code if author.institution else _("Unaffiliated"),
-                    'authorPosition': pos,
-                }
+                if author:
+                    ballot_dict = {
+                        'author': author.name,
+                        'authorInstitution': author.institution.code if author.institution else _("Unaffiliated"),
+                        'authorPosition': pos,
+                    }
+                else:
+                    ballot_dict = blank_author_dict
+
                 ballot_dict.update(debate_dict)
                 ballots_dicts.append(ballot_dict)
 
             if len(authors) == 0:
-                ballot_dict = {
-                    'author': "_______________________________________________",
-                    'authorInstitution': "",
-                    'authorPosition': "",
-                }
+                ballot_dict = blank_author_dict
                 ballot_dict.update(debate_dict)
                 ballots_dicts.append(ballot_dict)
 
