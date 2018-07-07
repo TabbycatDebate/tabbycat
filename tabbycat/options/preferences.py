@@ -1029,7 +1029,7 @@ class TeamCodeNames(ChoicePreference):
 
 @tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
-    help_text = _("Enables emoji in the draw")
+    help_text = _("Display team emoji in the public and admin interfaces")
     verbose_name = _("Show emoji")
     section = ui_options
     name = 'show_emoji'
