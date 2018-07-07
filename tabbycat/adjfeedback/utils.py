@@ -124,7 +124,7 @@ def feedback_stats(adj, rounds):
 
     for r in rounds:
         scores = [fb.score for fb in feedback_by_round[r]]
-        if scores:
+        if scores and debateadjs_by_round[r]:
             feedback_data.append({
                 'x': r.seq,
                 'y': round(mean(scores), 2),  # average score
