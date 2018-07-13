@@ -143,7 +143,8 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',  # for Jet
                 'utils.context_processors.debate_context',  # for tournament config vars
-                'django.template.context_processors.i18n'  # for serving static language translations
+                'django.template.context_processors.i18n',  # for serving static language translations
+                'dynamic_preferences.processors.global_preferences',
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [

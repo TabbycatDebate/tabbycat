@@ -60,6 +60,8 @@ urlpatterns = [
         admin.site.urls),
 
     # Accounts
+    path('accounts/',
+         include('users.urls')),
     path('accounts/logout/',
         auth_logout,
         {'next_page': '/'},  # override to specify next_page

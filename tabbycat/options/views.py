@@ -16,7 +16,7 @@ from utils.misc import reverse_tournament
 
 from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
-from .preferences import tournament_preferences_registry
+from .preferences import tournament_preferences_registry, global_preferences_registry
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +57,23 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
         return super().get_context_data(**kwargs)
 
 
-class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, PreferenceFormView):
-    registry = tournament_preferences_registry
+class MultiPreferenceFormView(PreferenceFormView):
+    possible_registries = []
+
+    def dispatch(self, request, *args, **kwargs):
+        for registry in self.possible_registries:
+            self.registry = registry
+            try:
+                return super().dispatch(request, *args, **kwargs)
+                break
+            except Http404:
+                continue
+        else:
+            raise Http404
+
+
+class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, TournamentMixin, MultiPreferenceFormView):
+    possible_registries = [global_preferences_registry, tournament_preferences_registry]
     section = None
     template_name = "preferences_section_set.html"
 
@@ -74,6 +89,8 @@ class TournamentPreferenceFormView(AdministratorMixin, LogActionMixin, Tournamen
     def get_form_class(self, *args, **kwargs):
         section = self.kwargs.get('section', None)
         form_class = tournament_preference_form_builder(instance=self.tournament, section=section)
+        if form_class is None:
+            raise ValueError("Could not build form_class: are prefs mixed between global and non-global?")
         return form_class
 
 

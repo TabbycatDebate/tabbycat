@@ -3,6 +3,7 @@ from django.forms import ValidationError
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from dynamic_preferences.preferences import Section
+from dynamic_preferences.registries import global_preferences_registry
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 from django_summernote.widgets import SummernoteWidget
 
@@ -1334,3 +1335,34 @@ class PointsEmailLinkText(StringPreference):
     section = email
     name = 'team_points_email_link_text'
     default = "To consult the current team standings, visit:"
+
+# ==============================================================================
+account_creation = Section('accounts', verbose_name=_('Account Creation'))
+# ==============================================================================
+
+
+@global_preferences_registry.register
+class AssistantAccountCreationKey(StringPreference):
+    section = account_creation
+    verbose_name = _('Key for creating an assistant account')
+    name = 'assistant_account_key'
+    default = ''
+
+    def get_field_kwargs(self):
+        kwargs = super().get_field_kwargs()
+        kwargs['required'] = False
+        return kwargs
+
+
+@global_preferences_registry.register
+class AdminAccountCreationKey(StringPreference):
+    section = account_creation
+    verbose_name = _('Key for creating an administrator account')
+    name = 'admin_account_key'
+    default = ''
+    required = False
+
+    def get_field_kwargs(self):
+        kwargs = super().get_field_kwargs()
+        kwargs['required'] = False
+        return kwargs

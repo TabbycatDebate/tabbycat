@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page-title %} {% trans "Sign-Up" as title %}{% endblock %}
+{% block head-title %}
+  {% trans "Sign-Up" as title %}
+{% endblock %}
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block content %}
+
+  <form id="signupForm" method="POST">
+    {% csrf_token %}
+
+    <div class="card">
+      <div class="list-group list-group-flush">
+
+        <div class="list-group-item pb-4">
+
+          {% if form.errors %}
+            {% trans "There are some problems with this sign-up form. Please review and correct them." as message %}
+            {% include "components/form-errors.html" with errors=form.errors %}
+          {% endif %}
+
+          {% for field in form %}
+            {% include "components/form-field.html" %}
+          {% endfor %}
+
+        </div>
+
+        {% trans "When submitting this form your IP address will be stored for logging purposes." as subtitle %}
+        {% include "components/form-submit.html" with title="Sign Up" %}
+
+      </div>
+    </div>
+  </form>
+
+{% endblock content %}

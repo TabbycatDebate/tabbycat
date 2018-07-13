@@ -16,6 +16,16 @@
     {% include "components/item-info.html" with type="info" icon="heart" %}
     <hr>
   {% endif %}
+  {% if global_preferences.accounts__admin_account_key or global_preferences.accounts__assistant_account_key %}
+    {% tournamenturl 'options-tournament-section' section='accounts' as url %}
+      <p class="card-text">
+    {% blocktrans trimmed asvar text%}
+      <a href="{{ url }}">You have enabled a key to create an account. You should disable it when you can, especially once the tournament starts!</a>
+    {% endblocktrans %}
+    {% include "components/item-alert.html" with type="info" icon="heart" %}
+    </p>
+    <hr>
+  {% endif %}
 
   {% if blank %}
 
