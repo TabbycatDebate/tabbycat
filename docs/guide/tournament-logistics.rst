@@ -60,11 +60,13 @@ Having effective registration systems and processes is one of the most important
 - You should have access to *all* of the data collected; often registration teams will make (false) assumptions about what you do or do not need. It is better to have everything and then selectively filter out what is not relevant to the tab.
 - It is critical that the registration team should check in with you before setting up forms asking for information. Every additional time that registration asks for data there will be less and less participation in the process, so you should aim to gather all that you need at the first opportunity; typically during the canonical individual registration phase. Particular information that should not be overlooked for tab purposes:
 
-  - Individual registration should ask for a person's team name/number (reconciling these later is painful).
-  - Individual registration should ask for any accessibility requirements people may have.
-  - Individual registration should ask for the previous institutions of adjudicators.
+  - Individual registration should ask whether a participant is a speaker or an adjudicator.
+  - If that person is a speaker it should ask for their team name/number (reconciling these later is painful).
+  - Individual registration should ask for any accessibility requirements of both adjudicators and speakers.
+  - Individual registration should ask for the previous institutions of both adjudicators and speakers.
   - Individual registration should ask for the email addresses of all participants.
   - Individual registration should ask for the phone numbers of adjudicators.
+  - Individual registration should ask for the gender identity of both adjudicators and speakers. Even if you are not *planning* on using this to inform processes, such as adjudicator allocations, you want it on hand in case plans change.
 
 - Independent adjudicators and the adjudication core should follow normal registration procedures. Having them not go through the normal process makes it easy to overlook their data or not get a complete picture of it. For example, adjudication core members might forget to nominate conflicts, or neglect to provide their previous institutions.
 - You should confirm how the registration team plans to manage how people check-in to the accommodation in particular. Check-in is when issues with registration data come to light and it is vital that these changes are noted and recorded. Some form of validation of registration data *must* occur at check-in — in particular all adjudicators should be (individually) verified as present and all members of a team should confirm their presence along with their team's name/number and speakers.
