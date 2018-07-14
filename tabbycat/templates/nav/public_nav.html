@@ -59,7 +59,7 @@
          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {% trans "Draws" %}
       </a>
-      <div class="dropdown-menu" aria-labelledby="drawsDrop">
+      <div class="dropdown-menu draw-dropdown-menu" aria-labelledby="drawsDrop">
         {% for r in tournament.round_set.all %}
           {% if r.draw_status == r.STATUS_RELEASED %}
             <a class="dropdown-item" href="{% roundurl 'draw-public-for-round' r %}">
@@ -73,6 +73,9 @@
             {% trans "View All" %}
           </a>
         {% endif %}
+        <div class="dropdown-item">
+          {% trans "No Draws Available" %}
+        </div>
       </div>
     </li>
   {% else %}

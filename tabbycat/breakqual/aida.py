@@ -70,7 +70,9 @@ class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
         # iii. Set aside teams that are capped out
         for tsi in self.eligible_teams:
             institution_rank = tsi.get_ranking("institution")
-            if institution_rank > 1 and tsi.get_ranking("rank") > natural_break_cutoff:
+            if institution_rank is None:
+                continue
+            elif institution_rank > 1 and tsi.get_ranking("rank") > natural_break_cutoff:
                 logger.info("Capped out post-cutoff, institution rank %d: %s", institution_rank, tsi.team)
                 self.capped_teams.append(tsi)
             elif institution_rank > self.institution_cap:

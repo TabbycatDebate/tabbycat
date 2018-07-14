@@ -5,7 +5,6 @@ from django.contrib.auth.views import logout as auth_logout
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
-from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
 
 import tournaments.views
@@ -67,10 +66,6 @@ urlpatterns = [
         name='logout'),
     path('accounts/',
         include('django.contrib.auth.urls')),
-
-    # Favicon for old browsers that ignore <head> links and always load via root
-    path('favicon\.ico',
-        RedirectView.as_view(url='/static/favicon.ico')),
 
     # Tournament URLs
     path('<slug:tournament_slug>/',

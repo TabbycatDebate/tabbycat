@@ -280,7 +280,9 @@ class TestFeedbackProgress(TestCase):
         if adj3 is not None:
             self._create_feedback(self._dt(debate3, 0), adj3)
 
-    def assertTeamProgress(self, show_splits, t, submitted, expected, fulfilled, unsubmitted, coverage): # noqa
+    def assertTeamProgress(self, feedback_paths, show_splits, t, submitted, # noqa
+                           expected, fulfilled, unsubmitted, coverage):
+        self.t.preferences['feedback__feedback_from_teams'] = feedback_paths
         self.t.preferences['ui_options__show_splitting_adjudicators'] = show_splits
         progress = FeedbackProgressForTeam(self._team(t))
         self.assertEqual(progress.num_submitted(), submitted)
@@ -290,46 +292,65 @@ class TestFeedbackProgress(TestCase):
         self.assertAlmostEqual(progress.coverage(), coverage)
         return progress
 
-    def test_team_progress_all_good(self):
+    def test_team_progress_all_good_orallist(self):
         self._create_team_progress_dataset(0, 4, 6)
-        self.assertTeamProgress(True, 0, 3, 3, 3, 0, 1.0)
-        self.assertTeamProgress(False, 0, 3, 3, 3, 0, 1.0)
+        self.assertTeamProgress('orallist', True, 0, 3, 3, 3, 0, 1.0)
+        self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
+
+    def test_team_progress_all_good_all_adjs(self):
+        debate1 = self._create_debate((0, 1), (0, 1, 2), "nnn")
+        debate2 = self._create_debate((0, 2), (3, 4, 5), "ann")
+        debate3 = self._create_debate((0, 3), (6,), "a")
+        self._create_feedback(self._dt(debate1, 0), 0)
+        self._create_feedback(self._dt(debate1, 0), 1)
+        self._create_feedback(self._dt(debate1, 0), 2)
+        self._create_feedback(self._dt(debate2, 0), 3)
+        self._create_feedback(self._dt(debate2, 0), 4)
+        self._create_feedback(self._dt(debate2, 0), 5)
+        self._create_feedback(self._dt(debate3, 0), 6)
+        self.assertTeamProgress('all-adjs', True, 0, 7, 7, 7, 0, 1.0)
+        self.assertTeamProgress('all-adjs', False, 0, 7, 7, 7, 0, 1.0)
 
     def test_team_progress_no_submissions(self):
         self._create_team_progress_dataset(None, None, None)
-        self.assertTeamProgress(True, 0, 0, 3, 0, 3, 0.0)
-        self.assertTeamProgress(False, 0, 0, 3, 0, 3, 0.0)
+        self.assertTeamProgress('orallist', True, 0, 0, 3, 0, 3, 0.0)
+        self.assertTeamProgress('all-adjs', True, 0, 0, 7, 0, 7, 0.0)
+        self.assertTeamProgress('orallist', False, 0, 0, 3, 0, 3, 0.0)
+        self.assertTeamProgress('all-adjs', False, 0, 0, 7, 0, 7, 0.0)
 
     def test_team_progress_no_debates(self):
         FeedbackProgressForTeam(self._team(4))
-        self.assertTeamProgress(True, 4, 0, 0, 0, 0, 1.0)
+        self.assertTeamProgress('orallist', True, 4, 0, 0, 0, 0, 1.0)
+        self.assertTeamProgress('all-adjs', True, 4, 0, 0, 0, 0, 1.0)
 
     def test_team_progress_missing_submission(self):
         self._create_team_progress_dataset(0, None, 6)
-        self.assertTeamProgress(True, 0, 2, 3, 2, 1, 2/3)
-        self.assertTeamProgress(False, 0, 2, 3, 2, 1, 2/3)
+        self.assertTeamProgress('orallist', True, 0, 2, 3, 2, 1, 2/3)
+        self.assertTeamProgress('all-adjs', True, 0, 2, 7, 2, 5, 2/7)
+        self.assertTeamProgress('orallist', False, 0, 2, 3, 2, 1, 2/3)
+        self.assertTeamProgress('all-adjs', False, 0, 2, 7, 2, 5, 2/7)
 
     def test_team_progress_wrong_target_on_unanimous(self):
         self._create_team_progress_dataset(2, 4, 6)
-        progress = self.assertTeamProgress(True, 0, 3, 3, 2, 1, 2/3)
+        progress = self.assertTeamProgress('orallist', True, 0, 3, 3, 2, 1, 2/3)
         self.assertEqual(len(progress.unexpected_trackers()), 1)
-        progress = self.assertTeamProgress(False, 0, 3, 3, 3, 0, 1.0)
+        progress = self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
 
     def test_team_progress_wrong_target_on_rolled_chair(self):
         self._create_team_progress_dataset(0, 3, 6)
-        progress = self.assertTeamProgress(True, 0, 3, 3, 2, 1, 2/3)
+        progress = self.assertTeamProgress('orallist', True, 0, 3, 3, 2, 1, 2/3)
         self.assertEqual(len(progress.unexpected_trackers()), 1)
-        progress = self.assertTeamProgress(False, 0, 3, 3, 3, 0, 1.0)
+        progress = self.assertTeamProgress('orallist', False, 0, 3, 3, 3, 0, 1.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
 
     def test_team_progress_unexpected(self):
         self._create_team_progress_dataset(5, 3, None)
-        progress = self.assertTeamProgress(True, 0, 2, 3, 0, 3, 0.0)
+        progress = self.assertTeamProgress('orallist', True, 0, 2, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 2)
 
         self.t.preferences['feedback__show_unexpected_feedback'] = False
-        progress = self.assertTeamProgress(True, 0, 2, 3, 0, 3, 0.0)
+        progress = self.assertTeamProgress('orallist', True, 0, 2, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
 
     # ==========================================================================

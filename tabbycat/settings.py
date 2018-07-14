@@ -20,9 +20,9 @@ DEBUG_ASSETS = DEBUG
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.1.1'
+TABBYCAT_VERSION = '2.1.2'
 TABBYCAT_CODENAME = 'Japanese Bobtail'
-READTHEDOCS_VERSION = 'v2.1.1'
+READTHEDOCS_VERSION = 'v2.1.2'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -179,6 +179,8 @@ STATICFILES_FINDERS = (
 
 # Whitenoise Gzipping and unique names
 STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
+# Serve files that must be at root (robots; favicon) from this folder
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'static/root')
 
 # ==============================================================================
 # Logging

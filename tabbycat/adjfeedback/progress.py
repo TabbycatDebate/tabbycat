@@ -297,6 +297,9 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
             trackers = [FeedbackExpectedSubmissionFromTeamOnSingleAdjudicatorTracker(dt, adj)
                         for dt in debateteams
                         for adj in dt.debate.adjudicators.all()]
+            self._prefetch_tracker_acceptable_submissions(trackers,
+                    attrgetter('source', 'target'),
+                    attrgetter('source_team', 'adjudicator'))
 
         else:
             # If teams submit only on orallists, there is one tracker for each
@@ -304,9 +307,9 @@ class FeedbackProgressForTeam(BaseFeedbackProgress):
             # silent.
             trackers = [FeedbackExpectedSubmissionFromTeamTracker(dt, self.enforce_orallist)
                         for dt in debateteams]
+            self._prefetch_tracker_acceptable_submissions(trackers,
+                        attrgetter('source'), attrgetter('source_team'))
 
-        self._prefetch_tracker_acceptable_submissions(trackers,
-                attrgetter('source'), attrgetter('source_team'))
         return trackers
 
 

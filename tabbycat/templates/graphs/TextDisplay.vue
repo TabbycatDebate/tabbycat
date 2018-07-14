@@ -4,7 +4,7 @@
     <template v-for="(data, index) in set.data">
 
       <div class="col-4 text-center">
-        <h5 :class="'mb-0 text-body gender-text gender-' + data.label.toLowerCase()">
+        <h5 :class="'mb-0 gender-text gender-' + data.label.toLowerCase()">
           {{ offset(data.count) }}
         </h5>
       </div>

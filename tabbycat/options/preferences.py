@@ -427,7 +427,7 @@ class TeamsInDebate(ChoicePreference):
 @tournament_preferences_registry.register
 class BallotsPerDebatePreliminary(ChoicePreference):
     help_text = _("Whether panels submit a ballot each or a single ballot for a debate during the preliminary rounds. Note: BP must use one per debate.")
-    verbose_name = _("Ballots per debate (for in-rounds)")
+    verbose_name = _("Ballots per debate, preliminary rounds")
     section = debate_rules
     name = 'ballots_per_debate_prelim'
     choices = (
@@ -440,7 +440,7 @@ class BallotsPerDebatePreliminary(ChoicePreference):
 @tournament_preferences_registry.register
 class BallotsPerDebateElimination(ChoicePreference):
     help_text = _("Whether panels submit a ballot each or a single ballot for a debate during the elimination rounds. Note: BP must use one per debate.")
-    verbose_name = _("Ballots per debate (for out-rounds)")
+    verbose_name = _("Ballots per debate, elimination rounds")
     section = debate_rules
     name = 'ballots_per_debate_elim'
     choices = (
@@ -1029,7 +1029,7 @@ class TeamCodeNames(ChoicePreference):
 
 @tournament_preferences_registry.register
 class ShowEmoji(BooleanPreference):
-    help_text = _("Enables emoji in the draw")
+    help_text = _("Display team emoji in the public and admin interfaces")
     verbose_name = _("Show emoji")
     section = ui_options
     name = 'show_emoji'

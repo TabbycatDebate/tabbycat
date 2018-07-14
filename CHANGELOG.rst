@@ -2,6 +2,17 @@
 Change Log
 ==========
 
+2.1.2
+-----
+*Release date: 14 July 2018*
+
+- Fixed an error caused when calculating breaks including teams without institutions
+- Improved display of long motions and info slides
+- Fixed bug in feedback progress tracking with UADC-style adjudication
+- Fixed bug where the public checks page would cause large amounts of failing requests
+- Fixed visual issue with adjudicator lists wrapping poorly on mobile devices
+- Limited the time it takes to serve requests to match Heroku's in-built limit; this may help improve the performance of sites under heavy load
+
 
 2.1.1
 -----

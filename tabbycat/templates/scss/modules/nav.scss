@@ -39,6 +39,16 @@
   }
 }
 
+.draw-dropdown-menu {
+
+  .dropdown-item:last-child  {
+    display: none; // Hide the "no draws element" if other options present
+  }
+  .dropdown-item:first-child  {
+    display: block; // Show the "no draws element" if no other options present
+  }
+}
+
 //------------------------------------------------------------------------------
 // Admin Sidebar Customisation
 //------------------------------------------------------------------------------
