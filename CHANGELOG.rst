@@ -14,6 +14,18 @@ Change Log
   This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_.
 
 
+2.1.2
+-----
+*Release date: 14 July 2018*
+
+- Fixed an error caused when calculating breaks including teams without institutions
+- Improved display of long motions and info slides
+- Fixed bug in feedback progress tracking with UADC-style adjudication
+- Fixed bug where the public checks page would cause large amounts of failing requests
+- Fixed visual issue with adjudicator lists wrapping poorly on mobile devices
+- Limited the time it takes to serve requests to match Heroku's in-built limit; this may help improve the performance of sites under heavy load
+
+
 2.1.1
 -----
 *Release date: 19 May 2018*

@@ -15,6 +15,11 @@
       {% trans "Ignored; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
+    {% if not feedback.debate_adjudicator.get_type_display %}
+      <div class="list-group-item list-group-item-danger h6">
+          {% trans "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback." %}
+      </div>
+    {% endif %}
     <div class="list-group-item h5">
       <span class="badge float-right
             {% if feedback.score <= score_thresholds.low_score %}badge-danger
