@@ -2,9 +2,10 @@
 Change Log
 ==========
 
-2.1.1
+2.1.2
 -----
-*Release date: Unreleased*
+*Release date: 14 July 2018*
+
 - Fixed an error caused when calculating breaks including teams without institutions
 - Improved display of long motions and info slides
 - Fixed bug in feedback progress tracking with UADC-style adjudication
