@@ -1343,6 +1343,10 @@ account_creation = Section('accounts', verbose_name=_('Account Creation'))
 
 @global_preferences_registry.register
 class AssistantAccountCreationKey(StringPreference):
+    help_text = _("Once a key is set you can send a private URL to people who "
+                  "you would like to be able to create an accounts. That URL "
+                  "takes the form of YOURAPPURL/accounts/signup/KEY/ — for "
+                  "example http://memeIV.herokuapp.com/accounts/signup/secretpassword")
     section = account_creation
     verbose_name = _('Key for creating an assistant account')
     name = 'assistant_account_key'
@@ -1356,6 +1360,10 @@ class AssistantAccountCreationKey(StringPreference):
 
 @global_preferences_registry.register
 class AdminAccountCreationKey(StringPreference):
+    help_text = _("Once a key is set you can send a private URL to people who "
+                  "you would like to be able to create an accounts. That URL "
+                  "takes the form of YOURAPPURL/accounts/signup/KEY/ — for "
+                  "example http://memeIV.herokuapp.com/accounts/signup/secretpassword")
     section = account_creation
     verbose_name = _('Key for creating an administrator account')
     name = 'admin_account_key'

@@ -9,6 +9,7 @@ Change Log
 - Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version.
 - Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.
 - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score. Thanks Étienne Beaulé for the pull request!
+- Added a means to allow site administrators to send a private link to people they wish to add to the site as admins or assistants. Upon receiving that link, users can complete the signup process themselves. Thanks to Tom Kunc for the pull request!
 - Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6.
 
   This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_.

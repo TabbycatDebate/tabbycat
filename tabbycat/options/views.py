@@ -16,7 +16,7 @@ from utils.misc import reverse_tournament
 
 from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
-from .preferences import tournament_preferences_registry, global_preferences_registry
+from .preferences import global_preferences_registry, tournament_preferences_registry
 
 logger = logging.getLogger(__name__)
 

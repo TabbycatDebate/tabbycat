@@ -1,6 +1,6 @@
 from dynamic_preferences.forms import preference_form_builder, PreferenceForm
 
-from .preferences import tournament_preferences_registry, global_preferences_registry
+from .preferences import global_preferences_registry, tournament_preferences_registry
 
 
 class TournamentPreferenceForm(PreferenceForm):

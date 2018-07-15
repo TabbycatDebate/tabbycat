@@ -15,18 +15,10 @@
     <div class="card">
       <div class="list-group list-group-flush">
 
-        <div class="list-group-item pb-4">
+        {% trans "Create an Account" context "page title" as title %}
+        {% include "components/form-title.html" with icon="user-plus" %}
 
-          {% if form.errors %}
-            {% trans "There are some problems with this sign-up form. Please review and correct them." as message %}
-            {% include "components/form-errors.html" with errors=form.errors %}
-          {% endif %}
-
-          {% for field in form %}
-            {% include "components/form-field.html" %}
-          {% endfor %}
-
-        </div>
+        {% include "components/form-main.html" %}
 
         {% trans "When submitting this form your IP address will be stored for logging purposes." as subtitle %}
         {% include "components/form-submit.html" with title="Sign Up" %}
