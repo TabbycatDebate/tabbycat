@@ -15,14 +15,16 @@ class TournamentEmailMessage(mail.EmailMessage):
         self.round = round
 
         self.event = event
-
-        self.reply_to = "%s <%s>" % (self.tournament.pref('reply_to_name'), self.tournament.pref('reply_to_address'))
-        self.from_email = "%s <%s>" % (self.tournament.short_name, settings.DEFAULT_FROM_EMAIL)
-
         self.headers = headers
-        headers['List-Unsubscribe'] = "<mailto:%s?subject=unsubscribe>" % (self.tournament.pref('reply_to_address'))
+
+        self.from_email = "%s <%s>" % (self.tournament.short_name, settings.DEFAULT_FROM_EMAIL)
+        self.reply_to = None
+        if self.tournament.pref('reply_to_address') != "":
+            headers['List-Unsubscribe'] = "<mailto:%s?subject=unsubscribe>" % (self.tournament.pref('reply_to_address'))
+            self.reply_to = ["%s <%s>" % (self.tournament.pref('reply_to_name'), self.tournament.pref('reply_to_address'))]
+
         super().__init__(subject, body, self.from_email, self.emails, bcc, connection, attachments,
-            self.headers, cc, [self.reply_to])
+            self.headers, cc, self.reply_to)
 
     def as_model(self):
         return MessageSentRecord(recepient=self.person, event=self.event, method=MessageSentRecord.METHOD_TYPE_EMAIL, round=self.round, tournament=self.tournament)
