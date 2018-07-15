@@ -10,6 +10,7 @@ from .forms import TabRegistrationForm
 
 
 class SignUp(CreateView):
+    ADMIN, ASSISTANT = "admin", "assistant"
     form_class = TabRegistrationForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
@@ -23,17 +24,24 @@ class SignUp(CreateView):
         return form
 
     def form_valid(self, form):
-        ADMIN, ASSISTANT = "admin", "assistant"
         prefs = global_preferences_registry.manager()
+        enable_admin_key = prefs['accounts__enable_admin_account_key']
         admin_key = prefs['accounts__admin_account_key']
+        enable_assist_key = prefs['accounts__enable_assistant_account_key']
         assist_key = prefs['accounts__assistant_account_key']
-        if form.instance.key == admin_key:
-            form.instance.type = ADMIN
+        if form.instance.key == admin_key and enable_admin_key:
+            form.instance.type = self.ADMIN
             form.instance.is_superuser = True
-            messages.success(self.request, _("You have successfully created a new administrator account. You can now log in."))
-        elif form.instance.key == assist_key:
-            form.instance.type = ASSISTANT
-            messages.success(self.request, _("You have successfully created a new assistant account. You can now log in."))
+            messages.success(
+                self.request,
+                _("You have successfully created a new administrator account. You can now log in.")
+            )
+        elif form.instance.key == assist_key and enable_assist_key:
+            form.instance.type = self.ASSISTANT
+            messages.success(
+                self.request,
+                _("You have successfully created a new assistant account. You can now log in.")
+            )
         else:
             raise PermissionDenied
         return super().form_valid(form)

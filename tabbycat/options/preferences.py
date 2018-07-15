@@ -1336,9 +1336,28 @@ class PointsEmailLinkText(StringPreference):
     name = 'team_points_email_link_text'
     default = "To consult the current team standings, visit:"
 
+
 # ==============================================================================
 account_creation = Section('accounts', verbose_name=_('Account Creation'))
 # ==============================================================================
+
+
+@global_preferences_registry.register
+class EnableAssistantAccountCreation(BooleanPreference):
+    help_text = _("Enables Tabbycat assistant accounts to be created via the account creation key")
+    verbose_name = _("Enable Assistant Account Creation")
+    section = account_creation
+    name = 'enable_assistant_account_key'
+    default = False
+
+
+@global_preferences_registry.register
+class EnableAdminAccountCreation(BooleanPreference):
+    help_text = _("Enables Tabbycat admin accounts to be created via the account creation key")
+    verbose_name = _("Enable Admin Account Creation")
+    section = account_creation
+    name = 'enable_admin_account_key'
+    default = False
 
 
 @global_preferences_registry.register
@@ -1350,12 +1369,7 @@ class AssistantAccountCreationKey(StringPreference):
     section = account_creation
     verbose_name = _('Key for creating an assistant account')
     name = 'assistant_account_key'
-    default = ''
-
-    def get_field_kwargs(self):
-        kwargs = super().get_field_kwargs()
-        kwargs['required'] = False
-        return kwargs
+    default = 'REPLACE_ME(ASSIST)'
 
 
 @global_preferences_registry.register
@@ -1367,10 +1381,4 @@ class AdminAccountCreationKey(StringPreference):
     section = account_creation
     verbose_name = _('Key for creating an administrator account')
     name = 'admin_account_key'
-    default = ''
-    required = False
-
-    def get_field_kwargs(self):
-        kwargs = super().get_field_kwargs()
-        kwargs['required'] = False
-        return kwargs
+    default = 'REPLACE_ME(ADMIN)'

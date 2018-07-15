@@ -49,14 +49,7 @@
       {% trans "How adjudicators are ranked and who can submit feedback" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🙅" text=title extra=description %}
 
-      {% if show_leagues %}
-        {% tournamenturl 'options-tournament-section' section='league_options' as url %}
-        {% trans "League Options" as title %}
-        {% trans "Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported." as description %}
-        {% include "components/item-action.html" with type="primary" emoji="🏫" text=title extra=description %}
-      {% endif %}
-
-    {% tournamenturl 'options-tournament-section' section='accounts' as url %}
+      {% tournamenturl 'options-tournament-section' section='accounts' as url %}
       {% trans "Accounts" as title %}
       {% trans "Set the rules for making Tabbycat accounts." as description %}
     {% include "components/item-action.html" with type="primary" emoji="👮‍" text=title extra=description %}
