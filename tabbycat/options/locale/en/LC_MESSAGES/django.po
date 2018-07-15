@@ -1307,7 +1307,7 @@ msgstr ""
 #: options/preferences.py:1280
 msgid ""
 "The subject line for emails sent to adjudicators with their submitted "
-"ballot. Use '<DEBATE>' as a placeholder for the associated debate"
+"ballot. Use '{{ DEBATE }}' as a placeholder for the associated debate"
 msgstr ""
 
 #: options/preferences.py:1282
@@ -1317,8 +1317,8 @@ msgstr ""
 #: options/preferences.py:1290
 msgid ""
 "The message body for emails sent to adjudicators with their submitted "
-"ballot. Use '<DEBATE>' as a placeholder for the associated debate, '<USER>' "
-"for the adjudicator, and '<SCORES>' for the ballot values."
+"ballot. Use '{{ DEBATE }}' as a placeholder for the associated debate, '{{ USER }}' "
+"for the adjudicator, and '{{ SCORES }}' for the ballot values."
 msgstr ""
 
 #: options/preferences.py:1293

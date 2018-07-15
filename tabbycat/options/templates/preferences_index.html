@@ -77,7 +77,7 @@
 
       {% tournamenturl 'options-tournament-section' section='email' as url %}
       {% trans "Notifications" as title %}
-      {% trans "Configures sending notifications" as description %}
+      {% trans "Configures sending notifications, such as emails confirming ballot submissions or team points" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📧" text=title extra=description %}
 
       {% if show_leagues %}
