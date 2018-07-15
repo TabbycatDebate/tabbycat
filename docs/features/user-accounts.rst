@@ -49,14 +49,31 @@ You should create an account for each person who needs to access the tab system.
 
 Tournament participants (other than tab staff) do not need an account. Everything they need to know can be accessed without an account. If you're using electronic ballots or electronic feedback, they access these using a URL that only they know (see :ref:`private-urls`).
 
-When doing data entry, users with superuser status should use the **assistant area**. The administrator area is intended for managing the tournament, and doesn't include someand should **not** in general be used for data entry. Specifically, the administrator area lacks checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm or modify a ballot.
+When doing data entry, users with superuser status should use the **assistant area**. The administrator area is intended for managing the tournament, and doesn't include some and should **not** in general be used for data entry. Specifically, the administrator area lacks checks that are important for data integrity assurance. It should be used only to override the normal :ref:`data entry <data-entry>` procedure, for example, to unconfirm or modify a ballot.
 
 The **Edit Database** interface should not be used except where it is actually necessary. There are a few functions which require this, but as a principle, it shouldn't be used as a matter of course.
 
 .. note:: In theory, you could grant an account staff status but not superuser status. But then they'd be allowed to edit the database, but not run the tournament, which would be weird.
 
-Adding accounts
-===============
+Allow users to create accounts.
+===============================
+
+If you wish to allow select staff to create their own accounts, you can do so:
+
+1. Go to the Configuration area of any tournament.
+
+2. Select the **Accounts** option.
+
+3. Tick the **"Enable Assistant Account Creation"** box, or the **"Enable Admin Account Creation"** box (or both!).
+
+4. Specify a secret password for each type of account creation. This should be hard to guess (don't just use "Admin" or your tournament name).
+
+5. Provide anybody the link to the signup form. That URL takes the form of YOURAPPURL/accounts/signup/KEY/ — for example http://memeIV.herokuapp.com/accounts/signup/secretpassword
+
+.. note:: It is not possible to create a link that automatically gives super-user access. You should either manually create other superusers, or use the admin interface to promote them once they have created an account this way.
+
+Adding accounts manually.
+=========================
 
 To add an account:
 
