@@ -38,7 +38,7 @@
     {% include 'components/alert.html' with type='warning' %}
   {% endif %}
 
-  {% url 'admin:privateurls_privateurlsentmailrecord_changelist' as sent_mail_records_url %}
+  {% url 'admin:notifications_MessageSentRecord_changelist' as sent_mail_records_url %}
 
   {% if nspeakers_already_sent or nadjudicators_already_sent %}
     {% blocktrans trimmed count nspeakers=nspeakers_already_sent asvar speaker_phrase %}

@@ -30,7 +30,7 @@
     {% include 'components/alert.html' with type='warning' %}
   {% endif %}
 
-  {% url 'admin:privateurls_privateurlsentmailrecord_changelist' as sent_mail_records_url %}
+  {% url 'admin:notifications_messagesentrecord_changelist' as sent_mail_records_url %}
 
   {% if nadjudicators_already_sent %}
     {% blocktrans trimmed count nadjs=nadjudicators_already_sent asvar message %}

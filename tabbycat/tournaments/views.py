@@ -166,7 +166,7 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
         populate_win_counts(active_teams)
 
         try:
-            send_standings_emails(self.tournament, active_teams, request)
+            send_standings_emails(self.tournament, active_teams, request, self.round)
         except (ConnectionError, SMTPException):
             messages.error(request, _("Team point emails could not be sent."))
         else:

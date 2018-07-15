@@ -96,6 +96,7 @@ TABBYCAT_APPS = (
     'utils',
     'users',
     'standings',
+    'notifications',
     'importer'
 )
 

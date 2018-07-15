@@ -1271,8 +1271,26 @@ class EnableCrossTournamentDrawPages(BooleanPreference):
 
 
 # ==============================================================================
-email = Section('email', verbose_name=_("Email Sending"))
+email = Section('email', verbose_name=_("Notifications"))
 # ==============================================================================
+
+
+@tournament_preferences_registry.register
+class ReplyToEmailName(StringPreference):
+    help_text = _("The name of the organizer tasked with managing emails (in case of replies)")
+    verbose_name = _("Reply-to name")
+    section = email
+    name = 'reply_to_name'
+    default = "Tabulation Team"
+
+
+@tournament_preferences_registry.register
+class ReplyToEmailAddress(StringPreference):
+    help_text = _("The email address for handling replies")
+    verbose_name = _("Reply-to address")
+    section = email
+    name = 'reply_to_address'
+    default = ""
 
 
 @tournament_preferences_registry.register
