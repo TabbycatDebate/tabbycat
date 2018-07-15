@@ -2,7 +2,7 @@
 
   {% if title %}
     <h4 class="card-title mt-0 {% if not text %}mb-2{% endif %} d-inline-block">
-      {% if icon %}<i data-feather="lock"></i>{% endif %}
+      {% if icon %}<i data-feather="{{ icon }}"></i>{% endif %}
       {% if emoji %}<span class="emoji">{{ emoji }}</span>{% endif %}
       {{ title|safe }}
     </h4>
