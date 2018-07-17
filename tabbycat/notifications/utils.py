@@ -20,7 +20,6 @@ class TournamentEmailMessage(mail.EmailMessage):
         self.from_email = "%s <%s>" % (self.tournament.short_name, settings.DEFAULT_FROM_EMAIL)
         self.reply_to = None
         if self.tournament.pref('reply_to_address') != "":
-            headers['List-Unsubscribe'] = "<mailto:%s?subject=unsubscribe>" % (self.tournament.pref('reply_to_address'))
             self.reply_to = ["%s <%s>" % (self.tournament.pref('reply_to_name'), self.tournament.pref('reply_to_address'))]
 
         super().__init__(subject, body, self.from_email, self.emails, bcc, connection, attachments,
