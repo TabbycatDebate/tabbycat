@@ -20,8 +20,8 @@ class MessageSentRecord(models.Model):
         (METHOD_TYPE_EMAIL, _("email")),
     )
 
-    recepient = models.ForeignKey('participants.Person', models.CASCADE,
-        verbose_name=_("recepient"))
+    recipient = models.ForeignKey('participants.Person', models.CASCADE,
+        verbose_name=_("recipient"))
     event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES,
         verbose_name=_("event"))
     timestamp = models.DateTimeField(auto_now=True,
@@ -40,4 +40,4 @@ class MessageSentRecord(models.Model):
         ordering = ['timestamp']
 
     def __str__(self):
-        return "%s: %s" % (self.recepient.name, self.event)
+        return "%s: %s" % (self.recipient.name, self.event)

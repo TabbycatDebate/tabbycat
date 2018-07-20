@@ -35,7 +35,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
     def get_adjudicators_to_email(self, url_type, already_sent=False):
         subquery = MessageSentRecord.objects.filter(
-            tournament=self.tournament, recepient=OuterRef('pk'),
+            tournament=self.tournament, recipient=OuterRef('pk'),
             event=url_type
         )
         adjudicators = Adjudicator.objects.filter(
@@ -49,7 +49,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
     def get_speakers_to_email(self, already_sent=False):
         subquery = MessageSentRecord.objects.filter(
-            tournament=self.tournament, recepient=OuterRef('pk'),
+            tournament=self.tournament, recipient=OuterRef('pk'),
             event=MessageSentRecord.EVENT_TYPE_FEEDBACK_URL
         )
         speakers = Speaker.objects.filter(

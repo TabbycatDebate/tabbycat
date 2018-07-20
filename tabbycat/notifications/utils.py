@@ -25,5 +25,5 @@ class TournamentEmailMessage(mail.EmailMessage):
         super().__init__(subject, body, self.from_email, self.emails, bcc, connection, attachments,
             self.headers, cc, self.reply_to)
 
-    def as_model(self):
-        return MessageSentRecord(recepient=self.person, event=self.event, method=MessageSentRecord.METHOD_TYPE_EMAIL, round=self.round, tournament=self.tournament)
+    def as_sent_record(self):
+        return MessageSentRecord(recipient=self.person, event=self.event, method=MessageSentRecord.METHOD_TYPE_EMAIL, round=self.round, tournament=self.tournament)

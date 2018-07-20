@@ -70,6 +70,6 @@ def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_
         raise
     else:
         logger.info("Sent %d randomised URL e-mails", len(messages))
-        MessageSentRecord.objects.bulk_create([message.as_model() for message in messages])
+        MessageSentRecord.objects.bulk_create([message.as_sent_record() for message in messages])
 
     return len(messages)

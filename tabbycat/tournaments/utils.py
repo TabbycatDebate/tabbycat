@@ -222,4 +222,4 @@ def send_standings_emails(tournament, teams, request, round):
         logger.exception("Connection error sending team points e-mails")
         raise
     else:
-        MessageSentRecord.objects.bulk_create([message.as_model() for message in messages])
+        MessageSentRecord.objects.bulk_create([message.as_sent_record() for message in messages])

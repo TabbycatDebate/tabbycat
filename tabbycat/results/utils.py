@@ -299,4 +299,4 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
         logger.exception("Connection error sending ballot receipt e-mails")
         raise
     else:
-        MessageSentRecord.objects.bulk_create([message.as_model() for message in messages])
+        MessageSentRecord.objects.bulk_create([message.as_sent_record() for message in messages])
