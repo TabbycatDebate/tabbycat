@@ -12,7 +12,7 @@ from django.views.generic.edit import FormView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names, use_team_code_names_data_entry
-from participants.models import Adjudicator, Team
+from participants.models import Adjudicator, Speaker, Team
 from participants.prefetch import populate_feedback_scores
 from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
@@ -460,7 +460,7 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         source = self.object
         if isinstance(source, Adjudicator):
             kwargs['source_type'] = "adj"
-        elif isinstance(source, Team):
+        elif isinstance(source, Speaker):
             kwargs['source_type'] = "team"
         kwargs['source_name'] = self.source_name
         return super().get_context_data(**kwargs)
@@ -469,10 +469,10 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
         self.object = self.get_object()  # For compatibility with SingleObjectMixin
         if isinstance(self.object, Adjudicator):
             self.source_name = self.object.name
-        elif isinstance(self.object, Team):
-            self.source_name = self.get_team_short_name(self.object)
+        elif isinstance(self.object, Speaker):
+            self.source_name = self.get_team_short_name(self.object.team)
         else:
-            logger.error("self.object was neither an Adjudicator nor a Team")
+            logger.error("self.object was neither an Adjudicator nor a Speaker")
             self.source_name = "<ERROR>"
 
     def get(self, request, *args, **kwargs):
@@ -557,11 +557,20 @@ class PublicAddFeedbackByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, Pub
         if isinstance(self.object, Adjudicator):
             return reverse_tournament('adjfeedback-public-add-from-adjudicator-randomised',
                 self.tournament, kwargs={'url_key': self.object.url_key})
-        elif isinstance(self.object, Team):
+        elif isinstance(self.object, Speaker):
             return reverse_tournament('adjfeedback-public-add-from-team-randomised',
                 self.tournament, kwargs={'url_key': self.object.url_key})
         else:
             raise ValueError("Private feedback source is not of a valid type")
+
+
+class SpeakerAddFeedbackByRandomisedUrlView(PublicAddFeedbackByRandomisedUrlView):
+    model = Speaker
+    tournament_field_name = 'team__tournament'
+
+
+class AdjudicatorAddFeedbackByRandomisedUrlView(PublicAddFeedbackByRandomisedUrlView):
+    model = Adjudicator
 
 
 class PublicAddFeedbackByIdUrlView(PublicAddFeedbackView):

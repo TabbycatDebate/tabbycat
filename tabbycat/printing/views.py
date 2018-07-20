@@ -1,5 +1,6 @@
 import json
 
+from django.db.models import Q
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 
@@ -9,7 +10,7 @@ from checkins.models import DebateIdentifier
 from checkins.utils import create_identifiers
 from draw.models import Debate, DebateTeam
 from options.utils import use_team_code_names
-from participants.models import Adjudicator
+from participants.models import Person
 from results.utils import side_and_position_names
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
@@ -279,29 +280,13 @@ class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView)
     template_name = 'randomised_url_sheets.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['sheet_type'] = self.sheet_type
         kwargs['tournament_slug'] = self.tournament.slug
 
         if not self.tournament.pref('share_adjs'):
-            kwargs['adjs'] = self.tournament.adjudicator_set.filter(url_key__isnull=False).order_by('institution__name', 'name')
+            kwargs['parts'] = self.tournament.participants.filter(url_key__isnull=False)
         else:
-            kwargs['adjs'] = Adjudicator.objects.filter(url_key__isnull=False).order_by('institution__name', 'name')
+            kwargs['parts'] = Person.objects.filter(Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament__isnull=True) & Q(url_key__isnull=False))
 
-        kwargs['exists'] = self.tournament.adjudicator_set.filter(url_key__isnull=False).exists() or \
-            self.tournament.team_set.filter(url_key__isnull=False).exists()
+        kwargs['exists'] = self.tournament.participants.filter(url_key__isnull=False).exists()
 
         return super().get_context_data(**kwargs)
-
-
-class PrintFeedbackURLsView(PrintableRandomisedURLs):
-
-    sheet_type = 'feedback'
-
-    def get_context_data(self, **kwargs):
-        kwargs['teams'] = self.tournament.team_set.filter(url_key__isnull=False).order_by('institution', 'reference')
-        return super().get_context_data(**kwargs)
-
-
-class PrintBallotURLsView(PrintableRandomisedURLs):
-
-    sheet_type = 'ballot'

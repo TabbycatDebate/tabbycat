@@ -8,11 +8,13 @@ class MessageSentRecord(models.Model):
     EVENT_TYPE_BALLOT_CONFIRMED = 'c'
     EVENT_TYPE_FEEDBACK_URL = 'f'
     EVENT_TYPE_BALLOT_URL = 'b'
+    EVENT_TYPE_URL = 'u'
     EVENT_TYPE_CHOICES = (
         (EVENT_TYPE_POINTS, _("team points")),
         (EVENT_TYPE_BALLOT_CONFIRMED, _("ballot confirmed")),
         (EVENT_TYPE_FEEDBACK_URL, _("feedback URL")),
-        (EVENT_TYPE_BALLOT_URL, _("ballot URL"))
+        (EVENT_TYPE_BALLOT_URL, _("ballot URL")),
+        (EVENT_TYPE_URL, _("splash page URL"))
     )
 
     METHOD_TYPE_EMAIL = 'e'

@@ -17,7 +17,6 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
 from options.utils import use_team_code_names
-from participants.models import Institution
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
@@ -28,7 +27,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import Adjudicator, Speaker, SpeakerCategory, Team
+from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from .tables import TeamResultTableBuilder
 
 logger = logging.getLogger(__name__)

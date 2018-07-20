@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n debate_tags %}
+
+{% block page-title %}{% trans "Private URL" %}{% endblock %}
+{% block head-title %}{% trans "Private URL" %}{% endblock %}
+{% block sub-title %}
+  {% blocktrans trimmed with name=person.name %}for {{ name }}{% endblocktrans %}
+  {% if person.speaker %}
+    {% blocktrans trimmed with team=person.speaker.team.short_name %}({{ team }}){% endblocktrans %}
+  {% endif %}
+{% endblock %}
+
+{% block page-subnav-actions %}
+
+  <a href="{% tournamenturl 'results-public-ballotset-new-randomised' url_key %}" class="btn btn-{{ballots_pref|yesno:"outline-primary,outline-secondary disabled"}}">
+    {% trans "Submit Ballot" %}
+  </a>
+
+
+  {% if person.adjudicator %}
+
+    <a href="{% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key %}" class="btn btn-{{feedback_pref|yesno:"outline-primary,outline-secondary disabled"}}">
+      {% trans "Submit Feedback" %}
+    </a>
+
+  {% endif %}
+
+  {% if person.speaker %}
+    <a href="{% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key %}" class="btn btn-{{feedback_pref|yesno:"outline-primary,outline-secondary disabled"}}">
+      {% trans "Submit Feedback" %}
+    </a>
+  {% endif %}
+
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% blocktrans trimmed with name=person.name asvar p1 %}
+    The URL of this page is personalised to you, {{ name }}. <strong>Do not
+    share it with anyone:</strong> anyone who knows this URL can submit results and/or
+    feedback for your debates. You may bookmark this page and return here after each
+    debate for the available actions.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+
+{% endblock %}
