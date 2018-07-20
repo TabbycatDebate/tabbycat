@@ -39,6 +39,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
             event=url_type
         )
         adjudicators = Adjudicator.objects.filter(
+            tournament=self.tournament,
             url_key__isnull=False, email__isnull=False
         ).exclude(
             email__exact=""
@@ -53,12 +54,15 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
             event=MessageSentRecord.EVENT_TYPE_FEEDBACK_URL
         )
         speakers = Speaker.objects.filter(
+            team__tournament=self.tournament,
             team__url_key__isnull=False, email__isnull=False
         ).exclude(
             email__exact=""
         ).annotate(
             already_sent=Exists(subquery)
-        ).filter(already_sent=already_sent)
+        ).filter(
+            already_sent=already_sent
+        ).select_related('team').prefetch_related('team__speaker_set')
         return speakers
 
 
