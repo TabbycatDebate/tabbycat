@@ -28,7 +28,6 @@
           <span></span> <!-- Hide Venues -->
         </template>
 
-
         <template slot="hpanel">
           <div :class="['thead flex-cell text-center',
                         'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
@@ -83,6 +82,19 @@
                                :percentiles="percentileThresholds"
                                :locked="unallocatedAdj.locked"></draggable-adjudicator>
       </div>
+      <div class="sort-handler align-items-center">
+        <div v-if="unallocatedAdjsByOrder.length > 5"
+             class="btn-group btn-group-toggle mt-2 mb-1 ml-2" data-toggle="buttons">
+          <label class="btn btn-sm btn-secondary active"
+                 @click="updateUnallocatedSorting('score')">
+            <input type="radio" checked>By Score
+          </label>
+          <label class="btn btn-sm btn-secondary"
+                 @click="updateUnallocatedSorting('name')">
+            <input type="radio">By Name
+          </label>
+        </div>
+      </div>
     </unallocated-items-container>
 
     <slide-over :subject="slideOverSubject"></slide-over>
@@ -113,6 +125,11 @@ export default {
            AutoImportanceLogicMixin, HighlightableContainerMixin],
   components: { AllocationActions, AllocationIntroModal, DebateImportance,
                 DebatePanel, DraggableAdjudicator },
+  data: function () {
+    return {
+      unallocatedSortOrder: null,
+    }
+  },
   props: { showIntroModal: Boolean },
   created: function () {
     // Watch for global conflict highlights
@@ -120,7 +137,8 @@ export default {
   },
   computed: {
     unallocatedAdjsByOrder: function () {
-      if (this.roundInfo.roundIsPrelim === true) {
+      if (this.unallocatedSortOrder === null && this.roundInfo.roundIsPrelim === true ||
+          this.unallocatedSortOrder === 'score') {
         return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
       } else {
         return _.sortBy(this.unallocatedItems, ['name'])
@@ -151,6 +169,9 @@ export default {
     },
   },
   methods: {
+    updateUnallocatedSorting(sortType) {
+      this.unallocatedSortOrder = sortType
+    },
     moveToDebate(payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move
