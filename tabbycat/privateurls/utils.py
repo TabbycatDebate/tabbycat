@@ -42,23 +42,19 @@ def delete_url_keys(queryset):
     queryset.update(url_key=None)
 
 
-def send_randomised_url_emails(request, tournament, queryset, url_name, url_key_function,
-        record_attrname, url_type, subject, message):
+def send_randomised_url_emails(request, tournament, participants, subject, message):
 
     messages = []
 
-    for instance in queryset:
-        url_key = url_key_function(instance)
-        path = reverse_tournament(url_name, tournament, kwargs={'url_key': url_key})
+    for instance in participants:
+        path = reverse_tournament('privateurls-person-index', tournament, kwargs={'url_key': instance.url_key})
         url = request.build_absolute_uri(path)
 
         variables = {'NAME': instance.name, 'URL': url}
-        if hasattr(instance, 'team'):
-            variables['TEAM'] = instance.team.short_name
 
         formatted_message = message.render(Context(variables))
         formatted_subject = subject.render(Context(variables))
-        messages.append(TournamentEmailMessage(formatted_subject, formatted_message, tournament, None, url_type, instance))
+        messages.append(TournamentEmailMessage(formatted_subject, formatted_message, tournament, None, MessageSentRecord.EVENT_TYPE_URL, instance))
 
     try:
         get_connection().send_messages(messages)

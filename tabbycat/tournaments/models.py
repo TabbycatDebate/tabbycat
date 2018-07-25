@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from participants.models import Person
 from utils.managers import LookupByNameFieldsMixin
 from utils.misc import reverse_round
 
@@ -168,6 +169,11 @@ class Tournament(models.Model):
             return Venue.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
         else:
             return self.venue_set.all()
+
+    @property
+    def participants(self):
+        """Convenience function for retrieving all participants. Returns a QuerySet."""
+        return Person.objects.filter(Q(adjudicator__tournament=self) | Q(speaker__team__tournament=self))
 
     def prelim_rounds(self, before=None, until=None):
         """Convenience function for retrieving preliminary rounds. Returns a QuerySet."""

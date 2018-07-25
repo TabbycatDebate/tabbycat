@@ -114,6 +114,9 @@ class Person(models.Model):
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
 
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple people to have no URL key
+        verbose_name=_("URL key"))
+
     notes = models.TextField(blank=True, null=True,
         verbose_name=_("notes"))
 
@@ -176,8 +179,6 @@ class Team(models.Model):
     use_institution_prefix = models.BooleanField(default=False,
         verbose_name=_("Uses institutional prefix"),
         help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
-        verbose_name=_("URL key"))
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
         verbose_name=_("break categories"))
 
@@ -396,8 +397,6 @@ class Adjudicator(Person):
         help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
     test_score = models.FloatField(default=0,
         verbose_name=_("test score"))
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
-        verbose_name=_("URL key"))
 
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',

@@ -28,9 +28,9 @@ urlpatterns = [
 
     # Submission via Private URL
     path('add/t<slug:url_key>/',
-        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Team),
+        views.SpeakerAddFeedbackByRandomisedUrlView.as_view(),
         name='adjfeedback-public-add-from-team-randomised'),
     path('add/a<slug:url_key>/',
-        views.PublicAddFeedbackByRandomisedUrlView.as_view(model=Adjudicator),
+        views.AdjudicatorAddFeedbackByRandomisedUrlView.as_view(),
         name='adjfeedback-public-add-from-adjudicator-randomised'),
 ]
