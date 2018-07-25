@@ -6,6 +6,8 @@ Change Log
 ------------------
 *Release date: TBD*
 
+- Implemented participant self-check-in through the use of their private URLs.
+- Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key.
 - Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable.
 - Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version.
 - Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.

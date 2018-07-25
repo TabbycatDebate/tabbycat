@@ -2,13 +2,14 @@ import json
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 from django.utils.translation import gettext as _
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
-from participants.models import Speaker
+from participants.models import Person, Speaker
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
@@ -292,3 +293,24 @@ class AdminCheckInPrintablesView(AdministratorMixin, CheckInPrintablesView):
 
 class AssistantCheckInPrintablesView(AssistantMixin, CheckInPrintablesView):
     pass
+
+
+class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
+
+    public_page_preference = 'public_checkins_submit'
+
+    def post(self, request, *args, **kwargs):
+        participant = get_object_or_404(Person, url_key=kwargs['url_key'])
+        identifier = get_object_or_404(PersonIdentifier, person=participant)
+
+        if Event.objects.filter(identifier=identifier, tournament=self.tournament).exists():
+            Event.objects.filter(identifier=identifier, tournament=self.tournament).delete()
+            messages.success(self.request, _("You have successfully signed-out."))
+        else:
+            Event(identifier=PersonIdentifier.objects.get(person=participant), tournament=self.tournament).save()
+            messages.success(self.request, _("You have successfully checked-in."))
+
+        return super().post(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': kwargs['url_key']})

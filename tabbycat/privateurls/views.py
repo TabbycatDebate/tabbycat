@@ -10,6 +10,7 @@ from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext, string_concat
 
+from checkins.models import Event, PersonIdentifier
 from notifications.models import MessageSentRecord
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
@@ -222,10 +223,13 @@ class PersonIndexView(PublicTournamentPageMixin, TemplateView):
     template_name = 'public_url_landing.html'
 
     def is_page_enabled(self, tournament):
-        return self.tournament.pref('participant_feedback') == 'private-urls' or self.tournament.pref('participant_ballots') == 'private-urls'
+        return self.tournament.pref('participant_feedback') == 'private-urls' or self.tournament.pref('participant_ballots') == 'private-urls' or self.tournament.pref('public_checkins_submit')
 
     def get_context_data(self, **kwargs):
-        kwargs['person'] = get_object_or_404(Person, url_key=kwargs['url_key'])
+        participant = get_object_or_404(Person, url_key=kwargs['url_key'])
+        kwargs['person'] = participant
+        kwargs['event'] = Event.objects.filter(identifier=PersonIdentifier.objects.get(person=participant)).exists()
+
         kwargs['feedback_pref'] = self.tournament.pref('participant_feedback') == 'private-urls'
         kwargs['ballots_pref'] = self.tournament.pref('participant_ballots') == 'private-urls'
 

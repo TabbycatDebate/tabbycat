@@ -16,6 +16,16 @@
     {% trans "Submit Ballot" %}
   </a>
 
+  <form action="{% tournamenturl 'public-checkin-submit' url_key %}" method="POST">
+    {% csrf_token %}
+    <button class="btn btn-{{checkin_pref|yesno:"outline-primary,outline-secondary"}}" id="participant-checkin" type="submit" {% if not checkin_pref %}disabled{% endif %}>
+      {% if event %}
+        {% trans "Sign-out" %}
+      {% else %}
+        {% trans "Check-in" %}
+      {% endif %}
+    </button>
+  </form>
 
   {% if person.adjudicator %}
 
