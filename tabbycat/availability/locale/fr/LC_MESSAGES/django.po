@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-15 22:43-0300\n"
 "PO-Revision-Date: 2018-04-29 10:35-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -48,7 +48,7 @@ msgstr "Marquer tous les juges qualifiant comme disponibles"
 
 #: availability/templates/availability_index.html:18
 msgid "Mark Everything as Available"
-msgstr "Marquer tous comme disponibles"
+msgstr "Tout marquer comme disponible"
 
 #: availability/templates/availability_index.html:25
 #, python-format
@@ -59,26 +59,33 @@ msgstr "Copier disponibilité de %(prev_round)s"
 msgid "View Draw"
 msgstr "Voir le tirage"
 
-#: availability/templates/availability_index.html:48
-#: availability/templates/availability_index.html:53
-#: availability/templates/availability_index.html:58
-#: availability/templates/availability_index.html:63
-#: availability/templates/availability_index.html:68
-#: availability/templates/availability_index.html:73
-#: availability/templates/availability_index.html:78
-#: availability/templates/availability_index.html:83
-#: availability/templates/availability_index.html:87
+#: availability/templates/availability_index.html:45
+#, python-format
+msgid ""
+"%(previous_unconfirmed)s debates from %(round_name)s do not have a completed "
+"ballot — this may lead to a draw that fails or is incorrect"
+msgstr ""
+
+#: availability/templates/availability_index.html:47
+#: availability/templates/availability_index.html:52
+#: availability/templates/availability_index.html:57
+#: availability/templates/availability_index.html:62
+#: availability/templates/availability_index.html:67
+#: availability/templates/availability_index.html:72
+#: availability/templates/availability_index.html:77
+#: availability/templates/availability_index.html:82
+#: availability/templates/availability_index.html:86
 msgid "Generate Draw"
 msgstr "Générer le tirage"
 
-#: availability/templates/availability_index.html:52
+#: availability/templates/availability_index.html:51
 msgid ""
 "The draw cannot be generated until some teams have been marked as available."
 msgstr ""
 "La génération du tirage n'est pas possible avant que des équipes aient été "
 "marquées comme disponibles."
 
-#: availability/templates/availability_index.html:57
+#: availability/templates/availability_index.html:56
 msgid ""
 "The draw cannot be generated until some adjudicators have been marked as "
 "available."
@@ -86,14 +93,14 @@ msgstr ""
 "La génération du tirage n'est pas possible avant que des juges aient été "
 "marqués comme disponibles."
 
-#: availability/templates/availability_index.html:62
+#: availability/templates/availability_index.html:61
 msgid ""
 "The draw cannot be generated until some venues have been marked as available."
 msgstr ""
 "La génération du tirage n'est pas possible avant que des salles aient été "
 "marquées comme disponibles."
 
-#: availability/templates/availability_index.html:67
+#: availability/templates/availability_index.html:66
 msgid ""
 "There aren't enough venues marked as available for the number of debates — "
 "the draw may not generate properly."
@@ -101,7 +108,7 @@ msgstr ""
 "Il n'y a pas assez de salles marquées comme disponibles pour le nombre de "
 "débats — le tirage ne se générera peut-être pas correctement."
 
-#: availability/templates/availability_index.html:72
+#: availability/templates/availability_index.html:71
 msgid ""
 "There aren't enough adjudicators marked as available for the number of "
 "debates — the draw may not generate properly."
@@ -109,7 +116,7 @@ msgstr ""
 "Il n'y a pas assez de juges marqués comme disponibles pour le nombre de "
 "débats — le tirage ne se générera peut-être pas correctement."
 
-#: availability/templates/availability_index.html:77
+#: availability/templates/availability_index.html:76
 msgid ""
 "There is an uneven number of teams marked as available — the draw may not "
 "generate properly."
@@ -117,7 +124,7 @@ msgstr ""
 "Il y a un nombre impair d'équipes marquées comme disponibles — le tirage ne "
 "se générera peut-être pas correctement."
 
-#: availability/templates/availability_index.html:82
+#: availability/templates/availability_index.html:81
 msgid ""
 "The number of teams marked as available is not a multiple of 4 — the draw "
 "may not generate properly."
@@ -125,7 +132,7 @@ msgstr ""
 "Le nombre d’équipes marquées comme disponibles n’est pas un multiple de 4 — "
 "le tirage ne se générera peut-être pas correctement."
 
-#: availability/templates/availability_index.html:100
+#: availability/templates/availability_index.html:99
 #, python-format
 msgid ""
 "One debate from %(prev_round)s <strong>does not have a completed ballot</"
@@ -149,7 +156,7 @@ msgstr[1] ""
 "\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de "
 "%(prev_round)s. </a>"
 
-#: availability/templates/availability_index.html:122
+#: availability/templates/availability_index.html:121
 #, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, however the current "
@@ -162,7 +169,7 @@ msgstr ""
 "oublié <a href=\"%(advance_round_url)s\" class=\"alert-link\">d'avancer au "
 "prochain tour?</a>"
 
-#: availability/templates/availability_index.html:137
+#: availability/templates/availability_index.html:136
 #, python-format
 msgid ""
 "This is the first round, but its draw type is <strong>%(draw_type)s</"
@@ -176,7 +183,7 @@ msgstr ""
 "le type de tirage de ce tour dans la zone pour modifier la base de données.</"
 "a>"
 
-#: availability/templates/availability_index.html:150
+#: availability/templates/availability_index.html:149
 #, python-format
 msgid ""
 "This is an elimination round, but it doesn't have a break category. "
@@ -190,7 +197,7 @@ msgstr ""
 "class=\"alert-link\">définir la catégorie de qualification de ce tour dans "
 "la zone pour modifier la base de données.</a>"
 
-#: availability/templates/availability_index.html:162
+#: availability/templates/availability_index.html:161
 #, python-format
 msgid ""
 "This is an elimination round, but its draw type is <strong>%(draw_type)s</"
@@ -204,7 +211,7 @@ msgstr ""
 "class=\"alert-link\">modifier le type de tirage de ce tour dans la zone pour "
 "modifier la base de données.</a>"
 
-#: availability/templates/availability_index.html:175
+#: availability/templates/availability_index.html:174
 #, python-format
 msgid ""
 "There don't appear to be any teams breaking in the %(break_category)s Break. "
@@ -216,7 +223,7 @@ msgstr ""
 "\"alert-link\">générer la qualification pour la catégorie "
 "%(break_category)s</a>?"
 
-#: availability/templates/availability_index.html:187
+#: availability/templates/availability_index.html:186
 #, python-format
 msgid ""
 "There's only one team breaking in the %(break_category)s Break. You can't "
@@ -272,7 +279,7 @@ msgstr ""
 
 #: availability/templates/checkin_progress.html:46
 msgid "No need to set team availability"
-msgstr "Pas de besoin marquer la disponibilité d'équipes"
+msgstr "Pas de besoin à marquer la disponibilité d'équipes"
 
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams marked as available for this round."
@@ -305,11 +312,10 @@ msgid_plural ""
 "There need to be at least %(required_count)s adjudicators marked as "
 "available, given the number of debates."
 msgstr[0] ""
-"Il faut au moins un juge marqué comme disponible pour satisfier le nombre de "
-"débats."
+"Il faut au moins un juge marqué comme disponible pour le nombre de débats."
 msgstr[1] ""
-"Il faut au moins %(required_count)s juges enregistrés pour satisfier le "
-"nombre de débats."
+"Il faut au moins %(required_count)s juges enregistrés pour le nombre de "
+"débats."
 
 #: availability/templates/checkin_progress.html:80
 msgid "Edit adjudicator availability"
@@ -342,15 +348,14 @@ msgid_plural ""
 "There need to be at least %(required_count)s venues marked as available, "
 "given the number of debates."
 msgstr[0] ""
-"Il faut au moins une salle marqués comme disponible pour satisfier le nombre "
-"de débats."
+"Il faut au moins une salle marquée comme disponible pour le nombre de débats."
 msgstr[1] ""
 "Il faut au moins %(required_count)s salles marquées comme disponibles pour "
 "satisfier le nombre de débats."
 
 #: availability/templates/checkin_progress.html:111
 msgid "Edit venue availability"
-msgstr "Modifier disponibilité de salles"
+msgstr "Modifier la disponibilité des salles"
 
 #: availability/templates/checkin_progress.html:115
 #, python-format
@@ -366,7 +371,7 @@ msgstr[1] ""
 
 #: availability/views.py:80
 msgid "no teams are debating"
-msgstr "aucune équipe ne débattre"
+msgstr "aucune équipe ne débat"
 
 #. Translators: nteams in this string can only be 0 or 1
 #: availability/views.py:90

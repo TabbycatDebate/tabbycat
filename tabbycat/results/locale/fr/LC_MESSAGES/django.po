@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-15 22:43-0300\n"
 "PO-Revision-Date: 2018-02-23 01:52-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 
 #: results/apps.py:7 results/templates/public_results_index.html:4
-#: results/templates/public_results_index.html:5 results/views.py:111
+#: results/templates/public_results_index.html:5 results/views.py:114
 msgid "Results"
 msgstr "Résultats"
 
@@ -153,6 +153,16 @@ msgstr ""
 #: results/forms.py:830
 msgid "There must be exactly two teams advancing."
 msgstr "Il faut qu'il y ait exactement deux équipes avançantes."
+
+#: results/mixins.py:43
+msgid "There was a problem sending ballot receipts to adjudicators."
+msgstr ""
+
+#: results/mixins.py:46
+msgid ""
+"There was a problem connecting to the e-mail server when trying to send "
+"ballot receipts to adjudicators."
+msgstr ""
 
 #: results/models.py:30
 msgid "Tab room"
@@ -450,6 +460,22 @@ msgstr ""
 "peuvent pas être saisis. <a href=\"%(motions_url)s\" class=\"alert-link"
 "\">Ajouter des motions.</a>"
 
+#: results/templates/admin_results.html:44
+#, python-format
+msgid ""
+"Your tournament configuration allows ballots to be submitted online by "
+"adjudicators. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must "
+"be released</a> before they can do so for this round."
+msgstr ""
+
+#: results/templates/admin_results.html:50
+#, python-format
+msgid ""
+"Your tournament configuration allows feedback to be submitted online by "
+"participants. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must "
+"be released</a> before they can do so for this round."
+msgstr ""
+
 #: results/templates/assistant_enter_results.html:7
 #: results/templates/enter_results.html:27
 msgid "Back to All Results"
@@ -604,6 +630,12 @@ msgstr ""
 msgid "Rank"
 msgstr ""
 
+#: results/templates/ballot/ballot_scoresheet.html:34
+#, fuzzy
+#| msgid "margin"
+msgid "Margin"
+msgstr "marge"
+
 #: results/templates/ballot/ballot_speaks.html:19
 msgid ""
 "Duplicate speeches are hidden from the speaker tab. If a speaker is 'iron-"
@@ -709,6 +741,22 @@ msgstr "Bulletin de %(name)s"
 msgid "Scoresheet"
 msgstr "Feuille de débat"
 
+#: results/templates/ballot/standard_ballot_set.html:35
+msgid "Solo Chair"
+msgstr ""
+
+#: results/templates/ballot/standard_ballot_set.html:35
+msgid "Chair"
+msgstr ""
+
+#: results/templates/ballot/standard_ballot_set.html:35
+msgid "Panellist"
+msgstr ""
+
+#: results/templates/ballot/standard_ballot_set.html:35
+msgid "Trainee"
+msgstr ""
+
 #: results/templates/ballot/standard_ballot_set.html:44
 msgid "Assign sides before entering scores"
 msgstr "Attribuez les côtés avant de saisir les scores"
@@ -808,10 +856,22 @@ msgstr "Bulletin de %(matchup)s"
 msgid "Return to Results for %(round_name)s"
 msgstr "Retour aux résultats de %(round_name)s"
 
+#: results/templates/public_ballot_set.html:33
+#, fuzzy
+#| msgid "motion"
+msgid "Motion"
+msgstr "motion"
+
 #: results/templates/public_ballot_set.html:46
 #, python-format
 msgid "From %(name)s (%(institution)s)"
 msgstr "De %(name)s (%(institution)s)"
+
+#: results/templates/public_ballot_set.html:69
+#, fuzzy, python-format
+#| msgid "%(team)s (%(side)s)"
+msgid "Total for %(short_name)s (%(side)s)"
+msgstr "%(team)s (%(side)s)"
 
 #: results/templates/public_enter_results.html:5
 #: results/templates/public_enter_results.html:8
@@ -887,39 +947,39 @@ msgid "%(round_name)s is a silent round"
 msgstr ""
 
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-#: results/utils.py:83
+#: results/utils.py:85
 #, python-format
 msgid "%(team_name)s as %(side_abbr)s"
 msgstr "%(team_name)s comme %(side_abbr)s"
 
-#: results/utils.py:101
+#: results/utils.py:103
 #, fuzzy, python-format
 #| msgid "%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)"
 msgid "%(winner)s (%(winner_side)s) won"
 msgstr "%(winner)s (%(winner_side)s) a gagné contre %(loser)s (%(loser_side)s)"
 
-#: results/utils.py:106
+#: results/utils.py:108
 #, fuzzy, python-format
 #| msgid "%(team)s (%(side)s)"
 msgid "vs %(loser)s (%(loser_side)s)"
 msgstr "%(team)s (%(side)s)"
 
-#: results/utils.py:121
+#: results/utils.py:123
 #, python-format
 msgid "Advancing: %(advancing_list)s<br>\n"
 msgstr "Avançants: %(advancing_list)s<br>\n"
 
-#: results/utils.py:125
+#: results/utils.py:127
 #, python-format
 msgid "Eliminated: %(eliminated_list)s"
 msgstr "Éliminés: %(eliminated_list)s"
 
-#: results/utils.py:135
+#: results/utils.py:137
 #, python-format
 msgid "1st: %(first_team)s<br>\n"
 msgstr ""
 
-#: results/utils.py:137
+#: results/utils.py:139
 #, fuzzy, python-format
 #| msgid ""
 #| "1st: %(first_team)s<br>\n"
@@ -936,126 +996,116 @@ msgstr ""
 "3ème : %(third_team)s<br>\n"
 "4ème : %(fourth_team)s"
 
-#: results/utils.py:148
+#: results/utils.py:150
 #, python-format
 msgid "Error with result for %(debate)s"
 msgstr "Erreur dans résultat de %(debate)s"
 
-#: results/utils.py:207
+#: results/utils.py:209
 msgid "1st"
 msgstr "1er"
 
-#: results/utils.py:208
+#: results/utils.py:210
 msgid "2nd"
 msgstr "2ème"
 
-#: results/utils.py:209
+#: results/utils.py:211
 msgid "3rd"
 msgstr "3ème"
 
-#: results/utils.py:210
+#: results/utils.py:212
 msgid "4th"
 msgstr "4ème"
 
-#: results/utils.py:211
+#: results/utils.py:213
 msgid "5th"
 msgstr "5ème"
 
-#: results/utils.py:212
+#: results/utils.py:214
 msgid "6th"
 msgstr "6ème"
 
-#: results/utils.py:213
+#: results/utils.py:215
 msgid "7th"
 msgstr "7ème"
 
-#: results/utils.py:214
+#: results/utils.py:216
 msgid "8th"
 msgstr "8ème"
 
 #. Translators: Abbreviation for Prime Minister
-#: results/utils.py:220
+#: results/utils.py:222
 msgid "PM"
 msgstr "PM"
 
 #. Translators: Abbreviation for Deputy Prime Minister
-#: results/utils.py:222
+#: results/utils.py:224
 msgid "DPM"
 msgstr "VPM"
 
 #. Translators: Abbreviation for Leader of the Opposition
-#: results/utils.py:224
+#: results/utils.py:226
 msgid "LO"
 msgstr "CO"
 
 #. Translators: Abbreviation for Deputy Leader of the Opposition
-#: results/utils.py:226
+#: results/utils.py:228
 msgid "DLO"
 msgstr "VCO"
 
 #. Translators: Abbreviation for Member for the Government
-#: results/utils.py:228
+#: results/utils.py:230
 msgid "MG"
 msgstr "MG"
 
 #. Translators: Abbreviation for Government Whip
-#: results/utils.py:230
+#: results/utils.py:232
 msgid "GW"
 msgstr "WG"
 
 #. Translators: Abbreviation for Member for the Opposition
-#: results/utils.py:232
+#: results/utils.py:234
 msgid "MO"
 msgstr "MO"
 
 #. Translators: Abbreviation for Opposition Whip
-#: results/utils.py:234
+#: results/utils.py:236
 msgid "OW"
 msgstr "WO"
 
-#: results/utils.py:254
+#: results/utils.py:256
 msgid "Reply"
 msgstr "Sommaire"
 
-#: results/utils.py:265
+#: results/utils.py:266
 #, python-format
 msgid "%(tournament)s %(round)s @ %(room)s"
 msgstr ""
 
-#: results/utils.py:279
+#: results/utils.py:281
 #, python-format
 msgid "(%(side)s) %(team)s\n"
 msgstr ""
 
-#: results/utils.py:282
+#: results/utils.py:284
 #, python-format
 msgid "- %(debater)s: %(score)s\n"
 msgstr ""
 
-#: results/views.py:240 results/views.py:242
+#: results/views.py:249 results/views.py:251
 msgid " vs "
 msgstr ""
 
-#: results/views.py:319
-msgid "There was a problem sending ballot receipts to adjudicators."
-msgstr ""
-
-#: results/views.py:322
-msgid ""
-"There was a problem connecting to the e-mail server when trying to send "
-"ballot receipts to adjudicators."
-msgstr ""
-
-#: results/views.py:353
+#: results/views.py:348
 #, python-format
 msgid "Ballot set for %(debate)s added."
 msgstr "Un ensemble de bulletins pour %(debate)s a été ajouté."
 
-#: results/views.py:355 results/views.py:414
+#: results/views.py:350 results/views.py:409
 msgid " Email receipts sent."
 msgstr ""
 
-#: results/views.py:369
+#: results/views.py:364
 #, python-format
 msgid ""
 "Whoops! The debate %(debate)s doesn't have a chair, so you can't enter "
@@ -1064,7 +1114,7 @@ msgstr ""
 "Oup ! Le débat %(debate)s n'a pas de président, donc vous ne pouvez pas "
 "saisir un résultat pour cela."
 
-#: results/views.py:375
+#: results/views.py:370
 #, python-format
 msgid ""
 "Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't "
@@ -1073,41 +1123,41 @@ msgstr ""
 "Oup ! Les côtés dans le débat %(debate)s ne sont pas confirmés, donc vous ne "
 "pouvez pas saisir un résultat pour cela."
 
-#: results/views.py:407
+#: results/views.py:402
 #, python-format
 msgid "Ballot set for %(matchup)s discarded."
 msgstr "L'ensemble de bulletins pour %(matchup)s est rejeté."
 
-#: results/views.py:409
+#: results/views.py:404
 #, python-format
 msgid "Ballot set for %(matchup)s confirmed."
 msgstr "L'ensemble de bulletins pour %(matchup)s est confirmé."
 
-#: results/views.py:411
+#: results/views.py:406
 #, python-format
 msgid "Edits to ballot set for %(matchup)s saved."
 msgstr ""
 "Les modifications à l'ensemble de bulletins de %(matchup)s a été "
 "enregistrées."
 
-#: results/views.py:447
+#: results/views.py:442
 #, python-format
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
 msgstr "Merci, %(user)s! Votre bulletin pour %(debate)s a été enregistré."
 
-#: results/views.py:458
+#: results/views.py:453
 msgid "The draw for this round hasn't been released yet."
 msgstr "Le tirage de ce tour n'est pas encore publié."
 
-#: results/views.py:462
+#: results/views.py:457
 msgid "The motions for this round haven't been released yet."
 msgstr "Les motions de ce tour ne sont pas encore publiées."
 
-#: results/views.py:467
+#: results/views.py:462
 msgid "It looks like you don't have a debate this round."
 msgstr "Il semble que vous n'ayez pas de débat ce tour."
 
-#: results/views.py:469
+#: results/views.py:464
 msgid ""
 "It looks like you're assigned to two or more debates this round. Please "
 "contact a tab room official."
@@ -1115,7 +1165,7 @@ msgstr ""
 "Il semble que vous soyez attribué à plusieurs débats ce tour. Veuillez "
 "contacter un responsable de la tabulation."
 
-#: results/views.py:477
+#: results/views.py:472
 msgid ""
 "Your debate doesn't have a chair, so you can't enter results for it. Please "
 "contact a tab room official."
@@ -1123,7 +1173,7 @@ msgstr ""
 "Votre débat n'a pas de président, donc il n'est pas possible de saisir son "
 "résultat. Veuillez contacter un responsable de la tabulation."
 
-#: results/views.py:482
+#: results/views.py:477
 msgid ""
 "It looks like the sides for this debate haven't yet been confirmed, so you "
 "can't enter results for it. Please contact a tab room official."
@@ -1132,13 +1182,13 @@ msgstr ""
 "n'est pas encore possible de saisir son résultat. Veuillez contacter un "
 "responsable de la tabulation."
 
-#: results/views.py:599
+#: results/views.py:594
 #, fuzzy, python-format
 #| msgid "Add result from %(adj_name)s"
 msgid "Add result from %(adjudicator)s"
 msgstr "Ajouter résultat de %(adj_name)s"
 
-#: results/views.py:603
+#: results/views.py:598
 msgid "Adjudicator"
 msgstr "Juge"
 

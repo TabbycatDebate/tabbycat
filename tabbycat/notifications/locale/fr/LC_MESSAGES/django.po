@@ -1,0 +1,95 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"PO-Revision-Date: 2018-08-11 11:41-0300\n"
+"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.1.1\n"
+
+#: notifications/apps.py:7
+msgid "Notifications"
+msgstr "Notifications"
+
+#: notifications/models.py:16
+msgid "team points"
+msgstr "note d’équipe"
+
+#: notifications/models.py:17
+msgid "ballot confirmed"
+msgstr "bulletin confirmé"
+
+#: notifications/models.py:18
+msgid "feedback URL"
+msgstr "URL de formulaire d’évaluation"
+
+#: notifications/models.py:19
+msgid "ballot URL"
+msgstr "URL de formulaire de bulletin"
+
+#: notifications/models.py:20
+msgid "landing page URL"
+msgstr "URL du page de renvoi"
+
+#: notifications/models.py:21
+msgid "draw released"
+msgstr "tirage publié"
+
+#: notifications/models.py:27 notifications/models.py:46
+msgid "email"
+msgstr "courriel"
+
+#: notifications/models.py:28
+msgid "SMS"
+msgstr "SMS"
+
+#: notifications/models.py:32
+msgid "recipient"
+msgstr "destinataire"
+
+#: notifications/models.py:34
+msgid "event"
+msgstr "évènement"
+
+#: notifications/models.py:36
+msgid "timestamp"
+msgstr "horodatage"
+
+#: notifications/models.py:38
+msgid "method"
+msgstr "méthode"
+
+#: notifications/models.py:41
+msgid "tournament"
+msgstr "tournoi"
+
+#: notifications/models.py:43
+msgid "round"
+msgstr "tour"
+
+#: notifications/models.py:48
+msgid "context"
+msgstr "contexte"
+
+#: notifications/models.py:50
+msgid "message"
+msgstr "message"
+
+#: notifications/models.py:53
+msgid "sent message"
+msgstr "message envoyé"
+
+#: notifications/models.py:54
+msgid "sent messages"
+msgstr "messages envoyés"

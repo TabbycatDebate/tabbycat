@@ -3,26 +3,28 @@
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
+"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"PO-Revision-Date: 2018-08-11 12:12-0300\n"
+"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: adjallocation/allocator.py:31
 msgid ""
 "There are no available adjudicators. Ensure there are adjudicators who have "
 "been marked as available for this round before auto-allocating."
 msgstr ""
+"Aucun juge n’est disponible. Assurez-vous qu’il y a des juges marqués comme "
+"disponibles pour ce tour avant de commencer l’allocation automatisée."
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
@@ -35,11 +37,16 @@ msgid ""
 "area and decrease the \"Minimum adjudicator score to vote\" setting in order "
 "to allow some adjudicators to be allocated."
 msgstr ""
+"Aucun juge n’est qualifié pour être ni président ni panéliste. Ça signifie "
+"normalement que vous devez baisser la valeur de l’option « Note minimale de "
+"juge pour le droit de vote » dans la section Règles du tirage des paramètres "
+"pour permettre à quelques juges de se faire allouer."
 
 #: adjallocation/hungarian.py:106
 msgid ""
 "There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr ""
+"Il n’y a aucun débat dans ce tour. N’aurez-vous pas encore fait un tirage ?"
 
 #: adjallocation/models.py:18
 msgid "chair"
@@ -127,116 +134,92 @@ msgstr "Modifier les juges dans %(round_abbr)s"
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 "Le tirage est déjà publié; il faut le dépublier pour pouvoir refaire "
-"l'allocation automatique."
+"la répartition automatique."
 
 #: adjallocation/views.py:144
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 "Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire "
-"l'allocation automatique."
+"la répartition automatique."
 
 #: adjallocation/views.py:193
 msgid "Not all adjudicators specified are associated with the tournament."
 msgstr "Certains juges spécifiés ne sont pas associés au tournoi."
 
 #: adjallocation/views.py:259
-#, fuzzy
-#| msgid "adjudicator-team conflicts"
 msgid "Adjudicator-Team Conflicts"
-msgstr "conflits entre juge et équipe"
+msgstr "Conflits juge-équipe"
 
 #: adjallocation/views.py:260
-#, fuzzy
-#| msgid "adjudicator-team conflicts"
 msgid "Save Adjudicator-Team Conflicts"
-msgstr "conflits entre juge et équipe"
+msgstr "Enregistrer conflits juge-équipe"
 
 #: adjallocation/views.py:271
-#, fuzzy, python-format
-#| msgid "adjudicator-team conflict"
+#, python-format
 msgid "Saved %(count)d adjudicator-team conflict."
 msgid_plural "Saved %(count)d adjudicator-team conflicts."
-msgstr[0] "conflit entre juge et équipe"
-msgstr[1] "conflit entre juge et équipe"
+msgstr[0] "Enregistré %(count)d conflit juge-équipe."
+msgstr[1] "Enregistré %(count)d conflits juge-équipe."
 
 #: adjallocation/views.py:277
-#, fuzzy, python-format
-#| msgid "adjudicator-team conflict"
+#, python-format
 msgid "Deleted %(count)d adjudicator-team conflict."
 msgid_plural "Deleted %(count)d adjudicator-team conflicts."
-msgstr[0] "conflit entre juge et équipe"
-msgstr[1] "conflit entre juge et équipe"
+msgstr[0] "Supprimé %(count)d conflit juge-équipe."
+msgstr[1] "Supprimé %(count)d conflits juge-équipe."
 
 #: adjallocation/views.py:282
-#, fuzzy
-#| msgid "adjudicator-team conflicts"
 msgid "No changes were made to adjudicator-team conflicts."
-msgstr "conflits entre juge et équipe"
+msgstr "Aucun changement n’a été fait aux conflits juge-équipe."
 
 #: adjallocation/views.py:289
-#, fuzzy
-#| msgid "adjudicator-adjudicator conflicts"
 msgid "Adjudicator-Adjudicator Conflicts"
-msgstr "conflits entre juge et juge"
+msgstr "Conflits juge-juge"
 
 #: adjallocation/views.py:290
-#, fuzzy
-#| msgid "adjudicator-adjudicator conflicts"
 msgid "Save Adjudicator-Adjudicator Conflicts"
-msgstr "conflits entre juge et juge"
+msgstr "Enregistrer les conflits juge-juge"
 
 #: adjallocation/views.py:305
-#, fuzzy, python-format
-#| msgid "adjudicator-team conflict"
+#, python-format
 msgid "Saved %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] "conflit entre juge et équipe"
-msgstr[1] "conflit entre juge et équipe"
+msgstr[0] "Enregistré %(count)d conflit juge-juge."
+msgstr[1] "Enregistré %(count)d conflits juge-juge."
 
 #: adjallocation/views.py:311
-#, fuzzy, python-format
-#| msgid "adjudicator-team conflict"
+#, python-format
 msgid "Deleted %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] "conflit entre juge et équipe"
-msgstr[1] "conflit entre juge et équipe"
+msgstr[0] "Supprimé %(count)d conflit juge-juge."
+msgstr[1] "Supprimé %(count)d conflits juge-juge."
 
 #: adjallocation/views.py:316
-#, fuzzy
-#| msgid "adjudicator-team conflicts"
 msgid "No changes were made to adjudicator-adjudicator conflicts."
-msgstr "conflits entre juge et équipe"
+msgstr "Aucun changement n’a été fait aux conflits juge-juge."
 
 #: adjallocation/views.py:323
-#, fuzzy
-#| msgid "adjudicator-institution conflicts"
 msgid "Adjudicator-Institution Conflicts"
-msgstr "conflits entre juge et institution"
+msgstr "Conflits juge-institution"
 
 #: adjallocation/views.py:324
-#, fuzzy
-#| msgid "adjudicator-institution conflicts"
 msgid "Save Adjudicator-Institution Conflicts"
-msgstr "conflits entre juge et institution"
+msgstr "Enregistrer les conflits juge-institution"
 
 #: adjallocation/views.py:332
-#, fuzzy, python-format
-#| msgid "adjudicator-team conflict"
+#, python-format
 msgid "Saved %(count)d adjudicator-institution conflict."
 msgid_plural "Saved %(count)d adjudicator-institution conflicts."
-msgstr[0] "conflit entre juge et équipe"
-msgstr[1] "conflit entre juge et équipe"
+msgstr[0] "Enregistré %(count)d conflit juge-institution."
+msgstr[1] "Enregistré %(count)d conflits juge-institution."
 
 #: adjallocation/views.py:338
-#, fuzzy, python-format
-#| msgid "adjudicator-team conflict"
+#, python-format
 msgid "Deleted %(count)d adjudicator-institution conflict."
 msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
-msgstr[0] "conflit entre juge et équipe"
-msgstr[1] "conflit entre juge et équipe"
+msgstr[0] "Supprimé %(count)d conflit juge-institution."
+msgstr[1] "Supprimé %(count)d conflits juge-institution."
 
 #: adjallocation/views.py:343
-#, fuzzy
-#| msgid "adjudicator-team conflicts"
 msgid "No changes were made to adjudicator-institution conflicts."
-msgstr "conflits entre juge et équipe"
+msgstr "Aucun changement n’a été fait aux conflits juge-institution."

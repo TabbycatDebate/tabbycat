@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
-"PO-Revision-Date: 2018-04-29 10:39-0700\n"
+"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"PO-Revision-Date: 2018-07-27 01:27-0300\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: utils/forms.py:25
 msgid "E-mail address"
@@ -24,15 +24,15 @@ msgstr "Adresse de courriel"
 
 #: utils/tables.py:43
 msgid "No Data Available"
-msgstr ""
+msgstr "Aucune donnée disponible"
 
 #: utils/tables.py:150 utils/tables.py:151
 msgid "ⓒ"
-msgstr ""
+msgstr "Ⓟ"
 
 #: utils/tables.py:152
 msgid "ⓣ"
-msgstr ""
+msgstr "ⓟ"
 
 #: utils/tables.py:156
 msgid "chair"
@@ -59,12 +59,12 @@ msgstr "Voir le dossier d'équipe de %(team)s"
 #: utils/tables.py:262
 #, python-format
 msgid "Code name: <strong>%(name)s</strong>"
-msgstr ""
+msgstr "Nom de code : <strong>%(name)s</strong>"
 
 #: utils/tables.py:264
 #, python-format
 msgid "Real name: <strong>%(name)s</strong>"
-msgstr ""
+msgstr "Vrai nom : <strong>%(name)s</strong>"
 
 #: utils/tables.py:276
 #, python-format
@@ -114,17 +114,17 @@ msgstr "%(team)s a été eliminé"
 #: utils/tables.py:345
 #, python-format
 msgid " vs %(opposition)s"
-msgstr ""
+msgstr " vs. %(opposition)s"
 
 #: utils/tables.py:351
 #, python-format
 msgid "Won against %(team)s"
-msgstr ""
+msgstr "Gagné contre %(team)s"
 
 #: utils/tables.py:353
 #, python-format
 msgid "Lost to %(team)s"
-msgstr ""
+msgstr "Perdu contre %(team)s"
 
 #: utils/tables.py:355
 #, python-format
@@ -134,24 +134,24 @@ msgstr "Aucun résultat pour débat contre %(team)s"
 #: utils/tables.py:363 utils/tables.py:440
 #, python-format
 msgid "Total speaker score: <strong>%s</strong>"
-msgstr ""
+msgstr "Score d’orateur total : <strong>%s</strong>"
 
 #: utils/tables.py:368 utils/tables.py:445
 msgid "View/edit debate ballot"
-msgstr ""
+msgstr "Afficher/modifier bulletin de débat"
 
 #: utils/tables.py:374 utils/tables.py:451
 msgid "View debate ballot"
-msgstr ""
+msgstr "Afficher bulletin de débat"
 
 #: utils/tables.py:380
 #, python-format
 msgid "Speakers in <strong>%(opp)s</strong>: %(speakers)s"
-msgstr ""
+msgstr "Orateurs dans <strong>%(opp)s</strong> : %(speakers)s"
 
 #: utils/tables.py:394
 msgid "Teams in debate:"
-msgstr ""
+msgstr "Équipes au débat :"
 
 #: utils/tables.py:397
 #, python-format
@@ -164,7 +164,7 @@ msgstr "avançant"
 
 #: utils/tables.py:416
 msgid "Advancing"
-msgstr ""
+msgstr "Avançant"
 
 #: utils/tables.py:418
 msgid "eliminated"
@@ -172,11 +172,11 @@ msgstr "éliminé"
 
 #: utils/tables.py:419
 msgid "Eliminated"
-msgstr ""
+msgstr "Éliminé"
 
 #: utils/tables.py:422 utils/tables.py:432
 msgid "No result for debate"
-msgstr ""
+msgstr "Aucun résultat au débat"
 
 #: utils/tables.py:425
 msgid "4th"
@@ -197,7 +197,7 @@ msgstr "1er"
 #: utils/tables.py:429
 #, python-format
 msgid "Placed %(place)s"
-msgstr ""
+msgstr "Placée %(place)s"
 
 #: utils/tables.py:460
 msgid "Tournament"
