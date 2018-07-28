@@ -18,7 +18,7 @@
   {% endif %}
 
   {% blocktrans trimmed asvar p1 %}
-    Review the list of participants who are due to be sent an email with their private ballot URL, then click the button at the bottom of the page to send the emails.
+    Review the list of participants who are due to be sent an email with their private URL, then click the button at the bottom of the page to send the emails.
   {% endblocktrans %}
   {% include 'components/explainer-card.html' with type='info' %}
 
@@ -34,10 +34,10 @@
 
   {% if nparticipants_already_sent %}
     {% blocktrans trimmed count npeople=nparticipants_already_sent asvar message %}
-      {{ npeople }} participant who has already had their ballot URL sent to them is excluded from the below list.
+      {{ npeople }} participant who has already had their URL sent to them is excluded from the below list.
       You can review the sent mail records in the <a href="{{ sent_mail_records_url }}">Edit Database area</a>.
     {% plural %}
-      {{ npeople }} participants who have already had their ballot URLs sent to them are excluded from the below list. You can review the sent mail records in the <a href="{{ sent_mail_records_url }}">Edit Database area</a>.
+      {{ npeople }} participants who have already had their URLs sent to them are excluded from the below list. You can review the sent mail records in the <a href="{{ sent_mail_records_url }}">Edit Database area</a>.
     {% endblocktrans %}
     {% include 'components/alert.html' with type='info' %}
   {% endif %}
@@ -59,7 +59,7 @@
         </div>
         <div class="list-group-item">
           <button class="btn btn-success btn-block" type="submit">
-            {% trans "Send emails with private ballot URLs to participants" %}
+            {% trans "Send emails with private URLs to participants" %}
           </button>
         </div>
       </form>
