@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
-from participants.models import Speaker
+from participants.models import Person, Speaker
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
@@ -292,3 +292,32 @@ class AdminCheckInPrintablesView(AdministratorMixin, CheckInPrintablesView):
 
 class AssistantCheckInPrintablesView(AssistantMixin, CheckInPrintablesView):
     pass
+
+
+class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
+
+    public_page_preference = 'public_checkins_submit'
+
+    def post(self, request, *args, **kwargs):
+        t = self.get_tournament()
+
+        try:
+            person = Person.objects.get(url_key=kwargs['url_key'])
+            identifier = PersonIdentifier.objects.get(person=person)
+        except ObjectDoesNotExist:
+            messages.error(self.request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
+            return super().post(request, *args, **kwargs)
+
+        checkins = get_unexpired_checkins(t, 'checkin_window_people')
+        existing_checkin = checkins.filter(identifier=identifier)
+        if existing_checkin.exists():
+            existing_checkin.delete()
+            messages.success(self.request, _("You have successfully signed-out."))
+        else:
+            Event(identifier=identifier, tournament=t).save()
+            messages.success(self.request, _("You have successfully checked-in."))
+
+        return super().post(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': kwargs['url_key']})

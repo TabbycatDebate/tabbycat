@@ -3,34 +3,15 @@
 
 {% block page-title %}{% trans "Private URL" %}{% endblock %}
 {% block head-title %}{% trans "Private URL" %}{% endblock %}
+
 {% block sub-title %}
   {% blocktrans trimmed with name=person.name %}for {{ name }}{% endblocktrans %}
   {% if person.speaker %}
     {% blocktrans trimmed with team=person.speaker.team.short_name %}({{ team }}){% endblocktrans %}
   {% endif %}
-{% endblock %}
-
-{% block page-subnav-actions %}
-
-  <a href="{% tournamenturl 'results-public-ballotset-new-randomised' url_key %}" class="btn btn-{{ballots_pref|yesno:"outline-primary,outline-secondary disabled"}}">
-    {% trans "Submit Ballot" %}
-  </a>
-
-
-  {% if person.adjudicator %}
-
-    <a href="{% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key %}" class="btn btn-{{feedback_pref|yesno:"outline-primary,outline-secondary disabled"}}">
-      {% trans "Submit Feedback" %}
-    </a>
-
-  {% endif %}
-
   {% if person.speaker %}
-    <a href="{% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key %}" class="btn btn-{{feedback_pref|yesno:"outline-primary,outline-secondary disabled"}}">
-      {% trans "Submit Feedback" %}
-    </a>
-  {% endif %}
 
+  {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
@@ -44,3 +25,56 @@
   {% include "components/explainer-card.html" with type="info" %}
 
 {% endblock %}
+
+{% block content %}
+
+  <div class="list-group mt-2">
+
+    {% if pref.public_checkins_submit %}
+      <form action="{% tournamenturl 'public-checkin-submit' url_key %}" method="POST" id="checkInForm">{% csrf_token %}</form>
+      {% if event %}
+        {% blocktrans trimmed with check_time=event.time asvar text %}
+          Revoke check-in from {{ check_time }}
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed asvar text %}
+          Check-in
+        {% endblocktrans %}
+      {% endif %}
+      {% include "components/item-action.html" with id="triggerCheckInForm" url="" %}
+    {% endif %}
+
+    {% if person.adjudicator and pref.participant_ballots == 'private-urls' %}
+      {% tournamenturl 'results-public-ballotset-new-randomised' url_key as url %}
+      {% trans  "Submit Ballot" as text %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if person.adjudicator and pref.participant_feedback == 'private-urls' %}
+      {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}
+      {% trans "Submit Feedback" as text %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if person.speaker and pref.participant_feedback == 'private-urls' %}
+      {% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key as url %}
+      {% trans "Submit Feedback" as text %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+  </div>
+
+{% endblock %}
+
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    $(document).ready( function() { // Use the fake submit buttons as real submissoin
+      $("#triggerCheckInForm").click( function() {
+        $("#checkInForm").submit();
+        return false;
+      });
+    });
+  </script>
+{% endblock js %}

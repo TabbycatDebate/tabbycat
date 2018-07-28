@@ -1,6 +1,7 @@
 import logging
 from smtplib import SMTPException
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
@@ -10,6 +11,8 @@ from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext, string_concat
 
+from checkins.models import PersonIdentifier
+from checkins.utils import get_unexpired_checkins
 from notifications.models import MessageSentRecord
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
@@ -64,7 +67,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
             return {'text': self.request.build_absolute_uri(path), 'class': 'small'}
 
         speakers = Speaker.objects.filter(team__tournament=tournament)
-        table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="team")
+        table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="name")
         table.add_speaker_columns(speakers, categories=False)
         table.add_column(
             {'key': 'url', 'title': _("URL")},
@@ -222,11 +225,20 @@ class PersonIndexView(PublicTournamentPageMixin, TemplateView):
     template_name = 'public_url_landing.html'
 
     def is_page_enabled(self, tournament):
-        return self.tournament.pref('participant_feedback') == 'private-urls' or self.tournament.pref('participant_ballots') == 'private-urls'
+        return self.tournament.pref('participant_feedback') == 'private-urls' or self.tournament.pref('participant_ballots') == 'private-urls' or self.tournament.pref('public_checkins_submit')
 
     def get_context_data(self, **kwargs):
-        kwargs['person'] = get_object_or_404(Person, url_key=kwargs['url_key'])
-        kwargs['feedback_pref'] = self.tournament.pref('participant_feedback') == 'private-urls'
-        kwargs['ballots_pref'] = self.tournament.pref('participant_ballots') == 'private-urls'
+        t = self.tournament
+        participant = get_object_or_404(Person, url_key=kwargs['url_key'])
+        kwargs['person'] = participant
+        try:
+            checkin_id = PersonIdentifier.objects.get(person=participant)
+            checkins = get_unexpired_checkins(t, 'checkin_window_people')
+            kwargs['event'] = checkins.filter(identifier=checkin_id).first()
+        except ObjectDoesNotExist:
+            kwargs['event'] = False
+
+        kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'
+        kwargs['ballots_pref'] = t.pref('participant_ballots') == 'private-urls'
 
         return super().get_context_data(**kwargs)

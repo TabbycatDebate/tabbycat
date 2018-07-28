@@ -799,6 +799,15 @@ class AssistantAccess(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class CheckInParticipantSubmit(BooleanPreference):
+    help_text = _("Whether participants can check themselves in/out through their private URl.")
+    verbose_name = _("Participant self-checkin")
+    section = data_entry
+    name = 'public_checkins_submit'
+    default = False
+
+
+@tournament_preferences_registry.register
 class CheckInWindowPeople(FloatPreference):
     help_text = _("The amount of time (in hours) before a speaker or adjudicator's check-in event expires")
     section = data_entry
