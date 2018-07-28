@@ -15,7 +15,7 @@ from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import MessageSentRecord
 from participants.models import Adjudicator, Person, Speaker
-from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -218,7 +218,7 @@ class EmailUrlsView(BaseEmailRandomisedUrlsView, FormView):
         return super().form_valid(form)
 
 
-class PersonIndexView(PublicTournamentPageMixin, TemplateView):
+class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
 

@@ -218,9 +218,24 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
             return self.render_page_disabled_error_page()
 
 
-class PublicTournamentPageMixin(TournamentAccessControlledPageMixin, CacheMixin):
-    """Mixin for views that show public tournament pages that can be enabled and
-    disabled by a tournament preference.
+class PersonalizablePublicTournamentPageMixin(TournamentAccessControlledPageMixin):
+    """Mixin for views that show personalizable public tournament pages which may be
+    enabled for disabled by tournament preferences. Caching is inappropriate for these
+    pages."""
+
+    public_page_preference = None
+    template_403_name = "errors/public_403.html"
+    _user_role = "public"
+
+    def is_page_enabled(self, tournament):
+        if self.public_page_preference is None:
+            raise ImproperlyConfigured("public_page_preference isn't set on this view.")
+        return tournament.pref(self.public_page_preference)
+
+
+class PublicTournamentPageMixin(PersonalizablePublicTournamentPageMixin, CacheMixin):
+    """Mixin for views that show non-personalized public tournament pages that can
+    be enabled and disabled by a tournament preference.
 
     Views using this mixin should set the `public_page_preference` class
     attribute to the name of the preference that controls whether the page is
@@ -234,14 +249,7 @@ class PublicTournamentPageMixin(TournamentAccessControlledPageMixin, CacheMixin)
     `get_disabled_message()` method.
     """
 
-    public_page_preference = None
-    template_403_name = "errors/public_403.html"
-    _user_role = "public"
-
-    def is_page_enabled(self, tournament):
-        if self.public_page_preference is None:
-            raise ImproperlyConfigured("public_page_preference isn't set on this view.")
-        return tournament.pref(self.public_page_preference)
+    pass
 
 
 class OptionalAssistantTournamentPageMixin(AssistantMixin, TournamentAccessControlledPageMixin):
