@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+  <title>{% if tournament %}{{ tournament.short_name }}{% else %}Tabbycat{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% if tournament %}
     {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
@@ -19,6 +19,7 @@
   {% endif %}
   <meta name="description" content="{{ meta_description }}" />
   <meta property="og:description" content="{{ meta_description }}" />
+  <meta property="og:image" content="{% static 'logo-social.png' %}" />
 
   <link rel="icon" type="image/png" href="{% static 'logo-32x32.png' %}" sizes="32x32" />
   <link rel="icon" type="image/png" href="{% static 'logo-16x16.png' %}" sizes="16x16" />
