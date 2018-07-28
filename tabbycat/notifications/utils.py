@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.core import mail
+from django.template import Context
 
-from .models import MessageSentRecord
+from .models import SentMessageRecord
 
 
 class TournamentEmailMessage(mail.EmailMessage):
-    def __init__(self, subject='', body='', tournament=None, round=None, event=None, person=None,
+    def __init__(self, subject, body, tournament=None, round=None, event=None, person=None, fields=None,
                  connection=None, headers={}, cc=None, bcc=None, attachments=None):
 
         self.person = person
@@ -17,13 +18,21 @@ class TournamentEmailMessage(mail.EmailMessage):
         self.event = event
         self.headers = headers
 
+        self.fields = fields
+        self.context = Context(fields)
+        self.subject = subject.render(self.context)
+        self.body = body.render(self.context)
+
         self.from_email = "%s <%s>" % (self.tournament.short_name, settings.DEFAULT_FROM_EMAIL)
         self.reply_to = None
         if self.tournament.pref('reply_to_address') != "":
             self.reply_to = ["%s <%s>" % (self.tournament.pref('reply_to_name'), self.tournament.pref('reply_to_address'))]
 
-        super().__init__(subject, body, self.from_email, self.emails, bcc, connection, attachments,
+        super().__init__(self.subject, self.body, self.from_email, self.emails, bcc, connection, attachments,
             self.headers, cc, self.reply_to)
 
     def as_sent_record(self):
-        return MessageSentRecord(recipient=self.person, event=self.event, method=MessageSentRecord.METHOD_TYPE_EMAIL, round=self.round, tournament=self.tournament)
+        return SentMessageRecord(recipient=self.person, email=self.person.email,
+                                 event=self.event, method=SentMessageRecord.METHOD_TYPE_EMAIL,
+                                 round=self.round, tournament=self.tournament,
+                                 context=self.fields, message=self.message().as_string())

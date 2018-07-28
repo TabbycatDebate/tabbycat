@@ -30,7 +30,7 @@
     {% include 'components/alert.html' with type='warning' %}
   {% endif %}
 
-  {% url 'admin:notifications_messagesentrecord_changelist' as sent_mail_records_url %}
+  {% url 'admin:notifications_sentmessagerecord_changelist' as sent_mail_records_url %}
 
   {% if nparticipants_already_sent %}
     {% blocktrans trimmed count npeople=nparticipants_already_sent asvar message %}
