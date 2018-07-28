@@ -800,7 +800,7 @@ class AssistantAccess(ChoicePreference):
 
 @tournament_preferences_registry.register
 class CheckInParticipantSubmit(BooleanPreference):
-    help_text = _("Whether participants can check themselves in/out through their privare URl.")
+    help_text = _("Whether participants can check themselves in/out through their private URl.")
     verbose_name = _("Participant self-checkin")
     section = data_entry
     name = 'public_checkins_submit'

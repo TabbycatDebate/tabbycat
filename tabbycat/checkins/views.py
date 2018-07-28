@@ -2,7 +2,6 @@ import json
 
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 from django.utils.translation import gettext as _
 
@@ -300,14 +299,22 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
     public_page_preference = 'public_checkins_submit'
 
     def post(self, request, *args, **kwargs):
-        participant = get_object_or_404(Person, url_key=kwargs['url_key'])
-        identifier = get_object_or_404(PersonIdentifier, person=participant)
+        t = self.get_tournament()
 
-        if Event.objects.filter(identifier=identifier, tournament=self.tournament).exists():
-            Event.objects.filter(identifier=identifier, tournament=self.tournament).delete()
+        try:
+            person = Person.objects.get(url_key=kwargs['url_key'])
+            identifier = PersonIdentifier.objects.get(person=person)
+        except ObjectDoesNotExist:
+            messages.error(self.request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
+            return super().post(request, *args, **kwargs)
+
+        checkins = get_unexpired_checkins(t, 'checkin_window_people')
+        existing_checkin = checkins.filter(identifier=identifier)
+        if existing_checkin.exists():
+            existing_checkin.delete()
             messages.success(self.request, _("You have successfully signed-out."))
         else:
-            Event(identifier=PersonIdentifier.objects.get(person=participant), tournament=self.tournament).save()
+            Event(identifier=identifier, tournament=t).save()
             messages.success(self.request, _("You have successfully checked-in."))
 
         return super().post(request, *args, **kwargs)
