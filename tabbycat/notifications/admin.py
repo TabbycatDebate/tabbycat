@@ -2,10 +2,10 @@ from django.contrib import admin
 
 from utils.admin import TabbycatModelAdminFieldsMixin
 
-from .models import MessageSentRecord
+from .models import SentMessageRecord
 
 
-@admin.register(MessageSentRecord)
+@admin.register(SentMessageRecord)
 class MessageLogAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('timestamp', 'recipient', 'tournament', 'event')
     list_filter = ('round', 'method', 'event')

@@ -5,12 +5,12 @@ from smtplib import SMTPException
 
 from django.core.mail import get_connection
 from django.db.models import Count
-from django.template import Context, Template
+from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from draw.models import Debate
-from notifications.models import MessageSentRecord
+from notifications.models import SentMessageRecord
 from notifications.utils import TournamentEmailMessage
 from tournaments.utils import get_side_name
 
@@ -269,7 +269,6 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
     message = Template(debate.round.tournament.pref('ballot_email_message'))
 
     context = {'DEBATE': round_name}
-    format_subject = subject.render(Context(context))
 
     for ballot in ballots:
         judge = ballot['adjudicator'] if 'adjudicator' in ballot else debate.debateadjudicator_set.get(type="C")
@@ -287,8 +286,7 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
         context['USER'] = judge.name
         context['SCORES'] = scores
 
-        format_message = message.render(Context(context))
-        messages.append(TournamentEmailMessage(format_subject, format_message, debate.round.tournament, debate.round, MessageSentRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge))
+        messages.append(TournamentEmailMessage(subject, message, debate.round.tournament, debate.round, SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context))
 
     try:
         get_connection().send_messages(messages)
@@ -299,4 +297,4 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
         logger.exception("Connection error sending ballot receipt e-mails")
         raise
     else:
-        MessageSentRecord.objects.bulk_create([message.as_sent_record() for message in messages])
+        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])
