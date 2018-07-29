@@ -321,7 +321,7 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
                 messages.error(self.request, _("Whoops! Looks like your check-in was already revoked."))
         elif action == 'checkin':
             if existing_checkin.exists():
-                messages.error(self.request, _("Whoops! Looks like you're aleady checked in."))
+                messages.error(self.request, _("Whoops! Looks like you're already checked in."))
             else:
                 Event(identifier=identifier, tournament=t).save()
                 messages.success(self.request, _("You are now checked in."))
