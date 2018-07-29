@@ -31,17 +31,21 @@
   <div class="list-group mt-2">
 
     {% if pref.public_checkins_submit %}
-      <form action="{% tournamenturl 'public-checkin-submit' url_key %}" method="POST" id="checkInForm">{% csrf_token %}</form>
-      {% if event %}
-        {% blocktrans trimmed with check_time=event.time asvar text %}
-          Revoke check-in from {{ check_time }}
-        {% endblocktrans %}
-      {% else %}
-        {% blocktrans trimmed asvar text %}
-          Check-in
-        {% endblocktrans %}
-      {% endif %}
-      {% include "components/item-action.html" with id="triggerCheckInForm" url="" %}
+      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm">
+        {% csrf_token %}
+        {% if event %}
+          <input type="hidden" name="action" value="revoke" />
+          {% blocktrans trimmed with check_time=event.time asvar text %}
+            Revoke check-in from {{ check_time }}
+          {% endblocktrans %}
+        {% else %}
+          <input type="hidden" name="action" value="checkin" />
+          {% blocktrans trimmed asvar text %}
+            Check in
+          {% endblocktrans %}
+        {% endif %}
+        {% include "components/item-action.html" with id="triggerCheckInForm" url="" %}
+      </form>
     {% endif %}
 
     {% if person.adjudicator and pref.participant_ballots == 'private-urls' %}

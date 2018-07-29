@@ -3,6 +3,7 @@ import json
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.base import TemplateView
+from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 
 from actionlog.mixins import LogActionMixin
@@ -301,6 +302,8 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
     def post(self, request, *args, **kwargs):
         t = self.get_tournament()
 
+        action = request.POST['action']
+
         try:
             person = Person.objects.get(url_key=kwargs['url_key'])
             identifier = PersonIdentifier.objects.get(person=person)
@@ -310,12 +313,20 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
 
         checkins = get_unexpired_checkins(t, 'checkin_window_people')
         existing_checkin = checkins.filter(identifier=identifier)
-        if existing_checkin.exists():
-            existing_checkin.delete()
-            messages.success(self.request, _("You have successfully signed-out."))
+        if action == 'revoke':
+            if existing_checkin.exists():
+                existing_checkin.delete()
+                messages.success(self.request, _("You have revoked your check-in."))
+            else:
+                messages.error(self.request, _("Whoops! Looks like your check-in was already revoked."))
+        elif action == 'checkin':
+            if existing_checkin.exists():
+                messages.error(self.request, _("Whoops! Looks like you're aleady checked in."))
+            else:
+                Event(identifier=identifier, tournament=t).save()
+                messages.success(self.request, _("You are now checked in."))
         else:
-            Event(identifier=identifier, tournament=t).save()
-            messages.success(self.request, _("You have successfully checked-in."))
+            return TemplateResponse(request=self.request, template='400.html', status=400)
 
         return super().post(request, *args, **kwargs)
 
