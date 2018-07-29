@@ -13,7 +13,7 @@ from django.utils.translation import ngettext, string_concat
 
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
-from notifications.models import MessageSentRecord
+from notifications.models import SentMessageRecord
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -37,9 +37,9 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
         return super().get_context_data(**kwargs)
 
     def get_participants_to_email(self, already_sent=False):
-        subquery = MessageSentRecord.objects.filter(
+        subquery = SentMessageRecord.objects.filter(
             tournament=self.tournament, recipient=OuterRef('pk'),
-            event=MessageSentRecord.EVENT_TYPE_URL
+            event=SentMessageRecord.EVENT_TYPE_URL
         )
         people = self.tournament.participants.filter(
             url_key__isnull=False, email__isnull=False

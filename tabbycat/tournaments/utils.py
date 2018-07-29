@@ -4,12 +4,12 @@ from smtplib import SMTPException
 
 from django.core.mail import get_connection
 from django.db.models import Max
-from django.template import Context, Template
+from django.template import Template
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext, pgettext_lazy
 
-from notifications.models import MessageSentRecord
+from notifications.models import SentMessageRecord
 from notifications.utils import TournamentEmailMessage
 from utils.misc import reverse_tournament
 
@@ -188,8 +188,8 @@ neg_team = _get_side_name('neg_team')
 def send_standings_emails(tournament, teams, request, round):
     messages = []
 
-    subject_temp = Template(tournament.pref('team_points_email_subject'))
-    message_temp = Template(tournament.pref('team_points_email_message'))
+    subject = Template(tournament.pref('team_points_email_subject'))
+    message = Template(tournament.pref('team_points_email_message'))
 
     context = {'TOURN': str(tournament)}
 
@@ -202,16 +202,13 @@ def send_standings_emails(tournament, teams, request, round):
         context['POINTS'] = str(team.points_count)
         context['TEAM'] = team.short_name
 
-        subject = subject_temp.render(Context(context))
-
         for speaker in team.speakers:
             if speaker.email is None:
                 continue
 
             context['USER'] = speaker.name
 
-            message = message_temp.render(Context(context)) + message_link
-            messages.append(TournamentEmailMessage(subject, message, tournament, round, MessageSentRecord.EVENT_TYPE_POINTS, speaker))
+            messages.append(TournamentEmailMessage(subject, message + message_link, tournament, round, SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
 
     try:
         get_connection().send_messages(messages)
@@ -222,4 +219,4 @@ def send_standings_emails(tournament, teams, request, round):
         logger.exception("Connection error sending team points e-mails")
         raise
     else:
-        MessageSentRecord.objects.bulk_create([message.as_sent_record() for message in messages])
+        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])

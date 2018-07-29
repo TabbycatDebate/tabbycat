@@ -5,9 +5,8 @@ from smtplib import SMTPException
 
 from django.core.mail import get_connection
 from django.db import IntegrityError
-from django.template import Context
 
-from notifications.models import MessageSentRecord
+from notifications.models import SentMessageRecord
 from notifications.utils import TournamentEmailMessage
 from utils.misc import reverse_tournament
 
@@ -52,10 +51,7 @@ def send_randomised_url_emails(request, tournament, participants, subject, messa
 
         variables = {'NAME': instance.name, 'URL': url}
 
-        formatted_message = message.render(Context(variables))
-        formatted_subject = subject.render(Context(variables))
-        messages.append(TournamentEmailMessage(formatted_subject, formatted_message, tournament, None, MessageSentRecord.EVENT_TYPE_URL, instance))
-
+        messages.append(TournamentEmailMessage(subject, message, tournament, None, SentMessageRecord.EVENT_TYPE_URL, instance, variables))
     try:
         get_connection().send_messages(messages)
     except SMTPException:
@@ -66,6 +62,6 @@ def send_randomised_url_emails(request, tournament, participants, subject, messa
         raise
     else:
         logger.info("Sent %d randomised URL e-mails", len(messages))
-        MessageSentRecord.objects.bulk_create([message.as_sent_record() for message in messages])
+        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])
 
     return len(messages)
