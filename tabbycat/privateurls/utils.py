@@ -49,7 +49,7 @@ def send_randomised_url_emails(request, tournament, participants, subject, messa
         path = reverse_tournament('privateurls-person-index', tournament, kwargs={'url_key': instance.url_key})
         url = request.build_absolute_uri(path)
 
-        variables = {'NAME': instance.name, 'URL': url}
+        variables = {'NAME': instance.name, 'URL': url, 'key': instance.url_key}
 
         messages.append(TournamentEmailMessage(subject, message, tournament, None, SentMessageRecord.EVENT_TYPE_URL, instance, variables))
     try:
