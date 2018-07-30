@@ -11,7 +11,7 @@ from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from importer.forms import ImportValidationError
-from participants.models import Adjudicator, Speaker
+from participants.models import Adjudicator, Speaker, Team
 from results.forms import TournamentPasswordField
 from tournaments.models import Round
 from utils.forms import OptionalChoiceField
@@ -222,8 +222,10 @@ def make_feedback_form_class(source, tournament, *args, **kwargs):
         return make_feedback_form_class_for_adj(source, tournament, *args, **kwargs)
     elif isinstance(source, Speaker):
         return make_feedback_form_class_for_team(source.team, tournament, *args, **kwargs)
+    elif isinstance(source, Team):
+        return make_feedback_form_class_for_team(source, tournament, *args, **kwargs)
     else:
-        raise TypeError('source must be Adjudicator or Speaker: %r' % source)
+        raise TypeError('source must be Adjudicator, Speaker, or Team: %r' % source)
 
 
 def make_feedback_form_class_for_adj(source, tournament, submission_fields, confirm_on_submit=False,
