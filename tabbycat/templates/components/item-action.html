@@ -3,7 +3,7 @@
   <a href="{{ url }}" {% if blank %}target="_blank"{% endif %} {% if id %}id="{{ id }}"{% endif %}
    class="list-group-item list-group-item-action
    {% if to_complete %}
-    bg-primary text-white
+    bg-{% if type %}{{ type }}{% else %}primary{% endif %} text-white
    {% else %}
     text-{% if type %}{{ type }}{% else %}primary{% endif %}
    {% endif %}">
@@ -11,10 +11,10 @@
     <div class="row align-items-center">
 
       <div class="col-auto pr-1">
-        {% if to_complete %}
-          <i data-feather="check-square"></i>
-        {% elif icon %}
+        {% if icon %}
           <i data-feather="{{ icon }}"></i>
+        {% elif to_complete %}
+          <i data-feather="check-square"></i>
         {% elif emoji %}
           <span class="emoji">{{ emoji }}</span>
         {% else %}

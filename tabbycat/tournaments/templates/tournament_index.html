@@ -72,10 +72,10 @@
   {% if global_preferences.accounts__enable_admin_account_key or global_preferences.accounts__enable_assistant_account_key %}
     {% tournamenturl 'options-tournament-section' section='accounts' as url %}
     {% blocktrans trimmed asvar text%}
-      You have enabled a secret key that allows users to create new accounts. You should disable it when you can, especially once the tournament starts!
+      You have enabled a (hopefully secret) URL that allows users to create new accounts. You should <strong>disable it when you can</strong>, especially once the tournament starts!
     {% endblocktrans %}
     <div class="mt-3">
-      {% include "components/item-action.html" with alone=True type="success" to_complete=True %}
+      {% include "components/item-action.html" with alone=True type="warning" icon="alert-triangle" to_complete=True %}
     </div>
   {% endif %}
 
