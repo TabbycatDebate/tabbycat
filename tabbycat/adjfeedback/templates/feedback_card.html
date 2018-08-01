@@ -27,7 +27,7 @@
             {% elif feedback.score > score_thresholds.high_score %}badge-success
             {% else %}badge-primary{% endif %}" data-toggle="tooltip"
             title="{% trans "The score given in this piece of feedback." %}">
-        {{ feedback.score }}
+        Given {{ feedback.score }}
       </span>
       <span class="badge mr-2 badge-light float-right" data-toggle="tooltip">
         {% blocktrans trimmed with test=feedback.adjudicator.test_score %}
@@ -35,7 +35,7 @@
         {% endblocktrans %}
       </span>
       {% blocktrans trimmed with adj=feedback.adjudicator.name as=feedback.debate_adjudicator.get_type_display %}
-        On {{ adj }} <span class="text-secondary">as {{ as }}</span>
+        On {{ adj }} <span class="text-secondary small">as {{ as }}</span>
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
@@ -46,11 +46,11 @@
       </span>
       {% if feedback.source_adjudicator %}
         {% blocktrans trimmed with source=feedback.source_adjudicator.adjudicator.name relationship=feedback.source_adjudicator.get_type_display %}
-          From {{ source }} <span class="text-secondary">their {{ relationship }}</span>
+          From {{ source }} <span class="text-secondary small">their {{ relationship }}</span>
         {% endblocktrans %}
       {% elif feedback.source_team %}
         {% blocktrans trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display %}
-          From {{ source }} <span class="text-secondary">who {{ relationship }}</span>
+          From {{ source }} <span class="text-secondary small">who {{ relationship }}</span>
         {% endblocktrans %}
       {% else %}
         {% trans "From unknown" %}
