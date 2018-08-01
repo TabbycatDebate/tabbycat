@@ -63,7 +63,7 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "artillery": "^1.6.0-22",
-    "eslint-config-airbnb-base": "^12.x",
+    "eslint-config-airbnb-base": "^13.x",
     "eslint-plugin-html": "^4.x",
     "eslint-plugin-import": "^2.x",
     "postcss-selector-parser": "^4.x",
