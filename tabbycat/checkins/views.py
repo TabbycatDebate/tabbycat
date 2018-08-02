@@ -300,7 +300,7 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
     public_page_preference = 'public_checkins_submit'
 
     def post(self, request, *args, **kwargs):
-        t = self.get_tournament()
+        t = self.tournament
 
         action = request.POST['action']
 

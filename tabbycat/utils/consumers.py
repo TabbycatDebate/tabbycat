@@ -37,7 +37,7 @@ class TournamentConsumer(JsonWebsocketConsumer):
     tournament_redirect_pattern_name = None
 
     # TODO: unify with TournamentMixin()
-    def get_tournament(self):
+    def identify_tournament(self):
         # First look in self,
         if hasattr(self, "_tournament_from_url"):
             return self._tournament_from_url
@@ -57,7 +57,7 @@ class TournamentConsumer(JsonWebsocketConsumer):
         return tournament
 
     def group_name(self):
-        return self.group_prefix + '_' + self.get_tournament().slug
+        return self.group_prefix + '_' + self.identify_tournament().slug
 
     def connect(self):
         if self.is_authenticated():

@@ -99,7 +99,7 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
     def get_formset(self):
         formset = super().get_formset()
         # Show relevant venues; not all venues
-        venues = self.get_tournament().relevant_venues.all()
+        venues = self.tournament.relevant_venues.all()
         for form in formset:
             form.fields['venues'].queryset = venues
         return formset

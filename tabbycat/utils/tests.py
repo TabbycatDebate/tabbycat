@@ -48,20 +48,19 @@ class TournamentTestsMixin:
     fixtures = ['completed_demo.json']
     round_seq = None
 
-    def get_tournament(self):
+    def identify_tournament(self):
         return Tournament.objects.first()
 
     def setUp(self):
         super().setUp()
-        self.t = self.get_tournament()
+        self.t = self.identify_tournament()
         self.client = Client()
 
     def get_view_url(self, provided_view_name):
         return reverse(provided_view_name, kwargs=self.get_url_kwargs())
 
     def get_url_kwargs(self):
-        t = self.get_tournament()
-        kwargs = {'tournament_slug': t.slug}
+        kwargs = {'tournament_slug': self.identify_tournament().slug}
         if self.round_seq is not None:
             kwargs['round_seq'] = self.round_seq
         return kwargs

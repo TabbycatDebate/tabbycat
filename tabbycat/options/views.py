@@ -41,7 +41,7 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
     def get_context_data(self, **kwargs):
         kwargs["presets"] = self.get_preset_options()
         kwargs["show_leagues"] = settings.LEAGUE
-        t = self.get_tournament()
+        t = self.tournament
         if t.pref('teams_in_debate') == 'bp':
             if t.pref('ballots_per_debate_prelim') == 'per-adj' or \
                t.pref('ballots_per_debate_elim') == 'per-adj':
