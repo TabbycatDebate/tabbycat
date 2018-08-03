@@ -8,8 +8,9 @@ from django.views.generic.edit import FormView
 from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
 from django.template import Template
+from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
-from django.utils.translation import ngettext, string_concat
+from django.utils.translation import ngettext
 
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
@@ -131,7 +132,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
             if nexisting_people == 0:
                 messages.success(self.request, generated_urls_message)
             else:
-                messages.success(self.request, string_concat(generated_urls_message, " ", non_generated_urls_message))
+                messages.success(self.request, format_lazy(generated_urls_message, " ", non_generated_urls_message))
 
         return super().post(request, *args, **kwargs)
 
