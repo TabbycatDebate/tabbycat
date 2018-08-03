@@ -183,12 +183,13 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
 
     def get_ballots_dicts(self):
         draw = self.round.debate_set_with_prefetches()
-        draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
-        ballots_dicts = []
 
         # Create the DebateIdentifiers for the ballots if needed
         create_identifiers(DebateIdentifier, draw)
         identifiers = DebateIdentifier.objects.values('debate_id', 'barcode')
+
+        draw = sorted(draw, key=lambda d: d.venue.display_name if d.venue else "")
+        ballots_dicts = []
 
         # Force translation before JSON serialization
         sides_and_positions = [(side, [str(pos) for pos in positions])
