@@ -3,7 +3,7 @@ import logging
 import random
 import string
 
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
 
@@ -64,11 +64,20 @@ def get_unexpired_checkins(tournament, window_preference_type):
 
 def create_identifiers(model_to_make, items_to_check):
     kind = model_to_make.instance_attr
+
+    ids = [item.id for item in items_to_check]
+    existing_ids = list(model_to_make.objects.filter(**{kind + "__in": ids}).values_list(kind, flat=True))
+
+    identifiers_to_make = []  # Collect debates that don't have an identifier
     for item in list(items_to_check):
-        try:
-            model_to_make.objects.get(**{kind: item})
-        except ObjectDoesNotExist:
+        if item.id not in existing_ids:
+            identifiers_to_make.append(item)
+
+    # Can't bulk_create a multi-table model so need an atomic wrap for speed
+    with transaction.atomic():
+        for item in identifiers_to_make:
             model_to_make.objects.create(**{kind: item})
+
     return
 
 
