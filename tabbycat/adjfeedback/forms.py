@@ -244,7 +244,8 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         debate__round__seq__lte=tournament.current_round.seq,
         debate__round__stage=Round.STAGE_PRELIMINARY
     ).order_by('-debate__round__seq').prefetch_related(
-        'debate__debateadjudicator_set__adjudicator'
+        'debate__debateadjudicator_set__adjudicator',
+        'debate__round'
     )
 
     if include_unreleased_draws:
