@@ -3,7 +3,7 @@ import logging
 import math
 
 from django.contrib import messages
-from django.db.models import F, Q
+from django.db.models import Count, F, Q
 from django.http import JsonResponse
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import TemplateView, View
@@ -151,8 +151,8 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
         table = TabbycatTableBuilder(view=self, sort_key="name")
         table.add_adjudicator_columns(tournament.adjudicator_set.all())
         feedback_data = []
-        for adj in tournament.adjudicator_set.all():
-            count = adj.adjudicatorfeedback_set.count()
+        for adj in tournament.adjudicator_set.all().annotate(feedback_count=Count('adjudicatorfeedback')):
+            count = adj.feedback_count
             feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
@@ -170,15 +170,13 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
     def get_tables(self):
         tournament = self.tournament
 
-        teams = tournament.team_set.all()
+        teams = tournament.team_set.all().annotate(feedback_count=Count('debateteam__adjudicatorfeedback')).prefetch_related('speaker_set')
         team_table = TabbycatTableBuilder(
             view=self, title='From Teams', sort_key='team')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
-            count = AdjudicatorFeedback.objects.filter(
-                source_team__team=team).select_related(
-                'source_team__team').count()
+            count = team.feedback_count
             team_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-team',
@@ -187,15 +185,13 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             })
         team_table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, team_feedback_data)
 
-        adjs = tournament.adjudicator_set.all()
+        adjs = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
         adj_table = TabbycatTableBuilder(
             view=self, title='From Adjudicators', sort_key='name')
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
-            count = AdjudicatorFeedback.objects.filter(
-                source_adjudicator__adjudicator=adj).select_related(
-                'source_adjudicator__adjudicator').count()
+            count = adj.feedback_count
             adj_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
                 'link': reverse_tournament('adjfeedback-view-from-adjudicator',
