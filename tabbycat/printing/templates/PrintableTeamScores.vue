@@ -6,7 +6,7 @@
         <strong>{{ titleCasePosition }}, {{ teamName }}</strong>
       </div>
       <div class="db-padding-horizontal db-align-vertical-center">
-        <small>{{ speakersList }}</small>
+        {{ speakersList }}
       </div>
       <div class="db-padding-horizontal db-flex-static "></div>
     </div>
@@ -26,7 +26,7 @@
 
       <div v-if="roundInfo.showDigits"
            class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border">
-        <div class="db-flex-item-2 db-padding-horizontal">
+        <div class="db-flex-item-2 db-padding-horizontal text-secondary">
           Circle the last digit of the {{ pos }}'s score:
         </div>
         <div class="db-flex-item-3 d-flex">
@@ -79,7 +79,7 @@
 
     <div v-if="roundInfo.showDigits"
          class="db-flex-item-2 align-items-center d-flex pr-1 small">
-      <div class="db-flex-item-2 db-padding-horizontal">
+      <div class="db-flex-item-2 db-padding-horizontal text-secondary">
         Circle the last digit of the team's total:
       </div>
       <div class="db-flex-item-3 d-flex">

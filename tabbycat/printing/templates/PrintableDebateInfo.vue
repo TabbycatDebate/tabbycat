@@ -16,7 +16,7 @@
               <template v-if="da.position === 'o'">(Solo Chair, </template>
               <template v-if="da.position === 'p'">(Panellist, </template>
               <template v-if="da.position === 't'">(Trainee, </template>
-              {{ getAdjudicatorInstitution(da) }})
+              {{ getAdjudicatorInstitution(da) }}).
             </span>
           </span>
 
