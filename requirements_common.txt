@@ -4,7 +4,7 @@
 # Mental note (npm equivalent command):   npm outdated
 
 # Core
-Django==2.1.1                           # pyup: >=2.1,<2.2
+Django==2.1.0                           # pyup: >=2.1,<2.2
 django-appconf==1.0.2                   # Helper for handling app configs
 django-dynamic-preferences==1.6         # Settings management
 django-extensions==2.1.0                # For the generate secret command
