@@ -321,10 +321,11 @@ SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY', r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
 # Parse database configuration from $DATABASE_URL
+# Note connection max age is in seconds
 try:
     import dj_database_url
     DATABASES = {
-        'default': dj_database_url.config(default='postgres://localhost')
+        'default': dj_database_url.config(default='postgres://localhost', conn_max_age=10)
     }
 except:
     pass
