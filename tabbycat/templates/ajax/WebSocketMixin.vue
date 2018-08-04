@@ -14,8 +14,8 @@ export default {
   created: function () {
 
     // Check if this is being run over HTTP(S); match the WS(S) procol
-    const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    var path = "/"
+    const scheme = 'ws';
+    var path = "/ws/"
     // Construct path
     if (this.tournamentSlug !== undefined) {
       path += this.tournamentSlug + "/"
@@ -45,12 +45,12 @@ export default {
       }.bind(handleMessage));
 
       // Logs
-      // webSocketBridge.socket.addEventListener('open', function () {
-      //   console.log("Connected to WebSocket path:", socketPath)
-      // }.bind(socketPath))
-      // webSocketBridge.socket.addEventListener('close', function () {
-      //   console.log("Disconnected to WebSocket path:", socketPath)
-      // }.bind(socketPath))
+      webSocketBridge.socket.addEventListener('open', function () {
+        console.log("Connected to WebSocket path:", socketPath)
+      }.bind(socketPath))
+      webSocketBridge.socket.addEventListener('close', function () {
+        console.log("Disconnected to WebSocket path:", socketPath)
+      }.bind(socketPath))
 
     }.bind(handleMessage))
   }
