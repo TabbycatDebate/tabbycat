@@ -18,8 +18,8 @@ from draw.models import Debate
 from draw.prefetch import populate_opponents
 from options.utils import use_team_code_names_data_entry
 from participants.models import Adjudicator
-from tournaments.mixins import (CurrentRoundMixin, PublicTournamentPageMixin, RoundMixin,
-                                SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
+from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin,
+                                RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
                                 TournamentMixin)
 from tournaments.models import Round
 from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
@@ -28,6 +28,7 @@ from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
+from .mixins import BallotEmailWithStatusMixin
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .result import DebateResult
@@ -314,20 +315,6 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return super().post(request, *args, **kwargs)
 
 
-class BallotEmailWithStatusMixin:
-    def send_email_receipts(self):
-        try:
-            send_ballot_receipt_emails_to_adjudicators(DebateResult(self.ballotsub).as_dicts(), self.debate)
-        except SMTPException:
-            messages.error(self.request, _("There was a problem sending ballot receipts to adjudicators."))
-            return False
-        except ConnectionError:
-            messages.error(self.request, _("There was a problem connecting to the e-mail server when trying to send ballot receipts to adjudicators."))
-            return False
-        else:
-            return True
-
-
 class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'enter_results.html'
     tabroom = True
@@ -431,7 +418,7 @@ class AssistantEditBallotSetView(AssistantBallotSetMixin, BaseEditBallotSetView)
     pass
 
 
-class BasePublicNewBallotSetView(PublicTournamentPageMixin, BaseBallotSetView):
+class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBallotSetView):
 
     template_name = 'public_enter_results.html'
     relates_to_new_ballotsub = True

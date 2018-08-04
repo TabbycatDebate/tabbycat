@@ -17,7 +17,7 @@ from participants.prefetch import populate_feedback_scores
 from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from results.mixins import PublicSubmissionFieldsMixin, TabroomSubmissionFieldsMixin
 from results.prefetch import populate_wins_for_debateteams
-from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
+from tournaments.mixins import (PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 
@@ -514,7 +514,7 @@ class AssistantAddFeedbackView(AssistantMixin, BaseTabroomAddFeedbackView):
     pass
 
 
-class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PublicTournamentPageMixin, BaseAddFeedbackView):
+class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTournamentPageMixin, BaseAddFeedbackView):
     """Base class for views for public users to add feedback."""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_FEEDBACK_SUBMIT
