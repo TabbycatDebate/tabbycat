@@ -153,6 +153,7 @@
         {% else %}
 
           {% trans "Release draw to public" as release_text %}
+          {% trans "Emails will be sent to adjudicators announcing their assignments." as email_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}</form>
 
           {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw %}
@@ -172,12 +173,21 @@
               {% include "components/item-info.html" with type="info" %}
             {% endif %}
 
+            {% if pref.enable_adj_email %}
+              {% include "components/item-info.html" with type="secondary" text=email_text icon="mail" %}
+            {% endif %}
+
             {% include "components/item-action.html" with type="success" id="triggerReleaseDrawForm" text=release_text url="" to_complete=True %}
 
           {% else %}
 
             {% trans "Your configuration doesn't have a public draw page or feedback/ballot submissions. There's no reason to release the draw." as text %}
             {% include "components/item-info.html" with type="secondary" %}
+
+            {% if pref.enable_adj_email %}
+              {% include "components/item-info.html" with type="secondary" text=email_text icon="mail" %}
+            {% endif %}
+
             {% include "components/item-action.html" with type="secondary" id="triggerReleaseDrawForm" text=release_text url="" %}
 
           {% endif %}
