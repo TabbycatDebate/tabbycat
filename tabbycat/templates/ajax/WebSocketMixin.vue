@@ -14,8 +14,8 @@ export default {
   created: function () {
 
     // Check if this is being run over HTTP(S); match the WS(S) procol
-    const scheme = 'ws';
-    var path = "/ws/"
+    const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    var path = scheme + "://" + window.location.host + "/ws/"
     // Construct path
     if (this.tournamentSlug !== undefined) {
       path += this.tournamentSlug + "/"
