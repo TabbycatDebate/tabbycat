@@ -6,6 +6,9 @@ Change Log
 ------------------
 *Release date: TBD*
 
+- Implemented a new server architecture on Heroku that should significantly improve performance under load. If upgrading an existing Heroku instance this requires a few tweaks:
+    - Adding the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
+    - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the `heroku stack:set heroku-16 --app APP_NAME` command
 - Implemented participant self-check-in through the use of their private URLs.
 - Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key.
 - Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable.
