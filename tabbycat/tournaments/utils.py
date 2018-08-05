@@ -189,14 +189,13 @@ def send_standings_emails(tournament, teams, request, round):
     messages = []
 
     subject = Template(tournament.pref('team_points_email_subject'))
-    message = Template(tournament.pref('team_points_email_message'))
+    message = tournament.pref('team_points_email_message')
 
     context = {'TOURN': str(tournament)}
 
-    message_link = ''
     if tournament.pref('public_team_standings'):
         url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', tournament))
-        message_link += "\n\n" + tournament.pref('team_points_email_link_text') + "\n" + url
+        message += "\n\n" + tournament.pref('team_points_email_link_text') + "\n" + url
 
     for team in teams:
         context['POINTS'] = str(team.points_count)
@@ -208,7 +207,7 @@ def send_standings_emails(tournament, teams, request, round):
 
             context['USER'] = speaker.name
 
-            messages.append(TournamentEmailMessage(subject, message + message_link, tournament, round, SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
+            messages.append(TournamentEmailMessage(subject, Template(message), tournament, round, SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
 
     try:
         get_connection().send_messages(messages)
