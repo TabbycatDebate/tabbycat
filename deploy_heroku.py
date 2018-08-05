@@ -150,8 +150,9 @@ heroku_url = match.group(2)
 run_heroku_command(["addons:create", "heroku-redis:hobby-dev", "--maxmemory_policy", "allkeys-lru"])
 
 # Set build packs
-run_heroku_command(["buildpacks:set", "heroku/python"])
-run_heroku_command(["buildpacks:add", "--index", "1", "heroku/nodejs"])
+run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
+run_heroku_command(["buildpacks:set", "--index", "1", "heroku/python"])
+run_heroku_command(["buildpacks:add", "--index", "2", "heroku/nodejs"])
 
 # Disable automatic collectstatic; do so on post_compile after gulp
 command = ["config:add", "DISABLE_COLLECTSTATIC=1"]

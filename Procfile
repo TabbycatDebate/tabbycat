@@ -1,4 +1,9 @@
-# production
-# Note this assumes a Heroku environment (http timeout of 30s is premature elsewhere)
-# Note websocket timeout is set at 2 hours, this is to try and compensate for connections accidentally being left open (say on an idle machine) indefinitely
-web: sh -c 'cd ./tabbycat/ && uvicorn asgi:application --host 0.0.0.0 --port $PORT --timeout-response 29'
+# Production
+
+# Command after start-nginx is directly run by nginx script; so dont use &&
+# Running multiple processes (with the wait) as per:
+# https://help.heroku.com/CTFS2TJK/how-do-i-run-multiple-processes-on-a-dyno
+# FORCE=1 prevents nginx for waiting on the touch to /tmp/ file
+
+# Run waitress and uvicorn through nginx
+web: FORCE=1 bin/start-nginx python ./tabbycat/run-waitress.py & python ./tabbycat/run-uvicorn.py  & wait -n
