@@ -6,8 +6,11 @@
     <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
        class="tournament-title d-flex justify-content-between align-items-center">
       <div>
-        <img src="{% if on_local %}{% static 'logo-local.svg' %}{% else %}{% static 'logo.svg' %}{% endif %}" class="d-md-block d-none logo-large" width="24" height="24">
-        <img src="{% if on_local %}{% static 'logo-local.svg' %}{% else %}{% static 'logo.svg' %}{% endif %}" class="d-md-none" width="20" height="20">
+        {% if on_local %}
+          {% include "nav/logo_local.html" with width=20 height=20 %}
+        {% else %}
+          {% include "nav/logo.html" with width=20 height=20 %}
+        {% endif %}
       </div>
       <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-1 pr-2">
         {{ tournament }}

@@ -8,7 +8,11 @@
 
       <button class="btn btn-link mr-2 p-0 navbar-brand dropdown-toggle" id="tournamentdrop"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="{% if on_local %}{% static 'logo-local.svg' %}{% else %}{% static 'logo.svg' %}{% endif %}" width="38" height="38" alt="">
+        {% if on_local %}
+          {% include "nav/logo_local.html" with width=33 height=33 %}
+        {% else %}
+          {% include "nav/logo.html" with width=33 height=33 %}
+        {% endif %}
         {% if tournament %}{{ tournament }}{% else %}Tabbycat{% endif %}
       </button>
 

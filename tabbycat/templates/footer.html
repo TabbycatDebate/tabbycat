@@ -10,7 +10,6 @@
 
       <div class="col-lg-6 col-md-5">
         <h6 class="d-inline-block">
-          <img src="{% static 'logo.svg' %}" width="28" height="24" style="margin-top: -14px;">
           {% if tournament and tabbycat_codename %}
             {% blocktrans trimmed %}{{ tournament }} runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
           {% else %}
