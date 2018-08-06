@@ -26,7 +26,7 @@ Getting started with development
 - To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
 - Please submit pull requests for features and bug fixes against `develop` (but not `master`).
 - We broadly use the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_).
-- We use Django's testing tools — it would be great if new features came with unit tests
+- We use Django's testing tools — adding unit tests to new features is greatly appreciated
 
     - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
 
@@ -39,6 +39,16 @@ Getting started with development
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+Database schema changes
+=======================
+
+When adding new features, it may be necessary to modify the database schema to support these new additions. After the changes are made, the migration files made by ``python manage.py makemigrations`` must also be committed. The migration files should also contain methods fill the new fields based on existing data if possible.
+
+Fixture files (found under ``data/fixtures/``) may also need to be updated, which can be done by running the ``migrate_fixtures.py`` script under a unmigrated database, then committing the result.
+::
+
+    $ python data/migrate_fixtures.py develop (your branch)
+
 Style guide
 ===========
 
@@ -50,7 +60,7 @@ For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirB
 
     $ npm run stylelint
 
-For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `AirBnB javascript  styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
+For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `AirBnB javascript styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
 
     $ npm run eslint
 
@@ -65,7 +75,7 @@ Our convention is to increment the minor version whenever we add new functionali
 - there is a major change to how the tournament workflow goes, or
 - we make some other change that is, in our opinion, significant enough to warrant a milestone.
 
-Most of the time, we write `data migrations <https://docs.djangoproject.com/en/1.10/topics/migrations/#data-migrations>`_ to allow existing systems to be upgraded easily. However, we don't always support backward database migrations. Our expectation is that long-lived installations keep up with our latest version.
+We write `data migrations <https://docs.djangoproject.com/en/1.10/topics/migrations/#data-migrations>`_ to allow existing systems to be upgraded easily. However, we don't always support backward database migrations. Our expectation is that long-lived installations keep up with our latest version.
 
 One day, we hope to have a public API in place to facilitate the integration with other debating tournament software, like registration or adjudicator feedback systems. If and when that happens, we'll probably revise this convention to be more in line with `Semantic Versioning <http://semver.org/>`_.
 
