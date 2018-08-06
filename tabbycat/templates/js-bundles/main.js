@@ -117,9 +117,7 @@ $(document).ready(function (){
       if (currentUrl.endsWith($(elem).attr('href'))) {
         $(this).addClass('active')
         const parentMenuItem = $(this).parent().parent()
-        console.log('parent', parentMenuItem)
         if (parentMenuItem.hasClass('dropdown')) {
-          console.log('test')
           $(parentMenuItem, '> .nav-link').addClass('active')
         }
       }
