@@ -35,7 +35,7 @@
           {{ graphsData.gendered_speakers }}
           <span v-text="gettext('speakers with gender data')"></span><br>
           {{ graphsData.speaks_count }}
-          <span v-text="gettext('speaker scores total')"></span>
+          <span v-text="gettext('speaker scores analysed')"></span>
         </h6>
         <hr>
         <text-display v-for="set in graphsData.speakers_results"
@@ -85,7 +85,7 @@
           {{ graphsData.gendered_adjudicators }}
           <span v-text="gettext('adjudicators with gender data')"></span><br>
           {{ graphsData.feedbacks_count }}
-          <span v-text="gettext('feedback scores total')"></span>
+          <span v-text="gettext('feedback scores analysed')"></span>
         </h6>
         <hr>
         <text-display v-for="set in graphsData.adjudicators_results"
