@@ -6,4 +6,4 @@
 # Preping FORCE=1 prevents nginx for waiting on the touch to /tmp/ file
 
 # Run waitress and uvicorn through nginx
-web: bin/start-nginx python ./tabbycat/run-waitress.py & python ./tabbycat/run-uvicorn.py  & wait -n
+web: bin/start-nginx python ./tabbycat/run-wsgi.py & python ./tabbycat/run-asgi.py  & wait -n
