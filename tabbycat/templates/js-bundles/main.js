@@ -94,6 +94,17 @@ $(document).ready(function (){
     })
   }
 
+  // IE 11 has no endsWith(); do a quick polyfill if that is the case
+  // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+  if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function(search, this_len) {
+      if (this_len === undefined || this_len > this.length) {
+        this_len = this.length;
+      }
+      return this.substring(this_len - search.length, this_len) === search;
+    };
+  }
+
   // Set Highlights on Navigation Elements
   var currentUrl = window.location.href;
   if ($('.admin-sidebar').length) {
