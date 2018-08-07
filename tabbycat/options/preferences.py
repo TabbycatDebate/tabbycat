@@ -4,7 +4,6 @@ from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
-from django_summernote.widgets import SummernoteWidget
 
 from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
@@ -12,6 +11,7 @@ from tournaments.utils import get_side_name_choices
 
 from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from .fields import FixedSummernoteWidget
 
 
 # ==============================================================================
@@ -990,7 +990,7 @@ class TournamentStaff(LongStringPreference):
     section = public_features
     name = 'tournament_staff'
     default = ""
-    widget = SummernoteWidget(attrs={'height': 150})
+    widget = FixedSummernoteWidget(attrs={'height': 150})
     field_kwargs = {'required': False}
 
 
@@ -1001,7 +1001,7 @@ class WelcomeMessage(LongStringPreference):
     section = public_features
     name = 'welcome_message'
     default = ""
-    widget = SummernoteWidget
+    widget = FixedSummernoteWidget
     field_kwargs = {'required': False}
 
 

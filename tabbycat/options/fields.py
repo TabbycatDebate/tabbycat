@@ -2,9 +2,18 @@ import logging
 
 from django.forms import ChoiceField, MultiValueField, MultiWidget, Select
 
+from django_summernote.widgets import SummernoteWidget
+
 logger = logging.getLogger(__name__)
 
 EMPTY_CHOICE = '__no_choice__'
+
+
+class FixedSummernoteWidget(SummernoteWidget):
+    """Summernote 0.8.8.6 is incompatible with Django 2.1;
+    this can be removed when it is compatible"""
+    def render(self, name, value, attrs=None, renderer=None):
+        return super().render(name, value, attrs)
 
 
 class MultiSelect(MultiWidget):
