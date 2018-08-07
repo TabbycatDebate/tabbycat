@@ -142,12 +142,15 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         return table
 
     def get_table_by_team(self):
-        teamscores = TeamScore.objects.filter(debate_team__debate__round=self.round,
-                ballot_submission__confirmed=True).prefetch_related(
-                'debate_team__team__speaker_set', 'debate_team__team__institution',
-                'debate_team__debate__debateadjudicator_set__adjudicator',
-                'debate_team__debate__debateteam_set__team',
-                'debate_team__debate__round').select_related('ballot_submission')
+        teamscores = TeamScore.objects.filter(
+            debate_team__debate__round=self.round,
+            ballot_submission__confirmed=True).prefetch_related(
+            'debate_team__team__speaker_set',
+            'debate_team__debate__debateadjudicator_set__adjudicator',
+            'debate_team__debate__debateadjudicator_set__adjudicator__institution',
+            'debate_team__debate__debateteam_set__team',
+            'debate_team__debate__round').select_related(
+            'ballot_submission')
         debates = [ts.debate_team.debate for ts in teamscores]
 
         if self.tournament.pref('teams_in_debate') == 'two':
