@@ -27,12 +27,6 @@
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
 
-  <script defer src="{% statici18n LANGUAGE_CODE %}"></script>
-  {% if user.is_authenticated %}
-  <script defer src="{% static 'js/admin.bundle.js' %}"></script>
-  {% else %}
-  <script defer src="{% static 'js/public.bundle.js' %}"></script>
-  {% endif %}
   <!-- Analytics -->
   {% if not debug %}
     <script>
@@ -164,12 +158,18 @@
   {% endblock %}
 
   {% block js %}
+    <script src="{% statici18n LANGUAGE_CODE %}"></script>
     <script>
       window.buildData = { // Pass to Raven
         version: '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}',
         sentry: {% if disable_sentry %}false{% else %}true{% endif %}
       }
     </script>
+    {% if user.is_authenticated %}
+    <script src="{% static 'js/admin.bundle.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/public.bundle.js' %}"></script>
+    {% endif %}
   {% endblock js %}
 
 </body>
