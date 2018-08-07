@@ -24,7 +24,6 @@ sqlparse==0.2.4                         # Parsing SQL statements
 
 # Server
 waitress==1.1.0                         # Primary server for wsgi
-uvicorn==0.2.22                         # Primary server for asgi
 
 # Pipeline
 whitenoise==3.3.1                       # Static file serving
@@ -32,11 +31,8 @@ whitenoise==3.3.1                       # Static file serving
 # Cache
 django_redis==4.9.0                     # Use redis for cache (on heroku; local optional)
 
-# Server
-uvicorn==0.2.22
-
 # Channels
-channels==2.1.2                         # Channels
+channels==2.1.2                         # Channels; also includes the Daphne server
 channels_redis==2.2.1                   # Channels Layer
 
 # Misc
