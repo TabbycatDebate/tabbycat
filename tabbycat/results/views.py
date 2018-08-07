@@ -118,7 +118,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
             return self.get_table_by_team()
 
     def get_table_by_debate(self):
-        debates = self.round.debate_set_with_prefetches(results=True, wins=True)
+        debates = self.round.debate_set_with_prefetches(results=True,
+                wins=True, institutions=True, adjudicators=True)
         populate_confirmed_ballots(debates, motions=True,
                 results=self.round.ballots_per_debate == 'per-adj')
 
