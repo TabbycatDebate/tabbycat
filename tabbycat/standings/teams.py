@@ -165,6 +165,22 @@ class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     exclude_forfeits = True
 
 
+class AverageIndividalScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for total constructive speaker score."""
+    key = "speaks_ind_avg"
+    name = _("average individual score")
+    abbr = _("AIS")
+
+    def get_annotation(self, round=None):
+        annotation_filter = Q(
+            debateteam__teamscore__ballot_submission__confirmed=True,
+            debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+            debateteam__teamscore__forfeit=False,
+            debateteam__speakerscore__position__lte=round.tournament.last_substantive_position
+        )
+        return Avg('debateteam__speakerscore__score', filter=annotation_filter)
+
+
 class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
     """Metric annotator for draw strength."""
     key = "draw_strength"
@@ -349,6 +365,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "wins"          : WinsMetricAnnotator,
         "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
         "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
+        "speaks_ind_avg": AverageIndividalScoreMetricAnnotator,
         "speaks_stddev" : SpeakerScoreStandardDeviationMetricAnnotator,
         "draw_strength" : DrawStrengthMetricAnnotator,
         "margin_sum"    : SumMarginMetricAnnotator,
