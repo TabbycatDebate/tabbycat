@@ -92,7 +92,14 @@
     <template v-if="ballot.authorPosition === 'c' || ballot.authorPosition === 'o'">
       <div class="db-item-gutter"></div>
       <div class="db-flex-static d-flex align-content-center">
-        <img :id="ballot.barcode" class="barcode-placeholder">
+        <svg :id="ballot.barcode" class="barcode-placeholder"
+             :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
+             jsbarcode-width="2.5" jsbarcode-height="85" v-if="roundInfo.hasMotions && roundInfo.hasVetoes">
+        </svg>
+        <svg :id="ballot.barcode" class="barcode-placeholder"
+             :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
+             jsbarcode-width="2.5" jsbarcode-height="60" v-else>
+        </svg>
       </div>
     </template>
 
@@ -166,20 +173,7 @@ export default {
     },
   },
   mounted: function () {
-    var height = 60
-    if (this.roundInfo.hasMotions && this.roundInfo.hasVetoes) {
-      height = 85 // Blow out the height to the big veto box has space
-    }
-    $(".barcode-placeholder").each(function () {
-      var code = $(this).attr('id')
-      $(this).JsBarcode(code, {
-        width: 2.5,
-        height: height,
-        text: code,
-        displayValue: false,
-        margin: 0,
-      })
-    })
+    JsBarcode(".barcode-placeholder").init();
   },
 }
 </script>
