@@ -1,0 +1,61 @@
+# Artillery installed as part of npm development requirements
+# Usage (note lack of trailing / on the URL):
+#   (import completed demo + do tab release preset)
+#   (restart dynos on heroku)
+#   $ artillery run bin/artillery-tab.yml --target https://tc-test-b.herokuapp.com
+# Testing Environment:
+#   DEBUG=0
+#   PUBLIC_FAST_CACHE_TIMEOUT=30
+#   PUBLIC_SLOW_CACHE_TIMEOUT=30
+#   TAB_PAGES_CACHE_TIMEOUT=30
+#   SCOUT_MONITOR=false
+
+config:
+  target: 'https://tabbycatdevelop.herokuapp.com'
+  http:
+    timeout: 35 # Responses returned in 30ish seconds or request is aborted
+  phases:
+    - duration: 30
+      arrivalRate: 0
+      name: "Wait for cache to expire"
+    - duration: 480
+      arrivalRate: 5
+      rampTo: 10
+      name: "Load test ramping to 10rps over 8 minutes"
+    - duration: 120
+      arrivalRate: 10
+      name: "Maintain load test maximum over 2 minutes"
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - name: "Home"
+    weight: 6
+    flow:
+    - get:
+        url: "/demo/"
+  - name: "Speaker Tab"
+    weight: 6
+    flow:
+    - get:
+        url: "/demo/tab/speaker/"
+  - name: "Team Tab"
+    weight: 3
+    flow:
+    - get:
+        url: "/demo/tab/team/"
+  - name: "Diversity"
+    weight: 3
+    flow:
+    - get:
+        url: "/demo/tab/diversity/"
+  - name: "Adj Break"
+    weight: 3
+    flow:
+    - get:
+        url: "/demo/break/adjudicators/"
+  - name: "Results"
+    weight: 3
+    flow:
+    - get:
+        url: "/demo/results/round/3/"

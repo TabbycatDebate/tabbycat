@@ -1,50 +1,46 @@
 # Artillery installed as part of npm development requirements
-# Usage:
+# Usage (note lack of trailing / on the URL):
 #   (setup 88-team BP tournament; enable public info; release R1 draw & motions)
 #   (restart dynos on heroku)
-#   $ artillery run bin/artillery-draw.yml
+#   $ artillery run bin/artillery-draw.yml --target https://tc-test-b.herokuapp.com
 # Testing Environment:
 #   DEBUG=0
-#   PUBLIC_FAST_CACHE_TIMEOUT=60
-#   PUBLIC_SLOW_CACHE_TIMEOUT=60
-#   TAB_PAGES_CACHE_TIMEOUT=60
-#   SCOUT_MONITOR=true
-
-
-# duration = time of each phase
-# arrival rate = number of virtual users per second
-# scenarios are probababilistic; weight control relative chance
+#   PUBLIC_FAST_CACHE_TIMEOUT=30
+#   PUBLIC_SLOW_CACHE_TIMEOUT=30
+#   TAB_PAGES_CACHE_TIMEOUT=30
+#   SCOUT_MONITOR=false
 
 config:
   target: 'https://tabbycatdevelop.herokuapp.com'
+  http:
+    timeout: 35 # Responses returned in 30 seconds or request is aborted
   phases:
-    - duration: 60
+    - duration: 30
       arrivalRate: 0
       name: "Wait for cache to expire"
-    - duration: 200
-      arrivalRate: 0.5
-      name: "Significant load test over two cache regens"
+    - duration: 480
+      arrivalRate: 9
+      rampTo: 18
+      name: "Load test ramping to 14rps over 10 minutes"
+    - duration: 120
+      arrivalRate: 18
+      name: "Maintain load test maximum over 2 minutes"
   defaults:
     headers:
       x-my-service-auth: '987401838271002188298567'
 scenarios:
-  - name: "Thing being tested"
-    weight: 5
+  - name: "Load main draw page"
+    weight: 6
     flow:
     - get:
-        url: "/bp88team/draw"
-  - name: "Hit other pages also; draw"
-    weight: 1
+        url: "/bp88team/draw/"
+  - name: "Load motions occasionally"
+    weight: 2
     flow:
     - get:
-        url: "/bp88team/motions"
-  - name: "Hit other pages also; home"
-    weight: 1
+        url: "/bp88team/motions/"
+  - name: "Load home occasionally"
+    weight: 2
     flow:
     - get:
-        url: "/bp88team"
-
-# Results
-#   18-08-01         1 Hobby Dyno           arrival rate of 0.5
-#               2175 median latency    9986 max latency    9009 p95
-#               2100 median latency    5016 max latency    4467 p95
+        url: "/bp88team/"
