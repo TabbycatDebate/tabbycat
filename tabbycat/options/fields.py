@@ -23,7 +23,7 @@ class MultiSelect(MultiWidget):
         widgets = [Select(choices=choices, attrs=attrs) for i in range(self.nfields)]
         super(MultiSelect, self).__init__(widgets, attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         # Extend to the appropriate number of values. Note that because
         # compress() compresses to a list, decompress() is not called by
         # MultiWidget.
