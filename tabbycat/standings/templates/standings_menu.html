@@ -33,9 +33,22 @@
   <div class="btn btn-outline-primary disabled">{% trans "Speakers" %}</div>
   <a class="btn btn-outline-primary {% if standings_speaker_nav %}active{% endif %}"
      href="{% roundurl 'standings-speaker' current_round %}">
-    {% trans "All" %}
+    {% if pref.reply_scores_enabled %}
+      {% trans "Substantives" %}
+    {% else %}
+      {% trans "All" %}
+    {% endif %}
   </a>
+  {% if pref.reply_scores_enabled %}
+    <a class="btn btn-outline-primary {% if standings_reply_nav %}active{% endif %}"
+       href="{% roundurl 'standings-reply' current_round %}">
+      {% trans "Replies" %}
+    </a>
+  {% endif %}
   {% for category in tournament.speakercategory_set.all %}
+    {% if forloop.first and pref.reply_scores_enabled %}
+      <div class="btn btn-outline-primary disabled">{% trans "Categories" %}</div>
+    {% endif %}
     <a class="btn btn-outline-primary"
        href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
       {% blocktrans trimmed with category_name=category.name %}
@@ -43,12 +56,6 @@
       {% endblocktrans %}
     </a>
   {% endfor %}
-  {% if pref.reply_scores_enabled %}
-    <a class="btn btn-outline-primary {% if standings_reply_nav %}active{% endif %}"
-       href="{% roundurl 'standings-reply' current_round %}">
-      {% trans "Replies" %}
-    </a>
-  {% endif %}
 </div>
 
 <div class="btn-group">
