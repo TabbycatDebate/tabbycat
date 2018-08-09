@@ -131,7 +131,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     standings__standings_missed_debates        = -1 # Speakers always show
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
     standings__speaker_standings_precedence    = ['total'] # constitutional
-    standings__speaker_standings_extra_metrics = ['stdev']
+    standings__speaker_standings_extra_metrics = ['average', 'stdev']
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
