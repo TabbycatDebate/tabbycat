@@ -187,7 +187,7 @@
               {% include "components/item-info.html" with text=email_text %}
             {% endif %}
 
-            {% include "components/item-action.html" with type="secondary" id="triggerReleaseDrawForm" text=release_text url="" %}
+            {% include "components/item-action.html" with id="triggerReleaseDrawForm" text=release_text url="" %}
 
           {% endif %}
 
@@ -236,7 +236,7 @@
           {% else %}
             {% trans "Your tournament is not configured to show the motion(s) for each round on the public site. There's no need to release the motion(s)." as text %}
             {% include "components/item-info.html" with type="secondary" %}
-            {% include "components/item-action.html" with type="secondary" id="triggerReleaseMotionsForm" text=release_text url="" %}
+            {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
           {% endif %}
 
         {% else %}
