@@ -10,7 +10,7 @@
         {% for side, average, width in motion.averages %}
           {% if average > 0 %}
             <div class="progress-bar progress-bar-{{ side }}"
-                 style="width: {{ width }}%">
+                 style="width: {{ width|unlocalize }}%">
               {{ side.upper }} {{ average|floatformat:2 }}
             </div>
           {% endif %}
@@ -42,7 +42,7 @@
             {% endblocktrans %}
 
             <div class="progress-bar progress-points-{{ points }}"
-                 style="width: {{ percentage }}%" data-toggle="tooltip"
+                 style="width: {{ percentage|unlocalize }}%" data-toggle="tooltip"
                  title="{{ tooltip_text }}">
               {% if count > 0 %}
                 {% if points == 3 %}

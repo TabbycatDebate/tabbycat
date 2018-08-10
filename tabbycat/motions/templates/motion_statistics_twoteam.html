@@ -8,12 +8,12 @@
     <div class="col">
 
       <div class="progress">
-        <div class="progress-bar progress-bar-aff" style="width: {{ motion.aff_win_percentage }}%">
+        <div class="progress-bar progress-bar-aff" style="width: {{ motion.aff_win_percentage|unlocalize }}%">
           {% if motion.aff_win_percentage >= 5 %}
             {{ motion.aff_win_percentage|floatformat:"0" }}%
           {% endif %}
         </div>
-        <div class="progress-bar progress-bar-neg" style="width: {{ motion.neg_win_percentage }}%">
+        <div class="progress-bar progress-bar-neg" style="width: {{ motion.neg_win_percentage|unlocalize }}%">
           {% if motion.neg_win_percentage >= 5 %}
             {{ motion.neg_win_percentage|floatformat:"0" }}%
           {% endif %}
@@ -65,14 +65,14 @@
       <div class="col">
         <div class="progress">
           {% if motion.aff_veto_percentage %}
-            <div class="progress-bar progress-bar-aff" style="width: {{ motion.aff_veto_percentage }}%">
+            <div class="progress-bar progress-bar-aff" style="width: {{ motion.aff_veto_percentage|unlocalize }}%">
               {% if motion.aff_veto_percentage >= 5 %}
                 {{ motion.aff_veto_percentage|floatformat:"0" }}%
               {% endif %}
             </div>
           {% endif %}
           {% if motion.neg_veto_percentage %}
-            <div class="progress-bar progress-bar-neg" style="width: {{ motion.neg_veto_percentage }}%">
+            <div class="progress-bar progress-bar-neg" style="width: {{ motion.neg_veto_percentage|unlocalize }}%">
               {% if motion.neg_veto_percentage >= 5 %}
                 {{ motion.neg_veto_percentage|floatformat:"0" }}%
               {% endif %}
