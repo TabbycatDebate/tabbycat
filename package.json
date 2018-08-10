@@ -21,7 +21,7 @@
     "django-channels": "^1.1.8",
     "envify": "^4.1.0",
     "es6-promise": "^4.2.4",
-    "eslint": "^4.x",
+    "eslint": "^5.x",
     "event-stream": "^3.3.4",
     "feather-icons": "^4.7.x",
     "gulp": "^3.9.x",
