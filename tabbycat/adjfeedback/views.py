@@ -471,6 +471,8 @@ class BaseAddFeedbackView(LogActionMixin, SingleObjectFromTournamentMixin, FormV
             self.source_name = self.object.name
         elif isinstance(self.object, Speaker):
             self.source_name = self.get_team_short_name(self.object.team)
+        elif isinstance(self.object, Team):
+            self.source_name = self.get_team_short_name(self.object)
         else:
             logger.error("self.object was neither an Adjudicator nor a Speaker")
             self.source_name = "<ERROR>"
