@@ -190,7 +190,7 @@ EMOJI_LIST = (
     ("⚓",	True , "Anchor"),
     ("♿",	False, "Wheelchair Symbol"),                # doesn't show
     ("⚒",	False, "Hammer and Pick"),                  # doesn't show
-    ("⚙",	True, "Gear"),                              # doesn't show
+    ("⚙",	True, "Gear"),
     ("⚗",	False, "Alembic"),                          # doesn't show
     ("⚖",	True, "Scales"),
     ("⚔",	False, "Crossed Swords"),                   # doesn't show
@@ -222,7 +222,7 @@ EMOJI_LIST = (
     ("⛱",	True , "Umbrella"),
     ("⛄",	True , "Snowman"),
     ("⚽",	True , "Soccer"),
-    ("⚾",	True, "Baseball"),                          # doesn't show
+    ("⚾",	True, "Baseball"),
     ("⛳",	True , "Hole in One"),
     ("⛸",	True , "Ice Skate"),
     ("⛷",	False, "Skier"),                            # dull
@@ -271,7 +271,7 @@ EMOJI_LIST = (
     ("😤",	False, "Face With Look of Triumph"),        # too similar to another
     ("😢",	False, "Crying"),                           # too similar to another
     ("😭",	True , "Sobbing"),
-    ("😨",	True, "Fearful"),                           # too similar to another
+    ("😨",	True, "Fearful"),
     ("😩",	False, "Weary"),                            # too similar to another
     ("😰",	False, "Open Mouth Cold Sweat"),            # too similar to another
     ("😱",	True , "Screaming"),
@@ -471,7 +471,7 @@ EMOJI_LIST = (
     ("🐛",	True , "Bug"),
     ("🐜",	True , "Ant"),
     ("🐝",	True , "Honeybee"),
-    ("🐞",	True, "Lady Beetle"),                       # dull
+    ("🐞",	True, "Lady Beetle"),
     ("💐",	True , "Bouquet"),
     ("🌸",	True , "Sakura"),
     ("💮",	False, "White Flower"),                     # dull
@@ -1356,7 +1356,7 @@ EMOJI_LIST = (
     ("🦀",	True , "Crab"),
     ("🦂",	True , "Scorpion"),
     ("🧀",	True , "Cheese"),
-    ("🌭",	True , "Hot Dog"),                          # dull
+    ("🌭",	False, "Hot Dog"),                          # dull
     ("🌮",	True , "Taco"),
     ("🌯",	True , "Burrito"),
     ("🍿",	True , "Popcorn"),

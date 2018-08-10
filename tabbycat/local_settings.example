@@ -110,3 +110,4 @@ ENABLE_DEBUG_TOOLBAR = False # True requires requirements_development install
 if ENABLE_DEBUG_TOOLBAR:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
     INSTALLED_APPS += ('debug_toolbar',)
+    DEBUG_TOOLBAR_PANELS += ('ddt_request_history.panels.request_history.RequestHistoryPanel',)
