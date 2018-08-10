@@ -1,6 +1,7 @@
 import json
 import datetime
 import logging
+from smtplib import SMTPException
 import unicodedata
 from itertools import product
 from math import floor
@@ -11,6 +12,7 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic.base import TemplateView
@@ -47,6 +49,7 @@ from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
+from .utils import send_mail_to_adjs
 
 logger = logging.getLogger(__name__)
 
@@ -569,7 +572,21 @@ class DrawReleaseView(DrawStatusEdit):
         self.round.draw_status = Round.STATUS_RELEASED
         self.round.save()
         self.log_action()
-        messages.success(request, _("Released the draw."))
+
+        email_success_message = ""
+        if self.tournament.pref('enable_adj_email'):
+            try:
+                send_mail_to_adjs(self.round)
+            except SMTPException:
+                messages.error(self.request, _("There was a problem sending adjudication assignment emails."))
+            except ConnectionError as e:
+                messages.error(self.request, _(
+                    "There was a problem connecting to the e-mail server when trying to send adjudication assigment emails: %(error)s"
+                ) % {'error': str(e)})
+            else:
+                email_success_message = _("Adjudicator emails successfully sent.")
+
+        messages.success(request, format_lazy(_("Released the draw."), " ", email_success_message))
         return super().post(request, *args, **kwargs)
 
 

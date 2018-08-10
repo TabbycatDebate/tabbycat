@@ -1361,3 +1361,35 @@ class PointsEmailLinkText(StringPreference):
     section = email
     name = 'team_points_email_link_text'
     default = "To consult the current team standings, visit:"
+
+
+@tournament_preferences_registry.register
+class EnableAdjudicatorDrawNotification(BooleanPreference):
+    help_text = _("Whether to send a notification informing adjudicators of their assignments when the draw is released.")
+    verbose_name = _("Adjudicator draw notifications")
+    section = email
+    name = 'enable_adj_email'
+    default = False
+
+
+@tournament_preferences_registry.register
+class AdjudicatorDrawNotificationSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to adjudicators with their assignments. "
+        "Use '{{ ROUND }}' as a placeholder for the current round, and '{{ VENUE }}' for their assigned venue.")
+    verbose_name = _("Adjudicator draw subject line")
+    section = email
+    name = 'adj_email_subject_line'
+    default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
+
+
+@tournament_preferences_registry.register
+class AdjudicatorDrawNotificationMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to adjudicators with their assignments. "
+        "Use '{{ ROUND }}' as a placeholder for the current round, '{{ VENUE }}' for their venue, "
+        "'{{ USER }}' for the adjudicator's name, '{{ POSITION }}' for their role, '{{ PANEL }}' for the full debate adjudication panel, and "
+        "'{{ DRAW }}' for the debate pairing.")
+    verbose_name = _("Adjudicator draw message")
+    section = email
+    name = 'adj_email_message'
+    default = "Hi {{ USER }}\n\nYou have been assigned as {{ POSITION }} adjudicator for {{ ROUND }} in room {{ VENUE }} with the following panel: {{ PANEL }}\n\n" \
+            + "The debate is between these teams: {{ DRAW }}"
