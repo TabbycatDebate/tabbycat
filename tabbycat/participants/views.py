@@ -407,7 +407,7 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
 
     def set_category_eligibility(self, speaker, sent_status):
         category_id = sent_status['type']
-        marked_eligible = speaker.categories.filter(pk=category_id).exists()
+        marked_eligible = category_id in [c.id for c in speaker.categories.all()]
         if sent_status['checked'] and not marked_eligible:
             speaker.categories.add(category_id)
             speaker.save()
