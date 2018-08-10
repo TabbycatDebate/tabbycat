@@ -19,6 +19,7 @@ from django.views.generic.edit import CreateView, FormView, UpdateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
+from notifications.models import SentMessageRecord
 from participants.models import Team
 from participants.prefetch import populate_win_counts
 from results.models import BallotSubmission
@@ -123,6 +124,8 @@ class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
         kwargs['num_unconfirmed'] = self.round.debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
+        kwargs['emails_sent'] = SentMessageRecord.objects.filter(
+            tournament=self.tournament, round=self.round, event=SentMessageRecord.EVENT_TYPE_POINTS).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -162,7 +165,7 @@ class RoundAdvanceView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyR
 class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
-        active_teams = Team.objects.filter(debateteam__debate__round=self.round)
+        active_teams = Team.objects.filter(debateteam__debate__round=self.round).prefetch_related('speaker_set')
         populate_win_counts(active_teams)
 
         try:

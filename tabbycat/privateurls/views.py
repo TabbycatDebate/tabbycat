@@ -39,7 +39,8 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
     def get_participants_to_email(self, already_sent=False):
         subquery = SentMessageRecord.objects.filter(
-            tournament=self.tournament, recipient=OuterRef('pk'),
+            tournament=self.tournament, email=OuterRef('email'),
+            context__key=OuterRef('url_key'),
             event=SentMessageRecord.EVENT_TYPE_URL
         )
         people = self.tournament.participants.filter(
