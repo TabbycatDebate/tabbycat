@@ -1,11 +1,23 @@
 # Note: Needs to be in this directory for the proper asgi import
 
+import logging
+import sys
+
 from daphne.server import Server
 from daphne.endpoints import build_endpoint_description_strings
 
 import asgi
 
-print("TC_DEPLOY: Initialising daphne")
+
+# Setup logging
+root = logging.getLogger()
+root.setLevel(logging.DEBUG)
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+root.addHandler(ch)
+root.info('TC_DEPLOY: Initialising daphne')
 
 # Same Command
 # daphne asgi:application --unix-socket "/tmp/asgi.socket" --http-timeout 29 --proxy-headers --ping-interval 15
