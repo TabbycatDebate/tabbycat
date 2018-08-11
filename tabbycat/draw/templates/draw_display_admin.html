@@ -134,7 +134,7 @@
             {% include "components/item-info.html" with type="" %}
 
             {% trans "View public draw page" as text %}
-            {% roundurl 'draw-public-for-round' current_round as public_link %}
+            {% roundurl 'draw-public-for-round' as public_link %}
             {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
           {% elif pref.participant_ballots != 'off' or pref.participant_feedback != 'off' %}
             {% blocktrans trimmed asvar text %}
@@ -252,7 +252,7 @@
             {% endif %}
             {% include "components/item-info.html" with type="" %}
             {% trans "View public motions page" as text %}
-            {% roundurl 'draw-public-for-round' current_round as public_link %}
+            {% tournamenturl 'motions-public' as public_link %}
             {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
           {% else %}
             {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
