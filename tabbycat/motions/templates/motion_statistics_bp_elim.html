@@ -35,7 +35,7 @@
           {% endblocktrans %}
 
           <div class="progress-bar progress-bar-advancing"
-               style="width: {{ advancing_pc }}%" data-toggle="tooltip"
+               style="width: {{ advancing_pc|unlocalize }}%" data-toggle="tooltip"
                title="{{ advancing_tooltip_text }}">
             {% if advancing_pc >= 25 %}
               {% trans "advanced" %}
@@ -44,7 +44,7 @@
             {% endif %}
           </div>
           <div class="progress-bar progress-bar-eliminated"
-               style="width: {{ eliminated_pc }}%" data-toggle="tooltip"
+               style="width: {{ eliminated_pc|unlocalize }}%" data-toggle="tooltip"
                title="{{ eliminated_tooltip_text }}">
             {% if eliminated_pc >= 25 %}
               {% trans "eliminated" %}
