@@ -125,7 +125,7 @@
 
         {% elif round.draw_status == round.STATUS_RELEASED %}
 
-          {% trans "Unrelease draw to public" as release_text %}
+          {% trans "Unrelease draw to public" as un_release_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}</form>
           {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
@@ -135,7 +135,7 @@
 
             {% trans "View public draw page" as text %}
             {% roundurl 'draw-public-for-round' current_round as public_link %}
-            {% include "components/item-action.html" with type="primary" url=public_link icon="eye" %}
+            {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
           {% elif pref.participant_ballots != 'off' or pref.participant_feedback != 'off' %}
             {% blocktrans trimmed asvar text %}
               You have released the draw, so ballots and/or feedback can be submitted from the public forms (if enabled). However, the draw itself will not show to the public unless the "public view of draw" setting is enabled in <a class="alert-link" href="{{ alert_link }}"> this tournament's configuration</a>.
@@ -148,7 +148,7 @@
             {% include "components/item-info.html" with type="warning" %}
           {% endif %}
 
-          {% include "components/item-action.html" with to_complete=True id="triggerReleaseDrawForm" url="" text=release_text %}
+          {% include "components/item-action.html" with id="triggerReleaseDrawForm" url="" text=un_release_text %}
 
         {% else %}
 
@@ -253,7 +253,7 @@
             {% include "components/item-info.html" with type="" %}
             {% trans "View public motions page" as text %}
             {% roundurl 'draw-public-for-round' current_round as public_link %}
-            {% include "components/item-action.html" with type="primary" url=public_link icon="eye" %}
+            {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
           {% else %}
             {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
             {% blocktrans trimmed asvar text %}
@@ -264,7 +264,7 @@
             {% include "components/item-info.html" with type="warning" %}
           {% endif %}
 
-          {% include "components/item-action.html" with to_complete=True id="triggerReleaseMotionsForm" url="" text=unrelease_text %}
+          {% include "components/item-action.html" with id="triggerReleaseMotionsForm" url="" text=unrelease_text %}
 
         {% endif %}
       </div>
