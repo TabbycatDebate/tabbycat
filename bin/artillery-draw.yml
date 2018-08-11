@@ -2,7 +2,7 @@
 # Usage (note lack of trailing / on the URL):
 #   (setup 88-team BP tournament; enable public info; release R1 draw & motions)
 #   (restart dynos on heroku)
-#   $ artillery run bin/artillery-draw.yml --target APP
+#   $ npx artillery run bin/artillery-draw.yml --target APP
 # Testing Environment:
 #   DEBUG=0
 #   PUBLIC_FAST_CACHE_TIMEOUT=30
@@ -19,13 +19,13 @@ config:
     - duration: 30
       arrivalRate: 0
       name: "Wait for cache to expire"
-    - duration: 480
-      arrivalRate: 8
-      rampTo: 16
-      name: "Load test ramping to 14rps over 10 minutes"
-    - duration: 120
-      arrivalRate: 16
-      name: "Maintain load test maximum over 2 minutes"
+    - duration: 300
+      arrivalRate: 10
+      rampTo: 25
+      name: "Load test ramping to 25rps over 5 minutes"
+    - duration: 300
+      arrivalRate: 25
+      name: "Maintain load test maximum over 5 minutes"
   defaults:
     headers:
       x-my-service-auth: '987401838271002188298567'

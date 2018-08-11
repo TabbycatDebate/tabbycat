@@ -2,7 +2,7 @@
 # Usage (note lack of trailing / on the URL):
 #   (import completed demo + do tab release preset)
 #   (restart dynos on heroku)
-#   $ artillery run bin/artillery-tab.yml --target APP
+#   $ npx artillery run bin/artillery-tab.yml --target APP
 # Testing Environment:
 #   DEBUG=0
 #   PUBLIC_FAST_CACHE_TIMEOUT=30
@@ -19,44 +19,44 @@ config:
     - duration: 30
       arrivalRate: 0
       name: "Wait for cache to expire"
-    - duration: 480
-      arrivalRate: 4
-      rampTo: 8
-      name: "Load test ramping to 10rps over 8 minutes"
-    - duration: 120
-      arrivalRate: 8
-      name: "Maintain load test maximum over 2 minutes"
+    - duration: 300
+      arrivalRate: 3
+      rampTo: 25
+      name: "Load test ramping to 10rps over 5 minutes"
+    - duration: 300
+      arrivalRate: 25
+      name: "Maintain load test maximum over 5 minutes"
   defaults:
     headers:
       x-my-service-auth: '987401838271002188298567'
 scenarios:
   - name: "Home"
-    weight: 6
+    weight: 1
     flow:
     - get:
         url: "/demo/"
   - name: "Speaker Tab"
-    weight: 6
+    weight: 1
     flow:
     - get:
         url: "/demo/tab/speaker/"
   - name: "Team Tab"
-    weight: 3
+    weight: 1
     flow:
     - get:
         url: "/demo/tab/team/"
   - name: "Diversity"
-    weight: 3
+    weight: 1
     flow:
     - get:
         url: "/demo/tab/diversity/"
   - name: "Adj Break"
-    weight: 3
+    weight: 1
     flow:
     - get:
         url: "/demo/break/adjudicators/"
   - name: "Results"
-    weight: 3
+    weight: 1
     flow:
     - get:
         url: "/demo/results/round/3/"
