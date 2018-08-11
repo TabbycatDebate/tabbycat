@@ -109,7 +109,7 @@ $(document).ready(function (){
   var currentUrl = window.location.href;
   if ($('.admin-sidebar').length) {
     // For admin area
-    $('a.list-group-item').filter(function (index, elem) {
+    $('.admin-sidebar a.list-group-item').filter(function (index, elem) {
       return currentUrl.endsWith($(elem).attr('href'))
     }).addClass('active')
     // Expand sidebar if an item within a section is active (if not on mobile)
