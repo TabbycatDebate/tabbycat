@@ -16,7 +16,16 @@ events {
 http {
     gzip on;
     gzip_comp_level 2;
-    gzip_min_length 512;
+    gzip_min_length 1100;
+    gzip_proxied any;
+    gzip_types
+        text/css
+        text/javascript
+        text/xml
+        text/plain
+        application/javascript
+        application/x-javascript
+        application/json;
 
     server_tokens off;
 
@@ -91,6 +100,16 @@ http {
             proxy_read_timeout     300;
             proxy_connect_timeout  300;
             proxy_set_header Connection "";
+        }
+
+        # Serve static files directly from the directory
+        location /static/ {
+            alias /app/tabbycat/staticfiles/;
+            autoindex on;
+            access_log off;
+            add_header Cache-Control "public";
+            expires 7d;
+            etag on;
         }
 
         # Pass to wsgi server

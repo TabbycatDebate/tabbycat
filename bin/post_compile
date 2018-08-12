@@ -16,7 +16,7 @@ python manage.py checkpreferences
 echo "-----> Running gulp compilation"
 NODE_ENV='production' gulp build
 
-echo "-----> Running whitenoise static files compilation"
+echo "-----> Running static files compilation"
 python manage.py collectstatic --noinput -v 0
 
 echo "-----> Post-compile done"

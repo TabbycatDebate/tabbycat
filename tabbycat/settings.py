@@ -60,7 +60,6 @@ FORMAT_MODULE_PATH = [
 MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
     # User language preferences; must be after Session
     'django.middleware.locale.LocaleMiddleware',
@@ -108,7 +107,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'channels', # For Websockets / real-time connections (above whitenoise)
-    'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -187,10 +185,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# Whitenoise Gzipping and unique names
-STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
-# Serve files that must be at root (robots; favicon) from this folder
-WHITENOISE_ROOT = os.path.join(BASE_DIR, 'static/root')
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # ==============================================================================
 # Logging
