@@ -325,7 +325,7 @@ SECRET_KEY = os.environ.get(
 try:
     import dj_database_url
     DATABASES = {
-        'default': dj_database_url.config(default='postgres://localhost', conn_max_age=10)
+        'default': dj_database_url.config(default='postgres://localhost')
     }
 except:
     pass
