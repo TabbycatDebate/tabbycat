@@ -25,7 +25,7 @@
     "event-stream": "^3.3.4",
     "feather-icons": "^4.7.x",
     "gulp": "^3.9.x",
-    "gulp-clean-css": "^3.9.x",
+    "gulp-clean-css": "^3.10.x",
     "gulp-concat": "^2.6.x",
     "gulp-gzip": "^1.4.x",
     "gulp-livereload": "^3.8.x",
