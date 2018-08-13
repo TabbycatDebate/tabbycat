@@ -3,6 +3,9 @@
 # Importing the base requirements
 -r requirements_common.txt
 
+# Run multiple processes in a Procfile
+honcho==1.0.1
+
 # Base Heroku Requirements
 dj-database-url==0.5.0                  # From the heroku toolbelt
 

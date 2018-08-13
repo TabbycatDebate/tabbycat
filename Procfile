@@ -1,9 +1,6 @@
 # Production
 
-# Command after start-nginx is directly run by nginx script; so dont use &&
-# Running multiple processes (with the wait) as per:
-# https://help.heroku.com/CTFS2TJK/how-do-i-run-multiple-processes-on-a-dyno
-# Preping FORCE=1 prevents nginx for waiting on the touch to /tmp/ file
+# Note that this runs honcho, which in turn runs a second 'MultiProcfile'
+# This better allows for multiple processes to be run simultaneously
 
-# Run waitress and uvicorn through nginx
-web: bin/start-nginx python ./tabbycat/run-wsgi.py & python ./tabbycat/run-asgi.py  & wait -n
+web: honcho -f ProcfileMulti start
