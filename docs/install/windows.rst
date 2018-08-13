@@ -191,21 +191,21 @@ e. Install Tabbycat's requirements.
 
     > python -m pip install --upgrade pip
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
-    > pip install -r requirements_common.txt
+    > pip install -r requirements.txt
     > npm install
 
   If you installed **64-bit Python**::
 
     > python -m pip install --upgrade pip
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
-    > pip install -r requirements_common.txt
+    > pip install -r requirements.txt
     > npm install
 
   If you're using a version of **Python other than 3.5**, replace the URL in the
   second line with the appropriate link from the
   `win-psycopg page <http://www.stickpeople.com/projects/python/win-psycopg/>`_.
 
-  .. note:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements_common.txt`` so that the latter doesn't try to install the Unix version.
+  .. note:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements.txt`` so that the latter doesn't try to install the Unix version.
 
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 
