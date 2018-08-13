@@ -3,10 +3,10 @@ import math
 from django.forms.fields import IntegerField
 from django.forms import CharField, ChoiceField, ModelChoiceField, ModelForm
 from django.utils.translation import gettext_lazy as _
+from django_summernote.widgets import SummernoteWidget
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
-from options.fields import FixedSummernoteWidget
 from options.preferences import TournamentStaff
 from options.presets import all_presets, get_preferences_data, presets_for_form, public_presets_for_form
 
@@ -94,7 +94,7 @@ class TournamentConfigureForm(ModelForm):
         initial=_("<strong>Tabulation:</strong> [list tabulation staff here]<br />"
             "<strong>Organisation:</strong> [list organising committee members here]<br />"
             "<strong>Adjudication:</strong> [list chief adjudicators here]"),
-        widget=FixedSummernoteWidget,
+        widget=SummernoteWidget,
     )
 
     def save(self):
