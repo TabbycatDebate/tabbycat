@@ -1,11 +1,17 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block head-title %}
-  <div class="text-center d-print-none">Master Sheet for Debates at {{ base_venue_category.name }} in {{ round.name }}</div>
+  <div class="text-center d-print-none">
+    {% blocktrans trimmed with category_name=base_venue_category.name round_name=round.name %}
+    Master Sheet for Debates at {{ category_name }} in {{ round_name }}
+    {% endblocktrans %}
+  </div>
 {% endblock %}
 {% block page-title %}
+  {% blocktrans trimmed with category_name=base_venue_category.name %}
   Master Sheet for Debates at {{ venue_category.name }}
+  {% endblocktrans %}
 {% endblock %}
 
 {% block nav %}{% endblock %}
@@ -36,14 +42,14 @@
               <col style="width:20%">
               <col style="width:8%">
               <col style="width:8%">
-              <th>Div</th>
-              <th>Room</th>
-              <th>Affirmative</th>
-              <th>Negative</th>
-              <th>Adjudicator</th>
-              <th>Winner of the Debate</th>
-              <th>Aff Score</th>
-              <th>Neg Score</th>
+              <th>{% trans "Div" context "Division" %}</th>
+              <th>{% trans "Room" %}</th>
+              <th>{% trans "Affirmative" %}</th>
+              <th>{% trans "Negative" %}</th>
+              <th>{% trans "Adjudicator" %}</th>
+              <th>{% trans "Winner of the Debate" %}</th>
+              <th>{% trans "Aff Score" %}</th>
+              <th>{% trans "Neg Score" %}</th>
             </tr>
           </thead>
           <tbody>
@@ -59,11 +65,13 @@
                 <td></td>
                 <td>
                   {% if debate.aff_team.type == 'B' or debate.neg_team.type == 'B'%}
-                    Bye
+                    {% trans "Bye" context "Odd number of teams" %}
                   {% elif debate.result_status == "P" %}
-                    Postponed
+                    {% trans "Postponed" %}
                   {% elif debate.confirmed_ballot.forfeit %}
-                    Forfeit by {{ debate.confirmed_ballot.forfeit.get_side_name|capfirst }}
+                    {% blocktrans trimmed with side_name=debate.confirmed_ballot.forfeit.get_side_name|capfirst %}
+                    Forfeit by {{ side_name }}
+                    {% endblocktrans %}
                   {% endif %}
                 </td>
                 <td></td>
@@ -81,7 +89,7 @@
 
   <div class="card">
     <div class="panel-heading">
-      <h4 class="panel-title">Additional Comments from the Head Ajudicator</h4>
+      <h4 class="panel-title">{% trans "Additional Comments from the Head Ajudicator" %}</h4>
     </div>
     <div class="card-body">
       <table  class="table">

@@ -30,7 +30,7 @@
   {% if motion.text  %}
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Motion</h4>
+        <h4 class="card-title">{% trans "Motion" %}</h4>
         {{ motion.text }}
       </div>
     </div>
@@ -66,7 +66,7 @@
                 </li>
               {% endfor %}
               <li class="list-group-item list-group-item-{{ team.win_style }}">
-                <em>Total for {{ team.team.short_name }} ({{ team.side }})</em>
+                <em>{% blocktrans trimemd with short_name=team.team.short_name side=team.side %}Total for {{ short_name }} ({{ side }}){% endblocktrans %}</em>
                 <span class="badge badge-secondary float-right">
                   {{ team.total }}
                 </span>

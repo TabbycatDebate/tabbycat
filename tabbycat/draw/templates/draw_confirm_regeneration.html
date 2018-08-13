@@ -1,33 +1,38 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block page-title %}
-  Confirm draw regeneration
+  {% trans "Confirm draw regeneration" %}
 {% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'draw' %}">
-    <i data-feather="chevron-left"></i> Back to Draw
+    <i data-feather="chevron-left"></i>{% trans "Back to Draw" %}
   </a>
 {% endblock %}
 
 {% block head-title %}
-  <span class="emoji">🔥</span>Confirm Draw Deletion for {{ round.name }}
+  <span class="emoji">🔥</span>
+  {% blocktrans trimmed with name=round.name %}Confirm Draw Deletion for {{ name }}{% endblocktrans %}
 {% endblock %}
 
 {% block page-alerts %}
 
   <div class="alert alert-warning">
-    Do you really want to regenerate the draw for {{ round.name }}? This will
+    {% blocktrans trimmed with name=round.name %}
+    Do you really want to regenerate the draw for {{ name }}? This will
     delete <strong>all the debates in the current draw</strong> —  including
     their ballots and adjudicator allocations — and cannot be undone.
     You probably don't want to do this if any results have been entered!
+    {% endblocktrans %}
   </div>
 
   <form method="POST" action="{% roundurl 'draw-regenerate' %}">
     {% csrf_token %}
     <button class="btn btn-block btn-danger " type="submit">
-      Yes, I want to delete the current draw for {{ round.name }}
+      {% blocktrans trimmed with name=round.name %}
+      Yes, I want to delete the current draw for {{ name }}
+      {% endblocktrans %}
     </button>
   </form>
 

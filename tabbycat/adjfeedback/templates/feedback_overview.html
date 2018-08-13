@@ -1,7 +1,7 @@
 {% extends "feedback_base.html" %}
 {% load debate_tags i18n static %}
 
-{% block sub-title %}<span id="c_breaking">{{ c_breaking }}</span> marked as breaking{% endblock %}
+{% block sub-title %}{% blocktrans trimmed %}<span id="c_breaking">{{ c_breaking }}</span> marked as breaking{% endblocktrans %}{% endblock %}
 
 {% block page-alerts %}
 

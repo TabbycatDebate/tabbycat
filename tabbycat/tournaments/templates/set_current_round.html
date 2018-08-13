@@ -2,16 +2,16 @@
 {% load debate_tags %}
 {% load add_field_css i18n %}
 
-{% block page-title %}Set Current Round{% endblock %}
+{% block page-title %}{% trans "Set Current Round" %}{% endblock %}
 {% block head-title %}
-  <span class="emoji">🙏</span>Set Current Round
+  <span class="emoji">🙏</span>{% trans "Set Current Round" %}
 {% endblock %}
 
 {% block page-subnav-sections %}
   {% if current_round %}
     <a class="btn btn-primary "
        href="{% tournamenturl 'options-tournament-index' %}">
-      <i data-feather="chevron-left"></i> Back to Configuration
+      <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
     </a>
   {% endif %}
 {% endblock %}
