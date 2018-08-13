@@ -16,6 +16,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
+from notifications.utils import BallotEmailGenerator
 from options.utils import use_team_code_names_data_entry
 from participants.models import Adjudicator
 from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin,
@@ -33,7 +34,7 @@ from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .result import DebateResult
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, populate_identical_ballotsub_lists, send_ballot_receipt_emails_to_adjudicators
+from .utils import get_result_status_stats, populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
 
@@ -279,7 +280,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     def send_email_receipts(self):
         # For proper error handling for admin/assistants, overwrite this
         try:
-            send_ballot_receipt_emails_to_adjudicators(DebateResult(self.ballotsub).as_dicts(), self.debate)
+            BallotEmailGenerator.run(DebateResult(self.ballotsub).as_dicts(), self.debate)
         except (SMTPException, ConnectionError):
             return False
         else:

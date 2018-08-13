@@ -7,7 +7,6 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
-from django.template import Template
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -15,6 +14,7 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
+from notifications.utils import RandomizedURLEmailGenerator
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -23,7 +23,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
 from .forms import MassEmailForm
-from .utils import populate_url_keys, send_randomised_url_emails
+from .utils import populate_url_keys
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
     def get_participants_to_email(self, already_sent=False):
         subquery = SentMessageRecord.objects.filter(
             tournament=self.tournament, email=OuterRef('email'),
-            context__key=OuterRef('url_key'),
+            context__key=str(OuterRef('url_key')),
             event=SentMessageRecord.EVENT_TYPE_URL
         )
         people = self.tournament.participants.filter(
@@ -197,12 +197,12 @@ class EmailUrlsView(BaseEmailRandomisedUrlsView, FormView):
 
     def form_valid(self, form):
         participants = self.get_participants_to_email()
-
         try:
-            nparticipants = send_randomised_url_emails(
-                self.request, self.tournament, participants,
-                Template(form.cleaned_data['subject_line']), Template(form.cleaned_data['message_body'])
-            )
+            nparticipants = RandomizedURLEmailGenerator(subject=form.cleaned_data['subject_line'],
+                                                        message=form.cleaned_data['message_body']).run(
+                                                            request=self.request, participants=participants,
+                                                            tournament=self.tournament
+                                                        )
         except SMTPException:
             messages.error(self.request, _("There was a problem sending private URLs to participants."))
         except ConnectionError as e:
