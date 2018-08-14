@@ -1,12 +1,13 @@
 {% extends "tables/base_vue_table.html" %}
-{% load static %}
-{% load debate_tags %}
+{% load static debate_tags i18n %}
 
 {% block page-alerts %}
   <div class="alert alert-info">
+  	{% tournamenturl 'adjfeedback-overview' as feedback_url %}
     <i data-feather="alert-circle"></i>
-    Adjudicators can be marked as breaking in the
-    <a href="{% tournamenturl 'adjfeedback-overview' %}">Feedback Overview</a> section.
+    {% blocktrans trimmed %}
+	    Adjudicators can be marked as breaking in the <a href="{{ feedback_url }}">Feedback Overview</a> section.
+    {% endblocktrans %}
   </div>
 {% endblock %}
 

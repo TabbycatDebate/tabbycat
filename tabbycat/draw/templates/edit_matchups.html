@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load static debate_tags i18n %}
-{% load debate_tags %}
 
-{% block head-title %}Edit Sides/Matchups for {{ round.abbreviation }}{% endblock %}
-{% block page-title %}Edit Sides/Matchups for {{ round.abbreviation }}{% endblock %}
+{% block head-title %}
+  {% blocktrans trimmed with abbreviation=round.abbreviation %}Edit Sides/Matchups for {{ abbreviation }}{% endblocktrans %}
+{% endblock %}
+{% block page-title %}
+  {% blocktrans trimmed with abbreviation=round.abbreviation %}Edit Sides/Matchups for {{ abbreviation }}{% endblocktrans %}
+{% endblock %}
 
 {% block content %}
   <div id="vueMount">

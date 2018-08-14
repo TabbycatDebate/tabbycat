@@ -1,11 +1,16 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
 {% block head-title %}
-  <div class="text-center d-print-none">Room Sheets for Debates at {{ base_venue_category.name }} in {{ round.name }}</div>
+  <div class="text-center d-print-none">
+  {% blocktrans trimmed with venue_category=base_venue_category.name round_name=round.name %}
+  Room Sheets for Debates at {{ venue_category }} in {{ round_name }}</div>
+  {% endblocktrans %}
 {% endblock %}
 {% block page-title %}
-  Room Sheets for Debates at {{ venue_category.name }}
+  {% blocktrans trimmed with venue_category=base_venue_category.name %}
+  Room Sheets for Debates at {{ venue_category }}
+  {% endblocktrans %}
 {% endblock %}
 
 {% block nav %}{% endblock %}
@@ -24,8 +29,9 @@
         <div class="card">
           <div class="panel-heading text-center">
             <h3 class="panel-title">
-              {{ debate.round.tournament.short_name }} Division
-              {{ debate.aff_team.division.name }}
+              {% blocktrans trimmed with tournament=debate.round.tournament.short_name division=debate.aff_team.division.name %}
+              {{ tournament }} Division {{ division }}
+              {% endblocktrans %}
             </h3>
           </div>
           <ul class="list-group h4 text-center">
@@ -34,19 +40,24 @@
             </li>
             <li class="list-group-item">
               {% if debate.confirmed_ballot.forfeit %}
-                <del>{{ debate.time|time:"H:i" }}</del>
-                (Forfeit by {{ debate.confirmed_ballot.forfeit.get_side_name|capfirst }})
+                {% blocktrans trimmed with time=debate.time|time:"H:i" side=debate.confirmed_ballot.forfeit.get_side_name|capfirst %}
+                <del>{{ time }}</del> (Forfeit by {{ side }})
+                {% endblocktrans %}
               {% elif debate.time %}
                 {{ debate.time|time:"H:i" }}
               {% else %}
-                (No time set)
+                {% trans "(No time set)" %}
               {% endif %}
             </li>
             <li class="list-group-item">
-              <strong>Affirmative</strong>: {{ debate.aff_team.short_name }}
+              {% blocktrans trimmed with team=debate.aff_team.short_name %}
+              <strong>Affirmative</strong>: {{ team }}
+              {% endblocktrans %}
             </li>
             <li class="list-group-item">
-              <strong>Negative</strong>: {{ debate.neg_team.short_name }}
+              {% blocktrans trimmed with team=debate.neg_team.short_name %}
+              <strong>Negative</strong>: {{ team }}
+              {% endblocktrans %}
             </li>
           </ul>
         </div>

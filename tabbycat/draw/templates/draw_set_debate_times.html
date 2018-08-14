@@ -1,19 +1,19 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block page-title %}Schedule Debates{% endblock %}
-{% block head-title %}<span class="emoji">⏰</span>Schedule Debates {% endblock %}
-{% block sub-title %}for {{ round.name }}{% endblock %}
+{% block page-title %}{% trans "Schedule Debates" %}{% endblock %}
+{% block head-title %}<span class="emoji">⏰</span>{% trans "Schedule Debates" %}{% endblock %}
+{% block sub-title %}{% blocktrans trimmed with name=round.name %}for {{ name }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-primary " href="{% roundurl 'draw' %}">
-    <i data-feather="chevron-left"></i> Back to Draw
+    <i data-feather="chevron-left"></i>{% trans "Back to Draw" %}
   </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
   <a href="{% roundurl 'draw-schedule-apply' %}" class="btn btn-success " id="assignTimes">
-    Apply Times to Debates
+    {% trans "Apply Times to Debates" %}
   </a>
 {% endblock %}
 
@@ -23,7 +23,7 @@
   <div class="col-md-6">
     <div class="card">
       <div class="panel-heading">
-        <h4 class="panel-title">Assign Dates to Venue Catgories</h4>
+        <h4 class="panel-title">{% trans "Assign Dates to Venue Catgories" %}</h4>
       </div>
       <form id="assignForm" method="POST" action="{% roundurl 'draw-schedule-apply' %}">
         {% csrf_token %}
@@ -51,7 +51,7 @@
   <div class="col-md-6">
     <div class="card">
       <div class="panel-heading">
-        <h4 class="panel-title">Assign Times to Divisions</h4>
+        <h4 class="panel-title">{% trans "Assign Times to Divisions" %}</h4>
       </div>
       <ul class="list-group">
         {% for d in divisions %}

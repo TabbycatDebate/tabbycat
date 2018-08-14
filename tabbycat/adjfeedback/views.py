@@ -5,7 +5,7 @@ import math
 from django.contrib import messages
 from django.db.models import Count, F, Q
 from django.http import JsonResponse
-from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.utils.translation import gettext as _, gettext_lazy, ngettext, ngettext_lazy
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
 
@@ -172,7 +172,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
         teams = tournament.team_set.all().annotate(feedback_count=Count('debateteam__adjudicatorfeedback')).prefetch_related('speaker_set')
         team_table = TabbycatTableBuilder(
-            view=self, title='From Teams', sort_key='team')
+            view=self, title=_('From Teams'), sort_key='team')
         team_table.add_team_columns(teams)
         team_feedback_data = []
         for team in teams:
@@ -187,7 +187,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
         adjs = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
         adj_table = TabbycatTableBuilder(
-            view=self, title='From Adjudicators', sort_key='name')
+            view=self, title=_('From Adjudicators'), sort_key='name')
         adj_table.add_adjudicator_columns(adjs)
         adj_feedback_data = []
         for adj in adjs:
@@ -500,8 +500,8 @@ class BaseTabroomAddFeedbackView(TabroomSubmissionFieldsMixin, BaseAddFeedbackVi
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        messages.success(self.request, "Feedback from {} on {} added.".format(
-            self.source_name, self.adj_feedback.adjudicator.name))
+        messages.success(self.request, _("Feedback from %(source)s on %(target)s added.") % {
+            'source': self.source_name, 'target': self.adj_feedback.adjudicator.name})
         return result
 
     def get_success_url(self):
@@ -530,8 +530,8 @@ class PublicAddFeedbackView(PublicSubmissionFieldsMixin, PersonalizablePublicTou
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        messages.success(self.request, "Thanks, {}! Your feedback on {} has been recorded.".format(
-            self.source_name, self.adj_feedback.adjudicator.name))
+        messages.success(self.request, _("Thanks, %(source)s! Your feedback on %(target)s has been recorded.") % {
+            'source': self.source_name, 'target': self.adj_feedback.adjudicator.name})
         return result
 
     def get_context_data(self, **kwargs):
@@ -609,7 +609,7 @@ class BaseAdjudicatorActionView(LogActionMixin, AdministratorMixin, TournamentMi
             adj_id = int(request.POST["adj_id"])
             adjudicator = Adjudicator.objects.get(id=adj_id)
         except (ValueError, Adjudicator.DoesNotExist, Adjudicator.MultipleObjectsReturned):
-            raise AdjudicatorActionError("Whoops! I didn't recognise that adjudicator: {}".format(adj_id))
+            raise AdjudicatorActionError(_("Whoops! I didn't recognise that adjudicator: %(adj)s") % {'adj': adj_id})
         return adjudicator
 
     def post(self, request, *args, **kwargs):
@@ -632,7 +632,7 @@ class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
         try:
             score = float(request.POST["test_score"])
         except ValueError:
-            raise AdjudicatorActionError("Whoops! The value isn't a valid test score.")
+            raise AdjudicatorActionError(_("Whoops! The value isn't a valid test score."))
 
         adjudicator.test_score = score
         adjudicator.save()
@@ -665,7 +665,7 @@ class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
         try:
             note = str(request.POST["note"])
         except ValueError as e:
-            raise AdjudicatorActionError("Whoop! There was an error interpreting that string: " + str(e))
+            raise AdjudicatorActionError(_("Whoops! There was an error interpreting that string: %s") % str(e))
 
         adjudicator.notes = note
         adjudicator.save()
@@ -685,18 +685,18 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
     def get_page_subtitle(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
         total_missing = sum([progress.num_unsubmitted() for progress in teams_progress + adjs_progress])
-        return "{:d} missing feedback submissions".format(total_missing)
+        return ngettext_lazy("%d missing feedback submission", "%d missing feedback submissions", total_missing) % (total_missing,)
 
     def get_tables(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
 
-        adjs_table = FeedbackTableBuilder(view=self, title="From Adjudicators",
+        adjs_table = FeedbackTableBuilder(view=self, title=_("From Adjudicators"),
             sort_key="owed", sort_order="desc")
         adjudicators = [progress.adjudicator for progress in adjs_progress]
         adjs_table.add_adjudicator_columns(adjudicators, show_metadata=False)
         adjs_table.add_feedback_progress_columns(adjs_progress)
 
-        teams_table = FeedbackTableBuilder(view=self, title="From Teams",
+        teams_table = FeedbackTableBuilder(view=self, title=_("From Teams"),
             sort_key="owed", sort_order="desc")
         teams = [progress.team for progress in teams_progress]
         teams_table.add_team_columns(teams)

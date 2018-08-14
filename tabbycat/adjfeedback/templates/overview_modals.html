@@ -7,31 +7,39 @@
         <div class="modal-body pb-0 pt-0">
           <div class="list-group list-group-flush">
 
-            {% include "components/form-title.html" with title="Change Test Score" %}
+            {% trans "Change Test Score" as title %}
+            {% include "components/form-title.html" %}
 
             {% csrf_token %}
 
             <div class="list-group-item text-info py-3">
-              The score range for adjudicators is between <strong>{{ pref.adj_min_score }}</strong> and
-              <strong>{{ pref.adj_max_score }}</strong>. Decimals are permitted. This can be configured in
-              <a href="{% tournamenturl 'options-tournament-section' section='feedback' %}">Feedback settings</a>.
+              {% tournamenturl 'options-tournament-section' section='feedback' as feedback_options %}
+              {% blocktrans trimmed with min_score=pref.adj_min_score max_score=pref.adj_max_score %}
+                The score range for adjudicators is between <strong>{{ pref.adj_min_score }}</strong> and
+                <strong>{{ pref.adj_max_score }}</strong>. Decimals are permitted. This can be configured in
+                <a href="{{ feedback_options }}">Feedback settings</a>.
+              {% endblocktrans %}
             </div>
             <div class="list-group-item text-info py-3">
-              The minimum score require to be allocated as a panellist or chair (when using the
-              auto-allocator) is <strong>{{ pref.adj_min_voting_score }}</strong>. This can be configured in
-              <a href="{% tournamenturl 'options-tournament-section' section='draw_rules' %}">Draw settings</a>.
+              {% tournamenturl 'options-tournament-section' section='draw_rules' as draw_rules %}
+              {% blocktrans trimmed with min_voting_score=pref.adj_min_voting_score %}
+                The minimum score require to be allocated as a panellist or chair (when using the
+                auto-allocator) is <strong>{{ min_voting_score }}</strong>. This can be configured in
+                <a href="{{ draw_rules }}">Draw settings</a>.
+              {% endblocktrans %}
             </div>
             <div class="list-group-item">
               <input id="id_adj_id" name="adj_id" type="hidden" />
               <div class="form-group pb-3">
-                <label>Test score</label>
+                <label>{% trans "Test score" %}</label>
                 <input id="id_test_score" class="form-control" name="test_score" placeholder="3.5"
                        min="{{ pref.adj_min_score }}" max="{{ pref.adj_max_score }}"
                        type="number" step="any"></input>
               </div>
             </div>
 
-            {% include "components/form-submit.html" with title="Save Test Score" %}
+            {% trans "Save Test Score" as title %}
+            {% include "components/form-submit.html" %}
 
             </div>
         </div>
@@ -45,7 +53,7 @@
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
         <div class="modal-header  text-center">
-          <h3>Edit Note</h3>
+          <h3>{% trans "Edit Note" %}</h3>
         </div>
         <div class="modal-body">
           <form id="adjNoteForm" method="POST" action="{% tournamenturl 'adjfeedback-set-adj-note' %}">
@@ -59,7 +67,7 @@
             <div class="form-group">
               <div class="col-sm-12">
                 <button type="submit" value="Save" class="btn btn-block btn-success">
-                  Save
+                  {% trans "Save" %}
                 </button>
               </div>
             </div>

@@ -5,7 +5,7 @@
 {% block head-title %}
   <span class="emoji">🙏</span> {% trans "Confirm Round Advance" %}
 {% endblock %}
-{% block sub-title %}{% blocktrans trimmed %}for {{ round.name }}{% endblocktrans %}{% endblock %}
+{% block sub-title %}{% blocktrans trimmed with name=round.name %}for {{ name }}{% endblocktrans %}{% endblock %}
 
 {% block page-subnav-actions %}
 
