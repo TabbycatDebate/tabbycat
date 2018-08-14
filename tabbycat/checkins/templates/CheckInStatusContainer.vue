@@ -122,13 +122,12 @@
 <script>
 import _ from 'lodash'
 
-import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 import PeopleStatusMixin from './PeopleStatusMixin.vue'
 import VenuesStatusMixin from './VenuesStatusMixin.vue'
 
 export default {
-  mixins: [AjaxMixin, WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],
+  mixins: [WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],
   data: function () {
     return {
       filterByPresence: {
@@ -258,7 +257,7 @@ export default {
       var type = this.isForVenues ? 'venues' : 'people'
       var payload = { barcodes: barcodeIdentifiers, status: setStatus, type: type }
       this.setLocked(barcodeIdentifiers, true)
-      this.ajaxSave(this.scanUrl, payload, message, this.passCheckIn, this.failCheckIn, null, false)
+      this.sendToSocket('checkins', payload)
     },
     setLocked: function (identifiers, status) {
       _.forEach(this.entitiesByType, (entity) => {
@@ -296,6 +295,7 @@ export default {
       })
     },
     handleSocketMessage: function (payload) {
+      console.log('handleSocketMessage', payload)
       if (payload.created === true) {
         this.events.push(payload)
       } else {

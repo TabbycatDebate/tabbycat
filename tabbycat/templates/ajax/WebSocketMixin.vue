@@ -11,6 +11,9 @@ import _ from 'lodash'
 
 export default {
   props: [ 'tournamentSlug', 'roundSeq'],
+  data: function () {
+    return { bridges: {} }
+  },
   created: function () {
 
     // Check if this is being run over HTTP(S); match the WS(S) procol
@@ -22,6 +25,7 @@ export default {
     }
 
     const handleMessage = this.handleSocketMessage
+    var self = this;
 
     // Setup each websocket connection
     _.forEach(this.sockets, function (socketLabel) {
@@ -34,6 +38,7 @@ export default {
 
       // Open the connection
       const webSocketBridge = new WebSocketBridge()
+
       webSocketBridge.connect(socketPath, undefined, {
         autoReconnectMS: 10000, // Wait 10s inbetween attempts
         stopReconnectingAfter: 21000, // Doesn't seem to work
@@ -52,7 +57,16 @@ export default {
         console.log("Disconnected to WebSocket path:", socketPath)
       }.bind(socketPath))
 
+      // Set the data to contain the socket bridge so we can send to it
+      self.$set(self.bridges, socketLabel, webSocketBridge)
+
     }.bind(handleMessage))
+  },
+  methods: {
+    sendToSocket: function (socketLabel, payload) {
+      console.log('sending payload', payload)
+      this.bridges[socketLabel].send(payload);
+    },
   }
 }
 </script>

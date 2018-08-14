@@ -1,35 +1,80 @@
+import json
+
 from asgiref.sync import AsyncToSync
-from channels.layers import get_channel_layer
-from django.db.models.signals import post_delete, post_save
-from django.dispatch import receiver
+from django.core.exceptions import ObjectDoesNotExist
 
 from utils.consumers import TournamentConsumer, WSPublicAccessMixin
 
-from .models import Event
+from .models import Event, Identifier
+from .utils import get_unexpired_checkins
 
 
 class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
 
     group_prefix = 'checkins'
 
+    def receive(self, text_data):
+        # Because the public can receive but not send checkins we need to
+        # re-authenticate here:
+        if not self.scope["user"].is_authenticated:
+            return
+        if not self.scope["user"].is_superuser:
+            return
 
-# Send out all the current events when a new check=in event is made
-@receiver(post_save, sender=Event)
-def checkin_event_notify_consumer(sender, instance, created, **kwargs):
-    if created:
-        broadcast(instance, True)
+        payload = self.checkin_identifiers(text_data)
+        # Send message to room group about the new checkin
+        AsyncToSync(self.channel_layer.group_send)(self.group_name(), {
+            'type': 'broadcast_checkin',
+            'payload': payload
+        })
 
+    def broadcast_checkin(self, event):
+        payload = event['payload']
+        print('broadcast_checkin', event)
 
-@receiver(post_delete, sender=Event)
-def checkout_event_notify_consumer(sender, instance, using, **kwargs):
-    broadcast(instance, False)
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'data': payload
+        }))
 
+    # Issue the relevant checkins and return the new objects
+    def checkin_identifiers(self, text_data):
+        barcode_ids = json.loads(text_data)['barcodes']
+        barcode_ids = [b for b in barcode_ids if b is not None]
+        status = json.loads(text_data)['status']
+        events = []
+        tournament = self.identify_tournament()
+        for barcode in barcode_ids:
+            try:
+                identifier = Identifier.objects.get(barcode=barcode)
+                if status is True: # If checking-in someone
+                    event = Event.objects.create(identifier=identifier,
+                                                 tournament=tournament)
+                    events.append(event)
+                else:
+                    # If undoing/revoking a check-in
+                    if json.loads(self.text_data)['type'] == 'people':
+                        window = 'checkin_window_people'
+                    else:
+                        window = 'checkin_window_venues'
 
-def broadcast(instance, created):
-    slug = instance.tournament.slug
-    group_name = CheckInEventConsumer.group_prefix + "_" + slug
-    payload = instance.serialize()
-    payload['created'] = created
-    AsyncToSync(get_channel_layer().group_send)(group_name, {
-        "type": "broadcast", "data": payload
-    })
+                    events = get_unexpired_checkins(tournament, window)
+                    events.filter(identifier=identifier).delete()
+
+            except ObjectDoesNotExist:
+                # Only raise an error for single check-ins as for multi-check-in
+                # events via the status page its clear what has failed or not
+                if len(barcode_ids) == 1:
+                    pass # TODO: raise error
+                    # raise BadJsonRequestError("Identifier doesn't exist")
+
+        # if status is True:
+        #     time = events[0].time.strftime('%H:%M:%S')
+        # else:
+        #     time = False
+
+        if len(events) > 0 or status is False:
+            return [e.serialize() for e in events]
+        else:
+            pass # TODO: raise error
+            # raise BadJsonRequestError("No identifiers exist for given barcodes")
