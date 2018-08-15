@@ -1,7 +1,7 @@
 import vueBases from './main'
+import Vue from 'vue'
 
 // Vue and the main app
-var Vue = require('vue')
 var VueTouch = require('vue-touch')
 
 // Redefine variables from import so that they can be edited

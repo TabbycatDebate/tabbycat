@@ -27,19 +27,26 @@
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
 
-  <!-- Analytics -->
-  {% if not debug %}
-    <script>
-      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-      ga('create', 'UA-314178-25', 'auto');
-      ga('send', 'pageview');
-      ga('set', 'transport', 'beacon'); // Reduce HTTP requests
-      {% if tabbycat_version %}ga('set', 'tcversion', '{{ tabbycat_version }}');{% endif %}
-      {% if tournament.short_name %}ga('set', 'tctournament', '{{ tournament.short_name }}');{% endif %}
-    </script>
-    <script async src='https://www.google-analytics.com/analytics.js'></script>
+  {% if not hmr %}
+    {% if user.is_authenticated %}
+  <link href="{% static 'vue/js/admin.js' %}" rel=preload as=script>
+    {% else %}
+  <link href="{% static 'vue/js/public.js' %}" rel=preload as=script>
+    {% endif %}
   {% endif %}
-
+  <link href="{% static 'vue/js/chunk-common.js' %}" rel=preload as=script>
+  <link href="{% static 'vue/js/chunk-vendors.js' %}" rel=preload as=script>
+  {% if not debug %}<!-- Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-314178-25', 'auto');
+    ga('send', 'pageview');
+    ga('set', 'transport', 'beacon'); // Reduce HTTP requests
+    {% if tabbycat_version %}ga('set', 'tcversion', '{{ tabbycat_version }}');{% endif %}
+    {% if tournament.short_name %}ga('set', 'tctournament', '{{ tournament.short_name }}');{% endif %}
+  </script>
+  <script async src='https://www.google-analytics.com/analytics.js'></script>
+  {% endif %}
 </head>
 
 <body class="{% block body-class %}{% endblock %}">
@@ -158,6 +165,7 @@
   {% endblock %}
 
   {% block js %}
+
     <script src="{% statici18n LANGUAGE_CODE %}"></script>
     <script>
       window.buildData = { // Pass to Raven
@@ -165,19 +173,24 @@
         sentry: {% if disable_sentry %}false{% else %}true{% endif %}
       }
     </script>
+
+
+    <script src="{% static 'vue/js/chunk-vendors.js' %}"></script>
+    <script src="{% static 'vue/js/chunk-common.js' %}"></script>
     {% if user.is_authenticated %}
-      {% if settings.USE_WEBPACK_SERVER %}
-        <script src="http://localhost:8000/admin.bundle.js"></script>
+      {% if hmr %}
+        <script src="http://localhost:8888/admin.js"></script>
       {% else %}
-        <script src="{% static 'js/admin.bundle.js' %}"></script>
+        <script src="{% static 'vue/js/admin.js' %}"></script>
       {% endif %}
     {% else %}
-      {% if settings.USE_WEBPACK_SERVER %}
-        <script src="http://localhost:8000/public.bundle.js"></script>
+      {% if hmr %}
+        <script src="http://localhost:8888/public.js"></script>
       {% else %}
-        <script src="{% static 'js/public.bundle.js' %}"></script>
+        <script src="{% static 'vue/js/public.js' %}"></script>
       {% endif %}
     {% endif %}
+
   {% endblock js %}
 
 </body>

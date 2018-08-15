@@ -26,7 +26,6 @@ RUN pip install -r ./requirements.txt
 RUN npm install
 
 # Compile all the static files
-RUN npm -g install gulp-cli # Needed for the gulp command to then work
 RUN npm rebuild node-sass --force
 RUN NODE_ENV='production' npm run build
 RUN python ./tabbycat/manage.py collectstatic --noinput -v 0

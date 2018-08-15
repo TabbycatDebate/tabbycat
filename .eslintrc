@@ -1,24 +1,28 @@
 {
-    "root": true,
-    "env": {
-      "node": true,
-      "browser": true, // Browser window global variables
-      "jquery": true // jQuery global variable
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/airbnb"
-    ],
-    "rules": {
+  "root": true,
+  "env": {
+    "node": true,
+    "browser": true, // Browser window global variables
+    "jquery": true // jQuery global variable
+  },
+  "extends": [
+    "plugin:vue/essential",
+    "@vue/airbnb"
+  ],
+  "rules": {
     "semi": 0, // Disallow semi colons for now
     "no-var": "off",
     "func-names": "off", // Conflicts with vue
     "object-shorthand": "off", // Conflicts with vue
-    },
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "plugins": [
-      "html"
-    ],
+  },
+  "parserOptions": {
+    "parser": "babel-eslint"
+  },
+  "plugins": [
+    "html"
+  ],
+  "overrides": {
+    "files": "your/globs/**/*.js",
+  },
 }
+

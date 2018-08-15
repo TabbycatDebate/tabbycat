@@ -4,44 +4,54 @@
   "repository": "https://github.com/TabbycatDebate/tabbycat",
   "license": "UNLICENSED",
   "engines": {
-    "node": "8.9.4",
-    "npm": "5.7.x"
+    "node": "8.11.x",
+    "npm": "6.3.x"
   },
   "dependencies": {
     "bootstrap": "^4.1.3",
     "browserify": "^16.2.2",
+    "browserslist": "^4.0.2",
     "core-js": "^2.5.7",
     "d3": "^5.5.x",
     "django-channels": "^1.1.8",
+    "eslint-plugin-html": "^4.x",
     "feather-icons": "^4.7.x",
     "inter-ui": "^2.5.x",
     "jquery": "^3.3.0",
     "jquery-validation": "~1.17.0",
     "jsbarcode": "^3.8.0",
     "lodash": "^4.17.5",
+    "node-sass": "^4.9.0",
     "popper.js": "^1.14.4",
     "quagga": "^0.12.1",
     "raven-js": "^3.x",
     "stats-percentile": "^3.1.0",
     "vue": "^2.5.17",
+    "vuex": "^3.0.1",
     "vue-touch": "^2.0.0-beta.4",
-    "vuex": "^3.0.1"
+    "vue-template-compiler": "^2.5.17",
+    "@vue/cli-plugin-eslint": "^3.0.0",
+    "@vue/cli-plugin-babel": "^3.0.0",
+    "@vue/cli-service": "3.0.0",
+    "@vue/eslint-config-airbnb": "^3.0.0"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "serve": "npm run serve-sass & npm run serve-vue",
+    "build": "npm run build-sass && npm run build-vue && npm run cp-fonts && npm run cp-i18n",
+    "build-sass": "npx node-sass --output-style compressed --include-path node_modules/ --include-path --output tabbycat/static/css/ tabbycat/templates/scss/style.scss && npx  node-sass --output-style compressed --include-path node_modules/ --include-path --output tabbycat/static/css/ tabbycat/templates/scss/printables.scss",
+    "serve-sass": "npm run build-sass -- --watch --recursive",
+    "build-vue": "npx vue-cli-service build",
+    "serve-vue": "npx vue-cli-service serve",
+    "cp-fonts": "cp -R 'node_modules/inter-ui/Inter UI (web)/' 'tabbycat/static/fonts'",
+    "cp-i18n": "cp -R 'tabbycat/locale/jsi18n/' 'tabbycat/static/jsi18n'",
+    "lint-vue": "npx vue-cli-service lint --ext .js,.html,.vue --ignore-pattern tabbycat/staticfiles/,tabbycat/static/ --cache tabbycat/",
+    "lint-sass": "stylelint --cache tabbycat/templates/scss/**/*.scss"
   },
   "devDependencies": {
     "artillery": "^1.6.0-22",
-    "@vue/cli-plugin-babel": "^3.0.0",
-    "@vue/cli-plugin-eslint": "^3.0.0",
-    "@vue/cli-service": "^3.0.0",
-    "@vue/eslint-config-airbnb": "^3.0.0",
-    "eslint-plugin-html": "^4.x",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.17"
+    "stylelint": "^9.x",
+    "stylelint-config-standard": "^18.x",
+    "stylelint-scss": "^3.x"
   },
   "browserslist": [
     "> 1%",
