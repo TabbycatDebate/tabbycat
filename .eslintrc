@@ -14,6 +14,9 @@
     "no-var": "off",
     "func-names": "off", // Conflicts with vue
     "object-shorthand": "off", // Conflicts with vue
+    "prefer-rest-params": "off", // Lazyness; for main.js
+    "prefer-destructuring": "off", // Lazyness; for main.js
+    "no-new": "off", // Lazyness; for main.js
   },
   "parserOptions": {
     "parser": "babel-eslint"
@@ -21,8 +24,5 @@
   "plugins": [
     "html"
   ],
-  "overrides": {
-    "files": "your/globs/**/*.js",
-  },
 }
 

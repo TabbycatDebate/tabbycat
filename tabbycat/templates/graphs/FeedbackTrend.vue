@@ -84,7 +84,8 @@ function initChart(vueContext){
     .tickSizeOuter(0)
     .tickPadding(10)
     .tickFormat(function (d) { return ''; }) // Hide ticks
-    .tickValues(d3.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))  // Set tick increments
+    // Set tick increments
+    .tickValues(d3.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))
 
   // Define the div for the tooltip
   var div = d3.select("body").append("div")
@@ -110,7 +111,9 @@ function initChart(vueContext){
   // Create series for regression
   var xLabels = vueContext.graphData.map(function (d) { return d['x']; })
   var xSeries = d3.range(1, xLabels.length + 1);
-	var ySeries = vueContext.graphData.map(function (d) { return parseFloat(d['y']); });
+	var ySeries = vueContext.graphData.map(function (d) {
+    return parseFloat(d['y']);
+  });
 	var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
@@ -142,12 +145,14 @@ function initChart(vueContext){
     .attr("cx", function (d) { return xScale (d.x); })
     .attr("cy", function (d) { return yScale (d.y); })
     .attr("r", 5) // Size of circle
-    .attr("class", function (d) { return "hoverable position-display d3-hover-black " + d.position_class})
+    .attr("class", function (d) {
+      return "hoverable position-display d3-hover-black " + d.position_class
+    })
     .on("mouseover", function (d, i) {
       div.transition()
           .duration(200)
           .style("opacity", .9);
-      div.html("<div class='tooltip-inner'>Received a " + d.y + " as a " + d.position + " in R" + d.x + "</div>")
+      div.html(`<div class='tooltip-inner'>Received a ${d.y} as a ${d.position} in R${d.x}"</div>`)
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY - 28) + "px");
     })

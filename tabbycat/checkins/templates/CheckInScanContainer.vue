@@ -87,7 +87,7 @@ export default {
       this.playSound('finishedScanSound')
     },
     failCheckIn: function (payload, returnPayload) {
-      var message = 'Failed to check in identifier ' + payload.barcodes[0] + '. Maybe it was misspelt?'
+      var message = `Failed to check in identifier ${payload.barcodes[0]} Maybe it was misspelt?`
       $.fn.showAlert('danger', message, 0)
       this.playSound('failedScanSound')
     },

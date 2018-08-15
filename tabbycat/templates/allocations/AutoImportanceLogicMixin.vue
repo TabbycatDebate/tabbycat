@@ -40,7 +40,8 @@ export default {
       for (var i = 1; i < 4; i += 1) {
         var boundary = _.minBy(brackets, function(bracket) {
           var diff = bracket.cumfreq - i * targetSize
-          return Math.abs(diff) + ((diff > 0) ? 0.1 : 0)  // bias towards lower side, if two are equidistant
+          // bias towards lower side, if two are equidistant
+          return Math.abs(diff) + ((diff > 0) ? 0.1 : 0)
         })
         thresholds.push(boundary.points)
       }

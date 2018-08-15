@@ -1,5 +1,6 @@
-import vueBases from './main'
 import Vue from 'vue'
+import vueBases from './main'
+
 
 // Vue and the main app
 var VueTouch = require('vue-touch')

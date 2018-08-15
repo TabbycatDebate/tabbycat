@@ -78,12 +78,15 @@ function InitChart(vueContext){
       .attr("width", (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
       .attr("height", (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
       .append("g")
-      .attr("transform", "translate(" + (vueContext.radius + vueContext.padding) + "," + (vueContext.radius + vueContext.padding) + ")");
+      .attr("transform", "translate(" + (vueContext.radius + vueContext.padding)
+                          + "," + (vueContext.radius + vueContext.padding) + ")");
 
   var path = svg.selectAll("path")
       .data(pie(vueContext.graphData.reverse()))
     .enter().append("path")
-      .attr("class", function (d, i) { return "hoverable " + vueContext.colorclass(vueContext.graphData[i].label); })
+      .attr("class", function (d, i) {
+        return "hoverable " + vueContext.colorclass(vueContext.graphData[i].label);
+      })
       .attr("d", arc)
 
   var tooltip = d3.select("body").append("div")

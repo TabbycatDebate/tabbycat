@@ -1,7 +1,17 @@
+import Vue from 'vue'
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 import vueBases from './main'
-import Vue from 'vue'
+
+import EditAdjudicatorsContainer from '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
+import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
+import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
+import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
+import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
+import EditMatchupsContainer from '../../draw/templates/EditMatchupsContainer.vue'
+import EditVenuesContainer from '../../venues/templates/EditVenuesContainer.vue'
+import CheckInScanContainer from '../../checkins/templates/CheckInScanContainer.vue'
+
 
 // Vue and the main app
 var VueTouch = require('vue-touch')
@@ -30,45 +40,34 @@ Vue.use(VueTouch, { name: 'v-touch' })
 // Tournament Homepage
 //------------------------------------------------------------------------------
 
-import TournamentOverviewContainer from  '../../tournaments/templates/TournamentOverviewContainer.vue'
-vueComponents['TournamentOverviewContainer'] = TournamentOverviewContainer
+vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
 
 //------------------------------------------------------------------------------
 // Printables
 //------------------------------------------------------------------------------
 
-import PrintableBallot from  '../../printing/templates/PrintableBallot.vue'
-vueComponents['PrintableBallot'] = PrintableBallot
+vueComponents.PrintableBallot = PrintableBallot
 
 //------------------------------------------------------------------------------
 // Other
 //------------------------------------------------------------------------------
 
-import CheckboxTablesContainer from  '../tables/CheckboxTablesContainer.vue'
-vueComponents['CheckboxTablesContainer'] = CheckboxTablesContainer
+vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
 
 //------------------------------------------------------------------------------
 // Check-Ins
 //------------------------------------------------------------------------------
 
-import CheckInScanContainer from '../../checkins/templates/CheckInScanContainer.vue'
-vueComponents['CheckInScanContainer'] = CheckInScanContainer
+vueComponents.CheckInScanContainer = CheckInScanContainer
 
 //------------------------------------------------------------------------------
 // Draw Containers
 //------------------------------------------------------------------------------
 
-import AllocateDivisionsContainer from  '../../divisions/templates/AllocateDivisionsContainer.vue'
-vueComponents['AllocateDivisionsContainer'] = AllocateDivisionsContainer
-
-import EditMatchupsContainer from  '../../draw/templates/EditMatchupsContainer.vue'
-vueComponents['EditMatchupsContainer'] = EditMatchupsContainer
-
-import EditVenuesContainer from  '../../venues/templates/EditVenuesContainer.vue'
-vueComponents['EditVenuesContainer'] = EditVenuesContainer
-
-import EditAdjudicatorsContainer from  '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
-vueComponents['EditAdjudicatorsContainer'] = EditAdjudicatorsContainer
+vueComponents.AllocateDivisionsContainer = AllocateDivisionsContainer
+vueComponents.EditMatchupsContainer = EditMatchupsContainer
+vueComponents.EditVenuesContainer = EditVenuesContainer
+vueComponents.EditAdjudicatorsContainer = EditAdjudicatorsContainer
 
 //------------------------------------------------------------------------------
 // Main Vue Instance

@@ -156,7 +156,9 @@ export default {
         return // Teams can't conflict others (only applies to institutionals)
       }
       if (this.verboseDebugMode) {
-        this.debugLog('setInstitutionConflicts()', 2, this.conflictable.id, hoverOrPanel, clashOrHistory, this.conflictableType, conflictType, state, issuerType)
+        this.debugLog('setInstitutionConflicts()', 2, this.conflictable.id,
+                      hoverOrPanel, clashOrHistory, this.conflictableType,
+                      conflictType, state, issuerType)
       }
       // Check if the supplied institutional ID matches any of this object's clashes
       if (this.conflictingInstitutionIDs.indexOf(id) !== -1) {
