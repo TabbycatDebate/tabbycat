@@ -7,16 +7,16 @@
 
         <div class="btn-toolbar flex-align-start">
           <div class="btn-group btn-group-sm mr-2">
-            <slide-over-item v-for="item in tier.features[0]" :item="item"></slide-over-item>
+            <slide-over-item v-for="item in tier.features[0]" :key="item.id" :item="item"></slide-over-item>
           </div>
           <div class="btn-group btn-group-sm mr-2">
-            <slide-over-item v-for="item in tier.features[1]" :item="item"></slide-over-item>
+            <slide-over-item v-for="item in tier.features[1]" :key="item.id" :item="item"></slide-over-item>
           </div>
         </div>
 
         <div class="btn-toolbar">
           <div class="btn-group btn-group-sm">
-            <slide-over-item v-for="item in tier.features[2]" :item="item"></slide-over-item>
+            <slide-over-item v-for="item in tier.features[2]" :key="item.id" :item="item"></slide-over-item>
            </div>
         </div>
 
