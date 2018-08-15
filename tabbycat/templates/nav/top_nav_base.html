@@ -3,15 +3,18 @@
 <nav class="navbar navbar-expand-lg navbar-light">
 
   {# Decisions about whether to show items in the menu are based on the role of the user (not the view). #}
+  {% blocktrans trimmed asvar logo_alt %}
+    Tabbycat Logo
+  {% endblocktrans %}
   {% if all_tournaments.count > 1 or user.is_authenticated %}
     <div class="nav-item dropdown">
 
       <button class="btn btn-link mr-2 p-0 navbar-brand dropdown-toggle" id="tournamentdrop"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {% if on_local %}
-          {% include "nav/logo_local.html" with width=33 height=33 %}
+          {% include "nav/logo_local.html" with width=33 height=33 alt=logo_alt %}
         {% else %}
-          {% include "nav/logo.html" with width=33 height=33 %}
+          {% include "nav/logo.html" with width=33 height=33 alt=logo_alt %}
         {% endif %}
         {% if tournament %}{{ tournament }}{% else %}Tabbycat{% endif %}
       </button>
@@ -62,11 +65,13 @@
 
       {% if tournament %}
         <a class="navbar-brand" href="{{ tournament.get_public_url  }}">
-          <img src="{% static 'logo.svg' %}" width="32" height="32" alt="">{{ tournament }}
+          {% include "nav/logo.html" with width=33 height=33  alt=logo_alt %}
+          {{ tournament }}
         </a>
       {% else %}
         <a class="navbar-brand" href="/">
-          <img src="{% static 'logo.svg' %}" width="32" height="32" alt="">Tabbycat
+          {% include "nav/logo.html" with width=33 height=33 alt=logo_alt %}
+          Tabbycat
         </a>
       {% endif %}
 
