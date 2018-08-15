@@ -166,9 +166,17 @@
       }
     </script>
     {% if user.is_authenticated %}
-    <script src="{% static 'js/admin.bundle.js' %}"></script>
+      {% if settings.USE_WEBPACK_SERVER %}
+        <script src="http://localhost:8000/admin.bundle.js"></script>
+      {% else %}
+        <script src="{% static 'js/admin.bundle.js' %}"></script>
+      {% endif %}
     {% else %}
-    <script src="{% static 'js/public.bundle.js' %}"></script>
+      {% if settings.USE_WEBPACK_SERVER %}
+        <script src="http://localhost:8000/public.bundle.js"></script>
+      {% else %}
+        <script src="{% static 'js/public.bundle.js' %}"></script>
+      {% endif %}
     {% endif %}
   {% endblock js %}
 

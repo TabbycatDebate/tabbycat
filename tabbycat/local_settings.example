@@ -66,6 +66,13 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # ==============================================================================
+# Webpack
+# ==============================================================================
+
+# Enables hot reloading but relies on the vue-cli (webpack) server being run
+USE_WEBPACK_SERVER = False
+
+# ==============================================================================
 # Redis
 # ==============================================================================
 

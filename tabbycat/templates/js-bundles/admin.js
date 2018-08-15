@@ -21,9 +21,6 @@ if (window.buildData.sentry === true) {
   }).addPlugin(RavenVue, Vue).install()
 }
 
-// Use a polyfill for IE 11 and older versions of other browsers not up to ES6
-require('es6-promise/auto')
-
 // Make a global mixin to provide translation functions
 Vue.mixin(vueBases.vueTranslationMixin)
 // Provide support for tab events
