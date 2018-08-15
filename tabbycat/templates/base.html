@@ -34,8 +34,6 @@
   <link href="{% static 'vue/js/public.js' %}" rel=preload as=script>
     {% endif %}
   {% endif %}
-  <link href="{% static 'vue/js/chunk-common.js' %}" rel=preload as=script>
-  <link href="{% static 'vue/js/chunk-vendors.js' %}" rel=preload as=script>
   {% if not debug %}<!-- Analytics -->
   <script>
     window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
@@ -174,9 +172,6 @@
       }
     </script>
 
-
-    <script src="{% static 'vue/js/chunk-vendors.js' %}"></script>
-    <script src="{% static 'vue/js/chunk-common.js' %}"></script>
     {% if user.is_authenticated %}
       {% if hmr %}
         <script src="http://localhost:8888/admin.js"></script>

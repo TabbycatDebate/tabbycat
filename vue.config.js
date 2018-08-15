@@ -19,6 +19,9 @@ module.exports = {
       errors: true,
     },
   },
+  chainWebpack: config => {
+    config.optimization.delete('splitChunks')
+  },
   pages: {
     admin: {
       entry: 'tabbycat/templates/js-bundles/admin.js',
