@@ -30,4 +30,11 @@ module.exports = {
       entry: 'tabbycat/templates/js-bundles/public.js',
     },
   },
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      analyzerMode: 'static', // Serve results as flat page
+      defaultSizes: 'gzip', // Show the filesizes as if gzipped
+      openAnalyzer: false, // Enable to view a heatmap of dependency sizes
+    },
+  },
 }
