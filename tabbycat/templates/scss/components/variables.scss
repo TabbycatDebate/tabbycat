@@ -87,7 +87,6 @@ $footer-height: 175px;
     color: opacify($textColor, 0.75);
   }
 }
-
 @mixin outline-highlights($baseColor) {
   border-color: $baseColor;
   color: $baseColor;
