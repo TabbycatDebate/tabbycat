@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load debate_tags i18n %}
+{% load debate_tags i18n static %}
 {% block subheader %}{% endblock %}<!-- Overwritten to add messages later -->
 
 {% block js %}
@@ -8,6 +8,7 @@
       'scanUrl': '{{ scan_url }}'
     }
   </script>
+  <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
   {{ block.super }}
 {% endblock js %}
 

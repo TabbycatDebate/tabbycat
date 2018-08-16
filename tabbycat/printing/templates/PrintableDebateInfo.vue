@@ -122,7 +122,6 @@
 
 <script>
 import _ from 'lodash'
-import JsBarcode from 'jsbarcode'
 
 import PrintableTeamScores from './PrintableTeamScores.vue'
 
@@ -171,9 +170,6 @@ export default {
       }
       return [{ seq: 1 }, { seq: 2 }, { seq: 3 }]
     },
-  },
-  mounted: function () {
-    JsBarcode(".barcode-placeholder").init();
   },
 }
 </script>
