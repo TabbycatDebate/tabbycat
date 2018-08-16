@@ -3,9 +3,8 @@
   <div class="list-group mt-3">
 
     <div class="list-group-item" v-if="!liveScanning">
-      <input v-model="barcode" :placeholder="placeholderText"
-             type="number" pattern="[0-9]*" inputmode="numeric" step="1"
-             class="form-control" ref="entry" autofocus>
+      <input v-model="barcode" type="number" pattern="[0-9]*" autofocus
+             inputmode="numeric" step="1" class="form-control" ref="entry" >
     </div>
     <div class="list-group-item pb-3">
       <div class="d-flex">
@@ -87,7 +86,7 @@ export default {
       this.playSound('finishedScanSound')
     },
     failCheckIn: function (payload, returnPayload) {
-      var message = 'Failed to check in identifier ' + payload.barcodes[0] + '. Maybe it was misspelt?'
+      var message = `Failed to check in identifier ${payload.barcodes[0]} Maybe it was misspelt?`
       $.fn.showAlert('danger', message, 0)
       this.playSound('failedScanSound')
     },

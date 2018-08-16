@@ -61,12 +61,14 @@ export default {
     setLocked(item, itemDictionary, lockStatus) {
       // When locking we need to lock the original debate; not the cloned
       if (_.isUndefined(itemDictionary[item.id])) {
-        this.showErrorAlert(' a debate', 'the debate doesn\'t seem to exist in the database anymore (e.g. the draw was remade)')
+        this.showErrorAlert(' a debate',
+          'the debate doesn\'t seem to exist in the database anymore (e.g. the draw was remade)')
       } else {
         itemDictionary[item.id].locked = lockStatus
       }
     },
-    postModifiedDebates(debatesToSave, addToUnused, removeFromUnused, reallocateToPanel, messageStart) {
+    postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
+                        reallocateToPanel, messageStart) {
       var self = this
       // Lock the debate and unused items to prevent edits
       _.forEach(debatesToSave, function (debateToSave) {

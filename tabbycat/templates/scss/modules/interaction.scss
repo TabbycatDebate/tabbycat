@@ -47,12 +47,12 @@ td > .touch-target {
   .list-group-item {
     padding: 0.5rem 0.75rem;
   }
+
   .bs-tether-element-attached-top::after,
-  .bs-tether-element-attached-top::before{
+  .bs-tether-element-attached-top::before {
     left: 25%;
   }
 }
-
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
 
   .popover {
@@ -129,12 +129,14 @@ td > .touch-target {
 //------------------------------------------------------------------------------
 
 // Addressses flickering issue in https://github.com/twbs/bootstrap/issues/25206
-.list-group-item, .list-group-item:hover {
+.list-group-item,
+.list-group-item:hover {
   z-index: auto;
 }
 
 .modal-sl { // For motions page; probably feedback also (want super big modals)
   @extend .modal-lg;
+
   max-width: 910px;
 }
 

@@ -56,12 +56,18 @@ export default {
           // Moving to a currently-occupied chair position from anywhere; ie a swap
           this.removefromPanel(toDebate, currentChair)
           this.removefromPanel(fromDebate, adjudicator)
-          toDebate.debateAdjudicators.push({ 'adjudicator': adjudicator, 'position': toPosition })
-          fromDebate.debateAdjudicators.push({ 'adjudicator': currentChair, 'position': oldPosition })
+          toDebate.debateAdjudicators.push({
+            'adjudicator': adjudicator, 'position': toPosition
+          })
+          fromDebate.debateAdjudicators.push({
+            'adjudicator': currentChair, 'position': oldPosition
+          })
         } else {
           // Remove them from their current panel; add to new panel
           this.removefromPanel(fromDebate, adjudicator)
-          toDebate.debateAdjudicators.push({ 'adjudicator': adjudicator, 'position': toPosition })
+          toDebate.debateAdjudicators.push({
+            'adjudicator': adjudicator, 'position': toPosition
+          })
         }
 
       }

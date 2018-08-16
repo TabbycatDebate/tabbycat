@@ -98,7 +98,7 @@
         <button v-for="highlight in highlights"
                 @click="toggleHighlight(highlight, highlight.state)"
                 :class="['btn btn-outline-primary hoverable disabled',
-                         highlights[label] ? 'btn-primary active' : '']">
+                         highlights.label ? 'btn-primary active' : '']">
           <span :class="highlight.state ? 'd-none' : ''">
             <i data-feather="eye"></i>
           </span>

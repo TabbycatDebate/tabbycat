@@ -38,8 +38,9 @@
       border-bottom-color: #ccc;
     }
   }
+
   &.hide-hover .hover-target .tooltip-trigger {
-    border-bottom: none;
+    border-bottom: 0;
   }
 }
 
@@ -75,8 +76,8 @@ thead,
 
   &:hover {
     @extend .text-primary;
-    cursor: pointer;
 
+    cursor: pointer;
     // By default; if not sorting is active; show sort-desc
     .vue-sort-key .feather-chevrons-up {
       display: inline;
@@ -89,6 +90,7 @@ thead,
     .feather-chevrons-down {
       display: inline;
     }
+
     .feather-chevrons-up {
       display: none;
     }
@@ -99,6 +101,7 @@ thead,
     .feather-chevrons-up {
       display: inline;
     }
+
     .feather-chevrons-down {
       display: none;
     }
@@ -125,6 +128,7 @@ thead,
   > div {
     padding-bottom: 2px; // Offset tooltip underline to maintain baseline
   }
+
   .tooltip-trigger {
     margin-bottom: -4px; // Un-Offset tooltip underline
     padding-bottom: 2px; // Offset tooltip underline
@@ -145,7 +149,6 @@ thead,
     margin-bottom: -4px; // Un-Offset tooltip underline
   }
 }
-
 
 .draw-container .thead .feather {
   margin-top: -4px;

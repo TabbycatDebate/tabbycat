@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">👑</span>Break{% endblock %}
-{% block page-title %}Break{% endblock %}
+{% block head-title %}<span class="emoji">👑</span> {% trans "Break" %}{% endblock %}
+{% block page-title %}{% trans "Break" %}{% endblock %}
 
 {% block content %}
 
@@ -12,13 +12,15 @@
     {% if pref.public_breaking_teams %}
       {% for category in tournament.breakcategory_set.all %}
       <li class="list-group-item"><a  href="{% tournamenturl 'breakqual-public-teams' category.slug %}">
-        {{ category.name }} Break
+        {% blocktrans trimmed with category_name=category.name %}
+          {{ category.name }} Break
+        {% endblocktrans %}
       </a></li>
       {% endfor %}
     {% endif %}
     {% if pref.public_breaking_adjs %}
       <li class="list-group-item"><a href="{% tournamenturl 'breakqual-public-adjs' %}">
-        Adjudicators
+        {% trans "Adjudicators" %}
       </a></li>
     {% endif %}
     </ul>

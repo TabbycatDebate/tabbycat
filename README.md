@@ -13,29 +13,35 @@
 
 </div>
 
-Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debating tournaments. It was used at Australs in 2010, [2012](https://www.facebook.com/Australs2012), [2014](http://australs2014.herokuapp.com), [2015](http://australs2015.herokuapp.com), [2016](http://australs2016.herokuapp.com), and [2017](http://australs2017.herokuapp.com) as well as [many other tournaments of all sizes and formats](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [Australs 2017 tab website](https://australs2017.herokuapp.com/2017_australs/).
+Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debating tournaments. It was used at Australs in 2010, and 2012-2018 as well as at EUDC 2018 and [many other tournaments of all sizes and formats](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [Australs 2018 tab website](https://australs2018.herokuapp.com).
 
 **Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 
 ## 🔍 Features
 
-- Enter data from multiple computers simultaneously and (optionally) display results, draws, and other information online
 - Deployable to [Heroku](https://www.heroku.com/) for an easy, fast, and free setup
+- Enter data from multiple computers simultaneously and (optionally) display results, draws, and other information online
+- Collect ballots and feedback online, or from printed forms customised for each round ( adjudicator feedback questions and rankings [are configurable](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html))
 - Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts/clashes
-- A drag and drop interface for adjudicator allocation that displays conflicts alongside gender and regional balance
-- A fully responsive interface that adapts to suit large screens, laptops, tablets, and phones
-- Support for British Parliamentary, Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
-- Configurable [adjudicator feedback questions](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html) with (optional) online submission options
+- A drag and drop interface for adjudicator allocation that displays conflicts alongside break liveness and gender/regional/language balance considerations
+- A responsive interface that adapts to suit large screens, laptops, tablets, and phones
+- Support for British Parliamentary (EUDC/WUDC), Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
 
-## 📖 Installation and Usage
+## 📖 Documentation
 
-Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/). The fastest way to launch a Tabbycat site is to click this button:
+Our user guide is at [tabbycat.readthedocs.io](http://tabbycat.readthedocs.io/).
+
+## ⬆️ Installation
+
+The fastest way to launch a Tabbycat site is to click this button:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/master)
 
 During the installation process Heroku will ask you to verify your account by adding a credit or debit card. A standard Tabbycat site *will not charge* your card without explicit permission — charges only accrue if you deliberately add a paid service in the Heroku dashboard.
 
 That said if you do not have access to a credit or debit card we offer a version of the software — 'Tabbykitten' — that does not require Heroku to verify your account. However, as a result, this version is limited: it cannot send emails and cannot be upgraded with extra database capacity or to better handle large amounts of traffic (although you can perform these upgrades later if you verify your Heroku account). We reccomend using it only for small tournaments. [Use this link to set up a Tabbykitten version](https://heroku.com/deploy?template=https://github.com/TabbycatDebate/tabbycat/tree/kitten).
+
+Our documentation also provides guides for how to run Tabbycat on your local machine.
 
 ## 💪 Support and Contributing
 

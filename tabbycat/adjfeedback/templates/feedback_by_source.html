@@ -1,8 +1,8 @@
 {% extends "feedback_base.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
-{% block page-title %}Feedback {{ source_type }} {{ source_name }}{% endblock %}
+{% block head-title %}{% blocktrans trimmed %}Feedback {{ source_type }} {{ source_name }}{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktrans trimmed %}Feedback {{ source_type }} {{ source_name }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
 

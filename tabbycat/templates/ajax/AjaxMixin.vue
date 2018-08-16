@@ -1,7 +1,8 @@
 <script>
 export default {
   methods: {
-    ajaxSave: function (url, payload, message, completeFunction, failFunction, returnPayload, showErrorModal = true) {
+    ajaxSave: function (url, payload, message, completeFunction, failFunction,
+                        returnPayload, showErrorModal = true) {
       var self = this
       var dataPayload = JSON.stringify(payload)
       $.ajax({
@@ -36,7 +37,11 @@ export default {
       });
     },
     showErrorAlert(message, error) {
-      $('#modalAlert').find('.modal-body').text(`Failed to save a change to ${message} because ${error}. You should now refresh this page to ensure the data is up to date and then retry the action. If the problem persists please get in touch with the developers.`)
+      $('#modalAlert').find('.modal-body').text(
+          `Failed to save a change to ${message} because ${error}. You should
+          now refresh this page to ensure the data is up to date and then retry
+          the action. If the problem persists please get in touch with
+          the developers.`)
     },
     ajaxError: function (message, responseText, textStatus, errorThrown) {
       var error = 'of a server error' // Default error
@@ -46,11 +51,14 @@ export default {
       }
 
       if (errorThrown === 'timeout') {
-        error = 'the server did not respond in time. This could be because your internet access is slow/unreliable, or the server is under heavy load'
+        error = `the server did not respond in time. This could be because your
+                 internet access is slow/unreliable, or the server is under
+                 heavy load`
         errorTitle = 'Connection Timeout'
       } else if (typeof (responseText) === 'undefined') {
         // Undefined response should indicate connection was lost
-        error = 'the server did not respond. Perhaps your internet connection was lost or the server is under heavy load or otherwise offline'
+        error = `the server did not respond. Perhaps your internet connection
+                 was lost or the server is under heavy load or otherwise offline`
         errorTitle = 'Connection Failure'
       } else {
         try {

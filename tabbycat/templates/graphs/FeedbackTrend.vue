@@ -7,7 +7,11 @@
 </template>
 
 <script>
-var d3 = require("d3");
+import * as d3shape from "d3-shape";
+import * as d3scale from "d3-scale";
+import * as d3selection from "d3-selection";
+import * as d3array from "d3-array";
+import * as d3axis from "d3-axis";
 
 export default {
   props: {
@@ -64,35 +68,36 @@ function leastSquares(xSeries, ySeries) {
 function initChart(vueContext){
 
   // Range is the pixel coordinates; domain is the axes range
-  var xScale = d3.scaleLinear()
+  var xScale = d3scale.scaleLinear()
     .range([0, vueContext.width])
     .domain([0, vueContext.cellData.roundSeq])
 
-  var yScale = d3.scaleLinear()
+  var yScale = d3scale.scaleLinear()
     .range([vueContext.height, 0])
     .domain([vueContext.cellData.minScore, vueContext.cellData.maxScore])
 
   // Scale axis to fit the range specified
-  var xAxis = d3.axisBottom(xScale)
+  var xAxis = d3axis.axisBottom(xScale)
     .tickSizeInner(-vueContext.height)
     .tickSizeOuter(0)
     .tickFormat(function (d) { return ''; }) // Hide ticks
-    .tickValues(d3.range(0, vueContext.cellData.roundSeq + 0.5, 1)) // Set tick increments
+    .tickValues(d3array.range(0, vueContext.cellData.roundSeq + 0.5, 1)) // Set tick increments
 
-  var yAxis = d3.axisLeft(yScale)
+  var yAxis = d3axis.axisLeft(yScale)
     .tickSizeInner(-vueContext.width)
     .tickSizeOuter(0)
     .tickPadding(10)
     .tickFormat(function (d) { return ''; }) // Hide ticks
-    .tickValues(d3.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))  // Set tick increments
+    // Set tick increments
+    .tickValues(d3array.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))
 
   // Define the div for the tooltip
-  var div = d3.select("body").append("div")
+  var div = d3selection.select("body").append("div")
     .attr("class", "d3-tooltip tooltip")
     .style("opacity", 0);
 
   var element = $(vueContext.$el).children(".d3-graph")[0]
-  var svg = d3.select(element).insert("svg", ":first-child")
+  var svg = d3selection.select(element).insert("svg", ":first-child")
       .attr("width", vueContext.width + vueContext.padding + vueContext.padding)
       .attr("height", vueContext.height + vueContext.padding  + vueContext.padding)
     .append("g")
@@ -109,9 +114,11 @@ function initChart(vueContext){
 
   // Create series for regression
   var xLabels = vueContext.graphData.map(function (d) { return d['x']; })
-  var xSeries = d3.range(1, xLabels.length + 1);
-	var ySeries = vueContext.graphData.map(function (d) { return parseFloat(d['y']); });
-	var leastSquaresCoeff = leastSquares(xSeries, ySeries);
+  var xSeries = d3array.range(1, xLabels.length + 1);
+  var ySeries = vueContext.graphData.map(function (d) {
+    return parseFloat(d['y']);
+  });
+  var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
     // apply the reults of the least squares regression (if there are enough data points for it)
@@ -142,19 +149,17 @@ function initChart(vueContext){
     .attr("cx", function (d) { return xScale (d.x); })
     .attr("cy", function (d) { return yScale (d.y); })
     .attr("r", 5) // Size of circle
-    .attr("class", function (d) { return "hoverable position-display d3-hover-black " + d.position_class})
+    .attr("class", function (d) {
+      return "hoverable position-display d3-hover-black " + d.position_class
+    })
     .on("mouseover", function (d, i) {
-      div.transition()
-          .duration(200)
-          .style("opacity", .9);
-      div.html("<div class='tooltip-inner'>Received a " + d.y + " as a " + d.position + " in R" + d.x + "</div>")
-          .style("left", (d3.event.pageX) + "px")
-          .style("top", (d3.event.pageY - 28) + "px");
+      div.style("opacity", .9);
+      div.html(`<div class='tooltip-inner'>Received a ${d.y} as a ${d.position} in R${d.x}</div>`)
+          .style("left", (d3selection.event.pageX) + "px")
+          .style("top", (d3selection.event.pageY - 28) + "px");
     })
     .on("mouseout", function (d, i) {
-      div.transition()
-        .duration(500)
-        .style("opacity", 0);
+      div.style("opacity", 0);
     });
 }
 </script>

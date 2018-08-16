@@ -71,8 +71,8 @@ test_script:
   - cd c:\projects\tabbycat
   - copy tabbycat\local_settings.example tabbycat\local_settings.py # Need to use local build opt
   # Update local connection settings
-  # Test gulp building
-  - gulp build
+  # Test asset building
+  - npm run build
   - python tabbycat/manage.py collectstatic
   # Test Docker Building
   # This fails at apt-get; apparently something to do with

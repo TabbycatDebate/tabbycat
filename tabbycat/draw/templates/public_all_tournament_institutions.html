@@ -1,16 +1,15 @@
 {% extends "base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load static debate_tags i18n %}
 
-{% block head-title %}All Institutions{% endblock %}
-{% block page-title %}All Institutions{% endblock %}
+{% block head-title %}{% trans "All Institutions" %}{% endblock %}
+{% block page-title %}{% trans "All Institutions" %}{% endblock %}
 
 {% block content %}
   <ul class="list-group">
     {% for institution in institutions %}
       <a class="list-group-item" href="{% url 'all-draws-for-institution' institution.id %}">
-        <span>Draws for {{ institution.name }}</span>
-        <span class="badge badge-secondary float-right">VIEW ALL</span>
+        <span>{% blocktrans trimmed with institution_name=institution.name %}Draws for {{ institution_name }}{% endblocktrans %}</span>
+        <span class="badge badge-secondary float-right">{% trans "VIEW ALL" %}</span>
       </a>
     {% endfor %}
   </ul>

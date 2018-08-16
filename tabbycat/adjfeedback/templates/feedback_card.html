@@ -27,7 +27,9 @@
             {% elif feedback.score > score_thresholds.high_score %}badge-success
             {% else %}badge-primary{% endif %}" data-toggle="tooltip"
             title="{% trans "The score given in this piece of feedback." %}">
-        Given {{ feedback.score }}
+        {% blocktrans trimmed with score=feedback.score %}
+          Given {{ score }}
+        {% endblocktrans %}
       </span>
       <span class="badge mr-2 badge-light float-right" data-toggle="tooltip">
         {% blocktrans trimmed with test=feedback.adjudicator.test_score %}
@@ -85,11 +87,11 @@
         {% endblocktrans %}
       </span>
       <span class="float-right" data-toggle="tooltip"
-            title="{% trans 'Ignored feedback is counted as having been submitted, but does not affect this adjudicator\'s score.' %}">
-        <form method="POST" action="{% tournamenturl 'adjfeedback-ignore-feedback' feedback.id %}"      class='text-secondary'>
+            title="{% trans "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score." %}">
+        <form method="POST" action="{% tournamenturl 'adjfeedback-ignore-feedback' feedback.id %}" class='text-secondary'>
           {% csrf_token %}
           <button type="submit" class="btn btn-link text-muted p-0">
-            <small>{% if feedback.ignored %}Un-ignore{% else %}Ignore{% endif %}</small>
+            <small>{% if feedback.ignored %}{% trans "Un-ignore" %}{% else %}{% trans "Ignore" %}{% endif %}</small>
           </button>
         </form>
       </span>

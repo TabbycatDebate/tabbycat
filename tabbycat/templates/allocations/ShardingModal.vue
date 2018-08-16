@@ -111,7 +111,8 @@ export default {
       $.fn.loadButton('#shpl')
       self.$eventHub.$emit('open-shard', this.split, this.mix, this.sort, index)
 
-      $.fn.showAlert('primary', `Opened shard ${this.split} ${shardIdentifier} (sorted by ${this.mix} using ${this.sort})`)
+      $.fn.showAlert('primary', `Opened shard ${this.split} ${shardIdentifier}
+                                 (sorted by ${this.mix} using ${this.sort})`)
       self.resetShardingModal()
     },
     setState: function (type, state) {

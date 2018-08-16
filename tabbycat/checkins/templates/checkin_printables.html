@@ -50,7 +50,7 @@
 
 {% block js %}
   {{ block.super }}
-  <script src="{% static 'js/vendor/JsBarcode.code128.min.js' %}"></script>
+  <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
   <script>
     JsBarcode(".barcode-placeholder").init();
   </script>

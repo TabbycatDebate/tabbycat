@@ -71,7 +71,7 @@ export default {
         ("\t".repeat(tabLevel) + title + spacer).substring(0, 45 - (tabLevel * 4)),
         ('to ' + eventType + ' #' + id + spacer).substring(0, 25),
         ('of type ' + conflictType + spacer).substring(0, 25),
-        (' as ' + state + ' for ' + clashOrHistory + ' / ' + hoverOrPanel + spacer).substring(0, 35),
+        (' as ' + state + ' for ' + clashOrHistory + hoverOrPanel + spacer).substring(0, 35),
         (' from a ' + issuerType).substring(0, 15)
       )
     },

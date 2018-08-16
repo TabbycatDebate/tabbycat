@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 {% load add_field_css %}
 
-{% block head-title %}Shift Check-In for {{ adjudicator.name }}{% endblock %}
-{% block page-title %}Shift Check-In for {{ adjudicator.name }}{% endblock %}
+{% block head-title %}{% blocktrans trimmed with name=adjudicator.name %}Shift Check-In for {{ name }}{% endblocktrans %}{% endblock %}
+{% block page-title %}{% blocktrans trimmed with name=adjudicator.name %}Shift Check-In for {{ name }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
@@ -35,7 +35,7 @@
     <div class="row">
       <div class="col-md-12">
         <button type="submit" name="submit" class="btn btn-success btn-block">
-          Save Availability
+          {% trans "Save Availability" %}
         </button>
       </div>
     </div>

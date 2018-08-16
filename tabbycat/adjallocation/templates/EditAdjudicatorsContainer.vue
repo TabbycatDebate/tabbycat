@@ -111,7 +111,7 @@ import percentile from 'stats-percentile'
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
 import AutoImportanceLogicMixin from '../../templates/allocations/AutoImportanceLogicMixin.vue'
-import HighlightableContainerMixin from '../../templates/allocations/HighlightableContainerMixin.vue'
+import HighlightContainerMixin from '../../templates/allocations/HighlightContainerMixin.vue'
 import AllocationActions from '../../templates/allocations/AllocationActions.vue'
 import AllocationIntroModal from '../../templates/allocations/AllocationIntroModal.vue'
 import DebateImportance from '../../templates/allocations/DebateImportance.vue'
@@ -122,7 +122,7 @@ import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           AutoImportanceLogicMixin, HighlightableContainerMixin],
+           AutoImportanceLogicMixin, HighlightContainerMixin],
   components: { AllocationActions, AllocationIntroModal, DebateImportance,
                 DebatePanel, DraggableAdjudicator },
   data: function () {

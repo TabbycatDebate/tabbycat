@@ -14,7 +14,7 @@
   <form id="confirmForm" method="POST" action="{% roundurl 'draw-confirm' %}">
     {% csrf_token %}
     <button id="confirmDraw" class="btn btn-success" type="submit">
-      Confirm Draw <i data-feather="chevron-right"></i>
+      {% trans "Confirm Draw" %}<i data-feather="chevron-right"></i>
     </button>
   </form>
 {% endblock %}

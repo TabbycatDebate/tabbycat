@@ -3,9 +3,9 @@
   <v-touch class="touch-target" ref="container" v-on:tap="togglePopOver">
     <div class="hover-target" @mouseenter="showPopOver">
 
-        <slot>
-          {{ content }}
-        </slot>
+      <slot>
+        {{ cellData.content }}
+      </slot>
 
     </div>
   </v-touch>
