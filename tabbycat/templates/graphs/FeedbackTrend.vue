@@ -111,10 +111,10 @@ function initChart(vueContext){
   // Create series for regression
   var xLabels = vueContext.graphData.map(function (d) { return d['x']; })
   var xSeries = d3.range(1, xLabels.length + 1);
-	var ySeries = vueContext.graphData.map(function (d) {
+  var ySeries = vueContext.graphData.map(function (d) {
     return parseFloat(d['y']);
   });
-	var leastSquaresCoeff = leastSquares(xSeries, ySeries);
+  var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
     // apply the reults of the least squares regression (if there are enough data points for it)
