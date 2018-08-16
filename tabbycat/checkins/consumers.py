@@ -65,16 +65,9 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
                 # Only raise an error for single check-ins as for multi-check-in
                 # events via the status page its clear what has failed or not
                 if len(barcode_ids) == 1:
-                    pass # TODO: raise error
-                    # raise BadJsonRequestError("Identifier doesn't exist")
-
-        # if status is True:
-        #     time = events[0].time.strftime('%H:%M:%S')
-        # else:
-        #     time = False
+                    raise("Identifier doesn't exist")
 
         if len(events) > 0 or status is False:
             return [e.serialize() for e in events]
         else:
-            pass # TODO: raise error
-            # raise BadJsonRequestError("No identifiers exist for given barcodes")
+            raise("No identifiers exist for given barcodes")
