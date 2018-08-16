@@ -12,7 +12,13 @@
 </template>
 
 <script>
-var d3 = require("d3");
+import * as d3shape from "d3-shape";
+import * as d3scale from "d3-scale";
+import * as d3selection from "d3-selection";
+import * as d3array from "d3-array";
+import * as d3time from "d3-time-format";
+import * as d3axis from "d3-axis";
+
 
 export default {
   props: {
@@ -35,10 +41,10 @@ function initChart(pad, height, data) {
   // var data = [{"time":"2018-01-20T18:31:05.000","total":50,"confirmed":0,"none":20,"draft":5}]
 
   if (data.length === 0) { return } // Don't init with blank data
-  d3.selectAll("#ballotsStatusGraph > svg > *").remove(); // Remove prior graph
+  d3selection.selectAll("#ballotsStatusGraph > svg > *").remove(); // Remove prior graph
 
   var stackKey = ["none", "draft", "confirmed"];
-  var parseDate = d3.isoParse // Date is ISO; parse as such
+  var parseDate = d3time.isoParse // Date is ISO; parse as such
   var colors = {
     "none": "#d1185e",
     "draft": "#17a2b8",
@@ -46,31 +52,31 @@ function initChart(pad, height, data) {
   }
 
   // Responsive width
-  var bounds = d3.select('#ballotsStatusGraph').node().getBoundingClientRect()
+  var bounds = d3selection.select('#ballotsStatusGraph').node().getBoundingClientRect()
   var width = parseInt(bounds.width - pad * 4);
   var margin = {top: pad, right: pad, bottom: pad, left: pad}
 
-  var xScale = d3.scaleBand().range([0, width]).padding(0.1)
-  var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%H:%M"))
-  var yScale = d3.scaleLinear().range([height, 0])
-  var yAxis = d3.axisLeft(yScale)
+  var xScale = d3scale.scaleBand().range([0, width]).padding(0.1)
+  var xAxis = d3axis.axisBottom(xScale).tickFormat(d3time.timeFormat("%H:%M"))
+  var yScale = d3scale.scaleLinear().range([height, 0])
+  var yAxis = d3axis.axisLeft(yScale)
 
-  var svg = d3.select("#ballotsStatusGraph").append("svg")
+  var svg = d3selection.select("#ballotsStatusGraph").append("svg")
       .attr("width", width)
       .attr("height", height)
       .append("g")
       .attr("transform", "translate(0,-25)")
 
-  var stack = d3.stack()
+  var stack = d3shape.stack()
     .keys(stackKey)
-    .order(d3.stackOrderNone)
-    .offset(d3.stackOffsetNone);
+    .order(d3shape.stackOrderNone)
+    .offset(d3shape.stackOffsetNone);
 
   var layers = stack(data);
     xScale.domain(data.map(function (d) {
       return parseDate(d.time); // x-scale derives from time sequence
     }));
-    yScale.domain([0, d3.max(data, function (d) {
+    yScale.domain([0, d3array.max(data, function (d) {
       return d.total; // y-scale is total ballots reported
     })]).nice();
 
