@@ -7,11 +7,8 @@
 </template>
 
 <script>
-import * as d3shape from "d3-shape";
-import * as d3scale from "d3-scale";
-import * as d3selection from "d3-selection";
-import * as d3array from "d3-array";
-import * as d3axis from "d3-axis";
+import * as d3 from "d3";
+
 
 export default {
   props: {
@@ -68,36 +65,36 @@ function leastSquares(xSeries, ySeries) {
 function initChart(vueContext){
 
   // Range is the pixel coordinates; domain is the axes range
-  var xScale = d3scale.scaleLinear()
+  var xScale = d3.scaleLinear()
     .range([0, vueContext.width])
     .domain([0, vueContext.cellData.roundSeq])
 
-  var yScale = d3scale.scaleLinear()
+  var yScale = d3.scaleLinear()
     .range([vueContext.height, 0])
     .domain([vueContext.cellData.minScore, vueContext.cellData.maxScore])
 
   // Scale axis to fit the range specified
-  var xAxis = d3axis.axisBottom(xScale)
+  var xAxis = d3.axisBottom(xScale)
     .tickSizeInner(-vueContext.height)
     .tickSizeOuter(0)
     .tickFormat(function (d) { return ''; }) // Hide ticks
-    .tickValues(d3array.range(0, vueContext.cellData.roundSeq + 0.5, 1)) // Set tick increments
+    .tickValues(d3.range(0, vueContext.cellData.roundSeq + 0.5, 1)) // Set tick increments
 
-  var yAxis = d3axis.axisLeft(yScale)
+  var yAxis = d3.axisLeft(yScale)
     .tickSizeInner(-vueContext.width)
     .tickSizeOuter(0)
     .tickPadding(10)
     .tickFormat(function (d) { return ''; }) // Hide ticks
     // Set tick increments
-    .tickValues(d3array.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))
+    .tickValues(d3.range(vueContext.cellData.minScore, vueContext.cellData.maxScore + 0.5, 1))
 
   // Define the div for the tooltip
-  var div = d3selection.select("body").append("div")
+  var div = d3.select("body").append("div")
     .attr("class", "d3-tooltip tooltip")
     .style("opacity", 0);
 
   var element = $(vueContext.$el).children(".d3-graph")[0]
-  var svg = d3selection.select(element).insert("svg", ":first-child")
+  var svg = d3.select(element).insert("svg", ":first-child")
       .attr("width", vueContext.width + vueContext.padding + vueContext.padding)
       .attr("height", vueContext.height + vueContext.padding  + vueContext.padding)
     .append("g")
@@ -114,7 +111,7 @@ function initChart(vueContext){
 
   // Create series for regression
   var xLabels = vueContext.graphData.map(function (d) { return d['x']; })
-  var xSeries = d3array.range(1, xLabels.length + 1);
+  var xSeries = d3.range(1, xLabels.length + 1);
   var ySeries = vueContext.graphData.map(function (d) {
     return parseFloat(d['y']);
   });

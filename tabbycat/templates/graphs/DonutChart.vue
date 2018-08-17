@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import * as d3shape from "d3-shape";
-import * as d3selection from "d3-selection";
+import * as d3 from "d3";
 
 export default {
   props: {
@@ -67,15 +66,15 @@ function InitChart(vueContext){
 
   // Female - Male - Other - Unknown
 
-  var pie = d3shape.pie()
+  var pie = d3.pie()
       .value(function (d) { return d.count; })
       .sort(null);
 
-  var arc = d3shape.arc()
+  var arc = d3.arc()
       .innerRadius(vueContext.radius - (vueContext.radius / 2))
       .outerRadius(vueContext.radius - vueContext.padding * 2);
 
-  var svg = d3selection.select(vueContext.$el).insert("svg", ":first-child")
+  var svg = d3.select(vueContext.$el).insert("svg", ":first-child")
       .attr("width", (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
       .attr("height", (vueContext.radius * 2) + vueContext.padding + vueContext.padding)
       .append("g")
@@ -90,7 +89,7 @@ function InitChart(vueContext){
       })
       .attr("d", arc)
 
-  var tooltip = d3selection.select("body").append("div")
+  var tooltip = d3.select("body").append("div")
     .attr("class", "d3-tooltip tooltip")
     .style("opacity", 0);
 
