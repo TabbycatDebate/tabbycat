@@ -835,6 +835,15 @@ class BallotsConfirmDigits(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class BallotsHideMotions(BooleanPreference):
+    help_text = _("Whether the printed scoresheets should hide the text of motions (even if they have been entered and released)")
+    verbose_name = _("Ballot Hide Motions")
+    section = data_entry
+    name = 'ballots_hide_motions'
+    default = False
+
+
+@tournament_preferences_registry.register
 class ScoreReturnLocation(StringPreference):
     help_text = _("The location to return scoresheets to, printed on pre-printed ballots. Set to 'TBA' to hide.")
     verbose_name = _("Score return location")

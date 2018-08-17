@@ -16,6 +16,7 @@ Change Log
 - Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version.
 - Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.
 - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score. Thanks Étienne Beaulé for the pull request!
+- Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request
 - Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
 - Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6.
 

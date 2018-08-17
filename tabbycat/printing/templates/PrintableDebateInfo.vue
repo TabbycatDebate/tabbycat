@@ -41,18 +41,43 @@
       </div>
 
       <!-- No motion selection; but a motion has been entered. I.E. BP/Joynt -->
-      <div v-if="!roundInfo.hasMotions && roundInfo.motions.length > 0"
+      <div v-if="!roundInfo.hideMotions && !roundInfo.hasMotions && roundInfo.motions.length > 0"
            class="db-flex-item-1 pt-2">
         The motion is <em>{{ roundInfo.motions[0].text }}.</em>
       </div>
 
-      <!-- Has motion selection; but no motions entered. I.E. Australs -->
+      <!-- No need to worry about if there is not motion selection and no motions have been entered; there's no use recording/providing the motion -->
+
+      <!-- Has motion selection; but not vetoes — no defined format -->
       <div v-if="roundInfo.hasMotions && !roundInfo.hasVetoes"
            class="db-flex-item-1 pt-2">
-        <div class="db-flex-item db-align-vertical-center" v-if="roundInfo.motions.length > 0">
+        <div v-if="roundInfo.motions.length > 1" class="db-flex-item db-align-vertical-center">
+          <template v-for="choice_type in ['Debated']">
+            <div class="d-flex flex-column justify-content-end">
+              <div class="text-center pb-2">Circle {{ choice_type }}</div>
+              <div class="d-flex text-monospace">
+                <div v-for="motion in motionsAccountingForBlanks"
+                     class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text m-1">
+                  <span class="db-circle">{{ motion.seq }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="db-item-gutter"></div>
+          </template>
+          <div class="flex-fill" v-if="!roundInfo.hideMotions">
+            <div class="db-flex-item db-align-vertical-center"
+                 v-for="(motion, index) in roundInfo.motions">
+              <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
+            </div>
+          </div>
+        </div>
+        <div v-if="!roundInfo.hideMotions && roundInfo.motions.length === 1"
+             class="db-flex-item db-align-vertical-center">
+          <!-- There shouldn't only be one motion if selection is on; but useful as fallback? -->
           The motion is <em>{{ roundInfo.motions[0].text }}</em>
         </div>
-        <div v-else class="db-flex-item db-fill-in pt-3">
+        <div v-if="roundInfo.hideMotions || roundInfo.motions.length === 0"
+             class="db-flex-item db-fill-in pt-3">
           Motion is:
         </div>
       </div>
@@ -74,10 +99,12 @@
         </template>
         <div class="flex-fill">
           <div class="db-flex-item db-align-vertical-center"
-               v-for="(motion, index) in roundInfo.motions">
+               v-for="(motion, index) in roundInfo.motions"
+               v-if="!roundInfo.hideMotions">
             <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
           </div>
-          <div v-if="roundInfo.motions.length === 0" class="d-flex">
+          <div class="d-flex"
+               v-if="roundInfo.motions.length === 0 || roundInfo.hideMotions">
             <div class="flex-fill db-fill-in strong mr-3 pt-3 mt-2"
                  v-for="choice_type in ['1', '2', '3', ]">
               {{ choice_type }}:
@@ -85,7 +112,6 @@
           </div>
         </div>
       </div>
-
 
     </div>
 
@@ -114,7 +140,6 @@
         <div>tab check</div>
       </div>
     </div>
-
 
   </section>
 
