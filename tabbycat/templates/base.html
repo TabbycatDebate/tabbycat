@@ -28,11 +28,7 @@
   {% block extra-head %}{% endblock %}
 
   {% if not hmr %}
-    {% if user.is_authenticated %}
-  <link href="{% static 'vue/js/admin.js' %}" rel=preload as=script>
-    {% else %}
-  <link href="{% static 'vue/js/public.js' %}" rel=preload as=script>
-    {% endif %}
+  <link href="{% static 'vue/js/app.js' %}" rel=preload as=script>
   {% endif %}
   {% if not debug %}<!-- Analytics -->
   <script>
@@ -172,18 +168,10 @@
       }
     </script>
 
-    {% if user.is_authenticated %}
-      {% if hmr %}
-        <script src="http://localhost:8888/admin.js"></script>
-      {% else %}
-        <script src="{% static 'vue/js/admin.js' %}"></script>
-      {% endif %}
+    {% if hmr %}
+      <script src="http://localhost:8888/app.js"></script>
     {% else %}
-      {% if hmr %}
-        <script src="http://localhost:8888/public.js"></script>
-      {% else %}
-        <script src="{% static 'vue/js/public.js' %}"></script>
-      {% endif %}
+      <script src="{% static 'vue/js/app.js' %}"></script>
     {% endif %}
 
   {% endblock js %}

@@ -1,5 +1,8 @@
 // The base template with universal or near-universal functionality (imported on all pages)
-
+import Vue from 'vue'
+import VueTouch from 'vue-touch'
+import Raven from 'raven-js'
+import RavenVue from 'raven-js/plugins/vue'
 import Popper from 'popper.js'
 import feather from 'feather-icons'
 import 'bootstrap' // Import bootstrap javascript plugins
@@ -7,54 +10,32 @@ import 'bootstrap' // Import bootstrap javascript plugins
 import TablesContainer from '../tables/TablesContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
+import EditAdjudicatorsContainer from '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
+import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
+import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
+import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
+import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
+import EditMatchupsContainer from '../../draw/templates/EditMatchupsContainer.vue'
+import EditVenuesContainer from '../../venues/templates/EditVenuesContainer.vue'
+import CheckInScanContainer from '../../checkins/templates/CheckInScanContainer.vue'
 
-//------------------------------------------------------------------------------
-// TCI: Vue Structure Setup
-//------------------------------------------------------------------------------
 
 // Setup the main constructs used for custom components
 var vueComponents = {}
 
-// This is the main data package setout in the django template
-var vueData = window.vueData // We need to mount props from the window itself
+// Setup jquery access
+var $ = require('jquery')
 
-// Vue Transations Setup
-
-// Mixin that maps methods in Vue to what django's equivalents; passing args
-var vueTranslationMixin = {
-  methods: {
-    gettext: function () {
-      return window.gettext.apply(this, arguments)
-    },
-    ngettext: function () {
-      return window.ngettext.apply(this, arguments)
-    },
-    interpolate: function () {
-      return window.interpolate.apply(this, arguments)
-    },
-    get_format: function () {
-      return window.get_format.apply(this, arguments)
-    },
-    gettext_noop: function () {
-      return window.gettext_noop.apply(this, arguments)
-    },
-    pgettext: function () {
-      return window.pgettext.apply(this, arguments)
-    },
-    npgettext: function () {
-      return window.npgettext.apply(this, arguments)
-    },
-    pluralidx: function () {
-      return window.pluralidx.apply(this, arguments)
-    },
-  },
+// Setup error logging (should happen before other imports)
+if (window.buildData.sentry === true) {
+  Raven.config('https://88a028d7eb504d93a1e4c92e077d6ce5@sentry.io/185378', {
+    release: window.buildData.version,
+  }).addPlugin(RavenVue, Vue).install()
 }
 
 //------------------------------------------------------------------------------
 // TCI: jQuery, Lodash, and Boostrap
 //------------------------------------------------------------------------------
-
-var $ = require('jquery')
 
 global.jQuery = $ // Set for bootstrap
 window.$ = $ // Set for browser window
@@ -184,10 +165,85 @@ vueComponents.DiversityContainer = DiversityContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
 
-// Expose data for admin/public.js to import
-// For admin modules
-export default {
-  baseComponents: vueComponents,
-  baseData: vueData,
-  vueTranslationMixin: vueTranslationMixin,
+//------------------------------------------------------------------------------
+// Vue Admin Components Setup
+//------------------------------------------------------------------------------
+
+// Tournament Homepage
+vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
+
+// Printables
+vueComponents.PrintableBallot = PrintableBallot
+
+// Other
+vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
+
+// Check-Ins
+vueComponents.CheckInScanContainer = CheckInScanContainer
+
+// Draw Containers
+vueComponents.AllocateDivisionsContainer = AllocateDivisionsContainer
+vueComponents.EditMatchupsContainer = EditMatchupsContainer
+vueComponents.EditVenuesContainer = EditVenuesContainer
+vueComponents.EditAdjudicatorsContainer = EditAdjudicatorsContainer
+
+//------------------------------------------------------------------------------
+// Main Vue Instance
+//------------------------------------------------------------------------------
+
+// This is the main data package setout in the django template
+const vueData = window.vueData // We need to mount props from the window itself
+
+// Vue Transations Setup
+// Mixin that maps methods in Vue to what django's equivalents; passing args
+const vueTranslationMixin = {
+  methods: {
+    gettext: function () {
+      return window.gettext.apply(this, arguments)
+    },
+    ngettext: function () {
+      return window.ngettext.apply(this, arguments)
+    },
+    interpolate: function () {
+      return window.interpolate.apply(this, arguments)
+    },
+    get_format: function () {
+      return window.get_format.apply(this, arguments)
+    },
+    gettext_noop: function () {
+      return window.gettext_noop.apply(this, arguments)
+    },
+    pgettext: function () {
+      return window.pgettext.apply(this, arguments)
+    },
+    npgettext: function () {
+      return window.npgettext.apply(this, arguments)
+    },
+    pluralidx: function () {
+      return window.pluralidx.apply(this, arguments)
+    },
+  },
+}
+
+// This is an coordinating instance used for inter-component pub/sub interfaces
+const eventHub = new Vue()
+Vue.prototype.$eventHub = eventHub
+
+// Make a global mixin to provide translation functions
+Vue.mixin(vueTranslationMixin)
+// Provide support for tab events
+Vue.use(VueTouch, { name: 'v-touch' })
+
+// Only instantiate Vue if there is set vueData; otherwise the mount is missing
+if (typeof vueData !== 'undefined') {
+  // Many templates share the vueTable base but don't provide data
+  if ('tablesData' in vueData && vueData.tablesData === null) {
+    // Is an empty table; do not mount
+  } else {
+    new Vue({
+      el: '#vueMount',
+      components: vueComponents,
+      data: vueData,
+    });
+  }
 }

@@ -20,14 +20,11 @@ module.exports = {
     },
   },
   chainWebpack: config => {
-    config.optimization.delete('splitChunks')
+    config.optimization.delete('splitChunks') // Don't split out dependencies
   },
   pages: {
-    admin: {
-      entry: 'tabbycat/templates/js-bundles/admin.js',
-    },
-    public: {
-      entry: 'tabbycat/templates/js-bundles/public.js',
+    app: {
+      entry: 'tabbycat/templates/js-bundles/main.js',
     },
   },
   pluginOptions: {
