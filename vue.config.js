@@ -19,6 +19,7 @@ module.exports = {
       errors: true,
     },
   },
+  baseUrl: 'http://localhost:8888', // This enables hot module reloads
   chainWebpack: config => {
     config.optimization.delete('splitChunks') // Don't split out dependencies
   },
