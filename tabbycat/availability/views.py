@@ -95,7 +95,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
                 teams_dict['in_now'] = 2 * debates
                 teams_dict['message'] = ngettext(
                     # Translators: ndebating in this string is always at least 2
-                    "%(ndebating)d breaking team is debating this round",  # never used, but needed for i18n
+                    "%(ndebating)d breaking team is debating this round",  # never used in English, but needed for i18n
                     "%(ndebating)d breaking teams are debating this round",
                     2 * debates) % {'ndebating': 2 * debates}
                 if bypassing > 0:

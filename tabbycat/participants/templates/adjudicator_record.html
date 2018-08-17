@@ -102,9 +102,9 @@
                         {% for adj, adjtype in adjudicators.with_positions %}
                           {% if adj != debateadjudicator.adjudicator %}
                             <a href="{% if admin_page %}{% tournamenturl 'participants-adjudicator-record' adj.pk %}{% else %}{% tournamenturl 'participants-public-adjudicator-record' adj.pk %}{% endif %}">
-                              {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                              {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
                           {% else %}
-                            {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                            {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
                           {% endif %}
                         {% endfor %}
                       {% endwith %}
