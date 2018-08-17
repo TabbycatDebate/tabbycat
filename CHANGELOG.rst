@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+2.1.3
+-----
+*Release date: ?*
+
+- Added an alert on British Parliamentary format grand-final ballots that better explains how to nominate a sole winner
+- Improved display of images shown when sharing Tabbycat links on social media
+- Optimised the performance of several commonly-loaded pages
+- Prevented the entry of integer-scale feedback questions without the required min/max attributes
+
+
 2.1.2
 -----
 *Release date: 14 July 2018*
