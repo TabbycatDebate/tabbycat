@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-15 22:43-0300\n"
 "PO-Revision-Date: 2018-04-29 10:39-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -142,6 +142,11 @@ msgstr "contrainte de salle"
 #: venues/models.py:141
 msgid "venue constraints"
 msgstr "contraintes de salle"
+
+#: venues/templates/edit_venues.html:5 venues/templates/edit_venues.html:10
+#, python-format
+msgid "Edit Venues for %(round_abbr)s"
+msgstr ""
 
 #: venues/templates/venue_categories_edit.html:4
 #: venues/templates/venue_categories_edit.html:5
