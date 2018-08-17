@@ -7,18 +7,16 @@ import Popper from 'popper.js'
 import feather from 'feather-icons'
 import 'bootstrap' // Import bootstrap javascript plugins
 
-import TablesContainer from '../tables/TablesContainer.vue'
-import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
-import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
-import EditAdjudicatorsContainer from '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
-import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
-import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
-import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
-import EditMatchupsContainer from '../../draw/templates/EditMatchupsContainer.vue'
+import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
+import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
+import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
+import EditAdjudicatorsContainer from '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
 import EditVenuesContainer from '../../venues/templates/EditVenuesContainer.vue'
-import CheckInScanContainer from '../../checkins/templates/CheckInScanContainer.vue'
-
+import EditMatchupsContainer from '../../draw/templates/EditMatchupsContainer.vue'
+import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
+import TablesContainer from '../tables/TablesContainer.vue'
+import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
 
 // Setup the main constructs used for custom components
 var vueComponents = {}
@@ -155,37 +153,32 @@ $(document).ready(() => {
 });
 
 //------------------------------------------------------------------------------
-// Vue Shared Components Setup
+// Vue General Components Setup
 //------------------------------------------------------------------------------
 
 // Table-based Views
 vueComponents.TablesContainer = TablesContainer
-// Diversity Standings
-vueComponents.DiversityContainer = DiversityContainer
+vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
-
-//------------------------------------------------------------------------------
-// Vue Admin Components Setup
-//------------------------------------------------------------------------------
-
-// Tournament Homepage
+// Divisions Containers
+vueComponents.AllocateDivisionsContainer = AllocateDivisionsContainer
+vueComponents.DiversityContainer = DiversityContainer
 vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
-
 // Printables
 vueComponents.PrintableBallot = PrintableBallot
-
-// Other
-vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
-
-// Check-Ins
-vueComponents.CheckInScanContainer = CheckInScanContainer
-
-// Draw Containers
-vueComponents.AllocateDivisionsContainer = AllocateDivisionsContainer
+// Allocations
+vueComponents.EditAdjudicatorsContainer = EditAdjudicatorsContainer
 vueComponents.EditMatchupsContainer = EditMatchupsContainer
 vueComponents.EditVenuesContainer = EditVenuesContainer
-vueComponents.EditAdjudicatorsContainer = EditAdjudicatorsContainer
+
+//------------------------------------------------------------------------------
+// Asynchronously Loaded Components Setup (defer loading to reduce bundle)
+//------------------------------------------------------------------------------
+
+// Note the 3d graphs are async loaded inline as part of components: {}
+// Check-Ins (thus delays loading quagga)
+vueComponents.CheckInScanContainer = () => import('../../checkins/templates/CheckInScanContainer.vue')
 
 //------------------------------------------------------------------------------
 // Main Vue Instance

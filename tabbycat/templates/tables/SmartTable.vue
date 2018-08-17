@@ -36,12 +36,16 @@ import _ from 'lodash'
 import SmartHeader from './SmartHeader.vue'
 import SmartCell from './SmartCell.vue'
 import SortableTableMixin from '../tables/SortableTableMixin.vue'
-import FeedbackTrend from '../graphs/FeedbackTrend.vue'
 import CheckCell from '../tables/CheckCell.vue'
 
 export default {
   mixins: [SortableTableMixin],
-  components: { SmartHeader, SmartCell, FeedbackTrend, CheckCell },
+  components: {
+    SmartHeader,
+    SmartCell,
+    'FeedbackTrend': () => import('../graphs/FeedbackTrend.vue'),
+    CheckCell,
+  },
   props: { tableHeaders: Array, tableContent: Array, tableClass: String,
            emptyTitle: String },
   computed: {

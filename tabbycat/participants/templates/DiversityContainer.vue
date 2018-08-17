@@ -105,12 +105,13 @@
 </template>
 
 <script>
-import DonutChart from  '../../templates/graphs/DonutChart.vue'
 import TextDisplay from '../../templates/graphs/TextDisplay.vue'
 
 export default {
-  components: { DonutChart, TextDisplay },
+  components: {
+    'DonutChart': () => import('../../templates/graphs/DonutChart.vue'),
+    TextDisplay
+  },
   props: [ 'graphsData' ],
-
 }
 </script>
