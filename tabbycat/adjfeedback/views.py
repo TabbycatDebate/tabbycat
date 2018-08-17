@@ -764,6 +764,9 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
 
     def form_valid(self, form):
         nupdated = form.save()
-        messages.success(self.request, _("Updated test scores for %(count)d adjudicators.") % {'count': nupdated})
+        messages.success(self.request, ngettext(
+            "Updated test score for %(count)d adjudicator.",
+            "Updated test scores for %(count)d adjudicators.",
+            nupdated) % {'count': nupdated})
         self.log_action()
         return super().form_valid(form)

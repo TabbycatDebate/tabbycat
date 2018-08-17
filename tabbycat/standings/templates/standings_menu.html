@@ -28,9 +28,7 @@
   {% for category in tournament.break_categories_nongeneral %}
     <a class="btn btn-outline-primary"
        href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
-      {% blocktrans trimmed with category_name=category.name %}
-        {{ category_name }}
-      {% endblocktrans %}
+      {{ category.name }}
     </a>
   {% endfor %}
 </div>

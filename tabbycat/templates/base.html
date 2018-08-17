@@ -1,19 +1,20 @@
 {% load static statici18n i18n debate_tags %}<!DOCTYPE html>
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{% if tournament %}{{ tournament.short_name }}{% else %}Tabbycat{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+  <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% trans "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% if tournament %}
     {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
       The tab for {{ tournament_name }} runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
+    {% blocktrans trimmed %}
       This tab runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% endif %}
