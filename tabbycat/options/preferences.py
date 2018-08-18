@@ -831,7 +831,7 @@ class BallotsConfirmDigits(BooleanPreference):
     verbose_name = _("Ballot Digit Checks")
     section = data_entry
     name = 'ballots_confirm_digits'
-    default = False
+    default = True
 
 
 @tournament_preferences_registry.register
