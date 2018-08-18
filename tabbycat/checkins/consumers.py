@@ -1,7 +1,6 @@
-import json
-
-from asgiref.sync import AsyncToSync
+from asgiref.sync import async_to_sync
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import gettext_lazy as _
 
 from utils.consumers import TournamentConsumer, WSPublicAccessMixin
 
@@ -13,61 +12,57 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
 
     group_prefix = 'checkins'
 
-    def receive(self, text_data):
+    def receive_json(self, content):
         # Because the public can receive but not send checkins we need to
         # re-authenticate here:
         if not self.scope["user"].is_authenticated:
             return
-        if not self.scope["user"].is_superuser:
-            return
 
-        payload = self.checkin_identifiers(text_data)
+        print('CheckInEventConsumer received', content)
         # Send message to room group about the new checkin
-        AsyncToSync(self.channel_layer.group_send)(self.group_name(), {
-            'type': 'broadcast_checkin',
-            'payload': payload
-        })
+        async_to_sync(self.channel_layer.group_send)(
+            self.group_name(), {
+                'type': 'broadcast_checkin',
+                'content': content
+            }
+        )
 
+    # Issue the relevant checkins
     def broadcast_checkin(self, event):
-        payload = event['payload']
-        print('broadcast_checkin', event)
+        print('CheckInEventConsumer broadcast_checkin', event)
 
-        # Send message to WebSocket
-        self.send(text_data=json.dumps({
-            'data': payload
-        }))
+        content = event['content']
+        tournament = self.tournament()
+        barcode_ids = [b for b in content['barcodes'] if b is not None]
+        return_content = {'created': content['status'], 'checkins': []}
 
-    # Issue the relevant checkins and return the new objects
-    def checkin_identifiers(self, text_data):
-        barcode_ids = json.loads(text_data)['barcodes']
-        barcode_ids = [b for b in barcode_ids if b is not None]
-        status = json.loads(text_data)['status']
-        events = []
-        tournament = self.identify_tournament()
         for barcode in barcode_ids:
             try:
                 identifier = Identifier.objects.get(barcode=barcode)
-                if status is True: # If checking-in someone
-                    event = Event.objects.create(identifier=identifier,
-                                                 tournament=tournament)
-                    events.append(event)
+                if content['status'] is True:
+                    # If checking-in someone
+                    checkin = Event.objects.create(identifier=identifier,
+                                                   tournament=tournament)
+                    return_content['checkins'].append(checkin.serialize())
                 else:
                     # If undoing/revoking a check-in
-                    if json.loads(self.text_data)['type'] == 'people':
+                    if content['type'] == 'people':
                         window = 'checkin_window_people'
                     else:
                         window = 'checkin_window_venues'
 
-                    events = get_unexpired_checkins(tournament, window)
-                    events.filter(identifier=identifier).delete()
+                    checkins = get_unexpired_checkins(tournament, window)
+                    checkins.filter(identifier=identifier).delete()
+                    return_content['checkins'].append({'identifier': barcode})
 
             except ObjectDoesNotExist:
                 # Only raise an error for single check-ins as for multi-check-in
                 # events via the status page its clear what has failed or not
                 if len(barcode_ids) == 1:
-                    raise("Identifier doesn't exist")
+                    self.send_error(_("Sent checkin identifier doesn't exist"))
 
-        if len(events) > 0 or status is False:
-            return [e.serialize() for e in events]
+        if len(return_content['checkins']) == 0 and content['status'] is not False:
+            self.send_error(_("Checkins"),
+                            _("No checkin identifiers exist for sent barcodes"))
         else:
-            raise("No identifiers exist for given barcodes")
+            self.send_json(return_content)
