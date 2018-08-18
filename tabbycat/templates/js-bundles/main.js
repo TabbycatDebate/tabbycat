@@ -7,15 +7,19 @@ import Popper from 'popper.js'
 import feather from 'feather-icons'
 import 'bootstrap' // Import bootstrap javascript plugins
 
-import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
-import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
+// Generic Templates
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
-import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
-import EditAdjudicatorsContainer from '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
-import EditVenuesContainer from '../../venues/templates/EditVenuesContainer.vue'
-import EditMatchupsContainer from '../../draw/templates/EditMatchupsContainer.vue'
-import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
+// App Templates
+import EditAdjudicatorsContainer from '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
+import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
+import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
+import EditMatchupsContainer from '../../draw/templates/EditMatchupsContainer.vue'
+import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
+import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
+import ResultsTablesContainer from '../../results/templates/ResultsTablesContainer.vue'
+import EditVenuesContainer from '../../venues/templates/EditVenuesContainer.vue'
+
 import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
 
 // Setup the main constructs used for custom components
@@ -159,6 +163,7 @@ $(document).ready(() => {
 // Table-based Views
 vueComponents.TablesContainer = TablesContainer
 vueComponents.CheckboxTablesContainer = CheckboxTablesContainer
+vueComponents.ResultsTablesContainer = ResultsTablesContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
 // Divisions Containers

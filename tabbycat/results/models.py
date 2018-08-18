@@ -145,7 +145,9 @@ class BallotSubmission(Submission):
             'type': result,
             'param': '',
             'timestamp': badge_datetime_format(self.timestamp),
-            'confirmed': self.confirmed
+            'confirmed': self.confirmed,
+            'debate': self.debate.id,
+            'result_status': self.debate.result_status
         }
 
 

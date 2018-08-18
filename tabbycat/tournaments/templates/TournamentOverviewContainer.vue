@@ -44,7 +44,7 @@
             <updates-list v-for="ballot in ballot_results" :key="ballot.id"
                           :item="ballot"></updates-list>
             <li class="list-group-item text-secondary" v-if="ballot_results.length === 0">
-              No Results Yet
+              No Confirmed Results Yet
             </li>
           </ul>
         </div>
@@ -77,24 +77,30 @@ export default {
   },
   methods: {
     handleSocketReceive: function (socketLabel, payload) {
-      console.log('handleSocketMessage', socketLabel, ' : ', payload)
       const data = payload['data']
+      console.log(data)
       if (socketLabel === 'ballot_statuses') {
         this.ballot_statuses = data
+        return
+      }
+      if (socketLabel === 'ballot_results') {
+        if (data.confirmed === false || data.result_status !== 'C') {
+          console.log('reject', data.confirmed, data.results_status)
+          return // Don't show new results unless they are confirmed/confirmed
+        }
+      }
+      // Check for duplicates; do a inline replace if so
+      let duplicateIndex = _.findIndex(this[socketLabel], function (i) {
+        return i.id == data.id
+      })
+      if (duplicateIndex != -1) {
+        this[socketLabel][duplicateIndex] = data
       } else {
-        // Check for duplicates; do a inline replace if so
-        let duplicateIndex = _.findIndex(this[socketLabel], function (i) {
-          return i.id == data.id
-        })
-        if (duplicateIndex != -1) {
-          this[socketLabel][duplicateIndex] = data
-        } else {
-          // Add new item to front
-          this[socketLabel].unshift(data)
-          // Remove last item if at the limit
-          if (this[socketLabel].length >= 15) {
-            this[socketLabel].pop()
-          }
+        // Add new item to front
+        this[socketLabel].unshift(data)
+        // Remove last item if at the limit
+        if (this[socketLabel].length >= 15) {
+          this[socketLabel].pop()
         }
       }
     }

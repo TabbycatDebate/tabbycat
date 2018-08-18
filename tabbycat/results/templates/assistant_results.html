@@ -49,93 +49,10 @@
 
 {% block content %}
 
-  <div class="card-deck">
-    <div class="card mb-3">
-      <div class="card-body text-center pb-1 row">
-        <div class="col">
-          <div class="progress">
-            <div class="progress-bar bg-primary" role="progressbar"
-                 style="width: {% percentage checks.checked checks.total %}%;"
-                 data-toggle="tooltip" title="{% trans "Checked-In" %}">
-              <i data-feather="x"></i>&nbsp;&nbsp;{{ checks.checked }}
-            </div>
-            <div class="progress-bar bg-secondary" role="progressbar"
-                 style="width: {% percentage checks.missing checks.total %}%"
-                 data-toggle="tooltip" title="{% trans "Not Checked-In" %} ">
-              <i data-feather="circle"></i>&nbsp;&nbsp;{{ checks.missing }}
-            </div>
-          </div>
-          <h6 class="pt-3 text-center text-secondary">{% trans "Ballot Check-Ins" %}</h6>
-        </div>
-        <div class="col">
-          <div class="progress">
-            <div class="progress-bar bg-danger" role="progressbar"
-                 style="width: {% percentage stats.none stats.total %}%;"
-                 data-toggle="tooltip" title="{% trans "Unknown" %}">
-              <i data-feather="x"></i>&nbsp;&nbsp;{{ stats.none }}
-            </div>
-            <div class="progress-bar bg-info" role="progressbar"
-                 style="width: {% percentage stats.draft stats.total %}%"
-                 data-toggle="tooltip" title="{% trans "Unconfirmed" %} ">
-              <i data-feather="circle"></i>&nbsp;&nbsp;{{ stats.draft }}
-            </div>
-            <div class="progress-bar bg-success" role="progressbar"
-                 style="width: {% percentage stats.confirmed stats.total %}%"
-                 data-toggle="tooltip" title="{% trans "Confirmed" %}">
-              <i data-feather="check"></i>&nbsp;&nbsp;{{ stats.confirmed }}
-            </div>
-            {% if pref.enable_postponements %}
-              <div class="progress-bar bg-secondary" role="progressbar"
-                   style="width: {% percentage stats.postponed stats.total %}%"
-                {{ stats.postponed }} {% trans "Postponed" %}&nbsp;&nbsp;<i data-feather="pause"></i>
-              </div>
-            {% endif %}
-          </div>
-          <h6 class="pt-3 text-center text-secondary">{% trans "Ballot Statuses" %}</h6>
-        </div>
-      </div>
-    </div>
+  <div id="vueMount">
+    <results-tables-container
+      :tables-data=tablesData orientation={{ tables_orientation|safe }}>
+    </results-tables-container>
   </div>
 
-  {{ block.super }}
-
-  <form id="postponeForm" action="{% roundurl 'results-postpone-debate' %}" method="POST">
-    <input type="hidden" id="postpone_debate_id" name="debate_id" />
-  </form>
-
-  <form id="unpostponeForm" action="{% roundurl 'results-unpostpone-debate' %}" method="POST">
-    <input type="hidden" id="unpostpone_debate_id" name="debate_id" />
-  </form>
-
 {% endblock content %}
-
-{% block js %}
-
-  {{ block.super }}
-
-  <script>
-    $(document).ready( function() {
-
-      $(".postpone-link").each(function () {
-        $(this).click( function() {
-          var debate_id = $(this).attr("debate-id");
-          $("#postpone_debate_id").val(debate_id);
-          $("#postponeForm").submit();
-          $(this).html("<i>{% trans "Postponing…" %}</i>");
-          return false;
-        });
-      });
-
-      $(".unpostpone-link").each( function() {
-        $(this).click( function() {
-          var debate_id = $(this).attr("debate-id");
-          $("#unpostpone_debate_id").val(debate_id);
-          $("#unpostponeForm").submit();
-          $(this).html("<i>{% trans "Unpostponing…" %}</i>");
-          return false;
-        });
-      });
-
-    });
-  </script>
-{% endblock %}

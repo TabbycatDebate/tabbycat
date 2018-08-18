@@ -192,20 +192,16 @@ class BaseResultForm(forms.Form):
 
         round = self.debate.round
         tournament = round.tournament
-        # 5. Notify the Latest Results consumer if result is 'final'
-        if self.ballotsub.confirmed:
-            if self.debate.result_status is self.debate.STATUS_CONFIRMED:
-                print("Broadcasting notification of BallotResultConsumer")
-                slug = round.tournament.slug
-                group_name = BallotResultConsumer.group_prefix + "_" + slug
-                async_to_sync(get_channel_layer().group_send)(group_name, {
-                    "type": "send_json",
-                    "data": self.ballotsub.serialize_like_actionlog
-                })
+        # 5. Notify the Latest Results consumer (for results/overview)
+        slug = round.tournament.slug
+        group_name = BallotResultConsumer.group_prefix + "_" + slug
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_json",
+            "data": self.ballotsub.serialize_like_actionlog
+        })
 
         # 6. Notify the Ballots Status Graph if result is for current round
         if round == tournament.current_round:
-            print("Broadcasting notification of BallotStatusConsumer")
             slug = tournament.slug
             group_name = BallotStatusConsumer.group_prefix + "_" + slug
             ballots = BallotSubmission.objects.filter(debate__round=round,
