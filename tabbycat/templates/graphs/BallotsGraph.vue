@@ -52,7 +52,7 @@ function initChart(pad, height, data) {
   var margin = {top: pad, right: pad, bottom: pad, left: pad}
 
   var xScale = d3.scaleBand().range([0, width]).padding(0.1)
-  var xAxis = d3.axisBottom(xScale).tickFormat(d3time.timeFormat("%H:%M"))
+  var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%H:%M"))
   var yScale = d3.scaleLinear().range([height, 0])
   var yAxis = d3.axisLeft(yScale)
 
