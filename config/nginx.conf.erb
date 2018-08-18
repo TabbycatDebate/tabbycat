@@ -72,14 +72,6 @@ http {
             try_files $uri @proxy_to_ws;
         }
 
-        # Any pages that load websockets inside it needs to pe proxied
-        # This is kinda hackish but I think comes from the websocket having
-        # auth that needs to authenticate to same server?
-        # For some reason it will only proxy at the app level; i.e. before import
-        location ~* /checkins/ {
-            try_files $uri @proxy_to_ws;
-        }
-
         location @proxy_to_ws {
             # Repeating earlier Uvicorn config
             # Don't set X-Forwarded-Port; sets infinite redirects

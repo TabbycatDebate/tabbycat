@@ -50,7 +50,7 @@
     </div>
 
     <transition-group :name="mainTransitions" tag="div">
-      <div v-for="(entity, grouper) in entitiesBySortingSetting"
+      <div v-for="(entities, grouper) in entitiesBySortingSetting"
            :key="grouper" class="card mt-1">
 
         <div class="card-body p-0">
@@ -61,9 +61,15 @@
               <div class="mr-auto strong my-1 px-2">
                 {{ grouper }}
               </div>
-              <button v-if="scanUrl" class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
-                      @click="checkInGroup(entity)">
+              <button v-if="scanUrl && statusForGroup(entities) === false"
+                      @click="checkInOrOutGroup(entities, true)"
+                      class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
                 <strong>✓</strong> All
+              </button>
+              <button v-if="scanUrl && statusForGroup(entities) === true"
+                      @click="checkInOrOutGroup(entities, false)"
+                      class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
+                <strong>☓</strong> All
               </button>
 
             </div>
@@ -72,7 +78,7 @@
               <transition-group :name="mainTransitions" tag="div" class="row no-gutters">
 
 
-                <div v-for="entity in entity" :key="entity.id"
+                <div v-for="entity in entities" :key="entity.id"
                      class="col-lg-3 col-md-4 col-6 check-in-person">
                   <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
 
@@ -85,7 +91,7 @@
                     <a v-if="scanUrl && !entity.status && entity.identifier[0] && !entity.locked"
                        class="col-auto p-2 btn-info text-center hoverable"
                        title="Click to check-in manually"
-                       @click="checkInIdentifiers(entity.identifier, true)">
+                       @click="checkInOrOutIdentifiers(entity.identifier, true)">
                       ✓
                     </a>
                     <div v-if="scanUrl && !entity.status && entity.identifier[0] && entity.locked"
@@ -99,7 +105,7 @@
                     </div>
                     <div v-if="entity.status" title="Click to undo a check-in"
                          class="col-auto p-2 btn-success hoverable text-center"
-                         @click="checkInIdentifiers(entity.identifier, false)">
+                         @click="checkInOrOutIdentifiers(entity.identifier, false)">
                       {{ lastSeenTime(entity.status.time) }}
                     </div>
 
@@ -122,13 +128,12 @@
 <script>
 import _ from 'lodash'
 
-import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 import PeopleStatusMixin from './PeopleStatusMixin.vue'
 import VenuesStatusMixin from './VenuesStatusMixin.vue'
 
 export default {
-  mixins: [AjaxMixin, WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],
+  mixins: [WebSocketMixin, PeopleStatusMixin, VenuesStatusMixin],
   data: function () {
     return {
       filterByPresence: {
@@ -244,36 +249,32 @@ export default {
       var paddedTime = (`0${timeRead}`).slice(-2)
       return paddedTime
     },
-    checkInGroup: function (entity) {
+    checkInOrOutGroup: function (entity, setStatus) {
       var identifiersForEntities = _.flatten(_.map(entity, 'identifier'))
       var nonNullIdentifiers = _.filter(identifiersForEntities, (id) => {
         return id !== null
       });
       if (nonNullIdentifiers.length > 0) {
-        this.checkInIdentifiers(nonNullIdentifiers, true)
+        this.checkInOrOutIdentifiers(nonNullIdentifiers, setStatus)
       }
     },
-    checkInIdentifiers: function (barcodeIdentifiers, setStatus) {
-      var message = `the checkin status of ${barcodeIdentifiers} to ${setStatus}`
+    statusForGroup: function(entities) {
+      // Check if all entites within a group are checked in
+      const statuses = entities.map(e => e.status.time)
+      return statuses, statuses.every(time=> time !== undefined)
+    },
+    checkInOrOutIdentifiers: function (barcodeIdentifiers, setStatus) {
       var type = this.isForVenues ? 'venues' : 'people'
       var payload = { barcodes: barcodeIdentifiers, status: setStatus, type: type }
-      this.setLocked(barcodeIdentifiers, true)
-      this.ajaxSave(this.scanUrl, payload, message, this.passCheckIn, this.failCheckIn, null, false)
+      this.setLockStatus(barcodeIdentifiers, true)
+      this.sendToSocket('checkins', payload)
     },
-    setLocked: function (identifiers, status) {
+    setLockStatus: function (identifiers, status) {
       _.forEach(this.entitiesByType, (entity) => {
         if (_.includes(identifiers, entity.identifier)) {
           entity.locked = true
         }
       })
-    },
-    passCheckIn: function (dataResponse, payload, returnPayload) {
-      this.setLocked(payload.barcodes, false)
-    },
-    failCheckIn: function (payload, returnPayload) {
-      var message = `Failed to check in one or more identifiers: ${payload.barcodes}`
-      $.fn.showAlert('danger', message, 0)
-      this.setLocked(payload.barcodes, false)
     },
     lastSeenTime: function (timeString) {
       var time = new Date(Date.parse(timeString))
@@ -295,15 +296,17 @@ export default {
         this.enableAnimations = true
       })
     },
-    handleSocketMessage: function (payload) {
+    handleSocketReceive: function (payload) {
       if (payload.created === true) {
-        this.events.push(payload)
+        this.events.push.apply(this.events, payload.checkins)
       } else {
         // Revoked checkins; remove all items that match the payload identifier
+        const revoked_checkins = payload.checkins.map(c => c.identifier);
         this.events = _.filter(this.events, function (event) {
-          return event.identifier !== payload.identifier
+          return !revoked_checkins.includes(event.identifier)
         })
       }
+      this.setLockStatus(payload.checkins.map(c => c.identifier), false)
     },
   },
 }

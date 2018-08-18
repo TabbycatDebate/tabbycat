@@ -1,5 +1,9 @@
 <script>
+import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
+
+
 export default {
+  mixins: [ModalErrorMixin],
   methods: {
     ajaxSave: function (url, payload, message, completeFunction, failFunction,
                         returnPayload, showErrorModal = true) {
@@ -36,13 +40,6 @@ export default {
         timeout: 15000, // sets timeout to 15 seconds
       });
     },
-    showErrorAlert(message, error) {
-      $('#modalAlert').find('.modal-body').text(
-          `Failed to save a change to ${message} because ${error}. You should
-          now refresh this page to ensure the data is up to date and then retry
-          the action. If the problem persists please get in touch with
-          the developers.`)
-    },
     ajaxError: function (message, responseText, textStatus, errorThrown) {
       var error = 'of a server error' // Default error
       var errorTitle = errorThrown
@@ -72,10 +69,7 @@ export default {
           console.error(message, '//', responseText, '//', textStatus, '//', errorThrown)
         }
       }
-      $('#modalAlert').modal();
-      $('#modalAlert').find('.modal-header').text(`Save Failed: ${errorTitle}`)
-      $('#modalAlert').find('.modal-header').addClass('text-danger')
-      this.showErrorAlert(message, error)
+      this.showErrorAlert(message, error, errorTitle)
     },
   },
 }
