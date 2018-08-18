@@ -4,9 +4,9 @@
 Scaling & Performance on Heroku
 ===============================
 
-If you expect your Tabbycat site to gain lots of traffic — either because it has a lot of participants or will be followed by lots of people who are not attending — there are a number of strategies to ensure that it will remain fast despite this attention. This is typically only necessary for large tournaments that will display information on the public-facing version of your Tabbycat site; and even then ongoing performance improvements should mean that only minor amounts of 'scaling' are needed.
+If you expect your Tabbycat site to gain lots of traffic — either because it has a lot of participants or will be followed by lots of people who are not attending — there are a number of strategies to ensure that it will remain fast despite this attention. This is typically only necessary for very large tournaments that will display information on the public-facing version of your Tabbycat site; and even then only minor amounts of 'scaling' are needed at particular occasions.
 
-By default, a Tabbycat installation runs on Heroku's free tier. This is a resource-constrained environment that has limited capacity to serve high amounts of traffic; particularly during 'bursty' events such as a draw or tab release at a big tournament. For tournaments Australs-size and up, the amount of scaling needed is typically minor; however, if your site does become slow you want to be able to do so quickly and with confidence — knowing what to do and how to do it ahead of time can be critical to prevent disruptions.
+By default, a Tabbycat installation runs on Heroku's free tier. This is a resource-constrained environment whose limits can be reached when serving high amounts of traffic during 'bursty' events such as a draw or tab release at a big tournament. For tournaments Australs-size and up, the amount of scaling needed is typically minor; however, if your site does become slow you want to be able to do so quickly and with confidence — knowing what to do and how to do it ahead of time can be critical to prevent disruptions.
 
 Improving performance will typically require paying for higher levels of Heroku services, however note that these are billed on a per-minute (not monthly) basis. If you make use of any upgrades mentioned below, you will only be billed for the actual duration used — i.e. if an upgrade is listed at $100/month, but you only use it for 4 hours, the final bill will be around $0.50. As such you can make use of high-performing resources just when they are needed, without needing to pay the full monthly price to maintain the resource indefinitely.
 
@@ -21,9 +21,9 @@ Heroku's primary resource is that of a 'dyno'. Each dyno can be thought of as ru
 
 Dynos can be scaled by adding more dynos ('horizontally') or by adding faster dynos ('vertically'). In general, horizontal scaling should be the first and most effective strategy — typically the problem with traffic is one of *concurrency* (lots of people want information all at once). The traffic on Tabbycat sites typically fluctuates a lot, with moments of high intensity clustering around draw releases, round advances, and the final tab release. As such you generally only need to scale your dynos for very short periods of time.
 
-In order to increase the number of dynos you first need to be using at least the **Standard 1X** level of dyno. While dynos higher than the **Standard 1X** level should help serve traffic faster having more dynos of is typically much more effective than using the higher level of dyno upgrades. Upgrading beyond **Standard 1X** is generally only required if you need additional memory (as described below) or want to use auto-scaling (also described below).
+In order to increase the number of dynos you first need to be using at least the **Standard 1X** level of dyno. While dynos higher than the **Standard 1X** level should help serve traffic faster having *more* dynos is typically more effective than having an *upgraded* or higher level of dyno. Upgrading beyond **Standard 1X** is generally only required if you need additional memory (as described below) or want to use auto-scaling (also described below).
 
-Before proceeding with this guide, a crucial step is to upgrade your existing '**Free**' dyno to a '**Hobby**'-level dyno. This will enable a "Metrics" tab on your Heroku dashboard that provides statistics which are crucial to understanding how your site is performing and how to improve said performance. In general, if you are at all unsure about how your site will perform it is a good idea to do this pre-emptively and keep an eye on it over the course of the tournament.
+At large tournaments you should always upgrade your existing '**Free**' dyno to a '**Hobby**'-level dyno. This upgrade is crucial as it will enable a "Metrics" tab on your Heroku dashboard that provides statistics which are crucial to understanding how your site is performing and how to improve said performance. In general, if you are at all unsure about how your site will perform it is a good idea to do this pre-emptively and keep an eye on it over the course of the tournament.
 
 .. note::
 
@@ -36,16 +36,16 @@ Once you have upgraded your dyno to the **Hobby** level, the metrics tab provide
 
   .. image:: images/events.png
 
-Red marks, or those labelled *Critical* typically indicate some sort of problem. H13 errors are a good measure of the amount of pages failing to load during heavy traffic, however they can be triggered under normal conditions — you want to check how many are occurring within a given time period and ensure its more than a handful. Note that in the upper-right of the page you can also toggle the graphs into a 2-hour timeline for more precise measurement.
+Red marks, or those labelled *Critical* typically indicate some sort of problem. H13 errors are a good measure of the amount of pages failing to load during heavy traffic, however they can be triggered under normal conditions — you want to check how many are occurring within a given time period and ensure its more than a handful.
 
 Response Time & Throughput
 --------------------------
 
   .. image:: images/response-time.png
 
-The response time is the amount of time it takes a dyno to load a page and serve it to your users. Smaller response times are thus good, and long response times (over ten seconds) indicate that a site is straining to serve its content.
+The response time is the amount of time it takes a dyno to load a page and serve it to your users. Smaller response times are thus good, and long response times (over fifteen seconds) indicate that a site is struggling to serve its content.
 
-Heroku dynos have a maximum response time of 30 seconds, at which point they will stop serving the request — something users see as an error or as a page that never loads. Thus if you see the graph is near 30 seconds at any point you need to try and diagnose what is causing this and add more resources to reduce the response time.
+Heroku dynos have a maximum response time of 30 seconds, at which point they will stop serving the request — something users see as an error or as a page that never loads. Thus if you see the graph is at or near 30 seconds at any point you need to try and diagnose what is causing this and add more resources to reduce the response time.
 
 .. note::
 
@@ -66,7 +66,7 @@ If this bar graph is hitting the top it will usually mean that a site that is sl
 
 If your average, rather than maximum, dyno load is approaching the upper limit of however many dynos you are running now (remember the y-axis will often exceed however many dynos you are currently running) that is a very good sign that you should increase the quantity of dynos being run. Continue adding dynos and evaluate how this effects load so that the bar is not hitting its limit.
 
-If you are consistently needing to scale things (or having previously had issues and are expecting a very heavy burst of traffic) it may be worth upgrading to the **Performance-M** dyno type, which will then allow you to enable the *Auto-scaling* feature. This will automatically add dynos as needed to cope with traffic, and remove them when they become unnecessary. This is very effective; however, note that this dyno-type is $250/month per dyno and will self-add dynos (within an upper limit you can specify). While this is not a huge price on a per hour/minute basis (even running 30 for an hour is only $10) you definitely want to ensure you keep a close eye on it and turn it off when it is not necessary.
+If you are consistently needing to scale things (or having previously had issues and are expecting a very heavy burst of traffic) it may be worth upgrading to the **Performance-M** dyno type, which will then allow you to enable the *Auto-scaling* feature. This will automatically add dynos as needed to cope with traffic, and remove them when they become unnecessary. This is very effective; however, note that this dyno-type is $250/month per dyno and will self-add dynos (within an upper limit you can specify). While this is not a huge price on a per hour/minute basis (even running 10 for an hour is only $4) you definitely want to ensure you keep a close eye on it and turn it off when it is not necessary.
 
 Memory Usage
 ------------
@@ -97,7 +97,7 @@ If you want you can also increase the 1-minute timeout for the pages that are po
 
 If you ever need to clear the cache (say to force the site to quickly show an update to the speaker tab) you can install `Heroku's Command Line Interface <https://devcenter.heroku.com/articles/heroku-cli>`_ and run the following command, replacing ``YOUR_APP`` with your site's name in the Heroku dashboard::
 
-    $ echo " FLUSHALL\r\n QUIT" | heroku redis:cli -a YOUR_APP --confirm YOUR_APP
+    $ echo "FLUSHALL\r\n QUIT" | heroku redis:cli -a YOUR_APP --confirm YOUR_APP
 
 Redis Limits
 ============
@@ -135,7 +135,8 @@ Once you visit the mirror site it should be setup just like the original one, wi
 Estimated Costs
 ===============
 
-As a quick and rough benchmark, here is a list of typical prices you would encounter if scaling to meet the performance needs of a high-team-count high-traffic tournament at the approximate scale of an Australs (~100 teams):
+As a quick and rough benchmark, here is a list of typical prices you would encounter if scaling to meet the performance needs of a high-team-count high-traffic tournament at the approximate scale of an Australs (~100 teams) or above. This is a probably an overly-conservative estimate in that it is based on tournaments run on the ``2.1`` version of Tabbycat. Versions ``2.2`` and above should perform dramatically better and thus have less need to scale using Standard and Performance dynos.
+
 
     - 1x ``Hobby Basic Postgres Plan`` ($9/month) run all day for 14 days = ~$4
         - A tournament of this size will require an upgraded database tier for the time when you are adding new data; i.e. during registration and rounds. Once the tab is released (and no further data changes needed) however you can downgrade it back to the ``Hobby Dev`` tier.
