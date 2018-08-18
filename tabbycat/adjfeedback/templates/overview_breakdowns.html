@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<div class="col-md-2 col-12 mb-3">
+<div class="col-md-2 col-12 mb-3 px-0">
   <div class="card">
     <div class="card-body text-center pb-1 pt-2 px-2">
       <div class="row">
@@ -52,9 +52,11 @@
       <h6 class="pt-2 text-secondary" data-toggle="tooltip"
           title="{% blocktrans trimmed with round=current_round.abbreviation %}
             The proportion of an adjudicator's score determined by feedback vs the
-            test is set on a per-round basis. This is the mix for the current round
-            ({{ round }}).
-          {% endblocktrans %}">{{ current_round.abbreviation }} {% trans "Score Ratio" %}</h6>
+            test is set on a per-round basis. Click this link and edit the 'Feedback weight' field to modify this ratio for {{ round }}.{% endblocktrans %}">
+        <a href="{% url 'admin:tournaments_round_change' current_round.id %}" target="_blank">
+          {{ current_round.abbreviation }} {% trans "Score Ratio" %}
+        </a>
+      </h6>
     </div>
   </div>
 </div>

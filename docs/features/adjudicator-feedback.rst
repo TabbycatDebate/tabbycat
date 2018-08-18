@@ -138,9 +138,7 @@ current round's feedback weight is set to 0.5 their score would be 3.5. If the
 weight was 0, their score will always be their test score; if the weight was 1
 it will always be their average feedback value.
 
-It is common to set rounds with a low feedback weight value early on in the
-tournament (when feedback is scant) and to increase the feedback weight as the
-tournament progresses.
+.. note:: To change the weight of a round you will need to go to the Edit Database area, open the round in question, and change its *Feedback weight* value. It is common to set rounds with a low feedback weight value early on in the tournament (when feedback is scant) and to increase the feedback weight as the tournament progresses.
 
 .. note:: A participant's test score can, in conjunction with feedback weight, also be used as a manual override for an adjudicator's overall ranking. At several tournaments, adjudication cores have set every round's feedback weight to 0, and manually adjusted an adjudicator's test score in response to feedback they have received and reviewed. In this way complete control over every adjudicator's overall score can be exerted.
 
