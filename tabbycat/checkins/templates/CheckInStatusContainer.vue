@@ -296,7 +296,7 @@ export default {
         this.enableAnimations = true
       })
     },
-    handleSocketReceive: function (payload) {
+    handleSocketReceive: function (socketLabel, payload) {
       // console.log(`Received payload ${JSON.stringify(payload)}`)
       if (payload.created === true) {
         this.events.push.apply(this.events, payload.checkins)

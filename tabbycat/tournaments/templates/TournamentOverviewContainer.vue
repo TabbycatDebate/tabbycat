@@ -26,9 +26,9 @@
             <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="action in actionlogs" :key="action.id"
+            <updates-list v-for="action in action_logs" :key="action.id"
                           :item="action"></updates-list>
-            <li class="list-group-item text-secondary" v-if="actionlogs.length === 0">
+            <li class="list-group-item text-secondary" v-if="action_logs.length === 0">
               No Actions Yet
             </li>
           </ul>
@@ -69,31 +69,32 @@ export default {
   props: [ 'tournamentSlug', 'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
-      actionlogs: this.initialActions,
+      action_logs: this.initialActions,
       ballot_results: this.initialBallots,
       ballot_statuses: this.initialGraphData,
-      sockets: ['actionlogs', 'ballot_results', 'ballot_statuses'],
+      sockets: ['action_logs', 'ballot_results', 'ballot_statuses'],
     }
   },
   methods: {
-    handleSocketMessage: function (payload, socketLabel) {
+    handleSocketReceive: function (socketLabel, payload) {
       console.log('handleSocketMessage', socketLabel, ' : ', payload)
+      const data = payload['data']
       if (socketLabel === 'ballot_statuses') {
-        this.ballot_statuses = payload
-        return
-      }
-      // Check for duplicates; do a inline replace if so
-      let duplicateIndex = _.findIndex(this[socketLabel], function (i) {
-        return i.id == payload.id
-      })
-      if (duplicateIndex != -1) {
-        this[socketLabel][duplicateIndex] = payload
+        this.ballot_statuses = data
       } else {
-        // Add new item to front
-        this[socketLabel].unshift(payload)
-        // Remove last item if at the limit
-        if (this[socketLabel].length >= 15) {
-          this[socketLabel].pop()
+        // Check for duplicates; do a inline replace if so
+        let duplicateIndex = _.findIndex(this[socketLabel], function (i) {
+          return i.id == data.id
+        })
+        if (duplicateIndex != -1) {
+          this[socketLabel][duplicateIndex] = data
+        } else {
+          // Add new item to front
+          this[socketLabel].unshift(data)
+          // Remove last item if at the limit
+          if (this[socketLabel].length >= 15) {
+            this[socketLabel].pop()
+          }
         }
       }
     }

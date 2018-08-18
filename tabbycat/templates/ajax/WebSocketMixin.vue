@@ -75,7 +75,7 @@ export default {
           this.showErrorAlert(payload.error, payload.message, null)
         }
       } else {
-        this.handleSocketReceive(payload)
+        this.handleSocketReceive(socketLabel, payload)
       }
     },
     // Called by inheriting components; sends a given payload to a socket

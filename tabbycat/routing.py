@@ -20,7 +20,7 @@ application = ProtocolTypeRouter({
     "websocket": AuthMiddlewareStack(
         URLRouter([
             # TournamentOverviewContainer
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/actionlogs/$', ActionLogEntryConsumer),
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/action_logs/$', ActionLogEntryConsumer),
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer),
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer),
             # CheckInStatusContainer

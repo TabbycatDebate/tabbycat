@@ -13,6 +13,7 @@ class ActionLogManager(models.Manager):
         obj = self.model(*args, **kwargs)
         obj.full_clean()
         obj.save()
+        return obj
 
 
 class ActionLogEntry(models.Model):

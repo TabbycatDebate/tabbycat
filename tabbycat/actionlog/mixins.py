@@ -1,5 +1,8 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib.auth import get_user_model
 
+from actionlog.consumers import ActionLogEntryConsumer
 from tournaments.models import Round
 from utils.misc import get_ip_address
 
@@ -97,7 +100,16 @@ class LogActionMixin:
         ip_address = get_ip_address(self.request)
         action_log_fields = self.get_action_log_fields()
         action_log_fields.update(kwargs)
-        ActionLogEntry.objects.log(ip_address=ip_address, **action_log_fields)
+        log = ActionLogEntry.objects.log(ip_address=ip_address, **action_log_fields)
+
+        # Notify the actionlog consumer to broadcast the event
+        if self.tournament:
+            print('Broadcasting notification of ActionLogEntryConsumer')
+            group_name = ActionLogEntryConsumer.group_prefix + "_" + self.tournament.slug
+            async_to_sync(get_channel_layer().group_send)(group_name, {
+                "type": "send_json",
+                "data": log.serialize,
+            })
 
     # If these methods exist, add `self.log_action()` to them.
     # (If they don't, this should be harmless.)

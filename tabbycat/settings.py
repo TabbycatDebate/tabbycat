@@ -15,6 +15,7 @@ ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 DEBUG_ASSETS = DEBUG
+USE_WEBPACK_SERVER = False
 
 # ==============================================================================
 # Version
