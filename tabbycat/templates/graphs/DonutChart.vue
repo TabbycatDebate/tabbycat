@@ -100,15 +100,15 @@ function InitChart(vueContext){
       "<br>" +
       vueContext.nicelabel(vueContext.graphData[i].label) +
       "</div>")
-      .style("left", (d3selection.event.pageX) + "px")
-      .style("top", (d3selection.event.pageY - 28) + "px")
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px")
       .style('opacity', 1)
-    d3selection.select(this).style('opacity', 0.5);
+    d3.select(this).style('opacity', 0.5);
   });
 
   path.on('mouseout', function (d) {
     tooltip.style('opacity', 0)
-    d3selection.select(this).style('opacity', 1);
+    d3.select(this).style('opacity', 1);
   });
 }
 </script>
