@@ -16,7 +16,7 @@ export default {
   mixins: [ModalErrorMixin],
   props: ['tournamentSlug', 'roundSeq'],
   data: function () {
-    return { bridges: {} }
+    return { bridges: {}, component_id: Math.floor(Math.random() * 10000) }
   },
   created: function () {
 
@@ -55,10 +55,10 @@ export default {
 
       // Logs
       webSocketBridge.socket.addEventListener('open', function () {
-        console.log("Connected to WebSocket path:", socketPath)
+        console.debug("Connected to WebSocket path:", socketPath)
       }.bind(socketPath))
       webSocketBridge.socket.addEventListener('close', function () {
-        console.log("Disconnected to WebSocket path:", socketPath)
+        console.debug("Disconnected to WebSocket path:", socketPath)
       }.bind(socketPath))
 
       // Set the data to contain the socket bridge so we can send to it
@@ -71,13 +71,17 @@ export default {
     receiveFromSocket: function(socketLabel, payload) {
       // console.log(`Received payload ${JSON.stringify(payload)} from socket ${socketLabel}`)
       if (payload.hasOwnProperty('error')) {
-        this.showErrorAlert(payload.error, payload.message, null)
+        if (payload['component_id'] === this.component_id) {
+          this.showErrorAlert(payload.error, payload.message, null)
+        }
+      } else {
+        this.handleSocketReceive(payload)
       }
-      this.handleSocketReceive(payload)
     },
     // Called by inheriting components; sends a given payload to a socket
     sendToSocket: function (socketLabel, payload) {
       // console.log(`Sent payload ${JSON.stringify(payload)} to socket ${socketLabel}`)
+      payload['component_id'] = this.component_id // Pass on originating Vue instance
       this.bridges[socketLabel].send(payload);
     },
   }

@@ -35,11 +35,12 @@ export default {
           var status = speaker.status ? 'Present; id=' : 'Absent; id='
           tt += `${speaker.name} (${status} ${speaker.identifier[0]}) `
         })
-      }
-      if (entity.identifier !== null) {
-        tt += ` with identifier of ${entity.identifier[0]}`
       } else {
-        tt += ' with no assigned identifier '
+        if (entity.identifier !== null ) {
+          tt += ` with identifier of ${entity.identifier[0]}`
+        } else {
+          tt += ' with no assigned identifier '
+        }
       }
       return tt
     },

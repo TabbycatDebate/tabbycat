@@ -18,7 +18,6 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
         if not self.scope["user"].is_authenticated:
             return
 
-        print('CheckInEventConsumer received', content)
         # Send message to room group about the new checkin
         async_to_sync(self.channel_layer.group_send)(
             self.group_name(), {
@@ -29,12 +28,11 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
 
     # Issue the relevant checkins
     def broadcast_checkin(self, event):
-        print('CheckInEventConsumer broadcast_checkin', event)
-
         content = event['content']
         tournament = self.tournament()
         barcode_ids = [b for b in content['barcodes'] if b is not None]
-        return_content = {'created': content['status'], 'checkins': []}
+        return_content = {'created': content['status'], 'checkins': [],
+                          'component_id': content['component_id']}
 
         for barcode in barcode_ids:
             try:
@@ -59,10 +57,13 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
                 # Only raise an error for single check-ins as for multi-check-in
                 # events via the status page its clear what has failed or not
                 if len(barcode_ids) == 1:
-                    self.send_error(_("Sent checkin identifier doesn't exist"))
+                    msg = _("Sent checkin identifier doesn't exist")
+                    self.send_error(_("Checkins"), msg, content)
+                    return
 
         if len(return_content['checkins']) == 0 and content['status'] is not False:
-            self.send_error(_("Checkins"),
-                            _("No checkin identifiers exist for sent barcodes"))
-        else:
-            self.send_json(return_content)
+            msg = _("No checkin identifiers exist for sent barcodes")
+            self.send_error(_("Checkins"), msg, content)
+            return
+
+        self.send_json(return_content)

@@ -5,7 +5,7 @@
 {% block js %}
   <script>
     window.vueData = {
-      'scanUrl': '{{ scan_url }}'
+      'tournamentSlug': '{{ tournament_slug }}'
     }
   </script>
   <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
@@ -20,7 +20,7 @@
   </div>
 
   <div id="vueMount">
-    <check-in-scan-container :scan-url="scanUrl"></check-in-scan-container>
+    <check-in-scan-container :tournament-slug="tournamentSlug"></check-in-scan-container>
   </div>
 
   <div class="mt-3" id="messages-container"></div>

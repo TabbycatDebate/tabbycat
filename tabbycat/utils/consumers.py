@@ -58,9 +58,14 @@ class TournamentConsumer(JsonWebsocketConsumer):
     def group_name(self):
         return self.group_prefix + '_' + self.tournament().slug
 
-    def send_error(self, error, message):
+    def send_error(self, error, message, original_content):
         # Need to forcibly decode the string (for translations)
-        self.send_json({'error': str(error), 'message': str(message)})
+        self.send_json({
+            'error': str(error),
+            'message': str(message),
+            'original_content': original_content,
+            'component_id': original_content['component_id']
+        })
         return super()
 
     def connect(self):

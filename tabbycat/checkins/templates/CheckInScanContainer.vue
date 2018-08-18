@@ -35,33 +35,57 @@
 <script>
 import _ from 'lodash'
 import Quagga from 'quagga'
-import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
+
+import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 export default {
-  mixins: [AjaxMixin],
+  mixins: [WebSocketMixin],
   data: function () {
     return {
       barcode: '',
       liveScanning: false,
       scannedResults: [],
+      sentIdentifiers: [],
       sound: false,
+      sockets: ['checkins'],
     }
   },
   props: {
-    scanUrl: String,
+    tournamentSlug: String,
   },
   methods: {
     checkInIdentifier: function (barcodeIdentifier) {
-      var message = `the checkin status of ${barcodeIdentifier}`
-      var payload = { barcodes: [barcodeIdentifier], status: true }
-      this.ajaxSave(
-        this.scanUrl, payload, message, this.finishCheckIn, this.failCheckIn,
-        null, false,
-      )
+      var payload = { barcodes: [barcodeIdentifier], status: true, type: 'people' }
+      this.sentIdentifiers.push(barcodeIdentifier) // Note what has been sent
+      this.sendToSocket('checkins', payload)
       this.barcode = '' // Reset
       if (!this.liveScanning) {
         this.$nextTick(() => this.$refs.entry.focus()) // Set focus back to input
       }
+    },
+    receiveFromSocket: function (socketLabel, payload) {
+      // Note overriding WebSocketMixin here to use sounds/inline alerts
+      // Note only responding to IDs that have been sent by this form —
+      // don't want to show checkins from everywhere else
+      console.log(`BReceived payload ${JSON.stringify(payload)} from socket ${socketLabel}`)
+      if (payload['component_id'] !== this.component_id) {
+        return // Didn't come from this form
+      }
+      if (payload.hasOwnProperty('error')) {
+        this.failCheckIn(payload.error, payload.message, null)
+      } else {
+        this.finishCheckIn(payload)
+      }
+    },
+    finishCheckIn: function (payload) {
+      const checkin = payload.checkins[0]
+      const msg = `${checkin.time} checked-in identifier ${checkin.identifier}`
+      $.fn.showAlert('success', msg, 0)
+      this.playSound('finishedScanSound')
+    },
+    failCheckIn: function (error, message) {
+      $.fn.showAlert('danger', message, 0)
+      this.playSound('failedScanSound')
     },
     unMute: function(event) {
       document.getElementById('finishedScanSound').muted = false
@@ -71,24 +95,13 @@ export default {
     playSound: function (elementID) {
       // Audio Problem
       var promise = document.getElementById(elementID).play()
-      console.log(promise)
       if (promise !== undefined) {
         promise.catch(error => {
           // Auto-play was prevented
           // Show a UI element to let the user manually start playback
-          console.log('Safari autoplay ... needs permission for sound')
+          console.debug('Safari autoplay ... needs permission for sound')
         })
       }
-    },
-    finishCheckIn: function (dataResponse, payload, returnPayload) {
-      var message = dataResponse.time + ' checked-in identifier ' + dataResponse.ids[0]
-      $.fn.showAlert('success', message, 0)
-      this.playSound('finishedScanSound')
-    },
-    failCheckIn: function (payload, returnPayload) {
-      var message = `Failed to check in identifier ${payload.barcodes[0]} Maybe it was misspelt?`
-      $.fn.showAlert('danger', message, 0)
-      this.playSound('failedScanSound')
     },
     toggleScan: function () {
       this.liveScanning = !this.liveScanning
@@ -118,7 +131,7 @@ export default {
         }
       }, function (err) {
         if(err) {
-          console.log("Initialization failed due to user camera permissions denial.");
+          console.debug("Initialization failed due to user camera permissions denial.");
           self.liveScanning = false
           return
         }
