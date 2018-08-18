@@ -271,7 +271,10 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
     context = {'DEBATE': round_name}
 
     for ballot in ballots:
-        judge = ballot['adjudicator'] if 'adjudicator' in ballot else debate.debateadjudicator_set.get(type="C")
+        if 'adjudicator' in ballot:
+            judge = ballot['adjudicator']
+        else:
+            judge = debate.debateadjudicator_set.get(type="C").adjudicator
 
         if judge.email is None:
             continue
