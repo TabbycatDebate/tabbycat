@@ -1,14 +1,23 @@
 module.exports = {
-  outputDir: './tabbycat/static/vue/', // Output to standard directory
-  filenameHashing: false, // Don't add a hash to the filename
-  runtimeCompiler: true, // Using <templates> in components; so this is needed
-  // configureWebpack: (config) => {
-  //   if (process.env.NODE_ENV === 'production') {
-  //     // mutate webpack config for production...
-  //   } else {
-  //     // mutate webpack config for development...
-  //   }
-  // },
+  // Output to standard directory; this is then compiled by django collectstatic
+  outputDir: './tabbycat/static/vue/',
+  // Need to set baseUrl for hot module reloading (proxies to the local server)
+  // But want to disable this when building for production
+  baseUrl: process.env.NODE_ENV === 'production' ? 'static/vue/' : 'http://localhost:8888',
+  // Don't add a hash to the filename
+  filenameHashing: false,
+  // We use <templates> in components; so need to include the compile
+  runtimeCompiler: true,
+  // Must output chunks to the same directory so async loading works
+  configureWebpack: {
+    output: {
+      chunkFilename: '[name].js',
+    },
+  },
+  // Don't split out vendors file
+  chainWebpack: config => {
+    config.optimization.delete('splitChunks')
+  },
   devServer: {
     port: 8888,
     headers: {
@@ -18,10 +27,6 @@ module.exports = {
       warnings: true,
       errors: true,
     },
-  },
-  baseUrl: 'http://localhost:8888', // This enables hot module reloads
-  chainWebpack: config => {
-    config.optimization.delete('splitChunks') // Don't split out dependencies
   },
   pages: {
     app: {

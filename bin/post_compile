@@ -15,7 +15,7 @@ python manage.py checkpreferences
 
 echo "-----> Running static asset compilation"
 npm install -g @vue/cli-service-global
-NODE_ENV='production' npm run build
+npm run build
 
 echo "-----> Running static files compilation"
 python manage.py collectstatic --noinput -v 0

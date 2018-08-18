@@ -42,7 +42,7 @@
     "build": "npm run build-sass && npm run build-vue && npm run cp-fonts && npm run cp-i18n && npm run cp-js",
     "build-sass": "npx node-sass --output-style compressed --include-path node_modules/ --include-path --output tabbycat/static/css/ tabbycat/templates/scss/style.scss && npx  node-sass --output-style compressed --include-path node_modules/ --include-path --output tabbycat/static/css/ tabbycat/templates/scss/printables.scss",
     "serve-sass": "npm run build-sass -- --watch --recursive",
-    "build-vue": "npx vue-cli-service build",
+    "build-vue": "NODE_ENV='production' npx vue-cli-service build",
     "serve-vue": "npx vue-cli-service serve",
     "cp-js": "cp node_modules/jquery/dist/jquery.js tabbycat/static/js/vendor && cp node_modules/jquery-validation/dist/jquery.validate.js tabbycat/static/js/vendor && cp node_modules/jsbarcode/dist/JsBarcode.all.min.js tabbycat/static/js/vendor",
     "cp-fonts": "cp -R 'node_modules/inter-ui/Inter UI (web)/' 'tabbycat/static/fonts'",
