@@ -32,7 +32,7 @@ gunicorn==19.9.0                        # Primary server for wsgi
 django_redis==4.9.0                     # Use redis for cache (on heroku; local optional)
 
 # Channels
-channels==2.1.2                         # Channels; also includes the Daphne server
+channels==2.1.3                         # Channels; also includes the Daphne server
 channels_redis==2.3.0                   # Channels Layer
 
 # Misc
