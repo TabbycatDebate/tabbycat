@@ -33,7 +33,7 @@ django_redis==4.9.0                     # Use redis for cache (on heroku; local 
 
 # Channels
 channels==2.1.2                         # Channels; also includes the Daphne server
-channels_redis==2.2.1                   # Channels Layer
+channels_redis==2.3.0                   # Channels Layer
 
 # Misc
 sendgrid==5.4.1                         # Email service of choice on Heroku
