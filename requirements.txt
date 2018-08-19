@@ -36,6 +36,6 @@ channels==2.1.2                         # Channels; also includes the Daphne ser
 channels_redis==2.2.1                   # Channels Layer
 
 # Misc
-sendgrid==5.4.1                         # Email service of choice on Heroku
+sendgrid==5.5.0                         # Email service of choice on Heroku
 scout-apm==1.2.2                        # Performance monitoring
 ipython==6.3.1
