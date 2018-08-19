@@ -921,12 +921,17 @@ class PublicSideAllocations(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class PublicDraw(BooleanPreference):
+class PublicDraw(ChoicePreference):
     help_text = _("Enables the public page showing released draws")
     verbose_name = _("Enable public view of draw")
     section = public_features
     name = 'public_draw'
-    default = False
+    choices = (
+        ('off', _("Disabled")),
+        ('current', _("Show a single page for the current round's draw")),
+        ('all-released', _("Show individual pages for all released draws")),
+    )
+    default = 'off'
 
 
 @tournament_preferences_registry.register
@@ -1089,15 +1094,6 @@ class ShowSpeakersInDraw(BooleanPreference):
     section = ui_options
     name = 'show_speakers_in_draw'
     default = True
-
-
-@tournament_preferences_registry.register
-class ShowAllDraws(BooleanPreference):
-    help_text = _("If showing draws to public, show all (past and future) released draws")
-    verbose_name = _("Show all draws")
-    section = ui_options
-    name = 'show_all_draws'
-    default = False
 
 
 @tournament_preferences_registry.register

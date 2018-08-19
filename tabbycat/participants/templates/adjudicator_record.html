@@ -7,7 +7,7 @@
 
   <div class="card-deck">
 
-    {% if pref.public_draw or admin_page %}
+    {% if pref.public_draw != 'off' or admin_page %}
       <div class="card {% if debateadjudications and draw_released %}panel-primary{% else %}panel-default{% endif %}">
         <div class="list-group list-group-flush">
 
@@ -164,7 +164,7 @@
         </div>
       </div>
 
-    {% endif %} {# pref.public_draw or admin_page #}
+    {% endif %} {# pref.public_draw != 'off' or admin_page #}
 
     {% if pref.public_participants or admin_page %}
 
