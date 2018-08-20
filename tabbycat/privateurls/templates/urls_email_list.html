@@ -22,6 +22,14 @@
   {% endblocktrans %}
   {% include 'components/explainer-card.html' with type='info' %}
 
+  {% if not pref.reply_to_address %}
+    {% tournamenturl 'options-tournament-section' section='email' as option_url %}
+    {% blocktrans trimmed asvar message %}
+      A reply-to address has not been specified. Participants receiving email will not be able to reply to the message for clarification or to alert a problem. Go to the <a href="{{ option_url }}">Notifications section of the tournament options</a> to set an incoming email address.
+    {% endblocktrans %}
+    {% include 'components/alert.html' with type='warning' %}
+  {% endif %}
+
   {% if people_no_email %}
     {% blocktrans trimmed with participants_list=people_no_email|join:", " asvar message %}
       The following participants have a URL key but don't have an e-mail address, so won't get e-mails:
