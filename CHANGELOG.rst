@@ -6,6 +6,8 @@ Change Log
 ------------------
 *Release date: TBD*
 
+- Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds.
+- Renamed the "average speaker score" to "average total speaker score."
 - Implemented a new server architecture on Heroku that should significantly improve performance under load. If upgrading an existing Heroku instance this requires a few tweaks:
     - Adding the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
     - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the `heroku stack:set heroku-16 --app APP_NAME` command
