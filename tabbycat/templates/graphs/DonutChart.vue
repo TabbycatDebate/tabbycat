@@ -50,7 +50,7 @@ export default {
       } else if (label == "NM") {
         return "Non-cis male identifying";
       } else if (label == "Unknown") {
-        return "Unspecified";
+        return "Unspecified or unrecorded";
       } else {
         return this.regions[label -1].name;
       }
@@ -84,6 +84,8 @@ function InitChart(vueContext){
       .data(pie(vueContext.graphData.reverse()))
     .enter().append("path")
       .attr("class", function (d, i) { return "hoverable " + vueContext.colorclass(vueContext.graphData[i].label); })
+      .style('stroke', 'white')
+      .style('stroke-width', '1')
       .attr("d", arc)
 
   var tooltip = d3.select("body").append("div")
