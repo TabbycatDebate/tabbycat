@@ -48,9 +48,15 @@ metrics that will be shown in the team standings, but not used to rank teams.
   * - Total speaker score
     - The sum of all speaker scores attained in all debates.
 
-  * - Average speaker score
+  * - Average total speaker score
     - The average total speaker score over all debates the team has had, not
       counting debates where they or their opponents forfeited.
+
+  * - Average individual speaker score
+    - The total substantive speaker score, over all debates the team has had and
+      the number of speakers. Provides an equivalent metric to average total
+      speaker score in no-reply formats, but within the substantive speech
+      scoring range.
 
   * - Speaker score standard deviation
     - The standard deviation of total speaker scores over all debates the team

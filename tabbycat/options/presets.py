@@ -337,8 +337,7 @@ class WADLPreferences(PreferencesPreset):
     ui_options__show_adjudicator_institutions  = False
     ui_options__show_speakers_in_draw          = False
     ui_options__public_motions_order           = 'reverse'
-    ui_options__show_all_draws                 = True
-    public_features__public_draw               = True
+    public_features__public_draw               = 'all-released'
     public_features__public_results            = True
     public_features__public_motions            = True
     public_features__public_record             = False
@@ -367,7 +366,7 @@ class PublicInformation(PreferencesPreset):
         "people can access the draw and other generally useful information "
         "via the tab site.")
 
-    public_features__public_draw               = True
+    public_features__public_draw               = 'current'
     public_features__public_break_categories   = True
     public_features__public_results            = True
     public_features__public_motions            = True
@@ -392,5 +391,5 @@ class TabRelease(PreferencesPreset):
     # Disable
     public_features__public_checkins           = False
     public_features__public_team_standings     = False
-    public_features__public_draw               = False
+    public_features__public_draw               = 'off'
     public_features__public_break_categories   = False

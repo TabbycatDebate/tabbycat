@@ -129,13 +129,18 @@
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-unrelease' %}">{% csrf_token %}</form>
           {% tournamenturl 'options-tournament-section' section='public_features' as alert_link %}
 
-          {% if pref.public_draw %}
+          {% if pref.public_draw != 'off' %}
             {% trans "The draw has been released publicly." as text %}
             {% include "components/item-info.html" with type="" %}
 
             {% trans "View public draw page" as text %}
-            {% roundurl 'draw-public-for-round' as public_link %}
-            {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
+            {% if pref.public_draw == 'current' and round == current_round %}
+              {% tournamenturl 'draw-public-current-round' as public_link %}
+              {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
+            {% elif pref.public_draw == 'all-released' %}
+              {% roundurl 'draw-public-for-round' as public_link %}
+              {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
+            {% endif %}
           {% elif pref.participant_ballots != 'off' or pref.participant_feedback != 'off' %}
             {% blocktrans trimmed asvar text %}
               You have released the draw, so ballots and/or feedback can be submitted from the public forms (if enabled). However, the draw itself will not show to the public unless the "public view of draw" setting is enabled in <a class="alert-link" href="{{ alert_link }}"> this tournament's configuration</a>.
@@ -156,7 +161,7 @@
           {% trans "Your tournament is configured to send emails to adjudicators announcing which debate they were allocated to once the draw is released." as email_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}</form>
 
-          {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw %}
+          {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw != 'off' %}
 
             {% if pref.participant_ballots != 'off' and pref.participant_feedback != 'off' %}
               {% trans "Your tournament allows ballots and feedback to be submitted online by adjudicators. The draw must be released before they can do so." as text %}
@@ -168,7 +173,7 @@
               {% trans "Your tournament allows feedback to be submitted online by participants. The draw must be released before they can do so." as text %}
               {% include "components/item-info.html" with type="danger" %}
             {% endif %}
-            {% if pref.public_draw %}
+            {% if pref.public_draw != 'off' %}
               {% trans "Your tournament is configured to show the draw publicly. Releasing a draw will allow it to show it on the public page." as text %}
               {% include "components/item-info.html" with type="info" %}
             {% endif %}

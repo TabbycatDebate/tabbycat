@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils.encoding import force_text
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, View
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
 
@@ -41,7 +42,7 @@ class PostOnlyRedirectView(View):
     """
 
     redirect_url = reverse_lazy('tabbycat-index')
-    not_post_message = "Whoops! You're not meant to type that URL into your browser."
+    not_post_message = _("Whoops! You're not meant to type that URL into your browser.")
 
     def get_redirect_url(self, *args, **kwargs):
         return self.redirect_url % kwargs

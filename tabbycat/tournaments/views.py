@@ -27,7 +27,7 @@ from results.utils import graphable_debate_statuses
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
@@ -39,7 +39,7 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicSiteIndexView(TemplateView):
+class PublicSiteIndexView(TemplateView, WarnAboutDatabaseUseMixin):
     template_name = 'site_index.html'
 
     def get(self, request, *args, **kwargs):
@@ -64,7 +64,7 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
 
 
-class TournamentDashboardHomeView(TournamentMixin, TemplateView):
+class TournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDatabaseUseMixin):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
@@ -214,12 +214,13 @@ class BlankSiteStartView(FormView):
         return super().form_valid(form)
 
 
-class CreateTournamentView(AdministratorMixin, CreateView):
+class CreateTournamentView(AdministratorMixin, CreateView, WarnAboutDatabaseUseMixin):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
     form_class = TournamentStartForm
     template_name = "create_tournament.html"
+    db_warning_severity = messages.ERROR
 
     def get_context_data(self, **kwargs):
         demo_datasets = [

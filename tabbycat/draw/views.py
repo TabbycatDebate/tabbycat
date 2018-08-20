@@ -122,7 +122,8 @@ class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
 
 class PublicDrawForRoundView(PublicTournamentPageMixin, BasePublicDrawTableView):
 
-    public_page_preference = 'public_draw'
+    def is_page_enabled(self, tournament):
+        return tournament.pref('public_draw') == 'all-released'
 
     def get_template_names(self):
         if self.round.draw_status != Round.STATUS_RELEASED:
@@ -140,7 +141,9 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, BasePublicDrawTableView)
 
 
 class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
-    pass
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('public_draw') == 'current'
 
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BasePublicDrawTableView):

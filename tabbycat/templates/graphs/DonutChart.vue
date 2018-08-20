@@ -50,7 +50,7 @@ export default {
       } else if (label == "NM") {
         return "Non-cis male identifying";
       } else if (label == "Unknown") {
-        return "Unspecified";
+        return "Unspecified or unrecorded";
       } else {
         return this.regions[label -1].name;
       }
@@ -87,6 +87,8 @@ function InitChart(vueContext){
       .attr("class", function (d, i) {
         return "hoverable " + vueContext.colorclass(vueContext.graphData[i].label);
       })
+      .style('stroke', 'white')
+      .style('stroke-width', '1')
       .attr("d", arc)
 
   var tooltip = d3.select("body").append("div")
@@ -100,15 +102,15 @@ function InitChart(vueContext){
       "<br>" +
       vueContext.nicelabel(vueContext.graphData[i].label) +
       "</div>")
-      .style("left", (d3selection.event.pageX) + "px")
-      .style("top", (d3selection.event.pageY - 28) + "px")
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px")
       .style('opacity', 1)
-    d3selection.select(this).style('opacity', 0.5);
+    d3.select(this).style('opacity', 0.5);
   });
 
   path.on('mouseout', function (d) {
     tooltip.style('opacity', 0)
-    d3selection.select(this).style('opacity', 1);
+    d3.select(this).style('opacity', 1);
   });
 }
 </script>

@@ -62,7 +62,6 @@ install:
   - pip install -r requirements.txt
   - pip install pypiwin32 # Extra dependency for channels/twisted on Windows
   - npm install
-  - npm -g install gulp-cli # Needs to be available to then use 'gulp' command later
 
 # before_test:
   # - psql -c "CREATE USER test WITH PASSWORD 'test';" -U postgres
@@ -72,7 +71,12 @@ test_script:
   - copy tabbycat\local_settings.example tabbycat\local_settings.py # Need to use local build opt
   # Update local connection settings
   # Test asset building
-  - npm run build
+  - npm run build-sass
+  # Override standard package.json build to set NODE_ENV on windows
+  - set "NODE_ENV='production' npx vue-cli-service build"
+  - npm run cp-fonts
+  - npm run cp-i18n
+  - npm run cp-js
   - python tabbycat/manage.py collectstatic
   # Test Docker Building
   # This fails at apt-get; apparently something to do with

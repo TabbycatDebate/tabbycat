@@ -6,6 +6,8 @@ Change Log
 ------------------
 *Release date: TBD*
 
+- Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds.
+- Renamed the "average speaker score" to "average total speaker score."
 - Implemented a new server architecture on Heroku that should significantly improve performance under load. If upgrading an existing Heroku instance this requires a few tweaks:
     - Adding the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
     - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the `heroku stack:set heroku-16 --app APP_NAME` command
@@ -17,6 +19,7 @@ Change Log
 - Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.
 - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score. Thanks Étienne Beaulé for the pull request!
 - Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request
+- Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments.
 - Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
 - Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6.
 
