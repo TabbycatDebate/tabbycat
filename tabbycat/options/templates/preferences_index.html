@@ -49,6 +49,10 @@
       {% trans "How adjudicators are ranked and who can submit feedback" as description %}
       {% include "components/item-action.html" with type="primary" emoji="🙅" text=title extra=description %}
 
+      {% tournamenturl 'options-tournament-section' section='motions' as url %}
+      {% trans "Motions" as title %}
+      {% trans "How and where are motions used" as description %}
+      {% include "components/item-action.html" with type="primary" emoji="📰" text=title extra=description %}
     </ul>
   </div>
 

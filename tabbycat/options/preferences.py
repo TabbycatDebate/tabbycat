@@ -478,15 +478,6 @@ class ReplyScores(BooleanPreference):
     default = True
 
 
-@tournament_preferences_registry.register
-class MotionVetoes(BooleanPreference):
-    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
-    verbose_name = _("Motion vetoes")
-    section = debate_rules
-    name = 'motion_vetoes_enabled'
-    default = True
-
-
 # ==============================================================================
 standings = Section('standings', verbose_name=_("Standings"))
 # ==============================================================================
@@ -774,15 +765,6 @@ class DisableBallotConfirmation(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class EnableMotions(BooleanPreference):
-    help_text = _("If checked, ballots require a motion to be entered")
-    verbose_name = _("Enable motions")
-    section = data_entry
-    name = 'enable_motions'
-    default = True
-
-
-@tournament_preferences_registry.register
 class AssistantAccess(ChoicePreference):
     help_text = _("Whether assistants can access pages that can reveal matchups "
                   "and motions ahead of public release (these pages are useful for "
@@ -832,15 +814,6 @@ class BallotsConfirmDigits(BooleanPreference):
     section = data_entry
     name = 'ballots_confirm_digits'
     default = True
-
-
-@tournament_preferences_registry.register
-class BallotsHideMotions(BooleanPreference):
-    help_text = _("Whether the printed scoresheets should hide the text of motions (even if they have been entered and released)")
-    verbose_name = _("Ballot Hide Motions")
-    section = data_entry
-    name = 'ballots_hide_motions'
-    default = False
 
 
 @tournament_preferences_registry.register
@@ -1034,15 +1007,6 @@ class ShowSplittingAdjudicators(BooleanPreference):
 
 
 @tournament_preferences_registry.register
-class ShowMotionsInResults(BooleanPreference):
-    help_text = _("If showing results to public, show which motions were selected in the record")
-    verbose_name = _("Show motions in results")
-    section = ui_options
-    name = 'show_motions_in_results'
-    default = False
-
-
-@tournament_preferences_registry.register
 class TeamCodeNames(ChoicePreference):
     help_text = _("Whether and how to use code names for teams")
     verbose_name = _("Team code names")
@@ -1094,19 +1058,6 @@ class ShowSpeakersInDraw(BooleanPreference):
     section = ui_options
     name = 'show_speakers_in_draw'
     default = True
-
-
-@tournament_preferences_registry.register
-class PublicMotionsOrder(ChoicePreference):
-    help_text = _("Order in which are listed by round in the public view")
-    verbose_name = _("Order to display motions")
-    section = ui_options
-    name = 'public_motions_order'
-    choices = (
-        ('forward', _("Earliest round first")),
-        ('reverse', _("Latest round first")),
-    )
-    default = 'reverse'
 
 
 @tournament_preferences_registry.register
@@ -1398,3 +1349,66 @@ class AdjudicatorDrawNotificationMessage(LongStringPreference):
     name = 'adj_email_message'
     default = "Hi {{ USER }}\n\nYou have been assigned as {{ POSITION }} adjudicator for {{ ROUND }} in room {{ VENUE }} with the following panel: {{ PANEL }}\n\n" \
             + "The debate is between these teams: {{ DRAW }}"
+
+
+# ==============================================================================
+motions = Section('motions', verbose_name=_("Motions"))
+# ==============================================================================
+
+
+@tournament_preferences_registry.register
+class EnableMotions(BooleanPreference):
+    help_text = _("If checked, ballots require a motion to be entered")
+    verbose_name = _("Enable motions")
+    section = motions
+    name = 'enable_motions'
+    default = True
+
+
+@tournament_preferences_registry.register
+class BallotsHideMotions(BooleanPreference):
+    help_text = _("Whether the printed scoresheets should hide the text of motions (even if they have been entered and released)")
+    verbose_name = _("Ballot Hide Motions")
+    section = data_entry
+    name = 'ballots_hide_motions'
+    default = False
+
+
+@tournament_preferences_registry.register
+class MotionVetoes(BooleanPreference):
+    help_text = _("Enables the motion veto field on ballots, to track veto statistics")
+    verbose_name = _("Motion vetoes")
+    section = motions
+    name = 'motion_vetoes_enabled'
+    default = True
+
+
+@tournament_preferences_registry.register
+class ShowMotionsInResults(BooleanPreference):
+    help_text = _("If showing results to public, show which motions were selected in the record")
+    verbose_name = _("Show motions in results")
+    section = motions
+    name = 'show_motions_in_results'
+    default = False
+
+
+@tournament_preferences_registry.register
+class PublicMotionsOrder(ChoicePreference):
+    help_text = _("Order in which are listed by round in the public view")
+    verbose_name = _("Order to display motions")
+    section = motions
+    name = 'public_motions_order'
+    choices = (
+        ('forward', _("Earliest round first")),
+        ('reverse', _("Latest round first")),
+    )
+    default = 'reverse'
+
+
+@tournament_preferences_registry.register
+class EnableMotionReuse(BooleanPreference):
+    help_text = _("Whether motions can be copied from one round to another.")
+    verbose_name = _("Allow motion re-use")
+    section = motions
+    name = 'enable_motion_reuse'
+    default = False

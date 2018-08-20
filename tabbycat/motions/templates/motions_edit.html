@@ -23,6 +23,21 @@
       {% trans "Assign Motions to Divisions" %}
     </a>
   {% endif %}
+
+  {% if pref.enable_motion_reuse %}
+    <div class="btn-group">
+      <form action="{% roundurl 'motions-previous' %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
+          {% trans "Copy Motions from Last Round" %}
+        </button>
+      </form>
+
+      <a href="{% roundurl 'motions-copy' %}" class="btn btn-outline-primary">
+        {% trans "Use Existing Motions" %}
+      </a>
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

@@ -10,6 +10,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
+from tournaments.models import Round
 from utils.misc import redirect_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
@@ -56,7 +57,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
-        excludes = ['rounds', 'id', 'tournament']
+        excludes = ['rounds', 'id']
 
         if not self.tournament.pref('enable_flagged_motions'):
             excludes.append('flagged')
@@ -92,19 +93,74 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
 
             self.log_action(content_object=motion)
 
-        count = len(motions)
+        self.show_message(len(motions), len(formset.deleted_objects))
+
+    def show_message(self, count, deleted):
         if not self.tournament.pref('enable_motions') and count == 1:
             messages.success(self.request, _("The motion has been saved."))
         elif count > 0:
             messages.success(self.request, ngettext("%(count)d motion has been saved.",
                 "%(count)d motions have been saved.", count) % {'count': count})
 
-        count = len(formset.deleted_objects)
-        if count > 0:
+        if deleted > 0:
             messages.success(self.request, ngettext("%(count)d motion has been deleted.",
-                "%(count)d motions have been deleted.", count) % {'count': count})
+                "%(count)d motions have been deleted.", deleted) % {'count': deleted})
 
         return redirect_round('draw-display', round)
+
+
+class CopyMotionsView(EditMotionsView):
+    formset_model = RoundMotions
+
+    def get_formset_factory_kwargs(self):
+        excludes = ['round', 'id']
+
+        nexisting = self.get_formset_queryset().count()
+        if self.tournament.pref('enable_motions'):
+            delete = True
+            extra = max(3 - nexisting, 0)
+        else:
+            excludes.append('seq')
+            extra = max(1 - nexisting, 0)
+            delete = nexisting > 1  # if there's more than one, allow deletion
+
+        return {'can_delete': delete, 'exclude': excludes, 'extra': extra}
+
+    def get_formset_queryset(self):
+        return self.round.roundmotions_set.all()
+
+    def formset_valid(self, formset):
+        motions = formset.save(commit=False)
+        round = self.round
+        for i, motion in enumerate(motions, start=1):
+            if not self.tournament.pref('enable_motions'):
+                motion.seq = i
+            motion.round = round
+            motion.save()
+
+            self.log_action(content_object=motion.motion)
+
+        self.show_message(len(motions), len(formset.deleted_objects))
+
+
+class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
+    round_redirect_pattern_name = 'draw-display'
+    action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
+
+    def post(self, request, *args, **kwargs):
+        motions = Round.objects.get(tournament=self.tournament, seq=self.round.seq - 1).roundmotions_set.select_related('motion')
+        new_motions = []
+
+        for motion in motions:
+            new_motions.append(RoundMotions(motion=motion.motion, seq=motion.seq, round=self.round))
+            self.log_action(content_object=motion.motion)
+
+        RoundMotions.objects.bulk_create(new_motions)
+        messages.success(request, ngettext(
+            "The motion was copied from the previous round.",
+            "The %(count)d motions were copied from the previous round.",
+            len(new_motions)) % {'count': len(new_motions)})
+        return super().post(request, *args, **kwargs)
 
 
 class AssignMotionsView(AdministratorMixin, RoundMixin, ModelFormSetView):
