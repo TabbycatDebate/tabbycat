@@ -17,6 +17,7 @@ Change Log
 - Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.
 - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score. Thanks Étienne Beaulé for the pull request!
 - Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request
+- Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments.
 - Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
 - Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6.
 
