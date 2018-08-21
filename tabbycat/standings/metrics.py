@@ -20,6 +20,9 @@ def metricgetter(*items):
      - After `f = metricgetter("a")`, the call `f(x)` returns `x.metrics["a"]`.
      - After `g = metricgetter(4, 9)`, the call `g(x)` returns `(x.metrics[4], x.metrics[9])`.
     """
+    if len(items) == 0:  # itemgetter() fails with no arguments
+        return lambda x: ()
+
     metricitemgetter = itemgetter(*items)
     return lambda x: metricitemgetter(x.metrics)
 
