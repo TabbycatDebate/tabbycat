@@ -93,7 +93,7 @@ class WarnAboutDatabaseUseMixin(ContextMixin):
     def get_context_data(self, **kwargs):
         if 'DATABASE_URL' in os.environ and self.request.user.is_authenticated:
             rows = self.get_database_row_count()
-            if rows >= 80:
+            if rows >= 8000:
                 messages.add_message(self.request, self.db_warning_severity,
                                      self.get_standings_error_message(rows))
 
