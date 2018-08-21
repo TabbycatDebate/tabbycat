@@ -33,11 +33,16 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         }
         status_cells = []
         for debate in debates:
+            barcode = debate.checkin_identifier.barcode
+            barcode = None
             cell = {
                 'icon': 'check' if debate.checked_in else 'x',
                 'class': 'text-primary' if debate.checked_in else 'text-muted',
                 'sort': 1 if debate.checked_in else 0,
-                'tooltip': debate.checked_tooltip
+                'tooltip': debate.checked_tooltip,
+                'check': 'checked' if debate.checked_in else 'missing', # Hook for vue
+                'id': debate.id,
+                'identifier': barcode if barcode else None,
             }
             status_cells.append(cell)
         self.add_column(status_header, status_cells)
@@ -56,7 +61,9 @@ class ResultsTableBuilder(TabbycatTableBuilder):
                 'icon': meta[0],
                 'class': meta[1],
                 'sort': meta[2],
-                'tooltip': meta[3]
+                'tooltip': meta[3],
+                'status': debate.result_status, # Hook for vue
+                'id': debate.id
             }
             status_cells.append(cell)
         self.add_column(status_header, status_cells)

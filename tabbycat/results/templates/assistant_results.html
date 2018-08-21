@@ -38,7 +38,7 @@
   {% with num_even_panel=round.num_debates_with_even_panel %}
     {% if pref.ballots_per_debate == 'per-adj' and num_even_panel > 0 %}
       {% blocktrans trimmed asvar message count num_even_panel=num_even_panel %}
-         One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
+        One debate has a panel with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
       {% plural %}
         {{ num_even_panel }} debates have panels with an even number of voting adjudicators. If the adjudicators split evenly, the debate will be awarded to the team for which the chair voted.
       {% endblocktrans %}
@@ -51,7 +51,8 @@
 
   <div id="vueMount">
     <results-tables-container
-      :tables-data=tablesData orientation={{ tables_orientation|safe }}>
+      :tables-data=tablesData
+      tournament-slug="{{ tournament_slug }}" orientation={{ tables_orientation|safe }}>
     </results-tables-container>
   </div>
 

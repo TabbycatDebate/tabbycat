@@ -33,7 +33,7 @@ from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .result import DebateResult
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, populate_identical_ballotsub_lists, send_ballot_receipt_emails_to_adjudicators
+from .utils import populate_identical_ballotsub_lists, send_ballot_receipt_emails_to_adjudicators
 
 logger = logging.getLogger(__name__)
 
@@ -75,27 +75,10 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         return table
 
     def get_context_data(self, **kwargs):
-        draw = self._get_draw()
-        result_status_stats = get_result_status_stats(self.round)
-
-        kwargs["stats"] = {
-            'none': result_status_stats[Debate.STATUS_NONE],
-            'draft': result_status_stats[Debate.STATUS_DRAFT],
-            'confirmed': result_status_stats[Debate.STATUS_CONFIRMED],
-            'postponed': result_status_stats[Debate.STATUS_POSTPONED],
-            'total': len(draw)
-        }
-        kwargs["checks"] = {
-            'checked': sum(1 for debate in draw if debate.checked_in),
-            'missing': sum(1 for debate in draw if not debate.checked_in),
-            'total': len(draw)
-        }
-
         kwargs["show_advance_button"] = (
             self.tournament.current_round == self.round and
             self.tournament.round_set.filter(seq__gt=self.round.seq).exists()
         )
-
         return super().get_context_data(**kwargs)
 
 
