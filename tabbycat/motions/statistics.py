@@ -194,6 +194,8 @@ class MotionBPStatsCalculator:
 
             for side in self.tournament.sides:
                 average = getattr(motion, '%s_average' % side)
+                if average is None:
+                    continue
                 motion.averages.append((side, average, average / 6 * 100))
                 counts = []
                 for points in [3, 2, 1, 0]:

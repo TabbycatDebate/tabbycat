@@ -2,6 +2,18 @@
 Change Log
 ==========
 
+2.1.3
+-----
+*Release date: 21 August 2018*
+
+- Added an alert for British Parliamentary format grand-final ballots that explains the workaround needed to nominate a sole winner
+- Improved display of images shown when sharing Tabbycat links on social media
+- Optimised the performance of several commonly-loaded pages. Thanks to Étienne Beaulé for the pull request!
+- Prevented the entry of integer-scale feedback questions without the required min/max attributes
+- Provided a shortcut link to editing a round's feedback weight
+- Prevented standings from crashing when only a single standings metric is set
+
+
 2.1.2
 -----
 *Release date: 14 July 2018*

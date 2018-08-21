@@ -118,7 +118,8 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
             return self.get_table_by_team()
 
     def get_table_by_debate(self):
-        debates = self.round.debate_set_with_prefetches(results=True, wins=True)
+        debates = self.round.debate_set_with_prefetches(results=True,
+                wins=True, institutions=True, adjudicators=True)
         populate_confirmed_ballots(debates, motions=True,
                 results=self.round.ballots_per_debate == 'per-adj')
 
@@ -135,12 +136,16 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
         return table
 
     def get_table_by_team(self):
-        teamscores = TeamScore.objects.filter(debate_team__debate__round=self.round,
-                ballot_submission__confirmed=True).prefetch_related(
-                'debate_team__team__speaker_set', 'debate_team__team__institution',
-                'debate_team__debate__debateadjudicator_set__adjudicator',
-                'debate_team__debate__debateteam_set__team',
-                'debate_team__debate__round').select_related('ballot_submission')
+        teamscores = TeamScore.objects.filter(
+            debate_team__debate__round=self.round,
+            ballot_submission__confirmed=True).prefetch_related(
+            'debate_team__team__speaker_set',
+            'debate_team__debate__debateadjudicator_set__adjudicator',
+            'debate_team__debate__debateadjudicator_set__adjudicator__institution',
+            'debate_team__debate__debateteam_set__team').select_related(
+            'ballot_submission',
+            'debate_team__team__institution',
+            'debate_team__debate__round')
         debates = [ts.debate_team.debate for ts in teamscores]
 
         if self.tournament.pref('teams_in_debate') == 'two':

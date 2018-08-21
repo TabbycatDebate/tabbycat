@@ -27,20 +27,17 @@
 
   <div class="d-lg-flex justify-content-lg-between mb-4">
     <div class="nav nav-pills btn-group">
-      <button class="btn btn-outline-secondary h6">
-        {% trans "Key" %}
-      </button>
       <button class="btn btn-primary gender-display gender-nm h6">
         {% trans "Non-cis male identifying" %}
       </button>
       <button class="btn btn-primary gender-display gender-male h6">
         {% trans "Male identifying" %}
       </button>
+      <button class="btn btn-primary gender-display gender-unknown h6">
+        {% trans "Unspecified/unrecorded" %}
+      </button>
     </div>
     <div class="nav nav-pills btn-group mt-md-0 mt-3">
-      <button class="btn btn-outline-secondary h6">
-        {% trans "Key" %}
-      </button>
       {% for r in regions %}
         <button class="btn btn-primary region-display region-{{ r.seq }} h6">
           {{ r.name }}
