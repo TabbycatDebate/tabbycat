@@ -1,13 +1,9 @@
 import logging
 import random
 import string
-from smtplib import SMTPException
 
-from django.core.mail import get_connection
 from django.db import IntegrityError
 
-from notifications.models import SentMessageRecord
-from notifications.utils import TournamentEmailMessage
 from utils.misc import reverse_tournament
 
 
@@ -41,27 +37,19 @@ def delete_url_keys(queryset):
     queryset.update(url_key=None)
 
 
-def send_randomised_url_emails(request, tournament, participants, subject, message):
+def send_randomised_url_emails(subject, message, request, participants, tournament):
+    from notifications.models import SentMessageRecord
+    from notifications.utils import TournamentEmailMessage
 
     messages = []
 
     for instance in participants:
-        path = reverse_tournament('privateurls-person-index', tournament, kwargs={'url_key': instance.url_key})
-        url = request.build_absolute_uri(path)
-
-        variables = {'NAME': instance.name, 'URL': url, 'key': instance.url_key}
+        variables = {
+            'NAME': instance.name,
+            'URL': request.build_absolute_uri(reverse_tournament('privateurls-person-index', tournament, kwargs={'url_key': instance.url_key})),
+            'key': instance.url_key
+        }
 
         messages.append(TournamentEmailMessage(subject, message, tournament, None, SentMessageRecord.EVENT_TYPE_URL, instance, variables))
-    try:
-        get_connection().send_messages(messages)
-    except SMTPException:
-        logger.exception("Failed to send randomised URL e-mails")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending randomised URL e-mails")
-        raise
-    else:
-        logger.info("Sent %d randomised URL e-mails", len(messages))
-        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])
 
-    return len(messages)
+    return messages

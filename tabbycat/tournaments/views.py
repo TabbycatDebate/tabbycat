@@ -20,6 +20,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import SentMessageRecord
+from notifications.utils import StandingsEmailGenerator
 from participants.models import Team
 from participants.prefetch import populate_win_counts
 from results.models import BallotSubmission
@@ -33,7 +34,7 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyR
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
-from .utils import get_side_name, send_standings_emails
+from .utils import get_side_name
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -169,7 +170,7 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
         populate_win_counts(active_teams)
 
         try:
-            send_standings_emails(self.tournament, active_teams, request, self.round)
+            StandingsEmailGenerator.run(self.tournament, active_teams, request, self.round)
         except (ConnectionError, SMTPException):
             messages.error(request, _("Team point emails could not be sent."))
         else:

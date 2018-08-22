@@ -1,16 +1,11 @@
 import itertools
 import logging
-from smtplib import SMTPException
 
-from django.core.mail import get_connection
 from django.db.models import Max
-from django.template import Template
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext, pgettext_lazy
 
-from notifications.models import SentMessageRecord
-from notifications.utils import TournamentEmailMessage
 from utils.misc import reverse_tournament
 
 from .models import Round
@@ -185,17 +180,16 @@ aff_team = _get_side_name('aff_team')
 neg_team = _get_side_name('neg_team')
 
 
-def send_standings_emails(tournament, teams, request, round):
+def send_standings_emails(subject, message, teams, request, round):
+    from notifications.models import SentMessageRecord
+    from notifications.utils import TournamentEmailMessage
+
     messages = []
 
-    subject = Template(tournament.pref('team_points_email_subject'))
-    message = tournament.pref('team_points_email_message')
+    context = {'TOURN': str(round.tournament)}
 
-    context = {'TOURN': str(tournament)}
-
-    if tournament.pref('public_team_standings'):
-        url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', tournament))
-        message += "\n\n" + tournament.pref('team_points_email_link_text') + "\n" + url
+    if round.tournament.pref('public_team_standings'):
+        context['url'] = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', round.tournament))
 
     for team in teams:
         context['POINTS'] = str(team.points_count)
@@ -207,15 +201,6 @@ def send_standings_emails(tournament, teams, request, round):
 
             context['USER'] = speaker.name
 
-            messages.append(TournamentEmailMessage(subject, Template(message), tournament, round, SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
+            messages.append(TournamentEmailMessage(subject, message, round.tournament, round, SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
 
-    try:
-        get_connection().send_messages(messages)
-    except SMTPException:
-        logger.exception("Failed to send team points e-mails")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending team points e-mails")
-        raise
-    else:
-        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])
+    return messages
