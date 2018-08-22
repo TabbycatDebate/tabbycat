@@ -212,17 +212,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return team.long_name
 
-    def _adjudicator_record_link(self, adj):
+    def _adjudicator_record_link(self, text, adj):
         adj_short_name = adj.name.split(" ")[0]
         if self.admin:
             return {
-                'text': _("View %(adj)s's Adjudication Record") % {'adj': adj_short_name},
+                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': text},
                 'link': reverse_tournament('participants-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(adj)s's Adjudication Record") % {'adj': adj_short_name},
+                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': text},
                 'link': reverse_tournament('participants-public-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
@@ -232,12 +232,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _team_record_link(self, team):
         if self.admin:
             return {
-                'text': _("View %(team)s's Team Record") % {'team': self._team_short_name(team)},
+                'text': _("View %(team)s's Record") % {'team': self._team_short_name(team)},
                 'link': reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(team)s's Team Record") % {'team': self._team_short_name(team)},
+                'text': _("View %(team)s's Record") % {'team': self._team_short_name(team)},
                 'link': reverse_tournament('participants-public-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         else:
@@ -377,8 +377,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 })
 
         if self._show_speakers_in_draw:
-            cell['popover']['content'].append({'text': _("Speakers in <strong>%(opp)s</strong>: %(speakers)s") % {
-                'opp': self._team_short_name(opp), 'speakers': ", ".join([s.name for s in opp.speakers])}})
+            cell['popover']['content'].append({
+                'text': ", ".join([s.name for s in opp.speakers])
+            })
 
         if self._show_record_links:
             cell['popover']['content'].append(
@@ -480,7 +481,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for adj in adjudicators:
             cell = {'text': adj.name}
             if self._show_record_links:
-                cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
+                cell['popover'] = {'content': [self._adjudicator_record_link(adj.name, adj)]}
             if subtext == 'institution' and adj.institution is not None:
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
@@ -542,16 +543,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
                 if a['adj'].institution is not None:
-                    descriptors.append("from %s" % a['adj'].institution.code)
+                    descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>in minority</span>")
                 text = a['adj'].name
 
                 if descriptors:
-                    text = "%s (%s)" % (text, ", ".join(descriptors))
-                popover_data.append({'text': text})
+                    descriptors = "(%s)" % (", ".join(descriptors))
+
                 if self._show_record_links:
-                    popover_data.append(self._adjudicator_record_link(a['adj']))
+                    popover_data.append(self._adjudicator_record_link(descriptors, a['adj']))
+                else:
+                    popover_data.append({'text': text + "" + descriptors})
 
             return popover_data
 
