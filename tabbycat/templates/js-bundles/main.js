@@ -126,11 +126,13 @@ $(document).ready(() => {
   // IE 11 has no endsWith(); do a quick polyfill if that is the case
   // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
   if (!String.prototype.endsWith) {
-    String.prototype.endsWith = function(search, this_len) {
-      if (this_len === undefined || this_len > this.length) {
-        this_len = this.length;
+    // eslint-disable-next-line no-extend-native
+    String.prototype.endsWith = function (search, thisLength) {
+      if (thisLength === undefined || thisLength > this.length) {
+        // eslint-disable-next-line no-param-reassign
+        thisLength = this.length;
       }
-      return this.substring(this_len - search.length, this_len) === search;
+      return this.substring(thisLength - search.length, thisLength) === search;
     };
   }
 
