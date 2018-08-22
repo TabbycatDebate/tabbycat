@@ -11,11 +11,10 @@ from draw.models import Debate, DebateTeam
 from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
-from .models import BallotSubmission
 from .consumers import BallotResultConsumer, BallotStatusConsumer
 from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
                      ForfeitDebateResult, VotingDebateResult)
-from .utils import graphable_debate_statuses, side_and_position_names
+from .utils import get_status_meta, side_and_position_names
 
 logger = logging.getLogger(__name__)
 
@@ -190,26 +189,32 @@ class BaseResultForm(forms.Form):
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
 
-        round = self.debate.round
-        tournament = round.tournament
+        t = self.debate.round.tournament
         # 5. Notify the Latest Results consumer (for results/overview)
-        slug = round.tournament.slug
-        group_name = BallotResultConsumer.group_prefix + "_" + slug
-        async_to_sync(get_channel_layer().group_send)(group_name, {
-            "type": "send_json",
-            "data": self.ballotsub.serialize_like_actionlog
-        })
+        if self.ballotsub.confirmed:
+            if self.debate.result_status is self.debate.STATUS_CONFIRMED:
+                group_name = BallotResultConsumer.group_prefix + "_" + t.slug
+                async_to_sync(get_channel_layer().group_send)(group_name, {
+                    "type": "send_json",
+                    "data": self.ballotsub.serialize_like_actionlog
+                })
 
         # 6. Notify the Ballots Status Graph if result is for current round
-        if round == tournament.current_round:
-            slug = tournament.slug
-            group_name = BallotStatusConsumer.group_prefix + "_" + slug
-            ballots = BallotSubmission.objects.filter(debate__round=round,
-                                                      discarded=False)
-            async_to_sync(get_channel_layer().group_send)(group_name, {
-                "type": "send_json",
-                "data": graphable_debate_statuses(ballots, round)
-            })
+        group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
+        # ballots = BallotSubmission.objects.filter(debate__round=round,
+        #                                           discarded=False)
+        meta = get_status_meta(self.debate)
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_json",
+            "data": {
+                # 'graph': graphable_debate_statuses(ballots, round),
+                'status': self.cleaned_data['debate_result_status'],
+                'icon': meta[0],
+                'class': meta[1],
+                'debate_id': self.debate.id,
+                'time': self.ballotsub.timestamp
+            }
+        })
 
         return self.ballotsub
 

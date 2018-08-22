@@ -1,28 +1,15 @@
 from django.utils.translation import gettext as _
 
 from draw.models import Debate
-from participants.models import Team
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
+
+from .utils import get_status_meta
 
 
 class ResultsTableBuilder(TabbycatTableBuilder):
     """Painfully construct the edit links; this is the only case where
     a cell has multiple links; hence the creating HTML directly"""
-
-    def get_status_meta(self, debate):
-        if any(team.type == Team.TYPE_BYE for team in debate.teams):
-            return "fast-forward", "", 5, _("Bye Debate")
-        elif debate.result_status == Debate.STATUS_NONE:
-            return "x", "text-danger", 0, _("No Ballot")
-        elif debate.result_status == Debate.STATUS_DRAFT:
-            return "circle", "text-info", 2, _("Ballot is Unconfirmed")
-        elif debate.result_status == Debate.STATUS_CONFIRMED:
-            return "check", "text-success", 3, _("Ballot is Confirmed")
-        elif debate.result_status == Debate.STATUS_POSTPONED:
-            return "pause", "", 4, _("Debate was Postponed")
-        else:
-            raise ValueError('Debate has no discernable status')
 
     def add_ballot_check_in_columns(self, debates, key):
 
@@ -33,8 +20,6 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         }
         status_cells = []
         for debate in debates:
-            barcode = debate.checkin_identifier.barcode
-            barcode = None
             cell = {
                 'icon': 'check' if debate.checked_in else 'x',
                 'class': 'text-primary' if debate.checked_in else 'text-muted',
@@ -42,7 +27,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
                 'tooltip': debate.checked_tooltip,
                 'check': 'checked' if debate.checked_in else 'missing', # Hook for vue
                 'id': debate.id,
-                'identifier': barcode if barcode else None,
+                'identifier': debate.barcode if debate.barcode else None,
             }
             status_cells.append(cell)
         self.add_column(status_header, status_cells)
@@ -56,7 +41,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         }
         status_cells = []
         for debate in debates:
-            meta = self.get_status_meta(debate)
+            meta = get_status_meta(debate)
             cell = {
                 'icon': meta[0],
                 'class': meta[1],
@@ -98,10 +83,13 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             else:
                 ballotsubs_info += edit_status + "</a><small class='d-block text-nowrap'>"
 
+            subtime = ballotsub.timestamp.strftime("%H:%M")
             if ballotsub.submitter_type == ballotsub.SUBMITTER_TABROOM:
-                ballotsubs_info += _(" added by %(user)s") % {'user': ballotsub.submitter.username}
+                ballotsubs_info += _("%(time)s by %(user)s") % {
+                    'user': ballotsub.submitter.username, 'time': subtime}
             elif ballotsub.submitter_type == ballotsub.SUBMITTER_PUBLIC:
-                ballotsubs_info += _(" a public submission from %(ip_address)s") % {'ip_address': ballotsub.ip_address}
+                ballotsubs_info += _("%(time)s via %(ip_address)s") % {
+                    'ip_address': ballotsub.ip_address, 'time': subtime}
 
             ballotsubs_info += "</small>"
 

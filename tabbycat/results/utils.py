@@ -17,6 +17,19 @@ from tournaments.utils import get_side_name
 logger = logging.getLogger(__name__)
 
 
+def get_status_meta(debate):
+    if debate.result_status == Debate.STATUS_NONE:
+        return "x", "text-danger", 0, _("No Ballot")
+    elif debate.result_status == Debate.STATUS_DRAFT:
+        return "circle", "text-info", 2, _("Ballot is Unconfirmed")
+    elif debate.result_status == Debate.STATUS_CONFIRMED:
+        return "check", "text-success", 3, _("Ballot is Confirmed")
+    elif debate.result_status == Debate.STATUS_POSTPONED:
+        return "pause", "", 4, _("Debate was Postponed")
+    else:
+        raise ValueError('Debate has no discernable status')
+
+
 def graphable_debate_statuses(ballots, round):
     # For each debate, find (a) the first non-discarded submission time, and
     # (b) the last confirmed confirmation time. (Note that this means when

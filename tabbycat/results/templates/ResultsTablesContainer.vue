@@ -5,7 +5,7 @@
 
     <div class="row">
       <div class="col">
-        <tables-container :tables-data="tablesData"></tables-container>
+        <tables-container :tables-data="localTableData"></tables-container>
       </div>
     </div>
 
@@ -23,6 +23,7 @@ export default {
   props: { tablesData: Array, 'tournamentSlug': String },
   data: function () {
     return {
+      localTableData: this.tablesData,
       sockets: ['ballot_statuses', 'checkins'],
     }
   },
@@ -32,21 +33,29 @@ export default {
       return matches.length
     },
     handleSocketReceive: function (socketLabel, payload) {
-      const data = payload['data']
-      console.log(socketLabel, payload)
       if (socketLabel === 'ballot_statuses') {
         // Going to have to reconstruct both the status icon for this debate
         // But also the edit links
+        var row = this.localTableData[0].data.find(function (cell) {
+          return cell[1].id === payload.data.debate_id
+        })
+        row[1].status = payload.data.status
+        row[1].icon = payload.data.icon
+        row[1].class = payload.data.class
       }
-      if (socketLabel === 'checkins') {
-        // Check if data.checkins[0].identifier is in this.debates
-        // If so somehow mutate its data
+      if (socketLabel === 'checkins' && payload.created) {
+        // Note: must alter the original object not the computed property
+        var row = this.localTableData[0].data.find(function (cell) {
+          return cell[0].identifier === payload.checkins[0].identifier
+        })
+        row[0].check = 'checked'
+        row[0].icon = 'check'
       }
     }
   },
   computed: {
     debates: function () {
-      const rows = this.tablesData[0].data.map(cells => ({
+      const rows = this.localTableData[0].data.map(cells => ({
         identifier: cells[0].identifier,
         id: cells[0].id,
         checked: cells[0].check,

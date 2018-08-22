@@ -6,6 +6,9 @@
 
 {% block page-alerts %}
 
+  {% trans "This page should automatically update with the new ballot entries and checkins." as message %}
+  {% include "components/alert.html" with type="info" %}
+
   {% block page-alerts-role-specific %}
     {# Administrators have different alert that have links, see admin_results.html. #}
     {% if pref.teams_in_debate == "bp" and pref.ballots_per_debate == "per-adj" %}
