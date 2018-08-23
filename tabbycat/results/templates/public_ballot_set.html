@@ -66,7 +66,7 @@
                 </li>
               {% endfor %}
               <li class="list-group-item list-group-item-{{ team.win_style }}">
-                <em>{% blocktrans trimemd with short_name=team.team.short_name side=team.side %}Total for {{ short_name }} ({{ side }}){% endblocktrans %}</em>
+                <em>{% blocktrans trimmed with short_name=team.team.short_name side=team.side %}Total for {{ short_name }} ({{ side }}){% endblocktrans %}</em>
                 <span class="badge badge-secondary float-right">
                   {{ team.total }}
                 </span>
