@@ -137,6 +137,10 @@ def get_git_push_spec():
 # Create the app with addons
 addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create"]
+
+# Ensure on the right stack (for NGINX compatability)
+command.extend(["--stack", "cedar-16"])
+
 if addons:
     command.extend(["--addons", ",".join(addons)])
 if args.urlname != "-":

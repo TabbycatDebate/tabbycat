@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin, messages
 from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy as _
@@ -30,8 +31,22 @@ class AdjudicatorTestScoreHistoryAdmin(admin.ModelAdmin):
 # Adjudicator feedback questions
 # ==============================================================================
 
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = AdjudicatorFeedbackQuestion
+        fields = '__all__'
+
+    def clean(self):
+        integer_scale = AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE
+        if self.cleaned_data.get('answer_type') == integer_scale:
+            if not self.cleaned_data.get('min_value') or not self.cleaned_data.get('max_value'):
+                raise forms.ValidationError(_("Integer scales must have a minimum and maximum"))
+        return self.cleaned_data
+
+
 @admin.register(AdjudicatorFeedbackQuestion)
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
+    form = QuestionForm
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
                     'required', 'from_adj', 'from_team')
     list_filter  = ('tournament',)

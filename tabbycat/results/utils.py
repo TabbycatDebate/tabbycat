@@ -34,7 +34,6 @@ def graphable_debate_statuses(ballots, round):
     # For each debate, find (a) the first non-discarded submission time, and
     # (b) the last confirmed confirmation time. (Note that this means when
     # a ballot is discarded, the graph will change retrospectively.)
-    total_debates = round.debate_set.count()
 
     # These two dictionaries record when a particular debate was first
     # entered or drafted. These can then be compared to given time intervals
@@ -49,45 +48,31 @@ def graphable_debate_statuses(ballots, round):
             confirmations[d_id] = ballot.confirm_timestamp
 
     # Collate timestamps into a single list.
-    timestamps = [t for t in drafts.values()] + [t for t in confirmations.values()]
+    # Tuples are (time, none_change, draft_change, confirmed_change)
+    first_draft_timestamps = [(time, -1, +1, 0) for time in drafts.values()]
+    confirmation_timestamps = [(time, 0, -1, +1) for time in confirmations.values()]
+    timestamps = sorted(first_draft_timestamps + confirmation_timestamps)
     if len(timestamps) == 0:
         return []
-    timestamps = sorted(timestamps) # Order by time
 
-    # Create the spaced intervals
-    intervals = 20 # IE numbner of bars on the graph
-    start_of_entry = timestamps[0]
-    end_of_entry = timestamps[-1]
-    time_span = end_of_entry - start_of_entry
-    minutes_span_interval = (time_span.total_seconds() / 60.0) / intervals
+    # Generate the timeline, including a one-minute margin before starting
+    margin = datetime.timedelta(minutes=1)
+    none = round.debate_set.count()
+    draft = 0
+    confirmed = 0
 
-    intervals_with_stats = []
-    for i in range(0, intervals):
-        delta = (i * minutes_span_interval) + minutes_span_interval
-        interval_time = start_of_entry + datetime.timedelta(minutes=delta)
+    stats = []
+    stats.append({"time": (timestamps[0][0] - margin).isoformat(), "none": none, "draft": draft, "confirmed": confirmed})
 
-        # Count up the number of drafts at this point by reviewing timestamps
-        interval_stat = {"time": interval_time.isoformat(),
-                         "total": total_debates,
-                         "none": total_debates, "draft": 0, "confirmed": 0}
+    for time, none_change, draft_change, confirmed_change in timestamps:
+        time_iso = time.isoformat()
+        stats.append({"time": time_iso, "none": none, "draft": draft, "confirmed": confirmed})
+        none += none_change
+        draft += draft_change
+        confirmed += confirmed_change
+        stats.append({"time": time_iso, "none": none, "draft": draft, "confirmed": confirmed})
 
-        # Count up the number of confirms/drafts at this point
-        recorded_ids = []
-        for dID, timestamp in confirmations.items():
-            if timestamp <= interval_time:
-                interval_stat['confirmed'] += 1
-                interval_stat['none'] -= 1
-                recorded_ids.append(dID)
-
-        for dID, timestamp in drafts.items():
-            if dID not in recorded_ids:
-                if drafts[dID] <= interval_time:
-                    interval_stat['draft'] += 1
-                    interval_stat['none'] -= 1
-
-        intervals_with_stats.append(interval_stat)
-
-    return intervals_with_stats
+    return stats
 
 
 def readable_ballotsub_result(ballotsub):

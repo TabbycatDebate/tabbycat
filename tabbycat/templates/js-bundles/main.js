@@ -127,6 +127,19 @@ $(document).ready(() => {
     })
   }
 
+  // IE 11 has no endsWith(); do a quick polyfill if that is the case
+  // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+  if (!String.prototype.endsWith) {
+    // eslint-disable-next-line no-extend-native
+    String.prototype.endsWith = function (search, thisLength) {
+      if (thisLength === undefined || thisLength > this.length) {
+        // eslint-disable-next-line no-param-reassign
+        thisLength = this.length;
+      }
+      return this.substring(thisLength - search.length, thisLength) === search;
+    };
+  }
+
   // Set Highlights on Navigation Elements
   const currentUrl = window.location.href;
   if ($('.admin-sidebar').length) {

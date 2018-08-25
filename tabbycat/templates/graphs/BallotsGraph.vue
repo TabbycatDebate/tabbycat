@@ -1,9 +1,8 @@
 <template id="ballots-graph">
   <div>
 
-    <svg id="ballotsStatusGraph" class="d3-graph"
-         style="margin: 10px 0 -5px 20px; width: 100%;"
-         :style="{ height: height + 'px' }"></svg>
+    <div id="ballotsStatusGraph" class="d3-graph"
+         :style="{ height: height + 'px' }"></div>
     <div v-if="!graphData" class="text-center">
       No ballots in for this round yet
     </div>
@@ -22,90 +21,93 @@ export default {
     graphData: { type: Array,  default: false }
   },
   mounted: function () {
-    initChart(this.padding, this.height, this.graphData)
+    var total = this.graphData[0].none +
+      this.graphData[0].draft + this.graphData[0].confirmed;
+    initChart(this.padding, this.graphData, total);
   },
   watch: {
     graphData: function (val, oldVal) {
-      initChart(this.padding, this.height, this.graphData)
+      var total = this.graphData[0].none +
+        this.graphData[0].draft + this.graphData[0].confirmed;
+      initChart(this.padding, this.graphData, total);
     }
   }
 }
 
-function initChart(pad, height, data) {
-  // Based on https://bl.ocks.org/caravinden/8979a6c1063a4022cbd738b4498a0ba6
-  // var data = [{"time":"2018-01-20T18:31:05.000","total":50,"confirmed":0,"none":20,"draft":5}]
+function initChart(pad, data, total) {
+  // Based on https://bl.ocks.org/mbostock/3885211
+  // var data = [{"time":"2018-01-20T18:31:05.000","confirmed":0,"none":20,"draft":5}]
 
-  if (data.length === 0) { return } // Don't init with blank data
-  d3.selectAll("#ballotsStatusGraph > svg > *").remove(); // Remove prior graph
+  if (data.length === 0) { return; } // Don't init with blank data
+  var d3_data = data.map(type);
+  d3.selectAll("#ballotsStatusGraph > *").remove(); // Remove prior graph
 
   var stackKey = ["none", "draft", "confirmed"];
-  var parseDate = d3.isoParse // Date is ISO; parse as such
   var colors = {
-    "none": "#d1185e",
-    "draft": "#17a2b8",
-    "confirmed": "#00bf8a",
-  }
+    "none": "#e34e42",
+    "draft": "#f0c230",
+    "confirmed": "#43ca75",
+  };
 
-  // Responsive width
-  var bounds = d3.select('#ballotsStatusGraph').node().getBoundingClientRect()
-  var width = parseInt(bounds.width - pad * 4);
-  var margin = {top: pad, right: pad, bottom: pad, left: pad}
+  var chartDiv = document.getElementById("ballotsStatusGraph");
+  var margin = {top: 20, right: 20, bottom: 30, left: 50};
+  var width = chartDiv.clientWidth - margin.left - margin.right,
+      height = chartDiv.clientHeight - margin.top - margin.bottom;
 
-  var xScale = d3.scaleBand().range([0, width]).padding(0.1)
-  var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%H:%M"))
-  var yScale = d3.scaleLinear().range([height, 0])
-  var yAxis = d3.axisLeft(yScale)
+  var svg = d3.select("#ballotsStatusGraph")
+    .append("svg")
+    .attr("viewbox", "0 0 " + width + " " + height)
+    .attr("height", "100%")
+    .attr("width", "100%");
 
-  var svg = d3.select("#ballotsStatusGraph").append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", "translate(0,-25)")
+  var x = d3.scaleTime().range([0, width]),
+      y = d3.scaleLinear().range([height, 0]),
+      z = d3.scaleOrdinal(colors);
 
   var stack = d3.stack()
     .keys(stackKey)
     .order(d3.stackOrderNone)
     .offset(d3.stackOffsetNone);
 
-  var layers = stack(data);
-    xScale.domain(data.map(function (d) {
-      return parseDate(d.time); // x-scale derives from time sequence
-    }));
-    yScale.domain([0, d3.max(data, function (d) {
-      return d.total; // y-scale is total ballots reported
-    })]).nice();
+  x.domain(d3.extent(d3_data, function(d) { return d.time; }));
+  y.domain([0, total]);
+  // The graph starts when the first ballot is submitted
+  z.domain(stackKey);
 
-  var layer = svg.selectAll(".layer")
-    .data(layers)
+  var area = d3.area()
+      .x(function(d, i) { return x(d.data.time); })
+      .y0(function(d) { return y(d[0]); })
+      .y1(function(d) { return y(d[1]); });
+
+  var g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var layer = g.selectAll(".layer")
+    .data(stack(d3_data))
     .enter().append("g")
-    .attr("class", "layer")
-    .style("fill", function (d, i) {
-      return colors[d.key];
-    });
+      .attr("class", "layer");
 
-  layer.selectAll("rect")
-    .data(function (d) { return d; })
-    .enter().append("rect")
-      .attr("x", function (d) {
-        return xScale(parseDate(d.data.time));
-      })
-      .attr("y", function (d) {
-        return yScale(d[1]);
-      })
-      .attr("height", function (d) {
-        return yScale(d[0]) - yScale(d[1]);
-      })
-      .attr("width", xScale.bandwidth());
+  layer.append("path")
+      .attr("class", "area")
+      .style("fill", function(d) { return colors[d.key]; })
+      .attr("d", area);
 
-  svg.append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + (height) + ")")
-    .call(xAxis);
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
 
-  // svg.append("g")
-  //   .attr("class", "axis axis--y")
-  //   .attr("transform", "translate(0, 0)")
-  //   .call(yAxis);
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y));
+
+  function type(d) {
+    d.time = d3.isoParse(d.time); // date is ISO
+    d.none = +d.none;
+    d.draft = +d.draft;
+    d.confirmed = +d.confirmed;
+    return d;
+  }
 
 }
 </script>
