@@ -37,7 +37,7 @@ export default {
         // Going to have to reconstruct both the status icon for this debate
         // But also the edit links
         var row = this.localTableData[0].data.find(function (cell) {
-          return cell[1].id === payload.data.debate_id
+          return cell[1].id === payload.data.ballot.debate_id
         })
         row[1].status = payload.data.status
         row[1].icon = payload.data.icon

@@ -201,8 +201,6 @@ class BaseResultForm(forms.Form):
 
         # 6. Notify the Ballots Status Graph if result is for current round
         group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
-        # ballots = BallotSubmission.objects.filter(debate__round=round,
-        #                                           discarded=False)
         meta = get_status_meta(self.debate)
         async_to_sync(get_channel_layer().group_send)(group_name, {
             "type": "send_json",
@@ -211,8 +209,7 @@ class BaseResultForm(forms.Form):
                 'status': self.cleaned_data['debate_result_status'],
                 'icon': meta[0],
                 'class': meta[1],
-                'debate_id': self.debate.id,
-                'time': self.ballotsub.timestamp
+                'ballot': self.ballotsub.serialize(t)
             }
         })
 

@@ -68,7 +68,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table = ResultsTableBuilder(view=self, sort_key="status")
         table.add_ballot_check_in_columns(draw, key="check_ins")
         table.add_ballot_status_columns(draw, key="status")
-        table.add_ballot_entry_columns(draw)
+        table.add_ballot_entry_columns(draw, self.request.user)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw)
         table.add_debate_adjudicators_column(draw, show_splits=True)

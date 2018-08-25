@@ -4,9 +4,10 @@ from threading import Lock
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from utils.misc import badge_datetime_format
+from utils.misc import badge_datetime_format, reverse_tournament
 
 from .result import DebateResult
 from .utils import readable_ballotsub_result
@@ -148,6 +149,25 @@ class BallotSubmission(Submission):
             'confirmed': self.confirmed,
             'debate': self.debate.id,
             'result_status': self.debate.result_status
+        }
+
+    def serialize(self, tournament=None):
+        if not tournament:
+            tournament = self.debate.round.tournament
+
+        return {
+            'ballot_id': self.id,
+            'debate_id': self.debate.id,
+            'submitter': self.submitter.username if self.submitter else self.ip_address,
+            'admin_link': reverse_tournament('results-ballotset-edit',
+                                             tournament, kwargs={'pk': self.id}),
+            'assistant_link': reverse_tournament('results-assistant-ballotset-edit',
+                                                 tournament, kwargs={'pk': self.id}),
+            'short_time': self.timestamp.strftime("%H:%M"),
+            'time': timezone.localtime(self.timestamp).strftime("%a, %d %b %Y %H:%M:%S"),
+            'version': self.version,
+            'confirmed': self.confirmed,
+            'discarded': self.discarded,
         }
 
 
