@@ -1,30 +1,31 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, printing module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-08 12:25+1000\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Yuki Kobayashi <yuki.kobayashi.sophia@gmail.com>, 2018\n"
+"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: printing/templates/feedback_list.html:5
 msgid "Feedback Forms"
-msgstr ""
+msgstr "フィードバックフォーム"
 
 #: printing/templates/feedback_list.html:7
 #, python-format
 msgid "Printable Feedback Forms for %(round_name)s"
-msgstr ""
+msgstr "%(round_name)sの印刷可能なフィードバックフォーム"
 
 #: printing/templates/feedback_list.html:14
 msgid ""
@@ -34,19 +35,19 @@ msgstr ""
 
 #: printing/templates/feedback_list.html:16
 msgid "No feedback questions have been added for teams to answer."
-msgstr ""
+msgstr "チームのフィードバックには質問はありません。"
 
 #: printing/templates/feedback_list.html:18
 msgid "No feedback questions have been added for adjudicators to answer."
-msgstr ""
+msgstr "ジャッジのフィードバックには質問はありません。"
 
 #: printing/templates/feedback_list.html:20
 #, python-format
 msgid ""
-"%(first_sentence)s Check the <a href=\"http://tabbycat.readthedocs.io/en/"
-"stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</"
-"a> for information on how to add these (otherwise these forms will be quite "
-"bare)."
+"%(first_sentence)s Check the <a "
+"href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-"
+"feedback.html\" target=\"_blank\">documentation</a> for information on how "
+"to add these (otherwise these forms will be quite bare)."
 msgstr ""
 
 #: printing/templates/feedback_list.html:41
@@ -58,14 +59,14 @@ msgstr ""
 #: printing/templates/printables_list.html:9
 msgid ""
 "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
-"<strong>page orientation</strong>, to turn off <strong>headers/footers</"
-"strong> and turn on <strong>background graphics</strong>. Works best in "
-"Chrome."
-msgstr ""
+"<strong>page orientation</strong>, to turn off "
+"<strong>headers/footers</strong> and turn on <strong>background "
+"graphics</strong>. Works best in Chrome."
+msgstr "Ctrl+PでPDFとして保存ができます。まだ途中"
 
 #: printing/templates/scoresheet_list.html:5
 msgid "Scoresheets"
-msgstr ""
+msgstr "スコアシート"
 
 #: printing/templates/scoresheet_list.html:7
 #, python-format
@@ -75,11 +76,11 @@ msgstr ""
 #: printing/templates/scoresheet_list.html:23
 msgid ""
 "There are no scoresheets available — perhaps the round has not been drawn?"
-msgstr ""
+msgstr "表示できるスコアシートがありません。……もしかすると、ラウンドがまだ設定されていないのかもしれません。"
 
 #: printing/views.py:90
 msgid "Overall Score"
-msgstr ""
+msgstr "合計点数"
 
 #: printing/views.py:117 printing/views.py:225 printing/views.py:238
 msgid "Unaffiliated"
@@ -87,4 +88,4 @@ msgstr ""
 
 #: printing/views.py:130 printing/views.py:134
 msgid "Team"
-msgstr ""
+msgstr "チーム"

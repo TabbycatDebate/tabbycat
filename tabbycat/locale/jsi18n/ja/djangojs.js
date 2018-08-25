@@ -37,6 +37,7 @@
     "Chosen %s": "\u9078\u629e\u3055\u308c\u305f %s",
     "Click to choose all %s at once.": "\u30af\u30ea\u30c3\u30af\u3059\u308b\u3068\u3059\u3079\u3066\u306e %s \u3092\u9078\u629e\u3057\u307e\u3059\u3002",
     "Click to remove all chosen %s at once.": "\u30af\u30ea\u30c3\u30af\u3059\u308b\u3068\u3059\u3079\u3066\u306e %s \u3092\u9078\u629e\u304b\u3089\u524a\u9664\u3057\u307e\u3059\u3002",
+    "Copy From Check-Ins": "\u30c1\u30a7\u30c3\u30af\u30a4\u30f3\u304b\u3089\u30b3\u30d4\u30fc\u3059\u308b",
     "December": "12\u6708",
     "February": "2\u6708",
     "Filter": "\u30d5\u30a3\u30eb\u30bf\u30fc",
@@ -47,6 +48,8 @@
     "March": "3\u6708",
     "May": "5\u6708",
     "Midnight": "0\u6642",
+    "No Gender Information": "\u30b8\u30a7\u30f3\u30c0\u30fc\u306b\u95a2\u3059\u308b\u60c5\u5831\u306a\u3057",
+    "No Region Information": "\u5730\u57df\u60c5\u5831\u306a\u3057",
     "Noon": "12\u6642",
     "Note: You are %s hour ahead of server time.": [
       "\u30ce\u30fc\u30c8: \u3042\u306a\u305f\u306e\u74b0\u5883\u306f\u30b5\u30fc\u30d0\u30fc\u6642\u9593\u3088\u308a\u3001%s\u6642\u9593\u9032\u3093\u3067\u3044\u307e\u3059\u3002"

@@ -1,34 +1,34 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, venues module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-08 12:25+1000\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
+"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: venues/apps.py:7
 msgid "Venues"
-msgstr ""
+msgstr "ラウンド部屋"
 
 #: venues/models.py:10 venues/models.py:74
 msgid "name"
-msgstr ""
+msgstr "名前"
 
 #: venues/models.py:12 venues/models.py:128
 msgid "priority"
-msgstr ""
+msgstr "優先度"
 
 #: venues/models.py:13
 msgid ""
@@ -38,19 +38,20 @@ msgstr ""
 
 #: venues/models.py:16
 msgid "tournament"
-msgstr ""
+msgstr "大会"
 
 #: venues/models.py:17
-msgid "Venues not assigned to any tournament can be shared between tournaments"
+msgid ""
+"Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
 
 #: venues/models.py:24
 msgid "venue"
-msgstr ""
+msgstr "ラウンド部屋"
 
 #: venues/models.py:25 venues/models.py:84
 msgid "venues"
-msgstr ""
+msgstr "ラウンド部屋"
 
 #: venues/models.py:69
 msgid "Don't display in venue name"
@@ -66,9 +67,9 @@ msgstr ""
 
 #: venues/models.py:75
 msgid ""
-"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
-"\". This name is shown when the category is prefixed or suffixed to a venue "
-"name in the draw, e.g., \"Purple – G05\"."
+"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab "
+"room\". This name is shown when the category is prefixed or suffixed to a "
+"venue name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 
 #: venues/models.py:79
@@ -102,15 +103,15 @@ msgstr ""
 
 #: venues/models.py:96
 msgid "venue category"
-msgstr ""
+msgstr "ラウンド部屋カテゴリー"
 
 #: venues/models.py:97
 msgid "venue categories"
-msgstr ""
+msgstr "ラウンド部屋カテゴリー"
 
 #: venues/models.py:127
 msgid "category"
-msgstr ""
+msgstr "カテゴリー"
 
 #: venues/models.py:131
 msgid "subject content type"
@@ -159,12 +160,12 @@ msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:9
 msgid ""
-"Venue constraints tell the venue allocator to try to keep the specified team "
-"or adjudicator, or all teams (but not adjudicators) from the specified "
+"Venue constraints tell the venue allocator to try to keep the specified team"
+" or adjudicator, or all teams (but not adjudicators) from the specified "
 "institution, in a venue in the given category. The \"priority\" field "
 "resolves conflicting constraints: the higher priority takes precedence. You "
-"can also use the priority field to specify \"lower-preference\" constraints, "
-"which are taken if a higher-priority constraint couldn't be met."
+"can also use the priority field to specify \"lower-preference\" constraints,"
+" which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:20
@@ -199,7 +200,6 @@ msgstr ""
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
-msgstr[1] ""
 
 #: venues/views.py:116
 msgid "No changes were made to the venue categories."
@@ -208,17 +208,17 @@ msgstr ""
 #: venues/views.py:168
 #, python-format
 msgid "%s (Adjudicator)"
-msgstr ""
+msgstr "%s（ジャッジ）"
 
 #: venues/views.py:171
 #, python-format
 msgid "%s (Team)"
-msgstr ""
+msgstr "%s（チーム）"
 
 #: venues/views.py:174
 #, python-format
 msgid "%s (Institution)"
-msgstr ""
+msgstr "%s（インスティチューション）"
 
 #: venues/views.py:177
 #, python-format
@@ -230,4 +230,3 @@ msgstr ""
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."
 msgstr[0] ""
-msgstr[1] ""

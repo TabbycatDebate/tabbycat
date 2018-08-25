@@ -1,61 +1,62 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, actionlog module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-08 12:25+1000\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
+"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: actionlog/apps.py:7
 msgid "Action Log"
-msgstr ""
+msgstr "動作履歴"
 
 #: actionlog/models.py:78
 msgid "Discarded ballot set"
-msgstr ""
+msgstr "破棄されたバロット一覧"
 
 #: actionlog/models.py:79
 msgid "Checked in ballot set"
-msgstr ""
+msgstr "確定済みバロット一覧"
 
 #: actionlog/models.py:80
 msgid "Created ballot set"
-msgstr ""
+msgstr "生成済みバロット一覧"
 
 #: actionlog/models.py:81
 msgid "Edited ballot set"
-msgstr ""
+msgstr "編集済みバロット一覧"
 
 #: actionlog/models.py:82
 msgid "Confirmed ballot set"
-msgstr ""
+msgstr "確定済みバロット一覧"
 
 #: actionlog/models.py:83
 msgid "Submitted ballot set from the public form"
-msgstr ""
+msgstr "パブリックフォームから提出されたバロット一覧"
 
 #: actionlog/models.py:84
 msgid "Submitted feedback from the public form"
-msgstr ""
+msgstr "パブリックフォームから提出されたフィードバック一覧<br>"
 
 #: actionlog/models.py:85
 msgid "Saved feedback"
-msgstr ""
+msgstr "保存済みフィードバック"
 
 #: actionlog/models.py:86
 msgid "Edited adjudicator test score"
-msgstr ""
+msgstr "編集済みジャッジテストスコア"
 
 #: actionlog/models.py:87
 msgid "Set adjudicator note"
@@ -63,11 +64,11 @@ msgstr ""
 
 #: actionlog/models.py:88
 msgid "Saved adjudicator allocation"
-msgstr ""
+msgstr "保存済みジャッジアロケーション"
 
 #: actionlog/models.py:89
 msgid "Auto-allocated adjudicators"
-msgstr ""
+msgstr "自動配置済みジャッジ"
 
 #: actionlog/models.py:90
 msgid "Saved a venue manual edit"
@@ -75,11 +76,11 @@ msgstr ""
 
 #: actionlog/models.py:91
 msgid "Auto-allocated venues"
-msgstr ""
+msgstr "自動配置済みのラウンド部屋"
 
 #: actionlog/models.py:92
 msgid "Edited venue categories"
-msgstr ""
+msgstr "編集済みのラウンド部屋カテゴリー"
 
 #: actionlog/models.py:93
 msgid "Edited venue constraints"
@@ -87,23 +88,23 @@ msgstr ""
 
 #: actionlog/models.py:94
 msgid "Created draw"
-msgstr ""
+msgstr "作成済み対戦表<br>"
 
 #: actionlog/models.py:95
 msgid "Confirmed draw"
-msgstr ""
+msgstr "確定済み対戦表"
 
 #: actionlog/models.py:96
 msgid "Regenerated draw"
-msgstr ""
+msgstr "再生成されたドロー"
 
 #: actionlog/models.py:97
 msgid "Released draw"
-msgstr ""
+msgstr "公開済み対戦表"
 
 #: actionlog/models.py:98
 msgid "Unreleased draw"
-msgstr ""
+msgstr "未公開の対戦表"
 
 #: actionlog/models.py:99
 msgid "Saved a matchup manual edit"
@@ -119,15 +120,15 @@ msgstr ""
 
 #: actionlog/models.py:102
 msgid "Added/edited motion"
-msgstr ""
+msgstr "追加済み/編集済みの論題"
 
 #: actionlog/models.py:103
 msgid "Released motions"
-msgstr ""
+msgstr "公開済みの論題"
 
 #: actionlog/models.py:104
 msgid "Unreleased motions"
-msgstr ""
+msgstr "未公開の論題"
 
 #: actionlog/models.py:105
 msgid "Edited debate importance"
@@ -143,11 +144,11 @@ msgstr ""
 
 #: actionlog/models.py:108
 msgid "Edited break categories"
-msgstr ""
+msgstr "編集済ブレイクカテゴリー"
 
 #: actionlog/models.py:109
 msgid "Generated the team break for all categories"
-msgstr ""
+msgstr "作成済みの全カテゴリーにおけるチームブレイク"
 
 #: actionlog/models.py:110
 msgid "Edited breaking team remarks and updated all team breaks"
@@ -163,11 +164,11 @@ msgstr ""
 
 #: actionlog/models.py:113
 msgid "Set start time"
-msgstr ""
+msgstr "試合開始時刻の設定"
 
 #: actionlog/models.py:114
 msgid "Advanced the current round to"
-msgstr ""
+msgstr "現在のラウンドへ進む<br>"
 
 #: actionlog/models.py:115
 msgid "Edited teams availability"
@@ -183,7 +184,7 @@ msgstr ""
 
 #: actionlog/models.py:118
 msgid "Edited tournament options"
-msgstr ""
+msgstr "保存済みの大会各種設定"
 
 #: actionlog/models.py:119
 msgid "Edited speaker category eligibility"
@@ -191,7 +192,7 @@ msgstr ""
 
 #: actionlog/models.py:120
 msgid "Edited speaker categories"
-msgstr ""
+msgstr "編集済みスピーカーカテゴリー"
 
 #: actionlog/models.py:121
 msgid "Imported institutions using the simple importer"
@@ -215,15 +216,15 @@ msgstr ""
 
 #: actionlog/models.py:126
 msgid "Edited adjudicator-team conflicts"
-msgstr ""
+msgstr "ジャッジ・チーム間コンフリクトを修正する"
 
 #: actionlog/models.py:127
 msgid "Edited adjudicator-adjudicator conflicts"
-msgstr ""
+msgstr "ジャッジ間コンフリクトを修正する"
 
 #: actionlog/models.py:128
 msgid "Edited adjudicator-institution conflicts"
-msgstr ""
+msgstr "ジャッジ・大学間のコンフリクト"
 
 #: actionlog/models.py:129
 msgid "Generated check in identifiers for speakers"
@@ -243,23 +244,23 @@ msgstr ""
 
 #: actionlog/models.py:137
 msgid "timestamp"
-msgstr ""
+msgstr "タイムスタンプ"
 
 #: actionlog/models.py:140
 msgid "user"
-msgstr ""
+msgstr "ユーザー"
 
 #: actionlog/models.py:142
 msgid "IP address"
-msgstr ""
+msgstr "IPアドレス"
 
 #: actionlog/models.py:146
 msgid "tournament"
-msgstr ""
+msgstr "トーナメント"
 
 #: actionlog/models.py:148
 msgid "round"
-msgstr ""
+msgstr "ラウンド"
 
 #: actionlog/models.py:152
 msgid "content type"
@@ -271,7 +272,7 @@ msgstr ""
 
 #: actionlog/models.py:160
 msgid "action log"
-msgstr ""
+msgstr "動作履歴"
 
 #: actionlog/models.py:161
 msgid "action log entries"
@@ -283,4 +284,4 @@ msgstr ""
 
 #: actionlog/models.py:202
 msgid "anonymous"
-msgstr ""
+msgstr "匿名"

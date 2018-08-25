@@ -1,22 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# Tabbycat translations, availability module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-08 12:25+1000\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
+"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: availability/apps.py:7 availability/views.py:36
 msgid "Availability"
@@ -32,7 +32,7 @@ msgstr ""
 
 #: availability/models.py:20
 msgid "round"
-msgstr ""
+msgstr "ラウンド"
 
 #: availability/models.py:24
 msgid "round availability"
@@ -44,20 +44,20 @@ msgstr ""
 
 #: availability/templates/availability_index.html:11
 msgid "Mark All Breaking Adjs as Available"
-msgstr ""
+msgstr "ブレイクしたすべてのジャッジを有効にする"
 
 #: availability/templates/availability_index.html:18
 msgid "Mark Everything as Available"
-msgstr ""
+msgstr "すべてを有効にする"
 
 #: availability/templates/availability_index.html:25
 #, python-format
 msgid "Copy Availability from %(prev_round)s"
-msgstr ""
+msgstr "%(prev_round)sで有効にされているものをコピーする"
 
 #: availability/templates/availability_index.html:40
 msgid "View Draw"
-msgstr ""
+msgstr "対戦表を確認する"
 
 #: availability/templates/availability_index.html:48
 #: availability/templates/availability_index.html:53
@@ -69,114 +69,119 @@ msgstr ""
 #: availability/templates/availability_index.html:83
 #: availability/templates/availability_index.html:87
 msgid "Generate Draw"
-msgstr ""
+msgstr "対戦表を作成する"
 
 #: availability/templates/availability_index.html:52
 msgid ""
 "The draw cannot be generated until some teams have been marked as available."
-msgstr ""
+msgstr "いくつかのチームが有効にされていない限り対戦表は作成できません。"
 
 #: availability/templates/availability_index.html:57
 msgid ""
 "The draw cannot be generated until some adjudicators have been marked as "
 "available."
-msgstr ""
+msgstr "何人かのジャッジが有効にされていない限り対戦表は作成できません。"
 
 #: availability/templates/availability_index.html:62
 msgid ""
-"The draw cannot be generated until some venues have been marked as available."
-msgstr ""
+"The draw cannot be generated until some venues have been marked as "
+"available."
+msgstr "いくつかのラウンド部屋が有効にされていない限り対戦表は作成できません。"
 
 #: availability/templates/availability_index.html:67
 msgid ""
 "There aren't enough venues marked as available for the number of debates — "
 "the draw may not generate properly."
-msgstr ""
+msgstr "有効にされているラウンド部屋が足りません。正しく対戦表が作成されない可能性があります。"
 
 #: availability/templates/availability_index.html:72
 msgid ""
 "There aren't enough adjudicators marked as available for the number of "
 "debates — the draw may not generate properly."
-msgstr ""
+msgstr "有効にされているジャッジが足りません。正しく対戦表が作成されない可能性があります。"
 
 #: availability/templates/availability_index.html:77
 msgid ""
 "There is an uneven number of teams marked as available — the draw may not "
 "generate properly."
-msgstr ""
+msgstr "有効にされているチーム数が奇数です。正しく対戦表が作成されない可能性があります。"
 
 #: availability/templates/availability_index.html:82
 msgid ""
 "The number of teams marked as available is not a multiple of 4 — the draw "
 "may not generate properly."
-msgstr ""
+msgstr "有効にされているチーム数が4の倍数でありません。正しく対戦表が作成されない可能性があります。"
 
 #: availability/templates/availability_index.html:100
 #, python-format
 msgid ""
-"One debate from %(prev_round)s <strong>does not have a completed ballot</"
-"strong>. This may lead to a draw that fails or is incorrect, depending on "
-"your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link"
-"\"> Enter results from %(prev_round)s. </a>"
+"One debate from %(prev_round)s <strong>does not have a completed "
+"ballot</strong>. This may lead to a draw that fails or is incorrect, "
+"depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class"
+"=\"alert-link\"> Enter results from %(prev_round)s. </a>"
 msgid_plural ""
 "%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a "
 "completed ballot</strong>. This may lead to a draw that fails or is "
-"incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s"
-"\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+"incorrect, depending on your draw rules. <a "
+"href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from"
+" %(prev_round)s. </a>"
 msgstr[0] ""
-msgstr[1] ""
+"<strong>ラウンド%(prev_round)sの%(previous_unconfirmed)s試合のバロットが揃っていません。</strong>対戦表が正しく作成されず、誤りが生じる可能性があります。<a"
+" href=\"%(prev_round_results_url)s\" class=\"alert-"
+"link\">まずラウンド%(prev_round)sの結果を入力してください。</a>"
 
 #: availability/templates/availability_index.html:122
 #, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, however the current "
 "round is still set to <strong>%(current_round_name)s</strong>. Did you "
-"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to "
-"the next round?</a>"
+"forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance to"
+" the next round?</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:137
 #, python-format
 msgid ""
-"This is the first round, but its draw type is <strong>%(draw_type)s</"
-"strong>. Did you intend for it to be <strong>Random</strong> instead? You "
-"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
-"draw type in the Edit Database area.</a>"
+"This is the first round, but its draw type is "
+"<strong>%(draw_type)s</strong>. Did you intend for it to be "
+"<strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" "
+"class=\"alert-link\"> edit this round's draw type in the Edit Database "
+"area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:150
 #, python-format
 msgid ""
 "This is an elimination round, but it doesn't have a break category. "
-"Elimination rounds must be associated with a break category. Please <a href="
-"\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
+"Elimination rounds must be associated with a break category. Please <a "
+"href=\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
 "category in the Edit Database area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:162
 #, python-format
 msgid ""
-"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
-"strong>. The draw type of all elimination rounds must be \"Elimination\". "
-"Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this "
-"round's draw type in the Edit Database area.</a>"
+"This is an elimination round, but its draw type is "
+"<strong>%(draw_type)s</strong>. The draw type of all elimination rounds must"
+" be \"Elimination\". Please <a href=\"%(change_round_url)s\" class=\"alert-"
+"link\"> change this round's draw type in the Edit Database area.</a>"
 msgstr ""
 
 #: availability/templates/availability_index.html:175
 #, python-format
 msgid ""
-"There don't appear to be any teams breaking in the %(break_category)s Break. "
-"Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated "
-"the break for the %(break_category)s Break</a> yet?"
+"There don't appear to be any teams breaking in the %(break_category)s Break."
+" Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> "
+"generated the break for the %(break_category)s Break</a> yet?"
 msgstr ""
 
 #: availability/templates/availability_index.html:187
 #, python-format
 msgid ""
 "There's only one team breaking in the %(break_category)s Break. You can't "
-"generate an elimination round draw with only one team — you might like to <a "
-"href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for "
-"the %(break_category)s Break</a>."
+"generate an elimination round draw with only one team — you might like to <a"
+" href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for"
+" the %(break_category)s Break</a>."
 msgstr ""
 
 #: availability/templates/base_availability.html:36
@@ -189,11 +194,11 @@ msgstr ""
 
 #: availability/templates/base_availability.html:38
 msgid "Check-Ins"
-msgstr ""
+msgstr "チェックイン"
 
 #: availability/templates/base_availability.html:39
 msgid "Check In All Breaking"
-msgstr ""
+msgstr "ブレイクしているすべての者をチェックインする"
 
 #: availability/templates/base_availability.html:40
 msgid "Copy from Previous"
@@ -201,37 +206,37 @@ msgstr ""
 
 #: availability/templates/base_availability.html:41
 msgid "Save Selected"
-msgstr ""
+msgstr "選択したものを保存する"
 
 #: availability/templates/checkin_progress.html:7
 msgid "Teams"
-msgstr ""
+msgstr "チーム"
 
 #: availability/templates/checkin_progress.html:8
 msgid "Adjudicators"
-msgstr ""
+msgstr "ジャッジ"
 
 #: availability/templates/checkin_progress.html:9
 msgid "Venues"
-msgstr ""
+msgstr "ラウンド部屋"
 
 #: availability/templates/checkin_progress.html:43
 msgid "Mark teams as available"
-msgstr ""
+msgstr "チームを有効にする"
 
 #: availability/templates/checkin_progress.html:46
 msgid "No need to set team availability"
-msgstr ""
+msgstr "チームを有効にする必要がありません"
 
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams marked as available for this round."
-msgstr ""
+msgstr "このラウンドで有効にされているチーム数が奇数です。"
 
 #: availability/templates/checkin_progress.html:53
 msgid ""
 "The number of teams marked as available for this round is not a multiple of "
 "4."
-msgstr ""
+msgstr "このラウンドで有効にされているチーム数が4の倍数でありません。"
 
 #: availability/templates/checkin_progress.html:59
 msgid "Edit team availability"
@@ -239,9 +244,10 @@ msgstr ""
 
 #: availability/templates/checkin_progress.html:66
 msgid "Mark adjudicators as available"
-msgstr ""
+msgstr "ジャッジを有効にする"
 
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#. Translators: required_count is a word for a number (e.g. "two", "three",
+#. etc.)
 #: availability/templates/checkin_progress.html:70
 #, python-format
 msgid ""
@@ -251,7 +257,6 @@ msgid_plural ""
 "There need to be at least %(required_count)s adjudicators marked as "
 "available, given the number of debates."
 msgstr[0] ""
-msgstr[1] ""
 
 #: availability/templates/checkin_progress.html:80
 msgid "Edit adjudicator availability"
@@ -268,13 +273,13 @@ msgid_plural ""
 "'Tournament' field in the Edit Database area if you want them to be marked "
 "as available."
 msgstr[0] ""
-msgstr[1] ""
 
 #: availability/templates/checkin_progress.html:95
 msgid "Mark venues as available"
 msgstr ""
 
-#. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
+#. Translators: required_count is a word for a number (e.g. "two", "three",
+#. etc.)
 #: availability/templates/checkin_progress.html:99
 #, python-format
 msgid ""
@@ -284,7 +289,6 @@ msgid_plural ""
 "There need to be at least %(required_count)s venues marked as available, "
 "given the number of debates."
 msgstr[0] ""
-msgstr[1] ""
 
 #: availability/templates/checkin_progress.html:111
 msgid "Edit venue availability"
@@ -293,14 +297,13 @@ msgstr ""
 #: availability/templates/checkin_progress.html:115
 #, python-format
 msgid ""
-"One venue does not have an associated Tournament. Set its 'Tournament' field "
-"in the Edit Database area if you want it to be marked as available."
+"One venue does not have an associated Tournament. Set its 'Tournament' field"
+" in the Edit Database area if you want it to be marked as available."
 msgid_plural ""
 "%(count)s venues do not have an associated Tournament. Set their "
 "'Tournament' field in the Edit Database area if you want them to be marked "
 "as available."
 msgstr[0] ""
-msgstr[1] ""
 
 #: availability/views.py:80
 msgid "no teams are debating"
@@ -312,7 +315,6 @@ msgstr ""
 msgid "%(nteams)d breaking team — no debates can happen"
 msgid_plural "%(nteams)d breaking teams — no debates can happen"
 msgstr[0] ""
-msgstr[1] ""
 
 #. Translators: ndebating in this string is always at least 2
 #: availability/views.py:98
@@ -320,7 +322,6 @@ msgstr[1] ""
 msgid "%(ndebating)d breaking team is debating this round"
 msgid_plural "%(ndebating)d breaking teams are debating this round"
 msgstr[0] ""
-msgstr[1] ""
 
 #. Translators: This gets appended to the previous string (the one with
 #. ndebating in it) if (and only if) nbypassing is greater than 0.
@@ -330,7 +331,6 @@ msgstr[1] ""
 msgid "; %(nbypassing)d team is bypassing it"
 msgid_plural "; %(nbypassing)d teams are bypassing it"
 msgstr[0] ""
-msgstr[1] ""
 
 #. Translators: nadvancing in this string is always at least 2
 #: availability/views.py:125
@@ -338,7 +338,6 @@ msgstr[1] ""
 msgid "%(nadvancing)s advancing team is debating this round"
 msgid_plural "%(nadvancing)s advancing teams are debating this round"
 msgstr[0] ""
-msgstr[1] ""
 
 #: availability/views.py:169
 msgid "Active Now"
@@ -367,7 +366,7 @@ msgstr ""
 
 #: availability/views.py:251
 msgid "Venue"
-msgstr ""
+msgstr "ラウンド部屋"
 
 #: availability/views.py:253
 msgid "Display Name (for the draw)"
@@ -375,7 +374,7 @@ msgstr ""
 
 #: availability/views.py:256
 msgid "Categories"
-msgstr ""
+msgstr "カテゴリー"
 
 #: availability/views.py:257
 msgid "Priority"
