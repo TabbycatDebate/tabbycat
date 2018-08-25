@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: 2018-08-16 21:23-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -435,6 +435,7 @@ msgid "Configure Tournament %(tournament_name)s"
 msgstr "Configuration du tournoi %(tournament_name)s"
 
 #: tournaments/templates/configure_tournament.html:9
+#: tournaments/templates/create_tournament.html:5
 msgid "Tabbycat"
 msgstr "Tabbycat"
 
@@ -580,6 +581,10 @@ msgstr ""
 "tabbycatproject/%(nteams)saud\">par Paypal</a>, mais n’hésitez pas à <a href="
 "\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">nous "
 "envoyer des courriels</a> si vous avez besoin d’autres moyens."
+
+#: tournaments/templates/fix_debate_teams.html:6
+msgid "Debate Team Missing"
+msgstr ""
 
 #: tournaments/templates/fix_debate_teams.html:16
 msgid ""
@@ -1338,15 +1343,15 @@ msgstr "Les courriels de notes des équipes n’ont pas pu être envoyés."
 msgid "Team point emails have been sent to the speakers."
 msgstr "Les courriels de notes des équipes ont été envoyés aux orateurs."
 
-#: tournaments/views.py:226
+#: tournaments/views.py:227
 msgid "8-team generic dataset"
 msgstr "données génériques à 8 équipes"
 
-#: tournaments/views.py:227
+#: tournaments/views.py:228
 msgid "24-team Australs dataset"
 msgstr "données à 24 équipes d'Australs"
 
-#: tournaments/views.py:228
+#: tournaments/views.py:229
 msgid "88-team BP dataset"
 msgstr "données à 88 équipes de PB"
 

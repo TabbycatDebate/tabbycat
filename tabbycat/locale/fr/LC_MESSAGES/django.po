@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: 2018-08-16 21:13-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -19,9 +19,23 @@ msgstr ""
 "X-Generator: Poedit 2.1.1\n"
 
 #: checkins/apps.py:7 templates/nav/admin_nav.html:119
-#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:96
+#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:94
 msgid "Check-Ins"
 msgstr "Enregistrements"
+
+#: checkins/consumers.py:60
+msgid "Sent checkin identifier doesn't exist"
+msgstr ""
+
+#: checkins/consumers.py:61 checkins/consumers.py:66
+#, fuzzy
+#| msgid "Check-Ins"
+msgid "Checkins"
+msgstr "Enregistrements"
+
+#: checkins/consumers.py:65
+msgid "No checkin identifiers exist for sent barcodes"
+msgstr ""
 
 #: checkins/models.py:28
 msgid "The barcode must contain between 4 and 20 digits."
@@ -126,7 +140,7 @@ msgid ""
 "strong>. Works best in Chrome."
 msgstr ""
 
-#: checkins/templates/checkin_scan.html:17
+#: checkins/templates/checkin_scan.html:18
 msgid ""
 "To scan an identifier type the number below (it will auto-submit). You can "
 "also use a barcode scanner (configured to work as as a keyboard) or scan "
@@ -162,59 +176,59 @@ msgstr "%(speaker)s est manquant(e)."
 msgid "Scan Identifiers"
 msgstr "Numériser les identifiants"
 
-#: checkins/views.py:103
+#: checkins/views.py:54
 msgid "People's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:161
+#: checkins/views.py:112
 msgid "Venue's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:210 templates/nav/admin_nav.html:126
+#: checkins/views.py:161 templates/nav/admin_nav.html:126
 msgid "Make Identifiers"
 msgstr "Créer les identifiants"
 
-#: checkins/views.py:217 templates/nav/admin_nav.html:214
+#: checkins/views.py:168 templates/nav/admin_nav.html:214
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: checkins/views.py:222 templates/nav/admin_nav.html:262
-#: templates/nav/public_nav.html:140
+#: checkins/views.py:173 templates/nav/admin_nav.html:262
+#: templates/nav/public_nav.html:138
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: checkins/views.py:227
+#: checkins/views.py:178
 msgid "Venues"
 msgstr "Salles"
 
-#: checkins/views.py:268
+#: checkins/views.py:219
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr "Identifiants générés฀pour %s"
 
-#: checkins/views.py:275
+#: checkins/views.py:226
 msgid "Identifiers"
 msgstr "Identifiants"
 
-#: checkins/views.py:311
+#: checkins/views.py:262
 msgid ""
 "Could not check you in as you do not have an identifying code — your tab "
 "director may need to make you an identifier."
 msgstr ""
 
-#: checkins/views.py:319
+#: checkins/views.py:270
 msgid "You have revoked your check-in."
 msgstr ""
 
-#: checkins/views.py:321
+#: checkins/views.py:272
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr ""
 
-#: checkins/views.py:324
+#: checkins/views.py:275
 msgid "Whoops! Looks like you're already checked in."
 msgstr ""
 
-#: checkins/views.py:327
+#: checkins/views.py:278
 msgid "You are now checked in."
 msgstr ""
 
@@ -274,25 +288,29 @@ msgstr "%(category_name)s"
 msgid "Division %(div)s"
 msgstr "Divisions"
 
-#: settings.py:43
+#: settings.py:44
 msgid "Arabic"
 msgstr "arabe"
 
-#: settings.py:44
+#: settings.py:45
 msgid "English"
 msgstr "anglais"
 
-#: settings.py:45
+#: settings.py:46
 msgid "Spanish"
 msgstr "espagnol"
 
-#: settings.py:46
+#: settings.py:47
 msgid "French"
 msgstr "français"
 
-#: settings.py:47
+#: settings.py:48
 msgid "Japanese"
 msgstr "japonais"
+
+#: settings.py:49
+msgid "Portuguese"
+msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
 msgid "You need to delete the above objects first."
@@ -331,7 +349,14 @@ msgctxt "button"
 msgid "I forgot my password"
 msgstr "J'ai oublié mon mot de passe"
 
-#: templates/base.html:12
+#: templates/base.html:10
+#, fuzzy
+#| msgctxt "page title"
+#| msgid "Log in to Tabbycat"
+msgid "Tabbycat"
+msgstr "Connexion à Tabbycat"
+
+#: templates/base.html:13
 #, python-format
 msgid ""
 "The tab for %(tournament_name)s runs on Tabbycat, an open-source tab system "
@@ -340,7 +365,7 @@ msgstr ""
 "La tabulation de %(tournament_name)s fonctionne sur Tabbycat, un système "
 "open-source pour tabuler une variété de formats de débat parlementaire"
 
-#: templates/base.html:16
+#: templates/base.html:17
 msgid ""
 "This tab runs on Tabbycat, an open-source tab system for a variety of "
 "parliamentary debating formats"
@@ -526,7 +551,7 @@ msgid "Import Data"
 msgstr "Importation de données"
 
 #: templates/nav/admin_nav.html:78 templates/nav/assistant_nav.html:18
-#: templates/nav/public_nav.html:175
+#: templates/nav/public_nav.html:173
 msgid "Participants"
 msgstr "Participants"
 
@@ -538,12 +563,12 @@ msgstr "URLs privées"
 msgid "Edit Database"
 msgstr "Modification de la base de données"
 
-#: templates/nav/admin_nav.html:97 templates/nav/public_nav.html:160
+#: templates/nav/admin_nav.html:97 templates/nav/public_nav.html:158
 msgid "Sides"
 msgstr "Côtés"
 
 #: templates/nav/admin_nav.html:109 templates/nav/admin_nav.html:207
-#: templates/nav/public_nav.html:150
+#: templates/nav/public_nav.html:148
 msgid "Divisions"
 msgstr "Divisions"
 
@@ -583,7 +608,7 @@ msgstr "Saisir des commentaires"
 msgid "Bulk Update"
 msgstr "Mise à jour par lots"
 
-#: templates/nav/admin_nav.html:182 templates/nav/public_nav.html:165
+#: templates/nav/admin_nav.html:182 templates/nav/public_nav.html:163
 msgid "Standings"
 msgstr "Classement"
 
@@ -613,11 +638,11 @@ msgstr "Orateurs %(category_name)s"
 msgid "Replies"
 msgstr "Discours de résponse"
 
-#: templates/nav/admin_nav.html:231 templates/nav/public_nav.html:155
+#: templates/nav/admin_nav.html:231 templates/nav/public_nav.html:153
 msgid "Motions"
 msgstr "Motions"
 
-#: templates/nav/admin_nav.html:234 templates/nav/public_nav.html:170
+#: templates/nav/admin_nav.html:234 templates/nav/public_nav.html:168
 msgid "Diversity"
 msgstr "Diversité"
 
@@ -638,7 +663,7 @@ msgstr "Deconnexion"
 msgid "Enter Results"
 msgstr "Saisie des résultats"
 
-#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:195
+#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:193
 msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
@@ -646,7 +671,7 @@ msgstr "Saisie d'une commentaire"
 msgid "Participants List"
 msgstr "Liste de participants"
 
-#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:180
+#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:178
 msgid "Institutions"
 msgstr "Institutions"
 
@@ -686,36 +711,36 @@ msgstr "Tab des juges"
 msgid "Motions Tab"
 msgstr "Tab des motions"
 
-#: templates/nav/public_nav.html:60
+#: templates/nav/public_nav.html:59
 msgid "Draws"
 msgstr "Tirages"
 
-#: templates/nav/public_nav.html:73
+#: templates/nav/public_nav.html:72
 msgid "View All"
 msgstr "Afficher tout"
 
-#: templates/nav/public_nav.html:77
+#: templates/nav/public_nav.html:76
 msgid "No Draws Available"
 msgstr "Aucun tirage disponible"
 
-#: templates/nav/public_nav.html:84
+#: templates/nav/public_nav.html:83
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr "Tirage de %(round_name)s"
 
-#: templates/nav/public_nav.html:106 templates/nav/round_panel.html:57
+#: templates/nav/public_nav.html:104 templates/nav/round_panel.html:57
 msgid "Results"
 msgstr "Résultats"
 
-#: templates/nav/public_nav.html:128
+#: templates/nav/public_nav.html:126
 msgid "Break"
 msgstr "Qualification"
 
-#: templates/nav/public_nav.html:185
+#: templates/nav/public_nav.html:183
 msgid "Feedback Progress"
 msgstr "Progrès des commentaires"
 
-#: templates/nav/public_nav.html:190
+#: templates/nav/public_nav.html:188
 msgid "Enter Ballot"
 msgstr "Saisie d'un bulletin"
 

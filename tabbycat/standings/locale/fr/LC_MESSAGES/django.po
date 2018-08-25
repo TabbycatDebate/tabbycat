@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: 2018-08-11 12:39-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -200,12 +200,14 @@ msgid "Spk"
 msgstr "Ora"
 
 #: standings/teams.py:127
-msgid "average speaker score"
+#, fuzzy
+#| msgid "average speaker score"
+msgid "average total speaker score"
 msgstr "note moyenne d’orateur"
 
 #: standings/teams.py:128
-msgid "ASS"
-msgstr "NMO"
+msgid "ATSS"
+msgstr ""
 
 #: standings/teams.py:138
 msgid "speaker score standard deviation"
@@ -232,62 +234,72 @@ msgid "AWM"
 msgstr "MM"
 
 #: standings/teams.py:171
+#, fuzzy
+#| msgid "average speaker score"
+msgid "average individual speaker score"
+msgstr "note moyenne d’orateur"
+
+#: standings/teams.py:172
+msgid "AISS"
+msgstr ""
+
+#: standings/teams.py:187
 msgid "draw strength"
 msgstr "puissance des opposants"
 
-#: standings/teams.py:172
+#: standings/teams.py:188
 msgid "DS"
 msgstr "PO"
 
-#: standings/teams.py:210
+#: standings/teams.py:226
 msgid "number of adjudicators who voted for this team"
 msgstr "nombre de juges qui ont voté pour cette équipe"
 
-#: standings/teams.py:211
+#: standings/teams.py:227
 msgid "Ballots"
 msgstr "Bulletins"
 
-#: standings/teams.py:212
+#: standings/teams.py:228
 msgid "votes/ballots carried"
 msgstr ""
 
-#: standings/teams.py:237
+#: standings/teams.py:253
 msgid "number of firsts"
 msgstr ""
 
-#: standings/teams.py:238
+#: standings/teams.py:254
 msgid "1sts"
 msgstr ""
 
-#: standings/teams.py:247
+#: standings/teams.py:263
 msgid "number of seconds"
 msgstr ""
 
-#: standings/teams.py:248
+#: standings/teams.py:264
 msgid "2nds"
 msgstr ""
 
-#: standings/teams.py:260
+#: standings/teams.py:276
 msgid "Who-beat-whom"
 msgstr ""
 
-#: standings/teams.py:261
+#: standings/teams.py:277
 msgid "WBW"
 msgstr ""
 
-#: standings/teams.py:262
+#: standings/teams.py:278
 msgid "who-beat-whom"
 msgstr "qui-a-battu-qui"
 
-#: standings/teams.py:307
+#: standings/teams.py:323
 msgid "Who-beat-whom (in division)"
 msgstr ""
 
-#: standings/teams.py:308
+#: standings/teams.py:324
 msgid "WBWD"
 msgstr ""
 
-#: standings/teams.py:309
+#: standings/teams.py:325
 msgid "who-beat-whom (in divisions)"
 msgstr ""
 
@@ -403,16 +415,15 @@ msgid ""
 msgstr ""
 
 #: standings/templates/standings_diversity.html:32
-#: standings/templates/standings_diversity.html:43
-msgid "Key"
-msgstr "Clé"
-
-#: standings/templates/standings_diversity.html:35
 msgid "Non-cis male identifying"
 msgstr ""
 
-#: standings/templates/standings_diversity.html:38
+#: standings/templates/standings_diversity.html:35
 msgid "Male identifying"
+msgstr ""
+
+#: standings/templates/standings_diversity.html:38
+msgid "Unspecified/unrecorded"
 msgstr ""
 
 #: standings/templates/standings_index.html:5
@@ -516,39 +527,38 @@ msgctxt "All [Teams]"
 msgid "All"
 msgstr "Toutes"
 
-#: standings/templates/standings_menu.html:31
-#: standings/templates/standings_menu.html:55
-#, python-format
-msgid "%(category_name)s"
-msgstr "%(category_name)s"
-
-#: standings/templates/standings_menu.html:40
+#: standings/templates/standings_menu.html:38
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: standings/templates/standings_menu.html:45
+#: standings/templates/standings_menu.html:43
 msgctxt "Substantive speeches"
 msgid "Substantives"
 msgstr "Discours principaux"
 
-#: standings/templates/standings_menu.html:47
+#: standings/templates/standings_menu.html:45
 msgctxt "All [Speakers]"
 msgid "All"
 msgstr "Tous"
 
-#: standings/templates/standings_menu.html:49
+#: standings/templates/standings_menu.html:47
 msgid "Speakers "
 msgstr "Orateurs "
 
-#: standings/templates/standings_menu.html:63
+#: standings/templates/standings_menu.html:53
+#, python-format
+msgid "%(category_name)s"
+msgstr "%(category_name)s"
+
+#: standings/templates/standings_menu.html:61
 msgid "Replies"
 msgstr "Résponses"
 
-#: standings/templates/standings_menu.html:72
+#: standings/templates/standings_menu.html:70
 msgid "Motions"
 msgstr "Motions"
 
-#: standings/templates/standings_menu.html:76
+#: standings/templates/standings_menu.html:74
 msgid "Diversity"
 msgstr "Diversité"
 
@@ -649,6 +659,12 @@ msgstr "Classement actuel des équipes"
 #: standings/views.py:600
 msgid "Points"
 msgstr "Points"
+
+#~ msgid "ASS"
+#~ msgstr "NMO"
+
+#~ msgid "Key"
+#~ msgstr "Clé"
 
 #~ msgid "%(category_name)s Speakers"
 #~ msgstr "Orateurs de la catégorie %(category_name)s"

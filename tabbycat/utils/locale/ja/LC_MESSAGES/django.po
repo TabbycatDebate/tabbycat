@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
@@ -21,6 +21,17 @@ msgstr ""
 #: utils/forms.py:25
 msgid "E-mail address"
 msgstr "メールアドレス"
+
+#: utils/mixins.py:84
+#, python-format
+msgid ""
+"You have current used %(rows)s rows on your database. If you have not "
+"upgraded your Heroku database to a non-free tier it is limited to a maximum "
+"of 10,000 rows. As you are relatively close to this limit you should "
+"<strong>not create new tournaments</strong> on this tab site unless you "
+"first <a href=\" %(url)s \">upgrade the database</a> or have already "
+"upgraded it."
+msgstr ""
 
 #: utils/tables.py:43
 msgid "No Data Available"
@@ -48,13 +59,13 @@ msgstr "トレイニー"
 
 #: utils/tables.py:219 utils/tables.py:225
 #, python-format
-msgid "View %(adj)s's Adjudication Record"
-msgstr "%(adj)sのジャッジ履歴を見る"
+msgid "View %(a)s's %(d)s Record"
+msgstr ""
 
 #: utils/tables.py:235 utils/tables.py:240
 #, python-format
-msgid "View %(team)s's Team Record"
-msgstr "%(team)sのチーム履歴を見る"
+msgid "View %(team)s's Record"
+msgstr ""
 
 #: utils/tables.py:262
 #, python-format
@@ -131,204 +142,203 @@ msgstr "%(team)sに敗北"
 msgid "No result for debate against %(team)s"
 msgstr "%(team)sとの試合の記録なし"
 
-#: utils/tables.py:363 utils/tables.py:440
+#: utils/tables.py:363 utils/tables.py:441
 #, python-format
 msgid "Total speaker score: <strong>%s</strong>"
 msgstr "合計スピーカースコア：<strong>%s</strong>"
 
-#: utils/tables.py:368 utils/tables.py:445
+#: utils/tables.py:368 utils/tables.py:446
 msgid "View/edit debate ballot"
 msgstr "ディベートのバロットを確認/修正"
 
-#: utils/tables.py:374 utils/tables.py:451
+#: utils/tables.py:374 utils/tables.py:452
 msgid "View debate ballot"
 msgstr "ディベートのバロットを確認"
 
-#: utils/tables.py:380
-#, python-format
-msgid "Speakers in <strong>%(opp)s</strong>: %(speakers)s"
-msgstr ""
-
-#: utils/tables.py:394
+#: utils/tables.py:395
 msgid "Teams in debate:"
 msgstr ""
 
-#: utils/tables.py:397
+#: utils/tables.py:398
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr ""
 
-#: utils/tables.py:415
+#: utils/tables.py:416
 msgid "advancing"
 msgstr ""
 
-#: utils/tables.py:416
+#: utils/tables.py:417
 msgid "Advancing"
 msgstr ""
 
-#: utils/tables.py:418
+#: utils/tables.py:419
 msgid "eliminated"
 msgstr "敗退"
 
-#: utils/tables.py:419
+#: utils/tables.py:420
 msgid "Eliminated"
 msgstr "敗退"
 
-#: utils/tables.py:422 utils/tables.py:432
+#: utils/tables.py:423 utils/tables.py:433
 msgid "No result for debate"
 msgstr "試合の結果なし"
 
-#: utils/tables.py:425
+#: utils/tables.py:426
 msgid "4th"
 msgstr "4th"
 
-#: utils/tables.py:425
+#: utils/tables.py:426
 msgid "3rd"
 msgstr "3rd"
 
-#: utils/tables.py:425
+#: utils/tables.py:426
 msgid "2nd"
 msgstr "2nd"
 
-#: utils/tables.py:425
+#: utils/tables.py:426
 msgid "1st"
 msgstr "1st"
 
-#: utils/tables.py:429
+#: utils/tables.py:430
 #, python-format
 msgid "Placed %(place)s"
 msgstr "%(place)s位"
 
-#: utils/tables.py:460
+#: utils/tables.py:461
 msgid "Tournament"
 msgstr "大会"
 
-#: utils/tables.py:469
+#: utils/tables.py:470
 msgid "Round"
 msgstr "ラウンド"
 
-#: utils/tables.py:487 utils/tables.py:663
+#: utils/tables.py:488 utils/tables.py:666
 msgid "Name"
 msgstr "名前"
 
-#: utils/tables.py:493 utils/tables.py:641
+#: utils/tables.py:494 utils/tables.py:644
 msgid "Institution"
 msgstr "大学・団体"
 
-#: utils/tables.py:499
+#: utils/tables.py:500
 msgid "Member of the Adjudication Core"
 msgstr "アッジュコアのメンバー"
 
-#: utils/tables.py:506
+#: utils/tables.py:507
 msgid "Independent Adjudicator"
 msgstr "インディペンデントジャッジ"
 
-#: utils/tables.py:514
+#: utils/tables.py:515
 msgid "Always Trainee"
 msgstr "常にトレイニー"
 
-#: utils/tables.py:578
+#: utils/tables.py:581
 msgid "Debate Adjudicators"
 msgstr ""
 
-#: utils/tables.py:602
+#: utils/tables.py:605
 msgid "Order as listed"
 msgstr ""
 
-#: utils/tables.py:612
+#: utils/tables.py:615
 msgid "Motion"
 msgstr "モーション"
 
-#: utils/tables.py:627
+#: utils/tables.py:630
 msgid "Team"
 msgstr "チーム"
 
-#: utils/tables.py:632 utils/tables.py:685
+#: utils/tables.py:635 utils/tables.py:688
 msgid "Categories"
 msgstr ""
 
-#: utils/tables.py:652 utils/tables.py:728
+#: utils/tables.py:655 utils/tables.py:731
 msgid "Division"
 msgstr ""
 
-#: utils/tables.py:659
+#: utils/tables.py:662
 msgid "Redacted"
 msgstr ""
 
-#: utils/tables.py:683
+#: utils/tables.py:686
 msgid "Category"
 msgstr ""
 
-#: utils/tables.py:710
+#: utils/tables.py:713
 #, python-format
 msgid "This venue %(predicate)s."
 msgstr ""
 
-#: utils/tables.py:712
+#: utils/tables.py:715
 #, python-format
 msgid "This venue %(predicates)s, and %(last_predicate)s."
 msgstr ""
 
-#: utils/tables.py:743
+#: utils/tables.py:746
 msgid "Venue"
 msgstr ""
 
-#: utils/tables.py:749
+#: utils/tables.py:752
 msgid "Date"
 msgstr ""
 
-#: utils/tables.py:749
+#: utils/tables.py:752
 msgid "Time"
 msgstr ""
 
-#: utils/tables.py:753
+#: utils/tables.py:756
 msgid "Bye"
 msgstr ""
 
-#: utils/tables.py:755
+#: utils/tables.py:758
 msgid "Postponed"
 msgstr ""
 
-#: utils/tables.py:757
+#: utils/tables.py:760
 msgid "Forfeit"
 msgstr ""
 
-#: utils/tables.py:778
+#: utils/tables.py:781
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
 msgstr[0] ""
 
-#: utils/tables.py:784
+#: utils/tables.py:787
 msgid "Teams are from the same institution"
 msgstr "両チームとも同じ大学・団体です"
 
-#: utils/tables.py:790
+#: utils/tables.py:793
 msgid "Conflicts/Flags"
 msgstr ""
 
-#: utils/tables.py:847
+#: utils/tables.py:850
 msgid "View/Edit Ballot"
 msgstr ""
 
-#: utils/tables.py:862
+#: utils/tables.py:865
 msgid "View Ballot"
 msgstr ""
 
-#: utils/tables.py:869
+#: utils/tables.py:872
 msgid "Result"
 msgstr "結果"
 
 #. Translators: "TBC" stands for "to be confirmed".
-#: utils/tables.py:875
+#: utils/tables.py:878
 msgid "TBC"
 msgstr "確認中"
 
-#: utils/tables.py:876
+#: utils/tables.py:879
 msgid "Side"
 msgstr "サイド"
 
-#: utils/tables.py:919
+#: utils/tables.py:922
 #, python-format
 msgid "Team %(num)d"
+msgstr ""
+
+#: utils/views.py:45
+msgid "Whoops! You're not meant to type that URL into your browser."
 msgstr ""

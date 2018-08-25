@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -57,7 +57,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: draw/apps.py:7 draw/views.py:286 draw/views.py:289
+#: draw/apps.py:7 draw/views.py:292 draw/views.py:295
 msgid "Draw"
 msgstr "قرعة "
 
@@ -533,6 +533,22 @@ msgstr ""
 "المناظرة المرتبطة بها. إذا لم تقم بذلك بشكل صحيح، العديد من الصفحات "
 "<strong>سوف </strong> تتأثر الكثير من الصفحات."
 
+#: draw/templates/confirmations_view.html:4
+#: draw/templates/confirmations_view.html:5
+msgid "Shift Confirmations"
+msgstr ""
+
+#: draw/templates/confirmations_view.html:9
+#: draw/templates/draw_confirm_regeneration.html:10
+#: draw/templates/draw_set_debate_times.html:10
+#: draw/templates/draw_subpage.html:6
+msgid "Back to Draw"
+msgstr ""
+
+#: draw/templates/confirmations_view.html:18
+msgid "Adjudicators with no confirmed shifts"
+msgstr ""
+
 #: draw/templates/draw_alerts_adjudicators.html:6
 #, python-format
 msgid "1 debate does not have a chair."
@@ -659,6 +675,29 @@ msgstr "موازنة المواقف "
 msgid "Display Draw"
 msgstr "عرض القرعة"
 
+#: draw/templates/draw_confirm_regeneration.html:5
+msgid "Confirm draw regeneration"
+msgstr ""
+
+#: draw/templates/draw_confirm_regeneration.html:16
+#, python-format
+msgid "Confirm Draw Deletion for %(name)s"
+msgstr ""
+
+#: draw/templates/draw_confirm_regeneration.html:22
+#, python-format
+msgid ""
+"Do you really want to regenerate the draw for %(name)s? This will delete "
+"<strong>all the debates in the current draw</strong> —  including their "
+"ballots and adjudicator allocations — and cannot be undone. You probably "
+"don't want to do this if any results have been entered!"
+msgstr ""
+
+#: draw/templates/draw_confirm_regeneration.html:33
+#, python-format
+msgid "Yes, I want to delete the current draw for %(name)s"
+msgstr ""
+
 #: draw/templates/draw_display_admin.html:17
 msgid "View Draw"
 msgstr "عرض القرعة "
@@ -673,6 +712,8 @@ msgid "Add Start Time"
 msgstr "إضافة وقت ابتداء المناظرة"
 
 #: draw/templates/draw_display_admin.html:33
+#: draw/templates/draw_set_debate_times.html:4
+#: draw/templates/draw_set_debate_times.html:5
 msgid "Schedule Debates"
 msgstr "جدول المناظرات "
 
@@ -763,7 +804,7 @@ msgstr ""
 msgid "View public draw page"
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:140
+#: draw/templates/draw_display_admin.html:145
 #, python-format
 msgid ""
 "You have released the draw, so ballots and/or feedback can be submitted from"
@@ -773,7 +814,7 @@ msgid ""
 "configuration</a>."
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:145
+#: draw/templates/draw_display_admin.html:150
 #, python-format
 msgid ""
 "You have released the draw, but it will not show to the public unless the "
@@ -781,11 +822,17 @@ msgid ""
 "href=\"%(alert_link)s\"> this tournament's configuration</a>."
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:155
+#: draw/templates/draw_display_admin.html:160
 msgid "Release draw to public"
 msgstr "إعلان القرعة للجمهور."
 
 #: draw/templates/draw_display_admin.html:161
+msgid ""
+"Your tournament is configured to send emails to adjudicators announcing "
+"which debate they were allocated to once the draw is released."
+msgstr ""
+
+#: draw/templates/draw_display_admin.html:167
 msgid ""
 "Your tournament allows ballots and feedback to be submitted online by "
 "adjudicators. The draw must be released before they can do so."
@@ -793,7 +840,7 @@ msgstr ""
 "بطولتك تسمح بإدخال النتائج وتسليم التغذية الراجعة من قبل الحكام عبر الرابط "
 "الخاص بهم. لا بد من إعلان القرعة ليتمكنوا من فعل ذلك."
 
-#: draw/templates/draw_display_admin.html:164
+#: draw/templates/draw_display_admin.html:170
 msgid ""
 "Your tournament allows ballots to be submitted online by adjudicators. The "
 "draw must be released before they can do so."
@@ -801,7 +848,7 @@ msgstr ""
 "بطولتك تسمح بإدخال النتائج وتسليمها من قبل الحكام عبر الرابط الخاص بهم. لا "
 "بد من إعلان القرعة ليتمكنوا من فعل ذلك."
 
-#: draw/templates/draw_display_admin.html:167
+#: draw/templates/draw_display_admin.html:173
 msgid ""
 "Your tournament allows feedback to be submitted online by participants. The "
 "draw must be released before they can do so."
@@ -809,7 +856,7 @@ msgstr ""
 "بطولتك تسمح بتسليم التغذية الراجعة من قبل الحكام عبر الرابط الخاص بهم. لا بد"
 " من إعلان القرعة ليتمكنوا من فعل ذلك."
 
-#: draw/templates/draw_display_admin.html:171
+#: draw/templates/draw_display_admin.html:177
 msgid ""
 "Your tournament is configured to show the draw publicly. Releasing a draw "
 "will allow it to show it on the public page."
@@ -817,7 +864,7 @@ msgstr ""
 "إعدادات البطولة تسمح بأن تٌرى من قبل العموم. إعلان القرعة سيظهرها على الصفحة"
 " العمومية."
 
-#: draw/templates/draw_display_admin.html:179
+#: draw/templates/draw_display_admin.html:188
 msgid ""
 "Your configuration doesn't have a public draw page or feedback/ballot "
 "submissions. There's no reason to release the draw."
@@ -825,31 +872,31 @@ msgstr ""
 "لا تحتوي أنظمة البطولة على صفحة قرعة عامة أو تعليقات / بطاقات النتائج . ليس "
 "هناك سبب لعرض القرعة."
 
-#: draw/templates/draw_display_admin.html:196
+#: draw/templates/draw_display_admin.html:210
 msgid "Release Motions"
 msgstr "أعلن القضايا"
 
-#: draw/templates/draw_display_admin.html:197
+#: draw/templates/draw_display_admin.html:211
 msgid "Release motions to public"
 msgstr "أعلن القضايا للجمهور."
 
-#: draw/templates/draw_display_admin.html:198
+#: draw/templates/draw_display_admin.html:212
 msgid "Unrelease motions to public"
 msgstr "عدم إعلان القضايا للجمهور."
 
-#: draw/templates/draw_display_admin.html:200
+#: draw/templates/draw_display_admin.html:214
 msgid "Release Motion"
 msgstr "أعلن القضية"
 
-#: draw/templates/draw_display_admin.html:201
+#: draw/templates/draw_display_admin.html:215
 msgid "Release motion to public"
 msgstr "اعلن القضية للجمهور."
 
-#: draw/templates/draw_display_admin.html:202
+#: draw/templates/draw_display_admin.html:216
 msgid "Unrelease motion to public"
 msgstr "عدم إعلان القضية للجمهور."
 
-#: draw/templates/draw_display_admin.html:216
+#: draw/templates/draw_display_admin.html:230
 msgid ""
 "Your tournament is configured to require motions to be selected in ballots "
 "and to allow ballots to be submitted by adjudicators. Ensure that you "
@@ -857,7 +904,7 @@ msgid ""
 "able to be submitted."
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:220
+#: draw/templates/draw_display_admin.html:234
 msgid ""
 "Your tournament is configured to allow motions to be vetoed and to allow "
 "ballots to be submitted by adjudicators. Ensure that you release the motions"
@@ -867,7 +914,7 @@ msgstr ""
 "يسمح في اهذه البطولة ب التصويت على القضايا/ و تسليم إستمارات الدرجات من "
 "المحكمين، تأكد من إعلان القضايا قبل انتهاء المناظرة ليتمكنوا من التصويت"
 
-#: draw/templates/draw_display_admin.html:224
+#: draw/templates/draw_display_admin.html:238
 msgid ""
 "Your tournament is configured to show the motion(s) for each round on the "
 "public site. You'll need to first release the motion(s) for it to show "
@@ -876,7 +923,7 @@ msgstr ""
 "هذه البطولة مبرمجة على إعلان القضايا في موقع عام، الرجاء إعلان القضايا "
 "ليتمكن البنامج من عرضها في الموقع العام."
 
-#: draw/templates/draw_display_admin.html:228
+#: draw/templates/draw_display_admin.html:242
 msgid ""
 "Your tournament is not configured to show the motion(s) for each round on "
 "the public site. There's no need to release the motion(s)."
@@ -884,24 +931,29 @@ msgstr ""
 "هذه البطولة غير مبرمجة على إعلان القضايا في موقع عام، لا داعي لإعلان "
 "القضايا."
 
-#: draw/templates/draw_display_admin.html:240
+#: draw/templates/draw_display_admin.html:254
 msgid "Motions have been released publicly."
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:242
+#: draw/templates/draw_display_admin.html:256
 msgid "The motion has been released publicly."
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:245
+#: draw/templates/draw_display_admin.html:259
 msgid "View public motions page"
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:250
+#: draw/templates/draw_display_admin.html:264
 #, python-format
 msgid ""
 "You have released the motions, but they will not show to the public unless "
 "the \"public view of motions\" setting is enabled in <a class=\"alert-link\""
 " href=\"%(alert_link)s\">this tournament's configuration</a>."
+msgstr ""
+
+#: draw/templates/draw_display_admin.html:325
+#: draw/templates/draw_display_assistant.html:51
+msgid "Start at"
 msgstr ""
 
 #: draw/templates/draw_display_by.html:17
@@ -954,6 +1006,23 @@ msgstr "توقف التمرير"
 msgid "The draw for %(round_name)s has yet to be released."
 msgstr "قرعة ـ%(round_name)s لم يعلن عنها بعد "
 
+#: draw/templates/draw_set_debate_times.html:6
+#, python-format
+msgid "for %(name)s"
+msgstr ""
+
+#: draw/templates/draw_set_debate_times.html:16
+msgid "Apply Times to Debates"
+msgstr ""
+
+#: draw/templates/draw_set_debate_times.html:26
+msgid "Assign Dates to Venue Catgories"
+msgstr ""
+
+#: draw/templates/draw_set_debate_times.html:54
+msgid "Assign Times to Divisions"
+msgstr ""
+
 #: draw/templates/draw_status_confirmed.html:18
 msgid "Adjudicator Allocations"
 msgstr "تعيين المحكمين"
@@ -1000,6 +1069,10 @@ msgstr[5] ""
 
 #: draw/templates/draw_status_draft.html:6
 msgid "Delete Draw"
+msgstr ""
+
+#: draw/templates/draw_status_draft.html:17
+msgid "Confirm Draw"
 msgstr ""
 
 #: draw/templates/draw_status_draft.html:25
@@ -1049,6 +1122,11 @@ msgid ""
 "section</a>."
 msgstr ""
 
+#: draw/templates/edit_matchups.html:5 draw/templates/edit_matchups.html:8
+#, python-format
+msgid "Edit Sides/Matchups for %(abbreviation)s"
+msgstr ""
+
 #: draw/templates/position_balance.html:6
 msgid ""
 "It looks like sides aren't confirmed for some debates in this round. This "
@@ -1083,80 +1161,121 @@ msgid ""
 "tournament."
 msgstr "لا يتم حساب تقارير موازنة الموقف للجولة الاولى ."
 
-#: draw/views.py:66
+#: draw/templates/public_all_tournament_institutions.html:4
+#: draw/templates/public_all_tournament_institutions.html:5
+msgid "All Institutions"
+msgstr ""
+
+#: draw/templates/public_all_tournament_institutions.html:11
+#, python-format
+msgid "Draws for %(institution_name)s"
+msgstr ""
+
+#: draw/templates/public_all_tournament_institutions.html:12
+#: draw/templates/public_all_tournament_venues.html:13
+msgid "VIEW ALL"
+msgstr ""
+
+#: draw/templates/public_all_tournament_venues.html:5
+#: draw/templates/public_all_tournament_venues.html:6
+msgid "All Venues"
+msgstr ""
+
+#: draw/templates/public_all_tournament_venues.html:12
+#, python-format
+msgid "Draws for %(vc)s"
+msgstr ""
+
+#: draw/utils.py:47
+msgid "the chair"
+msgstr ""
+
+#: draw/utils.py:48
+msgid "the only"
+msgstr ""
+
+#: draw/utils.py:49
+msgid "a panellist"
+msgstr ""
+
+#: draw/utils.py:50
+msgid "a trainee"
+msgstr ""
+
+#: draw/views.py:69
 #, python-format
 msgid "Draw for %(round)s"
 msgstr "قرعة ل%(round)s"
 
-#: draw/views.py:79
+#: draw/views.py:82
 #, python-format
 msgid "debates start at %(time)s (in %(time_zone)s)"
 msgstr ""
 
-#: draw/views.py:151
+#: draw/views.py:157
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
 msgstr "جميع المناظرات لجميع جولات بطولة %(tournament)s"
 
-#: draw/views.py:281
+#: draw/views.py:287
 msgid "No Draw"
 msgstr "لا قرعة "
 
-#: draw/views.py:283
+#: draw/views.py:289
 msgid "Draft Draw"
 msgstr "مسودة قرعة"
 
-#: draw/views.py:317
+#: draw/views.py:323
 msgid "No Debates for this Round"
 msgstr "لا توجد مناظرات لهذه الجولة "
 
 #. Translators: e.g. "Affirmative: Break rank"
-#: draw/views.py:368
+#: draw/views.py:376
 #, python-format
 msgid "%(side_name)s: Break rank"
 msgstr "%(side_name)s مستوى التأهل "
 
 #. Translators: "BR" stands for "Break rank"
-#: draw/views.py:373
+#: draw/views.py:381
 msgid "BR"
 msgstr "م.ت"
 
-#: draw/views.py:398
+#: draw/views.py:406
 msgid "Draw with Details"
 msgstr "قرعة مع التفاصيل"
 
-#: draw/views.py:406
+#: draw/views.py:414
 msgid "Position Balance Report"
 msgstr "تقرير موازنة الموقف "
 
-#: draw/views.py:417
+#: draw/views.py:425
 #, python-format
 msgid "Rényi entropy of order %(order)s"
 msgstr ""
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
-#: draw/views.py:420
+#: draw/views.py:428
 msgid " (<i>i.e.</i>, Shannon entropy)"
 msgstr ""
 
-#: draw/views.py:450
+#: draw/views.py:458
 msgid "Teams with position imbalances"
 msgstr "الفرق غير متوازنة المواقف"
 
-#: draw/views.py:451
+#: draw/views.py:459
 msgid "No teams with position imbalances! Hooray!"
 msgstr "لا يوجد فرق غير متوازنة المواقف"
 
-#: draw/views.py:454
+#: draw/views.py:462
 msgid "Annotated draw"
 msgstr "قرعة موضحة"
 
-#: draw/views.py:485
+#: draw/views.py:493
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr "لا يمكنك انشاء قرعة لـ%(round)s، هناك قرعة سابقة"
 
-#: draw/views.py:493
+#: draw/views.py:501
 #, python-format
 msgid ""
 "<p>The draw could not be created, for the following reason: <em>%(message)s</em></p>\n"
@@ -1165,7 +1284,7 @@ msgstr ""
 "<p>لا يمكن أنشاء قرعة للاسباب التالية : <em>%(message)s</em></p>\n"
 "<p>الرجاء قم بحل المشكلة لأنشاء القرعة </p>"
 
-#: draw/views.py:501
+#: draw/views.py:509
 #, python-format
 msgid ""
 "The draw could not be created, because the following error occurred: <em>%(message)s</em></p>\n"
@@ -1174,7 +1293,7 @@ msgstr ""
 "لا يمكن انشاء قرعة بسبب خلل <em>%(message)s</em></p>\n"
 "<p>اذا كان لم تستطيع حل المشكلة ، الرجاء التواصل مع فرق الدعم الفني </p>"
 
-#: draw/views.py:510
+#: draw/views.py:518
 #, python-format
 msgid ""
 "<p>The team standings could not be generated, because the following error occurred: <em>%(message)s</em></p>\n"
@@ -1183,7 +1302,7 @@ msgstr ""
 "<p>لم يتم ترتيب الفرق بسبب الخلل التالي : <em>%(message)s</em></p>\n"
 "<p> هناك مستخدم يقوم بترتيب الفرق في الوقت الحالي ، و هذا يمنع الحصول على القرعة </p>"
 
-#: draw/views.py:526
+#: draw/views.py:534
 msgid ""
 "Venues were not auto-allocated because there are one or more adjudicator "
 "venue constraints. You should run venue allocations after allocating "
@@ -1192,39 +1311,54 @@ msgstr ""
 "لم يتم تخصيص الأماكن بشكل تلقائي نظرا لوجود قيود على مكان واحد أو أكثر. يجب "
 "تشغيل تخصيصات المكان بعد تخصيص المحكمين."
 
-#: draw/views.py:553
+#: draw/views.py:561
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr "مسح القرعة ، يمكنك الان اعادة انشاء أخرى "
 
-#: draw/views.py:572
+#: draw/views.py:586
+msgid "There was a problem sending adjudication assignment emails."
+msgstr ""
+
+#: draw/views.py:589
+#, python-format
+msgid ""
+"There was a problem connecting to the e-mail server when trying to send "
+"adjudication assigment emails: %(error)s"
+msgstr ""
+
+#: draw/views.py:592
+msgid "Adjudicator emails successfully sent."
+msgstr ""
+
+#: draw/views.py:594
 msgid "Released the draw."
 msgstr "اعلنت القرعة"
 
-#: draw/views.py:587
+#: draw/views.py:609
 msgid "Unreleased the draw."
 msgstr "القرعة لم تعلن."
 
-#: draw/views.py:600
+#: draw/views.py:622
 #, python-format
 msgid ""
 "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
 "a colon, for example: \"13:57\"."
 msgstr ""
 
-#: draw/views.py:691
+#: draw/views.py:713
 msgid "Side Pre-Allocations"
 msgstr "تعيين الموقف الأولي"
 
-#: draw/views.py:827
+#: draw/views.py:849
 msgid "All Draws for All Teams"
 msgstr "قرعة جميع الفرق"
 
-#: draw/views.py:842
+#: draw/views.py:864
 #, python-format
 msgid "All Debates for Teams from %(institution)s"
 msgstr "جميع المناظرات للفرق من %(institution)s"
 
-#: draw/views.py:861
+#: draw/views.py:883
 msgid ""
 "This venue category does not exist or the URL for it might have changed. Try"
 " finding it again from the homepage."
@@ -1232,11 +1366,11 @@ msgstr ""
 "فئة القاعة هذه غير موجودة أو ربما تغير الرابط الخاص بها . حاول العثور عليه "
 "مرة أخرى من الصفحة الرئيسية."
 
-#: draw/views.py:868
+#: draw/views.py:890
 #, python-format
 msgid "All Debates at %(venue_category)s"
 msgstr "جميع المناظرات في %(venue_category)s"
 
-#: draw/views.py:870
+#: draw/views.py:892
 msgid "Unknown Venue Category"
 msgstr "فئة قاعات غير معروفة "

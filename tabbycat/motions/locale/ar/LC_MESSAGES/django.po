@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -18,7 +18,9 @@ msgstr ""
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: motions/apps.py:7 motions/templates/public_motions.html:4
+#: motions/apps.py:7 motions/templates/public_division_motions.html:4
+#: motions/templates/public_division_motions.html:5
+#: motions/templates/public_motions.html:4
 #: motions/templates/public_motions.html:5
 msgid "Motions"
 msgstr "قضايا المناظرة"
@@ -165,6 +167,11 @@ msgstr "العودة للعرض"
 #: motions/templates/assign.html:42
 msgid "Save Motion Assignments"
 msgstr "حفظ القضايا المقترحة "
+
+#: motions/templates/motion_statistics.html:4
+#: motions/templates/motion_statistics.html:5 motions/views.py:182
+msgid "Motion Statistics"
+msgstr "إحصائيات القضية"
 
 #: motions/templates/motion_statistics.html:30
 #: motions/templates/public_motions.html:24
@@ -360,6 +367,42 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
+#: motions/templates/motions_info.html:8
+msgid "Info Slide"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:10
+msgid "No motions have been released yet."
+msgstr ""
+
+#: motions/templates/public_division_motions.html:24
+msgid "RSeq"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:25
+msgid "Round"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:26
+msgid "Reference"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:27
+msgid "Venue(s)"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:28
+msgid "Divisions"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:29
+msgid "Text"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:31
+msgid "Contentious"
+msgstr ""
+
 #: motions/templates/public_motions.html:31
 msgid "There are no motions available for this round."
 msgstr "لا يوجد قضايا في هذه الجولة "
@@ -435,7 +478,3 @@ msgstr "قضايا تم رفضها "
 #: motions/views.py:156
 msgid "Unreleased the motion(s)."
 msgstr "قضايا لم ترفض"
-
-#: motions/views.py:182
-msgid "Motion Statistics"
-msgstr "إحصائيات القضية"

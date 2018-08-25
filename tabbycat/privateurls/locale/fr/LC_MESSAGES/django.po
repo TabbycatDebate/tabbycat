@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: 2018-07-28 19:45-0300\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -215,7 +215,16 @@ msgstr ""
 "Vérifiez la liste des juges auxquels on doit envoyer un courriel avec son "
 "URL privée, puis cliquez le bouton en bas de page pour les envoyer."
 
-#: privateurls/templates/urls_email_list.html:26
+#: privateurls/templates/urls_email_list.html:27
+#, python-format
+msgid ""
+"A reply-to address has not been specified. Participants receiving email will "
+"not be able to reply to the message for clarification or to alert a problem. "
+"Go to the <a href=\"%(option_url)s\">Notifications section of the tournament "
+"options</a> to set an incoming email address."
+msgstr ""
+
+#: privateurls/templates/urls_email_list.html:34
 #, python-format
 msgid ""
 "The following participants have a URL key but don't have an e-mail address, "
@@ -224,7 +233,7 @@ msgstr ""
 "Les juges suivants ont une clé d'URL mais n'ont pas d'adresse courriel, donc "
 "ils ne seront pas envoyés des courriels : %(participants_list)s"
 
-#: privateurls/templates/urls_email_list.html:36
+#: privateurls/templates/urls_email_list.html:44
 #, python-format
 msgid ""
 "%(npeople)s participant who has already had their URL sent to them is "
@@ -245,11 +254,11 @@ msgstr[1] ""
 "dans l’<a href=\"%(sent_mail_records_url)s\">aire de modifications de la "
 "base de données</a>."
 
-#: privateurls/templates/urls_email_list.html:49
+#: privateurls/templates/urls_email_list.html:57
 msgid "Email message"
 msgstr "Message courriel"
 
-#: privateurls/templates/urls_email_list.html:62
+#: privateurls/templates/urls_email_list.html:70
 msgid "Send emails with private URLs to participants"
 msgstr "Envoyer aux participants les courriels avec les URLs privées"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: 2018-02-23 01:52-0800\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -23,24 +23,24 @@ msgstr ""
 msgid "Results"
 msgstr "Résultats"
 
-#: results/forms.py:44
+#: results/forms.py:45
 msgid "That password isn't correct."
 msgstr "Ce n'est pas le bon mot de passe."
 
-#: results/forms.py:76
+#: results/forms.py:77
 msgid "Please enter a whole number."
 msgstr "Veuillez saisir un nombre entier."
 
-#: results/forms.py:78
+#: results/forms.py:79
 #, python-format
 msgid "Please enter a multiple of %s."
 msgstr "Veuillez saisir un multiple de %s."
 
-#: results/forms.py:157
+#: results/forms.py:158
 msgid "The ballot set can't be both discarded and confirmed."
 msgstr "L'ensemble de bulletins ne peut pas être réjeté et confirmé."
 
-#: results/forms.py:163
+#: results/forms.py:164
 msgid ""
 "The debate status can't be confirmed unless one of the ballot sets is "
 "confirmed."
@@ -48,36 +48,36 @@ msgstr ""
 "Le statut du débat ne peut pas être confirmé sauf qu'une des ensembles de "
 "bulletins est confirmé."
 
-#: results/forms.py:292
+#: results/forms.py:299
 msgid "---------"
 msgstr "---------"
 
-#: results/forms.py:294 results/forms.py:296
+#: results/forms.py:301 results/forms.py:303
 #, python-format
 msgid "%(aff_team)s affirmed, %(neg_team)s negated"
 msgstr "%(aff_team)s était l'affirmatif, %(neg_team)s était l'négatif"
 
-#: results/forms.py:313
+#: results/forms.py:320
 #, python-format
 msgid "%(side_abbr)s's motion veto"
 msgstr "Veto de motion de %(side_abbr)s"
 
-#: results/forms.py:330
+#: results/forms.py:337
 msgid "Mark as a duplicate speech"
 msgstr "Marquer comme discours en double"
 
-#: results/forms.py:336
+#: results/forms.py:343
 #, python-format
 msgid "Forfeit by the %(side)s"
 msgstr "Forfait déclaré par l'équipe %(side)s"
 
-#: results/forms.py:476
+#: results/forms.py:483
 #, python-format
 msgid "The speaker %(speaker)s doesn't appear to be on team %(team)s."
 msgstr ""
 "Il semble que l'orateur %(speaker)s ne fasse pas partie de l'équipe %(team)s."
 
-#: results/forms.py:490
+#: results/forms.py:497
 #, python-format
 msgid "%(speaker)s appears to have given %(count)d substantive speech."
 msgid_plural ""
@@ -87,29 +87,29 @@ msgstr[0] ""
 msgstr[1] ""
 "Il semble que %(speaker)s ait prononcé %(count)d discours substantifs."
 
-#: results/forms.py:507
+#: results/forms.py:514
 msgid "The last substantive speaker and reply speaker can't be the same."
 msgstr ""
 "Le dernier orateur et l'orateur de réponse pour l'équipe %(side)s ne peuvent "
 "pas être la même personne."
 
-#: results/forms.py:514
+#: results/forms.py:521
 msgid "The reply speaker for this team did not give a substantive speech."
 msgstr ""
 "L'orateur de réponse pour l'équipe %(side)s n'a pas prononcé un discours "
 "substantif."
 
-#: results/forms.py:673
+#: results/forms.py:680
 msgid "The total scores for the teams are the same (i.e. a draw)."
 msgstr ""
 "Les scores totaux pour les deux équipes sont la même (c'est-à-dire, un nul)."
 
-#: results/forms.py:682
+#: results/forms.py:689
 #, python-format
 msgid "The total scores for the following teams are the same: %(teams)s"
 msgstr "Les scores totaux pours ces équipes sont la même : %(teams)s"
 
-#: results/forms.py:692
+#: results/forms.py:699
 #, python-format
 msgid ""
 "The margin (%(margin).1f) exceeds the maximum allowable margin "
@@ -118,7 +118,7 @@ msgstr ""
 "La marge (%(margin).1f) excède la marge maximale admissible "
 "(%(max_margin).1f)."
 
-#: results/forms.py:769
+#: results/forms.py:776
 #, python-format
 msgid ""
 "The total scores for the teams are the same (i.e. a draw) for adjudicator "
@@ -127,7 +127,7 @@ msgstr ""
 "Les scores totals pour les équipes sont la même (c'est-a-dire, un nul) pour "
 "le/la juge %(adj)s."
 
-#: results/forms.py:777
+#: results/forms.py:784
 #, python-format
 msgid ""
 "The margin (%(margin).1f) in the ballot of adjudicator %(adj)s exceeds the "
@@ -136,12 +136,12 @@ msgstr ""
 "La marge (%(margin).1f) dans le bulletin du/de la juge %(adj)s excède la "
 "marge maximale admissable (%(max_margin).1f)."
 
-#: results/forms.py:809
+#: results/forms.py:816
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr "%(team)s (%(side)s)"
 
-#: results/forms.py:823
+#: results/forms.py:830
 msgid ""
 "Sides for this debate are not confirmed. You can't save a result for this "
 "debate until the sides have been confirmed in the draw."
@@ -150,7 +150,7 @@ msgstr ""
 "un résultat pour ce débat jusqu'à ce que les côtés aient été confirmées dans "
 "le tirage."
 
-#: results/forms.py:830
+#: results/forms.py:837
 msgid "There must be exactly two teams advancing."
 msgstr "Il faut qu'il y ait exactement deux équipes avançantes."
 
@@ -501,7 +501,7 @@ msgid "Results are incorrect"
 msgstr "Résultat est incorrect"
 
 #: results/templates/assistant_enter_results.html:49
-#: results/templates/enter_results.html:100
+#: results/templates/enter_results.html:108
 #: results/templates/public_enter_results.html:74
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
 msgstr ""
@@ -793,27 +793,40 @@ msgstr ""
 "juges sont divisés de manière égale entre les équipes, la victoire sera "
 "attribuée à l'équipe pour laquelle le/la président(e) a voté."
 
-#: results/templates/enter_results.html:62
+#: results/templates/enter_results.html:49
+#, python-format
+msgid ""
+"In the grand-final rounds of a British Parliamentary format this form will "
+"not let you nominated a single winner. To work around this, you need to "
+"first nominate a second 'fake' winner in this ballot and save/complete the "
+"ballot as normal. To then correct this result, you go to the <a href="
+"\"%(admin_fix)s\" target=\"_blank\">Team Scores page of the Edit Database "
+"area</a>, click the <em>Team Score</em> of the 'fake' winner of this debate, "
+"set the <em>Win</em> field to <strong>No</strong>, and then <em>Save</em> "
+"the change."
+msgstr ""
+
+#: results/templates/enter_results.html:70
 msgid "Ballot Status"
 msgstr "État de bulletin"
 
-#: results/templates/enter_results.html:63
+#: results/templates/enter_results.html:71
 msgid "only the confirmed ballot set will affect this debate's result"
 msgstr ""
 
-#: results/templates/enter_results.html:79
+#: results/templates/enter_results.html:87
 msgid "Debate Status"
 msgstr "Statut de débat"
 
-#: results/templates/enter_results.html:82
+#: results/templates/enter_results.html:90
 msgid "all debates must be confirmed to advance to the next round"
 msgstr ""
 
-#: results/templates/enter_results.html:92
+#: results/templates/enter_results.html:100
 msgid "Save Ballot"
 msgstr "Enregistrer Bulletin"
 
-#: results/templates/enter_results.html:95
+#: results/templates/enter_results.html:103
 msgid "Cancel Entry"
 msgstr "Annuler"
 
@@ -947,39 +960,39 @@ msgid "%(round_name)s is a silent round"
 msgstr ""
 
 #. Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-#: results/utils.py:85
+#: results/utils.py:70
 #, python-format
 msgid "%(team_name)s as %(side_abbr)s"
 msgstr "%(team_name)s comme %(side_abbr)s"
 
-#: results/utils.py:103
+#: results/utils.py:88
 #, fuzzy, python-format
 #| msgid "%(winner)s (%(winner_side)s) won against %(loser)s (%(loser_side)s)"
 msgid "%(winner)s (%(winner_side)s) won"
 msgstr "%(winner)s (%(winner_side)s) a gagné contre %(loser)s (%(loser_side)s)"
 
-#: results/utils.py:108
+#: results/utils.py:93
 #, fuzzy, python-format
 #| msgid "%(team)s (%(side)s)"
 msgid "vs %(loser)s (%(loser_side)s)"
 msgstr "%(team)s (%(side)s)"
 
-#: results/utils.py:123
+#: results/utils.py:108
 #, python-format
 msgid "Advancing: %(advancing_list)s<br>\n"
 msgstr "Avançants: %(advancing_list)s<br>\n"
 
-#: results/utils.py:127
+#: results/utils.py:112
 #, python-format
 msgid "Eliminated: %(eliminated_list)s"
 msgstr "Éliminés: %(eliminated_list)s"
 
-#: results/utils.py:137
+#: results/utils.py:122
 #, python-format
 msgid "1st: %(first_team)s<br>\n"
 msgstr ""
 
-#: results/utils.py:139
+#: results/utils.py:124
 #, fuzzy, python-format
 #| msgid ""
 #| "1st: %(first_team)s<br>\n"
@@ -996,98 +1009,98 @@ msgstr ""
 "3ème : %(third_team)s<br>\n"
 "4ème : %(fourth_team)s"
 
-#: results/utils.py:150
+#: results/utils.py:135
 #, python-format
 msgid "Error with result for %(debate)s"
 msgstr "Erreur dans résultat de %(debate)s"
 
-#: results/utils.py:209
+#: results/utils.py:194
 msgid "1st"
 msgstr "1er"
 
-#: results/utils.py:210
+#: results/utils.py:195
 msgid "2nd"
 msgstr "2ème"
 
-#: results/utils.py:211
+#: results/utils.py:196
 msgid "3rd"
 msgstr "3ème"
 
-#: results/utils.py:212
+#: results/utils.py:197
 msgid "4th"
 msgstr "4ème"
 
-#: results/utils.py:213
+#: results/utils.py:198
 msgid "5th"
 msgstr "5ème"
 
-#: results/utils.py:214
+#: results/utils.py:199
 msgid "6th"
 msgstr "6ème"
 
-#: results/utils.py:215
+#: results/utils.py:200
 msgid "7th"
 msgstr "7ème"
 
-#: results/utils.py:216
+#: results/utils.py:201
 msgid "8th"
 msgstr "8ème"
 
 #. Translators: Abbreviation for Prime Minister
-#: results/utils.py:222
+#: results/utils.py:207
 msgid "PM"
 msgstr "PM"
 
 #. Translators: Abbreviation for Deputy Prime Minister
-#: results/utils.py:224
+#: results/utils.py:209
 msgid "DPM"
 msgstr "VPM"
 
 #. Translators: Abbreviation for Leader of the Opposition
-#: results/utils.py:226
+#: results/utils.py:211
 msgid "LO"
 msgstr "CO"
 
 #. Translators: Abbreviation for Deputy Leader of the Opposition
-#: results/utils.py:228
+#: results/utils.py:213
 msgid "DLO"
 msgstr "VCO"
 
 #. Translators: Abbreviation for Member for the Government
-#: results/utils.py:230
+#: results/utils.py:215
 msgid "MG"
 msgstr "MG"
 
 #. Translators: Abbreviation for Government Whip
-#: results/utils.py:232
+#: results/utils.py:217
 msgid "GW"
 msgstr "WG"
 
 #. Translators: Abbreviation for Member for the Opposition
-#: results/utils.py:234
+#: results/utils.py:219
 msgid "MO"
 msgstr "MO"
 
 #. Translators: Abbreviation for Opposition Whip
-#: results/utils.py:236
+#: results/utils.py:221
 msgid "OW"
 msgstr "WO"
 
-#: results/utils.py:256
+#: results/utils.py:241
 msgid "Reply"
 msgstr "Sommaire"
 
-#: results/utils.py:266
+#: results/utils.py:251
 #, python-format
 msgid "%(tournament)s %(round)s @ %(room)s"
 msgstr ""
 
-#: results/utils.py:281
+#: results/utils.py:269
 #, python-format
 msgid "(%(side)s) %(team)s\n"
 msgstr ""
 
-#: results/utils.py:284
+#: results/utils.py:272
 #, python-format
 msgid "- %(debater)s: %(score)s\n"
 msgstr ""

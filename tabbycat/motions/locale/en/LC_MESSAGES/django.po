@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: motions/apps.py:7 motions/templates/public_motions.html:4
+#: motions/apps.py:7 motions/templates/public_division_motions.html:4
+#: motions/templates/public_division_motions.html:5
+#: motions/templates/public_motions.html:4
 #: motions/templates/public_motions.html:5
 msgid "Motions"
 msgstr ""
@@ -164,6 +166,11 @@ msgstr ""
 
 #: motions/templates/assign.html:42
 msgid "Save Motion Assignments"
+msgstr ""
+
+#: motions/templates/motion_statistics.html:4
+#: motions/templates/motion_statistics.html:5 motions/views.py:182
+msgid "Motion Statistics"
 msgstr ""
 
 #: motions/templates/motion_statistics.html:30
@@ -323,6 +330,42 @@ msgid_plural "Save Motions"
 msgstr[0] ""
 msgstr[1] ""
 
+#: motions/templates/motions_info.html:8
+msgid "Info Slide"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:10
+msgid "No motions have been released yet."
+msgstr ""
+
+#: motions/templates/public_division_motions.html:24
+msgid "RSeq"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:25
+msgid "Round"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:26
+msgid "Reference"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:27
+msgid "Venue(s)"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:28
+msgid "Divisions"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:29
+msgid "Text"
+msgstr ""
+
+#: motions/templates/public_division_motions.html:31
+msgid "Contentious"
+msgstr ""
+
 #: motions/templates/public_motions.html:31
 msgid "There are no motions available for this round."
 msgstr ""
@@ -379,8 +422,4 @@ msgstr ""
 
 #: motions/views.py:156
 msgid "Unreleased the motion(s)."
-msgstr ""
-
-#: motions/views.py:182
-msgid "Motion Statistics"
 msgstr ""

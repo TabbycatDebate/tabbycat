@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-15 22:43-0300\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: 2018-08-15 23:26-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -45,7 +45,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: draw/apps.py:7 draw/views.py:289 draw/views.py:292
+#: draw/apps.py:7 draw/views.py:292 draw/views.py:295
 msgid "Draw"
 msgstr "Tirage"
 
@@ -780,7 +780,7 @@ msgstr "Le tirage a été publié."
 msgid "View public draw page"
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:140
+#: draw/templates/draw_display_admin.html:145
 #, python-format
 msgid ""
 "You have released the draw, so ballots and/or feedback can be submitted from "
@@ -795,7 +795,7 @@ msgstr ""
 "class=\"alert-link\" href=\"%(alert_link)s\">la configuration de ce tournoi</"
 "a>."
 
-#: draw/templates/draw_display_admin.html:145
+#: draw/templates/draw_display_admin.html:150
 #, python-format
 msgid ""
 "You have released the draw, but it will not show to the public unless the "
@@ -806,17 +806,17 @@ msgstr ""
 "paramètre « affichage public du tirage » soit activée dans <a class=\"alert-"
 "link\" href=\"%(alert_link)s\">la configuration de ce tournoi</a>."
 
-#: draw/templates/draw_display_admin.html:155
+#: draw/templates/draw_display_admin.html:160
 msgid "Release draw to public"
 msgstr "Publier le tirage"
 
-#: draw/templates/draw_display_admin.html:156
+#: draw/templates/draw_display_admin.html:161
 msgid ""
 "Your tournament is configured to send emails to adjudicators announcing "
 "which debate they were allocated to once the draw is released."
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:162
+#: draw/templates/draw_display_admin.html:167
 msgid ""
 "Your tournament allows ballots and feedback to be submitted online by "
 "adjudicators. The draw must be released before they can do so."
@@ -825,7 +825,7 @@ msgstr ""
 "commentaires. Avant qu'ils puissent le faire, il faut que le tirage soit "
 "publié."
 
-#: draw/templates/draw_display_admin.html:165
+#: draw/templates/draw_display_admin.html:170
 msgid ""
 "Your tournament allows ballots to be submitted online by adjudicators. The "
 "draw must be released before they can do so."
@@ -833,7 +833,7 @@ msgstr ""
 "Votre tournoi permet aux juges de soumettre en ligne les bulletins. Avant "
 "qu'ils puissent le faire, il faut que le tirage soit publié."
 
-#: draw/templates/draw_display_admin.html:168
+#: draw/templates/draw_display_admin.html:173
 msgid ""
 "Your tournament allows feedback to be submitted online by participants. The "
 "draw must be released before they can do so."
@@ -841,7 +841,7 @@ msgstr ""
 "Votre tournoi permet aux juges de soumettre en ligne les commentaires. Avant "
 "qu'ils puissent le faire, il faut que le tirage soit publié."
 
-#: draw/templates/draw_display_admin.html:172
+#: draw/templates/draw_display_admin.html:177
 msgid ""
 "Your tournament is configured to show the draw publicly. Releasing a draw "
 "will allow it to show it on the public page."
@@ -849,7 +849,7 @@ msgstr ""
 "Votre tournoi est configuré pour afficher publiquement le tirage. La "
 "publication du tirage lui permettra de s'afficher sur la page publique."
 
-#: draw/templates/draw_display_admin.html:183
+#: draw/templates/draw_display_admin.html:188
 msgid ""
 "Your configuration doesn't have a public draw page or feedback/ballot "
 "submissions. There's no reason to release the draw."
@@ -858,31 +858,31 @@ msgstr ""
 "soumissions des bulletins et/ou commentaires. Il n'y a aucune raison de "
 "publier le tirage."
 
-#: draw/templates/draw_display_admin.html:205
+#: draw/templates/draw_display_admin.html:210
 msgid "Release Motions"
 msgstr "Publication des motions"
 
-#: draw/templates/draw_display_admin.html:206
+#: draw/templates/draw_display_admin.html:211
 msgid "Release motions to public"
 msgstr "Publier les motions"
 
-#: draw/templates/draw_display_admin.html:207
+#: draw/templates/draw_display_admin.html:212
 msgid "Unrelease motions to public"
 msgstr "Dépublier les motions"
 
-#: draw/templates/draw_display_admin.html:209
+#: draw/templates/draw_display_admin.html:214
 msgid "Release Motion"
 msgstr "Publication de la motion"
 
-#: draw/templates/draw_display_admin.html:210
+#: draw/templates/draw_display_admin.html:215
 msgid "Release motion to public"
 msgstr "Publier la motion"
 
-#: draw/templates/draw_display_admin.html:211
+#: draw/templates/draw_display_admin.html:216
 msgid "Unrelease motion to public"
 msgstr "Dépublier la motion"
 
-#: draw/templates/draw_display_admin.html:225
+#: draw/templates/draw_display_admin.html:230
 msgid ""
 "Your tournament is configured to require motions to be selected in ballots "
 "and to allow ballots to be submitted by adjudicators. Ensure that you "
@@ -894,7 +894,7 @@ msgstr ""
 "vous publiez les motions avant que les débats terminent, sinon les bulletins "
 "ne pourront pas être soumis."
 
-#: draw/templates/draw_display_admin.html:229
+#: draw/templates/draw_display_admin.html:234
 msgid ""
 "Your tournament is configured to allow motions to be vetoed and to allow "
 "ballots to be submitted by adjudicators. Ensure that you release the motions "
@@ -905,7 +905,7 @@ msgstr ""
 "vous publiez les motions avant que les débats terminent, sinon les bulletins "
 "ne pourront pas être soumis."
 
-#: draw/templates/draw_display_admin.html:233
+#: draw/templates/draw_display_admin.html:238
 msgid ""
 "Your tournament is configured to show the motion(s) for each round on the "
 "public site. You'll need to first release the motion(s) for it to show there."
@@ -914,7 +914,7 @@ msgstr ""
 "sur la page publique. Pour que la/les motion(s) s'y affiche(nt), vous devez "
 "la/les publier."
 
-#: draw/templates/draw_display_admin.html:237
+#: draw/templates/draw_display_admin.html:242
 msgid ""
 "Your tournament is not configured to show the motion(s) for each round on "
 "the public site. There's no need to release the motion(s)."
@@ -922,23 +922,23 @@ msgstr ""
 "Votre tournoi n'est pas configuré pour afficer la/les motion(s) de chaque "
 "tour sur la page publique. Vous n'avez pas besoin de la/les publier."
 
-#: draw/templates/draw_display_admin.html:249
+#: draw/templates/draw_display_admin.html:254
 #, fuzzy
 #| msgid "Motions have been released."
 msgid "Motions have been released publicly."
 msgstr "Les motions ont été publiées."
 
-#: draw/templates/draw_display_admin.html:251
+#: draw/templates/draw_display_admin.html:256
 #, fuzzy
 #| msgid "The motion has been released."
 msgid "The motion has been released publicly."
 msgstr "La motion a été publiée."
 
-#: draw/templates/draw_display_admin.html:254
+#: draw/templates/draw_display_admin.html:259
 msgid "View public motions page"
 msgstr ""
 
-#: draw/templates/draw_display_admin.html:259
+#: draw/templates/draw_display_admin.html:264
 #, python-format
 msgid ""
 "You have released the motions, but they will not show to the public unless "
@@ -949,7 +949,7 @@ msgstr ""
 "paramètre « affichage public des motions » soit activée dans <a class="
 "\"alert-link\" href=\"%(alert_link)s\">la configuration de ce tournoi</a>."
 
-#: draw/templates/draw_display_admin.html:320
+#: draw/templates/draw_display_admin.html:325
 #: draw/templates/draw_display_assistant.html:51
 msgid "Start at"
 msgstr ""
@@ -1216,70 +1216,70 @@ msgstr "Tirage de %(round)s"
 msgid "debates start at %(time)s (in %(time_zone)s)"
 msgstr "les débats commenceront à %(time)s"
 
-#: draw/views.py:154
+#: draw/views.py:157
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
 msgstr "Tous les débats pour tous les tours de %(tournament)s"
 
-#: draw/views.py:284
+#: draw/views.py:287
 msgid "No Draw"
 msgstr "Aucun tirage"
 
-#: draw/views.py:286
+#: draw/views.py:289
 msgid "Draft Draw"
 msgstr "Tirage brouillon"
 
-#: draw/views.py:320
+#: draw/views.py:323
 msgid "No Debates for this Round"
 msgstr "Aucun débat dans ce Tour"
 
 #. Translators: e.g. "Affirmative: Break rank"
-#: draw/views.py:371
+#: draw/views.py:376
 #, python-format
 msgid "%(side_name)s: Break rank"
 msgstr "%(side_name)s : rang dans la qualification"
 
 #. Translators: "BR" stands for "Break rank"
-#: draw/views.py:376
+#: draw/views.py:381
 msgid "BR"
 msgstr "RQ"
 
-#: draw/views.py:401
+#: draw/views.py:406
 msgid "Draw with Details"
 msgstr "Tirage detaillé"
 
-#: draw/views.py:409
+#: draw/views.py:414
 msgid "Position Balance Report"
 msgstr "Rapport sur l'équilibre des positions"
 
-#: draw/views.py:420
+#: draw/views.py:425
 #, python-format
 msgid "Rényi entropy of order %(order)s"
 msgstr ""
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
-#: draw/views.py:423
+#: draw/views.py:428
 msgid " (<i>i.e.</i>, Shannon entropy)"
 msgstr ""
 
-#: draw/views.py:453
+#: draw/views.py:458
 msgid "Teams with position imbalances"
 msgstr ""
 
-#: draw/views.py:454
+#: draw/views.py:459
 msgid "No teams with position imbalances! Hooray!"
 msgstr ""
 
-#: draw/views.py:457
+#: draw/views.py:462
 msgid "Annotated draw"
 msgstr ""
 
-#: draw/views.py:488
+#: draw/views.py:493
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr ""
 
-#: draw/views.py:496
+#: draw/views.py:501
 #, python-format
 msgid ""
 "<p>The draw could not be created, for the following reason: <em>%(message)s</"
@@ -1287,7 +1287,7 @@ msgid ""
 "<p>Please fix this issue before attempting to create the draw.</p>"
 msgstr ""
 
-#: draw/views.py:504
+#: draw/views.py:509
 #, python-format
 msgid ""
 "The draw could not be created, because the following error occurred: <em>"
@@ -1296,7 +1296,7 @@ msgid ""
 "contact the developers.</p>"
 msgstr ""
 
-#: draw/views.py:513
+#: draw/views.py:518
 #, python-format
 msgid ""
 "<p>The team standings could not be generated, because the following error "
@@ -1305,72 +1305,72 @@ msgid ""
 "prevents the draw from being generated.</p>"
 msgstr ""
 
-#: draw/views.py:529
+#: draw/views.py:534
 msgid ""
 "Venues were not auto-allocated because there are one or more adjudicator "
 "venue constraints. You should run venue allocations after allocating "
 "adjudicators."
 msgstr ""
 
-#: draw/views.py:556
+#: draw/views.py:561
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
-#: draw/views.py:581
+#: draw/views.py:586
 msgid "There was a problem sending adjudication assignment emails."
 msgstr ""
 
-#: draw/views.py:584
+#: draw/views.py:589
 #, python-format
 msgid ""
 "There was a problem connecting to the e-mail server when trying to send "
 "adjudication assigment emails: %(error)s"
 msgstr ""
 
-#: draw/views.py:587
+#: draw/views.py:592
 msgid "Adjudicator emails successfully sent."
 msgstr ""
 
-#: draw/views.py:589
+#: draw/views.py:594
 msgid "Released the draw."
 msgstr ""
 
-#: draw/views.py:604
+#: draw/views.py:609
 msgid "Unreleased the draw."
 msgstr ""
 
-#: draw/views.py:617
+#: draw/views.py:622
 #, python-format
 msgid ""
 "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
 "a colon, for example: \"13:57\"."
 msgstr ""
 
-#: draw/views.py:708
+#: draw/views.py:713
 msgid "Side Pre-Allocations"
 msgstr "Pré-Répartition des côtés aux équipes"
 
-#: draw/views.py:844
+#: draw/views.py:849
 msgid "All Draws for All Teams"
 msgstr ""
 
-#: draw/views.py:859
+#: draw/views.py:864
 #, python-format
 msgid "All Debates for Teams from %(institution)s"
 msgstr ""
 
-#: draw/views.py:878
+#: draw/views.py:883
 msgid ""
 "This venue category does not exist or the URL for it might have changed. Try "
 "finding it again from the homepage."
 msgstr ""
 
-#: draw/views.py:885
+#: draw/views.py:890
 #, python-format
 msgid "All Debates at %(venue_category)s"
 msgstr ""
 
-#: draw/views.py:887
+#: draw/views.py:892
 msgid "Unknown Venue Category"
 msgstr ""
 

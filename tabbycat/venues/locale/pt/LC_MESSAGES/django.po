@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Portuguese (https://www.transifex.com/tabbycat-jp/teams/86216/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -126,6 +126,11 @@ msgstr ""
 
 #: venues/models.py:141
 msgid "venue constraints"
+msgstr ""
+
+#: venues/templates/edit_venues.html:5 venues/templates/edit_venues.html:10
+#, python-format
+msgid "Edit Venues for %(round_abbr)s"
 msgstr ""
 
 #: venues/templates/venue_categories_edit.html:4
