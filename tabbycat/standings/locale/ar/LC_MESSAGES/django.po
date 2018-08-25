@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -32,7 +32,8 @@ msgid "Unrecognized metric code: \"%(code)s\""
 msgstr ""
 
 #: standings/diversity.py:136 standings/diversity.py:166
-#: standings/diversity.py:187
+#: standings/diversity.py:187 standings/templates/standings_menu.html:20
+#: standings/templates/standings_menu.html:36
 msgid "All"
 msgstr "الكل"
 
@@ -187,7 +188,7 @@ msgstr "النقاط (2/1/0)"
 msgid "wins"
 msgstr "عدد مرات الفوز"
 
-#: standings/teams.py:107 standings/views.py:589
+#: standings/teams.py:107 standings/views.py:590
 msgid "Wins"
 msgstr "عدد مرات الفوز"
 
@@ -292,8 +293,10 @@ msgid "who-beat-whom (in divisions)"
 msgstr "من أفضل من ( في الأقسام )"
 
 #: standings/templates/current_standings.html:6
-msgid "It also excludes silent rounds (if any)."
-msgstr "كما أنه يستثني الجولات الصامتة (إن وجدت)."
+msgid ""
+"It also excludes results from silent rounds (if any) and from the current "
+"round."
+msgstr ""
 
 #: standings/templates/current_standings.html:9
 #, python-format
@@ -377,43 +380,39 @@ msgstr "لا يوجد حقل تم تحديده "
 msgid "Male identifying"
 msgstr "تحديد"
 
-#: standings/templates/standings_menu.html:7
+#: standings/templates/standings_menu.html:6
 msgid "Overview"
 msgstr "عرض المتأهلون "
 
 #: standings/templates/standings_menu.html:11
-msgid "Teams"
-msgstr "الفرق"
-
-#: standings/templates/standings_menu.html:16
-#, python-format
-msgid "%(category_name)s Teams"
-msgstr ""
-
-#: standings/templates/standings_menu.html:24
 msgid "Divisions"
 msgstr "التقسيمات "
 
-#: standings/templates/standings_menu.html:29
+#: standings/templates/standings_menu.html:17
+msgid "Teams"
+msgstr "الفرق"
+
+#: standings/templates/standings_menu.html:25
+#: standings/templates/standings_menu.html:41
+#, python-format
+msgid "%(category_name)s"
+msgstr ""
+
+#: standings/templates/standings_menu.html:33
 msgid "Speakers"
 msgstr "المتناظرين"
 
-#: standings/templates/standings_menu.html:34
+#: standings/templates/standings_menu.html:49
 msgid "Replies"
 msgstr "الردود"
 
-#: standings/templates/standings_menu.html:40
-#, python-format
-msgid "%(category_name)s Speakers"
-msgstr "%(category_name)sالمتحدث "
+#: standings/templates/standings_menu.html:58
+msgid "Motions"
+msgstr ""
 
-#: standings/templates/standings_menu.html:52
-msgid "Motion Statistics"
-msgstr "إحصائيات القضية"
-
-#: standings/templates/standings_menu.html:56
-msgid "Diversity Overview"
-msgstr "عرض التقاسيم"
+#: standings/templates/standings_menu.html:62
+msgid "Diversity"
+msgstr ""
 
 #: standings/views.py:97
 #, python-format
@@ -510,6 +509,6 @@ msgstr ""
 msgid "Current Team Standings"
 msgstr "ترتيب الفرق الحالي"
 
-#: standings/views.py:589
+#: standings/views.py:590
 msgid "Points"
 msgstr ""

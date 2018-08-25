@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2018\n"
+"Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,8 +35,8 @@ msgid ""
 "Venues with a higher priority number will be preferred when allocating "
 "venues to debates"
 msgstr ""
-"Las salas con mayor prioridad serán prioridades al momento de la asignación "
-"de debates a salas"
+"Las salas con un mayor número de prioridad serán priorizadas cuando se "
+"asignen las salas de debate"
 
 #: venues/models.py:16
 msgid "tournament"
@@ -242,22 +242,22 @@ msgstr "No se realizaron cambios a las categorías de sala."
 #: venues/views.py:168
 #, python-format
 msgid "%s (Adjudicator)"
-msgstr ""
+msgstr "%s(Juez)"
 
 #: venues/views.py:171
 #, python-format
 msgid "%s (Team)"
-msgstr ""
+msgstr "%s(Equipo)"
 
 #: venues/views.py:174
 #, python-format
 msgid "%s (Institution)"
-msgstr ""
+msgstr "%s(Institución)"
 
 #: venues/views.py:177
 #, python-format
 msgid "%s (Division)"
-msgstr ""
+msgstr "%s(División)"
 
 #: venues/views.py:185
 #, python-format

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2017\n"
+"Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,6 +23,8 @@ msgid ""
 "There are no available adjudicators. Ensure there are adjudicators who have "
 "been marked as available for this round before auto-allocating."
 msgstr ""
+"No hay jueces disponibles. Asegúrese de que haya jueces que se hayan marcado"
+" como disponibles para esta ronda antes de la asignación automática."
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
@@ -35,11 +37,17 @@ msgid ""
 "area and decrease the \"Minimum adjudicator score to vote\" setting in order"
 " to allow some adjudicators to be allocated."
 msgstr ""
+"No hay jueces elegibles para ser principales o panelistas. Esto usualmente "
+"significa que necesitas ir al area de \"Reglas de emparejamiento\" en la "
+"sección de configuración y reducir el \"Puntaje mínimo del juez para votar\""
+" para que la configuración permita que algunos jueces sean asignados."
 
 #: adjallocation/hungarian.py:106
 msgid ""
 "There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr ""
+"No hay debates para esta ronda. Tal vez aún no haz creado el enfrentamiento "
+"de equipos aún."
 
 #: adjallocation/models.py:18
 msgid "chair"
@@ -141,78 +149,78 @@ msgstr "No todos los jueces especificados están asociados con el torneo."
 
 #: adjallocation/views.py:259
 msgid "Adjudicator-Team Conflicts"
-msgstr ""
+msgstr "Incompatibilidad juez-equipo"
 
 #: adjallocation/views.py:260
 msgid "Save Adjudicator-Team Conflicts"
-msgstr ""
+msgstr "Guardar incompatibilidad juez-equipo"
 
 #: adjallocation/views.py:271
 #, python-format
 msgid "Saved %(count)d adjudicator-team conflict."
 msgid_plural "Saved %(count)d adjudicator-team conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Se guardó %(count)dincompatibilidad juez-equipo."
+msgstr[1] "Se guardaron %(count)dincompatibilidades juez-equipo"
 
 #: adjallocation/views.py:277
 #, python-format
 msgid "Deleted %(count)d adjudicator-team conflict."
 msgid_plural "Deleted %(count)d adjudicator-team conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Se eliminó %(count)d incompatibilidad juez-equipo."
+msgstr[1] "Se eliminaron %(count)dincompatibilidades juez-equipo."
 
 #: adjallocation/views.py:282
 msgid "No changes were made to adjudicator-team conflicts."
-msgstr ""
+msgstr "No se hicieron cambios en las incompatibilidades juez-equipo."
 
 #: adjallocation/views.py:289
 msgid "Adjudicator-Adjudicator Conflicts"
-msgstr ""
+msgstr "Incompatibilidades Juez-Juez"
 
 #: adjallocation/views.py:290
 msgid "Save Adjudicator-Adjudicator Conflicts"
-msgstr ""
+msgstr "Guardar incompatibilidades Juez-Juez"
 
 #: adjallocation/views.py:305
 #, python-format
 msgid "Saved %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Se guardó %(count)d incompatibilidad juez-juez."
+msgstr[1] "Se guardaron %(count)d incompatibilidades juez-juez."
 
 #: adjallocation/views.py:311
 #, python-format
 msgid "Deleted %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Se eliminó %(count)d incompatibilidad juez-juez."
+msgstr[1] "Se eliminaron %(count)d incompatibilidades juez-juez."
 
 #: adjallocation/views.py:316
 msgid "No changes were made to adjudicator-adjudicator conflicts."
-msgstr ""
+msgstr "No se hicieron cambios en las incompatibilidades juez-juez."
 
 #: adjallocation/views.py:323
 msgid "Adjudicator-Institution Conflicts"
-msgstr ""
+msgstr "Incompatibilidades Juez-Institución"
 
 #: adjallocation/views.py:324
 msgid "Save Adjudicator-Institution Conflicts"
-msgstr ""
+msgstr "Guardar incompatibilidades Juez-Institución "
 
 #: adjallocation/views.py:332
 #, python-format
 msgid "Saved %(count)d adjudicator-institution conflict."
 msgid_plural "Saved %(count)d adjudicator-institution conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Guardar %(count)d incompatibilidad juez-institución."
+msgstr[1] "Guardar %(count)d incompatibilidades juez-institución"
 
 #: adjallocation/views.py:338
 #, python-format
 msgid "Deleted %(count)d adjudicator-institution conflict."
 msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Eliminar %(count)dincompatibilidad juez-institución"
+msgstr[1] "Eliminar %(count)dincompatibilidades juez-institución"
 
 #: adjallocation/views.py:343
 msgid "No changes were made to adjudicator-institution conflicts."
-msgstr ""
+msgstr "No se hizo ningún cambio en las incompatibilidades juez-institución"

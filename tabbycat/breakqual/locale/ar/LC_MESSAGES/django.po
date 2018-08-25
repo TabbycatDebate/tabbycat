@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: mohamad salman <mmali@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -332,7 +332,7 @@ msgstr ""
 msgid "Breaks Overview"
 msgstr "عرض المتأهلون "
 
-#: breakqual/templates/breakqual_subnav.html:9
+#: breakqual/templates/breakqual_subnav.html:11
 msgid "Adjudicators' Break"
 msgstr "الحكام المتأهلين"
 

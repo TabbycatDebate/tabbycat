@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
@@ -91,7 +91,7 @@ msgid ""
 msgstr "ما يُطلق عليه اسم المؤسسة عادةً ، على سبيل المثال \"كامبريدج\" "
 
 #: participants/models.py:59 participants/models.py:171
-#: participants/models.py:386
+#: participants/models.py:392
 msgid "institution"
 msgstr "مؤسسة"
 
@@ -100,7 +100,7 @@ msgid "institutions"
 msgstr "المؤسسات "
 
 #: participants/models.py:72 participants/models.py:173
-#: participants/models.py:389
+#: participants/models.py:395
 msgid "tournament"
 msgstr "البطولة"
 
@@ -154,7 +154,7 @@ msgstr "اذا تم اختياره، سيتم إظهار هذه الفئة مع 
 msgid "speaker category"
 msgstr "نقاط المتحدث"
 
-#: participants/models.py:96 participants/models.py:362
+#: participants/models.py:96 participants/models.py:368
 msgid "speaker categories"
 msgstr "نقاط المتحدثين"
 
@@ -288,7 +288,7 @@ msgstr "يستخدم البادئة المؤسسية"
 msgid "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
 msgstr "تنوية يمكنك تسمية فريق \"1\" من فكتوريا ليظهر \" فكتوريا 1 \" "
 
-#: participants/models.py:180 participants/models.py:394
+#: participants/models.py:180 participants/models.py:400
 msgid "URL key"
 msgstr "مفتاح الرابط "
 
@@ -320,7 +320,7 @@ msgstr "نوع"
 msgid "emoji"
 msgstr "رمز تعبيري"
 
-#: participants/models.py:215 participants/models.py:360
+#: participants/models.py:215 participants/models.py:366
 msgid "team"
 msgstr "فريق"
 
@@ -328,53 +328,53 @@ msgstr "فريق"
 msgid "teams"
 msgstr "فرق"
 
-#: participants/models.py:328
+#: participants/models.py:334
 msgid ""
 "Teams must have an institution if they are using the institutional prefix."
 msgstr "يجب أن يكون لدى الفرق مؤسسة إذا كانت تستخدم البادئة المؤسسية."
 
-#: participants/models.py:330
+#: participants/models.py:336
 msgid ""
 "Teams must have a full name if they don't use the institutional prefix."
 msgstr "يجب أن يكون للفرق اسم طويل إذا لم تستخدم البادئة المؤسسية."
 
-#: participants/models.py:332
+#: participants/models.py:338
 msgid ""
 "Teams must have a short name if they don't use the institutional prefix."
 msgstr "يجب أن يكون للفرق اسم قصير إذا لم تستخدم البادئة المؤسسية."
 
-#: participants/models.py:365
+#: participants/models.py:371
 msgid "speaker"
 msgstr "متحدث "
 
-#: participants/models.py:366
+#: participants/models.py:372
 msgid "speakers"
 msgstr "متحدثون "
 
-#: participants/models.py:390
+#: participants/models.py:396
 msgid ""
 "Adjudicators not assigned to any tournament can be shared between "
 "tournaments"
 msgstr ""
 "المحكمون الذين لم يتم تعيينهم في أي بطولة يمكن أن تكون مشتركة بين البطولات "
 
-#: participants/models.py:392
+#: participants/models.py:398
 msgid "test score"
 msgstr "نتيجة الفريق"
 
-#: participants/models.py:399
+#: participants/models.py:405
 msgid "institution conflicts"
 msgstr "تعارضات (منتخب)"
 
-#: participants/models.py:403
+#: participants/models.py:409
 msgid "team conflicts"
 msgstr "تعارضات (فريق)"
 
-#: participants/models.py:406
+#: participants/models.py:412
 msgid "always trainee"
 msgstr "المتدربين"
 
-#: participants/models.py:407
+#: participants/models.py:413
 msgid ""
 "If checked, this adjudicator will never be auto-allocated a voting position,"
 " regardless of their score"
@@ -382,23 +382,23 @@ msgstr ""
 "في حالة تحديده ، لن يتم تخصيص حق التصويت التلقائي لموضع التصويت ، بغض النظر "
 "عن درجاته"
 
-#: participants/models.py:409
+#: participants/models.py:415
 msgid "breaking"
 msgstr "المتأهلون"
 
-#: participants/models.py:411
+#: participants/models.py:417
 msgid "independent"
 msgstr "مستقل "
 
-#: participants/models.py:413
+#: participants/models.py:419
 msgid "adjudication core"
 msgstr "محكم"
 
-#: participants/models.py:422
+#: participants/models.py:428
 msgid "adjudicator"
 msgstr "محكم"
 
-#: participants/models.py:423
+#: participants/models.py:429
 msgid "adjudicators"
 msgstr "المحكمين"
 
@@ -476,18 +476,18 @@ msgid "%(adj_name)s is adjudicating in <strong>%(venue)s</strong>."
 msgstr "%(adj_name)s يحكم في <strong>%(venue)s</strong> "
 
 #: participants/templates/adjudicator_record.html:74
-#: participants/templates/team_record.html:68
+#: participants/templates/team_record.html:84
 #, python-format
 msgid "The round begins at %(start_time)s"
 msgstr "تبدأ الجولة %(start_time)s"
 
 #: participants/templates/adjudicator_record.html:83
-#: participants/templates/team_record.html:77
+#: participants/templates/team_record.html:93
 msgid "Teams:"
 msgstr "الفرق : "
 
 #: participants/templates/adjudicator_record.html:96
-#: participants/templates/team_record.html:93
+#: participants/templates/team_record.html:109
 msgid "Adjudicator:"
 msgid_plural "Adjudicators:"
 msgstr[0] ""
@@ -502,23 +502,23 @@ msgid "There are no panellists or trainees assigned to this debate."
 msgstr "لا يوجد قوائم للمدربين لهذه المناظرة "
 
 #: participants/templates/adjudicator_record.html:122
-#: participants/templates/team_record.html:111
+#: participants/templates/team_record.html:127
 msgid "Motions are not released to public."
 msgstr "القضايا الغير معلنة "
 
 #: participants/templates/adjudicator_record.html:125
-#: participants/templates/team_record.html:114
+#: participants/templates/team_record.html:130
 msgid "Motion:"
 msgstr "قضايا"
 
 #: participants/templates/adjudicator_record.html:129
-#: participants/templates/team_record.html:118
+#: participants/templates/team_record.html:134
 #, python-format
 msgid "Motion %(seq)s:"
 msgstr "قضايا المناظرة %(seq)s :"
 
 #: participants/templates/adjudicator_record.html:137
-#: participants/templates/team_record.html:126
+#: participants/templates/team_record.html:142
 msgid "The motion(s) for this round haven't yet been released."
 msgstr "القضية ( القضايا ) لهذه المناظرة لم يتم استلامها "
 
@@ -528,23 +528,23 @@ msgid "%(adj_name)s is not adjudicating this round."
 msgstr "%(adj_name)s لن يحكم هذه الجولة "
 
 #: participants/templates/adjudicator_record.html:159
-#: participants/templates/team_record.html:145
+#: participants/templates/team_record.html:161
 msgid "The draw for this round hasn't yet been released."
 msgstr "لم يتم إعلان القرعة حتى الآن "
 
 #: participants/templates/adjudicator_record.html:176
-#: participants/templates/team_record.html:160
+#: participants/templates/team_record.html:176
 #, python-format
 msgid "About %(name)s"
 msgstr "عن %(name)s"
 
 #: participants/templates/adjudicator_record.html:184
-#: participants/templates/team_record.html:205
+#: participants/templates/team_record.html:221
 msgid "Institution:"
 msgstr "منتخب"
 
 #: participants/templates/adjudicator_record.html:191
-#: participants/templates/team_record.html:212
+#: participants/templates/team_record.html:228
 msgid "Region:"
 msgstr "منطقة "
 
@@ -686,22 +686,22 @@ msgstr "%(participant_name)s لا يملك اي تغذية راجعةمعتمد�
 msgid "Participants List"
 msgstr "قائمة المشاركون"
 
-#: participants/templates/participants_subnav.html:10 participants/views.py:80
-msgid "Institutions"
+#: participants/templates/participants_subnav.html:10
+msgid "Institutions List"
 msgstr ""
 
-#: participants/templates/participants_subnav.html:15
+#: participants/templates/participants_subnav.html:17
 #: participants/views.py:125
 msgid "Code Names"
 msgstr ""
 
-#: participants/templates/participants_subnav.html:20
+#: participants/templates/participants_subnav.html:22
 #: participants/templates/speaker_categories_edit.html:4
 #: participants/templates/speaker_categories_edit.html:5
 msgid "Speaker Categories"
 msgstr "نقاط المتحدث"
 
-#: participants/templates/participants_subnav.html:24
+#: participants/templates/participants_subnav.html:26
 msgid "Speaker Eligibility"
 msgstr "المتأهلون"
 
@@ -730,11 +730,28 @@ msgstr ""
 msgid "Save Speaker Categories"
 msgstr "حفظ نقاط المتحدث "
 
-#: participants/templates/team_record.html:34
+#: participants/templates/team_record.html:33
+#, python-format
+msgid ""
+"It looks like %(team_name)s is competing in %(ndebates)s debate this round."
+msgid_plural ""
+"It looks like %(team_name)s is competing in %(ndebates)s debates this round."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: participants/templates/team_record.html:39
+msgid "If this is an error, please contact a tab director immediately."
+msgstr ""
+
+#: participants/templates/team_record.html:50
 msgid "Venue TBA"
 msgstr "القاعة غير معروفة "
 
-#: participants/templates/team_record.html:41
+#: participants/templates/team_record.html:57
 #, python-format
 msgid ""
 "%(team_name)s is debating as the <strong>%(side)s</strong> team against "
@@ -743,7 +760,7 @@ msgstr ""
 "%(team_name)s يتناظر كـ <strong>%(side)s</strong> ضد فريق "
 "<strong>%(opponent)s</strong> في <strong>%(venue)s</strong>"
 
-#: participants/templates/team_record.html:45
+#: participants/templates/team_record.html:61
 #, python-format
 msgid ""
 "%(team_name)s is debating against <strong>%(opponent)s</strong> in "
@@ -752,7 +769,7 @@ msgstr ""
 "%(team_name)s يتناظر ضد<strong>%(opponent)s</strong> "
 "في<strong>%(venue)s</strong> "
 
-#: participants/templates/team_record.html:54
+#: participants/templates/team_record.html:70
 #, python-format
 msgid ""
 "%(team_name)s is debating as the <strong>%(side)s</strong> team in "
@@ -761,43 +778,43 @@ msgstr ""
 "%(team_name)sستناظر كـ <strong>%(side)s</strong> في "
 "<strong>%(venue)s</strong>"
 
-#: participants/templates/team_record.html:58
+#: participants/templates/team_record.html:74
 #, python-format
 msgid "%(team_name)s is debating in <strong>%(venue)s</strong>."
 msgstr "%(team_name)s يتناظر في<strong>%(venue)s</strong>"
 
-#: participants/templates/team_record.html:101
+#: participants/templates/team_record.html:117
 msgctxt "chair icon"
 msgid "Ⓒ"
 msgstr "Ⓒ"
 
-#: participants/templates/team_record.html:101
+#: participants/templates/team_record.html:117
 msgctxt "trainee icon"
 msgid "Ⓣ"
 msgstr "Ⓣ"
 
-#: participants/templates/team_record.html:136
+#: participants/templates/team_record.html:152
 #, python-format
 msgid "%(team_name)s does not have a debate this round."
 msgstr "%(team_name)s ليس لدية مناظر في هذه الجولة "
 
-#: participants/templates/team_record.html:168
+#: participants/templates/team_record.html:184
 msgid "Full name:"
 msgstr "الاسم بالكامل "
 
-#: participants/templates/team_record.html:175
+#: participants/templates/team_record.html:191
 msgid "Code name:"
 msgstr "اسم الكود "
 
-#: participants/templates/team_record.html:181
+#: participants/templates/team_record.html:197
 msgid "Speakers:"
 msgstr "متحدثون "
 
-#: participants/templates/team_record.html:189
+#: participants/templates/team_record.html:205
 msgid "Division:"
 msgstr "تقاسيم "
 
-#: participants/templates/team_record.html:196
+#: participants/templates/team_record.html:212
 msgid "Eligible for break categories:"
 msgstr "تعديل الفواصل         "
 
@@ -813,6 +830,10 @@ msgstr "المحكمين"
 #: participants/views.py:56
 msgid "Speakers"
 msgstr "متحدثون "
+
+#: participants/views.py:80
+msgid "Institutions"
+msgstr ""
 
 #: participants/views.py:93
 msgid "Code"

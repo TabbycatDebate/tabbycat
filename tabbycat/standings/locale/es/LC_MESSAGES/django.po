@@ -8,8 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-07-01 01:45-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: David Alejandro Huertas Erazo <dale.huertas@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +20,7 @@ msgstr ""
 
 #: standings/base.py:295
 msgid "The same metric would be added twice:"
-msgstr ""
+msgstr "La misma métrica se agregaría dos veces:"
 
 #: standings/base.py:296
 msgid "The same ranking would be added twice:"
@@ -28,12 +29,13 @@ msgstr ""
 #: standings/base.py:370
 #, python-format
 msgid "Unrecognized metric code: \"%(code)s\""
-msgstr ""
+msgstr "Código de métrica no reconocido: \"%(code)s\""
 
 #: standings/diversity.py:136 standings/diversity.py:166
-#: standings/diversity.py:187
+#: standings/diversity.py:187 standings/templates/standings_menu.html:20
+#: standings/templates/standings_menu.html:36
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: standings/diversity.py:140 standings/diversity.py:155
 #: standings/diversity.py:173 standings/diversity.py:191
@@ -47,7 +49,7 @@ msgstr ""
 
 #: standings/diversity.py:151
 msgid "All Speakers"
-msgstr ""
+msgstr "Todos los oradores"
 
 #: standings/diversity.py:169
 msgid "Indies"
@@ -55,63 +57,63 @@ msgstr ""
 
 #: standings/diversity.py:177
 msgid "Chairs"
-msgstr ""
+msgstr "Principales"
 
 #: standings/diversity.py:177
 msgid "Panellists"
-msgstr ""
+msgstr "Panelistas"
 
 #: standings/diversity.py:177
 msgid "Trainees"
-msgstr ""
+msgstr "Trainee"
 
 #: standings/diversity.py:209
 msgid "Average Rating"
-msgstr ""
+msgstr "Calificación promedio"
 
 #: standings/diversity.py:210
 msgid "Median Rating"
-msgstr ""
+msgstr "Calificación mediana"
 
 #: standings/diversity.py:211
 msgid "Upper Quartile Rating"
-msgstr ""
+msgstr "Calificación del cuartil superior"
 
 #: standings/diversity.py:212
 msgid "Lower Quartile Rating"
-msgstr ""
+msgstr "Calificación del cuartil inferior"
 
 #: standings/diversity.py:218
 msgid "Average Rating From Teams"
-msgstr ""
+msgstr "Calificación promedio de los equipos"
 
 #: standings/diversity.py:219
 msgid "Average Rating From Chairs"
-msgstr ""
+msgstr "Calificación promedio de los principales"
 
 #: standings/diversity.py:220
 msgid "Average Rating From Panellists"
-msgstr ""
+msgstr "Calificación promedio de los panelistas"
 
 #: standings/diversity.py:221
 msgid "Average Rating From Trainees"
-msgstr ""
+msgstr "Calificación promedio de los trainee"
 
 #: standings/diversity.py:246
 msgid "Average Score"
-msgstr ""
+msgstr "Puntaje promedio"
 
 #: standings/diversity.py:247
 msgid "Median Score"
-msgstr ""
+msgstr "Puntaje mediano"
 
 #: standings/diversity.py:248
 msgid "Upper Quartile Score"
-msgstr ""
+msgstr "Puntaje del cuartil superior"
 
 #: standings/diversity.py:249
 msgid "Lower Quartile Score"
-msgstr ""
+msgstr "Puntaje del cuartil inferior"
 
 #: standings/diversity.py:256
 msgid "Reply Speaker Average"
@@ -124,69 +126,69 @@ msgstr ""
 
 #: standings/diversity.py:265
 msgid "Average Finals Score"
-msgstr ""
+msgstr "Promedio puntajes finales"
 
 #: standings/speakers.py:50 standings/speakers.py:116
 msgid "total"
-msgstr ""
+msgstr "total"
 
 #: standings/speakers.py:51 standings/speakers.py:117
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: standings/speakers.py:58 standings/speakers.py:126
 msgid "average"
-msgstr ""
+msgstr "promedio"
 
 #: standings/speakers.py:59 standings/speakers.py:127
 msgid "Avg"
-msgstr ""
+msgstr "Prom."
 
 #: standings/speakers.py:66
 msgid "trimmed mean (high-low drop)"
-msgstr ""
+msgstr "media recortada"
 
 #: standings/speakers.py:67
 msgid "Trim"
-msgstr ""
+msgstr "Recorte"
 
 #: standings/speakers.py:99 standings/speakers.py:136
 msgid "standard deviation"
-msgstr ""
+msgstr "desviación estándar"
 
 #: standings/speakers.py:100 standings/speakers.py:137
 msgid "Stdev"
-msgstr ""
+msgstr "Desv. est."
 
 #: standings/speakers.py:108
 msgid "number of speeches given"
-msgstr ""
+msgstr "número de discursos dados"
 
 #: standings/speakers.py:109 standings/speakers.py:148
 msgid "Num"
-msgstr ""
+msgstr "Num."
 
 #: standings/speakers.py:147
 msgid "replies given"
-msgstr ""
+msgstr "respuestas dadas"
 
 #: standings/teams.py:64 standings/teams.py:96
 msgid "points"
-msgstr ""
+msgstr "puntos"
 
 #: standings/teams.py:65 standings/teams.py:97
 msgid "Pts"
-msgstr ""
+msgstr "Pts."
 
 #: standings/teams.py:67
 msgid "Points (2/1/0)"
-msgstr ""
+msgstr "Puntos (2/1/0)"
 
 #: standings/teams.py:106
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:107 standings/views.py:589
+#: standings/teams.py:107 standings/views.py:590
 msgid "Wins"
 msgstr ""
 
@@ -291,7 +293,9 @@ msgid "who-beat-whom (in divisions)"
 msgstr ""
 
 #: standings/templates/current_standings.html:6
-msgid "It also excludes silent rounds (if any)."
+msgid ""
+"It also excludes results from silent rounds (if any) and from the current "
+"round."
 msgstr ""
 
 #: standings/templates/current_standings.html:9
@@ -370,42 +374,38 @@ msgstr ""
 msgid "Male identifying"
 msgstr ""
 
-#: standings/templates/standings_menu.html:7
+#: standings/templates/standings_menu.html:6
 msgid "Overview"
 msgstr ""
 
 #: standings/templates/standings_menu.html:11
-msgid "Teams"
-msgstr ""
-
-#: standings/templates/standings_menu.html:16
-#, python-format
-msgid "%(category_name)s Teams"
-msgstr ""
-
-#: standings/templates/standings_menu.html:24
 msgid "Divisions"
 msgstr ""
 
-#: standings/templates/standings_menu.html:29
+#: standings/templates/standings_menu.html:17
+msgid "Teams"
+msgstr ""
+
+#: standings/templates/standings_menu.html:25
+#: standings/templates/standings_menu.html:41
+#, python-format
+msgid "%(category_name)s"
+msgstr ""
+
+#: standings/templates/standings_menu.html:33
 msgid "Speakers"
 msgstr ""
 
-#: standings/templates/standings_menu.html:34
+#: standings/templates/standings_menu.html:49
 msgid "Replies"
 msgstr ""
 
-#: standings/templates/standings_menu.html:40
-#, python-format
-msgid "%(category_name)s Speakers"
+#: standings/templates/standings_menu.html:58
+msgid "Motions"
 msgstr ""
 
-#: standings/templates/standings_menu.html:52
-msgid "Motion Statistics"
-msgstr ""
-
-#: standings/templates/standings_menu.html:56
-msgid "Diversity Overview"
+#: standings/templates/standings_menu.html:62
+msgid "Diversity"
 msgstr ""
 
 #: standings/views.py:97
@@ -500,6 +500,6 @@ msgstr ""
 msgid "Current Team Standings"
 msgstr ""
 
-#: standings/views.py:589
+#: standings/views.py:590
 msgid "Points"
-msgstr ""
+msgstr "Puntos"
