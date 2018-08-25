@@ -45,8 +45,8 @@
     "build-vue": "NODE_ENV='production' npx vue-cli-service build",
     "serve-vue": "npx vue-cli-service serve",
     "cp-js": "cp node_modules/jquery/dist/jquery.js tabbycat/static/js/vendor && cp node_modules/jquery-validation/dist/jquery.validate.js tabbycat/static/js/vendor && cp node_modules/jsbarcode/dist/JsBarcode.all.min.js tabbycat/static/js/vendor",
-    "cp-fonts": "cp -R 'node_modules/inter-ui/Inter UI (web)/' 'tabbycat/static/fonts'",
-    "cp-i18n": "cp -R 'tabbycat/locale/jsi18n/' 'tabbycat/static/jsi18n'",
+    "cp-fonts": "mkdir -p tabbycat/static/fonts && cp node_modules/inter-ui/Inter\\ UI\\ \\(web\\)/* tabbycat/static/fonts",
+    "cp-i18n": "mkdir -p tabbycat/static/jsi18n && cp -R tabbycat/locale/jsi18n/* tabbycat/static/jsi18n/",
     "lint-vue": "npx vue-cli-service lint --ext .js,.html,.vue --ignore-pattern tabbycat/staticfiles/,tabbycat/static/ --cache tabbycat/",
     "lint-sass": "stylelint --cache tabbycat/templates/scss/**/*.scss"
   },
