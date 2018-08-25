@@ -46,6 +46,7 @@ LANGUAGES = [
     ('es', _('Spanish')),
     ('fr', _('French')),
     ('ja', _('Japanese')),
+    ('pt', _('Portuguese')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
