@@ -25,6 +25,7 @@ def allocate_adjudicators(round, alloc_class):
 class Allocator(object):
     def __init__(self, debates, adjudicators, round):
         self.tournament = round.tournament
+        self.round = round
         self.debates = list(debates)
         self.adjudicators = adjudicators
         if len(self.adjudicators) == 0:

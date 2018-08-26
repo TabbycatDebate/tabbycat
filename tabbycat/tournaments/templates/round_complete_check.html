@@ -72,16 +72,21 @@
     {% endblocktrans %}
     {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
   {% elif prior_rounds_not_completed %}
-    {% blocktrans trimmed asvar message %}
+    {% blocktrans trimmed count n=number_of_prior_rounds_not_completed asvar message %}
+      The following prior round has not yet been completed: {{ prior_rounds_not_completed }}.
+      You should complete it before marking this round as completed.
+    {% plural %}
       The following prior rounds have not yet been completed: {{ prior_rounds_not_completed }}.
       You should complete those before marking this round as completed.
     {% endblocktrans %}
     {% include 'components/alert.html' with type='danger' icon='alert-circle' %}
+
   {% elif increment_ok %}
     {% blocktrans trimmed with round_name=round.name asvar message %}
       All ballots from {{ round_name }} are confirmed. You should be good to go!
     {% endblocktrans %}
     {% include 'components/alert.html' with type='success' icon='alert-circle' %}
+
   {% else %}
     {% blocktrans trimmed count num_unconfirmed=num_unconfirmed asvar message %}
       There is still {{ num_unconfirmed }} ballot that is not confirmed.

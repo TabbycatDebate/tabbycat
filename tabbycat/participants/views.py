@@ -219,7 +219,7 @@ class BaseTeamRecordView(BaseRecordView):
             teamscores = teamscores.filter(
                 debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False,
-                debate_team__debate__round__seq__lt=tournament.current_round.seq
+                debate_team__debate__round__completed=True,
             )
 
         debates = [ts.debate_team.debate for ts in teamscores]
@@ -284,7 +284,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
             debateadjs = debateadjs.filter(
                 debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False,
-                debate__round__seq__lt=self.tournament.current_round.seq,
+                debate__round__completed=True,
             )
         debates = [da.debate for da in debateadjs]
         populate_wins(debates)

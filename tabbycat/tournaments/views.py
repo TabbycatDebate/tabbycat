@@ -12,6 +12,7 @@ from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
+from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
@@ -26,7 +27,7 @@ from results.models import BallotSubmission
 from results.utils import graphable_debate_statuses
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
-from utils.misc import redirect_round, redirect_tournament, reverse_tournament
+from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
@@ -62,6 +63,10 @@ class PublicSiteIndexView(TemplateView, WarnAboutDatabaseUseMixin):
 
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['results_available'] = self.tournament.round_set.filter(completed=True, silent=False).exists()
+        return super().get_context_data(**kwargs)
 
 
 class TournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDatabaseUseMixin):
@@ -115,7 +120,14 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
             Q(break_category=self.round.break_category) | Q(break_category__isnull=True),
             completed=False, seq__lt=self.round.seq
         )
-        kwargs['prior_rounds_not_completed'] = ", ".join(r.name for r in prior_rounds_not_completed)
+        kwargs['number_of_prior_rounds_not_completed'] = prior_rounds_not_completed.count()
+        kwargs['prior_rounds_not_completed'] = format_html_join(
+            ", ",
+            "<a href=\"{}\" class=\"alert-link\">{}</a>",
+            ((reverse_round('tournament-complete-round-check', r), r.name)
+                for r in prior_rounds_not_completed)
+        )
+
         kwargs['num_unconfirmed'] = self.round.debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0

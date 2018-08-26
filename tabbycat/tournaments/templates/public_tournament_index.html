@@ -111,7 +111,7 @@
       {% include "components/item-action.html" with icon="compass" %}
     {% endif %}
 
-    {% if pref.public_results and current_round.prev %}
+    {% if pref.public_results and results_available %}
       {% trans "Results" as text %}
       {% tournamenturl 'results-public-index' as url %}
       {% include "components/item-action.html" with icon="trending-up" %}
@@ -129,13 +129,13 @@
       {% include "components/item-action.html" with icon="file-text" %}
     {% endif %}
 
-    {% if pref.public_motions and pref.motion_tab_released == 0 and pref.draw_side_allocations == 'manual-ballot' %}
+    {% if pref.public_motions and not pref.motion_tab_released and pref.draw_side_allocations == 'manual-ballot' %}
       {% trans "Sides" as text %}
       {% tournamenturl 'draw-public-side-allocations' as url %}
       {% include "components/item-action.html" with icon="shuffle" %}
     {% endif %}
 
-    {% if pref.public_team_standings and current_round.prev and pref.team_tab_released == 0 %}
+    {% if pref.public_team_standings and results_available and not pref.team_tab_released %}
       {% trans "Team Standings" as text %}
       {% tournamenturl 'standings-public-teams-current' as url %}
       {% include "components/item-action.html" with icon="bar-chart-2" %}

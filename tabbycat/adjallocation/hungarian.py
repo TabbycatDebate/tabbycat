@@ -27,7 +27,7 @@ class BaseHungarianAllocator(Allocator):
         self.no_panellists = t.pref('no_panellist_position')
         self.no_trainees = t.pref('no_trainee_position')
         self.duplicate_allocations = t.pref('duplicate_adjs')
-        self.feedback_weight = t.current_round.feedback_weight
+        self.feedback_weight = self.round.feedback_weight
 
         self.munkres = Munkres()
 
