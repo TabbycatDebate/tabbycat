@@ -45,7 +45,7 @@
         {% elif motions|length == 1 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            {{ motions.0.text }}
+            {{ motions.0.motion.text }}
           </div>
 
         {% else %}
@@ -55,9 +55,9 @@
               <div class="d-flex align-items-center flex-grow-1">
                 <div>
                   {% if motions|length > 1 %}
-                    <span class="text-muted">{{ forloop.counter }}.</span>
+                    <span class="text-muted">{{ m.seq }}.</span>
                   {% endif %}
-                  {{ m.text }}
+                  {{ m.motion.text }}
                 </div>
               </div>
             {% endfor %}
@@ -87,7 +87,7 @@
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
-                  <small>{{ info.info_slide }}</small>
+                  <small>{{ info.motion.info_slide }}</small>
                 </p>
               </div>
             {% endfor %}

@@ -5,9 +5,6 @@ from django.utils.translation import gettext_lazy as _
 class Motion(models.Model):
     """Represents a single motion (not a set of motions)."""
 
-    seq = models.IntegerField(default=1,
-        verbose_name=_("sequence number"),
-        help_text=_("The order in which motions are displayed"))
     text = models.TextField(max_length=500,
         verbose_name=_("text"),
         help_text=_("The full motion e.g., \"This House would straighten all bananas\""))
@@ -20,13 +17,13 @@ class Motion(models.Model):
     flagged = models.BooleanField(default=False,
         verbose_name=_("flagged"),
         help_text=_("For WADL: Allows for particular motions to be flagged as contentious"))
-    round = models.ForeignKey('tournaments.Round', models.CASCADE,
-        verbose_name=_("round"))
+
+    rounds = models.ManyToManyField('tournaments.Round', through='motions.RoundMotions',
+        verbose_name=_("rounds"))
     divisions = models.ManyToManyField('divisions.Division', blank=True,
         verbose_name=_("divisions"))
 
     class Meta:
-        ordering = ('seq', )
         verbose_name = _("motion")
         verbose_name_plural = _("motions")
 
@@ -36,6 +33,7 @@ class Motion(models.Model):
 
 class DebateTeamMotionPreference(models.Model):
     """Represents a motion preference submitted by a debate team."""
+
     debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
         verbose_name=_("debate team"))
     motion = models.ForeignKey(Motion, models.CASCADE, db_index=True,
@@ -52,3 +50,25 @@ class DebateTeamMotionPreference(models.Model):
 
     def __str__(self):
         return "{0.motion.reference:s} ({0.preference:d}) by {0.debate_team!s}".format(self)
+
+
+class RoundMotions(models.Model):
+    """Represents the relation between rounds and motions"""
+
+    motion = models.ForeignKey(Motion, models.CASCADE,
+        verbose_name=_("motion"))
+    round = models.ForeignKey('tournaments.Round', models.CASCADE,
+        verbose_name=_("round"))
+
+    seq = models.IntegerField(default=1,
+        verbose_name=_("sequence number"),
+        help_text=_("The order in which motions are displayed"))
+
+    class Meta:
+        ordering = ('motion', 'seq')
+        unique_together = ('round', 'seq')
+        verbose_name = _("round motion")
+        verbose_name_plural = _("round motions")
+
+    def __str__(self):
+        return "%s: %s" % (self.motion.reference, self.round.name)

@@ -1601,12 +1601,10 @@
     "model": "motions.motion",
     "pk": 1,
     "fields": {
-        "seq": 1,
         "text": "This House would abolish national days",
         "reference": "National days",
         "info_slide": "",
         "flagged": false,
-        "round": 1,
         "divisions": []
     }
 },
@@ -1614,12 +1612,10 @@
     "model": "motions.motion",
     "pk": 2,
     "fields": {
-        "seq": 2,
         "text": "This House regrets the existence of Valentine's Day",
         "reference": "Valentine\u2019s Day",
         "info_slide": "",
         "flagged": false,
-        "round": 1,
         "divisions": []
     }
 },
@@ -1627,12 +1623,10 @@
     "model": "motions.motion",
     "pk": 3,
     "fields": {
-        "seq": 3,
         "text": "This House would rename Christmas with a name that is religiously neutral",
         "reference": "Christmas",
         "info_slide": "",
         "flagged": false,
-        "round": 1,
         "divisions": []
     }
 },
@@ -1640,12 +1634,10 @@
     "model": "motions.motion",
     "pk": 4,
     "fields": {
-        "seq": 1,
         "text": "This House would not buy Apple",
         "reference": "Apple",
         "info_slide": "",
         "flagged": false,
-        "round": 2,
         "divisions": []
     }
 },
@@ -1653,12 +1645,10 @@
     "model": "motions.motion",
     "pk": 5,
     "fields": {
-        "seq": 2,
         "text": "This House would end all research and development tax credits for highly profitable technology companies",
         "reference": "R&D tax credit",
         "info_slide": "",
         "flagged": false,
-        "round": 2,
         "divisions": []
     }
 },
@@ -1666,12 +1656,10 @@
     "model": "motions.motion",
     "pk": 6,
     "fields": {
-        "seq": 3,
         "text": "This House regrets the rise of computer science at the expense of the humanities",
         "reference": "Computer science",
         "info_slide": "",
         "flagged": false,
-        "round": 2,
         "divisions": []
     }
 },
@@ -1679,12 +1667,10 @@
     "model": "motions.motion",
     "pk": 7,
     "fields": {
-        "seq": 1,
         "text": "This House would favour creativity over intelligence",
         "reference": "Creativity and intelligence",
         "info_slide": "",
         "flagged": false,
-        "round": 3,
         "divisions": []
     }
 },
@@ -1692,12 +1678,10 @@
     "model": "motions.motion",
     "pk": 8,
     "fields": {
-        "seq": 2,
         "text": "This House believes that field hockey is better than ice hockey",
         "reference": "Hockey",
         "info_slide": "",
         "flagged": false,
-        "round": 3,
         "divisions": []
     }
 },
@@ -1705,12 +1689,10 @@
     "model": "motions.motion",
     "pk": 9,
     "fields": {
-        "seq": 3,
         "text": "This House would rather play with Lego than Barbie",
         "reference": "Lego and Barbie",
         "info_slide": "",
         "flagged": false,
-        "round": 3,
         "divisions": []
     }
 },
@@ -1718,12 +1700,10 @@
     "model": "motions.motion",
     "pk": 10,
     "fields": {
-        "seq": 1,
         "text": "This House would stop importing bananas from Latin America",
         "reference": "Bananas",
         "info_slide": "",
         "flagged": false,
-        "round": 4,
         "divisions": []
     }
 },
@@ -1731,12 +1711,10 @@
     "model": "motions.motion",
     "pk": 11,
     "fields": {
-        "seq": 2,
         "text": "This House believes that tomatoes are a fruit",
         "reference": "Tomatoes",
         "info_slide": "",
         "flagged": false,
-        "round": 4,
         "divisions": []
     }
 },
@@ -1744,12 +1722,10 @@
     "model": "motions.motion",
     "pk": 12,
     "fields": {
-        "seq": 3,
         "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
         "reference": "Pesticide labelling",
         "info_slide": "",
         "flagged": false,
-        "round": 4,
         "divisions": []
     }
 },
@@ -1757,12 +1733,10 @@
     "model": "motions.motion",
     "pk": 13,
     "fields": {
-        "seq": 1,
         "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
         "reference": "Indecent exposure",
         "info_slide": "",
         "flagged": false,
-        "round": 7,
         "divisions": []
     }
 },
@@ -1770,12 +1744,10 @@
     "model": "motions.motion",
     "pk": 14,
     "fields": {
-        "seq": 2,
         "text": "This House regrets the development of different fashion lines for men and women",
         "reference": "Gender and fashion",
         "info_slide": "",
         "flagged": false,
-        "round": 7,
         "divisions": []
     }
 },
@@ -1783,12 +1755,10 @@
     "model": "motions.motion",
     "pk": 15,
     "fields": {
-        "seq": 3,
         "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
         "reference": "Flip-flops",
         "info_slide": "",
         "flagged": false,
-        "round": 7,
         "divisions": []
     }
 },
@@ -1796,12 +1766,10 @@
     "model": "motions.motion",
     "pk": 16,
     "fields": {
-        "seq": 1,
         "text": "This House would stop using cash",
         "reference": "Cash",
         "info_slide": "",
         "flagged": false,
-        "round": 10,
         "divisions": []
     }
 },
@@ -1809,12 +1777,10 @@
     "model": "motions.motion",
     "pk": 17,
     "fields": {
-        "seq": 2,
         "text": "This House supports Bitcoin",
         "reference": "Bitcoin",
         "info_slide": "",
         "flagged": false,
-        "round": 10,
         "divisions": []
     }
 },
@@ -1822,13 +1788,173 @@
     "model": "motions.motion",
     "pk": 18,
     "fields": {
-        "seq": 3,
         "text": "This House would allow private organisations to compete in providing currency",
         "reference": "Private currency",
         "info_slide": "",
         "flagged": false,
-        "round": 10,
         "divisions": []
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 1,
+    "fields": {
+        "motion": 1,
+        "round": 1,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 2,
+    "fields": {
+        "motion": 4,
+        "round": 2,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 3,
+    "fields": {
+        "motion": 7,
+        "round": 3,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 4,
+    "fields": {
+        "motion": 10,
+        "round": 4,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 5,
+    "fields": {
+        "motion": 13,
+        "round": 7,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 6,
+    "fields": {
+        "motion": 16,
+        "round": 10,
+        "seq": 1
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 7,
+    "fields": {
+        "motion": 17,
+        "round": 10,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 8,
+    "fields": {
+        "motion": 2,
+        "round": 1,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 9,
+    "fields": {
+        "motion": 11,
+        "round": 4,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 10,
+    "fields": {
+        "motion": 14,
+        "round": 7,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 11,
+    "fields": {
+        "motion": 5,
+        "round": 2,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 12,
+    "fields": {
+        "motion": 8,
+        "round": 3,
+        "seq": 2
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 13,
+    "fields": {
+        "motion": 6,
+        "round": 2,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 14,
+    "fields": {
+        "motion": 9,
+        "round": 3,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 15,
+    "fields": {
+        "motion": 18,
+        "round": 10,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 16,
+    "fields": {
+        "motion": 12,
+        "round": 4,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 17,
+    "fields": {
+        "motion": 3,
+        "round": 1,
+        "seq": 3
+    }
+},
+{
+    "model": "motions.roundmotions",
+    "pk": 18,
+    "fields": {
+        "motion": 15,
+        "round": 7,
+        "seq": 3
     }
 },
 {

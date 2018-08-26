@@ -96,7 +96,7 @@ class BaseScoreField(forms.FloatField):
 
 class MotionModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return "%d. %s" % (obj.seq, obj.text)
+        return "%d. %s" % (obj.seq, obj.motion.text)
 
 
 class SubstantiveScoreField(BaseScoreField):
@@ -240,7 +240,7 @@ class BaseBallotSetForm(BaseResultForm):
         super().__init__(ballotsub, *args, **kwargs)
 
         self.adjudicators = list(self.debate.adjudicators.voting())
-        self.motions = self.debate.round.motion_set
+        self.motions = self.debate.round.roundmotions_set.order_by('seq').select_related('motion')
 
         self.using_motions = self.tournament.pref('enable_motions')
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')

@@ -597,17 +597,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             motions = [debate.round.motion_set.first() for debate in debates]
         self.add_motion_column(motions)
 
-    def add_motion_column(self, motions, show_order=False):
-        if show_order and self.tournament.pref('enable_motions'):
-            self.add_column({
-                'key': "order",
-                'icon': 'hash',
-                'tooltip': _("Order as listed"),
-            }, [{
-                'text': motion.seq,
-                'sort': motion.round.seq + (motion.seq * 0.1)
-            } for motion in motions])
-
+    def add_motion_column(self, motions):
         motion_data = [{
             'text': motion.reference if motion.reference else '?',
             'popover': {'content' : [{'text': motion.text}]}

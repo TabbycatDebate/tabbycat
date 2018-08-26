@@ -1,10 +1,10 @@
 import itertools
 
-from django.db.models import Avg, Count, Q
+from django.db.models import Avg, Count, F, Q
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from motions.models import Motion
+from motions.models import RoundMotions
 from tournaments.models import Round
 
 
@@ -28,7 +28,7 @@ class MotionTwoTeamStatsCalculator:
 
         for motion in self.motions:
             self._annotate_percentages(motion)
-            motion.χ2_label, motion.χ2_info = self._annotate_χsquared(motion.aff_wins, motion.neg_wins)
+            motion.χ2_label, motion.χ2_info = self._annotate_χsquared(motion.total_aff_wins, motion.total_neg_wins)
 
             if self.include_vetoes:
                 # vetoes are the "other way round", since an aff veto indicates it's neg-weighted
@@ -36,38 +36,35 @@ class MotionTwoTeamStatsCalculator:
 
     def _prefetch_motions(self):
 
-        self.motions = Motion.objects.filter(round__tournament=self.tournament).order_by(
-            'round__seq').select_related('round')
+        self.motions = RoundMotions.objects.filter(round__tournament=self.tournament).order_by(
+            'round__seq', 'seq').select_related('round', 'motion')
         annotations = {}  # dict of keyword arguments to pass to .annotate()
 
         # This if-else block could be simplified using **kwargs notation, but it'd be miserable to read
-        if self.by_motion:
-            self.motions = self.motions.filter(ballotsubmission__confirmed=True)
-            annotations['ndebates'] = Count('ballotsubmission', distinct=True)
-            annotations.update({'%s_wins' % side: Count(
-                'ballotsubmission__teamscore',
-                filter=Q(
-                    ballotsubmission__teamscore__debate_team__side=side,
-                    ballotsubmission__teamscore__win=True,
-                ), distinct=True) for side in self.tournament.sides})
+        self.motions = self.motions.filter(motion__ballotsubmission__confirmed=True)
+        annotations['ndebates'] = Count('motion__ballotsubmission', distinct=True)
+        annotations.update({'%s_wins' % side: Count(
+            'motion__ballotsubmission__teamscore',
+            filter=Q(
+                motion__ballotsubmission__teamscore__debate_team__side=side,
+                motion__ballotsubmission__teamscore__win=True,
+                motion__ballotsubmission__debate__round=F('round')
+            ), distinct=True) for side in self.tournament.sides})
 
-        else:
-            self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
-            annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
-            annotations.update({'%s_wins' % side: Count(
-                'round__debate__ballotsubmission__teamscore',
-                filter=Q(
-                    round__debate__ballotsubmission__teamscore__debate_team__side=side,
-                    round__debate__ballotsubmission__teamscore__win=True,
-                ), distinct=True) for side in self.tournament.sides})
+        annotations.update({'total_%s_wins' % side: Count(
+            'motion__ballotsubmission__teamscore',
+            filter=Q(
+                motion__ballotsubmission__teamscore__debate_team__side=side,
+                motion__ballotsubmission__teamscore__win=True
+            ), distinct=True) for side in self.tournament.sides})
 
         if self.include_vetoes:
             annotations.update({'%s_vetoes' % side: Count(
-                'debateteammotionpreference',
+                'motion__debateteammotionpreference',
                 filter=Q(
-                    debateteammotionpreference__debate_team__side=side,
-                    debateteammotionpreference__preference=3,
-                    debateteammotionpreference__ballot_submission__confirmed=True,
+                    motion__debateteammotionpreference__debate_team__side=side,
+                    motion__debateteammotionpreference__preference=3,
+                    motion__debateteammotionpreference__ballot_submission__confirmed=True,
                 ), distinct=True) for side in self.tournament.sides})
 
         self.motions = self.motions.annotate(**annotations)
@@ -159,11 +156,11 @@ class MotionBPStatsCalculator:
         per round. We'll implement motion selection if and when we discover that
         it's used by someone with BP."""
 
-        self.prelim_motions = Motion.objects.filter(
+        self.prelim_motions = RoundMotions.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_PRELIMINARY,
             round__debate__ballotsubmission__confirmed=True,
-        ).order_by('round__seq').select_related('round')
+        ).order_by('round__seq', 'seq').select_related('round', 'motion')
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
         annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
@@ -214,11 +211,11 @@ class MotionBPStatsCalculator:
         per round. We'll implement motion selection if and when we discover that
         it's used by someone with BP."""
 
-        self.elim_motions = Motion.objects.filter(
+        self.elim_motions = RoundMotions.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_ELIMINATION,
             round__debate__ballotsubmission__confirmed=True,
-        ).order_by('round__seq').select_related('round')
+        ).order_by('round__seq', 'seq').select_related('round', 'motion')
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
         annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)

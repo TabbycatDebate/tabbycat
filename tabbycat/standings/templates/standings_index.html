@@ -141,9 +141,11 @@
         </li>
         {% for top_motion in top_motions %}
           <li class="list-group-item">
-            {% blocktrans trimmed with reference=top_motion.reference abbreviation=top_motion.round.abbreviation %}
-            {{ reference }} in {{ abbreviation }}
-            {% endblocktrans %}
+            {{ top_motion.reference }} in
+            {% for round in top_motion.rounds.all %}
+              {{ round.abbreviation }}
+              {% if not forloop.last %}, {% endif %}
+            {% endfor %}
             <span class="badge badge-secondary float-right">{{ top_motion.ballotsubmission__count }}</span>
           </li>
         {% empty %}
@@ -154,9 +156,11 @@
         </li>
         {% for bottom_motion in bottom_motions %}
           <li class="list-group-item">
-            {% blocktrans trimmed with reference=bottom_motion.reference abbreviation=bottom_motion.round.abbreviation %}
-            {{ reference }} in {{ abbreviation }}
-            {% endblocktrans %}
+            {{ bottom_motion.reference }} in
+            {% for round in bottom_motion.rounds.all %}
+              {{ round.abbreviation }}
+              {% if not forloop.last %}, {% endif %}
+            {% endfor %}
             <span class="badge badge-secondary float-right">{{ bottom_motion.ballotsubmission__count }}</span>
           </li>
         {% empty %}

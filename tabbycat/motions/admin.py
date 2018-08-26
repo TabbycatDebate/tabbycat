@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import DebateTeamMotionPreference, Motion
+from .models import DebateTeamMotionPreference, Motion, RoundMotions
 
 from utils.admin import TabbycatModelAdminFieldsMixin
 
@@ -9,17 +9,21 @@ from utils.admin import TabbycatModelAdminFieldsMixin
 # Motions
 # ==============================================================================
 
+@admin.register(Motion)
 class MotionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
-    list_display = ('reference', 'round', 'seq', 'get_tournament')
-    list_filter = ('round__tournament', 'round', 'divisions')
-    ordering = ('round',)
-
-admin.site.register(Motion, MotionAdmin)
+    list_display = ('reference', 'text')
+    list_filter = ('rounds', 'divisions')
 
 
+@admin.register(DebateTeamMotionPreference)
 class DebateTeamMotionPreferenceAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('ballot_submission', 'get_confirmed', 'get_team',
                     'get_team_side', 'preference', 'get_motion_ref')
     search_fields = ('motion__reference',)
 
-admin.site.register(DebateTeamMotionPreference, DebateTeamMotionPreferenceAdmin)
+
+@admin.register(RoundMotions)
+class RoundMotionsAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+    list_display = ('seq', 'round', 'motion')
+    list_filter = ('round', 'motion')
+    ordering = ('round__seq', 'seq')

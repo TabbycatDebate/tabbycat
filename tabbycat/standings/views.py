@@ -76,9 +76,9 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
         if self.tournament.pref('motion_vetoes_enabled'):
             motions = Motion.objects.filter(
-                round__seq__lte=self.round.seq,
-                round__tournament=self.tournament
-            ).annotate(Count('ballotsubmission'))
+                rounds__seq__lte=self.round.seq,
+                rounds__tournament=self.tournament
+            ).annotate(Count('ballotsubmission')).prefetch_related('rounds')
             kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:4]
             kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:4]
 

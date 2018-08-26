@@ -100,7 +100,7 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "motions")
         self.importer.import_motions(f)
-        self.assertCountsDictEqual(self.importer.counts, {mm.Motion: 30})
+        self.assertCountsDictEqual(self.importer.counts, {mm.Motion: 30, mm.RoundMotions: 30})
         self.assertFalse(self.importer.errors)
 
     def test_adj_feedback_questions(self):

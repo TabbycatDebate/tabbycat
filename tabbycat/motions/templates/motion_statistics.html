@@ -21,12 +21,19 @@
           <div class="list-group-item pb-0 text-center">
 
             <h4 class="mb-3 mt-1">
-              {{ motion.text }}
+              {{ motion.motion.text }} <small class="text-muted d-md-inline d-none">({{ motion.motion.reference }})</small>
+              {% if motion.motion.rounds.count > 1 %}
+                {% for m_round in motion.motion.rounds.all.reverse %}
+                  <span class="badge mr-2 float-right badge-light">
+                    {{ m_round.abbreviation }}
+                  </span>
+                {% endfor %}
+              {% endif %}
             </h4>
 
-            {% if motion.info_slide %}
+            {% if motion.motion.info_slide %}
               <span class="h6 badge badge-light text-secondary mx-auto mb-3 mt-0 hover-target"
-                    data-toggle="modal" data-target="#info_{{ motion.id }}">
+                    data-toggle="modal" data-target="#info_{{ motion.motion.id }}">
                 {% trans "View Info Slide" %}
               </span>
               {% include 'motions_info.html' %}

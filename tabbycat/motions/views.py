@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.forms.models import modelformset_factory
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
@@ -14,7 +14,7 @@ from utils.misc import redirect_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
-from .models import Motion
+from .models import Motion, RoundMotions
 from .forms import ModelAssignForm
 from .statistics import MotionStatistics
 
@@ -42,7 +42,7 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
             filter_q |= Q(seq__lte=self.tournament.current_round.seq)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
-                order_by).prefetch_related('motion_set')
+                order_by).prefetch_related(Prefetch('motion_set', queryset=Motion.objects.order_by('roundmotions__seq')))
         return super().get_context_data(**kwargs)
 
 
@@ -56,7 +56,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
-        excludes = ['round', 'id']
+        excludes = ['rounds', 'id', 'tournament']
 
         if not self.tournament.pref('enable_flagged_motions'):
             excludes.append('flagged')
@@ -82,19 +82,15 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         return {'initial': initial}
 
     def get_formset_queryset(self):
-        return self.round.motion_set.all()
+        return self.round.motion_set.order_by('roundmotions__seq')
 
     def formset_valid(self, formset):
-        motions = formset.save(commit=False)
+        motions = formset.save(commit=True)
         round = self.round
         for i, motion in enumerate(motions, start=1):
-            if not self.tournament.pref('enable_motions'):
-                motion.seq = i
-            motion.round = round
-            motion.save()
+            RoundMotions(motion=motion, round=round, seq=1).save()
+
             self.log_action(content_object=motion)
-        for motion in formset.deleted_objects:
-            motion.delete()
 
         count = len(motions)
         if not self.tournament.pref('enable_motions') and count == 1:
@@ -161,10 +157,10 @@ class BaseDisplayMotionsView(RoundMixin, TemplateView):
     template_name = 'show.html'
 
     def get_context_data(self, **kwargs):
-        kwargs['motions'] = self.round.motion_set.all()
-        kwargs['motions_length'] = sum(len(i.text) for i in kwargs['motions'])
-        kwargs['infos'] = self.round.motion_set.exclude(info_slide="")
-        kwargs['infos_length'] = sum(len(i.info_slide) for i in kwargs['infos'])
+        kwargs['motions'] = self.round.roundmotions_set.select_related('motion').order_by('seq')
+        kwargs['motions_length'] = sum(len(i.motion.text) for i in kwargs['motions'])
+        kwargs['infos'] = self.round.roundmotions_set.select_related('motion').exclude(motion__info_slide="").order_by('seq')
+        kwargs['infos_length'] = sum(len(i.motion.info_slide) for i in kwargs['infos'])
         return super().get_context_data(**kwargs)
 
 

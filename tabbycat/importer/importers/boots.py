@@ -284,6 +284,18 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
 
     def import_motions(self, f):
         motions_interpreter = make_interpreter(
-            round=lambda x: tm.Round.objects.lookup(x, tournament=self.tournament),
+            DELETE=['rounds', 'seq']
         )
-        self._import(f, mm.Motion, motions_interpreter)
+        motions = self._import(f, mm.Motion, motions_interpreter)
+
+        def round_motions_interpreter(lineno, line):
+            if not line.get('rounds'):
+                return
+            motion = motions[lineno]
+            for round_name in line['rounds'].split(";"):
+                yield {
+                    'seq'    : 1,
+                    'motion' : motion,
+                    'round'  : tm.Round.objects.get(abbreviation=round_name, tournament=self.tournament),
+                }
+        self._import(f, mm.RoundMotions, round_motions_interpreter)
