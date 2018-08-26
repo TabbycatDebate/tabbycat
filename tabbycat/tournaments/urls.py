@@ -54,12 +54,12 @@ urlpatterns = [
     path('assistant/results/',      include('results.urls_assistant')),
 
     # Round progression
-    path('admin/round/<int:round_seq>/advance/check/',
-        views.RoundAdvanceConfirmView.as_view(),
-        name='tournament-advance-round-check'),
-    path('admin/round/<int:round_seq>/advance/',
-        views.RoundAdvanceView.as_view(),
-        name='tournament-advance-round'),
+    path('admin/round/<int:round_seq>/complete/check/',
+        views.CompleteRoundCheckView.as_view(),
+        name='tournament-complete-round-check'),
+    path('admin/round/<int:round_seq>/complete/',
+        views.CompleteRoundView.as_view(),
+        name='tournament-complete-round'),
     path('admin/set-current-round/',
         views.SetCurrentRoundView.as_view(),
         name='tournament-set-current-round'),

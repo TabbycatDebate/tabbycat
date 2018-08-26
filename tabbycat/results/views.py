@@ -91,11 +91,6 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
             'total': len(draw)
         }
 
-        kwargs["show_advance_button"] = (
-            self.tournament.current_round == self.round and
-            self.tournament.round_set.filter(seq__gt=self.round.seq).exists()
-        )
-
         return super().get_context_data(**kwargs)
 
 

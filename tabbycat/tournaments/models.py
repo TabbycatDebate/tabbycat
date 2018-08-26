@@ -487,28 +487,34 @@ class Round(models.Model):
     # Other convenience properties
     # --------------------------------------------------------------------------
 
-    def get_round_seq(self, filter):
-        rounds = self.tournament.round_set.filter(**filter).order_by('-seq')
+    def _rounds_in_same_sequence(self):
+        rounds = self.tournament.round_set.all()
         if self.is_break_round:
             rounds = rounds.filter(Q(stage=Round.STAGE_PRELIMINARY) | Q(break_category=self.break_category))
-        try:
-            return rounds.first()
-        except Round.DoesNotExist:
-            return None
+        return rounds
 
     @cached_property
     def prev(self):
         """Returns the round that comes before this round. If this is a break
         round, then it returns the latest preceding round that is either in the
         same break category or is a preliminary round."""
-        return self.get_round_seq({'seq__lt': self.seq})
+        return self._rounds_in_same_sequence().filter(seq__lt=self.seq).order_by('seq').last()
 
     @cached_property
     def next(self):
         """Returns the round that comes after this round. If this is a break
-        round, then it returns the next preceding round that is either in the
-        same break category or is a preliminary round."""
-        return self.get_round_seq({'seq__gt': self.seq})
+        round, then it returns the next round that is either in the same break
+        category or is a preliminary round."""
+        return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
+
+    @cached_property
+    def is_current(self):
+        """Returns True if this round is a current round."""
+        if self.completed:
+            return False
+        if self._rounds_in_same_sequence().filter(seq__lt=self.seq, completed=False).exists():
+            return False
+        return True
 
     @property
     def motions_good_for_public(self):
