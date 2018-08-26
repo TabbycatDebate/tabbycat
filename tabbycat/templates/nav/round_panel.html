@@ -6,8 +6,8 @@
      class="{% if r == current_round %}{% elif round == r %}active{% endif %}">
     <i data-feather="circle" class="circle-icon
       {% if r == current_round %}circle-current
-      {% elif r.seq > current_round.seq %}circle-later
-      {% elif r.seq < current_round.seq %}circle-done{% endif %}"></i>
+      {% elif r.completed %}circle-done
+      {% else %}circle-later{% endif %}"></i>
     <span class="d-none d-md-inline">{{ r.abbreviation }}</span>
     <span class="d-md-none">{{ r.abbreviation|slice:":2" }}</span>
     <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
@@ -19,7 +19,7 @@
     <a href="{% roundurl 'availability-index' r %}" data-parent="#rh{{ r.id }}"
        class="list-group-item {% if availability_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
-        {% if r.seq < current_round.seq %} circle-done
+        {% if r.completed %} circle-done
         {% elif r == current_round and r.draw_status == r.STATUS_NONE %} circle-todo
         {% elif r.draw_status == r.STATUS_DRAFT %} circle-done
         {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
@@ -30,7 +30,7 @@
     <a href="{% roundurl 'draw' r %}" data-parent="#rh{{ r.id }}"
        class="list-group-item {% if draw_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
-        {% if r.seq < current_round.seq %} circle-done
+        {% if r.completed %} circle-done
         {% elif r.draw_status == r.STATUS_NONE %} circle-later
         {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-done
         {% elif r.draw_status == r.STATUS_RELEASED %} circle-done
@@ -40,7 +40,7 @@
     <a href="{% roundurl 'draw-display' r %}" data-parent="#rh{{ r.id }}"
       class="list-group-item {% if display_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
-        {% if r.seq < current_round.seq %} circle-done
+        {% if r.completed %} circle-done
         {% elif r.draw_status == r.STATUS_NONE %} circle-later
         {% elif r.draw_status == r.STATUS_DRAFT %} circle-later
         {% elif r.draw_status == r.STATUS_CONFIRMED %} circle-todo
@@ -51,7 +51,7 @@
     <a href="{% roundurl 'results-round-list' r %}" data-parent="#rh{{ r.id }}"
        class="list-group-item {% if results_nav and round == r %}active{% endif %}">
       <i data-feather="circle" class="circle-icon
-        {% if r.seq < current_round.seq %} circle-done
+        {% if r.completed %} circle-done
         {% elif r.draw_status == r.STATUS_CONFIRMED %}circle-todo
         {% elif r.draw_status == r.STATUS_RELEASED %}circle-todo
         {% else %} circle-later{% endif %}"></i>{% trans "Results" %}
