@@ -8,8 +8,8 @@ from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
 from django.contrib import messages
 from django.db.models import Prefetch, Q
-from django.http import HttpResponseRedirect, QueryDict
-from django.shortcuts import get_object_or_404, reverse
+from django.http import QueryDict
+from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -90,22 +90,6 @@ class TournamentMixin(TabbycatPageTitlesMixin):
 
     def dispatch(self, request, *args, **kwargs):
         tournament = self.tournament
-        if tournament.current_round_id is None:
-            full_path = self.request.get_full_path()
-            if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.warning("Current round wasn't set, redirecting to set-current-round page")
-                set_current_round_url = reverse_tournament('tournament-set-current-round', self.tournament)
-                redirect_url = add_query_parameter(set_current_round_url, 'next', full_path)
-                return HttpResponseRedirect(redirect_url)
-            else:
-                logger.warning("Current round wasn't set, redirecting to site index")
-                messages.warning(request, _("There's a problem with the data for the tournament "
-                    "%(tournament_name)s. Please contact a tab director and ask them to set its "
-                    "current round.") % {'tournament_name': tournament.name})
-                home_url = reverse('tabbycat-index')
-                redirect_url = add_query_parameter(home_url, 'redirect', 'false')
-                return HttpResponseRedirect(redirect_url)
-
         try:
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError) as e:
