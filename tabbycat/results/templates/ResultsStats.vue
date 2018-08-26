@@ -2,45 +2,44 @@
   <div class="card-deck">
     <div class="card mb-3">
       <div class="card-body text-center pb-1 row">
+
         <div class="col">
           <div class="progress">
-            <!-- {% trans Checked-In" %} -->
             <div class="progress-bar bg-primary" role="progressbar"
                  :style="{ width: checksWidths.checked }"
-                 data-toggle="tooltip" title="Checked-In">
+                 data-toggle="tooltip" title="gettext('Checked-In')">
               <i data-feather="x"></i>&nbsp;&nbsp;{{ checks.checked }}
             </div>
-            <!-- {% trans "Not Checked-In" %} -->
             <div class="progress-bar bg-secondary" role="progressbar"
                  :style="{ width: checksWidths.missing }"
-                 data-toggle="tooltip" title="Not Checked-In">
+                 data-toggle="tooltip" title="gettext('Not Checked-In')">
               <i data-feather="circle"></i>&nbsp;&nbsp;{{ checks.missing }}
             </div>
           </div>
-          <!-- {% trans "Ballot Check-Ins" %} -->
-          <h6 class="pt-3 text-center text-secondary">Ballot Check-Ins</h6>
+          <h6 class="pt-3 text-center text-secondary" v-text="gettext('Ballot Check-Ins')"></h6>
         </div>
+
         <div class="col">
           <div class="progress">
             <div class="progress-bar bg-danger" role="progressbar"
                 :style="{ width: statusWidths.none }"
-                 data-toggle="tooltip" title="Unknown">
+                 data-toggle="tooltip" title="gettext('Unknown')">
               <i data-feather="x"></i>&nbsp;&nbsp;{{ statuses.none }}
             </div>
             <div class="progress-bar bg-info" role="progressbar"
                  :style="{ width: statusWidths.draft }"
-                 data-toggle="tooltip" title="Unconfirmed">
+                 data-toggle="tooltip" title="gettext('Unconfirmed')">
               <i data-feather="circle"></i>&nbsp;&nbsp;{{ statuses.draft }}
             </div>
             <div class="progress-bar bg-success" role="progressbar"
                  :style="{ width: statusWidths.confirmed }"
-                 data-toggle="tooltip" title="Confirmed">
+                 data-toggle="tooltip" title="gettext('Confirmed')">
               <i data-feather="check"></i>&nbsp;&nbsp;{{ statuses.confirmed }}
             </div>
           </div>
-          <!-- {% trans "Ballot Statuses" %} -->
-          <h6 class="pt-3 text-center text-secondary">Ballot Statuses</h6>
+          <h6 class="pt-3 text-center text-secondary" v-text="gettext('Ballot Statuses')"></h6>
         </div>
+
       </div>
     </div>
   </div>

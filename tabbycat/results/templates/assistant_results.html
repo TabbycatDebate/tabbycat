@@ -6,11 +6,12 @@
 
 {% block page-alerts %}
 
-  {% trans "This page should automatically update with the new ballot entries and checkins." as message %}
-  {% include "components/alert.html" with type="info" %}
-
   {% block page-alerts-role-specific %}
     {# Administrators have different alert that have links, see admin_results.html. #}
+
+    {% trans "This page automatically updates with the new ballot entries and checkins as they occur." as message %}
+    {% include "components/alert.html" with type="info" %}
+
     {% if pref.teams_in_debate == "bp" and pref.ballots_per_debate == "per-adj" %}
       {% blocktrans trimmed asvar message %}
         This tournament's configuration is set to <strong>British Parliamentary</strong> with <strong>one ballot per voting adjudicator</strong>. This combination isn't allowed: BP tournaments must use consensus ballots. Results can't be entered while this configuration is in place. Please ask an administrator to change this configuration.

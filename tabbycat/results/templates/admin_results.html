@@ -12,7 +12,7 @@
 
 {% block page-subnav-actions %}
   {% if show_advance_button %}
-    <a class="btn {% if stats.none == 0 and stats.draft == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
+    <a class="btn {% if incomplete_ballots == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
       {% trans "Advance to Next Round" %} <i data-feather="chevron-right"></i>
     </a>
   {% else %}
@@ -22,6 +22,10 @@
 
 {% block page-alerts-role-specific %}
   {# Overrides the assistant version of the same alert. #}
+
+  {% trans "This page automatically updates with the new ballot entries and checkins as they occur. You will, however, need to reload it once all ballots are completed in order to advance the round." as message %}
+  {% include "components/alert.html" with type="info" %}
+
   {% if pref.teams_in_debate == "bp" and pref.ballots_per_debate == "per-adj" %}
     {% tournamenturl 'options-tournament-section' section='debate_rules' as debate_rules_url %}
     {% blocktrans trimmed asvar message %}

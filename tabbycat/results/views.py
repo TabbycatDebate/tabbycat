@@ -5,6 +5,7 @@ from smtplib import SMTPException
 from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
+from django.db.models import Q
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.translation import gettext as _
@@ -68,13 +69,15 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table = ResultsTableBuilder(view=self, sort_key="status")
         table.add_ballot_check_in_columns(draw, key="check_ins")
         table.add_ballot_status_columns(draw, key="status")
-        table.add_ballot_entry_columns(draw, self.request.user)
+        table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw)
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
 
     def get_context_data(self, **kwargs):
+        kwargs["incomplete_ballots"] = self._get_draw().filter(
+            Q(result_status="N") | Q(result_status="D")).count()
         kwargs["show_advance_button"] = (
             self.tournament.current_round == self.round and
             self.tournament.round_set.filter(seq__gt=self.round.seq).exists()

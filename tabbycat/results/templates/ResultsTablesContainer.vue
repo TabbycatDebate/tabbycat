@@ -20,7 +20,9 @@ import ResultsStats from './ResultsStats.vue'
 export default {
   mixins: [WebsocketMixin],
   components: { TablesContainer, ResultsStats },
-  props: { tablesData: Array, 'tournamentSlug': String },
+  props: {
+    tablesData: Array, 'tournamentSlug': String
+  },
   data: function () {
     return {
       localTableData: this.tablesData,
@@ -34,14 +36,23 @@ export default {
     },
     handleSocketReceive: function (socketLabel, payload) {
       if (socketLabel === 'ballot_statuses') {
-        // Going to have to reconstruct both the status icon for this debate
-        // But also the edit links
         var row = this.localTableData[0].data.find(function (cell) {
           return cell[1].id === payload.data.ballot.debate_id
         })
+        // Update ballot statuses
         row[1].status = payload.data.status
         row[1].icon = payload.data.icon
         row[1].class = payload.data.class
+        row[1].sort = payload.data.sort
+        // Update ballot links
+        const existingBallotIndex = row[2].ballots.findIndex(function(ballot) {
+          return ballot.ballot_id === payload.data.ballot.ballot_id;
+        });
+        if (existingBallotIndex != -1) {
+          row[2].ballots[existingBallotIndex] = payload.data.ballot
+        } else {
+          row[2].ballots.push(payload.data.ballot)
+        }
       }
       if (socketLabel === 'checkins' && payload.created) {
         // Note: must alter the original object not the computed property
@@ -50,6 +61,8 @@ export default {
         })
         row[0].check = 'checked'
         row[0].icon = 'check'
+        row[0].class = 'text-primary'
+        row[0].sort = 1
       }
     }
   },

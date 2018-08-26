@@ -155,11 +155,16 @@ thead,
 }
 
 // Icons in cells (may as well make them big to match text size)
-.table > tbody > tr > td .feather {
-  width: 24px;
-  height: 24px;
-  margin-bottom: -6px;
-  margin-right: -3px;
+.table > tbody > tr > td {
+
+  i, .feather {
+    width: 24px;
+    height: 24px;
+  }
+  .feather {
+    margin-bottom: -6px;
+    margin-right: -3px;
+  }
 }
 
 // Bump emoji size in tables

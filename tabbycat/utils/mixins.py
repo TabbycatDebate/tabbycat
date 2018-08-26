@@ -47,9 +47,10 @@ class TabbycatPageTitlesMixin(ContextMixin):
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for administrators.
     Requires use to be a superuser."""
+    view_role = "admin"
 
     def get_context_data(self, **kwargs):
-        kwargs["user_role"] = "admin"
+        kwargs["user_role"] = self.view_role
         return super().get_context_data(**kwargs)
 
     def test_func(self):
@@ -58,9 +59,10 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
 
 class AssistantMixin(LoginRequiredMixin, ContextMixin):
     """Mixin for views that are for assistants."""
+    view_role = "assistant"
 
     def get_context_data(self, **kwargs):
-        kwargs["user_role"] = "assistant"
+        kwargs["user_role"] = self.view_role
         return super().get_context_data(**kwargs)
 
 

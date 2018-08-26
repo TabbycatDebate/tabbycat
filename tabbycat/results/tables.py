@@ -53,10 +53,10 @@ class ResultsTableBuilder(TabbycatTableBuilder):
             status_cells.append(cell)
         self.add_column(status_header, status_cells)
 
-    def get_ballot_cells(self, debate, tournament, user):
+    def get_ballot_cells(self, debate, tournament, view_role, user):
         # These are prefetched, so sort using Python rather than generating an SQL query
         ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
-        if user.is_superuser:
+        if view_role == 'admin':
             link = 'results-ballotset-new'
         else:
             link = 'results-assistant-ballotset-new'
@@ -64,15 +64,16 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         return {
             'component': 'ballots-cell',
             'ballots': [b.serialize(tournament) for b in ballotsubmissions],
-            'admin': True if user.is_superuser else False,
+            'current_user': user.username,
+            'acting_role': view_role,
             'new_ballot': reverse_tournament(link, self.tournament,
                                              kwargs={'debate_id': debate.id})
         }
 
-    def add_ballot_entry_columns(self, debates, user):
+    def add_ballot_entry_columns(self, debates, view_role, user):
 
         entry_header = {'key': 'EB', 'icon': "plus-circle"}
-        entry_cells = [self.get_ballot_cells(d, self.tournament, user) for d in debates]
+        entry_cells = [self.get_ballot_cells(d, self.tournament, view_role, user) for d in debates]
         self.add_column(entry_header, entry_cells)
 
         if self.tournament.pref('enable_postponements'):

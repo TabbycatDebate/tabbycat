@@ -209,6 +209,7 @@ class BaseResultForm(forms.Form):
                 'status': self.cleaned_data['debate_result_status'],
                 'icon': meta[0],
                 'class': meta[1],
+                'sort': meta[2],
                 'ballot': self.ballotsub.serialize(t)
             }
         })
