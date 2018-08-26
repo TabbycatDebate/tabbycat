@@ -42,9 +42,6 @@ class Tournament(models.Model):
     slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
         verbose_name=_("slug"),
         help_text=_("The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""))
-    current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='current_tournament',
-        verbose_name=_("current round"),
-        help_text=_("Must be set for the tournament to start! (Set after rounds are inputted)"))
     active = models.BooleanField(verbose_name=_("active"), default=True)
 
     class Meta:
@@ -205,6 +202,10 @@ class Tournament(models.Model):
     # --------------------------------------------------------------------------
 
     @cached_property
+    def current_round(self):
+        return self.round_set.filter(completed=False).order_by('seq').first()
+
+    @cached_property
     def get_current_round_cached(self):
         cached_key = "%s_current_round_object" % self.slug
         if self.current_round:
@@ -259,6 +260,10 @@ class Round(models.Model):
     tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"))
     seq = models.IntegerField(verbose_name=_("sequence number"),
         help_text=_("A number that determines the order of the round, should count consecutively from 1 for the first round"))
+    completed = models.BooleanField(default=False,
+        verbose_name=_("completed"),
+        help_text=_("True if the round is over, which normally means all results have been entered and confirmed"))
+
     name = models.CharField(max_length=40, verbose_name=_("name"), help_text=_("e.g. \"Round 1\""))
     abbreviation = models.CharField(max_length=10, verbose_name=_("abbreviation"), help_text=_("e.g. \"R1\""))
     stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
