@@ -6,8 +6,8 @@
 // - a handleSocketReceive() function that will handle the different
 // sockets' messages as appropriate
 
-import { WebSocketBridge } from 'django-channels'
 import _ from 'lodash'
+import { WebSocketBridge } from 'django-channels'
 
 import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
 
@@ -16,7 +16,7 @@ export default {
   mixins: [ModalErrorMixin],
   props: ['tournamentSlug', 'roundSeq'],
   data: function () {
-    return { bridges: {}, component_id: Math.floor(Math.random() * 10000) }
+    return { bridges: {}, componentId: Math.floor(Math.random() * 10000) }
   },
   created: function () {
     // Check if this is being run over HTTP(S); match the WS(S) procol
@@ -43,8 +43,10 @@ export default {
       const webSocketBridge = new WebSocketBridge()
 
       webSocketBridge.connect(socketPath, undefined, {
-        autoReconnectMS: 10000, // Wait 10s inbetween attempts
-        stopReconnectingAfter: 21000, // Doesn't seem to work
+        minReconnectionDelay: 5 * 1000, // Wait 5s inbetween attempts
+        maxReconnectionDelay: 240 * 1000, // Cap waits at 4m inbetween attempts
+        reconnectionDelayGrowFactor: 2, // Wait extra 10s inbetween
+        connectionTimeout: 10 * 1000,
       })
 
       // Listen for messages and pass to the defined handleSocketMessage()
@@ -55,10 +57,10 @@ export default {
       // Logs
       webSocketBridge.socket.addEventListener('open', function () {
         console.debug("Connected to WebSocket path:", socketPath)
-      }.bind(socketPath))
+      }.bind(socketPath, self))
       webSocketBridge.socket.addEventListener('close', function () {
         console.debug("Disconnected to WebSocket path:", socketPath)
-      }.bind(socketPath))
+      }.bind(socketPath, self))
 
       // Set the data to contain the socket bridge so we can send to it
       self.$set(self.bridges, socketLabel, webSocketBridge)
@@ -70,7 +72,7 @@ export default {
     receiveFromSocket: function(socketLabel, payload) {
       // console.log(`Received payload ${JSON.stringify(payload)} from socket ${socketLabel}`)
       if (payload.hasOwnProperty('error')) {
-        if (payload['component_id'] === this.component_id) {
+        if (payload['component_id'] === this.componentId) {
           this.showErrorAlert(payload.error, payload.message, null)
         }
       } else {
@@ -80,7 +82,7 @@ export default {
     // Called by inheriting components; sends a given payload to a socket
     sendToSocket: function (socketLabel, payload) {
       // console.log(`Sent payload ${JSON.stringify(payload)} to socket ${socketLabel}`)
-      payload['component_id'] = this.component_id // Pass on originating Vue instance
+      payload['component_id'] = this.componentId // Pass on originating Vue instance
       this.bridges[socketLabel].send(payload);
     },
   }
