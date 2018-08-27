@@ -1,6 +1,8 @@
 <script>
-import ConflictUtilitiesMixin from './ConflictUtilitiesMixin.vue'
 import _ from 'lodash'
+
+import ConflictUtilitiesMixin from './ConflictUtilitiesMixin.vue'
+
 
 export default {
   // An item that can be set into a conflicted state; either due to hover events
@@ -12,8 +14,12 @@ export default {
     return {
       verboseDebugMode: false,
       isConflicted: {
-        hover: { team: false, adjudicator: false, institution: false, histories: false },
-        panel: { team: false, adjudicator: false, institution: false, histories: false },
+        hover: {
+          team: false, adjudicator: false, institution: false, histories: false
+        },
+        panel: {
+          team: false, adjudicator: false, institution: false, histories: false
+        },
       },
     }
   },

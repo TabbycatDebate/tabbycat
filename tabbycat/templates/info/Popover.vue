@@ -69,7 +69,6 @@ export default {
       return ''
     },
     showPopOver: function () {
-
       if (this.showingPopOver) {
         return // This throws errors in Boostraps popover calls if not caught
       }
@@ -88,7 +87,7 @@ export default {
       $(this.$refs.container.$el).popover('show')
 
       // Wait until the show/hide actions finish before changing state
-      let self = this
+      const self = this
       $(this.$refs.container.$el).on('shown.bs.popover', () => {
         self.showingPopOver = true
         self.$eventHub.$emit('hideOtherPopOvers', self._uid)

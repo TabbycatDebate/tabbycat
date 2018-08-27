@@ -9,9 +9,9 @@ export default {
       if (debateId === 'unused') {
         return 'unused'
       }
-      var debate = this.debatesById[debateId]
+      const debate = this.debatesById[debateId]
       // Used for debugging
-      var niceName = "debate " + debate.id + " ("
+      let niceName = "debate " + debate.id + " ("
       _.forEach(debate.debateTeams, function (dt) {
         if (dt.team !== null) {
           niceName += dt.team.short_name + ", "

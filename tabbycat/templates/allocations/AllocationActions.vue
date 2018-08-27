@@ -127,8 +127,12 @@ import ShardingModal from '../allocations/ShardingModal.vue'
 import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
 
 export default {
-  props: { roundInfo: Object, percentiles: Array, sharding: Boolean },
-  components: { AutoAllocationModal, AutoImportanceModal, ShardingModal, AutoSaveCounter },
+  props: {
+    roundInfo: Object, percentiles: Array, sharding: Boolean
+  },
+  components: {
+    AutoAllocationModal, AutoImportanceModal, ShardingModal, AutoSaveCounter
+  },
   data: function () {
     // Internal state storing the status of which diversity highlight is being toggled
     return {

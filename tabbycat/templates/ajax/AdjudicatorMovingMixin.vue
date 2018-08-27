@@ -5,7 +5,7 @@ import MovingMixin from '../ajax/MovingMixin.vue'
 export default {
   mixins: [MovingMixin],
   methods: {
-    debateCheckIfShouldSave(debate) {
+    debateCheckIfShouldSave() {
       return true
     },
     getPanellist(debate, adjudicator=false, position=false) {

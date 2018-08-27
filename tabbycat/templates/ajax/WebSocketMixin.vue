@@ -19,7 +19,6 @@ export default {
     return { bridges: {}, component_id: Math.floor(Math.random() * 10000) }
   },
   created: function () {
-
     // Check if this is being run over HTTP(S); match the WS(S) procol
     const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
     var path = scheme + "://" + window.location.host + "/ws/"

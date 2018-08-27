@@ -100,7 +100,7 @@ export default {
     },
   },
   methods: {
-    resetShardingModal: function (button) {
+    resetShardingModal: function () {
       $('#confirmShardingModal').modal('hide')
       $.fn.resetButton('#shpb')
       $.fn.resetButton('#shpl')
