@@ -1727,6 +1727,7 @@
         "break_size": 8,
         "is_general": true,
         "priority": 10,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -1741,6 +1742,7 @@
         "break_size": 4,
         "is_general": false,
         "priority": 20,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -1755,6 +1757,7 @@
         "break_size": 2,
         "is_general": false,
         "priority": 30,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -21858,7 +21861,6 @@
         "short_name": "demo",
         "seq": null,
         "slug": "demo",
-        "current_round": 4,
         "active": true
     }
 },
@@ -21868,6 +21870,7 @@
     "fields": {
         "tournament": 1,
         "seq": 1,
+        "completed": true,
         "name": "Round 1",
         "abbreviation": "R1",
         "stage": "P",
@@ -21886,6 +21889,7 @@
     "fields": {
         "tournament": 1,
         "seq": 2,
+        "completed": true,
         "name": "Round 2",
         "abbreviation": "R2",
         "stage": "P",
@@ -21904,6 +21908,7 @@
     "fields": {
         "tournament": 1,
         "seq": 3,
+        "completed": true,
         "name": "Round 3",
         "abbreviation": "R3",
         "stage": "P",
@@ -21922,6 +21927,7 @@
     "fields": {
         "tournament": 1,
         "seq": 4,
+        "completed": false,
         "name": "Round 4",
         "abbreviation": "R4",
         "stage": "P",
@@ -21940,6 +21946,7 @@
     "fields": {
         "tournament": 1,
         "seq": 5,
+        "completed": false,
         "name": "Open Quarterfinal",
         "abbreviation": "OQF",
         "stage": "E",
@@ -21958,6 +21965,7 @@
     "fields": {
         "tournament": 1,
         "seq": 6,
+        "completed": false,
         "name": "ESL Semifinal",
         "abbreviation": "SSF",
         "stage": "E",
@@ -21976,6 +21984,7 @@
     "fields": {
         "tournament": 1,
         "seq": 7,
+        "completed": false,
         "name": "Open Semifinal",
         "abbreviation": "OSF",
         "stage": "E",
@@ -21994,6 +22003,7 @@
     "fields": {
         "tournament": 1,
         "seq": 8,
+        "completed": false,
         "name": "ESL Grand Final",
         "abbreviation": "SGF",
         "stage": "E",
@@ -22012,6 +22022,7 @@
     "fields": {
         "tournament": 1,
         "seq": 9,
+        "completed": false,
         "name": "Novice Grand Final",
         "abbreviation": "NGF",
         "stage": "E",
@@ -22030,6 +22041,7 @@
     "fields": {
         "tournament": 1,
         "seq": 10,
+        "completed": false,
         "name": "Open Grand Final",
         "abbreviation": "OGF",
         "stage": "E",
