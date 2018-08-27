@@ -31,7 +31,9 @@ from utils.misc import redirect_round, redirect_tournament, reverse_round, rever
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
-from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
+from .forms import (SetCurrentRoundMultipleBreakCategoriesForm,
+                    SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
+                    TournamentStartForm)
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 from .utils import get_side_name, send_standings_emails
@@ -264,7 +266,7 @@ class CreateTournamentView(AdministratorMixin, CreateView, WarnAboutDatabaseUseM
         return reverse_tournament('tournament-configure', tournament=t)
 
 
-class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
+class ConfigureTournamentView(AdministratorMixin, TournamentMixin, UpdateView):
     model = Tournament
     form_class = TournamentConfigureForm
     template_name = "configure_tournament.html"
@@ -275,12 +277,21 @@ class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
         return reverse_tournament('tournament-admin-home', tournament=t)
 
 
-class SetCurrentRoundView(AdministratorMixin, UpdateView):
-    model = Tournament
-    form_class = SetCurrentRoundForm
+class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     template_name = 'set_current_round.html'
     slug_url_kwarg = 'tournament_slug'
     redirect_field_name = 'next'
+
+    def get_form_class(self):
+        if self.tournament.breakcategory_set.count() <= 1:
+            return SetCurrentRoundSingleBreakCategoryForm
+        else:
+            return SetCurrentRoundMultipleBreakCategoriesForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.tournament
+        return kwargs
 
     def get_redirect_to(self, use_default=True):
         redirect_to = self.request.POST.get(
@@ -288,9 +299,13 @@ class SetCurrentRoundView(AdministratorMixin, UpdateView):
             self.request.GET.get(self.redirect_field_name, '')
         )
         if not redirect_to and use_default:
-            return reverse_tournament('tournament-admin-home', tournament=self.object)
+            return reverse_tournament('tournament-admin-home', tournament=self.tournament)
         else:
             return redirect_to
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
     def get_success_url(self):
         # Copied from django.contrib.auth.views.LoginView.get_success_url
