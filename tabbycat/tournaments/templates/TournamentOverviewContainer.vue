@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="row" v-if="ballot_statuses && ballot_statuses.length > 0">
+    <div class="row" v-if="totalDebates > 0">
 
       <div class="col">
         <div class="card mt-3">
@@ -9,8 +9,8 @@
             <h5 class="mb-0 text-center">Ballots Status</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item text-secondary">
-              <ballots-graph :graph-data="ballot_statuses"></ballots-graph>
+            <li class="list-group-item text-secondary px-2">
+              <ballots-graph :graph-data="ballotStatuses" :total-debates="totalDebates"></ballots-graph>
             </li>
           </ul>
         </div>
@@ -26,9 +26,9 @@
             <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="action in action_logs" :key="action.id"
+            <updates-list v-for="action in actionLogs" :key="action.id"
                           :item="action"></updates-list>
-            <li class="list-group-item text-secondary" v-if="action_logs.length === 0">
+            <li class="list-group-item text-secondary" v-if="actionLogs.length === 0">
               No Actions Yet
             </li>
           </ul>
@@ -41,9 +41,9 @@
             <h5 class="mb-0">Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="ballot in ballot_results" :key="ballot.id"
+            <updates-list v-for="ballot in ballotResults" :key="ballot.id"
                           :item="ballot"></updates-list>
-            <li class="list-group-item text-secondary" v-if="ballot_results.length === 0">
+            <li class="list-group-item text-secondary" v-if="ballotResults.length === 0">
               No Confirmed Results Yet
             </li>
           </ul>
@@ -66,43 +66,46 @@ export default {
     UpdatesList,
     'BallotsGraph': () => import('../../templates/graphs/BallotsGraph.vue'),
   },
-  props: [ 'tournamentSlug', 'initialActions', 'initialBallots', 'initialGraphData'],
+  props: [ 'tournamentSlug', 'totalDebates',
+           'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
-      action_logs: this.initialActions,
-      ballot_results: this.initialBallots,
-      ballot_statuses: this.initialGraphData,
+      actionLogs: this.initialActions,
+      ballotResults: this.initialBallots,
+      ballotStatuses: this.initialGraphData,
       sockets: ['action_logs', 'ballot_results', 'ballot_statuses'],
     }
   },
   methods: {
     handleSocketReceive: function (socketLabel, payload) {
       const data = payload['data']
-      console.log(data)
       if (socketLabel === 'ballot_statuses') {
-        this.ballot_statuses = data
+        this.ballotStatuses.push(data) // Push blindly; graph will filter
         return
       }
+      // Either action_logs or ballot_results
+      var dataLabel = 'actionLogs'
       if (socketLabel === 'ballot_results') {
+        dataLabel = 'ballotResults'
         if (data.confirmed === false || data.result_status !== 'C') {
-          console.log('reject', data.confirmed, data.results_status)
           return // Don't show new results unless they are confirmed/confirmed
         }
       }
-      // Check for duplicates; do a inline replace if so
-      let duplicateIndex = _.findIndex(this[socketLabel], function (i) {
+      // Check for duplicate log/results; do a inline replace if so
+      let duplicateIndex = _.findIndex(this[dataLabel], function (i) {
         return i.id == data.id
       })
       if (duplicateIndex != -1) {
-        this[socketLabel][duplicateIndex] = data
+        this[dataLabel][duplicateIndex] = data
       } else {
         // Add new item to front
-        this[socketLabel].unshift(data)
+        this[dataLabel].unshift(data)
         // Remove last item if at the limit
-        if (this[socketLabel].length >= 15) {
-          this[socketLabel].pop()
+        if (this[dataLabel].length >= 15) {
+          this[dataLabel].pop()
         }
       }
+
     }
   }
 }

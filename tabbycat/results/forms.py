@@ -199,18 +199,18 @@ class BaseResultForm(forms.Form):
                     "data": self.ballotsub.serialize_like_actionlog
                 })
 
-        # 6. Notify the Ballots Status Graph if result is for current round
+        # 6. Notify the Results Page/Ballots Status Graph
         group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
         meta = get_status_meta(self.debate)
         async_to_sync(get_channel_layer().group_send)(group_name, {
             "type": "send_json",
             "data": {
-                # 'graph': graphable_debate_statuses(ballots, round),
                 'status': self.cleaned_data['debate_result_status'],
                 'icon': meta[0],
                 'class': meta[1],
                 'sort': meta[2],
-                'ballot': self.ballotsub.serialize(t)
+                'ballot': self.ballotsub.serialize(t),
+                'round': self.debate.round.id
             }
         })
 

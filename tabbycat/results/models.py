@@ -155,6 +155,14 @@ class BallotSubmission(Submission):
         if not tournament:
             tournament = self.debate.round.tournament
 
+        # Shown in the results page on a per-ballot; always measured in tab TZ
+        created_short = timezone.localtime(self.timestamp).strftime("%H:%M")
+        # These are used by the status graph
+        created = timezone.localtime(self.timestamp).isoformat()
+        confirmed = None
+        if self.confirm_timestamp:
+            confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
+
         return {
             'ballot_id': self.id,
             'debate_id': self.debate.id,
@@ -163,8 +171,9 @@ class BallotSubmission(Submission):
                                              tournament, kwargs={'pk': self.id}),
             'assistant_link': reverse_tournament('results-assistant-ballotset-edit',
                                                  tournament, kwargs={'pk': self.id}),
-            'short_time': self.timestamp.strftime("%H:%M"),
-            'time': timezone.localtime(self.timestamp).strftime("%a, %d %b %Y %H:%M:%S"),
+            'short_time': created_short,
+            'created_timestamp': created,
+            'confirmed_timestamp': confirmed,
             'version': self.version,
             'confirmed': self.confirmed,
             'discarded': self.discarded,

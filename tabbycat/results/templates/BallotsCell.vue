@@ -5,7 +5,7 @@
     <div class="ballot-cell pr-2">
       <div v-for="ballot in cellData.ballots">
         <!-- If ballot was not entered by current user or user is admin -->
-        <a :href="ballotLink(ballot)" v-if="canReviewBallot(ballot)">
+        <a :href="ballotLink(ballot)" v-if="canReviewBallot(ballot)" class="ballot-link">
           <del v-if="ballot.discarded">
             {{ ballotText(ballot) }} v{{ ballot.version }}
           </del>
@@ -14,7 +14,7 @@
           </span>
         </a>
         <!-- If the ballot was entered by current user -->
-        <span v-else data-toggle="tooltip"
+        <span v-else class="ballot-link" data-toggle="tooltip"
               :title="gettext('You cannot confirm this ballot because you entered it')">
           <del v-if="ballot.discarded">
             {{ ballotText(ballot) }} v{{ ballot.version }}
@@ -24,7 +24,7 @@
           </span>
         </span>
         <!-- Ballot metadata -->
-        <span class="small text-muted">
+        <span class="small text-muted ballot-info">
           <span class="text-monospace">{{ ballot.short_time }}</span>
           {{ ballot.submitter }}
          </span>
@@ -88,18 +88,15 @@ export default {
 
 <style scoped>
 
-.ballot-cell {
+.ballot-link {
+  white-space: nowrap;
+  padding: 3px 0;
+  display: block;
+}
 
-  > div {
-    white-space: nowrap;
-    padding: 3px 0;
-  }
-
-  .small {
-    white-space: nowrap;
-    display: block;
-    margin-top: -4px; /* Tighten spacing to subhead */
-  }
+.ballot-info {
+  margin-top: -4px; /* Tighten spacing to subhead */
+  display: block;
 }
 
 </style>

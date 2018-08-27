@@ -1,5 +1,4 @@
 import logging
-import datetime
 from itertools import combinations
 from smtplib import SMTPException
 
@@ -28,51 +27,6 @@ def get_status_meta(debate):
         return "pause", "", 4, _("Debate was Postponed")
     else:
         raise ValueError('Debate has no discernable status')
-
-
-def graphable_debate_statuses(ballots, round):
-    # For each debate, find (a) the first non-discarded submission time, and
-    # (b) the last confirmed confirmation time. (Note that this means when
-    # a ballot is discarded, the graph will change retrospectively.)
-
-    # These two dictionaries record when a particular debate was first
-    # entered or drafted. These can then be compared to given time intervals
-    drafts = {}
-    confirmations = {}
-    for ballot in ballots:
-        d_id = ballot.debate_id
-        if ballot.timestamp and (d_id not in drafts or drafts[d_id] > ballot.timestamp):
-            drafts[d_id] = ballot.timestamp
-        if ballot.confirmed and ballot.confirm_timestamp and (d_id not in confirmations or
-                confirmations[d_id] < ballot.confirm_timestamp):
-            confirmations[d_id] = ballot.confirm_timestamp
-
-    # Collate timestamps into a single list.
-    # Tuples are (time, none_change, draft_change, confirmed_change)
-    first_draft_timestamps = [(time, -1, +1, 0) for time in drafts.values()]
-    confirmation_timestamps = [(time, 0, -1, +1) for time in confirmations.values()]
-    timestamps = sorted(first_draft_timestamps + confirmation_timestamps)
-    if len(timestamps) == 0:
-        return []
-
-    # Generate the timeline, including a one-minute margin before starting
-    margin = datetime.timedelta(minutes=1)
-    none = round.debate_set.count()
-    draft = 0
-    confirmed = 0
-
-    stats = []
-    stats.append({"time": (timestamps[0][0] - margin).isoformat(), "none": none, "draft": draft, "confirmed": confirmed})
-
-    for time, none_change, draft_change, confirmed_change in timestamps:
-        time_iso = time.isoformat()
-        stats.append({"time": time_iso, "none": none, "draft": draft, "confirmed": confirmed})
-        none += none_change
-        draft += draft_change
-        confirmed += confirmed_change
-        stats.append({"time": time_iso, "none": none, "draft": draft, "confirmed": confirmed})
-
-    return stats
 
 
 def readable_ballotsub_result(ballotsub):
