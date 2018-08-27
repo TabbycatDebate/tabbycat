@@ -79,9 +79,11 @@ def single_checkin(instance, events):
     instance.checked_in = False
     try:
         identifier = instance.checkin_identifier
+        instance.barcode = identifier.barcode
         instance.checked_tooltip = _("Not checked-in (barcode %(barcode)s)") % {'barcode': identifier.barcode}
     except ObjectDoesNotExist:
         identifier = None
+        instance.barcode = None
         instance.checked_tooltip = _("Not checked-in; no barcode assigned")
 
     if identifier:

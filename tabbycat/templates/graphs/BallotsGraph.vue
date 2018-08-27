@@ -1,112 +1,270 @@
 <template id="ballots-graph">
   <div>
 
-    <div id="ballotsStatusGraph" class="d3-graph"
-         :style="{ height: height + 'px' }"></div>
-    <div v-if="!graphData" class="text-center">
+    <div v-if="ballotStream.length === 0" class="text-center py-1">
       No ballots in for this round yet
     </div>
+    <div id="statusGraph" class="d3-graph" :style="{ height: graphHeight }"></div>
 
   </div>
 </template>
 
 <script>
-import * as d3 from "d3";
-
+import * as d3 from "d3"
 
 export default {
   props: {
     height: { type: Number, default: 350 },
-    padding: { type: Number, default: 10 },
-    graphData: { type: Array,  default: false }
+    padding: { type: Number, default: 35 },
+    graphData: { type: Array,  default: false },
+    totalDebates: Number,
   },
   mounted: function () {
-    var total = this.graphData[0].none +
-      this.graphData[0].draft + this.graphData[0].confirmed;
-    initChart(this.padding, this.graphData, total);
+    initChart(this.padding, this.ballotStream, this.totalDebates, this.height)
+  },
+  methods: {
+    addSeries: function(confirmed, draft, time) {
+      return {
+        'confirmed': confirmed,
+        'draft': draft,
+        'none': this.totalDebates - confirmed - draft,
+        'unix_time': time,
+      }
+    }
+  },
+  computed: {
+    graphHeight: function() {
+      // We need the statusGraph to grow once chart has been mounted
+      if (this.ballotStream.length > 1) {
+        return this.height + 'px';
+      }
+      return 0;
+    },
+    timePadding: function() {
+      // Ammount to pad the start and end of the graph by to show state
+      let defaultTime = 1000 * 60;
+      if (this.earliestBallotTime && this.lastestBallotTime) {
+        return Math.max(
+          Math.abs((this.lastestBallotTime - this.earliestBallotTime) * 0.02),
+          defaultTime
+        )
+      }
+      return defaultTime
+    },
+    ballots: function() {
+      // All ballots (including duplicates) sortest oldest to newest
+      var filteredBallots = []
+      var allBallots = this.graphData.map(item => item.ballot).sort(function (a, b) {
+        // Need to sort by whatever timestamp is latest
+        let aLatestTimeStamp = a.created_timestamp
+        if (a.confirmed_timestamp !== null) {
+          aLatestTimeStamp = a.confirmed_timestamp
+        }
+        let bLatestTimeStamp = b.created_timestamp
+        if (b.confirmed_timestamp !== null) {
+          bLatestTimeStamp = b.confirmed_timestamp
+        }
+        return aLatestTimeStamp < bLatestTimeStamp
+      })
+
+      if (allBallots.length === 0) {
+        return allBallots // Empty state
+      }
+
+      // Remove discarded ballots
+      allBallots.filter(ballot => ballot.discarded !== true)
+
+      // Only add the ballot to the filtered list if it doesn't already exist
+      allBallots.forEach(function(ballot) {
+        const hasMatch = filteredBallots.findIndex(testBallot =>
+          testBallot.debate_id === ballot.debate_id
+        )
+        // Need to parse the dates into unix time to get around TZ format issues
+        if (hasMatch === -1) {
+          let created = null
+          if (ballot.created_timestamp !== null) {
+            created = new Date(ballot.created_timestamp).getTime()
+          }
+          let confirmed = null
+          if (ballot.confirmed_timestamp !== null) {
+            confirmed = new Date(ballot.confirmed_timestamp).getTime()
+          }
+          filteredBallots.push({
+            created_timestamp: created,
+            confirmed_timestamp: confirmed,
+            debate_id: ballot.debate_id,
+          })
+        }
+      })
+      return filteredBallots
+    },
+    earliestBallotTime: function() {
+      if (this.ballots.length === 0) {
+        return null
+      }
+      return this.ballots[0].created_timestamp
+    },
+    lastestBallotTime: function() {
+      if (this.ballots.length === 0) {
+        return null
+      }
+      let latestBallot = this.ballots[this.ballots.length - 1]
+      if (latestBallot.confirmed_timestamp === null) {
+        return latestBallot.created_timestamp
+      }
+      return latestBallot.confirmed_timestamp
+    },
+    uniqueTimes: function() {
+      let createdTimes = this.ballots.map(item => item.created_timestamp)
+      let confirmedTimes = this.ballots.map(item => item.confirmed_timestamp)
+      let uniqueTimes = [...new Set([...createdTimes, ...confirmedTimes])]
+      // Remove null and sort by time
+      let uniqueFilteredTimes = uniqueTimes.filter(obj => obj).sort()
+      return uniqueFilteredTimes
+    },
+    ballotStream: function() {
+      // Formats ballots into a time series based on status
+      // Note this time series has essentially a duplicative structure, in that
+      // there are two items with the same status in the array; one with the
+      // start of that time period and one with the end
+
+      var ballotsSeries = []
+      if (this.ballots.length === 0) {
+        return ballotsSeries
+      }
+
+      for (var i = 0; i < this.uniqueTimes.length; i++) {
+        let periodStart = this.uniqueTimes[i]
+        if (i == this.uniqueTimes.length - 1) {
+          var periodEnd = periodStart + this.timePadding
+        } else {
+          var periodEnd = this.uniqueTimes[i + 1]
+        }
+
+        // Calculate ballot status backwards
+        const draftByThen = this.ballots.reduce(function(count, ballot) {
+
+          // If the created timestamp exists in it is AFTER the start of this time period
+          if (ballot.created_timestamp < periodEnd) {
+            // If the ballot is yet to be confirmed
+            if (ballot.confirmed_timestamp === null) {
+              return count + 1
+            }
+            // If the confirmed timestamp is yet to be confirmed
+            if (ballot.confirmed_timestamp + 1 > periodEnd) {
+              return count + 1
+            }
+          }
+          return count
+        }, 0)
+        const confirmedByThen = this.ballots.reduce(function(count, ballot) {
+          // If the confirming timestamp exists in it is AFTER the start of this time period
+          if (ballot.confirmed_timestamp <= periodStart &&
+              ballot.confirmed_timestamp !== null) {
+            return count + 1
+          }
+          return count
+        }, 0)
+        // First measure
+        ballotsSeries.push(this.addSeries(confirmedByThen, draftByThen, periodStart))
+        // Second measure
+        ballotsSeries.push(this.addSeries(confirmedByThen, draftByThen, periodEnd))
+      }
+
+      // Add extra initial row so there is always the null state shown
+      ballotsSeries.splice(0, 0, this.addSeries(0, 0,
+        ballotsSeries[0].unix_time))
+      ballotsSeries.splice(0, 0, this.addSeries(0, 0,
+        ballotsSeries[0].unix_time - this.timePadding))
+
+      return ballotsSeries
+    }
   },
   watch: {
-    graphData: function (val, oldVal) {
-      var total = this.graphData[0].none +
-        this.graphData[0].draft + this.graphData[0].confirmed;
-      initChart(this.padding, this.graphData, total);
+    ballotStream: function (val, oldVal) {
+      initChart(this.padding, this.ballotStream, this.totalDebates, this.height)
     }
   }
 }
 
-function initChart(pad, data, total) {
+function initChart(padding, data, total, setHeight) {
   // Based on https://bl.ocks.org/mbostock/3885211
   // var data = [{"time":"2018-01-20T18:31:05.000","confirmed":0,"none":20,"draft":5}]
 
-  if (data.length === 0) { return; } // Don't init with blank data
+  if (data.length <= 1) { return; } // Need at least two data points for time series
   var d3_data = data.map(type);
-  d3.selectAll("#ballotsStatusGraph > *").remove(); // Remove prior graph
+  d3.selectAll("#statusGraph > *").remove(); // Remove prior graph
 
-  var stackKey = ["none", "draft", "confirmed"];
+  var stackKey = ["none", "draft", "confirmed"]
   var colors = {
     "none": "#e34e42",
     "draft": "#f0c230",
     "confirmed": "#43ca75",
   };
 
-  var chartDiv = document.getElementById("ballotsStatusGraph");
-  var margin = {top: 20, right: 20, bottom: 30, left: 50};
-  var width = chartDiv.clientWidth - margin.left - margin.right,
-      height = chartDiv.clientHeight - margin.top - margin.bottom;
+  var chartDiv = document.getElementById("statusGraph")
+  var margin = {top: padding - 15, right: padding, bottom: padding, left: padding}
+  var width = chartDiv.clientWidth - margin.left - margin.right
+  var height = setHeight - margin.top - margin.bottom
 
-  var svg = d3.select("#ballotsStatusGraph")
+  var svg = d3.select("#statusGraph")
     .append("svg")
     .attr("viewbox", "0 0 " + width + " " + height)
     .attr("height", "100%")
-    .attr("width", "100%");
+    .attr("width", "100%")
 
   var x = d3.scaleTime().range([0, width]),
       y = d3.scaleLinear().range([height, 0]),
-      z = d3.scaleOrdinal(colors);
+      z = d3.scaleOrdinal(colors)
 
   var stack = d3.stack()
     .keys(stackKey)
     .order(d3.stackOrderNone)
-    .offset(d3.stackOffsetNone);
+    .offset(d3.stackOffsetNone)
 
-  x.domain(d3.extent(d3_data, function(d) { return d.time; }));
-  y.domain([0, total]);
+  x.domain(d3.extent(d3_data, function(d) { return d.time }))
+  y.domain([0, total])
   // The graph starts when the first ballot is submitted
-  z.domain(stackKey);
+  z.domain(stackKey)
 
   var area = d3.area()
-      .x(function(d, i) { return x(d.data.time); })
-      .y0(function(d) { return y(d[0]); })
-      .y1(function(d) { return y(d[1]); });
+    .x(function(d, i) { return x(d.data.time) })
+    .y0(function(d) { return y(d[0]); })
+    .y1(function(d) { return y(d[1]); })
 
   var g = svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
   var layer = g.selectAll(".layer")
     .data(stack(d3_data))
     .enter().append("g")
-      .attr("class", "layer");
+      .attr("class", "layer")
 
   layer.append("path")
-      .attr("class", "area")
-      .style("fill", function(d) { return colors[d.key]; })
-      .attr("d", area);
+    .attr("class", "area")
+    .style("fill", function(d) { return colors[d.key] })
+    .attr("d", area)
 
   g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+    .attr("class", "axis axis--x")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%H:%M")))
 
   g.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y));
+    .attr("class", "axis axis--y")
+    .call(d3.axisLeft(y))
+
+  g.append("g")
+    .attr("class", "axis axis--y")
+    .attr("transform", "translate(" + width + " ,0)")
+    .call(d3.axisRight(y))
 
   function type(d) {
-    d.time = d3.isoParse(d.time); // date is ISO
-    d.none = +d.none;
-    d.draft = +d.draft;
-    d.confirmed = +d.confirmed;
-    return d;
+    d.time = d3.isoParse(d.unix_time); // date is ISO
+    d.none = +d.none
+    d.draft = +d.draft
+    d.confirmed = +d.confirmed
+    return d
   }
 
 }
