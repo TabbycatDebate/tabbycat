@@ -4,6 +4,7 @@ from itertools import product
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django import forms
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
@@ -190,6 +191,11 @@ class BaseResultForm(forms.Form):
         self.debate.save()
 
         t = self.debate.round.tournament
+        # Need to provide a timestamp immediately for BallotStatusConsumer
+        # as it will broadcast before the view finishes assigning one
+        if self.ballotsub.confirmed:
+            self.ballotsub.confirm_timestamp = timezone.now()
+
         # 5. Notify the Latest Results consumer (for results/overview)
         if self.ballotsub.confirmed:
             if self.debate.result_status is self.debate.STATUS_CONFIRMED:

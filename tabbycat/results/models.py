@@ -160,7 +160,7 @@ class BallotSubmission(Submission):
         # These are used by the status graph
         created = timezone.localtime(self.timestamp).isoformat()
         confirmed = None
-        if self.confirm_timestamp:
+        if self.confirm_timestamp and self.confirmed:
             confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
 
         return {
