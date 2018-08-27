@@ -203,7 +203,10 @@ class Tournament(models.Model):
 
     @cached_property
     def current_round(self):
-        return self.round_set.filter(completed=False).order_by('seq').first()
+        current = self.round_set.filter(completed=False).order_by('seq').first()
+        if current is None:
+            return self.round_set.order_by('seq').last()
+        return current
 
     @cached_property
     def get_current_round_cached(self):
