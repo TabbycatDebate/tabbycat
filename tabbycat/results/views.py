@@ -1,4 +1,3 @@
-import datetime
 import logging
 from smtplib import SMTPException
 
@@ -8,6 +7,7 @@ from django.db import ProgrammingError
 from django.db.models import Q
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView, View
@@ -275,7 +275,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         self.ballotsub = form.save()
         if self.ballotsub.confirmed:
             self.ballotsub.confirmer = self.request.user
-            self.ballotsub.confirm_timestamp = datetime.datetime.now()
+            self.ballotsub.confirm_timestamp = timezone.now()
             self.ballotsub.save()
 
             if self.tournament.pref('enable_ballot_receipts'):
