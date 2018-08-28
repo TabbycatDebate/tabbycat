@@ -118,7 +118,7 @@ function initChart(vueContext){
   var leastSquaresCoeff = leastSquares(xSeries, ySeries);
 
   if (!isNaN(leastSquaresCoeff[0]) && !isNaN(leastSquaresCoeff[1])) {
-    // apply the reults of the least squares regression (if there are enough data points for it)
+    // Apply the reults of the least squares regression (if there are enough data points for it)
     var x1 = xLabels[0];
     var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
 
@@ -139,7 +139,6 @@ function initChart(vueContext){
       .attr("stroke-width", 2);
   }
 
-
   var circles = svg.selectAll("circle").data(vueContext.graphData)
   circles
     .enter().append('circle')
@@ -152,8 +151,8 @@ function initChart(vueContext){
     .on("mouseover", function (d, i) {
       div.style("opacity", .9);
       div.html(`<div class='tooltip-inner'>Received a ${d.y} as a ${d.position} in R${d.x}</div>`)
-          .style("left", (d3selection.event.pageX) + "px")
-          .style("top", (d3selection.event.pageY - 28) + "px");
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
     })
     .on("mouseout", function (d, i) {
       div.style("opacity", 0);
