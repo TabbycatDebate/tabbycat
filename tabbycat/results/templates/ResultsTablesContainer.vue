@@ -61,7 +61,7 @@ export default {
         })
         row[0].check = 'checked'
         row[0].icon = 'check'
-        row[0].class = 'text-primary'
+        row[0].class = 'text-secondary'
         row[0].sort = 1
       }
     }

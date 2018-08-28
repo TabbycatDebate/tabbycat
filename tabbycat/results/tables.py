@@ -22,7 +22,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         for debate in debates:
             cell = {
                 'icon': 'check' if debate.checked_in else 'x',
-                'class': 'text-primary' if debate.checked_in else 'text-muted',
+                'class': 'text-secondary' if debate.checked_in else 'text-dark',
                 'sort': 1 if debate.checked_in else 0,
                 'tooltip': debate.checked_tooltip,
                 'check': 'checked' if debate.checked_in else 'missing', # Hook for vue
