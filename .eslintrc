@@ -3,7 +3,7 @@
   "env": {
     "node": true,
     "browser": true, // Browser window global variables
-    "jquery": true // jQuery global variable
+    "jquery": true, // jQuery global variable
   },
   "extends": [
     "plugin:vue/essential",
@@ -20,10 +20,11 @@
     "no-new": "off", // Lazyness; for main.js
   },
   "parserOptions": {
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "sourceType": "module",
   },
   "plugins": [
-    "html"
+    "vue",
   ],
 }
 
