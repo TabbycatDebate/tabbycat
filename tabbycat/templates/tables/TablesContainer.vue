@@ -36,7 +36,7 @@
 import SmartTable from './SmartTable.vue'
 
 export default {
-  components: {SmartTable},
+  components: { SmartTable },
   props: {
     tablesData: Array, // Passed down from main.js
     orientation: String, // Passed down from template
@@ -47,24 +47,24 @@ export default {
   computed: {
     tableClass: function () {
       if (this.tablesData.length === 1) {
-        return 'col-md-12';
-      } else {
-        if (this.orientation === "rows") {
-          return 'col-md-12';
-        }
-        if (this.orientation === "columns") {
-          return 'col-md-6';
-        }
+        return 'col-md-12'
       }
-      return 'col-md-12'; // Fallback; should be redundant
+      if (this.orientation === 'rows') {
+        return 'col-md-12'
+      }
+      if (this.orientation === 'columns') {
+        return 'col-md-6'
+      }
+
+      return 'col-md-12' // Fallback; should be redundant
     },
     sortableData: function () {
       return this.rows // Enables SortableTableMixin
-    }
+    },
   },
   methods: {
     getTableId: function (i) {
-      return "tableContainer-" + i
+      return `tableContainer-${i}`
     },
     updateTableFilters: function () {
       this.$eventHub.$emit('update-table-filters', this.filterKey)

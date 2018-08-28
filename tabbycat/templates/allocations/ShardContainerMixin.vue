@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     debatesWithSharding: function () {
-      var sortedDebates
+      let sortedDebates
 
       if (!this.sharding.enabled) {
         return this.debates
@@ -54,10 +54,10 @@ export default {
       return null
     },
     splitDebates: function (debates, desiredSplit) {
-      var splitDebates = []
-      var n = desiredSplit
-      var size = Math.floor(debates.length / n)
-      var i = 0;
+      const splitDebates = []
+      let n = desiredSplit
+      let size = Math.floor(debates.length / n)
+      let i = 0
 
       // Sort debates into even chunks
       if (debates.length % n === 0) {
@@ -77,9 +77,9 @@ export default {
       return splitDebates
     },
     sortInterleaved: function (debates, desiredSplit) {
-      var interleavedDebates = []
-      var j = 0;
-      var i;
+      const interleavedDebates = []
+      let j = 0
+      let i
 
       // Make multidimensional array for each shard
       for (j = 0; j < desiredSplit; j += 1) {

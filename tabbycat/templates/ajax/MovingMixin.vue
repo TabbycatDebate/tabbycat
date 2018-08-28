@@ -11,45 +11,41 @@ export default {
       }
       const debate = this.debatesById[debateId]
       // Used for debugging
-      let niceName = "debate " + debate.id + " ("
-      _.forEach(debate.debateTeams, function (dt) {
+      let niceName = `debate ${debate.id} (`
+      _.forEach(debate.debateTeams, (dt) => {
         if (dt.team !== null) {
-          niceName += dt.team.short_name + ", "
+          niceName += `${dt.team.short_name}, `
         }
       })
       niceName = niceName.substring(0, niceName.length - 2)
-      niceName += ")"
+      niceName += ')'
       return niceName
     },
-    saveMove(movedItemId, fromDebateId, toDebateId, toPosition=null) {
-
-      var fromDebate = this.debatesById[fromDebateId]
+    saveMove (movedItemId, fromDebateId, toDebateId, toPosition = null) {
+      let fromDebate = this.debatesById[fromDebateId]
       if (_.isUndefined(fromDebate)) { // Undefined if coming from unused
         fromDebate = 'unused'
       }
-      var toDebate = this.debatesById[toDebateId]
+      let toDebate = this.debatesById[toDebateId]
       if (_.isUndefined(toDebate)) { // Undefined if going to unused
         toDebate = 'unused'
       }
 
       // We clone each object so we can roll back to the originals if it fails
-      var clonedToDebate = _.cloneDeep(toDebate)
+      const clonedToDebate = _.cloneDeep(toDebate)
 
-      if (toDebate.id === fromDebate.id) {
-        // For in-panel swaps we want them referring to the same variable
-        var clonedFromDebate = clonedToDebate
-      } else {
-        var clonedFromDebate = _.cloneDeep(fromDebate)
-      }
+      // For in-panel swaps we want them referring to the same variable
+      const fromSameDebate = (toDebate.id === fromDebate.id)
+      const clonedFromDebate = fromSameDebate ? clonedToDebate : _.cloneDeep(fromDebate)
 
       this.saveMoveForType(movedItemId, clonedFromDebate, clonedToDebate, toPosition)
     },
-    determineDebatesToSave(fromDebate, toDebate) {
+    determineDebatesToSave (fromDebate, toDebate) {
       // Note children must implement a debateCheckIfShouldSave()
+      const debatesToSave = []
       if (fromDebate.id === toDebate.id && this.debateCheckIfShouldSave(toDebate)) {
         return [toDebate]
       }
-      var debatesToSave = []
       if (toDebate !== 'unused' && this.debateCheckIfShouldSave(toDebate)) {
         debatesToSave.push(toDebate)
       }
@@ -58,41 +54,50 @@ export default {
       }
       return debatesToSave
     },
-    setLocked(item, itemDictionary, lockStatus) {
+    setLocked (item, itemDictionary, lockStatus) {
+      const possibleItemsToLock = itemDictionary
       // When locking we need to lock the original debate; not the cloned
-      if (_.isUndefined(itemDictionary[item.id])) {
-        this.showErrorAlert(' a debate',
-          'the debate doesn\'t seem to exist in the database anymore (e.g. the draw was remade)')
+      if (_.isUndefined(possibleItemsToLock[item.id])) {
+        this.showErrorAlert(
+          ' a debate',
+          'the debate doesn\'t seem to exist in the database anymore (e.g. the draw was remade)'
+        )
       } else {
-        itemDictionary[item.id].locked = lockStatus
+        possibleItemsToLock[item.id].locked = lockStatus
       }
     },
-    postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
-                        reallocateToPanel, messageStart) {
-      var self = this
+    postModifiedDebates (
+      debatesToSave, addToUnused, removeFromUnused,
+      reallocateToPanel, messageStart
+    ) {
+      const self = this
       // Lock the debate and unused items to prevent edits
-      _.forEach(debatesToSave, function (debateToSave) {
+      _.forEach(debatesToSave, (debateToSave) => {
         self.setLocked(debateToSave, self.debatesById, true)
       })
-      _.forEach(removeFromUnused, function (itemToUse) {
+      _.forEach(removeFromUnused, (itemToUse) => {
         self.setLocked(itemToUse, self.unallocatedById, true)
       })
       // Issue an AJAX request for each debate
-      _.forEach(debatesToSave, function (debateToSave) {
-        var message = messageStart + self.niceNameForDebate(debateToSave.id)
-        self.ajaxSave(self.roundInfo.saveUrl, debateToSave, message,
-                      self.processSaveSuccess, self.processSaveFailure,
-                      { 'addToUnused': addToUnused,
-                        'removeFromUnused': removeFromUnused,
-                        'reallocateToPanel': reallocateToPanel })
+      _.forEach(debatesToSave, (debateToSave) => {
+        const message = messageStart + self.niceNameForDebate(debateToSave.id)
+        self.ajaxSave(
+          self.roundInfo.saveUrl, debateToSave, message,
+          self.processSaveSuccess, self.processSaveFailure,
+          {
+            addToUnused: addToUnused,
+            removeFromUnused: removeFromUnused,
+            reallocateToPanel: reallocateToPanel,
+          }
+        )
       })
     },
     processSaveSuccess: function (dataResponse, savedDebate, returnPayload) {
       // Replace old debate object with new one
-      var oldDebateIndex = _.findIndex(this.debates, { 'id': savedDebate.id})
+      const oldDebateIndex = _.findIndex(this.debates, { id: savedDebate.id })
       if (oldDebateIndex !== -1) {
-        var self = this
-        var newDebate = dataResponse
+        const self = this
+        const newDebate = dataResponse
         // For the teams and adjudidcators teams in the new debate object
         // we need to swap them out for the representations of them that were
         // stored before they were sent over; as they come back without the
@@ -104,9 +109,9 @@ export default {
           newDebate.liveness = savedDebate.liveness
 
           // For teams they dont change so we can use the global variable
-          newDebate.debateTeams = _.map(newDebate.debateTeams, function (dt) {
+          newDebate.debateTeams = _.map(newDebate.debateTeams, (dt) => {
             if (dt.team !== null) {
-              var id = dt.team.id
+              const id = dt.team.id
               if (_.has(self.teamsById, id)) {
                 dt.team = self.teamsById[id]
               } else {
@@ -117,9 +122,9 @@ export default {
           })
 
           // For adjudicators we saved/stored a list of all adjs when saving and need to restore
-          var originalAdjsById = returnPayload.reallocateToPanel
-          newDebate.debateAdjudicators = _.map(newDebate.debateAdjudicators, function (da) {
-            var id = da.adjudicator.id
+          const originalAdjsById = returnPayload.reallocateToPanel
+          newDebate.debateAdjudicators = _.map(newDebate.debateAdjudicators, (da) => {
+            const id = da.adjudicator.id
             if (_.has(originalAdjsById, id)) {
               da.adjudicator = originalAdjsById[id]
             } else {
@@ -131,26 +136,26 @@ export default {
 
         // Remove/replace old debate with new Debate object
         this.debates.splice(oldDebateIndex, 1, newDebate)
-        console.debug("    VUE: Loaded new debate for " + this.niceNameForDebate(newDebate.id))
+        console.debug(`    VUE: Loaded new debate for ${this.niceNameForDebate(newDebate.id)}`)
       } else {
         console.warn("    VUE: Shouldn't happen; couldnt find old debates position")
       }
       // Remove/add relevant items to unused area
-      _.forEach(returnPayload.addToUnused, function (unusedItem) {
+      _.forEach(returnPayload.addToUnused, (unusedItem) => {
         self.unallocatedItems.push(unusedItem)
         unusedItem.locked = false
       })
-      _.forEach(returnPayload.removeFromUnused, function (usedItem) {
+      _.forEach(returnPayload.removeFromUnused, (usedItem) => {
         self.unallocatedItems.splice(self.unallocatedItems.indexOf(usedItem), 1)
       })
     },
     processSaveFailure: function (unsavedDebate, returnPayload) {
       this.setLocked(unsavedDebate, this.debatesById, false)
-      var self = this
-      _.forEach(returnPayload.removeFromUnused, function (itemToUse) {
+      const self = this
+      _.forEach(returnPayload.removeFromUnused, (itemToUse) => {
         self.setLocked(itemToUse, self.unallocatedById, false)
       })
-    }
-  }
+    },
+  },
 }
 </script>

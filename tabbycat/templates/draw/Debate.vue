@@ -61,20 +61,17 @@ import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
 import FindDebateTeamMixin from '../draw/FindDebateTeamMixin.vue'
 
 export default {
-  components: {DrawTeam, DrawVenue, DrawAdjudicator},
+  components: { DrawTeam, DrawVenue, DrawAdjudicator },
   mixins: [SlideOverSubjectMixin, FindDebateTeamMixin],
-  props: { debate: Object, roundInfo: Object},
+  props: { debate: Object, roundInfo: Object },
   methods: {
-    findDebateTeamInDebateBySide(side, debate) { // Used in Edit Matchups
-      var debateTeam = _.find(debate.debateTeams, function (dt) {
-        return dt.side === side
-      });
+    findDebateTeamInDebateBySide (side, debate) { // Used in Edit Matchups
+      const debateTeam = _.find(debate.debateTeams, dt => dt.side === side)
       if (!_.isUndefined(debateTeam)) {
         return debateTeam
-      } else {
-        return false
       }
+      return false
     },
-  }
+  },
 }
 </script>

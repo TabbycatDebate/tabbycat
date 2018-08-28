@@ -45,8 +45,8 @@ export default {
     resizeStart: function (event) {
       event.preventDefault()
       this.startPosition = event.clientY
-      window.addEventListener('mousemove', this.resizeMotion);
-      window.addEventListener('mouseup', this.resizeEnd);
+      window.addEventListener('mousemove', this.resizeMotion)
+      window.addEventListener('mouseup', this.resizeEnd)
     },
     resizeMotion: function (event) {
       event.preventDefault()
@@ -60,8 +60,8 @@ export default {
     },
     resizeEnd: function (event) {
       event.preventDefault()
-      window.removeEventListener('mousemove', this.resizeMotion);
-      window.removeEventListener('mouseup', this.resizeEnd);
+      window.removeEventListener('mousemove', this.resizeMotion)
+      window.removeEventListener('mouseup', this.resizeEnd)
     },
     boundedHeight: function (height) {
       if (height > this.maxHeight) {

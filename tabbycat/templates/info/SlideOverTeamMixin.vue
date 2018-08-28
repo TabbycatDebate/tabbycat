@@ -10,71 +10,67 @@ export default {
   mixins: [SlideOverDiversityMixin],
   computed: {
     breakCategoriesFeature: function () {
-      var self = this
+      const self = this
+      let resultsInfo
       if (this.roundInfo.teamsInDebate === 'bp') {
-        var resultsInfo = [{ 'title': 'On ' + self.team.points + ' points' }]
+        resultsInfo = [{ title: `On ${self.team.points} points` }]
       } else {
-        var resultsInfo = [{ 'title': 'On ' + self.team.wins + ' wins' }]
+        resultsInfo = [{ title: `On ${self.team.wins} wins` }]
       }
-      var bcInfo = _.map(this.team.break_categories, function (bc) {
-        return {
-          'title': self.titleForBC(bc),
-          'class': self.classForBC(bc),
-          'icon': self.iconForBC(bc)
-        }
-      })
+      const bcInfo = _.map(this.team.break_categories, bc => ({
+        title: self.titleForBC(bc),
+        class: self.classForBC(bc),
+        icon: self.iconForBC(bc),
+      }))
       return resultsInfo.concat(bcInfo)
     },
     teamInfoFeature: function () {
-      var self = this
-      var teamInfo = { 'title': this.team.short_name }
-      var speakersInfo = _.map(this.team.speakers, function (s) {
-        return {
-          'title': s.name + " " + self.genderBrackets(s.gender),
-          'class': 'gender-display gender-' + s.gender,
-          'icon': 'user'
-        }
-      })
+      const self = this
+      const teamInfo = { title: this.team.short_name }
+      const speakersInfo = _.map(this.team.speakers, s => ({
+        title: `${s.name} ${self.genderBrackets(s.gender)}`,
+        class: `gender-display gender-${s.gender}`,
+        icon: 'user',
+      }))
       return _.concat(teamInfo, speakersInfo)
     },
     annotateDataForSlideOver: function () {
       return this.team
-    }
+    },
   },
   methods: {
-    titleForBC: function (bc, wins) {
+    titleForBC: function (bc) {
       if (!_.isUndefined(bc.will_break)) {
         if (bc.will_break !== null) {
-          return bc.will_break.toUpperCase() + ' for ' + bc.name + ' Break'
-        } else {
-          return bc.name + ' Break'
+          return `${bc.will_break.toUpperCase()} for ${bc.name} Break`
         }
+        return `${bc.name} Break`
       }
+      return null
     },
     classForBC: function (bc) {
       if (bc.will_break === 'dead' || bc.will_break === 'safe') {
-        return 'category-display category-' + bc.class + '-disabled'
-      } else {
-        return 'category-display category-' + bc.class
+        return `category-display category-${bc.class}-disabled`
       }
+      return `category-display category-${bc.class}`
     },
     iconForBC: function (bc) {
       if (bc.will_break === 'dead') { return 'x' } else
       if (bc.will_break === 'safe') { return 'check' } else
       if (bc.will_break === 'live') { return 'star' }
-      else { return '' }
+      return ''
     },
-    formatForSlideOver: function (subject) {
+    formatForSlideOver: function () {
       return {
-        'tiers': [{
-          'features': [
+        tiers: [{
+          features: [
             this.teamInfoFeature,
             this.institutionDetailForSlideOver(this.team),
             this.breakCategoriesFeature,
-          ]
-        }]
+          ],
+        }],
       }
     },
-  }
+  },
 }
 </script>

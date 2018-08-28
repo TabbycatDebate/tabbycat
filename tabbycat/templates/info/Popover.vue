@@ -38,7 +38,7 @@ export default {
       if (event.pointerType === 'touch') { // Don't response to clicks as taps
         if (this.showingPopOver) {
           // Need to give time to taps on links to register
-          setTimeout(() => this.hidePopOver(), 150);
+          setTimeout(() => this.hidePopOver(), 150)
         } else {
           this.showPopOver()
         }
@@ -47,7 +47,7 @@ export default {
     getPopContent: function () {
       // Grab popover content from actual render html back as a string
       // Include the HTML explicitly in the template created problems
-      var string = ''
+      let string = ''
       if (this.cellData.content.length > 0) {
         string += '<div class="list-group list-group-item-flush">'
         _.forEach(this.cellData.content, (item) => {
@@ -57,7 +57,7 @@ export default {
           } else {
             string += `${item.text}</div>`
           }
-        });
+        })
         string += '</div>'
       }
       return string
@@ -98,11 +98,11 @@ export default {
     },
     hidePopOver: function () {
       if (this.showingPopOver) {
-        $(this.$refs.container.$el).tooltip().popover('dispose');
+        $(this.$refs.container.$el).tooltip().popover('dispose')
         this.showingPopOver = false
       }
     },
-    responeToGlobalHide(uid) {
+    responeToGlobalHide (uid) {
       if (this._uid !== uid) {
         this.hidePopOver()
       }

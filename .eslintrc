@@ -7,17 +7,18 @@
   },
   "extends": [
     "plugin:vue/essential",
-    "@vue/airbnb"
+    "standard"
   ],
   "rules": {
-    "semi": 0, // Disallow semi colons for now
-    "no-var": "off",
-    "no-console": "off",
+    "comma-dangle": ["error", "always-multiline"], // Improve diffs
     "func-names": "off", // Conflicts with vue
     "object-shorthand": "off", // Conflicts with vue
-    "prefer-rest-params": "off", // Lazyness; for main.js
-    "prefer-destructuring": "off", // Lazyness; for main.js
-    "no-new": "off", // Lazyness; for main.js
+    "no-underscore-dangle": "off", // Conflicts with vue
+    // Vue-plugin lint rules
+    "vue/require-v-for-key": "off", // Requires not using <template>; breaks layouts
+    // Temporary; to fix
+    "no-console": "off",
+    "radix": "off",
   },
   "parserOptions": {
     "parser": "babel-eslint",

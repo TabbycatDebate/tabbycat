@@ -10,7 +10,9 @@
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item text-secondary px-2">
-              <ballots-graph :graph-data="ballotStatuses" :total-debates="totalDebates"></ballots-graph>
+              <ballots-graph :graph-data="ballotStatuses"
+                             :total-debates="totalDebates">
+              </ballots-graph>
             </li>
           </ul>
         </div>
@@ -26,7 +28,8 @@
             <h5 class="mb-0">Latest Actions</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="action in actionLogs" :key="action.id"
+            <updates-list v-for="action in actionLogs"
+                          :key="action.id"
                           :item="action"></updates-list>
             <li class="list-group-item text-secondary" v-if="actionLogs.length === 0">
               No Actions Yet
@@ -41,7 +44,8 @@
             <h5 class="mb-0">Latest Results</h5>
           </div>
           <ul class="list-group list-group-flush">
-            <updates-list v-for="ballot in ballotResults" :key="ballot.id"
+            <updates-list v-for="ballot in ballotResults"
+                          :key="ballot.id"
                           :item="ballot"></updates-list>
             <li class="list-group-item text-secondary" v-if="ballotResults.length === 0">
               No Confirmed Results Yet
@@ -61,13 +65,13 @@ import UpdatesList from '../../templates/graphs/UpdatesList.vue'
 import WebSocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 export default {
-  mixins: [ WebSocketMixin ],
+  mixins: [WebSocketMixin],
   components: {
     UpdatesList,
-    'BallotsGraph': () => import('../../templates/graphs/BallotsGraph.vue'),
+    BallotsGraph: () => import('../../templates/graphs/BallotsGraph.vue'),
   },
-  props: [ 'tournamentSlug', 'totalDebates',
-           'initialActions', 'initialBallots', 'initialGraphData'],
+  props: ['tournamentSlug', 'totalDebates',
+    'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
       actionLogs: this.initialActions,
@@ -78,24 +82,21 @@ export default {
   },
   methods: {
     handleSocketReceive: function (socketLabel, payload) {
-      const data = payload['data']
+      const data = payload.data
       if (socketLabel === 'ballot_statuses') {
         this.ballotStatuses.push(data) // Push blindly; graph will filter
         return
       }
       // Either action_logs or ballot_results
-      var dataLabel = 'actionLogs'
+      const dataLabel = (socketLabel === 'ballot_results') ? 'ballotResults' : 'actionLogs'
       if (socketLabel === 'ballot_results') {
-        dataLabel = 'ballotResults'
         if (data.confirmed === false || data.result_status !== 'C') {
           return // Don't show new results unless they are confirmed/confirmed
         }
       }
       // Check for duplicate log/results; do a inline replace if so
-      let duplicateIndex = _.findIndex(this[dataLabel], function (i) {
-        return i.id == data.id
-      })
-      if (duplicateIndex != -1) {
+      const duplicateIndex = _.findIndex(this[dataLabel], i => i.id === data.id)
+      if (duplicateIndex !== -1) {
         this[dataLabel][duplicateIndex] = data
       } else {
         // Add new item to front
@@ -105,8 +106,7 @@ export default {
           this[dataLabel].pop()
         }
       }
-
-    }
-  }
+    },
+  },
 }
 </script>

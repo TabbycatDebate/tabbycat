@@ -5,7 +5,7 @@
 
       <label class="form-check-label m-0 pl-3">
         <input type="checkbox" class="form-check-input"
-               v-model.boolean.lazy="debate.sidesConfirmed" @change="checkUpdate">
+               v-model.lazy="debate.sidesConfirmed" @change="checkUpdate">
         <span :class="[debate.sidesConfirmed ? 'text-success' : 'text-danger']">
           <span v-if="!debate.sidesConfirmed">un</span>confirmed
         </span>
@@ -23,13 +23,13 @@ export default {
   mixins: [AjaxMixin],
   props: {
     debate: Object,
-    saveUrl: String
+    saveUrl: String,
   },
   methods: {
     checkUpdate: function () {
-      var sidesStatus = this.debate.sidesConfirmed
-      var message = "debate " + this.debate.id + "'s sides as " + sidesStatus
-      var payload = { 'sidesStatus': sidesStatus, id: this.debate.id }
+      const sidesStatus = this.debate.sidesConfirmed
+      const message = `debate ${this.debate.id}'s sides as ${sidesStatus}`
+      const payload = { sidesStatus: sidesStatus, id: this.debate.id }
       this.ajaxSave(this.saveUrl, payload, message, null, null, null)
     },
   },

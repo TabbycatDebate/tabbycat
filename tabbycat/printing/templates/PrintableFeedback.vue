@@ -8,13 +8,16 @@
           Did {{ ballot.target }} deliver the adjudication?
         </div>
         <div class="db-flex-item db-flex-row">
-          <div class="db-align-horizontal-center db-padding-horizontal db-align-vertical-center db-flex-static db-center-text db-vertical-center-text">
+          <div class="db-align-horizontal-center db-padding-horizontal db-align-vertical-center
+                      db-flex-static db-center-text db-vertical-center-text">
             <span class="db-padding-horizontal db-fill-in">Yes</span>
           </div>
-          <div class="db-align-horizontal-center db-padding-horizontal db-align-vertical-center db-flex-static db-center-text db-vertical-center-text">
+          <div class="db-align-horizontal-center db-padding-horizontal db-align-vertical-center
+                      db-flex-static db-center-text db-vertical-center-text">
             <span class="db-padding-horizontal ">No, I am submitting feedback on:</span>
           </div>
-          <div class="db-align-horizontal-center db-fill-in db-align-vertical-center db-flex-item db-center-text db-vertical-center-text">
+          <div class="db-align-horizontal-center db-fill-in db-align-vertical-center
+                      db-flex-item db-center-text db-vertical-center-text">
           </div>
         </div>
       </div>
@@ -22,11 +25,13 @@
 
     <printable-feedback-question v-if="ballot.authorPosition !== 'Team'"
       v-for="question in adjQuestions"
-      :question="question" :key="question.text" ></printable-feedback-question>
+      :question="question"
+      :key="question.text" ></printable-feedback-question>
 
     <printable-feedback-question v-if="ballot.authorPosition === 'Team'"
       v-for="question in teamQuestions"
-      :question="question" :key="question.text" ></printable-feedback-question>
+      :question="question"
+      :key="question.text" ></printable-feedback-question>
 
   </div>
 </template>

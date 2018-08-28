@@ -50,26 +50,26 @@
 export default {
   props: { checks: Object, statuses: Object },
   methods: {
-    widthForType: function(value, type) {
-      const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
-      return String(value / sumValues(type) * 100) + "%"
-    }
+    widthForType: function (value, type) {
+      const sumValues = obj => Object.values(obj).reduce((a, b) => a + b)
+      return `${String((value / sumValues(type)) * 100)}%`
+    },
   },
   computed: {
-    checksWidths: function() {
+    checksWidths: function () {
       return {
-        'checked': this.widthForType(this.checks.checked, this.checks),
-        'missing': this.widthForType(this.checks.missing, this.checks),
+        checked: this.widthForType(this.checks.checked, this.checks),
+        missing: this.widthForType(this.checks.missing, this.checks),
       }
     },
-    statusWidths: function() {
+    statusWidths: function () {
       return {
-        'none': this.widthForType(this.statuses.none, this.statuses),
-        'draft': this.widthForType(this.statuses.draft, this.statuses),
-        'confirmed': this.widthForType(this.statuses.confirmed, this.statuses),
+        none: this.widthForType(this.statuses.none, this.statuses),
+        draft: this.widthForType(this.statuses.draft, this.statuses),
+        confirmed: this.widthForType(this.statuses.confirmed, this.statuses),
       }
-    }
-  }
+    },
+  },
 }
 
 </script>

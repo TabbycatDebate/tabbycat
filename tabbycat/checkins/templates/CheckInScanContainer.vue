@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     checkInIdentifier: function (barcodeIdentifier) {
-      var payload = { barcodes: [barcodeIdentifier], status: true, type: 'people' }
+      const payload = { barcodes: [barcodeIdentifier], status: true, type: 'people' }
       this.sentIdentifiers.push(barcodeIdentifier) // Note what has been sent
       this.sendToSocket('checkins', payload)
       this.barcode = '' // Reset
@@ -68,10 +68,10 @@ export default {
       // Note only responding to IDs that have been sent by this form —
       // don't want to show checkins from everywhere else
       console.log(`BReceived payload ${JSON.stringify(payload)} from socket ${socketLabel}`)
-      if (payload['component_id'] !== this.componentId) {
+      if (payload.component_id !== this.componentId) {
         return // Didn't come from this form
       }
-      if (payload.hasOwnProperty('error')) {
+      if (Object.prototype.hasOwnProperty.call(payload, 'error')) {
         this.failCheckIn(payload.error, payload.message, null)
       } else {
         this.finishCheckIn(payload)
@@ -84,19 +84,22 @@ export default {
       this.playSound('finishedScanSound')
     },
     failCheckIn: function (error, message) {
+      if (error) {
+        console.error(error)
+      }
       $.fn.showAlert('danger', message, 0)
       this.playSound('failedScanSound')
     },
-    unMute: function(event) {
+    unMute: function () {
       document.getElementById('finishedScanSound').muted = false
       document.getElementById('failedScanSound').muted = false
       this.sound = true
     },
     playSound: function (elementID) {
       // Audio Problem
-      var promise = document.getElementById(elementID).play()
+      const promise = document.getElementById(elementID).play()
       if (promise !== undefined) {
-        promise.catch(error => {
+        promise.catch(() => {
           // Auto-play was prevented
           // Show a UI element to let the user manually start playback
           console.debug('Safari autoplay ... needs permission for sound')
@@ -106,72 +109,79 @@ export default {
     toggleScan: function () {
       this.liveScanning = !this.liveScanning
       // Give time for DOM elements to update
-      var self = this
-      this.$nextTick(function () {
+      const self = this
+      this.$nextTick(() => {
         if (self.liveScanning) {
           self.streamScan()
-          document.getElementById("pageTitle").style.display = 'none'
+          document.getElementById('pageTitle').style.display = 'none'
         } else {
           Quagga.stop()
-          document.getElementById("pageTitle").style.display = 'block'
+          document.getElementById('pageTitle').style.display = 'block'
         }
       })
     },
     streamScan: function () {
-      var self = this
+      const self = this
 
       Quagga.init({
-        inputStream : {
-          name : "Live",
-          type : "LiveStream",
-          target: document.querySelector('#scanCanvas')    // Or '#yourElement' (optional)
+        inputStream: {
+          name: 'Live',
+          type: 'LiveStream',
+          target: document.querySelector('#scanCanvas'), // Or '#yourElement' (optional)
         },
-        decoder : {
-          readers : ["code_128_reader"]
-        }
-      }, function (err) {
-        if(err) {
-          console.debug("Initialization failed due to user camera permissions denial.");
+        decoder: {
+          readers: ['code_128_reader'],
+        },
+      }, (err) => {
+        if (err) {
+          console.debug('Initialization failed due to user camera permissions denial.')
           self.liveScanning = false
           return
         }
-        Quagga.start();
-      });
+        Quagga.start()
+      })
 
       // Draws over frames as they are shown
-      Quagga.onProcessed(function (result) {
-        var drawingCtx = Quagga.canvas.ctx.overlay,
-            drawingCanvas = Quagga.canvas.dom.overlay;
+      Quagga.onProcessed((result) => {
+        const drawingCtx = Quagga.canvas.ctx.overlay
+        const drawingCanvas = Quagga.canvas.dom.overlay
 
         if (result) {
           if (result.boxes) {
-            drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")),
-                                       parseInt(drawingCanvas.getAttribute("height")));
-            result.boxes.filter(function (box) {
-                return box !== result.box;
-            }).forEach(function (box) {
+            drawingCtx.clearRect(
+              0, 0,
+              parseInt(drawingCanvas.getAttribute('width')),
+              parseInt(drawingCanvas.getAttribute('height'))
+            )
+            result.boxes.filter(box => box !== result.box).forEach((box) => {
               // The searching for box
-              Quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx,
-                                         {color: "#fd681d", lineWidth: 2});
-            });
+              Quagga.ImageDebug.drawPath(
+                box, { x: 0, y: 1 }, drawingCtx,
+                { color: '#fd681d', lineWidth: 2 }
+              )
+            })
           }
           if (result.box) {
-            Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx,
-                                       {color: "#663da0", lineWidth: 4});
+            Quagga.ImageDebug.drawPath(
+              result.box, { x: 0, y: 1 }, drawingCtx,
+              { color: '#663da0', lineWidth: 4 }
+            )
           }
           if (result.codeResult && result.codeResult.code) {
-            Quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, drawingCtx,
-                                       {color: '#00bf8a', lineWidth: 8});
+            Quagga.ImageDebug.drawPath(
+              result.line, { x: 'x', y: 'y' }, drawingCtx,
+              { color: '#00bf8a', lineWidth: 8 }
+            )
           }
         }
       })
       // Process a valid result (if it hasn't already been processed
-      Quagga.onDetected(function (result) {
-        var code = result.codeResult.code;
+      Quagga.onDetected((result) => {
+        const code = result.codeResult.code
         // Check length
         if (code.length === 5) {
           // Check numeric
-          if (code.match(/^[0-9]+$/) != null) {
+          if (code.match(/^[0-9]+$/) !== null) {
             // Check not already posted
             if (!_.includes(self.scannedResults, code)) {
               self.checkInIdentifier(code)
@@ -185,12 +195,12 @@ export default {
     },
   },
   watch: {
-    barcode: function (current, old) {
+    barcode: function (current) {
       if (current.length >= 5) {
         this.processing = true
         this.checkInIdentifier(current)
       }
-    }
-  }
+    },
+  },
 }
 </script>

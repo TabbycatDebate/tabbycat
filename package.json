@@ -11,7 +11,7 @@
     "@vue/cli-plugin-babel": "^3.0.0",
     "@vue/cli-plugin-eslint": "^3.0.0",
     "@vue/cli-service": "3.0.1",
-    "@vue/eslint-config-airbnb": "^3.0.0",
+    "@vue/eslint-config-standard": "^3.0.1",
     "babel-plugin-lodash": "^3.3.4",
     "bootstrap": "^4.1.3",
     "browserify": "^16.2.2",
@@ -47,7 +47,7 @@
     "cp-js": "cp node_modules/jquery/dist/jquery.js tabbycat/static/js/vendor && cp node_modules/jquery-validation/dist/jquery.validate.js tabbycat/static/js/vendor && cp node_modules/jsbarcode/dist/JsBarcode.all.min.js tabbycat/static/js/vendor",
     "cp-fonts": "mkdir -p tabbycat/static/fonts && cp node_modules/inter-ui/Inter\\ UI\\ \\(web\\)/* tabbycat/static/fonts",
     "cp-i18n": "mkdir -p tabbycat/static/jsi18n && cp -R tabbycat/locale/jsi18n/* tabbycat/static/jsi18n/",
-    "lint-vue": "npx vue-cli-service lint tabbycat/ --ext .vue --cache --ignore-pattern tabbycat/staticfiles/,tabbycat/static/" ,
+    "lint-vue": "npx vue-cli-service lint tabbycat/ --ext .vue --cache --ignore-pattern tabbycat/staticfiles/,tabbycat/static/",
     "lint-sass": "stylelint --cache tabbycat/templates/scss/**/*.scss"
   },
   "devDependencies": {

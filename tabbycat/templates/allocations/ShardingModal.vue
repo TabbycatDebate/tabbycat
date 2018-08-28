@@ -3,9 +3,21 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body text-center">
-          <p class="lead">Sharding will narrow the debates displayed to show a specific subset of the overall draw.</p>
-          <p class="lead">This feature is in beta — be sure to double check the main draw page for missing or duplicated adjudicators.</p>
-          <p>When using sharding to allow multiple people to allocate simultaneously <strong>be very sure</strong> that everyone is using the same <em>split</em>, <em>sort</em>, <em>mix</em>, and that each person has selected a different shard from the others.</p>
+
+          <p class="lead">
+            Sharding will narrow the debates displayed to show a specific subset
+            of the overall draw.
+          </p>
+          <p class="lead">
+            This feature is in beta — be sure to double check the main draw page for missing or
+            duplicated adjudicators.
+          </p>
+          <p>
+            When using sharding to allow multiple people to allocate simultaneously
+            <strong>be very sure</strong> that everyone is using the same <em>split</em>,
+            <em>sort</em>, <em>mix</em>, and that each person has selected a different
+            shard from the others.
+          </p>
 
           <h4>Shard Split</h4>
           <div class="btn-group mb-3 btn-group-toggle" role="group">
@@ -44,7 +56,12 @@
           </div>
 
           <h4 class="mt-3">Shard Mix</h4>
-          <p><em>Top-to-Bottom</em> mixing will sort the draw so the first shard contains debates from the top-most brackets, priority, or liveness, and the last shard contains debates from the bottom-most brackets, priority, orliveness. <em>Interleave</em> mixing will distribute an even mix of each characteristic amongst each of the shards</p>
+          <p>
+            <em>Top-to-Bottom</em> mixing will sort the draw so the first shard contains debates
+            from the top-most brackets, priority, or liveness, and the last shard contains debates
+            from the bottom-most brackets, priority, orliveness. <em>Interleave</em> mixing will
+            distribute an even mix of each characteristic amongst each of the shards
+          </p>
           <div class="btn-group mb-3 btn-group-toggle" role="group">
             <button type="button" @click="setState('mix', 'hierarchy')"
                     :class="['btn btn-primary', mix === 'hierarchy' ? 'active': '']">
@@ -57,7 +74,8 @@
           </div>
 
           <h4 class="mt-3">Select Shard</h4>
-          <button v-if="split === null || sort === null || mix === null" class="btn btn-secondary disabled">
+          <button v-if="split === null || sort === null || mix === null"
+                  class="btn btn-secondary disabled">
             Select a count, sort, and mix to open a shard
           </button>
           <div v-else class="btn-group" role="group">
@@ -106,7 +124,7 @@ export default {
       $.fn.resetButton('#shpl')
     },
     openShard: function (shardIdentifier, index) {
-      var self = this
+      const self = this
       $.fn.loadButton('#shpb')
       $.fn.loadButton('#shpl')
       self.$eventHub.$emit('open-shard', this.split, this.mix, this.sort, index)
@@ -116,7 +134,7 @@ export default {
       self.resetShardingModal()
     },
     setState: function (type, state) {
-      this[type] = state;
+      this[type] = state
     },
   },
 }

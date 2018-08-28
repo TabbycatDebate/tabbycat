@@ -11,12 +11,12 @@ export default {
   },
   methods: {
     showSlideOver: function (event, subject) {
-      var slide = this.formatForSlideOver(subject)
-      var annotationCall = this.annotationMethodName
-      var annotationItem = this.annotateDataForSlideOver
+      const slide = this.formatForSlideOver(subject)
+      const annotationCall = this.annotationMethodName
+      const annotationItem = this.annotateDataForSlideOver
       this.$eventHub.$emit('set-slideover', slide, annotationCall, annotationItem)
     },
-    hideSlideOver: function (event) {
+    hideSlideOver: function () {
       this.$eventHub.$emit('unset-slideover')
     },
     formatForSlideOver: function (subject) {
@@ -25,9 +25,9 @@ export default {
   },
   computed: {
     annotateDataForSlideOver: function () {
-      return null  // Children should return an object that can be used by
-                  // annotateMethodForSlideOver; such as a conflictable adj
-    }
-  }
+      return null // Children should return an object that can be used by
+      // annotateMethodForSlideOver; such as a conflictable adj
+    },
+  },
 }
 </script>

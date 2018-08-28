@@ -8,52 +8,51 @@
 // Subclasses can implement a handleDragEnter() handleDragLeave() handleDrop()
 
 export default {
-  data: function () { return { dragCounter: 0, isDroppable: false }},
+  data: function () { return { dragCounter: 0, isDroppable: false } },
   props: { locked: false },
   computed: {
     droppableClasses: function () {
       if (this.isDroppable && !this.locked) {
-        return "vue-droppable vue-is-drag-enter"
+        return 'vue-droppable vue-is-drag-enter'
       }
       if (this.locked) {
-        return "vue-droppable locked"
-      } else {
-        return "vue-droppable"
+        return 'vue-droppable locked'
       }
+      return 'vue-droppable'
     },
   },
   methods: {
     dragEnter: function (event) {
-      this.dragCounter++;
-      this.isDroppable = true;
+      this.dragCounter += 1
+      this.isDroppable = true
       if (typeof this.handleDragEnter === 'function') {
-        this.handleDragEnter(event);
+        this.handleDragEnter(event)
       }
     },
     dragLeave: function (event) {
-      this.dragCounter--;
+      this.dragCounter -= 1
       if (this.dragCounter === 0) {
-        this.isDroppable = false;
+        this.isDroppable = false
       }
       if (typeof this.handleDragLeave === 'function') {
-        this.handleDragLeave(event);
+        this.handleDragLeave(event)
       }
     },
     drop: function (event) {
       // Firefox needs to prevent original actions
-      if(event.preventDefault) { event.preventDefault() }
-      if(event.stopPropagation) { event.stopPropagation() }
-      this.dragCounter = 0;
+      if (event.preventDefault) { event.preventDefault() }
+      if (event.stopPropagation) { event.stopPropagation() }
+      this.dragCounter = 0
       if (this.locked) {
         return
       }
-      this.isDroppable = false;
+      this.isDroppable = false
       if (typeof this.handleDrop === 'function') {
-        var payloadData = event.dataTransfer.getData("text");
+        const payloadData = event.dataTransfer.getData('text')
         console.debug('DEBUG: JSON drop handleDrop payloadData:', payloadData)
-        this.handleDrop(JSON.parse(payloadData));
+        this.handleDrop(JSON.parse(payloadData))
       }
     },
-  }
+  },
 }
 </script>
