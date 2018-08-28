@@ -68,7 +68,7 @@ export default {
       // Note only responding to IDs that have been sent by this form —
       // don't want to show checkins from everywhere else
       console.log(`BReceived payload ${JSON.stringify(payload)} from socket ${socketLabel}`)
-      if (payload['component_id'] !== this.component_id) {
+      if (payload['component_id'] !== this.componentId) {
         return // Didn't come from this form
       }
       if (payload.hasOwnProperty('error')) {
