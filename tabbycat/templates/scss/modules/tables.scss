@@ -157,10 +157,12 @@ thead,
 // Icons in cells (may as well make them big to match text size)
 .table > tbody > tr > td {
 
-  i, .feather {
+  i,
+  .feather {
     width: 24px;
     height: 24px;
   }
+
   .feather {
     margin-bottom: -6px;
     margin-right: -3px;
