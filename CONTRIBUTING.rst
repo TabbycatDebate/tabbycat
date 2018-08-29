@@ -30,7 +30,6 @@ Getting started with development
 
     - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
 
-- By default the development server's build process will broadcast livereload events; installing one of their `browser plugins <http://livereload.com/extensions/>`_ can make testing front-end changes easier.
 - A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
 
     $ pip install -r 'requirements_development.txt'
@@ -38,6 +37,10 @@ Getting started with development
 - The email backend should be changed in ``local_settings.py`` to display sent messages in ``STDOUT``, not by real email. Insert::
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+- Our ``package.json`` provides a convenience command that runs a standard set of development tools simultaneously, such as the Django server and the automatic recompilation with live injecting of javascript and CSS. Once you have set ``USE_WEBPACK_SERVER=True`` in your ``local_settings.py`` you can then run this with::
+
+    $ npm run serve
 
 Database schema changes
 =======================
@@ -52,19 +55,21 @@ Fixture files (found under ``data/fixtures/``) may also need to be updated, whic
 Style guide
 ===========
 
+For the front end interface design there is a style guide available at "/style/" once a tournament has been setup.
+
 For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
 
     $ flake8 .
 
-For stylesheets, we use `stylelint <https://stylelint.io>`_ to enforce the `AirBnB CSS styleguide <https://github.com/airbnb/css>`_. The relevant code can be checked by using::
+For stylesheets, we use `stylelint <https://stylelint.io>`_. The relevant code can be checked by using::
 
-    $ npm run stylelint
+    $ npm run lint-sass
 
-For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `AirBnB javascript styleguide <https://github.com/airbnb/javascript>`_. The relevant code can be checked by using::
+For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `standardJS <https://standardjs.com>`_ style and the standard recommendation of the vue plugin for eslint. The relevant code can be checked by using::
 
-    $ npm run eslint
+    $ npm run lint-vue
 
-For the front end interface design there is a style guide available at "/style/" once a tournament has been setup.
+Note that if you have installed our npm packages `husky <https://www.npmjs.com/package/husky>`_ will intercept git pushes to run the css and javascript lints below and block the push if they do not pass. You can bypass this with the ``--no-verify`` flag if necessary. This behaviour is designed to be run in parallel with the python linting running on the ``pre-commit`` hook (which can be setup via ``flake8 --install-hook git``).
 
 Versioning convention
 =====================

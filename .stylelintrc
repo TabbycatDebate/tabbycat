@@ -22,7 +22,6 @@
     "declaration-property-value-blacklist": {
       "/^border/": ["none"],
     },
-    // Temporary
-    "no-descending-specificity": null,
+    "no-descending-specificity": null
   }
 }
