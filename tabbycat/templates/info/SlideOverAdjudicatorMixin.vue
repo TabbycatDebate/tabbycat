@@ -10,24 +10,28 @@ export default {
   mixins: [SlideOverDiversityMixin],
   computed: {
     ratingsFeature: function () {
-      var ratings = [{ 'title': this.adjudicator.score + ' Feedback Score',
-                       'icon': 'wifi' }]
+      const ratings = [{
+        title: `${this.adjudicator.score} Feedback Score`,
+        icon: 'wifi',
+      }]
       // Percentile rankings only on Edit Adjudicators page
       if (!_.isUndefined(this.percentileRanking)) {
-        var css = 'ranking-display ranking-' + this.percentileRanking.percentile
-        ratings[0]['class'] = css
+        const css = `ranking-display ranking-${this.percentileRanking.percentile}`
+        ratings[0].class = css
         ratings.push({
-          'title': this.percentileRanking.grade + this.percentileRanking.text,
-          'class': css
+          title: this.percentileRanking.grade + this.percentileRanking.text,
+          class: css,
         })
       }
       return ratings
     },
     genderFeature: function () {
-      var gender = [
-        { 'title': this.adjudicator.name + this.genderBrackets(this.adjudicator.gender),
-          'class': 'gender-display gender-' + this.adjudicator.gender,
-          'icon': 'user' }
+      const gender = [
+        {
+          title: this.adjudicator.name + this.genderBrackets(this.adjudicator.gender),
+          class: `gender-display gender-${this.adjudicator.gender}`,
+          icon: 'user',
+        },
       ]
       return gender
     },
@@ -36,17 +40,17 @@ export default {
     },
   },
   methods: {
-    formatForSlideOver: function (subject) {
+    formatForSlideOver: function () {
       return {
-        'tiers': [{
-          'features': [
+        tiers: [{
+          features: [
             this.genderFeature,
             this.institutionDetailForSlideOver(this.adjudicator),
-            this.ratingsFeature
-          ]
-        }]
+            this.ratingsFeature,
+          ],
+        }],
       }
     },
-  }
+  },
 }
 </script>

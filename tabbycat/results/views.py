@@ -1,12 +1,13 @@
-import datetime
 import logging
 from smtplib import SMTPException
 
 from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
+from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic import FormView, TemplateView, View
@@ -33,7 +34,7 @@ from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .result import DebateResult
 from .prefetch import populate_confirmed_ballots
-from .utils import get_result_status_stats, populate_identical_ballotsub_lists, send_ballot_receipt_emails_to_adjudicators
+from .utils import populate_identical_ballotsub_lists, send_ballot_receipt_emails_to_adjudicators
 
 logger = logging.getLogger(__name__)
 
@@ -67,29 +68,15 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table = ResultsTableBuilder(view=self, sort_key="status")
         table.add_ballot_check_in_columns(draw, key="check_ins")
         table.add_ballot_status_columns(draw, key="status")
-        table.add_ballot_entry_columns(draw)
+        table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw)
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
 
     def get_context_data(self, **kwargs):
-        draw = self._get_draw()
-        result_status_stats = get_result_status_stats(self.round)
-
-        kwargs["stats"] = {
-            'none': result_status_stats[Debate.STATUS_NONE],
-            'draft': result_status_stats[Debate.STATUS_DRAFT],
-            'confirmed': result_status_stats[Debate.STATUS_CONFIRMED],
-            'postponed': result_status_stats[Debate.STATUS_POSTPONED],
-            'total': len(draw)
-        }
-        kwargs["checks"] = {
-            'checked': sum(1 for debate in draw if debate.checked_in),
-            'missing': sum(1 for debate in draw if not debate.checked_in),
-            'total': len(draw)
-        }
-
+        kwargs["incomplete_ballots"] = self._get_draw().filter(
+            Q(result_status="N") | Q(result_status="D")).count()
         return super().get_context_data(**kwargs)
 
 
@@ -283,7 +270,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         self.ballotsub = form.save()
         if self.ballotsub.confirmed:
             self.ballotsub.confirmer = self.request.user
-            self.ballotsub.confirm_timestamp = datetime.datetime.now()
+            self.ballotsub.confirm_timestamp = timezone.now()
             self.ballotsub.save()
 
             if self.tournament.pref('enable_ballot_receipts'):

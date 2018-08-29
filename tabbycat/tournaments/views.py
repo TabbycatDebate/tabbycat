@@ -24,7 +24,6 @@ from notifications.models import SentMessageRecord
 from participants.models import Team
 from participants.prefetch import populate_win_counts
 from results.models import BallotSubmission
-from results.utils import graphable_debate_statuses
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
@@ -95,13 +94,15 @@ class TournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDataba
         kwargs["initialBallots"] = json.dumps(subs)
 
         status = t.current_round.draw_status
+        kwargs["total_debates"] = t.current_round.debate_set.count()
         if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
-            ballots = BallotSubmission.objects.filter(debate__round=t.current_round,
-                                                      discarded=False)
-            stats = graphable_debate_statuses(ballots, t.current_round)
-            kwargs["initialGraphData"] = json.dumps(stats)
+            ballots = BallotSubmission.objects.filter(
+                debate__round=t.current_round, discarded=False).select_related(
+                'submitter', 'debate')
+            stats = [{'ballot': bs.serialize(t)} for bs in ballots]
+            kwargs["initial_graph_data"] = json.dumps(stats)
         else:
-            kwargs["initialGraphData"] = json.dumps([])
+            kwargs["initial_graph_data"] = json.dumps([])
 
         return super().get_context_data(**kwargs)
 

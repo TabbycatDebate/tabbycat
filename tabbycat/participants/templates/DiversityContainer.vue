@@ -109,9 +109,9 @@ import TextDisplay from '../../templates/graphs/TextDisplay.vue'
 
 export default {
   components: {
-    'DonutChart': () => import('../../templates/graphs/DonutChart.vue'),
-    TextDisplay
+    DonutChart: () => import('../../templates/graphs/DonutChart.vue'),
+    TextDisplay,
   },
-  props: [ 'graphsData' ],
+  props: ['graphsData'],
 }
 </script>

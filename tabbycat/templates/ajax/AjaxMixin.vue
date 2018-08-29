@@ -1,14 +1,15 @@
 <script>
 import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
 
-
 export default {
   mixins: [ModalErrorMixin],
   methods: {
-    ajaxSave: function (url, payload, message, completeFunction, failFunction,
-                        returnPayload, showErrorModal = true) {
-      var self = this
-      var dataPayload = JSON.stringify(payload)
+    ajaxSave: function (
+      url, payload, message, completeFunction, failFunction,
+      returnPayload, showErrorModal = true
+    ) {
+      const self = this
+      const dataPayload = JSON.stringify(payload)
       $.ajax({
         type: 'POST',
         url: url,
@@ -23,26 +24,26 @@ export default {
             failFunction(payload, returnPayload)
           }
         },
-        success: function (data, textStatus, xhr) {
+        success: function (data) {
           if (JSON.parse(data).status === 503) {
             // A straight up 503 response doesn't hit error function
             this.error('', '', '503 Service Unavailable')
           } else {
             self.$eventHub.$emit('update-saved-counter', this.updateLastSaved)
-            console.info('AJAX: Saved ' + message)
+            console.info(`AJAX: Saved ${message}`)
             console.debug('DEBUG: JSON ajaxSave success data:', data)
-            var dataResponse = JSON.parse(data)
+            const dataResponse = JSON.parse(data)
             if (completeFunction !== null) {
               completeFunction(dataResponse, payload, returnPayload)
             }
           }
         },
         timeout: 15000, // sets timeout to 15 seconds
-      });
+      })
     },
     ajaxError: function (message, responseText, textStatus, errorThrown) {
-      var error = 'of a server error' // Default error
-      var errorTitle = errorThrown
+      let error = 'of a server error' // Default error
+      let errorTitle = errorThrown
       if (errorThrown === '' || typeof (responseText) === 'undefined') {
         errorTitle = 'Server Error'
       }
