@@ -89,8 +89,9 @@ class TournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDataba
         status = t.current_round.draw_status
         kwargs["total_debates"] = t.current_round.debate_set.count()
         if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
-            ballots = BallotSubmission.objects.filter(debate__round=t.current_round,
-                                                      discarded=False)
+            ballots = BallotSubmission.objects.filter(
+                debate__round=t.current_round, discarded=False).select_related(
+                'submitter', 'debate')
             stats = [{'ballot': bs.serialize(t)} for bs in ballots]
             kwargs["initial_graph_data"] = json.dumps(stats)
         else:
