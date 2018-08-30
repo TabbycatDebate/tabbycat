@@ -2,7 +2,6 @@ import json
 import logging
 
 from django.contrib import messages
-from django.db import transaction
 from django.db.models import Q
 from django.forms import ModelChoiceField
 from django.views.generic.base import TemplateView, View
@@ -165,9 +164,8 @@ class SaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View)
         posted_info = json.loads(body)
         priorities = posted_info['priorities']
 
-        with transaction.atomic(): # Speed up the saving by using a single query
-            for debate_id, priority in priorities.items():
-                Debate.objects.filter(pk=debate_id).update(importance=priority)
+        for debate_id, priority in priorities.items():
+            Debate.objects.filter(pk=debate_id).update(importance=priority)
 
         self.log_action()
         return JsonResponse(json.dumps(priorities), safe=False)
