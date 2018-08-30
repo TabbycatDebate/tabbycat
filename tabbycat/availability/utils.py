@@ -1,7 +1,6 @@
 import logging
 
 from django.contrib.contenttypes.models import ContentType
-from django.db import IntegrityError
 from django.db.models import Prefetch
 
 from availability.models import RoundAvailability
@@ -56,19 +55,15 @@ def set_availability_by_id(model, ids, round):
     logger.debug("%s IDs to set: %s", model._meta.verbose_name.title(), ids)
     logger.debug("Existing %s IDs: %s", model._meta.verbose_name, existing)
 
-    try:
-        # Delete existing availabilities that should no longer be set
-        delete = existing.difference(ids)
-        logger.debug("%s IDs to delete: %s", model._meta.verbose_name.title(), delete)
-        RoundAvailability.objects.filter(content_type=contenttype, round=round, object_id__in=delete).delete()
+    # Delete existing availabilities that should no longer be set
+    delete = existing.difference(ids)
+    logger.debug("%s IDs to delete: %s", model._meta.verbose_name.title(), delete)
+    RoundAvailability.objects.filter(content_type=contenttype, round=round, object_id__in=delete).delete()
 
-        # Add new availabilities
-        new = ids.difference(existing)
-        logger.debug("%s IDs to create: %s", model._meta.verbose_name.title(), new)
-        RoundAvailability.objects.bulk_create([RoundAvailability(content_type=contenttype, round=round, object_id=id) for id in new])
-    except IntegrityError:
-        logger.exception("IntegrityError updating round availabilities")
-        raise IntegrityError # Catch in parent view
+    # Add new availabilities
+    new = ids.difference(existing)
+    logger.debug("%s IDs to create: %s", model._meta.verbose_name.title(), new)
+    RoundAvailability.objects.bulk_create([RoundAvailability(content_type=contenttype, round=round, object_id=id) for id in new])
 
 
 def activate_all(round):
