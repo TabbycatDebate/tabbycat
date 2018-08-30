@@ -2,7 +2,7 @@
 
   <transition name="slide-over">
     <div class="panel slideover-info" v-if="subject">
-      <div v-for="tier in subject.tiers"
+      <div v-for="tier in subject.tiers" v-if="!tierIsEmpty(tier)"
            class="list-group-item flex-horizontal flex-justify">
 
         <div class="btn-toolbar flex-align-start">
@@ -39,6 +39,17 @@ export default {
   components: { SlideOverItem },
   props: {
     subject: Object,
+  },
+  methods: {
+    tierIsEmpty: function (tier) {
+      const flattened = tier.features.reduce(
+        function (accumulator, currentValue) {
+          return accumulator.concat(currentValue)
+        }, []
+      )
+      const flattenedNoNull = flattened.filter(item => item)
+      return flattenedNoNull.length === 0
+    },
   },
 }
 </script>
