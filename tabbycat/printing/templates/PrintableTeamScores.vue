@@ -108,9 +108,6 @@ export default {
   },
   computed: {
     team: function () {
-      if (this.dt.team === null) {
-        console.log('null')
-      }
       return this.dt.team
     },
     teamName: function () {

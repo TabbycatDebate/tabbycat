@@ -136,9 +136,6 @@ export default {
 
         // Remove/replace old debate with new Debate object
         this.debates.splice(oldDebateIndex, 1, newDebate)
-        console.debug(`    VUE: Loaded new debate for ${this.niceNameForDebate(newDebate.id)}`)
-      } else {
-        console.warn("    VUE: Shouldn't happen; couldnt find old debates position")
       }
       // Remove/add relevant items to unused area
       _.forEach(returnPayload.addToUnused, (unusedItem) => {
