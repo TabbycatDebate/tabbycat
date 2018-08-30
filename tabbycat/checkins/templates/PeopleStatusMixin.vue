@@ -91,7 +91,7 @@ export default {
       return teams
     },
     annotatedDebaters: function () {
-      if (this.speakerGroupings.Speakers) {
+      if (this.speakerGroupings.Speaker) {
         return this.annotatedSpeakers
       }
       return this.annotatedTeams
