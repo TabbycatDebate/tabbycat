@@ -45,3 +45,13 @@
 .page-navs .btn {
   @extend .mb-4; // Need to do here so they don't blow out on button-less pages
 }
+
+//------------------------------------------------------------------------------
+// Alerts
+//------------------------------------------------------------------------------
+
+.alert {
+  p:last-child {
+    margin-bottom: 0; // Improve spacing of paragraphs in alerts
+  }
+}
