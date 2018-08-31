@@ -53,7 +53,7 @@
     "cp-i18n": "cpx \"tabbycat/locale/jsi18n/**/*.js\" tabbycat/static/jsi18n",
     "serve-django": "dj r",
     "serve-docs": "sphinx-autobuild docs docs/_build/html --port 7999",
-    "serve-sass": "npm run build-sass -- --watch --recursive & npm run build-sass-print -- --watch --recursive",
+    "serve-sass": "npm run build-sass -- --watch --recursive --output-style expanded & npm run build-sass-print -- --watch --recursive --output-style expanded --sourcemap",
     "serve-sass-live": "livereload tabbycat/static/css/",
     "serve-vue": "npx vue-cli-service serve",
     "lint-vue": "npx vue-cli-service lint tabbycat/ --ext .vue --cache --ignore-pattern tabbycat/staticfiles/,tabbycat/static/",
