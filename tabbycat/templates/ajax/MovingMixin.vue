@@ -139,18 +139,17 @@ export default {
       }
       // Remove/add relevant items to unused area
       _.forEach(returnPayload.addToUnused, (unusedItem) => {
-        self.unallocatedItems.push(unusedItem)
+        this.unallocatedItems.push(unusedItem)
         unusedItem.locked = false
       })
       _.forEach(returnPayload.removeFromUnused, (usedItem) => {
-        self.unallocatedItems.splice(self.unallocatedItems.indexOf(usedItem), 1)
+        this.unallocatedItems.splice(this.unallocatedItems.indexOf(usedItem), 1)
       })
     },
     processSaveFailure: function (unsavedDebate, returnPayload) {
       this.setLocked(unsavedDebate, this.debatesById, false)
-      const self = this
       _.forEach(returnPayload.removeFromUnused, (itemToUse) => {
-        self.setLocked(itemToUse, self.unallocatedById, false)
+        this.setLocked(itemToUse, this.unallocatedById, false)
       })
     },
   },
