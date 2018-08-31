@@ -1,7 +1,9 @@
 # Development Dependencies
 
-# Importing the base requirements (for convenience)
--r requirements.txt
+# Importing the other requirements (for convenience of installing/updating)
+-r requirements_core.txt
+-r requirements_docs.txt
+-r requirements_heroku.txt
 
 # Linting
 flake8==3.5.*
@@ -19,6 +21,3 @@ transifex-client==0.13.*                    # Translations
 # Debug
 django-debug-toolbar==1.9.1
 django-debug-toolbar-request-history==0.0.7 # Debug POSTs/AJAX
-
-# Documentation Dependencies
--r docs/requirements.txt                    # Import Sphinx dependencies

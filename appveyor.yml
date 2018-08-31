@@ -59,7 +59,7 @@ install:
   - python --version
   - cd c:\projects\tabbycat
   - python -m pip install -U pip
-  - pip install -r requirements.txt
+  - pip install -r config/requirements_core.txt
   - pip install pypiwin32 # Extra dependency for channels/twisted on Windows
   - npm install
 

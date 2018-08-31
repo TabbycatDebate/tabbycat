@@ -63,8 +63,7 @@ install:
   - python --version
   - pip --version
   - pip install --upgrade pip
-  - pip install -r requirements.txt
-  - pip install -r requirements_development.txt # Needed for flake8
+  - pip install -r ./config/requirements_development.txt # Needed for flake8
   - node --version
   - npm --version
   - npm install

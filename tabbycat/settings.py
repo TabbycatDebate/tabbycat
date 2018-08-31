@@ -102,8 +102,7 @@ TABBYCAT_APPS = (
 )
 
 INSTALLED_APPS = (
-    # Scout should be listed first
-    'scout_apm.django', 'jet' if os.environ.get('SCOUT_MONITOR') is True else 'jet',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,6 +120,10 @@ INSTALLED_APPS = (
     'formtools',
     'statici18n' # Compile js translations as static file; saving requests
 )
+
+if os.environ.get('SCOUT_MONITOR'):
+    # Scout should be listed first; prepend it to the existing list if added
+    INSTALLED_APPS = ('scout_apm.django', *INSTALLED_APPS)
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'

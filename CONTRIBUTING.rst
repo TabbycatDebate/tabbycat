@@ -32,7 +32,7 @@ Getting started with development
 
 - A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
 
-    $ pip install -r 'requirements_development.txt'
+    $ pip install -r 'config/requirements_development.txt'
 
 - The email backend should be changed in ``local_settings.py`` to display sent messages in ``STDOUT``, not by real email. Insert::
 

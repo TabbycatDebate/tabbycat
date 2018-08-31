@@ -47,7 +47,7 @@ Then create local_settings.py as described :ref:`below <local-settings-linux>`, 
   python3 -m venv venv
   source venv/bin/activate
   pip install --upgrade pip
-  pip install -r requirements.txt
+  pip install -r ./config/requirements_core.txt
   npm install
   cd tabbycat
   dj migrate
@@ -178,7 +178,7 @@ c. Run the ``activate`` script. This puts you "into" the virtual environment::
 d. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
-    $ pip install -r requirements.txt
+    $ pip install -r ./config/requirements_core.txt
     $ npm install
 
 e. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
