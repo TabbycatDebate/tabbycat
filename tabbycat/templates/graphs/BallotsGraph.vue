@@ -30,9 +30,9 @@ function initChart (padding, data, total, setHeight) {
 
   const stackKey = ['none', 'draft', 'confirmed']
   const colors = {
-    none: '#e34e42',
-    draft: '#f0c230',
-    confirmed: '#43ca75',
+    none: '#d1185e',
+    draft: '#17a2b8',
+    confirmed: '#00bf8a',
   }
 
   const chartDiv = document.getElementById('statusGraph')
