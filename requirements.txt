@@ -29,7 +29,7 @@ honcho==1.0.1                           # Allows a Procfile to run multiple proc
 gunicorn==19.9.0                        # Primary server for wsgi
 
 # Cache
-django_redis==4.9.0                     # Use redis for cache (on heroku; local optional)
+django-redis==4.9.0                     # Use redis for cache (on heroku; local optional)
 
 # Channels
 channels==2.1.3                         # Channels; also includes the Daphne server
