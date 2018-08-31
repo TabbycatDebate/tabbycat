@@ -150,8 +150,10 @@ match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku
 urlname = match.group(1)
 heroku_url = match.group(2)
 
-# Add the redis app (it needs a config flag)
-run_heroku_command(["addons:create", "heroku-redis:hobby-dev", "--maxmemory_policy", "allkeys-lru"])
+# Add the redis add-ons (the heroku one needs a config flag)
+run_heroku_command(["addons:create", "heroku-redis:hobby-dev",
+                    "--maxmemory_policy", "allkeys-lru"])
+run_heroku_command(["addons:create", "rediscloud:30"])
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])

@@ -346,29 +346,47 @@ ALLOWED_HOSTS = ['*']
 if 'TAB_DIRECTOR_EMAIL' in os.environ:
     TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
 
-# Redis Services
+# ==============================================================================
+# REDIS
+# ==============================================================================
+
 if os.environ.get('REDIS_URL', ''):
-    try:
-        CACHES = {
-            "default": {
-                "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": os.environ.get('REDIS_URL'),
-                "OPTIONS": {
-                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
-                }
+
+    # Set the connection pool to match Heroku's free tier; but allow for upgrades
+    if os.environ.get('REDIS_POOL_SIZE'):
+        REDIS_POOL_SIZE = int(os.environ.get('REDIS_POOL_SIZE'))
+    else:
+        REDIS_POOL_SIZE = 19
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": os.environ.get('REDIS_URL'),
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                # Don't crash on say ConnectionError due to limits
+                "IGNORE_EXCEPTIONS": True,
+                # Limit connections to stick within limits of the Heroku plan
+                "CONNECTION_POOL_KWARGS": {"max_connections": REDIS_POOL_SIZE}
             }
         }
-        CHANNEL_LAYERS = {
-            "default": {
-                "BACKEND": "channels_redis.core.RedisChannelLayer",
-                "CONFIG": {
-                    "hosts": [os.environ.get('REDIS_URL')],
-                },
+    }
+
+    # Use separate Redis addon for channels to reduce chance of connection limits
+    # With fallback for Tabbykitten installs (no addons) or for pre-2.2 instances
+    if os.environ.get('REDISCLOUD_URL'):
+        CHANNEL_HOSTS = [os.environ.get('REDISCLOUD_URL')]
+    else:
+        CHANNEL_HOSTS = [os.environ.get('REDIS_URL')]
+
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": CHANNEL_HOSTS, # RedisChannelLayer should pool by default
             },
-        }
-    except:
-        pass
+        },
+    }
 
 # ==============================================================================
 # Travis CI
