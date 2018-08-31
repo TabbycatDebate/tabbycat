@@ -915,12 +915,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if all_sides_confirmed:
             results_header = [{
                 'title': get_side_name(self.tournament, side, 'abbr').capitalize(),
-                'key': 'A'
+                'key': get_side_name(self.tournament, side, 'abbr')
             } for side in self.tournament.sides]
         else:
             results_header = [{
                 'title': _("Team %(num)d") % {'num': i},
-                'key': 'B'
+                'key': _("Team %(num)d") % {'num': i}
             } for i in range(1, len(side_abbrs)+1)]
 
         self.add_columns(results_header, results_data)
