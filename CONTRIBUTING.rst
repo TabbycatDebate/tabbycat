@@ -34,11 +34,11 @@ Getting started with development
 
     $ pip install -r 'config/requirements_development.txt'
 
-- The email backend should be changed in ``local_settings.py`` to display sent messages in ``STDOUT``, not by real email. Insert::
+- The email backend should be changed in ``settings_local.py`` to display sent messages in ``STDOUT``, not by real email. Insert::
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-- Our ``package.json`` provides a convenience command that runs a standard set of development tools simultaneously, such as the Django server and the automatic recompilation with live injecting of javascript and CSS. Once you have set ``USE_WEBPACK_SERVER=True`` in your ``local_settings.py`` you can then run this with::
+- Our ``package.json`` provides a convenience command that runs a standard set of development tools simultaneously, such as the Django server and the automatic recompilation with live injecting of javascript and CSS. Once you have set ``USE_WEBPACK_SERVER=True`` in your ``settings_local.py`` you can then run this with::
 
     $ npm run serve
 

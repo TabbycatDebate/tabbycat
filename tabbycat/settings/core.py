@@ -4,18 +4,22 @@ from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(os.path.join(__file__, os.pardir)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==============================================================================
-# Overwritten in local_settings.py
+# Overwritten in settings_local.py or settings_heroku.py
 # ==============================================================================
 
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
-DEBUG_ASSETS = DEBUG
-USE_WEBPACK_SERVER = False
+ENABLE_DEBUG_TOOLBAR = False # Must default to false
+DISABLE_SENTRY = True # Must default to false
+SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
+
+# Hide league-related configuration options unless explicitly enabled
+LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
 
 # ==============================================================================
 # Version
@@ -121,12 +125,9 @@ INSTALLED_APPS = (
     'statici18n' # Compile js translations as static file; saving requests
 )
 
-if os.environ.get('SCOUT_MONITOR'):
-    # Scout should be listed first; prepend it to the existing list if added
-    INSTALLED_APPS = ('scout_apm.django', *INSTALLED_APPS)
-
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
+FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
 
 # ==============================================================================
 # Templates
@@ -198,15 +199,6 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-if os.environ.get('SENDGRID_USERNAME', ''):
-    SERVER_EMAIL = os.environ['SENDGRID_USERNAME']
-    DEFAULT_FROM_EMAIL = os.environ['SENDGRID_USERNAME']
-    EMAIL_HOST = 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
-    EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -252,29 +244,6 @@ for app in TABBYCAT_APPS:
         'handlers': ['console', 'sentry'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
-# ==============================================================================
-
-# Scout
-# ==============================================================================
-
-SCOUT_NAME = "Tabbycat"
-
-# ==============================================================================
-# Sentry
-# ==============================================================================
-
-DISABLE_SENTRY = True
-
-if 'DATABASE_URL' in os.environ and not DEBUG:
-    DISABLE_SENTRY = False  # Only log JS errors in production on heroku
-
-    RAVEN_CONFIG = {
-        'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
-        'release': TABBYCAT_VERSION,
-    }
-
-    # Custom implementation makes the user ID the e-mail address, rather than the primary key
-    SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
 
 # ==============================================================================
 # Messages
@@ -301,6 +270,16 @@ SUMMERNOTE_CONFIG = {
 }
 
 # ==============================================================================
+# Database
+# ==============================================================================
+
+DATABASES = {
+    'default': {
+        'ENGINE'      : 'django.db.backends.postgresql',
+    }
+}
+
+# ==============================================================================
 # Channels
 # ==============================================================================
 
@@ -313,145 +292,19 @@ CHANNEL_LAYERS = {
 }
 
 # ==============================================================================
-# Heroku
+# Environments
 # ==============================================================================
 
-# Get key from heroku config env else use a fall back
-SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY', r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
-
-# Parse database configuration from $DATABASE_URL
-# Note connection max age is in seconds
 try:
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(default='postgres://localhost')
-    }
-except:
+    if os.environ.get('TRAVIS', '') == 'true':
+        from .travis import *
+    elif os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
+        from .docker import *
+    elif os.environ.get('DJANGO_SECRET_KEY', ''):
+        from .heroku import *
+    else:
+        from .local import *
+        if os.environ.get('LOCAL_DEVELOPMENT', ''):
+            from .development import *
+except ImportError:
     pass
-
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Require HTTPS
-if 'DJANGO_SECRET_KEY' in os.environ and os.environ.get('DISABLE_HTTPS_REDIRECTS', '') != 'disable':
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-
-# Allow all host headers
-ALLOWED_HOSTS = ['*']
-
-# Store Tab Director Emails for reporting purposes
-if 'TAB_DIRECTOR_EMAIL' in os.environ:
-    TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
-
-# Redis Services
-if os.environ.get('REDIS_URL', ''):
-    try:
-        CACHES = {
-            "default": {
-                "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": os.environ.get('REDIS_URL'),
-                "OPTIONS": {
-                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
-                }
-            }
-        }
-        CHANNEL_LAYERS = {
-            "default": {
-                "BACKEND": "channels_redis.core.RedisChannelLayer",
-                "CONFIG": {
-                    "hosts": [os.environ.get('REDIS_URL')],
-                },
-            },
-        }
-    except:
-        pass
-
-# ==============================================================================
-# Travis CI
-# ==============================================================================
-
-FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'data', 'fixtures'), )
-
-if os.environ.get('TRAVIS', '') == 'true':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'USER': 'postgres',
-            'PASSWORD': '',
-            'HOST': 'localhost',
-            'PORT': '',
-        }
-    }
-
-# ==============================================================================
-# Debug Toolbar
-# ==============================================================================
-
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-)
-
-DEBUG_TOOLBAR_CONFIG = {
-    'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
-    'SHOW_COLLAPSED': True
-}
-
-# Must default to false; usually overridden in local_settings
-ENABLE_DEBUG_TOOLBAR = False
-
-# That said provide a flag to turn it on in Heroku
-if 'DEBUG_TOOLBAR' in os.environ and bool(int(os.environ['DEBUG_TOOLBAR'])):
-    ENABLE_DEBUG_TOOLBAR = True
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
-    INSTALLED_APPS += ('debug_toolbar',)
-    # Override check for internal IPs (and DEBUG=1) on Heroku
-    DEBUG_TOOLBAR_CONFIG['SHOW_TOOLBAR_CALLBACK'] = 'settings.show_toolbar'
-
-
-def show_toolbar(request):
-    return request.user.is_staff
-
-# ==============================================================================
-# Local Overrides and Docker
-# ==============================================================================
-
-# Hide league-related configuration options unless explicitly enabled
-LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
-
-if os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
-    DEBUG = True # Just to be sure
-    ALLOWED_HOSTS = ["*"]
-    DATABASES = {
-        'default': {
-             'ENGINE': 'django.db.backends.postgresql',
-             'NAME': 'tabbycat',
-             'USER': 'tabbycat',
-             'PASSWORD': 'tabbycat',
-             'HOST': 'db',
-             'PORT': 5432, # Non-standard to prevent collisions
-        }
-    }
-else:
-    try:
-        LOCAL_SETTINGS
-    except NameError:
-        try:
-            from local_settings import *   # noqa
-        except ImportError:
-            pass

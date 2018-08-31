@@ -17,6 +17,6 @@ ignore = E126,E127,E128,E221,E226,E261,E203,E231,E241,E305,E722,Q000,I100,I202
 
 max-line-length = 200
 
-exclude = docs, data, migrations, node_modules, venv, */__init__.py, local_settings.py, emoji.py
+exclude = docs, data, migrations, node_modules, venv, */__init__.py, tabbycat/settings/*.py, emoji.py
 
 import-order-style = google

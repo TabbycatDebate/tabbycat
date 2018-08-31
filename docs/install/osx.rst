@@ -105,7 +105,7 @@ a. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat/directory
 
-b. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+b. Copy **settings/local.example** to **config/settings_local.py**. Find this part in your new settings_local.py, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -124,7 +124,7 @@ b. Copy **local_settings.example** to **local_settings.py**. Find this part in y
 
     TIME_ZONE = 'Australia/Melbourne'
 
-c. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+c. Ensure you are in the main Tabbycat directory (not the config folder where **settings_local.py** is and start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
     $ python3 -m venv venv
 

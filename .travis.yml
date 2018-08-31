@@ -27,7 +27,7 @@ matrix:
     #   before_script:
     #     - brew services start postgresql
     #     # We are testing, in effect, the local install so use local settings:
-    #     - cp tabbycat/local_settings.example tabbycat/local_settings.py
+    #     - cp config/settings_local.example config/settings_local.py
     #   script:
     #     - npm run build
     #     - python tabbycat/manage.py collectstatic
@@ -69,8 +69,8 @@ install:
   - npm install
 script:
   - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
-  - flake8 .
   - npm run lint
+  - python manage.py test -v 2 --exclude-tag=selenium
 
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/

@@ -16,11 +16,11 @@ Change Log
 - Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key.
 - Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable.
 - Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version.
-- Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.
 - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score. Thanks Étienne Beaulé for the pull request!
 - Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request
 - Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments.
 - Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
+- Relocated and better modularised our settings folders. If you are upgrading an existing Tabbycat local installation you will need to rename and move your current `tabbycat/local_settings.py` up to become `tabbycat/settings/local.py`.
 - Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6.
 
   This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_.
@@ -113,7 +113,7 @@ Change Log
     - On the assistant "enter results" page, pressing "/" jumps to the "Find in Table" box, so data entry can be done entirely from your keyboard
 - Switched to using a Websockets/Channels based infrastructure to better allow for asynchronous updates. This should also ameliorate cases where the Memcachier plugin expired due to inactivity which would then crash a site. Notes for those upgrading:
     - On Heroku: You should remove the Memcachier plugin and instead add 'heroku-redis' to any instances being upgraded
-    - Locally: You should recreate your `local_settings.py` from the `local_settings.example` file
+    - Locally: You should recreate your `settings_local.py` from the `settings_local.example` file
 - Upgraded to Django 2.0
     - Converted most raw SQL queries to use the new ``filter`` keyword in annotations
 
