@@ -115,7 +115,7 @@ thead,
 .table > thead > tr > th,
 .table > tbody > tr > td,
 .draw-container .thead {
-  padding: 8px 4px; // Narrow spacing post-BP
+  padding: 8px 8px 8px 4px;
 }
 
 .table > thead > tr > th,
@@ -181,7 +181,6 @@ thead,
   .emoji {
     text-align: center;
     padding-top: 5px;
-    margin-left: -2px;
   }
 }
 
@@ -190,7 +189,7 @@ thead,
 }
 
 .no-wrap {
-  white-space: nowrap
+  white-space: nowrap; // For cells that we want to force to display full width
 }
 
 .table > tbody > tr > th,
@@ -222,12 +221,6 @@ thead,
 
 // For Phones
 @media (max-width: breakpoint-min(sm, $grid-breakpoints)) {
-
-  .table > tbody > tr > th,
-  .table > tbody > tr > td {
-    padding-left: 4px;
-    padding-right: 4px;
-  }
 
   // Table widths on mobile devices should span the screen
   .table-container {

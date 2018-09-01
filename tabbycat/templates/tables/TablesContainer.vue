@@ -15,7 +15,7 @@
     <div class="col mb-3" v-for="(table, i) in tablesData" :class="tableClass">
       <div class="card table-container" :id="getTableId(i)">
         <div class="card-body py-2">
-          <h4 class="card-title pt-3 pt-sm-0 pl-md-0 pl-1" v-if="table.title">
+          <h4 class="card-title pt-3 pl-md-0 pl-1" v-if="table.title">
             {{ table.title }}
           </h4>
           <smart-table

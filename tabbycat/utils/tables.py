@@ -248,7 +248,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'text': self._team_short_name(team),
             'emoji': team.emoji if show_emoji and self.tournament.pref('show_emoji') else None,
             'sort': self._team_short_name(team),
-            'class': 'team-name',
+            'class': 'team-name no-wrap' if len(self._team_short_name(team)) < 18 else 'team-name',
             'popover': {'title': self._team_long_name(team), 'content': []}
         }
 
@@ -634,7 +634,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if show_break_categories and self.tournament.breakcategory_set.filter(is_general=False).exists():
             self.add_column(
-                {'key': 'categories', 'title': _("Categories")},
+                {'key': 'categories', 'icon': 'user-check', 'tooltip': _("Categories")},
                 [", ".join(bc.name for bc in getattr(team, 'break_categories_nongeneral', []))
                     for team in teams]
             )
@@ -661,9 +661,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
-                speaker_data.append("<em>" + _("Redacted") + "</em>")
+                speaker_data.append({'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'})
             else:
-                speaker_data.append(speaker.name)
+                speaker_data.append({
+                    'text': speaker.name,
+                    'class': 'no-wrap' if len(speaker.name) < 20 else ''
+                })
 
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, speaker_data)
 

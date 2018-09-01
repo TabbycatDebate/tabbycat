@@ -17,6 +17,14 @@
 
     </template>
 
+    <template v-if="set.data.length === 0">
+
+      <div class="col-12 text-center text-muted">
+        No Data Yet
+      </div>
+
+    </template>
+
     <div class="col text-center text-muted h6 mb-3 mt-2">
       {{ set.title }}
       <hr>
