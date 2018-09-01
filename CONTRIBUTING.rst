@@ -42,6 +42,11 @@ Getting started with development
 
     $ npm run serve
 
+Generating Test Data
+====================
+
+Test data can be generated through the command line for both ballots and feedback for use when testing. All the tabbycat commands can be found in ``dj help``. To generate ballots and rounds, the ``dj simulaterounds`` command creates results for specified rounds and ``dj generatefeedback`` can be used to generate random feedback.
+
 Database schema changes
 =======================
 
