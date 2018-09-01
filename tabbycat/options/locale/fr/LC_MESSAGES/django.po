@@ -71,19 +71,19 @@ msgstr "Marge maximum"
 
 #: options/preferences.py:61
 msgid "Minimum allowed score for reply speeches"
-msgstr "Score minimum admissible pour les discours de réponse"
+msgstr "Score minimum admissible pour les discours de réplique"
 
 #: options/preferences.py:62
 msgid "Minimum reply score"
-msgstr "Score minimum de réponse"
+msgstr "Score minimum de réplique"
 
 #: options/preferences.py:70
 msgid "Maximum allowed score for reply speeches"
-msgstr "Score maximum admissible pour les discours de réponse"
+msgstr "Score maximum admissible pour les discours de réplique"
 
 #: options/preferences.py:71
 msgid "Maximum reply score"
-msgstr "Score maximum de réponse"
+msgstr "Score maximum de réplique"
 
 #: options/preferences.py:79
 msgid ""
