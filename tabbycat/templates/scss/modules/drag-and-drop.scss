@@ -64,6 +64,7 @@
 }
 
 .vue-draggable:hover,
+.vue-draggable.btn:hover, // Override specfificity from btn styles
 .vue-draggable:active {
   cursor: move;
 }
