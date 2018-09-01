@@ -46,10 +46,23 @@
   </li>
 {% endif %}
 {% if pref.motion_tab_released %}
-  <li class="nav-item {% if motions_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
-  </li>
-{% endif %}
+  {% if pref.enable_motion_reuse %}
+    <li class="nav-item dropdown {% if motions_nav %}active{% endif %}">
+      <a class="nav-link dropdown-toggle" href="#" id="motionsDrop"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% trans "Motions Tab" %}
+      </a>
+      <div class="dropdown-menu" aria-labelledby="motionsDrop">
+        <a class="dropdown-item" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "By round" %}</a>
+        <a class="dropdown-item" href="{% tournamenturl 'motions-global-public-statistics' %}">{% trans "Globally" %}</a>
+      </div>
+    </li>
+  {% else %}
+    <li class="nav-item {% if motions_nav %}active{% endif %}">
+      <a class="nav-link" href="{% tournamenturl 'motions-public-statistics' %}">{% trans "Motions Tab" %}</a>
+    </li>
+  {% endif %}
+{% endif%}
 
 <!-- DRAW RELEASES -->
 {% if pref.public_draw == 'all-released' and not pref.team_tab_released %}

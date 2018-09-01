@@ -20,7 +20,7 @@ from utils.views import ModelFormSetView, PostOnlyRedirectView
 
 from .models import Motion, RoundMotions
 from .forms import ModelAssignForm
-from .statistics import MotionStatistics
+from .statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator, RoundMotionsBPStatsCalculator, RoundMotionsTwoTeamStatsCalculator
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
@@ -90,13 +90,12 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
 
     def formset_valid(self, formset):
         motions = formset.save(commit=True)
-        round = self.round
         for i, motion in enumerate(motions, start=1):
-            RoundMotions(motion=motion, round=round, seq=1).save()
+            RoundMotions(motion=motion, round=self.round, seq=1).save()
 
             self.log_action(content_object=motion)
 
-        self.show_message(len(motions), len(formset.deleted_objects))
+        return self.show_message(len(motions), len(formset.deleted_objects))
 
     def show_message(self, count, deleted):
         if not self.tournament.pref('enable_motions') and count == 1:
@@ -109,7 +108,7 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
             messages.success(self.request, ngettext("%(count)d motion has been deleted.",
                 "%(count)d motions have been deleted.", deleted) % {'count': deleted})
 
-        return redirect_round('draw-display', round)
+        return redirect_round('draw-display', self.round)
 
 
 class CopyMotionsView(EditMotionsView):
@@ -134,16 +133,18 @@ class CopyMotionsView(EditMotionsView):
 
     def formset_valid(self, formset):
         motions = formset.save(commit=False)
-        round = self.round
         for i, motion in enumerate(motions, start=1):
             if not self.tournament.pref('enable_motions'):
                 motion.seq = i
-            motion.round = round
+            motion.round = self.round
             motion.save()
 
             self.log_action(content_object=motion.motion)
 
-        self.show_message(len(motions), len(formset.deleted_objects))
+        for rm in formset.deleted_objects:
+            rm.delete()
+
+        return self.show_message(len(motions), len(formset.deleted_objects))
 
 
 class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
@@ -247,21 +248,59 @@ class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
 
 
 class BaseMotionStatisticsView(TournamentMixin, TemplateView):
-
     template_name = 'motion_statistics.html'
     page_title = gettext_lazy("Motion Statistics")
     page_emoji = '💭'
 
+    for_public = False
+
     def get_context_data(self, **kwargs):
-        kwargs['statistics'] = MotionStatistics(self.tournament)
+        kwargs['statistics'] = self.get_statistics()
+        kwargs['type'] = self.stats_type
+        kwargs['for_public'] = self.for_public
         return super().get_context_data(**kwargs)
 
 
-class MotionStatisticsView(AdministratorMixin, BaseMotionStatisticsView):
+class RoundMotionsStatisticsView(BaseMotionStatisticsView):
+    stats_type = "round"
+
+    def get_statistics(self, *args, **kwargs):
+        if self.tournament.pref('teams_in_debate') == 'two':
+            return RoundMotionsTwoTeamStatsCalculator(self.tournament, *args, **kwargs)
+        else:
+            return RoundMotionsBPStatsCalculator(self.tournament, *args, **kwargs)
+
+
+class GlobalMotionStatisticsView(BaseMotionStatisticsView):
+    stats_type = "global"
+
+    def get_statistics(self, *args, **kwargs):
+        if self.tournament.pref('teams_in_debate') == 'two':
+            return MotionTwoTeamStatsCalculator(self.tournament, *args, **kwargs)
+        else:
+            return MotionBPStatsCalculator(self.tournament, *args, **kwargs)
+
+
+class BasePublicMotionStatisticsView(PublicTournamentPageMixin):
+    """Base class for public motion tabs
+
+    Motion context provided in subclasses."""
+    public_page_preference = 'motion_tab_released'
+    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+    for_public = True
+
+
+class AdminRoundMotionsStatisticsView(AdministratorMixin, RoundMotionsStatisticsView):
     pass
 
 
-class PublicMotionStatisticsView(PublicTournamentPageMixin, BaseMotionStatisticsView):
-    public_page_preference = 'motion_tab_released'
-    template_name = 'public_motion_statistics.html'
-    cache_timeout = settings.TAB_PAGES_CACHE_TIMEOUT
+class AdminGlobalMotionStatisticsView(AdministratorMixin, GlobalMotionStatisticsView):
+    pass
+
+
+class PublicRoundMotionsStatisticsView(BasePublicMotionStatisticsView, RoundMotionsStatisticsView):
+    pass
+
+
+class PublicGlobalMotionStatisticsView(BasePublicMotionStatisticsView, GlobalMotionStatisticsView):
+    pass

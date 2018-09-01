@@ -63,12 +63,25 @@
   {% endif %}
 </div>
 
+{% if pref.enable_motion_reuse %}
+  <div class="btn-group">
+    <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-global-statistics' %}">
+      {% trans "Motions" %}
+    </a>
+    <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}" href="{% tournamenturl 'motions-statistics' %}">
+      {% trans "By Round" %}
+    </a>
+  </div>
+{% endif %}
+
 <div class="btn-group">
 
-  <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}"
-     href="{% tournamenturl 'motions-statistics' %}">
-    {% trans "Motions" %}
-  </a>
+  {% if not pref.enable_motion_reuse %}
+    <a class="btn btn-outline-primary {% if motions_statistics_nav %}active{% endif %}"
+       href="{% tournamenturl 'motions-statistics' %}">
+      {% trans "Motions" %}
+    </a>
+  {% endif %}
   <a class="btn btn-outline-primary {% if standings_diversity_nav %}active{% endif %}"
      href="{% roundurl 'standings-diversity' current_round %}">
     {% trans "Diversity" %}

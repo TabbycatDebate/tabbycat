@@ -32,7 +32,12 @@ urlpatterns = [
             name='motions-email'),
     ])),
 
-    path('statistics/',
-        views.MotionStatisticsView.as_view(),
-        name='motions-statistics'),
+    path('statistics/', include([
+        path('',
+            views.AdminRoundMotionsStatisticsView.as_view(),
+            name='motions-statistics'),
+        path('global/',
+            views.AdminGlobalMotionStatisticsView.as_view(),
+            name='motions-global-statistics'),
+    ])),
 ]
