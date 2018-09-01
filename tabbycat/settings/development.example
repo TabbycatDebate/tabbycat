@@ -108,3 +108,9 @@ if ENABLE_DEBUG_TOOLBAR:
         'debug_toolbar.panels.profiling.ProfilingPanel',
         'ddt_request_history.panels.request_history.RequestHistoryPanel',
     )
+
+# ==============================================================================
+# Email Backend (print all emails to STDOUT)
+# ==============================================================================
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
