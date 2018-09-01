@@ -343,7 +343,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {
             'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else self._team_short_name(opp)},
-            'popover': {'content': [], 'title': ''}
+            'popover': {'content': [], 'title': ''},
+            'class': "no-wrap",
         }
         cell = self._result_cell_class_two(ts.win, cell)
 
@@ -407,7 +408,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {'popover': {
             'content': [{'text': "<br />".join(other_team_strs)}],
-            'title': ""
+            'title': "",
+            'class': "no-wrap",
         }}
 
         if ts.debate_team.debate.round.is_break_round:

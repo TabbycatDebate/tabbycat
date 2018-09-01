@@ -165,7 +165,7 @@ thead,
 
   .feather {
     margin-bottom: -6px;
-    margin-right: -3px;
+    margin-left: -2px;
   }
 }
 
@@ -181,13 +181,16 @@ thead,
   .emoji {
     text-align: center;
     padding-top: 5px;
-    margin-right: 2px;
-    margin-left: -4px;
+    margin-left: -2px;
   }
 }
 
 .venue-name {
   min-width: 75px; // With BP cells ensure venue names don't get squished
+}
+
+.no-wrap {
+  white-space: nowrap
 }
 
 .table > tbody > tr > th,
@@ -224,10 +227,6 @@ thead,
   .table > tbody > tr > td {
     padding-left: 4px;
     padding-right: 4px;
-  }
-
-  .table > tbody > tr > td:first-child {
-    padding-left: 10px; // Compensate for reduced left margins on phones
   }
 
   // Table widths on mobile devices should span the screen
