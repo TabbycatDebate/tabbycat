@@ -352,11 +352,13 @@ if 'TAB_DIRECTOR_EMAIL' in os.environ:
 
 if os.environ.get('REDIS_URL', ''):
 
-    # Set the connection pool to match Heroku's free tier; but allow for upgrades
-    if os.environ.get('REDIS_POOL_SIZE'):
-        REDIS_POOL_SIZE = int(os.environ.get('REDIS_POOL_SIZE'))
-    else:
-        REDIS_POOL_SIZE = 19
+    # Set the connection pool to match Heroku's free tier; with upgradability.
+    # From testing it seems a connection pool is shared between each
+    # gunicorn-worker meaning we have, at max, 1 pools open per dyno.
+    # So, presuming REDISCLOUD is handling the channel connections to Redis.
+    # we should only need to worry about max_connections if more than 20
+    # dynos are running and even then it would be best solved by upgrading the
+    # addon. Thus, at present the max_connections limit is not set.
 
     CACHES = {
         "default": {
@@ -366,8 +368,8 @@ if os.environ.get('REDIS_URL', ''):
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
                 # Don't crash on say ConnectionError due to limits
                 "IGNORE_EXCEPTIONS": True,
-                # Limit connections to stick within limits of the Heroku plan
-                "CONNECTION_POOL_KWARGS": {"max_connections": REDIS_POOL_SIZE}
+                # Limit connections per pool
+                # "CONNECTION_POOL_KWARGS": {"max_connections": REDIS_POOL_SIZE}
             }
         }
     }
@@ -383,8 +385,12 @@ if os.environ.get('REDIS_URL', ''):
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": CHANNEL_HOSTS, # RedisChannelLayer should pool by default
+                "hosts": CHANNEL_HOSTS,
+                # Remove channels from groups after 3 hours
+                # This matches websocket_timeout in Daphne
+                "group_expiry": 10800,
             },
+            # RedisChannelLayer should pool by default
         },
     }
 
