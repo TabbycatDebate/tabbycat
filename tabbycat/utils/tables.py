@@ -877,8 +877,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         header = {'key': 'result', 'tooltip': _("Result"), 'icon': 'thermometer'}
         self.add_column(header, results_data)
 
-    def add_debate_side_by_team_column(self, teamscores):
-        sides_data = [ts.debate_team.get_side_name().title()
+    def add_debate_side_by_team_column(self, teamscores, tournament=None):
+        sides_data = [ts.debate_team.get_side_name(tournament).title()
             # Translators: "TBC" stands for "to be confirmed".
             if ts.debate_team.debate.sides_confirmed else _("TBC") for ts in teamscores]
         header = {'key': 'side', 'title': _("Side")}
