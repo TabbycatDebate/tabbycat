@@ -57,7 +57,11 @@ export default {
       }
       if (socketLabel === 'checkins' && payload.created) {
         // Note: must alter the original object not the computed property
-        const row = table.data.find(cell => cell[0].identifier === payload.checkins[0].identifier)
+        const identifier = payload.checkins[0].identifier
+        if (!identifier) {
+          return
+        }
+        const row = table.data.find(cell => cell[0].identifier === identifier)
         if (!row) {
           return // Could not find matching debate; likely because its from another round
         }
