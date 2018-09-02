@@ -348,7 +348,7 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
             position__in=self.positions,
-        ).select_related('speaker')
+        ).select_related('speaker', 'debate_team')
 
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
