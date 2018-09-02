@@ -99,13 +99,6 @@ If you ever need to clear the cache (say to force the site to quickly show an up
 
     $ echo "FLUSHALL\r\n QUIT" | heroku redis:cli -a YOUR_APP --confirm YOUR_APP
 
-Redis Limits
-============
-
-Redis is a service that handles storing and serving your app's cache on Heroku. On the free tier it has a limit of 30 'clients'. Clients are used by pages that serve live data, although the not on a 1:1 basis. If you notice pages like Check-Ins or Results page are not updating live you may want to check if you are hitting the client limit, although this generally should not happen, even at large tournaments.
-
-You can monitor this in your Heroku Dashboard by going to the **Resources** tab and clicking on the Redis Cloud link. The **Connections** graph here will show you how close you are to the limit. If you need to increase the limit or want to take precautions, you can go back to the **Resources** tab and click the **Edit plan** link for Redis Cloud. The **100MB** plan will increase the client limit to 256 and will self-install seamlessly.
-
 Postgres Limits
 ===============
 
