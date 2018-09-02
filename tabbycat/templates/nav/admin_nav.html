@@ -5,17 +5,17 @@
   <div class="list-group-item d-inline-block main-menu-item">
     <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
        class="tournament-title d-flex justify-content-between align-items-center">
-      <div class="mx-auto text-center">
+      <div class="mx-auto mx-md-0 text-center">
         {% blocktrans trimmed asvar logo_alt %}
           Tabbycat Logo
         {% endblocktrans %}
         {% if on_local %}
-          {% include "nav/logo_local.html" with width=20 height=20 alt=logo_alt %}
+          {% include "nav/logo_local.html" with width=18 height=18 alt=logo_alt %}
         {% else %}
-          {% include "nav/logo.html" with width=20 height=20 alt=logo_alt %}
+          {% include "nav/logo.html" with width=18 height=18 alt=logo_alt %}
         {% endif %}
       </div>
-      <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-1 pr-2">
+      <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-2 pr-2">
         {{ tournament }}
       </div>
       <div>
