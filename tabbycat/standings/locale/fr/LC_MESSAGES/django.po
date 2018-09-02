@@ -620,15 +620,15 @@ msgstr "Tab des orateurs de la catégorie %(category)s"
 
 #: standings/views.py:368
 msgid "Reply Speaker Standings"
-msgstr "Classement des orateurs aux discours de réponse"
+msgstr "Classement des orateurs aux discours de réplique"
 
 #: standings/views.py:373
 msgid "Reply speeches aren't enabled in this tournament."
-msgstr "Les discours de réponse ne sont pas activés dans ce tournoi."
+msgstr "Les discours de réplique ne sont pas activés dans ce tournoi."
 
 #: standings/views.py:410
 msgid "Reply Speaker Tab"
-msgstr "Tab des orateurs de réponse de la catégorie %(category_name)s"
+msgstr "Tab des orateurs de réplique de la catégorie %(category_name)s"
 
 #: standings/views.py:422
 msgid "Team Standings"

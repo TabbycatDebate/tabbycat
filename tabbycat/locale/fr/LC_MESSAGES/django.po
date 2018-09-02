@@ -614,7 +614,7 @@ msgstr "Classement"
 
 #: templates/nav/admin_nav.html:193
 msgid "All Teams"
-msgstr "Tout les équipes"
+msgstr "Toutes les équipes"
 
 #: templates/nav/admin_nav.html:195
 msgid "Teams"
@@ -627,7 +627,7 @@ msgstr "Équipes %(category_name)s"
 
 #: templates/nav/admin_nav.html:212
 msgid "All Speakers"
-msgstr "Tout les orateurs"
+msgstr "Tous les orateurs"
 
 #: templates/nav/admin_nav.html:219 templates/nav/public_nav.html:30
 #, python-format
@@ -636,7 +636,7 @@ msgstr "Orateurs %(category_name)s"
 
 #: templates/nav/admin_nav.html:227
 msgid "Replies"
-msgstr "Discours de résponse"
+msgstr "Répliques"
 
 #: templates/nav/admin_nav.html:231 templates/nav/public_nav.html:153
 msgid "Motions"
