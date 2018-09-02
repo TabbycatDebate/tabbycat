@@ -355,9 +355,9 @@ if os.environ.get('REDIS_URL', ''):
     # Use a separate Redis addon for channels to reduce number of connections
     # With fallback for Tabbykitten installs (no addons) or pre-2.2 instances
     if os.environ.get('REDISCLOUD_URL'):
-        ALT_REDIS_URL = [os.environ.get('REDISCLOUD_URL')] # 30 clients on free
+        ALT_REDIS_URL = os.environ.get('REDISCLOUD_URL') # 30 clients on free
     else:
-        ALT_REDIS_URL = [os.environ.get('REDIS_URL')] # 20 clients on free
+        ALT_REDIS_URL = os.environ.get('REDIS_URL') # 20 clients on free
 
     # Connection/Pooling Notes
     # ========================
@@ -394,7 +394,7 @@ if os.environ.get('REDIS_URL', ''):
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": os.environ.get('REDIS_URL'),
+                "hosts": [os.environ.get('REDIS_URL')],
                 # Remove channels from groups after 3 hours
                 # This matches websocket_timeout in Daphne
                 "group_expiry": 10800,
