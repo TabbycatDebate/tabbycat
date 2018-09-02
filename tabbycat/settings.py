@@ -427,6 +427,7 @@ if os.environ.get('TRAVIS', '') == 'true':
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 DEBUG_TOOLBAR_PANELS = (
+    'ddt_request_history.panels.request_history.RequestHistoryPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
     'debug_toolbar.panels.settings.SettingsPanel',
