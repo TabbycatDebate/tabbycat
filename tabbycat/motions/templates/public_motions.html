@@ -16,9 +16,9 @@
         {% if round.motions_released %}
           {% for motion in round.motion_set.all %}
             <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center">
-              {% if round.motion_set.all|length > 0 %}
-                <div class="badge badge-info mr-2 d-none d-md-block">
-                  {{ forloop.counter }}
+              {% if pref.enable_motions %}
+                <div class="badge badge-info mr-3 d-none d-md-block">
+                  {{ motion.seq }}
                 </div>
               {% endif %}
               <div class="mr-auto pr-3 lead">
