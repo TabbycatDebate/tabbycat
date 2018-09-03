@@ -25,10 +25,10 @@ Getting started with development
 
 - To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
 - Please submit pull requests for features and bug fixes against `develop` (but not `master`).
-- We broadly use the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_).
+- We broadly use the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_.
 - We use Django's testing tools — adding unit tests to new features is greatly appreciated
 
-    - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
+  - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
 
 - A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
 
@@ -42,10 +42,17 @@ Getting started with development
 
     $ npm run serve
 
-Generating Test Data
+Generating test data
 ====================
 
-Test data can be generated through the command line for both ballots and feedback for use when testing. All the tabbycat commands can be found in ``dj help``. To generate ballots and rounds, the ``dj simulaterounds`` command creates results for specified rounds and ``dj generatefeedback`` can be used to generate random feedback.
+There are management commands to help developers quickly generate data for use in testing, including results and feedback. A list of all commands can be found from ``dj help``, but the most useful in this context are:
+
+- ``dj importtournament ( minimal8team | australs24team | bp88team )``, which imports participant data for the 8-team (``minimal8team``), 24-team Australs (``australs24team``) and 88-team BP (``bp88team``) demonstration tournaments respectively.
+- ``dj simulaterounds ROUND [ROUND ROUND ...]``, which simulates all of the rounds specified, generating a draw, an adjudicator allocation and a complete set of random results (but not feedback).
+- ``dj generatefeedback ROUND [ROUND ROUND ...]``, which randomly generates feedback for all existing debates in the specified rounds.
+- ``dj generateresults ROUND [ROUND ROUND ...]``, which randomly generates results for all existing debates in the specified rounds. (You don't need to run this if you ran ``simulaterounds``, because that already does it.)
+
+Rounds can be specified by sequence number (``seq``) or abbreviation. You can find more information about each of them by adding ``--help`` after the command name.
 
 Database schema changes
 =======================
@@ -102,7 +109,7 @@ To preview the documentation locally, install the development dependencies and t
 
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`_.
 
-Project Structure
+Project structure
 =================
 
 - ``bin`` contains a number of convenience scripts for starting/stopping Docker, and the webserver/asset pipeline.
@@ -137,7 +144,7 @@ The frontend's translation files are manually updated in ``tabbycat/locale/LANGU
 
 These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of the npm build task.
 
-Release Checklist
+Release checklist
 =================
 
 1. Check that all migrations have been generated and committed into Git
