@@ -60,10 +60,21 @@ $adj-ranking-8:           hsla(0, 0%, 50%, 1);
 // Team Positions
 $aff:                     theme-color("info");
 $neg:                     theme-color("danger");
-$og:                      theme-color("info");
-$oo:                      theme-color("warning");
-$cg:                      adjust-hue($og, 15deg);
-$co:                      adjust-hue($oo, 15deg);
+
+// BP colors designed according to a perceptual color wheel primaries as sides
+// i.e. red/green and yellow/blue opposites
+// Which then makes halves or benches a 45 degree rotation around that wheel
+// Along with tweaking to account for contrasts
+$og:                      hsla(82, 90, 32, 1); // Green
+$oo:                      hsla(28, 95, 39, 1); // Orange
+$cg:                      hsla(190, 95, 33, 1); // Teal-Blue
+$co:                      hsla(286, 50, 35, 1); // Pink
+// Complementary pair
+$gov:                     hsla(136, 100, 44, 1); // Green (gren + blue)
+$opp:                     hsla(2, 80, 54, 0.8); // Rust Red (pink + orange)
+// Complementary pair
+$front:                   hsla(43, 100, 50, 1); // Orange (green + orange)
+$back:                    hsla(217, 95, 60, 1); // Navy-Blue (blue + pink)
 
 //------------------------------------------------------------------------------
 // Layout Details

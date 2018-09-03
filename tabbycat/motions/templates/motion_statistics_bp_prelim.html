@@ -1,36 +1,76 @@
-{% load i18n l10n %}
+{% load i18n l10n debate_tags %}
 
 <div class="col-sm-12">
 
 {% if motion.ndebates > 0 %}
 
-  <div class="row mb-3">
-    <div class="col-md-12">
+  <div class="row no-gutters">
+
+    <div class="col-12 col-md-6 mb-2 px-2">
+      <div class="progress">
+        <div class="progress-bar progress-bar-gov"
+             style="width: {% percentage motion.counts_by_bench.gov 3 %}%">
+          {% trans "Government" %} {{ motion.counts_by_bench.gov|floatformat:2 }}
+        </div>
+        <div class="progress-bar progress-bar-opp"
+             style="width: {% percentage motion.counts_by_bench.opp 3 %}%">
+          {% trans "Opposition" %} {{ motion.counts_by_bench.opp|floatformat:2 }}
+        </div>
+      </div>
+      <h6 class="mt-2 text-center text-muted">
+        {% trans "Average Points per bench" %}
+      </h6>
+    </div>
+
+    <div class="col-12 col-md-6 mb-2 px-2">
+      <div class="progress">
+        <div class="progress-bar progress-bar-opening"
+             style="width: {% percentage motion.counts_by_half.top 3 %}%">
+          {% trans "Opening" %} {{ motion.counts_by_half.top|floatformat:2 }}
+        </div>
+        <div class="progress-bar progress-bar-closing"
+             style="width: {% percentage motion.counts_by_half.bottom 3 %}%">
+          {% trans "Closing" %} {{ motion.counts_by_half.bottom|floatformat:2 }}
+        </div>
+      </div>
+      <h6 class="mt-2 text-center text-muted">
+        {% trans "Average Points per half" %}
+      </h6>
+    </div>
+
+
+  </div>
+
+  <div class="row no-gutters">
+    <div class="col-md-12 mb-2 px-2">
       <div class="progress">
         {% for side, average, width in motion.averages %}
           {% if average > 0 %}
             <div class="progress-bar progress-bar-{{ side }}"
                  style="width: {{ width|unlocalize }}%">
-              {{ side.upper }} {{ average|floatformat:2 }}
+              <div>
+                <span class="d-none d-md-inline">{{ side.upper }} </span>
+                {{ average|floatformat:2 }}
+              </div>
             </div>
           {% endif %}
         {% endfor %}
       </div>
       <h6 class="mt-2 text-center text-muted">
         {% blocktrans trimmed count ndebates=motion.ndebates %}
-          average points per position from {{ ndebates }} debate
+          average points per position ({{ ndebates }} debates)
         {% plural %}
-          average points per position from {{ ndebates }} debates
+          average points per position ({{ ndebates }} debates)
         {% endblocktrans %}
       </h6>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row no-gutters">
 
     {% for side, counts_dict in motion.counts_by_side %}
 
-      <div class="col-md-3 mb-3">
+      <div class="col-md-3 col-6 mb-2 px-2">
         <div class="progress">
 
           {% for points, count, percentage in counts_dict %}
@@ -46,29 +86,33 @@
                  title="{{ tooltip_text }}">
               {% if count > 0 %}
                 {% if points == 3 %}
-                  {% if percentage >= 10 %}
+                  <span class="d-none d-md-inline">
                     {% trans "1st" %}
-                  {% else %}
+                  </span>
+                  <span class="d-inline d-md-none">
                     {% trans "1" context "used when there isn't enough space to display '1st'" %}
-                  {% endif %}
+                  </span>
                 {% elif points == 2 %}
-                  {% if percentage >= 10 %}
+                  <span class="d-none d-md-inline">
                     {% trans "2nd" %}
-                  {% else %}
+                  </span>
+                  <span class="d-inline d-md-none">
                     {% trans "2" context "used when there isn't enough space to display '2nd'" %}
-                  {% endif %}
+                  </span>
                 {% elif points == 1 %}
-                  {% if percentage >= 10 %}
+                  <span class="d-none d-md-inline">
                     {% trans "3rd" %}
-                  {% else %}
+                  </span>
+                  <span class="d-inline d-md-none">
                     {% trans "3" context "used when there isn't enough space to display '3rd'" %}
-                  {% endif %}
+                  </span>
                 {% else %}
-                  {% if percentage >= 10 %}
+                  <span class="d-none d-md-inline">
                     {% trans "4th" %}
-                  {% else %}
+                  </span>
+                  <span class="d-inline d-md-none">
                     {% trans "4" context "used when there isn't enough space to display '4th'" %}
-                  {% endif %}
+                  </span>
                 {% endif %}
               {% endif %}
             </div>
@@ -78,7 +122,7 @@
         </div>
         <h6 class="mt-2 text-center text-{{ side }}">
           {% blocktrans trimmed with side=side.upper %}
-            {{ side }} results distribution
+            {{ side }} results
           {% endblocktrans %}
         </h6>
       </div>
