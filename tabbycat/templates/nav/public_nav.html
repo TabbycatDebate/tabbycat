@@ -79,10 +79,14 @@
   </li>
 {% elif pref.public_draw == 'current' and current_round.draw_status == current_round.STATUS_RELEASED and not pref.team_tab_released %}
   <li class="nav-item {% if draw_nav %}active{% endif %}">
-    <a class="nav-link" href="{% tournamenturl 'draw-public-current-round' %}">
-      {% blocktrans trimmed with round_name=current_round.name %}
-        Draw for {{ round_name }}
-      {% endblocktrans %}
+    <a class="nav-link" href="{% tournamenturl 'draw-public-current-rounds' %}">
+      {% if tournament.current_rounds|length == 1 %}
+        {% blocktrans trimmed with round_name=current_round.name %}
+          Draw for {{ round_name }}
+        {% endblocktrans %}
+      {% else %}
+        {% trans "Current Draws" %}
+      {% endif %}
     </a>
   </li>
 {% endif %}

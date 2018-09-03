@@ -186,9 +186,31 @@ class Tournament(models.Model):
         return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
 
     def rounds_for_nav(self):
-        """Returns a round QuerySet suitable for the admin nav bar.
-        This currently annotates with motion counts and sorts by stage (preliminary/elimination)."""
-        return self.round_set.order_by('-stage', 'seq').annotate(Count('motion'))
+        """Returns a Round QuerySet suitable for the admin nav bar.
+        This annotates the QuerySet with information used to determine bubble
+        colours in the admin nav bar."""
+
+        rounds = self.round_set.order_by('-stage', 'seq').annotate(
+            Count('motion'), Count('debate')
+        ).select_related('break_category')
+        categories_where_current_found = []
+        prelim_current_found = False
+
+        # Do this in bulk for performance. This should be kept consistent with
+        # Round.is_current and Tournament.current_rounds.
+        for r in rounds:
+            if r.completed or prelim_current_found:
+                r._is_current = False
+            elif not r.is_break_round:
+                r._is_current = True
+                prelim_current_found = True
+            elif r.debate__count > 0 and r.break_category not in categories_where_current_found:
+                categories_where_current_found.append(r.break_category)
+                r._is_current = True
+            else:
+                r._is_current = False
+
+        return rounds
 
     @cached_property
     def adj_feedback_questions(self):
@@ -209,7 +231,35 @@ class Tournament(models.Model):
         return current
 
     @cached_property
+    def current_rounds(self):
+        """List of all current rounds with existent draws. If a preliminary
+        round is the earliest non-completed round, then that's the only current
+        round. If all preliminary rounds are completed, then the earliest
+        non-completed round with an existent draw in each category is a current
+        round, and they're listed in the `seq` order of the break categories.
+
+        This should be kept consistent with Tournament.rounds_for_nav and
+        Round.is_current."""
+
+        # For something this complicated it's easier just to get the entire
+        # round set from the database, and process it in Python.
+        rounds = self.round_set.filter(completed=False).order_by('seq').annotate(
+                Count('debate')).select_related('break_category')
+        current_elim_rounds = {}
+        for r in rounds:
+            if not r.is_break_round:
+                return [r]  # short-circuit everything else
+            elif r.debate__count > 0:
+                current_elim_rounds.setdefault(r.break_category, r)
+        return [
+            current_elim_rounds.get(category)
+            for category in self.breakcategory_set.order_by('seq')
+            if category in current_elim_rounds
+        ]
+
+    @cached_property
     def get_current_round_cached(self):
+        return self.current_round
         cached_key = "%s_current_round_object" % self.slug
         if self.current_round:
             cache.get_or_set(cached_key, self.current_round, None)
@@ -510,14 +560,22 @@ class Round(models.Model):
         category or is a preliminary round."""
         return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
 
-    @cached_property
+    @property
     def is_current(self):
         """Returns True if this round is a current round."""
-        if self.completed:
-            return False
-        if self._rounds_in_same_sequence().filter(seq__lt=self.seq, completed=False).exists():
-            return False
-        return True
+        # For performance, self._is_current may be set by Tournament.rounds_for_nav,
+        # which should be kept consistent with this implementation.
+        # This should also be kept consistent with Tournament.current_rounds.
+        if not hasattr(self, '_is_current'):
+            if self.completed:
+                self._is_current = False
+            elif self._rounds_in_same_sequence().filter(seq__lt=self.seq, completed=False).exists():
+                self._is_current = False
+            elif self.is_break_round and not self.debate_set.exists():
+                self._is_current = False
+            else:
+                self._is_current = True
+        return self._is_current
 
     @property
     def motions_good_for_public(self):

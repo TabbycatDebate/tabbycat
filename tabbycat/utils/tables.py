@@ -37,6 +37,7 @@ class BaseTableBuilder:
         self.headers = []
         self.data = []
         self.title = kwargs.get('title', "")
+        self.subtitle = kwargs.get('subtitle', "")
         self.table_class = kwargs.get('table_class', "")
         self.sort_key = kwargs.get('sort_key', '')
         self.sort_order = kwargs.get('sort_order', '')
@@ -134,8 +135,9 @@ class BaseTableBuilder:
         return {
             'head': self.headers,
             'data': self.data,
-            'title': self.title,
-            'empty_title': self.empty_title,
+            'title': force_text(self.title),
+            'subtitle': force_text(self.subtitle),
+            'empty_title': force_text(self.empty_title),
             'class': self.table_class,
             'sort_key': self.sort_key,
             'sort_order': self.sort_order,

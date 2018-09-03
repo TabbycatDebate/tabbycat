@@ -263,25 +263,6 @@ class OptionalAssistantTournamentPageMixin(AssistantMixin, TournamentAccessContr
         return tournament.pref('assistant_access') in self.assistant_page_permissions
 
 
-class CrossTournamentPageMixin(PublicTournamentPageMixin):
-    """Mixin for views that show pages with data drawn from multiple tournaments
-    but are optionally viewed. They check the last available tournament object
-    and check its preferences"""
-    cross_tournament = True
-
-    @property
-    def round(self):
-        return None  # Override Parent
-
-    @property
-    def tournament(self):
-        return Tournament.objects.order_by('id').last()
-
-    def get_context_data(self, **kwargs):
-        kwargs['tournament'] = self.tournament
-        return super().get_context_data(**kwargs)
-
-
 class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
     """Mixin for views that relate to a single object that is part of a
     tournament. Like SingleObjectMixin, but restricts searches to the relevant

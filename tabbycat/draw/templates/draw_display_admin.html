@@ -283,14 +283,45 @@
   <div class="col-md-12">
     <ul class="list-group">
 
-      {% roundurl 'draw-display-by-venue' round as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Venue" subtext="(for the briefing room)" emoji="🏫" blank=True %}
+      {% trans "(for the briefing room)" as briefing_room_subtext %}
 
-      {% roundurl 'draw-display-by-team' round as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Team" subtext="(for the briefing room)" emoji="👭" blank=True %}
+      {% if not round.is_current or tournament.current_rounds|length == 1 %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-venue' as url %}
+        {% trans "Display Draw ordered by Venue" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-team' as url %}
+        {% trans "Display Draw ordered by Team" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+      {% else %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-venue' as url %}
+        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Venue" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-team' as url %}
+        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Team" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+        {% roundurl 'draw-display-specific-round-by-venue' as url %}
+        {% blocktrans trimmed with round_name=round.name asvar text %}
+          Display Draw for <strong>{{ round_name }}</strong> ordered by Venue
+        {% endblocktrans %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% roundurl 'draw-display-specific-round-by-team' as url %}
+        {% blocktrans trimmed with round_name=round.name asvar text %}
+          Display Draw for <strong>{{ round_name }}</strong> ordered by Team
+        {% endblocktrans %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+      {% endif %}
 
       {% roundurl 'motions-display' round as url %}
-      {% include "components/item-action.html" with text="Display Motions" subtext="(for the briefing room)" emoji="📃" blank=True %}
+      {% trans "Display Motions" as text %}
+      {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="📃" blank=True %}
 
     </ul>
     <ul class="list-group mt-3">
