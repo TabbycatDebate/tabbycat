@@ -173,6 +173,10 @@ class PublicDrawMixin(PublicTournamentPageMixin):
 
     empty_table_title = gettext_lazy("The draw for this round hasn't been released.")
 
+    @cached_property
+    def draws_available(self):
+        return any(r.draw_status == Round.STATUS_RELEASED for r in self.rounds)
+
     @classmethod
     def get_debates_for_round(cls, round):
         if round.draw_status != Round.STATUS_RELEASED:
@@ -180,20 +184,24 @@ class PublicDrawMixin(PublicTournamentPageMixin):
         return super().get_debates_for_round(round)
 
     def get_template_names(self):
-        if all(r.draw_status != Round.STATUS_RELEASED for r in self.rounds):
+        if not self.draws_available:
             return ['draw_not_released.html']
         return super().get_template_names()
 
     def get_tables(self):
-        if all(r.draw_status != Round.STATUS_RELEASED for r in self.rounds):
+        if not self.draws_available:
             return []
         return super().get_tables()
 
     def get_page_emoji(self):
-        if all(r.draw_status != Round.STATUS_RELEASED for r in self.rounds):
+        if not self.draws_available:
             return '😴'
-        else:
-            return super().get_page_emoji()
+        return super().get_page_emoji()
+
+    def get_page_subtitle(self):
+        if not self.draws_available:
+            return ""
+        return super().get_page_subtitle()
 
 
 class PublicDrawForRoundView(PublicDrawMixin, BaseDisplayDrawForSpecificRoundTableView):

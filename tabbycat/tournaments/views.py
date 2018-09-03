@@ -65,12 +65,8 @@ class PublicSiteIndexView(TemplateView, WarnAboutDatabaseUseMixin):
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
 
-    def get_context_data(self, **kwargs):
-        kwargs['results_available'] = self.tournament.round_set.filter(completed=True, silent=False).exists()
-        return super().get_context_data(**kwargs)
 
-
-class TournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDatabaseUseMixin):
+class BaseTournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDatabaseUseMixin):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
@@ -107,11 +103,11 @@ class TournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDataba
         return super().get_context_data(**kwargs)
 
 
-class TournamentAssistantHomeView(AssistantMixin, TournamentDashboardHomeView):
+class TournamentAssistantHomeView(AssistantMixin, BaseTournamentDashboardHomeView):
     template_name = 'assistant_tournament_index.html'
 
 
-class TournamentAdminHomeView(AdministratorMixin, TournamentDashboardHomeView):
+class TournamentAdminHomeView(AdministratorMixin, BaseTournamentDashboardHomeView):
     template_name = 'tournament_index.html'
 
 

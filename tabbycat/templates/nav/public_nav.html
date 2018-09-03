@@ -77,7 +77,7 @@
       </div>
     </div>
   </li>
-{% elif pref.public_draw == 'current' and current_round.draw_status == current_round.STATUS_RELEASED and not pref.team_tab_released %}
+{% elif pref.public_draw == 'current' and tournament.public_draw_available and not pref.team_tab_released %}
   <li class="nav-item {% if draw_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'draw-public-current-rounds' %}">
       {% if tournament.current_rounds|length == 1 %}
@@ -101,7 +101,7 @@
 {% endif %}
 
 <!-- RESULTS RELEASES -->
-{% if pref.public_results and current_round.prev %}
+{% if pref.public_results and tournament.public_results_available %}
   <li class="nav-item dropdown {% if results_nav %}active{% endif %}">
     <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

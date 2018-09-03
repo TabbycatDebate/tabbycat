@@ -271,6 +271,18 @@ class Tournament(models.Model):
     def billable_teams(self):
         return self.team_set.count()
 
+    @cached_property
+    def public_draws_available(self):
+        """Returns True if draws are available for public viewing. Used in
+        public navigation menus."""
+        return any(r.draw_status == Round.STATUS_RELEASED for r in self.current_rounds)
+
+    @cached_property
+    def public_results_available(self):
+        """Returns True if results are available for public viewing. Used in
+        public navigation menus."""
+        return self.round_set.filter(completed=True, silent=False).exists()
+
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
     use_for_related_fields = True
