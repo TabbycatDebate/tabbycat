@@ -22,7 +22,7 @@ ADD . /tcd/
 RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
-RUN pip install -r ./requirements.txt
+RUN pip install -r ./config/requirements_core.txt
 RUN npm install
 
 # Compile all the static files

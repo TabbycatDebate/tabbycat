@@ -135,7 +135,7 @@ d. Run the ``activate`` script. This puts you "into" the virtual environment::
 e. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
-    $ pip install -r requirements.txt
+    $ pip install -r ./config/requirements_core.txt
     $ npm install
 
 f. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::

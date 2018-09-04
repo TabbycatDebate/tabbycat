@@ -57,7 +57,7 @@ export default {
       }).fail((response) => {
         // Handle Failure
         // Note: this block duplicated in EditVenuesContainer
-        console.debug(JSON.stringify(response)) // Help identify failures in sentry
+        console.error(JSON.stringify(response)) // Help identify failures in sentry
         let info = ''
         if (Object.prototype.hasOwnProperty.call(response, 'responseJSON')) {
           info += response.responseJSON.message

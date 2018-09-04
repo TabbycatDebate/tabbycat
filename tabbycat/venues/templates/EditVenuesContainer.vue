@@ -109,7 +109,7 @@ export default {
       }).fail((response) => {
         // Handle Failure (or at least log it so we can figure out failure mode)
         // Note: this block duplicated in AllocationModal
-        console.debug(JSON.stringify(response))
+        console.error(JSON.stringify(response))
         let info = ''
         if (Object.prototype.hasOwnProperty.call(response, 'responseJSON')) {
           info += response.responseJSON.message

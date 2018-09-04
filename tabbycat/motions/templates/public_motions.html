@@ -10,13 +10,20 @@
   {# so `rounds` is guaranteed to be non-empty. #}
   {% for round in rounds %}
     <div class="card mt-3">
-      <div class="list-group">
+      <div class="list-group list-group-flush">
 
         {% include "components/form-title.html" with title=round.name %}
         {% if round.motions_released %}
           {% for motion in round.motion_set.all %}
             <li class="list-group-item d-flex flex-column flex-md-row align-items-md-center">
-              <div class="mr-auto pr-3 lead">{{ motion.text }}</div>
+              {% if pref.enable_motions %}
+                <div class="badge badge-info mr-3 d-none d-md-block">
+                  {{ motion.seq }}
+                </div>
+              {% endif %}
+              <div class="mr-auto pr-3 lead">
+                {{ motion.text }}
+              </div>
               {% if motion.info_slide %}
                 <div class="pt-md-0 pt-2">
                   <button class="btn btn-sm btn-secondary btn-block"
@@ -28,14 +35,20 @@
               {% endif %}
             </li>
           {% empty %}
-            <li class="list-group-item text-info"><em>{% trans "There are no motions available for this round." %}</em></li>
+            <li class="list-group-item list-group-item-secondary">
+              {% trans "There are no motions available for this round." %}
+            </li>
           {% endfor %}
         {% elif pref.enable_motions %}
           {# Translators: Used when there are expected to be several motions per round (e.g. Australs) #}
-          <li class="list-group-item text-info"><em>{% trans "The motions for this round have not been released." %}</em></li>
+          <li class="list-group-item list-group-item-secondary">
+            {% trans "The motions for this round have not been released." %}
+          </li>
         {% else %}
           {# Translators: Used when there is expected to be one motion per round (e.g. WUDC) #}
-          <li class="list-group-item text-info"><em>{% trans "The motion for this round has not been released." %}</em></li>
+          <li class="list-group-item list-group-item-secondary">
+            {% trans "The motion for this round has not been released." %}
+          </li>
         {% endif %}
       </div>
     </div>

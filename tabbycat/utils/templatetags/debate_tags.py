@@ -42,6 +42,12 @@ def tournament_side_names(tournament, name_type):
     return side_names
 
 
+@register.simple_tag
+def debate_team_side_name(debate_team, tournament):
+    # If returned directly from the object it will have to lookup tournament
+    return debate_team.get_side_name(tournament)
+
+
 class TournamentURLNode(URLNode):
 
     def __init__(self, view_name, args, kwargs, asvar):

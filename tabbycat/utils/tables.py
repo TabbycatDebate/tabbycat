@@ -250,7 +250,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'text': self._team_short_name(team),
             'emoji': team.emoji if show_emoji and self.tournament.pref('show_emoji') else None,
             'sort': self._team_short_name(team),
-            'class': 'team-name',
+            'class': 'team-name no-wrap' if len(self._team_short_name(team)) < 18 else 'team-name',
             'popover': {'title': self._team_long_name(team), 'content': []}
         }
 
@@ -345,7 +345,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {
             'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else self._team_short_name(opp)},
-            'popover': {'content': [], 'title': ''}
+            'popover': {'content': [], 'title': ''},
+            'class': "no-wrap",
         }
         cell = self._result_cell_class_two(ts.win, cell)
 
@@ -409,7 +410,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {'popover': {
             'content': [{'text': "<br />".join(other_team_strs)}],
-            'title': ""
+            'title': "",
+            'class': "no-wrap",
         }}
 
         if ts.debate_team.debate.round.is_break_round:
@@ -634,7 +636,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if show_break_categories and self.tournament.breakcategory_set.filter(is_general=False).exists():
             self.add_column(
-                {'key': 'categories', 'title': _("Categories")},
+                {'key': 'categories', 'icon': 'user-check', 'tooltip': _("Categories")},
                 [", ".join(bc.name for bc in getattr(team, 'break_categories_nongeneral', []))
                     for team in teams]
             )
@@ -661,9 +663,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
-                speaker_data.append("<em>" + _("Redacted") + "</em>")
+                speaker_data.append({'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'})
             else:
-                speaker_data.append(speaker.name)
+                speaker_data.append({
+                    'text': speaker.name,
+                    'class': 'no-wrap' if len(speaker.name) < 20 else ''
+                })
 
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, speaker_data)
 
@@ -874,8 +879,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         header = {'key': 'result', 'tooltip': _("Result"), 'icon': 'thermometer'}
         self.add_column(header, results_data)
 
-    def add_debate_side_by_team_column(self, teamscores):
-        sides_data = [ts.debate_team.get_side_name().title()
+    def add_debate_side_by_team_column(self, teamscores, tournament=None):
+        sides_data = [ts.debate_team.get_side_name(tournament).title()
             # Translators: "TBC" stands for "to be confirmed".
             if ts.debate_team.debate.sides_confirmed else _("TBC") for ts in teamscores]
         header = {'key': 'side', 'title': _("Side")}
@@ -917,12 +922,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if all_sides_confirmed:
             results_header = [{
                 'title': get_side_name(self.tournament, side, 'abbr').capitalize(),
-                'key': 'A'
+                'key': get_side_name(self.tournament, side, 'abbr')
             } for side in self.tournament.sides]
         else:
             results_header = [{
                 'title': _("Team %(num)d") % {'num': i},
-                'key': 'B'
+                'key': _("Team %(num)d") % {'num': i}
             } for i in range(1, len(side_abbrs)+1)]
 
         self.add_columns(results_header, results_data)

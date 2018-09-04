@@ -38,6 +38,9 @@ export default {
       const table = this.localTableData[0]
       if (socketLabel === 'ballot_statuses') {
         const row = table.data.find(cell => cell[1].id === payload.data.ballot.debate_id)
+        if (!row) {
+          return // Could not find matching debate; likely because its from another round
+        }
         // Update ballot statuses
         row[1].status = payload.data.status
         row[1].icon = payload.data.icon
@@ -54,7 +57,14 @@ export default {
       }
       if (socketLabel === 'checkins' && payload.created) {
         // Note: must alter the original object not the computed property
-        const row = table.data.find(cell => cell[0].identifier === payload.checkins[0].identifier)
+        const identifier = payload.checkins[0].identifier
+        if (!identifier) {
+          return
+        }
+        const row = table.data.find(cell => cell[0].identifier === identifier)
+        if (!row) {
+          return // Could not find matching debate; likely because its from another round
+        }
         row[0].check = 'checked'
         row[0].icon = 'check'
         row[0].class = 'text-secondary'

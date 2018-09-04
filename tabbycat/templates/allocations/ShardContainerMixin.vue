@@ -29,7 +29,6 @@ export default {
       // Re-order them to be evenly distributed single array if interleaved
       if (this.sharding.mix === 'interleave') {
         sortedDebates = this.sortInterleaved(sortedDebates, this.sharding.splitNumeric)
-        console.log('interleaveShards', sortedDebates)
       }
       // Split up into sub arrays based on nominated shard size / index
       const shardedDebates = this.splitDebates(sortedDebates, this.sharding.splitNumeric)

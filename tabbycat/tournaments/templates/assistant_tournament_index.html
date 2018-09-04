@@ -10,6 +10,10 @@
   {% endblocktrans %}
 {% endblock %}
 
+{% block page-alerts %}
+  {% include 'database_limit_warning.html' %}
+{% endblock %}
+
 {% block content %}
 
   <div id="vueMount">

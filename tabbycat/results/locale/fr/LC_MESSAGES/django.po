@@ -90,13 +90,13 @@ msgstr[1] ""
 #: results/forms.py:514
 msgid "The last substantive speaker and reply speaker can't be the same."
 msgstr ""
-"Le dernier orateur et l'orateur de réponse pour l'équipe %(side)s ne peuvent "
+"Le dernier orateur et l'orateur de réplique pour l'équipe %(side)s ne peuvent "
 "pas être la même personne."
 
 #: results/forms.py:521
 msgid "The reply speaker for this team did not give a substantive speech."
 msgstr ""
-"L'orateur de réponse pour l'équipe %(side)s n'a pas prononcé un discours "
+"L'orateur de réplique pour l'équipe %(side)s n'a pas prononcé un discours "
 "substantif."
 
 #: results/forms.py:680

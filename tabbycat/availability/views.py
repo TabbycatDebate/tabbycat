@@ -270,8 +270,14 @@ class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectVie
     round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
-        self.activate_function()
-        messages.success(self.request, self.activation_msg)
+        try:
+            self.activate_function()
+            messages.success(self.request, self.activation_msg)
+        except IntegrityError:
+            messages.error(self.request, _("Failed to update some or all "
+                                           "availabilities due to an integrity"
+                                           "error. You should retry this "
+                                           "action or make individual updates."))
         return super().post(request, *args, **kwargs)
 
 
