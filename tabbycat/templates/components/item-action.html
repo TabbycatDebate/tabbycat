@@ -1,7 +1,7 @@
-{% if alone == True %}<div class="list-item-group">{% endif %}
+{% if alone %}<div class="list-item-group">{% endif %}
 
   <a href="{{ url }}" {% if blank %}target="_blank"{% endif %} {% if id %}id="{{ id }}"{% endif %}
-   class="list-group-item list-group-item-action
+   class="{% if not child %}list-group-item {% endif %}list-group-item-action
    {% if to_complete %}
     bg-primary text-white
    {% else %}

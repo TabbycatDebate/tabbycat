@@ -31,7 +31,7 @@
   <div class="list-group mt-2">
 
     {% if pref.public_checkins_submit %}
-      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm">
+      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
         {% csrf_token %}
         {% if event %}
           <input type="hidden" name="action" value="revoke" />
@@ -44,7 +44,7 @@
             Check in
           {% endblocktrans %}
         {% endif %}
-        {% include "components/item-action.html" with id="triggerCheckInForm" url="" %}
+        {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
     {% endif %}
 
