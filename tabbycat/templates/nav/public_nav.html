@@ -77,7 +77,7 @@
       </div>
     </div>
   </li>
-{% elif pref.public_draw == 'current' and tournament.public_draw_available and not pref.team_tab_released %}
+{% elif pref.public_draw == 'current' and tournament.public_draws_available and not pref.team_tab_released %}
   <li class="nav-item {% if draw_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'draw-public-current-rounds' %}">
       {% if tournament.current_rounds|length == 1 %}

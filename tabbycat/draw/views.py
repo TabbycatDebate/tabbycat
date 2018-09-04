@@ -75,7 +75,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
         if len(self.rounds) == 1:
             return _("Draw for %(round)s") % {'round': self.rounds[0].name}
         else:
-            return _("Draw for Current Rounds")
+            return _("Draws for Current Rounds")
 
     def get_page_subtitle(self):
         if len(self.rounds) == 1 and getattr(self.rounds[0], 'starts_at', None):
