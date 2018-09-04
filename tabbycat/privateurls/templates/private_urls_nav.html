@@ -10,10 +10,18 @@
        href="{% tournamenturl 'printing-urls' %}" target="_blank">
       {% trans "Print URLs" %}
     </a>
-    <a class="btn btn-outline-primary {% if private_urls_nav %}active{% endif %}"
-       href="{% tournamenturl 'privateurls-email' %}">
-      {% trans "Email URLs" %}
-    </a>
+    {% if to_email_exists %}
+    <form action="{% tournamenturl 'privateurls-email' %}" method="POST">
+      {% csrf_token %}
+      <button class="btn btn-outline-primary" id="emailUrls" type="submit">
+        {% trans "Email URLs" %}
+      </button>
+    </form>
+    {% else %}
+      <button class="btn btn-outline-secondary" id="emailUrls" type="submit" data-toggle="tooltip" title="{% trans "All reachable participants have already been sent their private URLs." %}">
+        {% trans "Email URLs" %}
+      </button>
+    {% endif %}
   </div>
   {% if blank_exists %}
     <div class="btn-group">
