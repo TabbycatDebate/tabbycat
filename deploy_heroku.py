@@ -139,7 +139,7 @@ addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_pla
 command = ["heroku", "apps:create"]
 
 # Ensure on the right stack (for NGINX compatability)
-command.extend(["--stack", "cedar-16"])
+command.extend(["--stack", "heroku-16"])
 
 if addons:
     command.extend(["--addons", ",".join(addons)])
@@ -157,8 +157,8 @@ run_heroku_command(["addons:create", "rediscloud:30"])
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
-run_heroku_command(["buildpacks:set", "--index", "1", "heroku/python"])
-run_heroku_command(["buildpacks:add", "--index", "2", "heroku/nodejs"])
+run_heroku_command(["buildpacks:add", "--index", "1", "heroku/nodejs"])
+run_heroku_command(["buildpacks:add", "--index", "2", "heroku/python"])
 
 # Disable automatic collectstatic; do so on post_compile after gulp
 command = ["config:add", "DISABLE_COLLECTSTATIC=1"]
