@@ -8,8 +8,8 @@ class PublicDrawForRoundViewTest(ConditionalTableViewTestsMixin, TestCase):
     view_name = 'draw-public-for-round'
     view_toggle = 'public_features__public_draw'
     round_seq = 2
-    view_toggle_on = 'all-released'  # Otherwise will assign True as the set state
-    view_toggle_off = 'off'  # Otherwise False as the config's unset state
+    view_toggle_on = 'all-released'
+    view_toggle_off = 'off'
 
     def table_data(self):
         # Check number of debates is correct
@@ -19,10 +19,10 @@ class PublicDrawForRoundViewTest(ConditionalTableViewTestsMixin, TestCase):
 
 class PublicDrawForCurrentRoundViewTest(ConditionalTableViewTestsMixin, TestCase):
     """ Check that the current round can have its draw seen if enabled"""
-    view_name = 'draw-public-current-round'
+    view_name = 'draw-public-current-rounds'
     view_toggle = 'public_features__public_draw'
-    view_toggle_on = 'current'  # Otherwise will assign True as the set state
-    view_toggle_off = 'off'  # Otherwise False as the config's unset state
+    view_toggle_on = 'current'
+    view_toggle_off = 'off'
 
     def table_data(self):
         # Check number of debates is correct
