@@ -162,36 +162,28 @@ class TournamentTestCase(TournamentTestsMixin, TestCase):
 
 
 class TableViewTestsMixin:
-    """Mixin that provides methods for validating data in table views.
-    Subclasses should override the `table_data` methods."""
+    """Mixin that provides methods for validating row counts in table views.
+    Subclasses must override `expected_row_counts()`.
+    """
 
     # This can't be a TestCase subclass, because it is inherited by
     # ConditionalTableViewTestsMixin, which provides tests.
 
     def validate_response(self, response):
-        self.validate_table_data(response)
+        self.validate_row_counts(response)
 
-    def validate_table_data(self, r):
-        if 'tableData' in r.context and self.table_data():
-            data = len(json.loads(r.context['tableData']))
-            self.assertEqual(self.table_data(), data)
+    @staticmethod
+    def get_table_data(response):
+        return json.loads(response.context.get('tables_data', '[]'))
 
-        if 'tableDataA' in r.context and self.table_data_a():
-            data_a = len(json.loads(r.context['tableDataA']))
-            self.assertEqual(self.table_data_a(), data_a)
+    def validate_row_counts(self, response):
+        data = self.get_table_data(response)
+        for count, table in zip(self.expected_row_counts(), data):
+            self.assertNotEqual(count, 0)  # check the test isn't vacuous
+            self.assertEqual(count, len(table['data']))
 
-        if 'tableDataB' in r.context and self.table_data_b():
-            data_b = len(json.loads(r.context['tableDataB']))
-            self.assertEqual(self.table_data_b(), data_b)
-
-    def table_data(self):
-        return False
-
-    def table_data_a(self):
-        return False
-
-    def table_data_b(self):
-        return False
+    def expected_row_counts(self):
+        raise NotImplementedError
 
 
 class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):

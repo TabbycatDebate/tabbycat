@@ -11,10 +11,8 @@ class PublicDrawForRoundViewTest(ConditionalTableViewTestsMixin, TestCase):
     view_toggle_on = 'all-released'  # Otherwise will assign True as the set state
     view_toggle_off = 'off'  # Otherwise False as the config's unset state
 
-    def table_data(self):
-        # Check number of debates is correct
-        round = self.t.round_set.get(seq=self.round_seq)
-        return round.debate_set.all().count()
+    def expected_row_counts(self):
+        return [self.t.round_set.get(seq=self.round_seq).debate_set.count()]
 
 
 class PublicDrawForCurrentRoundViewTest(ConditionalTableViewTestsMixin, TestCase):
@@ -24,7 +22,5 @@ class PublicDrawForCurrentRoundViewTest(ConditionalTableViewTestsMixin, TestCase
     view_toggle_on = 'current'  # Otherwise will assign True as the set state
     view_toggle_off = 'off'  # Otherwise False as the config's unset state
 
-    def table_data(self):
-        # Check number of debates is correct
-        round = self.t.round_set.get(seq=self.round_seq)
-        return round.debate_set.all().count()
+    def expected_row_counts(self):
+        return [self.t.round_set.get(seq=2).debate_set.count()]

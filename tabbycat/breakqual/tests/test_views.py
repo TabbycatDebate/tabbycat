@@ -2,7 +2,6 @@ import logging
 
 from django.test import TestCase
 
-from breakqual.models import BreakingTeam
 from utils.tests import ConditionalTableViewTestsMixin, suppress_logs
 
 
@@ -15,10 +14,8 @@ class BreakingTeamsViewTestMixin(ConditionalTableViewTestsMixin):
         kwargs['category'] = self.break_slug
         return kwargs
 
-    def table_data(self):
-        # Check number of rows in table matches number of breaking teams
-        return BreakingTeam.objects.filter(
-            break_category__slug=self.break_slug).count()
+    def expected_row_counts(self):
+        return [self.t.breakcategory_set.get(slug=self.break_slug).breaking_teams.count()]
 
     def test_set_preference(self):
         # Suppress standings queryset info logging
@@ -41,3 +38,6 @@ class PublicNoviceBreakingTeamsViewTest(BreakingTeamsViewTestMixin, TestCase):
 class PublicBreakingAdjudicatorsViewTest(ConditionalTableViewTestsMixin, TestCase):
     view_name = 'breakqual-public-adjs'
     view_toggle = 'public_features__public_breaking_adjs'
+
+    def expected_row_counts(self):
+        return [self.t.adjudicator_set.filter(breaking=True).count()]
