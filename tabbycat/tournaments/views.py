@@ -38,7 +38,7 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicSiteIndexView(TemplateView, WarnAboutDatabaseUseMixin):
+class PublicSiteIndexView(WarnAboutDatabaseUseMixin, TemplateView):
     template_name = 'site_index.html'
 
     def get(self, request, *args, **kwargs):
@@ -63,7 +63,7 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
 
 
-class TournamentDashboardHomeView(TournamentMixin, TemplateView, WarnAboutDatabaseUseMixin):
+class TournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
@@ -215,7 +215,7 @@ class BlankSiteStartView(FormView):
         return super().form_valid(form)
 
 
-class CreateTournamentView(AdministratorMixin, CreateView, WarnAboutDatabaseUseMixin):
+class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
