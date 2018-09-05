@@ -78,3 +78,23 @@
 </div>
 
 {% endblock %}
+
+{% block js %}
+  {{ block.super }}
+
+  <script>
+    function updateElimFields() {
+      if ($('#id_prelim').val() == '') {
+        $('select[id^=id_elim_]').prop('disabled', false);
+        $('select[id^=id_elim_] option:nth-child(2)').prop('selected', true);
+      } else {
+        $('select[id^=id_elim_]').prop('disabled', true);
+        $('select[id^=id_elim_] option:nth-child(1)').prop('selected', true);
+      }
+    }
+
+    $('#id_prelim').change(updateElimFields);
+    $(document).ready(updateElimFields);
+  </script>
+
+{% endblock %}
