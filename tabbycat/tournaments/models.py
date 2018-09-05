@@ -42,9 +42,6 @@ class Tournament(models.Model):
     slug = models.SlugField(unique=True, validators=[validate_tournament_slug],
         verbose_name=_("slug"),
         help_text=_("The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""))
-    current_round = models.ForeignKey('Round', models.SET_NULL, null=True, blank=True, related_name='current_tournament',
-        verbose_name=_("current round"),
-        help_text=_("Must be set for the tournament to start! (Set after rounds are inputted)"))
     active = models.BooleanField(verbose_name=_("active"), default=True)
 
     class Meta:
@@ -189,9 +186,31 @@ class Tournament(models.Model):
         return self.round_set.filter(stage=Round.STAGE_ELIMINATION)
 
     def rounds_for_nav(self):
-        """Returns a round QuerySet suitable for the admin nav bar.
-        This currently annotates with motion counts and sorts by stage (preliminary/elimination)."""
-        return self.round_set.order_by('-stage', 'seq').annotate(Count('motion'))
+        """Returns a Round QuerySet suitable for the admin nav bar.
+        This annotates the QuerySet with information used to determine bubble
+        colours in the admin nav bar."""
+
+        rounds = self.round_set.order_by('-stage', 'seq').annotate(
+            Count('motion'), Count('debate')
+        ).select_related('break_category')
+        categories_where_current_found = []
+        prelim_current_found = False
+
+        # Do this in bulk for performance. This should be kept consistent with
+        # Round.is_current and Tournament.current_rounds.
+        for r in rounds:
+            if r.completed or prelim_current_found:
+                r._is_current = False
+            elif not r.is_break_round:
+                r._is_current = True
+                prelim_current_found = True
+            elif r.debate__count > 0 and r.break_category not in categories_where_current_found:
+                categories_where_current_found.append(r.break_category)
+                r._is_current = True
+            else:
+                r._is_current = False
+
+        return rounds
 
     @cached_property
     def adj_feedback_questions(self):
@@ -205,7 +224,42 @@ class Tournament(models.Model):
     # --------------------------------------------------------------------------
 
     @cached_property
+    def current_round(self):
+        current = self.round_set.filter(completed=False).order_by('seq').first()
+        if current is None:
+            return self.round_set.order_by('seq').last()
+        return current
+
+    @cached_property
+    def current_rounds(self):
+        """List of all current rounds with existent draws. If a preliminary
+        round is the earliest non-completed round, then that's the only current
+        round. If all preliminary rounds are completed, then the earliest
+        non-completed round with an existent draw in each category is a current
+        round, and they're listed in the `seq` order of the break categories.
+
+        This should be kept consistent with Tournament.rounds_for_nav and
+        Round.is_current."""
+
+        # For something this complicated it's easier just to get the entire
+        # round set from the database, and process it in Python.
+        rounds = self.round_set.filter(completed=False).order_by('seq').annotate(
+                Count('debate')).select_related('break_category')
+        current_elim_rounds = {}
+        for r in rounds:
+            if not r.is_break_round:
+                return [r]  # short-circuit everything else
+            elif r.debate__count > 0:
+                current_elim_rounds.setdefault(r.break_category, r)
+        return [
+            current_elim_rounds.get(category)
+            for category in self.breakcategory_set.order_by('seq')
+            if category in current_elim_rounds
+        ]
+
+    @cached_property
     def get_current_round_cached(self):
+        return self.current_round
         cached_key = "%s_current_round_object" % self.slug
         if self.current_round:
             cache.get_or_set(cached_key, self.current_round, None)
@@ -216,6 +270,18 @@ class Tournament(models.Model):
     @cached_property
     def billable_teams(self):
         return self.team_set.count()
+
+    @cached_property
+    def public_draws_available(self):
+        """Returns True if draws are available for public viewing. Used in
+        public navigation menus."""
+        return any(r.draw_status == Round.STATUS_RELEASED for r in self.current_rounds)
+
+    @cached_property
+    def public_results_available(self):
+        """Returns True if results are available for public viewing. Used in
+        public navigation menus."""
+        return self.round_set.filter(completed=True, silent=False).exists()
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -259,6 +325,10 @@ class Round(models.Model):
     tournament = models.ForeignKey(Tournament, models.CASCADE, verbose_name=_("tournament"))
     seq = models.IntegerField(verbose_name=_("sequence number"),
         help_text=_("A number that determines the order of the round, should count consecutively from 1 for the first round"))
+    completed = models.BooleanField(default=False,
+        verbose_name=_("completed"),
+        help_text=_("True if the round is over, which normally means all results have been entered and confirmed"))
+
     name = models.CharField(max_length=40, verbose_name=_("name"), help_text=_("e.g. \"Round 1\""))
     abbreviation = models.CharField(max_length=10, verbose_name=_("abbreviation"), help_text=_("e.g. \"R1\""))
     stage = models.CharField(max_length=1, choices=STAGE_CHOICES, default=STAGE_PRELIMINARY,
@@ -482,28 +552,42 @@ class Round(models.Model):
     # Other convenience properties
     # --------------------------------------------------------------------------
 
-    def get_round_seq(self, filter):
-        rounds = self.tournament.round_set.filter(**filter).order_by('-seq')
+    def _rounds_in_same_sequence(self):
+        rounds = self.tournament.round_set.all()
         if self.is_break_round:
             rounds = rounds.filter(Q(stage=Round.STAGE_PRELIMINARY) | Q(break_category=self.break_category))
-        try:
-            return rounds.first()
-        except Round.DoesNotExist:
-            return None
+        return rounds
 
     @cached_property
     def prev(self):
         """Returns the round that comes before this round. If this is a break
         round, then it returns the latest preceding round that is either in the
         same break category or is a preliminary round."""
-        return self.get_round_seq({'seq__lt': self.seq})
+        return self._rounds_in_same_sequence().filter(seq__lt=self.seq).order_by('seq').last()
 
     @cached_property
     def next(self):
         """Returns the round that comes after this round. If this is a break
-        round, then it returns the next preceding round that is either in the
-        same break category or is a preliminary round."""
-        return self.get_round_seq({'seq__gt': self.seq})
+        round, then it returns the next round that is either in the same break
+        category or is a preliminary round."""
+        return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
+
+    @property
+    def is_current(self):
+        """Returns True if this round is a current round."""
+        # For performance, self._is_current may be set by Tournament.rounds_for_nav,
+        # which should be kept consistent with this implementation.
+        # This should also be kept consistent with Tournament.current_rounds.
+        if not hasattr(self, '_is_current'):
+            if self.completed:
+                self._is_current = False
+            elif self._rounds_in_same_sequence().filter(seq__lt=self.seq, completed=False).exists():
+                self._is_current = False
+            elif self.is_break_round and not self.debate_set.exists():
+                self._is_current = False
+            else:
+                self._is_current = True
+        return self._is_current
 
     @property
     def motions_good_for_public(self):

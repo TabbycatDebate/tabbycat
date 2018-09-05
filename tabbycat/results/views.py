@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.db.models import Q
-from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -47,8 +47,7 @@ class PublicResultsIndexView(PublicTournamentPageMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs["rounds"] = self.tournament.round_set.filter(
-            seq__lt=self.tournament.current_round.seq,
-            silent=False).order_by('seq')
+            completed=True, silent=False).order_by('seq')
         return super().get_context_data(**kwargs)
 
 
@@ -77,11 +76,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs["incomplete_ballots"] = self._get_draw().filter(
-            Q(result_status="N") | Q(result_status="D")).count()
-        kwargs["show_advance_button"] = (
-            self.tournament.current_round == self.round and
-            self.tournament.round_set.filter(seq__gt=self.round.seq).exists()
-        )
+            Q(result_status=Debate.STATUS_NONE) | Q(result_status=Debate.STATUS_DRAFT)).count()
         return super().get_context_data(**kwargs)
 
 
@@ -161,10 +156,10 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get(self, request, *args, **kwargs):
         if self.round.silent and not self.tournament.pref('all_results_released'):
             logger.warning("Refused results for %s: silent", self.round.name)
-            return render(request, 'public_results_silent.html')
-        if self.round.seq >= self.tournament.current_round.seq and not self.tournament.pref('all_results_released'):
-            logger.warning("Refused results for %s: not yet available", self.round.name)
-            return render(request, 'public_results_not_available.html')
+            return render(request, 'public_results_silent.html', status=403)
+        if not self.round.completed and not self.tournament.pref('all_results_released'):
+            logger.warning("Refused results for %s: round not completed", self.round.name)
+            return render(request, 'public_results_not_available.html', status=403)
 
         # If there's a query string, store the session setting
         if request.GET.get('view') in ['team', 'debate']:
@@ -515,25 +510,21 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
     tournament_field_name = 'round__tournament'
     template_name = 'public_ballot_set.html'
 
-    def get_object(self):
-        debate = super().get_object()
-
+    def check_permissions(self, debate):
         round = debate.round
         if round.silent and not round.tournament.pref('all_results_released'):
             logger.warning("Refused public view of ballots for %s: %s is silent", debate, round.name)
-            raise Http404("This debate is in %s, which is a silent round." % round.name)
-        if round.seq >= round.tournament.current_round.seq and not round.tournament.pref('all_results_released'):
-            logger.warning("Refused public view of ballots for %s: %s results not yet available", debate, round.name)
-            raise Http404("This debate is in %s, the results for which aren't available yet." % round.name)
+            return (403, _("This debate is in %s, which is a silent round.") % round.name)
+        if not round.completed and not round.tournament.pref('all_results_released'):
+            logger.warning("Refused public view of ballots for %s: %s is not completed", debate, round.name)
+            return (403, _("This debate is in %s, the results for which aren't available yet.") % round.name)
 
         if debate.result_status != Debate.STATUS_CONFIRMED:
             logger.warning("Refused public view of ballots for %s: not confirmed", debate)
-            raise Http404("The result for debate %s is not confirmed." % debate.matchup)
+            return (404, _("The result for debate %s is not confirmed.") % debate.matchup)
         if debate.confirmed_ballot is None:
             logger.warning("Refused public view of ballots for %s: no confirmed ballot", debate)
-            raise Http404("The debate %s does not have a confirmed ballot." % debate.matchup)
-
-        return debate
+            return (404, _("The debate %s does not have a confirmed ballot.") % debate.matchup)
 
     def get_context_data(self, **kwargs):
         kwargs['motion'] = self.object.confirmed_ballot.motion
@@ -542,6 +533,18 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
+
+        error = self.check_permissions(self.object)
+        if error:
+            status, message = error
+            return self.response_class(
+                request=self.request,
+                template='public_ballot_set_error.html',
+                context={'message': message},
+                using=self.template_engine,
+                status=status,
+            )
+
         return super().get(self, request, *args, **kwargs)
 
 

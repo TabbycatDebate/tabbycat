@@ -12,6 +12,7 @@ from django.db.models import Q
 from django.db.models.expressions import RawSQL
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
+from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView
@@ -25,11 +26,13 @@ from participants.prefetch import populate_win_counts
 from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
-from utils.misc import redirect_round, redirect_tournament, reverse_tournament
+from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
-from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
+from .forms import (SetCurrentRoundMultipleBreakCategoriesForm,
+                    SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
+                    TournamentStartForm)
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
 from .utils import get_side_name, send_standings_emails
@@ -63,7 +66,7 @@ class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
 
 
-class TournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, TemplateView):
+class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
@@ -100,28 +103,30 @@ class TournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, Te
         return super().get_context_data(**kwargs)
 
 
-class TournamentAssistantHomeView(AssistantMixin, TournamentDashboardHomeView):
+class TournamentAssistantHomeView(AssistantMixin, BaseTournamentDashboardHomeView):
     template_name = 'assistant_tournament_index.html'
 
 
-class TournamentAdminHomeView(AdministratorMixin, TournamentDashboardHomeView):
+class TournamentAdminHomeView(AdministratorMixin, BaseTournamentDashboardHomeView):
     template_name = 'tournament_index.html'
 
 
-class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
-    template_name = 'round_advance_check.html'
-
-    def get(self, request, *args, **kwargs):
-        current_round = self.tournament.current_round
-        if self.round != current_round:
-            messages.error(self.request, "You are trying to advance from {this_round} but "
-                "the current round is {current_round} — advance to {this_round} first!".format(
-                    this_round=self.round.name, current_round=current_round.name))
-            return redirect_round('results-round-list', current_round)
-        else:
-            return super().get(self, request, *args, **kwargs)
+class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
+    template_name = 'round_complete_check.html'
 
     def get_context_data(self, **kwargs):
+        prior_rounds_not_completed = self.tournament.round_set.filter(
+            Q(break_category=self.round.break_category) | Q(break_category__isnull=True),
+            completed=False, seq__lt=self.round.seq
+        )
+        kwargs['number_of_prior_rounds_not_completed'] = prior_rounds_not_completed.count()
+        kwargs['prior_rounds_not_completed'] = format_html_join(
+            ", ",
+            "<a href=\"{}\" class=\"alert-link\">{}</a>",
+            ((reverse_round('tournament-complete-round-check', r), r.name)
+                for r in prior_rounds_not_completed)
+        )
+
         kwargs['num_unconfirmed'] = self.round.debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
@@ -130,37 +135,56 @@ class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class RoundAdvanceView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
+class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyRedirectView):
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_ADVANCE
-    round_redirect_pattern_name = 'results-round-list' # standard redirect is only on error
+    action_log_type = ActionLogEntry.ACTION_TYPE_ROUND_COMPLETE
 
     def post(self, request, *args, **kwargs):
-        # Advance relative to the round of the view, not the current round, so
-        # that in times of confusion, going back then clicking again won't advance
-        # twice.
-        next_round = self.tournament.round_set.filter(seq__gt=self.round.seq).order_by('seq').first()
+        self.round.completed = True
+        self.round.save()
+        self.log_action(round=self.round, content_object=self.round)
 
-        if next_round:
-            self.tournament.current_round = next_round
-            self.tournament.save()
-            self.log_action(round=next_round, content_object=next_round)
+        incomplete_rounds = self.tournament.round_set.filter(completed=False)
 
-            if (next_round.stage == Round.STAGE_ELIMINATION and
-                    self.round.stage == Round.STAGE_PRELIMINARY):
-                messages.success(request, _("The current round has been advanced to %(round)s. "
-                        "You've made it to the end of the preliminary rounds! Congratulations! "
-                        "The next step is to generate the break.") % {'round': next_round.name})
+        if not incomplete_rounds.exists():
+            messages.success(request, _("%(round)s has been marked as completed. "
+                "All rounds are now completed, so you're done with the tournament! "
+                "Congratulations!") % {'round': self.round.name})
+            return redirect_tournament('tournament-admin-home', self.tournament)
+
+        elif not self.round.next:
+            messages.success(request, _("%(round)s has been marked as completed. "
+                "That's the last round in that sequence! Going back to the first "
+                "round that hasn't been marked as completed.") % {'round': self.round.name})
+            # guaranteed to exist, otherwise the first 'if' statement would have been false
+            round_for_redirect = incomplete_rounds.order_by('seq').first()
+            return redirect_round('availability-index', round_for_redirect)
+
+        if (self.round.stage == Round.STAGE_PRELIMINARY and
+                self.round.next.stage == Round.STAGE_ELIMINATION):
+
+            incomplete_prelim_rounds = incomplete_rounds.filter(stage=Round.STAGE_PRELIMINARY)
+
+            if not incomplete_prelim_rounds.exists():
+                messages.success(request, _("%(round)s has been marked as completed. "
+                    "You've made it to the end of the preliminary rounds! Congratulations! "
+                    "The next step is to generate the break.") % {'round': self.round.name})
                 return redirect_tournament('breakqual-index', self.tournament)
+
             else:
-                messages.success(request, _("The current round has been advanced to %(round)s. "
-                    "Woohoo! Keep it up!") % {'round': next_round.name})
-                return redirect_round('availability-index', next_round)
+                messages.success(request, _("%(round)s has been marked as completed. "
+                    "That was the last preliminary round, but one or more preliminary "
+                    "rounds are still not completed. Going back to the first incomplete "
+                    "preliminary round.") % {'round': self.round.name})
+                round_for_redirect = incomplete_prelim_rounds.order_by('seq').first()
+                return redirect_round('availability-index', round_for_redirect)
 
         else:
-            messages.error(request, _("Whoops! Could not advance round, because there's no round "
-                "after this round!"))
-            return super().post(request, *args, **kwargs)
+            messages.success(request, _("%(this_round)s has been marked as completed. "
+                "Moving on to %(next_round)s! Woohoo! Keep it up!") % {
+                'this_round': self.round.name, 'next_round': self.round.next.name,
+            })
+            return redirect_round('availability-index', self.round.next)
 
 
 class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
@@ -176,7 +200,7 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
         else:
             messages.success(request, _("Team point emails have been sent to the speakers."))
 
-        return redirect_round('tournament-advance-round-check', self.round)
+        return redirect_round('tournament-complete-round-check', self.round)
 
 
 class BlankSiteStartView(FormView):
@@ -239,7 +263,7 @@ class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, Create
         return reverse_tournament('tournament-configure', tournament=t)
 
 
-class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
+class ConfigureTournamentView(AdministratorMixin, TournamentMixin, UpdateView):
     model = Tournament
     form_class = TournamentConfigureForm
     template_name = "configure_tournament.html"
@@ -250,12 +274,21 @@ class ConfigureTournamentView(AdministratorMixin, UpdateView, TournamentMixin):
         return reverse_tournament('tournament-admin-home', tournament=t)
 
 
-class SetCurrentRoundView(AdministratorMixin, UpdateView):
-    model = Tournament
-    form_class = SetCurrentRoundForm
+class SetCurrentRoundView(AdministratorMixin, TournamentMixin, FormView):
     template_name = 'set_current_round.html'
     slug_url_kwarg = 'tournament_slug'
     redirect_field_name = 'next'
+
+    def get_form_class(self):
+        if self.tournament.breakcategory_set.count() <= 1:
+            return SetCurrentRoundSingleBreakCategoryForm
+        else:
+            return SetCurrentRoundMultipleBreakCategoriesForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['tournament'] = self.tournament
+        return kwargs
 
     def get_redirect_to(self, use_default=True):
         redirect_to = self.request.POST.get(
@@ -263,9 +296,13 @@ class SetCurrentRoundView(AdministratorMixin, UpdateView):
             self.request.GET.get(self.redirect_field_name, '')
         )
         if not redirect_to and use_default:
-            return reverse_tournament('tournament-admin-home', tournament=self.object)
+            return reverse_tournament('tournament-admin-home', tournament=self.tournament)
         else:
             return redirect_to
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
     def get_success_url(self):
         # Copied from django.contrib.auth.views.LoginView.get_success_url

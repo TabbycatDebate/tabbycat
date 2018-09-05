@@ -91,10 +91,6 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
         self._import(f, tm.Round, round_interpreter)
 
-        # Set the round with the lowest known seqno to be the current round.
-        self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
-        self.tournament.save()
-
     def import_regions(self, f):
         region_interpreter = make_interpreter()
         self._import(f, pm.Region, region_interpreter)

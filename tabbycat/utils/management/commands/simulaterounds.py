@@ -44,5 +44,5 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         self.stdout.write("Generating results for round '{}'...".format(round.name))
         add_results_to_round(round, **self.result_kwargs(options))
 
-        round.tournament.current_round = round
-        round.tournament.save()
+        round.completed = True
+        round.save()

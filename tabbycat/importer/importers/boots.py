@@ -85,10 +85,6 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
 
         self._import(f, tm.Round, interpreter)
 
-        # Set the round with the lowest known seqno to be the current round.
-        self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
-        self.tournament.save()
-
     def import_institutions(self, f, auto_create_regions=True):
         if auto_create_regions:
             def region_interpreter(lineno, line):

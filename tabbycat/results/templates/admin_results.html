@@ -11,9 +11,9 @@
 {% endblock %}
 
 {% block page-subnav-actions %}
-  {% if show_advance_button %}
-    <a class="btn {% if incomplete_ballots == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-advance-round-check' %}">
-      {% trans "Advance to Next Round" %} <i data-feather="chevron-right"></i>
+  {% if round.is_current %}
+    <a class="btn {% if incomplete_ballots == 0  %}btn-outline-success{% else %}btn-danger disabled{% endif %} " href="{% roundurl 'tournament-complete-round-check' %}">
+      {% trans "Complete Round" %} <i data-feather="chevron-right"></i>
     </a>
   {% else %}
     <div class="hidden"></div><!-- Just keeps the spacing consistent -->
@@ -35,7 +35,7 @@
   {% endif %}
 
   {% if pref.enable_motions and round.motion_set.count == 0 %}
-    {% roundurl 'motions-edit' current_round as motions_url %}
+    {% roundurl 'motions-edit' as motions_url %}
     {% blocktrans trimmed asvar message %}
       Currently there are no motions entered for this round, so debate results
       cannot be entered. <a href="{{ motions_url }}" class="alert-link">Add Motions.</a>
@@ -43,13 +43,14 @@
     {% include "components/alert.html" with type="danger" %}
   {% endif %}
 
-  {% roundurl 'draw-display' current_round as display_url %}
+  {% roundurl 'draw-display' as display_url %}
   {% if round.draw_status != round.STATUS_RELEASED and pref.participant_ballots != 'off' %}
     {% blocktrans trimmed asvar message %}
         Your tournament configuration allows ballots to be submitted online by adjudicators. The draw <a href="{{ display_url }}" class="alert-link">must be released</a> before they can do so for this round.
       {% endblocktrans %}
     {% include "components/alert.html" with type="danger" %}
   {% endif %}
+
   {% if round.draw_status != round.STATUS_RELEASED and pref.participant_feedback != 'off' %}
     {% blocktrans trimmed asvar message %}
         Your tournament configuration allows feedback to be submitted online by participants. The draw <a href="{{ display_url }}" class="alert-link">must be released</a> before they can do so for this round.

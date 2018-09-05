@@ -897,6 +897,166 @@
     }
 },
 {
+    "model": "adjallocation.debateadjudicator",
+    "pk": 89,
+    "fields": {
+        "debate": 70,
+        "adjudicator": 74,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 90,
+    "fields": {
+        "debate": 69,
+        "adjudicator": 88,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 93,
+    "fields": {
+        "debate": 70,
+        "adjudicator": 98,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 94,
+    "fields": {
+        "debate": 70,
+        "adjudicator": 78,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 95,
+    "fields": {
+        "debate": 69,
+        "adjudicator": 95,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 96,
+    "fields": {
+        "debate": 69,
+        "adjudicator": 92,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 97,
+    "fields": {
+        "debate": 71,
+        "adjudicator": 88,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 98,
+    "fields": {
+        "debate": 73,
+        "adjudicator": 98,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 99,
+    "fields": {
+        "debate": 73,
+        "adjudicator": 87,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 100,
+    "fields": {
+        "debate": 73,
+        "adjudicator": 92,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 101,
+    "fields": {
+        "debate": 72,
+        "adjudicator": 74,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 102,
+    "fields": {
+        "debate": 72,
+        "adjudicator": 89,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 103,
+    "fields": {
+        "debate": 72,
+        "adjudicator": 90,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 104,
+    "fields": {
+        "debate": 74,
+        "adjudicator": 95,
+        "type": "C",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 105,
+    "fields": {
+        "debate": 74,
+        "adjudicator": 78,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
+    "model": "adjallocation.debateadjudicator",
+    "pk": 106,
+    "fields": {
+        "debate": 74,
+        "adjudicator": 94,
+        "type": "P",
+        "timing_confirmed": null
+    }
+},
+{
     "model": "adjallocation.adjudicatorconflict",
     "pk": 1,
     "fields": {
@@ -1727,6 +1887,7 @@
         "break_size": 8,
         "is_general": true,
         "priority": 10,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -1741,6 +1902,7 @@
         "break_size": 4,
         "is_general": false,
         "priority": 20,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -1755,6 +1917,7 @@
         "break_size": 2,
         "is_general": false,
         "priority": 30,
+        "limit": 0,
         "rule": "standard"
     }
 },
@@ -2737,38 +2900,6 @@
 },
 {
     "model": "draw.debate",
-    "pk": 61,
-    "fields": {
-        "round": 6,
-        "venue": 23,
-        "division": null,
-        "bracket": 0.0,
-        "room_rank": 1,
-        "time": null,
-        "flags": "",
-        "importance": 2,
-        "result_status": "N",
-        "sides_confirmed": true
-    }
-},
-{
-    "model": "draw.debate",
-    "pk": 62,
-    "fields": {
-        "round": 6,
-        "venue": 22,
-        "division": null,
-        "bracket": 0.0,
-        "room_rank": 2,
-        "time": null,
-        "flags": "",
-        "importance": 2,
-        "result_status": "N",
-        "sides_confirmed": true
-    }
-},
-{
-    "model": "draw.debate",
     "pk": 67,
     "fields": {
         "round": 7,
@@ -2797,6 +2928,102 @@
         "importance": 2,
         "result_status": "N",
         "sides_confirmed": true
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 69,
+    "fields": {
+        "round": 6,
+        "venue": 25,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 2,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "sides_confirmed": false
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 70,
+    "fields": {
+        "round": 6,
+        "venue": 24,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 1,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "sides_confirmed": false
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 71,
+    "fields": {
+        "round": 5,
+        "venue": 27,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 1,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "sides_confirmed": false
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 72,
+    "fields": {
+        "round": 5,
+        "venue": 25,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 3,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "sides_confirmed": false
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 73,
+    "fields": {
+        "round": 5,
+        "venue": 26,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 2,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "sides_confirmed": false
+    }
+},
+{
+    "model": "draw.debate",
+    "pk": 74,
+    "fields": {
+        "round": 5,
+        "venue": 24,
+        "division": null,
+        "bracket": 0.0,
+        "room_rank": 4,
+        "time": null,
+        "flags": "",
+        "importance": 0,
+        "result_status": "N",
+        "sides_confirmed": false
     }
 },
 {
@@ -3761,46 +3988,6 @@
 },
 {
     "model": "draw.debateteam",
-    "pk": 121,
-    "fields": {
-        "debate": 61,
-        "team": 10,
-        "side": "aff",
-        "flags": ""
-    }
-},
-{
-    "model": "draw.debateteam",
-    "pk": 122,
-    "fields": {
-        "debate": 61,
-        "team": 9,
-        "side": "neg",
-        "flags": ""
-    }
-},
-{
-    "model": "draw.debateteam",
-    "pk": 123,
-    "fields": {
-        "debate": 62,
-        "team": 6,
-        "side": "aff",
-        "flags": ""
-    }
-},
-{
-    "model": "draw.debateteam",
-    "pk": 124,
-    "fields": {
-        "debate": 62,
-        "team": 5,
-        "side": "neg",
-        "flags": ""
-    }
-},
-{
-    "model": "draw.debateteam",
     "pk": 133,
     "fields": {
         "debate": 67,
@@ -3835,6 +4022,126 @@
     "fields": {
         "debate": 68,
         "team": 4,
+        "side": "neg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 137,
+    "fields": {
+        "debate": 69,
+        "team": 5,
+        "side": "aff",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 138,
+    "fields": {
+        "debate": 69,
+        "team": 6,
+        "side": "neg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 139,
+    "fields": {
+        "debate": 70,
+        "team": 10,
+        "side": "aff",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 140,
+    "fields": {
+        "debate": 70,
+        "team": 9,
+        "side": "neg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 141,
+    "fields": {
+        "debate": 71,
+        "team": 4,
+        "side": "aff",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 142,
+    "fields": {
+        "debate": 71,
+        "team": 7,
+        "side": "neg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 143,
+    "fields": {
+        "debate": 72,
+        "team": 20,
+        "side": "aff",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 144,
+    "fields": {
+        "debate": 72,
+        "team": 17,
+        "side": "neg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 145,
+    "fields": {
+        "debate": 73,
+        "team": 11,
+        "side": "aff",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 146,
+    "fields": {
+        "debate": 73,
+        "team": 18,
+        "side": "neg",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 147,
+    "fields": {
+        "debate": 74,
+        "team": 1,
+        "side": "aff",
+        "flags": ""
+    }
+},
+{
+    "model": "draw.debateteam",
+    "pk": 148,
+    "fields": {
+        "debate": 74,
+        "team": 12,
         "side": "neg",
         "flags": ""
     }
@@ -21858,7 +22165,6 @@
         "short_name": "demo",
         "seq": null,
         "slug": "demo",
-        "current_round": 4,
         "active": true
     }
 },
@@ -21868,6 +22174,7 @@
     "fields": {
         "tournament": 1,
         "seq": 1,
+        "completed": true,
         "name": "Round 1",
         "abbreviation": "R1",
         "stage": "P",
@@ -21886,6 +22193,7 @@
     "fields": {
         "tournament": 1,
         "seq": 2,
+        "completed": true,
         "name": "Round 2",
         "abbreviation": "R2",
         "stage": "P",
@@ -21904,6 +22212,7 @@
     "fields": {
         "tournament": 1,
         "seq": 3,
+        "completed": true,
         "name": "Round 3",
         "abbreviation": "R3",
         "stage": "P",
@@ -21922,6 +22231,7 @@
     "fields": {
         "tournament": 1,
         "seq": 4,
+        "completed": false,
         "name": "Round 4",
         "abbreviation": "R4",
         "stage": "P",
@@ -21940,12 +22250,13 @@
     "fields": {
         "tournament": 1,
         "seq": 5,
+        "completed": false,
         "name": "Open Quarterfinal",
         "abbreviation": "OQF",
         "stage": "E",
-        "draw_type": "F",
+        "draw_type": "E",
         "break_category": 1,
-        "draw_status": "N",
+        "draw_status": "C",
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
@@ -21958,12 +22269,13 @@
     "fields": {
         "tournament": 1,
         "seq": 6,
+        "completed": false,
         "name": "ESL Semifinal",
         "abbreviation": "SSF",
         "stage": "E",
-        "draw_type": "F",
+        "draw_type": "E",
         "break_category": 2,
-        "draw_status": "N",
+        "draw_status": "C",
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
@@ -21976,12 +22288,13 @@
     "fields": {
         "tournament": 1,
         "seq": 7,
+        "completed": false,
         "name": "Open Semifinal",
         "abbreviation": "OSF",
         "stage": "E",
-        "draw_type": "B",
+        "draw_type": "E",
         "break_category": 1,
-        "draw_status": "C",
+        "draw_status": "N",
         "feedback_weight": 0.7,
         "silent": true,
         "motions_released": false,
@@ -21994,10 +22307,11 @@
     "fields": {
         "tournament": 1,
         "seq": 8,
+        "completed": false,
         "name": "ESL Grand Final",
         "abbreviation": "SGF",
         "stage": "E",
-        "draw_type": "B",
+        "draw_type": "E",
         "break_category": 2,
         "draw_status": "N",
         "feedback_weight": 0.7,
@@ -22012,10 +22326,11 @@
     "fields": {
         "tournament": 1,
         "seq": 9,
+        "completed": false,
         "name": "Novice Grand Final",
         "abbreviation": "NGF",
         "stage": "E",
-        "draw_type": "F",
+        "draw_type": "E",
         "break_category": 3,
         "draw_status": "N",
         "feedback_weight": 0.7,
@@ -22030,10 +22345,11 @@
     "fields": {
         "tournament": 1,
         "seq": 10,
+        "completed": false,
         "name": "Open Grand Final",
         "abbreviation": "OGF",
         "stage": "E",
-        "draw_type": "B",
+        "draw_type": "E",
         "break_category": 1,
         "draw_status": "N",
         "feedback_weight": 0.7,

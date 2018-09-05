@@ -14,6 +14,7 @@ from draw.models import DebateTeam
 from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
+from utils.misc import reverse_tournament
 
 logger = logging.getLogger(__name__)
 
@@ -41,11 +42,13 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(returnto)
 
 
-class TournamentTestsMixin:
-    """Mixin that provides methods for testing a populated view on a tournament,
-    with a prepopulated database."""
+class CompletedTournamentTestMixin:
+    """Mixin providing a few convenience functions for tests:
+      - Loads a completed demonstration tournament
+      - Assumes URLs are from said tournament and, optionally, a particular round
+    """
 
-    fixtures = ['completed_demo.json']
+    fixtures = ['after_round_4.json']
     round_seq = None
 
     def get_tournament(self):
@@ -58,53 +61,76 @@ class TournamentTestsMixin:
             self.round = self.tournament.round_set.get(seq=self.round_seq)
         self.client = Client()
 
-    def get_view_url(self, provided_view_name):
-        return reverse(provided_view_name, kwargs=self.get_url_kwargs())
-
-    def get_url_kwargs(self):
-        kwargs = {'tournament_slug': self.tournament.slug}
+    def reverse_url(self, view_name, **kwargs):
+        """Convenience function for reversing a URL for the demo tournament,
+        and the round if one is specified in the class."""
         if self.round_seq is not None:
-            kwargs['round_seq'] = self.round_seq
-        return kwargs
+            kwargs.setdefault('round_seq', self.round_seq)
+        return reverse_tournament(view_name, self.tournament, kwargs=kwargs)
+
+    def get_response(self, view_name, **kwargs):
+        cache.clear()
+        url = self.reverse_url(view_name, **kwargs)
+        return self.client.get(url)
+
+    def assertResponseOK(self, response):  # noqa: N802
+        self.assertEqual(response.status_code, 200)
+
+    def assertResponsePermissionDenied(self, response):  # noqa: N802
+        self.assertEqual(response.status_code, 403)
+
+    def assertResponseRedirect(self, response, url):  # noqa: N802
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url.split('?', 1)[0], url)
+
+
+class SingleViewTestMixin(CompletedTournamentTestMixin):
+    """Mixin for TestCases relating to a single view."""
+
+    view_name = None
+    view_reverse_kwargs = {}
+
+    def get_view_reverse_kwargs(self):
+        return self.view_reverse_kwargs.copy()
 
     def get_response(self):
-        cache.clear() # overriding the CACHE setting itself isn't enough
-        return self.client.get(self.get_view_url(self.view_name))
+        kwargs = self.get_view_reverse_kwargs()
+        return super().get_response(self.view_name, **kwargs)
 
 
-class TournamentViewSimpleLoadTestMixin(TournamentTestsMixin):
-    """For testing that a given view_name will merely load"""
+class TournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
 
     def test_response(self):
         response = self.get_response()
-        self.assertEqual(response.status_code, 200)
+        self.assertResponseOK(response)
 
 
-class AssistantTournamentViewSimpleLoadTestMixin(TournamentTestsMixin):
-    """For testing that a given view_name will merely load properly with auth"""
+class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
 
     def test_authenticated_response(self):
+        self.authenticate()
+        response = self.get_response()
+        self.assertResponseOK(response)
+
+    def test_unauthenticated_response(self):
+        self.client.logout()
+        response = self.get_response()
+        self.assertResponseRedirect(response, reverse('login'))
+
+
+class AssistantTournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
+    def authenticate(self):
         get_user_model().objects.create_user('assistant', 'assistant@tabbycatdebate.org', '26yEn!CQ')
         self.client.login(username='assistant', password='26yEn!CQ')
-        self.assertEqual(self.get_response().status_code, 200)
-
-    def test_unauthenticated_response(self):
-        self.assertEqual(self.get_response().status_code, 302) # Redirect to login
 
 
-class AdminTournamentViewSimpleLoadTestMixin(TournamentTestsMixin):
-    """For testing that a given view_name will merely load properly with auth"""
-
-    def test_authenticated_response(self):
+class AdminTournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
+    def authenticate(self):
         get_user_model().objects.create_superuser('admin', 'admin@tabbycatdebate.org', 'OH&K5V@n')
         self.client.login(username='admin', password='OH&K5V@n')
-        self.assertEqual(self.get_response().status_code, 200)
-
-    def test_unauthenticated_response(self):
-        self.assertEqual(self.get_response().status_code, 302) # Redirect to login
 
 
-class ConditionalTournamentTestsMixin(TournamentTestsMixin):
+class ConditionalTournamentTestsMixin(SingleViewTestMixin):
     """Mixin that provides tests for testing a view class that is conditionally
     shown depending on whether a user preference is set.
 
@@ -119,18 +145,22 @@ class ConditionalTournamentTestsMixin(TournamentTestsMixin):
         raise NotImplementedError
 
     def test_view_enabled(self):
-        """Checks that a page loads with 200 (OK) when enabled."""
-        self.tournament.preferences[self.view_toggle_preference] = self.view_toggle_on_value
-        response = self.get_response()
-        self.assertEqual(response.status_code, 200)
-        self.validate_response(response)
+        values = getattr(self, 'view_toggle_on_values', [self.view_toggle_on_value])
+        for value in values:
+            with self.subTest(value=value):
+                self.tournament.preferences[self.view_toggle_preference] = value
+                response = self.get_response()
+                self.assertResponseOK(response)
+                self.validate_response(response)
 
     def test_view_disabled(self):
-        """Checks that a page returns 403 (Permission Denied) when disabled."""
-        self.tournament.preferences[self.view_toggle_preference] = self.view_toggle_off_value
-        with self.assertLogs('tournaments.mixins', logging.WARNING):
-            response = self.get_response()
-        self.assertEqual(response.status_code, 403)  # expect 403 (Permission Denied)
+        values = getattr(self, 'view_toggle_off_values', [self.view_toggle_off_value])
+        for value in values:
+            with self.subTest(value=value):
+                self.tournament.preferences[self.view_toggle_preference] = value
+                with self.assertLogs('tournaments.mixins', logging.WARNING):
+                    response = self.get_response()
+                self.assertResponsePermissionDenied(response)
 
 
 class ConditionalTournamentViewSimpleLoadTestMixin(ConditionalTournamentTestsMixin):
@@ -140,7 +170,7 @@ class ConditionalTournamentViewSimpleLoadTestMixin(ConditionalTournamentTestsMix
         pass
 
 
-class TournamentTestCase(TournamentTestsMixin, TestCase):
+class TournamentTestCase(SingleViewTestMixin, TestCase):
     """Extension of django.test.TestCase that provides methods for testing a
     populated view on a tournament, with a prepopulated database.
     Selenium tests can't inherit from this otherwise fixtures wont be loaded;
@@ -149,33 +179,35 @@ class TournamentTestCase(TournamentTestsMixin, TestCase):
 
 
 class TableViewTestsMixin:
-    """Mixin that provides methods for validating row counts in table views.
-    Subclasses must override `expected_row_counts()`.
-    """
-
-    # This can't be a TestCase subclass, because it is inherited by
-    # ConditionalTableViewTestsMixin, which provides tests.
-
-    def validate_response(self, response):
-        self.validate_row_counts(response)
+    """Mixin providing utility functions for table views."""
 
     def get_table_data(self, response):
         self.assertIn('tables_data', response.context)
         return json.loads(response.context['tables_data'])
 
-    def validate_row_counts(self, response):
+    def assertNoTables(self, response):  # noqa: N802
         data = self.get_table_data(response)
-        for count, table in zip(self.expected_row_counts(), data):
-            self.assertNotEqual(count, 0)  # check the test isn't vacuous
-            self.assertEqual(count, len(table['data']))
+        self.assertEqual(len(data), 0)
 
-    def expected_row_counts(self):
-        raise NotImplementedError
+    def assertResponseTableRowCountsEqual(self, response, counts, allow_vacuous=False):  # noqa: N802
+        data = self.get_table_data(response)
+        self.assertEqual(len(counts), len(data))
+        for count, table in zip(counts, data):
+            if not allow_vacuous:
+                self.assertNotEqual(count, 0)  # check the test isn't vacuous
+            self.assertEqual(count, len(table['data']))
 
 
 class ConditionalTableViewTestsMixin(TableViewTestsMixin, ConditionalTournamentTestsMixin):
     """Combination of TableViewTestsMixin and ConditionalTournamentTestsMixin,
     for convenience."""
+
+    def validate_response(self, response):
+        counts = self.expected_row_counts()
+        self.assertResponseTableRowCountsEqual(response, counts)
+
+    def expected_row_counts(self):
+        raise NotImplementedError
 
 
 class BaseMinimalTournamentTestCase(TestCase):
@@ -234,7 +266,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         super().tearDownClass()
 
 
-class SeleniumTournamentTestCase(TournamentTestsMixin, SeleniumTestCase):
+class SeleniumTournamentTestCase(SingleViewTestMixin, SeleniumTestCase):
     """ Basically reimplementing BaseTournamentTest; but use cls not self """
 
     set_preferences = None

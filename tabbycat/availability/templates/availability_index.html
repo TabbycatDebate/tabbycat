@@ -114,15 +114,16 @@
     </div>
   {% endif %}
 
-  {% if round.seq > current_round.seq and not round.is_break_round %}
+  {% if not round.completed and round.prev and not round.prev.completed and not round.is_break_round %}
     <div class="alert alert-warning">
       <i data-feather="alert-circle"></i>
-      {% roundurl 'tournament-advance-round-check' current_round as advance_round_url %}
-      {% blocktrans trimmed with round_name=round.name current_round_name=current_round.name %}
-        This is a page for <strong>{{ round_name }}</strong>, however the current
-        round is still set to <strong>{{ current_round_name }}</strong>. Did you
-        forget to <a href="{{ advance_round_url }}" class="alert-link">
-        advance to the next round?</a>
+      {% roundurl 'tournament-complete-round-check' round.prev as complete_prev_round_url %}
+      {% blocktrans trimmed with round_name=round.name prev_round_name=round.prev.name %}
+        This is a page for <strong>{{ round_name }}</strong>, but the previous
+        round is still not marked as completed. Did you forget to
+        <a href="{{ complete_prev_round_url }}" class="alert-link">
+          mark {{ prev_round_name }} as completed?
+        </a>
       {% endblocktrans %}
     </div>
   {% endif %}

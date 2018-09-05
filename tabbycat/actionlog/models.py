@@ -49,7 +49,8 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_MOTIONS_UNRELEASE          = 'mo.unre'
     ACTION_TYPE_DEBATE_IMPORTANCE_EDIT     = 'db.im.edit'
     ACTION_TYPE_ROUND_START_TIME_SET       = 'rd.st.set'
-    ACTION_TYPE_ROUND_ADVANCE              = 'rd.adva'
+    ACTION_TYPE_ROUND_ADVANCE              = 'rd.adva'   # obsolete, kept to avoid breaking old sites
+    ACTION_TYPE_ROUND_COMPLETE             = 'rd.comp'
     ACTION_TYPE_ADJUDICATOR_BREAK_SET      = 'br.aj.set'
     ACTION_TYPE_BREAK_ELIGIBILITY_EDIT     = 'br.el.edit'
     ACTION_TYPE_BREAK_CATEGORIES_EDIT      = 'br.ca.edit'
@@ -113,6 +114,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_BREAK_EDIT_REMARKS        , _("Edited breaking team remarks")),
         (ACTION_TYPE_ROUND_START_TIME_SET      , _("Set start time")),
         (ACTION_TYPE_ROUND_ADVANCE             , _("Advanced the current round to")),
+        (ACTION_TYPE_ROUND_COMPLETE            , _("Marked round as completed")),
         (ACTION_TYPE_AVAIL_TEAMS_SAVE          , _("Edited teams availability")),
         (ACTION_TYPE_AVAIL_ADJUDICATORS_SAVE   , _("Edited adjudicators availability")),
         (ACTION_TYPE_AVAIL_VENUES_SAVE         , _("Edited venue availability")),
