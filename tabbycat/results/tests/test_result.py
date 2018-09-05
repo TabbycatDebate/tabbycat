@@ -91,18 +91,18 @@ class BaseTestDebateResult(TestCase):
     SIDES = ['aff', 'neg']
 
     def setUp(self):
-        self.t = Tournament.objects.create(slug="resulttest", name="ResultTest")
+        self.tournament = Tournament.objects.create(slug="resulttest", name="ResultTest")
         self.teams = []
         for i in range(2):
             inst = Institution.objects.create(code="Inst{:d}".format(i), name="Institution {:d}".format(i))
-            team = Team.objects.create(tournament=self.t, institution=inst, reference="Team {:d}".format(i), use_institution_prefix=False)
+            team = Team.objects.create(tournament=self.tournament, institution=inst, reference="Team {:d}".format(i), use_institution_prefix=False)
             self.teams.append(team)
             for j in range(3):
                 Speaker.objects.create(team=team, name="Speaker {:d}-{:d}".format(i, j))
 
         venue = Venue.objects.create(name="Venue", priority=10)
 
-        rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
+        rd = Round.objects.create(tournament=self.tournament, seq=1, abbreviation="R1")
         self.debate = Debate.objects.create(round=rd, venue=venue)
 
         sides = [DebateTeam.SIDE_AFF, DebateTeam.SIDE_NEG]
@@ -110,18 +110,18 @@ class BaseTestDebateResult(TestCase):
             DebateTeam.objects.create(debate=self.debate, team=team, side=side)
 
         inst = Institution.objects.create(code="Adjs", name="Adjudicators")
-        self.adjs = [Adjudicator.objects.create(tournament=self.t, institution=inst,
+        self.adjs = [Adjudicator.objects.create(tournament=self.tournament, institution=inst,
                 name="Adjudicator {:d}".format(i), test_score=5) for i in range(3)]
 
     def tearDown(self):
         DebateTeam.objects.all().delete()
         Institution.objects.all().delete()
-        self.t.delete()
+        self.tournament.delete()
 
     def set_tournament_preference(self, section, name, value):
-        self.t.preferences[section + '__' + name] = value
-        if name in self.t._prefs:    # clear model-level cache
-            del self.t._prefs[name]
+        self.tournament.preferences[section + '__' + name] = value
+        if name in self.tournament._prefs:    # clear model-level cache
+            del self.tournament._prefs[name]
 
     def get_result(self):
         ballotsub = BallotSubmission.objects.get(debate=self.debate, confirmed=True)

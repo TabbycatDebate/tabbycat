@@ -31,12 +31,12 @@ class TestImporterAnorak(TestCase):
 
         # create tournament
         self.maxDiff = None
-        self.t = tm.Tournament(slug="import-test")
-        self.t.save()
+        self.tournament = tm.Tournament(slug="import-test")
+        self.tournament.save()
         self.logger = logging.getLogger(__name__)
         self.logger.propagate = False  # keep logs contained for tests
         self.logger.setLevel(logging.INFO)
-        self.importer = AnorakTournamentDataImporter(self.t, logger=self.logger)
+        self.importer = AnorakTournamentDataImporter(self.tournament, logger=self.logger)
 
     def _open_csv_file(self, dir, filename):
         path = os.path.join(dir, filename + ".csv")

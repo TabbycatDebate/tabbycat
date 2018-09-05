@@ -933,10 +933,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def add_standings_results_columns(self, standings, rounds, show_ballots):
 
         for round_seq, round in enumerate(rounds):
+            header = {'title': round.abbreviation, 'key': round.abbreviation}
             results = [self._result_cell(
                 s.round_results[round_seq],
                 compress=True,
                 show_score=True,
                 show_ballots=show_ballots
             ) for s in standings]
-            self.add_column(round.abbreviation, results)
+            self.add_column(header, results)

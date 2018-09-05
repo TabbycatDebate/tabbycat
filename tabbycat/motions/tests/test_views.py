@@ -1,8 +1,8 @@
 from django.test import TestCase
 
-from utils.tests import ConditionalTournamentViewLoadTest
+from utils.tests import ConditionalTournamentViewSimpleLoadTestMixin
 
 
-class PublicMotionStatisticsViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicMotionStatisticsViewTest(ConditionalTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'motions-public-statistics'
-    view_toggle = 'tab_release__motion_tab_released'
+    view_toggle_preference = 'tab_release__motion_tab_released'
