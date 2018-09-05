@@ -1,24 +1,24 @@
 from django.test import TestCase
 
-from utils.tests import AdminTournamentViewDoesLoadTest, AssistantTournamentViewDoesLoadTest, ConditionalTournamentViewLoadTest
+from utils.tests import AdminTournamentViewSimpleLoadTestMixin, AssistantTournamentViewSimpleLoadTestMixin, ConditionalTournamentViewSimpleLoadTestMixin
 
 
-class AdminCheckInScanView(AdminTournamentViewDoesLoadTest, TestCase):
+class AdminCheckInScanView(AdminTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'admin-checkin-scan' # DONE
 
 
-class AssistantCheckInScanView(AssistantTournamentViewDoesLoadTest, TestCase):
+class AssistantCheckInScanView(AssistantTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'assistant-checkin-scan'
 
 
-class AdminCheckInStatusView(AdminTournamentViewDoesLoadTest, TestCase):
+class AdminCheckInStatusView(AdminTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'admin-checkin-status' # DONE
 
 
-class AssistantCheckInStatusView(AssistantTournamentViewDoesLoadTest, TestCase):
+class AssistantCheckInStatusView(AssistantTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'assistant-checkin-status'
 
 
-class PublicCheckInStatusViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicCheckInStatusViewTest(ConditionalTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'checkins-public-status'
-    view_toggle = 'public_features__public_checkins'
+    view_toggle_preference = 'public_features__public_checkins'

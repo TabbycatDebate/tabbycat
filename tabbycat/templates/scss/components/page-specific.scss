@@ -93,6 +93,22 @@
   background-color: $red;
 }
 
+.progress-bar-opening {
+  background-color: $front;
+}
+
+.progress-bar-closing {
+  background-color: $back;
+}
+
+.progress-bar-gov {
+  background-color: $gov;
+}
+
+.progress-bar-opp {
+  background-color: $opp;
+}
+
 .text-aff {
   color: $aff;
 }
