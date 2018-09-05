@@ -4,7 +4,7 @@ from utils.tests import AdminTournamentViewSimpleLoadTestMixin, AssistantTournam
 
 
 class AdminCheckInScanView(AdminTournamentViewSimpleLoadTestMixin, TestCase):
-    view_name = 'admin-checkin-scan' # DONE
+    view_name = 'admin-checkin-scan'
 
 
 class AssistantCheckInScanView(AssistantTournamentViewSimpleLoadTestMixin, TestCase):
@@ -12,7 +12,7 @@ class AssistantCheckInScanView(AssistantTournamentViewSimpleLoadTestMixin, TestC
 
 
 class AdminCheckInStatusView(AdminTournamentViewSimpleLoadTestMixin, TestCase):
-    view_name = 'admin-checkin-status' # DONE
+    view_name = 'admin-checkin-status'
 
 
 class AssistantCheckInStatusView(AssistantTournamentViewSimpleLoadTestMixin, TestCase):

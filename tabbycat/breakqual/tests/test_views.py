@@ -9,8 +9,8 @@ class BreakingTeamsViewTestMixin(ConditionalTableViewTestsMixin):
     view_name = 'breakqual-public-teams'
     view_toggle_preference = 'public_features__public_breaking_teams'
 
-    def get_url_kwargs(self):
-        kwargs = super().get_url_kwargs()
+    def get_view_reverse_kwargs(self):
+        kwargs = super().get_view_reverse_kwargs()
         kwargs['category'] = self.break_category_slug
         return kwargs
 
