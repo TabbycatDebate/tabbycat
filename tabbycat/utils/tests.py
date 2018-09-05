@@ -101,7 +101,6 @@ class SingleViewTestMixin(CompletedTournamentTestMixin):
 class TournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
 
     def test_response(self):
-        """Tests that the response loads without error."""
         response = self.get_response()
         self.assertResponseOK(response)
 
@@ -109,13 +108,11 @@ class TournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
 class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
 
     def test_authenticated_response(self):
-        """Checks that when logged in, the page loads without error."""
         self.authenticate()
         response = self.get_response()
         self.assertResponseOK(response)
 
     def test_unauthenticated_response(self):
-        """Checks that when not logged in, the page redirects to the login page."""
         self.client.logout()
         response = self.get_response()
         self.assertResponseRedirect(response, reverse('login'))
@@ -148,7 +145,6 @@ class ConditionalTournamentTestsMixin(SingleViewTestMixin):
         raise NotImplementedError
 
     def test_view_enabled(self):
-        """Tests that a page loads without error when enabled."""
         values = getattr(self, 'view_toggle_on_values', [self.view_toggle_on_value])
         for value in values:
             with self.subTest(value=value):
@@ -158,7 +154,6 @@ class ConditionalTournamentTestsMixin(SingleViewTestMixin):
                 self.validate_response(response)
 
     def test_view_disabled(self):
-        """Tests that a page is refused with Permission Denied (403) when disabled."""
         values = getattr(self, 'view_toggle_off_values', [self.view_toggle_off_value])
         for value in values:
             with self.subTest(value=value):

@@ -38,6 +38,7 @@ class PublicDrawForCurrentRoundViewPermissionTest(ConditionalTableViewTestsMixin
 
 
 class PublicDrawSpecificRoundTest(CompletedTournamentTestMixin, TableViewTestsMixin, TestCase):
+    """Tests that the specific-round draw page responds to draw release."""
 
     round_seq = 2
 
@@ -46,8 +47,6 @@ class PublicDrawSpecificRoundTest(CompletedTournamentTestMixin, TableViewTestsMi
         self.tournament.preferences['public_features__public_draw'] = 'all-released'
 
     def test_unreleased(self):
-        """Checks that the public draw for a specific round does not show when
-        not released."""
         self.round.draw_status = Round.STATUS_CONFIRMED
         self.round.save()
 
@@ -56,7 +55,6 @@ class PublicDrawSpecificRoundTest(CompletedTournamentTestMixin, TableViewTestsMi
         self.assertNoTables(response)
 
     def test_released(self):
-        """Checks that the public draw for a specific round shows when released."""
         self.round.draw_status = Round.STATUS_RELEASED
         self.round.save()
 
@@ -66,6 +64,8 @@ class PublicDrawSpecificRoundTest(CompletedTournamentTestMixin, TableViewTestsMi
 
 
 class PublicDrawPreliminaryCurrentRoundTest(CompletedTournamentTestMixin, TableViewTestsMixin, TestCase):
+    """Tests the single-round current round page, which appears during the
+    preliminary rounds, and how it responds to draw release."""
 
     def setUp(self):
         super().setUp()
@@ -78,8 +78,6 @@ class PublicDrawPreliminaryCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.round.save()
 
     def test_unreleased(self):
-        """Checks that the public draw for the current round does not show when
-        not released."""
         self.round.draw_status = Round.STATUS_CONFIRMED
         self.round.save()
 
@@ -88,7 +86,6 @@ class PublicDrawPreliminaryCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.assertNoTables(response)
 
     def test_released(self):
-        """Checks that the public draw for the current round shows when released."""
         self.round.draw_status = Round.STATUS_RELEASED
         self.round.save()
 
@@ -120,6 +117,8 @@ class PublicDrawPreliminaryCurrentRoundTest(CompletedTournamentTestMixin, TableV
 
 
 class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableViewTestsMixin, TestCase):
+    """Tests the multi-round current round page, which appears when there are
+    simultaneous elimination rounds, and how it responds to draw release."""
 
     fixtures = ['before_oqf_ssf.json']
 
@@ -134,9 +133,6 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.ngf = self.tournament.round_set.get(abbreviation='NGF')
 
     def test_unreleased(self):
-        """Checks the public draw page when neither of two current rounds have
-        been released, and a third potentially-current round hasn't been
-        generated."""
         self.oqf.draw_status = Round.STATUS_CONFIRMED
         self.oqf.save()
         self.ssf.draw_status = Round.STATUS_CONFIRMED
@@ -147,8 +143,6 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.assertNoTables(response)
 
     def test_one_released(self):
-        """Checks that the public draw for the current round shows when released,
-        and a third potentially-current round hasn't been generated."""
         self.oqf.draw_status = Round.STATUS_RELEASED
         self.oqf.save()
         self.ssf.draw_status = Round.STATUS_CONFIRMED
@@ -158,9 +152,6 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.assertResponseTableRowCountsEqual(response, [4, 0], allow_vacuous=True)
 
     def test_both_released(self):
-        """Checks the public draw page when both of two current rounds have
-        been released, and a third potentially-current round hasn't been
-        generated."""
         self.oqf.draw_status = Round.STATUS_RELEASED
         self.oqf.save()
         self.ssf.draw_status = Round.STATUS_RELEASED
@@ -170,9 +161,6 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.assertResponseTableRowCountsEqual(response, [4, 2])
 
     def test_all_three_released(self):
-        """Checks the public draw page when all of three current rounds have
-        been released, by creating a Novice Grand Final so that that round
-        becomes a current round."""
         self.oqf.draw_status = Round.STATUS_RELEASED
         self.oqf.save()
         self.ssf.draw_status = Round.STATUS_RELEASED
