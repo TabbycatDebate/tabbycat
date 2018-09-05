@@ -155,9 +155,7 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.ssf.save()
 
         response = self.get_response('draw-public-current-rounds')
-        counts = [self.oqf.debate_set.count(), 0]
-        self.assertNotEqual(counts[0], 0)
-        self.assertResponseTableRowCountsEqual(response, counts, allow_vacuous=True)
+        self.assertResponseTableRowCountsEqual(response, [4, 0], allow_vacuous=True)
 
     def test_both_released(self):
         """Checks the public draw page when both of two current rounds have
@@ -169,8 +167,7 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         self.ssf.save()
 
         response = self.get_response('draw-public-current-rounds')
-        counts = [self.oqf.debate_set.count(), self.ssf.debate_set.count()]
-        self.assertResponseTableRowCountsEqual(response, counts)
+        self.assertResponseTableRowCountsEqual(response, [4, 2])
 
     def test_all_three_released(self):
         """Checks the public draw page when all of three current rounds have
@@ -191,5 +188,4 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
         ngf_debate.debateteam_set.create(team=neg, side=DebateTeam.SIDE_NEG)
 
         response = self.get_response('draw-public-current-rounds')
-        counts = [self.oqf.debate_set.count(), self.ssf.debate_set.count(), 1]
-        self.assertResponseTableRowCountsEqual(response, counts)
+        self.assertResponseTableRowCountsEqual(response, [4, 2, 1])
