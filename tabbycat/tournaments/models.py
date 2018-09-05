@@ -259,7 +259,6 @@ class Tournament(models.Model):
 
     @cached_property
     def get_current_round_cached(self):
-        return self.current_round
         cached_key = "%s_current_round_object" % self.slug
         if self.current_round:
             cache.get_or_set(cached_key, self.current_round, None)
