@@ -159,9 +159,9 @@ class TableViewTestsMixin:
     def validate_response(self, response):
         self.validate_row_counts(response)
 
-    @staticmethod
-    def get_table_data(response):
-        return json.loads(response.context.get('tables_data', '[]'))
+    def get_table_data(self, response):
+        self.assertIn('tables_data', response.context)
+        return json.loads(response.context['tables_data'])
 
     def validate_row_counts(self, response):
         data = self.get_table_data(response)
