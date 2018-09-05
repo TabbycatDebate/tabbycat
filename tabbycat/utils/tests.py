@@ -48,7 +48,7 @@ class CompletedTournamentTestMixin:
       - Assumes URLs are from said tournament and, optionally, a particular round
     """
 
-    fixtures = ['completed_demo.json']
+    fixtures = ['after_round_4.json']
     round_seq = None
 
     def get_tournament(self):
@@ -149,17 +149,23 @@ class ConditionalTournamentTestsMixin(SingleViewTestMixin):
 
     def test_view_enabled(self):
         """Tests that a page loads without error when enabled."""
-        self.tournament.preferences[self.view_toggle_preference] = self.view_toggle_on_value
-        response = self.get_response()
-        self.assertResponseOK(response)
-        self.validate_response(response)
+        values = getattr(self, 'view_toggle_on_values', [self.view_toggle_on_value])
+        for value in values:
+            with self.subTest(value=value):
+                self.tournament.preferences[self.view_toggle_preference] = value
+                response = self.get_response()
+                self.assertResponseOK(response)
+                self.validate_response(response)
 
     def test_view_disabled(self):
         """Tests that a page is refused with Permission Denied (403) when disabled."""
-        self.tournament.preferences[self.view_toggle_preference] = self.view_toggle_off_value
-        with self.assertLogs('tournaments.mixins', logging.WARNING):
-            response = self.get_response()
-        self.assertResponsePermissionDenied(response)
+        values = getattr(self, 'view_toggle_off_values', [self.view_toggle_off_value])
+        for value in values:
+            with self.subTest(value=value):
+                self.tournament.preferences[self.view_toggle_preference] = value
+                with self.assertLogs('tournaments.mixins', logging.WARNING):
+                    response = self.get_response()
+                self.assertResponsePermissionDenied(response)
 
 
 class ConditionalTournamentViewSimpleLoadTestMixin(ConditionalTournamentTestsMixin):
@@ -186,12 +192,14 @@ class TableViewTestsMixin:
 
     def assertNoTables(self, response):  # noqa: N802
         data = self.get_table_data(response)
-        self.assertEqual(data, [])
+        self.assertEqual(len(data), 0)
 
-    def assertResponseTableRowCountsEqual(self, response, counts):  # noqa: N802
+    def assertResponseTableRowCountsEqual(self, response, counts, allow_vacuous=False):  # noqa: N802
         data = self.get_table_data(response)
+        self.assertEqual(len(counts), len(data))
         for count, table in zip(counts, data):
-            self.assertNotEqual(count, 0)  # check the test isn't vacuous
+            if not allow_vacuous:
+                self.assertNotEqual(count, 0)  # check the test isn't vacuous
             self.assertEqual(count, len(table['data']))
 
 
