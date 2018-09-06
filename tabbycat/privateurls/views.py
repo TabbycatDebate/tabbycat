@@ -4,7 +4,6 @@ from smtplib import SMTPException
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView
 from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
 from django.template import Template
@@ -22,7 +21,6 @@ from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
-from .forms import MassEmailForm
 from .utils import populate_url_keys, send_randomised_url_emails
 
 logger = logging.getLogger(__name__)
@@ -35,13 +33,13 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
         tournament = self.tournament
         kwargs['exists'] = tournament.participants.filter(url_key__isnull=False).exists()
         kwargs['blank_exists'] = tournament.participants.filter(url_key__isnull=True).exists()
+        kwargs['to_email_exists'] = self.get_participants_to_email().exists()
         return super().get_context_data(**kwargs)
 
     def get_participants_to_email(self, already_sent=False):
         subquery = SentMessageRecord.objects.filter(
-            tournament=self.tournament, email=OuterRef('email'),
-            context__key=str(OuterRef('url_key')),
-            event=SentMessageRecord.EVENT_TYPE_URL
+            event=SentMessageRecord.EVENT_TYPE_URL,
+            tournament=self.tournament, email=OuterRef('email')
         )
         people = self.tournament.participants.filter(
             url_key__isnull=False, email__isnull=False
@@ -138,70 +136,18 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
         return super().post(request, *args, **kwargs)
 
 
-class BaseEmailRandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
+class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
 
-    tables_orientation = 'rows'
+    tournament_redirect_pattern_name = 'privateurls-list'
 
-    def get_context_data(self, **kwargs):
-        kwargs['people_no_email'] = self.tournament.participants.filter(
-            Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False
-        ).values_list('name', flat=True)
-        return super().get_context_data(**kwargs)
-
-    def get_participant_table(self):
-        tournament = self.tournament
-
-        def _build_url(person):
-            path = reverse_tournament('privateurls-person-index', tournament, kwargs={'url_key': person.url_key})
-            return self.request.build_absolute_uri(path)
-
-        people = self.get_participants_to_email()
-        title = _("Participants who will be sent e-mails (%(n)s)") % {'n': people.count()}
-        table = TabbycatTableBuilder(view=self, title=title, sort_key="name")
-        table.add_column({'key': 'name', 'title': _("Name")}, [p.name for p in people])
-        table.add_column({'key': 'email', 'title': _("Email")}, [p.email for p in people])
-        table.add_column({'key': 'url', 'title': _("Private URL")}, [_build_url(p) for p in people])
-
-        return table
-
-
-class EmailUrlsView(BaseEmailRandomisedUrlsView, FormView):
-
-    template_name = 'urls_email_list.html'
-    form_class = MassEmailForm
-
-    def get_success_url(self):
-        return reverse_tournament('privateurls-email', self.tournament)
-
-    def get_initial(self):
-        default = {}
-        default['subject_line'] = _("Your personal private URL for %(tour)s") % {'tour': self.tournament}
-        default['message_body'] = _(
-            "Hi {{ NAME }},\n\n"
-            "At %(tour)s, we are using an online tabulation system. You can submit "
-            "your ballots and/or feedback at the following URL. This URL is unique to you — do not share it with "
-            "anyone, as anyone who knows it can submit forms on your behalf. This URL "
-            "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
-            "Your personal private URL is:\n"
-            "{{ URL }}"
-        ) % {'tour': self.tournament}
-        return default
-
-    def get_context_data(self, **kwargs):
-        kwargs['nparticipants_already_sent'] = self.get_participants_to_email(
-            already_sent=True).count()
-        return super().get_context_data(**kwargs)
-
-    def get_table(self):
-        return self.get_participant_table()
-
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        t = self.tournament
         participants = self.get_participants_to_email()
 
         try:
             nparticipants = send_randomised_url_emails(
-                self.request, self.tournament, participants,
-                Template(form.cleaned_data['subject_line']), Template(form.cleaned_data['message_body'])
+                self.request, t, participants,
+                Template(t.pref('url_email_subject')), Template(t.pref('url_email_message'))
             )
         except SMTPException:
             messages.error(self.request, _("There was a problem sending private URLs to participants."))
@@ -217,7 +163,17 @@ class EmailUrlsView(BaseEmailRandomisedUrlsView, FormView):
                 nparticipants
             ) % {'nparticipants': nparticipants})
 
-        return super().form_valid(form)
+        people_no_email = t.participants.filter(
+            Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False
+        ).values_list('name', flat=True)
+
+        if people_no_email:
+            messages.warning(self.request, ngettext(
+                "This participant does not have an email address: %(participants)s",
+                "These %(count)d participants do not have an email address: %(participants)s",
+                people_no_email.count()) % {'count': people_no_email.count(), 'participants': ", ".join(people_no_email)})
+
+        return super().post(request, *args, **kwargs)
 
 
 class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):

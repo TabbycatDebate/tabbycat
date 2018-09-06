@@ -6,11 +6,11 @@ urlpatterns = [
     path('',
         views.RandomisedUrlsView.as_view(),
         name='privateurls-list'),
+
     path('generate/',
         views.GenerateRandomisedUrlsView.as_view(),
         name='privateurls-generate'),
-
     path('email/',
-        views.EmailUrlsView.as_view(),
+        views.EmailRandomizedUrlsView.as_view(),
         name='privateurls-email'),
 ]
