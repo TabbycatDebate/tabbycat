@@ -1396,7 +1396,7 @@ class AdjudicatorDrawNotificationMessage(LongStringPreference):
     verbose_name = _("Adjudicator draw message")
     section = email
     name = 'adj_email_message'
-    default = "Hi {{ USER }}\n\nYou have been assigned as {{ POSITION }} adjudicator for {{ ROUND }} in room {{ VENUE }} with the following panel: {{ PANEL }}\n\n" \
+    default = "Hi {{ USER }},\n\nYou have been assigned as {{ POSITION }} adjudicator for {{ ROUND }} in room {{ VENUE }} with the following panel: {{ PANEL }}\n\n" \
             + "The debate is between these teams: {{ DRAW }}"
 
 
@@ -1418,7 +1418,7 @@ class PrivateUrlEmailMessage(LongStringPreference):
     section = email
     name = 'url_email_message'
     default = ("Hi {{ NAME }},\n\n"
-        "At %(tour)s, we are using an online tabulation system. You can submit "
+        "At '{{ TOURN }}', we are using an online tabulation system. You can submit "
         "your ballots and/or feedback at the following URL. This URL is unique to you — do not share it with "
         "anyone, as anyone who knows it can submit forms on your behalf. This URL "
         "will not change throughout this tournament, so we suggest bookmarking it.\n\n"

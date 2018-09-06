@@ -10,6 +10,8 @@
        href="{% tournamenturl 'printing-urls' %}" target="_blank">
       {% trans "Print URLs" %}
     </a>
+  </div>
+  <div class="btn-group">
     {% if to_email_exists %}
     <form action="{% tournamenturl 'privateurls-email' %}" method="POST">
       {% csrf_token %}
