@@ -61,16 +61,10 @@
   },
   "devDependencies": {
     "artillery": "^1.6.0-22",
-    "husky": "^1.0.0-rc.13",
     "livereload": "^0.7.0",
     "stylelint": "^9.x",
     "stylelint-config-standard": "^18.x",
     "stylelint-scss": "^3.x"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run lint"
-    }
   },
   "browserslist": [
     "> 1%",
