@@ -30,7 +30,6 @@ services:
     environment:
       - DEBUG=1
       - IN_DOCKER=1
-    image: django
     ports:
       - "8000:8000"
     volumes:

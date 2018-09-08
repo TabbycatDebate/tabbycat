@@ -22,10 +22,10 @@ ADD . /tcd/
 RUN git config --global url."https://".insteadOf git://
 
 # Install our node/python requirements
+RUN npm install -g npm@6.3.0
 RUN pip install -r ./config/requirements_core.txt
-RUN npm install
+RUN npm install --only=production
 
 # Compile all the static files
-RUN npm rebuild node-sass --force
 RUN npm run build
 RUN python ./tabbycat/manage.py collectstatic --noinput -v 0

@@ -81,8 +81,6 @@ For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `standardJS
 
     $ npm run lint-vue
 
-Note that if you have installed our npm packages `husky <https://www.npmjs.com/package/husky>`_ will intercept git pushes to run the css and javascript lints below and block the push if they do not pass. You can bypass this with the ``--no-verify`` flag if necessary. This behaviour is designed to be run in parallel with the python linting running on the ``pre-commit`` hook (which can be setup via ``flake8 --install-hook git``).
-
 Versioning convention
 =====================
 
