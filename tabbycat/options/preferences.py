@@ -1418,7 +1418,7 @@ class PrivateUrlEmailMessage(LongStringPreference):
     section = email
     name = 'url_email_message'
     default = ("Hi {{ NAME }},\n\n"
-        "At '{{ TOURN }}', we are using an online tabulation system. You can submit "
+        "At {{ TOURN }}, we are using an online tabulation system. You can submit "
         "your ballots and/or feedback at the following URL. This URL is unique to you — do not share it with "
         "anyone, as anyone who knows it can submit forms on your behalf. This URL "
         "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
