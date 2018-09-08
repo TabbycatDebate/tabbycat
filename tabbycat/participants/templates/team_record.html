@@ -98,9 +98,7 @@ names are relevant, or to the team's real name if it is not. #}
                         {% if use_code_names %}{{ dt.team.code_name }}{% else %}{{ dt.team.short_name }}{% endif %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% endif %} {# dt != debateteam #}
                       {% if debate.sides_confirmed %}
-                        ({% debate_team_side_name dt tournament %})
-                        {% if not forloop.last %},{% endif %}
-                      {% endif %}
+                        ({% debate_team_side_name dt tournament %}){% endif %}{% if not forloop.last %},{% endif %}
                     {% endfor %}
                   </div>
                 {% endif %} {# pref.teams_in_debate == 'bp' #}
