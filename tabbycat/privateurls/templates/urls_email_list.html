@@ -54,10 +54,10 @@
 
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">{% trans "Email message" %}</h4>
+      <h4 class="card-title mb-0">{% trans "Email message" %}</h4>
     </div>
     <div class="list-group list-group-flush">
-      <form method="POST" class="mb-3">
+      <form method="POST">
         {% csrf_token %}
         <div class="list-group-item">
           {{ form.non_field_errors }}
