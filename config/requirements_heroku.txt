@@ -10,6 +10,7 @@ gunicorn==19.9.0                        # Primary server for wsgi
 
 # Cache
 django-redis==4.9.0                     # Use redis for cache (on heroku; local optional)
+celery==4.2.1                           # Task queue (on heroku; local optional)
 
 # Misc
 sendgrid==5.4.1                         # Email service of choice on Heroku
