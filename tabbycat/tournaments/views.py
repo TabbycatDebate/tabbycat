@@ -70,7 +70,7 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
 
     def get_context_data(self, **kwargs):
         t = self.tournament
-        updates = 15 # Number of items to fetch
+        updates = 10 # Number of items to fetch
 
         kwargs["round"] = t.current_round
         kwargs["tournament_slug"] = t.slug

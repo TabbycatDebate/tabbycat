@@ -284,7 +284,10 @@ class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView)
         kwargs['tournament_slug'] = self.tournament.slug
 
         if not self.tournament.pref('share_adjs'):
-            kwargs['parts'] = self.tournament.participants.filter(url_key__isnull=False)
+            kwargs['parts'] = self.tournament.participants.filter(
+                url_key__isnull=False).select_related(
+                'speaker', 'speaker__team', 'adjudicator__institution',
+                'adjudicator')
         else:
             kwargs['parts'] = Person.objects.filter(Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament__isnull=True) & Q(url_key__isnull=False))
 

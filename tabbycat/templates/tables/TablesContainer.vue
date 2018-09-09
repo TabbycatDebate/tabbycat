@@ -3,7 +3,7 @@
 
     <div class="col-12 mb-3 d-print-none">
       <div class="input-group">
-        <input class="form-control" id="table-search" type="search"
+        <input class="form-control table-search" id="table-search" type="search"
                v-model="filterKey" @keyup="updateTableFilters"
                :placeholder="gettext('Find in Table')">
         <div class="input-group-append">
@@ -13,9 +13,9 @@
     </div>
 
     <div class="col mb-3" v-for="(table, i) in tablesData" :class="tableClass">
-      <div class="card table-container" :id="getTableId(i)">
-        <div class="card-body py-2">
-          <h4 class="card-title pt-3 pl-md-0 pl-1" v-if="table.title">
+      <div class="card table-container pl-1" :id="getTableId(i)">
+        <div class="card-body pl-3 pr-0 py-2">
+          <h4 class="card-title mt-1 mb-2" v-if="table.title">
             {{ table.title }}
             <small class="text-muted d-md-inline d-none" v-if="table.subtitle">
               {{ table.subtitle }}

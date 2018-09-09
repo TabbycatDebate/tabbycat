@@ -128,13 +128,14 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🕵'
 
     def get_table(self):
-        teams = self.tournament.team_set.select_related('institution').prefetch_related('speaker_set')
+        t = self.tournament
+        teams = t.team_set.select_related('institution').prefetch_related('speaker_set')
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'emoji': t.emoji, 'text': t.code_name or "—"} for t in teams]
+            [{'text': t.code_name or "—"} for t in teams]
         )
-        table.add_team_columns(teams, show_emoji=False)
+        table.add_team_columns(teams)
         return table
 
 
