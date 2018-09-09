@@ -208,7 +208,7 @@ EMOJI_LIST = (
     ("⬜",	True , "White Square"),
 
     # Unicode Version 5.2
-    ("⛑",	True , "Rescue Worker"),
+    ("⛑",	True , "Rescue Hat"),
     ("⛰",	True , "Mountain"),
     ("⛪",	True , "Church"),
     ("⛲",	True , "Fountain"),
@@ -238,7 +238,7 @@ EMOJI_LIST = (
 
     # Unicode Version 6.0
     ("😁",	False, "Smiling Eyes"),                     # too similar to another
-    ("😂",	True , "Tears of Joy"),
+    ("😂",	True , "Joy Tears"),
     ("😃",	False, "Smiling Face With Open Mouth"),     # too similar to another
     ("😄",	False, "Smiling Face With Open Mouth and Smiling Eyes"), # too similar to another
     ("😅",	False, "Cold Sweat"),                       # too similar to another
@@ -359,9 +359,9 @@ EMOJI_LIST = (
     ("💌",	True , "Love Letter"),
     ("💧",	True , "Droplet"),
     ("💤",	True , "ZZZ"),
-    ("💢",	True, "Anger"),
-    ("💣",	True , "Bomb"),
-    ("💥",	True , "Explosion"),
+    ("💢",	True , "Anger"),
+    ("💣",	False, "Bomb"),                             # potentially offensive
+    ("💥",	True , "Sparks"),
     ("💦",	True , "Splashing"),
     ("💨",	True , "Dash"),
     ("💫",	True , "Shooting Star"),
@@ -448,7 +448,7 @@ EMOJI_LIST = (
     ("🐾",	True , "Paw Prints"),
     ("🐔",	True , "Chicken"),
     ("🐓",	False, "Rooster"),                          # dull
-    ("🐣",	True , "Hatching Chick"),
+    ("🐣",	True , "Hatching"),
     ("🐤",	True , "Chick"),
     ("🐥",	False, "Front-Facing Baby Chick"),          # too similar to another
     ("🐦",	True , "Bird"),
@@ -712,7 +712,7 @@ EMOJI_LIST = (
     ("🌠",	False, "Shooting Star"),                    # dull
     ("🔥",	True , "Fire"),
     ("🎃",	True , "Jack-O-Lantern"),
-    ("🎄",	True , "Christmas Tree"),
+    ("🎄",	True , "Presents Tree"),
     ("🎆",	True , "Fireworks"),
     ("🎇",	False, "Firework Sparkler"),                # dull
     ("✨",	False, "Sparkles"),                         # dull
@@ -1261,7 +1261,7 @@ EMOJI_LIST = (
     ("🏙",	False, "Cityscape"),                        # dull
     ("🏚",	False, "Derelict House Building"),          # dull
     ("🖼",	False, "Frame With Picture"),               # dull
-    ("🛢",	True , "Oil Drum"),
+    ("🛢",	True , "Drum"),
     ("🛣",	False, "Motorway"),                         # dull
     ("🛤",	False, "Railway Track"),                    # dull
     ("🛳",	False, "Passenger Ship"),                   # dull
@@ -1378,7 +1378,7 @@ EMOJI_LIST = (
     # Unicode Version 9.0
     ("🤣",	True , "ROFL Face"),
     ("🤤",	True , "Drooling"),
-    ("🤢",	True , "Nauseated"),
+    ("🤢",	False, "Nauseated"),                        # potentially offensive
     ("🤧",	True , "Sneezing"),
     ("🤠",	True , "Cowboy"),
     ("🤡",	True , "Clown"),
@@ -1455,7 +1455,7 @@ EMOJI_LIST = (
     ("🤯",  True , "Mind Blown"),
     ("🤪",  True , "Zany Face"),
     ("🤬",  True , "Swear Face"),
-    ("🤮",  True , "Vomiting"),
+    ("🤮",  False, "Vomiting"),                          # potentially offensive
     ("🤫",  True , "Shushing"),
     ("🤭",  False, "Hand Over Mouth"),                   # too similar
     ("🧐",  True , "Monocle"),
@@ -1478,7 +1478,7 @@ EMOJI_LIST = (
     ("🤟",  False, "Love-You Gesture"),                  # too similar
     ("🤲",  False, "Palms Up Together"),                 # dull
     ("🧠",  True , "Brain"),
-    ("🧡",  False , "Orange Heart"),                     # too similar
+    ("🧡",  False, "Orange Heart"),                      # too similar
     ("🧣",  True , "Scarf"),
     ("🧤",  True , "Gloves"),
     ("🧥",  True , "Coat"),
@@ -1499,10 +1499,10 @@ EMOJI_LIST = (
     ("🥫",  True , "Canned"),
     ("🥟",  True , "Dumpling"),
     ("🥠",  True , "Fortune Cookie"),
-    ("🥡",  False , "Takeout Box"),                      # dull
+    ("🥡",  False, "Takeout Box"),                      # dull
     ("🥧",  True , "Pie"),
-    ("🥤",  False , "Cup With Straw"),                   # dull
-    ("🥢",  False , "Chopsticks"),                       # dull
+    ("🥤",  False, "Cup With Straw"),                   # dull
+    ("🥢",  False, "Chopsticks"),                       # dull
     ("🛸",  True , "Flying Saucer"),
     ("🛷",  True , "Sled"),
     ("🥌",  True , "Curling"),
