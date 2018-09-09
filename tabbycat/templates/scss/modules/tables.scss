@@ -3,15 +3,11 @@
 //------------------------------------------------------------------------------
 
 .table-container {
-  overflow-x: scroll;
+  overflow-x: scroll; // Enable side-scrolling on mobile
+}
 
-  .card-title {
-    margin-top: -8px;
-  }
-
-  .card-body {
-    @extend .px-2;
-  }
+.table-search {
+  padding-left: 21px; // Match margin of cards and titles
 }
 
 .table {
