@@ -90,16 +90,19 @@ names are relevant, or to the team's real name if it is not. #}
                 {# Teams (only in BP -- in two-team, it's displayed above) #}
                 {% if pref.teams_in_debate == 'bp' %}
                   <div class="list-group-item">
-                    <strong>{% trans "Teams:" %}</strong>
+                    <strong>{% trans "Teams:" %} </strong>
                     {% for dt in debate.debateteams_ordered %}
                       {% if dt != debateteam %}
                         {% team_record_link dt.team admin_page tournament %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% else %} {# elif dt == debateteam #}
-                        {% if use_code_names %}{{ dt.team.code_name }}{% else %}{{ dt.team.short_name }}{% endif %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
+                        {% if use_code_names %}
+                          {{ dt.team.code_name }}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
+                        {% else %}
+                          {{ dt.team.short_name }}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
+                        {% endif %}
                       {% endif %} {# dt != debateteam #}
                       {% if debate.sides_confirmed %}
-                        ({% debate_team_side_name dt tournament %})
-                        {% if not forloop.last %},{% endif %}
+                        ({% debate_team_side_name dt tournament %}){% if not forloop.last %},{% endif %}
                       {% endif %}
                     {% endfor %}
                   </div>

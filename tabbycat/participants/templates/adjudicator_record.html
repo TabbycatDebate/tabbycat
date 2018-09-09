@@ -84,9 +84,8 @@
                     {% for dt in debate.debateteams_ordered %}
                       {% team_record_link dt.team admin_page tournament %}
                       {% if debate.sides_confirmed %}
-                         ({% debate_team_side_name dt tournament %})
+                        ({% debate_team_side_name dt tournament %}){% if not forloop.last %},{% endif %}
                       {% endif %}
-                      {% if not forloop.last %},{% endif %}
                     {% endfor %}
                   </div>
                 {% endif %} {# pref.teams_in_debate == 'bp' #}
