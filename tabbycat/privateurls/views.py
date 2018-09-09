@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.views.generic.base import TemplateView
 from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
-from django.template import Template
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -14,6 +13,7 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
+from notifications.utils import RandomizedURLEmailGenerator
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -21,7 +21,7 @@ from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
-from .utils import populate_url_keys, send_randomised_url_emails
+from .utils import populate_url_keys
 
 logger = logging.getLogger(__name__)
 
@@ -142,13 +142,15 @@ class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
         t = self.tournament
-        participants = self.get_participants_to_email()
+
+        path = reverse_tournament('privateurls-person-index', t, kwargs={'url_key': '0'})
+        url = request.build_absolute_uri(path)[:-2]
 
         try:
-            nparticipants = send_randomised_url_emails(
-                self.request, t, participants,
-                Template(t.pref('url_email_subject')), Template(t.pref('url_email_message'))
-            )
+            generator = RandomizedURLEmailGenerator(t)
+            generator.run(url, t.id)
+
+            nparticipants = len(generator.emails)
         except SMTPException:
             messages.error(self.request, _("There was a problem sending private URLs to participants."))
         except ConnectionError as e:

@@ -1,14 +1,7 @@
 import logging
-from smtplib import SMTPException
 
-from django.core.mail import get_connection
 from django.db.models import Count, Q
-from django.template import Template
-from django.utils.translation import gettext as _
 
-from adjallocation.allocation import AdjudicatorAllocation
-from notifications.models import SentMessageRecord
-from notifications.utils import TournamentEmailMessage
 from participants.models import Team
 from tournaments.models import Round
 
@@ -33,54 +26,3 @@ def annotate_npullups(teams, until):
 
     for team in teams:
         team.npullups = npullups_by_team_id.get(team.id, 0)
-
-
-def send_mail_to_adjs(round):
-    tournament = round.tournament
-    draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
-
-    subject = Template(tournament.pref('adj_email_subject_line'))
-    body = Template(tournament.pref('adj_email_message'))
-    messages = []
-
-    adj_position_names = {
-        AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
-        AdjudicatorAllocation.POSITION_ONLY: _("the only"),
-        AdjudicatorAllocation.POSITION_PANELLIST: _("a panellist"),
-        AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
-    }
-
-    def _assemble_panel(adjs):
-        adj_string = []
-        for adj, pos in adjs:
-            adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
-
-        return ", ".join(adj_string)
-
-    for debate in draw:
-        context = {
-            'ROUND': round.name,
-            'VENUE': debate.venue.name,
-            'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-            'DRAW': debate.matchup
-        }
-
-        for adj, pos in debate.adjudicators.with_positions():
-            if adj.email is None:
-                continue
-
-            context['USER'] = adj.name
-            context['POSITION'] = adj_position_names[pos]
-
-            messages.append(TournamentEmailMessage(subject, body, tournament, round, SentMessageRecord.EVENT_TYPE_DRAW, adj, context))
-
-    try:
-        get_connection().send_messages(messages)
-    except SMTPException:
-        logger.exception("Failed to send adjudicator e-mails")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending adjudicator e-mails")
-        raise
-    else:
-        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])

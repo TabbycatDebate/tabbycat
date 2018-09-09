@@ -3,11 +3,10 @@ from smtplib import SMTPException
 from django.contrib import messages
 from django.utils.translation import gettext as _
 
+from notifications.utils import BallotEmailGenerator
 from utils.misc import get_ip_address
 
 from .models import Submission
-from .result import DebateResult
-from .utils import send_ballot_receipt_emails_to_adjudicators
 
 
 class TabroomSubmissionFieldsMixin:
@@ -38,7 +37,7 @@ class PublicSubmissionFieldsMixin:
 class BallotEmailWithStatusMixin:
     def send_email_receipts(self):
         try:
-            send_ballot_receipt_emails_to_adjudicators(DebateResult(self.ballotsub).as_dicts(), self.debate)
+            BallotEmailGenerator(self.tournament).run(self.debate.id)
         except SMTPException:
             messages.error(self.request, _("There was a problem sending ballot receipts to adjudicators."))
             return False

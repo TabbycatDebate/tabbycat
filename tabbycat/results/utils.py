@@ -1,16 +1,11 @@
 import logging
 from itertools import combinations
-from smtplib import SMTPException
 
-from django.core.mail import get_connection
 from django.db.models import Count
-from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from draw.models import Debate
-from notifications.models import SentMessageRecord
-from notifications.utils import TournamentEmailMessage
 from tournaments.utils import get_side_name
 
 logger = logging.getLogger(__name__)
@@ -209,47 +204,3 @@ def side_and_position_names(tournament):
                 else _ORDINALS[pos]
                 for pos in tournament.positions]
             yield side, positions
-
-
-def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
-
-    messages = []
-
-    round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(debate.round.tournament),
-                                                             'round': debate.round.name, 'room': debate.venue.name}
-    subject = Template(debate.round.tournament.pref('ballot_email_subject'))
-    message = Template(debate.round.tournament.pref('ballot_email_message'))
-
-    context = {'DEBATE': round_name}
-
-    for ballot in ballots:
-        if 'adjudicator' in ballot:
-            judge = ballot['adjudicator']
-        else:
-            judge = debate.debateadjudicator_set.get(type="C").adjudicator
-
-        if judge.email is None:
-            continue
-
-        scores = ''
-        for team in ballot['teams']:
-            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team['team'].short_name}
-
-            for speaker in team['speakers']:
-                scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
-
-        context['USER'] = judge.name
-        context['SCORES'] = scores
-
-        messages.append(TournamentEmailMessage(subject, message, debate.round.tournament, debate.round, SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context))
-
-    try:
-        get_connection().send_messages(messages)
-    except SMTPException:
-        logger.exception("Failed to send ballot receipt e-mails")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending ballot receipt e-mails")
-        raise
-    else:
-        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])
