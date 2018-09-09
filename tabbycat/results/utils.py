@@ -8,9 +8,11 @@ from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
+from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from notifications.models import SentMessageRecord
 from notifications.utils import TournamentEmailMessage
+from options.utils import use_team_code_names
 from tournaments.utils import get_side_name
 
 logger = logging.getLogger(__name__)
@@ -221,19 +223,22 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
     message = Template(debate.round.tournament.pref('ballot_email_message'))
 
     context = {'DEBATE': round_name}
+    use_codes = use_team_code_names(debate.round.tournament, False)
 
     for ballot in ballots:
         if 'adjudicator' in ballot:
             judge = ballot['adjudicator']
         else:
-            judge = debate.debateadjudicator_set.get(type="C").adjudicator
+            judge = debate.debateadjudicator_set.get(type=DebateAdjudicator.TYPE_CHAIR).adjudicator
 
         if judge.email is None:
             continue
 
-        scores = ''
+        scores = ""
         for team in ballot['teams']:
-            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team['team'].short_name}
+
+            team_name = team['team'].code_name if use_codes else team['team'].short_name
+            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team_name}
 
             for speaker in team['speakers']:
                 scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}

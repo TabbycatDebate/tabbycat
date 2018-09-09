@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 from adjallocation.allocation import AdjudicatorAllocation
 from notifications.models import SentMessageRecord
 from notifications.utils import TournamentEmailMessage
+from options.utils import use_team_code_names
 from participants.models import Team
 from tournaments.models import Round
 
@@ -38,6 +39,7 @@ def annotate_npullups(teams, until):
 def send_mail_to_adjs(round):
     tournament = round.tournament
     draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
+    use_codes = use_team_code_names(tournament, False)
 
     subject = Template(tournament.pref('adj_email_subject_line'))
     body = Template(tournament.pref('adj_email_message'))
@@ -58,11 +60,12 @@ def send_mail_to_adjs(round):
         return ", ".join(adj_string)
 
     for debate in draw:
+        matchup = debate.matchup_codes if use_codes else debate.matchup
         context = {
             'ROUND': round.name,
             'VENUE': debate.venue.name,
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-            'DRAW': debate.matchup
+            'DRAW': matchup
         }
 
         for adj, pos in debate.adjudicators.with_positions():
