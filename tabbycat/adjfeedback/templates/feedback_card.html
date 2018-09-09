@@ -5,7 +5,7 @@
 
     {% if not feedback.confirmed %}
       <div class="list-group-item list-group-item-dark h6 text-light" data-toggle="tooltip"
-           title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has done submitted several times on the same person.' %}">
+           title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has submitted several times on the same person; or because a team has submitted feedback on multiple panellists (rather than just the orallist).' %}">
       {% trans "Unconfirmed; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
