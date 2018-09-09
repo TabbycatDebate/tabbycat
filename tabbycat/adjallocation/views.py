@@ -228,7 +228,9 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         return super().get_context_data(**kwargs)
 
     def get_formset_queryset(self):
-        return self.formset_model.objects.filter(adjudicator__tournament=self.tournament)
+        return self.formset_model.objects.filter(
+                adjudicator__tournament=self.tournament).order_by(
+                'adjudicator__name')
 
     def get_formset(self):
         formset = super().get_formset()
