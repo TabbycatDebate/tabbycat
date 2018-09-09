@@ -713,11 +713,11 @@ class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView
     public_page_preference = 'feedback_progress'
 
 
-class IgnoreFeedbackView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
+class BaseFeedbackToggleView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
         feedback = AdjudicatorFeedback.objects.get(id=kwargs['feedback_id'])
-        feedback.ignored = False if feedback.ignored else True
+        feedback = self.modify_feedback(feedback)
         feedback.save()
 
         # Make message
@@ -725,7 +725,7 @@ class IgnoreFeedbackView(AdministratorMixin, TournamentMixin, PostOnlyRedirectVi
             source = feedback.source_adjudicator.adjudicator.name
         else:
             source = feedback.source_team.team.short_name
-        result = _("ignored") if feedback.ignored else _("recognized")
+        result = self.feedback_result(feedback)
         messages.success(self.request, _(
             "Feedback for %(adj)s from %(source)s is now %(result)s.")
             % {'adj': feedback.adjudicator.name, 'source': source, 'result': result})
@@ -733,7 +733,29 @@ class IgnoreFeedbackView(AdministratorMixin, TournamentMixin, PostOnlyRedirectVi
         return super().post(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse_tournament('adjfeedback-overview', self.tournament)
+        # Returns to the referring page (by way of hidden input with the path)
+        fallback = reverse_tournament('adjfeedback-overview', self.tournament)
+        return self.request.POST.get('next', fallback)
+
+
+class ConfirmFeedbackView(BaseFeedbackToggleView):
+
+    def feedback_result(self, feedback):
+        return _("confirmed") if feedback.confirmed else _("un-confirmed")
+
+    def modify_feedback(self, feedback):
+        feedback.confirmed = False if feedback.confirmed else True
+        return feedback
+
+
+class IgnoreFeedbackView(BaseFeedbackToggleView):
+
+    def feedback_result(self, feedback):
+        return _("ignored") if feedback.ignored else _("un-ignored")
+
+    def modify_feedback(self, feedback):
+        feedback.ignored = False if feedback.ignored else True
+        return feedback
 
 
 # ==============================================================================

@@ -4,13 +4,13 @@
   <div class="list-group list-group-flush">
 
     {% if not feedback.confirmed %}
-      <div class="list-group-item list-group-item-dark h6 text-light" data-toggle="tooltip"
+      <div class="list-group-item list-group-item-warning h6" data-toggle="tooltip"
            title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has submitted several times on the same person; or because a team has submitted feedback on multiple panellists (rather than just the orallist).' %}">
       {% trans "Unconfirmed; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
     {% if feedback.ignored %}
-      <div class="list-group-item list-group-item-dark h6 text-light" data-toggle="tooltip"
+      <div class="list-group-item list-group-item-warning h6" data-toggle="tooltip"
            title="{% trans 'The feedback is counted for the adjudicator, but is not taken into account when calculating scores.' %}">
       {% trans "Ignored; will not affect this adjudicator's score." %}
       </div>
@@ -28,7 +28,7 @@
             {% else %}badge-primary{% endif %}" data-toggle="tooltip"
             title="{% trans "The score given in this piece of feedback." %}">
         {% blocktrans trimmed with score=feedback.score %}
-          Given {{ score }}
+          {{ score }}
         {% endblocktrans %}
       </span>
       <span class="badge mr-2 badge-light float-right" data-toggle="tooltip">
@@ -87,9 +87,20 @@
         {% endblocktrans %}
       </span>
       <span class="float-right" data-toggle="tooltip"
+            title="{% trans "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score." %}">
+        <form method="POST" action="{% tournamenturl 'adjfeedback-confirm-feedback' feedback.id %}" class='text-secondary'>
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" class="btn btn-link text-muted pl-3 p-0">
+            <small>{% if feedback.confirmed %}{% trans "Un-confirm" %}{% else %}{% trans "Confirm" %}{% endif %}</small>
+          </button>
+        </form>
+      </span>
+      <span class="float-right" data-toggle="tooltip"
             title="{% trans "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score." %}">
         <form method="POST" action="{% tournamenturl 'adjfeedback-ignore-feedback' feedback.id %}" class='text-secondary'>
           {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
           <button type="submit" class="btn btn-link text-muted p-0">
             <small>{% if feedback.ignored %}{% trans "Un-ignore" %}{% else %}{% trans "Ignore" %}{% endif %}</small>
           </button>

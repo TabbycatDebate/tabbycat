@@ -21,6 +21,7 @@ Change Log
     - Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds. The old "average speaker score" metric has been renamed to to "average total speaker score"
     - Reworked the ballots status graph to be an area chart
 - Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request!
+- Added the ability to unconfirm feedback from any of the views that show it
 - BP motion statistics now also show average points split by bench and half
 - Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments
 - Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
