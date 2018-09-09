@@ -442,7 +442,6 @@ DEBUG_TOOLBAR_PANELS = (
 )
 
 DEBUG_TOOLBAR_CONFIG = {
-    'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
     'SHOW_COLLAPSED': True
 }
 
