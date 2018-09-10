@@ -1,5 +1,6 @@
 import logging
 from smtplib import SMTPException
+from celery import shared_task
 
 from django.conf import settings
 from django.core import mail
@@ -33,8 +34,8 @@ class TournamentEmailMessage(mail.EmailMessage):
 
         self.fields = fields
         self.context = Context(fields)
-        self.subject = Template(subject).render(self.context)
-        self.body = Template(body).render(self.context)
+        self.subject = Template(self.tournament.pref(subject)).render(self.context)
+        self.body = Template(self.tournament.pref(body)).render(self.context)
 
         self.from_email = "%s <%s>" % (self.tournament.short_name, settings.DEFAULT_FROM_EMAIL)
         self.reply_to = None
@@ -51,174 +52,152 @@ class TournamentEmailMessage(mail.EmailMessage):
                                  context=self.fields, message=self.message().as_string())
 
 
-class EmailMessageGenerator:
+def send_mail(emails):
+    try:
+        mail.get_connection().send_messages(emails)
+    except SMTPException:
+        logger.exception("Failed to send e-mails.")
+        raise
+    except ConnectionError:
+        logger.exception("Connection error sending e-mails.")
+        raise
+    else:
+        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in emails])
+
+    return len(emails)
+
+
+def adjudicator_assignment_email_generator(round_id):
     emails = []
+    round = Round.objects.get(id=round_id)
+    tournament = round.tournament
+    draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
 
-    subject = None
-    message = None
+    adj_position_names = {
+        AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
+        AdjudicatorAllocation.POSITION_ONLY: _("the only"),
+        AdjudicatorAllocation.POSITION_PANELLIST: _("a panellist"),
+        AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
+    }
 
-    def __init__(self, tournament=None):
-        self.tournament = tournament
+    def _assemble_panel(adjs):
+        adj_string = []
+        for adj, pos in adjs:
+            adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
 
-    def get_subject(self):
-        return self.tournament.pref(self.subject)
+        return ", ".join(adj_string)
 
-    def get_message(self):
-        return self.tournament.pref(self.message)
-
-    def run(self, *args, **kwargs):
-        try:
-            mail.get_connection().send_messages(self.emails)
-        except SMTPException:
-            logger.exception("Failed to send e-mails.")
-            raise
-        except ConnectionError:
-            logger.exception("Connection error sending e-mails.")
-            raise
-        else:
-            SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in self.emails])
-
-        return len(self.emails)
-
-
-class AdjudicatorAssignmentEmailGenerator(EmailMessageGenerator):
-    subject = 'adj_email_subject_line'
-    message = 'adj_email_message'
-
-    def run(self, round_id):
-        round = Round.objects.get(id=round_id) # Serialize -> Expand
-        tournament = round.tournament
-        draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
-
-        adj_position_names = {
-            AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
-            AdjudicatorAllocation.POSITION_ONLY: _("the only"),
-            AdjudicatorAllocation.POSITION_PANELLIST: _("a panellist"),
-            AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
+    for debate in draw:
+        context = {
+            'ROUND': round.name,
+            'VENUE': debate.venue.name,
+            'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
+            'DRAW': debate.matchup
         }
 
-        def _assemble_panel(adjs):
-            adj_string = []
-            for adj, pos in adjs:
-                adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
-
-            return ", ".join(adj_string)
-
-        for debate in draw:
-            context = {
-                'ROUND': round.name,
-                'VENUE': debate.venue.name,
-                'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-                'DRAW': debate.matchup
-            }
-
-            for adj, pos in debate.adjudicators.with_positions():
-                if adj.email is None:
-                    continue
-
-                context['USER'] = adj.name
-                context['POSITION'] = adj_position_names[pos]
-
-                self.emails.append(TournamentEmailMessage(
-                    self.get_subject(), self.get_message(),
-                    tournament, round,
-                    SentMessageRecord.EVENT_TYPE_DRAW, adj, context))
-
-        super().run(self)
-
-
-class RandomizedURLEmailGenerator(EmailMessageGenerator):
-    subject = 'url_email_subject'
-    message = 'url_email_message'
-
-    def run(self, url, tournament_id):
-        tournament = Tournament.objects.get(id=tournament_id)
-
-        subquery = SentMessageRecord.objects.filter(
-            event=SentMessageRecord.EVENT_TYPE_URL,
-            tournament=tournament, email=OuterRef('email')
-        )
-        participants = tournament.participants.filter(
-            url_key__isnull=False, email__isnull=False
-        ).exclude(email__exact="").annotate(already_sent=Exists(subquery)).filter(already_sent=False)
-
-        for instance in participants:
-            url_ind = url + instance.url_key + '/'
-
-            variables = {'NAME': instance.name, 'URL': url_ind, 'KEY': instance.url_key, 'TOURN': str(tournament)}
-
-            self.emails.append(TournamentEmailMessage(
-                self.get_subject(), self.get_message(), tournament, None, SentMessageRecord.EVENT_TYPE_URL, instance, variables))
-
-        super().run(self)
-
-
-class BallotEmailGenerator(EmailMessageGenerator):
-    subject = 'ballot_email_subject'
-    message = 'ballot_email_message'
-
-    def run(self, debate_id):
-        debate = Debate.objects.get(id=debate_id)
-        ballots = DebateResult(debate.confirmed_ballot).as_dicts()
-        round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(debate.round.tournament),
-                                                                 'round': debate.round.name, 'room': debate.venue.name}
-
-        context = {'DEBATE': round_name}
-
-        for ballot in ballots:
-            if 'adjudicator' in ballot:
-                judge = ballot['adjudicator']
-            else:
-                judge = debate.debateadjudicator_set.get(type="C").adjudicator
-
-            if judge.email is None:
+        for adj, pos in debate.adjudicators.with_positions():
+            if adj.email is None:
                 continue
 
-            scores = ''
-            for team in ballot['teams']:
-                scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team['team'].short_name}
+            context['USER'] = adj.name
+            context['POSITION'] = adj_position_names[pos]
 
-                for speaker in team['speakers']:
-                    scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
+            emails.append(TournamentEmailMessage(
+                'adj_email_subject_line', 'adj_email_message',
+                tournament, round,
+                SentMessageRecord.EVENT_TYPE_DRAW, adj, context))
 
-            context['USER'] = judge.name
-            context['SCORES'] = scores
-
-            self.emails.append(TournamentEmailMessage(
-                self.get_subject(), self.get_message(),
-                debate.round.tournament, debate.round,
-                SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context))
-
-        super().run(self)
+    return send_mail(emails)
 
 
-class StandingsEmailGenerator(EmailMessageGenerator):
-    subject = 'team_points_email_subject'
-    message = 'team_points_email_message'
+def randomized_url_email_generator(url, tournament_id):
+    emails = []
+    tournament = Tournament.objects.get(id=tournament_id)
 
-    def run(self, url, round_id):
-        round = Round.objects.get(id=round_id)
-        teams = round.active_teams.prefetch_related('speaker_set')
-        populate_win_counts(teams)
+    subquery = SentMessageRecord.objects.filter(
+        event=SentMessageRecord.EVENT_TYPE_URL,
+        tournament=tournament, email=OuterRef('email')
+    )
+    participants = tournament.participants.filter(
+        url_key__isnull=False, email__isnull=False
+    ).exclude(email__exact="").annotate(already_sent=Exists(subquery)).filter(already_sent=False)
 
-        context = {'TOURN': str(round.tournament)}
+    for instance in participants:
+        url_ind = url + instance.url_key + '/'
 
-        if round.tournament.pref('public_team_standings'):
-            context['url'] = url
+        variables = {'NAME': instance.name, 'URL': url_ind, 'KEY': instance.url_key, 'TOURN': str(tournament)}
 
-        for team in teams:
-            context['POINTS'] = str(team.points_count)
-            context['TEAM'] = team.short_name
+        emails.append(TournamentEmailMessage(
+            'url_email_subject', 'url_email_message',
+            tournament, None,
+            SentMessageRecord.EVENT_TYPE_URL, instance, variables))
 
-            for speaker in team.speaker_set.all():
-                if speaker.email is None:
-                    continue
+    return send_mail(emails)
 
-                context['USER'] = speaker.name
 
-                self.emails.append(TournamentEmailMessage(
-                    self.get_subject(), self.get_message(),
-                    round.tournament, round,
-                    SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
+def ballots_email_generator(debate_id):
+    emails = []
+    debate = Debate.objects.get(id=debate_id)
+    tournament = debate.round.tournament
+    ballots = DebateResult(debate.confirmed_ballot).as_dicts()
+    round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(tournament),
+                                                             'round': debate.round.name, 'room': debate.venue.name}
 
-        super().run(self)
+    context = {'DEBATE': round_name}
+
+    for ballot in ballots:
+        if 'adjudicator' in ballot:
+            judge = ballot['adjudicator']
+        else:
+            judge = debate.debateadjudicator_set.get(type="C").adjudicator
+
+        if judge.email is None:
+            continue
+
+        scores = ''
+        for team in ballot['teams']:
+            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team['team'].short_name}
+
+            for speaker in team['speakers']:
+                scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
+
+        context['USER'] = judge.name
+        context['SCORES'] = scores
+
+        emails.append(TournamentEmailMessage(
+            'ballot_email_subject', 'ballot_email_message',
+            tournament, debate.round,
+            SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context))
+
+    return send_mail(emails)
+
+
+def standings_email_generator(url, round_id):
+    emails = []
+    round = Round.objects.get(id=round_id)
+    tournament = round.tournament
+
+    teams = round.active_teams.prefetch_related('speaker_set')
+    populate_win_counts(teams)
+
+    context = {'TOURN': str(tournament)}
+
+    if tournament.pref('public_team_standings'):
+        context['url'] = url
+
+    for team in teams:
+        context['POINTS'] = str(team.points_count)
+        context['TEAM'] = team.short_name
+
+        for speaker in team.speaker_set.all():
+            if speaker.email is None:
+                continue
+
+            context['USER'] = speaker.name
+
+            emails.append(TournamentEmailMessage(
+                'team_points_email_subject', 'team_points_email_message',
+                tournament, round,
+                SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
+
+    return send_mail(emails)
