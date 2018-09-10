@@ -22,6 +22,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
+from notifications.utils import AdjudicatorAssignmentEmailGenerator
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
 from participants.utils import get_side_history
@@ -49,7 +50,6 @@ from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
-from .utils import send_mail_to_adjs
 
 logger = logging.getLogger(__name__)
 
@@ -688,7 +688,7 @@ class DrawReleaseView(DrawStatusEdit):
         email_success_message = ""
         if self.tournament.pref('enable_adj_email'):
             try:
-                send_mail_to_adjs(self.round)
+                AdjudicatorAssignmentEmailGenerator(self.tournament).run(self.round.id)
             except SMTPException:
                 messages.error(self.request, _("There was a problem sending adjudication assignment emails."))
             except ConnectionError as e:
