@@ -17,7 +17,7 @@
     {% endif %}
     {% if not feedback.debate_adjudicator.get_type_display %}
       <div class="list-group-item list-group-item-danger h6">
-          {% trans "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback." %}
+        {% trans "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback." %}
       </div>
     {% endif %}
     <div class="list-group-item h5">
@@ -87,7 +87,7 @@
         {% endblocktrans %}
       </span>
       <span class="float-right" data-toggle="tooltip"
-            title="{% trans "Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator's score." %}">
+            title="{% trans 'Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator\'s score.' %}">
         <form method="POST" action="{% tournamenturl 'adjfeedback-confirm-feedback' feedback.id %}" class='text-secondary'>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.path }}">
@@ -97,7 +97,7 @@
         </form>
       </span>
       <span class="float-right" data-toggle="tooltip"
-            title="{% trans "Ignored feedback is counted as having been submitted, but does not affect this adjudicator's score." %}">
+            title="{% trans 'Ignored feedback is counted as having been submitted, but does not affect this adjudicator\'s score.' %}">
         <form method="POST" action="{% tournamenturl 'adjfeedback-ignore-feedback' feedback.id %}" class='text-secondary'>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ request.path }}">

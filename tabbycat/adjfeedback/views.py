@@ -238,6 +238,7 @@ class FeedbackMixin(TournamentMixin):
             'source_adjudicator__debate__round',
             'source_team__debate__round',
             'source_team__team',
+            'source_team__team__tournament',
         )
 
 
