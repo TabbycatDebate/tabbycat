@@ -13,7 +13,7 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
-from notifications.utils import RandomizedURLEmailGenerator
+from notifications.utils import randomized_url_email_generator
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -147,10 +147,7 @@ class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
         url = request.build_absolute_uri(path)[:-2]
 
         try:
-            generator = RandomizedURLEmailGenerator(t)
-            generator.run(url, t.id)
-
-            nparticipants = len(generator.emails)
+            nparticipants = randomized_url_email_generator(url, t.id)
         except SMTPException:
             messages.error(self.request, _("There was a problem sending private URLs to participants."))
         except ConnectionError as e:

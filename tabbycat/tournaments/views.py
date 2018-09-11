@@ -21,7 +21,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import SentMessageRecord
-from notifications.utils import StandingsEmailGenerator
+from notifications.utils import standings_email_generator
 from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
@@ -192,7 +192,7 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
         url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
 
         try:
-            StandingsEmailGenerator(self.tournament).run(url, self.round_id)
+            standings_email_generator(url, self.round.id)
         except (ConnectionError, SMTPException):
             messages.error(request, _("Team point emails could not be sent."))
         else:

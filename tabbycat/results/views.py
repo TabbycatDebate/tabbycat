@@ -17,7 +17,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
-from notifications.utils import BallotEmailGenerator
+from notifications.utils import ballots_email_generator
 from options.utils import use_team_code_names_data_entry
 from participants.models import Adjudicator
 from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin,
@@ -260,7 +260,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
     def send_email_receipts(self):
         # For proper error handling for admin/assistants, overwrite this
         try:
-            BallotEmailGenerator(self.tournament).run(self.debate.id)
+            ballots_email_generator(self.debate.id)
         except (SMTPException, ConnectionError):
             return False
         else:
