@@ -62,7 +62,7 @@ thead,
   .feather-chevrons-up,
   .feather-chevrons-down {
     display: none;
-    margin-bottom: -5px; // Align with text
+    margin-bottom: -3px; // Align with text
     margin-right: -4px; // Overwrite the padding as it acts as a spacer
   }
 
@@ -168,7 +168,6 @@ thead,
 }
 
 .team-name {
-  min-width: 125px; // BP team cells need a good width when using abbreviations
 
   .emoji {
     text-align: center;
@@ -205,6 +204,12 @@ thead,
   // For highlighting boundaries between metrics in "draw with details"
   &.highlight-col {
     border-left: 2px dotted $droppable-bg;
+  }
+
+  .result-icon {
+    text-align: right;
+    margin-left: -4px;
+    margin-right: 0;
   }
 }
 

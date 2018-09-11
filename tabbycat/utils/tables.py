@@ -275,12 +275,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if win is True:
             cell['popover']['title'] = _("%(team)s won") % {'team': team_name}
             cell['icon'] = "chevron-up"
-            cell['iconClass'] = "text-success"
+            cell['iconClass'] = "text-success result-icon"
             cell['sort'] = 2
         elif win is False:
             cell['popover']['title'] = _("%(team)s lost") % {'team': team_name}
             cell['icon'] = "chevron-down"
-            cell['iconClass'] = "text-danger"
+            cell['iconClass'] = "text-danger result-icon"
             cell['sort'] = 1
         else: # None
             cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
@@ -293,22 +293,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if points is 3:
             cell['popover']['title'] = _("%(team)s took 1st") % {'team': team_name}
             cell['icon'] = "chevrons-up"
-            cell['iconClass'] = "text-success"
+            cell['iconClass'] = "text-success result-icon"
             cell['sort'] = 4
         elif points is 2:
             cell['popover']['title'] = _("%(team)s took 2nd") % {'team': team_name}
             cell['icon'] = "chevron-up"
-            cell['iconClass'] = "text-info"
+            cell['iconClass'] = "text-info result-icon"
             cell['sort'] = 3
         elif points is 1:
             cell['popover']['title'] = _("%(team)s took 3rd") % {'team': team_name}
             cell['icon'] = "chevron-down"
-            cell['iconClass'] = "text-warning"
+            cell['iconClass'] = "text-warning result-icon"
             cell['sort'] = 2
         elif points is 0:
             cell['popover']['title'] = _("%(team)s took 4th") % {'team': team_name}
             cell['icon'] = "chevrons-down"
-            cell['iconClass'] = "text-danger"
+            cell['iconClass'] = "text-danger result-icon"
             cell['sort'] = 1
         else: # None
             cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
