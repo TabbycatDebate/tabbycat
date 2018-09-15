@@ -1,6 +1,5 @@
 import logging
 from smtplib import SMTPException
-from celery import shared_task
 
 from django.conf import settings
 from django.core import mail
@@ -199,5 +198,41 @@ def standings_email_generator(url, round_id):
                 'team_points_email_subject', 'team_points_email_message',
                 tournament, round,
                 SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
+
+    return send_mail(emails)
+
+
+def motion_release_email_generator(round_id):
+    emails = []
+    round = Round.objects.get(id=round_id)
+
+    def _create_motion_list():
+        motion_list = ""
+        for motion in round.motion_set.all():
+            motion_list += _(" - %s (%s)\n") % (motion.text, motion.reference)
+
+            if motion.info_slide:
+                motion_list += "   %s\n" % (motion.info_slide)
+
+        return motion_list
+
+    context = {
+        'TOURN': str(round.tournament),
+        'ROUND': round.name,
+        'MOTIONS': _create_motion_list()
+    }
+
+    teams = round.tournament.team_set.filter(round_availabilities__round=round).prefetch_related('speaker_set')
+    for team in teams:
+        for speaker in team.speaker_set.all():
+            if speaker.email is None:
+                continue
+
+            context['USER'] = speaker.name
+
+            emails.append(TournamentEmailMessage(
+                'motion_email_subject', 'motion_email_message',
+                round.tournament, round,
+                SentMessageRecord.EVENT_TYPE_MOTIONS, speaker, context))
 
     return send_mail(emails)

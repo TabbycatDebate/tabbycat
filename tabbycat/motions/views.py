@@ -1,3 +1,5 @@
+from smtplib import SMTPException
+
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
@@ -8,6 +10,7 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from notifications.utils import motion_release_email_generator
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from utils.misc import redirect_round
@@ -138,6 +141,7 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
         round.motions_released = self.motions_released
         round.save()
         self.log_action()
+
         messages.success(request, self.message_text)
         return super().post(request, *args, **kwargs)
 
@@ -147,6 +151,21 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
     message_text = _("Released the motion(s).")
+
+    def post(self, request, *args, **kwargs):
+        if self.tournament.pref('enable_motion_email'):
+            try:
+                motion_release_email_generator(self.round.id)
+            except SMTPException:
+                messages.error(self.request, _("There was a problem sending motion release emails."))
+            except ConnectionError as e:
+                messages.error(self.request, _(
+                    "There was a problem connecting to the e-mail server when trying to send motion release emails: %(error)s"
+                ) % {'error': str(e)})
+            else:
+                self.message_text += _(" Emails successfully sent.")
+
+        return super().post(request, *args, **kwargs)
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):
