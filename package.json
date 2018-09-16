@@ -60,7 +60,7 @@
     "lint-sass": "stylelint --cache \"tabbycat/templates/scss/**/*.scss\""
   },
   "devDependencies": {
-    "artillery": "^1.6.0-23",
+    "artillery": "^1.6.0-24",
     "livereload": "^0.7.0",
     "stylelint": "^9.x",
     "stylelint-config-standard": "^18.x",
