@@ -18,7 +18,7 @@
     "browserslist": "^4.0.2",
     "cpx": "^1.5.0",
     "core-js": "^2.5.7",
-    "d3": "^5.5.x",
+    "d3": "^5.6.x",
     "django-channels": "^1.1.8",
     "eslint-plugin-html": "^4.x",
     "feather-icons": "^4.7.x",
