@@ -1,6 +1,5 @@
 import logging
 from smtplib import SMTPException
-from celery import shared_task
 
 from django.conf import settings
 from django.core import mail
