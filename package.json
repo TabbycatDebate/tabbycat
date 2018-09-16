@@ -1,5 +1,5 @@
 {
-  "name": "tabby-cat",
+  "name": "tabbycat",
   "description": "Debating tabulation software for two-team parliamentary formats",
   "repository": "https://github.com/TabbycatDebate/tabbycat",
   "license": "UNLICENSED",
@@ -8,7 +8,7 @@
     "npm": "6.3.x"
   },
   "dependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0",
+    "@vue/cli-plugin-babel": "^3.0.3",
     "@vue/cli-plugin-eslint": "^3.0.3",
     "@vue/cli-service": "3.0.3",
     "@vue/eslint-config-standard": "^3.0.3",
@@ -17,7 +17,7 @@
     "browserify": "^16.2.x",
     "browserslist": "^4.0.x",
     "cpx": "^1.5.x",
-    "core-js": "^2.5.7",
+    "core-js": "^2.5.x",
     "d3": "^5.6.x",
     "django-channels": "^1.1.8",
     "eslint-plugin-html": "^4.x",
@@ -25,12 +25,12 @@
     "inter-ui": "^2.5.x",
     "jquery": "^3.3.0",
     "jquery-validation": "~1.18.x",
-    "jsbarcode": "^3.11.0",
+    "jsbarcode": "^3.11.x",
     "lodash": "^4.17.x",
     "node-sass": "^4.9.3",
-    "npm-run-all": "^4.1.3",
+    "npm-run-all": "^4.1.x",
     "popper.js": "^1.14.4",
-    "quagga": "^0.12.1",
+    "quagga": "^0.12.x",
     "raven-js": "^3.x",
     "stats-percentile": "^3.1.0",
     "vue": "^2.5.17",
@@ -60,7 +60,6 @@
     "lint-sass": "stylelint --cache \"tabbycat/templates/scss/**/*.scss\""
   },
   "devDependencies": {
-    "artillery": "^1.x",
     "livereload": "^0.x",
     "stylelint": "^9.x",
     "stylelint-config-standard": "^18.x",
