@@ -1424,3 +1424,33 @@ class PrivateUrlEmailMessage(LongStringPreference):
         "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
         "Your personal private URL is:\n"
         "{{ URL }}")
+
+
+@tournament_preferences_registry.register
+class MotionReleaseNotification(BooleanPreference):
+    help_text = _("Whether to send emails to speakers on motion release.")
+    verbose_name = _("Motion release notifications")
+    section = email
+    name = 'enable_motion_email'
+    default = False
+
+
+@tournament_preferences_registry.register
+class MotionReleaseEmailSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to participants on motion release. "
+        "Use '{{ TOURN }}' for the tournament, '{{ ROUND }}' for the round, and '{{ USER }}' for the speaker.")
+    verbose_name = _("Motion release notification subject line")
+    section = email
+    name = 'motion_email_subject'
+    default = "Motions for {{ ROUND }}"
+
+
+@tournament_preferences_registry.register
+class MotionReleaseEmailMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants on motion release. "
+        "Use '{{ TOURN }}' for the tournament, '{{ ROUND }}' for the round, '{{ USER }}' for the speaker, "
+        "and '{{ MOTIONS }} for the motions of the round.")
+    verbose_name = _("Motion release notification message")
+    section = email
+    name = 'motion_email_message'
+    default = "{{ MOTIONS }}"

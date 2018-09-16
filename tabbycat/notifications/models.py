@@ -11,6 +11,8 @@ class SentMessageRecord(models.Model):
     EVENT_TYPE_BALLOT_URL = 'b'
     EVENT_TYPE_URL = 'u'
     EVENT_TYPE_DRAW = 'd'
+    EVENT_TYPE_TEAM = 't'
+    EVENT_TYPE_MOTIONS = 'm'
 
     EVENT_TYPE_CHOICES = (
         (EVENT_TYPE_POINTS, _("team points")),
@@ -19,6 +21,8 @@ class SentMessageRecord(models.Model):
         (EVENT_TYPE_BALLOT_URL, _("ballot URL")),
         (EVENT_TYPE_URL, _("landing page URL")),
         (EVENT_TYPE_DRAW, _("draw released")),
+        (EVENT_TYPE_TEAM, _("team registration")),
+        (EVENT_TYPE_MOTIONS, _("motion(s) released"))
     )
 
     METHOD_TYPE_EMAIL = 'e'
