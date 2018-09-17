@@ -20,4 +20,4 @@ transifex-client==0.13.*                    # Translations
 
 # Debug
 django-debug-toolbar==1.10
-django-debug-toolbar-request-history==0.0.7 # Debug POSTs/AJAX
+git+https://github.com/djsutho/django-debug-toolbar-request-history.git@remove-jquery # Debug POSTs/AJAX
