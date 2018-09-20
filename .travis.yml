@@ -44,7 +44,6 @@ matrix:
         - ./cc-test-reporter before-build
       script:
         - pip install coverage
-        - flake8 tabbycat
         - coverage run tabbycat/manage.py test -v 2 --exclude-tag=selenium
       after_script:
         - coverage xml
@@ -64,13 +63,14 @@ install:
   - python --version
   - pip --version
   - pip install --upgrade pip
-  - pip install -r requirements_common.txt
-  - pip install -r requirements_development.txt # Needed for flake8
+  - pip install -r ./config/requirements_development.txt # Needed for flake8
   - node --version
   - npm --version
   - npm install
 script:
   - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
+  - flake8 .
+  - npm run lint
 
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/

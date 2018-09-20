@@ -62,7 +62,7 @@ class DebateAdmin(admin.ModelAdmin):
     actions = list()
     for value, verbose_name in Debate.STATUS_CHOICES:
 
-        def _make_set_result_status(value, verbose_name):
+        def _make_set_result_status(value, verbose_name): # noqa: N805
             def _set_result_status(modeladmin, request, queryset):
                 count = queryset.update(result_status=value)
                 message = ngettext("%(count)d debate had its status set to %(status)s.",

@@ -5,12 +5,13 @@
       <div class="col d-flex justify-content-between mb-4">
 
         <div class="btn-group">
-          <a :href="item.url" class="btn btn-outline-primary" v-for="item in navigation">
+          <a :href="item.url" v-for="item in navigation" :key="item.title"
+             class="btn btn-outline-primary">
             <i data-feather="chevron-left" v-if="item.back"></i>{{ item.title }}
           </a>
         </div>
 
-        <div class="btn-group" v-for="(bc, index) in categories">
+        <div class="btn-group" v-for="(bc, index) in categories" :key="index">
           <button class="btn btn-secondary" v-if="categories.length > 1">
             {{ bc.name }}
           </button>
@@ -33,7 +34,8 @@
           <div class="btn-group">
             <button v-if="roundInfo.prev" @click="copyFromPrevious"
                     class="btn btn-primary" type="button" data-toggle="tooltip"
-                    :title="gettext('Set all the availabilities to exactly match what they were in the previous round.')">
+                    :title="gettext(`Set all the availabilities to exactly match
+                                     what they were in the previous round.`)">
               <i data-feather="repeat"></i> {{ gettext("Match") }} {{ roundInfo.prev }}
             </button>
             <button @click="setFromCheckIns(true)"
@@ -43,7 +45,9 @@
             </button>
             <button @click="setFromCheckIns(false)"
                     class="btn btn-primary" type="button" data-toggle="tooltip"
-                    :title="gettext('Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities.')">
+                    :title="gettext(`Set people as available only if they have
+                                     a check-in and are currently unavailable —
+                                     i.e. it will not overwrite any existing availabilities.`)">
               <i data-feather="corner-up-right"></i> {{ gettext("Copy Check-Ins") }}
             </button>
           </div>
@@ -72,24 +76,30 @@ import AjaxMixin from '../ajax/AjaxMixin.vue'
 export default {
   mixins: [AjaxMixin],
   components: { AutoSaveCounter, TablesContainer },
-  props: { tablesData: Array, categories: Array, urls: Object,
-           navigation: Array, roundInfo: Object, translations: Object },
+  props: {
+    tablesData: Array,
+    categories: Array,
+    urls: Object,
+    navigation: Array,
+    roundInfo: Object,
+    translations: Object,
+  },
   created: function () {
     // Watch for events on the global event hub
     this.$eventHub.$on('toggle-checked', this.toggleChecked)
   },
   computed: {
     checked: function () {
-      var checked = {}
-      _.forEach(this.categories, function (category) {
+      const checked = {}
+      _.forEach(this.categories, (category) => {
         checked[category.id] = {}
       })
       // Map Checks in table to a dictionary keyed by id
-      _.forEach(this.tablesData[0].data, function (row) {
-        _.forEach(row, function (column) {
+      _.forEach(this.tablesData[0].data, (row) => {
+        _.forEach(row, (column) => {
           if (!_.isUndefined(column.type)) {
-            var break_data = {'type': column.type, 'checked': column.checked }
-            checked[column.type][column.id] = break_data;
+            const breakData = { type: column.type, checked: column.checked }
+            checked[column.type][column.id] = breakData
           }
         })
       })
@@ -98,35 +108,33 @@ export default {
   },
   methods: {
     saveChecks: function (type) {
-      var payload = this.checked[type]
-      var message = "Checks for " + payload.id + " as " + payload.checked
+      const payload = this.checked[type]
+      const message = `Checks for ${payload.id} as ${payload.checked}`
       this.ajaxSave(this.urls.save, payload, message, null, null, null)
     },
     toggleChecked: function (id, checked, type) {
       this.saveChecks(type)
     },
     copyFromPrevious: function () {
-      _.forEach(this.tablesData[0].data, function (row) {
+      _.forEach(this.tablesData[0].data, (row) => {
         row[0].checked = row[0].prev
       })
       this.saveChecks(0)
     },
     setFromCheckIns: function (match) {
-      _.forEach(this.tablesData[0].data, function (row) {
+      _.forEach(this.tablesData[0].data, (row) => {
         if (match) {
           row[0].checked = row[0].checked_in
-        } else {
+        } else if (row[0].checked_in) {
           // Only update for those checked (i.e. don't overrwrite existing)
-          if (row[0].checked_in) {
-            row[0].checked = row[0].checked_in
-          }
+          row[0].checked = row[0].checked_in
         }
       })
       this.saveChecks(0)
     },
     massSelect: function (state, type) {
-      _.forEach(this.tablesData[0].data, function (row) {
-        _.forEach(row, function (column) {
+      _.forEach(this.tablesData[0].data, (row) => {
+        _.forEach(row, (column) => {
           if (column.type === type) {
             column.checked = state
           }
@@ -134,7 +142,7 @@ export default {
       })
       this.saveChecks(type)
     },
-  }
+  },
 }
 
 </script>

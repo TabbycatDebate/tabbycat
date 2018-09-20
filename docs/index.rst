@@ -44,6 +44,8 @@ formats too. If you're looking for a general overview of the software, check out
 
    guide/tournament-logistics
    guide/comparisons
+   guide/scaling
+   guide/upgrading
 
 .. _feature-docs:
 

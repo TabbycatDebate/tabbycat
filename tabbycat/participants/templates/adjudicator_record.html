@@ -7,7 +7,7 @@
 
   <div class="card-deck">
 
-    {% if pref.public_draw or admin_page %}
+    {% if pref.public_draw != 'off' or admin_page %}
       <div class="card {% if debateadjudications and draw_released %}panel-primary{% else %}panel-default{% endif %}">
         <div class="list-group list-group-flush">
 
@@ -31,8 +31,8 @@
 
                   {# (Two-team formats) #}
                   {% if pref.teams_in_debate == 'two' %}
-                    {% team_record_link debate.aff_team admin_page as aff %}
-                    {% team_record_link debate.neg_team admin_page as neg %}
+                    {% team_record_link debate.aff_team admin_page tournament as aff %}
+                    {% team_record_link debate.neg_team admin_page tournament as neg %}
 
                     {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
                       {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:"Venue TBA" %}
@@ -82,7 +82,10 @@
                   <div class="list-group-item">
                     <strong>{% trans "Teams:" %}</strong>
                     {% for dt in debate.debateteams_ordered %}
-                      {% team_record_link dt.team admin_page %}{% if debate.sides_confirmed %} ({{ dt.get_side_name }}){% endif %}{% if not forloop.last %},{% endif %}
+                      {% team_record_link dt.team admin_page tournament %}
+                      {% if debate.sides_confirmed %}
+                        ({% debate_team_side_name dt tournament %}){% if not forloop.last %},{% endif %}
+                      {% endif %}
                     {% endfor %}
                   </div>
                 {% endif %} {# pref.teams_in_debate == 'bp' #}
@@ -102,9 +105,9 @@
                         {% for adj, adjtype in adjudicators.with_positions %}
                           {% if adj != debateadjudicator.adjudicator %}
                             <a href="{% if admin_page %}{% tournamenturl 'participants-adjudicator-record' adj.pk %}{% else %}{% tournamenturl 'participants-public-adjudicator-record' adj.pk %}{% endif %}">
-                              {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                              {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
                           {% else %}
-                            {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %} Ⓒ{% elif adjtype == adjudicators.POSITION_TRAINEE %} Ⓣ{% endif %}{% if not forloop.last %},{% endif %}
+                            {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
                           {% endif %}
                         {% endfor %}
                       {% endwith %}
@@ -164,7 +167,7 @@
         </div>
       </div>
 
-    {% endif %} {# pref.public_draw or admin_page #}
+    {% endif %} {# pref.public_draw != 'off' or admin_page #}
 
     {% if pref.public_participants or admin_page %}
 
@@ -224,7 +227,7 @@
   {% endif %}
 
   {% if pref.public_results or admin_page %}
-    <div class="mt-md-4">
+    <div class="mt-md-3">
       {{ block.super }} {# this is the Vue table, which is populated with previous debates #}
     </div>
   {% endif %}

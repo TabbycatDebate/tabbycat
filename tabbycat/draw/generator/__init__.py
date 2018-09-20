@@ -60,6 +60,8 @@ def DrawGenerator(teams_per_debate, draw_type, teams, results=None, rrseq=None, 
     elif teams_per_debate == 'bp':
         if draw_type == "random":
             klass = RandomBPDrawGenerator
+        elif draw_type == "manual":
+            klass = ManualDrawGenerator
         elif draw_type == "power_paired":
             klass = BPHungarianDrawGenerator
         elif draw_type == "partial_elimination":

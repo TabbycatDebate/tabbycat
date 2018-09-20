@@ -6,7 +6,7 @@ Installing on Heroku
 
 When running Tabbycat on the internet, we set it up on `Heroku <http://www.heroku.com/>`_. The project is set up to be good to go on Heroku, and it works well for us, so if you'd like to run it online, we recommend that you do the same. Naturally, this requires you to have a Heroku account.
 
-There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but (unlike the short way) allows you to import data from CSV files.
+There are two ways to do this: a **short way** and a **long way**. Most people should use the short way. The long way requires some familiarity with command-line interfaces and Git, and requires a :ref:`local installation <install-local>` as a prerequisite, but makes it easier to :ref:`upgrade versions <upgrade-heroku>` later on and (unlike the short way) allows you to import data from CSV files.
 
 The short way
 =============
@@ -25,7 +25,7 @@ If you don't already have a Heroku account, it'll prompt you to create one. Once
 
 The long way
 ============
-The long way sets you up with more control over your environment. Because you'll clone `our GitHub repository`_, it'll be easier for you to pull and contribute updates to the source code.  We recommend it if you have experience with Git.  It's also easier with this method to import CSV files using the command-line importer, so if you have a very large tournament, this might make importing initial data easier.
+The long way sets you up with more control over your environment.  Because you'll clone `our GitHub repository`_, it'll be easier for you to :ref:`upgrade your app <upgrade-heroku>` when a new version is released.  You'll also have the flexibility to make and contribute updates to the source code.  We recommend it if you have experience with Git.  It's also easier with this method to import CSV files using the command-line importer, so if you have a very large tournament, this might make importing initial data easier.
 
 We've tested these instructions successfully on Windows, Linux and macOS.
 
@@ -193,6 +193,8 @@ Heroku options you may want to change
 
 If you have a large tournament, you may want to customize your Heroku app. This section provides some guidance on upgrades and settings you may wish to consider. Some of these configurations require you to have the `Heroku Command Line Interface (CLI) <https://devcenter.heroku.com/articles/heroku-cli>`_ installed.
 
+.. _db-upgrades:
+
 Upgrading your database size
 ----------------------------
 
@@ -229,3 +231,80 @@ Time zone
 ---------
 
 If you want to change the time zone you nominated during deployment, you can do so by going to the `Heroku Dashboard <https://dashboard.heroku.com/>`_, clicking on your app, going to the **Settings** tab, clicking **Reveal Config Vars** and changing the value of the ``TIME_ZONE`` variable. This value must be one of the names in the IANA tz database, *e.g.* ``Pacific/Auckland``, ``America/Mexico_City``, ``Asia/Kuala_Lumpur``.  You can find a `list of these on Wikipedia <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in the 'TZ\*' column.
+
+SendGrid account details
+------------------------
+
+By default, Heroku will automatically create a SendGrid account for you. For small tournaments, this should work fine. For larger ones, though, SendGrid typically doesn't allow new accounts to send so many emails without additional vetting. This vetting is separate to the verification you did for your Heroku account, and as far as we're aware, it can't be done until you send your first email, by which time it's probably too late.
+
+If you're running a large tournament, you may wish to use your own SendGrid account instead. The free tier probably won't suffice after the trial period, but the Essentials tier should be more than adequate. If you're a student and have the `GitHub Education Pack <https://education.github.com/pack>`_, you might find the SendGrid plan here useful.
+
+If you set up and use your own SendGrid account, you can remove the SendGrid add-on from your Heroku app. The SendGrid add-on is only necessary if you wish to use Heroku's auto-created SendGrid account.
+
+To set up your app to use your own SendGrid account:
+
+.. rst-class:: spaced-list
+
+1. `Sign up for a SendGrid account <https://sendgrid.com/pricing/>`_, if you don't already have one.
+
+2. `Create an API key <https://app.sendgrid.com/settings/api_keys>`_ in your SendGrid account.
+
+  There are `instructions for how to do this in the SendGrid documentation <https://sendgrid.com/docs/User_Guide/Settings/api_keys.html>`_. The only permission that is needed is the "Mail Send" permission, so you can turn off all others if you want to be safe.
+
+3. Set the following config vars in Heroku Dashboard (or using the Heroku CLI, if you have it):
+
+  - ``SENDGRID_USERNAME`` should be set to ``apikey`` (not your username).
+  - ``SENDGRID_PASSWORD`` should be set to your API key, which will start with ``SG*******``.
+
+  .. warning:: The `Heroku SendGrid instructions <https://devcenter.heroku.com/articles/sendgrid#setup-api-key-environment-variable>`_ to do something with ``SENDGRID_API_KEY`` are **incorrect**. We figured this out by contacting SendGrid support staff. Use the above config vars instead.
+
+
+.. _upgrade-heroku:
+
+Upgrading an existing Heroku app
+================================
+
+.. note:: For most users, we recommend starting a new site for every tournament, when you set up the tab for that tournament. There's generally not a pressing need to upgrade Tabbycat after a tournament is concluded, and every time you deploy a new site, you'll be using the latest version at the time of deployment.
+
+To upgrade an existing Heroku-based Tabbycat app to the latest version, you need to *deploy* the current version of Tabbycat to your Heroku app. There are several ways to do this. We list one below, primarily targeted at users with some background in Git.
+
+The essence of it is that you need to `create a Git remote <https://devcenter.heroku.com/articles/git#creating-a-heroku-remote>`_ for your Heroku app (if you don't already have one), then `push to it <https://devcenter.heroku.com/articles/git#deploying-code>`_.
+
+.. attention:: You should **always** :ref:`back up your database <backups>` before upgrading Tabbycat.
+
+You'll need both Git and the Heroku CLI, and you'll need to be logged in to the Heroku CLI already.
+
+1. Take a backup of your database::
+
+    $ heroku pg:backups:capture
+
+2. If you haven't already, clone our Git repository and check out the master branch::
+
+    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+    $ git checkout master
+
+  If you've already cloned our Git repository, don't forget to pull so you're up to date::
+
+    $ git checkout master
+    $ git pull
+
+3. Check to see if you have a Git remote already in place::
+
+    $ git remote -v
+    heroku  https://git.heroku.com/mytournament2018.git (fetch)
+    heroku  https://git.heroku.com/mytournament2018.git (push)
+
+  If you do, the name of the remote will be on the left (``heroku`` in the above example), and the URL of your Git repository will be on the right. In the example above, our Tabbycat site URL would be ``mytournament2018.herokuapp.com``; the Git remote URL is then ``https://git.heroku.com/mytournament2018.git``.
+
+  If a Git remote URL for your Tabbycat site *doesn't* appear, then create one::
+
+    $ heroku git:remote --app mytournament2018 --remote heroku
+    set git remote heroku to https://git.heroku.com/mytournament2018.git
+
+  .. tip:: If you tab many tournaments, it'll probably be helpful to use a name other than ``heroku`` (say, ``mytournament2018``), so that you can manage multiple tournaments.
+
+4. Push to Heroku::
+
+    $ git push heroku master
+
+  This will take a while to complete.

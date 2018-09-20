@@ -5,11 +5,17 @@
   <div class="list-group-item d-inline-block main-menu-item">
     <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
        class="tournament-title d-flex justify-content-between align-items-center">
-      <div>
-        <img src="{% static 'logo.svg' %}" class="d-md-block d-none logo-large" width="24" height="24">
-        <img src="{% static 'logo.svg' %}" class="d-md-none" width="20" height="20">
+      <div class="mx-auto mx-md-0 text-center">
+        {% blocktrans trimmed asvar logo_alt %}
+          Tabbycat Logo
+        {% endblocktrans %}
+        {% if on_local %}
+          {% include "nav/logo_local.html" with width=18 height=18 alt=logo_alt %}
+        {% else %}
+          {% include "nav/logo.html" with width=18 height=18 alt=logo_alt %}
+        {% endif %}
       </div>
-      <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-1 pr-2">
+      <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-2 pr-2">
         {{ tournament }}
       </div>
       <div>
@@ -183,7 +189,11 @@
         <i data-feather="maximize"></i>{% trans "Overview" %}
       </a>
       <a class="list-group-item" href="{% roundurl 'standings-team' current_round %}">
-        <i data-feather="users"></i>{% trans "Teams" %}
+        {% if tournament.break_categories_nongeneral.count > 0 %}
+          <i data-feather="users"></i>{% trans "All Teams" %}
+        {% else %}
+          <i data-feather="users"></i>{% trans "Teams" %}
+        {% endif %}
       </a>
       {% for category in tournament.break_categories_nongeneral %}
         <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
@@ -198,7 +208,11 @@
       </a>
       {% endif %}
       <a class="list-group-item" href="{% roundurl 'standings-speaker' current_round %}">
-        <i data-feather="user"></i>{% trans "Speakers" %}
+        {% if tournament.speakercategory_set.all.count > 0 %}
+          <i data-feather="user"></i>{% trans "All Speakers" %}
+        {% else %}
+          <i data-feather="user"></i>{% trans "Speakers" %}
+        {% endif %}
       </a>
       {% for category in tournament.speakercategory_set.all %}
         <a class="list-group-item" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">

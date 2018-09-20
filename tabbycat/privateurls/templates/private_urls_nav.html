@@ -7,22 +7,12 @@
   </a>
   <div class="btn-group">
     <a class="btn btn-outline-primary"
-       href="{% tournamenturl 'printing-feedback-urls' %}" target="_blank">
-      {% trans "Print Feedback URLs" %}
+       href="{% tournamenturl 'printing-urls' %}" target="_blank">
+      {% trans "Print URLs" %}
     </a>
-    <a class="btn btn-outline-primary"
-       href="{% tournamenturl 'printing-ballot-urls' %}" target="_blank">
-      {% trans "Print Ballot URLs" %}
-    </a>
-  </div>
-  <div class="btn-group">
-    <a class="btn btn-outline-primary {% if email_feedback_nav %}active{% endif %}"
-       href="{% tournamenturl 'privateurls-email-feedback' %}">
-      {% trans "Email Feedback URLs" %}
-    </a>
-    <a class="btn btn-outline-primary {% if email_ballot_nav %}active{% endif %}"
-       href="{% tournamenturl 'privateurls-email-ballot' %}">
-      {% trans "Email Ballot URLs" %}
+    <a class="btn btn-outline-primary {% if private_urls_nav %}active{% endif %}"
+       href="{% tournamenturl 'privateurls-email' %}">
+      {% trans "Email URLs" %}
     </a>
   </div>
   {% if blank_exists %}
@@ -30,14 +20,14 @@
       <form action="{% tournamenturl 'privateurls-generate' %}" method="POST">
       {% csrf_token %}
       <button class="btn btn-outline-success" id="generateRandomisedUrls" type="submit" data-toggle="tooltip" title="{% trans "This button only generates private URLs for participants who do not already have one." %}">
-        {% trans "Generate Private URLs" %}
+        {% trans "Generate URLs" %}
       </button>
       </form>
     </div>
   {% else %}
     <div class="btn-group">
       <button class="btn btn-outline-secondary" id="generateRandomisedUrls" data-toggle="tooltip" title="{% trans "All participants already have private URLs." %}">
-        {% trans "Generate Private URLs" %}
+        {% trans "Generate URLs" %}
       </button>
     </div>
   {% endif %}

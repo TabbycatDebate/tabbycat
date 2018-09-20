@@ -7,16 +7,14 @@ cd ./tabbycat/
 echo "-----> Running database migration"
 python manage.py migrate --noinput
 
-echo "-----> Clearing application cache"
-python manage.py clearcache
-
 echo "-----> Running dynamic preferences checks"
 python manage.py checkpreferences
 
-echo "-----> Running gulp compilation"
-NODE_ENV='production' gulp build
+echo "-----> Running static asset compilation"
+npm install -g @vue/cli-service-global
+npm run build
 
-echo "-----> Running whitenoise static files compilation"
+echo "-----> Running static files compilation"
 python manage.py collectstatic --noinput -v 0
 
 echo "-----> Post-compile done"

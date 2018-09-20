@@ -116,13 +116,13 @@ class TestFeedbackProgress(TestCase):
 
         return debate
 
-    def _create_feedback(self, source, target):
+    def _create_feedback(self, source, target, confirmed=True, ignored=False):
         if isinstance(source, DebateTeam):
             source_kwargs = dict(source_team=source)
         else:
             source_kwargs = dict(source_adjudicator=source)
         target_adj = self._adj(target)
-        return AdjudicatorFeedback.objects.create(confirmed=True, adjudicator=target_adj, score=3,
+        return AdjudicatorFeedback.objects.create(confirmed=confirmed, ignored=ignored, adjudicator=target_adj, score=3,
                 **source_kwargs)
 
     # ==========================================================================
@@ -246,6 +246,24 @@ class TestFeedbackProgress(TestCase):
         debate = self._create_debate((0, 1), (0, 1, 2), "aan")
         for a in (1, 2):
             self._create_feedback(self._da(debate, 0), a+2)
+            self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, False, 0, [])
+
+    def test_submitted_feedback_ignored_score(self):
+        debate = self._create_debate((0, 1), (0, 1, 2), "aan")
+        for a in (1, 2):
+            feedback = self._create_feedback(self._da(debate, 0), a, ignored=True)
+            self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, True, 1, [feedback])
+
+    def test_submitted_feedback_unconfirmed_score(self):
+        debate = self._create_debate((0, 1), (0, 1, 2), "aan")
+        for a in (1, 2):
+            self._create_feedback(self._da(debate, 0), a, confirmed=False)
+            self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, False, 0, [])
+
+    def test_submitted_feedback_ignored_unconfirmed_score(self):
+        debate = self._create_debate((0, 1), (0, 1, 2), "aan")
+        for a in (1, 2):
+            self._create_feedback(self._da(debate, 0), a, confirmed=False, ignored=True)
             self.assertExpectedFromAdjudicatorTracker(debate, 0, a, True, False, 0, [])
 
     def test_adj_on_adj_multiple_submission(self):

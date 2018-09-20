@@ -116,18 +116,18 @@ class RoundListFilter(admin.SimpleListFilter):
 
 @admin.register(AdjudicatorFeedback)
 class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
-    list_display  = ('adjudicator', 'confirmed', 'score', 'version', 'get_source')
+    list_display  = ('adjudicator', 'confirmed', 'ignored', 'score', 'version', 'get_source')
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',
             'score', 'source_adjudicator__adjudicator__name',
             'source_team__team__short_name', 'source_team__team__long_name')
-    raw_id_fields = ('source_team',)
+    raw_id_fields = ('source_team', 'adjudicator', 'source_team', 'source_adjudicator')
     list_filter   = (
         RoundListFilter,
         ('adjudicator', custom_titled_filter(_('target'))),
         ('source_adjudicator__adjudicator__name', custom_titled_filter(_('source adjudicator'))),
         ('source_team__team__short_name', custom_titled_filter(_('source team'))),
     )
-    actions       = ('mark_as_confirmed', 'mark_as_unconfirmed')
+    actions       = ('mark_as_confirmed', 'mark_as_unconfirmed', 'ignore_feedback', 'recognize_feedback')
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related(
@@ -191,6 +191,26 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         message = ngettext(
             "1 feedback submission was marked as unconfirmed.",
             "%(count)d feedback submissions were marked as unconfirmed.",
+            count
+        ) % {'count': count}
+        self.message_user(request, message)
+
+    def ignore_feedback(self, request, queryset):
+        count = queryset.update(ignored=True)
+
+        message = ngettext(
+            "1 feedback submission is now ignored.",
+            "%(count)d feedback submissions are now ignored.",
+            count
+        ) % {'count': count}
+        self.message_user(request, message)
+
+    def recognize_feedback(self, request, queryset):
+        count = queryset.update(ignored=False)
+
+        message = ngettext(
+            "1 feedback submission is now recognized.",
+            "%(count)d feedback submissions are now recognized.",
             count
         ) % {'count': count}
         self.message_user(request, message)

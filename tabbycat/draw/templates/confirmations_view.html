@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block head-title %}Shift Confirmations{% endblock %}
-{% block page-title %}Shift Confirmations{% endblock %}
+{% block head-title %}{% trans "Shift Confirmations" %}{% endblock %}
+{% block page-title %}{% trans "Shift Confirmations" %}{% endblock %}
 
 {% block page-subnav-sections %}
   <a class="btn btn-primary " href="{% roundurl 'draw' %}">
-    <i data-feather="chevron-left"></i> Back to Draw
+    <i data-feather="chevron-left"></i>{% trans "Back to Draw" %}
   </a>
 {% endblock %}
 
@@ -15,7 +15,7 @@
   <div class="col-md-12">
     <div class="card">
       <div class="panel-heading">
-        <h3 class="panel-title">Adjudicators with no confirmed shifts</h3>
+        <h3 class="panel-title">{% trans "Adjudicators with no confirmed shifts" %}</h3>
       </div>
       <div class="card-body">
         {% for adj in adjs %}

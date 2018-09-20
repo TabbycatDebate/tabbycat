@@ -42,6 +42,12 @@ def tournament_side_names(tournament, name_type):
     return side_names
 
 
+@register.simple_tag
+def debate_team_side_name(debate_team, tournament):
+    # If returned directly from the object it will have to lookup tournament
+    return debate_team.get_side_name(tournament)
+
+
 class TournamentURLNode(URLNode):
 
     def __init__(self, view_name, args, kwargs, asvar):
@@ -227,3 +233,9 @@ def percentage(number_a, number_b):
 @register.simple_tag
 def subtract(number_a, number_b):
     return number_a - number_b # Used in Feedback Overview
+
+
+@register.filter(name='abbreviatename')
+def abbreviatename(name):
+    """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
+    return "%s.%s" % (name[0], name.split(" ")[-1][:5]) # Used for barcodes

@@ -23,22 +23,6 @@
   min-height: 51px; // When the success msg goes away the page shouldn't jump
 }
 
-.draw-container {
-
-  .draw-row:last-of-type {
-    border-radius: 0 0 4px 4px;
-  }
-
-  .thead.vue-sortable {
-    padding-right: 0; // Balance the offset from the sorting icons
-  }
-
-  .vue-sort-key,
-  .thead.vue-droppable-container .vue-sort-key {
-    margin-bottom: -2px;
-  }
-}
-
 .draw-header {
   @extend .draw-row;
 
@@ -63,6 +47,22 @@
 
   &.droppable-cell {
     border-bottom-color: #fff; // Have more contrast in drag/drop UIs
+  }
+}
+
+.draw-container {
+
+  .draw-row:last-of-type {
+    border-radius: 0 0 4px 4px;
+  }
+
+  .thead.vue-sortable {
+    padding-right: 0; // Balance the offset from the sorting icons
+  }
+
+  .vue-sort-key,
+  .thead.vue-droppable-container .vue-sort-key {
+    margin-bottom: -2px;
   }
 }
 

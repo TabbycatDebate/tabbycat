@@ -14,6 +14,6 @@ import SlideOverVenueMixin from '../info/SlideOverVenueMixin.vue'
 
 export default {
   mixins: [SlideOverSubjectMixin, SlideOverVenueMixin],
-  props: { 'venue': Object },
+  props: { venue: Object },
 }
 </script>

@@ -3,7 +3,7 @@
 
 {% block content %}
   {% if not pref.all_results_released %}
-    {% trans "It also excludes silent rounds (if any)." as silent_round_sentence %}
+    {% trans "It also excludes results from silent rounds (if any) and from the current round." as silent_round_sentence %}
   {% endif %}
   {% if pref.teams_in_debate == 'bp' %}
     {% blocktrans trimmed asvar p1 %}

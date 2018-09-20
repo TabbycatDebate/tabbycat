@@ -191,6 +191,8 @@ class MotionBPStatsCalculator:
         for motion in self.prelim_motions:
             motion.averages = []
             motion.counts_by_side = []
+            motion.counts_by_half = {'top': 0, 'bottom': 0}
+            motion.counts_by_bench = {'gov': 0, 'opp': 0}
 
             for side in self.tournament.sides:
                 average = getattr(motion, '%s_average' % side)
@@ -203,6 +205,16 @@ class MotionBPStatsCalculator:
                     percentage = count / motion.ndebates * 100 if motion.ndebates > 0 else 0
                     counts.append((points, count, percentage))
                 motion.counts_by_side.append((side, counts))
+
+                if side == 'og' or side == 'oo':
+                    motion.counts_by_half['top'] += (average / 2)
+                else:
+                    motion.counts_by_half['bottom'] += (average / 2)
+
+                if side == 'og' or side == 'cg':
+                    motion.counts_by_bench['gov'] += (average / 2)
+                else:
+                    motion.counts_by_bench['opp'] += (average / 2)
 
     def _prefetch_elim_motions(self):
         """Constructs the database query for elimination round motions.

@@ -117,7 +117,7 @@ class BPHungarianDrawGenerator(BaseBPDrawGenerator):
         nteams = 0
         level = None
         pullups_needed = 0
-        for p in range(max(points), -1, -1):
+        for p in sorted(counts.keys(), reverse=True):
             if pullups_needed < counts[p]: # complete the bracket
                 if pullups_needed:
                     allowed.add(p)

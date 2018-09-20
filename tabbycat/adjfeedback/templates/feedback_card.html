@@ -1,17 +1,23 @@
-{% load humanize i18n %}
+{% load debate_tags humanize i18n %}
 
 <div class="card">
   <div class="list-group list-group-flush">
 
     {% if not feedback.confirmed %}
-      <div class="list-group-item list-group-item-dark h6" data-toggle="tooltip"
-           title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has done submitted several times on the same person.' %}">
+      <div class="list-group-item list-group-item-warning h6" data-toggle="tooltip"
+           title="{% trans 'This is most likely because the team or adjudicator who submitted this feedback has submitted several times on the same person; or because a team has submitted feedback on multiple panellists (rather than just the orallist).' %}">
       {% trans "Unconfirmed; will not affect this adjudicator's score." %}
+      </div>
+    {% endif %}
+    {% if feedback.ignored %}
+      <div class="list-group-item list-group-item-warning h6" data-toggle="tooltip"
+           title="{% trans 'The feedback is counted for the adjudicator, but is not taken into account when calculating scores.' %}">
+      {% trans "Ignored; will not affect this adjudicator's score." %}
       </div>
     {% endif %}
     {% if not feedback.debate_adjudicator.get_type_display %}
       <div class="list-group-item list-group-item-danger h6">
-      {% trans "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback." %}
+        {% trans "This feedback is submitted on an adjudicator but it looks like they have been since been removed from the debate. You should probably go to the Edit Database area and delete this feedback." %}
       </div>
     {% endif %}
     <div class="list-group-item h5">
@@ -21,7 +27,9 @@
             {% elif feedback.score > score_thresholds.high_score %}badge-success
             {% else %}badge-primary{% endif %}" data-toggle="tooltip"
             title="{% trans "The score given in this piece of feedback." %}">
-        {{ feedback.score }}
+        {% blocktrans trimmed with score=feedback.score %}
+          {{ score }}
+        {% endblocktrans %}
       </span>
       <span class="badge mr-2 badge-light float-right" data-toggle="tooltip">
         {% blocktrans trimmed with test=feedback.adjudicator.test_score %}
@@ -29,7 +37,7 @@
         {% endblocktrans %}
       </span>
       {% blocktrans trimmed with adj=feedback.adjudicator.name as=feedback.debate_adjudicator.get_type_display %}
-        On {{ adj }} <span class="text-secondary">as {{ as }}</span>
+        On {{ adj }} <span class="text-secondary small">as {{ as }}</span>
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
@@ -40,11 +48,11 @@
       </span>
       {% if feedback.source_adjudicator %}
         {% blocktrans trimmed with source=feedback.source_adjudicator.adjudicator.name relationship=feedback.source_adjudicator.get_type_display %}
-          From {{ source }} <span class="text-secondary">their {{ relationship }}</span>
+          From {{ source }} <span class="text-secondary small">their {{ relationship }}</span>
         {% endblocktrans %}
       {% elif feedback.source_team %}
         {% blocktrans trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display %}
-          From {{ source }} <span class="text-secondary">who {{ relationship }}</span>
+          From {{ source }} <span class="text-secondary small">who {{ relationship }}</span>
         {% endblocktrans %}
       {% else %}
         {% trans "From unknown" %}
@@ -72,10 +80,32 @@
         {% endif %}
       </div>
     {% endfor %}
-    <div class="list-group-item text-secondary small">
-      {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
-        Submitted {{ time }}
-      {% endblocktrans %}
+    <div class="list-group-item text-secondary">
+      <span class="pt-3 small">
+        {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
+          Submitted {{ time }}
+        {% endblocktrans %}
+      </span>
+      <span class="float-right" data-toggle="tooltip"
+            title="{% trans 'Unconfirmed feedback is not counted as having been submitted and does not affect this adjudicator\'s score.' %}">
+        <form method="POST" action="{% tournamenturl 'adjfeedback-confirm-feedback' feedback.id %}" class='text-secondary'>
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" class="btn btn-link text-muted pl-3 p-0">
+            <small>{% if feedback.confirmed %}{% trans "Un-confirm" %}{% else %}{% trans "Confirm" %}{% endif %}</small>
+          </button>
+        </form>
+      </span>
+      <span class="float-right" data-toggle="tooltip"
+            title="{% trans 'Ignored feedback is counted as having been submitted, but does not affect this adjudicator\'s score.' %}">
+        <form method="POST" action="{% tournamenturl 'adjfeedback-ignore-feedback' feedback.id %}" class='text-secondary'>
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" class="btn btn-link text-muted p-0">
+            <small>{% if feedback.ignored %}{% trans "Un-ignore" %}{% else %}{% trans "Ignore" %}{% endif %}</small>
+          </button>
+        </form>
+      </span>
     </div>
 
   </div>

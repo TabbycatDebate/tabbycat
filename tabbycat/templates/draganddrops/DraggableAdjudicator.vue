@@ -40,30 +40,30 @@ import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
   mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
-           HighlightableMixin, ConflictableMixin],
-  props: { 'adjudicator': Object, 'debateId': null, 'percentiles': Array },
+    HighlightableMixin, ConflictableMixin],
+  props: { adjudicator: Object, debateId: null, percentiles: Array },
   data: function () {
     return { debugMode: false }
   },
   computed: {
     initialledName: function () {
       // Translate Joe Blogs into Joe B.
-      var names = this.adjudicator.name.split(" ")
+      const names = this.adjudicator.name.split(' ')
       if (names.length > 1) {
-        var lastname = names[names.length - 1]
-        var lastInitial = lastname[0]
-        var firstNames = this.adjudicator.name.split(" " + lastname).join('')
-        var limit = 10
+        const lastname = names[names.length - 1]
+        const lastInitial = lastname[0]
+        let firstNames = this.adjudicator.name.split(` ${lastname}`).join('')
+        const limit = 10
         if (firstNames.length > limit + 2) {
-          firstNames = firstNames.substring(0, limit) + "…"
+          firstNames = `${firstNames.substring(0, limit)}…`
         }
-        return firstNames + " " + lastInitial
+        return `${firstNames} ${lastInitial}`
       }
-      return names.join(" ")
+      return names.join(' ')
     },
     shrunkScore: function () {
-      var score = this.adjudicator.score.split(".")[0]
-      score += "<small>." + this.adjudicator.score.split(".")[1] + "</small>"
+      let score = this.adjudicator.score.split('.')[0]
+      score += `<small>.${this.adjudicator.score.split('.')[1]}</small>`
       return score
     },
     highlightableObject: function () {
@@ -73,31 +73,31 @@ export default {
       return JSON.stringify({ adjudicator: this.adjudicator.id, debate: this.debateId })
     },
     percentileRanking: function () {
-      var rating = parseFloat(this.adjudicator.score)
-      var rank =  _.find(this.percentiles, function (threshold) {
-        return rating >= threshold.cutoff
-      })
+      const rating = parseFloat(this.adjudicator.score)
+      let rank = _.find(this.percentiles, threshold => rating >= threshold.cutoff)
+
       if (_.isUndefined(rank)) {
         // Sometimes a score might be weird like in the negatives; in which case
         // just give them the lowest possible percentile to avoid an error
         rank = this.percentiles[this.percentiles.length - 1]
       }
+
+      let percentileText = ` Ranking (Bottom ${rank.percentile}%)`
       if (rank.percentile > 50) {
-        var percentileText = ' Ranking (Top ' + (100 - rank.percentile) + '%)'
-      } else {
-        var percentileText = ' Ranking (Bottom ' + rank.percentile + '%)'
+        percentileText = ` Ranking (Top ${100 - rank.percentile}%)`
       }
-      return { 'grade': rank.grade, 'percentile': rank.percentile, 'text': percentileText}
-    }
+
+      return { grade: rank.grade, percentile: rank.percentile, text: percentileText }
+    },
   },
   methods: {
-    handleDragStart: function (event) {
+    handleDragStart: function () {
       // this.$dispatch('started-dragging-team', this);
     },
-    handleDragEnd: function (event) {
+    handleDragEnd: function () {
       this.hideHoverConflicts()
       this.hideSlideOver()
     },
-  }
+  },
 }
 </script>

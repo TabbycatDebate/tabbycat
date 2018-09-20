@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% load debate_tags %}
+{% load debate_tags i18n %}
 
-{% block page-title %}Printable {{ sheet_type|title }} URLs{% endblock %}
+{% block page-title %}{% blocktrans trimmed with sheet=sheet_type|title %}Printable {{ sheet }} URLs{% endblocktrans %}{% endblock %}
 
 {% block header %}{% endblock %}
 {% block nav %}{% endblock %}
@@ -10,43 +10,37 @@
 
 {% block page-alerts %}
   <div class="alert alert-info d-print-none">
+    {% blocktrans %}
     This page is designed to be printed as double sided A4 sheets, with the
-    outside facing side showing the team/adj name and the inside facing side
+    outside facing side showing the participant name and the inside facing side
     showing the URL. Use CTRL-P to print; for best results use Chrome.
+    {% endblocktrans %}
   </div>
 {% endblock %}
 
 {% block content %}
 
-  {% for adj in adjs %}
+  {% for p in parts %}
     <div class="h1 text-center printable-page-break">
       <br>
-      {{ sheet_type|title }} URL for {{ adj.name }} ({{ adj.institution.code }})
-    </div>
-    <div class="h4 text-center printable-page-break">
-      <br><br><br>
-      Please bookmark the following URL, you will use it to submit {{ sheet_type }}s
-      throughout the tournament:
-      <br><br>
-      {% if sheet_type == 'feedback' %}
-        {% tournament_absurl 'adjfeedback-public-add-from-adjudicator-randomised' adj.url_key %}
-      {% elif sheet_type == 'ballot' %}
-        {% tournament_absurl 'results-public-ballotset-new-randomised' adj.url_key %}
+      {% if p.adjudicator %}
+        {% blocktrans trimmed with name=p.name group=p.adjudicator.institution.code team=p.speaker.team.short_name %}
+          Private URL for {{ name }} ({{ group }})
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with name=p.name group=p.speaker.team.short_name %}
+          Private URL for {{ name }} ({{ group }})
+        {% endblocktrans %}
       {% endif %}
     </div>
-  {% endfor %}
-
-  {% for team in teams %}
-    <div class="h1 text-center printable-page-break">
-      <br>
-      {{ sheet_type|title }} URL for {{ team.short_name }}
-    </div>
     <div class="h4 text-center printable-page-break">
       <br><br><br>
-      Please bookmark the following URL, you will use it to submit {{ sheet_type }}s
+      {% blocktrans %}
+      Please bookmark the following URL, you will use it to submit forms
       throughout the tournament:
+      {% endblocktrans %}
       <br><br>
-      {% tournament_absurl 'adjfeedback-public-add-from-team-randomised' team.url_key %}
+      {% tournament_absurl 'privateurls-person-index' p.url_key %}
     </div>
   {% endfor %}
 

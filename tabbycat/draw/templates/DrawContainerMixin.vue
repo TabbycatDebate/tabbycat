@@ -17,18 +17,22 @@ import SortableTableMixin from '../../templates/tables/SortableTableMixin.vue'
 export default {
   mixins: [AjaxMixin, SlideOverContainerMixin, SortableTableMixin, ShardContainerMixin],
   components: {
-    DrawHeader, AutoSaveCounter, Debate,
-    DroppableGeneric, UnallocatedItemsContainer, SlideOver
+    DrawHeader,
+    AutoSaveCounter,
+    Debate,
+    DroppableGeneric,
+    UnallocatedItemsContainer,
+    SlideOver,
   },
   data: function () {
     return {
       debates: this.initialDebates,
       unallocatedItems: this.initialUnallocatedItems,
       headers: [
-        {'key':'bracket'},{'key':'liveness'},{'key':'importance'},
-        {'key':'venue'},{'key':'aff'},{'key':'neg'},
-        {'key':'og'},{'key':'oo'},{'key':'cg'},{'key':'co'},
-      ]
+        { key: 'bracket' }, { key: 'liveness' }, { key: 'importance' },
+        { key: 'venue' }, { key: 'aff' }, { key: 'neg' },
+        { key: 'og' }, { key: 'oo' }, { key: 'cg' }, { key: 'co' },
+      ],
     }
   },
   props: ['initialDebates', 'initialUnallocatedItems', 'roundInfo'],
@@ -45,28 +49,19 @@ export default {
     },
     teams: function () {
       // Return all teams (in debates) as a single array
-      var allTeams = _.map(this.debates, function (debate) {
-        return _.map(debate.debateTeams, function (dt) {
-          return dt.team
-        })
-      })
+      const allTeams = _.map(this.debates, debate => _.map(debate.debateTeams, dt => dt.team))
       return _.flattenDeep(allTeams)
     },
     adjudicators: function () {
       // Return all adjs (in debates) as a single array
-      var allPanellists = _.map(this.debates, function (debate) {
-        return _.map(debate.debateAdjudicators, function (panel) {
-          return panel.adjudicator
-        })
-      })
-      var allAdjudicators = allPanellists.concat(this.unallocatedItems)
+      const allPanellists = _.map(this.debates, debate =>
+        _.map(debate.debateAdjudicators, p => p.adjudicator))
+      const allAdjudicators = allPanellists.concat(this.unallocatedItems)
       return _.flattenDeep(allAdjudicators)
     },
     venues: function () {
       // Return all teams as a single array
-      var allVenues = _.map(this.debates, function (debate) {
-        return debate.venue
-      })
+      const allVenues = _.map(this.debates, debate => debate.venue)
       return allVenues
     },
     debatesById: function () {
@@ -79,16 +74,15 @@ export default {
       return _.keyBy(this.adjudicators, 'id')
     },
     institutionsById: function () {
-      var teamInstitutions = _.map(this.teams, function (team) {
+      const teamInstitutions = this.teams.map((team) => {
         if (team !== null) {
           return team.institution
         }
+        return false
       })
-      var adjInstitutions = _.map(this.adjudicators, function (adjudicator) {
-        return adjudicator.institution
-      })
-      var allInstitutions = teamInstitutions.concat(adjInstitutions)
-      var uniqueInstitutions = _.uniq(allInstitutions)
+      const adjInstitutions = _.map(this.adjudicators, adjudicator => adjudicator.institution)
+      const allInstitutions = teamInstitutions.concat(adjInstitutions)
+      const uniqueInstitutions = _.uniq(allInstitutions)
       return _.keyBy(uniqueInstitutions, 'id')
     },
     unallocatedById: function () {
@@ -107,43 +101,39 @@ export default {
     },
     // Duplicating sortableHeaderMixin; but can't inheret in a slot
     sortClasses: function (key) {
-      var baseCSS = "vue-sort-key "
+      const baseCSS = 'vue-sort-key '
       if (!_.isUndefined(this.sortKey) && !_.isUndefined(key)) {
         if (this.sortKey.toLowerCase() === key.toLowerCase()) {
-          if (this.sortOrder === "asc") {
-            return baseCSS + "vue-sort-active sort-by-desc"
-          } else {
-            return baseCSS + "vue-sort-active sort-by-asc"
+          if (this.sortOrder === 'asc') {
+            return `${baseCSS}vue-sort-active sort-by-desc`
           }
+          return `${baseCSS}vue-sort-active sort-by-asc`
         }
       }
-      return baseCSS + "text-muted"
+      return `${baseCSS}text-muted`
     },
-    getSortableProperty(row, orderedHeaderIndex) {
+    getSortableProperty (row) {
       // Rather than an array of cells (as in Table) row is a Debate
       // So just return the relevant property
-      var key = this.sortKey
+      const key = this.sortKey
       if (typeof row[key] === 'string' ||
           typeof row[key] === 'number') {
         return row[key]
       } else if (key === 'venue') {
         if (!_.isNull(row.venue)) {
           return row.venue.name
-        } else {
-          return '' // Venues can be null
         }
+        return '' // Venues can be null
       } else if (_.includes(_.map(this.teamPositions), key)) {
-        var teamAtSide = _.find(row.debateTeams, function (dt) {
-          return dt.side === key
-        });
+        const teamAtSide = _.find(row.debateTeams, dt => dt.side === key)
         if (teamAtSide.team !== null) {
           return teamAtSide.team.short_name
-        } else {
-          return ''  // Teams in a position can be null
         }
+        return '' // Teams in a position can be null
       }
-      console.log('Couldnt find sorting property')
-    }
-  }
+      console.error('Couldnt find sorting property')
+      return '' // Teams in a position can be null
+    },
+  },
 }
 </script>

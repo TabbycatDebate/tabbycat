@@ -1,19 +1,20 @@
 {% load static statici18n i18n debate_tags %}<!DOCTYPE html>
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{% if tournament %}{{ tournament.short_name }}{% else %}Tabbycat{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
+  <title>{% if tournament %}{{ tournament.short_name }}{% else %}{% trans "Tabbycat" %}{% endif %} | {% if page_title %}{{ page_title }}{% else %}{% block page-title %}{% endblock %}{% endif %}</title>
 
   {% if tournament %}
     {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
       The tab for {{ tournament_name }} runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% else %}
-    {% blocktrans trimmed with tournament_name=tournament.short_name asvar meta_description %}
+    {% blocktrans trimmed asvar meta_description %}
       This tab runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats
     {% endblocktrans %}
   {% endif %}
@@ -27,6 +28,20 @@
   {% block extra-css %}{% endblock %}
   {% block extra-head %}{% endblock %}
 
+  {% if not hmr %}
+  <link href="{% static 'vue/js/app.js' %}" rel=preload as=script>
+  {% endif %}
+  {% if not debug %}<!-- Analytics -->
+  <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-314178-25', 'auto');
+    ga('send', 'pageview');
+    ga('set', 'transport', 'beacon'); // Reduce HTTP requests
+    {% if tabbycat_version %}ga('set', 'tcversion', '{{ tabbycat_version }}');{% endif %}
+    {% if tournament.short_name %}ga('set', 'tctournament', '{{ tournament.short_name }}');{% endif %}
+  </script>
+  <script async src='https://www.google-analytics.com/analytics.js'></script>
+  {% endif %}
 </head>
 
 <body class="{% block body-class %}{% endblock %}">
@@ -145,34 +160,28 @@
   {% endblock %}
 
   {% block js %}
-  <script src="{% statici18n LANGUAGE_CODE %}"></script>
-  {% if user.is_authenticated %}
-  <script>
-    window.buildData = { // Pass to Raven
-      version: '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}',
-      sentry: {% if disable_sentry %}false{% else %}true{% endif %}
-    }
-  </script>
-  <script src="{% static 'js/admin.bundle.js' %}"></script>
-  {% else %}
-  <script src="{% static 'js/public.bundle.js' %}"></script>
-  {% endif %}
-  {% endblock js %}
 
-  <!-- Analytics -->
-  {% if not debug %}
+    <script src="{% statici18n LANGUAGE_CODE %}"></script>
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-314178-25', 'auto');
-      ga('set', 'transport', 'beacon'); // Reduce HTTP requests
-      {% if tabbycat_version %}ga('set', 'tcversion', '{{ tabbycat_version }}');{% endif %}
-      {% if tournament.short_name %}ga('set', 'tctournament', '{{ tournament.short_name }}');{% endif %}
-      ga('send', 'pageview');
+      window.buildData = { // Pass to Raven
+        version: '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}',
+        sentry: {% if disable_sentry %}false{% else %}true{% endif %}
+      }
     </script>
-  {% endif %}
+
+    {% if hmr %}
+      <!-- webpack dev server (live js) -->
+      <script src="http://localhost:8888/app.js"></script>
+      <!-- livereload (live css) -->
+      <script>
+        document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
+        ':35729/livereload.js?snipver=1"></' + 'script>')
+      </script>
+    {% else %}
+      <script src="{% static 'vue/js/app.js' %}"></script>
+    {% endif %}
+
+  {% endblock js %}
 
 </body>
 </html>

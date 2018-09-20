@@ -4,7 +4,7 @@
 
 // Actionable elements (buttons, navs) should be distinct
 .btn .feather {
-  margin-bottom: -3px;
+  margin-top: -2.5px;
 }
 
 // Fix bad inheritance
@@ -78,11 +78,13 @@ label.error {
   font-size: $font-size-sm;
 }
 
-.btn-group .btn-success, .btn-group .btn-primary, .btn-group .btn-secondary {
+.btn-group .btn-success,
+.btn-group .btn-primary,
+.btn-group .btn-secondary {
   border-right: 3px solid rgba(255, 255, 255, 0.25);
 
   &:last-child {
-    border-right: none;
+    border-right: 0;
   }
 }
 
@@ -102,9 +104,9 @@ label.error {
 }
 
 // Welcome message box
-#id_public_features__welcome_message_iframe {
+#id_public_features__welcome_message_iframe { /* stylelint-disable-line */
   padding: 0;
-  border: none;
+  border: 0;
 }
 
 // IE Horizontal choice/radio options; align form elements & text horizontally

@@ -1,5 +1,6 @@
 from itertools import islice, zip_longest
 
+from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
@@ -264,10 +265,15 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         teams = [team for team in teams if self.get_imbalance_category(team) is not None]
         self.add_team_columns(teams)
 
-        # Points
+        # First metric
+        metric_info = next(self.standings.metrics_info())
+        header = {
+            'key': "pts",  # always use 'pts' to make it more predictable
+            'title': force_text(metric_info['abbr']),
+            'tooltip': force_text(metric_info['name']),
+        }
         infos = self.standings.get_standings(teams)
-        header = {'key': "pts", 'title': _("Pts"), 'tooltip': _("Points")}
-        self.add_column(header, [info.metrics['points'] for info in infos])
+        self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])
 
         # Sides
         sides_lookup = {dt.team_id: dt.side for debate in draw
@@ -334,7 +340,8 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         self.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
     def add_permitted_points_column(self):
-        points = [info.metrics['points'] for info in self.standings]
+        first_metric = self.standings.metric_keys[0]
+        points = [info.metrics[first_metric] for info in self.standings]
         points.sort(reverse=True)
         pref = self.tournament.pref('bp_pullup_distribution')
         define_rooms_func = getattr(BPHungarianDrawGenerator, BPHungarianDrawGenerator.DEFINE_ROOM_FUNCTIONS[pref])
@@ -342,7 +349,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         data = [sorted(allowed, reverse=True) for level, allowed in rooms]
         cells = []
         for datum in data:
-            strs = [str(x) for x in datum]
+            strs = [metricformat(x) for x in datum]
             strs[0] = "<strong>%s</strong>" % strs[0]
             cells.append(", ".join(strs))
         header = {
@@ -363,9 +370,14 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             row[-1]['class'] = 'highlight-col'
 
         # Points of team
+        metric_info = next(self.standings.metrics_info())
+        header = {
+            'key': "pts",  # always use 'pts' to make it more predictable
+            'tooltip': _("%(team)s: %(metric)s") % {'team': side_abbr, 'metric': metric_info['name']},
+            'icon': 'star'
+        }
         infos = self.standings.get_standings(teams)
-        header = {'key': "pts", 'tooltip': side_abbr + " " + _("Points"), 'icon': 'star'}
-        self.add_column(header, [info.metrics['points'] for info in infos])
+        self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])
 
         # Side history after last round
         header = self._prepend_side_header(side, _("side history before this round"), _("Sides"), text_only=True)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,59 +59,66 @@ msgstr ""
 msgid "View Draw"
 msgstr ""
 
-#: availability/templates/availability_index.html:48
-#: availability/templates/availability_index.html:53
-#: availability/templates/availability_index.html:58
-#: availability/templates/availability_index.html:63
-#: availability/templates/availability_index.html:68
-#: availability/templates/availability_index.html:73
-#: availability/templates/availability_index.html:78
-#: availability/templates/availability_index.html:83
-#: availability/templates/availability_index.html:87
+#: availability/templates/availability_index.html:45
+#, python-format
+msgid ""
+"%(previous_unconfirmed)s debates from %(round_name)s do not have a completed "
+"ballot — this may lead to a draw that fails or is incorrect"
+msgstr ""
+
+#: availability/templates/availability_index.html:47
+#: availability/templates/availability_index.html:52
+#: availability/templates/availability_index.html:57
+#: availability/templates/availability_index.html:62
+#: availability/templates/availability_index.html:67
+#: availability/templates/availability_index.html:72
+#: availability/templates/availability_index.html:77
+#: availability/templates/availability_index.html:82
+#: availability/templates/availability_index.html:86
 msgid "Generate Draw"
 msgstr ""
 
-#: availability/templates/availability_index.html:52
+#: availability/templates/availability_index.html:51
 msgid ""
 "The draw cannot be generated until some teams have been marked as available."
 msgstr ""
 
-#: availability/templates/availability_index.html:57
+#: availability/templates/availability_index.html:56
 msgid ""
 "The draw cannot be generated until some adjudicators have been marked as "
 "available."
 msgstr ""
 
-#: availability/templates/availability_index.html:62
+#: availability/templates/availability_index.html:61
 msgid ""
 "The draw cannot be generated until some venues have been marked as available."
 msgstr ""
 
-#: availability/templates/availability_index.html:67
+#: availability/templates/availability_index.html:66
 msgid ""
 "There aren't enough venues marked as available for the number of debates — "
 "the draw may not generate properly."
 msgstr ""
 
-#: availability/templates/availability_index.html:72
+#: availability/templates/availability_index.html:71
 msgid ""
 "There aren't enough adjudicators marked as available for the number of "
 "debates — the draw may not generate properly."
 msgstr ""
 
-#: availability/templates/availability_index.html:77
+#: availability/templates/availability_index.html:76
 msgid ""
 "There is an uneven number of teams marked as available — the draw may not "
 "generate properly."
 msgstr ""
 
-#: availability/templates/availability_index.html:82
+#: availability/templates/availability_index.html:81
 msgid ""
 "The number of teams marked as available is not a multiple of 4 — the draw "
 "may not generate properly."
 msgstr ""
 
-#: availability/templates/availability_index.html:100
+#: availability/templates/availability_index.html:99
 #, python-format
 msgid ""
 "One debate from %(prev_round)s <strong>does not have a completed ballot</"
@@ -126,7 +133,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/templates/availability_index.html:122
+#: availability/templates/availability_index.html:121
 #, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, however the current "
@@ -135,7 +142,7 @@ msgid ""
 "the next round?</a>"
 msgstr ""
 
-#: availability/templates/availability_index.html:137
+#: availability/templates/availability_index.html:136
 #, python-format
 msgid ""
 "This is the first round, but its draw type is <strong>%(draw_type)s</"
@@ -144,7 +151,7 @@ msgid ""
 "draw type in the Edit Database area.</a>"
 msgstr ""
 
-#: availability/templates/availability_index.html:150
+#: availability/templates/availability_index.html:149
 #, python-format
 msgid ""
 "This is an elimination round, but it doesn't have a break category. "
@@ -153,7 +160,7 @@ msgid ""
 "category in the Edit Database area.</a>"
 msgstr ""
 
-#: availability/templates/availability_index.html:162
+#: availability/templates/availability_index.html:161
 #, python-format
 msgid ""
 "This is an elimination round, but its draw type is <strong>%(draw_type)s</"
@@ -162,7 +169,7 @@ msgid ""
 "round's draw type in the Edit Database area.</a>"
 msgstr ""
 
-#: availability/templates/availability_index.html:175
+#: availability/templates/availability_index.html:174
 #, python-format
 msgid ""
 "There don't appear to be any teams breaking in the %(break_category)s Break. "
@@ -170,7 +177,7 @@ msgid ""
 "the break for the %(break_category)s Break</a> yet?"
 msgstr ""
 
-#: availability/templates/availability_index.html:187
+#: availability/templates/availability_index.html:186
 #, python-format
 msgid ""
 "There's only one team breaking in the %(break_category)s Break. You can't "

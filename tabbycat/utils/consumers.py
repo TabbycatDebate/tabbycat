@@ -1,4 +1,4 @@
-from asgiref.sync import AsyncToSync
+from asgiref.sync import async_to_sync
 from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 
@@ -9,19 +9,19 @@ from tournaments.models import Tournament
 
 class WSLoginRequiredMixin():
 
-    def is_authenticated(self):
+    def authentication_needed(self):
         return self.scope["user"].is_authenticated
 
 
 class WSSuperUserRequiredMixin():
 
-    def is_authenticated(self):
+    def authentication_needed(self):
         return self.scope["user"].is_superuser
 
 
 class WSPublicAccessMixin():
 
-    def is_authenticated(self):
+    def authentication_needed(self):
         return True
 
 
@@ -36,13 +36,12 @@ class TournamentConsumer(JsonWebsocketConsumer):
     tournament_cache_key = "{slug}_object"
     tournament_redirect_pattern_name = None
 
-    # TODO: unify with TournamentMixin()
-    def get_tournament(self):
-        # First look in self,
+    def tournament(self):
+        # First look in self
         if hasattr(self, "_tournament_from_url"):
             return self._tournament_from_url
 
-        # then look in cache,
+        # Then look in cache
         slug = self.scope["url_route"]["kwargs"][self.tournament_slug_url_kwarg]
         key = self.tournament_cache_key.format(slug=slug)
         cached_tournament = cache.get(key)
@@ -50,33 +49,36 @@ class TournamentConsumer(JsonWebsocketConsumer):
             self._tournament_from_url = cached_tournament
             return cached_tournament
 
-        # and if it was in neither place, retrieve the object
+        # If it was in neither place, retrieve the object
         tournament = get_object_or_404(Tournament, slug=slug)
         cache.set(key, tournament, None)
         self._tournament_from_url = tournament
         return tournament
 
     def group_name(self):
-        return self.group_prefix + '_' + self.get_tournament().slug
+        return self.group_prefix + '_' + self.tournament().slug
+
+    def send_error(self, error, message, original_content):
+        # Need to forcibly decode the string (for translations)
+        self.send_json({
+            'error': str(error),
+            'message': str(message),
+            'original_content': original_content,
+            'component_id': original_content['component_id']
+        })
+        return super()
 
     def connect(self):
-        if self.is_authenticated():
-            AsyncToSync(self.channel_layer.group_add)(self.group_name(), self.channel_name)
+        if self.authentication_needed():
+            async_to_sync(self.channel_layer.group_add)(
+                self.group_name(), self.channel_name
+            )
             self.accept()
         else:
             pass
 
     def disconnect(self, message):
-        AsyncToSync(self.channel_layer.group_discard)(self.group_name(), self.channel_name)
-        # print('Channels: disconnect from', self.channel_name, self.group_name())
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name(), self.channel_name
+        )
         super().disconnect(message)
-
-    def broadcast(self, event):
-        # Handles the "broadcast" event when sent out from outside the class
-        # print('Channels: broadcast for', self.group_name(), event)
-        self.send_json(event["data"])
-
-    @classmethod
-    def get_data(cls, data):
-        # Optional; allows for custom methods to act on data before JSONing
-        return data

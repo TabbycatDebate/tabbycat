@@ -4,6 +4,10 @@
 {% block head-title %}<span class="emoji">👋</span> {% trans "Welcome!" %}{% endblock %}
 {% block page-title %}Home{% endblock %}
 
+{% block page-alerts %}
+  {% include 'database_limit_warning.html' %}
+{% endblock %}
+
 {% block content %}
 
 {% for tournament in tournaments %}

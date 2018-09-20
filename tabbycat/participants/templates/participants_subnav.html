@@ -7,8 +7,10 @@
   </a>
   <a class="btn btn-outline-primary {% if institutions_nav %}active{% endif %}"
      href="{% tournamenturl 'participants-institutions-list' %}">
-    {% trans "Institutions" %}
+    {% trans "Institutions List" %}
   </a>
+</div>
+<div class="btn-group btn-group">
   {% if pref.team_code_names != 'off' %}
     <a class="btn btn-outline-primary {% if code_names_nav %}active{% endif %}"
        href="{% tournamenturl 'participants-code-names-list' %}">

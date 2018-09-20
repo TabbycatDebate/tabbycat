@@ -7,12 +7,12 @@
     class="navbar navbar-default fixed-bottom p-0"
     :style="{height: height + 'px'}" ref="resizeableElement">
 
-    <section class="resize-handler" @dragover.prevent @mousedown="resizeStart">
+    <section class="resize-handler" @dragover.prevent @mousedown="resizeStart"
+             data-toggle="tooltip">
       <i data-feather="menu" class="align-self-center mx-auto"></i>
     </section>
 
-    <div class="vue-droppable unallocated-items pt-4 p-2
-                justify-content-center d-flex flex-wrap"
+    <div class="vue-droppable unallocated-items pt-4 p-2 d-flex flex-wrap"
          :class="{ 'vue-is-drag-enter': isDroppable }">
 
       <slot><!-- Container sets unallocated items here --></slot>
@@ -45,8 +45,8 @@ export default {
     resizeStart: function (event) {
       event.preventDefault()
       this.startPosition = event.clientY
-      window.addEventListener('mousemove', this.resizeMotion);
-      window.addEventListener('mouseup', this.resizeEnd);
+      window.addEventListener('mousemove', this.resizeMotion)
+      window.addEventListener('mouseup', this.resizeEnd)
     },
     resizeMotion: function (event) {
       event.preventDefault()
@@ -60,8 +60,8 @@ export default {
     },
     resizeEnd: function (event) {
       event.preventDefault()
-      window.removeEventListener('mousemove', this.resizeMotion);
-      window.removeEventListener('mouseup', this.resizeEnd);
+      window.removeEventListener('mousemove', this.resizeMotion)
+      window.removeEventListener('mouseup', this.resizeEnd)
     },
     boundedHeight: function (height) {
       if (height > this.maxHeight) {

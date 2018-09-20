@@ -20,5 +20,5 @@ class AssistantCheckInStatusView(AssistantTournamentViewDoesLoadTest, TestCase):
 
 
 class PublicCheckInStatusViewTest(ConditionalTournamentViewLoadTest, TestCase):
-    view_name = 'public-checkin-status'
+    view_name = 'checkins-public-status'
     view_toggle = 'public_features__public_checkins'

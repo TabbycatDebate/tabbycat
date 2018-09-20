@@ -169,7 +169,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         - If `view` is specified, then `tournament` and `admin` are inferred
           from `view`. This option is provided for convenience.
         """
-        if 'tournament' not in kwargs and hasattr(view, 'get_tournament'):
+        if 'tournament' not in kwargs and hasattr(view, 'tournament'):
             self.tournament = view.tournament
         else:
             self.tournament = kwargs.get('tournament')
@@ -212,17 +212,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return team.long_name
 
-    def _adjudicator_record_link(self, adj):
+    def _adjudicator_record_link(self, text, adj):
         adj_short_name = adj.name.split(" ")[0]
         if self.admin:
             return {
-                'text': _("View %(adj)s's Adjudication Record") % {'adj': adj_short_name},
+                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': text},
                 'link': reverse_tournament('participants-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(adj)s's Adjudication Record") % {'adj': adj_short_name},
+                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': text},
                 'link': reverse_tournament('participants-public-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
@@ -232,12 +232,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
     def _team_record_link(self, team):
         if self.admin:
             return {
-                'text': _("View %(team)s's Team Record") % {'team': self._team_short_name(team)},
+                'text': _("View %(team)s's Record") % {'team': self._team_short_name(team)},
                 'link': reverse_tournament('participants-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(team)s's Team Record") % {'team': self._team_short_name(team)},
+                'text': _("View %(team)s's Record") % {'team': self._team_short_name(team)},
                 'link': reverse_tournament('participants-public-team-record', self.tournament, kwargs={'pk': team.pk})
             }
         else:
@@ -248,7 +248,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'text': self._team_short_name(team),
             'emoji': team.emoji if show_emoji and self.tournament.pref('show_emoji') else None,
             'sort': self._team_short_name(team),
-            'class': 'team-name',
+            'class': 'team-name no-wrap' if len(self._team_short_name(team)) < 18 else 'team-name',
             'popover': {'title': self._team_long_name(team), 'content': []}
         }
 
@@ -275,12 +275,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if win is True:
             cell['popover']['title'] = _("%(team)s won") % {'team': team_name}
             cell['icon'] = "chevron-up"
-            cell['iconClass'] = "text-success"
+            cell['iconClass'] = "text-success result-icon"
             cell['sort'] = 2
         elif win is False:
             cell['popover']['title'] = _("%(team)s lost") % {'team': team_name}
             cell['icon'] = "chevron-down"
-            cell['iconClass'] = "text-danger"
+            cell['iconClass'] = "text-danger result-icon"
             cell['sort'] = 1
         else: # None
             cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
@@ -293,22 +293,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if points is 3:
             cell['popover']['title'] = _("%(team)s took 1st") % {'team': team_name}
             cell['icon'] = "chevrons-up"
-            cell['iconClass'] = "text-success"
+            cell['iconClass'] = "text-success result-icon"
             cell['sort'] = 4
         elif points is 2:
             cell['popover']['title'] = _("%(team)s took 2nd") % {'team': team_name}
             cell['icon'] = "chevron-up"
-            cell['iconClass'] = "text-info"
+            cell['iconClass'] = "text-info result-icon"
             cell['sort'] = 3
         elif points is 1:
             cell['popover']['title'] = _("%(team)s took 3rd") % {'team': team_name}
             cell['icon'] = "chevron-down"
-            cell['iconClass'] = "text-warning"
+            cell['iconClass'] = "text-warning result-icon"
             cell['sort'] = 2
         elif points is 0:
             cell['popover']['title'] = _("%(team)s took 4th") % {'team': team_name}
             cell['icon'] = "chevrons-down"
-            cell['iconClass'] = "text-danger"
+            cell['iconClass'] = "text-danger result-icon"
             cell['sort'] = 1
         else: # None
             cell['popover']['title'] = _("%(team)s—no result") % {'team': team_name}
@@ -343,7 +343,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {
             'text': _(" vs %(opposition)s") % {'opposition': opp_vshort if compress else self._team_short_name(opp)},
-            'popover': {'content': [], 'title': ''}
+            'popover': {'content': [], 'title': ''},
+            'class': "no-wrap",
         }
         cell = self._result_cell_class_two(ts.win, cell)
 
@@ -377,8 +378,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 })
 
         if self._show_speakers_in_draw:
-            cell['popover']['content'].append({'text': _("Speakers in <strong>%(opp)s</strong>: %(speakers)s") % {
-                'opp': self._team_short_name(opp), 'speakers': ", ".join([s.name for s in opp.speakers])}})
+            cell['popover']['content'].append({
+                'text': ", ".join([s.name for s in opp.speakers])
+            })
 
         if self._show_record_links:
             cell['popover']['content'].append(
@@ -406,7 +408,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         cell = {'popover': {
             'content': [{'text': "<br />".join(other_team_strs)}],
-            'title': ""
+            'title': "",
+            'class': "no-wrap",
         }}
 
         if ts.debate_team.debate.round.is_break_round:
@@ -480,7 +483,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for adj in adjudicators:
             cell = {'text': adj.name}
             if self._show_record_links:
-                cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
+                cell['popover'] = {'content': [self._adjudicator_record_link(adj.name, adj)]}
             if subtext == 'institution' and adj.institution is not None:
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
@@ -542,16 +545,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
                 if a['adj'].institution is not None:
-                    descriptors.append("from %s" % a['adj'].institution.code)
+                    descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>in minority</span>")
                 text = a['adj'].name
 
                 if descriptors:
-                    text = "%s (%s)" % (text, ", ".join(descriptors))
-                popover_data.append({'text': text})
+                    descriptors = "(%s)" % (", ".join(descriptors))
+
                 if self._show_record_links:
-                    popover_data.append(self._adjudicator_record_link(a['adj']))
+                    popover_data.append(self._adjudicator_record_link(descriptors, a['adj']))
+                else:
+                    popover_data.append({'text': text + "" + descriptors})
 
             return popover_data
 
@@ -629,7 +634,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if show_break_categories and self.tournament.breakcategory_set.filter(is_general=False).exists():
             self.add_column(
-                {'key': 'categories', 'title': _("Categories")},
+                {'key': 'categories', 'icon': 'user-check', 'tooltip': _("Categories")},
                 [", ".join(bc.name for bc in getattr(team, 'break_categories_nongeneral', []))
                     for team in teams]
             )
@@ -656,9 +661,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         speaker_data = []
         for speaker in speakers:
             if getattr(speaker, 'anonymise', False):
-                speaker_data.append("<em>" + _("Redacted") + "</em>")
+                speaker_data.append({'text': "<em>" + _("Redacted") + "</em>", 'class': 'no-wrap'})
             else:
-                speaker_data.append(speaker.name)
+                speaker_data.append({
+                    'text': speaker.name,
+                    'class': 'no-wrap' if len(speaker.name) < 20 else ''
+                })
 
         self.add_column({'key': 'name', 'tooltip': _("Name"), 'icon': 'user'}, speaker_data)
 
@@ -869,8 +877,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         header = {'key': 'result', 'tooltip': _("Result"), 'icon': 'thermometer'}
         self.add_column(header, results_data)
 
-    def add_debate_side_by_team_column(self, teamscores):
-        sides_data = [ts.debate_team.get_side_name().title()
+    def add_debate_side_by_team_column(self, teamscores, tournament=None):
+        sides_data = [ts.debate_team.get_side_name(tournament).title()
             # Translators: "TBC" stands for "to be confirmed".
             if ts.debate_team.debate.sides_confirmed else _("TBC") for ts in teamscores]
         header = {'key': 'side', 'title': _("Side")}
@@ -912,12 +920,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if all_sides_confirmed:
             results_header = [{
                 'title': get_side_name(self.tournament, side, 'abbr').capitalize(),
-                'key': 'A'
+                'key': get_side_name(self.tournament, side, 'abbr')
             } for side in self.tournament.sides]
         else:
             results_header = [{
                 'title': _("Team %(num)d") % {'num': i},
-                'key': 'B'
+                'key': _("Team %(num)d") % {'num': i}
             } for i in range(1, len(side_abbrs)+1)]
 
         self.add_columns(results_header, results_data)

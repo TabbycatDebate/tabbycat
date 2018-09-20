@@ -2,6 +2,7 @@
 
 import logging
 
+from django.db.models import OuterRef, Subquery
 from django.db.models.expressions import RawSQL
 
 from .models import Debate, DebateTeam
@@ -17,13 +18,11 @@ def populate_opponents(debateteams, speakers=True):
     """
 
     ids = [dt.id for dt in debateteams]
+    opponent_subq = DebateTeam.objects.filter(
+        debate=OuterRef('debate')).exclude(id=OuterRef('id')).values('id')[:1]
     debateteams_annotated = DebateTeam.objects.filter(id__in=ids).annotate(
-        opponent_id=RawSQL("""
-        SELECT opponent.id
-        FROM draw_debateteam AS opponent
-        WHERE opponent.debate_id = draw_debateteam.debate_id
-        AND opponent.id != draw_debateteam.id LIMIT 1""", ())
-    )
+        opponent_id=Subquery(opponent_subq))
+
     debateteams_annotated_by_id = {dt.id: dt for dt in debateteams_annotated}
     opponent_ids = [dt.opponent_id for dt in debateteams_annotated]
 

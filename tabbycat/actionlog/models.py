@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from options.utils import use_team_code_names
 from utils.misc import badge_datetime_format
 
 
@@ -13,6 +14,7 @@ class ActionLogManager(models.Manager):
         obj = self.model(*args, **kwargs)
         obj.full_clean()
         obj.save()
+        return obj
 
 
 class ActionLogEntry(models.Model):
@@ -177,9 +179,15 @@ class ActionLogEntry(models.Model):
         model_name = self.content_type.model
         try:
             if model_name == 'ballotsubmission':
-                return obj.debate.matchup
+                if use_team_code_names(self.tournament, True):
+                    return obj.debate.matchup_codes
+                else:
+                    return obj.debate.matchup
             elif model_name == 'debate':
-                return obj.matchup
+                if use_team_code_names(self.tournament, True):
+                    return obj.debate.matchup_codes
+                else:
+                    return obj.debate.matchup
             elif model_name == 'motion':
                 return obj.reference
             elif model_name == 'adjudicatortestscorehistory':

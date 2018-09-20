@@ -1,0 +1,213 @@
+# Tabbycat translations, adjallocation module
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language-Team: Portuguese (https://www.transifex.com/tabbycat-jp/teams/86216/pt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: adjallocation/allocator.py:31
+msgid ""
+"There are no available adjudicators. Ensure there are adjudicators who have "
+"been marked as available for this round before auto-allocating."
+msgstr ""
+
+#: adjallocation/apps.py:7
+msgid "Adjudicator Allocation"
+msgstr ""
+
+#: adjallocation/hungarian.py:98
+msgid ""
+"There are no adjudicators eligible to be a chair or panellist. This usually "
+"means that you need to go to the Draw Rules section of the Configuration "
+"area and decrease the \"Minimum adjudicator score to vote\" setting in order"
+" to allow some adjudicators to be allocated."
+msgstr ""
+
+#: adjallocation/hungarian.py:106
+msgid ""
+"There are no debates for this round. Maybe you haven't created a draw yet?"
+msgstr ""
+
+#: adjallocation/models.py:18
+msgid "chair"
+msgstr ""
+
+#: adjallocation/models.py:19
+msgid "panellist"
+msgstr ""
+
+#: adjallocation/models.py:20
+msgid "trainee"
+msgstr ""
+
+#: adjallocation/models.py:26
+msgid "debate"
+msgstr ""
+
+#: adjallocation/models.py:28 adjallocation/models.py:44
+#: adjallocation/models.py:74
+msgid "adjudicator"
+msgstr ""
+
+#: adjallocation/models.py:30
+msgid "type"
+msgstr ""
+
+#: adjallocation/models.py:31
+msgid "available?"
+msgstr ""
+
+#: adjallocation/models.py:34
+msgid "debate adjudicator"
+msgstr ""
+
+#: adjallocation/models.py:35
+msgid "debate adjudicators"
+msgstr ""
+
+#: adjallocation/models.py:46
+msgid "team"
+msgstr ""
+
+#: adjallocation/models.py:49
+msgid "adjudicator-team conflict"
+msgstr ""
+
+#: adjallocation/models.py:50
+msgid "adjudicator-team conflicts"
+msgstr ""
+
+#: adjallocation/models.py:59
+msgid "adjudicator 1"
+msgstr ""
+
+#: adjallocation/models.py:61
+msgid "adjudicator 2"
+msgstr ""
+
+#: adjallocation/models.py:64
+msgid "adjudicator-adjudicator conflict"
+msgstr ""
+
+#: adjallocation/models.py:65
+msgid "adjudicator-adjudicator conflicts"
+msgstr ""
+
+#: adjallocation/models.py:76
+msgid "institution"
+msgstr ""
+
+#: adjallocation/models.py:79
+msgid "adjudicator-institution conflict"
+msgstr ""
+
+#: adjallocation/models.py:80
+msgid "adjudicator-institution conflicts"
+msgstr ""
+
+#: adjallocation/templates/edit_adjudicators.html:11
+#, python-format
+msgid "Edit Adjudicators for %(round_abbr)s"
+msgstr ""
+
+#: adjallocation/views.py:140
+msgid "Draw is already released, unrelease draw to redo auto-allocations."
+msgstr ""
+
+#: adjallocation/views.py:144
+msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+msgstr ""
+
+#: adjallocation/views.py:193
+msgid "Not all adjudicators specified are associated with the tournament."
+msgstr ""
+
+#: adjallocation/views.py:259
+msgid "Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:260
+msgid "Save Adjudicator-Team Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:271
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:277
+#, python-format
+msgid "Deleted %(count)d adjudicator-team conflict."
+msgid_plural "Deleted %(count)d adjudicator-team conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:282
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr ""
+
+#: adjallocation/views.py:289
+msgid "Adjudicator-Adjudicator Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:290
+msgid "Save Adjudicator-Adjudicator Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:305
+#, python-format
+msgid "Saved %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:311
+#, python-format
+msgid "Deleted %(count)d adjudicator-adjudicator conflict."
+msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:316
+msgid "No changes were made to adjudicator-adjudicator conflicts."
+msgstr ""
+
+#: adjallocation/views.py:323
+msgid "Adjudicator-Institution Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:324
+msgid "Save Adjudicator-Institution Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:332
+#, python-format
+msgid "Saved %(count)d adjudicator-institution conflict."
+msgid_plural "Saved %(count)d adjudicator-institution conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:338
+#, python-format
+msgid "Deleted %(count)d adjudicator-institution conflict."
+msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/views.py:343
+msgid "No changes were made to adjudicator-institution conflicts."
+msgstr ""

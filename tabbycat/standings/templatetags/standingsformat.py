@@ -1,5 +1,7 @@
 from django import template
 
+from ..teams import TeamStandingsGenerator
+
 register = template.Library()
 
 
@@ -21,3 +23,12 @@ def rankingformat(value):
     if value[1]:
         string += "="
     return string
+
+
+@register.filter
+def teammetricname(key):
+    try:
+        metric_class = TeamStandingsGenerator.metric_annotator_classes[key]
+    except KeyError:
+        return ""
+    return metric_class.name

@@ -1,6 +1,7 @@
 import json
 import logging
 from collections import OrderedDict
+from smtplib import SMTPException
 from threading import Lock
 
 from django.conf import settings
@@ -18,24 +19,26 @@ from django.views.generic.edit import CreateView, FormView, UpdateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
+from notifications.models import SentMessageRecord
+from participants.models import Team
+from participants.prefetch import populate_win_counts
 from results.models import BallotSubmission
-from results.utils import graphable_debate_statuses
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_tournament
-from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
+from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
 
 from .forms import SetCurrentRoundForm, TournamentConfigureForm, TournamentStartForm
 from .mixins import RoundMixin, TournamentMixin
 from .models import Tournament
-from .utils import get_side_name
+from .utils import get_side_name, send_standings_emails
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-class PublicSiteIndexView(TemplateView):
+class PublicSiteIndexView(WarnAboutDatabaseUseMixin, TemplateView):
     template_name = 'site_index.html'
 
     def get(self, request, *args, **kwargs):
@@ -58,14 +61,13 @@ class PublicSiteIndexView(TemplateView):
 
 class TournamentPublicHomeView(CacheMixin, TournamentMixin, TemplateView):
     template_name = 'public_tournament_index.html'
-    cache_timeout = 10 # Set slower to show new indexes so it will show new pages
 
 
-class TournamentDashboardHomeView(TournamentMixin, TemplateView):
+class TournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         t = self.tournament
-        updates = 15 # Number of items to fetch
+        updates = 10 # Number of items to fetch
 
         kwargs["round"] = t.current_round
         kwargs["tournament_slug"] = t.slug
@@ -80,18 +82,20 @@ class TournamentDashboardHomeView(TournamentMixin, TemplateView):
             debate__round__tournament=t, confirmed=True).prefetch_related(
             'teamscore_set__debate_team',
             'teamscore_set__debate_team__team').select_related(
-            'debate__round').order_by('-timestamp')[:updates]
+            'debate__round__tournament').order_by('-timestamp')[:updates]
         subs = [bs.serialize_like_actionlog for bs in subs]
         kwargs["initialBallots"] = json.dumps(subs)
 
         status = t.current_round.draw_status
+        kwargs["total_debates"] = t.current_round.debate_set.count()
         if status == Round.STATUS_CONFIRMED or status == Round.STATUS_RELEASED:
-            ballots = BallotSubmission.objects.filter(debate__round=t.current_round,
-                                                      discarded=False)
-            stats = graphable_debate_statuses(ballots, t.current_round)
-            kwargs["initialGraphData"] = json.dumps(stats)
+            ballots = BallotSubmission.objects.filter(
+                debate__round=t.current_round, discarded=False).select_related(
+                'submitter', 'debate')
+            stats = [{'ballot': bs.serialize(t)} for bs in ballots]
+            kwargs["initial_graph_data"] = json.dumps(stats)
         else:
-            kwargs["initialGraphData"] = json.dumps([])
+            kwargs["initial_graph_data"] = json.dumps([])
 
         return super().get_context_data(**kwargs)
 
@@ -121,6 +125,8 @@ class RoundAdvanceConfirmView(AdministratorMixin, RoundMixin, TemplateView):
         kwargs['num_unconfirmed'] = self.round.debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
+        kwargs['emails_sent'] = SentMessageRecord.objects.filter(
+            tournament=self.tournament, round=self.round, event=SentMessageRecord.EVENT_TYPE_POINTS).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -155,6 +161,22 @@ class RoundAdvanceView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnlyR
             messages.error(request, _("Whoops! Could not advance round, because there's no round "
                 "after this round!"))
             return super().post(request, *args, **kwargs)
+
+
+class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
+
+    def post(self, request, *args, **kwargs):
+        active_teams = Team.objects.filter(debateteam__debate__round=self.round).prefetch_related('speaker_set')
+        populate_win_counts(active_teams)
+
+        try:
+            send_standings_emails(self.tournament, active_teams, request, self.round)
+        except (ConnectionError, SMTPException):
+            messages.error(request, _("Team point emails could not be sent."))
+        else:
+            messages.success(request, _("Team point emails have been sent to the speakers."))
+
+        return redirect_round('tournament-advance-round-check', self.round)
 
 
 class BlankSiteStartView(FormView):
@@ -193,12 +215,13 @@ class BlankSiteStartView(FormView):
         return super().form_valid(form)
 
 
-class CreateTournamentView(AdministratorMixin, CreateView):
+class CreateTournamentView(AdministratorMixin, WarnAboutDatabaseUseMixin, CreateView):
     """This view allows a logged-in superuser to create a new tournament."""
 
     model = Tournament
     form_class = TournamentStartForm
     template_name = "create_tournament.html"
+    db_warning_severity = messages.ERROR
 
     def get_context_data(self, **kwargs):
         demo_datasets = [

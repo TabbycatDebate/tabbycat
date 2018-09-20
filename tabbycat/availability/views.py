@@ -95,7 +95,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
                 teams_dict['in_now'] = 2 * debates
                 teams_dict['message'] = ngettext(
                     # Translators: ndebating in this string is always at least 2
-                    "%(ndebating)d breaking team is debating this round",  # never used, but needed for i18n
+                    "%(ndebating)d breaking team is debating this round",  # never used in English, but needed for i18n
                     "%(ndebating)d breaking teams are debating this round",
                     2 * debates) % {'ndebating': 2 * debates}
                 if bypassing > 0:
@@ -270,8 +270,14 @@ class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectVie
     round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
-        self.activate_function()
-        messages.success(self.request, self.activation_msg)
+        try:
+            self.activate_function()
+            messages.success(self.request, self.activation_msg)
+        except IntegrityError:
+            messages.error(self.request, _("Failed to update some or all "
+                                           "availabilities due to an integrity"
+                                           "error. You should retry this "
+                                           "action or make individual updates."))
         return super().post(request, *args, **kwargs)
 
 

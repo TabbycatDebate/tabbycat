@@ -10,4 +10,5 @@
 !test/
 !presets/
 !fixtures/
+!emailstest/
 !migrate_fixtures.py
