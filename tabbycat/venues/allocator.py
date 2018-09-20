@@ -25,7 +25,7 @@ class VenueAllocator:
 
     def allocate(self, round, debates=None):
         if debates is None:
-            debates = round.debate_set_with_prefetches(speakers=False)
+            debates = round.debate_set_with_prefetches(speakers=False, institutions=True)
         self._all_venues = list(round.active_venues.order_by('-priority'))
         self._preferred_venues = self._all_venues[:len(debates)]
 

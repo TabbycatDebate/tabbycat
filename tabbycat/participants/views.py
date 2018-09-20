@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Prefetch, Q
@@ -16,7 +17,6 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
 from options.utils import use_team_code_names
-from participants.models import Institution
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
@@ -27,7 +27,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import Adjudicator, Speaker, SpeakerCategory, Team
+from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from .tables import TeamResultTableBuilder
 
 logger = logging.getLogger(__name__)
@@ -73,6 +73,7 @@ class AssistantParticipantsListView(AssistantMixin, BaseParticipantsListView):
 class PublicParticipantsListView(PublicTournamentPageMixin, BaseParticipantsListView):
     public_page_preference = 'public_participants'
     admin = False
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
 class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
@@ -118,6 +119,7 @@ class AssistantInstitutionsListView(AssistantMixin, BaseInstitutionsListView):
 class PublicInstitutionsListView(PublicTournamentPageMixin, BaseInstitutionsListView):
     public_page_preference = 'public_institutions_list'
     admin = False
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
 
 class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
@@ -126,13 +128,14 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🕵'
 
     def get_table(self):
-        teams = self.tournament.team_set.select_related('institution').prefetch_related('speaker_set')
+        t = self.tournament
+        teams = t.team_set.select_related('institution').prefetch_related('speaker_set')
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'emoji': t.emoji, 'text': t.code_name or "—"} for t in teams]
+            [{'text': t.code_name or "—"} for t in teams]
         )
-        table.add_team_columns(teams, show_emoji=False)
+        table.add_team_columns(teams)
         return table
 
 
@@ -405,7 +408,7 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
 
     def set_category_eligibility(self, speaker, sent_status):
         category_id = sent_status['type']
-        marked_eligible = speaker.categories.filter(pk=category_id).exists()
+        marked_eligible = category_id in [c.id for c in speaker.categories.all()]
         if sent_status['checked'] and not marked_eligible:
             speaker.categories.add(category_id)
             speaker.save()

@@ -2,8 +2,12 @@
 {% load add_field_css i18n %}
 
 {% block head-title %}<span class="emoji">🏆</span>{% trans "Create New Tournament"%}{% endblock %}
-{% block page-title %}Tabbycat{% endblock %}
+{% block page-title %}{% trans "Tabbycat" %}{% endblock %}
 {% block sidebar %}{% endblock %} {# Need to override sidebar manually it will crash when no tournaments are present. Ideally this would be handled with the Mixins but this is a relatively unique view as it is part of Tournaments but is admin-only and thus shown with the sidebar #}
+
+{% block page-alerts %}
+  {% include 'database_limit_warning.html' %}
+{% endblock %}
 
 {% block content %}
 

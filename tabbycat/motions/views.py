@@ -67,13 +67,19 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         nexisting = self.get_formset_queryset().count()
         if self.tournament.pref('enable_motions'):
             delete = True
-            extras = max(3 - nexisting, 0)
+            extra = max(3 - nexisting, 0)
         else:
             excludes.append('seq')
-            extras = max(1 - nexisting, 0)
+            extra = max(1 - nexisting, 0)
             delete = nexisting > 1  # if there's more than one, allow deletion
 
-        return dict(can_delete=delete, extra=extras, exclude=excludes)
+        return {'can_delete': delete, 'exclude': excludes, 'extra': extra}
+
+    def get_formset_kwargs(self):
+        nexisting = self.get_formset_queryset().count()
+        nmotions = 3 if self.tournament.pref('enable_motions') else 1
+        initial = [{'seq': i} for i in range(nexisting+1, nmotions+1)]
+        return {'initial': initial}
 
     def get_formset_queryset(self):
         return self.round.motion_set.all()

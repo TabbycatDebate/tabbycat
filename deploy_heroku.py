@@ -44,8 +44,10 @@ parser.add_argument(
     help="Print commands, don't run them.")
 
 config_group = parser.add_argument_group("heroku configuration settings")
-config_group.add_argument("--public-cache-timeout", type=int, default=None, metavar="TIMEOUT",
-                          help="Set the public page cache timeout to TIMEOUT")
+config_group.add_argument("--fast-cache-timeout", type=int, default=None, metavar="TIMEOUT",
+                          help="Set the faster public page cache timeout to TIMEOUT")
+config_group.add_argument("--slow-cache-timeout", type=int, default=None, metavar="TIMEOUT",
+                          help="Set the slower public page cache timeout to TIMEOUT")
 config_group.add_argument("--tab-cache-timeout", type=int, default=None, metavar="TIMEOUT",
                           help="Set the tab page cache timeout to TIMEOUT")
 config_group.add_argument("--enable-debug", action="store_true", default=False,
@@ -135,6 +137,10 @@ def get_git_push_spec():
 # Create the app with addons
 addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
 command = ["heroku", "apps:create"]
+
+# Ensure on the right stack (for NGINX compatability)
+command.extend(["--stack", "heroku-16"])
+
 if addons:
     command.extend(["--addons", ",".join(addons)])
 if args.urlname != "-":
@@ -144,12 +150,15 @@ match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku
 urlname = match.group(1)
 heroku_url = match.group(2)
 
-# Add the redis app (it needs a config flag)
-run_heroku_command(["addons:create", "heroku-redis:hobby-dev", "--maxmemory_policy", "allkeys-lru"])
+# Add the redis add-ons (the heroku one needs a config flag)
+run_heroku_command(["addons:create", "heroku-redis:hobby-dev",
+                    "--maxmemory_policy", "allkeys-lru"])
+run_heroku_command(["addons:create", "rediscloud:30"])
 
 # Set build packs
-run_heroku_command(["buildpacks:set", "heroku/python"])
+run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
 run_heroku_command(["buildpacks:add", "--index", "1", "heroku/nodejs"])
+run_heroku_command(["buildpacks:add", "--index", "2", "heroku/python"])
 
 # Disable automatic collectstatic; do so on post_compile after gulp
 command = ["config:add", "DISABLE_COLLECTSTATIC=1"]
@@ -158,8 +167,10 @@ run_heroku_command(command)
 # Set config variables
 command = ["config:add"]
 command.append("DEBUG=1" if args.enable_debug else "DEBUG=0")
-if args.public_cache_timeout:
-    command.append("PUBLIC_PAGE_CACHE_TIMEOUT=%d" % args.public_cache_timeout)
+if args.fast_cache_timeout:
+    command.append("PUBLIC_FAST_CACHE_TIMEOUT=%d" % args.fast_cache_timeout)
+if args.slow_cache_timeout:
+    command.append("PUBLIC_SLOW_CACHE_TIMEOUT=%d" % args.slow_cache_timeout)
 if args.tab_cache_timeout:
     command.append("TAB_PAGES_CACHE_TIMEOUT=%d" % args.tab_cache_timeout)
 

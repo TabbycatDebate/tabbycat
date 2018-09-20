@@ -12,19 +12,19 @@
 // else they wont be remove upon a drop
 
 export default {
-  data: function () { return { isDragging: false, isHovering: false }},
+  data: function () { return { isDragging: false, isHovering: false } },
   props: { locked: false },
   computed: {
     draggableClasses: function () {
-      var draggableCSS = "vue-draggable btn btn-sm "
+      let draggableCSS = 'vue-draggable btn btn-sm '
       if (this.isHovering) {
-        draggableCSS += "vue-is-hovering "
+        draggableCSS += 'vue-is-hovering '
       }
       if (this.isDragging) {
-        return draggableCSS += "vue-is-dragging "
+        draggableCSS += 'vue-is-dragging '
       }
       if (this.locked) {
-        return draggableCSS += "locked "
+        draggableCSS += 'locked '
       }
       return draggableCSS
     },
@@ -33,24 +33,23 @@ export default {
     dragStart: function (event) {
       if (this.locked) {
         event.preventDefault() // Firefox needs this
-        return
       } else {
-        this.isDragging = true;
-        this.isHovering = true;
+        this.isDragging = true
+        this.isHovering = true
         // Set data on the drag event to uniquely record what is being dragged
         // Must have a setData handler here for Firefox to allow dragging;
         // see http://mereskin.github.io/dnd/
-        event.dataTransfer.setData("text", this.draggablePayload);
-        this.handleDragStart(event);
+        event.dataTransfer.setData('text', this.draggablePayload)
+        this.handleDragStart(event)
       }
     },
     dragEnd: function (event) {
       this.$nextTick(function () {
-        this.isDragging = false;
-        this.isHovering = false;
+        this.isDragging = false
+        this.isHovering = false
         this.handleDragEnd(event)
       })
     },
-  }
+  },
 }
 </script>

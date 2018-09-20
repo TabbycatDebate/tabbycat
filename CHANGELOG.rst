@@ -2,6 +2,34 @@
 Change Log
 ==========
 
+2.2.0 (Khao Manee)
+------------------
+*Release date: 20 September 2018*
+
+- Implemented a new server architecture on Heroku along with other optimisation that should significantly improve the performance of sites receiving lots of traffic. Note that if you are upgrading an existing Heroku instance this requires a few tweaks before you deploy the update:
+    - Add the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
+    - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the ``heroku stack:set heroku-16 --app APP_NAME`` command
+- Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version
+- Added support for Japanese and Portuguese. Let us know if you'd like to help contribute translations for either language (or a new one)!
+- The results-entry page now updates its data live, giving you a more up to date look at data entry progress and reducing the cases of old data leading people to enter new ballots when they meant to confirm them
+- A huge thanks to Étienne Beaulé for contributing a number of major new features and bug fixes. Notably:
+    - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score
+    - Added email notification to adjudicators on round release
+    - Implemented participant self-check-in through the use of their private URLs
+    - Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key
+    - Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable
+    - Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds. The old "average speaker score" metric has been renamed to to "average total speaker score"
+    - Reworked the ballots status graph to be an area chart
+- Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request!
+- Added the ability to unconfirm feedback from any of the views that show it
+- BP motion statistics now also show average points split by bench and half
+- Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments
+- Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
+- Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6
+
+  This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_
+
+
 2.1.3
 -----
 *Release date: 21 August 2018*
@@ -50,7 +78,7 @@ Change Log
     - Ballot check-ins have been converted to this new method, and now all printed ballots will contain the barcodes needed to scan them
     - Venue check-ins have been added alongside the standard 'person' check-ins to allow you to track a room's status at the start of the day or round-by-round
 - Added (partial) translations in French, Spanish and Arabic
-    - Users can now use a link in the footer to switch the site's language into French, Spanish, or Arabic. By default Tabbycat should also match your browser's language and so automatically apply those languages if it matches.
+    - Users can now use a link in the footer to switch the site's language into French, Spanish, or Arabic. By default Tabbycat should also match your browser's language and so automatically apply those languages if it matches
     - Our translations are generously provided by volunteers, but (so far) do not cover all of the interface text within Tabbycat. If you're interested in helping to translate new or existing languages please get in touch!
     - Thanks to the excellent team at QatarDebate for contributing the Arabic translations, and to Alejandro, Hernando, Julian and Zoe for contributing the Spanish translations.
 - Added a new (beta) feature: allocation 'sharding'

@@ -1,14 +1,13 @@
 {% extends "base.html" %}
-{% load debate_tags %}
-{% load static %}
+{% load static debate_tags i18n %}
 
-{% block head-title %}Motions{% endblock %}
-{% block page-title %}Motions{% endblock %}
+{% block head-title %}{% trans "Motions" %}{% endblock %}
+{% block page-title %}{% trans "Motions" %}{% endblock %}
 
 {% block page-alerts %}
   {% if rounds.all.count == 0 %}
     <div class="alert alert-info" role="alert">
-      No motions have been released yet.
+      {% trans "No motions have been released yet." %}
     </div>
   {% endif %}
 {% endblock %}
@@ -22,14 +21,14 @@
           <table class="table">
             <thead>
               <tr>
-                <th>RSeq</th>
-                <th>Round</th>
-                <th>Reference</th>
-                <th>Venue(s)</th>
-                <th>Divisions</th>
-                <th>Text</th>
+                <th>{% trans "RSeq" %}</th>
+                <th>{% trans "Round" %}</th>
+                <th>{% trans "Reference" %}</th>
+                <th>{% trans "Venue(s)" %}</th>
+                <th>{% trans "Divisions" %}</th>
+                <th>{% trans "Text" %}</th>
                 {% if pref.enable_flagged_motions %}
-                  <th>Contentious</th>
+                  <th>{% trans "Contentious" %}</th>
                 {% endif %}
               </tr>
             </thead>
@@ -37,8 +36,8 @@
             {% for round in rounds %}
               {% for motion in round.motion_set.all %}
                 <tr>
-                  <td>{{ motion.round.seq }}</td>
-                  <td>{{ motion.round.abbreviation }}</td>
+                  <td>{{ round.seq }}</td>
+                  <td>{{ round.abbreviation }}</td>
                   <td>{{ motion.reference }}</td>
                   <td>
                     {% regroup motion.divisions.all by venue_category as unique_venues %}

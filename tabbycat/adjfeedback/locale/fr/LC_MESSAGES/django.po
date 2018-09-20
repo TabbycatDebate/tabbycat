@@ -7,38 +7,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-29 10:27-0700\n"
-"PO-Revision-Date: 2018-02-27 22:01-0800\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
+"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"PO-Revision-Date: 2018-08-15 23:59-0300\n"
+"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.1.1\n"
 
-#: adjfeedback/admin.py:53 adjfeedback/admin.py:111
+#: adjfeedback/admin.py:43
+msgid "Integer scales must have a minimum and maximum"
+msgstr ""
+
+#: adjfeedback/admin.py:68 adjfeedback/admin.py:126
 msgid "target"
-msgstr ""
+msgstr "cible"
 
-#: adjfeedback/admin.py:54 adjfeedback/admin.py:112 adjfeedback/models.py:219
+#: adjfeedback/admin.py:69 adjfeedback/admin.py:127 adjfeedback/models.py:219
 msgid "source adjudicator"
-msgstr ""
+msgstr "juge source"
 
-#: adjfeedback/admin.py:55 adjfeedback/admin.py:113 adjfeedback/models.py:221
+#: adjfeedback/admin.py:70 adjfeedback/admin.py:128 adjfeedback/models.py:221
 msgid "source team"
-msgstr ""
+msgstr "équipe source"
 
-#: adjfeedback/admin.py:69
+#: adjfeedback/admin.py:84
 msgid "Target"
-msgstr ""
+msgstr "Cible"
 
-#: adjfeedback/admin.py:70 adjfeedback/admin.py:134
+#: adjfeedback/admin.py:85 adjfeedback/admin.py:149
 msgid "Source"
-msgstr ""
+msgstr "Source"
 
-#: adjfeedback/admin.py:152
+#: adjfeedback/admin.py:167
 #, python-format
 msgid ""
 "1 feedback submission was marked as confirmed. Note that this may have "
@@ -47,13 +51,13 @@ msgid_plural ""
 "%(count)d feedback submissions were marked as confirmed. Note that this may "
 "have caused other feedback submissions to be marked as unconfirmed."
 msgstr[0] ""
-"1 commentaire a été marqué comme confirmé. Notez que cette action peut avoir "
-"rendu autres commentaires marqué comme non confirmés."
+"1 évaluation a été marqué comme confirmé. Notez que cette action peut avoir "
+"marqué autre évaluations comme non confirmés."
 msgstr[1] ""
-"%(count)d commentaires ont été marqué comme confirmés. Notez que cette "
-"action peut avoir rendu autres commentaires marqué comme non confirmés."
+"%(count)d évaluations ont été marqués comme confirmé. Notez que cette action "
+"peut avoir marqué autre évaluations comme non confirmés."
 
-#: adjfeedback/admin.py:164
+#: adjfeedback/admin.py:179
 #, python-format
 msgid ""
 "1 feedback submission was not marked as confirmed, probably because other "
@@ -63,18 +67,36 @@ msgid_plural ""
 "because other feedback submissions that conflict with them were also marked "
 "as confirmed."
 msgstr[0] ""
+"1 évaluation n’a pas été marqué comme confirmé, probablement parce qu’autres "
+"évaluations qui sont incompatibles l’ont été."
 msgstr[1] ""
+"%(count)d évaluations n’ont pas été marqués comme confirmé, probablement "
+"parce qu’autres évaluations qui sont incompatibles l’ont été."
 
-#: adjfeedback/admin.py:177
+#: adjfeedback/admin.py:192
 #, python-format
 msgid "1 feedback submission was marked as unconfirmed."
 msgid_plural "%(count)d feedback submissions were marked as unconfirmed."
-msgstr[0] "1 commentaire a été marqué comme non confirmé."
-msgstr[1] "%(count)d commentaires ont été marqué comme non confirmés."
+msgstr[0] "1 évaluation a été marqué comme non confirmé."
+msgstr[1] "%(count)d évaluations ont été marqué comme non confirmés."
+
+#: adjfeedback/admin.py:202
+#, python-format
+msgid "1 feedback submission is now ignored."
+msgid_plural "%(count)d feedback submissions are now ignored."
+msgstr[0] "1 évaluation n’est plus tenu en compte."
+msgstr[1] "%(count)d évaluations ne sont plus tenus en compte."
+
+#: adjfeedback/admin.py:212
+#, python-format
+msgid "1 feedback submission is now recognized."
+msgid_plural "%(count)d feedback submissions are now recognized."
+msgstr[0] "1 évaluation est désormais tenu en compte."
+msgstr[1] "%(count)d évaluations sont désormais tenus en compte."
 
 #: adjfeedback/apps.py:7
 msgid "Adjudicator Feedback"
-msgstr "Commentaires sur les juges"
+msgstr "Évaluations de juges"
 
 #: adjfeedback/forms.py:25
 msgid "chair"
@@ -107,73 +129,82 @@ msgstr "Non"
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
 
-#: adjfeedback/forms.py:168
+#: adjfeedback/forms.py:169
 #, python-format
 msgid "Overall score (%(min)d=worst; %(max)d=best)"
 msgstr "Note globale (%(min)d=le pire; %(max)d=le meilleur)"
 
+#: adjfeedback/forms.py:181
+msgid "Ignored"
+msgstr "Pas tenu en compte"
+
 #. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2", adjpos="chair"
 #. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round 3", adjpos="panellist"
-#: adjfeedback/forms.py:230 adjfeedback/forms.py:287
+#: adjfeedback/forms.py:240 adjfeedback/forms.py:299
 #, python-format
 msgid "%(name)s (%(round)s %(adjpos)s)"
 msgstr "%(name)s (%(adjpos)s dans %(round)s)"
 
-#: adjfeedback/forms.py:247 adjfeedback/forms.py:308
+#: adjfeedback/forms.py:258 adjfeedback/forms.py:320
 msgid "-- Adjudicators --"
 msgstr "-- Juges --"
 
-#: adjfeedback/forms.py:261
+#: adjfeedback/forms.py:273
 msgid "Adjudicator this feedback is about"
-msgstr "Juge que ce commentaire concerne"
+msgstr "Juge dont l’évaluation concerne"
 
-#: adjfeedback/forms.py:284
+#: adjfeedback/forms.py:296
 #, python-format
 msgid "%(name)s (%(round)s)"
 msgstr "%(name)s (%(round)s)"
 
-#: adjfeedback/forms.py:290
+#: adjfeedback/forms.py:302
 #, python-format
 msgid "%(name)s (%(round)s — chair gave oral)"
-msgstr ""
+msgstr "%(name)s (%(round)s — le(a) président(e) a rendu les commentaires)"
 
-#: adjfeedback/forms.py:292
+#: adjfeedback/forms.py:304
 #, python-format
 msgid "%(name)s (%(round)s — chair rolled, this panellist gave oral)"
 msgstr ""
+"%(name)s (%(round)s — le(a) président(e) a délégué les commentaires à "
+"cet(te) panéliste)"
 
-#: adjfeedback/forms.py:365
+#: adjfeedback/forms.py:378
 #, python-format
 msgid "This line (for %(adjudicator)s) didn't have a score"
-msgstr ""
+msgstr "La ligne (pour %(adjudicator)s) n’avait pas de note"
 
-#: adjfeedback/forms.py:370
+#: adjfeedback/forms.py:383
 #, python-format
 msgid "This line (for %(adjudicator)s) had too many columns"
-msgstr ""
+msgstr "La ligne (pour %(adjudicator)s) avait trop de colonnes"
 
-#: adjfeedback/forms.py:379
+#: adjfeedback/forms.py:392
 #, python-format
 msgid ""
 "There are several adjudicators called \"%(adjudicator)s\", so you can't use "
 "the bulk importer to update their score. Please do so in the Feedback "
 "Overview page instead."
 msgstr ""
+"Il y a plusieurs juges appelés « %(adjudicator)s » donc vous ne pouvez pas "
+"utiliser l’outil d’import d’ensemble pour mettre leurs notes à jour. "
+"Veuillez le faire sur la page de vue d’ensemble d’évaluations à la place."
 
-#: adjfeedback/forms.py:385
+#: adjfeedback/forms.py:398
 #, python-format
 msgid ""
 "There is no adjudicator in this tournament with the name \"%(adjudicator)s\""
-msgstr ""
-
-#: adjfeedback/forms.py:393
-#, python-format
-msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
-msgstr ""
+msgstr "Il n’y a pas de juge dans ce tournoi avec le nom « %(adjudicator)s »"
 
 #: adjfeedback/forms.py:406
+#, python-format
+msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
+msgstr "La note pour %(adjudicator)s, « %(score)s », n’est pas un nombre"
+
+#: adjfeedback/forms.py:419
 msgid "There were no scores to import."
-msgstr ""
+msgstr "Il n’y a aucun note à importer."
 
 #: adjfeedback/models.py:13 adjfeedback/models.py:214
 msgid "adjudicator"
@@ -193,11 +224,11 @@ msgstr "horodatage"
 
 #: adjfeedback/models.py:21
 msgid "adjudicator test score history"
-msgstr "histoire de note d'examen de juge"
+msgstr "histoire de note de base de juge"
 
 #: adjfeedback/models.py:22
 msgid "adjudicator test score histories"
-msgstr "histoires de note d'examen de juge"
+msgstr "histoires de note de base de juge"
 
 #: adjfeedback/models.py:30
 msgid "question"
@@ -205,7 +236,7 @@ msgstr "question"
 
 #: adjfeedback/models.py:32
 msgid "feedback"
-msgstr "commentaire"
+msgstr "évaluation"
 
 #: adjfeedback/models.py:43 adjfeedback/models.py:51 adjfeedback/models.py:59
 #: adjfeedback/models.py:67
@@ -214,79 +245,79 @@ msgstr "réponse"
 
 #: adjfeedback/models.py:46
 msgid "adjudicator feedback boolean answer"
-msgstr "réponse booléenne d'un commentaire sur un juge"
+msgstr "réponse booléenne d'un évaluation de juge"
 
 #: adjfeedback/models.py:47
 msgid "adjudicator feedback boolean answers"
-msgstr "réponses booléennes d'un commentaire sur un juge"
+msgstr "réponses booléennes d'un évaluation de juge"
 
 #: adjfeedback/models.py:54
 msgid "adjudicator feedback integer answer"
-msgstr "réponse au nombre entier d'un commentaire sur un juge"
+msgstr "réponse au nombre entier d'un évaluation de juge"
 
 #: adjfeedback/models.py:55
 msgid "adjudicator feedback integer answers"
-msgstr "réponses au nombre entier d'un commentaire sur un juge"
+msgstr "réponses au nombre entier d'un évaluation de juge"
 
 #: adjfeedback/models.py:62
 msgid "adjudicator feedback float answer"
-msgstr ""
+msgstr "réponse en virgule flottante d’un évaluation de juge"
 
 #: adjfeedback/models.py:63
 msgid "adjudicator feedback float answers"
-msgstr ""
+msgstr "réponses en virgule flottante d’un évaluation de juge"
 
 #: adjfeedback/models.py:70
 msgid "adjudicator feedback string answer"
-msgstr ""
+msgstr "réponse en chaine de caractères d’un évaluation de juge"
 
 #: adjfeedback/models.py:71
 msgid "adjudicator feedback string answers"
-msgstr ""
+msgstr "réponses en chaine de caractères d’un évaluation de juge"
 
 #: adjfeedback/models.py:89
 msgid "checkbox"
-msgstr ""
+msgstr "case à cocher"
 
 #: adjfeedback/models.py:90
 msgid "yes/no (dropdown)"
-msgstr ""
+msgstr "oui/non (liste déroulante)"
 
 #: adjfeedback/models.py:91
 msgid "integer (textbox)"
-msgstr ""
+msgstr "nombre entier (champ de saisie)"
 
 #: adjfeedback/models.py:92
 msgid "integer scale"
-msgstr ""
+msgstr "échelle de nombres entier"
 
 #: adjfeedback/models.py:93
 msgid "float"
-msgstr ""
+msgstr "virgule flottante"
 
 #: adjfeedback/models.py:94 adjfeedback/models.py:126
 msgid "text"
-msgstr ""
+msgstr "texte"
 
 #: adjfeedback/models.py:95
 msgid "long text"
-msgstr ""
+msgstr "texte long"
 
 #: adjfeedback/models.py:96
 msgid "select one"
-msgstr ""
+msgstr "choisissez un"
 
 #: adjfeedback/models.py:97
 msgid "select multiple"
-msgstr ""
+msgstr "choisissez plusieurs"
 
 #: adjfeedback/models.py:122
 msgid "tournament"
-msgstr ""
+msgstr "tournoi"
 
 #: adjfeedback/models.py:124
 msgid "sequence number"
-msgstr ""
+msgstr "nombre de séquence"
 
 #: adjfeedback/models.py:127
 msgid ""
@@ -296,7 +327,7 @@ msgstr ""
 
 #: adjfeedback/models.py:129
 msgid "name"
-msgstr ""
+msgstr "nom"
 
 #: adjfeedback/models.py:130
 msgid "A short name for the question, e.g., \"Agree with decision\""
@@ -304,7 +335,7 @@ msgstr ""
 
 #: adjfeedback/models.py:132
 msgid "reference"
-msgstr ""
+msgstr "référence"
 
 #: adjfeedback/models.py:133
 msgid "Code-compatible reference, e.g., \"agree_with_decision\""
@@ -312,15 +343,15 @@ msgstr ""
 
 #: adjfeedback/models.py:136
 msgid "from adjudicator"
-msgstr "des juges"
+msgstr "pour les juges"
 
 #: adjfeedback/models.py:137
 msgid "Adjudicators should be asked this question (about other adjudicators)"
-msgstr "Cette question devrait être posée aux juges (à propos des autre juges)"
+msgstr "Cette question devrait être posée aux juges (à propos d’autres juges)"
 
 #: adjfeedback/models.py:139
 msgid "from team"
-msgstr "des équipes"
+msgstr "pour les équipes"
 
 #: adjfeedback/models.py:140
 msgid "Teams should be asked this question"
@@ -328,15 +359,19 @@ msgstr "Cette question devrait être posée aux équipes"
 
 #: adjfeedback/models.py:143
 msgid "answer type"
-msgstr ""
+msgstr "type de réponse"
 
 #: adjfeedback/models.py:145
 msgid "required"
+msgstr "obligatoire"
+
+#: adjfeedback/models.py:146
+msgid "Whether participants are required to fill out this field"
 msgstr ""
 
 #: adjfeedback/models.py:148
 msgid "minimum value"
-msgstr ""
+msgstr "valeur minimale"
 
 #: adjfeedback/models.py:149
 msgid ""
@@ -345,7 +380,7 @@ msgstr ""
 
 #: adjfeedback/models.py:151
 msgid "maximum value"
-msgstr ""
+msgstr "valeur maximale"
 
 #: adjfeedback/models.py:152
 msgid ""
@@ -354,7 +389,7 @@ msgstr ""
 
 #: adjfeedback/models.py:159
 msgid "choices"
-msgstr ""
+msgstr "choix"
 
 #: adjfeedback/models.py:160
 msgid ""
@@ -362,57 +397,72 @@ msgid ""
 "'//' (ignored for other fields)"
 msgstr ""
 "Les choix acceptables pour les champs « sélectionner un/plusieurs », séparés "
-"par « // » (ignoré dans les autres types de champs)"
+"par « // » (ignoré dans les autres types de champ)"
 
 #: adjfeedback/models.py:165
 msgid "adjudicator feedback question"
-msgstr ""
+msgstr "question d’un évaluation de juge"
 
 #: adjfeedback/models.py:166
 msgid "adjudicator feedback questions"
-msgstr ""
+msgstr "questions d’un évaluation de juge"
+
+#: adjfeedback/models.py:224 adjfeedback/views.py:728
+msgid "ignored"
+msgstr "pas tenu en compte"
 
 #: adjfeedback/models.py:225
+msgid "Whether the feedback should affect the judge's score"
+msgstr "Si l’évaluation devrait influencer la note du (de la) juge"
+
+#: adjfeedback/models.py:229
 msgid "adjudicator feedback"
-msgstr ""
+msgstr "évaluation de juge"
 
-#: adjfeedback/models.py:226
+#: adjfeedback/models.py:230
 msgid "adjudicator feedbacks"
-msgstr ""
+msgstr "évaluations de juge"
 
-#: adjfeedback/models.py:273
+#: adjfeedback/models.py:277
 msgid "Either the source adjudicator or source team wasn't specified."
 msgstr ""
 
-#: adjfeedback/models.py:276
+#: adjfeedback/models.py:280
 msgid "There was both a source adjudicator and a source team."
 msgstr ""
 
-#: adjfeedback/models.py:278
+#: adjfeedback/models.py:282
+msgid ""
+"There is no adjudicator specified as the target for this feedback.Perhaps "
+"they were deleted?"
+msgstr ""
+
+#: adjfeedback/models.py:284
 msgid "Adjudicator did not see this debate."
 msgstr ""
 
 #: adjfeedback/tables.py:105
 msgid "Feedback Per Round"
+msgstr "Évaluations par tour"
+
+#: adjfeedback/templates/add_feedback.html:5
+msgid "Who is the feedback from?"
 msgstr ""
 
+#: adjfeedback/templates/add_feedback.html:6
 #: adjfeedback/templates/enter_feedback.html:5
-#, fuzzy
-#| msgid "Adjudicator Feedback"
 msgid "Enter Feedback"
-msgstr "Commentaires sur les juges"
+msgstr "Saisir Évaluation"
 
 #: adjfeedback/templates/enter_feedback.html:9
 #, python-format
 msgid "Add Feedback from %(source_name)s"
-msgstr ""
+msgstr "Ajouter Évaluation par %(source_name)s"
 
 #: adjfeedback/templates/enter_feedback.html:13
 #: adjfeedback/templates/feedback_base.html:39
-#, fuzzy
-#| msgid "Adjudicator Feedback"
 msgid "Add Feedback"
-msgstr "Commentaires sur les juges"
+msgstr "Ajouter Évaluation"
 
 #: adjfeedback/templates/enter_feedback.html:21
 msgid ""
@@ -425,18 +475,20 @@ msgid ""
 "There are some problems with this feedback submission. Please review and "
 "correct them."
 msgstr ""
-"Cette soumission de commentaires a des problèmes. Veuillez les examiner et "
-"les corriger."
+"Ce formulaire d’évaluation a des problèmes. Veuillez les examiner et les "
+"corriger."
 
 #: adjfeedback/templates/enter_feedback.html:49
 msgid ""
 "When submitting this form your IP address will be stored for logging "
 "purposes."
 msgstr ""
+"Quand soumettant ce formulaire, votre adresse IP sera stocké pour des usages "
+"d’historique."
 
 #: adjfeedback/templates/feedback_base.html:8
 msgid "Overview"
-msgstr ""
+msgstr "Vue d’ensemble"
 
 #: adjfeedback/templates/feedback_base.html:12
 msgid "Latest"
@@ -445,6 +497,10 @@ msgstr ""
 #: adjfeedback/templates/feedback_base.html:16
 msgid "Unsubmitted"
 msgstr ""
+
+#: adjfeedback/templates/feedback_base.html:20
+msgid "Important"
+msgstr "Important"
 
 #: adjfeedback/templates/feedback_base.html:24
 msgid "Find by Source"
@@ -458,6 +514,12 @@ msgstr ""
 msgid "Bulk Update Scores"
 msgstr ""
 
+#: adjfeedback/templates/feedback_by_source.html:4
+#: adjfeedback/templates/feedback_by_source.html:5
+#, python-format
+msgid "Feedback %(source_type)s %(source_name)s"
+msgstr "Évaluation %(source_type)s %(source_name)s"
+
 #: adjfeedback/templates/feedback_by_source.html:12
 #, python-format
 msgid "%(source_name)s hasn't submitted any feedback yet."
@@ -466,7 +528,7 @@ msgstr "%(source_name)s n'a pas encore soumis aucun commentaire."
 #: adjfeedback/templates/feedback_by_source.html:17
 #, python-format
 msgid "%(source_name)s hasn't received any feedback yet."
-msgstr ""
+msgstr "%(source_name)s n’a pas encore reçu d’évaluation."
 
 #: adjfeedback/templates/feedback_card.html:8
 msgid ""
@@ -478,44 +540,93 @@ msgstr ""
 msgid "Unconfirmed; will not affect this adjudicator's score."
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:18
+#: adjfeedback/templates/feedback_card.html:14
+msgid ""
+"The feedback is counted for the adjudicator, but is not taken into account "
+"when calculating scores."
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:15
+msgid "Ignored; will not affect this adjudicator's score."
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:20
+msgid ""
+"This feedback is submitted on an adjudicator but it looks like they have "
+"been since been removed from the debate. You should probably go to the Edit "
+"Database area and delete this feedback."
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:29
 msgid "The score given in this piece of feedback."
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:22
+#: adjfeedback/templates/feedback_card.html:30
+#, python-format
+msgid "Given %(score)s"
+msgstr ""
+
+#: adjfeedback/templates/feedback_card.html:35
 #, python-format
 msgid "Test %(test)s"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:26
+#: adjfeedback/templates/feedback_card.html:39
 #, python-format
-msgid "On %(adj)s <span class=\"text-secondary\">as %(as)s</span>"
+msgid "On %(adj)s <span class=\"text-secondary small\">as %(as)s</span>"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:32
+#: adjfeedback/templates/feedback_card.html:45
 #, python-format
 msgid "In %(rname)s"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:37
+#: adjfeedback/templates/feedback_card.html:50
 #, python-format
 msgid ""
-"From %(source)s <span class=\"text-secondary\">their %(relationship)s</span>"
+"From %(source)s <span class=\"text-secondary small\">their %(relationship)s</"
+"span>"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:41
+#: adjfeedback/templates/feedback_card.html:54
 #, python-format
 msgid ""
-"From %(source)s <span class=\"text-secondary\">who %(relationship)s</span>"
+"From %(source)s <span class=\"text-secondary small\">who %(relationship)s</"
+"span>"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:45
+#: adjfeedback/templates/feedback_card.html:58
 msgid "From unknown"
-msgstr ""
+msgstr "Par inconnu"
 
-#: adjfeedback/templates/feedback_card.html:71
+#: adjfeedback/templates/feedback_card.html:85
 #, python-format
 msgid "Submitted %(time)s"
+msgstr "Envoyé %(time)s"
+
+#: adjfeedback/templates/feedback_card.html:90
+msgid ""
+"Ignored feedback is counted as having been submitted, but does not affect "
+"this adjudicator's score."
+msgstr ""
+"Les évaluations non-tenus en compte sont marqués comme reçues, mais "
+"n’influence pas la note du (de la) juge."
+
+#: adjfeedback/templates/feedback_card.html:94
+msgid "Un-ignore"
+msgstr "Tiendre en compte"
+
+#: adjfeedback/templates/feedback_card.html:94
+msgid "Ignore"
+msgstr "Plus tenir en compte"
+
+#: adjfeedback/templates/feedback_cards_list.html:17
+msgid "No feedback has been submitted yet"
+msgstr "Aucun évaluation n’a encore été envoyé"
+
+#: adjfeedback/templates/feedback_overview.html:4
+#, python-format
+msgid "<span id=\"c_breaking\">%(c_breaking)s</span> marked as breaking"
 msgstr ""
 
 #: adjfeedback/templates/feedback_overview.html:10
@@ -579,25 +690,25 @@ msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html:43
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: adjfeedback/templates/overview_breakdowns.html:49
 msgid "Feedback"
-msgstr ""
+msgstr "Évaluation"
 
 #: adjfeedback/templates/overview_breakdowns.html:53
 #, python-format
 msgid ""
 "The proportion of an adjudicator's score determined by feedback vs the test "
-"is set on a per-round basis. This is the mix for the current round "
-"(%(round)s)."
+"is set on a per-round basis. Click this link and edit the 'Feedback weight' "
+"field to modify this ratio for %(round)s."
 msgstr ""
 
 #: adjfeedback/templates/overview_breakdowns.html:57
 msgid "Score Ratio"
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:70
+#: adjfeedback/templates/overview_breakdowns.html:72
 #, python-format
 msgid ""
 "There is %(c_chairs)s debate per round, so there needs to be %(c_chairs)s "
@@ -608,7 +719,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:76
+#: adjfeedback/templates/overview_breakdowns.html:78
 #, python-format
 msgid ""
 "There is %(c_debates)s debate per round, but only %(c_chairs)s above the "
@@ -619,27 +730,27 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:83
+#: adjfeedback/templates/overview_breakdowns.html:85
 #, python-format
 msgid "%(c_chairs)s chair"
 msgid_plural "%(c_chairs)s chairs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:93
+#: adjfeedback/templates/overview_breakdowns.html:95
 msgid ""
 "All adjudicators with a score high enough to vote, but who aren't allocated "
 "as chairs, are allocated as panellists by the auto-allocator."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:97
+#: adjfeedback/templates/overview_breakdowns.html:99
 #, python-format
 msgid "%(c_panellists)s panellist"
 msgid_plural "%(c_panellists)s panellists"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:107
+#: adjfeedback/templates/overview_breakdowns.html:109
 #, python-format
 msgid ""
 "Adjudicators are allocated as trainees by the auto-allocator if their score "
@@ -647,25 +758,74 @@ msgid ""
 "this tournament's Draw Rules configuration."
 msgstr ""
 
-#: adjfeedback/templates/overview_breakdowns.html:112
+#: adjfeedback/templates/overview_breakdowns.html:114
 #, python-format
 msgid "%(c_trainees)s trainee"
 msgid_plural "%(c_trainees)s trainees"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/templates/overview_breakdowns.html:121
+#: adjfeedback/templates/overview_breakdowns.html:123
 #, python-format
 msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr ""
 
+#: adjfeedback/templates/overview_modals.html:10
+msgid "Change Test Score"
+msgstr "Changer la note de base"
+
+#: adjfeedback/templates/overview_modals.html:17
+#, python-format
+msgid ""
+"The score range for adjudicators is between <strong>%(pref.adj_min_score)s</"
+"strong> and <strong>%(pref.adj_max_score)s</strong>. Decimals are permitted. "
+"This can be configured in <a href=\"%(feedback_options)s\">Feedback "
+"settings</a>."
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html:25
+#, python-format
+msgid ""
+"The minimum score require to be allocated as a panellist or chair (when "
+"using the auto-allocator) is <strong>%(min_voting_score)s</strong>. This can "
+"be configured in <a href=\"%(draw_rules)s\">Draw settings</a>."
+msgstr ""
+
+#: adjfeedback/templates/overview_modals.html:34
+msgid "Test score"
+msgstr "Note de base"
+
+#: adjfeedback/templates/overview_modals.html:41
+msgid "Save Test Score"
+msgstr "Enregistrer la note de base"
+
+#: adjfeedback/templates/overview_modals.html:56
+msgid "Edit Note"
+msgstr "Modifier le commentaire"
+
+#: adjfeedback/templates/overview_modals.html:70
+msgid "Save"
+msgstr "Enregistrer"
+
+#: adjfeedback/templates/public_add_feedback.html:4
+msgid "Who are you?"
+msgstr "Qui êtes-vous ?"
+
+#: adjfeedback/templates/public_add_feedback.html:5
+msgid "click your name or your team on this list"
+msgstr "sélectionnez votre nom ou celui de ton équipe dans cette liste"
+
+#: adjfeedback/templates/public_add_feedback.html:13
+#: adjfeedback/templates/public_add_feedback.html:20
+#, python-format
+msgid "Add feedback from %(name)s"
+msgstr "Ajouter évaluation par %(name)s"
+
 #: adjfeedback/templates/update_adjudicator_scores.html:4
 #: adjfeedback/templates/update_adjudicator_scores.html:6
-#, fuzzy
-#| msgid "adjudicator test score history"
 msgctxt "page title"
 msgid "Update Adjudicator Scores"
-msgstr "histoire de note d'examen de juge"
+msgstr "Mettre notes de juge à jour"
 
 #: adjfeedback/templates/update_adjudicator_scores.html:11
 #, python-format
@@ -687,96 +847,133 @@ msgid ""
 msgstr ""
 
 #: adjfeedback/templates/update_adjudicator_scores.html:47
-#, fuzzy
-#| msgid ""
-#| "There are some problems with this feedback submission. Please review and "
-#| "correct them."
 msgid "There are some problems with the data on this form:"
-msgstr ""
-"Cette soumission de commentaires a des problèmes. Veuillez les examiner et "
-"les corriger."
+msgstr "Cet envoi de formulaire a des problèmes :"
 
 #: adjfeedback/templates/update_adjudicator_scores.html:58
 msgid "Submit"
-msgstr ""
+msgstr "Envoyer"
 
 #: adjfeedback/views.py:120
 msgid "Feedback Overview"
-msgstr ""
+msgstr "Vue d’ensemble des évaluations"
 
 #: adjfeedback/views.py:146
-#, fuzzy
-#| msgid "An Adjudicator"
 msgid "Find Feedback on Adjudicator"
-msgstr "Un(e) juge"
+msgstr "Trouver évaluations d’un juge"
 
-#: adjfeedback/views.py:157 adjfeedback/views.py:183 adjfeedback/views.py:200
+#: adjfeedback/views.py:157 adjfeedback/views.py:181 adjfeedback/views.py:196
 #, python-format
 msgid "%(count)d feedback"
 msgid_plural "%(count)d feedbacks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d évaluation"
+msgstr[1] "%(count)d évaluations"
 
-#: adjfeedback/views.py:160 adjfeedback/views.py:188 adjfeedback/views.py:205
-#, fuzzy
-#| msgid "feedback"
+#: adjfeedback/views.py:160 adjfeedback/views.py:186 adjfeedback/views.py:201
 msgid "Feedbacks"
-msgstr "commentaire"
+msgstr "Évaluations"
 
 #: adjfeedback/views.py:167
-#, fuzzy
-#| msgid "Adjudicator Feedback"
 msgid "Find Feedback"
-msgstr "Commentaires sur les juges"
+msgstr "Trouver Évaluation"
 
-#: adjfeedback/views.py:271
-#, fuzzy
-#| msgid "Adjudicator Feedback"
+#: adjfeedback/views.py:175 adjfeedback/views.py:699
+msgid "From Teams"
+msgstr "Par les équipes"
+
+#: adjfeedback/views.py:190 adjfeedback/views.py:693
+msgid "From Adjudicators"
+msgstr "Par les juges"
+
+#: adjfeedback/views.py:267
 msgid "Latest Feedback"
-msgstr "Commentaires sur les juges"
+msgstr "Évaluations Récents"
 
-#: adjfeedback/views.py:272
+#: adjfeedback/views.py:268
 msgid "(30 most recent)"
-msgstr ""
+msgstr "(30 plus récents)"
 
-#: adjfeedback/views.py:282
-#, fuzzy
-#| msgid "Adjudicator Feedback"
+#: adjfeedback/views.py:278
 msgid "Important Feedback"
-msgstr "Commentaires sur les juges"
+msgstr "Évaluations Importantes"
 
-#: adjfeedback/views.py:283
+#: adjfeedback/views.py:279
 msgid "(rating was much higher/lower than expected)"
-msgstr ""
+msgstr "(la note était beaucoup plus élevée ou basse que prévu)"
 
-#: adjfeedback/views.py:350
+#: adjfeedback/views.py:346
 msgid "A Team"
-msgstr ""
+msgstr "Une équipe"
 
-#: adjfeedback/views.py:355
+#: adjfeedback/views.py:351
 msgid "Team"
-msgstr ""
+msgstr "Équipe"
 
-#: adjfeedback/views.py:362 adjfeedback/views.py:387
+#: adjfeedback/views.py:358 adjfeedback/views.py:383
 msgid "Institution"
-msgstr ""
+msgstr "Institution"
 
-#: adjfeedback/views.py:370
+#: adjfeedback/views.py:366
 msgid "An Adjudicator"
 msgstr "Un(e) juge"
 
-#: adjfeedback/views.py:380
+#: adjfeedback/views.py:376
 msgid "Adjudicator"
 msgstr "Juge"
 
-#: adjfeedback/views.py:667
-msgid "Feedback Progress"
-msgstr ""
-
-#: adjfeedback/views.py:735
+#: adjfeedback/views.py:503
 #, python-format
-msgid "Updated test scores for %(count)d adjudicators."
+msgid "Feedback from %(source)s on %(target)s added."
+msgstr "L’évaluation de %(target)s par %(source)s est ajouté."
+
+#: adjfeedback/views.py:533
+#, python-format
+msgid "Thanks, %(source)s! Your feedback on %(target)s has been recorded."
+msgstr "Merci, %(source)s ! Votre évaluation de %(target)s a été enregistrée."
+
+#: adjfeedback/views.py:612
+#, python-format
+msgid "Whoops! I didn't recognise that adjudicator: %(adj)s"
+msgstr "Oups ! Je n’ai pas reconnu ce juge : %(adj)s"
+
+#: adjfeedback/views.py:635
+msgid "Whoops! The value isn't a valid test score."
+msgstr "Oups ! Cette valeur n’est pas une note de base valide."
+
+#: adjfeedback/views.py:668
+#, python-format
+msgid "Whoops! There was an error interpreting that string: %s"
 msgstr ""
+"Oups ! Une erreur s’est produise en interprétant cette chaîne de "
+"caractères : %s"
+
+#: adjfeedback/views.py:676
+msgid "Feedback Progress"
+msgstr "L’avance des évaluations"
+
+#: adjfeedback/views.py:688
+#, python-format
+msgid "%d missing feedback submission"
+msgid_plural "%d missing feedback submissions"
+msgstr[0] "%d envoi d’évaluation manquant"
+msgstr[1] "%d envois d’évaluation manquants"
+
+#: adjfeedback/views.py:728
+msgid "recognized"
+msgstr "tenu en compte"
+
+#: adjfeedback/views.py:730
+#, python-format
+msgid "Feedback for %(adj)s from %(source)s is now %(result)s."
+msgstr "Évaluation de %(adj)s par %(source)s est désormais %(result)s."
+
+#: adjfeedback/views.py:768
+#, fuzzy, python-format
+#| msgid "Updated test scores for %(count)d adjudicators."
+msgid "Updated test score for %(count)d adjudicator."
+msgid_plural "Updated test scores for %(count)d adjudicators."
+msgstr[0] "Mis à jour les notes de base pour %(count)d juges."
+msgstr[1] "Mis à jour les notes de base pour %(count)d juges."
 
 #~ msgid "Score"
 #~ msgstr "Score"

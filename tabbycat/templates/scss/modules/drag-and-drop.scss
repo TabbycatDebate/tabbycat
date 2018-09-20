@@ -64,6 +64,7 @@
 }
 
 .vue-draggable:hover,
+.vue-draggable.btn:hover, // Override specfificity from btn styles
 .vue-draggable:active {
   cursor: move;
 }
@@ -150,11 +151,15 @@
 .resize-handler {
   width: 100%;
   text-align: center;
-  height: 18px;
+  height: 23px;
   margin-bottom: -28px;
   z-index: $z_3 + 1;
 
   &:hover {
     cursor: ns-resize;
   }
+}
+
+.sort-handler {
+  margin-left: auto;
 }

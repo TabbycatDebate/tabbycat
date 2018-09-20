@@ -19,12 +19,12 @@ export default {
   mixins: [DroppableMixin, FeatherMixin],
   props: { assignmentId: Number, assignmentPosition: String, extraCss: '' },
   data: function () {
-    return { 'icon': 'loader' }
+    return { icon: 'loader' }
   },
   methods: {
     handleDrop: function (event) {
       this.$eventHub.$emit('assign-draggable', event, this.assignmentId, this.assignmentPosition)
-    }
-  }
+    },
+  },
 }
 </script>

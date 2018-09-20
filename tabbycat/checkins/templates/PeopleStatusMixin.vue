@@ -8,10 +8,10 @@ export default {
         All: true, Adjudicators: false, Debaters: false,
       },
       peopleSortByGroup: {
-        'By Institution': true, 'By Name': false, 'By Time': false,
+        Institution: true, Name: false, Time: false,
       },
       speakerGroupings: {
-        'Show Speakers': false, 'Show Teams': true,
+        Speaker: false, Team: true,
       },
     }
   },
@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     getToolTipForPerson: function (entity) {
-      var tt = `${entity.name}, a ${entity.type}`
+      let tt = `${entity.name}, a ${entity.type}`
       if (!this.teamCodes && entity.type !== 'Team') {
         if (entity.institution === null) {
           tt += ' of no institutional affiliation'
@@ -32,11 +32,10 @@ export default {
       if (entity.speakers !== null && entity.type === 'Team') {
         tt += ' with speakers '
         _.forEach(entity.speakers, (speaker) => {
-          var status = speaker.status ? 'Present; id=' : 'Absent; id='
+          const status = speaker.status ? 'Present; id=' : 'Absent; id='
           tt += `${speaker.name} (${status} ${speaker.identifier[0]}) `
         })
-      }
-      if (entity.identifier !== null) {
+      } else if (entity.identifier !== null) {
         tt += ` with identifier of ${entity.identifier[0]}`
       } else {
         tt += ' with no assigned identifier '
@@ -44,8 +43,9 @@ export default {
       return tt
     },
     annotatePeople: function (peopleType) {
-      _.forEach(this[peopleType], (person) => {
-        person.status = _.find(this.events, ['identifier', person.identifier[0]])
+      const self = this
+      this[peopleType].forEach((person) => {
+        person.status = _.find(self.events, ['identifier', person.identifier[0]])
         if (_.isUndefined(person.status)) {
           person.status = false
         }
@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     annotatedSpeakers: function () {
-      var speakers = this.annotatePeople('speakers')
+      const speakers = this.annotatePeople('speakers')
       if (this.teamCodes) {
         _.forEach(speakers, (speaker) => {
           speaker.institution = { code: 'Anonymous (due to team codes)', name: 'Anon' }
@@ -64,11 +64,11 @@ export default {
       return speakers
     },
     annotatedTeams: function () {
-      var teams = []
-      var groupedSpeakers = _.groupBy(this.annotatedSpeakers, 'team')
+      const teams = []
+      const groupedSpeakers = _.groupBy(this.annotatedSpeakers, 'team')
       _.forEach(groupedSpeakers, (teamSpeakers, teamName) => {
         const institution = teamSpeakers[0].institution
-        var team = {
+        const team = {
           name: teamName,
           id: teamName,
           locked: false,
@@ -83,7 +83,7 @@ export default {
         } else {
           const lastCheckedIn = _.sortBy(team.speakers, [function (speaker) {
             return speaker.status.time
-          }]);
+          }])
           team.status = { time: lastCheckedIn[0].status.time }
         }
         teams.push(team)
@@ -91,7 +91,7 @@ export default {
       return teams
     },
     annotatedDebaters: function () {
-      if (this.speakerGroupings['Show Speakers']) {
+      if (this.speakerGroupings.Speaker) {
         return this.annotatedSpeakers
       }
       return this.annotatedTeams
@@ -105,7 +105,7 @@ export default {
       return this.annotatePeople('adjudicators')
     },
     peopleByType: function () {
-      var entities = []
+      const entities = []
       if (this.filterByType.All || this.filterByType.Adjudicators) {
         _.forEach(this.annotatedAdjudicators, (adjudicator) => {
           entities.push(adjudicator)
@@ -119,7 +119,7 @@ export default {
       return entities
     },
     peopleByInstitution: function () {
-      var sortedByInstitution = _.sortBy(this.entitiesSortedByName, (p) => {
+      const sortedByInstitution = _.sortBy(this.entitiesSortedByName, (p) => {
         if (p.institution === null) {
           return 'Unaffiliated'
         }

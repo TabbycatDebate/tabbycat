@@ -1,9 +1,10 @@
 import logging
 from itertools import product
 
-from asgiref.sync import AsyncToSync
+from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django import forms
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
@@ -14,7 +15,7 @@ from tournaments.utils import get_side_name
 from .consumers import BallotResultConsumer, BallotStatusConsumer
 from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
                      ForfeitDebateResult, VotingDebateResult)
-from .utils import side_and_position_names
+from .utils import get_status_meta, side_and_position_names
 
 logger = logging.getLogger(__name__)
 
@@ -189,24 +190,35 @@ class BaseResultForm(forms.Form):
         self.debate.result_status = self.cleaned_data['debate_result_status']
         self.debate.save()
 
-        # 5. Notify the websocket Latest Results consumer if result is 'final'
+        t = self.debate.round.tournament
+        # Need to provide a timestamp immediately for BallotStatusConsumer
+        # as it will broadcast before the view finishes assigning one
+        if self.ballotsub.confirmed:
+            self.ballotsub.confirm_timestamp = timezone.now()
+
+        # 5. Notify the Latest Results consumer (for results/overview)
         if self.ballotsub.confirmed:
             if self.debate.result_status is self.debate.STATUS_CONFIRMED:
-                slug = self.debate.round.tournament.slug
-                group_name = BallotResultConsumer.group_prefix + "_" + slug
-                AsyncToSync(get_channel_layer().group_send)(group_name, {
-                    "type": "broadcast",
+                group_name = BallotResultConsumer.group_prefix + "_" + t.slug
+                async_to_sync(get_channel_layer().group_send)(group_name, {
+                    "type": "send_json",
                     "data": self.ballotsub.serialize_like_actionlog
                 })
 
-        # 6. Notify the websocket Ballots Status if result is for current round
-        if self.debate.round == self.debate.round.tournament.current_round:
-            slug = self.debate.round.tournament.slug
-            group_name = BallotStatusConsumer.group_prefix + "_" + slug
-            AsyncToSync(get_channel_layer().group_send)(group_name, {
-                "type": "broadcast",
-                "data": BallotStatusConsumer.get_data(self.debate.round)
-            })
+        # 6. Notify the Results Page/Ballots Status Graph
+        group_name = BallotStatusConsumer.group_prefix + "_" + t.slug
+        meta = get_status_meta(self.debate)
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_json",
+            "data": {
+                'status': self.cleaned_data['debate_result_status'],
+                'icon': meta[0],
+                'class': meta[1],
+                'sort': meta[2],
+                'ballot': self.ballotsub.serialize(t),
+                'round': self.debate.round.id
+            }
+        })
 
         return self.ballotsub
 

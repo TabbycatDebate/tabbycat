@@ -13,12 +13,9 @@ urlpatterns = [
         name='printing-feedback'),
 
     # Private URL distribution
-    path('feedback_urls_sheets/',
-        views.PrintFeedbackURLsView.as_view(),
-        name='printing-feedback-urls'),
-    path('ballots_urls_sheets/',
-        views.PrintBallotURLsView.as_view(),
-        name='printing-ballot-urls'),
+    path('urls_sheets/',
+        views.PrintableRandomisedURLs.as_view(),
+        name='printing-urls'),
 
     # WADL sheets
     path('round/<int:round_seq>/master_sheets/list/',

@@ -3,18 +3,19 @@ import json
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.base import TemplateView
+from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
-from participants.models import Speaker
+from participants.models import Person, Speaker
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
+from utils.views import PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
-from .models import Event, Identifier, PersonIdentifier, VenueIdentifier
+from .models import Event, PersonIdentifier, VenueIdentifier
 from .utils import create_identifiers, get_unexpired_checkins
 
 
@@ -24,7 +25,7 @@ class CheckInPreScanView(TournamentMixin, TemplateView):
     page_emoji = '📷'
 
     def get_context_data(self, **kwargs):
-        kwargs["scan_url"] = reverse_tournament(self.scan_view, self.tournament)
+        kwargs["scan_url"] = self.tournament.slug + '/checkins/'
         return super().get_context_data(**kwargs)
 
 
@@ -36,55 +37,6 @@ class AssistantCheckInPreScanView(AssistantMixin, CheckInPreScanView):
     scan_view = 'assistant-checkin-scan'
 
 
-class CheckInScanView(JsonDataResponsePostView, TournamentMixin):
-
-    def post_data(self):
-        barcode_ids = json.loads(self.body)['barcodes']
-        barcode_ids = [b for b in barcode_ids if b is not None]
-        status = json.loads(self.body)['status']
-        events = []
-        for barcode in barcode_ids:
-            try:
-                identifier = Identifier.objects.get(barcode=barcode)
-                if status is True: # If checking-in someone
-                    event = Event.objects.create(identifier=identifier,
-                                                 tournament=self.tournament)
-                    events.append(event)
-                else:
-                    # If undoing/revoking a check-in
-                    if json.loads(self.body)['type'] == 'people':
-                        window = 'checkin_window_people'
-                    else:
-                        window = 'checkin_window_venues'
-
-                    events = get_unexpired_checkins(self.tournament, window)
-                    events.filter(identifier=identifier).delete()
-
-            except ObjectDoesNotExist:
-                # Only raise an error for single check-ins as for multi-check-in
-                # events via the status page its clear what has failed or not
-                if len(barcode_ids) == 1:
-                    raise BadJsonRequestError("Identifier doesn't exist")
-
-        if status is True:
-            time = events[0].time.strftime('%H:%M:%S')
-        else:
-            time = False
-
-        if len(events) > 0 or status is False:
-            return json.dumps({'ids': barcode_ids, 'time': time})
-        else:
-            raise BadJsonRequestError("No identifiers exist for given barcodes")
-
-
-class AdminCheckInScanView(AdministratorMixin, CheckInScanView):
-    pass
-
-
-class AssistantCheckInScanView(AssistantMixin, CheckInScanView):
-    pass
-
-
 class BaseCheckInStatusView(TournamentMixin, TemplateView):
     template_name = 'checkin_status.html'
     scan_view = False
@@ -93,7 +45,7 @@ class BaseCheckInStatusView(TournamentMixin, TemplateView):
         events = get_unexpired_checkins(self.tournament, self.window_preference)
         kwargs["events"] = json.dumps([e.serialize() for e in events])
         if self.scan_view:
-            kwargs["scan_url"] = reverse_tournament(self.scan_view, self.tournament)
+            kwargs["scan_url"] = self.tournament.slug + '/checkins/'
         return super().get_context_data(**kwargs)
 
 
@@ -292,3 +244,42 @@ class AdminCheckInPrintablesView(AdministratorMixin, CheckInPrintablesView):
 
 class AssistantCheckInPrintablesView(AssistantMixin, CheckInPrintablesView):
     pass
+
+
+class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
+
+    public_page_preference = 'public_checkins_submit'
+
+    def post(self, request, *args, **kwargs):
+        t = self.tournament
+
+        action = request.POST['action']
+
+        try:
+            person = Person.objects.get(url_key=kwargs['url_key'])
+            identifier = PersonIdentifier.objects.get(person=person)
+        except ObjectDoesNotExist:
+            messages.error(self.request, _("Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."))
+            return super().post(request, *args, **kwargs)
+
+        checkins = get_unexpired_checkins(t, 'checkin_window_people')
+        existing_checkin = checkins.filter(identifier=identifier)
+        if action == 'revoke':
+            if existing_checkin.exists():
+                existing_checkin.delete()
+                messages.success(self.request, _("You have revoked your check-in."))
+            else:
+                messages.error(self.request, _("Whoops! Looks like your check-in was already revoked."))
+        elif action == 'checkin':
+            if existing_checkin.exists():
+                messages.error(self.request, _("Whoops! Looks like you're already checked in."))
+            else:
+                Event(identifier=identifier, tournament=t).save()
+                messages.success(self.request, _("You are now checked in."))
+        else:
+            return TemplateResponse(request=self.request, template='400.html', status=400)
+
+        return super().post(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': kwargs['url_key']})

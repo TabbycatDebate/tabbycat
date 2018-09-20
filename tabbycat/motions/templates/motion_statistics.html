@@ -1,8 +1,8 @@
 {% extends "standings_base.html" %}
 {% load debate_tags static i18n %}
 
-{% block page-title %}Motion Statistics{% endblock %}
-{% block head-title %}<span class="emoji">💭</span> Motion Statistics{% endblock %}
+{% block page-title %}{% trans "Motion Statistics" %}{% endblock %}
+{% block head-title %}<span class="emoji">💭</span>{% trans "Motion Statistics" %}{% endblock %}
 
 {% block content %}
 
@@ -13,14 +13,14 @@
     {% for round, motions in motions_by_round %}
       <div class="list-group mt-3">
 
-        <div class="list-group-item disabled text-center strong">
-          {{ round.name }}
+        <div class="list-group-item disabled text-center h5">
+          <span class="badge badge-secondary">{{ round.name }}</span>
         </div>
 
         {% for motion in motions %}
-          <div class="list-group-item pb-0 text-center">
+          <div class="list-group-item px-1 px-md-4 pb-0 text-center">
 
-            <h4 class="mb-3 mt-1">
+            <h4 class="mb-4 mt-2">
               {{ motion.text }}
             </h4>
 

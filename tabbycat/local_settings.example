@@ -1,6 +1,8 @@
 LOCAL_SETTINGS = True
 from settings import *
 
+ON_LOCAL = True
+
 # ==============================================================================
 # Settings that you should specify
 # ==============================================================================
@@ -13,7 +15,7 @@ DATABASES = {
         'PASSWORD'    : '',  # put your PostgreSQL login role's password in here
         'HOST'        : 'localhost',
         'PORT'        : '5432',
-        'CONN_MAX_AGE': 600,
+        'CONN_MAX_AGE': None,
     }
 }
 
@@ -41,20 +43,12 @@ INTERNAL_IPS = (
 )
 
 # ==============================================================================
-# Static Files & Compilation
-# ==============================================================================
-
-# When debug is enabled don't compress things
-if DEBUG:
-    WHITENOISE_AUTOREFRESH = True
-    WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ('css', 'js')
-
-# ==============================================================================
 # Caching
 # ==============================================================================
 
-PUBLIC_PAGE_CACHE_TIMEOUT   = 1
-TAB_PAGES_CACHE_TIMEOUT     = 1
+PUBLIC_FAST_CACHE_TIMEOUT   = 0
+PUBLIC_SLOW_CACHE_TIMEOUT   = 0
+TAB_PAGES_CACHE_TIMEOUT     = 0
 
 CACHES = { # Use a dummy cache in development
     'default': {
@@ -70,6 +64,13 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 # Use the cache with database write through for local sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+# ==============================================================================
+# Webpack
+# ==============================================================================
+
+# Enables hot reloading but relies on the vue-cli (webpack) server being run
+USE_WEBPACK_SERVER = False
 
 # ==============================================================================
 # Redis

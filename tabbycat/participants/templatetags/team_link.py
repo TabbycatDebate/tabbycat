@@ -8,14 +8,15 @@ register = template.Library()
 
 
 @register.simple_tag
-def team_record_link(team, admin):
+def team_record_link(team, admin, tournament=None):
     """Team record links are used often, so this template tag just reduces
     clutter in templates, in particular in translated strings."""
 
     if not team:
         return ""
 
-    tournament = team.tournament
+    if not tournament:
+        tournament = team.tournament
 
     if use_team_code_names(tournament, admin):
         name = team.code_name

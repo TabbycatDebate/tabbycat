@@ -19,9 +19,9 @@
     }],
     "selector-list-comma-newline-after": "always",
     "selector-max-id": 0,
-
     "declaration-property-value-blacklist": {
       "/^border/": ["none"],
     },
+    "no-descending-specificity": null
   }
 }

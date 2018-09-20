@@ -1,15 +1,18 @@
 import json
 import datetime
 import logging
+from smtplib import SMTPException
 import unicodedata
 from itertools import product
 from math import floor
 
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from django.views.generic.base import TemplateView
@@ -46,6 +49,7 @@ from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
+from .utils import send_mail_to_adjs
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +79,9 @@ class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
     def get_page_subtitle(self):
         round = self.round
         if round and round.starts_at:
-            return _("debates start at %(time)s") % {'time': round.starts_at.strftime('%H:%M')}
+            return _("debates start at %(time)s (in %(time_zone)s)") % {
+                     'time': round.starts_at.strftime('%H:%M'),
+                     'time_zone': settings.TIME_ZONE}
         else:
             return ''
 
@@ -116,7 +122,8 @@ class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
 
 class PublicDrawForRoundView(PublicTournamentPageMixin, BasePublicDrawTableView):
 
-    public_page_preference = 'public_draw'
+    def is_page_enabled(self, tournament):
+        return tournament.pref('public_draw') == 'all-released'
 
     def get_template_names(self):
         if self.round.draw_status != Round.STATUS_RELEASED:
@@ -134,7 +141,9 @@ class PublicDrawForRoundView(PublicTournamentPageMixin, BasePublicDrawTableView)
 
 
 class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
-    pass
+
+    def is_page_enabled(self, tournament):
+        return tournament.pref('public_draw') == 'current'
 
 
 class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BasePublicDrawTableView):
@@ -291,7 +300,8 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         teams = Team.objects.filter(debateteam__debate__round=self.round)
         side_histories_before = get_side_history(teams, self.tournament.sides, self.round.prev.seq)
         side_histories_now = get_side_history(teams, self.tournament.sides, self.round.seq)
-        generator = TeamStandingsGenerator(('points',), ())
+        metrics = self.tournament.pref('team_standings_precedence')
+        generator = TeamStandingsGenerator(metrics[0:1], ())
         standings = generator.generate(teams, round=self.round.prev)
         draw_table = PositionBalanceReportDrawTableBuilder(view=self)
         draw_table.build(draw, teams, side_histories_before, side_histories_now, standings)
@@ -440,7 +450,8 @@ class PositionBalanceReportView(RoundMixin, AdministratorMixin, VueTableTemplate
         teams = Team.objects.filter(debateteam__debate__round=self.round)
         side_histories_before = get_side_history(teams, self.tournament.sides, self.round.prev.seq)
         side_histories_now = get_side_history(teams, self.tournament.sides, self.round.seq)
-        generator = TeamStandingsGenerator(('points',), ())
+        metrics = self.tournament.pref('team_standings_precedence')
+        generator = TeamStandingsGenerator(metrics[0:1], ())
         standings = generator.generate(teams, round=self.round.prev)
 
         summary_table = PositionBalanceReportSummaryTableBuilder(view=self,
@@ -566,7 +577,21 @@ class DrawReleaseView(DrawStatusEdit):
         self.round.draw_status = Round.STATUS_RELEASED
         self.round.save()
         self.log_action()
-        messages.success(request, _("Released the draw."))
+
+        email_success_message = ""
+        if self.tournament.pref('enable_adj_email'):
+            try:
+                send_mail_to_adjs(self.round)
+            except SMTPException:
+                messages.error(self.request, _("There was a problem sending adjudication assignment emails."))
+            except ConnectionError as e:
+                messages.error(self.request, _(
+                    "There was a problem connecting to the e-mail server when trying to send adjudication assigment emails: %(error)s"
+                ) % {'error': str(e)})
+            else:
+                email_success_message = _("Adjudicator emails successfully sent.")
+
+        messages.success(request, format_lazy(_("Released the draw."), " ", email_success_message))
         return super().post(request, *args, **kwargs)
 
 

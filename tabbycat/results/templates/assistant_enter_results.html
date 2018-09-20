@@ -44,6 +44,11 @@
               <input id="incorrect" class="btn btn-danger btn-block" type="button" value="{% trans "Results are incorrect" %}" tabindex="{{ form.nexttabindex|add:1 }}" />
             </div>
           </div>
+          <div class="text-center pt-3 small text-muted">
+            {% if pref.enable_ballot_receipts and not request.user == ballotsub.submitter %}
+              {% trans "Emails will be sent to adjudicators when the ballot is confirmed." %}
+            {% endif %}
+          </div>
         {% endif %}
       </div>
     </div>

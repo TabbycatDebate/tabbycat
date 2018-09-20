@@ -67,7 +67,10 @@ Once you're happy with your adjudicator allocation, you're ready to start the ro
 
 2. **Release to public.** If you're using the public draw function (where the draw is posted publicly to your Tabbycat website) use the **Release to Public** button to allow the page to display.
 
-  .. tip:: To avoid the site from being overloaded by anxious refreshers, we recommend that large tournaments not release the draw to the public until after it's been seen by general assembly.
+  .. tip:: 
+
+    - To avoid the site from being overloaded by anxious refreshers, we recommend that large tournaments not release the draw to the public until after it's been seen by general assembly. That said, note that due to caching there can be a delay of up to 1 minute between when a draw is released and when it first shows up on the public site.
+    - Tabbycat can be set to send emails once the draw is released to adjudicators informing them of their assignments for convenience.
 
 .. _releasing-the-motions:
 
@@ -106,6 +109,8 @@ Once you've got all the results entered and confirmed, you're ready to progress 
 
 .. image:: images/results-page.png
 
-.. warning:: When you advance to the next round, if you've enabled public results, the results for the current round (which is now the previous round) will be release to the public **unless** the round is marked as "silent" in the database. So if you're careful about when results should be released, don't change the current round until you're ready to release those results.
+.. warning:: When you advance to the next round, if you've enabled public results, the results for the current round (which is now the previous round) will be released to the public **unless** the round is marked as "silent" in the database. So if you're careful about when results should be released, don't change the current round until you're ready to release those results.
 
 .. note:: There is a design assumption that you will always want to release results for non-silent rounds before you start working on the draw for the next round. If this isn't true for you, please get in touch with us so that we know. The workaround is to make all rounds silent, then unsilent them when you're ready to release results.
+
+.. tip:: Emails can be sent to speakers informing them of their team's win/loss/points record before advancing rounds. This is independent from whether the whole round's results are released to the public.

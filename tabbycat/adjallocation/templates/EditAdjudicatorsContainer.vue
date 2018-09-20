@@ -28,10 +28,10 @@
           <span></span> <!-- Hide Venues -->
         </template>
 
-
         <template slot="hpanel">
-          <div :class="['thead flex-cell text-center',
-                        'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
+          <div :class="[
+              'thead flex-cell text-center',
+              'flex-' + (adjPositions.length > 2 ? 10 : adjPositions.length > 1 ? 8 : 12)]">
             <div class="d-flex align-items-end">
               <span>Chair</span>
             </div>
@@ -55,7 +55,8 @@
       </draw-header>
 
       <debate v-for="debate in dataOrderedByKey"
-              :debate="debate" :key="debate.id" :round-info="roundInfo">
+              :debate="debate"
+              :key="debate.id" :round-info="roundInfo">
 
         <div class="draw-cell flex-6" slot="simportance">
           <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
@@ -83,6 +84,19 @@
                                :percentiles="percentileThresholds"
                                :locked="unallocatedAdj.locked"></draggable-adjudicator>
       </div>
+      <div class="sort-handler align-items-center">
+        <div v-if="unallocatedAdjsByOrder.length > 5"
+             class="btn-group btn-group-toggle mt-2 mb-1 ml-2" data-toggle="buttons">
+          <label class="btn btn-sm btn-secondary active"
+                 @click="updateUnallocatedSorting('score')">
+            <input type="radio" checked>By Score
+          </label>
+          <label class="btn btn-sm btn-secondary"
+                 @click="updateUnallocatedSorting('name')">
+            <input type="radio">By Name
+          </label>
+        </div>
+      </div>
     </unallocated-items-container>
 
     <slide-over :subject="slideOverSubject"></slide-over>
@@ -99,7 +113,7 @@ import percentile from 'stats-percentile'
 import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
 import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
 import AutoImportanceLogicMixin from '../../templates/allocations/AutoImportanceLogicMixin.vue'
-import HighlightableContainerMixin from '../../templates/allocations/HighlightableContainerMixin.vue'
+import HighlightContainerMixin from '../../templates/allocations/HighlightContainerMixin.vue'
 import AllocationActions from '../../templates/allocations/AllocationActions.vue'
 import AllocationIntroModal from '../../templates/allocations/AllocationIntroModal.vue'
 import DebateImportance from '../../templates/allocations/DebateImportance.vue'
@@ -107,12 +121,21 @@ import DebatePanel from '../../templates/allocations/DebatePanel.vue'
 import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
-
 export default {
   mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
-           AutoImportanceLogicMixin, HighlightableContainerMixin],
-  components: { AllocationActions, AllocationIntroModal, DebateImportance,
-                DebatePanel, DraggableAdjudicator },
+    AutoImportanceLogicMixin, HighlightContainerMixin],
+  components: {
+    AllocationActions,
+    AllocationIntroModal,
+    DebateImportance,
+    DebatePanel,
+    DraggableAdjudicator,
+  },
+  data: function () {
+    return {
+      unallocatedSortOrder: null,
+    }
+  },
   props: { showIntroModal: Boolean },
   created: function () {
     // Watch for global conflict highlights
@@ -120,11 +143,11 @@ export default {
   },
   computed: {
     unallocatedAdjsByOrder: function () {
-      if (this.roundInfo.roundIsPrelim === true) {
+      if ((this.unallocatedSortOrder === null && this.roundInfo.roundIsPrelim === true) ||
+           this.unallocatedSortOrder === 'score') {
         return _.reverse(_.sortBy(this.unallocatedItems, ['score']))
-      } else {
-        return _.sortBy(this.unallocatedItems, ['name'])
       }
+      return _.sortBy(this.unallocatedItems, ['name'])
     },
     adjudicatorsById: function () {
       // Override DrawContainer() method to include unallocated
@@ -132,18 +155,16 @@ export default {
     },
     percentileThresholds: function () {
       // For determining feedback rankings
-      var allScores = _.map(this.adjudicatorsById, function (adj) {
-        return parseFloat(adj.score)
-      }).sort()
-      var thresholds = []
-      var letterGrades = ["A+", "A", "A-", "B+", "B", "B-", "C+", "C"]
-      for (var i = 90; i > 10; i -= 10) {
+      const allScores = _.map(this.adjudicatorsById, adj => parseFloat(adj.score)).sort()
+      const thresholds = []
+      const letterGrades = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C']
+      for (let i = 90; i > 10; i -= 10) {
         thresholds.push({
-          'grade': letterGrades[0], 'cutoff': percentile(allScores, i), 'percentile': i
+          grade: letterGrades[0], cutoff: percentile(allScores, i), percentile: i,
         })
         letterGrades.shift()
       }
-      thresholds.push({'grade': "F", 'cutoff': 0, 'percentile': 10})
+      thresholds.push({ grade: 'F', cutoff: 0, percentile: 10 })
       return thresholds
     },
     adjPositions: function () {
@@ -151,25 +172,27 @@ export default {
     },
   },
   methods: {
-    moveToDebate(payload, assignedId, assignedPosition) {
+    updateUnallocatedSorting (sortType) {
+      this.unallocatedSortOrder = sortType
+    },
+    moveToDebate (payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
         // Check that it isn't an in-panel move
-        var thisDebate = this.debatesById[payload.debate]
-        var fromPanellist = _.find(thisDebate.debateAdjudicators, function (da) {
-          return da.adjudicator.id === payload.adjudicator;
-        })
+        const thisDebate = this.debatesById[payload.debate]
+        const debateAdjs = thisDebate.debateAdjudicators
+        const fromPanellist = _.find(debateAdjs, da => da.adjudicator.id === payload.adjudicator)
         if (assignedPosition === fromPanellist.position) {
           return // Moving to same debate/position; do nothing
         }
       }
       this.saveMove(payload.adjudicator, payload.debate, assignedId, assignedPosition)
     },
-    moveToUnused(payload) {
+    moveToUnused (payload) {
       if (_.isUndefined(payload.debate)) {
         return // Moving to unused from unused; do nothing
       }
       this.saveMove(payload.adjudicator, payload.debate)
     },
-  }
+  },
 }
 </script>

@@ -1,10 +1,5 @@
-# The necessary dependencies for just heroku installs
+# Base Requirements File
+# This is auto-installed on Heroku, so must combine core and Heroku dependencies
 
-# Importing the base requirements
--r requirements_common.txt
-
-# Base Heroku Requirements
-dj-database-url==0.5.0                  # From the heroku toolbelt
-
-# Misc
-sendgrid==5.3.0                         # Emailing
+-r config/requirements_core.txt
+-r config/requirements_heroku.txt

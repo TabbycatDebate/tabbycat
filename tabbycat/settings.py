@@ -15,14 +15,15 @@ ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 DEBUG_ASSETS = DEBUG
+USE_WEBPACK_SERVER = False
 
 # ==============================================================================
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.1.3'
-TABBYCAT_CODENAME = 'Japanese Bobtail'
-READTHEDOCS_VERSION = 'v2.1.3'
+TABBYCAT_VERSION = '2.2.0'
+TABBYCAT_CODENAME = 'Khao Manee'
+READTHEDOCS_VERSION = 'v2.2.0'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -43,7 +44,9 @@ LANGUAGES = [
     ('ar', _('Arabic')),
     ('en', _('English')),
     ('es', _('Spanish')),
-    ('fr', _('French'))
+    ('fr', _('French')),
+    ('ja', _('Japanese')),
+    ('pt', _('Portuguese')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
@@ -57,12 +60,18 @@ FORMAT_MODULE_PATH = [
 # ==============================================================================
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For Static Files
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # User language preferences
+    # User language preferences; must be after Session
+    'django.middleware.locale.LocaleMiddleware',
+    # Set Etags; i.e. cached requests not on network; must precede Common
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # Must be after SessionMiddleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # Must be after SessionMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.DebateMiddleware'
@@ -88,18 +97,17 @@ TABBYCAT_APPS = (
     'utils',
     'users',
     'standings',
+    'notifications',
     'importer'
 )
 
 INSTALLED_APPS = (
-    # Scout should be listed first
-    'scout_apm.django', 'jet' if os.environ.get('SCOUT_MONITOR') is True else 'jet',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'channels', # For Websockets / real-time connections (above whitenoise)
-    'whitenoise.runserver_nostatic',  # Use whitenoise with runserver
     'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -112,6 +120,10 @@ INSTALLED_APPS = (
     'formtools',
     'statici18n' # Compile js translations as static file; saving requests
 )
+
+if os.environ.get('SCOUT_MONITOR'):
+    # Scout should be listed first; prepend it to the existing list if added
+    INSTALLED_APPS = ('scout_apm.django', *INSTALLED_APPS)
 
 ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = '/'
@@ -151,7 +163,8 @@ TEMPLATES = [
 # Caching
 # ==============================================================================
 
-PUBLIC_PAGE_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_PAGE_CACHE_TIMEOUT', 60 * 1))
+PUBLIC_FAST_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_FAST_CACHE_TIMEOUT', 60 * 1))
+PUBLIC_SLOW_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_SLOW_CACHE_TIMEOUT', 60 * 3.5))
 TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
 
 # Default non-heroku cache is to use local memory
@@ -177,10 +190,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# Whitenoise Gzipping and unique names
-STATICFILES_STORAGE = 'utils.misc.SquashedWhitenoiseStorage'
-# Serve files that must be at root (robots; favicon) from this folder
-WHITENOISE_ROOT = os.path.join(BASE_DIR, 'static/root')
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # ==============================================================================
 # Logging
@@ -311,6 +321,7 @@ SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY', r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc')
 
 # Parse database configuration from $DATABASE_URL
+# Note connection max age is in seconds
 try:
     import dj_database_url
     DATABASES = {
@@ -335,29 +346,62 @@ ALLOWED_HOSTS = ['*']
 if 'TAB_DIRECTOR_EMAIL' in os.environ:
     TAB_DIRECTOR_EMAIL = os.environ.get('TAB_DIRECTOR_EMAIL', '')
 
-# Redis Services
+# ==============================================================================
+# REDIS
+# ==============================================================================
+
 if os.environ.get('REDIS_URL', ''):
-    try:
-        CACHES = {
-            "default": {
-                "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": os.environ.get('REDIS_URL'),
-                "OPTIONS": {
-                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                    "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
-                }
-            }
-        }
-        CHANNEL_LAYERS = {
-            "default": {
-                "BACKEND": "channels_redis.core.RedisChannelLayer",
-                "CONFIG": {
-                    "hosts": [os.environ.get('REDIS_URL')],
-                },
+
+    # Use a separate Redis addon for channels to reduce number of connections
+    # With fallback for Tabbykitten installs (no addons) or pre-2.2 instances
+    if os.environ.get('REDISCLOUD_URL'):
+        ALT_REDIS_URL = os.environ.get('REDISCLOUD_URL') # 30 clients on free
+    else:
+        ALT_REDIS_URL = os.environ.get('REDIS_URL') # 20 clients on free
+
+    # Connection/Pooling Notes
+    # ========================
+    # From testing each dyno seems to use, at a maximum, 8 connections for
+    # serving standard traffic. Channels seems to use 1 connection per dyno.
+    # Setting the connection pool could enforce limits to keep this under the
+    # maximum, however that just shifts the point of failure to the pool's max
+    # which is trickier to calibrate as it is traffic/dyno dependenent.
+    # It seems that connections are essentially per-process (so 5 per dyno;
+    # following the unicorn worker count) along with some left idle waiting to
+    # be closed (Heroku by default closes after 5 minutes)
+    # ========================
+    # The below config sets a more aggressive timeout but does not limit
+    # total connections — so the limit of 30 could be theoretically be hit if
+    # running 4 or so dynos. If this becomes a problem then we need to implement
+    # a pooling logic that ensures connections are shared amonst unicorn workers
+    # ========================
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": ALT_REDIS_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                # "IGNORE_EXCEPTIONS": True, # Supresses ConnectionError at max
+                # "CONNECTION_POOL_KWARGS": {"max_connections": 5} # See above
+                "SOCKET_CONNECT_TIMEOUT": 5,
+                "SOCKET_TIMEOUT": 60,
             },
         }
-    except:
-        pass
+    }
+
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [os.environ.get('REDIS_URL')],
+                # Remove channels from groups after 3 hours
+                # This matches websocket_timeout in Daphne
+                "group_expiry": 10800,
+            },
+            # RedisChannelLayer should pool by default
+        },
+    }
 
 # ==============================================================================
 # Travis CI
@@ -383,6 +427,7 @@ if os.environ.get('TRAVIS', '') == 'true':
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 DEBUG_TOOLBAR_PANELS = (
+    'ddt_request_history.panels.request_history.RequestHistoryPanel',
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
     'debug_toolbar.panels.settings.SettingsPanel',

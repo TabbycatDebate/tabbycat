@@ -1,0 +1,25 @@
+{% extends "standings_table.html" %}
+{% load debate_tags i18n %}
+
+{% block page-alerts %}
+
+  {% trans "Reply speakers are ranked by their <strong>average reply score</strong>." as p1 %}
+
+  {% if pref.standings_missed_replies > 0 %}
+    {% blocktrans trimmed with count=pref.standings_missed_replies asvar p2 %}
+      Speakers can miss up to {{ count }} reply speeches before they are omitted from
+      the replies tab.
+    {% endblocktrans %}
+  {% else %}
+    {% trans "All reply speakers appear in these standings, no matter how many replies they've missed." as p2 %}
+  {% endif %}
+
+  {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+  {% blocktrans trimmed asvar p3 %}
+    These settings can be changed in the
+    <a href="{{ standings_config_url }}" class="alert-link">Standings section
+    of this tournament's configuration</a>.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+
+{% endblock %}

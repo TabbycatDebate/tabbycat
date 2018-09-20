@@ -46,7 +46,8 @@
 
             <template slot="hteams">
               <div class="vue-sortable thead flex-cell flex-12"
-                   v-for="position in teamPositions" @click="updateSorting(position)">
+                   v-for="position in teamPositions" @click="updateSorting(position)"
+                   :key="position">
                 <div class="d-flex align-items-end">
                   <span>{{ position.toUpperCase() }}</span>
                   <div :class="sortClasses(position)">
@@ -68,7 +69,8 @@
           </draw-header>
 
           <debate v-for="debate in dataOrderedByKey"
-                  :debate="debate" :key="debate.id" :round-info="roundInfo">
+                  :key="debate.id"
+                  :debate="debate" :round-info="roundInfo">
 
             <div slot="sbracket"></div>
             <div slot="sliveness"></div>
@@ -77,7 +79,7 @@
 
             <template v-for="position in roundInfo.teamPositions">
               <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
-                   :slot="'s-' + position">
+                   :slot="'s-' + position" :key="position">
                 <droppable-generic :assignment-id="debate.id"
                                    :assignment-position="position" :locked="debate.locked">
                    <draggable-team v-if="findTeamInDebateBySide(position, debate)"
@@ -100,7 +102,7 @@
     </div>
 
     <unallocated-items-container>
-      <div v-for="unallocatedTeam in unallocatedTeamsByWins">
+      <div v-for="unallocatedTeam in unallocatedTeamsByWins" :key="unallocatedTeam.id">
         <draggable-team :team="unallocatedTeam" :round-info="roundInfo"></draggable-team>
       </div>
     </unallocated-items-container>
@@ -131,23 +133,23 @@ export default {
     },
   },
   methods: {
-    moveToDebate(payload, assignedId, assignedPosition) {
+    moveToDebate (payload, assignedId, assignedPosition) {
       if (payload.debate === assignedId) {
-        var team = this.allTeamsById[payload.team]
-        var debate = this.debatesById[payload.debate]
-        var fromPosition = this.findDebateTeamInDebateByTeam(team, debate)
+        const team = this.allTeamsById[payload.team]
+        const debate = this.debatesById[payload.debate]
+        const fromPosition = this.findDebateTeamInDebateByTeam(team, debate)
         if (assignedPosition === fromPosition) {
           return // Moving to same debate/position; do nothing
         }
       }
       this.saveMove(payload.team, payload.debate, assignedId, assignedPosition)
     },
-    moveToUnused(payload) {
+    moveToUnused (payload) {
       if (_.isUndefined(payload.debate)) {
         return // Moving to unused from unused; do nothing
       }
       this.saveMove(payload.team, payload.debate)
-    }
+    },
   },
 }
 

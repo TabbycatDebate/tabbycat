@@ -50,11 +50,11 @@ def delete_identifiers(queryset):
     klass.objects.filter(**{attr + '__in': queryset}).delete()
 
 
-def get_unexpired_checkins(tournament, window_preference):
-    if not window_preference:
+def get_unexpired_checkins(tournament, window_preference_type):
+    if not window_preference_type:
         time_window = datetime.datetime.fromtimestamp(0)  # Unix start
     else:
-        start = datetime.timedelta(hours=tournament.pref(window_preference))
+        start = datetime.timedelta(hours=tournament.pref(window_preference_type))
         time_window = datetime.datetime.now() - start
 
     events = Event.objects.filter(tournament=tournament,
@@ -64,11 +64,11 @@ def get_unexpired_checkins(tournament, window_preference):
 
 def create_identifiers(model_to_make, items_to_check):
     kind = model_to_make.instance_attr
-    for item in list(items_to_check):
-        try:
-            model_to_make.objects.get(**{kind: item})
-        except ObjectDoesNotExist:
-            model_to_make.objects.create(**{kind: item})
+    identifiers_to_make = items_to_check.filter(checkin_identifier__isnull=True)
+
+    for item in identifiers_to_make:
+        model_to_make.objects.create(**{kind: item})
+
     return
 
 
@@ -77,9 +77,11 @@ def single_checkin(instance, events):
     instance.checked_in = False
     try:
         identifier = instance.checkin_identifier
+        instance.barcode = identifier.barcode
         instance.checked_tooltip = _("Not checked-in (barcode %(barcode)s)") % {'barcode': identifier.barcode}
     except ObjectDoesNotExist:
         identifier = None
+        instance.barcode = None
         instance.checked_tooltip = _("Not checked-in; no barcode assigned")
 
     if identifier:
@@ -118,8 +120,9 @@ def multi_checkin(team, events, t):
     return team
 
 
-def get_checkins(queryset, t, window_preference):
-    events = get_unexpired_checkins(t, window_preference).values('time', 'identifier__barcode')
+def get_checkins(queryset, t, window_preference_type):
+    events = get_unexpired_checkins(t, window_preference_type).values(
+        'time', 'identifier__barcode')
     for instance in queryset:
         if hasattr(instance, 'use_institution_prefix'):
             instance = multi_checkin(instance, events, t)

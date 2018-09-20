@@ -8,6 +8,7 @@ tabbycat/staticfiles/
 tabbycat/static/css/
 tabbycat/static/js/
 tabbycat/static/jsi18n/
+tabbycat/static/vue/
 tabbycat/static/fonts/
 
 # Translations
@@ -75,3 +76,6 @@ nosetests.xml
 # Python 2to3 backup files
 *.bak
 /.stylelintcache
+
+# Redis
+dump.rdb

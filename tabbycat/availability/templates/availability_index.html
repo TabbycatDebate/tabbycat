@@ -35,16 +35,15 @@
 
 {% block page-subnav-actions %}
 
-  {% if round.draw_status == round.STATUS_CONFIRMED or round.draw_status == round.STATUS_RELEASED %}
+  {% if round.draw_status != round.STATUS_NONE %}
     <a class="btn btn-outline-success " href="{% roundurl 'draw' round %}">
       {% trans "View Draw" %} <i data-feather="chevron-right"></i>
     </a>
   {% else %}
     {% if previous_unconfirmed %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{{ previous_unconfirmed }} debates from
-        {{ round.prev.name }} do not have a completed ballot —
-        this may lead to a draw that fails or is incorrect">
+        data-toggle="tooltip" title="{% blocktrans trimmed with round_name=round.prev.name %}{{ previous_unconfirmed }} debates from
+        {{ round_name }} do not have a completed ballot — this may lead to a draw that fails or is incorrect{% endblocktrans %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif availability_info.teams.in_now == 0 %}

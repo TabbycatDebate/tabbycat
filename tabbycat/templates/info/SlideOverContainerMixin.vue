@@ -19,11 +19,11 @@ export default {
   },
   methods: {
     setSlideover: function (object, annotateMethod, annotateObject) {
-      var info = object
+      const info = object
       if (annotateMethod) {
-        var extraFeatures = this[annotateMethod](annotateObject)
+        const extraFeatures = this[annotateMethod](annotateObject)
         if (extraFeatures) {
-          info['tiers'].push(extraFeatures)
+          info.tiers.push(extraFeatures)
         }
       }
       this.slideOverSubject = info
@@ -33,51 +33,56 @@ export default {
     },
     addConflictsAnnotation: function (item) {
       return {
-        'features': [
+        features: [
           this.getClashesForSlideOver(item),
           null,
-          this.getHistoriesForSlideOver(item)
-        ]
+          this.getHistoriesForSlideOver(item),
+        ],
       }
     },
-    adjShortName(name) {
-      var names = name.split(" ")
+    adjShortName (name) {
+      const names = name.split(' ')
       if (names.length > 1) {
-        var lastname = names[names.length - 1]
-        var firstNames = name.split(" " + lastname).join('')
-        return firstNames + " " + lastname[0]
+        const lastname = names[names.length - 1]
+        const firstNames = name.split(` ${lastname}`).join('')
+        return `${firstNames} ${lastname[0]}`
       }
-      return names.join(" ")
+      return names.join(' ')
     },
     getClashesForSlideOver: function (item) {
-      var clashes = item.conflicts.clashes
+      const clashes = item.conflicts.clashes
+      const formattedClashes = []
+      const self = this
+
       if (_.isUndefined(clashes) || !clashes) { return [] }
-      var formattedClashes = []
-      var self = this
-      _.forEach(clashes, function (clashesList, clashesType) {
-        _.forEach(clashesList, function (clash) {
-          var clashName = false
+
+      _.forEach(clashes, (clashesList, clashesType) => {
+        _.forEach(clashesList, (clash) => {
+          let clashName = false
+          let clashIcon = ''
+
           if (clashesType === 'team') {
             if (!_.isUndefined(self.teamsById[clash.id])) {
-              var clashName = self.teamsById[clash.id].short_name
-              var clashIcon = 'message-circle'
+              clashName = self.teamsById[clash.id].short_name
+              clashIcon = 'message-circle'
             }
           } else if (clashesType === 'adjudicator') {
             if (!_.isUndefined(self.adjudicatorsById[clash.id])) {
-              var clashName = self.adjShortName(self.adjudicatorsById[clash.id].name)
-              var clashIcon = 'user'
+              clashName = self.adjShortName(self.adjudicatorsById[clash.id].name)
+              clashIcon = 'user'
             }
           } else if (clashesType === 'institution') {
             if (!_.isUndefined(self.institutionsById[clash.id])) {
-              var clashName = self.institutionsById[clash.id].code
-              var clashIcon = 'globe'
+              clashName = self.institutionsById[clash.id].code
+              clashIcon = 'globe'
             }
           }
           // Institution/Teams/Adjs may be clashed but not present in this draw
           if (clashName) {
             formattedClashes.push({
-              'title': clashName, 'class': 'conflictable hover-' + clashesType,
-              'icon': clashIcon
+              title: clashName,
+              class: `conflictable hover-${clashesType}`,
+              icon: clashIcon,
             })
           }
         })
@@ -85,33 +90,38 @@ export default {
       return formattedClashes
     },
     getHistoriesForSlideOver: function (item) {
-      var histories = item.conflicts.histories
+      let histories = item.conflicts.histories
+      const formattedHistories = []
       if (_.isUndefined(histories) || !histories) { return [] }
-      var formattedHistories = []
-      var self = this
-      _.forEach(histories, function (historiesList, historiesType) {
-        _.forEach(historiesList, function (history) {
+      const self = this
+
+      _.forEach(histories, (historiesList, historiesType) => {
+        _.forEach(historiesList, (history) => {
+          let historyName = false
+
           if (historiesType === 'team') {
             if (_.isUndefined(self.teamsById[history.id])) {
-              var historyName = false // Saw someone not in current draw
+              historyName = false // Saw someone not in current draw
             } else {
-              var historyName = self.teamsById[history.id].short_name
+              historyName = self.teamsById[history.id].short_name
             }
           } else if (historiesType === 'adjudicator') {
             if (_.isUndefined(self.adjudicatorsById[history.id])) {
-              var historyName = false // Saw someone not in current draw
+              historyName = false // Saw someone not in current draw
             } else {
-              var historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
+              historyName = self.adjShortName(self.adjudicatorsById[history.id].name)
             }
           }
           // Only push if the team/adj is present in the draw
           if (historyName) {
-            var css = 'conflictable hover-histories-' + history.ago + '-ago'
+            let css = `conflictable hover-histories-${history.ago}-ago`
             // Only show last 2 rounds for small screens
             if (history.ago > 2) { css += ' visible-lg-block' }
             formattedHistories.push({
-              'title': historyName, 'ago': history.ago,
-              'class': css, 'type': historiesType
+              title: historyName,
+              ago: history.ago,
+              class: css,
+              type: historiesType,
             })
           }
         })
@@ -123,23 +133,25 @@ export default {
       }
 
       // Order by rounds;
-      var histories = _.sortBy(formattedHistories, [function (h) {
+      histories = _.sortBy(formattedHistories, [function (h) {
         return h.ago
       }])
 
       // Add initial and subsequent round counter
       histories.splice(0, 0, {
-        'title': '-' + histories[0].ago, 'icon': 'clock',
-        'class': histories[0].ago > 2 ? ' visible-lg-block' : ' '
+        title: `-${histories[0].ago}`,
+        icon: 'clock',
+        class: histories[0].ago > 2 ? ' visible-lg-block' : ' ',
       })
 
-      _.forEach(histories, function (history, i) {
-        if (_.isUndefined(history['icon'])) {
+      _.forEach(histories, (history, i) => {
+        if (_.isUndefined(history.icon)) {
           if (!_.isUndefined(histories[i + 1])) {
             if (histories[i + 1].ago !== history.ago) {
               histories.splice(i + 1, 0, {
-                'title': '-' + histories[i + 1].ago, 'icon': 'clock',
-                'class': histories[i + 1].ago > 2 ? ' visible-lg-block' : ' '
+                title: `-${histories[i + 1].ago}`,
+                icon: 'clock',
+                class: histories[i + 1].ago > 2 ? ' visible-lg-block' : ' ',
               })
             }
           }
@@ -150,11 +162,11 @@ export default {
       histories = histories.slice(0, 15)
 
       // Remove trailing round indicator if it's the last element
-      if (!_.isUndefined(_.last(histories)['icon'])) {
+      if (!_.isUndefined(_.last(histories).icon)) {
         histories.pop()
       }
       return histories
-    }
-  }
+    },
+  },
 }
 </script>

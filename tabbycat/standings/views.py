@@ -379,6 +379,15 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
     def get_metrics(self):
         return ('replies_avg',), ('replies_stddev', 'replies_count')
 
+    def get_rank_filter(self):
+        missable_replies = self.tournament.pref('standings_missed_replies')
+        if missable_replies < 0:
+            return None  # no limit
+        total_prelim_rounds = self.tournament.round_set.filter(
+            stage=Round.STAGE_PRELIMINARY, seq__lte=self.round.seq).count()
+        minimum_replies_needed = total_prelim_rounds - missable_replies
+        return lambda info: info.metrics["replies_count"] >= minimum_replies_needed
+
     def add_round_results(self, standings, rounds):
         add_speaker_round_results(standings, rounds, self.tournament, replies=True)
         self.cast_round_results(standings, rounds, 'reply_score_step')
@@ -394,7 +403,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
 
 
 class ReplyStandingsView(AdministratorMixin, BaseReplyStandingsView):
-    pass
+    template_name = 'reply_standings.html'  # add an info alert
 
 
 class PublicReplyTabView(PublicTabMixin, BaseReplyStandingsView):
@@ -554,6 +563,7 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
     public_page_preference = 'public_team_standings'
     page_title = gettext_lazy("Current Team Standings")
     page_emoji = '🌟'
+    cache_timeout = settings.PUBLIC_SLOW_CACHE_TIMEOUT
 
     def get_rounds(self):
         if not hasattr(self, '_rounds'):
@@ -582,15 +592,17 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
 
         # Can't use prefetch.populate_win_counts, since that doesn't exclude
         # silent rounds and future rounds appropriately
-        add_team_round_results_public(teams, rounds)
+        opponents = self.tournament.pref('teams_in_debate') == 'two'
+        add_team_round_results_public(teams, rounds, opponents=opponents)
 
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, getattr(t, name_attr)))
         key, title = ('points', _("Points")) if self.tournament.pref('teams_in_debate') == 'bp' else ('wins', _("Wins"))
+        header = {'key': key, 'tooltip': title, 'icon': 'bar-chart'}
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column({'key': key, 'title': title}, [team.points for team in teams])
+        table.add_column(header, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
         return table

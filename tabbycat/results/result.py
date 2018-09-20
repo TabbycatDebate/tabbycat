@@ -348,7 +348,7 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
             position__in=self.positions,
-        ).select_related('speaker')
+        ).select_related('speaker', 'debate_team')
 
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
@@ -428,7 +428,8 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
                 side_dict["win_style"] = "success" if sheet.winner() == side else "danger"
             elif hasattr(sheet, 'rank'):
                 rank = sheet.rank(side)
-                side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+                if rank:
+                    side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
 
             for pos, pos_name in zip(self.positions, pos_names):
                 side_dict["speakers"].append({

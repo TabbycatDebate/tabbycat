@@ -36,6 +36,7 @@ As a general principle, Tabbycat requires all ballots to be looked at by two peo
   - Don't forget to check the winner against the ballot! If the adjudicator gets it wrong, it's worth asking to clarify.
   - It can be helpful to think about the room layout to maximize efficiency.
   - Some tab rooms like to assign some to data entry and some to verification. This isn't really necessary, since Tabbycat doesn't let the same person enter and verify the same ballot. (This is one of many reasons why every person should have their own account.)
+  - Emails can be configured to be sent to adjudicators as a receipt of their ballot once confirmed.
 
 Duplicate/Swing Speeches
 ------------------------
@@ -66,9 +67,9 @@ There are two methods of allowing ballots and feedback to be submitted online. B
 Private URLs
 ------------
 
-The first method of data entry is using 'private URLs'. When this setting is enabled you can create a special URL that is unique to a particular team or adjudicator. This link contains a number of random characters and is not displayed publicly; it is in effect a secret that only that particular participant should know. Presuming people do not share these links to others this provides a means to (relatively) securely identify who is submitting what information. Because Tabbycat knows which team or adjudicator has which URL it will only allow them to submit feedback/ballots for debates that they were speakers/adjudicators in.
+The first method of data entry is using 'private URLs'. When this setting is enabled you can create a special URL that is unique to a participant. This link contains a number of random characters and is not displayed publicly; it is in effect a secret that only that a specific participant should know. Presuming people do not share these links to others, this provides a means to (relatively) securely identify who is submitting what information. Because Tabbycat knows which participant has which URL it will only allow them to submit feedback/ballots for debates that they were speakers/adjudicators in.
 
-.. warning:: Private URLs should provide more than adequate security for almost all tournaments' purposes, but they aren't foolproof. Anyone with access to the URL for a participant can submit feedback from them, so it's important that participants not share their URLs. This also means participants need to be careful when submitting from devices they do not own, because the URL will be logged in that device's browser history.
+.. warning:: Private URLs should provide more than adequate security for almost all tournaments' purposes, but they aren't foolproof. Anyone with access to the URL for a participant can submit feedback or ballots on their behalf, so it's important that participants not share their URLs. This also means participants need to be careful when submitting from devices they do not own, because the URL will be logged in that device's browser history.
 
 These links must be generated within Tabbycat after the preference is enabled. To do so go to the **Feedback** section and then the **Private URLs** area. Once there you will be prompted to generate those URLs for all participants, which — once generated — will be presented in separate tables (one for teams; one for adjudicators).
 
@@ -76,11 +77,11 @@ These links must be generated within Tabbycat after the preference is enabled. T
 
 These URLs can then be distributed to each person in a number of ways. There are pages within Tabbycat for printing them out (one URL per page labelled by recipient) or emailing them out (providing participants have been assigned email addresses). In the past tournaments have also used data from this table to send out SMSs by bulk, or distributed them to institutional representatives to disburse.
 
-.. tip:: You can assign email address to participants using the :ref:`importtournament command <importtournament-command>` when importing your registration data, or by going to the *Edit Data* area and looking up each Speaker/Adjudicator.
+.. tip::
 
-.. tip:: If, after generating the private URLs, you add additional Teams or Adjudicators you can go to the *Edit Data* area , look up each Speaker/Adjudicator, and type in a bunch of random characters as their *Url key* to assign them a private URL.
-
-.. tip:: You can delete the current set of URLs by running this command in a shell on your server (replacing TOURNAMENT_SLUG with the appropriate value):
+  - You can assign email address to participants using the :ref:`importtournament command <importtournament-command>` when importing your registration data, or by going to the *Edit Data* area and looking up each Speaker/Adjudicator.
+  - If, after generating the private URLs, you add additional Teams or Adjudicators you can go to the *Edit Database* area , look up each Speaker/Adjudicator, and type in a bunch of random characters as their *Url key* to assign them a private URL.
+  - You can delete the current set of URLs by running this command in a shell on your server (replacing TOURNAMENT_SLUG with the appropriate value):
     ``python manage.py randomisedurls delete --tournament TOURNAMENT_SLUG``
 
 

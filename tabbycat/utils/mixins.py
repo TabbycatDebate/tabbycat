@@ -1,7 +1,9 @@
+import os
 import logging
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import connection
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin
@@ -43,9 +45,10 @@ class TabbycatPageTitlesMixin(ContextMixin):
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for administrators.
     Requires use to be a superuser."""
+    view_role = "admin"
 
     def get_context_data(self, **kwargs):
-        kwargs["user_role"] = "admin"
+        kwargs["user_role"] = self.view_role
         return super().get_context_data(**kwargs)
 
     def test_func(self):
@@ -54,16 +57,40 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
 
 class AssistantMixin(LoginRequiredMixin, ContextMixin):
     """Mixin for views that are for assistants."""
+    view_role = "assistant"
 
     def get_context_data(self, **kwargs):
-        kwargs["user_role"] = "assistant"
+        kwargs["user_role"] = self.view_role
+        return super().get_context_data(**kwargs)
+
+
+class WarnAboutDatabaseUseMixin(ContextMixin):
+    """Mixin for views that should stop people exceeding database counts.
+
+    If a user has hit 8000 rows they have received Heroku's shut down
+    notification. They are probably fine to finish current tournament even if it
+    exceeds these limits because of the one-week grace period. However they
+    should not create new tournaments as this typically happens after the grace
+    period and is thus subject to major disruptions."""
+
+    def get_database_row_count(self):
+        cursor = connection.cursor()
+        cursor.execute("SELECT schemaname,relname,n_live_tup FROM pg_stat_user_tables ORDER BY n_live_tup DESC;")
+        return sum([row[2] for row in cursor.fetchall()])
+
+    def get_context_data(self, **kwargs):
+        if 'DATABASE_URL' in os.environ and self.request.user.is_authenticated:
+            rows = self.get_database_row_count()
+            if rows >= 8000:
+                kwargs['database_rows_used'] = rows
+
         return super().get_context_data(**kwargs)
 
 
 class CacheMixin:
-    """Mixin for views that cache the page."""
+    """Mixin for views that cache the page and need to update quickly."""
 
-    cache_timeout = settings.PUBLIC_PAGE_CACHE_TIMEOUT
+    cache_timeout = settings.PUBLIC_FAST_CACHE_TIMEOUT
 
     @method_decorator(cache_page(cache_timeout))
     def dispatch(self, *args, **kwargs):

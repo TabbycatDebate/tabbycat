@@ -1,9 +1,15 @@
 {% extends "base.html" %}
-{% load static %}
-{% load debate_tags %}
+{% load static debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🏪</span> Edit Venues for {{ round.abbreviation }}{% endblock %}
-{% block page-title %}🏪Edit Venues for {{ round.abbreviation }}{% endblock %}
+{% block head-title %}<span class="emoji">🏪</span>
+  {% blocktrans trimmed with round_abbr=round.abbreviation %}
+  Edit Venues for {{ round_abbr }}
+  {% endblocktrans %}
+{% endblock %}
+{% block page-title %}🏪
+  {% blocktrans trimmed with round_abbr=round.abbreviation %}
+  Edit Venues for {{ round_abbr }}
+  {% endblocktrans %}{% endblock %}
 
 {% block content %}
   <div id="vueMount">

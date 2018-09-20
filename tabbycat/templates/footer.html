@@ -1,7 +1,7 @@
 {% load debate_tags static i18n cache %}
 {% get_current_language as LANGUAGE_CODE %}
 
-{% cache 120 footer tournament LANGUAGE_CODE %}
+{% cache 600 footer tournament LANGUAGE_CODE %}
 <div class="row mt-3">
 
   <div class="navbar navbar-light container-fluid small">
@@ -10,7 +10,6 @@
 
       <div class="col-lg-6 col-md-5">
         <h6 class="d-inline-block">
-          <img src="{% static 'logo.svg' %}" width="28" height="24" style="margin-top: -14px;">
           {% if tournament and tabbycat_codename %}
             {% blocktrans trimmed %}{{ tournament }} runs on Tabbycat {{ tabbycat_version }} ({{ tabbycat_codename }}) {% endblocktrans %}
           {% else %}
@@ -52,7 +51,7 @@
         <h6 class="d-inline-block">{% blocktrans trimmed %}Need ballots?{% endblocktrans %}</h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
-            You can <a href="https://tabbycatdebate.github.io/debate-ballots/" target="_blank"> customise and print</a> great ballots from your browser.
+            You can <a href="https://tabbycatdebate.github.io/debate-ballots/" rel="noreferrer" target="_blank"> customise and print</a> great ballots from your browser.
           {% endblocktrans %}
         </p>
       </div>
@@ -64,7 +63,7 @@
           <li class="nav-item p-2">
             <i data-feather="globe"></i>
             <a class="nav-link p-0 d-inline-block" href="#" data-toggle="modal" data-target="#setLanguageModal">
-              Language / Idioma / Langue / لُغَة
+              Language / Idioma / Langue / 言語 / لُغَة
             </a>
           </li>
           <li class="nav-item p-2">

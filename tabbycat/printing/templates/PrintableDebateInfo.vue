@@ -16,7 +16,7 @@
               <template v-if="da.position === 'o'">(Solo Chair, </template>
               <template v-if="da.position === 'p'">(Panellist, </template>
               <template v-if="da.position === 't'">(Trainee, </template>
-              {{ getAdjudicatorInstitution(da) }})
+              {{ getAdjudicatorInstitution(da) }}).
             </span>
           </span>
 
@@ -41,18 +41,45 @@
       </div>
 
       <!-- No motion selection; but a motion has been entered. I.E. BP/Joynt -->
-      <div v-if="!roundInfo.hasMotions && roundInfo.motions.length > 0"
+      <div v-if="!roundInfo.hideMotions && !roundInfo.hasMotions && roundInfo.motions.length > 0"
            class="db-flex-item-1 pt-2">
         The motion is <em>{{ roundInfo.motions[0].text }}.</em>
       </div>
 
-      <!-- Has motion selection; but no motions entered. I.E. Australs -->
+      <!-- No need to worry about if there is not motion selection and no motions
+           have been entered; there's no use recording/providing the motion -->
+
+      <!-- Has motion selection; but not vetoes — no defined format -->
       <div v-if="roundInfo.hasMotions && !roundInfo.hasVetoes"
            class="db-flex-item-1 pt-2">
-        <div class="db-flex-item db-align-vertical-center" v-if="roundInfo.motions.length > 0">
+        <div v-if="roundInfo.motions.length > 1" class="db-flex-item db-align-vertical-center">
+          <template v-for="choice_type in ['Debated']">
+            <div class="d-flex flex-column justify-content-end">
+              <div class="text-center pb-2">Circle {{ choice_type }}</div>
+              <div class="d-flex text-monospace">
+                <div v-for="motion in motionsAccountingForBlanks"
+                     class="db-align-horizontal-center db-align-vertical-start
+                            db-flex-item-1 db-center-text m-1">
+                  <span class="db-circle">{{ motion.seq }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="db-item-gutter"></div>
+          </template>
+          <div class="flex-fill" v-if="!roundInfo.hideMotions">
+            <div class="db-flex-item db-align-vertical-center"
+                 v-for="motion in roundInfo.motions">
+              <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
+            </div>
+          </div>
+        </div>
+        <div v-if="!roundInfo.hideMotions && roundInfo.motions.length === 1"
+             class="db-flex-item db-align-vertical-center">
+          <!-- There shouldn't only be one motion if selection is on; but useful as fallback? -->
           The motion is <em>{{ roundInfo.motions[0].text }}</em>
         </div>
-        <div v-else class="db-flex-item db-fill-in pt-3">
+        <div v-if="roundInfo.hideMotions || roundInfo.motions.length === 0"
+             class="db-flex-item db-fill-in pt-3">
           Motion is:
         </div>
       </div>
@@ -65,7 +92,8 @@
             <div class="text-center pb-2">Circle {{ choice_type }}</div>
             <div class="d-flex text-monospace">
               <div v-for="motion in motionsAccountingForBlanks"
-                   class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text m-1">
+                   class="db-align-horizontal-center db-align-vertical-start
+                          db-flex-item-1 db-center-text m-1">
                 <span class="db-circle">{{ motion.seq }}</span>
               </div>
             </div>
@@ -74,10 +102,12 @@
         </template>
         <div class="flex-fill">
           <div class="db-flex-item db-align-vertical-center"
-               v-for="(motion, index) in roundInfo.motions">
+               v-for="motion in roundInfo.motions"
+               v-if="!roundInfo.hideMotions">
             <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
           </div>
-          <div v-if="roundInfo.motions.length === 0" class="d-flex">
+          <div class="d-flex"
+               v-if="roundInfo.motions.length === 0 || roundInfo.hideMotions">
             <div class="flex-fill db-fill-in strong mr-3 pt-3 mt-2"
                  v-for="choice_type in ['1', '2', '3', ]">
               {{ choice_type }}:
@@ -86,13 +116,20 @@
         </div>
       </div>
 
-
     </div>
 
     <template v-if="ballot.authorPosition === 'c' || ballot.authorPosition === 'o'">
       <div class="db-item-gutter"></div>
       <div class="db-flex-static d-flex align-content-center">
-        <img :id="ballot.barcode" class="barcode-placeholder">
+        <svg :id="ballot.barcode" class="barcode-placeholder"
+             :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
+             jsbarcode-width="2.5" jsbarcode-height="85"
+             v-if="roundInfo.hasMotions && roundInfo.hasVetoes">
+        </svg>
+        <svg :id="ballot.barcode" class="barcode-placeholder"
+             :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
+             jsbarcode-width="2.5" jsbarcode-height="60" v-else>
+        </svg>
       </div>
     </template>
 
@@ -108,14 +145,12 @@
       </div>
     </div>
 
-
   </section>
 
 </template>
 
 <script>
 import _ from 'lodash'
-import JsBarcode from 'jsbarcode'
 
 import PrintableTeamScores from './PrintableTeamScores.vue'
 
@@ -124,7 +159,7 @@ export default {
   components: { PrintableTeamScores },
   methods: {
     getAdjudicatorInstitution: function (debateAdjudicator) {
-      var institution = debateAdjudicator.adjudicator.institution
+      const institution = debateAdjudicator.adjudicator.institution
       if (!_.isUndefined(institution) && institution !== null) {
         return institution.code
       }
@@ -133,26 +168,23 @@ export default {
     scoreDisplay: function (number) {
       if (number % 1 === 0) {
         return Math.round(number)
-      } else {
-        return number
       }
+      return number
     },
     getDisplayStep: function (number) {
       if (number % 1 === 0) {
-        return "no ½ marks"
+        return 'no ½ marks'
       } else if (number % 0.5 === 0) {
-        return "½ marks are allowed"
-      } else {
-        return "decimal marks are allowed"
+        return '½ marks are allowed'
       }
-    }
+      return 'decimal marks are allowed'
+    },
   },
   computed: {
     panellistsExcludingSelf: function () {
-      var ballotSource = this.ballot.author
-      var authoringPanellist = _.find(this.ballot.debateAdjudicators, function (panellist) {
-        return panellist.adjudicator.name === ballotSource
-      });
+      const ballotSource = this.ballot.author
+      const ballotAdjs = this.ballot.debateAdjudicators
+      const authoringPanellist = _.find(ballotAdjs, p => p.adjudicator.name === ballotSource)
       if (!_.isUndefined(authoringPanellist)) {
         return _.without(this.ballot.debateAdjudicators, authoringPanellist)
       }
@@ -164,22 +196,6 @@ export default {
       }
       return [{ seq: 1 }, { seq: 2 }, { seq: 3 }]
     },
-  },
-  mounted: function () {
-    var height = 60
-    if (this.roundInfo.hasMotions && this.roundInfo.hasVetoes) {
-      height = 85 // Blow out the height to the big veto box has space
-    }
-    $(".barcode-placeholder").each(function () {
-      var code = $(this).attr('id')
-      $(this).JsBarcode(code, {
-        width: 2.5,
-        height: height,
-        text: code,
-        displayValue: false,
-        margin: 0,
-      })
-    })
   },
 }
 </script>

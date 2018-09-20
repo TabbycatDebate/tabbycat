@@ -1,0 +1,110 @@
+# Tabbycat translations, JavaScript strings
+# Copyright (C) 2018 Tabbycat developers and translators
+# This file is distributed under the same license as the Tabbycat package.
+# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-14 04:50+1100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language-Team: Portuguese (https://www.transifex.com/tabbycat-jp/teams/86216/pt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/tables/TablesContrainer.vue:8
+msgid "Find in Table"
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:30
+msgid "Set All Breaking as Available"
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:36
+msgid ""
+"Set all the availabilities to exactly match what they were in the previous "
+"round."
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:37
+msgid "Match"
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:41
+msgid "Set all availabilities to exactly match check-ins."
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:44
+msgid "Match Check-Ins"
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue
+msgid ""
+"Set people as available only if they have a check-in and are currently "
+"unavailable — i.e. it will not overwrite any existing availabilities."
+msgstr ""
+
+#: templates/tables/CheckboxTables.vue:47
+msgid "Copy From Check-Ins"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:6
+msgid "Speaker Demographics"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:11
+msgid "No Gender Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:18
+msgid "No Speaker Categories Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:33
+msgid "Speaker Results"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:36
+msgid "speakers with gender data"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:38
+msgid "speaker scores total"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:49
+msgid "No Region Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:56
+msgid "Adjudicator Demographics"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:68
+msgid "No Position Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:83
+msgid "Adjudicator Results"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:86
+msgid "adjudicators with gender data"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:88
+msgid "feedback scores total"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:94
+msgid "No Adjudicator Ratings Information"
+msgstr ""
+
+#: participants/templates/DiversityContrainer.vue:99
+msgid "No Adjudicator-Adjudicator Feedback Information"
+msgstr ""

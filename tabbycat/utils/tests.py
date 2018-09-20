@@ -5,7 +5,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.urls import reverse
-from django.test import Client, modify_settings, override_settings, tag, TestCase
+from django.test import Client, tag, TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -48,27 +48,23 @@ class TournamentTestsMixin:
     fixtures = ['completed_demo.json']
     round_seq = None
 
-    def get_tournament(self):
+    def identify_tournament(self):
         return Tournament.objects.first()
 
     def setUp(self):
         super().setUp()
-        self.t = self.get_tournament()
+        self.t = self.identify_tournament()
         self.client = Client()
 
     def get_view_url(self, provided_view_name):
         return reverse(provided_view_name, kwargs=self.get_url_kwargs())
 
     def get_url_kwargs(self):
-        t = self.get_tournament()
-        kwargs = {'tournament_slug': t.slug}
+        kwargs = {'tournament_slug': self.identify_tournament().slug}
         if self.round_seq is not None:
             kwargs['round_seq'] = self.round_seq
         return kwargs
 
-    # Remove whitenoise middleware as it won't resolve on Travis
-    @override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
-    @modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
     def get_response(self):
         cache.clear() # overriding the CACHE setting itself isn't enough
         return self.client.get(self.get_view_url(self.view_name), kwargs=self.get_url_kwargs())
@@ -157,9 +153,6 @@ class ConditionalTournamentViewLoadTest(ConditionalTournamentTestsMixin):
         return True
 
 
-# Remove whitenoise middleware as it won't resolve on Travis
-@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
-@modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
 class TournamentTestCase(TournamentTestsMixin, TestCase):
     """Extension of django.test.TestCase that provides methods for testing a
     populated view on a tournament, with a prepopulated database.
@@ -262,8 +255,6 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         super().tearDownClass()
 
 
-@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
-@modify_settings(MIDDLEWARE={'remove': ['whitenoise.middleware.WhiteNoiseMiddleware']})
 class SeleniumTournamentTestCase(TournamentTestsMixin, SeleniumTestCase):
     """ Basically reimplementing BaseTournamentTest; but use cls not self """
 
