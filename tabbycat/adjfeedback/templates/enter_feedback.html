@@ -22,6 +22,15 @@
     {% include "components/alert.html" with type="info" %}
   {% endif %}
 
+  {% if source_type == 'team' %}
+    {% if pref.feedback_from_teams == 'orallist' %}
+      {% trans "This tournament expects you to submit feedback <strong>only on the adjudicator who delivered the adjudication</strong>. Do not submit feedback on other adjudicators." as message %}
+    {% else %}
+      {% trans "This tournament expects you to submit feedback on all of the adjudicators on the panel (including trainees)." as message %}
+    {% endif %}
+    {% include "components/alert.html" with type="info" %}
+  {% endif %}
+
   <form id="feedbackForm" method="POST">
     {% csrf_token %}
 

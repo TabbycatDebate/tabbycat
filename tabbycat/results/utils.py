@@ -6,6 +6,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from draw.models import Debate
+from options.utils import use_team_code_names
 from tournaments.utils import get_side_name
 
 logger = logging.getLogger(__name__)
@@ -27,15 +28,16 @@ def get_status_meta(debate):
 def readable_ballotsub_result(ballotsub):
     """ Make a human-readable representation of a debate result """
 
-    def format_dt(dt, t):
+    def format_dt(dt, t, use_codes):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
         return _("%(team_name)s as %(side_abbr)s") % {
-            'team_name': dt.team.short_name,
+            'team_name': dt.team.code_name if use_codes else dt.team.short_name,
             'side_abbr': dt.get_side_name(t, 'abbr')
         }
 
     t = ballotsub.debate.round.tournament
     team_scores = ballotsub.teamscore_set.all()
+    use_codes = use_team_code_names(t, True)
 
     try:
         if t.pref('teams_in_debate') == 'two':
@@ -49,12 +51,12 @@ def readable_ballotsub_result(ballotsub):
 
             result_winner = _("%(winner)s (%(winner_side)s) won")
             result_winner = result_winner % {
-                'winner': winner.team.short_name,
+                'winner': winner.team.code_name if use_codes else winner.team.short_name,
                 'winner_side': winner.get_side_name(t, 'abbr'),
             }
             result = _("vs %(loser)s (%(loser_side)s)")
             result = result % {
-                'loser': loser.team.short_name,
+                'loser': loser.team.code_name if use_codes else loser.team.short_name,
                 'loser_side': loser.get_side_name(t, 'abbr'),
             }
 
@@ -69,11 +71,11 @@ def readable_ballotsub_result(ballotsub):
 
             result_winner = _("Advancing: %(advancing_list)s<br>\n")
             result_winner = result_winner % {
-                'advancing_list': ", ".join(format_dt(dt, t) for dt in advancing)
+                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in advancing)
             }
             result = _("Eliminated: %(eliminated_list)s")
             result = result % {
-                'eliminated_list': ", ".join(format_dt(dt, t) for dt in eliminated),
+                'eliminated_list': ", ".join(format_dt(dt, t, use_codes) for dt in eliminated),
             }
 
         else:  # BP preliminary round
@@ -82,19 +84,23 @@ def readable_ballotsub_result(ballotsub):
                 ordered[teamscore.points] = teamscore.debate_team
 
             result_winner = _("1st: %(first_team)s<br>\n")
-            result_winner = result_winner % {'first_team':  format_dt(ordered[3], t)}
+            result_winner = result_winner % {'first_team':  format_dt(ordered[3], t, use_codes)}
             result = _("2nd: %(second_team)s<br>\n"
                        "3rd: %(third_team)s<br>\n"
                        "4th: %(fourth_team)s")
             result = result % {
-                'second_team': format_dt(ordered[2], t),
-                'third_team':  format_dt(ordered[1], t),
-                'fourth_team': format_dt(ordered[0], t),
+                'second_team': format_dt(ordered[2], t, use_codes),
+                'third_team':  format_dt(ordered[1], t, use_codes),
+                'fourth_team': format_dt(ordered[0], t, use_codes),
             }
 
     except (IndexError, AttributeError):
         logger.warning("Error constructing latest result string", exc_info=True)
-        result_winner = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
+        if use_codes:
+            matchup = ballotsub.debate.matchup_codes
+        else:
+            matchup = ballotsub.debate.matchup
+        result_winner = _("Error with result for %(debate)s") % {'debate': matchup}
         result = ""
 
     return result_winner, result

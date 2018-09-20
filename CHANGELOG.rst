@@ -4,11 +4,11 @@ Change Log
 
 2.2.0 (Khao Manee)
 ------------------
-*Release date: TBD*
+*Release date: 20 September 2018*
 
 - Implemented a new server architecture on Heroku along with other optimisation that should significantly improve the performance of sites receiving lots of traffic. Note that if you are upgrading an existing Heroku instance this requires a few tweaks before you deploy the update:
     - Add the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
-    - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the `heroku stack:set heroku-16 --app APP_NAME` command
+    - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the ``heroku stack:set heroku-16 --app APP_NAME`` command
 - Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version
 - Added support for Japanese and Portuguese. Let us know if you'd like to help contribute translations for either language (or a new one)!
 - The results-entry page now updates its data live, giving you a more up to date look at data entry progress and reducing the cases of old data leading people to enter new ballots when they meant to confirm them
@@ -21,6 +21,7 @@ Change Log
     - Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds. The old "average speaker score" metric has been renamed to to "average total speaker score"
     - Reworked the ballots status graph to be an area chart
 - Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request!
+- Added the ability to unconfirm feedback from any of the views that show it
 - BP motion statistics now also show average points split by bench and half
 - Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments
 - Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file

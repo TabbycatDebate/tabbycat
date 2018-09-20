@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     colorclass: function (label) {
-      if (this.regions === null) {
+      if (this.regions === undefined) {
         return `gender-display gender-${label.toLowerCase()}`
       }
       return `region-display region-${label}`

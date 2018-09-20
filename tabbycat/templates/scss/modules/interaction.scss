@@ -32,15 +32,6 @@
   }
 }
 
-// Expand hover target by taking up the cells padding
-td > .touch-target {
-  margin: -8px -4px -8px -4px;
-
-  > .hover-target {
-    padding: 8px 4px; // Transfer padding to the element that triggers hovers
-  }
-}
-
 .popover {
   max-width: none; // Bootstrap defaults to 270
 

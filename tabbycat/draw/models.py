@@ -100,6 +100,20 @@ class Debate(models.Model):
         return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
                 for dt in self.debateteam_set.all()])
 
+    @property
+    def matchup_codes(self):
+        # Like matchup, but uses team codes. It is not as protected.
+        if not self.sides_confirmed:
+            teams_list = ", ".join([dt.team.code_name for dt in self.debateteam_set.all()])
+            return teams_list + gettext(" (sides not confirmed)")
+
+        try:
+            sides = self.round.tournament.sides
+            return gettext(" vs ").join(self.get_team(side).code_name for side in sides)
+        except (IndexError, ObjectDoesNotExist, MultipleObjectsReturned):
+            return ", ".join(["%s (%s)" % (dt.team.code_name, dt.get_side_display())
+                for dt in self.debateteam_set.all()])
+
     # --------------------------------------------------------------------------
     # Team properties
     # --------------------------------------------------------------------------
