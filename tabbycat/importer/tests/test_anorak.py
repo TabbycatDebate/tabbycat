@@ -91,7 +91,7 @@ class TestImporterAnorak(TestCase):
             fm.AdjudicatorTestScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorConflict: 3,
+            am.AdjudicatorTeamConflict: 3,
         })
         self.assertFalse(self.importer.errors)
 
@@ -155,7 +155,7 @@ class TestImporterAnorak(TestCase):
             fm.AdjudicatorTestScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorConflict: 3,
+            am.AdjudicatorTeamConflict: 3,
         })
         self.assertFalse(self.importer.errors)
 

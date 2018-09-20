@@ -403,7 +403,7 @@ class Adjudicator(Person):
         related_name='adj_inst_conflicts',
         verbose_name=_("institution conflicts"))
     conflicts = models.ManyToManyField('Team',
-        through='adjallocation.AdjudicatorConflict',
+        through='adjallocation.AdjudicatorTeamConflict',
         related_name='adj_adj_conflicts',
         verbose_name=_("team conflicts"))
 
@@ -437,8 +437,8 @@ class Adjudicator(Person):
         if not getattr(self, '_conflicts_populated', False):
             logger.debug("Populating conflict cache for %s", self)
             self._team_conflict_cache = [c.team_id
-                    for c in self.adjudicatorconflict_set.all()]
-            self._adjudicator_conflict_cache = [c.conflict_adjudicator_id
+                    for c in self.adjudicatorteamconflict_set.all()]
+            self._adjudicator_conflict_cache = [c.adjudicator2_id
                     for c in self.adjudicatoradjudicatorconflict_source_set.all()]
             self._institution_conflict_cache = [c.institution_id
                     for c in self.adjudicatorinstitutionconflict_set.all()]

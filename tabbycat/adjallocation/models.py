@@ -39,7 +39,7 @@ class DebateAdjudicator(models.Model):
         return '{} in {} ({})'.format(self.adjudicator, self.debate, self.get_type_display())
 
 
-class AdjudicatorConflict(models.Model):
+class AdjudicatorTeamConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
         verbose_name=_("adjudicator"))
     team = models.ForeignKey('participants.Team', models.CASCADE,
@@ -55,18 +55,18 @@ class AdjudicatorConflict(models.Model):
 
 
 class AdjudicatorAdjudicatorConflict(models.Model):
-    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_source_set",
+    adjudicator1 = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_source_set",
         verbose_name=_("adjudicator 1"))
-    conflict_adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_target_set",
+    adjudicator2 = models.ForeignKey('participants.Adjudicator', models.CASCADE, related_name="adjudicatoradjudicatorconflict_target_set",
         verbose_name=_("adjudicator 2"))
 
     class Meta:
         verbose_name = _("adjudicator-adjudicator conflict")
         verbose_name_plural = _("adjudicator-adjudicator conflicts")
-        unique_together = ('adjudicator', 'conflict_adjudicator')
+        unique_together = ('adjudicator1', 'adjudicator2')
 
     def __str__(self):
-        return '{} with {}'.format(self.adjudicator, self.conflict_adjudicator)
+        return '{} with {}'.format(self.adjudicator1, self.adjudicator2)
 
 
 class AdjudicatorInstitutionConflict(models.Model):
@@ -82,3 +82,18 @@ class AdjudicatorInstitutionConflict(models.Model):
 
     def __str__(self):
         return '{} with {}'.format(self.adjudicator, self.institution)
+
+
+class TeamInstitutionConflict(models.Model):
+    team = models.ForeignKey('participants.Team', models.CASCADE,
+        verbose_name=_("team"))
+    institution = models.ForeignKey('participants.Institution', models.CASCADE,
+        verbose_name=_("institution"))
+
+    class Meta:
+        verbose_name = _("team-institution conflict")
+        verbose_name_plural = _("team-institution conflicts")
+        unique_together = ('team', 'institution')
+
+    def __str__(self):
+        return '{} with {}'.format(self.team, self.institution)

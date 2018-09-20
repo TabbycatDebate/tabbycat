@@ -24,8 +24,8 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelForm
 
 from .allocator import allocate_adjudicators
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
-from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorConflict,
-                     AdjudicatorInstitutionConflict, DebateAdjudicator)
+from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+                     AdjudicatorTeamConflict, DebateAdjudicator)
 from .utils import get_clashes, get_histories
 
 from utils.misc import reverse_round
@@ -253,7 +253,7 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
 class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
-    formset_model = AdjudicatorConflict
+    formset_model = AdjudicatorTeamConflict
     page_title = gettext_lazy("Adjudicator-Team Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
     same_view = 'adjallocation-conflicts-adj-team'
@@ -288,13 +288,13 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
     same_view = 'adjallocation-conflicts-adj-adj'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
-    formset_factory_kwargs.update({'fields': ('adjudicator', 'conflict_adjudicator')})
+    formset_factory_kwargs.update({'fields': ('adjudicator1', 'adjudicator2')})
 
     def get_formset(self):
         formset = super().get_formset()
         all_adjs = self.tournament.adjudicator_set.order_by('name').all()
         for form in formset:
-            form.fields['conflict_adjudicator'].queryset = all_adjs # Order list by alpha
+            form.fields['adjudicator2'].queryset = all_adjs # Order list by alpha
         return formset
 
     def add_message(self, nsaved, ndeleted):

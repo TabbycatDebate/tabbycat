@@ -3,7 +3,8 @@ from itertools import permutations
 
 from django.db.models import Q
 
-from .models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict, DebateAdjudicator
+from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+                     AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
 
 from draw.models import DebateTeam
 
@@ -14,17 +15,21 @@ def adjudicator_conflicts_display(debates):
     conflicts between adjudicators and each other."""
 
     adjteamconflicts = {}
-    for conflict in AdjudicatorConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
+    for conflict in AdjudicatorTeamConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
         adjteamconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.team_id)
     adjinstconflicts = {}
     for conflict in AdjudicatorInstitutionConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
         adjinstconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.institution_id)
     adjadjconflicts = {}
-    for conflict in AdjudicatorAdjudicatorConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
-        adjadjconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.conflict_adjudicator_id)
+    for conflict in AdjudicatorAdjudicatorConflict.objects.filter(adjudicator1__debateadjudicator__debate__in=debates).distinct():
+        adjadjconflicts.setdefault(conflict.adjudicator1_id, []).append(conflict.adjudicator2_id)
+    teaminstconflicts = {}
+    for conflict in TeamInstitutionConflict.objects.filter(team__debateteam__debate__in=debates).select_related('institution').distinct():
+        teaminstconflicts.setdefault(conflict.team_id, []).append(conflict.institution)
 
     conflict_messages = {debate: [] for debate in debates}
     for debate in debates:
+
         for adjudicator in debate.adjudicators.all():
             for team in debate.teams:
                 if team.id in adjteamconflicts.get(adjudicator.id, []):
@@ -32,11 +37,13 @@ def adjudicator_conflicts_display(debates):
                         "Conflict: <strong>{adj}</strong> & <strong>{team}</strong>".format(
                             adj=adjudicator.name, team=team.short_name)
                     ))
-                if team.institution_id in adjinstconflicts.get(adjudicator.id, []):
-                    conflict_messages[debate].append(("danger",
-                        "Conflict: <strong>{adj}</strong> & institution <strong>{inst}</strong> ({team})".format(
-                            adj=adjudicator.name, team=team.short_name, inst=team.institution.code)
-                    ))
+
+                for institution in teaminstconflicts.get(team.id, []):
+                    if institution.id in adjinstconflicts.get(adjudicator.id, []):
+                        conflict_messages[debate].append(("danger",
+                            "Conflict: <strong>{adj}</strong> & institution <strong>{inst}</strong> ({team})".format(
+                                adj=adjudicator.name, team=team.short_name, inst=institution.code)
+                        ))
 
         for adj1, adj2 in permutations(debate.adjudicators.all(), 2):
             if adj2.id in adjadjconflicts.get(adj1.id, []):
@@ -92,18 +99,24 @@ def populate_clashes(conflicts, conflict, type, for_type):
     return conflicts
 
 
+# TODO: Update this to include team-institution conflicts
+
+
 def get_clashes(t, r):
     # Grab all clashes data as value lists of conflict-er and conflict-ee
-    filter = Q(adjudicator__tournament=t) | Q(adjudicator__tournament=None)
-    team_clashes = AdjudicatorConflict.objects.filter(
-        filter).values_list('adjudicator', 'team')
+    team_clashes = AdjudicatorTeamConflict.objects.filter(
+        Q(adjudicator__tournament=t) | Q(adjudicator__tournament=None)
+    ).values_list('adjudicator', 'team')
     institution_clashes = AdjudicatorInstitutionConflict.objects.filter(
-        filter).values_list('adjudicator', 'institution')
+        Q(adjudicator__tournament=t) | Q(adjudicator__tournament=None)
+    ).values_list('adjudicator', 'institution')
     adj_clashes_a = AdjudicatorAdjudicatorConflict.objects.filter(
-        filter).values_list('adjudicator', 'conflict_adjudicator')
+        Q(adjudicator1__tournament=t) | Q(adjudicator1__tournament=None)
+    ).values_list('adjudicator1', 'adjudicator2')
     # Adj-adj clashes need to be symmetric; so reverse the order
     adj_clashes_b = AdjudicatorAdjudicatorConflict.objects.filter(
-        filter).values_list('conflict_adjudicator', 'adjudicator')
+        Q(adjudicator2__tournament=t) | Q(adjudicator2__tournament=None)
+    ).values_list('adjudicator2', 'adjudicator1')
 
     # Make a dictionary of clashes with team or adj ID as key
     clashes = {'for_teams': {}, 'for_adjs': {}}

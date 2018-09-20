@@ -5,7 +5,8 @@ from django.utils.translation import ngettext
 from django.utils.translation import gettext_lazy as _
 
 from draw.models import TeamSideAllocation
-from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
+from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+                                  AdjudicatorTeamConflict, TeamInstitutionConflict)
 from adjfeedback.models import AdjudicatorTestScoreHistory
 from breakqual.models import BreakCategory
 from tournaments.models import Tournament
@@ -95,6 +96,21 @@ class TeamForm(forms.ModelForm):
         return categories
 
 
+class TeamInstitutionConflictInline(admin.TabularInline):
+    model = TeamInstitutionConflict
+    extra = 1
+
+
+class AdjudicatorTeamConflictInline(admin.TabularInline):
+    model = AdjudicatorTeamConflict
+    extra = 1
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'team':
+            kwargs["queryset"] = Team.objects.select_related('tournament')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
@@ -103,7 +119,8 @@ class TeamAdmin(admin.ModelAdmin):
     search_fields = ('reference', 'short_name', 'institution__name',
                      'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution', 'break_categories')
-    inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline)
+    inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
+               AdjudicatorTeamConflictInline, TeamInstitutionConflictInline)
     raw_id_fields = ('division', )
     actions = ['delete_url_key']
 
@@ -137,21 +154,11 @@ class TeamAdmin(admin.ModelAdmin):
 # Adjudicator
 # ==============================================================================
 
-class AdjudicatorConflictInline(admin.TabularInline):
-    model = AdjudicatorConflict
-    extra = 1
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'team':
-            kwargs["queryset"] = Team.objects.select_related('tournament')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
 class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
     model = AdjudicatorAdjudicatorConflict
-    fk_name = "adjudicator"
+    fk_name = "adjudicator1"
     extra = 1
-    raw_id_fields = ('conflict_adjudicator', )
+    raw_id_fields = ('adjudicator2',)
 
 
 class AdjudicatorInstitutionConflictInline(admin.TabularInline):
@@ -182,7 +189,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'name', 'institution')
     list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
-    inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
+    inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
     actions = ['delete_url_key']
 

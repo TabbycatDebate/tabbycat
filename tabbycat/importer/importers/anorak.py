@@ -275,7 +275,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     'adjudicator' : adjudicator,
                     'team'        : team,
                 }
-        self._import(f, am.AdjudicatorConflict, team_conflict_interpreter)
+        self._import(f, am.AdjudicatorTeamConflict, team_conflict_interpreter)
 
         def adj_conflict_interpreter(lineno, line):
             if not line.get('adj_conflicts'):
@@ -285,8 +285,8 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                 adj_name = adj_name.strip()
                 conflicted_adj = pm.Adjudicator.objects.get(name=adj_name)
                 yield {
-                    'adjudicator'               : adjudicator,
-                    'conflict_adjudicator'      : conflicted_adj,
+                    'adjudicator1' : adjudicator,
+                    'adjudicator2' : conflicted_adj,
                 }
         self._import(f, am.AdjudicatorAdjudicatorConflict, adj_conflict_interpreter)
 

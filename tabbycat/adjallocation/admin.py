@@ -1,12 +1,8 @@
 from django.contrib import admin
 
-from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorConflict,
-                     AdjudicatorInstitutionConflict, DebateAdjudicator)
+from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+                     AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
 
-
-# ==============================================================================
-# Debate Adjudicators
-# ==============================================================================
 
 @admin.register(DebateAdjudicator)
 class DebateAdjudicatorAdmin(admin.ModelAdmin):
@@ -15,12 +11,8 @@ class DebateAdjudicatorAdmin(admin.ModelAdmin):
     raw_id_fields = ('debate',)
 
 
-# ==============================================================================
-# Adjudicator Team Conflicts
-# ==============================================================================
-
-@admin.register(AdjudicatorConflict)
-class AdjudicatorConflictAdmin(admin.ModelAdmin):
+@admin.register(AdjudicatorTeamConflict)
+class AdjudicatorTeamConflictAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'team')
     list_select_related = ('adjudicator__institution', 'team__tournament')
     search_fields = ('adjudicator__name', 'team__short_name', 'team__long_name')
@@ -31,24 +23,23 @@ class AdjudicatorConflictAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-# ==============================================================================
-# Adjudicator Adjudicator Conflicts
-# ==============================================================================
-
 @admin.register(AdjudicatorAdjudicatorConflict)
 class AdjudicatorAdjudicatorConflictAdmin(admin.ModelAdmin):
-    list_display = ('adjudicator', 'conflict_adjudicator')
-    list_select_related = ('adjudicator__institution', 'conflict_adjudicator__institution')
-    search_fields = ('adjudicator__name', 'conflict_adjudicator__name',
-                     'adjudicator__institution', 'conflict_adjudicator__institution')
+    list_display = ('adjudicator1', 'adjudicator2')
+    list_select_related = ('adjudicator1__institution', 'adjudicator2__institution')
+    search_fields = ('adjudicator1__name', 'adjudicator2__name',
+                     'adjudicator1__institution', 'adjudicator2__institution')
 
-
-# ==============================================================================
-# AdjudicatorConflict
-# ==============================================================================
 
 @admin.register(AdjudicatorInstitutionConflict)
 class AdjudicatorInstitutionConflictAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'institution')
     list_select_related = ('adjudicator__institution', 'institution')
     search_fields = ('adjudicator__name', 'institution__name')
+
+
+@admin.register(TeamInstitutionConflict)
+class TeamInstitutionConflictAdmin(admin.ModelAdmin):
+    list_display = ('team', 'institution')
+    list_select_related = ('team__institution', 'institution')
+    search_fields = ('team__short_name', 'team__long_name', 'institution__name')
