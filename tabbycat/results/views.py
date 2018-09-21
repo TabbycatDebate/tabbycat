@@ -522,7 +522,7 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
     template_name = 'public_ballot_set.html'
 
     def matchup_description(self, debate):
-        if use_team_code_names(self.tournament, self.tabroom):
+        if use_team_code_names(self.tournament, False):
             return debate.matchup_codes
         else:
             return debate.matchup

@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.2.1
+-----
+*Release date: 21 September 2018*
+
+- Fix issue causing public views of release scoresheets to throw errors
+
+
 2.2.0 (Khao Manee)
 ------------------
 *Release date: 20 September 2018*
