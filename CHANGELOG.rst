@@ -2,11 +2,19 @@
 Change Log
 ==========
 
+
+2.2.2
+-----
+*Release date: 22 September 2018*
+
+- *Actually* fix the issue causing public views of released scoresheets to throw errors
+
+
 2.2.1
 -----
 *Release date: 21 September 2018*
 
-- Fix issue causing public views of release scoresheets to throw errors
+- Fix issue causing public views of released scoresheets to throw errors
 
 
 2.2.0 (Khao Manee)
