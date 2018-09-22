@@ -25,7 +25,7 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelForm
 from .allocator import allocate_adjudicators
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, DebateAdjudicator)
+                     AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
 from .utils import get_clashes, get_histories
 
 from utils.misc import reverse_round
@@ -227,16 +227,6 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         kwargs['save_text'] = self.save_text
         return super().get_context_data(**kwargs)
 
-    def get_formset_queryset(self):
-        return self.formset_model.objects.filter(adjudicator__tournament=self.tournament)
-
-    def get_formset(self):
-        formset = super().get_formset()
-        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
-        for form in formset:
-            form.fields['adjudicator'].queryset = all_adjs # Order list by alpha
-        return formset
-
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)
 
@@ -262,6 +252,18 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
         'fields': ('adjudicator', 'team'),
         'field_classes': {'team': TeamChoiceField},
     })
+
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        all_teams = self.tournament.team_set.order_by('short_name').all()
+        for form in formset:
+            form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+            form.fields['team'].queryset = all_teams        # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(adjudicator__tournament=self.tournament)
 
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
@@ -294,8 +296,12 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
         formset = super().get_formset()
         all_adjs = self.tournament.adjudicator_set.order_by('name').all()
         for form in formset:
-            form.fields['adjudicator2'].queryset = all_adjs # Order list by alpha
+            form.fields['adjudicator1'].queryset = all_adjs  # order alphabetically
+            form.fields['adjudicator2'].queryset = all_adjs  # order alphabetically
         return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(adjudicator1__tournament=self.tournament)
 
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
@@ -324,6 +330,16 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({'fields': ('adjudicator', 'institution')})
 
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        for form in formset:
+            form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(adjudicator__tournament=self.tournament)
+
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
             messages.success(self.request, ngettext(
@@ -339,3 +355,43 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
             ) % {'count': ndeleted})
         if nsaved == 0 and ndeleted == 0:
             messages.success(self.request, _("No changes were made to adjudicator-institution conflicts."))
+
+
+class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT
+    formset_model = TeamInstitutionConflict
+    page_title = gettext_lazy("Team-Institution Conflicts")
+    save_text = gettext_lazy("Save Team-Institution Conflicts")
+    same_view = 'adjallocation-conflicts-team-inst'
+    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs.update({
+        'fields': ('team', 'institution'),
+        'field_classes': {'team': TeamChoiceField},
+    })
+
+    def get_formset(self):
+        formset = super().get_formset()
+        all_teams = self.tournament.team_set.order_by('short_name').all()
+        for form in formset:
+            form.fields['team'].queryset = all_teams  # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(team__tournament=self.tournament)
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
+                "Saved %(count)d team-institution conflict.",
+                "Saved %(count)d team-institution conflicts.",
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d team-institution conflict.",
+                "Deleted %(count)d team-institution conflicts.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, _("No changes were made to team-institution conflicts."))
