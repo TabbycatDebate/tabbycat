@@ -556,7 +556,7 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
     def get_context_data(self, **kwargs):
         kwargs['motion'] = self.object.confirmed_ballot.motion
         kwargs['result'] = self.object.confirmed_ballot.result
-        kwargs['use_code_names'] = use_team_code_names(self.tournament, self.tabroom)
+        kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
