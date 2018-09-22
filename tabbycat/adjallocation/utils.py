@@ -1,7 +1,8 @@
 import math
-from itertools import permutations
+from itertools import combinations, product
 
 from django.db.models import Q
+from django.utils.translation import gettext as _
 
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
@@ -14,49 +15,73 @@ def adjudicator_conflicts_display(debates):
     strings of explaining conflicts between adjudicators and teams, and
     conflicts between adjudicators and each other."""
 
-    adjteamconflicts = {}
-    for conflict in AdjudicatorTeamConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
-        adjteamconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.team_id)
+    adjteamconflict_instances = AdjudicatorTeamConflict.objects.filter(
+            adjudicator__debateadjudicator__debate__in=debates).distinct()
+    adjteamconflicts = [(c.adjudicator_id, c.team_id) for c in adjteamconflict_instances]
+
+    adjadjconflict_instances = AdjudicatorAdjudicatorConflict.objects.filter(
+            adjudicator1__debateadjudicator__debate__in=debates).distinct()
+    adjadjconflicts = []
+    for conflict in adjadjconflict_instances:
+        adjadjconflicts.append((conflict.adjudicator1_id, conflict.adjudicator2_id))
+        adjadjconflicts.append((conflict.adjudicator2_id, conflict.adjudicator1_id))
+
+    adjinstconflict_instances = AdjudicatorInstitutionConflict.objects.filter(
+        adjudicator__debateadjudicator__debate__in=debates
+    ).select_related('institution').distinct()
     adjinstconflicts = {}
-    for conflict in AdjudicatorInstitutionConflict.objects.filter(adjudicator__debateadjudicator__debate__in=debates).distinct():
-        adjinstconflicts.setdefault(conflict.adjudicator_id, []).append(conflict.institution_id)
-    adjadjconflicts = {}
-    for conflict in AdjudicatorAdjudicatorConflict.objects.filter(adjudicator1__debateadjudicator__debate__in=debates).distinct():
-        adjadjconflicts.setdefault(conflict.adjudicator1_id, []).append(conflict.adjudicator2_id)
+    for conflict in adjinstconflict_instances:
+        adjinstconflicts.setdefault(conflict.adjudicator_id, set()).add(conflict.institution)
+
+    teaminstconflict_instances = TeamInstitutionConflict.objects.filter(
+        team__debateteam__debate__in=debates
+    ).select_related('institution').distinct()
     teaminstconflicts = {}
-    for conflict in TeamInstitutionConflict.objects.filter(team__debateteam__debate__in=debates).select_related('institution').distinct():
-        teaminstconflicts.setdefault(conflict.team_id, []).append(conflict.institution)
+    for conflict in teaminstconflict_instances:
+        teaminstconflicts.setdefault(conflict.team_id, set()).add(conflict.institution)
 
     conflict_messages = {debate: [] for debate in debates}
+
     for debate in debates:
 
-        for adjudicator in debate.adjudicators.all():
-            for team in debate.teams:
-                if team.id in adjteamconflicts.get(adjudicator.id, []):
-                    conflict_messages[debate].append(("danger",
-                        "Conflict: <strong>{adj}</strong> & <strong>{team}</strong>".format(
-                            adj=adjudicator.name, team=team.short_name)
-                    ))
+        for adjudicator, team in product(debate.adjudicators.all(), debate.teams):
 
-                for institution in teaminstconflicts.get(team.id, []):
-                    if institution.id in adjinstconflicts.get(adjudicator.id, []):
-                        conflict_messages[debate].append(("danger",
-                            "Conflict: <strong>{adj}</strong> & institution <strong>{inst}</strong> ({team})".format(
-                                adj=adjudicator.name, team=team.short_name, inst=institution.code)
-                        ))
+            if (adjudicator.id, team.id) in adjteamconflicts:
+                conflict_messages[debate].append(("danger", _(
+                    "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> "
+                    "(personal)"
+                ) % {'adj': adjudicator.name, 'team': team.short_name}))
 
-        for adj1, adj2 in permutations(debate.adjudicators.all(), 2):
-            if adj2.id in adjadjconflicts.get(adj1.id, []):
-                conflict_messages[debate].append(("danger",
-                    "Conflict: <strong>{adj}</strong> & <strong>{other}</strong>".format(
-                        adj=adj1.name, other=adj2.name)
-                ))
+            conflicting_institutions = (teaminstconflicts.get(team.id, set()) &
+                    adjinstconflicts.get(adjudicator.id, set()))
+            for institution in conflicting_institutions:
+                conflict_messages[debate].append(("danger", _(
+                    "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> "
+                    "via institution <strong>%(inst)s</strong>"
+                ) % {
+                    'adj': adjudicator.name,
+                    'team': team.short_name,
+                    'inst': institution.code,
+                }))
 
-            if adj2.institution_id in adjinstconflicts.get(adj1.id, []):
-                conflict_messages[debate].append(("warning",
-                    "Conflict: <strong>{adj}</strong> & institution <strong>{inst}</strong> ({other})".format(
-                        adj=adj1.name, other=adj2.name, inst=adj2.institution.code)
-                ))
+        for adj1, adj2 in combinations(debate.adjudicators.all(), 2):
+            if (adj1.id, adj2.id) in adjadjconflicts:
+                conflict_messages[debate].append(("danger", _(
+                    "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> "
+                    "(personal)"
+                ) % {'adj1': adj1.name, 'adj2': adj2.name}))
+
+            conflicting_institutions = (adjinstconflicts.get(adj1.id, set()) &
+                    adjinstconflicts.get(adj2.id, set()))
+            for institution in conflicting_institutions:
+                conflict_messages[debate].append(("warning", _(
+                    "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> "
+                    "via institution <strong>%(inst)s</strong>"
+                ) % {
+                    'adj1': adj1.name,
+                    'adj2': adj2.name,
+                    'inst': institution.code,
+                }))
 
     return conflict_messages
 
