@@ -181,6 +181,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
                     yield dict(name=name, team=team)
             self._import(f, pm.Speaker, speakers_interpreter)
 
+        def own_team_institution_conflict_interpreter(lineno, line):
+            team = teams[lineno]
+            if team.institution is not None:
+                return {
+                    'team': team,
+                    'institution': team.institution,
+                }
+        self._import(f, am.TeamInstitutionConflict, own_team_institution_conflict_interpreter)
+
     def import_speakers(self, f, auto_create_teams=True):
         """Imports speakers, also creating teams as needed (unless
         'auto_create_teams' is False). Institutions are not created as needed;
@@ -203,6 +212,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
             teams = self._import(f, pm.Team, team_interpreter, expect_unique=False)
             set_emoji(teams.values(), self.tournament)
+
+            def own_team_institution_conflict_interpreter(lineno, line):
+                team = teams.get(lineno)
+                if team is not None and team.institution is not None:
+                    return {
+                        'team': team,
+                        'institution': team.institution,
+                    }
+            self._import(f, am.TeamInstitutionConflict, own_team_institution_conflict_interpreter)
 
         speaker_interpreter_part = make_interpreter(
             DELETE=['use_institution_prefix', 'institution', 'team_name'],

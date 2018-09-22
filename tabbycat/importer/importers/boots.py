@@ -168,6 +168,15 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         teams = self._import(f, pm.Team, team_interpreter)
         set_emoji(teams.values(), self.tournament)
 
+        def own_team_institution_conflict_interpreter(lineno, line):
+            team = teams[lineno]
+            if team.institution is not None:
+                return {
+                    'team': team,
+                    'institution': team.institution,
+                }
+        self._import(f, am.TeamInstitutionConflict, own_team_institution_conflict_interpreter)
+
         def break_category_interpreter(lineno, line):
             if line.get('break_category'):
                 for category in line['break_category'].split('/'):
