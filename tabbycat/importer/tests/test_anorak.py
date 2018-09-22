@@ -78,7 +78,11 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "speakers")
         self.importer.import_speakers(f)
-        self.assertCountsDictEqual(self.importer.counts, {pm.Team: 24, pm.Speaker: 72})
+        self.assertCountsDictEqual(self.importer.counts, {
+            pm.Team: 24,
+            pm.Speaker: 72,
+            am.TeamInstitutionConflict: 23,
+        })
         self.assertFalse(self.importer.errors)
 
     def test_adjudicators(self):
