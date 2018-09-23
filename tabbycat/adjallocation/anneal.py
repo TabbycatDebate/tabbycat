@@ -161,8 +161,8 @@ class SAAllocator(Allocator):
         score = 0
 
         for adj in panel:
-            score += self.SCORE_ADJ_TEAM_CONFLICT * adj.conflicts_with_team(debate.aff_team)
-            score += self.SCORE_ADJ_TEAM_CONFLICT * adj.conflicts_with_team(debate.neg_team)
+            score += self.SCORE_ADJ_TEAM_CONFLICT * self.conflicts.conflict_adj_team(adj, debate.aff_team)
+            score += self.SCORE_ADJ_TEAM_CONFLICT * self.conflicts.conflict_adj_team(adj, debate.neg_team)
         return score
 
     def score_adj_team_history(self, debate, panel):

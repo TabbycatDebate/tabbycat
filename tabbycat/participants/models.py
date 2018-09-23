@@ -433,34 +433,6 @@ class Adjudicator(Person):
         else:
             return "%s (%s)" % (self.name, self.institution.code)
 
-    def _populate_conflict_cache(self):
-        if not getattr(self, '_conflicts_populated', False):
-            logger.debug("Populating conflict cache for %s", self)
-            self._team_conflict_cache = [c.team_id
-                    for c in self.adjudicatorteamconflict_set.all()]
-            self._adjudicator_conflict_cache = [c.adjudicator2_id
-                    for c in self.adjudicatoradjudicatorconflict_source_set.all()]
-            self._institution_conflict_cache = [c.institution_id
-                    for c in self.adjudicatorinstitutionconflict_set.all()]
-            self._conflicts_populated = True
-
-    def conflicts_with_team(self, team):
-        self._populate_conflict_cache()
-        return team.id in self._team_conflict_cache or team.institution_id in self._institution_conflict_cache
-
-    def conflicts_with_adj(self, adj):
-        self._populate_conflict_cache()
-        adj._populate_conflict_cache()
-        if adj.id in self._adjudicator_conflict_cache:
-            return True
-        if adj.institution_id in self._institution_conflict_cache:
-            return True
-        if self.id in adj._adjudicator_conflict_cache:
-            return True
-        if self.institution_id in adj._institution_conflict_cache:
-            return True
-        return False
-
     @property
     def is_unaccredited(self):
         return self.novice

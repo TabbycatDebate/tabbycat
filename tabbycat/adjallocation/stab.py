@@ -123,7 +123,7 @@ class StabAllocator(Allocator):
 
         if avoid_conflicts:
             for i, (debate, panel) in enumerate(self.pairings):
-                if panel.conflicts(debate):
+                if self.check_conflicts(panel, debate):
                     j = self.search_swap(i, list(range(i, 0, -1)))
                     if j is None:
                         j = self.search_swap(i, list(range(i+1, len(panels))))
@@ -157,13 +157,20 @@ class StabAllocator(Allocator):
 
         for j in search_range:
             debate, panel = self.pairings[j]
-            if not (base_panel.conflicts(debate) or
-                    panel.conflicts(base_debate)):
+            if not (self.check_conflicts(base_panel, debate) or
+                    self.check_conflicts(panel, base_debate)):
                 # do swap
                 self.pairings[idx] = (base_debate, panel)
                 self.pairings[j] = (debate, base_panel)
                 return j
         return None
+
+    def check_conflicts(self, panel, debate):
+        for adj in panel.panel:
+            for team in (debate.aff_team, debate.neg_team):
+                if self.conflicts.conflict_adj_team(adj, team):
+                    return True
+        return False
 
 
 class StabPanel(object):
@@ -179,13 +186,6 @@ class StabPanel(object):
 
     def get_energy(self):
         return sum(a.score for a in self.panel) / len(self.panel)
-
-    def conflicts(self, debate):
-        for adj in self.panel:
-            for team in (debate.aff_team, debate.neg_team):
-                if adj.conflicts_with_team(team):
-                    return True
-        return False
 
 
 def test():
