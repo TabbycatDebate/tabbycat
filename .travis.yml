@@ -27,7 +27,7 @@ matrix:
     #   before_script:
     #     - brew services start postgresql
     #     # We are testing, in effect, the local install so use local settings:
-    #     - cp config/settings_local.example config/settings_local.py
+    #     - cp settings/local.example settings/local.py
     #   script:
     #     - npm run build
     #     - python tabbycat/manage.py collectstatic

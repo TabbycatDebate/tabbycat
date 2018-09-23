@@ -68,7 +68,8 @@ install:
 
 test_script:
   - cd c:\projects\tabbycat
-  - copy config\settings_local.example config\settings_local.py # Need to use local build opt
+  # Need to use local build options
+  - copy tabbycat\settings\local.example tabbycat\settings\local.py
   # Update local connection settings
   # Test asset building
   # Override standard package.json build to set NODE_ENV on windows
