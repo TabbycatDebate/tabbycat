@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(os.path.join(__file__, os.pardir)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # ==============================================================================
-# Overwritten in settings_local.py or settings_heroku.py
+# Overwritten in local.py or heroku.py
 # ==============================================================================
 
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
@@ -60,7 +60,7 @@ FORMAT_MODULE_PATH = [
 ]
 
 # ==============================================================================
-# Django-specific Module
+# Django-specific Modules
 # ==============================================================================
 
 MIDDLEWARE = [
@@ -275,7 +275,7 @@ SUMMERNOTE_CONFIG = {
 
 DATABASES = {
     'default': {
-        'ENGINE'      : 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql',
     }
 }
 
@@ -290,21 +290,3 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
-
-# ==============================================================================
-# Environments
-# ==============================================================================
-
-try:
-    if os.environ.get('TRAVIS', '') == 'true':
-        from .travis import *
-    elif os.environ.get('IN_DOCKER', '') and bool(int(os.environ['IN_DOCKER'])):
-        from .docker import *
-    elif os.environ.get('DJANGO_SECRET_KEY', ''):
-        from .heroku import *
-    else:
-        from .local import *
-        if os.environ.get('LOCAL_DEVELOPMENT', ''):
-            from .development import *
-except ImportError:
-    pass

@@ -21,43 +21,6 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 USE_WEBPACK_SERVER = True
 
 # ==============================================================================
-# Debug Toolbar
-# ==============================================================================
-
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-)
-
-DEBUG_TOOLBAR_CONFIG = {
-    'JQUERY_URL': '/static/js/vendor/jquery.js', # Enables offline work
-    'SHOW_COLLAPSED': True
-}
-
-# That said provide a flag to turn it on in Heroku
-if 'DEBUG_TOOLBAR' in os.environ and bool(int(os.environ['DEBUG_TOOLBAR'])):
-    ENABLE_DEBUG_TOOLBAR = True
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
-    INSTALLED_APPS += ('debug_toolbar',)
-    # Override check for internal IPs (and DEBUG=1) on Heroku
-    DEBUG_TOOLBAR_CONFIG['SHOW_TOOLBAR_CALLBACK'] = 'settings.show_toolbar'
-
-
-def show_toolbar(request):
-    return request.user.is_staff
-
-# ==============================================================================
 # Redis
 # ==============================================================================
 
@@ -88,7 +51,7 @@ if USE_REDIS_LOCALLY:
 # Debug Toolbar (development aid; helps diagnose queries and performance)
 # ==============================================================================
 
-ENABLE_DEBUG_TOOLBAR = True # True requires requirements_development install
+ENABLE_DEBUG_TOOLBAR = True # Requires requirements_development.txt install
 
 if ENABLE_DEBUG_TOOLBAR:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
