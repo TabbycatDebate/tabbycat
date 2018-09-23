@@ -1,5 +1,7 @@
 # Django Related
-tabbycat/local_settings.py
+tabbycat/local_settings.py # Legacy location
+tabbycat/settings/local.py
+tabbycat/settings/development.py
 .gitmodules/
 __pycache__/
 

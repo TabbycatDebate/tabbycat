@@ -1,6 +1,3 @@
-LOCAL_SETTINGS = True
-from settings import *
-
 ON_LOCAL = True
 
 # ==============================================================================
@@ -56,55 +53,5 @@ CACHES = { # Use a dummy cache in development
    }
 }
 
-# Don't used the cached loader otherwise updating templates is a pain
-TEMPLATES[0]['OPTIONS']['loaders'] = [
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-]
-
 # Use the cache with database write through for local sessions
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-
-# ==============================================================================
-# Webpack
-# ==============================================================================
-
-# Enables hot reloading but relies on the vue-cli (webpack) server being run
-USE_WEBPACK_SERVER = False
-
-# ==============================================================================
-# Redis
-# ==============================================================================
-
-USE_REDIS_LOCALLY = False
-
-# Option to run channels/cache on Redis locally (requires redis install)
-if USE_REDIS_LOCALLY:
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [("localhost", 6379)],
-            },
-        },
-    }
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379/1",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "IGNORE_EXCEPTIONS": True, # Don't crash on say ConnectionError due to limits
-            }
-        }
-    }
-
-# ==============================================================================
-# Debug Toolbar (development aid; helps diagnose queries and performance)
-# ==============================================================================
-
-ENABLE_DEBUG_TOOLBAR = False # True requires requirements_development install
-
-if ENABLE_DEBUG_TOOLBAR:
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
-    INSTALLED_APPS += ('debug_toolbar',)
