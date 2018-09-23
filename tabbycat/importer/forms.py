@@ -302,6 +302,9 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
                 team.speaker_set.create(name=name, email=email)
             team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
 
+            if team.institution:
+                team.teaminstitutionconflict_set.create(institution=team.institution)
+
         return team
 
 
