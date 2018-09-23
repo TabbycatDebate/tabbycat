@@ -135,7 +135,7 @@
 
             {% trans "View public draw page" as text %}
             {% if pref.public_draw == 'current' and round == current_round %}
-              {% tournamenturl 'draw-public-current-round' as public_link %}
+              {% tournamenturl 'draw-public-current-rounds' as public_link %}
               {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
             {% elif pref.public_draw == 'all-released' %}
               {% roundurl 'draw-public-for-round' as public_link %}
