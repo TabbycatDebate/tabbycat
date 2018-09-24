@@ -350,7 +350,6 @@ class Team(models.Model):
         team = {'id': self.id, 'short_name': self.short_name,
                 'long_name': self.long_name, 'code_name': self.code_name}
         team['emoji'] = self.emoji
-        team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize if self.institution else None
         team['region'] = self.region.serialize if self.region else None
         team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in self.speakers]
@@ -398,6 +397,7 @@ class Adjudicator(Person):
     test_score = models.FloatField(default=0,
         verbose_name=_("test score"))
 
+    # TODO: Are these actually used?= If not, remove?
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',
         related_name='adj_inst_conflicts',
@@ -501,7 +501,6 @@ class Adjudicator(Person):
 
     def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
-        adj['conflicts'] = {'clashes': [], 'histories': []}
         adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None

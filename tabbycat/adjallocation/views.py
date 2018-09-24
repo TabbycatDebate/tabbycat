@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.forms import ModelChoiceField
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
+from django.utils.functional import cached_property
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from actionlog.mixins import LogActionMixin
@@ -34,36 +35,54 @@ logger = logging.getLogger(__name__)
 
 class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
+    @cached_property
+    def conflicts_and_history(self):
+        conflicts = ConflictsInfo(teams=self.tournament.team_set.all(),
+            adjudicators=self.tournament.adjudicator_set.all())
+        team_conflicts, adj_conflicts = conflicts.serialized_by_participant()
+        history = HistoryInfo(self.round)
+        team_history, adj_history = history.serialized_by_participant()
+
+        teams_combined = {}
+        for team_id, conflicts in team_conflicts.items():
+            teams_combined[team_id] = {'clashes': conflicts}
+        for team_id, history in team_history.items():
+            teams_combined.setdefault(team_id, {})['histories'] = history
+
+        adjs_combined = {}
+        for adj_id, conflicts in adj_conflicts.items():
+            adjs_combined[adj_id] = {'clashes': conflicts}
+        for adj_id, history in adj_history.items():
+            adjs_combined.setdefault(adj_id, {})['histories'] = history
+
+        return teams_combined, adjs_combined
+
     def get_unallocated_adjudicators(self):
         round = self.round
         unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
         populate_feedback_scores(unused_adj_instances)
         unused_adjs = [a.serialize(round) for a in unused_adj_instances]
         unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
-        # TODO: annotate with conflicts correctly using new system
-        # unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
+
+        _, adj_conflicts = self.conflicts_and_history
+        for adj in unused_adjs:
+            adj['conflicts'] = adj_conflicts[adj['id']]
+
         return json.dumps(unused_adjs)
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
 
-        teams = self.tournament.team_set.all()
-        adjudicators = self.tournament.adjudicator_set.all()
-        conflicts = ConflictsInfo(teams=teams, adjudicators=adjudicators)
-        team_conflicts, adjudicator_conflicts = conflicts.serialized_by_participant()
-        history = HistoryInfo(self.round, teams=teams, adjudicators=adjudicators)
-        team_history, adjudicator_history = history.serialized_by_participant()
+        team_conflicts, adj_conflicts = self.conflicts_and_history
 
         for debate in serialised_draw:
             for da in debate['debateAdjudicators']:
-                da['adjudicator']['conflicts']['clashes'] = adjudicator_conflicts[da['adjudicator']['id']]
-                da['adjudicator']['conflicts']['histories'] = adjudicator_history[da['adjudicator']['id']]
+                da['adjudicator']['conflicts'] = adj_conflicts[da['adjudicator']['id']]
                 da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
             for dt in debate['debateTeams']:
                 if not dt['team']:
                     continue
-                dt['team']['conflicts']['clashes'] = team_conflicts[dt['team']['id']]
-                dt['team']['conflicts']['histories'] = team_history[da['team']['id']]
+                dt['team']['conflicts'] = team_conflicts[dt['team']['id']]
 
         return super().annotate_draw(draw, serialised_draw)
 

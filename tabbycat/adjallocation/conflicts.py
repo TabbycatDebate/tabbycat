@@ -153,16 +153,15 @@ class ConflictsInfo:
 
 class HistoryInfo:
     """Manages information about past encounters between participants prior to
-    (and not including) a given round.
+    (and not including) a given round. The object stores information about all
+    teams and adjudicators who participated in any round prior to the given
+    round.
 
     The main purpose of this class is to streamline queries about history. This
     class hits the database once, on creation, with queries for
     `DebateAdjudicator` and `DebateTeam`. It then can be used to find
-    efficiently whether particular participants conflict, without a need for
-    further SQL queries or excessive data processing.
-
-    All queries must relate to teams and adjudicators that were in the QuerySets
-    or other iterables that were provided to the constructor.
+    efficiently whether particular participants have seen each other, without a
+    need for further SQL queries or excessive data processing.
 
     Although the attributes `self.adjteamhistories` and  `self.adjadjhistories`
     aren't marked as such, they should be treated a private implementation
@@ -173,8 +172,6 @@ class HistoryInfo:
     def __init__(self, round, teams=None, adjudicators=None):
         self.round = round
         self.tournament = round.tournament
-        self.teams = teams or Team.objects.none()
-        self.adjudicators = adjudicators or Adjudicator.objects.none()
         self._fetch_histories_from_db()
 
     def _fetch_histories_from_db(self):
