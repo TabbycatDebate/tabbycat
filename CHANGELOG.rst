@@ -3,7 +3,7 @@ Change Log
 ==========
 
 
-2.2.0 (LaPerm)
+2.3.0 (LaPerm)
 ------------------
 *Release date: ?*
 
