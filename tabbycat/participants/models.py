@@ -2,7 +2,6 @@ import logging
 from warnings import warn
 
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
@@ -244,10 +243,7 @@ class Team(models.Model):
 
     @property
     def region(self):
-        institution = self.get_cached_institution()
-        if institution is None:
-            return None
-        return institution.region
+        return self.institution.region if self.institution else None
 
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam
@@ -317,16 +313,6 @@ class Team(models.Model):
                 team=self, ).order_by('-debate__round__seq')[0].debate
         except IndexError:
             return None
-
-    def get_cached_institution(self):
-        cached_key = "%s_%s_%s" % ('teamid', self.id, '_institution__object')
-        cached_value = cache.get(cached_key)
-        if cached_value:
-            return cache.get(cached_key)
-        else:
-            cached_value = self.institution
-            cache.set(cached_key, cached_value, None)
-            return cached_value
 
     def clean(self):
         # Require reference and short_reference if use_institution_prefix is False
