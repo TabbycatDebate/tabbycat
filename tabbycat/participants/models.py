@@ -460,31 +460,6 @@ class Adjudicator(Person):
     def get_feedback(self):
         return self.adjudicatorfeedback_set.all()
 
-    def seen_team(self, team, before_round=None):
-        from draw.models import DebateTeam
-        if not hasattr(self, '_seen_team_cache'):
-            self._seen_team_cache = {}
-        if before_round not in self._seen_team_cache:
-            logger.debug("Populating seen team cache for %s", self)
-            qs = DebateTeam.objects.filter(debate__debateadjudicator__adjudicator=self)
-            if before_round is not None:
-                qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_team_cache[before_round] = [dt.team_id for dt in qs]
-        return self._seen_team_cache[before_round].count(team.id)
-
-    def seen_adjudicator(self, adj, before_round=None):
-        from adjallocation.models import DebateAdjudicator
-        if not hasattr(self, '_seen_adjudicator_cache'):
-            self._seen_adjudicator_cache = {}
-        if before_round not in self._seen_adjudicator_cache:
-            logger.debug("Populating seen adjudicator cache for %s", self)
-            qs = DebateAdjudicator.objects.filter(
-                debate__debateadjudicator__adjudicator=self).exclude(adjudicator=self)
-            if before_round is not None:
-                qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_adjudicator_cache[before_round] = [da.adjudicator_id for da in qs]
-        return self._seen_adjudicator_cache[before_round].count(adj.id)
-
     def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
         adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))

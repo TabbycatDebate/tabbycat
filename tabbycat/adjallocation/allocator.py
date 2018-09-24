@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from participants.models import Team
 from utils.views import BadJsonRequestError
 
-from .conflicts import ConflictsInfo
+from .conflicts import ConflictsInfo, HistoryInfo
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +41,7 @@ class Allocator(object):
 
         teams = Team.objects.filter(debateteam__debate__in=debates)
         self.conflicts = ConflictsInfo(teams=teams, adjudicators=self.adjudicators)
+        self.history = HistoryInfo(round=round)
 
     def allocate(self):
         raise NotImplementedError
