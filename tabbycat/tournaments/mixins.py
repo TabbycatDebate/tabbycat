@@ -402,7 +402,7 @@ class DrawForDragAndDropMixin(RoundMixin):
         populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
         populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])
 
-        serialised_draw = [d.serialize() for d in draw]
+        serialised_draw = [d.serialize(tournament=self.tournament) for d in draw]
         draw = self.annotate_draw(draw, serialised_draw)
         return json.dumps(serialised_draw)
 
