@@ -526,32 +526,28 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
     tournament_field_name = 'round__tournament'
     template_name = 'public_ballot_set.html'
 
-    def matchup_description(self, debate):
+    def matchup_description(self):
         if use_team_code_names(self.tournament, False):
-            return debate.matchup_codes
+            return self.object.matchup_codes
         else:
-            return debate.matchup
+            return self.object.matchup
 
-    def get_object(self):
-        debate = super().get_object()
-        matchup = self.matchup_description(debate)
-
+    def check_permissions(self):
+        debate = self.object
         round = debate.round
         if round.silent and not round.tournament.pref('all_results_released'):
-            logger.warning("Refused public view of ballots for %s: %s is silent", matchup, round.name)
+            logger.warning("Refused public view of ballots for %s: %s is silent", debate, round.name)
             raise Http404("This debate is in %s, which is a silent round." % round.name)
         if round.seq >= round.tournament.current_round.seq and not round.tournament.pref('all_results_released'):
-            logger.warning("Refused public view of ballots for %s: %s results not yet available", matchup, round.name)
+            logger.warning("Refused public view of ballots for %s: %s results not yet available", debate, round.name)
             raise Http404("This debate is in %s, the results for which aren't available yet." % round.name)
 
         if debate.result_status != Debate.STATUS_CONFIRMED:
             logger.warning("Refused public view of ballots for %s: not confirmed", debate)
-            raise Http404("The result for debate %s is not confirmed." % matchup)
+            return (404, _("The result for debate %s is not confirmed.") % self.matchup_description())
         if debate.confirmed_ballot is None:
             logger.warning("Refused public view of ballots for %s: no confirmed ballot", debate)
-            raise Http404("The debate %s does not have a confirmed ballot." % matchup)
-
-        return debate
+            return (404, _("The debate %s does not have a confirmed ballot.") % self.matchup_description())
 
     def get_context_data(self, **kwargs):
         kwargs['motion'] = self.object.confirmed_ballot.motion
@@ -560,7 +556,19 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        self.object = super().get_object()
+
+        error = self.check_permissions()
+        if error:
+            status, message = error
+            return self.response_class(
+                request=self.request,
+                template='public_ballot_set_error.html',
+                context={'message': message},
+                using=self.template_engine,
+                status=status,
+            )
+
         return super().get(self, request, *args, **kwargs)
 
 
