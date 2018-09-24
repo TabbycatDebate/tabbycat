@@ -6,7 +6,6 @@ from django.db.models import Q
 from django.forms import ModelChoiceField
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
-from django.utils.functional import cached_property
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from actionlog.mixins import LogActionMixin
@@ -23,10 +22,10 @@ from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
 from .allocator import allocate_adjudicators
+from .conflicts import ConflictsInfo, HistoryInfo
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
-from .utils import get_clashes, get_histories
 
 from utils.misc import reverse_round
 
@@ -35,53 +34,36 @@ logger = logging.getLogger(__name__)
 
 class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
-    @cached_property
-    def get_clashes(self):
-        return get_clashes(self.tournament, self.round)
-
-    @cached_property
-    def get_histories(self):
-        return get_histories(self.tournament, self.round)
-
     def get_unallocated_adjudicators(self):
         round = self.round
         unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
         populate_feedback_scores(unused_adj_instances)
         unused_adjs = [a.serialize(round) for a in unused_adj_instances]
         unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
-        unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
+        # TODO: annotate with conflicts correctly using new system
+        # unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
         return json.dumps(unused_adjs)
-
-    def annotate_conflicts(self, serialized_adj_or_team, for_type):
-        adj_or_team_id = serialized_adj_or_team['id']
-        try:
-            serialized_adj_or_team['conflicts']['clashes'] = self.get_clashes[for_type][adj_or_team_id]
-        except KeyError:
-            serialized_adj_or_team['conflicts']['clashes'] = {}
-        try:
-            serialized_adj_or_team['conflicts']['histories'] = self.get_histories[for_type][adj_or_team_id]
-        except KeyError:
-            serialized_adj_or_team['conflicts']['histories'] = {}
-
-        if for_type == 'for_teams':
-            # Teams don't show in AdjudicatorInstitutionConflict; need to
-            # add own institutional clash manually to reverse things
-            if serialized_adj_or_team['institution']:
-                ic = [{'id': serialized_adj_or_team['institution']['id']}]
-                serialized_adj_or_team['conflicts']['clashes']['institution'] = ic
-
-        return serialized_adj_or_team
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
+
+        teams = self.tournament.team_set.all()
+        adjudicators = self.tournament.adjudicator_set.all()
+        conflicts = ConflictsInfo(teams=teams, adjudicators=adjudicators)
+        team_conflicts, adjudicator_conflicts = conflicts.serialized_by_participant()
+        history = HistoryInfo(self.round, teams=teams, adjudicators=adjudicators)
+        team_history, adjudicator_history = history.serialized_by_participant()
+
         for debate in serialised_draw:
             for da in debate['debateAdjudicators']:
-                da['adjudicator'] = self.annotate_conflicts(da['adjudicator'], 'for_adjs')
+                da['adjudicator']['conflicts']['clashes'] = adjudicator_conflicts[da['adjudicator']['id']]
+                da['adjudicator']['conflicts']['histories'] = adjudicator_history[da['adjudicator']['id']]
                 da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
             for dt in debate['debateTeams']:
                 if not dt['team']:
                     continue
-                dt['team'] = self.annotate_conflicts(dt['team'], 'for_teams')
+                dt['team']['conflicts']['clashes'] = team_conflicts[dt['team']['id']]
+                dt['team']['conflicts']['histories'] = team_history[da['team']['id']]
 
         return super().annotate_draw(draw, serialised_draw)
 
