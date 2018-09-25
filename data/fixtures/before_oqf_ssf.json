@@ -1057,7 +1057,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 1,
     "fields": {
         "adjudicator": 77,
@@ -1065,7 +1065,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 2,
     "fields": {
         "adjudicator": 81,
@@ -1073,7 +1073,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 3,
     "fields": {
         "adjudicator": 84,
@@ -1081,7 +1081,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 4,
     "fields": {
         "adjudicator": 87,
@@ -1089,7 +1089,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 5,
     "fields": {
         "adjudicator": 89,
@@ -1097,7 +1097,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 6,
     "fields": {
         "adjudicator": 91,
@@ -1105,7 +1105,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 7,
     "fields": {
         "adjudicator": 93,
@@ -1113,7 +1113,7 @@
     }
 },
 {
-    "model": "adjallocation.adjudicatorconflict",
+    "model": "adjallocation.adjudicatorteamconflict",
     "pk": 8,
     "fields": {
         "adjudicator": 89,
@@ -1406,6 +1406,198 @@
     "fields": {
         "adjudicator": 96,
         "institution": 8
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 1,
+    "fields": {
+        "team": 1,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 2,
+    "fields": {
+        "team": 2,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 3,
+    "fields": {
+        "team": 3,
+        "institution": 1
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 4,
+    "fields": {
+        "team": 4,
+        "institution": 2
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 5,
+    "fields": {
+        "team": 5,
+        "institution": 3
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 6,
+    "fields": {
+        "team": 6,
+        "institution": 4
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 7,
+    "fields": {
+        "team": 7,
+        "institution": 4
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 8,
+    "fields": {
+        "team": 8,
+        "institution": 5
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 9,
+    "fields": {
+        "team": 9,
+        "institution": 6
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 10,
+    "fields": {
+        "team": 10,
+        "institution": 6
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 11,
+    "fields": {
+        "team": 11,
+        "institution": 7
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 12,
+    "fields": {
+        "team": 12,
+        "institution": 7
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 13,
+    "fields": {
+        "team": 13,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 14,
+    "fields": {
+        "team": 14,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 15,
+    "fields": {
+        "team": 15,
+        "institution": 8
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 16,
+    "fields": {
+        "team": 16,
+        "institution": 9
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 17,
+    "fields": {
+        "team": 17,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 18,
+    "fields": {
+        "team": 18,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 19,
+    "fields": {
+        "team": 19,
+        "institution": 10
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 20,
+    "fields": {
+        "team": 20,
+        "institution": 11
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 21,
+    "fields": {
+        "team": 21,
+        "institution": 11
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 22,
+    "fields": {
+        "team": 22,
+        "institution": 13
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 23,
+    "fields": {
+        "team": 23,
+        "institution": 13
+    }
+},
+{
+    "model": "adjallocation.teaminstitutionconflict",
+    "pk": 24,
+    "fields": {
+        "team": 24,
+        "institution": 13
     }
 },
 {

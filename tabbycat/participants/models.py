@@ -2,7 +2,6 @@ import logging
 from warnings import warn
 
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
@@ -244,10 +243,7 @@ class Team(models.Model):
 
     @property
     def region(self):
-        institution = self.get_cached_institution()
-        if institution is None:
-            return None
-        return institution.region
+        return self.institution.region if self.institution else None
 
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam
@@ -318,16 +314,6 @@ class Team(models.Model):
         except IndexError:
             return None
 
-    def get_cached_institution(self):
-        cached_key = "%s_%s_%s" % ('teamid', self.id, '_institution__object')
-        cached_value = cache.get(cached_key)
-        if cached_value:
-            return cache.get(cached_key)
-        else:
-            cached_value = self.institution
-            cache.set(cached_key, cached_value, None)
-            return cached_value
-
     def clean(self):
         # Require reference and short_reference if use_institution_prefix is False
         errors = {}
@@ -350,7 +336,6 @@ class Team(models.Model):
         team = {'id': self.id, 'short_name': self.short_name,
                 'long_name': self.long_name, 'code_name': self.code_name}
         team['emoji'] = self.emoji
-        team['conflicts'] = {'clashes': [], 'histories': []}
         team['institution'] = self.institution.serialize if self.institution else None
         team['region'] = self.region.serialize if self.region else None
         team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in self.speakers]
@@ -398,12 +383,13 @@ class Adjudicator(Person):
     test_score = models.FloatField(default=0,
         verbose_name=_("test score"))
 
+    # TODO: Are these actually used?= If not, remove?
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',
         related_name='adj_inst_conflicts',
         verbose_name=_("institution conflicts"))
     conflicts = models.ManyToManyField('Team',
-        through='adjallocation.AdjudicatorConflict',
+        through='adjallocation.AdjudicatorTeamConflict',
         related_name='adj_adj_conflicts',
         verbose_name=_("team conflicts"))
 
@@ -432,34 +418,6 @@ class Adjudicator(Person):
             return self.name
         else:
             return "%s (%s)" % (self.name, self.institution.code)
-
-    def _populate_conflict_cache(self):
-        if not getattr(self, '_conflicts_populated', False):
-            logger.debug("Populating conflict cache for %s", self)
-            self._team_conflict_cache = [c.team_id
-                    for c in self.adjudicatorconflict_set.all()]
-            self._adjudicator_conflict_cache = [c.conflict_adjudicator_id
-                    for c in self.adjudicatoradjudicatorconflict_source_set.all()]
-            self._institution_conflict_cache = [c.institution_id
-                    for c in self.adjudicatorinstitutionconflict_set.all()]
-            self._conflicts_populated = True
-
-    def conflicts_with_team(self, team):
-        self._populate_conflict_cache()
-        return team.id in self._team_conflict_cache or team.institution_id in self._institution_conflict_cache
-
-    def conflicts_with_adj(self, adj):
-        self._populate_conflict_cache()
-        adj._populate_conflict_cache()
-        if adj.id in self._adjudicator_conflict_cache:
-            return True
-        if adj.institution_id in self._institution_conflict_cache:
-            return True
-        if self.id in adj._adjudicator_conflict_cache:
-            return True
-        if self.institution_id in adj._institution_conflict_cache:
-            return True
-        return False
 
     @property
     def is_unaccredited(self):
@@ -502,34 +460,8 @@ class Adjudicator(Person):
     def get_feedback(self):
         return self.adjudicatorfeedback_set.all()
 
-    def seen_team(self, team, before_round=None):
-        from draw.models import DebateTeam
-        if not hasattr(self, '_seen_team_cache'):
-            self._seen_team_cache = {}
-        if before_round not in self._seen_team_cache:
-            logger.debug("Populating seen team cache for %s", self)
-            qs = DebateTeam.objects.filter(debate__debateadjudicator__adjudicator=self)
-            if before_round is not None:
-                qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_team_cache[before_round] = [dt.team_id for dt in qs]
-        return self._seen_team_cache[before_round].count(team.id)
-
-    def seen_adjudicator(self, adj, before_round=None):
-        from adjallocation.models import DebateAdjudicator
-        if not hasattr(self, '_seen_adjudicator_cache'):
-            self._seen_adjudicator_cache = {}
-        if before_round not in self._seen_adjudicator_cache:
-            logger.debug("Populating seen adjudicator cache for %s", self)
-            qs = DebateAdjudicator.objects.filter(
-                debate__debateadjudicator__adjudicator=self).exclude(adjudicator=self)
-            if before_round is not None:
-                qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_adjudicator_cache[before_round] = [da.adjudicator_id for da in qs]
-        return self._seen_adjudicator_cache[before_round].count(adj.id)
-
     def serialize(self, round):
         adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
-        adj['conflicts'] = {'clashes': [], 'histories': []}
         adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
         adj['region'] = self.region.serialize if self.region else None
         adj['institution'] = self.institution.serialize if self.institution else None

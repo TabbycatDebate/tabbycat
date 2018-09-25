@@ -73,6 +73,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT    = 'ac.at.edit'
     ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT     = 'ac.aa.edit'
     ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT    = 'ac.ai.edit'
+    ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT   = 'ac.ti.edit'
     ACTION_TYPE_CHECKIN_SPEAK_GENERATE     = 'ch.sp.gene'
     ACTION_TYPE_CHECKIN_ADJ_GENERATE       = 'ch.aj.gene'
     ACTION_TYPE_CHECKIN_VENUES_GENERATE    = 'ch.ve.gene'
@@ -130,6 +131,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT   , _("Edited adjudicator-team conflicts")),
         (ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT    , _("Edited adjudicator-adjudicator conflicts")),
         (ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT   , _("Edited adjudicator-institution conflicts")),
+        (ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT  , _("Edited team-institution conflicts")),
         (ACTION_TYPE_CHECKIN_SPEAK_GENERATE    , _("Generated check in identifiers for speakers")),
         (ACTION_TYPE_CHECKIN_ADJ_GENERATE      , _("Generated check in identifiers for adjudicators")),
         (ACTION_TYPE_CHECKIN_VENUES_GENERATE   , _("Generated check in identifiers for venues")),

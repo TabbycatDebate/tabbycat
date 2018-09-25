@@ -57,11 +57,11 @@ class BaseHungarianAllocator(Allocator):
         normalised_importance = debate.importance + 3
 
         for side in self.tournament.sides:
-            cost += self.conflict_penalty * adj.conflicts_with_team(debate.get_team(side))
-            cost += self.history_penalty * adj.seen_team(debate.get_team(side), debate.round)
+            cost += self.conflict_penalty * self.conflicts.conflict_adj_team(adj, debate.get_team(side))
+            cost += self.history_penalty * self.history.seen_adj_team(adj, debate.get_team(side))
         if chair:
-            cost += self.conflict_penalty * adj.conflicts_with_adj(chair)
-            cost += self.history_penalty * adj.seen_adjudicator(chair, debate.round)
+            cost += self.conflict_penalty * self.conflicts.conflict_adj_adj(adj, chair)
+            cost += self.history_penalty * self.history.seen_adj_adj(adj, chair)
 
         impt = normalised_importance + adjustment
         diff = 5 + impt - adj._normalized_score

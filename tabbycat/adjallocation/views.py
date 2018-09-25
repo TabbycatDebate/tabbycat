@@ -23,10 +23,10 @@ from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
 from .allocator import allocate_adjudicators
+from .conflicts import ConflictsInfo, HistoryInfo
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
-from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorConflict,
-                     AdjudicatorInstitutionConflict, DebateAdjudicator)
-from .utils import get_clashes, get_histories
+from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+                     AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
 
 from utils.misc import reverse_round
 
@@ -36,52 +36,53 @@ logger = logging.getLogger(__name__)
 class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     @cached_property
-    def get_clashes(self):
-        return get_clashes(self.tournament, self.round)
+    def conflicts_and_history(self):
+        conflicts = ConflictsInfo(teams=self.tournament.team_set.all(),
+            adjudicators=self.tournament.adjudicator_set.all())
+        team_conflicts, adj_conflicts = conflicts.serialized_by_participant()
+        history = HistoryInfo(self.round)
+        team_history, adj_history = history.serialized_by_participant()
 
-    @cached_property
-    def get_histories(self):
-        return get_histories(self.tournament, self.round)
+        teams_combined = {}
+        for team_id, conflicts in team_conflicts.items():
+            teams_combined[team_id] = {'clashes': conflicts}
+        for team_id, history in team_history.items():
+            teams_combined.setdefault(team_id, {})['histories'] = history
+
+        adjs_combined = {}
+        for adj_id, conflicts in adj_conflicts.items():
+            adjs_combined[adj_id] = {'clashes': conflicts}
+        for adj_id, history in adj_history.items():
+            adjs_combined.setdefault(adj_id, {})['histories'] = history
+
+        return teams_combined, adjs_combined
 
     def get_unallocated_adjudicators(self):
         round = self.round
         unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
         populate_feedback_scores(unused_adj_instances)
         unused_adjs = [a.serialize(round) for a in unused_adj_instances]
-        unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
-        unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
+
+        _, adj_conflicts = self.conflicts_and_history
+        for adj in unused_adjs:
+            self.annotate_region_classes(adj)
+            adj['conflicts'] = adj_conflicts[adj['id']]
+
         return json.dumps(unused_adjs)
-
-    def annotate_conflicts(self, serialized_adj_or_team, for_type):
-        adj_or_team_id = serialized_adj_or_team['id']
-        try:
-            serialized_adj_or_team['conflicts']['clashes'] = self.get_clashes[for_type][adj_or_team_id]
-        except KeyError:
-            serialized_adj_or_team['conflicts']['clashes'] = {}
-        try:
-            serialized_adj_or_team['conflicts']['histories'] = self.get_histories[for_type][adj_or_team_id]
-        except KeyError:
-            serialized_adj_or_team['conflicts']['histories'] = {}
-
-        if for_type == 'for_teams':
-            # Teams don't show in AdjudicatorInstitutionConflict; need to
-            # add own institutional clash manually to reverse things
-            if serialized_adj_or_team['institution']:
-                ic = [{'id': serialized_adj_or_team['institution']['id']}]
-                serialized_adj_or_team['conflicts']['clashes']['institution'] = ic
-
-        return serialized_adj_or_team
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
+
+        team_conflicts, adj_conflicts = self.conflicts_and_history
+
         for debate in serialised_draw:
             for da in debate['debateAdjudicators']:
-                da['adjudicator'] = self.annotate_conflicts(da['adjudicator'], 'for_adjs')
-                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
+                da['adjudicator']['conflicts'] = adj_conflicts[da['adjudicator']['id']]
+                self.annotate_region_classes(da['adjudicator'])
             for dt in debate['debateTeams']:
                 if not dt['team']:
                     continue
-                dt['team'] = self.annotate_conflicts(dt['team'], 'for_teams')
+                dt['team']['conflicts'] = team_conflicts[dt['team']['id']]
 
         return super().annotate_draw(draw, serialised_draw)
 
@@ -227,18 +228,6 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         kwargs['save_text'] = self.save_text
         return super().get_context_data(**kwargs)
 
-    def get_formset_queryset(self):
-        return self.formset_model.objects.filter(
-                adjudicator__tournament=self.tournament).order_by(
-                'adjudicator__name')
-
-    def get_formset(self):
-        formset = super().get_formset()
-        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
-        for form in formset:
-            form.fields['adjudicator'].queryset = all_adjs # Order list by alpha
-        return formset
-
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)
 
@@ -255,7 +244,7 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
 class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
-    formset_model = AdjudicatorConflict
+    formset_model = AdjudicatorTeamConflict
     page_title = gettext_lazy("Adjudicator-Team Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
     same_view = 'adjallocation-conflicts-adj-team'
@@ -264,6 +253,20 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
         'fields': ('adjudicator', 'team'),
         'field_classes': {'team': TeamChoiceField},
     })
+
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        all_teams = self.tournament.team_set.order_by('short_name').all()
+        for form in formset:
+            form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+            form.fields['team'].queryset = all_teams        # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            adjudicator__tournament=self.tournament
+        ).order_by('adjudicator__name')
 
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
@@ -290,14 +293,20 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
     same_view = 'adjallocation-conflicts-adj-adj'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
-    formset_factory_kwargs.update({'fields': ('adjudicator', 'conflict_adjudicator')})
+    formset_factory_kwargs.update({'fields': ('adjudicator1', 'adjudicator2')})
 
     def get_formset(self):
         formset = super().get_formset()
         all_adjs = self.tournament.adjudicator_set.order_by('name').all()
         for form in formset:
-            form.fields['conflict_adjudicator'].queryset = all_adjs # Order list by alpha
+            form.fields['adjudicator1'].queryset = all_adjs  # order alphabetically
+            form.fields['adjudicator2'].queryset = all_adjs  # order alphabetically
         return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            adjudicator1__tournament=self.tournament
+        ).order_by('adjudicator1__name')
 
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
@@ -326,6 +335,18 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({'fields': ('adjudicator', 'institution')})
 
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        for form in formset:
+            form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            adjudicator__tournament=self.tournament
+        ).order_by('adjudicator__name')
+
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
             messages.success(self.request, ngettext(
@@ -341,3 +362,45 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
             ) % {'count': ndeleted})
         if nsaved == 0 and ndeleted == 0:
             messages.success(self.request, _("No changes were made to adjudicator-institution conflicts."))
+
+
+class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT
+    formset_model = TeamInstitutionConflict
+    page_title = gettext_lazy("Team-Institution Conflicts")
+    save_text = gettext_lazy("Save Team-Institution Conflicts")
+    same_view = 'adjallocation-conflicts-team-inst'
+    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs.update({
+        'fields': ('team', 'institution'),
+        'field_classes': {'team': TeamChoiceField},
+    })
+
+    def get_formset(self):
+        formset = super().get_formset()
+        all_teams = self.tournament.team_set.order_by('short_name').all()
+        for form in formset:
+            form.fields['team'].queryset = all_teams  # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            team__tournament=self.tournament
+        ).order_by('team__short_name')
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
+                "Saved %(count)d team-institution conflict.",
+                "Saved %(count)d team-institution conflicts.",
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d team-institution conflict.",
+                "Deleted %(count)d team-institution conflicts.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, _("No changes were made to team-institution conflicts."))

@@ -299,51 +299,36 @@ class DrawForDragAndDropMixin(RoundMixin):
     drag and drop table used for editing matchups/adjs/venues with a
     drag and drop interface. Subclass annotate method to add extra view data """
 
-    def annotate_break_classes(self, serialised_team, thresholds):
-        """We can't style break categories in CSS because we need a defined range;
-        this normalises IDs of the break categories so the CSS classes can work"""
-        if serialised_team['break_categories']:
-            breaks_seq = {}
-            for i, r in enumerate(self.break_categories):
-                breaks_seq[r.id] = i
-            # Very rarely teams can have BCs even after they were deleted
-            # In which case it seems best to not calculate a class/liveness
-            if not breaks_seq:
-                return serialised_team
-
-            for bc in serialised_team['break_categories']:
-                bc['class'] = breaks_seq[bc['id']]
-                points = serialised_team['points']
-                bc['will_break'] = determine_liveness(thresholds[bc['id']], points)
-
-        return serialised_team
-
-    def annotate_region_classes(self, adj_or_team):
-        """Same as above, but for regions"""
-        if len(self.regions) == 0:
-            return adj_or_team
-
-        regions_seq = {}
-        for i, r in enumerate(self.regions):
-            regions_seq[r.id] = i
-        if adj_or_team['region']:
-            adj_or_team['region']['class'] = regions_seq[adj_or_team['region']['id']]
-
-        return adj_or_team
-
     @cached_property
     def break_categories(self):
-        return self.tournament.breakcategory_set.order_by('-is_general', 'name')
+        return self.tournament.breakcategory_set.order_by('-is_general', 'name', 'id')
 
     @cached_property
     def break_thresholds(self):
-        t = self.tournament
-        r = self.round
-        return {bc.id: calculate_live_thresholds(bc, t, r) for bc in self.break_categories}
+        return {
+            category.id:
+            calculate_live_thresholds(category, self.tournament, self.round)
+            for category in self.break_categories
+        }
 
     @cached_property
-    def regions(self):
-        return Region.objects.order_by('id')
+    def break_category_classes(self):
+        return {category.id: i for i, category in enumerate(self.break_categories)}
+
+    def annotate_break_classes(self, serialised_team, thresholds):
+        for bc in serialised_team.get('break_categories', []):
+            bc['class'] = self.break_category_classes[bc['id']]
+            points = serialised_team['points']
+            bc['will_break'] = determine_liveness(thresholds[bc['id']], points)
+
+    @cached_property
+    def region_classes(self):
+        return {region.id: i for i, region in enumerate(Region.objects.order_by('id'))}
+
+    def annotate_region_classes(self, adj_or_team):
+        """Adds a class to the region dict, if it exists. Operates in-place."""
+        if adj_or_team.get('region', None):
+            adj_or_team['region']['class'] = self.region_classes[adj_or_team['region']['id']]
 
     def annotate_draw(self, draw, serialised_draw):
         # Need to unique-ify/reorder break categories/regions for consistent CSS
@@ -356,8 +341,8 @@ class DrawForDragAndDropMixin(RoundMixin):
                 team = dt['team']
                 if not team:
                     continue
-                team = self.annotate_break_classes(team, break_thresholds)
-                team = self.annotate_region_classes(team)
+                self.annotate_break_classes(team, break_thresholds)
+                self.annotate_region_classes(team)
                 if team['break_categories'] is not None:
                     statuses = [c['will_break'] for c in team['break_categories']]
                     team_live_categories = statuses.count('live') + statuses.count('?')
@@ -368,7 +353,7 @@ class DrawForDragAndDropMixin(RoundMixin):
                         nsafeteams += 1
 
             for da in debate['debateAdjudicators']:
-                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
+                self.annotate_region_classes(da['adjudicator'])
 
             debate['liveness'] = nlivecategories
             debate['nliveteams'] = nliveteams
@@ -402,7 +387,7 @@ class DrawForDragAndDropMixin(RoundMixin):
         populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
         populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])
 
-        serialised_draw = [d.serialize() for d in draw]
+        serialised_draw = [d.serialize(tournament=self.tournament) for d in draw]
         draw = self.annotate_draw(draw, serialised_draw)
         return json.dumps(serialised_draw)
 

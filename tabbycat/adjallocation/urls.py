@@ -27,5 +27,8 @@ urlpatterns = [
         path('adjudicator-institution/',
             views.AdjudicatorInstitutionConflictsView.as_view(),
             name='adjallocation-conflicts-adj-inst'),
+        path('team-institution/',
+            views.TeamInstitutionConflictsView.as_view(),
+            name='adjallocation-conflicts-team-inst'),
     ])),
 ]
