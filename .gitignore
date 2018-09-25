@@ -24,6 +24,7 @@ dbdata
 
 # Docs
 docs/site/
+docs/.doctrees/
 issues-*.html
 
 # Tags
