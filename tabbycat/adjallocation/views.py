@@ -62,10 +62,10 @@ class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
         unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
         populate_feedback_scores(unused_adj_instances)
         unused_adjs = [a.serialize(round) for a in unused_adj_instances]
-        unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
 
         _, adj_conflicts = self.conflicts_and_history
         for adj in unused_adjs:
+            self.annotate_region_classes(adj)
             adj['conflicts'] = adj_conflicts[adj['id']]
 
         return json.dumps(unused_adjs)
@@ -78,7 +78,7 @@ class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
         for debate in serialised_draw:
             for da in debate['debateAdjudicators']:
                 da['adjudicator']['conflicts'] = adj_conflicts[da['adjudicator']['id']]
-                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
+                self.annotate_region_classes(da['adjudicator'])
             for dt in debate['debateTeams']:
                 if not dt['team']:
                     continue

@@ -872,8 +872,8 @@ class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView
         serialized_unused = [t.serialize() for t in unused]
         break_thresholds = self.break_thresholds
         for t, serialt in zip(unused, serialized_unused):
-            serialt = self.annotate_break_classes(serialt, break_thresholds)
-            serialt = self.annotate_region_classes(serialt)
+            self.annotate_break_classes(serialt, break_thresholds)
+            self.annotate_region_classes(serialt)
 
         kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
         kwargs['saveSidesStatusUrl'] = reverse_round('save-debate-sides-status', self.round)
