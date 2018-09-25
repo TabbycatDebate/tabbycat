@@ -124,7 +124,7 @@ def randomized_url_email_generator(url, tournament_id):
     for instance in participants:
         url_ind = url + instance.url_key + '/'
 
-        variables = {'NAME': instance.name, 'URL': url_ind, 'KEY': instance.url_key, 'TOURN': str(tournament)}
+        variables = {'USER': instance.name, 'URL': url_ind, 'KEY': instance.url_key, 'TOURN': str(tournament)}
 
         emails.append(TournamentEmailMessage(
             'url_email_subject', 'url_email_message',

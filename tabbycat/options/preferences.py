@@ -1403,7 +1403,7 @@ class AdjudicatorDrawNotificationMessage(LongStringPreference):
 @tournament_preferences_registry.register
 class PrivateUrlEmailSubject(StringPreference):
     help_text = _("The subject-line for emails sent to participants with their private URLs. "
-        "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ NAME }}' for the participant's name, and '{{ URL }}' for the private URL.")
+        "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ USER }}' for the participant's name, and '{{ URL }}' for the private URL.")
     verbose_name = _("Private URL notification subject line")
     section = email
     name = 'url_email_subject'
@@ -1413,11 +1413,11 @@ class PrivateUrlEmailSubject(StringPreference):
 @tournament_preferences_registry.register
 class PrivateUrlEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants with their private URLs. "
-        "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ NAME }}' for the participant's name, and '{{ URL }}' for the private URL.")
+        "Use '{{ TOURN }}' as a placeholder for the tournament, '{{ USER }}' for the participant's name, and '{{ URL }}' for the private URL.")
     verbose_name = _("Private URL notification message")
     section = email
     name = 'url_email_message'
-    default = ("Hi {{ NAME }},\n\n"
+    default = ("Hi {{ USER }},\n\n"
         "At {{ TOURN }}, we are using an online tabulation system. You can submit "
         "your ballots and/or feedback at the following URL. This URL is unique to you — do not share it with "
         "anyone, as anyone who knows it can submit forms on your behalf. This URL "
