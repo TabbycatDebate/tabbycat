@@ -527,9 +527,6 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
         else:
             return self.object.matchup
 
-    def get_description(self):
-        return self.matchup_description()
-
     def check_permissions(self):
         debate = self.object
         round = debate.round
@@ -542,10 +539,10 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
 
         if debate.result_status != Debate.STATUS_CONFIRMED:
             logger.warning("Refused public view of ballots for %s: not confirmed", debate)
-            return (404, _("The result for debate %s is not confirmed.") % self.description)
+            return (404, _("The result for debate %s is not confirmed.") % self.matchup_description())
         if debate.confirmed_ballot is None:
             logger.warning("Refused public view of ballots for %s: no confirmed ballot", debate)
-            return (404, _("The debate %s does not have a confirmed ballot.") % self.description)
+            return (404, _("The debate %s does not have a confirmed ballot.") % self.matchup_description())
 
     def get_context_data(self, **kwargs):
         kwargs['motion'] = self.object.confirmed_ballot.motion
@@ -555,7 +552,6 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
 
     def get(self, request, *args, **kwargs):
         self.object = super().get_object()
-        self.description = self.get_description()
 
         error = self.check_permissions()
         if error:
