@@ -1356,16 +1356,7 @@ class PointsEmailMessageBody(LongStringPreference):
     verbose_name = _("Team points message")
     section = email
     name = 'team_points_email_message'
-    default = "Hi {{ USER }},\n\nYour team ({{ TEAM }}) currently has {{ POINTS }} wins in the {{ TOURN }}."
-
-
-@tournament_preferences_registry.register
-class PointsEmailLinkText(StringPreference):
-    help_text = _("The text introducing the link to the current standings in the team points emails.")
-    verbose_name = _("Team points standings link text")
-    section = email
-    name = 'team_points_email_link_text'
-    default = "To consult the current team standings, visit:"
+    default = "Hi {{ USER }},\n\nYour team ({{ TEAM }}) currently has {{ POINTS }} wins in the {{ TOURN }}.\n\n{{ URL }}"
 
 
 @tournament_preferences_registry.register
