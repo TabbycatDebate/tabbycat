@@ -8,8 +8,10 @@ from django.template import Context, Template
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
+from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from results.result import DebateResult
+from options.utils import use_team_code_names
 from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
 
@@ -71,6 +73,7 @@ def adjudicator_assignment_email_generator(round_id):
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
     draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
+    use_codes = use_team_code_names(tournament, False)
 
     adj_position_names = {
         AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
@@ -87,11 +90,12 @@ def adjudicator_assignment_email_generator(round_id):
         return ", ".join(adj_string)
 
     for debate in draw:
+        matchup = debate.matchup_codes if use_codes else debate.matchup
         context = {
             'ROUND': round.name,
             'VENUE': debate.venue.name,
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-            'DRAW': debate.matchup
+            'DRAW': matchup
         }
 
         for adj, pos in debate.adjudicators.with_positions():
@@ -143,19 +147,22 @@ def ballots_email_generator(debate_id):
                                                              'round': debate.round.name, 'room': debate.venue.name}
 
     context = {'DEBATE': round_name}
+    use_codes = use_team_code_names(debate.round.tournament, False)
 
     for ballot in ballots:
         if 'adjudicator' in ballot:
             judge = ballot['adjudicator']
         else:
-            judge = debate.debateadjudicator_set.get(type="C").adjudicator
+            judge = debate.debateadjudicator_set.get(type=DebateAdjudicator.TYPE_CHAIR).adjudicator
 
         if judge.email is None:
             continue
 
-        scores = ''
+        scores = ""
         for team in ballot['teams']:
-            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team['team'].short_name}
+
+            team_name = team['team'].code_name if use_codes else team['team'].short_name
+            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team_name}
 
             for speaker in team['speakers']:
                 scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
