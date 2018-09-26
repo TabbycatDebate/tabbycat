@@ -27,3 +27,4 @@ channels_redis==2.2.1                   # Channels Layer
 
 # Misc
 ipython==6.3.1
+qrcode==6.0
