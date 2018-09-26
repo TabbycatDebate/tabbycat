@@ -14,31 +14,45 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
 .. list-table::
   :header-rows: 1
 
-  * - Event
-    - Description
+  * - Email content
+    - Description and when sent
     - Variables
 
-  * - Adjudicator assignment
-    - Email to adjudicators indicating their room when draw is released.
+  * - **Adjudicator draw notification**
+    - Email to adjudicators indicating their room assignment.
+
+      Sent when the draw is released, if enabled.
     - * ``{{ ROUND }}``: The round name
       * ``{{ VENUE }}``: The venue of the assigned debate
       * ``{{ PANEL }}``: A list of all the adjudicators assigned to the venue (with positions)
       * ``{{ DRAW }}``: A list of the team matchup with their roles
       * ``{{ POSITION }}``: The target adjudicator's position in the panel
-  * - Private URL distribution
-    - Email to participants giving them their private URL for e-forms
+
+  * - **Private URL distribution**
+    - Email to participants giving them their private URL for electronic forms.
+
+      Sent when you click the "Email URLs" button under Private URLs.
     - * ``{{ URL }}``: The personalized URL
       * ``{{ KEY }}``: The private code in the URL
-  * - Ballot submission receipt
-    - Email to adjudicators of their ballot after tabroom confirmation
+
+  * - **Ballot submission receipt**
+    - Email to adjudicators of their ballot after tabroom confirmation.
+
+      Sent when their ballot's result status becomes confirmed, if enabled.
     - * ``{{ DEBATE }}``: The name (with round & venue) of the relevent debate
       * ``{{ SCORES }}``: The submitted ballot with speaker scores ands team names
-  * - Current team standings
-    - Email to speakers with their point total
+
+  * - **Current team standings**
+    - Email to speakers with their point total.
+
+      Sent when you click the "Email Team Wins/Losses" or "Email Team Points" button on the "Confirm Round Completion" page.
     - * ``{{ URL }}``: The URL of the team standings page (if public)
       * ``{{ TEAM }}``: The team's name
       * ``{{ POINTS }}``: The team's number of points
-  * - Motion release
-    - Email to speakers with the motion(s) of the current round
+
+  * - **Motion release**
+    - Email to speakers with the motion(s) of the current round.
+
+      Sent when you release the motion(s), if enabled.
     - * ``{{ ROUND }}``: The name of the round
       * ``{{ MOTIONS }}``: A list of the motions released
