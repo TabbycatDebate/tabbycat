@@ -62,6 +62,7 @@ formats too. If you're looking for a general overview of the software, check out
    features/draw-generation
    features/draw-generation-bp
    features/printing
+   features/notifications
    features/standings-rules
    features/team-code-names
    features/data-importers
