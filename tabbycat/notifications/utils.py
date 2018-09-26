@@ -188,8 +188,7 @@ def standings_email_generator(url, round_id):
 
     context = {'TOURN': str(tournament)}
 
-    if tournament.pref('public_team_standings'):
-        context['url'] = url
+    context['URL'] = url if tournament.pref('public_team_standings') else ""
 
     for team in teams:
         context['POINTS'] = str(team.points_count)
