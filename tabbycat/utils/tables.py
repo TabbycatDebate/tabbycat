@@ -214,17 +214,17 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return team.long_name
 
-    def _adjudicator_record_link(self, text, adj):
+    def _adjudicator_record_link(self, adj, suffix=""):
         adj_short_name = adj.name.split(" ")[0]
         if self.admin:
             return {
-                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': text},
+                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': suffix},
                 'link': reverse_tournament('participants-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
         elif self.tournament.pref('public_record'):
             return {
-                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': text},
+                'text': _("View %(a)s's %(d)s Record") % {'a': adj_short_name, 'd': suffix},
                 'link': reverse_tournament('participants-public-adjudicator-record',
                     self.tournament, kwargs={'pk': adj.pk})
             }
@@ -485,7 +485,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for adj in adjudicators:
             cell = {'text': adj.name}
             if self._show_record_links:
-                cell['popover'] = {'content': [self._adjudicator_record_link(adj.name, adj)]}
+                cell['popover'] = {'content': [self._adjudicator_record_link(adj)]}
             if subtext == 'institution' and adj.institution is not None:
                 cell['subtext'] = adj.institution.code
             adj_data.append(cell)
@@ -555,7 +555,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
 
                 if self._show_record_links:
-                    popover_data.append(self._adjudicator_record_link(descriptors, a['adj']))
+                    popover_data.append(self._adjudicator_record_link(a['adj'], suffix=descriptors))
                 else:
                     popover_data.append({'text': text + "" + descriptors})
 
