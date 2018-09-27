@@ -30,6 +30,13 @@
 
   <div class="list-group mt-2">
 
+    {% if pref.team_code_names != 'off' %}
+      {% blocktrans trimmed asvar text with code_name=person.speaker.team.code_name %}
+        Your team's code name is <strong>{{ code_name }}</strong>.
+      {% endblocktrans %}
+      {% include "components/item-info.html" with type="primary" %}
+    {% endif %}
+
     {% if pref.public_checkins_submit %}
       <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
         {% csrf_token %}
