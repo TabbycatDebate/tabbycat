@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _, gettext_lazy
 class TestEmailForm(forms.Form):
     """Simple form that just sends a test email."""
 
-    recipient = forms.EmailField(label=gettext_lazy("Recipient"), required=True)
+    recipient = forms.EmailField(label=gettext_lazy("Recipient email address"), required=True)
 
     def send_email(self, host):
         send_mail(
