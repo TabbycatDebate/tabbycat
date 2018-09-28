@@ -10,14 +10,15 @@
           <span v-if="ballot.debateAdjudicators && ballot.debateAdjudicators.length > 1">
             Adjudicating with
             <span v-for="(da, i) in panellistsExcludingSelf">
-              <template v-if="i !== 0">&amp;</template>
+              <template v-if="i !== 0">; </template>
+              <template v-if="i == panellistsExcludingSelf.length - 1">&amp; </template>
               <strong>{{ da.adjudicator.name }}</strong>
-              <template v-if="da.position === 'c'">(Chair, </template>
-              <template v-if="da.position === 'o'">(Solo Chair, </template>
-              <template v-if="da.position === 'p'">(Panellist, </template>
-              <template v-if="da.position === 't'">(Trainee, </template>
-              {{ getAdjudicatorInstitution(da) }}).
-            </span>
+              <template v-if="da.position === 'c'"> (Chair, </template>
+              <template v-if="da.position === 'o'"> (Solo Chair, </template>
+              <template v-if="da.position === 'p'"> (Panellist, </template>
+              <template v-if="da.position === 't'"> (Trainee, </template>
+              <template>{{ getAdjudicatorInstitution(da) }})</template>
+            </span>.
           </span>
 
           <span v-if="showScoring">

@@ -550,8 +550,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     descriptors.append("<span class='text-danger'>in minority</span>")
                 text = a['adj'].name
 
-                if descriptors:
-                    descriptors = "(%s)" % (", ".join(descriptors))
+                descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
 
                 if self._show_record_links:
                     popover_data.append(self._adjudicator_record_link(descriptors, a['adj']))
