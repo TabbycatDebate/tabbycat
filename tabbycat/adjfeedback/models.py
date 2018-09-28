@@ -155,7 +155,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     # We can't insert the CHOICE_SEPARATOR using string formatting because the below must be
     # translated lazily, and string formatting isn't compatible with lazy objects. (It can be
     # done with django.utils.text.format_lazy(), but this uses {}-style formating, not %-style.)
-    choices = models.CharField(max_length=500, blank=True,
+    choices = models.TextField(blank=True,
         verbose_name=_("choices"),
         help_text=_("Permissible choices for select one/multiple fields, separated by '//' "
                     "(ignored for other fields)"))
