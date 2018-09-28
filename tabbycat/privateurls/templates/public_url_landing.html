@@ -30,7 +30,7 @@
 
   <div class="list-group mt-2">
 
-    {% if pref.team_code_names != 'off' %}
+    {% if pref.team_code_names != 'off' and person.speaker.team %}
       {% blocktrans trimmed asvar text with code_name=person.speaker.team.code_name %}
         Your team's code name is <strong>{{ code_name }}</strong>.
       {% endblocktrans %}
