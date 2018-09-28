@@ -18,8 +18,7 @@
               <template v-if="da.position === 'p'"> (Panellist, </template>
               <template v-if="da.position === 't'"> (Trainee, </template>
               <template>{{ getAdjudicatorInstitution(da) }})</template>
-            </span>
-            .
+            </span>.
           </span>
 
           <span v-if="showScoring">
