@@ -1,8 +1,10 @@
 import json
 import logging
 from collections import OrderedDict
-from smtplib import SMTPException
 from threading import Lock
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from django.conf import settings
 from django.contrib import messages
@@ -21,7 +23,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import SentMessageRecord
-from notifications.utils import standings_email_generator
+from notifications.consumers import NotificationQueueConsumer
 from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
@@ -191,12 +193,14 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
     def post(self, request, *args, **kwargs):
         url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
 
-        try:
-            standings_email_generator(url, self.round.id)
-        except (ConnectionError, SMTPException):
-            messages.error(request, _("Team point emails could not be sent."))
-        else:
-            messages.success(request, _("Team point emails have been sent to the speakers."))
+        group_name = NotificationQueueConsumer.group_prefix + "_" + self.tournament.slug
+        async_to_sync(get_channel_layer().group_send)(group_name, {
+            "type": "send_notifications",
+            "message": "team_points",
+            "extra": {'url': url, 'round_id': self.round.id}
+        })
+
+        messages.success(request, _("Team point emails have been queued to be sent to the speakers."))
 
         return redirect_round('tournament-complete-round-check', self.round)
 

@@ -1,4 +1,5 @@
-from smtplib import SMTPException
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from django.conf import settings
 from django.contrib import messages
@@ -10,7 +11,7 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from notifications.utils import motion_release_email_generator
+from notifications.consumers import NotificationQueueConsumer
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from utils.misc import redirect_round
@@ -154,16 +155,13 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     def post(self, request, *args, **kwargs):
         if self.tournament.pref('enable_motion_email'):
-            try:
-                motion_release_email_generator(self.round.id)
-            except SMTPException:
-                messages.error(self.request, _("There was a problem sending motion release emails."))
-            except ConnectionError as e:
-                messages.error(self.request, _(
-                    "There was a problem connecting to the e-mail server when trying to send motion release emails: %(error)s"
-                ) % {'error': str(e)})
-            else:
-                self.message_text += _(" Emails successfully sent.")
+            group_name = NotificationQueueConsumer.group_prefix + "_" + self.tournament.slug
+            async_to_sync(get_channel_layer().group_send)(group_name, {
+                "type": "send_notifications",
+                "message": "motion",
+                "extra": {'round_id': self.round.id}
+            })
+            self.message_text += _(" Emails queued to be sent.")
 
         return super().post(request, *args, **kwargs)
 

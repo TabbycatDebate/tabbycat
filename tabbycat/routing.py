@@ -5,6 +5,7 @@ from channels.auth import AuthMiddlewareStack
 
 from actionlog.consumers import ActionLogEntryConsumer
 from checkins.consumers import CheckInEventConsumer
+from notifications.consumers import NotificationQueueConsumer
 from results.consumers import BallotResultConsumer, BallotStatusConsumer
 
 
@@ -24,7 +25,9 @@ application = ProtocolTypeRouter({
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer),
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer),
             # CheckInStatusContainer
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer)
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer),
+            # Email queue
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/notifications/$', NotificationQueueConsumer)
         ])
     ),
 })
