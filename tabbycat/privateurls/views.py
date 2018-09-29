@@ -56,42 +56,46 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     template_name = 'private_urls.html'
     tables_orientation = 'columns'
 
-    def get_speakers_table(self):
-        tournament = self.tournament
-
-        def _build_url(speaker):
-            if speaker.url_key is None:
+    def add_url_columns(self, table, people, request):
+        def build_url(person):
+            if person.url_key is None:
                 return {'text': _("no URL"), 'class': 'text-warning'}
-            path = reverse_tournament('privateurls-person-index', tournament,
-                kwargs={'url_key': speaker.url_key})
-            return {'text': self.request.build_absolute_uri(path), 'class': 'small'}
+            path = reverse_tournament('privateurls-person-index', self.tournament,
+                kwargs={'url_key': person.url_key})
+            return {'text': request.build_absolute_uri(path), 'class': 'small'}
 
-        speakers = Speaker.objects.filter(team__tournament=tournament)
+        def build_link(person):
+            if person.url_key is None:
+                return {'text': _("no key"), 'class': 'text-warning'}
+            path = reverse_tournament('privateurls-person-index', self.tournament,
+                kwargs={'url_key': person.url_key})
+            return {'text': "🔗", 'link': request.build_absolute_uri(path)}
+
+        table.add_column(
+            {'title': _("URL"), 'key': "url"},
+            [build_url(person) for person in people]
+        )
+        table.add_column(
+            {'title': "", 'key': "key"},
+            [build_link(person) for person in people]
+        )
+        return table
+
+    def get_speakers_table(self):
+        speakers = Speaker.objects.filter(team__tournament=self.tournament)
         table = TabbycatTableBuilder(view=self, title=_("Speakers"), sort_key="name")
         table.add_speaker_columns(speakers, categories=False)
-        table.add_column(
-            {'key': 'url', 'title': _("URL")},
-            [_build_url(speaker) for speaker in speakers]
-        )
+        self.add_url_columns(table, speakers, self.request)
 
         return table
 
     def get_adjudicators_table(self):
         tournament = self.tournament
 
-        def _build_url(adjudicator):
-            if adjudicator.url_key is None:
-                return {'text': _("no URL"), 'class': 'text-warning'}
-            path = reverse_tournament('privateurls-person-index', tournament, kwargs={'url_key': adjudicator.url_key})
-            return {'text': self.request.build_absolute_uri(path), 'class': 'small'}
-
         adjudicators = Adjudicator.objects.all() if tournament.pref('share_adjs') else Adjudicator.objects.filter(tournament=tournament)
         table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         table.add_adjudicator_columns(adjudicators, show_institutions=False, show_metadata=False)
-        table.add_column(
-            {'key': 'url', 'title': _("URL")},
-            [_build_url(adj) for adj in adjudicators]
-        )
+        self.add_url_columns(table, adjudicators, self.request)
 
         return table
 
