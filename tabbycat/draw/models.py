@@ -262,7 +262,7 @@ class Debate(models.Model):
         for each item if this is called for many different debates in the
         same tournament."""
         if tournament is None:
-            tournament = self.tournament
+            tournament = self.round.tournament
         for side in tournament.sides:
             sdt = {'side': side, 'team': None,
                    'position': get_side_name(tournament, side, 'full'),
