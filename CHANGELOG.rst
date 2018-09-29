@@ -12,6 +12,15 @@ Change Log
     - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development.
 
 
+2.2.3
+-----
+*Release date: 28 September 2018*
+
+- *Literally* fix the issue causing public views of released scoresheets to throw errors (thanks for the pull request Étienne)
+- Fix minor spacing issues in printed ballots (thanks for the pull request Étienne)
+- Fix issue where institution-less adjudicators would cause some draw views to crash (thanks for the pull request Étienne)
+
+
 2.2.2
 -----
 *Release date: 22 September 2018*

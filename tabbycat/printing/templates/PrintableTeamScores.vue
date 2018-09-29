@@ -108,7 +108,16 @@ export default {
   },
   computed: {
     team: function () {
-      return this.dt.team
+      if (this.dt.team !== null) {
+        return this.dt.team
+      } else {
+        // Fallback if no team is assigned
+        return {
+          code_name: '____________________________________________________________',
+          short_name: '____________________________________________________________',
+          speakers: [],
+        }
+      }
     },
     teamName: function () {
       if (this.roundInfo.teamCodes === true) {
@@ -118,7 +127,7 @@ export default {
     },
     speakersList: function () {
       let speakersList = ''
-      _.forEach(this.dt.team.speakers, (speaker) => {
+      _.forEach(this.team.speakers, (speaker) => {
         speakersList += `${speaker.name}, `
       })
       return speakersList.slice(0, -2)

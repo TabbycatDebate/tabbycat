@@ -279,6 +279,9 @@ class Debate(models.Model):
         """`tournament` can be provided to avoid hitting the preference cache
         for each item if this is called for many different debates in the
         same tournament."""
+        if tournament is None:
+            tournament = self.round.tournament
+
         debate = {'id': self.id, 'bracket': self.bracket,
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
