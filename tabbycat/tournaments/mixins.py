@@ -343,7 +343,7 @@ class DrawForDragAndDropMixin(RoundMixin):
                     continue
                 self.annotate_break_classes(team, break_thresholds)
                 self.annotate_region_classes(team)
-                if team['break_categories'] is not None:
+                if team['break_categories']:
                     statuses = [c['will_break'] for c in team['break_categories']]
                     team_live_categories = statuses.count('live') + statuses.count('?')
                     nlivecategories += team_live_categories

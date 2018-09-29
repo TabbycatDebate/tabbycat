@@ -340,7 +340,7 @@ class Team(models.Model):
         team['region'] = self.region.serialize if self.region else None
         team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in self.speakers]
         break_categories = self.break_categories.all()
-        team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
+        team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else []
         team['highlights'] = {'region': False, 'gender': False, 'category': False}
         team['wins'] = self.wins_count
         team['points'] = self.points_count
