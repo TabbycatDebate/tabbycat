@@ -15,7 +15,8 @@ from utils.admin import TabbycatModelAdminFieldsMixin
 @admin.register(BallotSubmission)
 class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('id', 'debate', 'version', 'get_round', 'timestamp',
-            'submitter_type', 'submitter', 'confirmer')
+            'submitter_type', 'submitter', 'confirmer', 'confirmed')
+    list_editable = ('confirmed',)
     search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     raw_id_fields = ('debate', 'motion', 'forfeit')
     list_filter = ('debate__round', 'submitter', 'confirmer')
