@@ -194,12 +194,14 @@ names are relevant, or to the team's real name if it is not. #}
             </div>
           {% endif %}
 
-          <div class="list-group-item">
-            <strong>{% trans "Speakers:" %}</strong>
-            {% for speaker in team.speakers %}
-              {{ speaker.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </div>
+          {% if pref.show_speakers_in_draw %}
+            <div class="list-group-item">
+              <strong>{% trans "Speakers:" %}</strong>
+              {% for speaker in team.speakers %}
+                {{ speaker.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
 
           {% if team.division %}
             <div class="list-group-item">
