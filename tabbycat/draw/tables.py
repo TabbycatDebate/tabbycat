@@ -273,7 +273,14 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
             'tooltip': force_text(metric_info['name']),
         }
         infos = self.standings.get_standings(teams)
-        self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])
+        cells = []
+        for info in infos:
+            points = info.metrics[metric_info['key']]
+            cells.append({
+                'text': metricformat(points),
+                'sort': points,
+            })
+        self.add_column(header, cells)
 
         # Sides
         sides_lookup = {dt.team_id: dt.side for debate in draw
@@ -318,7 +325,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         self.add_column({'key': 'status', 'title': _("Status")}, cells)
 
         # Sort by points as secondary sort (will be sorted by cost in Vue)
-        self.data.sort(key=lambda x: x[1]['sort'], reverse=True)
+        self.data.sort(key=lambda x: x[1].get('sort', 0), reverse=True)
 
 
 class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilder):
