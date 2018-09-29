@@ -70,10 +70,6 @@ export default {
       return null
     },
     conflictingInstitutionIDs: function () {
-      if (this.conflictableType === 'team') {
-        return [this.conflictable.institution.id]
-      }
-      // Adjs don't necessarily conflict with their own instutitions
       return _.map(this.conflictable.conflicts.clashes.institution, 'id')
     },
     conflictsStatus: function () {
