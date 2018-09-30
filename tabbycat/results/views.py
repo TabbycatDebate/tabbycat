@@ -264,7 +264,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
     def send_email_receipts(self):
         # For proper error handling for admin/assistants, overwrite this
-        if self.debate.round.stage == Round.STAGE_ELIMINATION:
+        if self.debate.round.stage == Round.STAGE_ELIMINATION and self.tournament.pref('teams_in_debate') == 'bp':
             return False
 
         try:
