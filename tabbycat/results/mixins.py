@@ -37,7 +37,7 @@ class PublicSubmissionFieldsMixin:
 
 class BallotEmailWithStatusMixin:
     def send_email_receipts(self):
-        if self.debate.round.stage == Round.STAGE_ELIMINATION:
+        if self.debate.round.stage == Round.STAGE_ELIMINATION and self.tournament.pref('teams_in_debate') == 'bp':
             return False
 
         try:
