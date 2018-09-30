@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.utils.translation import gettext as _
 
 from notifications.utils import ballots_email_generator
+from tournaments.models import Round
 from utils.misc import get_ip_address
 
 from .models import Submission
@@ -36,6 +37,9 @@ class PublicSubmissionFieldsMixin:
 
 class BallotEmailWithStatusMixin:
     def send_email_receipts(self):
+        if self.debate.round.stage == Round.STAGE_ELIMINATION:
+            return False
+
         try:
             ballots_email_generator(self.debate.id)
         except SMTPException:
