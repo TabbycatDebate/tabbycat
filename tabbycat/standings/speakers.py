@@ -93,6 +93,27 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
         )
 
 
+class SpeakerTeamPointsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
+
+    key = "team_points"
+    name = _("team points")
+    abbr = _("Team")
+
+
+    def get_annotation(self, round):
+        """Returns a QuerySet annotated with the metric given. All positional
+        arguments from the third onwards, and all keyword arguments, are passed
+        to get_annotation_metric_query_str()."""
+
+        annotation_filter = Q(
+            team__debateteam__teamscore__ballot_submission__confirmed=True,
+            team__debateteam__debate__round__seq__lte=round.seq,
+            team__debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+        )
+
+        return Sum('team__debateteam__teamscore__points', filter=annotation_filter)
+
+
 class StandardDeviationSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     """Metric annotator for standard deviation of speaker score."""
     key = "stdev"
@@ -174,6 +195,7 @@ class SpeakerStandingsGenerator(BaseStandingsGenerator):
         "total"         : TotalSpeakerScoreMetricAnnotator,
         "average"       : AverageSpeakerScoreMetricAnnotator,
         "trimmed_mean"  : TrimmedMeanSpeakerScoreMetricAnnotator,
+        "team_points"   : SpeakerTeamPointsMetricAnnotator,
         "stdev"         : StandardDeviationSpeakerScoreMetricAnnotator,
         "count"         : NumberOfSpeechesMetricAnnotator,
         "replies_sum"   : TotalReplyScoreMetricAnnotator,
