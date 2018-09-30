@@ -66,7 +66,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
         def build_link(person):
             if person.url_key is None:
-                return {'text': _("no key"), 'class': 'text-warning'}
+                return ''
             path = reverse_tournament('privateurls-person-index', self.tournament,
                 kwargs={'url_key': person.url_key})
             return {'text': "🔗", 'link': request.build_absolute_uri(path)}
