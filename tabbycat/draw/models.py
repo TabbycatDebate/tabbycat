@@ -263,7 +263,6 @@ class Debate(models.Model):
         same tournament."""
         if tournament is None:
             tournament = self.round.tournament
-
         for side in tournament.sides:
             sdt = {'side': side, 'team': None,
                    'position': get_side_name(tournament, side, 'full'),
