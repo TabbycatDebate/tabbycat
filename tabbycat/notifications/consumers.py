@@ -6,6 +6,7 @@ from django.core import mail
 from django.template import Context, Template
 from django.utils.translation import gettext_lazy as _
 
+from draw.models import Debate
 from tournaments.models import Round, Tournament
 
 from .models import SentMessageRecord
@@ -31,7 +32,16 @@ class NotificationQueueConsumer(SyncConsumer):
     }
 
     def email(self, event):
-        t = Tournament.objects.get(pk=event['extra']['tournament_id'])
+        if hasattr(event['extra'], 'debate_id'):
+            round = Debate.objects.get(pk=event['extra']['debate_id']).round
+            t = round.tournament
+        elif hasattr(event['extra'], 'round_id'):
+            round = Round.objects.get(pk=event['extra']['round_id'])
+            t = round.tournament
+        else:
+            round = None
+            t = Tournament.objects.get(pk=event['extra']['tournament_id'])
+
         notification_type = event['message']
 
         from_email = "%s <%s>" % (t.short_name, settings.DEFAULT_FROM_EMAIL)
@@ -42,9 +52,6 @@ class NotificationQueueConsumer(SyncConsumer):
         body = Template(t.pref(notification_type + "_email_message"))
 
         data = self.NOTIFICATION_GENERATORS[notification_type](**event['extra'])
-        round = None
-        if hasattr(event['extra'], 'round_id'):
-            round = Round.objects.get(pk=event['extra']['round_id'])
 
         # Prepare messages
         messages = []
