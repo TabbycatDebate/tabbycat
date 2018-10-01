@@ -50,13 +50,13 @@ export default {
       return names.join(' ')
     },
     getClashesForSlideOver: function (item) {
-      const clashes = item.conflicts.clashes
+      if (!item.hasOwnProperty('conflicts') || !item.conflicts.hasOwnProperty('clashes')) {
+        return []
+      }
+
       const formattedClashes = []
       const self = this
-
-      if (_.isUndefined(clashes) || !clashes) { return [] }
-
-      _.forEach(clashes, (clashesList, clashesType) => {
+      _.forEach(item.conflicts.clashes, (clashesList, clashesType) => {
         _.forEach(clashesList, (clash) => {
           let clashName = false
           let clashIcon = ''
@@ -90,12 +90,13 @@ export default {
       return formattedClashes
     },
     getHistoriesForSlideOver: function (item) {
-      let histories = item.conflicts.histories
-      const formattedHistories = []
-      if (_.isUndefined(histories) || !histories) { return [] }
-      const self = this
+      if (!item.hasOwnProperty('conflicts') || !item.conflicts.hasOwnProperty('histories')) {
+        return []
+      }
 
-      _.forEach(histories, (historiesList, historiesType) => {
+      const formattedHistories = []
+      const self = this
+      _.forEach(item.conflicts.histories, (historiesList, historiesType) => {
         _.forEach(historiesList, (history) => {
           let historyName = false
 
@@ -133,7 +134,7 @@ export default {
       }
 
       // Order by rounds;
-      histories = _.sortBy(formattedHistories, [function (h) {
+      let histories = _.sortBy(formattedHistories, [function (h) {
         return h.ago
       }])
 
