@@ -147,15 +147,15 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
     page_emoji = '🔍'
 
     def get_table(self):
-        tournament = self.tournament
+        adjudicators = self.tournament.adjudicator_set.annotate(feedback_count=Count('adjudicatorfeedback'))
         table = TabbycatTableBuilder(view=self, sort_key="name")
-        table.add_adjudicator_columns(tournament.adjudicator_set.all())
+        table.add_adjudicator_columns(adjudicators)
         feedback_data = []
-        for adj in tournament.adjudicator_set.all().annotate(feedback_count=Count('adjudicatorfeedback')):
+        for adj in adjudicators:
             count = adj.feedback_count
             feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
-                'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
+                'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.id}),
             })
         table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, feedback_data)
         return table
@@ -185,12 +185,12 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             })
         team_table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, team_feedback_data)
 
-        adjs = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
+        adjudicators = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
         adj_table = TabbycatTableBuilder(
             view=self, title=_('From Adjudicators'), sort_key='name')
-        adj_table.add_adjudicator_columns(adjs)
+        adj_table.add_adjudicator_columns(adjudicators)
         adj_feedback_data = []
-        for adj in adjs:
+        for adj in adjudicators:
             count = adj.feedback_count
             adj_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
