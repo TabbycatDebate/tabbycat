@@ -188,7 +188,7 @@ push_spec = get_git_push_spec()
 run_command(["git", "push", remote_name, push_spec])
 
 # Scale dynos (by default it only adds 1 web dyno)
-run_heroku_command(["ps:scale", "web=%s" % args.web_dynos])
+run_heroku_command(["ps:scale", "worker=1", "web=%s" % args.web_dynos])
 
 # Make secret key
 command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])

@@ -1,10 +1,4 @@
-import logging
-from smtplib import SMTPException
-
-from django.conf import settings
-from django.core import mail
 from django.db.models import Exists, OuterRef
-from django.template import Context, Template
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
@@ -16,56 +10,6 @@ from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
 
 from .models import SentMessageRecord
-
-logger = logging.getLogger(__name__)
-
-
-class TournamentEmailMessage(mail.EmailMessage):
-    def __init__(self, subject, body, tournament=None, round=None, event=None, person=None, fields=None,
-                 connection=None, headers={}, cc=None, bcc=None, attachments=None):
-
-        self.person = person
-        self.emails = [self.person.email]
-
-        self.tournament = tournament
-        self.round = round
-
-        self.event = event
-        self.headers = headers
-
-        self.fields = fields
-        self.context = Context(fields)
-        self.subject = Template(self.tournament.pref(subject)).render(self.context)
-        self.body = Template(self.tournament.pref(body)).render(self.context)
-
-        self.from_email = "%s <%s>" % (self.tournament.short_name, settings.DEFAULT_FROM_EMAIL)
-        self.reply_to = None
-        if self.tournament.pref('reply_to_address') != "":
-            self.reply_to = ["%s <%s>" % (self.tournament.pref('reply_to_name'), self.tournament.pref('reply_to_address'))]
-
-        super().__init__(self.subject, self.body, self.from_email, self.emails, bcc, connection, attachments,
-            self.headers, cc, self.reply_to)
-
-    def as_sent_record(self):
-        return SentMessageRecord(recipient=self.person, email=self.person.email,
-                                 event=self.event, method=SentMessageRecord.METHOD_TYPE_EMAIL,
-                                 round=self.round, tournament=self.tournament,
-                                 context=self.fields, message=self.message().as_string())
-
-
-def send_mail(emails):
-    try:
-        mail.get_connection().send_messages(emails)
-    except SMTPException:
-        logger.exception("Failed to send e-mails.")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending e-mails.")
-        raise
-    else:
-        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in emails])
-
-    return len(emails)
 
 
 def adjudicator_assignment_email_generator(round_id):
@@ -105,12 +49,9 @@ def adjudicator_assignment_email_generator(round_id):
             context['USER'] = adj.name
             context['POSITION'] = adj_position_names[pos]
 
-            emails.append(TournamentEmailMessage(
-                'adj_email_subject_line', 'adj_email_message',
-                tournament, round,
-                SentMessageRecord.EVENT_TYPE_DRAW, adj, context))
+            emails.append((context, adj))
 
-    return send_mail(emails)
+    return emails
 
 
 def randomized_url_email_generator(url, tournament_id):
@@ -130,12 +71,9 @@ def randomized_url_email_generator(url, tournament_id):
 
         variables = {'USER': instance.name, 'URL': url_ind, 'KEY': instance.url_key, 'TOURN': str(tournament)}
 
-        emails.append(TournamentEmailMessage(
-            'url_email_subject', 'url_email_message',
-            tournament, None,
-            SentMessageRecord.EVENT_TYPE_URL, instance, variables))
+        emails.append((variables, instance))
 
-    return send_mail(emails)
+    return emails
 
 
 def ballots_email_generator(debate_id):
@@ -170,12 +108,9 @@ def ballots_email_generator(debate_id):
         context['USER'] = judge.name
         context['SCORES'] = scores
 
-        emails.append(TournamentEmailMessage(
-            'ballot_email_subject', 'ballot_email_message',
-            tournament, debate.round,
-            SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context))
+        emails.append((context, judge))
 
-    return send_mail(emails)
+    return emails
 
 
 def standings_email_generator(url, round_id):
@@ -200,12 +135,9 @@ def standings_email_generator(url, round_id):
 
             context['USER'] = speaker.name
 
-            emails.append(TournamentEmailMessage(
-                'team_points_email_subject', 'team_points_email_message',
-                tournament, round,
-                SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
+            emails.append((context, speaker))
 
-    return send_mail(emails)
+    return emails
 
 
 def motion_release_email_generator(round_id):
@@ -236,9 +168,6 @@ def motion_release_email_generator(round_id):
 
             context['USER'] = speaker.name
 
-            emails.append(TournamentEmailMessage(
-                'motion_email_subject', 'motion_email_message',
-                round.tournament, round,
-                SentMessageRecord.EVENT_TYPE_MOTIONS, speaker, context))
+            emails.append((context, speaker))
 
-    return send_mail(emails)
+    return emails

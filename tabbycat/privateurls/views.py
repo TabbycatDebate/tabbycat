@@ -1,5 +1,7 @@
 import logging
-from smtplib import SMTPException
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
@@ -13,7 +15,6 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
-from notifications.utils import randomized_url_email_generator
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -150,21 +151,13 @@ class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
         path = reverse_tournament('privateurls-person-index', t, kwargs={'url_key': '0'})
         url = request.build_absolute_uri(path)[:-2]
 
-        try:
-            nparticipants = randomized_url_email_generator(url, t.id)
-        except SMTPException:
-            messages.error(self.request, _("There was a problem sending private URLs to participants."))
-        except ConnectionError as e:
-            messages.error(self.request, _(
-                "There was a problem connecting to the e-mail server when trying to send private "
-                "URLs to participants: %(error)s"
-            ) % {'error': str(e)})
-        else:
-            messages.success(self.request, ngettext(
-                "An E-mail with a private URL was sent to %(nparticipants)d participant.",
-                "E-mails with private ballot URLs were sent to %(nparticipants)d participants.",
-                nparticipants
-            ) % {'nparticipants': nparticipants})
+        async_to_sync(get_channel_layer().send)("notifications", {
+            "type": "email",
+            "message": "url",
+            "extra": {'url': url, 'tournament_id': t.id}
+        })
+
+        messages.success(self.request, _("Private URL emails have been successfully queued for sending."))
 
         people_no_email = t.participants.filter(
             Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False

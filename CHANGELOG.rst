@@ -10,6 +10,7 @@ Change Log
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
     - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details).
     - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development.
+- Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
 
 2.2.3

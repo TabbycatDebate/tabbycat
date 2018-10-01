@@ -1,10 +1,11 @@
 from django.conf.urls import url
 
-from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 
 from actionlog.consumers import ActionLogEntryConsumer
 from checkins.consumers import CheckInEventConsumer
+from notifications.consumers import NotificationQueueConsumer
 from results.consumers import BallotResultConsumer, BallotStatusConsumer
 
 
@@ -24,7 +25,12 @@ application = ProtocolTypeRouter({
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_results/$', BallotResultConsumer),
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/ballot_statuses/$', BallotStatusConsumer),
             # CheckInStatusContainer
-            url(r'^ws/(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer)
+            url(r'^ws/(?P<tournament_slug>[-\w_]+)/checkins/$', CheckInEventConsumer),
         ])
     ),
+
+    # Worker handlers (which don't need a URL/protocol)
+    "channel": ChannelNameRouter({
+        "notifications": NotificationQueueConsumer, # Name used in runworker cmd
+    }),
 })
