@@ -415,6 +415,10 @@ class DebateTeam(models.Model):
         except KeyError:
             return self.get_side_display()  # fallback
 
+    def get_side_abbr(self, tournament=None):
+        """Convenience function, mainly for use in templates."""
+        return self.get_side_name(tournament, 'abbr')
+
 
 class MultipleDebateTeamsError(DebateTeam.MultipleObjectsReturned):
     pass
