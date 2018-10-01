@@ -18,7 +18,7 @@ from utils.views import PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
 from .consumers import CheckInEventConsumer
-from .models import Event, PersonIdentifier, VenueIdentifier
+from .models import PersonIdentifier, VenueIdentifier
 from .utils import create_identifiers, get_unexpired_checkins
 
 
@@ -286,7 +286,12 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'broadcast_checkin',
-                'content': { 'barcodes': [identifier.barcode], 'status': action == 'checkin', 'type': 'people', 'component_id': None }
+                'content': {
+                    'barcodes': [identifier.barcode],
+                    'status': action == 'checkin',
+                    'type': 'people',
+                    'component_id': None
+                }
             }
         )
 
