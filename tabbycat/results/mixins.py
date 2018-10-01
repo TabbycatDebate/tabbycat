@@ -3,6 +3,7 @@ from smtplib import SMTPException
 from django.contrib import messages
 from django.utils.translation import gettext as _
 
+from tournaments.models import Round
 from utils.misc import get_ip_address
 
 from .models import Submission
@@ -37,6 +38,9 @@ class PublicSubmissionFieldsMixin:
 
 class BallotEmailWithStatusMixin:
     def send_email_receipts(self):
+        if self.debate.round.stage == Round.STAGE_ELIMINATION:
+            return False
+
         try:
             send_ballot_receipt_emails_to_adjudicators(DebateResult(self.ballotsub).as_dicts(), self.debate)
         except SMTPException:

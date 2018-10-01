@@ -264,6 +264,9 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
     def send_email_receipts(self):
         # For proper error handling for admin/assistants, overwrite this
+        if self.debate.round.stage == Round.STAGE_ELIMINATION:
+            return False
+
         try:
             send_ballot_receipt_emails_to_adjudicators(DebateResult(self.ballotsub).as_dicts(), self.debate)
         except (SMTPException, ConnectionError):
