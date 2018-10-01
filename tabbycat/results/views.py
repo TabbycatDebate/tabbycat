@@ -60,7 +60,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
     def _get_draw(self):
         if not hasattr(self, '_draw'):
             self._draw = self.round.debate_set_with_prefetches(
-                    ordering=('room_rank',), results=True, wins=True, check_ins=True)
+                    ordering=('room_rank',), results=True, wins=True, check_ins=True, iron=True)
         return self._draw
 
     def get_table(self):
@@ -70,7 +70,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
         table.add_debate_venue_columns(draw, for_admin=True)
-        table.add_debate_results_columns(draw)
+        table.add_debate_results_columns(draw, iron=True)
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
 
