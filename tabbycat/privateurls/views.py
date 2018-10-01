@@ -15,7 +15,6 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
-from notifications.consumers import NotificationQueueConsumer
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -148,9 +147,8 @@ class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
         path = reverse_tournament('privateurls-person-index', t, kwargs={'url_key': '0'})
         url = request.build_absolute_uri(path)[:-2]
 
-        group_name = NotificationQueueConsumer.group_prefix + "_" + t.slug
-        async_to_sync(get_channel_layer().group_send)(group_name, {
-            "type": "send_notifications",
+        async_to_sync(get_channel_layer().send)("notifications", {
+            "type": "email",
             "message": "url",
             "extra": {'url': url, 'tournament_id': t.id}
         })

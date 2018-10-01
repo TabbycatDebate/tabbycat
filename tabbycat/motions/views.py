@@ -11,7 +11,6 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from notifications.consumers import NotificationQueueConsumer
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from utils.misc import redirect_round
@@ -155,9 +154,8 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
 
     def post(self, request, *args, **kwargs):
         if self.tournament.pref('enable_motion_email'):
-            group_name = NotificationQueueConsumer.group_prefix + "_" + self.tournament.slug
-            async_to_sync(get_channel_layer().group_send)(group_name, {
-                "type": "send_notifications",
+            async_to_sync(get_channel_layer().send)("notifications", {
+                "type": "email",
                 "message": "motion",
                 "extra": {'round_id': self.round.id}
             })

@@ -24,7 +24,6 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
-from notifications.consumers import NotificationQueueConsumer
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
 from participants.utils import get_side_history
@@ -689,10 +688,8 @@ class DrawReleaseView(DrawStatusEdit):
 
         email_success_message = ""
         if self.tournament.pref('enable_adj_email'):
-
-            group_name = NotificationQueueConsumer.group_prefix + "_" + self.tournament.slug
-            async_to_sync(get_channel_layer().group_send)(group_name, {
-                "type": "send_notifications",
+            async_to_sync(get_channel_layer().send)("notifications", {
+                "type": "email",
                 "message": "adj",
                 "extra": {'round_id': self.round.id}
             })

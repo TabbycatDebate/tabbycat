@@ -23,7 +23,6 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import SentMessageRecord
-from notifications.consumers import NotificationQueueConsumer
 from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
@@ -193,9 +192,8 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
     def post(self, request, *args, **kwargs):
         url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
 
-        group_name = NotificationQueueConsumer.group_prefix + "_" + self.tournament.slug
-        async_to_sync(get_channel_layer().group_send)(group_name, {
-            "type": "send_notifications",
+        async_to_sync(get_channel_layer().send)("notifications", {
+            "type": "email",
             "message": "team_points",
             "extra": {'url': url, 'round_id': self.round.id}
         })

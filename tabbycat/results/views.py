@@ -19,7 +19,6 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from draw.prefetch import populate_opponents
-from notifications.consumers import NotificationQueueConsumer
 from options.utils import use_team_code_names, use_team_code_names_data_entry
 from participants.models import Adjudicator
 from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin,
@@ -277,9 +276,8 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             self.ballotsub.save()
 
             if self.tournament.pref('enable_ballot_receipts'):
-                group_name = NotificationQueueConsumer.group_prefix + "_" + self.tournament.slug
-                async_to_sync(get_channel_layer().group_send)(group_name, {
-                    "type": "send_notifications",
+                async_to_sync(get_channel_layer().send)("notifications", {
+                    "type": "email",
                     "message": "ballot",
                     "extra": {"debate_id": self.debate.id}
                 })
