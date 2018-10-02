@@ -99,7 +99,6 @@ class SpeakerTeamPointsMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator):
     name = _("team points")
     abbr = _("Team")
 
-
     def get_annotation(self, round):
         """Returns a QuerySet annotated with the metric given. All positional
         arguments from the third onwards, and all keyword arguments, are passed

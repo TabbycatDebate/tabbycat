@@ -27,6 +27,10 @@ Dynos can be scaled by adding more dynos ('horizontally') or by adding upgraded 
 
 In order to increase the number of dynos you first need to be using at least the **Standard 1X** level of dyno. Once set the Heroku Dashboard will show you a slider that can be used to increase the dyno count. While dynos higher than the **Standard 1X** level may help serve pages a tiny bit faster, having *more* dynos is far more effective than having *upgraded* dynos. Upgrading beyond **Standard 1X** is generally only required if you need additional memory (as described below) or want to use auto-scaling (also described below).
 
+.. note::
+
+    There should be no need to increase the number of 'worker' dynos. While 'web' dynos are responsible for serving traffic, the worker only handles a few rare tasks such as serving email and creating allocations.
+
 At large tournaments you should always upgrade your existing '**Free**' dyno to a '**Hobby**'-level dyno. This upgrade is crucial as it will enable a "Metrics" tab on your Heroku dashboard that provides statistics which are crucial to understanding how your site is performing and how to improve said performance. If you are at all unsure about how your site will perform it is a good idea to do this pre-emptively and keep an eye on these metrics over the course of the tournament.
 
 .. note::

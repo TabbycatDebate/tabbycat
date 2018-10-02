@@ -1,10 +1,12 @@
 import json
 import datetime
 import logging
-from smtplib import SMTPException
 import unicodedata
 from itertools import product
 from math import floor
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from django.conf import settings
 from django.contrib import messages
@@ -22,7 +24,6 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
-from notifications.utils import adjudicator_assignment_email_generator
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
 from participants.utils import get_side_history
@@ -687,16 +688,13 @@ class DrawReleaseView(DrawStatusEdit):
 
         email_success_message = ""
         if self.tournament.pref('enable_adj_email'):
-            try:
-                adjudicator_assignment_email_generator(self.round.id)
-            except SMTPException:
-                messages.error(self.request, _("There was a problem sending adjudication assignment emails."))
-            except ConnectionError as e:
-                messages.error(self.request, _(
-                    "There was a problem connecting to the e-mail server when trying to send adjudication assigment emails: %(error)s"
-                ) % {'error': str(e)})
-            else:
-                email_success_message = _("Adjudicator emails successfully sent.")
+            async_to_sync(get_channel_layer().send)("notifications", {
+                "type": "email",
+                "message": "adj",
+                "extra": {'round_id': self.round.id}
+            })
+
+            email_success_message = _("Adjudicator emails queued to be sent.")
 
         messages.success(request, format_lazy(_("Released the draw."), " ", email_success_message))
         return super().post(request, *args, **kwargs)
