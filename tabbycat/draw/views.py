@@ -686,7 +686,7 @@ class DrawReleaseView(DrawStatusEdit):
         self.round.save()
         self.log_action()
 
-        email_success_message = ""
+        success_message = _("Released the draw.")
         if self.tournament.pref('enable_adj_email'):
             async_to_sync(get_channel_layer().send)("notifications", {
                 "type": "email",
@@ -694,9 +694,9 @@ class DrawReleaseView(DrawStatusEdit):
                 "extra": {'round_id': self.round.id}
             })
 
-            email_success_message = _("Adjudicator emails queued to be sent.")
+            success_message += _(" Adjudicator emails queued to be sent.")
 
-        messages.success(request, format_lazy(_("Released the draw."), " ", email_success_message))
+        messages.success(request, success_message)
         return super().post(request, *args, **kwargs)
 
 
