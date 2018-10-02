@@ -171,3 +171,31 @@ def motion_release_email_generator(round_id):
             emails.append((context, speaker))
 
     return emails
+
+
+def team_speaker_email_generator(tournament_id):
+    emails = []
+    tournament = Tournament.objects.get(id=tournament_id)
+
+    for team in tournament.team_set.all().prefetch_related('speaker_set', 'break_categories').select_related('division', 'institution'):
+        context = {
+            'TOURN': str(tournament),
+            'SHORT': team.short_name,
+            'LONG': team.long_name,
+            'CODE': team.code_name,
+            'DIVISION': team.division.name,
+            'BREAK': _(", ").join([breakq.name for breakq in team.break_categories.all()]),
+            'SPEAKERS': _(", ").join([p.name for p in team.speaker_set.all()]),
+            'INSTITUTION': str(team.institution),
+            'EMOJI': team.emoji
+        }
+
+        for speaker in team.speakers:
+            if speaker.email is None:
+                continue
+
+            context['USER'] = speaker.name
+
+            emails.append((context, speaker))
+
+    return emails

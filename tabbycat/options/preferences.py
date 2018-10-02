@@ -1430,3 +1430,22 @@ class MotionReleaseEmailMessage(LongStringPreference):
     section = email
     name = 'motion_email_message'
     default = "{{ MOTIONS }}"
+
+
+@tournament_preferences_registry.register
+class TeamNameEmailSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to participants informing them of their team registration.")
+    verbose_name = _("Team registration notification subject line")
+    section = email
+    name = 'team_email_subject'
+    default = "Registration for {{ SHORT }}"
+
+
+@tournament_preferences_registry.register
+class TeamNameEmailMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants informing them of their team registration.")
+    verbose_name = _("Team registration notification message")
+    section = email
+    name = 'team_email_message'
+    default = ("Hi {{ USER }},\n\n"
+        "You are registered as {{ LONG }} in {{ TOURN }} with {{ SPEAKERS }}. Your code name is {{ CODE }}.")

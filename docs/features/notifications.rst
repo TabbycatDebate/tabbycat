@@ -60,3 +60,17 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
       Sent when you release the motion(s), if enabled.
     - * ``{{ ROUND }}``: The name of the round
       * ``{{ MOTIONS }}``: A list of the motions released
+
+  * - **Team information**
+
+      Email to speakers with information pertaining to their team, such as eligibility and codes.
+
+      Sent when you click the "Email Registration" button under Participants.
+    - * ``{{ SHORT }}``: The team's short name
+      * ``{{ LONG }}``: The team's long name
+      * ``{{ CODE }}``: The team's code name
+      * ``{{ EMOJI }}``: The team's assigned emoji
+      * ``{{ DIVISION }}``: The team's division if applicable
+      * ``{{ BREAK }}``: Break categories which the team is a member
+      * ``{{ SPEAKERS }}``: A list of the speakers in the team
+      * ``{{ INSTITUTION }}``: The team's affiliation

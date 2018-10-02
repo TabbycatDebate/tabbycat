@@ -1,6 +1,9 @@
 import json
 import logging
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,6 +19,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
+from notifications.models import SentMessageRecord
 from options.utils import use_team_code_names
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
@@ -24,7 +28,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import ModelFormSetView, VueTableTemplateView
+from utils.views import ModelFormSetView, PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
@@ -59,6 +63,12 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
         return [adjs_table, speakers_table]
+
+    def get_context_data(self, **kwargs):
+        # These are used to choose the nav display
+        kwargs['email_sent'] = SentMessageRecord.objects.filter(
+            tournament=self.tournament, event=SentMessageRecord.EVENT_TYPE_TEAM).exists()
+        return super().get_context_data(**kwargs)
 
 
 class AdminParticipantsListView(AdministratorMixin, BaseParticipantsListView):
@@ -145,6 +155,26 @@ class AdminCodeNamesListView(AdministratorMixin, BaseCodeNamesListView):
 
 class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
     pass
+
+
+# ==============================================================================
+# Notification POST page
+# ==============================================================================
+
+class EmailParticipantRegistrationView(TournamentMixin, PostOnlyRedirectView):
+
+    tournament_redirect_pattern_name = 'participants-list'
+
+    def post(self, request, *args, **kwargs):
+        async_to_sync(get_channel_layer().send)("notifications", {
+            "type": "email",
+            "message": "team",
+            "extra": {'tournament_id': self.tournament.id}
+        })
+
+        messages.success(self.request, _("Registration information emails have been successfully queued for sending."))
+
+        return super().post(request, *args, **kwargs)
 
 
 # ==============================================================================
