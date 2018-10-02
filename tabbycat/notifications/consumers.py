@@ -32,15 +32,19 @@ class NotificationQueueConsumer(SyncConsumer):
     }
 
     def email(self, event):
-        if hasattr(event['extra'], 'debate_id'):
+        # So this try/except block is heinous, but the expected AttributeError
+        # is not surfaced; and hasattr() returns false regardless of the actual
+        # presence of the object. Thus, this:
+        try:
             round = Debate.objects.get(pk=event['extra']['debate_id']).round
             t = round.tournament
-        elif hasattr(event['extra'], 'round_id'):
-            round = Round.objects.get(pk=event['extra']['round_id'])
-            t = round.tournament
-        else:
-            round = None
-            t = Tournament.objects.get(pk=event['extra']['tournament_id'])
+        except:
+            try:
+                round = Round.objects.get(pk=event['extra']['round_id'])
+                t = round.tournament
+            except:
+                round = None
+                t = Tournament.objects.get(pk=event['extra']['tournament_id'])
 
         notification_type = event['message']
 
@@ -70,8 +74,6 @@ class NotificationQueueConsumer(SyncConsumer):
                                   round=round, tournament=t,
                                   context=instance, message=email.body)
             )
-
-        print("NotificationQueueConsumer done send")
 
         # Send messages & record
         try:

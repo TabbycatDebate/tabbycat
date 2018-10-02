@@ -1367,7 +1367,7 @@ class AdjudicatorDrawNotificationSubject(StringPreference):
     help_text = _("The subject-line for emails sent to adjudicators with their assignments.")
     verbose_name = _("Adjudicator draw subject line")
     section = email
-    name = 'adj_email_subject_line'
+    name = 'adj_email_subject'
     default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
 
 
