@@ -10,7 +10,7 @@
   "dependencies": {
     "@vue/cli-plugin-babel": "^3.0.3",
     "@vue/cli-plugin-eslint": "^3.0.3",
-    "@vue/cli-service": "3.0.3",
+    "@vue/cli-service": "3.0.4",
     "@vue/eslint-config-standard": "^3.0.3",
     "babel-plugin-lodash": "^3.3.x",
     "bootstrap": "^4.1.3",
