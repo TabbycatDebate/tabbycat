@@ -258,13 +258,8 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         pass
 
     def should_send_email_receipts(self):
-        # For proper error handling for admin/assistants, overwrite this
-        if not self.tournament.pref('enable_ballot_receipts'):
-            return False
-        if self.debate.round.stage == Round.STAGE_ELIMINATION and self.tournament.pref('teams_in_debate') == 'bp':
-            return False
-
-        return True
+        return self.tournament.pref('enable_ballot_receipts') and not (self.debate.round.stage == Round.STAGE_ELIMINATION and
+            self.tournament.pref('teams_in_debate') == 'bp')
 
     def matchup_description(self):
         """This is primarily shown in messages, some of which are public. This
