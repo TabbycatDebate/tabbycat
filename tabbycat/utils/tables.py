@@ -245,7 +245,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         else:
             return {'text': '', 'link': False}
 
-    def _team_cell(self, team, show_emoji=False, subtext=None, highlight=False, show_iron=False, iron=0):
+    def _team_cell(self, team, show_emoji=False, subtext=None, highlight=False, show_iron=False, iron=0, iron_prev=0):
         cell = {
             'text': self._team_short_name(team),
             'emoji': team.emoji if show_emoji and self.tournament.pref('show_emoji') else None,
@@ -265,9 +265,18 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.tournament.pref('team_code_names') == 'admin-tooltips-real' and self.admin:
             cell['popover']['content'].append({'text': _("Real name: <strong>%(name)s</strong>") % {'name': team.short_name}})
 
-        if show_iron and iron > 0:
+        if show_iron and (iron > 0 or iron_prev > 0):
             cell['text'] += "🗣️"
-            cell['popover']['content'].append({'text': _("<span class='text-danger'>Team iron-manned the round</span>")})
+
+            popover_text = []
+            if iron > 0 and iron_prev > 0:
+                popover_text = _("Team iron-manned this round and the last.")
+            elif iron > 0:
+                popover_text = _("Team iron-manned this round.")
+            else:
+                popover_text = _("Team iron-manned last round.")
+
+            cell['popover']['content'].append({'text': "<span class='text-danger'>" + popover_text + "</span>"})
 
         if self._show_speakers_in_draw:
             cell['popover']['content'].append({'text': ", ".join([s.name for s in team.speakers])})
@@ -910,7 +919,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 team = debate.get_team(side)
 
                 subtext = None if (all_sides_confirmed or not debate.sides_confirmed) else side_abbrs[side]
-                cell = self._team_cell(team, show_emoji=False, subtext=subtext, show_iron=True, iron=debateteam.iron)
+                cell = self._team_cell(team, show_emoji=False, subtext=subtext, show_iron=True,
+                    iron=debateteam.iron, iron_prev=debateteam.iron_prev)
 
                 if self.tournament.pref('teams_in_debate') == 'two':
                     cell = self._result_cell_class_two(debateteam.win, cell)

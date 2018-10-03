@@ -508,7 +508,9 @@ class Round(models.Model):
                     Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')))
             if iron:
                 debateteam_prefetch_queryset = debateteam_prefetch_queryset.annotate(
-                    iron=Count('speakerscore__ghost', filter=Q(speakerscore__ghost=True)))
+                    iron=Count('speakerscore__ghost', filter=Q(speakerscore__ghost=True))).annotate(
+                    iron_prev=Count('team__debateteam__speakerscore__ghost',
+                        filter=Q(team__debateteam__speakerscore__ghost=True) & Q(team__debateteam__debate__round=self.prev)))
 
             debates = debates.prefetch_related(
                 Prefetch('debateteam_set', queryset=debateteam_prefetch_queryset))
