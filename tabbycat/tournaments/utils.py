@@ -198,16 +198,18 @@ def send_standings_emails(tournament, teams, request, round):
         message += "\n\n" + tournament.pref('team_points_email_link_text') + "\n" + url
 
     for team in teams:
-        context['POINTS'] = str(team.points_count)
-        context['TEAM'] = team.short_name
+        context_team = context.copy()
+        context_team['POINTS'] = str(team.points_count)
+        context_team['TEAM'] = team.short_name
 
         for speaker in team.speakers:
             if speaker.email is None:
                 continue
 
-            context['USER'] = speaker.name
+            context_user = context_team.copy()
+            context_user['USER'] = speaker.name
 
-            messages.append(TournamentEmailMessage(subject, Template(message), tournament, round, SentMessageRecord.EVENT_TYPE_POINTS, speaker, context))
+            messages.append(TournamentEmailMessage(subject, Template(message), tournament, round, SentMessageRecord.EVENT_TYPE_POINTS, speaker, context_user))
 
     try:
         get_connection().send_messages(messages)

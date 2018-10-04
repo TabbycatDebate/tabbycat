@@ -248,10 +248,11 @@ def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
             for speaker in team['speakers']:
                 scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
 
-        context['USER'] = judge.name
-        context['SCORES'] = scores
+        context_user = context.copy()
+        context_user['USER'] = judge.name
+        context_user['SCORES'] = scores
 
-        messages.append(TournamentEmailMessage(subject, message, debate.round.tournament, debate.round, SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context))
+        messages.append(TournamentEmailMessage(subject, message, debate.round.tournament, debate.round, SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context_user))
 
     try:
         get_connection().send_messages(messages)

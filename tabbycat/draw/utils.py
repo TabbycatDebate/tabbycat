@@ -72,10 +72,11 @@ def send_mail_to_adjs(round):
             if adj.email is None:
                 continue
 
-            context['USER'] = adj.name
-            context['POSITION'] = adj_position_names[pos]
+            context_user = context.copy()
+            context_user['USER'] = adj.name
+            context_user['POSITION'] = adj_position_names[pos]
 
-            messages.append(TournamentEmailMessage(subject, body, tournament, round, SentMessageRecord.EVENT_TYPE_DRAW, adj, context))
+            messages.append(TournamentEmailMessage(subject, body, tournament, round, SentMessageRecord.EVENT_TYPE_DRAW, adj, context_user))
 
     try:
         get_connection().send_messages(messages)
