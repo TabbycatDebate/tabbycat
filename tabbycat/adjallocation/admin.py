@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
+                     AdjudicatorTeamConflict, DebateAdjudicator, PreformedPanel,
+                     PreformedPanelAdjudicator, TeamInstitutionConflict)
 
 
 @admin.register(DebateAdjudicator)
@@ -43,3 +44,16 @@ class TeamInstitutionConflictAdmin(admin.ModelAdmin):
     list_display = ('team', 'institution')
     list_select_related = ('team__institution', 'institution')
     search_fields = ('team__short_name', 'team__long_name', 'institution__name')
+
+
+class PreformedPanelAdjudicatorInline(admin.TabularInline):
+    model = PreformedPanelAdjudicator
+    extra = 1
+    raw_id_fields = ('adjudicator',)
+
+
+@admin.register(PreformedPanel)
+class PreformedPanelAdmin(admin.ModelAdmin):
+    list_display = ('round', 'importance')
+    list_select_related = ('round__tournament',)
+    inlines = (PreformedPanelAdjudicatorInline,)

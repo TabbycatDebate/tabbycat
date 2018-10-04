@@ -39,6 +39,10 @@ class DebateAdjudicator(models.Model):
         return '{} in {} ({})'.format(self.adjudicator, self.debate, self.get_type_display())
 
 
+# ==============================================================================
+# Conflicts
+# ==============================================================================
+
 class AdjudicatorTeamConflict(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
         verbose_name=_("adjudicator"))
@@ -99,3 +103,37 @@ class TeamInstitutionConflict(models.Model):
 
     def __str__(self):
         return '{} with {}'.format(self.team, self.institution)
+
+
+# ==============================================================================
+# Preformed panels
+# ==============================================================================
+
+class PreformedPanel(models.Model):
+    round = models.ForeignKey('tournaments.Round', models.CASCADE,
+        verbose_name=_("round"))
+    importance = models.FloatField(default=0.0, choices=[(float(i), i) for i in range(-2, 3)],
+        verbose_name=_("importance"))
+
+    class Meta:
+        verbose_name = _("preformed panel")
+        verbose_name_plural = _("preformed panels")
+
+    def __str__(self):
+        return "[{x.id}] {x.round.name} impt={x.importance}".format(x=self)
+
+
+class PreformedPanelAdjudicator(models.Model):
+    panel = models.ForeignKey(PreformedPanel, models.CASCADE,
+        verbose_name=_("panel"))
+    adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
+        verbose_name=_("adjudicator"))
+    type = models.CharField(max_length=2, choices=DebateAdjudicator.TYPE_CHOICES,
+        verbose_name=_("type"))
+
+    class Meta:
+        verbose_name = _("preformed panel adjudicator")
+        verbose_name_plural = _("preformed panel adjudicators")
+
+    def __str__(self):
+        return "[{x.id}] {x.adjudicator.name} in panel {x.panel_id}".format(x=self)
