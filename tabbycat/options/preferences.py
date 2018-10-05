@@ -1448,4 +1448,4 @@ class TeamNameEmailMessage(LongStringPreference):
     section = email
     name = 'team_email_message'
     default = ("Hi {{ USER }},\n\n"
-        "You are registered as {{ LONG }} in {{ TOURN }} with {{ SPEAKERS }}. Your code name is {{ CODE }}.")
+        "You are registered as {{ LONG }} in {{ TOURN }} with {{ SPEAKERS }}.")

@@ -190,7 +190,7 @@ def team_speaker_email_generator(tournament_id):
             'SHORT': team.short_name,
             'LONG': team.long_name,
             'CODE': team.code_name,
-            'DIVISION': team.division.name if not None else "",
+            'DIVISION': team.division.name if team.division is not None else "",
             'BREAK': _(", ").join([breakq.name for breakq in team.break_categories.all()]),
             'SPEAKERS': _(", ").join([p.name for p in team.speaker_set.all()]),
             'INSTITUTION': str(team.institution),
