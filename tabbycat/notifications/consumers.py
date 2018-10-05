@@ -11,7 +11,8 @@ from tournaments.models import Round, Tournament
 
 from .models import SentMessageRecord
 from .utils import (adjudicator_assignment_email_generator, ballots_email_generator,
-                    motion_release_email_generator, randomized_url_email_generator, standings_email_generator)
+                    motion_release_email_generator, randomized_url_email_generator,
+                    standings_email_generator, team_speaker_email_generator)
 
 
 class NotificationQueueConsumer(SyncConsumer):
@@ -21,14 +22,16 @@ class NotificationQueueConsumer(SyncConsumer):
         "url": randomized_url_email_generator,
         "ballot": ballots_email_generator,
         "team_points": standings_email_generator,
-        "motion": motion_release_email_generator
+        "motion": motion_release_email_generator,
+        "team": team_speaker_email_generator
     }
     NOTIFICATION_EVENTS = {
         "adj": SentMessageRecord.EVENT_TYPE_DRAW,
         "url": SentMessageRecord.EVENT_TYPE_URL,
         "ballot": SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED,
         "team_points": SentMessageRecord.EVENT_TYPE_POINTS,
-        "motion": SentMessageRecord.EVENT_TYPE_MOTIONS
+        "motion": SentMessageRecord.EVENT_TYPE_MOTIONS,
+        "team": SentMessageRecord.EVENT_TYPE_TEAM
     }
 
     def email(self, event):

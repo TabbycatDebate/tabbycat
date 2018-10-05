@@ -11,6 +11,20 @@
   </a>
 </div>
 <div class="btn-group btn-group">
+  <form action="{% tournamenturl 'participants-email' %}" method="POST">
+    {% csrf_token %}
+    {% if email_sent %}
+      <button class="btn btn-outline-secondary" id="emailTeams" type="submit" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+        {% trans "Email Registration" %}
+      </button>
+    {% else %}
+      <button class="btn btn-outline-primary" id="emailTeams" type="submit">
+        {% trans "Email Registration" %}
+      </button>
+    {% endif %}
+  </form>
+</div>
+<div class="btn-group btn-group">
   {% if pref.team_code_names != 'off' %}
     <a class="btn btn-outline-primary {% if code_names_nav %}active{% endif %}"
        href="{% tournamenturl 'participants-code-names-list' %}">
