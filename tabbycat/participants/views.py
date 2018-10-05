@@ -172,7 +172,7 @@ class EmailParticipantRegistrationView(TournamentMixin, PostOnlyRedirectView):
             "extra": {'tournament_id': self.tournament.id}
         })
 
-        messages.success(self.request, _("Registration information emails have been successfully queued for sending."))
+        messages.success(self.request, _("Registration information emails have been queued for sending."))
 
         return super().post(request, *args, **kwargs)
 

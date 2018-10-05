@@ -157,7 +157,7 @@ class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
             "extra": {'url': url, 'tournament_id': t.id}
         })
 
-        messages.success(self.request, _("Private URL emails have been successfully queued for sending."))
+        messages.success(self.request, _("Private URL emails have been queued for sending."))
 
         people_no_email = t.participants.filter(
             Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False
