@@ -123,9 +123,11 @@ def standings_email_generator(url, round_id):
     teams = round.active_teams.prefetch_related('speaker_set')
     populate_win_counts(teams)
 
-    context = {'TOURN': str(tournament)}
-
-    context['URL'] = url if tournament.pref('public_team_standings') else ""
+    context = {
+        'TOURN': str(tournament),
+        'ROUND': round.name,
+        'URL': url if tournament.pref('public_team_standings') else ""
+    }
 
     for team in teams:
         context_team = context.copy()
