@@ -5,9 +5,54 @@
   <a href="{% roundurl 'draw-display' %}" class="btn btn-outline-primary">
     <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
   </a>
-  <a class="btn btn-outline-primary " href="{% tournamenturl 'admin-checkin-prescan' %}">
+  <a class="btn btn-outline-primary" href="{% tournamenturl 'admin-checkin-prescan' %}">
     {% trans "Check-In Ballots" %}
   </a>
+  <a class="btn btn-outline-primary" href="" data-toggle="modal" data-target="#ironSpeeches">
+    {% trans "Recent 'Iron-Persons'" %}
+  </a>
+
+  <div class="modal fade" id="ironSpeeches" tabindex="-1" role="dialog"
+       aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{% trans "Teams who have recently missed a speaker" %}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="list-group">
+          {% for iron in iron_speeches %}
+            <div class="list-group-item">
+              <h5>For Current Debate in Venue {{ iron.venue }}</h5>
+              {% if iron.previous_round %}
+                <p class="text-warning mt-3 mb-0">
+                  {% blocktrans trimmed with team=iron.team %}
+                    A speaker from {{ team }} gave multiple speeches in the previous round
+                  {% endblocktrans %}
+                </p>
+              {% endif %}
+              {% if iron.current_round %}
+                <p class="text-info mt-3 mb-0">
+                  {% blocktrans with team=iron.team %}
+                    A speaker from {{ team }} gave multiple speeches in the current round
+                  {% endblocktrans %}
+                </p>
+              {% endif %}
+            </div>
+          {% empty %}
+           <div class="list-group-item">
+              <p class="lead text-success mb-0">
+                {% trans "No known cases in the current or previous round" %}
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block page-subnav-actions %}

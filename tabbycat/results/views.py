@@ -21,6 +21,7 @@ from draw.models import Debate
 from draw.prefetch import populate_opponents
 from options.utils import use_team_code_names, use_team_code_names_data_entry
 from participants.models import Adjudicator
+from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin,
                                 RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
                                 TournamentMixin)
@@ -74,9 +75,25 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
 
+    def get_irons_list(self):
+        iron_speeches = []
+        use_code_names = use_team_code_names_data_entry(self.tournament, True)
+        for d in self._get_draw():
+            for side in self.tournament.sides:
+                debateteam = d.get_dt(side)
+                if debateteam.iron > 0 or debateteam.iron_prev:
+                    iron_speeches.append({
+                        'venue': d.venue.display_name,
+                        'team': team_name_for_data_entry(debateteam.team, use_code_names),
+                        'current_round': debateteam.iron,
+                        'previous_round': debateteam.iron_prev
+                    })
+        return iron_speeches
+
     def get_context_data(self, **kwargs):
         kwargs["incomplete_ballots"] = self._get_draw().filter(
             Q(result_status=Debate.STATUS_NONE) | Q(result_status=Debate.STATUS_DRAFT)).count()
+        kwargs["iron_speeches"] = self.get_irons_list()
         return super().get_context_data(**kwargs)
 
 
