@@ -5,7 +5,7 @@ Authors & Acknowledgements
 Authors
 -------
 
-Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current active developers are:
+Tabbycat was authored by Qi-Shan Lim for Auckland Australs 2010. The current active maintainers are:
 
 - Philip Belesky (`pb-e-mail <http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=>`_)
 - Chuan-Zheng Lee (`cz-e-mail <mailto:czlee@stanford.edu>`_)
@@ -15,6 +15,7 @@ Please don't hesitate to contact us with any suggestions, expressions of interes
 Contributors
 ------------
 
+- Étienne Beaulé has contributed many features, fixes, and suggestions across many aspects of Tabbycat.
 - Thevesh Theva contributed the algorithm for calculating the liveness of teams within a particular break category.
 - Viran Weerasekera contributed the statistical tests used to estimate the degree to which a motion's results and vetoes are balanced.
 - Viran Weerasekera, Valerie Tierney, Molly Dale, Madeline Schultz, and Vail Bromberger contributed to the "Tournament Logistics" section of our documentation.
