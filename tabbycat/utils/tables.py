@@ -916,17 +916,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     cell = self._result_cell_class_four(debateteam.points, cell)
 
                 if iron and (debateteam.iron > 0 or debateteam.iron_prev > 0):
-                    cell['text'] += "🗣️"
+                    cell['text'] = "🗣️" + cell['text']
 
                     popover_text = []
                     if debateteam.iron > 0 and debateteam.iron_prev > 0:
                         popover_text = _("Team iron-manned this round and the last.")
+                        warning_level = "text-info"
                     elif debateteam.iron > 0:
                         popover_text = _("Team iron-manned this round.")
+                        warning_level = "text-info"
                     else:
                         popover_text = _("Team iron-manned last round.")
+                        warning_level = "text-warning"
 
-                    cell['popover']['content'].append({'text': "<span class='text-danger'>" + popover_text + "</span>"})
+                    cell['class'] = "%s strong" % warning_level
+                    cell['popover']['content'].append({'text': "<span class='%s'>%s</span>"
+                        % (warning_level, popover_text)})
 
                 row.append(cell)
             results_data.append(row)
