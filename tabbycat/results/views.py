@@ -6,7 +6,7 @@ from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -247,6 +247,10 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).short_name for side in sides)
         else:
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).code_name for side in sides)
+
+        kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
+            filter=Q(team__debateteam__debate__round=self.debate.round.prev) & Q(team__debateteam__speakerscore__ghost=True),
+            distinct=True)).filter(iron__gt=0)
 
         return super().get_context_data(**kwargs)
 
