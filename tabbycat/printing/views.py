@@ -182,7 +182,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
     template_name = 'scoresheet_list.html'
 
     def get_ballots_dicts(self):
-        draw = self.round.debate_set_with_prefetches()
+        draw = self.round.debate_set_with_prefetches(iron=True)
 
         # Create the DebateIdentifiers for the ballots if needed
         create_identifiers(DebateIdentifier, draw)
@@ -214,6 +214,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
                         'short_name': team.short_name,
                         'code_name': team.code_name,
                         'speakers': [{'name': s.name} for s in team.speakers],
+                        'iron': debate.get_dt(side).iron_prev > 0,
                     }
                 except DebateTeam.DoesNotExist:
                     dt_dict['team'] = None

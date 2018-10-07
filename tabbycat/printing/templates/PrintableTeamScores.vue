@@ -4,6 +4,7 @@
     <div class="db-flex-item-2 db-flex-row db-bottom-border">
       <div class="db-padding-horizontal flex-grow-1 db-align-vertical-center">
         <strong>{{ titleCasePosition }}, {{ teamName }}</strong>
+        <span v-if="this.team.iron">: (Team was missing speakers last round. Circle if the same here.)</span>
       </div>
       <div class="db-padding-horizontal db-align-vertical-center">
         {{ speakersList }}
