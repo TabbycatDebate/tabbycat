@@ -14,6 +14,13 @@ Change Log
 - Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
 
+2.2.4
+-----
+*Release date: 09 October 2018*
+
+- Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics.
+
+
 2.2.3
 -----
 *Release date: 28 September 2018*
