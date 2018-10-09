@@ -3,6 +3,13 @@ Change Log
 ==========
 
 
+2.2.4
+-----
+*Release date: 09 October 2018*
+
+- Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics.
+
+
 2.2.3
 -----
 *Release date: 28 September 2018*
