@@ -35,18 +35,25 @@ export default {
     adjudicators: function () {
       return _.map(this.panelAdjudicators, da => da.adjudicator)
     },
+    institutionIDs: function () {
+      // Counterpart to adjudicatorIds and teamIds property on DebatePanel; but calculated from
+      // institution clashes rather than object IDs. These are not unique.
+
+      let adjInstitutionalClashes = _.map(this.adjudicators, 'conflicts.clashes.institution')
+      adjInstitutionalClashes = _.flatten(adjInstitutionalClashes).map(clash => clash.id)
+
+      let teamInstitutionalClashes = _.map(this.teams, 'conflicts.clashes.institution')
+      teamInstitutionalClashes = _.flatten(teamInstitutionalClashes).map(clash => clash.id)
+      // We don't want teams of the same institution clashing each other; so never allow dupe IDs
+      teamInstitutionalClashes = _.uniq(teamInstitutionalClashes)
+
+      return [...adjInstitutionalClashes, ...teamInstitutionalClashes]
+    },
     allConflicts: function () {
       // Create an array of conflicts gathered from each team or adjudicator
-      const allConflicts = _.map(this.adjudicators, adj => adj.conflicts)
-      _.forEach(this.teams, (team) => {
-        // Remove any institutional conflicts coming from teams; only via adjs
-        const teamConflicts = _.clone(team.conflicts)
-        delete teamConflicts.clashes.institution
-        if (!_.isEmpty(teamConflicts)) {
-          allConflicts.push(teamConflicts)
-        }
-      })
-      return allConflicts
+      const allAdjConflicts = _.map(this.adjudicators, adj => adj.conflicts)
+      const allTeamConflicts = _.map(this.teams, team => team.conflicts)
+      return [...allAdjConflicts, ...allTeamConflicts]
     },
     filteredConflicts: function () {
       // Traverse the combined conflicts object and delete those not relevant
@@ -66,8 +73,6 @@ export default {
           }
         })
       })
-      // De-duplicate the institutional IDs; often they are multiple overlaps
-      subset.clashes.institution = _.uniqBy(subset.clashes.institution, 'id')
       return subset
     },
   },
@@ -87,7 +92,7 @@ export default {
       })
     },
     activatePanelConflicts: function () {
-      // Turn on all conflicts by activating what hs been set by
+      // Turn on all conflicts by activating what has been set by
       // filteredPanelConflicts(). Calls/happens when a panel updates
       const self = this
       if (this.debugMode) {
@@ -95,13 +100,13 @@ export default {
       }
       this.forEachConflict(this.filteredConflicts, (conflict, type, clashOrHistory) => {
         if (type === 'institution') {
-          self.activatePanelWithInstitutionalConflict(conflict) // See below
+          self.activatePanelInstitutionalConflict(conflict)
         } else {
           self.sendConflict(conflict, type, type, 'panel', clashOrHistory)
         }
       })
     },
-    activatePanelWithInstitutionalConflict: function (conflict) {
+    activatePanelInstitutionalConflict: function (conflict) {
       // For institutional conflicts within a panel we want to send them
       // out in a targetted fashion (unlike for say hover-overs where we
       // can do a global broadcast by institutional ID); that is to say we
@@ -109,23 +114,17 @@ export default {
       // target those items specifically
       const self = this
 
+      // Find teams with an institutional conflict that matches
       const teamsMatches = _.filter(this.teams, (team) => {
-        if (team.institution !== null) {
-          return team.institution.id === conflict.id
+        const teamInstitutions = team.conflicts.clashes.institution
+        const institutionIDs = _.map(teamInstitutions, 'id')
+        if (institutionIDs.indexOf(conflict.id) !== -1) {
+          return true
         }
         return false
       })
-      // Find teams of the same institution as the conflict
-      _.forEach(teamsMatches, (team) => {
-        if (team.institution.id === conflict.id) {
-          self.sendConflict(team, 'team', 'institution', 'panel', 'clashes')
-        }
-      })
 
-      // Find adjs who have the same institutional conflicts as the conflict we
-      // we are checking. We have to loop over the adj in questions actual
-      // institutional conflicts; not just their current institution as
-      // its a many to many relationship
+      // Find adjs with an institutional conflict that matcvhes
       const adjsMatches = _.filter(this.adjudicators, (adj) => {
         const adjudicatorsInstitutions = adj.conflicts.clashes.institution
         const institutionIDs = _.map(adjudicatorsInstitutions, 'id')
@@ -135,22 +134,28 @@ export default {
         return false
       })
 
-      // Unlike with teams; adj-adj institution conflicts require co-presence
-      if (adjsMatches.length > 1 || teamsMatches.length > 0) {
+      // Activate any matches
+      if (adjsMatches.length > 0 || teamsMatches.length > 0) {
         _.forEach(adjsMatches, (adj) => {
           self.sendConflict(adj, 'adjudicator', 'institution', 'panel', 'clashes')
+        })
+        _.forEach(teamsMatches, (team) => {
+          self.sendConflict(team, 'team', 'institution', 'panel', 'clashes')
         })
       }
     },
     checkIfInPanel: function (conflict, type) {
-      // For a given conflict from a team/adj check if it can actually apply
-      // to the panel
+      // For a given conflict from a team/adj check if it can actually apply to the panel
       if (type === 'institution') {
-        return true // These are calculated later
+        if (this.institutionIDs.filter(id => id === conflict.id).length > 1) {
+          // For institutional conflicts there will always be at least one matching ID from the
+          // originator; to identify a conflict we need to find if the ID occurs again
+          return true
+        }
       } else if (type === 'team' && _.includes(this.teamIds, conflict.id)) {
-        return true // Team not present
+        return true // Conflicted team is present in panel
       } else if (type === 'adjudicator' && _.includes(this.adjudicatorIds, conflict.id)) {
-        return true // Adj not present
+        return true // Conflicted adjudicator is present in panel
       }
       return false
     },
