@@ -55,12 +55,12 @@
 
 <script>
 import _ from 'lodash'
-import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
+import LegacyDrawContainerMixin from '../../draw/templates/LegacyDrawContainerMixin.vue'
 import VenueMovingMixin from '../../templates/ajax/VenueMovingMixin.vue'
 import DraggableVenue from '../../templates/draganddrops/DraggableVenue.vue'
 
 export default {
-  mixins: [VenueMovingMixin, DrawContainerMixin],
+  mixins: [VenueMovingMixin, LegacyDrawContainerMixin],
   components: { DraggableVenue },
   props: { venueConstraints: Array },
   computed: {

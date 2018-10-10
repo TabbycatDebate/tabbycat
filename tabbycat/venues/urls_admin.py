@@ -5,14 +5,14 @@ from . import views
 urlpatterns = [
 
     path('round/<int:round_seq>/edit/',
-        views.EditVenuesView.as_view(),
-        name='venues-edit'),
+        views.LegacyEditVenuesView.as_view(),
+        name='legacy-venues-edit'),
     path('round/<int:round_seq>/save/',
-        views.SaveVenuesView.as_view(),
-        name='save-debate-venues'),
+        views.LegacySaveVenuesView.as_view(),
+        name='legacy-save-debate-venues'),
     path('round/<int:round_seq>/autoallocate/',
-        views.AutoAllocateVenuesView.as_view(),
-        name='venues-auto-allocate'),
+        views.LegacyAutoAllocateVenuesView.as_view(),
+        name='legacy-venues-auto-allocate'),
 
     path('categories/',
         views.VenueCategoriesView.as_view(),

@@ -33,7 +33,11 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
-class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
+# ==============================================================================
+# Legacy Adjudicator Allocation Views
+# ==============================================================================
+
+class LegacyAdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     @cached_property
     def conflicts_and_history(self):
@@ -87,11 +91,11 @@ class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
         return super().annotate_draw(draw, serialised_draw)
 
 
-class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
+class LegacyEditAdjudicatorAllocationView(LegacyAdjudicatorAllocationMixin, TemplateView):
 
-    template_name = 'edit_adjudicators.html'
-    auto_url = "adjallocation-auto-allocate"
-    save_url = "adjallocation-save-debate-panel"
+    template_name = 'legacy_edit_adjudicators.html'
+    auto_url = "legacy-adjallocation-auto-allocate"
+    save_url = "legacy-adjallocation-save-debate-panel"
 
     def get_regions_info(self):
         # Need to extract and annotate regions for the allcoation actions key
@@ -110,7 +114,7 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
 
     def get_round_info(self):
         round_info = super().get_round_info()
-        round_info['updateImportanceURL'] = reverse_round('adjallocation-save-debate-importance', self.round)
+        round_info['updateImportanceURL'] = reverse_round('legacy-adjallocation-save-debate-importance', self.round)
         round_info['scoreMin'] = self.tournament.pref('adj_min_score')
         round_info['scoreMax'] = self.tournament.pref('adj_max_score')
         round_info['scoreForVote'] = self.tournament.pref('adj_min_voting_score')
@@ -129,7 +133,7 @@ class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataResponsePostView):
+class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
@@ -157,7 +161,7 @@ class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataR
         }
 
 
-class SaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View):
+class LegacySaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):
@@ -172,7 +176,7 @@ class SaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View)
         return JsonResponse(json.dumps(priorities), safe=False)
 
 
-class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
     def get_moved_item(self, id):

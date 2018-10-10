@@ -11,14 +11,14 @@ import 'bootstrap' // Import bootstrap javascript plugins
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
-import EditAdjudicatorsContainer from '../../adjallocation/templates/EditAdjudicatorsContainer.vue'
+import LegacyEditAdjudicatorsContainer from '../../adjallocation/templates/LegacyEditAdjudicatorsContainer.vue'
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
 import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
-import EditMatchupsContainer from '../../draw/templates/EditMatchupsContainer.vue'
+import LegacyEditMatchupsContainer from '../../draw/templates/LegacyEditMatchupsContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
 import ResultsTablesContainer from '../../results/templates/ResultsTablesContainer.vue'
-import EditVenuesContainer from '../../venues/templates/EditVenuesContainer.vue'
+import LegacyEditVenuesContainer from '../../venues/templates/LegacyEditVenuesContainer.vue'
 
 import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
 
@@ -186,9 +186,9 @@ vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
 // Printables
 vueComponents.PrintableBallot = PrintableBallot
 // Allocations
-vueComponents.EditAdjudicatorsContainer = EditAdjudicatorsContainer
-vueComponents.EditMatchupsContainer = EditMatchupsContainer
-vueComponents.EditVenuesContainer = EditVenuesContainer
+vueComponents.LegacyEditAdjudicatorsContainer = LegacyEditAdjudicatorsContainer
+vueComponents.LegacyEditMatchupsContainer = LegacyEditMatchupsContainer
+vueComponents.LegacyEditVenuesContainer = LegacyEditVenuesContainer
 
 // -----------------------------------------------------------------------------
 // Asynchronously Loaded Components Setup (defer loading to reduce bundle)

@@ -25,18 +25,18 @@ from .models import Venue, VenueCategory, VenueConstraint
 logger = logging.getLogger(__name__)
 
 
-class VenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
+class LegacyVenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     def get_unallocated_venues(self):
         unused_venues = self.round.unused_venues().prefetch_related('venuecategory_set')
         return json.dumps([v.serialize() for v in unused_venues])
 
 
-class EditVenuesView(VenueAllocationMixin, TemplateView):
+class LegacyEditVenuesView(LegacyVenueAllocationMixin, TemplateView):
 
-    template_name = "edit_venues.html"
-    auto_url = "venues-auto-allocate"
-    save_url = "save-debate-venues"
+    template_name = "legacy_edit_venues.html"
+    auto_url = "legacy-venues-auto-allocate"
+    save_url = "legacy-save-debate-venues"
 
     def get_context_data(self, **kwargs):
         vcs = VenueConstraint.objects.prefetch_related('subject')
@@ -45,10 +45,10 @@ class EditVenuesView(VenueAllocationMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class AutoAllocateVenuesView(VenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
+class LegacyAutoAllocateVenuesView(LegacyVenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
-    round_redirect_pattern_name = 'venues-edit'
+    round_redirect_pattern_name = 'legacy-venues-edit'
 
     def post_data(self):
         self.log_action()
@@ -68,7 +68,7 @@ class AutoAllocateVenuesView(VenueAllocationMixin, LogActionMixin, JsonDataRespo
         }
 
 
-class SaveVenuesView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveVenuesView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
     def get_moved_item(self, id):

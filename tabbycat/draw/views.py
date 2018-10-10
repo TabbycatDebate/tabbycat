@@ -14,7 +14,6 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
@@ -846,9 +845,9 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
-class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView):
-    template_name = 'edit_matchups.html'
-    save_url = "save-debate-teams"
+class LegacyEditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView):
+    template_name = 'legacy_edit_matchups.html'
+    save_url = "legacy-save-debate-teams"
 
     def annotate_draw(self, draw, serialised_draw):
         if self.round.tournament.pref('teams_in_debate') == 'bp':
@@ -874,11 +873,11 @@ class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView
             self.annotate_region_classes(serialt)
 
         kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
-        kwargs['saveSidesStatusUrl'] = reverse_round('save-debate-sides-status', self.round)
+        kwargs['saveSidesStatusUrl'] = reverse_round('legacy-save-debate-sides-status', self.round)
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
     allows_creation = True
 
@@ -915,7 +914,7 @@ class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
         return debate
 
 
-class SaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_SIDES_SAVE
     allows_creation = False
 

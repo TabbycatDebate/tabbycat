@@ -32,13 +32,13 @@
 
             {% endif %} {# active_adjs < debates_in_round #}
 
-            {% roundurl 'adjallocation-round-edit' as url %}
+            {% roundurl 'legacy-adjallocation-round-edit' as url %}
             {% if active_adjs < debates_in_round or no_chair > 0 or pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
               {% trans "Allocate adjudicators" as title %}
               {% include "components/item-action.html" with text=title type="success" to_complete=True %}
             {% else %}
-              {% trans "Edit adjudicator allocation" as title %}
-              {% include "components/item-action.html" with text=title type="primary" %}
+              {% trans "Edit adjudicator allocation (legacy interface)" as title %}
+              {% include "components/item-action.html" with text=title type="info" %}
             {% endif %}
 
           {% endwith %}
@@ -57,13 +57,13 @@
 
           {% include "draw_alerts_venues.html" %}
 
-          {% roundurl 'venues-edit' round as url %}
+          {% roundurl 'legacy-venues-edit' round as url %}
           {% if round.num_debates_without_venue > 0 %}
             {% trans "Allocate venues" as title %}
             {% include "components/item-action.html" with text=title type="success" to_complete=True %}
           {% else %}
-            {% trans "Edit venue allocation" as title %}
-            {% include "components/item-action.html" with text=title type="primary" %}
+            {% trans "Edit venue allocation (legacy interface)" as title %}
+            {% include "components/item-action.html" with text=title type="info" %}
           {% endif %}
 
         </div>
@@ -89,7 +89,7 @@
               {% endblocktrans %}
               {% include "components/item-info.html" with type="danger" %}
 
-              {% roundurl 'draw-matchups-edit' as url %}
+              {% roundurl 'legacy-draw-matchups-edit' as url %}
               {% include "components/item-action.html" with text="Allocate Sides" type="success" to_complete=True %}
 
             </div>

@@ -56,7 +56,7 @@ export default {
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
       }).fail((response) => {
         // Handle Failure
-        // Note: this block duplicated in EditVenuesContainer
+        // Note: this block duplicated in LegacyEditVenuesContainer
         console.error(JSON.stringify(response)) // Help identify failures in sentry
         let info = ''
         if (Object.prototype.hasOwnProperty.call(response, 'responseJSON')) {

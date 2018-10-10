@@ -15,13 +15,13 @@ Edit Adjudicators for {{ round_abbr }}
 {% block content %}
 <div id="vueMount">
 
-  <edit-adjudicators-container :initial-debates="debates"
-                               :round-info="roundInfo"
-                               :initial-unallocated-items="unallocatedItems"
-                               :default-sort-key="'bracket'"
-                               :default-sort-order="'desc'"
-                               :show-intro-modal="showIntroModal">
-  </edit-adjudicators-container>
+  <legacy-edit-adjudicators-container :initial-debates="debates"
+                                      :round-info="roundInfo"
+                                      :initial-unallocated-items="unallocatedItems"
+                                      :default-sort-key="'bracket'"
+                                      :default-sort-order="'desc'"
+                                      :show-intro-modal="showIntroModal">
+  </legacy-edit-adjudicators-container>
 
 </div>
 {% endblock content %}

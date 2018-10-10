@@ -110,7 +110,7 @@
 import _ from 'lodash'
 import percentile from 'stats-percentile'
 
-import DrawContainerMixin from '../../draw/templates/DrawContainerMixin.vue'
+import LegacyDrawContainerMixin from '../../draw/templates/LegacyDrawContainerMixin.vue'
 import AdjudicatorMovingMixin from '../../templates/ajax/AdjudicatorMovingMixin.vue'
 import AutoImportanceLogicMixin from '../../templates/allocations/AutoImportanceLogicMixin.vue'
 import HighlightContainerMixin from '../../templates/allocations/HighlightContainerMixin.vue'
@@ -122,7 +122,7 @@ import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudica
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
-  mixins: [AjaxMixin, AdjudicatorMovingMixin, DrawContainerMixin,
+  mixins: [AjaxMixin, AdjudicatorMovingMixin, LegacyDrawContainerMixin,
     AutoImportanceLogicMixin, HighlightContainerMixin],
   components: {
     AllocationActions,
