@@ -50,6 +50,7 @@ class CompletedTournamentTestMixin:
 
     fixtures = ['after_round_4.json']
     round_seq = None
+    use_post = False
 
     def get_tournament(self):
         return Tournament.objects.first()
@@ -68,13 +69,16 @@ class CompletedTournamentTestMixin:
             kwargs.setdefault('round_seq', self.round_seq)
         return reverse_tournament(view_name, self.tournament, kwargs=kwargs)
 
-    def get_response(self, view_name, **kwargs):
+    def get_response(self, view_name, use_post=False, **kwargs):
         cache.clear()
         url = self.reverse_url(view_name, **kwargs)
         return self.client.get(url)
 
     def assertResponseOK(self, response):  # noqa: N802
-        self.assertEqual(response.status_code, 200)
+        try:
+            self.assertEqual(response.status_code, 200)
+        except:
+            self.fail("%s raised exception unexpectedly" % self.view_name)
 
     def assertResponsePermissionDenied(self, response):  # noqa: N802
         self.assertEqual(response.status_code, 403)
@@ -118,16 +122,20 @@ class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
         self.assertResponseRedirect(response, reverse('login'))
 
 
-class AssistantTournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
+class AssistantTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
+    """ For testing that admin pages resolve """
+
     def authenticate(self):
-        get_user_model().objects.create_user('assistant', 'assistant@tabbycatdebate.org', '26yEn!CQ')
-        self.client.login(username='assistant', password='26yEn!CQ')
+        get_user_model().objects.create_user('test_assistant', 'test@t.org', 'test')
+        self.client.login(username='test_assistant', password='test')
 
 
-class AdminTournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
+class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
+    """ For testing that assistant pages resolve """
+
     def authenticate(self):
-        get_user_model().objects.create_superuser('admin', 'admin@tabbycatdebate.org', 'OH&K5V@n')
-        self.client.login(username='admin', password='OH&K5V@n')
+        get_user_model().objects.create_superuser('test_admin', 'test@t.org', 'test')
+        self.client.login(username='test_admin', password='test')
 
 
 class ConditionalTournamentTestsMixin(SingleViewTestMixin):
