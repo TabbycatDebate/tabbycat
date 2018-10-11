@@ -16,7 +16,7 @@ from draw.models import Debate
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
-from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, PanelsDragAndDropMixin, RoundMixin, TournamentMixin
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
@@ -33,11 +33,11 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
-class EditDebateAdjudicatorsView(AdministratorMixin, TemplateView):
+class EditDebateAdjudicatorsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_adjudicators.html"
 
 
-class EditPanelAdjudicatorsView(AdministratorMixin, TemplateView):
+class EditPanelAdjudicatorsView(PanelsDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_panel_adjudicators.html"
 
 
@@ -45,7 +45,7 @@ class EditPanelAdjudicatorsView(AdministratorMixin, TemplateView):
 # Legacy Adjudicator Allocation Views
 # ==============================================================================
 
-class LegacyAdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
+class LegacyAdjudicatorAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
 
     @cached_property
     def conflicts_and_history(self):

@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
-from adjallocation.models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator, PreformedPanel, PreformedPanelAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
 from participants.models import Region, Speaker
@@ -294,7 +294,76 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     slug_url_kwarg = 'url_key'
 
 
-class DrawForDragAndDropMixin(RoundMixin):
+class DragAndDropMixin(RoundMixin):
+
+    def get_round_info(self):
+        return self.round.serialize()
+
+    def annotate_debates_or_panels(self, objects, serialised_objects):
+        return serialised_objects
+
+    def get_draw_or_panels(self):
+        objects = self.get_draw_or_panels_objects()
+        serialised_objects = [o.serialize(tournament=self.tournament) for o in objects]
+        annotated_objects = self.annotate_debates_or_panels(objects, serialised_objects)
+        return json.dumps(annotated_objects)
+
+    def get_context_data(self, **kwargs):
+        kwargs['vueDebatesOrPanels'] = self.get_draw_or_panels()
+        kwargs['vueRoundInfo'] = json.dumps(self.get_round_info())
+        return super().get_context_data(**kwargs)
+
+
+class DebateDragAndDropMixin(DragAndDropMixin):
+
+    def get_draw_or_panels_objects(self):
+        # The use-case for prefetches here is so intense that we'll just implement
+        # a separate one (as opposed to use Round.debate_set_with_prefetches())
+        draw = self.round.debate_set.select_related('venue').prefetch_related(
+            Prefetch('debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution__region')),
+            Prefetch('debateteam_set',
+                queryset=DebateTeam.objects.select_related(
+                    'team__institution__region'
+                ).prefetch_related(
+                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
+                )),
+            'debateteam_set__team__break_categories',
+            'venue__venuecategory_set',
+        )
+        # These are pulled in via serialisation so should always be fetched
+        populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
+        populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])
+        return draw
+
+
+class PanelsDragAndDropMixin(DragAndDropMixin):
+
+    def get_draw_or_panels_objects(self):
+        panels = self.round.preformedpanel_set.prefetch_related(
+            Prefetch('preformedpaneladjudicator_set',
+                queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator__institution__region'))
+        )
+        populate_feedback_scores([pa.adjudicator for panel in panels for pa in panel.preformedpaneladjudicator_set.all()])
+
+        """ Assume the number of preformed panels should always match the
+        maximum possible number of debates (for now). These should be
+        automatically created so they are in-place on page load """
+        teams_count = self.tournament.team_set.count()
+        if self.tournament.pref('teams_in_debate') == 'bp':
+            debates_count = teams_count // 4
+        else:
+            debates_count = teams_count // 2
+
+        new_panels_count = debates_count - len(panels)
+        if new_panels_count > 0:
+            new_panels = [PreformedPanel(round=self.round)] * new_panels_count
+            PreformedPanel.objects.bulk_create(new_panels)
+            panels.extend(new_panels)
+        return panels
+
+
+class LegacyDrawForDragAndDropMixin(RoundMixin):
     """Provides the base set of constructors used to assemble a the
     drag and drop table used for editing matchups/adjs/venues with a
     drag and drop interface. Subclass annotate method to add extra view data """

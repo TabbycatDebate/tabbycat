@@ -29,7 +29,7 @@ from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CurrentRoundMixin, DrawForDragAndDropMixin,
+from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin,
     OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
     TournamentMixin)
 from tournaments.models import Round, Tournament
@@ -845,11 +845,11 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
-class EditDebateTeamsView(AdministratorMixin, TemplateView):
+class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_teams.html"
 
 
-class LegacyEditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView):
+class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = 'legacy_edit_matchups.html'
     save_url = "legacy-save-debate-teams"
 

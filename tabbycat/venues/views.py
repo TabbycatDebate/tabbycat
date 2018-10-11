@@ -10,7 +10,7 @@ from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import DrawForDragAndDropMixin, TournamentMixin
+from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.forms import SelectPrepopulated
@@ -25,11 +25,11 @@ from .models import Venue, VenueCategory, VenueConstraint
 logger = logging.getLogger(__name__)
 
 
-class EditDebateVenuesView(AdministratorMixin, TemplateView):
+class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_venues.html"
 
 
-class LegacyVenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
+class LegacyVenueAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
 
     def get_unallocated_venues(self):
         unused_venues = self.round.unused_venues().prefetch_related('venuecategory_set')

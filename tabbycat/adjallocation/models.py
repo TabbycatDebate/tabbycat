@@ -122,6 +122,19 @@ class PreformedPanel(models.Model):
     def __str__(self):
         return "[{x.id}] {x.round.name} impt={x.importance}".format(x=self)
 
+    def serialize(self, tournament=None):
+        """ Serialize like a Debate so they are interoperable to Vue """
+        if tournament is None:
+            tournament = self.round.tournament
+        round = tournament.current_round
+
+        panel = {'id': self.id, 'importance': self.importance}
+        panel['debateAdjudicators'] = [{
+            'position': panellist.type,
+            'adjudicator': panellist.adjudicator.serialize(round=round),
+        } for panellist in self.preformedpaneladjudicator_set.all()]
+        return panel
+
 
 class PreformedPanelAdjudicator(models.Model):
     panel = models.ForeignKey(PreformedPanel, models.CASCADE,
