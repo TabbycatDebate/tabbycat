@@ -5,6 +5,9 @@ from . import views
 urlpatterns = [
 
     path('round/<int:round_seq>/edit/',
+        views.EditDebateVenuesView.as_view(),
+        name='edit-debate-venues'),
+    path('round/<int:round_seq>/edit-legacy/',
         views.LegacyEditVenuesView.as_view(),
         name='legacy-venues-edit'),
     path('round/<int:round_seq>/save/',

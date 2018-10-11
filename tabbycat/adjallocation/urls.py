@@ -5,6 +5,9 @@ from . import views
 urlpatterns = [
     path('round/<int:round_seq>/', include([
         path('edit/',
+            views.EditDebateAdjudicatorsView.as_view(),
+            name='edit-debate-adjudicators'),
+        path('edit-legacy/',
             views.LegacyEditAdjudicatorAllocationView.as_view(),
             name='legacy-adjallocation-round-edit'),
         path('create/',
@@ -16,6 +19,9 @@ urlpatterns = [
         path('panel/set/',
             views.LegacySaveDebatePanel.as_view(),
             name='legacy-adjallocation-save-debate-panel'),
+        path('panels/edit',
+            views.EditPanelAdjudicatorsView.as_view(),
+            name='edit-panel-adjudicators'),
     ])),
     path('conflicts/', include([
         path('adjudicator-team/',

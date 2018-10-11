@@ -33,6 +33,14 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
+class EditDebateAdjudicatorsView(AdministratorMixin, TemplateView):
+    template_name = "edit_debate_adjudicators.html"
+
+
+class EditPanelAdjudicatorsView(AdministratorMixin, TemplateView):
+    template_name = "edit_panel_adjudicators.html"
+
+
 # ==============================================================================
 # Legacy Adjudicator Allocation Views
 # ==============================================================================

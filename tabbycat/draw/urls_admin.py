@@ -29,6 +29,9 @@ urlpatterns = [
             name='draw-regenerate'),
 
         # Side and Matchup Editing
+        path('edit/',
+            views.EditDebateTeamsView.as_view(),
+            name='edit-debate-teams'),
         path('matchups/edit/',
             views.LegacyEditMatchupsView.as_view(),
             name='legacy-draw-matchups-edit'),

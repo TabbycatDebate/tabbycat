@@ -33,7 +33,7 @@
   {% endif %}
 
   {% if round.draw_type == round.DRAW_MANUAL and round.debate_set.count == 0 %}
-    {% roundurl 'legacy-draw-matchups-edit' round as edit_matchups_url %}
+    {% roundurl 'edit-debate-teams' round as edit_matchups_url %}
     {% blocktrans trimmed asvar message %}
       The draw type for this round is set to <strong>manual</strong>, so Tabbycat has just made a
       blank draw. Head on over to

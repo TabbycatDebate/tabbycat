@@ -25,6 +25,10 @@ from .models import Venue, VenueCategory, VenueConstraint
 logger = logging.getLogger(__name__)
 
 
+class EditDebateVenuesView(AdministratorMixin, TemplateView):
+    template_name = "edit_debate_venues.html"
+
+
 class LegacyVenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
 
     def get_unallocated_venues(self):

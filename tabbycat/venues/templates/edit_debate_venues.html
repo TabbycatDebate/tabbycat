@@ -1,0 +1,17 @@
+{% extends "base_fullscreen.html" %}
+
+{% block content %}
+  <div id="vueMount">
+
+  </div>
+{% endblock content %}
+
+{% block js %}
+
+  <script>
+    window.vueData = {
+    }
+  </script>
+  {{ block.super }}
+
+{% endblock js %}

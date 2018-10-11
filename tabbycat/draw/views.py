@@ -845,6 +845,10 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
+class EditDebateTeamsView(AdministratorMixin, TemplateView):
+    template_name = "edit_debate_teams.html"
+
+
 class LegacyEditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = 'legacy_edit_matchups.html'
     save_url = "legacy-save-debate-teams"
