@@ -4,8 +4,7 @@ import logging
 from django.contrib import messages
 from django.db.models import Q
 from django.forms import Select
-from django.utils.translation import ngettext
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
@@ -27,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_venues.html"
+    page_title = gettext_lazy("Edit Draw Venues")
 
 
 class LegacyVenueAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):

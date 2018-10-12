@@ -35,10 +35,12 @@ logger = logging.getLogger(__name__)
 
 class EditDebateAdjudicatorsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_adjudicators.html"
+    page_title = gettext_lazy("Edit Adjudicator Allocation")
 
 
 class EditPanelAdjudicatorsView(PanelsDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_panel_adjudicators.html"
+    page_title = gettext_lazy("Edit Preformed Panels")
 
 
 # ==============================================================================

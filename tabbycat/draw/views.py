@@ -847,6 +847,7 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
 
 class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_teams.html"
+    page_title = gettext_lazy("Edit Draw Matchups")
 
 
 class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):

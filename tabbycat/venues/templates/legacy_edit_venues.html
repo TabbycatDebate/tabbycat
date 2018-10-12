@@ -15,13 +15,13 @@
 {% block content %}
   <div id="vueMount">
 
-    <edit-venues-container :initial-debates="debates"
+    <legacy-edit-venues-container :initial-debates="debates"
                            :round-info="roundInfo"
                            :initial-unallocated-items="unallocatedItems"
                            :venue-constraints="venueConstraints"
                            :default-sort-key="'bracket'"
                            :default-sort-order="'desc'">
-    </edit-venues-container>
+    </legacy-edit-venues-container>
 
   </div>
 {% endblock content %}

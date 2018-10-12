@@ -19,8 +19,13 @@ import DiversityContainer from '../../participants/templates/DiversityContainer.
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
 import ResultsTablesContainer from '../../results/templates/ResultsTablesContainer.vue'
 import LegacyEditVenuesContainer from '../../venues/templates/LegacyEditVenuesContainer.vue'
-
 import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
+// Allocations
+import EditDebateAdjudicatorsContainer from '../../adjallocation/templates/EditDebateAdjudicatorsContainer.vue'
+import EditPanelAdjudicatorsContainer from '../../adjallocation/templates/EditPanelAdjudicatorsContainer.vue'
+import EditDebateTeamsContainer from '../../draw/templates/EditDebateTeamsContainer.vue'
+import EditDebateVenuesContainer from '../../venues/templates/EditDebateVenuesContainer.vue'
+import store from '../../utils/templates/DragAndDropStore'
 
 // Setup the main constructs used for custom components
 var vueComponents = {}
@@ -185,10 +190,15 @@ vueComponents.DiversityContainer = DiversityContainer
 vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
 // Printables
 vueComponents.PrintableBallot = PrintableBallot
-// Allocations
+// Allocations Legacy
 vueComponents.LegacyEditAdjudicatorsContainer = LegacyEditAdjudicatorsContainer
 vueComponents.LegacyEditMatchupsContainer = LegacyEditMatchupsContainer
 vueComponents.LegacyEditVenuesContainer = LegacyEditVenuesContainer
+// Allocations New
+vueComponents.EditDebateAdjudicatorsContainer = EditDebateAdjudicatorsContainer
+vueComponents.EditPanelAdjudicatorsContainer = EditPanelAdjudicatorsContainer
+vueComponents.EditDebateTeamsContainer = EditDebateTeamsContainer
+vueComponents.EditDebateVenuesContainer = EditDebateVenuesContainer
 
 // -----------------------------------------------------------------------------
 // Asynchronously Loaded Components Setup (defer loading to reduce bundle)
@@ -237,6 +247,7 @@ const vueTranslationMixin = {
 }
 
 // This is an coordinating instance used for inter-component pub/sub interfaces
+// Only needed by the legay drag and drop screens
 const eventHub = new Vue()
 Vue.prototype.$eventHub = eventHub
 
@@ -253,6 +264,7 @@ if (typeof vueData !== 'undefined') {
   } else {
     new Vue({ // eslint-disable-line no-new
       el: '#vueMount',
+      store, // Inject store into all root level components
       components: vueComponents,
       data: vueData,
     })

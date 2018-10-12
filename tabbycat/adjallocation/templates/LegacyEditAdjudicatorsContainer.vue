@@ -59,7 +59,7 @@
               :key="debate.id" :round-info="roundInfo">
 
         <div class="draw-cell flex-6" slot="simportance">
-          <debate-importance :id="debate.id" :importance="debate.importance"></debate-importance>
+          <legacy-debate-importance :id="debate.id" :importance="debate.importance"></legacy-debate-importance>
         </div>
 
         <template slot="svenue">
@@ -116,7 +116,7 @@ import AutoImportanceLogicMixin from '../../templates/allocations/AutoImportance
 import HighlightContainerMixin from '../../templates/allocations/HighlightContainerMixin.vue'
 import AllocationActions from '../../templates/allocations/AllocationActions.vue'
 import AllocationIntroModal from '../../templates/allocations/AllocationIntroModal.vue'
-import DebateImportance from '../../templates/allocations/DebateImportance.vue'
+import LegacyDebateImportance from '../../templates/allocations/LegacyDebateImportance.vue'
 import DebatePanel from '../../templates/allocations/DebatePanel.vue'
 import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
@@ -127,7 +127,7 @@ export default {
   components: {
     AllocationActions,
     AllocationIntroModal,
-    DebateImportance,
+    LegacyDebateImportance,
     DebatePanel,
     DraggableAdjudicator,
   },
