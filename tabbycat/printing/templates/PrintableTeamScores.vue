@@ -5,6 +5,9 @@
       <div class="db-padding-horizontal flex-grow-1 db-align-vertical-center">
         <strong>{{ titleCasePosition }}, {{ teamName }}</strong>
       </div>
+      <div class="db-padding-horizontal db-align-vertical-center strong small" v-if="this.team.iron">
+        IMPORTANT: Check and explicitly note if a speaker gives multiple speeches
+      </div>
       <div class="db-padding-horizontal db-align-vertical-center">
         {{ speakersList }}
       </div>

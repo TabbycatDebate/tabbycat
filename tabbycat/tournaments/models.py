@@ -473,7 +473,7 @@ class Round(models.Model):
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, divisions=True, wins=False,
-            results=False, venues=True, institutions=False, check_ins=False):
+            results=False, venues=True, institutions=False, check_ins=False, iron=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
         out which team is on which side, and sets attributes accordingly."""
@@ -499,13 +499,19 @@ class Round(models.Model):
         if check_ins:
             debates = debates.select_related('checkin_identifier')
 
-        if teams or wins or institutions or speakers:
+        if teams or wins or institutions or speakers or iron:
             debateteam_prefetch_queryset = DebateTeam.objects.select_related('team')
             if institutions:
                 debateteam_prefetch_queryset = debateteam_prefetch_queryset.select_related('team__institution')
             if speakers:
                 debateteam_prefetch_queryset = debateteam_prefetch_queryset.prefetch_related(
                     Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')))
+            if iron:
+                debateteam_prefetch_queryset = debateteam_prefetch_queryset.annotate(
+                    iron=Count('speakerscore', filter=Q(speakerscore__ghost=True), distinct=True),
+                    iron_prev=Count('team__debateteam__speakerscore', distinct=True,
+                        filter=Q(team__debateteam__speakerscore__ghost=True) & Q(team__debateteam__debate__round=self.prev)))
+
             debates = debates.prefetch_related(
                 Prefetch('debateteam_set', queryset=debateteam_prefetch_queryset))
 
