@@ -83,18 +83,20 @@
   {{ block.super }}
 
   <script>
-    function updateElimFields() {
-      if ($('#id_prelim').val() == '') {
+    $('#id_prelim').change(function () {
+      if ($('#id_prelim').val() == 'all-completed') {
         $('select[id^=id_elim_]').prop('disabled', false);
         $('select[id^=id_elim_] option:nth-child(2)').prop('selected', true);
       } else {
         $('select[id^=id_elim_]').prop('disabled', true);
         $('select[id^=id_elim_] option:nth-child(1)').prop('selected', true);
       }
-    }
+    });
 
-    $('#id_prelim').change(updateElimFields);
-    $(document).ready(updateElimFields);
+    // disable elimination round fields if preliminary rounds are complete
+    $(document).ready(function () {
+      $('select[id^=id_elim_]').prop('disabled', $('#id_prelim').val() != 'all-completed');
+    });
   </script>
 
 {% endblock %}

@@ -46,10 +46,11 @@ def adjudicator_assignment_email_generator(round_id):
             if adj.email is None:
                 continue
 
-            context['USER'] = adj.name
-            context['POSITION'] = adj_position_names[pos]
+            context_user = context.copy()
+            context_user['USER'] = adj.name
+            context_user['POSITION'] = adj_position_names[pos]
 
-            emails.append((context, adj))
+            emails.append((context_user, adj))
 
     return emails
 
@@ -105,8 +106,9 @@ def ballots_email_generator(debate_id):
             for speaker in team['speakers']:
                 scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
 
-        context['USER'] = judge.name
-        context['SCORES'] = scores
+        context_user = context.copy()
+        context_user['USER'] = judge.name
+        context_user['SCORES'] = scores
 
         emails.append((context, judge))
 
@@ -121,21 +123,25 @@ def standings_email_generator(url, round_id):
     teams = round.active_teams.prefetch_related('speaker_set')
     populate_win_counts(teams)
 
-    context = {'TOURN': str(tournament)}
-
-    context['URL'] = url if tournament.pref('public_team_standings') else ""
+    context = {
+        'TOURN': str(tournament),
+        'ROUND': round.name,
+        'URL': url if tournament.pref('public_team_standings') else ""
+    }
 
     for team in teams:
-        context['POINTS'] = str(team.points_count)
-        context['TEAM'] = team.short_name
+        context_team = context.copy()
+        context_team['POINTS'] = str(team.points_count)
+        context_team['TEAM'] = team.short_name
 
         for speaker in team.speaker_set.all():
             if speaker.email is None:
                 continue
 
-            context['USER'] = speaker.name
+            context_user = context_team.copy()
+            context_user['USER'] = speaker.name
 
-            emails.append((context, speaker))
+            emails.append((context_user, speaker))
 
     return emails
 
@@ -166,8 +172,38 @@ def motion_release_email_generator(round_id):
             if speaker.email is None:
                 continue
 
-            context['USER'] = speaker.name
+            context_user = context.copy()
+            context_user['USER'] = speaker.name
 
-            emails.append((context, speaker))
+            emails.append((context_user, speaker))
+
+    return emails
+
+
+def team_speaker_email_generator(tournament_id):
+    emails = []
+    tournament = Tournament.objects.get(id=tournament_id)
+
+    for team in tournament.team_set.all().prefetch_related('speaker_set', 'break_categories').select_related('division', 'institution'):
+        context = {
+            'TOURN': str(tournament),
+            'SHORT': team.short_name,
+            'LONG': team.long_name,
+            'CODE': team.code_name,
+            'DIVISION': team.division.name if team.division is not None else "",
+            'BREAK': _(", ").join([breakq.name for breakq in team.break_categories.all()]),
+            'SPEAKERS': _(", ").join([p.name for p in team.speaker_set.all()]),
+            'INSTITUTION': str(team.institution),
+            'EMOJI': team.emoji
+        }
+
+        for speaker in team.speakers:
+            if speaker.email is None:
+                continue
+
+            context_user = context.copy()
+            context_user['USER'] = speaker.name
+
+            emails.append((context_user, speaker))
 
     return emails

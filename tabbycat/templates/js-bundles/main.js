@@ -35,9 +35,9 @@ if (window.buildData.sentry === true) {
   }).addPlugin(RavenVue, Vue).install()
 }
 
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // TCI: jQuery, Lodash, and Boostrap
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 global.jQuery = $ // Set for bootstrap
 window.$ = $ // Set for browser window
@@ -52,31 +52,31 @@ $.fn.extend({
       <div id='alertdiv' class='alert alert-${alerttype} fade show'>
         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
         <span aria-hidden='true'>&times;</span></button>${message}
-      </div>`);
+      </div>`)
     if (timeout && timeout !== 0) {
       // this will automatically close the alert and remove this if the users don't within in 5s
       setTimeout(() => {
         $('#alertdiv').alert('close')
-      }, timeout);
+      }, timeout)
     }
   },
   loadButton: function () {
     // Can't use disable attr as some submission button need to pass their value
-    $('button').prop('disabled', true);
+    $('button').prop('disabled', true)
   },
   resetButton: function () {
-    $('button').prop('disabled', false);
+    $('button').prop('disabled', false)
   },
-});
+})
 
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // TCI: Mount global jquery stuff here
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
-function disabledTriggeredForm(triggeredForm) {
-  var triggeredButton = $('[type=submit]:focus')[0]; // CLicked button
-  var submitValue = $(triggeredButton).attr('value');
-  var submitName = $(triggeredButton).attr('name');
+function disabledTriggeredForm (triggeredForm) {
+  var triggeredButton = $('[type=submit]:focus')[0] // CLicked button
+  var submitValue = $(triggeredButton).attr('value')
+  var submitName = $(triggeredButton).attr('name')
 
   if ($(triggeredButton).prop('disabled') === undefined ||
       $(triggeredButton).prop('disabled') === false) {
@@ -87,9 +87,9 @@ function disabledTriggeredForm(triggeredForm) {
         .attr('type', 'hidden')
         .attr('name', submitName)
         .attr('value', submitValue)
-        .appendTo(triggeredForm);
+        .appendTo(triggeredForm)
     }
-    $.fn.loadButton(triggeredButton, triggeredForm);
+    $.fn.loadButton(triggeredButton, triggeredForm)
   }
 }
 
@@ -97,25 +97,25 @@ $(document).ready(() => {
   // Enable hover tooltips for all elements
   $('[data-toggle=tooltip]').tooltip({
     html: true,
-  });
+  })
 
   // Feather shim for icons
-  feather.replace();
+  feather.replace()
 
   // Remove the pre-expanded sidebar states for mobile (they overlap)
   if ($(window).width() < 768) {
-    $('#sidebar .collapse').removeClass('show');
+    $('#sidebar .collapse').removeClass('show')
   }
 
   // Auto disable submit buttons for forms upon submission (prevent double-sub)
   $('form').submit(function () {
     disabledTriggeredForm(this)
-  });
+  })
 
   // Auto disable submit buttons for buttons that POST
   $('.submit-disable').click((event) => {
-    $.fn.loadButton(event.target);
-  });
+    $.fn.loadButton(event.target)
+  })
 
   // Focus '/' on table search
   if ($('#table-search').length) {
@@ -134,22 +134,22 @@ $(document).ready(() => {
     String.prototype.endsWith = function (search, thisLength) {
       if (thisLength === undefined || thisLength > this.length) {
         // eslint-disable-next-line no-param-reassign
-        thisLength = this.length;
+        thisLength = this.length
       }
-      return this.substring(thisLength - search.length, thisLength) === search;
-    };
+      return this.substring(thisLength - search.length, thisLength) === search
+    }
   }
 
   // Set Highlights on Navigation Elements
-  const currentUrl = window.location.href;
+  const currentUrl = window.location.href
   if ($('.admin-sidebar').length) {
     // For admin area
     $('.admin-sidebar a.list-group-item').filter((index, elem) =>
       currentUrl.endsWith($(elem).attr('href'))).addClass('active')
     // Expand sidebar if an item within a section is active (if not on mobile)
-    const isMobile = window.matchMedia('only screen and (max-width: 576px)');
+    const isMobile = window.matchMedia('only screen and (max-width: 576px)')
     if (!isMobile.matches) {
-      const menuSectionClass = '.list-group-item.d-inline-block:not(.main-menu-item)';
+      const menuSectionClass = '.list-group-item.d-inline-block:not(.main-menu-item)'
       const listGroups = $(menuSectionClass).filter((index, elem) =>
         $(elem).find('a.list-group-item.active').length > 0)
       listGroups.children('a').attr('aria-expanded', 'true')
@@ -167,11 +167,11 @@ $(document).ready(() => {
       }
     })
   }
-});
+})
 
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Vue General Components Setup
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 // Table-based Views
 vueComponents.TablesContainer = TablesContainer
@@ -190,17 +190,17 @@ vueComponents.EditAdjudicatorsContainer = EditAdjudicatorsContainer
 vueComponents.EditMatchupsContainer = EditMatchupsContainer
 vueComponents.EditVenuesContainer = EditVenuesContainer
 
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Asynchronously Loaded Components Setup (defer loading to reduce bundle)
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 // Note the 3d graphs are async loaded inline as part of components: {}
 // Check-Ins (thus delays loading quagga)
 vueComponents.CheckInScanContainer = () => import('../../checkins/templates/CheckInScanContainer.vue')
 
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Main Vue Instance
-//------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 // This is the main data package setout in the django template
 const vueData = window.vueData // We need to mount props from the window itself
@@ -251,10 +251,10 @@ if (typeof vueData !== 'undefined') {
   if ('tablesData' in vueData && vueData.tablesData === null) {
     // Is an empty table; do not mount
   } else {
-    new Vue({
+    new Vue({ // eslint-disable-line no-new
       el: '#vueMount',
       components: vueComponents,
       data: vueData,
-    });
+    })
   }
 }

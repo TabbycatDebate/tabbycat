@@ -59,4 +59,4 @@ class SentMessageRecord(models.Model):
         ordering = ['timestamp']
 
     def __str__(self):
-        return "%s: %s" % (self.recipient.name, self.event)
+        return "%s: %s" % (self.recipient.name, self.get_event_display())
