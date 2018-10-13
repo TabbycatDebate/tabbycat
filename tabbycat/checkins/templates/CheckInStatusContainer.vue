@@ -68,12 +68,12 @@
               <div class="mr-auto strong my-1 px-2">
                 {{ grouper }}
               </div>
-              <button v-if="statusForGroup(entities) === false"
+              <button v-if="forAdmin && statusForGroup(entities) === false"
                 @click="checkInOrOutGroup(entities, true)"
                 class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
                 <strong>✓</strong> All
               </button>
-              <button v-if="statusForGroup(entities) === true"
+              <button v-if="forAdmin && statusForGroup(entities) === true"
                 @click="checkInOrOutGroup(entities, false)"
                 class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
                 <strong>☓</strong> All
@@ -94,28 +94,35 @@
                          data-toggle="tooltip" :title="getToolTipForEntity(entity)">
                       {{ entity.name }}
                     </div>
-                    <a v-if="!entity.status && entity.identifier[0] && !entity.locked"
-                       class="col-auto p-2 btn-info text-center hoverable"
-                       title="Click to check-in manually"
-                       @click="checkInOrOutIdentifiers(entity.identifier, true)">
-                      ✓
-                    </a>
-                    <div v-if="!entity.status && entity.identifier[0] && entity.locked"
-                         class="col-auto p-2 btn-secondary text-center btn-no-hover">
-                      saving...
-                    </div>
-                    <div v-if="!entity.identifier[0]"
-                         class="col-auto p-2 btn-secondary text-white text-center"
-                         data-toggle="tooltip"
-                         title="`This person does not have a check-in identifier so
-                                 they can't be checked in`">
-                      ?
-                    </div>
-                    <div v-if="entity.status" title="Click to undo a check-in"
-                         class="col-auto p-2 btn-success hoverable text-center"
-                         @click="checkInOrOutIdentifiers(entity.identifier, false)">
-                      {{ lastSeenTime(entity.status.time) }}
-                    </div>
+                    <template v-if="forAdmin">
+                      <a v-if="!entity.status && entity.identifier[0] && !entity.locked"
+                         class="col-auto p-2 btn-info text-center hoverable"
+                         title="Click to check-in manually"
+                         @click="checkInOrOutIdentifiers(entity.identifier, true)">
+                        ✓
+                      </a>
+                      <div v-if="!entity.status && entity.identifier[0] && entity.locked"
+                           class="col-auto p-2 btn-secondary text-center btn-no-hover">
+                        saving...
+                      </div>
+                      <div v-if="!entity.identifier[0]"
+                           class="col-auto p-2 btn-secondary text-white text-center"
+                           data-toggle="tooltip"
+                           title="`This person does not have a check-in identifier so
+                                   they can't be checked in`">
+                        ?
+                      </div>
+                      <div v-if="entity.status" title="Click to undo a check-in"
+                           class="col-auto p-2 btn-success hoverable text-center"
+                           @click="checkInOrOutIdentifiers(entity.identifier, false)">
+                        {{ lastSeenTime(entity.status.time) }}
+                      </div>
+                    </template>
+                    <template v-if="!forAdmin">
+                      <div v-if="entity.status" class="col-auto p-2 btn-success actext-center">
+                        {{ lastSeenTime(entity.status.time) }}
+                      </div>
+                    </template>
 
                   </div>
                 </div>
@@ -158,6 +165,7 @@ export default {
     initialEvents: Array,
     assistantUrl: String,
     teamCodes: Boolean,
+    forAdmin: Boolean,
   },
   computed: {
     statsAbsent: function () {

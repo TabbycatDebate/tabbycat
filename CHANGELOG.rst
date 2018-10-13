@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+2.2.5
+-----
+*Release date: ?? October 2018*
+
+- Remove the buttons from the public check-ins page (as these do nothing unless the user is logged in)
+
 
 2.2.4
 -----
