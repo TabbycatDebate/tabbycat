@@ -69,7 +69,7 @@
 
 <script>
 import _ from 'lodash'
-import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
+import AutoSaveCounter from '../draganddrops/LegacyAutoSaveCounter.vue'
 import TablesContainer from './TablesContainer.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
 

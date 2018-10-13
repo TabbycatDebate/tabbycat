@@ -2,17 +2,17 @@
 // Provides shared functionality common across the container components for editing
 // adjs/teams/venues etc
 import DragAndDropDebate from '../../utils/templates/DragAndDropDebate.vue'
+import DragAndDropLayout from '../../utils/templates/DragAndDropLayout.vue'
+import DragAndDropActions from '../../utils/templates/DragAndDropActions.vue'
 import WebsocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 export default {
   mixins: [WebsocketMixin],
-  components: { DragAndDropDebate },
+  components: { DragAndDropDebate, DragAndDropLayout, DragAndDropActions },
   props: ['initialDebatesOrPanels', 'initialRoundInfo'],
-  data: function () {
-    return {
-      sockets: ['debates'],
-    }
-  },
+  data: () => ({
+    sockets: ['debates'],
+  }),
   created: function () {
     // Initial mutation to the Vuex store that sets up the initial state
     this.$store.commit('setupDebatesOrPanels', this.initialDebatesOrPanels)

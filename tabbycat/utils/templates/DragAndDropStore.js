@@ -13,6 +13,7 @@ export default new Vuex.Store({
     roundInfo: null, // Globally accessible but constant
     wsBridge: null,
     wsPseudoComponentID: null,
+    lastSaved: null,
   },
   mutations: {
     setupDebatesOrPanels (state, setupDebatesOrPanels) {
@@ -30,6 +31,9 @@ export default new Vuex.Store({
       Object.entries(debateOrPanel.attrs).forEach(([key, value]) => {
         state.debatesOrPanels[debateOrPanel.id][key] = value
       })
+    },
+    updateSaveCounter (state) {
+      state.lastSaved = new Date()
     },
   },
   getters: {
@@ -49,6 +53,7 @@ export default new Vuex.Store({
         debatesOrPanels: updatedDebatesOrPanels,
         componentID: this.state.wsPseudoComponentID,
       })
+      commit('updateSaveCounter')
       // TODO: error handling; locking; checking if the result matches send
     },
     receiveUpdatedupdateDebatesOrPanelsAttribute ({ commit }, payload) {
