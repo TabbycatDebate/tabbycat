@@ -303,10 +303,11 @@ class DragAndDropMixin(RoundMixin):
         return serialised_objects
 
     def get_draw_or_panels(self):
-        objects = self.get_draw_or_panels_objects()
-        serialised_objects = [o.serialize(tournament=self.tournament) for o in objects]
-        annotated_objects = self.annotate_debates_or_panels(objects, serialised_objects)
-        return json.dumps(annotated_objects)
+        items = self.get_draw_or_panels_objects()
+        serialised_objects = [i.serialize(tournament=self.tournament) for i in items]
+        annotated_objects = self.annotate_debates_or_panels(items, serialised_objects)
+        keyed_objects = {item['id'] : item for item in annotated_objects}
+        return json.dumps(keyed_objects)
 
     def get_context_data(self, **kwargs):
         kwargs['vueDebatesOrPanels'] = self.get_draw_or_panels()

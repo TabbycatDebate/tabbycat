@@ -27,6 +27,6 @@
 // Uses slots so that parent components can override them with custom components for editing the
 // specific type of data they are responsible for
 export default {
-  props: ['debateOrPanel'],
+  props: ['debateOrPanel', 'ws'],
 }
 </script>

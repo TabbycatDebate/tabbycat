@@ -158,6 +158,7 @@ export default {
     initialEvents: Array,
     assistantUrl: String,
     teamCodes: Boolean,
+    tournamentSlug: String,
   },
   computed: {
     statsAbsent: function () {
@@ -239,6 +240,9 @@ export default {
         return this.entitiesByTime
       }
       return this.entitiesByTime
+    },
+    tournamentSlugForWSPath: function () {
+      return this.tournamentSlug
     },
   },
   methods: {

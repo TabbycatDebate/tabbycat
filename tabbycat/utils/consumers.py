@@ -135,7 +135,7 @@ class DebateOrPanelConsumer(TournamentConsumer, WSSuperUserRequiredMixin):
         async_to_sync(self.channel_layer.group_send)(
             self.group_name(), {
                 'type': 'broadcast_checkin',
-                'content': json_objects
+                'content': content
             }
         )
 

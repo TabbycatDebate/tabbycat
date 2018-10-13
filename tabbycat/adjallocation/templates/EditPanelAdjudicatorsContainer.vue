@@ -1,9 +1,8 @@
 <template>
 
   <section>
-    <drag-and-drop-debate v-for="debate in debatesOrPanels"
-                          :key="debate.id" :debateOrPanel="debate">
-      <debate-importance slot="importance"></debate-importance>
+    <drag-and-drop-debate v-for="panel in debatesOrPanels" :key="panel.id" :debateOrPanel="panel">
+      <debate-importance slot="importance" :debateOrPanel="panel"></debate-importance>
       <template slot="adjudicators">fancy adjs UI</template>
       <template slot="venue"><span></span></template><!--Hide Venues-->
     </drag-and-drop-debate>
@@ -16,5 +15,10 @@ import EditEitherAdjudicatorsSharedMixin from './EditEitherAdjudicatorsSharedMix
 
 export default {
   mixins: [EditEitherAdjudicatorsSharedMixin],
+  data: function () {
+    return {
+      sockets: ['panels'], // Override the normal debate socket from DragAndDropContainerMixin
+    }
+  },
 }
 </script>

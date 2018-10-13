@@ -402,6 +402,7 @@ class Round(models.Model):
             'roundName' : self.abbreviation,
             'roundSeq' : self.seq,
             'roundIsPrelim' : not self.is_break_round,
+            'tournamentSlug': self.tournament.slug,
         }
         return round_info
 

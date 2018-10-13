@@ -53,6 +53,11 @@ export default {
   props: {
     tournamentSlug: String,
   },
+  computed: {
+    tournamentSlugForWSPath: function () {
+      return this.tournamentSlug
+    },
+  },
   methods: {
     checkInIdentifier: function (barcodeIdentifier) {
       const payload = { barcodes: [barcodeIdentifier], status: true, type: 'people' }

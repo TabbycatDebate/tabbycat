@@ -11,6 +11,8 @@ export default new Vuex.Store({
   state: {
     debatesOrPanels: null,
     roundInfo: null, // Globally accessible but constant
+    wsBridge: null,
+    wsPseudoComponentID: null,
   },
   mutations: {
     setupDebatesOrPanels (state, setupDebatesOrPanels) {
@@ -19,10 +21,43 @@ export default new Vuex.Store({
     setupRoundInfo (state, roundInfo) {
       state.roundInfo = roundInfo
     },
+    setupWebsocketBridge (state, bridge) {
+      state.wsBridge = bridge
+      state.wsPseudoComponentID = Math.floor(Math.random() * 10000)
+    },
+    setDebateOrPanelAttributes (state, debateOrPanel) {
+      // For a given debate or panel set its state to match the given attributes
+      Object.entries(debateOrPanel.attrs).forEach(([key, value]) => {
+        state.debatesOrPanels[debateOrPanel.id][key] = value
+      })
+    },
   },
   getters: {
     allDebatesOrPanels: state => {
       return state.debatesOrPanels
+    },
+  },
+  // Note actions are async
+  actions: {
+    updateDebatesOrPanelsAttribute ({ commit }, updatedDebatesOrPanels) {
+      // For each debate or panel mutate the state to reflect the new attributes
+      Object.entries(updatedDebatesOrPanels).forEach(([id, attrs]) => {
+        commit('setDebateOrPanelAttributes', { 'id': id, 'attrs': attrs })
+      })
+      // Send the result over the websocket
+      this.state.wsBridge.send({
+        debatesOrPanels: updatedDebatesOrPanels,
+        componentID: this.state.wsPseudoComponentID,
+      })
+      // TODO: error handling; locking; checking if the result matches send
+    },
+    receiveUpdatedupdateDebatesOrPanelsAttribute ({ commit }, payload) {
+      // Only commit changes from websockets initiated from other instances
+      if (payload.componentID !== this.state.wsPseudoComponentID) {
+        Object.entries(payload.debatesOrPanels).forEach(([id, attrs]) => {
+          commit('setDebateOrPanelAttributes', { 'id': id, 'attrs': attrs })
+        })
+      }
     },
   },
   strict: debug,
