@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+2.2.5
+-----
+*Release date: ?? October 2018*
+
+- Fixed a bug that allow the public-facing version of the check-ins page to issue check-ins (rather than be read-only)
+
 
 2.3.0 (LaPerm)
 ------------------
