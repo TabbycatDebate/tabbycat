@@ -33,14 +33,40 @@ from utils.misc import reverse_round
 logger = logging.getLogger(__name__)
 
 
-class EditDebateAdjudicatorsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
+class EditDebateOrPanelAdjudicatorsMixin(AdministratorMixin, TemplateView):
+
+    def get_meta_info(self):
+        info = super().get_meta_info()
+        """ Manually construct a highlight to match format of regions/breaks"""
+        gender_options = [
+            {'pk': 'm', 'fields': {'name': _('Male')}},
+            {'pk': 'f', 'fields': {'name': _('Female')}},
+            {'pk': 'o', 'fields': {'name': _('Other')}},
+            {'pk': 'u', 'fields': {'name': _('Unknown')}},
+        ]
+        info['highlights']['gender'] = json.dumps(gender_options)
+        rank_options = [
+            {'pk': 'a+', 'fields': {'name': 'A+'}},
+            {'pk': 'a', 'fields': {'name': 'A'}},
+            {'pk': 'a-', 'fields': {'name': 'A-'}},
+            {'pk': 'b+', 'fields': {'name': 'B+'}},
+            {'pk': 'b', 'fields': {'name': 'B'}},
+            {'pk': 'b-', 'fields': {'name': 'B-'}},
+            {'pk': 'c+', 'fields': {'name': 'C+'}},
+            {'pk': 'f', 'fields': {'name': 'C'}},
+        ]
+        info['highlights']['rank'] = json.dumps(rank_options)
+        return info
+
+
+class EditDebateAdjudicatorsView(EditDebateOrPanelAdjudicatorsMixin, DebateDragAndDropMixin):
     template_name = "edit_debate_adjudicators.html"
-    page_title = gettext_lazy("Edit Adjudicator Allocation")
+    page_title = gettext_lazy("Edit Allocation")
 
 
-class EditPanelAdjudicatorsView(PanelsDragAndDropMixin, AdministratorMixin, TemplateView):
+class EditPanelAdjudicatorsView(EditDebateOrPanelAdjudicatorsMixin, PanelsDragAndDropMixin):
     template_name = "edit_panel_adjudicators.html"
-    page_title = gettext_lazy("Edit Preformed Panels")
+    page_title = gettext_lazy("Edit Panels")
 
 
 # ==============================================================================
@@ -48,6 +74,7 @@ class EditPanelAdjudicatorsView(PanelsDragAndDropMixin, AdministratorMixin, Temp
 # ==============================================================================
 
 class LegacyAdjudicatorAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
+    """@depracate when legacy drag and drop UIs removed"""
 
     @cached_property
     def conflicts_and_history(self):
@@ -102,6 +129,7 @@ class LegacyAdjudicatorAllocationMixin(LegacyDrawForDragAndDropMixin, Administra
 
 
 class LegacyEditAdjudicatorAllocationView(LegacyAdjudicatorAllocationMixin, TemplateView):
+    """@depracate when legacy drag and drop UIs removed"""
 
     template_name = 'legacy_edit_adjudicators.html'
     auto_url = "legacy-adjallocation-auto-allocate"
@@ -144,6 +172,7 @@ class LegacyEditAdjudicatorAllocationView(LegacyAdjudicatorAllocationMixin, Temp
 
 
 class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixin, JsonDataResponsePostView):
+    """@depracate when legacy drag and drop UIs removed"""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
@@ -172,6 +201,7 @@ class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixi
 
 
 class LegacySaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View):
+    """@depracate when legacy drag and drop UIs removed"""
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):
@@ -187,6 +217,7 @@ class LegacySaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin,
 
 
 class LegacySaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
+    """@depracate when legacy drag and drop UIs removed"""
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
     def get_moved_item(self, id):

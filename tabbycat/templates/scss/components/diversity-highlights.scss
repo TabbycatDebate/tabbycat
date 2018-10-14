@@ -6,6 +6,7 @@
   color: #fff; // Needed to keep consistent with other bars
 }
 
+// @depracate post legacy allocations remove
 .category-display {
 
   &.category-0 {
@@ -41,31 +42,70 @@
   }
 }
 
+.break-display {
+
+  &.break-0 {
+    @include hover-highlights($break-cat-1);
+  }
+
+  &.break-0-disabled {
+    @include outline-highlights($break-cat-1);
+  }
+
+  &.break-1 {
+    @include hover-highlights($break-cat-2);
+  }
+
+  &.break-1-disabled {
+    @include outline-highlights($break-cat-2);
+  }
+
+  &.break-2 {
+    @include hover-highlights($break-cat-3);
+  }
+
+  &.break-2-disabled {
+    @include outline-highlights($break-cat-3);
+  }
+
+  &.break-3 {
+    @include hover-highlights($break-cat-4);
+  }
+
+  &.break-4-disabled {
+    @include outline-highlights($break-cat-4);
+  }
+}
+
 .gender-display {
 
   &.gender-male,
   &.gender-m,
-  &.gender-M {
+  &.gender-M,
+  &.gender-0 {
     @include hover-highlights($male);
   }
 
   &.gender-female,
   &.gender-f,
   &.gender-F,
-  &.gender-nm {
+  &.gender-nm,
+  &.gender-1 {
     @include hover-highlights($female);
   }
 
   &.gender-other,
   &.gender-o,
-  &.gender-O {
+  &.gender-O,
+  &.gender-2 {
     @include hover-highlights($other);
   }
 
   &.gender-unknown,
   &.gender-u,
   &.gender-U,
-  &.gender- {
+  &.gender-,
+  &.gender-3 {
     @include hover-highlights($unknown);
   }
 

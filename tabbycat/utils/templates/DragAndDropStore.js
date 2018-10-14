@@ -9,18 +9,34 @@ const debug = process.env.NODE_ENV !== 'production'
 // and updated through websockets
 export default new Vuex.Store({
   state: {
-    debatesOrPanels: null,
-    roundInfo: null, // Globally accessible but constant
+    debatesOrPanels: {}, // Keyed by primary key
+    round: null,
+    tournament: null,
+    extra: {},
+    highlights: {},
+    // For saving mechanisms
     wsBridge: null,
     wsPseudoComponentID: null,
     lastSaved: null,
   },
   mutations: {
-    setupDebatesOrPanels (state, setupDebatesOrPanels) {
-      state.debatesOrPanels = setupDebatesOrPanels
-    },
-    setupRoundInfo (state, roundInfo) {
-      state.roundInfo = roundInfo
+    setupInitialData (state, initialData) {
+      // Primary data across all drag and drop views
+      state.round = initialData.round[0]
+      state.tournament = initialData.tournament[0]
+      initialData.debatesOrPanels.forEach((debateOrPanel) => {
+        state.debatesOrPanels[debateOrPanel.pk] = debateOrPanel
+      })
+      // Universal data but extended on a per view basis
+      state.extra = initialData.extra
+      // Highlights
+      Object.entries(initialData.highlights).forEach(([key, value]) => {
+        Vue.set(state.highlights, key, { active: false, options: {} })
+        value.forEach((item, index) => {
+          item.css = key + '-display ' + key + '-' + index
+          state.highlights[key].options[item.pk] = item
+        })
+      })
     },
     setupWebsocketBridge (state, bridge) {
       state.wsBridge = bridge
@@ -29,8 +45,14 @@ export default new Vuex.Store({
     setDebateOrPanelAttributes (state, debateOrPanel) {
       // For a given debate or panel set its state to match the given attributes
       Object.entries(debateOrPanel.attrs).forEach(([key, value]) => {
-        state.debatesOrPanels[debateOrPanel.id][key] = value
+        state.debatesOrPanels[debateOrPanel.pk]['fields'][key] = value
       })
+    },
+    toggleHighlight (state, type) {
+      Object.entries(state.highlights).forEach(([key, value]) => {
+        value.active = false
+      })
+      state.highlights[type].active = !state.highlights[type].active
     },
     updateSaveCounter (state) {
       state.lastSaved = new Date()
@@ -45,8 +67,8 @@ export default new Vuex.Store({
   actions: {
     updateDebatesOrPanelsAttribute ({ commit }, updatedDebatesOrPanels) {
       // For each debate or panel mutate the state to reflect the new attributes
-      Object.entries(updatedDebatesOrPanels).forEach(([id, attrs]) => {
-        commit('setDebateOrPanelAttributes', { 'id': id, 'attrs': attrs })
+      Object.entries(updatedDebatesOrPanels).forEach(([pk, attrs]) => {
+        commit('setDebateOrPanelAttributes', { 'pk': pk, 'attrs': attrs })
       })
       // Send the result over the websocket
       this.state.wsBridge.send({
@@ -59,8 +81,8 @@ export default new Vuex.Store({
     receiveUpdatedupdateDebatesOrPanelsAttribute ({ commit }, payload) {
       // Only commit changes from websockets initiated from other instances
       if (payload.componentID !== this.state.wsPseudoComponentID) {
-        Object.entries(payload.debatesOrPanels).forEach(([id, attrs]) => {
-          commit('setDebateOrPanelAttributes', { 'id': id, 'attrs': attrs })
+        Object.entries(payload.debatesOrPanels).forEach(([pk, attrs]) => {
+          commit('setDebateOrPanelAttributes', { 'pk': pk, 'attrs': attrs })
         })
       }
     },

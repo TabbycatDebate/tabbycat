@@ -387,6 +387,7 @@ class Round(models.Model):
             raise ValidationError(errors)
 
     def serialize(self):
+        """@depracate when legacy drag and drop UIs removed"""
         adjudicator_positions = ["C"]
         if not self.tournament.pref('no_panellist_position'):
             adjudicator_positions += "P"

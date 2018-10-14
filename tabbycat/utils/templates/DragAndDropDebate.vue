@@ -1,6 +1,6 @@
 <template>
   <div>
-    DEBATE {{ debateOrPanel.id }}
+    DEBATE {{ debateOrPanel.pk }}
     <slot name="bracket">
       — BRACKET {{ debateOrPanel.bracket }}
     </slot>

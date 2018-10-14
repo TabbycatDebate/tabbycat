@@ -158,6 +158,14 @@ msgstr ""
 msgid "No changes"
 msgstr ""
 
-#: utils/templates/DragAndDropActions.vue:9
+#: utils/templates/DragAndDropActions.vue:8
 msgid "Return to Draw"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:15
+msgid "Auto-Prioritise"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:17
+msgid "Auto-Allocate"
 msgstr ""

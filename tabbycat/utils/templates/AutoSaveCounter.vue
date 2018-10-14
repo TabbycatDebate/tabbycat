@@ -31,7 +31,7 @@ export default {
         this.animationClass = '' // Remove animation flash
       }
       if (secondsLastSaved > 59) {
-        this.lastSavedDisplay = `Saved at ${this.lastSaved.getHours()}:${this.paddedMinutes}`
+        this.lastSavedDisplay = `Saved at ${this.lastSaved.getHours()}:${this.paddedMinutes()}`
       } else {
         this.lastSavedDisplay = `Saved ${parseInt(secondsLastSaved)}s ago`
       }

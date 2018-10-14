@@ -20,27 +20,27 @@ export default {
   props: { debateOrPanel: Object },
   computed: {
     importanceDescription: function () {
-      if (this.debateOrPanel.importance === 2) {
+      if (this.importance === 2) {
         return 'V.I.P.'
-      } else if (this.debateOrPanel.importance === 1) {
+      } else if (this.importance === 1) {
         return 'Important'
-      } else if (this.debateOrPanel.importance === 0) {
+      } else if (this.importance === 0) {
         return 'Neutral'
-      } else if (this.debateOrPanel.importance === -1) {
+      } else if (this.importance === -1) {
         return 'Unimportant'
-      } else if (this.debateOrPanel.importance === -2) {
+      } else if (this.importance === -2) {
         return '¯\\_(ツ)_/¯'
       }
       return null
     },
     importance: {
       get () {
-        return this.debateOrPanel.importance
+        return parseInt(this.debateOrPanel.fields.importance)
       },
       set (value) {
         // Pass a message to the parent component to then save a change to the store
         let updatedDebatesOrPanels = { }
-        updatedDebatesOrPanels[this.debateOrPanel.id] = { 'importance': value }
+        updatedDebatesOrPanels[this.debateOrPanel.pk] = { 'importance': value }
         this.$store.dispatch('updateDebatesOrPanelsAttribute', updatedDebatesOrPanels)
       },
     },

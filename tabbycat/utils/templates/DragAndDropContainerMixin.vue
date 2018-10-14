@@ -9,14 +9,15 @@ import WebsocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 export default {
   mixins: [WebsocketMixin],
   components: { DragAndDropDebate, DragAndDropLayout, DragAndDropActions },
-  props: ['initialDebatesOrPanels', 'initialRoundInfo'],
-  data: () => ({
-    sockets: ['debates'],
-  }),
+  props: ['initialData'],
+  data: function () {
+    return {
+      sockets: ['debates'],
+    }
+  },
   created: function () {
     // Initial mutation to the Vuex store that sets up the initial state
-    this.$store.commit('setupDebatesOrPanels', this.initialDebatesOrPanels)
-    this.$store.commit('setupRoundInfo', this.initialRoundInfo)
+    this.$store.commit('setupInitialData', this.initialData)
     this.$store.commit('setupWebsocketBridge', this.bridges[this.sockets[0]])
   },
   computed: {
@@ -24,10 +25,10 @@ export default {
       return this.$store.getters.allDebatesOrPanels
     },
     tournamentSlugForWSPath: function () {
-      return this.initialRoundInfo.tournamentSlug
+      return this.initialData.tournament[0].fields.slug
     },
     roundSlugForWSPath: function () {
-      return this.initialRoundInfo.roundSeq
+      return this.initialData.round[0].fields.seq
     },
   },
   methods: {

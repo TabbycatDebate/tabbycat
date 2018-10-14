@@ -3,6 +3,7 @@ import logging
 import warnings
 from urllib.parse import urlparse, urlunparse
 
+from django.core import serializers
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
@@ -296,22 +297,35 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
 
 class DragAndDropMixin(RoundMixin):
 
-    def get_round_info(self):
-        return self.round.serialize()
+    def get_extra_info(self, extra_info):
+        """ Unlike meta_info everything under extra info is json serialised
+        automatically. Designed for simple key/values"""
+        extra_info['backUrl'] = reverse_round('draw', self.round)
+        return extra_info
 
-    def annotate_debates_or_panels(self, objects, serialised_objects):
-        return serialised_objects
+    def get_meta_info(self):
+        """ Data universal to all allocation views; these are accessed
+        directly from the template, so only the value but not key are JSON. """
+        info = {'highlights': {}}
+        info['round'] = serializers.serialize('json', [self.round])
+        info['tournament'] = serializers.serialize('json', [self.tournament])
+        info['highlights']['region'] = serializers.serialize('json', Region.objects.all())
+        info['highlights']['break'] = serializers.serialize('json', self.tournament.breakcategory_set.all())
+        info['extra'] = self.get_extra_info({})
+        return info
+
+    def get_debate_or_panel_adjs(self, item):
+        return item.debateadjudicator_set.all()
+
+    def get_debate_or_panel_teams(self, item):
+        return item.debateteam_set.all()
 
     def get_draw_or_panels(self):
-        items = self.get_draw_or_panels_objects()
-        serialised_objects = [i.serialize(tournament=self.tournament) for i in items]
-        annotated_objects = self.annotate_debates_or_panels(items, serialised_objects)
-        keyed_objects = {item['id'] : item for item in annotated_objects}
-        return json.dumps(keyed_objects)
+        return list(self.get_draw_or_panels_objects())
 
     def get_context_data(self, **kwargs):
-        kwargs['vueDebatesOrPanels'] = self.get_draw_or_panels()
-        kwargs['vueRoundInfo'] = json.dumps(self.get_round_info())
+        kwargs['vueDebatesOrPanels'] = serializers.serialize('json', self.get_draw_or_panels())
+        kwargs['vueMetaInfo'] = self.get_meta_info()
         return super().get_context_data(**kwargs)
 
 
@@ -339,6 +353,12 @@ class DebateDragAndDropMixin(DragAndDropMixin):
 
 
 class PanelsDragAndDropMixin(DragAndDropMixin):
+
+    def get_debate_or_panel_adjs(self, item):
+        return item.preformedpaneladjudicator_set.all()
+
+    def get_debate_or_panel_teams(self, item):
+        return [] # Override; no teams to fetch
 
     def get_draw_or_panels_objects(self):
         panels = self.round.preformedpanel_set.prefetch_related(

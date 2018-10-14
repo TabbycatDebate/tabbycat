@@ -2,7 +2,6 @@ import logging
 
 from asgiref.sync import async_to_sync
 from django.core.cache import cache
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
@@ -112,17 +111,15 @@ class DebateOrPanelConsumer(TournamentConsumer, WSSuperUserRequiredMixin):
     def receive_json(self, content):
         # Retrieve either the debates or panels
         json_objects = content['debatesOrPanels']
-        try:
-            debates_or_panels = self.get_objects(json_objects.keys())
-        except ObjectDoesNotExist:
-            msg = _("TODO")
-            self.send_error(_("TODO"), msg, content)
+        debates_or_panels = self.get_objects(json_objects.keys())
+        if debates_or_panels.count() == 0:
+            self.send_error(_("TODO: error"), _("TODO: msg"), content)
 
         # Make and save the change to the objects based on the provided change
         # TODO: these should be a bulk update operation (F expression?) if they
         # are ever used to update a non trivial amount of objects
         for object_id, object_changes in json_objects.items():
-            debate_or_panel = debates_or_panels.get(pk=int(object_id))
+            debate_or_panel = debates_or_panels.get(id=int(object_id))
             for attribute, value in object_changes.items():
                 if attribute == "adjudicators":
                     # Manually handle setting debate or panel allocation

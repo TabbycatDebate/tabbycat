@@ -26,10 +26,15 @@ logger = logging.getLogger(__name__)
 
 class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_venues.html"
-    page_title = gettext_lazy("Edit Draw Venues")
+    page_title = gettext_lazy("Edit Venues")
+
+    def get_round_info(self):
+
+        return super.get_round_info(self)
 
 
 class LegacyVenueAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
+    """@depracate when legacy drag and drop UIs removed"""
 
     def get_unallocated_venues(self):
         unused_venues = self.round.unused_venues().prefetch_related('venuecategory_set')
@@ -37,6 +42,7 @@ class LegacyVenueAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMix
 
 
 class LegacyEditVenuesView(LegacyVenueAllocationMixin, TemplateView):
+    """@depracate when legacy drag and drop UIs removed"""
 
     template_name = "legacy_edit_venues.html"
     auto_url = "legacy-venues-auto-allocate"
@@ -50,6 +56,7 @@ class LegacyEditVenuesView(LegacyVenueAllocationMixin, TemplateView):
 
 
 class LegacyAutoAllocateVenuesView(LegacyVenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
+    """@depracate when legacy drag and drop UIs removed"""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
     round_redirect_pattern_name = 'legacy-venues-edit'
@@ -73,6 +80,7 @@ class LegacyAutoAllocateVenuesView(LegacyVenueAllocationMixin, LogActionMixin, J
 
 
 class LegacySaveVenuesView(BaseSaveDragAndDropDebateJsonView):
+    """@depracate when legacy drag and drop UIs removed"""
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
     def get_moved_item(self, id):

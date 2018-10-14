@@ -1,20 +1,5 @@
-{% extends "base_fullscreen.html" %}
+{% extends "base_drag_and_drop.html" %}
 
-{% block content %}
-  <div id="vueMount">
-    <edit-debate-teams-container
-      :initial-debates-or-panels="debatesOrPanels"
-      :initial-round-info="roundInfo">
-    </edit-debate-teams-container>
-  </div>
-{% endblock content %}
-
-{% block js %}
-  <script>
-    window.vueData = {
-      debatesOrPanels: {{ vueDebatesOrPanels|safe }},
-      roundInfo: {{ vueRoundInfo|safe }},
-    }
-  </script>
-  {{ block.super }}
-{% endblock js %}
+{% block component %}
+  <edit-debate-teams-container :initial-data="allData"></edit-debate-teams-container>
+{% endblock component %}
