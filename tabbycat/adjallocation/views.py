@@ -18,7 +18,7 @@ from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
 from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, PanelsDragAndDropMixin, RoundMixin, TournamentMixin
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
-from utils.misc import redirect_tournament, reverse_tournament
+from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
@@ -45,17 +45,10 @@ class EditDebateOrPanelAdjudicatorsMixin(AdministratorMixin, TemplateView):
             {'pk': 'u', 'fields': {'name': _('Unknown')}},
         ]
         info['highlights']['gender'] = json.dumps(gender_options)
-        rank_options = [
-            {'pk': 'a+', 'fields': {'name': 'A+'}},
-            {'pk': 'a', 'fields': {'name': 'A'}},
-            {'pk': 'a-', 'fields': {'name': 'A-'}},
-            {'pk': 'b+', 'fields': {'name': 'B+'}},
-            {'pk': 'b', 'fields': {'name': 'B'}},
-            {'pk': 'b-', 'fields': {'name': 'B-'}},
-            {'pk': 'c+', 'fields': {'name': 'C+'}},
-            {'pk': 'f', 'fields': {'name': 'C'}},
-        ]
-        info['highlights']['rank'] = json.dumps(rank_options)
+        info['highlights']['rank'] = json.dumps(ranks_dictionary())
+        info['extra']['scoreForVote'] = self.tournament.pref('adj_min_score')
+        info['extra']['scoreMax'] = self.tournament.pref('adj_max_score')
+        info['extra']['scoreMin'] = self.tournament.pref('adj_min_voting_score')
         return info
 
 

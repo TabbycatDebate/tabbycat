@@ -2,8 +2,9 @@
 
   <drag-and-drop-layout>
 
-    <drag-and-drop-actions slot="actions" allocate="#confirmAutoAllocationModal">
+    <drag-and-drop-actions slot="actions" allocate="true" @allocate="allocate">
       <template slot="default-highlights">
+        <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
         <button class="btn conflictable conflicts-toolbar hover-adjudicator"
                 data-toggle="tooltip" v-text="gettext('Constraint')"
                 :title="gettext('This adjudicator or team has an unmet venue constraint.')"></button>
@@ -19,14 +20,20 @@
       </drag-and-drop-debate>
     </template>
 
+    <template slot="modals">
+      <modal-for-allocating :intro-text="gettext(allocateIntro)"></modal-for-allocating>
+    </template>
+
   </drag-and-drop-layout>
 
 </template>
 
 <script>
 import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
+import ModalForPrioritising from '../../utils/templates/modals/ModalForPrioritising.vue'
 
 export default {
+  components: { ModalForPrioritising },
   mixins: [DragAndDropContainerMixin],
   data: function () {
     return {
@@ -42,6 +49,7 @@ export default {
           options: [],
         },
       },
+      allocateIntro: `TKTK`,
     }
   },
 }

@@ -10,35 +10,59 @@
 .category-display {
 
   &.category-0 {
-    @include hover-highlights($break-cat-1);
+    @include hover-highlights($break-cat-0);
   }
 
   &.category-0-disabled {
-    @include outline-highlights($break-cat-1);
+    @include outline-highlights($break-cat-0);
   }
 
   &.category-1 {
-    @include hover-highlights($break-cat-2);
+    @include hover-highlights($break-cat-1);
   }
 
   &.category-1-disabled {
-    @include outline-highlights($break-cat-2);
+    @include outline-highlights($break-cat-1);
   }
 
   &.category-2 {
-    @include hover-highlights($break-cat-3);
+    @include hover-highlights($break-cat-2);
   }
 
   &.category-2-disabled {
-    @include outline-highlights($break-cat-3);
+    @include outline-highlights($break-cat-2);
   }
 
   &.category-3 {
+    @include hover-highlights($break-cat-3);
+  }
+
+  &.category-3-disabled {
+    @include outline-highlights($break-cat-3);
+  }
+
+  &.category-4 {
     @include hover-highlights($break-cat-4);
   }
 
   &.category-4-disabled {
     @include outline-highlights($break-cat-4);
+  }
+
+  &.category-5 {
+    @include hover-highlights($break-cat-5);
+  }
+
+  &.category-5-disabled {
+    @include outline-highlights($break-cat-5);
+  }
+
+  &.category-6 {
+    @include hover-highlights($break-cat-6);
+  }
+
+  &.category-6-disabled {
+    @include outline-highlights($break-cat-6);
   }
 }
 
@@ -244,41 +268,62 @@ path.region-8 {
 }
 
 // Ranking Display
-.ranking-display {
+// @depracate 'ranking-display' form legacy drag and drop UIs removed
+.ranking-display,
+.rank-display,
+.priority-display {
 
-  &.ranking-90 {
+  &.ranking-90,
+  &.rank-0,
+  &.priority-0 {
     @include hover-highlights($adj-ranking-0);
   }
 
-  &.ranking-80 {
+  &.ranking-80,
+  &.rank-1,
+  &.priority-1 {
     @include hover-highlights($adj-ranking-1);
   }
 
-  &.ranking-70 {
+  &.ranking-70,
+  &.rank-2,
+  &.priority-2 {
     @include hover-highlights($adj-ranking-2);
   }
 
-  &.ranking-60 {
+  &.ranking-60,
+  &.rank-3,
+  &.priority-3 {
     @include hover-highlights($adj-ranking-3);
   }
 
-  &.ranking-50 {
+  &.ranking-50,
+  &.rank-4,
+  &.priority-4 {
     @include hover-highlights($adj-ranking-4);
   }
 
-  &.ranking-40 {
+  &.ranking-40,
+  &.rank-5,
+  &.priority-5 {
     @include hover-highlights($adj-ranking-5);
   }
 
-  &.ranking-30 {
+  &.ranking-30,
+  &.rank-6,
+  &.priority-6 {
     @include hover-highlights($adj-ranking-6);
   }
 
-  &.ranking-20 {
+  &.ranking-20,
+  &.rank-7,
+  &.priority-7 {
     @include hover-highlights($adj-ranking-7);
   }
 
-  &.ranking-10 {
+  &.ranking-10,
+  &.rank-8,
+  &.priority-8 {
     @include hover-highlights($adj-ranking-8);
   }
 }

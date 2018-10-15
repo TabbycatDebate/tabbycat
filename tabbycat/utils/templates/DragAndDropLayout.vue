@@ -17,14 +17,15 @@
     </section>
 
     <slot name=""></slot><!-- SlideOver Item -->
-    <slot name="modal"></slot><!-- Modals -->
+
+    <slot name="modals"></slot>
 
   </div>
 </template>
 
 <script>
 // The master layout for drag and drop screens; to using slots for content
+
 export default {
-  mixins: [],
 }
 </script>

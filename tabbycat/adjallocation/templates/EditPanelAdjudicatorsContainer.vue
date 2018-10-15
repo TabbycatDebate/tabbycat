@@ -2,9 +2,10 @@
 
   <drag-and-drop-layout>
 
-    <drag-and-drop-actions slot="actions" prioritise="#confirmAutoPrioritiseModal"
-                           allocate="#confirmAutoAllocationModal">
+    <drag-and-drop-actions slot="actions" prioritise="true" allocate="true" shard="true"
+                           @shard="shard" @allocate="allocate" @prioritise="prioritise">
       <template slot="default-highlights">
+        <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
                 data-toggle="tooltip" v-text="gettext('Seen')"
                 title="This adjudicator has judged with this adjudicator previously"></button>
@@ -28,6 +29,12 @@
       </drag-and-drop-debate>
     </template>
 
+    <template slot="modals">
+      <modal-for-sharding :intro-text="gettext('shardIntro')"></modal-for-sharding>
+      <modal-for-allocating :intro-text="gettext(allocateIntro)"></modal-for-allocating>
+      <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"></modal-for-prioritising>
+    </template>
+
   </drag-and-drop-layout>
 
 </template>
@@ -39,6 +46,12 @@ export default {
   mixins: [EditEitherAdjudicatorsSharedMixin],
   data: () => ({
     sockets: ['panels'], // Override the normal debate socket from DragAndDropContainerMixin
+    shardIntro: `Sharding narrows the debates displayed to show only a specific subset of the
+      overall draw`,
+    allocateIntro: `Using auto-allocate will remove adjudicators from panels and create a new
+      allocations in their place.`,
+    prioritiseIntro: `Using auto-prioritise will remove all existing panel priorities and
+      assign new ones.`,
   }),
 }
 </script>

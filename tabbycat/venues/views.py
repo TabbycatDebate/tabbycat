@@ -2,6 +2,7 @@ import json
 import logging
 
 from django.contrib import messages
+from django.core import serializers
 from django.db.models import Q
 from django.forms import Select
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
@@ -13,7 +14,7 @@ from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropM
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.forms import SelectPrepopulated
-from utils.misc import redirect_tournament, reverse_tournament
+from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
@@ -28,9 +29,11 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
     template_name = "edit_debate_venues.html"
     page_title = gettext_lazy("Edit Venues")
 
-    def get_round_info(self):
-
-        return super.get_round_info(self)
+    def get_meta_info(self):
+        info = super().get_meta_info()
+        info['highlights']['priority'] = json.dumps(ranks_dictionary())
+        info['highlights']['category'] = serializers.serialize('json', VenueCategory.objects.all())
+        return info
 
 
 class LegacyVenueAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):

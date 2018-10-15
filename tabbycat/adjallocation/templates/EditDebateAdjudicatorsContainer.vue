@@ -2,21 +2,22 @@
 
   <drag-and-drop-layout>
 
-    <drag-and-drop-actions slot="actions" prioritise="#confirmAutoPrioritiseModal"
-                           allocate="#confirmAutoAllocationModal">
+    <drag-and-drop-actions slot="actions" prioritise="true" allocate="true" shard="true"
+                           @shard="shard" @allocate="allocate" @prioritise="prioritise">
       <template slot="default-highlights">
+        <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
                 data-toggle="tooltip" v-text="gettext('Seen')"
-                :title="('This adjudicator has judged this team or judged with this adjudicator previously')"></button>
+                :title="('Has judged this team or with this adjudicator previously')"></button>
         <button class="btn conflictable conflicts-toolbar hover-institution"
                 data-toggle="tooltip" v-text="gettext('Institution')"
-                :title="('This adjudicator is from the same institution as this team or panelist.')"></button>
+                :title="('Is from the same institution as this team or panelist.')"></button>
         <button class="btn conflictable conflicts-toolbar hover-adjudicator"
                 data-toggle="tooltip" v-text="gettext('Conflict')"
-                :title="('This adjudicator has a nominated conflict with this team or panelist.')"></button>
+                :title="('Has a nominated conflict with this team or panelist.')"></button>
         <button class="btn panel-incomplete"
                 data-toggle="tooltip" v-text="gettext('Incomplete')"
-                :title="('Panel is missing a chair or lacks enough adjudicators for a voting majority.')"></button>
+                :title="('Panel is missing a chair or enough adjudicators for a voting majority.')"></button>
       </template>
     </drag-and-drop-actions>
 
@@ -28,6 +29,12 @@
       </drag-and-drop-debate>
     </template>
 
+    <template slot="modals">
+      <modal-for-sharding :intro-text="gettext(intro)"></modal-for-sharding>
+      <modal-for-allocating :intro-text="gettext(allocateIntro)"></modal-for-allocating>
+      <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"></modal-for-prioritising>
+    </template>
+
   </drag-and-drop-layout>
 
 </template>
@@ -37,5 +44,13 @@ import EditEitherAdjudicatorsSharedMixin from './EditEitherAdjudicatorsSharedMix
 
 export default {
   mixins: [EditEitherAdjudicatorsSharedMixin],
+  data: () => ({
+    intro: `Sharding narrows the panels displayed to show only a specific subset of all
+      panels available.`,
+    allocateIntro: `Using auto-allocate will remove adjudicators from all debates and create a new
+      allocations in their place.`,
+    prioritiseIntro: `Using auto-prioritise will remove all existing debate priorities and assign
+      new ones.`,
+  }),
 }
 </script>

@@ -11,19 +11,22 @@
           <auto-save-counter></auto-save-counter>
         </div>
         <div class="btn-group btn-group-sm ml-2">
-          <a v-if="prioritise" class="btn text-white btn-success"
-             v-text="gettext('Auto-Prioritise')" data-toggle="modal" :data-target="prioritise"></a>
-          <a v-if="allocate" class="btn text-white btn-success"
-             v-text="gettext('Auto-Allocate')" data-toggle="modal" :data-target="allocate"></a>
+          <a v-if="prioritise" class="btn text-white btn-success" @click="$emit('prioritise')"
+             v-text="gettext('Auto-Prioritise')"></a>
+          <a v-if="allocate" class="btn text-white btn-success" @click="$emit('allocate')"
+             v-text="gettext('Auto-Allocate')"></a>
+          <a v-if="shard" class="btn text-white btn-success" @click="$emit('shard')">
+            <i data-feather="server"></i>
+          </a>
         </div>
       </div>
 
       <div class="btn-group btn-group-sm">
-        <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
         <template v-if="!currentHighlightKey">
           <slot name="default-highlights"></slot>
         </template>
         <template v-else>
+          <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
           <button v-for="option in highlights[currentHighlightKey].options"
                   :class="['btn btn-primary', option.css]">
             {{ option.fields.name }}
@@ -41,24 +44,26 @@
         </button>
       </div>
 
-      <slot name="modals"></slot>
-
     </nav>
 
 </template>
 
 <script>
-import AutoSaveCounter from './AutoSaveCounter.vue'
 import { mapMutations, mapState } from 'vuex'
+
+import AutoSaveCounter from './AutoSaveCounter.vue'
 
 export default {
   components: { AutoSaveCounter },
-  props: ['prioritise', 'allocate'],
+  props: ['prioritise', 'allocate', 'shard'],
   methods: {
     titleCase: function (title) {
       return title.charAt(0).toUpperCase() + title.substr(1)
     },
     ...mapMutations(['toggleHighlight']),
+    startShard: function (event) {
+      window.alert('sharding')
+    },
   },
   computed: {
     currentHighlightKey: function () {

@@ -35,6 +35,15 @@ export default {
     handleSocketReceive: function (socketLabel, payload) {
       this.$store.dispatch('receiveUpdatedupdateDebatesOrPanelsAttribute', payload)
     },
+    shard: function () {
+      $('#confirmShardModal').modal('show')
+    },
+    allocate: function () {
+      $('#confirmAllocateModal').modal('show')
+    },
+    prioritise: function () {
+      $('#confirmPrioritiseModal').modal('show')
+    },
   },
 }
 </script>
