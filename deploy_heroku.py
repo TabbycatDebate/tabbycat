@@ -216,4 +216,9 @@ run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
 
 # Open in browser
 if args.open:
-    run_heroku_command(["open"])
+    try:
+        run_heroku_command(["open"])
+    except subprocess.CalledProcessError:
+        print_yellow("There was a problem automatically opening your browser, but your new Tabbycat")
+        print_yellow("site itself did deploy successfully. Just visit this URL in your browser:")
+        print_yellow("http://%s.herokuapp.com/" % urlname)
