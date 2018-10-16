@@ -1,6 +1,10 @@
 import logging
-import random
 import string
+
+try:
+    from secrets import SystemRandom
+except ImportError:  # for Python 3.5 compatibility
+    from random import SystemRandom
 
 from django.db import IntegrityError
 
@@ -10,7 +14,7 @@ logger = logging.getLogger(__name__)
 def generate_url_key(length=8):
     """Generates a randomised URL key."""
     chars = string.ascii_lowercase + string.digits
-    return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
+    return ''.join(SystemRandom().choice(chars) for _ in range(length))
 
 
 def populate_url_keys(queryset, length=8, num_attempts=10):
