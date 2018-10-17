@@ -31,8 +31,10 @@
 
     <template slot="modals">
       <modal-for-sharding :intro-text="gettext(intro)"></modal-for-sharding>
-      <modal-for-allocating :intro-text="gettext(allocateIntro)"></modal-for-allocating>
-      <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"></modal-for-prioritising>
+      <modal-for-allocating :intro-text="gettext(allocateIntro)"
+                            :context-of-action="'allocate_debate_adjs'"></modal-for-allocating>
+      <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"
+                              :context-of-action="'prioritise_debate_adjs'"></modal-for-prioritising>
     </template>
 
   </drag-and-drop-layout>

@@ -10,7 +10,8 @@ from .conflicts import ConflictsInfo, HistoryInfo
 logger = logging.getLogger(__name__)
 
 
-def allocate_adjudicators(round, alloc_class):
+def legacy_allocate_adjudicators(round, alloc_class):
+    """@depracate when legacy drag and drop UIs removed"""
     if round.draw_status != round.STATUS_CONFIRMED:
         raise RuntimeError("Tried to allocate adjudicators on unconfirmed draw")
 

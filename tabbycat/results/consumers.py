@@ -1,9 +1,9 @@
-from utils.consumers import TournamentConsumer, WSLoginRequiredMixin
+from utils.consumers import TournamentConsumerMixin, WSLoginRequiredMixin
 
 
-class BallotResultConsumer(TournamentConsumer, WSLoginRequiredMixin):
+class BallotResultConsumer(TournamentConsumerMixin, WSLoginRequiredMixin):
     group_prefix = 'ballot_results'
 
 
-class BallotStatusConsumer(TournamentConsumer, WSLoginRequiredMixin):
+class BallotStatusConsumer(TournamentConsumerMixin, WSLoginRequiredMixin):
     group_prefix = 'ballot_statuses'

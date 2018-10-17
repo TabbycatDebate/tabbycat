@@ -2,13 +2,13 @@ from asgiref.sync import async_to_sync
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from utils.consumers import TournamentConsumer, WSPublicAccessMixin
+from utils.consumers import TournamentConsumerMixin, WSPublicAccessMixin
 
 from .models import Event, Identifier
 from .utils import get_unexpired_checkins
 
 
-class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
+class CheckInEventConsumer(TournamentConsumerMixin, WSPublicAccessMixin):
 
     group_prefix = 'checkins'
 

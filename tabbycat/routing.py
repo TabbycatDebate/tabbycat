@@ -6,7 +6,7 @@ from channels.auth import AuthMiddlewareStack
 from actionlog.consumers import ActionLogEntryConsumer
 from adjallocation.consumers import PanelEditConsumer
 from checkins.consumers import CheckInEventConsumer
-from draw.consumers import DebateEditConsumer
+from draw.consumers import DebateEditConsumer, DebateOrPanelWorkerConsumer
 from notifications.consumers import NotificationQueueConsumer
 from results.consumers import BallotResultConsumer, BallotStatusConsumer
 
@@ -36,6 +36,8 @@ application = ProtocolTypeRouter({
 
     # Worker handlers (which don't need a URL/protocol)
     "channel": ChannelNameRouter({
-        "notifications": NotificationQueueConsumer, # Name used in runworker cmd
+        # Name used in runworker cmd : SyncConsumer responsible
+        "notifications":  NotificationQueueConsumer, # Email sending
+        "draw_tasks": DebateOrPanelWorkerConsumer,  # E.g. venue/adj allocation
     }),
 })

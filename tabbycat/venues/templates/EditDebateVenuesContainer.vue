@@ -21,7 +21,8 @@
     </template>
 
     <template slot="modals">
-      <modal-for-allocating :intro-text="gettext(allocateIntro)"></modal-for-allocating>
+      <modal-for-allocating :intro-text="gettext(allocateIntro)"
+                            :context-of-action="'allocate_debate_venues'"></modal-for-allocating>
     </template>
 
   </drag-and-drop-layout>
@@ -30,10 +31,10 @@
 
 <script>
 import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
-import ModalForPrioritising from '../../utils/templates/modals/ModalForPrioritising.vue'
+import ModalForAllocating from '../../utils/templates/modals/ModalForAllocating.vue'
 
 export default {
-  components: { ModalForPrioritising },
+  components: { ModalForAllocating },
   mixins: [DragAndDropContainerMixin],
   data: function () {
     return {

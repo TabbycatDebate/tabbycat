@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  props: { introText: String },
+  props: { introText: String, contextOfAction: String },
   data: function () {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
@@ -47,6 +47,9 @@ export default {
     },
     createAutoPrioritisation: function (type) {
       this.resetModal()
+      this.$store.state.wsBridge.send({
+        'action': this.contextOfAction,
+      })
     },
   },
 }

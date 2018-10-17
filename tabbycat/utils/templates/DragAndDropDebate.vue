@@ -8,7 +8,7 @@
       — LIVENESS
     </slot>
     <slot name="importance">
-      — IMPORTANCE: {{ debateOrPanel.importance }}
+      — IMPORTANCE: {{ debateOrPanel.fields.importance }}
     </slot>
     <slot name="venue">
       — VENUE <span v-if="debateOrPanel.venue">{{ debateOrPanel.venue.display_name }}</span>

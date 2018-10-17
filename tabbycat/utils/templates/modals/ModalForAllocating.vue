@@ -40,7 +40,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  props: { introText: String },
+  props: { introText: String, contextOfAction: String },
   data: function () {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
@@ -54,7 +54,11 @@ export default {
       $(this.id).modal('hide')
     },
     createAutoAllocation: function () {
-      this.loading = true
+      // this.loading = true
+      // Send the result over the websocket
+      this.$store.state.wsBridge.send({
+        'action': this.contextOfAction,
+      })
     },
   },
 }

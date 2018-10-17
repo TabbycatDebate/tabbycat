@@ -1,15 +1,10 @@
-import logging
-
 from asgiref.sync import async_to_sync
-from django.core.cache import cache
-from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext as _
-
 from channels.generic.websocket import JsonWebsocketConsumer
 
-from tournaments.models import Tournament
+from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 
-logger = logging.getLogger(__name__)
+from tournaments.models import Round, Tournament
 
 
 class WSLoginRequiredMixin():
@@ -30,7 +25,7 @@ class WSPublicAccessMixin():
         return True
 
 
-class TournamentConsumer(JsonWebsocketConsumer):
+class TournamentConsumerMixin(JsonWebsocketConsumer):
     """For a channel consumer specific to a tournament and whose path includes
     a tournament_slug. Must provide a group_prefix that serves as a stream_name
     to be follow by "_" and tournament_slug."""
@@ -38,7 +33,7 @@ class TournamentConsumer(JsonWebsocketConsumer):
     group_prefix = None
 
     tournament_slug_url_kwarg = "tournament_slug"
-    tournament_cache_key = "{slug}_object"
+    tournament_cache_key = "{slug}_tournament_object"
     tournament_redirect_pattern_name = None
 
     def tournament(self):
@@ -89,52 +84,35 @@ class TournamentConsumer(JsonWebsocketConsumer):
         super().disconnect(message)
 
 
-class DebateOrPanelConsumer(TournamentConsumer, WSSuperUserRequiredMixin):
-    """For receiving updates to either debates or preformed panels, making the
-    supplied modifications, and re-broadcasting them. This intent is that the
-    socket provides a dict of objects, which in turn have a dict of attributes
-    that can be updated directly and the original object returned. This avoids
-    having to serialise/re-serialise objects that creates many more queries"""
+class RoundConsumerMixin(TournamentConsumerMixin):
+    """For a channel consumer specific to a round and whose path includes
+    a round_seq. Must provide a group_prefix that serves as a stream_name
+    to be follow by "_" then tournament_slug then "_" then round_seq."""
 
-    def update_adjudicators(self, debate_or_panl, adjudicators):
-        # Delete adjudicators who aren't in the posted information
-        adj_ids = [a["adjudicator"]["id"] for a in adjudicators]
-        delete_count, deleted = self.delete_adjudicators(debate_or_panl, adj_ids)
-        logger.debug("Deleted %d adjudicators from %s", delete_count, debate_or_panl)
+    group_prefix = None
 
-        # Update or create positions of adjudicators in debate
-        for adjudicator in adjudicators:
-            adj_id = adjudicator['adjudicator']['id']
-            adj_type = adjudicator['position']
-            obj, created = self.create_adjudicators(debate_or_panl, adj_id, adj_type)
+    round_seq_url_kwarg = "round_seq"
+    round_cache_key = "{seq}_round_object"
 
-    def receive_json(self, content):
-        # Retrieve either the debates or panels
-        json_objects = content['debatesOrPanels']
-        debates_or_panels = self.get_objects(json_objects.keys())
-        if debates_or_panels.count() == 0:
-            self.send_error(_("TODO: error"), _("TODO: msg"), content)
+    def round(self):
+        # First look in self
+        if hasattr(self, "_round_from_url"):
+            return self._round_from_url
 
-        # Make and save the change to the objects based on the provided change
-        # TODO: these should be a bulk update operation (F expression?) if they
-        # are ever used to update a non trivial amount of objects
-        for object_id, object_changes in json_objects.items():
-            debate_or_panel = debates_or_panels.get(id=int(object_id))
-            for attribute, value in object_changes.items():
-                if attribute == "adjudicators":
-                    # Manually handle setting debate or panel allocation
-                    self.update_adjudicators(debate_or_panel, value)
-                else:
-                    setattr(debate_or_panel, attribute, value)
-                    debate_or_panel.save()
+        # Then look in cache
+        seq = self.scope["url_route"]["kwargs"][self.round_seq_url_kwarg]
+        key = self.round_cache_key.format(seq=seq)
+        cached_round = cache.get(key)
+        if cached_round:
+            self._round_from_url = cached_round
+            return cached_round
 
-        # Re-Broadcast initial payload to confirm the change to websockets
-        async_to_sync(self.channel_layer.group_send)(
-            self.group_name(), {
-                'type': 'broadcast_checkin',
-                'content': content
-            }
-        )
+        # If it was in neither place, retrieve the object
+        round = get_object_or_404(Round, seq=seq, tournament=self.tournament())
+        cache.set(key, round, None)
+        self._round_from_url = round
+        return round
 
-    def broadcast_checkin(self, event):
-        self.send_json(event['content'])
+    def group_name(self):
+        tournament_path = super().group_name()
+        return tournament_path + '_' + str(self.round().seq)

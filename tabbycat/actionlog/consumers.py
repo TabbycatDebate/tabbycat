@@ -1,6 +1,6 @@
-from utils.consumers import TournamentConsumer, WSLoginRequiredMixin
+from utils.consumers import TournamentConsumerMixin, WSLoginRequiredMixin
 
 
-class ActionLogEntryConsumer(TournamentConsumer, WSLoginRequiredMixin):
+class ActionLogEntryConsumer(TournamentConsumerMixin, WSLoginRequiredMixin):
 
     group_prefix = 'actionlogs'

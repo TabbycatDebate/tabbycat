@@ -22,7 +22,7 @@ from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
-from .allocator import allocate_adjudicators
+from .allocator import legacy_allocate_adjudicators
 from .conflicts import ConflictsInfo, HistoryInfo
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
@@ -186,7 +186,7 @@ class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixi
         else:
             allocator_class = ConsensusHungarianAllocator
 
-        allocate_adjudicators(self.round, allocator_class)
+        legacy_allocate_adjudicators(self.round, allocator_class)
         return {
             'debates': self.get_draw(),
             'unallocatedAdjudicators': self.get_unallocated_adjudicators()
