@@ -6,7 +6,7 @@ from threading import Lock
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import get_user_model, login
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.db.models.expressions import RawSQL
@@ -207,8 +207,7 @@ class BlankSiteStartView(FormView):
             return super().post(request)
 
     def form_valid(self, form):
-        form.save()
-        user = authenticate(username=self.request.POST['username'], password=self.request.POST['password1'])
+        user = form.save()
         login(self.request, user)
         messages.info(self.request, "Welcome! You've created an account for %s." % user.username)
 
