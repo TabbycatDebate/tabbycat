@@ -35,6 +35,7 @@ class NotificationQueueConsumer(SyncConsumer):
     }
 
     def email(self, event):
+        # Get database objects
         if 'debate_id' in event['extra']:
             round = Debate.objects.get(pk=event['extra']['debate_id']).round
             t = round.tournament
@@ -54,7 +55,7 @@ class NotificationQueueConsumer(SyncConsumer):
         subject = Template(t.pref(notification_type + "_email_subject"))
         body = Template(t.pref(notification_type + "_email_message"))
 
-        data = self.NOTIFICATION_GENERATORS[notification_type](**event['extra'])
+        data = self.NOTIFICATION_GENERATORS[notification_type](to=event['send_to'], **event['extra'])
 
         # Prepare messages
         messages = []

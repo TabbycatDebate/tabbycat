@@ -11,6 +11,7 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from utils.misc import redirect_round
@@ -157,7 +158,11 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
             async_to_sync(get_channel_layer().send)("notifications", {
                 "type": "email",
                 "message": "motion",
-                "extra": {'round_id': self.round.id}
+                "extra": {'round_id': self.round.id},
+                "send_to": [a.id for a in Speaker.objects.filter(
+                    team__round_availabilities__round=self.round,
+                    email__isnull=False
+                ).exclude(email__exact="")]
             })
             self.message_text += _(" Emails queued to be sent.")
 

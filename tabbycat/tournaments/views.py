@@ -23,6 +23,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import SentMessageRecord
+from participants.models import Speaker
 from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
@@ -195,7 +196,11 @@ class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectVi
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email",
             "message": "team_points",
-            "extra": {'url': url, 'round_id': self.round.id}
+            "extra": {'url': url, 'round_id': self.round.id},
+            "send_to": [a.id for a in Speaker.objects.filter(
+                team__round_availabilities__round=self.round,
+                email__isnull=False
+            ).exclude(email__exact="")]
         })
 
         messages.success(request, _("Team point emails have been queued to be sent to the speakers."))

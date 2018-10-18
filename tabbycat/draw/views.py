@@ -690,7 +690,8 @@ class DrawReleaseView(DrawStatusEdit):
             async_to_sync(get_channel_layer().send)("notifications", {
                 "type": "email",
                 "message": "adj",
-                "extra": {'round_id': self.round.id}
+                "extra": {'round_id': self.round.id},
+                "send_to": [a.id for a in self.round.active_adjudicators.filter(email__isnull=False).exclude(email__exact="")]
             })
 
             success_message += _(" Adjudicator emails queued to be sent.")

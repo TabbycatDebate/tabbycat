@@ -169,7 +169,8 @@ class EmailParticipantRegistrationView(TournamentMixin, PostOnlyRedirectView):
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email",
             "message": "team",
-            "extra": {'tournament_id': self.tournament.id}
+            "extra": {'tournament_id': self.tournament.id},
+            "send_to": [a.id for a in Speaker.objects.filter(team__tournament=self.tournament, email__isnull=False).exclude(email__exact="")]
         })
 
         messages.success(self.request, _("Registration information emails have been queued for sending."))

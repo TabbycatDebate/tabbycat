@@ -151,10 +151,19 @@ class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
         path = reverse_tournament('privateurls-person-index', t, kwargs={'url_key': '0'})
         url = request.build_absolute_uri(path)[:-2]
 
+        subquery = SentMessageRecord.objects.filter(
+            event=SentMessageRecord.EVENT_TYPE_URL,
+            tournament=t, email=OuterRef('email')
+        )
+        to_email = t.participants.filter(
+            url_key__isnull=False, email__isnull=False
+        ).exclude(email__exact="").annotate(already_sent=Exists(subquery)).filter(already_sent=False)
+
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email",
             "message": "url",
-            "extra": {'url': url, 'tournament_id': t.id}
+            "extra": {'url': url, 'tournament_id': t.id},
+            "send_to": [a.id for a in to_email]
         })
 
         messages.success(self.request, _("Private URL emails have been queued for sending."))
