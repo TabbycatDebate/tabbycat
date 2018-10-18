@@ -3,7 +3,6 @@ import logging
 import warnings
 from urllib.parse import urlparse, urlunparse
 
-from django.core import serializers
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
@@ -16,12 +15,15 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
+from rest_framework.renderers import JSONRenderer
 
-from adjallocation.models import DebateAdjudicator, PreformedPanel, PreformedPanelAdjudicator
+from adjallocation.models import DebateAdjudicator, PreformedPanel
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
-from participants.models import Region, Speaker
+from participants.models import Institution, Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
+from participants.serializers import InstitutionSerializer, RegionSerializer
+from tournaments.serializers import RoundSerializer, TournamentSerializer
 
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
@@ -297,34 +299,47 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
 
 class DragAndDropMixin(RoundMixin):
 
-    def get_extra_info(self, extra_info):
+    def get_extra_info(self):
         """ Unlike meta_info everything under extra info is json serialised
-        automatically. Designed for simple key/values"""
-        extra_info['backUrl'] = reverse_round('draw', self.round)
+        automatically. Designed for simple key/value pairs"""
+        extra_info = {} # Set by view for top bar toggles
+        extra_info['highlights'] = {}
         return extra_info
 
     def get_meta_info(self):
         """ Data universal to all allocation views; these are accessed
-        directly from the template, so only the value but not key are JSON. """
-        info = {'highlights': {}}
-        info['round'] = serializers.serialize('json', [self.round])
-        info['tournament'] = serializers.serialize('json', [self.tournament])
-        info['highlights']['region'] = serializers.serialize('json', Region.objects.all())
-        info['highlights']['break'] = serializers.serialize('json', self.tournament.breakcategory_set.all())
-        info['extra'] = self.get_extra_info({})
-        return info
+        directly from the template so only the value & not the key are JSON. """
+        serialized_round = RoundSerializer(self.round)
+        serialized_tournament = TournamentSerializer(self.tournament)
+        return {
+            'round': self.json_render(serialized_round.data),
+            'tournament': self.json_render(serialized_tournament.data),
+            'extra': json.dumps(self.get_extra_info())
+        }
 
-    def get_debate_or_panel_adjs(self, item):
-        return item.debateadjudicator_set.all()
+    def json_render(self, data):
+        # For some reason JSONRenderer produces byte strings
+        return bytes.decode(JSONRenderer().render(data))
 
-    def get_debate_or_panel_teams(self, item):
-        return item.debateteam_set.all()
+    def get_serialised_regions(self):
+        regions = Region.objects.all()
+        serialized_regions = RegionSerializer(regions, many=True)
+        return self.json_render(serialized_regions.data)
 
-    def get_draw_or_panels(self):
-        return list(self.get_draw_or_panels_objects())
+    def get_serialised_institutions(self):
+        institutions = Institution.objects.all()
+        serialized_institutions = InstitutionSerializer(institutions, many=True)
+        return self.json_render(serialized_institutions.data)
+
+    def get_serialised_debates_or_panels(self):
+        draw = self.get_draw_or_panels_objects()
+        serialized_draw = self.debates_or_panels_factory(draw)
+        return self.json_render(serialized_draw.data)
 
     def get_context_data(self, **kwargs):
-        kwargs['vueDebatesOrPanels'] = serializers.serialize('json', self.get_draw_or_panels())
+        kwargs['vueDebatesOrPanels'] = self.get_serialised_debates_or_panels()
+        kwargs['vueRegions'] = self.get_serialised_regions()
+        kwargs['vueInstitutions'] = self.get_serialised_institutions()
         kwargs['vueMetaInfo'] = self.get_meta_info()
         return super().get_context_data(**kwargs)
 
@@ -332,55 +347,32 @@ class DragAndDropMixin(RoundMixin):
 class DebateDragAndDropMixin(DragAndDropMixin):
 
     def get_draw_or_panels_objects(self):
-        # The use-case for prefetches here is so intense that we'll just implement
-        # a separate one (as opposed to use Round.debate_set_with_prefetches())
-        draw = self.round.debate_set.select_related('venue').prefetch_related(
-            Prefetch('debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution__region')),
-            Prefetch('debateteam_set',
-                queryset=DebateTeam.objects.select_related(
-                    'team__institution__region'
-                ).prefetch_related(
-                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
-                )),
-            'debateteam_set__team__break_categories',
-            'venue__venuecategory_set',
-        )
-        # These are pulled in via serialisation so should always be fetched
-        populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
-        populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])
-        return draw
+        return self.round.debate_set.select_related('venue')
 
 
 class PanelsDragAndDropMixin(DragAndDropMixin):
 
-    def get_debate_or_panel_adjs(self, item):
-        return item.preformedpaneladjudicator_set.all()
-
-    def get_debate_or_panel_teams(self, item):
-        return [] # Override; no teams to fetch
-
     def get_draw_or_panels_objects(self):
-        panels = self.round.preformedpanel_set.prefetch_related(
-            Prefetch('preformedpaneladjudicator_set',
-                queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator__institution__region'))
-        )
-        populate_feedback_scores([pa.adjudicator for panel in panels for pa in panel.preformedpaneladjudicator_set.all()])
+        panels = self.round.preformedpanel_set
+        panels = self.create_extra_panels(panels)
+        return panels
 
+    def create_extra_panels(self, panels):
         """ Assume the number of preformed panels should always match the
         maximum possible number of debates (for now). These should be
-        automatically created so they are in-place on page load """
+        automatically created so they are in-place upon page load """
         teams_count = self.tournament.team_set.count()
         if self.tournament.pref('teams_in_debate') == 'bp':
             debates_count = teams_count // 4
         else:
             debates_count = teams_count // 2
 
-        new_panels_count = debates_count - len(panels)
+        new_panels_count = debates_count - panels.count()
         if new_panels_count > 0:
             new_panels = [PreformedPanel(round=self.round)] * new_panels_count
             PreformedPanel.objects.bulk_create(new_panels)
             panels.extend(new_panels)
+
         return panels
 
 

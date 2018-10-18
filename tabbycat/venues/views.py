@@ -2,7 +2,6 @@ import json
 import logging
 
 from django.contrib import messages
-from django.core import serializers
 from django.db.models import Q
 from django.forms import Select
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
@@ -14,13 +13,14 @@ from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropM
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.forms import SelectPrepopulated
-from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
 from .allocator import allocate_venues
 from .forms import venuecategoryform_factory
 from .models import Venue, VenueCategory, VenueConstraint
+from .serializers import EditDebateVenuesDebateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -29,10 +29,14 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
     template_name = "edit_debate_venues.html"
     page_title = gettext_lazy("Edit Venues")
 
-    def get_meta_info(self):
-        info = super().get_meta_info()
-        info['highlights']['priority'] = json.dumps(ranks_dictionary())
-        info['highlights']['category'] = serializers.serialize('json', VenueCategory.objects.all())
+    def debates_or_panels_factory(self, debates):
+        return EditDebateVenuesDebateSerializer(debates, many=True)
+
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['highlights']['priority'] = [] # TODO - venue priority range
+        info['highlights']['category'] = [] # TODO - venue category
+        info['highlights']['break'] = [] # TODO
         return info
 
 

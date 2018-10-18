@@ -27,6 +27,7 @@ from .conflicts import ConflictsInfo, HistoryInfo
 from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
+from .serializers import EditDebateAdjudicatorsDebateSerializer, EditPanelAdjudicatorsPanelSerializer
 
 from utils.misc import reverse_round
 
@@ -35,31 +36,46 @@ logger = logging.getLogger(__name__)
 
 class EditDebateOrPanelAdjudicatorsMixin(AdministratorMixin, TemplateView):
 
-    def get_meta_info(self):
-        info = super().get_meta_info()
-        """ Manually construct a highlight to match format of regions/breaks"""
-        gender_options = [
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        # TODO: construct adj score ranges from settings
+        info['highlights']['gender'] = [
             {'pk': 'm', 'fields': {'name': _('Male')}},
             {'pk': 'f', 'fields': {'name': _('Female')}},
             {'pk': 'o', 'fields': {'name': _('Other')}},
             {'pk': 'u', 'fields': {'name': _('Unknown')}},
         ]
-        info['highlights']['gender'] = json.dumps(gender_options)
-        info['highlights']['rank'] = json.dumps(ranks_dictionary())
-        info['extra']['scoreForVote'] = self.tournament.pref('adj_min_score')
-        info['extra']['scoreMax'] = self.tournament.pref('adj_max_score')
-        info['extra']['scoreMin'] = self.tournament.pref('adj_min_voting_score')
+        info['highlights']['rank'] = ranks_dictionary()
+        info['highlights']['region'] = [] # TODO
+        info['scoreForVote'] = self.tournament.pref('adj_min_score')
+        info['scoreMax'] = self.tournament.pref('adj_max_score')
+        info['scoreMin'] = self.tournament.pref('adj_min_voting_score')
         return info
+
+    def get_context_data(self, **kwargs):
+        kwargs['vueDebatesOrPanelAdjudicators'] = json.dumps(None)
+        return super().get_context_data(**kwargs)
 
 
 class EditDebateAdjudicatorsView(EditDebateOrPanelAdjudicatorsMixin, DebateDragAndDropMixin):
     template_name = "edit_debate_adjudicators.html"
     page_title = gettext_lazy("Edit Allocation")
 
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['highlights']['break'] = [] # TODO construct adj score ranges from settings
+        return info
+
+    def debates_or_panels_factory(self, debates):
+        return EditDebateAdjudicatorsDebateSerializer(debates, many=True)
+
 
 class EditPanelAdjudicatorsView(EditDebateOrPanelAdjudicatorsMixin, PanelsDragAndDropMixin):
     template_name = "edit_panel_adjudicators.html"
     page_title = gettext_lazy("Edit Panels")
+
+    def debates_or_panels_factory(self, panels):
+        return EditPanelAdjudicatorsPanelSerializer(panels, many=True)
 
 
 # ==============================================================================

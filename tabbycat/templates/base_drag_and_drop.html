@@ -12,13 +12,10 @@
     window.vueData = {
       allData: {
         debatesOrPanels: {{ vueDebatesOrPanels|safe }},
+        regions: {{ vueRegions|safe }},
+        institutions: {{ vueInstitutions|safe }},
         round: {{ vueMetaInfo.round|safe }},
         tournament: {{ vueMetaInfo.tournament|safe }},
-        highlights: {
-          {% for key, value in vueMetaInfo.highlights.items %}
-            {{ key }}: {{ value|safe }},
-          {% endfor %}
-        },
         extra: {{ vueMetaInfo.extra|safe }},
       }
     }

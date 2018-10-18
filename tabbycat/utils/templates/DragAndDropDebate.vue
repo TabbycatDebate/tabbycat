@@ -1,6 +1,6 @@
 <template>
   <div>
-    DEBATE {{ debateOrPanel.pk }}
+    DEBATE {{ debateOrPanel.id }}
     <slot name="bracket">
       — BRACKET {{ debateOrPanel.bracket }}
     </slot>
@@ -8,7 +8,7 @@
       — LIVENESS
     </slot>
     <slot name="importance">
-      — IMPORTANCE: {{ debateOrPanel.fields.importance }}
+      — IMPORTANCE: {{ debateOrPanel.importance }}
     </slot>
     <slot name="venue">
       — VENUE <span v-if="debateOrPanel.venue">{{ debateOrPanel.venue.display_name }}</span>

@@ -35,12 +35,12 @@ export default {
     },
     importance: {
       get () {
-        return parseInt(this.debateOrPanel.fields.importance)
+        return parseInt(this.debateOrPanel.importance)
       },
       set (value) {
         // Pass a message to the parent component to then save a change to the store
         let updatedDebatesOrPanels = { }
-        updatedDebatesOrPanels[this.debateOrPanel.pk] = { 'importance': value }
+        updatedDebatesOrPanels[this.debateOrPanel.id] = { 'importance': value }
         this.$store.dispatch('updateDebatesOrPanelsAttribute', updatedDebatesOrPanels)
       },
     },

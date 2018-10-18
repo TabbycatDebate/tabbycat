@@ -25,10 +25,10 @@ export default {
       return this.$store.getters.allDebatesOrPanels
     },
     tournamentSlugForWSPath: function () {
-      return this.initialData.tournament[0].fields.slug
+      return this.initialData.tournament.slug
     },
     roundSlugForWSPath: function () {
-      return this.initialData.round[0].fields.seq
+      return this.initialData.round.seq
     },
   },
   methods: {

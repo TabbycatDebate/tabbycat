@@ -50,6 +50,7 @@ from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
+from .serializers import EditDebateTeamsDebateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -848,6 +849,14 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
 class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_teams.html"
     page_title = gettext_lazy("Edit Matchups")
+
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['highlights']['break'] = [] # TODO
+        return info
+
+    def debates_or_panels_factory(self, debates):
+        return EditDebateTeamsDebateSerializer(debates, many=True)
 
 
 class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):
