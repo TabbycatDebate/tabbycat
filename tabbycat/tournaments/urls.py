@@ -36,6 +36,7 @@ urlpatterns = [
     path('admin/feedback/',         include('adjfeedback.urls_admin')),
     path('admin/import/',           include('importer.urls')),
     path('admin/motions/',          include('motions.urls_admin')),
+    path('admin/notifications/',    include('notifications.urls_admin')),
     path('admin/options/',          include('options.urls')),
     path('admin/participants/',     include('participants.urls_admin')),
     path('admin/printing/',         include('printing.urls_admin')),

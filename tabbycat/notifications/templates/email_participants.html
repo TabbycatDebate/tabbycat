@@ -1,0 +1,20 @@
+{% extends "tables/base_vue_table.html" %}
+{% load debate_tags i18n %}
+
+{% block content %}
+
+  <form method="POST">
+    {% csrf_token %}
+
+    {{ block.super }}
+
+    {{ form.non_field_errors }}
+    {% for field in form.visible_fields %}
+      {% include "components/form-field.html" %}
+    {% endfor %}
+    <button type="submit" class="btn btn-block btn-success">
+      {% trans "Send Message(s)" %}
+    </button>
+  </form>
+
+{% endblock content %}
