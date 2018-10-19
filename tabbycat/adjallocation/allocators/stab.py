@@ -1,4 +1,5 @@
-from .base import BaseAllocator
+from .base import BaseAdjudicatorAllocator
+from ..allocation import AdjudicatorAllocation
 
 
 class PanelMaker(object):
@@ -109,7 +110,7 @@ class PanelMaker(object):
         return len([(adj, rank) for adj, rank in self.available if rank == r])
 
 
-class StabAllocator(BaseAllocator):
+class StabAllocator(BaseAdjudicatorAllocator):
     def allocate(self, avoid_conflicts=True):
         p = PanelMaker()
         panels = p.form_panels(self.adjudicators, len(self.debates))
@@ -127,8 +128,6 @@ class StabAllocator(BaseAllocator):
                     j = self.search_swap(i, list(range(i, 0, -1)))
                     if j is None:
                         j = self.search_swap(i, list(range(i+1, len(panels))))
-
-        from adjallocation.allocation import AdjudicatorAllocation
 
         allocation = []
         for debate, panel in self.pairings:

@@ -9,12 +9,12 @@ from django.utils.translation import gettext as _
 from utils.views import BadJsonRequestError
 
 from ..allocation import AdjudicatorAllocation
-from .base import BaseAllocator
+from .base import BaseAdjudicatorAllocator
 
 logger = logging.getLogger(__name__)
 
 
-class BaseHungarianAllocator(BaseAllocator):
+class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

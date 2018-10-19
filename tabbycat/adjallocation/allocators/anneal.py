@@ -1,11 +1,12 @@
 import math
 import random
 
-from .base import BaseAllocator
+from .base import BaseAdjudicatorAllocator
 from .stab import StabAllocator
+from ..allocation import AdjudicatorAllocation
 
 
-class SAAllocator(BaseAllocator):
+class SAAllocator(BaseAdjudicatorAllocator):
     SCORE_ADJ_TEAM_CONFLICT = 10000
     SCORE_TARGET_PANEL = 800
     SCORE_ADJ_TEAM_HISTORY = 100
@@ -14,7 +15,6 @@ class SAAllocator(BaseAllocator):
     MAX_TRIES = 3
 
     def allocate(self, initial=None):
-        from .allocation import AdjudicatorAllocation
 
         if initial is None:
             initial = StabAllocator(self.debates, self.adjudicators).allocate()
