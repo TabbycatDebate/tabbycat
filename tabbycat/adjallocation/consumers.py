@@ -6,7 +6,7 @@ from draw.mixins import DebateOrPanelConsumerMixin
 from tournaments.models import Round
 
 from .models import PreformedPanel, PreformedPanelAdjudicator
-from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
+from .allocators import ConsensusHungarianAllocator, VotingHungarianAllocator
 
 logger = logging.getLogger(__name__)
 
