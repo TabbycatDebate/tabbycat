@@ -153,7 +153,7 @@ def motion_release_email_generator(round_id):
     def _create_motion_list():
         motion_list = ""
         for motion in round.motion_set.all():
-            motion_list += _(" - %s (%s)\n") % (motion.text, motion.reference)
+            motion_list += _(" - %(text)s (%(ref)s)\n") % {'text': motion.text, 'ref': motion.reference}
 
             if motion.info_slide:
                 motion_list += "   %s\n" % (motion.info_slide)

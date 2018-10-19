@@ -1,11 +1,11 @@
 import math
 import random
 
-from .allocator import Allocator
+from .base import BaseAllocator
 from .stab import StabAllocator
 
 
-class SAAllocator(Allocator):
+class SAAllocator(BaseAllocator):
     SCORE_ADJ_TEAM_CONFLICT = 10000
     SCORE_TARGET_PANEL = 800
     SCORE_ADJ_TEAM_HISTORY = 100

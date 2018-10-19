@@ -6,7 +6,7 @@ from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
@@ -21,6 +21,7 @@ from draw.models import Debate
 from draw.prefetch import populate_opponents
 from options.utils import use_team_code_names, use_team_code_names_data_entry
 from participants.models import Adjudicator
+from participants.templatetags.team_name_for_data_entry import team_name_for_data_entry
 from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin,
                                 RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
                                 TournamentMixin)
@@ -60,7 +61,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
     def _get_draw(self):
         if not hasattr(self, '_draw'):
             self._draw = self.round.debate_set_with_prefetches(
-                    ordering=('room_rank',), results=True, wins=True, check_ins=True)
+                    ordering=('room_rank',), results=True, wins=True, check_ins=True, iron=True)
         return self._draw
 
     def get_table(self):
@@ -70,13 +71,29 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_ballot_status_columns(draw, key="status")
         table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
         table.add_debate_venue_columns(draw, for_admin=True)
-        table.add_debate_results_columns(draw)
+        table.add_debate_results_columns(draw, iron=True)
         table.add_debate_adjudicators_column(draw, show_splits=True)
         return table
+
+    def get_irons_list(self):
+        iron_speeches = []
+        use_code_names = use_team_code_names_data_entry(self.tournament, True)
+        for d in self._get_draw():
+            for side in self.tournament.sides:
+                debateteam = d.get_dt(side)
+                if debateteam.iron > 0 or debateteam.iron_prev:
+                    iron_speeches.append({
+                        'venue': d.venue.display_name,
+                        'team': team_name_for_data_entry(debateteam.team, use_code_names),
+                        'current_round': debateteam.iron,
+                        'previous_round': debateteam.iron_prev
+                    })
+        return iron_speeches
 
     def get_context_data(self, **kwargs):
         kwargs["incomplete_ballots"] = self._get_draw().filter(
             Q(result_status=Debate.STATUS_NONE) | Q(result_status=Debate.STATUS_DRAFT)).count()
+        kwargs["iron_speeches"] = self.get_irons_list()
         return super().get_context_data(**kwargs)
 
 
@@ -230,6 +247,10 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).short_name for side in sides)
         else:
             kwargs['debate_name'] = _(" vs ").join(self.debate.get_team(side).code_name for side in sides)
+
+        kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
+            filter=Q(team__debateteam__debate__round=self.debate.round.prev) & Q(team__debateteam__speakerscore__ghost=True),
+            distinct=True)).filter(iron__gt=0)
 
         return super().get_context_data(**kwargs)
 

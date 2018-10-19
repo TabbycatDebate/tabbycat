@@ -62,6 +62,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
         for_admin = True
         if hasattr(self, '_user_role') and self._user_role == 'public':
             for_admin = False
+        kwargs["for_admin"] = json.dumps(for_admin)
 
         team_codes = use_team_code_names(self.tournament, admin=for_admin)
         kwargs["team_codes"] = json.dumps(team_codes)

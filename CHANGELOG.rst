@@ -2,11 +2,18 @@
 Change Log
 ==========
 
+2.2.5
+-----
+*Release date: ?? October 2018*
+
+- Fixed a bug that allow the public-facing version of the check-ins page to issue check-ins (rather than be read-only)
+
 
 2.3.0 (LaPerm)
 ------------------
 *Release date: ?*
 
+- The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
 - When printing the per-participant private URLs they now feature QR codes in addition to the URL. Thanks to Étienne Beaulé for contributing this feature!
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
     - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details).
@@ -16,7 +23,7 @@ Change Log
 
 2.2.4
 -----
-*Release date: 09 October 2018*
+*Release date: 9 October 2018*
 
 - Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics.
 
