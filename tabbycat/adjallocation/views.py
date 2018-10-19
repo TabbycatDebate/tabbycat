@@ -16,7 +16,7 @@ from draw.models import Debate
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
-from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, PanelsDragAndDropMixin, RoundMixin, TournamentMixin
+from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, RoundMixin, TournamentMixin
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
@@ -26,15 +26,15 @@ from .allocators import (ConsensusHungarianAllocator, legacy_allocate_adjudicato
                          VotingHungarianAllocator)
 from .conflicts import ConflictsInfo, HistoryInfo
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
-from .serializers import EditDebateAdjudicatorsDebateSerializer, EditPanelAdjudicatorsPanelSerializer
+                     AdjudicatorTeamConflict, DebateAdjudicator, PreformedPanel, TeamInstitutionConflict)
+from .serializers import EditDebateAdjudicatorsDebateSerializer, EditPanelAdjudicatorsPanelSerializer, EditPanelOrDebateAdjudicatorSerializer
 
 from utils.misc import reverse_round
 
 logger = logging.getLogger(__name__)
 
 
-class EditDebateOrPanelAdjudicatorsMixin(AdministratorMixin, TemplateView):
+class BaseEditDebateOrPanelAdjudicatorsView(AdministratorMixin, TemplateView):
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -52,12 +52,18 @@ class EditDebateOrPanelAdjudicatorsMixin(AdministratorMixin, TemplateView):
         info['scoreMin'] = self.tournament.pref('adj_min_voting_score')
         return info
 
+    def get_serialised_allocatable_items(self):
+        # TODO: account for shared adjs
+        adjs = Adjudicator.objects.filter(tournament=self.tournament)
+        serialized_adjs = EditPanelOrDebateAdjudicatorSerializer(adjs, many=True)
+        return self.json_render(serialized_adjs.data)
+
     def get_context_data(self, **kwargs):
         kwargs['vueDebatesOrPanelAdjudicators'] = json.dumps(None)
         return super().get_context_data(**kwargs)
 
 
-class EditDebateAdjudicatorsView(EditDebateOrPanelAdjudicatorsMixin, DebateDragAndDropMixin):
+class EditDebateAdjudicatorsView(DebateDragAndDropMixin, BaseEditDebateOrPanelAdjudicatorsView):
     template_name = "edit_debate_adjudicators.html"
     page_title = gettext_lazy("Edit Allocation")
 
@@ -70,9 +76,32 @@ class EditDebateAdjudicatorsView(EditDebateOrPanelAdjudicatorsMixin, DebateDragA
         return EditDebateAdjudicatorsDebateSerializer(debates, many=True)
 
 
-class EditPanelAdjudicatorsView(EditDebateOrPanelAdjudicatorsMixin, PanelsDragAndDropMixin):
+class EditPanelAdjudicatorsView(DebateDragAndDropMixin, BaseEditDebateOrPanelAdjudicatorsView):
     template_name = "edit_panel_adjudicators.html"
     page_title = gettext_lazy("Edit Panels")
+
+    def get_draw_or_panels_objects(self):
+        panels = self.round.preformedpanel_set.all()
+        panels = self.create_extra_panels(panels)
+        return panels
+
+    def create_extra_panels(self, panels):
+        """ Assume the number of preformed panels should always match the
+        maximum possible number of debates (for now). These should be
+        automatically created so they are in-place upon page load """
+        teams_count = self.tournament.team_set.count()
+        if self.tournament.pref('teams_in_debate') == 'bp':
+            debates_count = teams_count // 4
+        else:
+            debates_count = teams_count // 2
+
+        new_panels_count = debates_count - panels.count()
+        if new_panels_count > 0:
+            new_panels = [PreformedPanel(round=self.round)] * new_panels_count
+            PreformedPanel.objects.bulk_create(new_panels)
+            panels.extend(new_panels)
+
+        return panels
 
     def debates_or_panels_factory(self, panels):
         return EditPanelAdjudicatorsPanelSerializer(panels, many=True)

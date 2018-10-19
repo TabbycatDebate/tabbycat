@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Institution, Region
+from .models import Adjudicator, Institution, Region, Team
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
@@ -17,17 +17,19 @@ class RegionSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-# class AdjudicatorSerializer(serializers.Serializer):
-#     class Meta:
-#         model = Adjudicator
-#         fields = ('id', 'name', 'gender')
+class AdjudicatorSerializer(serializers.ModelSerializer):
+    institution = serializers.PrimaryKeyRelatedField(read_only=True)
 
-#     institution = InstitutionSerializer()
+    class Meta:
+        model = Adjudicator
+        fields = ('id', 'name', 'gender', 'institution',)
 
 
-# class TeamSerializer(serializers.Serializer):
-#     class Meta:
-#         model = Team
-#         fields = ('id', 'name', 'gender')
+class TeamSerializer(serializers.ModelSerializer):
+    institution = serializers.PrimaryKeyRelatedField(read_only=True)
 
-#     institution = InstitutionSerializer()
+    class Meta:
+        model = Team
+        fields = ('id', 'short_name', 'long_name', 'institution')
+
+    institution = InstitutionSerializer()

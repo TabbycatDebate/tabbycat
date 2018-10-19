@@ -1,17 +1,18 @@
-from draw.serializers import DebateSerializer
+from rest_framework import serializers
+
+from utils.serializers import DebateSerializerMixin, VenueSerializer
 
 
-# class VenueSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Venue
-#         fields = ('id', 'name', 'priority', 'display_name')
+class EditDebateVenuesDebateSerializer(DebateSerializerMixin):
+    """ Returns debates for the Edit Debate Teams view"""
+    venue = serializers.PrimaryKeyRelatedField(read_only=True)  # Override
 
 
-class EditDebateVenuesDebateSerializer(DebateSerializer):
-    # override fetching the debate adjs to just use primary key
-    pass
+class EditDebateVenuesVenueSerializer(VenueSerializer):
+    """ Returns venues for use in the allocate Debate Venues view """
 
-
-# class EditDebateVenuesVenue(VenueSerializer):
-#     # fetch categories
-#     # fetch constraints
+    # TODO: fetch categories
+    # TODO: fetch constraints
+    class Meta:
+        model = VenueSerializer.Meta.model
+        fields = (*VenueSerializer.Meta.fields, 'priority') # Add fields

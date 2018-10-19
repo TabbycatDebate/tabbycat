@@ -20,7 +20,7 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelForm
 from .allocator import allocate_venues
 from .forms import venuecategoryform_factory
 from .models import Venue, VenueCategory, VenueConstraint
-from .serializers import EditDebateVenuesDebateSerializer
+from .serializers import EditDebateVenuesDebateSerializer, EditDebateVenuesVenueSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +31,11 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
 
     def debates_or_panels_factory(self, debates):
         return EditDebateVenuesDebateSerializer(debates, many=True)
+
+    def get_serialised_allocatable_items(self):
+        venues = Venue.objects.filter(tournament=self.tournament)
+        serialized_venues = EditDebateVenuesVenueSerializer(venues, many=True)
+        return self.json_render(serialized_venues.data)
 
     def get_extra_info(self):
         info = super().get_extra_info()

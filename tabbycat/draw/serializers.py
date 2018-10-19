@@ -1,28 +1,12 @@
-from rest_framework import serializers
-
-from .models import Debate
-
-
-class DebateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Debate
-        fields = ('id', 'bracket', 'room_rank', 'importance', 'result_status',
-                  'sides_confirmed')
-
-    # venue = VenueSerializer
-    # debate adjudicators = DebateAdjudicatorSerializer
-    # debate teams = DebateTeamSerializer
+from participants.serializers import TeamSerializer
+from utils.serializers import DebateSerializerMixin
 
 
-class EditDebateTeamsDebateSerializer(DebateSerializer):
+class EditDebateTeamsDebateSerializer(DebateSerializerMixin):
+    """ Returns debates for the Edit Debate Teams view"""
     pass
 
 
-# class DebateTeamSerializer(serializers.ModelSerializer):
-#     # This should be a flat model; i.e. collapse debate team and team
-#     pass
-
-
-# class DebateAdjudicatorSerializer(serializers.ModelSerializer):
-#     # This should be a flat model; i.e. collapse debate adjudicator and adj
-#     pass
+class EditDebateTeamsTeamSerializer(TeamSerializer):
+    """ Returns teams for use in the allocate Debate Teams view """
+    pass

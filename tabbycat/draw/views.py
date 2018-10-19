@@ -50,7 +50,7 @@ from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
-from .serializers import EditDebateTeamsDebateSerializer
+from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -854,6 +854,12 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
         info = super().get_extra_info()
         info['highlights']['break'] = [] # TODO
         return info
+
+    def get_serialised_allocatable_items(self):
+        # TODO: account for shared teams
+        teams = Team.objects.filter(tournament=self.tournament)
+        serialized_venues = EditDebateTeamsTeamSerializer(teams, many=True)
+        return self.json_render(serialized_venues.data)
 
     def debates_or_panels_factory(self, debates):
         return EditDebateTeamsDebateSerializer(debates, many=True)

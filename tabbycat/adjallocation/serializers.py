@@ -1,24 +1,28 @@
 from rest_framework import serializers
 
-from draw.serializers import DebateSerializer
-# from participants.serializers import BaseAdjudicatorSerializer
+from participants.serializers import AdjudicatorSerializer
+from utils.serializers import DebateSerializerMixin
 
 from .models import PreformedPanel
 
-# class PanelOrDebateAdjudicatorSerializer(BaseAdjudicatorSerializer):
-#     """ For use in views where adjs are edited """
-#     # score = serializers.IntegerField()
-#     # fetch conflicts
-#     pass
+
+class EditPanelOrDebateAdjudicatorSerializer(AdjudicatorSerializer):
+    """ Returns adjudicators for use in views where they are allocated """
+
+    # score = serializers.IntegerField()
+    # fetch conflicts
+    pass
 
 
-class EditDebateAdjudicatorsDebateSerializer(DebateSerializer):
-    # override fetching the debate adjs to just use primary key
+class EditDebateAdjudicatorsDebateSerializer(DebateSerializerMixin):
+    """ Returns debates for the Edit Adjudicator Allocation view"""
+
+    # TODO override fetching the full debate adjudicators to just use primary key
     pass
 
 
 class EditPanelAdjudicatorsPanelSerializer(serializers.ModelSerializer):
-    # override fetching the panel adjs to just use primary key
+    """ Returns debates for the Edit Panels Allocation view"""
     class Meta:
         model = PreformedPanel
         fields = ('id', 'importance')

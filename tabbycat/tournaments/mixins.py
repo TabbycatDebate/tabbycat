@@ -17,7 +17,7 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 from rest_framework.renderers import JSONRenderer
 
-from adjallocation.models import DebateAdjudicator, PreformedPanel
+from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
 from participants.models import Institution, Region, Speaker
@@ -338,6 +338,7 @@ class DragAndDropMixin(RoundMixin):
 
     def get_context_data(self, **kwargs):
         kwargs['vueDebatesOrPanels'] = self.get_serialised_debates_or_panels()
+        kwargs['vueAllocatableItems'] = self.get_serialised_allocatable_items()
         kwargs['vueRegions'] = self.get_serialised_regions()
         kwargs['vueInstitutions'] = self.get_serialised_institutions()
         kwargs['vueMetaInfo'] = self.get_meta_info()
@@ -348,32 +349,6 @@ class DebateDragAndDropMixin(DragAndDropMixin):
 
     def get_draw_or_panels_objects(self):
         return self.round.debate_set.select_related('venue')
-
-
-class PanelsDragAndDropMixin(DragAndDropMixin):
-
-    def get_draw_or_panels_objects(self):
-        panels = self.round.preformedpanel_set.all()
-        panels = self.create_extra_panels(panels)
-        return panels
-
-    def create_extra_panels(self, panels):
-        """ Assume the number of preformed panels should always match the
-        maximum possible number of debates (for now). These should be
-        automatically created so they are in-place upon page load """
-        teams_count = self.tournament.team_set.count()
-        if self.tournament.pref('teams_in_debate') == 'bp':
-            debates_count = teams_count // 4
-        else:
-            debates_count = teams_count // 2
-
-        new_panels_count = debates_count - panels.count()
-        if new_panels_count > 0:
-            new_panels = [PreformedPanel(round=self.round)] * new_panels_count
-            PreformedPanel.objects.bulk_create(new_panels)
-            panels.extend(new_panels)
-
-        return panels
 
 
 class LegacyDrawForDragAndDropMixin(RoundMixin):
