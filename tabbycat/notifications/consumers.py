@@ -72,7 +72,7 @@ class NotificationQueueConsumer(SyncConsumer):
                                   event=self.NOTIFICATION_EVENTS[notification_type],
                                   method=SentMessageRecord.METHOD_TYPE_EMAIL,
                                   round=round, tournament=t,
-                                  context=instance, message=email.body)
+                                  context=instance, message=email.message())
             )
 
         # Send messages & record
@@ -107,7 +107,7 @@ class NotificationQueueConsumer(SyncConsumer):
                 SentMessageRecord(
                     recipient_id=pk, email=address,
                     method=SentMessageRecord.METHOD_TYPE_EMAIL,
-                    tournament_id=event['tournament'], message=email.body)
+                    tournament_id=event['tournament'], message=email.message())
             )
 
         # Send messages & record
