@@ -1,9 +1,9 @@
-from .base import BaseAllocator
+from .base import BaseAdjudicatorAllocator
+from ..allocation import AdjudicatorAllocation
 
 
-class DumbAllocator(BaseAllocator):
+class DumbAllocator(BaseAdjudicatorAllocator):
     def allocate(self):
-        from adjallocation.allocation import AdjudicatorAllocation
 
         debates = self.debates
         adjs = self.adjudicators

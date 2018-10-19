@@ -10,7 +10,7 @@ from ..conflicts import ConflictsInfo, HistoryInfo
 logger = logging.getLogger(__name__)
 
 
-class BaseAllocator(object):
+class BaseAdjudicatorAllocator:
 
     def __init__(self, debates, adjudicators, round):
         self.tournament = round.tournament
