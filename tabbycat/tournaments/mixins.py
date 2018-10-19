@@ -353,7 +353,7 @@ class DebateDragAndDropMixin(DragAndDropMixin):
 class PanelsDragAndDropMixin(DragAndDropMixin):
 
     def get_draw_or_panels_objects(self):
-        panels = self.round.preformedpanel_set
+        panels = self.round.preformedpanel_set.all()
         panels = self.create_extra_panels(panels)
         return panels
 
