@@ -1,7 +1,7 @@
-from .allocator import Allocator
+from .base import BaseAllocator
 
 
-class DumbAllocator(Allocator):
+class DumbAllocator(BaseAllocator):
     def allocate(self):
         from adjallocation.allocation import AdjudicatorAllocation
 

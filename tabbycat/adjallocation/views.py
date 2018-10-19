@@ -22,9 +22,9 @@ from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
-from .allocator import allocate_adjudicators
+from .allocators import (allocate_adjudicators, ConsensusHungarianAllocator,
+                         VotingHungarianAllocator)
 from .conflicts import ConflictsInfo, HistoryInfo
-from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, DebateAdjudicator, TeamInstitutionConflict)
 
