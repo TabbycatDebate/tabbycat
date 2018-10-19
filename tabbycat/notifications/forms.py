@@ -24,5 +24,6 @@ class BasicEmailForm(forms.Form):
     """A base class for an email form with fields for subject/message
 
     Note that the list of recipients is handled by Vue, bypassing this Form."""
+
     subject_line = forms.CharField(label=_("Subject"), required=True, max_length=78)
     message_body = forms.CharField(label=_("Message"), required=True, widget=forms.Textarea)

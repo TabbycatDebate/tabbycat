@@ -1,6 +1,18 @@
 {% extends "tables/base_vue_table.html" %}
 {% load debate_tags i18n %}
 
+{% block page-alerts %}
+
+{% if pref.reply_to_address == "" %}
+  {% tournamenturl 'options-tournament-section' section='notifications' as notifications_options_url %}
+  {% blocktrans trimmed asvar p1 %}
+    You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href="{{ notifications_options_url }}">Notifications section of the preferences</a>.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+{% endif %}
+
+{% endblock %}
+
 {% block content %}
 
   <form method="POST">
