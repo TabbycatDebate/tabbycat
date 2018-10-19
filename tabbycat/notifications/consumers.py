@@ -34,6 +34,27 @@ class NotificationQueueConsumer(SyncConsumer):
         "team": SentMessageRecord.EVENT_TYPE_TEAM
     }
 
+    def _send(self, messages, records):
+        try:
+            mail.get_connection().send_messages(messages)
+        except SMTPException as e:
+            self.send_error(e, _("Failed to send e-mails."), event)
+            raise
+        except ConnectionError as e:
+            self.send_error(e, _("Connection error sending e-mails."), event)
+            raise
+        else:
+            SentMessageRecord.objects.bulk_create(records)
+
+    def _get_from_fields(self, t):
+        from_email = "%s <%s>" % (t.short_name, settings.DEFAULT_FROM_EMAIL)
+        reply_to = None
+        if t.pref('reply_to_address'):
+            reply_to = "%s <%s>" % (t.pref('reply_to_name'), t.pref('reply_to_address'))
+
+        # Django wants the reply_to as an array
+        return from_email, [reply_to]
+
     def email(self, event):
         # Get database objects
         if 'debate_id' in event['extra']:
@@ -46,12 +67,9 @@ class NotificationQueueConsumer(SyncConsumer):
             round = None
             t = Tournament.objects.get(pk=event['extra']['tournament_id'])
 
+        from_email, reply_to = _get_from_fields(t)
         notification_type = event['message']
 
-        from_email = "%s <%s>" % (t.short_name, settings.DEFAULT_FROM_EMAIL)
-        reply_to = None
-        if t.pref('reply_to_address'):
-            reply_to = "%s <%s>" % (t.pref('reply_to_name'), t.pref('reply_to_address'))
         subject = Template(t.pref(notification_type + "_email_subject"))
         body = Template(t.pref(notification_type + "_email_message"))
 
@@ -64,7 +82,7 @@ class NotificationQueueConsumer(SyncConsumer):
             context = Context(instance)
             email = mail.EmailMessage(
                 subject=subject.render(context), body=body.render(context),
-                from_email=from_email, to=[recipient.email], reply_to=[reply_to]
+                from_email=from_email, to=[recipient.email], reply_to=reply_to
             )
             messages.append(email)
             records.append(
@@ -75,49 +93,26 @@ class NotificationQueueConsumer(SyncConsumer):
                                   context=instance, message=email.message())
             )
 
-        # Send messages & record
-        try:
-            mail.get_connection().send_messages(messages)
-        except SMTPException as e:
-            self.send_error(e, _("Failed to send e-mails."), event)
-            raise
-        except ConnectionError as e:
-            self.send_error(e, _("Connection error sending e-mails."), event)
-            raise
-        else:
-            SentMessageRecord.objects.bulk_create(records)
+        self._send(messages, records)
 
     def email_custom(self, event):
         messages = []
         records = []
 
         t = Tournament.objects.get(id=event['tournament'])
-        from_email = "%s <%s>" % (t.short_name, settings.DEFAULT_FROM_EMAIL)
-        reply_to = None
-        if t.pref('reply_to_address'):
-            reply_to = "%s <%s>" % (t.pref('reply_to_name'), t.pref('reply_to_address'))
+        from_email, reply_to = _get_from_fields(t)
 
         for pk, address in event['send_to']:
             email = mail.EmailMessage(
                 subject=event['subject'], body=event['message'],
-                from_email=from_email, to=[address], reply_to=[reply_to]
+                from_email=from_email, to=[address], reply_to=reply_to
             )
             messages.append(email)
             records.append(
                 SentMessageRecord(
                     recipient_id=pk, email=address,
                     method=SentMessageRecord.METHOD_TYPE_EMAIL,
-                    tournament_id=event['tournament'], message=email.message())
+                    tournament=t, message=email.message())
             )
 
-        # Send messages & record
-        try:
-            mail.get_connection().send_messages(messages)
-        except SMTPException as e:
-            self.send_error(e, _("Failed to send e-mails."), event)
-            raise
-        except ConnectionError as e:
-            self.send_error(e, _("Connection error sending e-mails."), event)
-            raise
-        else:
-            SentMessageRecord.objects.bulk_create(records)
+        self._send(messages, records)
