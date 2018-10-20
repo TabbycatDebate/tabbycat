@@ -80,7 +80,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         } for p in self.get_queryset()])
 
         table.add_column({'key': 'role', 'title': _("Role")}, [{
-            'text': _("Adj") if hasattr(p, 'adjudicator') else _("Spk")
+            'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker")
         } for p in self.get_queryset()])
 
         return table
