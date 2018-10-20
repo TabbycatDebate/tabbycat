@@ -2,7 +2,7 @@ import json
 import logging
 
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.forms import ModelChoiceField
 from django.views.generic.base import TemplateView, View
 from django.http import JsonResponse
@@ -26,15 +26,16 @@ from .allocators import (ConsensusHungarianAllocator, legacy_allocate_adjudicato
                          VotingHungarianAllocator)
 from .conflicts import ConflictsInfo, HistoryInfo
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, DebateAdjudicator, PreformedPanel, TeamInstitutionConflict)
-from .serializers import EditDebateAdjudicatorsDebateSerializer, EditPanelAdjudicatorsPanelSerializer, EditPanelOrDebateAdjudicatorSerializer
+                     AdjudicatorTeamConflict, DebateAdjudicator, PreformedPanel,
+                     PreformedPanelAdjudicator, TeamInstitutionConflict)
+from .serializers import EditDebateAdjsDebateSerializer, EditPanelAdjsPanelSerializer, EditPanelOrDebateAdjSerializer
 
 from utils.misc import reverse_round
 
 logger = logging.getLogger(__name__)
 
 
-class BaseEditDebateOrPanelAdjudicatorsView(AdministratorMixin, TemplateView):
+class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -55,7 +56,10 @@ class BaseEditDebateOrPanelAdjudicatorsView(AdministratorMixin, TemplateView):
     def get_serialised_allocatable_items(self):
         # TODO: account for shared adjs
         adjs = Adjudicator.objects.filter(tournament=self.tournament)
-        serialized_adjs = EditPanelOrDebateAdjudicatorSerializer(adjs, many=True)
+        populate_feedback_scores(adjs)
+        weight = self.tournament.current_round.feedback_weight
+        serialized_adjs = EditPanelOrDebateAdjSerializer(
+            adjs, many=True, context={'feedback_weight': weight})
         return self.json_render(serialized_adjs.data)
 
     def get_context_data(self, **kwargs):
@@ -63,9 +67,10 @@ class BaseEditDebateOrPanelAdjudicatorsView(AdministratorMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class EditDebateAdjudicatorsView(DebateDragAndDropMixin, BaseEditDebateOrPanelAdjudicatorsView):
+class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     template_name = "edit_debate_adjudicators.html"
     page_title = gettext_lazy("Edit Allocation")
+    prefetch_adjs = True # Fetched in full as get_serialised
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -73,15 +78,19 @@ class EditDebateAdjudicatorsView(DebateDragAndDropMixin, BaseEditDebateOrPanelAd
         return info
 
     def debates_or_panels_factory(self, debates):
-        return EditDebateAdjudicatorsDebateSerializer(debates, many=True)
+        return EditDebateAdjsDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides})
 
 
-class EditPanelAdjudicatorsView(DebateDragAndDropMixin, BaseEditDebateOrPanelAdjudicatorsView):
+class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     template_name = "edit_panel_adjudicators.html"
     page_title = gettext_lazy("Edit Panels")
 
     def get_draw_or_panels_objects(self):
-        panels = self.round.preformedpanel_set.all()
+        panels = self.round.preformedpanel_set.all().prefetch_related(
+            Prefetch('preformedpaneladjudicator_set',
+                queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator'))
+        )
         panels = self.create_extra_panels(panels)
         return panels
 
@@ -104,7 +113,7 @@ class EditPanelAdjudicatorsView(DebateDragAndDropMixin, BaseEditDebateOrPanelAdj
         return panels
 
     def debates_or_panels_factory(self, panels):
-        return EditPanelAdjudicatorsPanelSerializer(panels, many=True)
+        return EditPanelAdjsPanelSerializer(panels, many=True)
 
 
 # ==============================================================================

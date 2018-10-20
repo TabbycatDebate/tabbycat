@@ -25,6 +25,7 @@
       <drag-and-drop-debate v-for="panel in debatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
         <debate-importance slot="importance" :debateOrPanel="panel"></debate-importance>
         <template slot="adjudicators">fancy adjs UI</template>
+        <template slot="teams"><span></span></template><!--Hide Teams-->
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
     </template>

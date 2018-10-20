@@ -19,20 +19,4 @@ class RoundSerializer(serializers.ModelSerializer):
 class TournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament
-        fields = ('slug', 'sides', 'positions')
-
-
-# class AdjudicatorSerializer(serializers.Serializer):
-#     class Meta:
-#         model = Adjudicator
-#         fields = ('id', 'name', 'gender')
-
-#     institution = InstitutionSerializer()
-
-
-# class TeamSerializer(serializers.Serializer):
-#     class Meta:
-#         model = Team
-#         fields = ('id', 'name', 'gender')
-
-#     institution = InstitutionSerializer()
+        fields = ('slug', 'sides')

@@ -25,6 +25,7 @@ from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
+from participants.prefetch import populate_win_counts
 from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
@@ -849,6 +850,7 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
 class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_teams.html"
     page_title = gettext_lazy("Edit Matchups")
+    prefetch_teams = False # Fetched in full as get_serialised
 
     def get_extra_info(self):
         info = super().get_extra_info()
@@ -857,12 +859,14 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
 
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams
-        teams = Team.objects.filter(tournament=self.tournament)
-        serialized_venues = EditDebateTeamsTeamSerializer(teams, many=True)
-        return self.json_render(serialized_venues.data)
+        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
+        populate_win_counts(teams)
+        serialized_teams = EditDebateTeamsTeamSerializer(teams, many=True)
+        return self.json_render(serialized_teams.data)
 
     def debates_or_panels_factory(self, debates):
-        return EditDebateTeamsDebateSerializer(debates, many=True)
+        return EditDebateTeamsDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides})
 
 
 class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):

@@ -28,12 +28,14 @@ logger = logging.getLogger(__name__)
 class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_venues.html"
     page_title = gettext_lazy("Edit Venues")
+    prefetch_venues = False # Fetched in full as get_serialised
 
     def debates_or_panels_factory(self, debates):
-        return EditDebateVenuesDebateSerializer(debates, many=True)
+        return EditDebateVenuesDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides})
 
     def get_serialised_allocatable_items(self):
-        venues = Venue.objects.filter(tournament=self.tournament)
+        venues = Venue.objects.filter(tournament=self.tournament).prefetch_related('venuecategory_set')
         serialized_venues = EditDebateVenuesVenueSerializer(venues, many=True)
         return self.json_render(serialized_venues.data)
 

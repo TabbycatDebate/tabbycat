@@ -4,7 +4,10 @@ from utils.serializers import DebateSerializerMixin
 
 class EditDebateTeamsDebateSerializer(DebateSerializerMixin):
     """ Returns debates for the Edit Debate Teams view"""
-    pass
+
+    def team_representation(self, debate_team):
+        # Only need the PK of the teams as they are fetched separately
+        return debate_team.team.pk
 
 
 class EditDebateTeamsTeamSerializer(TeamSerializer):

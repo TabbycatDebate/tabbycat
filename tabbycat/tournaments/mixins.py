@@ -346,9 +346,32 @@ class DragAndDropMixin(RoundMixin):
 
 
 class DebateDragAndDropMixin(DragAndDropMixin):
+    prefetch_adjs = True
+    prefetch_teams = True
+    prefetch_venues = True
 
     def get_draw_or_panels_objects(self):
-        return self.round.debate_set.select_related('venue')
+        selects = ('round__tournament', 'venue')
+        prefetches = ()
+        if self.prefetch_venues:
+            prefetches = (*prefetches, 'venue__venuecategory_set')
+        if self.prefetch_adjs:
+            prefetches = (*prefetches, Prefetch('debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator')))
+        if self.prefetch_teams:
+            prefetches = (*prefetches, Prefetch('debateteam_set',
+                queryset=DebateTeam.objects.select_related('team').prefetch_related(
+                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
+                )))
+        else:
+            prefetches = (*prefetches, Prefetch('debateteam_set',
+                queryset=DebateTeam.objects.select_related('team')))
+
+        draw = self.round.debate_set.select_related(*selects).prefetch_related(*prefetches)
+
+        if self.prefetch_teams:
+            populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
+        return draw
 
 
 class LegacyDrawForDragAndDropMixin(RoundMixin):

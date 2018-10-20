@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('round/<int:round_seq>/', include([
-        path('edit/',
+        path('debtates/edit/',
             views.EditDebateAdjudicatorsView.as_view(),
             name='edit-debate-adjudicators'),
         path('edit-legacy/',

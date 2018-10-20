@@ -13,11 +13,14 @@
     <slot name="venue">
       — VENUE <span v-if="debateOrPanel.venue">{{ debateOrPanel.venue.display_name }}</span>
     </slot>
+    <br>---------------
     <slot name="teams">
-      — TEAMS
+      <span v-for="(team, position) in debateOrPanel.teams">{{ team.short_name }} ({{ position }}),</span>
     </slot>
     <slot name="adjudicators">
-      — ADJS
+      <span v-for="adj in debateOrPanel.adjudicators.C">{{ adj.name }} (C),</span>
+      <span v-for="adj in debateOrPanel.adjudicators.P">{{ adj.name }}</span>
+      <span v-for="adj in debateOrPanel.adjudicators.T">{{ adj.name }} (T)</span>
     </slot>
   </div>
 </template>

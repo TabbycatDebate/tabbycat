@@ -5,7 +5,8 @@ from utils.serializers import DebateSerializerMixin, VenueSerializer
 
 class EditDebateVenuesDebateSerializer(DebateSerializerMixin):
     """ Returns debates for the Edit Debate Teams view"""
-    venue = serializers.PrimaryKeyRelatedField(read_only=True)  # Override
+    # Only need the PK of the venues as they are fetched separately
+    venue = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class EditDebateVenuesVenueSerializer(VenueSerializer):
