@@ -116,13 +116,13 @@
 import _ from 'lodash'
 import TeamMovingMixin from '../../templates/ajax/TeamMovingMixin.vue'
 import LegacyDrawContainerMixin from '../../draw/templates/LegacyDrawContainerMixin.vue'
-import DraggableTeam from '../../templates/draganddrops/DraggableTeam.vue'
+import LegacyDraggableTeam from '../../templates/draganddrops/LegacyDraggableTeam.vue'
 import DrawSidesStatus from '../../templates/draw/DrawSidesStatus.vue'
 import FindDebateTeamMixin from '../../templates/draw/FindDebateTeamMixin.vue'
 
 export default {
   mixins: [TeamMovingMixin, LegacyDrawContainerMixin, FindDebateTeamMixin],
-  components: { DraggableTeam, DrawSidesStatus },
+  components: { LegacyDraggableTeam, DrawSidesStatus },
   props: ['saveSidesStatusUrl'],
   computed: {
     unallocatedTeamsByWins: function () {

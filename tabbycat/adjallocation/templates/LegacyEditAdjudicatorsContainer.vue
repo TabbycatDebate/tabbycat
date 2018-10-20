@@ -118,7 +118,7 @@ import AllocationActions from '../../templates/allocations/AllocationActions.vue
 import AllocationIntroModal from '../../templates/allocations/AllocationIntroModal.vue'
 import LegacyDebateImportance from '../../templates/allocations/LegacyDebateImportance.vue'
 import DebatePanel from '../../templates/allocations/DebatePanel.vue'
-import DraggableAdjudicator from '../../templates/draganddrops/DraggableAdjudicator.vue'
+import LegacyDraggableAdjudicator from '../../templates/draganddrops/LegacyDraggableAdjudicator.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
@@ -129,7 +129,7 @@ export default {
     AllocationIntroModal,
     LegacyDebateImportance,
     DebatePanel,
-    DraggableAdjudicator,
+    LegacyDraggableAdjudicator,
   },
   data: function () {
     return {
