@@ -8,7 +8,7 @@
   {% blocktrans trimmed asvar p1 %}
     You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href="{{ notifications_options_url }}">Notifications section of the preferences</a>.
   {% endblocktrans %}
-  {% include "components/explainer-card.html" with type="info" %}
+  {% include "components/explainer-card.html" with type="warning" %}
 {% endif %}
 
 {% endblock %}
