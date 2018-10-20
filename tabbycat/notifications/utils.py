@@ -91,7 +91,7 @@ def ballots_email_generator(debate_id):
         ballot = ""
 
         for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
-            ballot += _("%(side)s: %(team)s (%(points)d - %(rank)s)\n") % {
+            ballot += _("%(side)s: %(team)s (%(rank)s points and %(points)d total speaks)\n") % {
                 'side': side_name,
                 'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
                 'points': scoresheet.get_total(side),
