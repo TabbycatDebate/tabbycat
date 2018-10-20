@@ -12,9 +12,9 @@
       <slot name="debates"></slot><!-- Debates -->
     </section>
 
-    <section>
-      <slot name="unallocated"></slot><!-- Unallocated Items -->
-    </section>
+    <drag-and-drop-unallocated-items
+      :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
+    </drag-and-drop-unallocated-items>
 
     <slot name=""></slot><!-- SlideOver Item -->
 
@@ -24,8 +24,11 @@
 </template>
 
 <script>
+import DragAndDropUnallocatedItems from './DragAndDropUnallocatedItems.vue'
 // The master layout for drag and drop screens; to using slots for content
 
 export default {
+  components: { DragAndDropUnallocatedItems },
+  props: ['unallocatedItems', 'unallocatedComponent'],
 }
 </script>

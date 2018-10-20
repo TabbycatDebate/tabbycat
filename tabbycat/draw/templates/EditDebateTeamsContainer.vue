@@ -1,6 +1,6 @@
 <template>
 
-  <drag-and-drop-layout>
+  <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
 
     <drag-and-drop-actions slot="actions"></drag-and-drop-actions>
 
@@ -17,7 +17,22 @@
 <script>
 import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
 
+import DraggableTeam from './DraggableTeam.vue'
+
 export default {
   mixins: [DragAndDropContainerMixin],
+  data: () => ({
+    unallocatedComponent: DraggableTeam,
+  }),
+  methods: {
+    getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
+      // Provide an array of IDs representing teams in this debate
+      let itemIDs = []
+      for (const positionDebateTeamID of Object.entries(debateOrPanel.teams)) {
+        itemIDs.push(Number(positionDebateTeamID[1]))
+      }
+      return itemIDs
+    },
+  },
 }
 </script>

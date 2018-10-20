@@ -27,12 +27,12 @@
 <script>
 import _ from 'lodash'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
-import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
+import LegacyDraggableAdjudicator from '../draganddrops/LegacyDraggableAdjudicator.vue'
 import DebateConflictsMixin from '../allocations/DebateConflictsMixin.vue'
 
 export default {
   mixins: [DebateConflictsMixin],
-  components: { DroppableGeneric, DraggableAdjudicator },
+  components: { DroppableGeneric, LegacyDraggableAdjudicator },
   props: ['panelAdjudicators', 'adjPositions', 'panelTeams', 'debateId',
     'percentiles', 'locked', 'roundInfo'],
   computed: {

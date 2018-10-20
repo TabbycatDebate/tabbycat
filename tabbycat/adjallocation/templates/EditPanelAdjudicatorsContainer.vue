@@ -1,6 +1,6 @@
 <template>
 
-  <drag-and-drop-layout>
+  <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
 
     <drag-and-drop-actions slot="actions" prioritise="true" allocate="true" shard="true"
                            @shard="shard" @allocate="allocate" @prioritise="prioritise">
@@ -23,8 +23,10 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="panel in debatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
-        <debate-importance slot="importance" :debateOrPanel="panel"></debate-importance>
-        <template slot="adjudicators">fancy adjs UI</template>
+        <debate-or-panel-importance slot="importance"
+          :debateOrPanel="panel"></debate-or-panel-importance>
+        <debate-or-panel-adjudicators slot="adjudicators"
+          :adjudicators="panel.adjudicators"></debate-or-panel-adjudicators>
         <template slot="teams"><span></span></template><!--Hide Teams-->
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>

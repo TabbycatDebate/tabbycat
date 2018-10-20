@@ -1,6 +1,6 @@
 <template>
 
-  <drag-and-drop-layout>
+  <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
 
     <drag-and-drop-actions slot="actions" allocate="true" @allocate="allocate">
       <template slot="default-highlights">
@@ -33,6 +33,8 @@
 import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
 import ModalForAllocating from '../../utils/templates/modals/ModalForAllocating.vue'
 
+import DraggableVenue from './DraggableVenue.vue'
+
 export default {
   components: { ModalForAllocating },
   mixins: [DragAndDropContainerMixin],
@@ -51,7 +53,18 @@ export default {
         },
       },
       allocateIntro: `TKTK`,
+      unallocatedComponent: DraggableVenue,
     }
+  },
+  methods: {
+    getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
+      // Return the ID of the venue in this debate
+      if (debateOrPanel.venue) {
+        return [Number(debateOrPanel.venue)]
+      } else {
+        return []
+      }
+    },
   },
 }
 </script>

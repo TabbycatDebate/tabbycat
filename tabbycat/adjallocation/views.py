@@ -91,7 +91,7 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
             Prefetch('preformedpaneladjudicator_set',
                 queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator'))
         )
-        panels = self.create_extra_panels(panels)
+        panels = self.create_extra_panels(list(panels))
         return panels
 
     def create_extra_panels(self, panels):
@@ -104,7 +104,7 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
         else:
             debates_count = teams_count // 2
 
-        new_panels_count = debates_count - panels.count()
+        new_panels_count = debates_count - len(panels)
         if new_panels_count > 0:
             new_panels = [PreformedPanel(round=self.round)] * new_panels_count
             PreformedPanel.objects.bulk_create(new_panels)

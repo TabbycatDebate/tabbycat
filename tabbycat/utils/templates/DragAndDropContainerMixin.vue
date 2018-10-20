@@ -30,6 +30,22 @@ export default {
     roundSlugForWSPath: function () {
       return this.initialData.round.seq
     },
+    unallocatedItems: function () {
+      // Filters the global list of items based upon the state of each individual debate
+      let allocatedItemIDs = []
+      let allDebatesOrPanels = this.$store.getters.allDebatesOrPanels
+      for (const keyPanel of Object.entries(allDebatesOrPanels)) {
+        allocatedItemIDs.push(...this.getUnallocatedItemFromDebateOrPanel(keyPanel[1]))
+      }
+      let unallocatedItems = []
+      let allUnallocatedItems = this.$store.getters.allocatableItems
+      for (const [id, adjudicator] of Object.entries(allUnallocatedItems)) {
+        if (!allocatedItemIDs.includes(Number(id))) {
+          unallocatedItems.push(adjudicator)
+        }
+      }
+      return unallocatedItems
+    },
   },
   methods: {
     handleSocketReceive: function (socketLabel, payload) {

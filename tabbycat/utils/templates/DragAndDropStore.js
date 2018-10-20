@@ -10,6 +10,7 @@ const debug = process.env.NODE_ENV !== 'production'
 export default new Vuex.Store({
   state: {
     debatesOrPanels: {}, // Keyed by primary key
+    allocatableItems: {}, // Keyed by primary key
     extra: {},
     highlights: {},
     institutions: {},
@@ -23,18 +24,18 @@ export default new Vuex.Store({
   },
   mutations: {
     setupInitialData (state, initialData) {
-      // Primary data across all drag and drop views
+      // Set primary data across all drag and drop views
       let loadDirectFromKey = ['round', 'tournament', 'extra']
       loadDirectFromKey.forEach((key) => {
         state[key] = initialData[key]
       })
-      let LoadKeyedAsDictionary = ['debatesOrPanels', 'institutions']
+      let LoadKeyedAsDictionary = ['debatesOrPanels', 'institutions', 'allocatableItems']
       LoadKeyedAsDictionary.forEach((key) => {
         initialData[key].forEach((item) => {
           state[key][item.id] = item // Load array in as id-key dictionary
         })
       })
-      // Highlights
+      // Set Highlights
       Object.entries(initialData.extra.highlights).forEach(([key, value]) => {
         Vue.set(state.highlights, key, { active: false, options: {} })
         value.forEach((item, index) => {
@@ -44,7 +45,7 @@ export default new Vuex.Store({
       })
     },
     setupWebsocketBridge (state, bridge) {
-      state.wsBridge = bridge
+      state.wsBridge = bridge // Load websocket into store for universal access
       state.wsPseudoComponentID = Math.floor(Math.random() * 10000)
     },
     setDebateOrPanelAttributes (state, debateOrPanel) {
@@ -66,6 +67,9 @@ export default new Vuex.Store({
   getters: {
     allDebatesOrPanels: state => {
       return state.debatesOrPanels
+    },
+    allocatableItems: state => {
+      return state.allocatableItems
     },
   },
   // Note actions are async
