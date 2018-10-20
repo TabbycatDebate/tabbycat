@@ -2,9 +2,9 @@ from django.db.models import Exists, OuterRef
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
-from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
-from results.result import DebateResult
+from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.utils import side_and_position_names
 from options.utils import use_team_code_names
 from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
@@ -81,36 +81,50 @@ def ballots_email_generator(debate_id):
     emails = []
     debate = Debate.objects.get(id=debate_id)
     tournament = debate.round.tournament
-    ballots = DebateResult(debate.confirmed_ballot).as_dicts()
+    results = DebateResult(debate.confirmed_ballot)
     round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(tournament),
                                                              'round': debate.round.name, 'room': debate.venue.name}
 
-    context = {'DEBATE': round_name}
     use_codes = use_team_code_names(debate.round.tournament, False)
 
-    for ballot in ballots:
-        if 'adjudicator' in ballot:
-            judge = ballot['adjudicator']
-        else:
-            judge = debate.debateadjudicator_set.get(type=DebateAdjudicator.TYPE_CHAIR).adjudicator
+    def _create_ballot(result, scoresheet):
+        ballot = ""
 
-        if judge.email is None:
-            continue
+        for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
+            ballot += _("%(side)s: %(team)s (%(points)d - %(rank)s)\n") % {
+                'side': side_name,
+                'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
+                'points': scoresheet.get_total(side),
+                'rank': scoresheet.rank(side)
+            }
 
-        scores = ""
-        for team in ballot['teams']:
+            for pos, pos_name in zip(tournament.positions, pos_names):
+                ballot += _("- %(pos)s: %(speaker)s (%(score)s)\n") % {
+                    'pos': pos_name,
+                    'speaker': result.get_speaker(side, pos).name,
+                    'score': scoresheet.get_score(side, pos)
+                }
 
-            team_name = team['team'].code_name if use_codes else team['team'].short_name
-            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team_name}
+        return ballot
 
-            for speaker in team['speakers']:
-                scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
+    if isinstance(results, VotingDebateResult):
+        for (adj, ballot) in results.scoresheets.items():
+            if adj.email is None:
+                continue
 
-        context_user = context.copy()
-        context_user['USER'] = judge.name
-        context_user['SCORES'] = scores
+            context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
+            emails.append((context, adj))
+    elif isinstance(results, BaseConsensusDebateResultWithSpeakers):
+        context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
 
-        emails.append((context, judge))
+        for adj in debate.debateadjudicator_set.all():
+            if adj.adjudicator.email is None:
+                continue
+
+            context_user = context.copy()
+            context_user['USER'] = adj.adjudicator.name
+
+            emails.append((context_user, adj.adjudicator))
 
     return emails
 
