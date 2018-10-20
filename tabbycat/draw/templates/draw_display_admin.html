@@ -158,7 +158,6 @@
         {% else %}
 
           {% trans "Release draw to public" as release_text %}
-          {% trans "Your tournament is configured to send emails to adjudicators announcing which debate they were allocated to once the draw is released." as email_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}</form>
 
           {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw != 'off' %}
@@ -177,9 +176,6 @@
               {% trans "Your tournament is configured to show the draw publicly. Releasing a draw will allow it to show it on the public page." as text %}
               {% include "components/item-info.html" with type="info" %}
             {% endif %}
-            {% if pref.enable_adj_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
 
             {% include "components/item-action.html" with type="success" id="triggerReleaseDrawForm" text=release_text url="" to_complete=True %}
 
@@ -187,10 +183,6 @@
 
             {% trans "Your configuration doesn't have a public draw page or feedback/ballot submissions. There's no reason to release the draw." as text %}
             {% include "components/item-info.html" with type="secondary" %}
-
-            {% if pref.enable_adj_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
 
             {% include "components/item-action.html" with id="triggerReleaseDrawForm" text=release_text url="" %}
 
@@ -226,34 +218,20 @@
           <form id="releaseMotionsForm" method="POST" hidden
                 action="{% roundurl 'motions-release' %}">{% csrf_token %}</form>
 
-          {% trans "Your tournament is configured to send emails to speakers announcing the motion once it is released." as email_text %}
           {% if pref.participant_ballots != 'off' and pref.enable_motions %}
-            {% trans "Your tournament is configured to send emails to speakers announcing the motions once they are released." as email_text %}
             {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
             {% include "components/item-info.html" with type="danger" %}
-            {% if pref.enable_motion_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
             {% trans "Your tournament is configured to allow motions to be vetoed and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to nominate vetoes." as text %}
             {% include "components/item-info.html" with type="danger" %}
-            {% if pref.enable_motion_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.public_motions %}
             {% trans "Your tournament is configured to show the motion(s) for each round on the public site. You'll need to first release the motion(s) for it to show there." as text %}
             {% include "components/item-info.html" with type="" %}
-            {% if pref.enable_motion_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% else %}
             {% trans "Your tournament is not configured to show the motion(s) for each round on the public site. There's no need to release the motion(s)." as text %}
-            {% if pref.enable_motion_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
             {% include "components/item-info.html" with type="secondary" %}
             {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
           {% endif %}
@@ -351,6 +329,13 @@
         {% include "components/item-action.html" with text="View Division Sheet" subtext="(for printing)" emoji="📠" %}
       {% endif %}
 
+    </ul>
+    <ul class="list-group mt-3">
+      {% roundurl 'notifications-round-template-email' round event_type='adj' as url %}
+      {% include "components/item-action.html" with text="Email Adjudicator Draw" subtext="to active adjudicators" emoji="✉️" %}
+
+      {% roundurl 'notifications-round-template-email' round event_type='motion' as url %}
+      {% include "components/item-action.html" with text="Email Round Motion(s)" subtext="to active teams" emoji="📇" %}
     </ul>
   </div>
 </div>
