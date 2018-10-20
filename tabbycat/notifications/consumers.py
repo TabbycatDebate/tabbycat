@@ -34,7 +34,7 @@ class NotificationQueueConsumer(SyncConsumer):
         "team": SentMessageRecord.EVENT_TYPE_TEAM
     }
 
-    def _send(self, messages, records):
+    def _send(self, event, messages, records):
         try:
             mail.get_connection().send_messages(messages)
         except SMTPException as e:
@@ -67,7 +67,7 @@ class NotificationQueueConsumer(SyncConsumer):
             round = None
             t = Tournament.objects.get(pk=event['extra']['tournament_id'])
 
-        from_email, reply_to = _get_from_fields(t)
+        from_email, reply_to = self._get_from_fields(t)
         notification_type = event['message']
 
         subject = Template(t.pref(notification_type + "_email_subject"))
@@ -93,14 +93,14 @@ class NotificationQueueConsumer(SyncConsumer):
                                   context=instance, message=email.message())
             )
 
-        self._send(messages, records)
+        self._send(event, messages, records)
 
     def email_custom(self, event):
         messages = []
         records = []
 
         t = Tournament.objects.get(id=event['tournament'])
-        from_email, reply_to = _get_from_fields(t)
+        from_email, reply_to = self._get_from_fields(t)
 
         for pk, address in event['send_to']:
             email = mail.EmailMessage(
@@ -115,4 +115,4 @@ class NotificationQueueConsumer(SyncConsumer):
                     tournament=t, message=email.message())
             )
 
-        self._send(messages, records)
+        self._send(event, messages, records)

@@ -5,9 +5,6 @@ import unicodedata
 from itertools import product
 from math import floor
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
@@ -685,18 +682,7 @@ class DrawReleaseView(DrawStatusEdit):
         self.round.save()
         self.log_action()
 
-        success_message = _("Released the draw.")
-        if self.tournament.pref('enable_adj_email'):
-            async_to_sync(get_channel_layer().send)("notifications", {
-                "type": "email",
-                "message": "adj",
-                "extra": {'round_id': self.round.id},
-                "send_to": [a.id for a in self.round.active_adjudicators.filter(email__isnull=False).exclude(email__exact="")]
-            })
-
-            success_message += _(" Adjudicator emails queued to be sent.")
-
-        messages.success(request, success_message)
+        messages.success(request, _("Released the draw."))
         return super().post(request, *args, **kwargs)
 
 

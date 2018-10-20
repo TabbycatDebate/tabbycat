@@ -10,7 +10,4 @@ urlpatterns = [
     path('generate/',
         views.GenerateRandomisedUrlsView.as_view(),
         name='privateurls-generate'),
-    path('email/',
-        views.EmailRandomizedUrlsView.as_view(),
-        name='privateurls-email'),
 ]

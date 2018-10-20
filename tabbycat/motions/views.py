@@ -1,6 +1,3 @@
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
@@ -11,7 +8,6 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
 from utils.misc import redirect_round
@@ -152,21 +148,6 @@ class ReleaseMotionsView(BaseReleaseMotionsView):
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTIONS_RELEASE
     motions_released = True
     message_text = _("Released the motion(s).")
-
-    def post(self, request, *args, **kwargs):
-        if self.tournament.pref('enable_motion_email'):
-            async_to_sync(get_channel_layer().send)("notifications", {
-                "type": "email",
-                "message": "motion",
-                "extra": {'round_id': self.round.id},
-                "send_to": [a.id for a in Speaker.objects.filter(
-                    team__round_availabilities__round=self.round,
-                    email__isnull=False
-                ).exclude(email__exact="")]
-            })
-            self.message_text += _(" Emails queued to be sent.")
-
-        return super().post(request, *args, **kwargs)
 
 
 class UnreleaseMotionsView(BaseReleaseMotionsView):

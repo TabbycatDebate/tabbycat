@@ -1,9 +1,6 @@
 import json
 import logging
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -28,7 +25,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import ModelFormSetView, PostOnlyRedirectView, VueTableTemplateView
+from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
@@ -155,27 +152,6 @@ class AdminCodeNamesListView(AdministratorMixin, BaseCodeNamesListView):
 
 class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
     pass
-
-
-# ==============================================================================
-# Notification POST page
-# ==============================================================================
-
-class EmailParticipantRegistrationView(TournamentMixin, PostOnlyRedirectView):
-
-    tournament_redirect_pattern_name = 'participants-list'
-
-    def post(self, request, *args, **kwargs):
-        async_to_sync(get_channel_layer().send)("notifications", {
-            "type": "email",
-            "message": "team",
-            "extra": {'tournament_id': self.tournament.id},
-            "send_to": [a.id for a in Speaker.objects.filter(team__tournament=self.tournament, email__isnull=False).exclude(email__exact="")]
-        })
-
-        messages.success(self.request, _("Registration information emails have been queued for sending."))
-
-        return super().post(request, *args, **kwargs)
 
 
 # ==============================================================================

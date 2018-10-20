@@ -13,26 +13,18 @@
     <i data-feather="chevron-left"></i>{% trans "Enter Results" %}
   </a>
 
-  <form action="{% roundurl 'tournament-send-standings-emails' %}" method="POST">
-    {% csrf_token %}
-    {% if emails_sent %}
-      <button class="btn btn-outline-secondary" id="sendPointsEmails" type="submit" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
-        {% if pref.teams_in_debate == "two" %}
-          {% trans "Email Team Wins/Losses" %}
-        {% else %}
-          {% trans "Email Team Points" %}
-        {% endif %}
-      </button>
+
+  {% if emails_sent %}
+    <a href="{% roundurl 'notifications-round-template-email' event_type='team_points' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+  {% else %}
+    <a href="{% roundurl 'notifications-round-template-email' event_type='team_points' %}" class="btn btn-outline-primary active">
+  {% endif %}
+    {% if pref.teams_in_debate == "two" %}
+      {% trans "Email Team Wins/Losses" %}
     {% else %}
-      <button class="btn btn-outline-primary active" id="sendPointsEmails" type="submit">
-        {% if pref.teams_in_debate == "two" %}
-          {% trans "Email Team Wins/Losses" %}
-        {% else %}
-          {% trans "Email Team Points" %}
-        {% endif %}
-      </button>
+      {% trans "Email Team Points" %}
     {% endif %}
-  </form>
+  </a>
 
   {% if not round.completed %}
     <form action="{% roundurl 'tournament-complete-round' %}" method="POST">

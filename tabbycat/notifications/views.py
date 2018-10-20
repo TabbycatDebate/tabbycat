@@ -9,9 +9,9 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic.edit import FormView
 
-from participants.models import Speaker, Person
-from tournaments.mixins import TournamentMixin, RoundMixin
-from utils.misc import reverse_tournament, reverse_round
+from participants.models import Person, Speaker
+from tournaments.mixins import RoundMixin, TournamentMixin
+from utils.misc import reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -150,12 +150,13 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
         messages.success(request, _("Emails have been queued for sending."))
         return super().post(request, *args, **kwargs)
 
+
 class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
     allowed_email_types = ['url', 'team']
 
     def get_queryset(self):
         if self.event_type == 'team':
-            return Person.objects.filter(speaker__team__tournament=self.tournament)
+            return Speaker.objects.filter(team__tournament=self.tournament)
         else:
             return super().get_queryset()
 
@@ -202,6 +203,6 @@ class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):
     def get_success_url(self):
         return {
             'adj': reverse_round('draw-display', self.round),
-            'team_points': redirect_round('tournament-complete-round-check', self.round),
+            'team_points': reverse_round('tournament-complete-round-check', self.round),
             'motion': reverse_round('draw-display', self.round)
         }[self.event_type]

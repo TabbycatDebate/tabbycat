@@ -3,9 +3,6 @@ import logging
 from collections import OrderedDict
 from threading import Lock
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
@@ -23,7 +20,6 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import SentMessageRecord
-from participants.models import Speaker
 from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
@@ -186,26 +182,6 @@ class CompleteRoundView(RoundMixin, AdministratorMixin, LogActionMixin, PostOnly
                 'this_round': self.round.name, 'next_round': self.round.next.name,
             })
             return redirect_round('availability-index', self.round.next)
-
-
-class SendStandingsEmailsView(RoundMixin, AdministratorMixin, PostOnlyRedirectView):
-
-    def post(self, request, *args, **kwargs):
-        url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
-
-        async_to_sync(get_channel_layer().send)("notifications", {
-            "type": "email",
-            "message": "team_points",
-            "extra": {'url': url, 'round_id': self.round.id},
-            "send_to": [a.id for a in Speaker.objects.filter(
-                team__round_availabilities__round=self.round,
-                email__isnull=False
-            ).exclude(email__exact="")]
-        })
-
-        messages.success(request, _("Team point emails have been queued to be sent to the speakers."))
-
-        return redirect_round('tournament-complete-round-check', self.round)
 
 
 class BlankSiteStartView(FormView):

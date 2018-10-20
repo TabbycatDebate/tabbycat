@@ -1,12 +1,9 @@
 import logging
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.views.generic.base import TemplateView
-from django.db.models import Exists, OuterRef, Q
+from django.db.models import Exists, OuterRef
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
@@ -137,46 +134,6 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
                 messages.success(self.request, generated_urls_message)
             else:
                 messages.success(self.request, format_lazy(generated_urls_message, " ", non_generated_urls_message))
-
-        return super().post(request, *args, **kwargs)
-
-
-class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
-
-    tournament_redirect_pattern_name = 'privateurls-list'
-
-    def post(self, request, *args, **kwargs):
-        t = self.tournament
-
-        path = reverse_tournament('privateurls-person-index', t, kwargs={'url_key': '0'})
-        url = request.build_absolute_uri(path)[:-2]
-
-        subquery = SentMessageRecord.objects.filter(
-            event=SentMessageRecord.EVENT_TYPE_URL,
-            tournament=t, email=OuterRef('email')
-        )
-        to_email = t.participants.filter(
-            url_key__isnull=False, email__isnull=False
-        ).exclude(email__exact="").annotate(already_sent=Exists(subquery)).filter(already_sent=False)
-
-        async_to_sync(get_channel_layer().send)("notifications", {
-            "type": "email",
-            "message": "url",
-            "extra": {'url': url, 'tournament_id': t.id},
-            "send_to": [a.id for a in to_email]
-        })
-
-        messages.success(self.request, _("Private URL emails have been queued for sending."))
-
-        people_no_email = t.participants.filter(
-            Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False
-        ).values_list('name', flat=True)
-
-        if people_no_email:
-            messages.warning(self.request, ngettext(
-                "This participant does not have an email address: %(participants)s",
-                "These %(count)d participants do not have an email address: %(participants)s",
-                people_no_email.count()) % {'count': people_no_email.count(), 'participants': ", ".join(people_no_email)})
 
         return super().post(request, *args, **kwargs)
 

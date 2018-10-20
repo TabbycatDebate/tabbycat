@@ -13,10 +13,6 @@ urlpatterns = [
         views.AdminCodeNamesListView.as_view(),
         name='participants-code-names-list'),
 
-    path('email/',
-        views.EmailParticipantRegistrationView.as_view(),
-        name='participants-email'),
-
     path('eligibility/',
         views.EditSpeakerCategoryEligibilityView.as_view(),
         name='participants-speaker-eligibility'),

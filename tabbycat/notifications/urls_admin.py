@@ -13,6 +13,6 @@ urlpatterns = [
             name='notifications-round-template-email'),
     ])),
     path('t/<str:event_type>/',
-    	views.TournamentTemplateEmailCreateView.as_view(),
-    	name='notifications-tournament-template-email'),
+        views.TournamentTemplateEmailCreateView.as_view(),
+        name='notifications-tournament-template-email'),
 ]
