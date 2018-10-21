@@ -13,12 +13,12 @@ export default {
   computed: {
     droppableClasses: function () {
       if (this.isDroppable && !this.locked) {
-        return 'vue-droppable vue-is-drag-enter'
+        return 'legacy-vue-droppable vue-is-drag-enter'
       }
       if (this.locked) {
-        return 'vue-droppable locked'
+        return 'legacy-vue-droppable locked'
       }
-      return 'vue-droppable'
+      return 'legacy-vue-droppable'
     },
   },
   methods: {

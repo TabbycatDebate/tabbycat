@@ -1,9 +1,15 @@
 <template>
   <draggable-item>
 
-    <span slot="number">{{ scoreInt }}<small>.{{ scoreDecimal }}</small></span>
-    <span slot="title">{{ initialledName }}</span>
-    <span slot="subtitle">{{ institutionCode }}</span>
+      <span slot="number">
+        <small class="vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>
+      </span>
+      <span slot="title">
+        {{ initialledName }}
+      </span>
+      <span slot="subtitle">
+        {{ institutionCode }}
+      </span>
 
   </draggable-item>
 </template>

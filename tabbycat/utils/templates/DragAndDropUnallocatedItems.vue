@@ -1,33 +1,35 @@
 <template>
-  <div @dragover.prevent @dragenter="dragEnter" @dragleave="dragLeave" @drop="drop"
-       class="n" :style="{height: 300 + 'px'}" ref="resizeableElement">
+  <div class="navbar-light fixed-bottom d-flex flex-column p-0">
 
-    <section class="resize-handler" @dragover.prevent @mousedown="resizeStart"
-             data-toggle="tooltip">
-      <i data-feather="menu" class="align-self-center mx-auto"></i>
-    </section>
+    <div :class="['vue-droppable d-flex flex-column', { 'vue-is-drag-enter': isDroppable }]">
 
-    <div :class="['vue-droppable', { 'vue-is-drag-enter': isDroppable }]">
-      <div v-for="item in unallocatedItems" :is="unallocatedComponent"
-           :item="item" :key="item.id"></div>
+      <section class="vc-resize-handler mx-auto mt-1 text-center"
+               data-toggle="tooltip" :title="gettext('Drag to resize')">
+        <i data-feather="menu" class="align-self-center mx-auto"></i>
+      </section>
+      <div class="d-flex">
+        <div v-for="item in unallocatedItems" :is="unallocatedComponent"
+             :item="item" :key="item.id"></div>
+      </div>
     </div>
 
   </div>
 </template>
 
 <script>
-import DroppableMixin from '../../templates/draganddrops/DroppableMixin.vue'
-
 export default {
-  mixins: [DroppableMixin],
+  mixins: [],
   props: ['unallocatedItems', 'unallocatedComponent'],
-  methods: {
-    handleDrop: function (event) {
-
-    },
-    resizeStart: function (event) {
-
-    },
-  },
+  methods: {},
 }
 </script>
+
+<style scoped>
+  .vc-resize-handler {
+    height: 20px;
+    width: 100%;
+  }
+  .vc-resize-handler:hover {
+    cursor: ns-resize;
+  }
+</style>

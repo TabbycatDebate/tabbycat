@@ -3,6 +3,49 @@
 //------------------------------------------------------------------------------
 
 .vue-draggable {
+  background: #fff;
+  border: 3px solid $gray-600;
+  border-radius: $border-radius;
+
+  .vue-draggable-muted {
+    color: $text-muted; // Can't rely on text-muted as we need to override on hover
+  }
+
+  &:hover {
+    background: $purple;
+    border-color: darken($purple, 7.5%);
+    cursor: move;
+    color: #fff;
+
+    .vue-draggable-muted {
+      color: #fff; // Can't rely on text-muted as we need to override on hover
+    }
+
+    .vue-draggable {
+      color: $body-color; // Don't highlight draggable items within this one
+      .vue-draggable-muted {
+        color: $text-muted;
+      }
+    }
+  }
+
+  &.vue-draggable-child {
+    border-color: lighten($gray-600, 20%); // Lighten panel draggable
+  }
+}
+
+.vue-droppable {
+  background: $droppable-bg;
+
+  &.vue-droppable-parent {
+    background: lighten($droppable-bg, 2%); // Lighten panel draggable
+  }
+}
+
+
+
+
+.legacy-vue-draggable {
   // Don't let text selections get in the way of dragging
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -63,9 +106,9 @@
   }
 }
 
-.vue-draggable:hover,
-.vue-draggable.btn:hover, // Override specfificity from btn styles
-.vue-draggable:active {
+.legacy-vue-draggable:hover,
+.legacy-vue-draggable.btn:hover, // Override specfificity from btn styles
+.legacy-vue-draggable:active {
   cursor: move;
 }
 
@@ -74,12 +117,12 @@
 }
 
 .vue-is-dragging,
-.vue-draggable:active { // :active is the 'ghost' drag element
+.legacy-vue-draggable:active { // :active is the 'ghost' drag element
   opacity: 0.66 !important;
   @include hover-highlights(#000);
 }
 
-.vue-draggable.locked {
+.legacy-vue-draggable.locked {
   opacity: 0.33;
   pointer-events: none;
 }
@@ -88,18 +131,18 @@
 // Droppables
 //------------------------------------------------------------------------------
 
-.vue-droppable {
+.legacy-vue-droppable {
   background: $droppable-bg;
   min-height: 50px;
   padding: 0 0 4px 4px; // Draggable items only have top/left padding
 }
 
-.vue-droppable.locked {
+.legacy-vue-droppable.locked {
   background: #fff;
   position: relative; // For the spinner
 }
 
-.vue-droppable-lock-spinner { // Container for a loading spinner
+.legacy-vue-droppable-lock-spinner { // Container for a loading spinner
   position: absolute;
   z-index: 11;
   font-size: 25px;
@@ -112,16 +155,16 @@
   @extend .flex-horizontal-center;
 }
 
-.draw-cell .vue-droppable {
+.draw-cell .legacy-vue-droppable {
   width: 100%;
   height: 100%;
 }
 
-.flex-cell.vue-droppable-container {
+.flex-cell.legacy-vue-droppable-container {
   padding: 0; // Suppress padding for larger drop area
 }
 
-.thead.vue-droppable-container span {
+.thead.legacy-vue-droppable-container span {
   margin-left: 8px; // Compensate for suppressed padding
   display: inline-block;
 }
@@ -148,7 +191,7 @@
   }
 }
 
-.resize-handler {
+.legacy-resize-handler {
   width: 100%;
   text-align: center;
   height: 23px;

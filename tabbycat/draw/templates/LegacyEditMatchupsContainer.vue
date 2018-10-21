@@ -78,7 +78,7 @@
             <div slot="svenue"></div>
 
             <template v-for="position in roundInfo.teamPositions">
-              <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
+              <div class="draw-cell droppable-cell flex-12 legacy-vue-droppable-container"
                    :slot="'s-' + position" :key="position">
                 <droppable-generic :assignment-id="debate.id"
                                    :assignment-position="position" :locked="debate.locked">

@@ -1,12 +1,11 @@
 <template>
 
-  <div class="d-flex">
-    <div class="p-2 flex-grow-1">
-      <draggable-allocation :adjudicators="adjudicators"></draggable-allocation>
+  <div class="d-flex flex-36 vue-droppable vue-droppable-parent p-1"
+       :class="{ 'vue-is-drag-enter': isDroppable }">
+    <div class="d-flex align-items-center">
+      metrics
     </div>
-    <div class="p-2 flex-grow-1">
-      panel metrics here
-    </div>
+    <draggable-allocation :adjudicators="adjudicators"></draggable-allocation>
   </div>
 
 </template>

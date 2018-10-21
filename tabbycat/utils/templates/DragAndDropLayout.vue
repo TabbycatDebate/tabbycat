@@ -1,13 +1,12 @@
 <template>
-  <div class="draw-container allocation-container">
-
-    <div id="messages-container"><!-- Messages container--></div>
+  <div>
 
     <section>
       <slot name="actions"></slot><!-- Actions -->
     </section>
 
-    <section>
+    <section class="vc-debates-container">
+      <div id="messages-container"><!-- Messages container--></div>
       <slot name="headers"></slot><!-- Debates Header -->
       <slot name="debates"></slot><!-- Debates -->
     </section>
@@ -32,3 +31,11 @@ export default {
   props: ['unallocatedItems', 'unallocatedComponent'],
 }
 </script>
+
+<style scoped>
+  .vc-debates-container {
+    padding-top: 100px; /* Need to ensure actions bar doesn't overlap */
+    padding-bottom: 100px; /* Need to ensure unallocated area doesn't overlap */
+    margin: 0 -15px; /* Remove the container padding added from base layout */
+  }
+</style>

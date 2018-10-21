@@ -61,7 +61,7 @@
   }
 
   .vue-sort-key,
-  .thead.vue-droppable-container .vue-sort-key {
+  .thead.legacy-vue-droppable-container .vue-sort-key {
     margin-bottom: -2px;
   }
 }
@@ -81,17 +81,17 @@
 
 .panel-container {
 
-  .vue-droppable-container {
+  .legacy-vue-droppable-container {
     border-right: 2px solid #fff;
     height: 100%;
 
-    .vue-droppable {
+    .legacy-vue-droppable {
       flex-wrap: wrap; // Ensure content can wrap if needed
       display: flex;
     }
   }
 
-  .vue-droppable-container:last-child {
+  .legacy-vue-droppable-container:last-child {
     border-right: 0;
   }
 }

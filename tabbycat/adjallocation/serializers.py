@@ -33,4 +33,5 @@ class EditPanelAdjsPanelSerializer(EditDebateAdjsDebateSerializer):
 
     class Meta:
         model = PreformedPanel
-        fields = ('id', 'importance', 'adjudicators')
+        fields = ('id', 'importance', 'adjudicators',
+                  'bracket_min', 'bracket_max', 'room_rank', 'liveness')

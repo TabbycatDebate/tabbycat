@@ -3,7 +3,7 @@
        @dragover.prevent @drop="drop"
        @dragenter="dragEnter" @dragleave="dragLeave">
 
-    <div v-if="locked" class="vue-droppable-lock-spinner">
+    <div v-if="locked" class="legacy-vue-droppable-lock-spinner">
       <i class="spinning" v-html="getFeatherIcon"></i>
     </div>
     <slot><!-- Container sets the dropped items here --></slot>

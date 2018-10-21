@@ -29,7 +29,7 @@
 
       <debate v-for="debate in dataOrderedByKey"
               :debate="debate" :key="debate.id" :round-info="roundInfo">
-        <div class="draw-cell droppable-cell flex-12 vue-droppable-container"
+        <div class="draw-cell droppable-cell flex-12 legacy-vue-droppable-container"
              slot="svenue">
           <droppable-generic :assignment-id="debate.id" :locked="debate.locked">
             <slot name="svenue">

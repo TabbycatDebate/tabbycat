@@ -3,7 +3,7 @@
                 'flex-' + (12 * adjPositions.length)]">
 
     <div v-for="position in adjPositions" :key="position"
-         :class="['vue-droppable-container', 'position-container-' + position,
+         :class="['legacy-vue-droppable-container', 'position-container-' + position,
                   'positions-limited-' + adjPositions.length]">
       <droppable-generic :assignment-id="debateId"
                          :assignment-position="position"

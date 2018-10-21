@@ -3,7 +3,7 @@
 // draggable=true
 // @dragstart="dragStart"
 // @dragend="dragEnd"
-// class="vue-draggable"
+// class="legacy-vue-draggable"
 // :class="[componentClasses, isDragging ? vue-is-dragging : '']"
 //
 // Subclass can provide handleDragStart() and handleDragEnd()
@@ -16,7 +16,7 @@ export default {
   props: { locked: false },
   computed: {
     draggableClasses: function () {
-      let draggableCSS = 'vue-draggable btn btn-sm '
+      let draggableCSS = 'legacy-vue-draggable btn btn-sm '
       if (this.isHovering) {
         draggableCSS += 'vue-is-hovering '
       }
