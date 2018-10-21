@@ -78,4 +78,4 @@ class RoundWebsocketMixin(RoundFromUrlMixin, TournamentWebsocketMixin):
 
     def group_name(self):
         tournament_path = super().group_name()
-        return tournament_path + '_' + str(self.round().seq)
+        return tournament_path + '_' + str(self.round.seq)

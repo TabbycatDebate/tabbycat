@@ -130,9 +130,9 @@ class RoundFromUrlMixin(TournamentFromUrlMixin):
                              RoundWebsocketMixin (in utils/consumers.py)
     """
 
-    tournament_slug_url_kwarg = "tournament_slug"
-    tournament_cache_key = "{slug}_object"
-    tournament_redirect_pattern_name = None
+    round_seq_url_kwarg = "round_seq"
+    round_cache_key = "{slug}_{seq}_object"
+    round_redirect_pattern_name = None
 
     @property
     def round(self):
@@ -166,9 +166,6 @@ class RoundMixin(RoundFromUrlMixin, TournamentMixin):
     This mixin includes `TournamentMixin`, so classes using `RoundMixin` do not
     need to explicitly inherit from both.
     """
-    round_seq_url_kwarg = "round_seq"
-    round_cache_key = "{slug}_{seq}_object"
-    round_redirect_pattern_name = None
 
     def get_page_subtitle(self):
         if not getattr(self, "page_subtitle") and not getattr(self, "use_template_subtitle", False) \

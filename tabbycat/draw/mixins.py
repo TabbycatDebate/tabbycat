@@ -60,8 +60,8 @@ class BaseDebateOrPanelConsumer(SuperuserRequiredWebsocketMixin, RoundWebsocketM
     def receive_action(self, action_function, user):
         async_to_sync(get_channel_layer().send)("draw_tasks", {
             "type": action_function, # Corresponds to the function
-            "extra": {'user_id': user.id, 'round_id': self.round().id,
-                      'tournament_id': self.tournament().id,
+            "extra": {'user_id': user.id, 'round_id': self.round.id,
+                      'tournament_id': self.tournament.id,
                       'group_name': self.group_name()}
         })
 

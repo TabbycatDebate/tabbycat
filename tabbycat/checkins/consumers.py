@@ -30,7 +30,6 @@ class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
     # Issue the relevant checkins
     def broadcast_checkin(self, event):
         content = event['content']
-        tournament = self.tournament()
         barcode_ids = [b for b in content['barcodes'] if b is not None]
         return_content = {'created': content['status'], 'checkins': [],
                           'component_id': content['component_id']}
@@ -41,7 +40,7 @@ class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
                 if content['status'] is True:
                     # If checking-in someone
                     checkin = Event.objects.create(identifier=identifier,
-                                                   tournament=tournament)
+                                                   tournament=self.tournament)
                     return_content['checkins'].append(checkin.serialize())
                 else:
                     # If undoing/revoking a check-in
@@ -50,7 +49,7 @@ class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
                     else:
                         window = 'checkin_window_venues'
 
-                    checkins = get_unexpired_checkins(tournament, window)
+                    checkins = get_unexpired_checkins(self.tournament, window)
                     checkins.filter(identifier=identifier).delete()
                     return_content['checkins'].append({'identifier': barcode})
 
