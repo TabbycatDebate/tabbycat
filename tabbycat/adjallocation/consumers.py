@@ -53,7 +53,7 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         #     # raise BadJsonRequestError(info)
 
         debates = round.debate_set.all()
-        adjs = list(round.active_adjudicators.all())
+        adjs = round.active_adjudicators.all()
         if round.ballots_per_debate == 'per-adj':
             allocator = VotingHungarianAllocator(debates, adjs, round)
         else:
@@ -68,6 +68,18 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
     def allocate_panel_adjs(self, event):
         print('AllocatePanelAdjudicatorsTask allocate_panel_adjudicators', event)
         self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
+
+        round = Round.objects.get(pk=event['extra']['round_id'])
+        panels = round.preformedpanel_set.all()
+        adjs = round.active_adjudicators.all()
+        if round.ballots_per_debate == 'per-adj':
+            allocator = VotingHungarianAllocator(panels, adjs, round)
+        else:
+            allocator = ConsensusHungarianAllocator(panels, adjs, round)
+
+        for alloc in allocator.allocate():
+            alloc.save()
+
         # self.return_response(content, event['extra']['group_name'])
 
     def allocate_panels_to_debates(self, event):
