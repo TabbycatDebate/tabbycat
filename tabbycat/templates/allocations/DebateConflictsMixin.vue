@@ -40,7 +40,14 @@ export default {
       // institution clashes rather than object IDs. These are not unique.
 
       let adjInstitutionalClashes = _.map(this.adjudicators, 'conflicts.clashes.institution')
-      const adjInstitutionalClashesIDs = _.flatten(adjInstitutionalClashes).map(clash => clash.id)
+      let adjInstitutionalClashesIDs = []
+      _.flatten(adjInstitutionalClashes).forEach(clash => {
+        if (clash !== undefined) {
+          if (clash.id !== undefined) {
+            adjInstitutionalClashesIDs.push(clash.id)
+          }
+        }
+      })
 
       let teamInstitutionalClashes = _.map(this.teams, 'conflicts.clashes.institution')
       let teamInstitutionalClashIDs = []
