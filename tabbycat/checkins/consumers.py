@@ -3,7 +3,7 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from utils.consumers import TournamentWebsocketMixin
+from tournaments.mixins import TournamentWebsocketMixin
 
 from .models import Event, Identifier
 from .utils import get_unexpired_checkins

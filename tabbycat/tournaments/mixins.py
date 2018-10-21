@@ -1,13 +1,13 @@
 import json
 import logging
-from urllib.parse import urlparse, urlunparse
 
+from asgiref.sync import async_to_sync
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch
+from django.utils.encoding import force_text
 from django.contrib import messages
 from django.db.models import Prefetch, Q
-from django.http import QueryDict
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
@@ -31,23 +31,18 @@ from .models import Round, Tournament
 logger = logging.getLogger(__name__)
 
 
-def add_query_parameter(url, name, value):
-    parts = list(urlparse(url))
-    query = QueryDict(parts[4], mutable=True)
-    query[name] = value
-    parts[4] = query.urlencode(parts)
-    return urlunparse(parts)
-
+# ==============================================================================
+# Mixins providing access to tournament and round from URL
+# ==============================================================================
 
 class TournamentFromUrlMixin:
     """Provides the `tournament` property, looking in the cache and URL path,
     and keeping its own local cache.
 
-    Known direct subclasses: TournamentMixin (in this file)
-                             TournamentWebsocketMixin (in utils/consumers.py)
-                             RoundFromUrlMixin (in this file)
+    This mixin shouldn't generally be used directly; it should instead typically
+    be inherited via `TournamentMixin` (for views) or `TournamentWebsocketMixin`
+    (for websocket consumers).
     """
-
     tournament_slug_url_kwarg = "tournament_slug"
     tournament_cache_key = "{slug}_object"
     tournament_redirect_pattern_name = None
@@ -83,13 +78,7 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
     Views using this mixin should have a `tournament_slug` group in their URL's
     regular expression. They should then call `self.tournament` to
     retrieve the tournament.
-
-    Note: `self.tournament` is defined in TournamentFromUrlMixin
     """
-    tournament_slug_url_kwarg = "tournament_slug"
-    tournament_cache_key = "{slug}_object"
-    tournament_redirect_pattern_name = None
-
     def get_url_kwargs(self):
         return self.kwargs
 
@@ -122,14 +111,55 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
                 return redirect_tournament('tournament-public-index', self.tournament)
 
 
+class TournamentWebsocketMixin(TournamentFromUrlMixin):
+    """Mixin for websocket consumers that listen for changes relating to a
+    particular tournament, as specified in the URL.
+
+    Subclasses must provide a `group_prefix` that serves as a name for the
+    stream; the name of the group is a concatenation of this and the tournament
+    slug.
+    """
+    group_prefix = None
+
+    def get_url_kwargs(self):
+        return self.scope["url_route"]["kwargs"]
+
+    def group_name(self):
+        if self.group_prefix is None:
+            raise ImproperlyConfigured("group_prefix must be specified on subclasses of TournamentWebsocketMixin")
+        return self.group_prefix + '_' + self.tournament.slug
+
+    def send_error(self, error, message, original_content):
+        # Need to forcibly decode the string (for translations)
+        self.send_json({
+            'error': force_text(error),
+            'message': force_text(message),
+            'original_content': original_content,
+            'component_id': original_content['component_id']
+        })
+        return super()
+
+    def connect(self):
+        async_to_sync(self.channel_layer.group_add)(
+            self.group_name(), self.channel_name
+        )
+        super().connect()
+
+    def disconnect(self, message):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name(), self.channel_name
+        )
+        super().disconnect(message)
+
+
 class RoundFromUrlMixin(TournamentFromUrlMixin):
     """Provides the `round` property, looking in the cache and URL path,
     and keeping its own local cache.
 
-    Known direct subclasses: RoundMixin (in this file)
-                             RoundWebsocketMixin (in utils/consumers.py)
+    This mixin shouldn't generally be used directly; it should instead typically
+    be inherited via `RoundMixin` (for views) or `RoundWebsocketMixin` (for
+    websocket consumers).
     """
-
     round_seq_url_kwarg = "round_seq"
     round_cache_key = "{slug}_{seq}_object"
     round_redirect_pattern_name = None
@@ -186,6 +216,22 @@ class RoundMixin(RoundFromUrlMixin, TournamentMixin):
         return super().get_redirect_url(*args, **kwargs)
 
 
+class RoundWebsocketMixin(RoundFromUrlMixin, TournamentWebsocketMixin):
+    """Mixin for websocket consumers that listen for changes relating to a
+    particular round, as specified in the URL.
+
+    Subclasses must provide a `group_prefix` that serves as a name for the
+    stream; the name of the group is a concatenation of this, the tournament
+    slug and the round sequence number.
+
+    This mixin includes `TournamentWebsocketMixin`, so classes using it do not
+    need to explicitly inherit from both.
+    """
+    def group_name(self):
+        tournament_path = super().group_name()
+        return tournament_path + '_' + str(self.round.seq)
+
+
 class CurrentRoundMixin(RoundMixin, ContextMixin):
     """Mixin for views that relate to the current round (without URL reference)."""
 
@@ -199,6 +245,10 @@ class CurrentRoundMixin(RoundMixin, ContextMixin):
         kwargs['round'] = self.round
         return super().get_context_data(**kwargs)
 
+
+# ==============================================================================
+# Mixins regulating public and assistant tournament views
+# ==============================================================================
 
 class TournamentAccessControlledPageMixin(TournamentMixin):
     """Base mixin for views that can be enabled and disabled by a tournament
@@ -285,6 +335,10 @@ class OptionalAssistantTournamentPageMixin(AssistantMixin, TournamentAccessContr
         return tournament.pref('assistant_access') in self.assistant_page_permissions
 
 
+# ==============================================================================
+# Mixins extending SingleObjectMixin for tournaments
+# ==============================================================================
+
 class SingleObjectFromTournamentMixin(SingleObjectMixin, TournamentMixin):
     """Mixin for views that relate to a single object that is part of a
     tournament. Like SingleObjectMixin, but restricts searches to the relevant
@@ -315,6 +369,10 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
 
+
+# ==============================================================================
+# Drag-and-drop mixins
+# ==============================================================================
 
 class DragAndDropMixin(RoundMixin):
 

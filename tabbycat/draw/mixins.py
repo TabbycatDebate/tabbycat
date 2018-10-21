@@ -6,7 +6,8 @@ from channels.generic.websocket import JsonWebsocketConsumer
 
 from django.utils.translation import gettext as _
 
-from utils.consumers import RoundWebsocketMixin, SuperuserRequiredWebsocketMixin
+from tournaments.mixins import RoundWebsocketMixin
+from utils.mixins import SuperuserRequiredWebsocketMixin
 
 logger = logging.getLogger(__name__)
 

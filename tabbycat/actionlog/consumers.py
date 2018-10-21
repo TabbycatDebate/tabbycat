@@ -1,6 +1,7 @@
 from channels.generic.websocket import JsonWebsocketConsumer
 
-from utils.consumers import LoginRequiredWebsocketMixin, TournamentWebsocketMixin
+from tournaments.mixins import TournamentWebsocketMixin
+from utils.mixins import LoginRequiredWebsocketMixin
 
 
 class ActionLogEntryConsumer(LoginRequiredWebsocketMixin, TournamentWebsocketMixin, JsonWebsocketConsumer):
