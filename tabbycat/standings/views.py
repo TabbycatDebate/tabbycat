@@ -67,6 +67,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
             'debate_team__team__institution'
         )
         if self.tournament.pref('teams_in_debate') == 'bp':
+            team_scores.filter(debate_team__debate__round__stage=Round.STAGE_PRELIMINARY)
             kwargs["top_team_scores"] = team_scores.order_by('-score')[:9]
             kwargs["bottom_team_scores"] = team_scores.order_by('score')[:9]
         else:
