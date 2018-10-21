@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.http import Http404
 from django.urls import reverse_lazy
-from django.utils.translation import gettext as _, gettext_lazy
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.edit import FormView
 
 from participants.models import Person, Speaker
@@ -108,7 +108,11 @@ class CustomEmailCreateView(BaseSelectPeopleEmailView):
             "send_to": [(p.id, p.email) for p in people]
         })
 
-        messages.success(request, _("%s emails have been queued for sending." % len(people)))
+        messages.success(request, ngettext(
+            "%(count)s email has been queued for sending.",
+            "%(count)s emails have been queued for sending.",
+            len(people)
+        ) % {'count': len(people)})
         return super().post(request, *args, **kwargs)
 
 
@@ -152,7 +156,11 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
             "send_to": email_recipients
         })
 
-        messages.success(request, _("%s emails have been queued for sending." % len(email_recipients)))
+        messages.success(request, ngettext(
+            "%(count)s email has been queued for sending.",
+            "%(count)s emails have been queued for sending.",
+            len(email_recipients)
+        ) % {'count': len(email_recipients)})
         return super().post(request, *args, **kwargs)
 
 
