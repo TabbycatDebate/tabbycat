@@ -2,15 +2,8 @@
 Change Log
 ==========
 
-2.2.5
------
-*Release date: ?? October 2018*
-
-- Fixed a bug that allow the public-facing version of the check-ins page to issue check-ins (rather than be read-only)
-
-
 2.3.0 (LaPerm)
-------------------
+--------------
 *Release date: ?*
 
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
@@ -19,6 +12,15 @@ Change Log
     - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details).
     - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development.
 - Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
+
+
+2.2.5
+-----
+*Release date: 21 October 2018*
+
+- Remove the buttons from the public check-ins page (as these do nothing unless the user is logged in)
+- Hopefully fixed error that could cause Team- and Adjudicator- Institutional conflicts to not show properly on Allocation pages
+- Thanks to Étienne for pull requests fixing rare bugs in the user creation form and break generation when rounds are not present.
 
 
 2.2.4
