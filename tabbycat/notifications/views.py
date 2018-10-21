@@ -65,7 +65,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key='name')
 
-        table.add_column({'key': 'send', 'title': _("Send to")}, [{
+        table.add_column({'key': 'send', 'title': _("Send Email")}, [{
             'component': 'check-cell',
             'checked': self.default_send(p),
             'id': p.id,
@@ -75,8 +75,12 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
         table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [{
             'text': p.name,
-            'tooltip': p.email,
             'class': 'no-wrap' if len(p.name) < 20 else ''
+        } for p in self.get_queryset()])
+
+        table.add_column({'key': 'email', 'tooltip': _("Email Address"), 'icon': 'mail'}, [{
+            'text': p.email if p.email else _("Not Provided"),
+            'class': 'small'
         } for p in self.get_queryset()])
 
         table.add_column({'key': 'role', 'title': _("Role")}, [{
@@ -104,7 +108,7 @@ class CustomEmailCreateView(BaseSelectPeopleEmailView):
             "send_to": [(p.id, p.email) for p in people]
         })
 
-        messages.success(request, _("Emails have been queued for sending."))
+        messages.success(request, _("%s emails have been queued for sending." % len(people)))
         return super().post(request, *args, **kwargs)
 
 
@@ -139,15 +143,16 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
         self.tournament.preferences[self.event_type + "_email_subject"] = request.POST['subject_line']
         self.tournament.preferences[self.event_type + "_email_message"] = request.POST['message_body']
+        email_recipients = list(map(int, request.POST.getlist('recipients')))
 
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email",
             "message": self.event_type,
             "extra": self.get_extra(),
-            "send_to": list(map(int, request.POST.getlist('recipients')))
+            "send_to": email_recipients
         })
 
-        messages.success(request, _("Emails have been queued for sending."))
+        messages.success(request, _("%s emails have been queued for sending." % len(email_recipients)))
         return super().post(request, *args, **kwargs)
 
 

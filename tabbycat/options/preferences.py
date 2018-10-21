@@ -1421,7 +1421,7 @@ class MotionReleaseEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants on motion release.")
     verbose_name = _("Motion release notification message")
     name = 'motion_email_message'
-    default = "{{ MOTIONS }}"
+    default = "The motion(s) for {{ ROUND }} are:\n {{ MOTIONS }}"
 
 
 @tournament_preferences_registry.register
