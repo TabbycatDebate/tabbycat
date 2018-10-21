@@ -7,6 +7,7 @@ from tournaments.models import Round
 
 from .models import PreformedPanel, PreformedPanelAdjudicator
 from .allocators import ConsensusHungarianAllocator, VotingHungarianAllocator
+from .preformed.dumb import DumbPreformedPanelAllocator
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +70,15 @@ class AllocatePanelAdjudicatorsTask():
     action_log_type = None # TODO
 
     def allocate_panel_adjudicators(self, event):
-        # self.log_action(user, round)
         # self.return_response(content, event['extra']['group_name'])
-        pass
+        print('AllocatePanelAdjudicatorsTask allocate_panel_adjudicators', event)
+        self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
+        round = Round.objects.get(pk=event['extra']['round_id'])
+
+        debates = round.debate_set.all()
+        panels = round.preformedpanel_set.all()
+        allocator = DumbPreformedPanelAllocator(debates, panels, round)
+        allocator.allocate()  # writes to database
 
 
 class PrioritiseDebateAdjudicatorsTask():
