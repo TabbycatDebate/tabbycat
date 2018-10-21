@@ -9,6 +9,13 @@ from ..conflicts import ConflictsInfo, HistoryInfo
 
 logger = logging.getLogger(__name__)
 
+registry = {}
+
+
+def register(cls):
+    registry[cls.key] = cls
+    return cls
+
 
 class BaseAdjudicatorAllocator:
 

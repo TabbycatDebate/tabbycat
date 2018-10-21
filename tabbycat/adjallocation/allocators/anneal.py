@@ -1,12 +1,19 @@
+import logging
 import math
 import random
 
-from .base import BaseAdjudicatorAllocator
-from .stab import StabAllocator
+from .base import BaseAdjudicatorAllocator, register
+from .hungarian import VotingHungarianAllocator
 from ..allocation import AdjudicatorAllocation
 
+logger = logging.getLogger(__name__)
 
+
+@register
 class SAAllocator(BaseAdjudicatorAllocator):
+
+    key = "simanneal"
+
     SCORE_ADJ_TEAM_CONFLICT = 10000
     SCORE_TARGET_PANEL = 800
     SCORE_ADJ_TEAM_HISTORY = 100
@@ -14,12 +21,18 @@ class SAAllocator(BaseAdjudicatorAllocator):
 
     MAX_TRIES = 3
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        t = self.tournament
+        self.conflict_penalty = t.pref('adj_conflict_penalty')
+        self.history_penalty = t.pref('adj_history_penalty')
+
     def allocate(self, initial=None):
 
         if initial is None:
-            initial = StabAllocator(self.debates, self.adjudicators).allocate()
+            initial = VotingHungarianAllocator(self.debates, self.adjudicators, self.round).allocate()
 
-        pairs = [(aa.debate, tuple(a[1] for a in aa)) for aa in initial]
+        pairs = [(aa.container, tuple(aa.all())) for aa in initial]
 
         top_bracket = pairs[0][0].bracket
         bot_bracket = pairs[-1][0].bracket
@@ -35,7 +48,7 @@ class SAAllocator(BaseAdjudicatorAllocator):
             setattr(debate, 'target_panel', 2 + (debate.bracket - bot_bracket +
                                                  1) * div)
 
-        print([d.target_panel for d, p in pairs])
+        logger.info([d.target_panel for d, p in pairs])
 
         self.state = dict(pairs)
 
@@ -53,7 +66,7 @@ class SAAllocator(BaseAdjudicatorAllocator):
             panel.sort(key=lambda x: x.score, reverse=True)
 
             aa.chair = panel.pop(0)
-            aa.panel = panel
+            aa.panellists = panel
             result.append(aa)
 
         return result
@@ -65,7 +78,7 @@ class SAAllocator(BaseAdjudicatorAllocator):
     def anneal(self, steps, min_temp, max_temp, state):
 
         self.energy = self.calc_energy(state)
-        print("start energy", self.energy)
+        logger.info("start energy %.2f", self.energy)
         self.save_best()
         tf = -math.log(float(max_temp) / min_temp)
 
@@ -90,10 +103,10 @@ class SAAllocator(BaseAdjudicatorAllocator):
                         if self.energy == 0:
                             break
 
-        print("accepts", accepts, "improves", improves)
-        print("end energy", self.best_energy)
-        print("end energy", self.calc_energy(self.best_state))
-        print(self.best_state)
+        logger.info("accepts %d improves %d", accepts, improves)
+        logger.info("end energy %.2f", self.best_energy)
+        logger.info("end energy %.2f", self.calc_energy(self.best_state))
+        logger.info(self.best_state)
 
     def calc_energy(self, state):
         return sum(self.score(debate, panel) for debate, panel in list(state.items()))
@@ -161,17 +174,16 @@ class SAAllocator(BaseAdjudicatorAllocator):
         score = 0
 
         for adj in panel:
-            score += self.SCORE_ADJ_TEAM_CONFLICT * self.conflicts.conflict_adj_team(adj, debate.aff_team)
-            score += self.SCORE_ADJ_TEAM_CONFLICT * self.conflicts.conflict_adj_team(adj, debate.neg_team)
+            for side in self.tournament.sides:
+                score += self.conflict_penalty * self.conflicts.conflict_adj_team(adj, debate.get_team(side))
         return score
 
     def score_adj_team_history(self, debate, panel):
         score = 0
 
         for adj in panel:
-            adj_impt = (6 - adj.score)
-            score += self.SCORE_ADJ_TEAM_HISTORY * self.history.seen_adj_team(adj, debate.aff_team) * adj_impt
-            score += self.SCORE_ADJ_TEAM_HISTORY * self.history.seen_adj_team(adj, debate.neg_team) * adj_impt
+            for side in self.tournament.sides:
+                score += self.history_penalty * self.history.seen_adj_team(adj, debate.get_team(side))
 
         return score
 
@@ -180,7 +192,7 @@ class SAAllocator(BaseAdjudicatorAllocator):
 
         for i, adj in enumerate(panel):
             for j in range(i+1, len(panel)):
-                score += self.SCORE_ADJ_ADJ_HISTORY * self.history.seen_adj_adj(adj, panel[j])
+                score += self.history_penalty * self.history.seen_adj_adj(adj, panel[j])
 
         return score
 
@@ -189,20 +201,3 @@ class SAAllocator(BaseAdjudicatorAllocator):
         diff = abs(debate.target_panel - avg)
 
         return self.SCORE_TARGET_PANEL * diff * debate.target_panel * avg
-
-
-def test():
-    from tournaments.models import Round
-    from adjallocation.stab import StabAllocator
-
-    r = Round.objects.get(pk=4)
-    debates = r.debates()
-    adjs = list(r.active_adjudicators.all())
-
-    initial = StabAllocator(debates, adjs).allocate()
-
-    sa = SAAllocator(debates, adjs).allocate(initial)
-    print(sa)
-
-if __name__ == '__main__':
-    test()

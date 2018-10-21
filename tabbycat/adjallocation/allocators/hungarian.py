@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 from utils.views import BadJsonRequestError
 
 from ..allocation import AdjudicatorAllocation
-from .base import BaseAdjudicatorAllocator
+from .base import BaseAdjudicatorAllocator, register
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
     def allocate_trainees(self, trainees, allocation, debates):
         if len(trainees) > 0 and len(debates) > 0:
-            allocation_by_debate = {aa.debate: aa for aa in allocation}
+            allocation_by_debate = {aa.container: aa for aa in allocation}
 
             logger.info("costing trainees")
             cost_matrix = []
@@ -109,7 +109,10 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
             raise BadJsonRequestError(info)
 
 
+@register
 class VotingHungarianAllocator(BaseHungarianAllocator):
+
+    key = "hungarian-voting"
 
     def run_allocation(self):
 
@@ -170,7 +173,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
             result = ((solo_debates[i], solos[j]) for i, j in indexes if i < len(solo_debates))
             alloc = [AdjudicatorAllocation(d, c) for d, c in result]
             for aa in alloc:
-                logger.info("allocating to %s: %s", aa.debate, aa.chair)
+                logger.info("allocating to %s: %s", aa.container, aa.chair)
 
         else:
             logger.info("No solo adjudicators.")
@@ -212,7 +215,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                 alloc.append(aa)
 
         for aa in alloc[len(solos):]:
-            logger.info("allocating to %s: %s (c), %s", aa.debate, aa.chair, ", ".join([str(p) for p in aa.panellists]))
+            logger.info("allocating to %s: %s (c), %s", aa.container, aa.chair, ", ".join([str(p) for p in aa.panellists]))
 
         # Allocate trainees, one per solo debate (leave the rest unallocated)
         self.allocate_trainees(trainees, alloc, solo_debates)
@@ -220,7 +223,10 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
         return alloc
 
 
+@register
 class ConsensusHungarianAllocator(BaseHungarianAllocator):
+
+    key = "hungarian-consensus"
 
     def run_allocation(self):
 
@@ -285,7 +291,7 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
             alloc.append(aa)
             del indexes[0:njudges]
 
-            logger.info("allocating to %s: %s (c), %s", aa.debate, aa.chair, ", ".join([str(p) for p in aa.panellists]))
+            logger.info("allocating to %s: %s (c), %s", aa.container, aa.chair, ", ".join([str(p) for p in aa.panellists]))
 
         # Allocate trainees
         self.allocate_trainees(trainees, alloc, debates_sorted)

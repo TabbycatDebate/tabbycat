@@ -14,8 +14,19 @@ class AdjudicatorAllocation:
     POSITION_PANELLIST = 'p'
     POSITION_TRAINEE = 't'
 
-    def __init__(self, debate, chair=None, panellists=None, trainees=None, from_db=False):
-        self.debate = debate
+    def __init__(self, container, chair=None, panellists=None, trainees=None, from_db=False):
+        """The `container` is a model instance that relates to adjudicators via
+        a RelatedManager. It's easiest to think of this as a "panel", though the
+        typical use case is actually a debate. The model instance's model class
+        must define a property `related_adjudicator_set`, which must be the
+        related manager for a model that has the following two fields:
+
+            1. `adjudicator`, a `ForeignKey` to `Adjudicator`
+            2. `type`, a `CharField` whose choices are `DebateAdjudicator.TYPE_CHOICES`
+
+        Current known container models: `Debate`, `PreformedPanel`.
+        """
+        self.container = container
 
         if from_db:
             if chair or panellists or trainees:
@@ -24,7 +35,7 @@ class AdjudicatorAllocation:
             self.panellists = []
             self.trainees = []
 
-            debateadjs = self.debate.debateadjudicator_set.all()
+            debateadjs = self.container.related_adjudicator_set.all()
 
             # The purpose of the line below is to avoid redundant database hits.
             # It uses an internal (undocumented) flag of Django's QuerySet model
@@ -32,9 +43,9 @@ class AdjudicatorAllocation:
             # a clone of the query set (prefetch_related makes a clone), so that
             # it will use the adjudicators that are already prefetched. An
             # important assumption there is that if there's already a prefetch
-            # on this debateadjudicator_set, we assume it includes
-            # 'adjudicator'. If there isn't a prefetch done, we add a prefetch
-            # here to avoid duplicate adjudicator SQLqueries.
+            # on this related manager, we assume it includes 'adjudicator'. If
+            # there isn't a prefetch done, we add a prefetch here to avoid
+            # duplicate adjudicator SQLqueries.
             if not debateadjs._prefetch_done:
                 debateadjs = debateadjs.prefetch_related('adjudicator')
 
@@ -65,9 +76,9 @@ class AdjudicatorAllocation:
     def __repr__(self):
         result = "<AdjudicatorAllocation for "
         try:
-            result += self.debate.matchup
+            result += self.container.matchup
         except AttributeError:
-            result += str(self.debate)
+            result += str(self.container)
         result += ": "
         try:
             result += self.chair.name
@@ -82,7 +93,7 @@ class AdjudicatorAllocation:
         return item == self.chair or item in self.panellists or item in self.trainees
 
     def __eq__(self, other):
-        return self.debate == other.debate and \
+        return self.container == other.container and \
             self.chair == other.chair and \
             set(self.panellists) == set(other.panellists) and \
             set(self.trainees) == set(other.trainees)
@@ -179,16 +190,16 @@ class AdjudicatorAllocation:
 
     def delete(self):
         """Delete existing, current allocation"""
-        self.debate.debateadjudicator_set.all().delete()
+        self.container.related_adjudicator_set.all().delete()
         self.chair = None
         self.panellists = []
         self.trainees = []
 
     def save(self):
-        self.debate.debateadjudicator_set.exclude(adjudicator__in=self.all()).delete()
+        self.container.related_adjudicator_set.exclude(adjudicator__in=self.all()).delete()
         for adj, t in self.with_debateadj_types():
             if not adj:
                 continue
-            _, created = DebateAdjudicator.objects.update_or_create(debate=self.debate, adjudicator=adj,
-                    defaults={'type': t})
-            logger.debug("%s: %s, %s, %s", "Created" if created else "Updated", self.debate, adj, t)
+            _, created = self.container.related_adjudicator_set.update_or_create(
+                    adjudicator=adj, defaults={'type': t})
+            logger.debug("%s: %s, %s, %s", "Created" if created else "Updated", self.container, adj, t)

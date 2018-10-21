@@ -22,8 +22,8 @@ from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
 
-from .allocators import (ConsensusHungarianAllocator, legacy_allocate_adjudicators,
-                         VotingHungarianAllocator)
+from .allocators import legacy_allocate_adjudicators
+from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .conflicts import ConflictsInfo, HistoryInfo
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, DebateAdjudicator, PreformedPanel,

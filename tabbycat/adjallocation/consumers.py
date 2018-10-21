@@ -10,7 +10,7 @@ from draw.consumers import BaseAdjudicatorContainerConsumer
 from tournaments.models import Round
 
 from .models import PreformedPanel
-from .allocators import ConsensusHungarianAllocator, VotingHungarianAllocator
+from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed.dumb import DumbPreformedPanelAllocator
 
 logger = logging.getLogger(__name__)
@@ -61,9 +61,6 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
 
         for alloc in allocator.allocate():
             alloc.save()
-
-        round.adjudicator_status = round.STATUS_DRAFT
-        round.save()
 
         # TODO: return values (will require modifying the allocate function
         # self.return_response(content, event['extra']['group_name'])
