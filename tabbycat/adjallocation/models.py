@@ -115,6 +115,19 @@ class PreformedPanel(models.Model):
     importance = models.FloatField(default=0.0, choices=[(float(i), i) for i in range(-2, 3)],
         verbose_name=_("importance"))
 
+    bracket_min = models.FloatField(default=0,
+        verbose_name=_("minimum bracket"),
+        help_text=_("Estimate of the lowest bracket for which this panel might be"))
+    bracket_max = models.FloatField(default=0,
+        verbose_name=_("maximum bracket"),
+        help_text=_("Estimate of the highest bracket for which this panel might be"))
+    room_rank = models.IntegerField(default=0,
+        verbose_name=_("room rank"),
+        help_text=_("Sequential number of panel, not used in any algorithms"))
+    liveness = models.IntegerField(default=0,
+        verbose_name=_("liveness"),
+        help_text=_("Number of categories this room is expected to be live for"))
+
     class Meta:
         verbose_name = _("preformed panel")
         verbose_name_plural = _("preformed panels")
