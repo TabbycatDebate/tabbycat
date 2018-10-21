@@ -1,6 +1,5 @@
 import json
 import logging
-import warnings
 from urllib.parse import urlparse, urlunparse
 
 from django.core.cache import cache
@@ -24,10 +23,8 @@ from participants.models import Institution, Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
 from participants.serializers import InstitutionSerializer, RegionSerializer
 from tournaments.serializers import RoundSerializer, TournamentSerializer
-
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
-
 
 from .models import Round, Tournament
 
@@ -42,21 +39,21 @@ def add_query_parameter(url, name, value):
     return urlunparse(parts)
 
 
-class TournamentMixin(TabbycatPageTitlesMixin):
-    """Mixin for views that relate to a tournament, and are specified as
-    relating to a tournament in the URL.
+class TournamentFromUrlMixin:
+    """Provides the `tournament` property, looking in the cache and URL path,
+    and keeping its own local cache.
 
-    Views using this mixin should have a `tournament_slug` group in their URL's
-    regular expression. They should then call `self.tournament` to
-    retrieve the tournament.
+    Known direct subclasses: TournamentMixin (in this file)
+                             TournamentWebsocketMixin (in utils/consumers.py)
+                             RoundFromUrlMixin (in this file)
     """
+
     tournament_slug_url_kwarg = "tournament_slug"
     tournament_cache_key = "{slug}_object"
     tournament_redirect_pattern_name = None
 
-    def get_tournament(self):
-        warnings.warn("get_tournament() is deprecated, use self.tournament instead", stacklevel=2)
-        return self.tournament
+    def get_url_kwargs(self):
+        raise NotImplementedError
 
     @property
     def tournament(self):
@@ -65,7 +62,7 @@ class TournamentMixin(TabbycatPageTitlesMixin):
             return self._tournament_from_url
 
         # then look in cache,
-        slug = self.kwargs[self.tournament_slug_url_kwarg]
+        slug = self.get_url_kwargs()[self.tournament_slug_url_kwarg]
         key = self.tournament_cache_key.format(slug=slug)
         cached_tournament = cache.get(key)
         if cached_tournament:
@@ -78,6 +75,24 @@ class TournamentMixin(TabbycatPageTitlesMixin):
         self._tournament_from_url = tournament
         return tournament
 
+
+class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
+    """Mixin for views that relate to a tournament, and are specified as
+    relating to a tournament in the URL.
+
+    Views using this mixin should have a `tournament_slug` group in their URL's
+    regular expression. They should then call `self.tournament` to
+    retrieve the tournament.
+
+    Note: `self.tournament` is defined in TournamentFromUrlMixin
+    """
+    tournament_slug_url_kwarg = "tournament_slug"
+    tournament_cache_key = "{slug}_object"
+    tournament_redirect_pattern_name = None
+
+    def get_url_kwargs(self):
+        return self.kwargs
+
     def get_redirect_url(self, *args, **kwargs):
         # Override if self.tournament_redirect_pattern_name is specified,
         # otherwise just pass down the chain
@@ -86,13 +101,12 @@ class TournamentMixin(TabbycatPageTitlesMixin):
                 return reverse_tournament(self.tournament_redirect_pattern_name,
                         self.tournament, args=args, kwargs=kwargs)
             except NoReverseMatch:
-                logger.warning("No Reverse Match for given tournament_slug_url_kwarg")
+                logger.warning("No reverse match for %s", self.tournament_redirect_pattern_name)
                 pass
 
         return super().get_redirect_url(*args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
-        tournament = self.tournament
         try:
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError) as e:
@@ -100,15 +114,48 @@ class TournamentMixin(TabbycatPageTitlesMixin):
                 logger.warning("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
                 messages.warning(request, _("You've been redirected to this page because of a problem with "
                         "how teams are assigned to sides in a debate."))
-                return redirect_tournament('tournament-fix-debate-teams', tournament)
+                return redirect_tournament('tournament-fix-debate-teams', self.tournament)
             else:
                 logger.warning("Debate team side assignment error, redirecting to tournament-public-index")
                 messages.warning(request, _("There's a problem with how teams are assigned to sides "
                         "in a debate. The tab director will need to resolve this issue."))
-                return redirect_tournament('tournament-public-index', tournament)
+                return redirect_tournament('tournament-public-index', self.tournament)
 
 
-class RoundMixin(TournamentMixin):
+class RoundFromUrlMixin(TournamentFromUrlMixin):
+    """Provides the `round` property, looking in the cache and URL path,
+    and keeping its own local cache.
+
+    Known direct subclasses: RoundMixin (in this file)
+                             RoundWebsocketMixin (in utils/consumers.py)
+    """
+
+    tournament_slug_url_kwarg = "tournament_slug"
+    tournament_cache_key = "{slug}_object"
+    tournament_redirect_pattern_name = None
+
+    @property
+    def round(self):
+        # First look in self,
+        if hasattr(self, "_round_from_url"):
+            return self._round_from_url
+
+        # then look in cache,
+        seq = self.get_url_kwargs()[self.round_seq_url_kwarg]
+        key = self.round_cache_key.format(slug=self.tournament.slug, seq=seq)
+        cached_round = cache.get(key)
+        if cached_round:
+            self._round_from_url = cached_round
+            return cached_round
+
+        # and if it was in neither place, retrieve the object
+        round = get_object_or_404(Round, tournament=self.tournament, seq=seq)
+        cache.set(key, round, None)
+        self._round_from_url = round
+        return round
+
+
+class RoundMixin(RoundFromUrlMixin, TournamentMixin):
     """Mixin for views that relate to a round, and are specified as relating
     to a round in the URL.
 
@@ -129,31 +176,6 @@ class RoundMixin(TournamentMixin):
             return _("for %(round)s") % {'round': self.round.name}
         else:
             return super().get_page_subtitle()
-
-    def get_round(self):
-        warnings.warn("get_round() is deprecated, use self.round instead", stacklevel=2)
-        return self.round
-
-    @property
-    def round(self):
-        # First look in self,
-        if hasattr(self, "_round_from_url"):
-            return self._round_from_url
-
-        # then look in cache,
-        tournament = self.tournament
-        seq = self.kwargs[self.round_seq_url_kwarg]
-        key = self.round_cache_key.format(slug=tournament.slug, seq=seq)
-        cached_round = cache.get(key)
-        if cached_round:
-            self._round_from_url = cached_round
-            return cached_round
-
-        # and if it was in neither place, retrieve the object
-        round = get_object_or_404(Round, tournament=tournament, seq=seq)
-        cache.set(key, round, None)
-        self._round_from_url = round
-        return round
 
     def get_redirect_url(self, *args, **kwargs):
         # Override if self.round_redirect_pattern_name is specified,

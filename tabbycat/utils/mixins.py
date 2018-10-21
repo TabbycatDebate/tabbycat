@@ -44,7 +44,7 @@ class TabbycatPageTitlesMixin(ContextMixin):
 
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for administrators.
-    Requires use to be a superuser."""
+    Requires user to be a superuser."""
     view_role = "admin"
 
     def get_context_data(self, **kwargs):

@@ -1,14 +1,15 @@
 from asgiref.sync import async_to_sync
+from channels.generic.websocket import JsonWebsocketConsumer
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from utils.consumers import TournamentConsumerMixin, WSPublicAccessMixin
+from utils.consumers import TournamentWebsocketMixin
 
 from .models import Event, Identifier
 from .utils import get_unexpired_checkins
 
 
-class CheckInEventConsumer(TournamentConsumerMixin, WSPublicAccessMixin):
+class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
 
     group_prefix = 'checkins'
 

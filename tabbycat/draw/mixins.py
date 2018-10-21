@@ -2,15 +2,16 @@ import logging
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from channels.generic.websocket import JsonWebsocketConsumer
 
 from django.utils.translation import gettext as _
 
-from utils.consumers import RoundConsumerMixin, WSSuperUserRequiredMixin
+from utils.consumers import RoundWebsocketMixin, SuperuserRequiredWebsocketMixin
 
 logger = logging.getLogger(__name__)
 
 
-class DebateOrPanelConsumerMixin(RoundConsumerMixin, WSSuperUserRequiredMixin):
+class BaseDebateOrPanelConsumer(SuperuserRequiredWebsocketMixin, RoundWebsocketMixin, JsonWebsocketConsumer):
     """For receiving updates to either debates or preformed panels; making the
     supplied modifications; and re-broadcasting them. The intent is that the
     socket provides a dict of objects, which in turn have a dict of attributes

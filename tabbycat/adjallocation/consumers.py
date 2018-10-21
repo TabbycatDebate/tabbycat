@@ -2,7 +2,7 @@ import logging
 import random
 
 from actionlog.models import ActionLogEntry
-from draw.mixins import DebateOrPanelConsumerMixin
+from draw.mixins import BaseDebateOrPanelConsumer
 from tournaments.models import Round
 
 from .models import PreformedPanel, PreformedPanelAdjudicator
@@ -12,7 +12,7 @@ from .preformed.dumb import DumbPreformedPanelAllocator
 logger = logging.getLogger(__name__)
 
 
-class PanelEditConsumer(DebateOrPanelConsumerMixin):
+class PanelEditConsumer(BaseDebateOrPanelConsumer):
     """ Adapts the generic methods for updating adjudicators to update preformed
     panel adjudicators specifically (instead of debate adjudicators) """
 

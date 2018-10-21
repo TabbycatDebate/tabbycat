@@ -7,7 +7,7 @@ from channels.layers import get_channel_layer
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.consumers import AllocateDebateAdjudicatorsTask, AllocatePanelAdjudicatorsTask, PrioritiseDebateAdjudicatorsTask, PrioritisePanelAdjudicatorsTask
-from draw.mixins import DebateOrPanelConsumerMixin
+from draw.mixins import BaseDebateOrPanelConsumer
 from venues.consumers import AllocateDebateVenuesTask
 
 from .models import Debate
@@ -15,7 +15,7 @@ from .models import Debate
 logger = logging.getLogger(__name__)
 
 
-class DebateEditConsumer(DebateOrPanelConsumerMixin):
+class DebateEditConsumer(BaseDebateOrPanelConsumer):
     """ Adapts the generic methods for updating adjudicators to update debate
     adjudicators specifically (instead of preformed panel adjudicators) """
 
