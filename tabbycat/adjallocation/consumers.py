@@ -1,37 +1,41 @@
 import logging
 import random
 
+from asgiref.sync import async_to_sync
+from channels.consumer import SyncConsumer
+from channels.layers import get_channel_layer
+
 from actionlog.models import ActionLogEntry
-from draw.mixins import BaseDebateOrPanelConsumer
+from draw.consumers import BaseAdjudicatorContainerConsumer
 from tournaments.models import Round
 
-from .models import PreformedPanel, PreformedPanelAdjudicator
+from .models import PreformedPanel
 from .allocators import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed.dumb import DumbPreformedPanelAllocator
 
 logger = logging.getLogger(__name__)
 
 
-class PanelEditConsumer(BaseDebateOrPanelConsumer):
-    """ Adapts the generic methods for updating adjudicators to update preformed
-    panel adjudicators specifically (instead of debate adjudicators) """
-
+class PanelEditConsumer(BaseAdjudicatorContainerConsumer):
     group_prefix = 'panels'
-
-    def delete_adjudicators(self, panel, adj_ids):
-        return panel.preformedpaneladjudicator_set.exclude(adjudicator_id__in=adj_ids).delete()
-
-    def create_adjudicators(self, panel, adj_id, adj_type):
-        return PreformedPanelAdjudicator.objects.update_or_create(
-            panel=panel,
-            adjudicator_id=adj_id, defaults={'type': adj_type})
-
-    def get_objects(self, ids):
-        return PreformedPanel.objects.filter(id__in=ids)
+    model = PreformedPanel
 
 
-class AllocateDebateAdjudicatorsTask():
-    """ Mixin to DebateOrPanelWorkerConsumer that specifies a worker task"""
+class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
+
+    def log_action(self, extra, type):
+        ActionLogEntry.objects.log(type=type,
+                                   user_id=extra['user_id'],
+                                   round_id=extra['round_id'],
+                                   tournament_id=extra['tournament_id'])
+
+    def return_response(self, content, group_name):
+        async_to_sync(get_channel_layer().group_send)(
+            group_name, {
+                'type': 'broadcast_debates_or_panels',
+                'content': content
+            }
+        )
 
     def allocate_debate_adjs(self, event):
         print('AllocateDebateAdjudicatorsTask allocate_debate_adjs', event)
@@ -64,15 +68,12 @@ class AllocateDebateAdjudicatorsTask():
         # TODO: return values (will require modifying the allocate function
         # self.return_response(content, event['extra']['group_name'])
 
-
-class AllocatePanelAdjudicatorsTask():
-    """ Mixin to DebateOrPanelWorkerConsumer that specifies a worker task"""
-    action_log_type = None # TODO
-
-    def allocate_panel_adjudicators(self, event):
-        # self.return_response(content, event['extra']['group_name'])
+    def allocate_panel_adjs(self, event):
         print('AllocatePanelAdjudicatorsTask allocate_panel_adjudicators', event)
         self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
+        # self.return_response(content, event['extra']['group_name'])
+
+    def allocate_panels_to_debates(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
 
         debates = round.debate_set.all()
@@ -80,22 +81,12 @@ class AllocatePanelAdjudicatorsTask():
         allocator = DumbPreformedPanelAllocator(debates, panels, round)
         allocator.allocate()  # writes to database
 
-
-class PrioritiseDebateAdjudicatorsTask():
-    """ Mixin to DebateOrPanelWorkerConsumer that specifies a worker task"""
-    action_log_type = None # TODO
-
     def prioritise_debate_adjs(self, event):
         # PROOF OF CONCEPT DEMO
         content = {'debatesOrPanels': {}}
         for debate_id in [117, 118, 119, 120]:
             content['debatesOrPanels'][debate_id] = {'importance': random.randint(-2, 2)}
         self.return_response(content, event['extra']['group_name'])
-
-
-class PrioritisePanelAdjudicatorsTask():
-    """ Mixin to DebateOrPanelWorkerConsumer that specifies a worker task"""
-    action_log_type = None # TODO
 
     def prioritise_panel_adjs(self, event):
         # PROOF OF CONCEPT DEMO

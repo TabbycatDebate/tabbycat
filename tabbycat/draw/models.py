@@ -235,6 +235,11 @@ class Debate(models.Model):
             return self._history
 
     @property
+    def related_adjudicator_set(self):
+        """Used by objects that work with both Debate and PreformedPanel."""
+        return self.debateadjudicator_set
+
+    @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""

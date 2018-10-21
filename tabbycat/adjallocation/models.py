@@ -135,6 +135,11 @@ class PreformedPanel(models.Model):
     def __str__(self):
         return "[{x.id}] {x.round.name} impt={x.importance}".format(x=self)
 
+    @property
+    def related_adjudicator_set(self):
+        """Used by objects that work with both Debate and PreformedPanel."""
+        return self.preformedpaneladjudicator_set
+
 
 class PreformedPanelAdjudicator(models.Model):
     panel = models.ForeignKey(PreformedPanel, models.CASCADE,

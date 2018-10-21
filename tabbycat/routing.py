@@ -4,11 +4,12 @@ from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 
 from actionlog.consumers import ActionLogEntryConsumer
-from adjallocation.consumers import PanelEditConsumer
+from adjallocation.consumers import AdjudicatorAllocationWorkerConsumer, PanelEditConsumer
 from checkins.consumers import CheckInEventConsumer
-from draw.consumers import DebateEditConsumer, DebateOrPanelWorkerConsumer
+from draw.consumers import DebateEditConsumer
 from notifications.consumers import NotificationQueueConsumer
 from results.consumers import BallotResultConsumer, BallotStatusConsumer
+from venues.consumers import VenuesWorkerConsumer
 
 
 # This acts like a urls.py equivalent; need to import the channel routes
@@ -38,6 +39,7 @@ application = ProtocolTypeRouter({
     "channel": ChannelNameRouter({
         # Name used in runworker cmd : SyncConsumer responsible
         "notifications":  NotificationQueueConsumer, # Email sending
-        "draw_tasks": DebateOrPanelWorkerConsumer,  # E.g. venue/adj allocation
+        "adjallocation": AdjudicatorAllocationWorkerConsumer,
+        "venues": VenuesWorkerConsumer,
     }),
 })

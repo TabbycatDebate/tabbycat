@@ -1,11 +1,18 @@
+from channels.consumer import SyncConsumer
+
 from actionlog.models import ActionLogEntry
 from tournaments.models import Round
 
 from .allocator import allocate_venues
 
 
-class AllocateDebateVenuesTask():
-    """ Mixin to DebateOrPanelWorkerConsumer that specifies the worker's task"""
+class VenuesWorkerConsumer(SyncConsumer):
+
+    def log_action(self, extra, type):
+        ActionLogEntry.objects.log(type=type,
+                                   user_id=extra['user_id'],
+                                   round_id=extra['round_id'],
+                                   tournament_id=extra['tournament_id'])
 
     def allocate_debate_venues(self, event):
         self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE)
