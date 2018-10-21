@@ -75,7 +75,7 @@ class TournamentConsumerMixin(JsonWebsocketConsumer):
             )
             self.accept()
         else:
-            pass
+            self.close()
 
     def disconnect(self, message):
         async_to_sync(self.channel_layer.group_discard)(
