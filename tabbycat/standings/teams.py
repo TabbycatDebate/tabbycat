@@ -175,9 +175,11 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         annotation_filter = Q(
             debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
-            debateteam__teamscore__forfeit=False,
-            debateteam__speakerscore__position__lte=round.tournament.last_substantive_position
+            debateteam__teamscore__forfeit=False
         )
+        if round is not None:
+            annotation_filter &= Q(debateteam__speakerscore__position__lte=round.tournament.last_substantive_position)
+
         return Avg('debateteam__speakerscore__score', filter=annotation_filter)
 
 

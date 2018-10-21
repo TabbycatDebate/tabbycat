@@ -10,7 +10,8 @@
                                :speakers="speakers"
                                :venues="venues"
                                :assistant-url="assistantUrl"
-                               :team-codes="teamCodes">
+                               :team-codes="teamCodes"
+                               :for-admin="forAdmin">
     </check-in-status-container>
   </div>
 
@@ -26,6 +27,7 @@
       'venues': {% if venues %}{{ venues|safe }}{% else %}null{% endif %},
       'assistantUrl': {% if user_role == "admin" %}{% if venues %}'{% tournamenturl "assistant-venues-statuses" %}'{% else %}'{% tournamenturl "assistant-people-statuses" %}'{% endif %}{% else %}''{% endif %},
       'teamCodes': {{ team_codes }},
+      'forAdmin': {{ for_admin }},
     }
   </script>
   {{ block.super }}
