@@ -140,6 +140,16 @@ class PreformedPanel(models.Model):
         """Used by objects that work with both Debate and PreformedPanel."""
         return self.preformedpaneladjudicator_set
 
+    # Properties to make this look like Debate for the adjudicator allocators
+
+    @property
+    def bracket(self):
+        return self.bracket_max
+
+    @property
+    def teams(self):
+        return []
+
 
 class PreformedPanelAdjudicator(models.Model):
     panel = models.ForeignKey(PreformedPanel, models.CASCADE,

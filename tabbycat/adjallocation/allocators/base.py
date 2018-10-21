@@ -1,7 +1,9 @@
 import logging
 
+from django.db.models import QuerySet
 from django.utils.translation import gettext as _
 
+from draw.models import Debate
 from participants.models import Team
 from utils.views import BadJsonRequestError
 
@@ -22,7 +24,7 @@ class BaseAdjudicatorAllocator:
     def __init__(self, debates, adjudicators, round):
         self.tournament = round.tournament
         self.round = round
-        self.debates = list(debates)
+        self.debates = debates
         self.adjudicators = adjudicators
 
         if len(self.adjudicators) == 0:
@@ -32,7 +34,12 @@ class BaseAdjudicatorAllocator:
             logger.info(info)
             raise BadJsonRequestError(info)
 
-        teams = Team.objects.filter(debateteam__debate__in=debates)
+        if (isinstance(debates, QuerySet) and debates.model == Debate) or \
+                (isinstance(debates, list) and len(debates) > 0 and isinstance(debates[0], Debate)):
+            teams = Team.objects.filter(debateteam__debate__in=debates)
+        else:
+            teams = None
+
         self.conflicts = ConflictsInfo(teams=teams, adjudicators=self.adjudicators)
         self.history = HistoryInfo(round=round)
 

@@ -25,7 +25,11 @@ class Command(RoundCommand):
             raise CommandError("Draw status isn't confirmed (it's {}), use "
                 "--force to run anyway".format(round.get_draw_status_display().lower()))
 
-        debates = round.debate_set.all()
+        if options["preformed"]:
+            debates = round.preformedpanel_set.all()
+        else:
+            debates = round.debate_set.all()
+
         adjs = round.active_adjudicators.all()
         allocator_class = registry[options["allocator"]]
         allocator = allocator_class(debates, adjs, round)

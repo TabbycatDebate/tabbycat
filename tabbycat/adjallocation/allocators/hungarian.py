@@ -56,9 +56,9 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         # Normalise debate importances back to the 1-5 (not ±2) range expected
         normalised_importance = debate.importance + 3
 
-        for side in self.tournament.sides:
-            cost += self.conflict_penalty * self.conflicts.conflict_adj_team(adj, debate.get_team(side))
-            cost += self.history_penalty * self.history.seen_adj_team(adj, debate.get_team(side))
+        for team in debate.teams:
+            cost += self.conflict_penalty * self.conflicts.conflict_adj_team(adj, team)
+            cost += self.history_penalty * self.history.seen_adj_team(adj, team)
         if chair:
             cost += self.conflict_penalty * self.conflicts.conflict_adj_adj(adj, chair)
             cost += self.history_penalty * self.history.seen_adj_adj(adj, chair)

@@ -174,16 +174,16 @@ class SAAllocator(BaseAdjudicatorAllocator):
         score = 0
 
         for adj in panel:
-            for side in self.tournament.sides:
-                score += self.conflict_penalty * self.conflicts.conflict_adj_team(adj, debate.get_team(side))
+            for team in debate.teams:
+                score += self.conflict_penalty * self.conflicts.conflict_adj_team(adj, team)
         return score
 
     def score_adj_team_history(self, debate, panel):
         score = 0
 
         for adj in panel:
-            for side in self.tournament.sides:
-                score += self.history_penalty * self.history.seen_adj_team(adj, debate.get_team(side))
+            for team in debate.teams:
+                score += self.history_penalty * self.history.seen_adj_team(adj, team)
 
         return score
 
