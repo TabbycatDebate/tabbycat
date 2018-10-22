@@ -80,9 +80,9 @@
 
     <unallocated-items-container v-if="!sharding.enabled">
       <div v-for="unallocatedAdj in unallocatedAdjsByOrder">
-        <draggable-adjudicator :adjudicator="unallocatedAdj"
+        <legacy-draggable-adjudicator :adjudicator="unallocatedAdj"
                                :percentiles="percentileThresholds"
-                               :locked="unallocatedAdj.locked"></draggable-adjudicator>
+                               :locked="unallocatedAdj.locked"></legacy-draggable-adjudicator>
       </div>
       <div class="sort-handler align-items-center">
         <div v-if="unallocatedAdjsByOrder.length > 5"

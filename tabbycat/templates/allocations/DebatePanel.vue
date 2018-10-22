@@ -10,13 +10,13 @@
                          :extra-css="getCSSForPosition(position)"
                          :locked="locked">
 
-        <draggable-adjudicator
+        <legacy-draggable-adjudicator
           v-for="da in getAdjudicatorsByPosition(panelAdjudicators, position)"
           :adjudicator="da.adjudicator" :debate-id="debateId"
           :percentiles="percentiles"
           :key="da.adjudicator.id"
           :locked="locked">
-        </draggable-adjudicator>
+        </legacy-draggable-adjudicator>
 
       </droppable-generic>
     </div>

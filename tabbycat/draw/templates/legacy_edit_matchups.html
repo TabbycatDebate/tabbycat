@@ -11,13 +11,13 @@
 {% block content %}
   <div id="vueMount">
 
-    <edit-matchups-container :initial-debates="debates"
+    <legacy-edit-matchups-container :initial-debates="debates"
                              :round-info="roundInfo"
                              :initial-Unallocated-items="unallocatedItems"
                              :default-sort-key="'bracket'"
                              :default-sort-order="'desc'"
                              :save-sides-status-url="saveSidesStatusUrl">
-    </edit-matchups-container>
+    </legacy-edit-matchups-container>
 
   </div>
 {% endblock content %}

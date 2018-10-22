@@ -33,9 +33,9 @@
              slot="svenue">
           <droppable-generic :assignment-id="debate.id" :locked="debate.locked">
             <slot name="svenue">
-              <draggable-venue v-if="debate.venue !== null"
+              <legacy-draggable-venue v-if="debate.venue !== null"
                :venue="debate.venue" :debate-id="debate.id"
-               :locked="debate.locked"></draggable-venue>
+               :locked="debate.locked"></legacy-draggable-venue>
           </slot>
           </droppable-generic>
         </div>
@@ -44,7 +44,7 @@
 
     <unallocated-items-container>
       <div v-for="venue in unallocatedVenuesByPriority">
-        <draggable-venue :venue="venue" :locked="venue.locked"></draggable-venue>
+        <legacy-draggable-venue :venue="venue" :locked="venue.locked"></legacy-draggable-venue>
       </div>
     </unallocated-items-container>
 
