@@ -15,9 +15,9 @@
 
 
   {% if emails_sent %}
-    <a href="{% roundurl 'notifications-round-template-email' event_type='team_points' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+    <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
   {% else %}
-    <a href="{% roundurl 'notifications-round-template-email' event_type='team_points' %}" class="btn btn-outline-primary active">
+    <a href="{% roundurl 'progress-email' %}" class="btn btn-outline-primary active">
   {% endif %}
     {% if pref.teams_in_debate == "two" %}
       {% trans "Email Team Wins/Losses" %}

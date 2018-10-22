@@ -331,15 +331,15 @@
 
     </ul>
     <ul class="list-group mt-3">
-      {% roundurl 'notifications-round-template-email' round event_type='adj' as url %}
+      {% roundurl 'draw-email' as url %}
       {% include "components/item-action.html" with text="Email Draw" subtext="(to active adjudicators)" emoji="✉️" %}
       {% if pref.enable_motions or pref.motion_vetoes_enabled %}
         {% trans "Email Motions" as text %}
       {% else %}
         {% trans "Email Motion" as text %}
       {% endif %}
-      {% roundurl 'notifications-round-template-email' round event_type='motion' as url %}
-      {% include "components/item-action.html" with subtext="(to active teams)" emoji="📇" %}
+      {% roundurl 'motions-email' as url %}
+      {% include "components/item-action.html" with emoji="📇" %}
     </ul>
   </div>
 </div>

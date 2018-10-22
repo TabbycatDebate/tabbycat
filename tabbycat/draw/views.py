@@ -20,6 +20,8 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
+from notifications.models import SentMessageRecord
+from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
 from participants.utils import get_side_history
@@ -375,6 +377,20 @@ class AdminDrawDisplayView(AdministratorMixin, BaseDrawDisplayIndexView):
 class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayIndexView):
     template_name = 'draw_display_assistant.html'
     assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
+    page_subtitle = _("Adjudicator Assignments")
+
+    event = SentMessageRecord.EVENT_TYPE_DRAW
+    subject_template = 'adj_email_subject'
+    message_template = 'adj_email_message'
+
+    def get_success_url(self):
+        return reverse_round('draw-display', self.round)
+
+    def get_queryset(self):
+        return self.round.active_adjudicators
 
 
 # ==============================================================================

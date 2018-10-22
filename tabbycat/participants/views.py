@@ -17,6 +17,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
 from notifications.models import SentMessageRecord
+from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
@@ -152,6 +153,24 @@ class AdminCodeNamesListView(AdministratorMixin, BaseCodeNamesListView):
 
 class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
     pass
+
+
+# ==============================================================================
+# Email page
+# ==============================================================================
+
+class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
+    page_subtitle = _("Team Registration")
+
+    event = SentMessageRecord.EVENT_TYPE_TEAM
+    subject_template = 'team_email_subject'
+    message_template = 'team_email_message'
+
+    def get_success_url(self):
+        return reverse_tournament('participants-list', self.tournament)
+
+    def get_queryset(self):
+        return Speaker.objects.filter(team__tournament=self.tournament)
 
 
 # ==============================================================================

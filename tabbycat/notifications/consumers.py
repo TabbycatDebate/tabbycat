@@ -18,20 +18,12 @@ from .utils import (adjudicator_assignment_email_generator, ballots_email_genera
 class NotificationQueueConsumer(SyncConsumer):
 
     NOTIFICATION_GENERATORS = {
-        "adj": adjudicator_assignment_email_generator,
-        "url": randomized_url_email_generator,
-        "ballot": ballots_email_generator,
-        "team_points": standings_email_generator,
-        "motion": motion_release_email_generator,
-        "team": team_speaker_email_generator
-    }
-    NOTIFICATION_EVENTS = {
-        "adj": SentMessageRecord.EVENT_TYPE_DRAW,
-        "url": SentMessageRecord.EVENT_TYPE_URL,
-        "ballot": SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED,
-        "team_points": SentMessageRecord.EVENT_TYPE_POINTS,
-        "motion": SentMessageRecord.EVENT_TYPE_MOTIONS,
-        "team": SentMessageRecord.EVENT_TYPE_TEAM
+        SentMessageRecord.EVENT_TYPE_DRAW: adjudicator_assignment_email_generator,
+        SentMessageRecord.EVENT_TYPE_URL: randomized_url_email_generator,
+        SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED: ballots_email_generator,
+        SentMessageRecord.EVENT_TYPE_POINTS: standings_email_generator,
+        SentMessageRecord.EVENT_TYPE_MOTIONS: motion_release_email_generator,
+        SentMessageRecord.EVENT_TYPE_TEAM: team_speaker_email_generator
     }
 
     def _send(self, event, messages, records):
@@ -70,8 +62,8 @@ class NotificationQueueConsumer(SyncConsumer):
         from_email, reply_to = self._get_from_fields(t)
         notification_type = event['message']
 
-        subject = Template(t.pref(notification_type + "_email_subject"))
-        body = Template(t.pref(notification_type + "_email_message"))
+        subject = Template(event['subject'])
+        body = Template(event['body'])
 
         data = self.NOTIFICATION_GENERATORS[notification_type](to=event['send_to'], **event['extra'])
 
@@ -87,7 +79,7 @@ class NotificationQueueConsumer(SyncConsumer):
             messages.append(email)
             records.append(
                 SentMessageRecord(recipient=recipient, email=recipient.email,
-                                  event=self.NOTIFICATION_EVENTS[notification_type],
+                                  event=notification_type,
                                   method=SentMessageRecord.METHOD_TYPE_EMAIL,
                                   round=round, tournament=t,
                                   context=instance, message=email.message())

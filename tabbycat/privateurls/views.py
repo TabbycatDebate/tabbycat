@@ -12,6 +12,7 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
+from notifications.views import TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -136,6 +137,23 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
                 messages.success(self.request, format_lazy(generated_urls_message, " ", non_generated_urls_message))
 
         return super().post(request, *args, **kwargs)
+
+
+class EmailRandomisedUrlsView(TournamentTemplateEmailCreateView):
+    page_subtitle = _("Private URLs")
+
+    event = SentMessageRecord.EVENT_TYPE_URL
+    subject_template = 'url_email_subject'
+    message_template = 'url_email_message'
+
+    def get_success_url(self):
+        return reverse_tournament('privateurls-list', self.tournament)
+
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['url'] = self.request.build_absolute_uri(
+                reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
+        return extra
 
 
 class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):

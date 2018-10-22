@@ -8,9 +8,12 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from notifications.models import SentMessageRecord
+from notifications.views import RoundTemplateEmailCreateView
+from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
-from utils.misc import redirect_round
+from utils.misc import redirect_round, reverse_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
@@ -175,6 +178,20 @@ class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
 
 class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDisplayMotionsView):
     assistant_page_permissions = ['all_areas']
+
+
+class EmailMotionReleaseView(RoundTemplateEmailCreateView):
+    page_subtitle = _("Round Motions")
+
+    event = SentMessageRecord.EVENT_TYPE_MOTIONS
+    subject_template = 'motion_email_subject'
+    message_template = 'motion_email_message'
+
+    def get_success_url(self):
+        return reverse_round('draw-display', self.round)
+
+    def get_default_send_queryset(self):
+        return Speaker.objects.filter(team__round_availabilities__round=self.round, email__isnull=False).exclude(email__exact="")
 
 
 class BaseMotionStatisticsView(TournamentMixin, TemplateView):

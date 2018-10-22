@@ -12,9 +12,9 @@
 </div>
 <div class="btn-group btn-group">
   {% if email_sent %}
-    <a href="{% tournamenturl 'notifications-tournament-template-email' event_type='team' %}" class="btn btn-outline-primary">
+    <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-primary">
   {% else %}
-    <a href="{% tournamenturl 'notifications-tournament-template-email' event_type='team' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
+    <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
   {% endif %}
     {% trans "Email Registration" %}
   </a>

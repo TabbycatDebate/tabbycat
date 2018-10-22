@@ -17,6 +17,10 @@ urlpatterns = [
             views.DivisionStandingsView.as_view(),
             name='standings-division'),
 
+        path('email/',
+            views.EmailTeamStandingsView.as_view(),
+            name='progress-email'),
+
         path('speaker/',
             views.SpeakerStandingsView.as_view(),
             name='standings-speaker'),

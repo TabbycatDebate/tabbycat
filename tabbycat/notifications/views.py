@@ -4,14 +4,13 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.db.models import Q
-from django.http import Http404
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.edit import FormView
 
-from participants.models import Person, Speaker
+from participants.models import Person
 from tournaments.mixins import RoundMixin, TournamentMixin
-from utils.misc import reverse_round, reverse_tournament
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
@@ -80,25 +79,22 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
         table.add_column({'key': 'email', 'tooltip': _("Email Address"), 'icon': 'mail'}, [{
             'text': p.email if p.email else _("Not Provided"),
-            'class': 'small'
-        } for p in self.get_queryset()])
-
-        table.add_column({'key': 'role', 'title': _("Role")}, [{
-            'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker")
+            'class': 'small' if p.email else 'small text-warning'
         } for p in self.get_queryset()])
 
         return table
 
 
 class CustomEmailCreateView(BaseSelectPeopleEmailView):
-    def get_success_url(self, *args, **kwargs):
+
+    def get_success_url(self):
         return reverse_tournament('notifications-email', self.tournament)
 
     def default_send(self, p):
         return False
 
     def post(self, request, *args, **kwargs):
-        people = Person.objects.filter(id__in=request.POST.getlist('recipients'))
+        people = Person.objects.filter(id__in=list(map(int, request.POST.getlist('recipients'))))
 
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email_custom",
@@ -115,45 +111,37 @@ class CustomEmailCreateView(BaseSelectPeopleEmailView):
         ) % {'count': len(people)})
         return super().post(request, *args, **kwargs)
 
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_column({'key': 'role', 'title': _("Role")}, [{
+            'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker")
+        } for p in self.get_queryset()])
+
+        return table
+
 
 class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
-    def get_page_subtitle(self):
-        return {
-            "adj": _("Adjudicator Assignments"),
-            "url": _("Private URLs"),
-            "team_points": _("Team Standings"),
-            "motion": _("Round Motions"),
-            "team": _("Team Registration")
-        }[self.event_type]
-
-    def get(self, request, *args, **kwargs):
-        if self.kwargs['event_type'] in self.allowed_email_types:
-            self.event_type = self.kwargs['event_type']
-        else:
-            raise Http404(_("There is no email template with that name."))
-
-        return super().get(request, *args, **kwargs)
-
     def get_initial(self):
         initial = super().get_initial()
-        initial['subject_line'] = self.tournament.pref(self.event_type + "_email_subject")
-        initial['message_body'] = self.tournament.pref(self.event_type + "_email_message")
+        initial['subject_line'] = self.tournament.pref(self.subject_template)
+        initial['message_body'] = self.tournament.pref(self.message_template)
 
         return initial
 
     def post(self, request, *args, **kwargs):
-        self.event_type = self.kwargs['event_type']
-
-        self.tournament.preferences[self.event_type + "_email_subject"] = request.POST['subject_line']
-        self.tournament.preferences[self.event_type + "_email_message"] = request.POST['message_body']
+        self.tournament.preferences[self.subject_template] = request.POST['subject_line']
+        self.tournament.preferences[self.message_template] = request.POST['message_body']
         email_recipients = list(map(int, request.POST.getlist('recipients')))
 
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email",
-            "message": self.event_type,
+            "message": self.event,
             "extra": self.get_extra(),
-            "send_to": email_recipients
+            "send_to": email_recipients,
+            "subject": request.POST['subject_line'],
+            "body": request.POST['message_body']
         })
 
         messages.success(request, ngettext(
@@ -165,57 +153,14 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
 
 class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
-    allowed_email_types = ['url', 'team']
-
-    def get_queryset(self):
-        if self.event_type == 'team':
-            return Speaker.objects.filter(team__tournament=self.tournament)
-        else:
-            return super().get_queryset()
 
     def get_extra(self):
         extra = {'tournament_id': self.tournament.id}
-        if self.event_type == 'url':
-            extra['url'] = self.request.build_absolute_uri(
-                reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
         return extra
-
-    def get_success_url(self):
-        return {
-            'url': reverse_tournament('privateurls-list', self.tournament),
-            'team': reverse_tournament('participants-list', self.tournament)
-        }[self.event_type]
 
 
 class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):
-    allowed_email_types = ['adj', 'team_points', 'motion']
-
-    def get_queryset(self):
-        if self.event_type == 'adj':
-            return self.round.active_adjudicators
-        elif self.event_type == 'team_points':
-            return Speaker.objects.filter(team__tournament=self.tournament)
-        else:
-            return super().get_queryset()
-
-    def get_default_send_queryset(self):
-        if self.event_type == 'team_points' or self.event_type == 'motion':
-            return Speaker.objects.filter(
-                team__round_availabilities__round=self.round,
-                email__isnull=False
-            ).exclude(email__exact="")
-        else:
-            return super().get_default_send_queryset()
 
     def get_extra(self):
         extra = {'tournament_id': self.tournament.id, 'round_id': self.round.id}
-        if self.event_type == 'team_points':
-            extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
         return extra
-
-    def get_success_url(self):
-        return {
-            'adj': reverse_round('draw-display', self.round),
-            'team_points': reverse_round('tournament-complete-round-check', self.round),
-            'motion': reverse_round('draw-display', self.round)
-        }[self.event_type]

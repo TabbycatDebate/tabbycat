@@ -13,9 +13,9 @@
   </div>
   <div class="btn-group">
     {% if to_email_exists %}
-      <a href="{% tournamenturl 'notifications-tournament-template-email' event_type='url' %}" class="btn btn-outline-primary">
+      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-primary">
     {% else %}
-      <a href="{% tournamenturl 'notifications-tournament-template-email' event_type='url' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "All reachable participants have already been sent their private URLs." %}">
+      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "All reachable participants have already been sent their private URLs." %}">
     {% endif %}
       {% trans "Email URLs" %}
     </a>
