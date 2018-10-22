@@ -107,8 +107,8 @@ class VotingScore(FloatPreference):
 
 @tournament_preferences_registry.register
 class AdjConflictPenalty(IntegerPreference):
-    help_text = _("Penalty applied by auto-allocator for adjudicator-team conflict")
-    verbose_name = _("Adjudicator-team conflict penalty")
+    help_text = _("Penalty applied by adjudicator auto-allocator for conflicts")
+    verbose_name = _("Adjudicator conflict penalty")
     section = draw_rules
     name = 'adj_conflict_penalty'
     default = 1000000
@@ -116,11 +116,20 @@ class AdjConflictPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class AdjHistoryPenalty(IntegerPreference):
-    help_text = _("Penalty applied by auto-allocator for adjudicator-team history")
-    verbose_name = _("Adjudicator-team history penalty")
+    help_text = _("Penalty applied by adjudicator auto-allocator for history")
+    verbose_name = _("Adjudicator history penalty")
     section = draw_rules
     name = 'adj_history_penalty'
     default = 10000
+
+
+@tournament_preferences_registry.register
+class PreformedPanelMismatchPenalty(IntegerPreference):
+    help_text = _("Penality applied by preformed panel auto-allocator for importance mismatch")
+    verbose_name = _("Importance mismatch penalty")
+    section = draw_rules
+    name = 'preformed_panel_mismatch_penalty'
+    default = 10000000
 
 
 @tournament_preferences_registry.register

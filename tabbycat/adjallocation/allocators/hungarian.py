@@ -18,6 +18,7 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         t = self.tournament
         self.min_score = t.pref('adj_min_score')
         self.max_score = t.pref('adj_max_score')
@@ -84,11 +85,11 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
                 cost_matrix.append(row)
 
             logger.info("optimizing trainees (matrix size: %d positions by %d trainees)", len(cost_matrix), len(cost_matrix[0]))
-            indexes = self.munkres.compute(cost_matrix)
-            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
-            logger.info('total cost for %d trainees: %f', len(indexes), total_cost)
+            indices = self.munkres.compute(cost_matrix)
+            total_cost = sum(cost_matrix[i][j] for i, j in indices)
+            logger.info('total cost for %d trainees: %f', len(indices), total_cost)
 
-            result = ((debates[i], trainees[j]) for i, j in indexes if i < len(debates))
+            result = ((debates[i], trainees[j]) for i, j in indices if i < len(debates))
             for debate, trainee in result:
                 allocation_by_debate[debate].trainees.append(trainee)
                 logger.info("allocating to %s: %s (t)", debate, trainee)
@@ -166,11 +167,11 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                 cost_matrix.append(row)
 
             logger.info("optimizing solos (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
-            indexes = self.munkres.compute(cost_matrix)
-            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+            indices = self.munkres.compute(cost_matrix)
+            total_cost = sum(cost_matrix[i][j] for i, j in indices)
             logger.info('total cost for %d solo debates: %f', len(solos), total_cost)
 
-            result = ((solo_debates[i], solos[j]) for i, j in indexes if i < len(solo_debates))
+            result = ((solo_debates[i], solos[j]) for i, j in indices if i < len(solo_debates))
             alloc = [AdjudicatorAllocation(d, c) for d, c in result]
             for aa in alloc:
                 logger.info("allocating to %s: %s", aa.container, aa.chair)
@@ -192,15 +193,15 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                     cost_matrix.append(row)
 
             logger.info("optimizing panellists (matrix size: %d positions by %d adjudicators)", len(cost_matrix), len(cost_matrix[0]))
-            indexes = self.munkres.compute(cost_matrix)
-            total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+            indices = self.munkres.compute(cost_matrix)
+            total_cost = sum(cost_matrix[i][j] for i, j in indices)
             logger.info('total cost for %d panel debates: %f', len(panel_debates), total_cost)
 
             # transfer the indices to the debates
             # the debate corresponding to row r is floor(r/3) (i.e. r // 3)
             n = len(panel_debates)
             panels = [[] for i in range(n)]
-            for r, c in indexes[:n*3]:
+            for r, c in indices[:n*3]:
                 panels[r // 3].append(panellists[c])
 
             # create the corresponding adjudicator allocations, making sure that
@@ -271,16 +272,16 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
 
         logger.info("optimizing voting adjudicators (matrix size: %d positions by %d adjudicators)",
                 len(cost_matrix), len(cost_matrix[0]))
-        indexes = self.munkres.compute(cost_matrix)
-        indexes.sort()
-        total_cost = sum(cost_matrix[i][j] for i, j in indexes)
+        indices = self.munkres.compute(cost_matrix)
+        indices.sort()
+        total_cost = sum(cost_matrix[i][j] for i, j in indices)
         logger.info('total cost for %d debates: %f', n_debates, total_cost)
 
         # transfer the indices to the debates
         alloc = []
         for debate, njudges in zip(debates_sorted, judges_per_room):
             aa = AdjudicatorAllocation(debate)
-            panel_indices = indexes[0:njudges]
+            panel_indices = indices[0:njudges]
             panel = [voting[c] for r, c in panel_indices]
             panel.sort(key=lambda a: a._normalized_score, reverse=True)
             try:
@@ -289,7 +290,7 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
                 aa.chair = None
             aa.panellists = panel
             alloc.append(aa)
-            del indexes[0:njudges]
+            del indices[0:njudges]
 
             logger.info("allocating to %s: %s (c), %s", aa.container, aa.chair, ", ".join([str(p) for p in aa.panellists]))
 
