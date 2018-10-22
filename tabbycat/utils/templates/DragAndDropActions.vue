@@ -4,20 +4,24 @@
 
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group btn-group-sm">
-          <a :href="extra.backUrl" class="btn btn-outline-primary"
+          <button :href="extra.backUrl" class="btn btn-outline-primary"
              data-toggle="tooltip" data-placement="bottom" :title="gettext('Return to Draw')">
             <i data-feather="chevron-left"></i>
-          </a>
+          </button>
           <auto-save-counter></auto-save-counter>
         </div>
         <div class="btn-group btn-group-sm ml-2">
-          <a v-if="prioritise" class="btn text-white btn-success" @click="$emit('prioritise')"
-             v-text="gettext('Auto-Prioritise')"></a>
-          <a v-if="allocate" class="btn text-white btn-success" @click="$emit('allocate')"
-             v-text="gettext('Auto-Allocate')"></a>
-          <a v-if="shard" class="btn text-white btn-success" @click="$emit('shard')">
+          <slot name="extra-actions"></slot>
+          <button v-if="prioritise" @click="$emit('show-prioritise')"
+                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  v-text="gettext('Auto-Prioritise')"></button>
+          <button v-if="allocate" @click="$emit('show-allocate')"
+                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  v-text="gettext('Auto-Allocate')"></button>
+          <button v-if="shard" @click="$emit('show-shard')"
+                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']" >
             <i data-feather="server"></i>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -55,7 +59,7 @@ import AutoSaveCounter from './AutoSaveCounter.vue'
 
 export default {
   components: { AutoSaveCounter },
-  props: ['prioritise', 'allocate', 'shard'],
+  props: ['prioritise', 'allocate', 'shard', 'count'],
   methods: {
     titleCase: function (title) {
       return title.charAt(0).toUpperCase() + title.substr(1)

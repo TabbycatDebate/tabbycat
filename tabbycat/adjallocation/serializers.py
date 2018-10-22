@@ -35,3 +35,32 @@ class EditPanelAdjsPanelSerializer(EditDebateAdjsDebateSerializer):
         model = PreformedPanel
         fields = ('id', 'importance', 'adjudicators',
                   'bracket_min', 'bracket_max', 'room_rank', 'liveness')
+
+# Below classes serialise only a specified field (i.e. allocated adjudicators);
+# i.e. they act as a a lightweight data update to be broadcast back over the
+# websocket in response to websocket actions or updates rather than needing to
+# construct a complete representation of the debate or panelfrom scratch
+
+
+class SimpleDebateImportanceSerializer(EditDebateAdjsDebateSerializer):
+    class Meta:
+        model = EditDebateAdjsDebateSerializer.Meta.model
+        fields = ('id', 'importance',)
+
+
+class SimplePanelImportanceSerializer(EditPanelAdjsPanelSerializer):
+    class Meta:
+        model = EditPanelAdjsPanelSerializer.Meta.model
+        fields = ('id', 'importance',)
+
+
+class SimpleDebateAllocationSerializer(EditDebateAdjsDebateSerializer):
+    class Meta:
+        model = EditDebateAdjsDebateSerializer.Meta.model
+        fields = ('id', 'adjudicators',)
+
+
+class SimplePanelAllocationSerializer(EditPanelAdjsPanelSerializer):
+    class Meta:
+        model = EditPanelAdjsPanelSerializer.Meta.model
+        fields = ('id', 'adjudicators',)

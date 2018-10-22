@@ -50,8 +50,10 @@ export default new Vuex.Store({
     },
     setDebateOrPanelAttributes (state, debateOrPanel) {
       // For a given debate or panel set its state to match the given attributes
-      Object.entries(debateOrPanel.attrs).forEach(([key, value]) => {
-        state.debatesOrPanels[debateOrPanel.id][key] = value
+      Object.entries(debateOrPanel).forEach(([key, value]) => {
+        if (key !== 'id') {
+          state.debatesOrPanels[debateOrPanel.id] = value
+        }
       })
     },
     toggleHighlight (state, type) {
@@ -76,8 +78,8 @@ export default new Vuex.Store({
   actions: {
     updateDebatesOrPanelsAttribute ({ commit }, updatedDebatesOrPanels) {
       // For each debate or panel mutate the state to reflect the new attributes
-      Object.entries(updatedDebatesOrPanels).forEach(([id, attrs]) => {
-        commit('setDebateOrPanelAttributes', { 'id': id, 'attrs': attrs })
+      updatedDebatesOrPanels.forEach((debateOrPanel) => {
+        commit('setDebateOrPanelAttributes', debateOrPanel)
       })
       // Send the result over the websocket
       this.state.wsBridge.send({

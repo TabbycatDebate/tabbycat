@@ -91,25 +91,6 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
             Prefetch('preformedpaneladjudicator_set',
                 queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator'))
         )
-        panels = self.create_extra_panels(list(panels))
-        return panels
-
-    def create_extra_panels(self, panels):
-        """ Assume the number of preformed panels should always match the
-        maximum possible number of debates (for now). These should be
-        automatically created so they are in-place upon page load """
-        teams_count = self.tournament.team_set.count()
-        if self.tournament.pref('teams_in_debate') == 'bp':
-            debates_count = teams_count // 4
-        else:
-            debates_count = teams_count // 2
-
-        new_panels_count = debates_count - len(panels)
-        if new_panels_count > 0:
-            new_panels = [PreformedPanel(round=self.round)] * new_panels_count
-            PreformedPanel.objects.bulk_create(new_panels)
-            panels.extend(new_panels)
-
         return panels
 
     def debates_or_panels_factory(self, panels):

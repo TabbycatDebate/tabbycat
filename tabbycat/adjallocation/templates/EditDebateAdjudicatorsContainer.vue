@@ -2,8 +2,8 @@
 
   <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
 
-    <drag-and-drop-actions slot="actions" prioritise="true" allocate="true" shard="true"
-                           @shard="shard" @allocate="allocate" @prioritise="prioritise">
+    <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" prioritise="true" allocate="true" shard="true"
+                           @show-shard="showShard" @show-allocate="showAllocate" @show-prioritise="showPrioritise">
       <template slot="default-highlights">
         <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
@@ -36,7 +36,7 @@
       <modal-for-allocating :intro-text="gettext(allocateIntro)"
                             :context-of-action="'allocate_debate_adjs'"></modal-for-allocating>
       <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"
-                              :context-of-action="'prioritise_debate_adjs'"></modal-for-prioritising>
+                              :context-of-action="'prioritise_debates'"></modal-for-prioritising>
     </template>
 
   </drag-and-drop-layout>

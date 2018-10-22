@@ -5,20 +5,17 @@
     <div class="p-2 d-flex align-items-center">
       <i data-feather="move"></i>
     </div>
-    <div class="flex-1 p-1 d-flex border-left vue-droppable"
-        :class="{ 'vue-is-drag-enter': isDroppable }">
+    <div class="flex-1 p-1 d-flex border-left vue-droppable">
       <draggable-adjudicator v-if="adjudicators.C[0]" class="flex-fill"
                              :item="allAdjudicators[adjudicators.C[0]]">
       </draggable-adjudicator>
     </div>
-    <div class="flex-3 p-1 d-flex flex-wrap border-left vue-droppable"
-        :class="{ 'vue-is-drag-enter': isDroppable }">
+    <div class="flex-3 p-1 d-flex flex-wrap border-left vue-droppable">
       <draggable-adjudicator v-for="adjID in adjudicators.P"
                              :item="allAdjudicators[adjID]" :key="adjID">
       </draggable-adjudicator>
     </div>
-    <div class="flex-1 p-1 d-flex border-left vue-droppable"
-        :class="{ 'vue-is-drag-enter': isDroppable }">
+    <div class="flex-1 p-1 d-flex border-left vue-droppable">
       <draggable-adjudicator v-for="adjID in adjudicators.T"
                              :item="allAdjudicators[adjID]" :key="adjID">
       </draggable-adjudicator>

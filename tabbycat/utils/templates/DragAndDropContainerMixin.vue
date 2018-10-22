@@ -24,6 +24,9 @@ export default {
     debatesOrPanels () {
       return this.$store.getters.allDebatesOrPanels
     },
+    debatesOrPanelsCount: function () {
+      return Object.keys(this.debatesOrPanels).length
+    },
     tournamentSlugForWSPath: function () {
       return this.initialData.tournament.slug
     },
@@ -51,13 +54,13 @@ export default {
     handleSocketReceive: function (socketLabel, payload) {
       this.$store.dispatch('receiveUpdatedupdateDebatesOrPanelsAttribute', payload)
     },
-    shard: function () {
+    showShard: function () {
       $('#confirmShardModal').modal('show')
     },
-    allocate: function () {
+    showAllocate: function () {
       $('#confirmAllocateModal').modal('show')
     },
-    prioritise: function () {
+    showPrioritise: function () {
       $('#confirmPrioritiseModal').modal('show')
     },
   },

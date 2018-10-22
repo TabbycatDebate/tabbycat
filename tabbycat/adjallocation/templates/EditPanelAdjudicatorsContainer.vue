@@ -2,8 +2,12 @@
 
   <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
 
-    <drag-and-drop-actions slot="actions" prioritise="true" allocate="true" shard="true"
-                           @shard="shard" @allocate="allocate" @prioritise="prioritise">
+    <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" prioritise="true" allocate="true" shard="true"
+                           @show-shard="showShard" @show-allocate="showAllocate" @show-prioritise="showPrioritise">
+      <template slot="extra-actions">
+        <button :class="['btn', debatesOrPanelsCount > 0 ? 'btn-outline-primary' : 'btn-success']"
+                @click="showCreatePanels" v-text="gettext('Create Panels')"></button>
+      </template>
       <template slot="default-highlights">
         <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
@@ -17,7 +21,7 @@
                 title="This adjudicator has a nominated conflict with this panelist."></button>
         <button class="btn panel-incomplete"
                 data-toggle="tooltip" v-text="gettext('Incomplete')"
-                title="Panel is eithr missing a chair or enough adjudicators for a voting majority."></button>
+                title="Panel is either missing a chair or enough adjudicators for a voting majority."></button>
       </template>
     </drag-and-drop-actions>
 
@@ -30,14 +34,20 @@
         <template slot="teams"><span></span></template><!--Hide Teams-->
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
+      <div class="text-center lead mx-5 p-5" v-if="debatesOrPanelsCount === 0">
+        <p class="mx-5 lead px-5" v-text="gettext(createPanelsInline)"></p>
+      </div>
     </template>
 
     <template slot="modals">
+      <modal-for-creating-preformed-panels
+        :intro-text="gettext('Create Preformed Panels')"
+        :context-of-action="'create_preformed_panels'"></modal-for-creating-preformed-panels>
       <modal-for-sharding :intro-text="gettext('shardIntro')"></modal-for-sharding>
       <modal-for-allocating :intro-text="gettext(allocateIntro)"
                             :context-of-action="'allocate_panel_adjs'"></modal-for-allocating>
       <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"
-                              :context-of-action="'prioritise_panel_adjs'"></modal-for-prioritising>
+                              :context-of-action="'prioritise_panels'"></modal-for-prioritising>
     </template>
 
   </drag-and-drop-layout>
@@ -45,10 +55,15 @@
 </template>
 
 <script>
+import ModalForCreatingPreformedPanels from '../../utils/templates/modals/ModalForCreatingPreformedPanels.vue'
+
 import EditEitherAdjudicatorsSharedMixin from './EditEitherAdjudicatorsSharedMixin.vue'
 
 export default {
   mixins: [EditEitherAdjudicatorsSharedMixin],
+  components: {
+    ModalForCreatingPreformedPanels,
+  },
   data: () => ({
     sockets: ['panels'], // Override the normal debate socket from DragAndDropContainerMixin
     shardIntro: `Sharding narrows the debates displayed to show only a specific subset of the
@@ -57,6 +72,13 @@ export default {
       allocations in their place.`,
     prioritiseIntro: `Using auto-prioritise will remove all existing panel priorities and
       assign new ones.`,
+    createPanelsInline: `There are no Preformed Panels for this round. You will need to create
+      some first by using the button in the top-left.`,
   }),
+  methods: {
+    showCreatePanels: function () {
+      $('#confirmCreatePreformedPanelsModal').modal('show')
+    },
+  },
 }
 </script>

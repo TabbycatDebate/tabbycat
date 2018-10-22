@@ -2,7 +2,7 @@
 
   <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
 
-    <drag-and-drop-actions slot="actions"></drag-and-drop-actions>
+    <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount"></drag-and-drop-actions>
 
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in debatesOrPanels" :key="debate.id" :debateOrPanel="debate">

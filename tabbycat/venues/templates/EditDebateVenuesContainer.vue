@@ -2,7 +2,7 @@
 
   <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
 
-    <drag-and-drop-actions slot="actions" allocate="true" @allocate="allocate">
+    <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" allocate="true" @show-allocate="showAllocate">
       <template slot="default-highlights">
         <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
         <button class="btn conflictable conflicts-toolbar hover-adjudicator"

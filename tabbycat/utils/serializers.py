@@ -1,9 +1,16 @@
 from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from participants.serializers import AdjudicatorSerializer, TeamSerializer
 from venues.models import Venue
+
+
+def django_rest_json_render(data):
+    """ For some reason JSONRenderer produces byte strings which cant be parsed
+    into templates or sent over a websocket; so need to intermediate """
+    return bytes.decode(JSONRenderer().render(data))
 
 
 class VenueSerializer(serializers.ModelSerializer):

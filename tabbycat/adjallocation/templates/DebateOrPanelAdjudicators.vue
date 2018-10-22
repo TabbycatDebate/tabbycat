@@ -1,7 +1,6 @@
 <template>
 
-  <div class="d-flex flex-36 vue-droppable vue-droppable-parent p-1"
-       :class="{ 'vue-is-drag-enter': isDroppable }">
+  <div class="d-flex flex-36 vue-droppable vue-droppable-parent">
     <div class="d-flex align-items-center">
       metrics
     </div>

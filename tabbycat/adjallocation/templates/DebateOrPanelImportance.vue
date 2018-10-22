@@ -41,8 +41,7 @@ export default {
       },
       set (value) {
         // Pass a message to the parent component to then save a change to the store
-        let updatedDebatesOrPanels = { }
-        updatedDebatesOrPanels[this.debateOrPanel.id] = { 'importance': value }
+        let updatedDebatesOrPanels = [{ 'id': this.debateOrPanel.id, 'importance': value }]
         this.$store.dispatch('updateDebatesOrPanelsAttribute', updatedDebatesOrPanels)
       },
     },

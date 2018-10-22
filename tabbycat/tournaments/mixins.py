@@ -14,7 +14,6 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
-from rest_framework.renderers import JSONRenderer
 
 from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
@@ -25,6 +24,7 @@ from participants.serializers import InstitutionSerializer, RegionSerializer
 from tournaments.serializers import RoundSerializer, TournamentSerializer
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
+from utils.serializers import django_rest_json_render
 
 from .models import Round, Tournament
 
@@ -396,7 +396,7 @@ class DragAndDropMixin(RoundMixin):
 
     def json_render(self, data):
         # For some reason JSONRenderer produces byte strings
-        return bytes.decode(JSONRenderer().render(data))
+        return django_rest_json_render(data)
 
     def get_serialised_regions(self):
         regions = Region.objects.all()

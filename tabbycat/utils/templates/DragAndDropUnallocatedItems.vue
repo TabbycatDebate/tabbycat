@@ -1,7 +1,7 @@
 <template>
   <div class="navbar-light fixed-bottom d-flex flex-column p-0">
 
-    <div :class="['vue-droppable d-flex flex-column', { 'vue-is-drag-enter': isDroppable }]">
+    <div :class="['vue-droppable d-flex flex-column pb-2']">
 
       <section class="vc-resize-handler mx-auto mt-1 text-center"
                data-toggle="tooltip" :title="gettext('Drag to resize')">
