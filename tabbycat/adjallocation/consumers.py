@@ -11,6 +11,7 @@ from tournaments.models import Round
 
 from .models import PreformedPanel
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
+from .preformed import copy_panels_to_debates
 from .preformed.dumb import DumbPreformedPanelAllocator
 
 logger = logging.getLogger(__name__)
@@ -88,7 +89,8 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         debates = round.debate_set.all()
         panels = round.preformedpanel_set.all()
         allocator = DumbPreformedPanelAllocator(debates, panels, round)
-        allocator.allocate()  # writes to database
+        debates, panels = allocator.allocate()
+        copy_panels_to_debates(debates, panels)
 
     def prioritise_debate_adjs(self, event):
         # PROOF OF CONCEPT DEMO

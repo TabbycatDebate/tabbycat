@@ -11,6 +11,13 @@ from ..conflicts import ConflictsInfo, HistoryInfo
 
 logger = logging.getLogger(__name__)
 
+registry = {}
+
+
+def register(cls):
+    registry[cls.key] = cls
+    return cls
+
 
 class BasePreformedPanelAllocator:
     """Base class for preformed panel allocators.
@@ -43,18 +50,9 @@ class BasePreformedPanelAllocator:
         self.history = HistoryInfo(round=round)
 
     def allocate(self):
-        allocations = self.get_allocations()
-        self.write_allocations_to_db(allocations)
-
-    def write_allocations_to_db(self, allocations):
-        """Writes the given allocations to the database, wiping existing
-        adjudicator allocations for the given debates if there are any.
-        `allocations` must be an iterable of 2-tuples `(panel, debate)`,
-        where `panel` is a `PreformedPanel` and `debate` is a `Debate`."""
-        for debate, panel in allocations:
-            debate.debateadjudicator_set.all().delete()
-            for ppa in panel.preformedpaneladjudicator_set.all():
-                debate.debateadjudicator_set.create(adjudicator=ppa.adjudicator, type=ppa.type)
-
-    def get_allocations(self):
+        """Must return a tuple of two lists: a list of `Debate` instances, and
+        a list of `PreformedPanel` instances, presumably those in `self.debates`
+        and `self.panels`. The list of panels (but not the list of debates) may
+        have `None` in it, to indicate that the corresponding debate should have
+        its adjudicators cleared."""
         raise NotImplementedError

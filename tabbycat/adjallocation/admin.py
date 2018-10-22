@@ -54,6 +54,6 @@ class PreformedPanelAdjudicatorInline(admin.TabularInline):
 
 @admin.register(PreformedPanel)
 class PreformedPanelAdmin(admin.ModelAdmin):
-    list_display = ('round', 'importance')
+    list_display = ('id', 'round', 'importance', 'bracket_min', 'bracket_max', 'room_rank', 'liveness')
     list_select_related = ('round__tournament',)
     inlines = (PreformedPanelAdjudicatorInline,)

@@ -1,10 +1,11 @@
-from .base import BasePreformedPanelAllocator
+from .base import BasePreformedPanelAllocator, register
 
 
+@register
 class DumbPreformedPanelAllocator(BasePreformedPanelAllocator):
-    """Allocates panels to debates in the same order as their room ranks."""
+    """Allocates panels to debates arbitrarily."""
 
-    def get_allocations(self):
-        debates = sorted(self.debates, key=lambda d: d.room_rank)
-        panels = sorted(self.panels, key=lambda p: p.room_rank)
-        return zip(debates, panels)
+    key = "dumb"
+
+    def allocate(self):
+        return self.debates, self.panels

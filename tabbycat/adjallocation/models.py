@@ -140,6 +140,17 @@ class PreformedPanel(models.Model):
         """Used by objects that work with both Debate and PreformedPanel."""
         return self.preformedpaneladjudicator_set
 
+    @property
+    def adjudicators(self):
+        """Returns an AdjudicatorAllocation containing the adjudicators on this
+        panel."""
+        try:
+            return self._adjudicators
+        except AttributeError:
+            from adjallocation.allocation import AdjudicatorAllocation
+            self._adjudicators = AdjudicatorAllocation(self, from_db=True)
+            return self._adjudicators
+
     # Properties to make this look like Debate for the adjudicator allocators
 
     @property
