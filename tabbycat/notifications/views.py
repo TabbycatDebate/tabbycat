@@ -162,5 +162,5 @@ class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
 class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):
 
     def get_extra(self):
-        extra = {'tournament_id': self.tournament.id, 'round_id': self.round.id}
+        extra = {'round_id': self.round.id}
         return extra

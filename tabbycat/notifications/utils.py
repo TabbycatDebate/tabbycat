@@ -85,7 +85,7 @@ def randomized_url_email_generator(to, url, tournament_id):
     return emails
 
 
-def ballots_email_generator(debate_id):
+def ballots_email_generator(to, debate_id):
     emails = []
     debate = Debate.objects.get(id=debate_id)
     tournament = debate.round.tournament

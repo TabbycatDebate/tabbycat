@@ -1335,6 +1335,10 @@ class BallotEmailMessageBody(LongStringPreference):
     default = "Hi {{ USER }},\n\nYour ballot for {{ DEBATE }} has been successfully received, with these scores:\n\n{{ SCORES }}\n\nIf there are any problems, please contact the tab team."
 
 
+# -----
+# Email-related but unattached for use in separate inline forms
+# -----
+
 @tournament_preferences_registry.register
 class PointsEmailSubjectLine(StringPreference):
     help_text = _("The subject line for emails sent to speakers with their team points.")
@@ -1349,15 +1353,6 @@ class PointsEmailMessageBody(LongStringPreference):
     verbose_name = _("Team points message")
     name = 'team_points_email_message'
     default = "Hi {{ USER }},\n\nAfter {{ ROUND }}, your team ({{ TEAM }}) currently has {{ POINTS }} wins in the {{ TOURN }}.\n\n{{ URL }}"
-
-
-@tournament_preferences_registry.register
-class EnableAdjudicatorDrawNotification(BooleanPreference):
-    help_text = _("Whether to send a notification informing adjudicators of their assignments when the draw is released.")
-    verbose_name = _("Adjudicator draw notifications")
-    section = email
-    name = 'enable_adj_email'
-    default = False
 
 
 @tournament_preferences_registry.register
@@ -1397,15 +1392,6 @@ class PrivateUrlEmailMessage(LongStringPreference):
         "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
         "Your personal private URL is:\n"
         "{{ URL }}")
-
-
-@tournament_preferences_registry.register
-class MotionReleaseNotification(BooleanPreference):
-    help_text = _("Whether to send emails to speakers on motion release.")
-    verbose_name = _("Motion release notifications")
-    section = email
-    name = 'enable_motion_email'
-    default = False
 
 
 @tournament_preferences_registry.register

@@ -151,8 +151,7 @@ class EmailRandomisedUrlsView(TournamentTemplateEmailCreateView):
 
     def get_extra(self):
         extra = super().get_extra()
-        extra['url'] = self.request.build_absolute_uri(
-                reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
+        extra['url'] = self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
         return extra
 
 

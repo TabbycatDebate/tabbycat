@@ -304,10 +304,11 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             if self.should_send_email_receipts():
                 async_to_sync(get_channel_layer().send)("notifications", {
                     "type": "email",
-                    "message": SentMessageRecord.EVENT_TYPE_BALLOT,
+                    "message": SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED,
                     "extra": {"debate_id": self.debate.id},
                     "subject": self.tournament.pref("ballot_email_subject"),
-                    "body": self.tournament.pref("ballot_email_message")
+                    "body": self.tournament.pref("ballot_email_message"),
+                    "send_to": None
                 })
 
         self.add_success_message()
@@ -361,7 +362,7 @@ class BaseNewBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
     def add_success_message(self):
         message = _("Ballot set for %(debate)s added.") % {'debate': self.matchup_description()}
-        if self.should_send_email_receipts():
+        if self.should_send_email_receipts() and self.ballotsub.confirmed:
             message += _(" Email receipts queued to be sent.")
         messages.success(self.request, message)
 
@@ -420,7 +421,7 @@ class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
         else:
             message = _("Edits to ballot set for %(matchup)s saved.")
 
-        if self.should_send_email_receipts():
+        if self.should_send_email_receipts() and self.ballotsub.confirmed:
             message += _(" Email receipts queued to be sent.")
 
         messages.success(self.request, message % {'matchup': self.matchup_description()})
