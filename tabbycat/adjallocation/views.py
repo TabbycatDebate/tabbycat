@@ -26,7 +26,7 @@ from .allocators import legacy_allocate_adjudicators
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .conflicts import ConflictsInfo, HistoryInfo
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, DebateAdjudicator, PreformedPanel,
+                     AdjudicatorTeamConflict, DebateAdjudicator,
                      PreformedPanelAdjudicator, TeamInstitutionConflict)
 from .serializers import EditDebateAdjsDebateSerializer, EditPanelAdjsPanelSerializer, EditPanelOrDebateAdjSerializer
 

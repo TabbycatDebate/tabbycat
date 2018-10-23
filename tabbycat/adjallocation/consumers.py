@@ -4,7 +4,6 @@ import random
 from asgiref.sync import async_to_sync
 from channels.consumer import SyncConsumer
 from channels.layers import get_channel_layer
-from rest_framework.renderers import JSONRenderer
 
 from actionlog.models import ActionLogEntry
 from draw.consumers import BaseAdjudicatorContainerConsumer
@@ -14,7 +13,8 @@ from .models import PreformedPanel
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed import copy_panels_to_debates
 from .preformed.dumb import DumbPreformedPanelAllocator
-from .serializers import SimplePanelAllocationSerializer, SimplePanelImportanceSerializer
+from .serializers import (SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer,
+                          SimplePanelAllocationSerializer, SimplePanelImportanceSerializer)
 
 logger = logging.getLogger(__name__)
 
@@ -35,14 +35,15 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
                                    tournament_id=extra['tournament_id'])
 
     def return_response(self, serialized_debates_or_panels, group_name):
+        content = {'debatesOrPanels': serialized_debates_or_panels.data}
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'broadcast_debates_or_panels',
-                'content': JSONRenderer().render(serialized_debates_or_panels.data)
+                'content': content
             }
         )
 
-    def reserialize_debate_or_panels(self, serialiser, round, panels=None):
+    def reserialize_panels(self, serialiser, round, panels=None):
         if not panels:
             panels = round.preformedpanel_set.all() # TODO: prefetch
 
@@ -98,9 +99,7 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         for alloc in allocator.allocate():
             alloc.save()
 
-        print('done allocating')
         content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
-        print('done content', content)
         self.return_response(content, event['extra']['group_name'])
 
     def allocate_panels_to_debates(self, event):
@@ -117,9 +116,10 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         self.return_response(content, event['extra']['group_name'])
 
     def prioritise_debates(self, event):
+        # PROOF OF CONCEPT DEMO
         self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_AUTO)
 
-        # PROOF OF CONCEPT DEMO
+        round = Round.objects.get(pk=event['extra']['round_id'])
         debates = round.debate_set.all()
         for debate in debates:
             debate.importance = random.randint(-2, 2)
@@ -129,15 +129,16 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         self.return_response(content, event['extra']['group_name'])
 
     def prioritise_panels(self, event):
+        # PROOF OF CONCEPT DEMO
         self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO)
 
-        # PROOF OF CONCEPT DEMO
-        panels = round.debate_set.all()
+        round = Round.objects.get(pk=event['extra']['round_id'])
+        panels = round.preformedpanel_set.all()
         for panel in panels:
             panel.importance = random.randint(-2, 2)
             panel.save()
 
-        content = self.reserialize_debates(SimplePanelImportanceSerializer, round, panels)
+        content = self.reserialize_panels(SimplePanelImportanceSerializer, round, panels)
         self.return_response(content, event['extra']['group_name'])
 
     def create_preformed_panels(self, event):

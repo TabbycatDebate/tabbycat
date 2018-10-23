@@ -48,12 +48,14 @@ export default new Vuex.Store({
       state.wsBridge = bridge // Load websocket into store for universal access
       state.wsPseudoComponentID = Math.floor(Math.random() * 10000)
     },
-    setDebateOrPanelAttributes (state, debateOrPanel) {
-      // For a given debate or panel set its state to match the given attributes
-      Object.entries(debateOrPanel).forEach(([key, value]) => {
-        if (key !== 'id') {
-          state.debatesOrPanels[debateOrPanel.id] = value
-        }
+    setDebateOrPanelAttributes (state, changes) {
+      // For a given set of debates or panels update their attribute values
+      changes.forEach((debateOrPanel) => {
+        Object.entries(debateOrPanel).forEach(([key, value]) => {
+          if (key !== 'id') {
+            state.debatesOrPanels[debateOrPanel.id][key] = value
+          }
+        })
       })
     },
     toggleHighlight (state, type) {
@@ -77,24 +79,24 @@ export default new Vuex.Store({
   // Note actions are async
   actions: {
     updateDebatesOrPanelsAttribute ({ commit }, updatedDebatesOrPanels) {
-      // For each debate or panel mutate the state to reflect the new attributes
-      updatedDebatesOrPanels.forEach((debateOrPanel) => {
-        commit('setDebateOrPanelAttributes', debateOrPanel)
+      // Mutate debate/panel state to reflect the sent attributes via data like:
+      // { attributeKey: [{ id: debateID, attributeKey: attributeValue ], ... }
+      Object.entries(updatedDebatesOrPanels).forEach(([attribute, changes]) => {
+        commit('setDebateOrPanelAttributes', changes)
       })
-      // Send the result over the websocket
-      this.state.wsBridge.send({
-        debatesOrPanels: updatedDebatesOrPanels,
-        componentID: this.state.wsPseudoComponentID,
-      })
+      // Send the result over the websocket, like:
+      // "importance": [{ "id": 71, "importance": "0"} ], "componentID": 1407 }
+      updatedDebatesOrPanels['componentID'] = this.state.wsPseudoComponentID
+      this.state.wsBridge.send(updatedDebatesOrPanels)
       commit('updateSaveCounter')
-      // TODO: error handling; locking; checking if the result matches send
+      // TODO: error handling; locking; checking if the result matches sent data
     },
     receiveUpdatedupdateDebatesOrPanelsAttribute ({ commit }, payload) {
-      // Only commit changes from websockets initiated from other instances
+      // Commit changes from websockets i.e.
+      // { "componentID": 5711, "debatesOrPanels": [{ "id": 72, "importance": "0" }] }
+      // Don't update the data if it came from this store as it's mutated
       if (payload.componentID !== this.state.wsPseudoComponentID) {
-        Object.entries(payload.debatesOrPanels).forEach(([id, attrs]) => {
-          commit('setDebateOrPanelAttributes', { 'id': id, 'attrs': attrs })
-        })
+        commit('setDebateOrPanelAttributes', payload.debatesOrPanels)
       }
     },
   },
