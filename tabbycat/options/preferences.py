@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, validate_slug
 from django.forms import ValidationError
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
@@ -1305,6 +1305,17 @@ class ReplyToEmailAddress(StringPreference):
     section = email
     name = 'reply_to_address'
     default = ""
+
+
+@tournament_preferences_registry.register
+class EmailWebhookKey(StringPreference):
+    help_text = _("A secret key to accept email status events")
+    verbose_name = _("Email status secret key")
+    section = email
+    name = 'email_hook_key'
+    default = ""
+    required = False
+    field_kwargs = {'validators': [validate_slug]}
 
 
 @tournament_preferences_registry.register

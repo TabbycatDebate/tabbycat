@@ -1,11 +1,16 @@
+from datetime import datetime
+import json
 from smtplib import SMTPException
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.views.generic.base import View
 from django.views.generic.edit import FormView
 
 from participants.models import Person
@@ -16,6 +21,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
 
 from .forms import BasicEmailForm, TestEmailForm
+from .models import EmailStatus, SentMessageRecord
 
 
 class TestEmailView(AdministratorMixin, FormView):
@@ -35,6 +41,25 @@ class TestEmailView(AdministratorMixin, FormView):
             messages.success(self.request,
                 _("A test email has been sent to %(recipient)s.") % {'recipient': recipient})
         return super().form_valid(form)
+
+
+class EmailEventWebhookView(TournamentMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        if kwargs['key'] is not self.tournament.pref('email_hook_key'):
+            return HttpResponse(status_code=404) # 404: Not Found
+
+        data = json.loads(request.body)
+
+        for obj in data:
+            email = SentMessageRecord.objects.get(message_id=obj['smtp-id'])
+
+            dt = datetime.fromtimestamp(obj['timestamp'])
+            timestamp = timezone.make_aware(dt, timezone.utc)
+
+            EmailStatus.objects.create(email=email, timestamp=timestamp, event=obj['event'], data=obj)
+
+        return HttpResponse(status_code=201) # 201: Created
 
 
 class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTemplateView, FormView):
