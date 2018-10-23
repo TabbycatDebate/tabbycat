@@ -27,10 +27,8 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="panel in debatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
-        <debate-or-panel-importance slot="importance"
-          :debateOrPanel="panel"></debate-or-panel-importance>
-        <debate-or-panel-adjudicators slot="adjudicators"
-          :adjudicators="panel.adjudicators"></debate-or-panel-adjudicators>
+        <debate-or-panel-importance slot="importance" :debate-or-panel="panel"></debate-or-panel-importance>
+        <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="panel"></debate-or-panel-adjudicators>
         <template slot="teams"><span></span></template><!--Hide Teams-->
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>

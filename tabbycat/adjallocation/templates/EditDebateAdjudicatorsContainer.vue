@@ -23,10 +23,8 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in debatesOrPanels" :key="debate.id" :debateOrPanel="debate">
-        <debate-or-panel-importance slot="importance"
-          :debateOrPanel="debate"></debate-or-panel-importance>
-        <debate-or-panel-adjudicators slot="adjudicators"
-          :adjudicators="debate.adjudicators"></debate-or-panel-adjudicators>
+        <debate-or-panel-importance slot="importance" :debate-or-panel="debate"></debate-or-panel-importance>
+        <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="debate"></debate-or-panel-adjudicators>
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
     </template>

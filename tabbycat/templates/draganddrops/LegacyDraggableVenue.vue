@@ -25,12 +25,12 @@
 </template>
 
 <script>
-import DraggableMixin from '../draganddrops/DraggableMixin.vue'
+import LegacyDraggableMixin from '../draganddrops/LegacyDraggableMixin.vue'
 import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
 import SlideOverVenueMixin from '../info/SlideOverVenueMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverVenueMixin],
+  mixins: [LegacyDraggableMixin, SlideOverSubjectMixin, SlideOverVenueMixin],
   props: { venue: Object, debateId: null },
   computed: {
     titleWithLimit: function () {

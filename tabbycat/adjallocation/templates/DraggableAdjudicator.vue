@@ -1,5 +1,5 @@
 <template>
-  <draggable-item>
+  <draggable-item :drop-payload="dropPayload">
 
       <span slot="number">
         <small class="vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>
@@ -19,7 +19,7 @@ import DraggableItem from '../../utils/templates/DraggableItem.vue'
 
 export default {
   components: { DraggableItem },
-  props: { item: Object },
+  props: { item: Object, dropPayload: Object },
   computed: {
     adjudicator: function () {
       return this.item

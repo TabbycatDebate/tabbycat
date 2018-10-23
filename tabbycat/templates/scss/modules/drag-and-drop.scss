@@ -32,6 +32,12 @@
   &.vue-draggable-child {
     border-color: lighten($gray-600, 20%); // Lighten panel draggable
   }
+
+  &.vue-draggable-locked {
+    opacity: 0.33;
+    pointer-events: none;
+  }
+
 }
 
 .vue-droppable {
@@ -40,8 +46,12 @@
   &.vue-droppable-parent {
     background: lighten($droppable-bg, 2%); // Lighten panel draggable
   }
-}
 
+  &.vue-droppable-locked {
+    background: #fff;
+    position: relative; // For the spinner
+  }
+}
 
 
 
@@ -173,7 +183,7 @@
   min-height: 66px;
 }
 
-.vue-is-drag-enter {
+.vue-droppable-enter {
   background: theme-color("success") !important;
 }
 

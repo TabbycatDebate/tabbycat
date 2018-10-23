@@ -1,6 +1,7 @@
 <template>
 
-  <div draggable=true class="d-flex m-1 align-items-center vue-draggable">
+  <div draggable=true @dragstart="dragStart" @dragend="dragEnd"
+       :class="['d-flex m-1 align-items-center', dragableClasses]">
 
     <slot>
       <h4 class="mb-0 px-2 py-1 text-monospace vc-draggable-number vc-number">
@@ -21,8 +22,10 @@
 </template>
 
 <script>
-export default {
+import DraggableMixin from './DraggableMixin.vue'
 
+export default {
+  mixins: [DraggableMixin],
 }
 </script>
 

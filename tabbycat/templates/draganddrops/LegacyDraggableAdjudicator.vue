@@ -32,14 +32,14 @@
 
 <script>
 import _ from 'lodash'
-import DraggableMixin from '../draganddrops/DraggableMixin.vue'
+import LegacyDraggableMixin from '../draganddrops/LegacyDraggableMixin.vue'
 import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
 import SlideOverAdjudicatorMixin from '../info/SlideOverAdjudicatorMixin.vue'
 import HighlightableMixin from '../allocations/HighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
+  mixins: [LegacyDraggableMixin, SlideOverSubjectMixin, SlideOverAdjudicatorMixin,
     HighlightableMixin, ConflictableMixin],
   props: { adjudicator: Object, debateId: null, percentiles: Array },
   data: function () {

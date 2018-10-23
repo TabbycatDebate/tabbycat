@@ -60,25 +60,38 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
         del content['importance'] # Reserialise as debatesOrPanels
         self.return_attributes(content, serialized)
 
+    def delete_adjudicators(self, debate_or_panel, adj_ids):
+        return debate_or_panel.related_adjudicator_set.exclude(
+            adjudicator_id__in=adj_ids).delete()
+
+    def create_adjudicators(self, debate_or_panel, adj_id, adj_type):
+        return debate_or_panel.related_adjudicator_set.update_or_create(
+            adjudicator_id=adj_id, defaults={'type': adj_type})
+
     def receive_adjudicators(self, content):
+        print('RA')
         # Update adjudicatorss on the django data then reserialize/return it
         changes = {int(c['id']): c for c in content['adjudicators']}
         debates_or_panels = self.get_debates_or_panels(changes)
         for d_or_p in debates_or_panels:
-            sent_adjudicators = changes[d_or_p.id]['adjudicators']
+            sent_allocation = changes[d_or_p.id]['adjudicators']
+            sent_allocation_ids = []
+            for (position, position_ids) in sent_allocation.items():
+                sent_allocation_ids.extend(adj_id for adj_id in position_ids)
 
-            # Delete adjudicators who aren't in the posted information
-            adj_ids = [a["adjudicator"]["id"] for a in sent_adjudicators]
-            delete_count, deleted = self.delete_adjudicators(d_or_p, adj_ids)
+            # Delete adjudicators in the posted information
+            delete_count, deleted = self.delete_adjudicators(d_or_p, sent_allocation_ids)
             logger.debug("Deleted %d adjudicators from %s", delete_count, d_or_p)
 
-            # Update or create positions of adjudicators in debate
-            for d_or_p_adjudicator in sent_adjudicators:
+            # TODO: wire up using new sent_allocation structure
+            # Re-create positions of adjudicators in debate
+            for d_or_p_adjudicator in sent_allocation:
                 adj_id = d_or_p_adjudicator['adjudicator']['id']
                 adj_type = d_or_p_adjudicator['position']
                 obj, created = self.create_adjudicators(d_or_p, adj_id, adj_type)
 
         serialized = self.adjudicators_serializer(debates_or_panels, many=True)
+        print('RA serialized', serialized)
         del content['adjudicators']
         self.return_attributes(content, serialized)
 
@@ -101,10 +114,3 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
     model = Debate
     importance_serializer = SimpleDebateImportanceSerializer
     adjudicators_serializer = SimpleDebateAllocationSerializer
-
-    def delete_adjudicators(self, debate_or_panel, adj_ids):
-        return debate_or_panel.related_adjudicator_set.exclude(adjudicator_id__in=adj_ids).delete()
-
-    def create_adjudicators(self, debate_or_panel, adj_id, adj_type):
-        return debate_or_panel.related_adjudicator_set.update_or_create(
-            adjudicator_id=adj_id, defaults={'type': adj_type})

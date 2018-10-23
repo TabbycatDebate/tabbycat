@@ -4,7 +4,7 @@
     <div class="d-flex align-items-center">
       metrics
     </div>
-    <draggable-allocation :adjudicators="adjudicators"></draggable-allocation>
+    <draggable-allocation :debate-or-panel="debateOrPanel"></draggable-allocation>
   </div>
 
 </template>
@@ -14,6 +14,6 @@ import DraggableAllocation from './DraggableAllocation.vue'
 
 export default {
   components: { DraggableAllocation },
-  props: [ 'adjudicators' ],
+  props: [ 'debateOrPanel' ],
 }
 </script>

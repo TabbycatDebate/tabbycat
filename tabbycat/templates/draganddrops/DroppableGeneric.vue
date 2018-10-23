@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import DroppableMixin from '../draganddrops/DroppableMixin.vue'
+import LegacyDroppableMixin from '../draganddrops/LegacyDroppableMixin.vue'
 import FeatherMixin from '../tables/FeatherMixin.vue'
 
 export default {
-  mixins: [DroppableMixin, FeatherMixin],
+  mixins: [LegacyDroppableMixin, FeatherMixin],
   props: { assignmentId: Number, assignmentPosition: String, extraCss: '' },
   data: function () {
     return { icon: 'loader' }

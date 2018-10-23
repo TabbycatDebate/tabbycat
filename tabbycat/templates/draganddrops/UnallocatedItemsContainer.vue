@@ -13,7 +13,7 @@
     </section>
 
     <div class="legacy-vue-droppable unallocated-items pt-4 p-2 d-flex flex-wrap"
-         :class="{ 'vue-is-drag-enter': isDroppable }">
+         :class="{ 'vue-droppable-enter': isDroppable }">
 
       <slot><!-- Container sets unallocated items here --></slot>
 
@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import DroppableMixin from '../draganddrops/DroppableMixin.vue'
+import LegacyDroppableMixin from '../draganddrops/LegacyDroppableMixin.vue'
 
 export default {
-  mixins: [DroppableMixin],
+  mixins: [LegacyDroppableMixin],
   data: function () {
     return {
       height: null,

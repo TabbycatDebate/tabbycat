@@ -3,7 +3,7 @@
 // @dragover.prevent
 // @dragenter="dragEnter"
 // @dragleave="dragLeave"
-// :class="{ 'vue-is-drag-enter': isDroppable }"
+// :class="{ 'vue-droppable-enter': isDroppable }"
 // @drop="drop"
 // Subclasses can implement a handleDragEnter() handleDragLeave() handleDrop()
 
@@ -13,7 +13,7 @@ export default {
   computed: {
     droppableClasses: function () {
       if (this.isDroppable && !this.locked) {
-        return 'legacy-vue-droppable vue-is-drag-enter'
+        return 'legacy-vue-droppable vue-droppable-enter'
       }
       if (this.locked) {
         return 'legacy-vue-droppable locked'
