@@ -74,3 +74,14 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
       * ``{{ BREAK }}``: Break categories which the team is a member
       * ``{{ SPEAKERS }}``: A list of the speakers in the team
       * ``{{ INSTITUTION }}``: The team's affiliation
+
+Event Webhook
+=============
+
+With SendGrid, the status of sent emails can be sent to Tabbycat to be displayed, giving an indication of failures and whether participants have opened the messages. To activate this feature, setup must be done both in your SendGrid account and in Tabbycat.
+
+1. Set a secret key in the Email section of the tournament's preferences. This key must be alphanumeric without any spaces.
+2. Copy the "web-hook" link presented in a box at the top of the "email participants" page.
+3. Go to https://app.sendgrid.com/settings/mail_settings and select "Event Notifications"
+4. Enable the feature and paste the Tabbycat URL under "HTTP POST URL".
+5. Select the notifications to keep track of (or all of them).

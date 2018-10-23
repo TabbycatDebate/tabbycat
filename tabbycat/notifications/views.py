@@ -71,6 +71,11 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
     sort_key = 'role'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
+        return context
+
     def get_default_send_queryset(self):
         return self.get_queryset().filter(email__isnull=False).exclude(email__exact="")
 
