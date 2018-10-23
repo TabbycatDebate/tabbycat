@@ -16,7 +16,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
 from results.models import SpeakerScore, TeamScore
@@ -64,8 +64,8 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
-        kwargs['email_sent'] = SentMessageRecord.objects.filter(
-            tournament=self.tournament, event=SentMessageRecord.EVENT_TYPE_TEAM).exists()
+        kwargs['email_sent'] = BulkNotification.objects.filter(
+            tournament=self.tournament, event=BulkNotification.EVENT_TYPE_TEAM).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -162,7 +162,7 @@ class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
 class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     page_subtitle = _("Team Registration")
 
-    event = SentMessageRecord.EVENT_TYPE_TEAM
+    event = BulkNotification.EVENT_TYPE_TEAM
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 

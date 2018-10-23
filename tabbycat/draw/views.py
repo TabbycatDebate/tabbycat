@@ -20,7 +20,7 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from divisions.models import Division
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
@@ -382,7 +382,7 @@ class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPag
 class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Adjudicator Assignments")
 
-    event = SentMessageRecord.EVENT_TYPE_DRAW
+    event = BulkNotification.EVENT_TYPE_DRAW
     subject_template = 'adj_email_subject'
     message_template = 'adj_email_message'
 

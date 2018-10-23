@@ -12,7 +12,7 @@ from django.views.generic.base import TemplateView
 from adjfeedback.views import BaseFeedbackOverview
 from breakqual.models import BreakCategory
 from motions.models import Motion
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
@@ -678,7 +678,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
 class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Team Standings")
 
-    event = SentMessageRecord.EVENT_TYPE_POINTS
+    event = BulkNotification.EVENT_TYPE_POINTS
     subject_template = 'team_points_email_subject'
     message_template = 'team_points_email_message'
 

@@ -11,7 +11,7 @@ from django.utils.translation import ngettext
 
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification, SentMessageRecord
 from notifications.views import TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
@@ -37,8 +37,8 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
 
     def get_participants_to_email(self, already_sent=False):
         subquery = SentMessageRecord.objects.filter(
-            event=SentMessageRecord.EVENT_TYPE_URL,
-            tournament=self.tournament, email=OuterRef('email')
+            notification__event=BulkNotification.EVENT_TYPE_URL,
+            notification__tournament=self.tournament, email=OuterRef('email')
         )
         people = self.tournament.participants.filter(
             url_key__isnull=False, email__isnull=False
@@ -142,7 +142,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 class EmailRandomisedUrlsView(TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
 
-    event = SentMessageRecord.EVENT_TYPE_URL
+    event = BulkNotification.EVENT_TYPE_URL
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
 
