@@ -91,11 +91,18 @@ def ballots_email_generator(debate_id):
         ballot = ""
 
         for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
-            ballot += _("%(side)s: %(team)s (%(rank)s points and %(points)d total speaks)\n") % {
+            if tournament.pref('teams_in_debate') == 'bp':
+                side_string = _("%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)\n")
+                points = 4 - scoresheet.rank(side)
+            else:
+                side_string = _("%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)\n")
+                points = _("Win") if side == scoresheet.winner() else _("Loss")
+
+            ballot +=  side_string % {
                 'side': side_name,
                 'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
-                'points': scoresheet.get_total(side),
-                'rank': scoresheet.rank(side)
+                'speaks': scoresheet.get_total(side),
+                'points': points
             }
 
             for pos, pos_name in zip(tournament.positions, pos_names):
