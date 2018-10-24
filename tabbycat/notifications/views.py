@@ -44,8 +44,6 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 
     form_class = BasicEmailForm
 
-    sort_key = 'role'
-
     def get_default_send_queryset(self):
         return self.get_queryset().filter(email__isnull=False).exclude(email__exact="")
 
@@ -85,7 +83,20 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         return table
 
 
-class CustomEmailCreateView(BaseSelectPeopleEmailView):
+class RoleColumnMixin:
+    """Mixin to have a column Adjudicator/Speaker for email"""
+
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_column({'key': 'role', 'title': _("Role")}, [{
+            'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker")
+        } for p in self.get_queryset()])
+
+        return table
+
+
+class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
 
     def get_success_url(self):
         return reverse_tournament('notifications-email', self.tournament)
@@ -110,15 +121,6 @@ class CustomEmailCreateView(BaseSelectPeopleEmailView):
             len(people)
         ) % {'count': len(people)})
         return super().post(request, *args, **kwargs)
-
-    def get_table(self):
-        table = super().get_table()
-
-        table.add_column({'key': 'role', 'title': _("Role")}, [{
-            'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker")
-        } for p in self.get_queryset()])
-
-        return table
 
 
 class TemplateEmailCreateView(BaseSelectPeopleEmailView):
