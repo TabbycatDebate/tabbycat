@@ -175,12 +175,27 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         annotation_filter = Q(
             debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
-            debateteam__teamscore__forfeit=False
+            debateteam__teamscore__forfeit=False,
+            debateteam__speakerscore__ghost=False
         )
         if round is not None:
-            annotation_filter &= Q(debateteam__speakerscore__position__lte=round.tournament.last_substantive_position)
+            annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+
+        if self.tournament is not None:
+            annotation_filter &= Q(debateteam__speakerscore__position__lte=self.tournament.last_substantive_position)
 
         return Avg('debateteam__speakerscore__score', filter=annotation_filter)
+
+    def get_annotated_queryset(self, queryset, column_name, round=None):
+        if round is not None:
+            self.tournament = round.tournament
+        elif queryset.first() is not None:
+            self.tournament = queryset.first().tournament
+        else:
+            # Doesn't matter in this case as there is nothing in the queryset (therefore nothing to filter out)
+            self.tournament = None
+
+        return super().get_annotated_queryset(queryset, column_name, round)
 
 
 class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
