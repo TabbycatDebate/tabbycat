@@ -15,10 +15,10 @@
           <button class="btn btn-secondary" v-if="categories.length > 1">
             {{ bc.name }}
           </button>
-          <button @click="massSelect(true, bc.id)" class="btn btn-primary">
+          <button @click="massSelect(true, bc.id)" class="btn btn-primary" type="button">
             <i data-feather="check-circle"></i> Set All
           </button>
-          <button @click="massSelect(false, bc.id)" class="btn btn-primary">
+          <button @click="massSelect(false, bc.id)" class="btn btn-primary" type="button">
             <i data-feather="x-circle"></i> Set None
           </button>
         </div>

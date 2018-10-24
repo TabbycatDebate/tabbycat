@@ -67,7 +67,8 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
             'checked': self.default_send(p),
             'id': p.id,
             'name': 'recipients',
-            'value': p.id
+            'value': p.id,
+            'type': 'adj' if hasattr(p, 'adjudicator') else 'spk'
         } for p in self.get_queryset()])
 
         table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [{
@@ -94,6 +95,14 @@ class RoleColumnMixin:
         } for p in self.get_queryset()])
 
         return table
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = [
+            {'id': 'spk', 'name': _("Speakers")},
+            {'id': 'adj', 'name': _("Adjudicators")}
+        ]
+        return context
 
 
 class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
