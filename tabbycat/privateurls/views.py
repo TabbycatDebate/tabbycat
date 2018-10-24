@@ -154,6 +154,17 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
         extra['url'] = self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
         return extra
 
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, [{
+            'text': p.url_key,
+            'link': self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key})),
+            'class': 'small'
+        } for p in self.get_queryset()])
+
+        return table
+
 
 class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):
     slug_field = 'url_key'

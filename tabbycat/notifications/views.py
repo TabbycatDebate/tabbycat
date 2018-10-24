@@ -53,33 +53,36 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         if self.tournament.pref('share_adjs'):
             queryset_filter |= Q(adjudicator__tournament__isnull=True)
 
-        return Person.objects.filter(queryset_filter).select_related('speaker', 'adjudicator', 'speaker__team')
+        return Person.objects.filter(queryset_filter).select_related('speaker', 'adjudicator')
 
-    def default_send(self, p):
+    def default_send(self, p, default_send_queryset=None):
         """Whether the person should be emailed by default"""
-        return p.id in [a.id for a in self.get_default_send_queryset()]
+        return p in default_send_queryset
 
-    def get_table(self):
+    def get_table(self, mixed_participants=False):
         table = TabbycatTableBuilder(view=self, sort_key='name')
+
+        queryset = self.get_queryset()
+        default_send_queryset = self.get_default_send_queryset()
 
         table.add_column({'key': 'send', 'title': _("Send Email")}, [{
             'component': 'check-cell',
-            'checked': self.default_send(p),
+            'checked': self.default_send(p, default_send_queryset),
             'id': p.id,
             'name': 'recipients',
             'value': p.id,
-            'type': 'adj' if hasattr(p, 'adjudicator') else 'spk'
-        } for p in self.get_queryset()])
+            'type': 'adj' if mixed_participants and hasattr(p, 'adjudicator') else 'spk'
+        } for p in queryset])
 
         table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [{
             'text': p.name,
             'class': 'no-wrap' if len(p.name) < 20 else ''
-        } for p in self.get_queryset()])
+        } for p in queryset])
 
         table.add_column({'key': 'email', 'tooltip': _("Email Address"), 'icon': 'mail'}, [{
             'text': p.email if p.email else _("Not Provided"),
             'class': 'small' if p.email else 'small text-warning'
-        } for p in self.get_queryset()])
+        } for p in queryset])
 
         return table
 
@@ -87,7 +90,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
 class RoleColumnMixin:
     """Mixin to have a column Adjudicator/Speaker for email"""
 
-    def get_table(self):
+    def get_table(self, mixed_participants=True):
         table = super().get_table()
 
         table.add_column({'key': 'role', 'title': _("Role")}, [{
@@ -110,7 +113,7 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
     def get_success_url(self):
         return reverse_tournament('notifications-email', self.tournament)
 
-    def default_send(self, p):
+    def default_send(self, p, default_send_queryset):
         return False
 
     def post(self, request, *args, **kwargs):
