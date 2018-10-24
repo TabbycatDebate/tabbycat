@@ -1,6 +1,8 @@
 <script>
 // Provides shared functionality common across the container components for editing
 // adjs/teams/venues etc
+import { mapGetters } from 'vuex'
+
 import DragAndDropDebate from '../../utils/templates/DragAndDropDebate.vue'
 import DragAndDropLayout from '../../utils/templates/DragAndDropLayout.vue'
 import DragAndDropActions from '../../utils/templates/DragAndDropActions.vue'
@@ -21,11 +23,9 @@ export default {
     this.$store.commit('setupWebsocketBridge', this.bridges[this.sockets[0]])
   },
   computed: {
-    debatesOrPanels () {
-      return this.$store.getters.allDebatesOrPanels
-    },
+    ...mapGetters(['allDebatesOrPanels']),
     debatesOrPanelsCount: function () {
-      return Object.keys(this.debatesOrPanels).length
+      return Object.keys(this.allDebatesOrPanels).length
     },
     tournamentSlugForWSPath: function () {
       return this.initialData.tournament.slug
@@ -53,9 +53,6 @@ export default {
   methods: {
     handleSocketReceive: function (socketLabel, payload) {
       this.$store.dispatch('receiveUpdatedupdateDebatesOrPanelsAttribute', payload)
-    },
-    showShard: function () {
-      $('#confirmShardModal').modal('show')
     },
     showAllocate: function () {
       $('#confirmAllocateModal').modal('show')

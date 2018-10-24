@@ -7,11 +7,11 @@
       <h4 class="mb-0 px-2 py-1 text-monospace vc-draggable-number vc-number">
         <slot name="number"></slot>
       </h4>
-      <div class="py-1 pr-2">
-        <h5 class="mb-0 vc-title no-wrap">
+      <div class="py-1 pr-2 d-flex flex-column flex-truncate">
+        <h5 class="mb-0 vc-title text-truncate">
           <slot name="title"></slot>
         </h5>
-        <h6 class="mb-0 vue-draggable-muted vc-subtitle no-wrap">
+        <h6 class="mb-0 vue-draggable-muted vc-subtitle text-truncate">
           <slot name="subtitle"></slot>
         </h6>
       </div>
@@ -39,6 +39,6 @@ export default {
   }
   .vc-subtitle {
     font-weight: normal;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 </style>

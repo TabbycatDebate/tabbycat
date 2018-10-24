@@ -15,7 +15,7 @@
     </drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="debate in debatesOrPanels" :key="debate.id" :debateOrPanel="debate">
+      <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <template slot="venues">fancy venues UI</template>
       </drag-and-drop-debate>
     </template>

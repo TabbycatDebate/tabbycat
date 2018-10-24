@@ -3,7 +3,7 @@
 export default {
   props: {
     locked: false,
-    dropPayload: Object, // The context of the draggable item; sent to store
+    dragPayload: Object, // The context of the draggable item; sent to store
   },
   data: function () {
     return {
@@ -31,7 +31,7 @@ export default {
         // Must have a setData handler here for Firefox to allow dragging;
         // see http://mereskin.github.io/dnd/
         // Must also be a string; so we serialise to JSON
-        event.dataTransfer.setData('text', JSON.stringify(this.dropPayload))
+        event.dataTransfer.setData('text', JSON.stringify(this.dragPayload))
       }
     },
     dragEnd: function (event) {

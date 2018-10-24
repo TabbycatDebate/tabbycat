@@ -1,6 +1,6 @@
 <template>
   <div @mouseover="showTooltip=true" @mouseleave="showTooltip=false"
-       class="flex-4 d-flex border-right align-items-center">
+       class="flex-4 flex-truncate d-flex border-right align-items-center">
 
     <input max="2" min="-2" step="1" type="range" v-model="importance">
 

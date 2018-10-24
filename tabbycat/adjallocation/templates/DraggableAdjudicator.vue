@@ -1,10 +1,10 @@
 <template>
-  <draggable-item :drop-payload="dropPayload">
+  <draggable-item :drag-payload="dragPayload" :class="{ 'border-light': isTrainee }">
 
       <span slot="number">
         <small class="vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>
       </span>
-      <span slot="title">
+      <span slot="title" :class="{ 'text-muted': isTrainee }">
         {{ initialledName }}
       </span>
       <span slot="subtitle">
@@ -19,7 +19,7 @@ import DraggableItem from '../../utils/templates/DraggableItem.vue'
 
 export default {
   components: { DraggableItem },
-  props: { item: Object, dropPayload: Object },
+  props: { item: Object, dragPayload: Object, isTrainee: false },
   computed: {
     adjudicator: function () {
       return this.item
@@ -59,3 +59,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+  .vc-trainee-indicator {
+    opacity: 0.75;
+  }
+</style>

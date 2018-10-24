@@ -42,14 +42,14 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
         })
 
     def get_debates_or_panels(self, debates_or_panels):
-        # Retrieve either the debates or panels from the JSON id keys
+        """ Retrieve either the debates or panels from the JSON id keys """
         ids = [id for (id, d_or_p) in debates_or_panels.items()]
         debates_or_panels = list(self.model.objects.filter(id__in=ids))
         # TODO: error handling if return items fewer/more than expected
         return debates_or_panels
 
     def receive_importance(self, content):
-        # Update importances on the django data then reserialize/return it
+        """ Update importances on the django data then reserialize/return it """
         changes = {int(c['id']): c for c in content['importance']}
         debates_or_panels = self.get_debates_or_panels(changes)
         for d_or_p in debates_or_panels:
@@ -69,9 +69,9 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
             adjudicator_id=adj_id, defaults={'type': adj_type})
 
     def receive_adjudicators(self, content):
-        print('RA')
-        # Update adjudicatorss on the django data then reserialize/return it
+        """ Update adjudicators on the django data then reserialize/return it """
         changes = {int(c['id']): c for c in content['adjudicators']}
+        # TODO: prefetch the adjudicator allocation objects
         debates_or_panels = self.get_debates_or_panels(changes)
         for d_or_p in debates_or_panels:
             sent_allocation = changes[d_or_p.id]['adjudicators']
@@ -81,22 +81,20 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
 
             # Delete adjudicators in the posted information
             delete_count, deleted = self.delete_adjudicators(d_or_p, sent_allocation_ids)
-            logger.debug("Deleted %d adjudicators from %s", delete_count, d_or_p)
-
-            # TODO: wire up using new sent_allocation structure
             # Re-create positions of adjudicators in debate
-            for d_or_p_adjudicator in sent_allocation:
-                adj_id = d_or_p_adjudicator['adjudicator']['id']
-                adj_type = d_or_p_adjudicator['position']
-                obj, created = self.create_adjudicators(d_or_p, adj_id, adj_type)
+            for (position, position_ids) in sent_allocation.items():
+                for adjudicator_id in position_ids:
+                    obj, created = self.create_adjudicators(d_or_p, adjudicator_id, position)
 
+        # Re-fetch the modified data
+        # TODO: is it necessary to re-fetch? Or should the objects be returned?
+        debates_or_panels = self.get_debates_or_panels(changes)
         serialized = self.adjudicators_serializer(debates_or_panels, many=True)
-        print('RA serialized', serialized)
         del content['adjudicators']
         self.return_attributes(content, serialized)
 
     def return_attributes(self, original_content, serialized_content):
-        # Return the original JSON but with the generic debatesOrPanels key
+        """ Return the original JSON but with the generic debatesOrPanels key """
         original_content['debatesOrPanels'] = serialized_content.data
         async_to_sync(get_channel_layer().group_send)(
             self.group_name(), {

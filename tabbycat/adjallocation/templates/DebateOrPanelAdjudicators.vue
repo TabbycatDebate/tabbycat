@@ -1,10 +1,11 @@
 <template>
 
-  <div class="d-flex flex-36 vue-droppable vue-droppable-parent">
-    <div class="d-flex align-items-center">
+  <div class="d-flex flex-36 flex-truncate vue-droppable vue-droppable-parent">
+    <div class="d-flex align-items-center small">
       metrics
     </div>
-    <draggable-allocation :debate-or-panel="debateOrPanel"></draggable-allocation>
+    <draggable-allocation :handle-debate-or-panel-drop="handleDebateOrPanelDrop"
+                          :debate-or-panel="debateOrPanel"></draggable-allocation>
   </div>
 
 </template>
@@ -14,6 +15,6 @@ import DraggableAllocation from './DraggableAllocation.vue'
 
 export default {
   components: { DraggableAllocation },
-  props: [ 'debateOrPanel' ],
+  props: [ 'debateOrPanel', 'handleDebateOrPanelDrop' ],
 }
 </script>

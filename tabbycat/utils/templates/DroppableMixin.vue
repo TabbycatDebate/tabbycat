@@ -5,6 +5,8 @@
 export default {
   props: {
     locked: false,
+    handleDrop: Function,
+    dropContext: Object, // Passed to the handler of the item
   },
   data: function () {
     return {
@@ -44,8 +46,8 @@ export default {
       }
       this.aboutToDrop = false
       // Send data to parent's handler method (after deserialising it)
-      const droppedData = JSON.parse(event.dataTransfer.getData('text'))
-      this.$emit('handledrop', droppedData) // Bound to parent component
+      const dragPayload = JSON.parse(event.dataTransfer.getData('text'))
+      this['handleDrop'](dragPayload, this.dropContext) // Call page-specific method handler passed down
     },
   },
 }

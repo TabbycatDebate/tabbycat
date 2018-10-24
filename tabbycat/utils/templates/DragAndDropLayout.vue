@@ -11,8 +11,9 @@
       <slot name="debates"></slot><!-- Debates -->
     </section>
 
-    <drag-and-drop-unallocated-items
-      :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
+    <drag-and-drop-unallocated-items :unallocatedItems="unallocatedItems"
+                                     :unallocatedComponent="unallocatedComponent"
+                                     :handle-unused-drop="handleUnusedDrop">
     </drag-and-drop-unallocated-items>
 
     <slot name=""></slot><!-- SlideOver Item -->
@@ -28,7 +29,7 @@ import DragAndDropUnallocatedItems from './DragAndDropUnallocatedItems.vue'
 
 export default {
   components: { DragAndDropUnallocatedItems },
-  props: ['unallocatedItems', 'unallocatedComponent'],
+  props: ['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop'],
 }
 </script>
 

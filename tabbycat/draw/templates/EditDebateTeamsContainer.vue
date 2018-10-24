@@ -5,7 +5,7 @@
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount"></drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="debate in debatesOrPanels" :key="debate.id" :debateOrPanel="debate">
+      <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <template slot="teams">fancy teams UI</template>
       </drag-and-drop-debate>
     </template>
