@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'bulk notification',
                 'verbose_name_plural': 'bulk notifications',
-                'ordering': ['timestamp'],
+                'ordering': ['-timestamp'],
             },
         ),
         migrations.AddField(
@@ -75,12 +75,13 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'email status',
                 'verbose_name_plural': 'email statuses',
-                'ordering': ['timestamp'],
+                'ordering': ['-timestamp'],
+                'get_latest_by': '-timestamp'
             },
         ),
         migrations.AlterModelOptions(
             name='sentmessagerecord',
-            options={'ordering': ['notification__timestamp'], 'verbose_name': 'sent message', 'verbose_name_plural': 'sent messages'},
+            options={'ordering': ['-notification__timestamp', '-recipient__name'], 'verbose_name': 'sent message', 'verbose_name_plural': 'sent messages'},
         ),
         migrations.RemoveField(
             model_name='sentmessagerecord',
@@ -101,10 +102,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sentmessagerecord',
             name='message_id',
-            field=models.EmailField(null=True, max_length=254, unique=True, verbose_name='Message-ID'),
+            field=models.CharField(null=True, max_length=254, unique=True, verbose_name='Message-ID'),
             preserve_default=False,
         ),
         migrations.RunPython(get_message_ids),
+        migrations.AlterField(
+            model_name='sentmessagerecord',
+            name='recipient',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='participants.Person', verbose_name='recipient'),
+        ),
         migrations.AddField(
             model_name='emailstatus',
             name='email',

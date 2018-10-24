@@ -12,10 +12,10 @@ class SentMessageRecord(models.Model):
         (METHOD_TYPE_SMS, _("SMS")),
     )
 
-    message_id = models.EmailField(unique=True, null=True,
+    message_id = models.CharField(max_length=254, unique=True, null=True,
         verbose_name="Message-ID") # Technical, Untranslatable term
 
-    recipient = models.ForeignKey('participants.Person', models.CASCADE,
+    recipient = models.ForeignKey('participants.Person', models.SET_NULL, null=True,
         verbose_name=_("recipient"))
     method = models.CharField(max_length=1, choices=METHOD_TYPE_CHOICES,
         verbose_name=_("method"))
@@ -33,7 +33,7 @@ class SentMessageRecord(models.Model):
     class Meta:
         verbose_name = _("sent message")
         verbose_name_plural = _("sent messages")
-        ordering = ['notification__timestamp']
+        ordering = ['-notification__timestamp', '-recipient__name']
 
     def __str__(self):
         return "%s: %s" % (self.recipient.name, self.notification.get_event_display())
@@ -74,7 +74,7 @@ class BulkNotification(models.Model):
     class Meta:
         verbose_name = _("bulk notification")
         verbose_name_plural = _("bulk notifications")
-        ordering = ['timestamp']
+        ordering = ['-timestamp']
 
     def __str__(self):
         return "[%s] %s: %s" % (self.tournament.short_name, self.get_event_display(), self.timestamp)
@@ -119,7 +119,8 @@ class EmailStatus(models.Model):
     class Meta:
         verbose_name = _("email status")
         verbose_name_plural = _("email statuses")
-        ordering = ['timestamp']
+        ordering = ['-timestamp']
+        get_latest_by = '-timestamp'
 
     def __str__(self):
         return "%s - %s" % (self.email, self.event)
