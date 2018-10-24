@@ -143,7 +143,6 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
 
     def create_preformed_panels(self, event):
         self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_CREATE)
-
         # TODO: PROOF OF CONCEPT DEMO
         round = Round.objects.get(pk=event['extra']['round_id'])
         teams_count = round.tournament.team_set.count()
@@ -152,10 +151,7 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         else:
             debates_count = teams_count // 2
 
-        new_panels_count = debates_count - len(round.preformedpanel_set.count())
-        if new_panels_count > 0:
-            new_panels = [PreformedPanel(round=self.round)] * new_panels_count
-            PreformedPanel.objects.bulk_create(new_panels)
-
-            content = self.reserialize_panels(round, new_panels)
-            self.return_response(content, event['extra']['group_name'])
+        new_panels = [PreformedPanel(round=round)] * debates_count
+        PreformedPanel.objects.bulk_create(new_panels)
+        content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
+        self.return_response(content, event['extra']['group_name'])

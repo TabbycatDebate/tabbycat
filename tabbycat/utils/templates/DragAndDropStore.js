@@ -51,11 +51,17 @@ export default new Vuex.Store({
     setDebateOrPanelAttributes (state, changes) {
       // For a given set of debates or panels update their attribute values
       changes.forEach((debateOrPanel) => {
-        Object.entries(debateOrPanel).forEach(([key, value]) => {
-          if (key !== 'id') {
-            state.debatesOrPanels[debateOrPanel.id][key] = value
-          }
-        })
+        if (state.debatesOrPanels[debateOrPanel.id]) {
+          Object.entries(debateOrPanel).forEach(([key, value]) => {
+            if (key !== 'id') {
+              state.debatesOrPanels[debateOrPanel.id][key] = value
+            }
+          })
+        } else {
+          // We can receive entirely new debates; i.e. from create panels or
+          // if the draw is edited and then an allocation runs
+          Vue.set(state.debatesOrPanels, debateOrPanel.id, debateOrPanel)
+        }
       })
     },
     toggleHighlight (state, type) {

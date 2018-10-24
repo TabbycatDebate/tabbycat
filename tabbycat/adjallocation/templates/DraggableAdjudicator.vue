@@ -4,7 +4,7 @@
       <span slot="number">
         <small class="vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>
       </span>
-      <span slot="title" :class="{ 'text-muted': isTrainee }">
+      <span slot="title">
         {{ initialledName }}
       </span>
       <span slot="subtitle">
@@ -59,9 +59,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-  .vc-trainee-indicator {
-    opacity: 0.75;
-  }
-</style>

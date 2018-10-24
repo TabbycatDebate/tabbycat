@@ -27,21 +27,24 @@
         <span v-if="debateOrPanel.venue">{{ debateOrPanel.venue.display_name }}</span>
       </div>
     </slot>
-    <slot name="teams" v-if="sides.length > 2">
-      <div class="vc-bp-grid flex-12 flex-truncate">
+    <slot name="teams">
+      <div class="vc-bp-grid flex-12 flex-truncate" v-if="sides.length === 4">
         <div :class="['d-flex flex-truncate align-items-center py-1 px-2 border-right',
                       i < 2 ? 'border-bottom' : '']"
              v-for="(side, i) in sides">
-          <div class="text-truncate small">{{ debateOrPanel.teams[side].short_name }}</div>
+          <div class="text-truncate small" v-if="debateOrPanel.teams">
+            {{ debateOrPanel.teams[side].short_name }}
+          </div>
         </div>
       </div>
-    </slot>
-    <slot name="teams" v-else>
-      <div class="d-flex flex-column flex-6 flex-truncate">
+      <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
         <div :class="['d-flex flex-fill align-items-center py-1 px-2 border-right',
                       i % 2 === 0 ? 'border-bottom' : '']"
              v-for="(side, i) in sides">
-          <div class="text-truncate small">{{ debateOrPanel.teams[side].short_name }}</div>
+          <div class="text-truncate small" v-if="debateOrPanel.teams">
+            <span v-if="debateOrPanel.teams[side]">{{ debateOrPanel.teams[side].short_name }}</span>
+            <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
+          </div>
         </div>
       </div>
     </slot>

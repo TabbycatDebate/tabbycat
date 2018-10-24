@@ -6,7 +6,6 @@
   background: #fff;
   border: 3px solid $gray-600;
   border-radius: $border-radius;
-  max-width: 158px;
 
   .vue-draggable-muted {
     color: $text-muted; // Can't rely on text-muted as we need to override on hover

@@ -11,7 +11,8 @@
           <div class="mx-auto py-2 px-3">ⓒ</div>
         </div>
         <draggable-adjudicator v-if="chairID" class="flex-fill" :item="allAdjudicators[chairID]"
-                               :drag-payload="getDragPayload(chairID, 'C')">
+                               :drag-payload="getDragPayload(chairID, 'C')"
+                               style="max-width: 160px">
         </draggable-adjudicator>
       </droppable-item>
     </div>
@@ -75,6 +76,6 @@ export default {
 
 <style scoped>
   .vc-chair-flex {
-    flex: 0 0 175px; /* Don't grow or shrink; remain at fixed width */
+    flex: 0 0 168px; /* Don't grow or shrink; remain at fixed width (must match style on chair) */
   }
 </style>
