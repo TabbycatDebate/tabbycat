@@ -8,6 +8,7 @@ from draw.models import TeamSideAllocation
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                                   AdjudicatorTeamConflict, TeamInstitutionConflict)
 from adjfeedback.models import AdjudicatorTestScoreHistory
+from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
 from tournaments.models import Tournament
 from venues.admin import VenueConstraintInline
@@ -120,7 +121,8 @@ class TeamAdmin(admin.ModelAdmin):
                      'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
-               AdjudicatorTeamConflictInline, TeamInstitutionConflictInline)
+               AdjudicatorTeamConflictInline, TeamInstitutionConflictInline,
+               RoundAvailabilityInline)
     raw_id_fields = ('division', )
     actions = ['delete_url_key']
 
@@ -188,7 +190,8 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     list_filter = ('tournament', 'name', 'institution')
     list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
     inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
-               AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
+               AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline,
+               RoundAvailabilityInline)
     actions = ['delete_url_key']
 
     def get_queryset(self, request):

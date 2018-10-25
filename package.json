@@ -51,7 +51,7 @@
     "cp-barcode": "cpx node_modules/jsbarcode/dist/JsBarcode.all.min.js tabbycat/static/js/vendor",
     "cp-fonts": "cpx \"node_modules/inter-ui/Inter UI (web)/*\" tabbycat/static/fonts",
     "cp-i18n": "cpx \"tabbycat/locale/jsi18n/**/*.js\" tabbycat/static/jsi18n",
-    "serve-django": "dj r",
+    "serve-django": "dj r 0.0.0.0:8000",
     "serve-docs": "sphinx-autobuild docs docs/_build/html --port 7999",
     "serve-sass": "npm run build-sass -- --watch --recursive --output-style expanded & npm run build-sass-print -- --watch --recursive --output-style expanded --sourcemap",
     "serve-sass-live": "livereload 'tabbycat/' --exts 'html,css' --exclusions 'tabbycat/static/vue/'",
@@ -69,6 +69,6 @@
   "browserslist": [
     "> 1%",
     "last 3 versions",
-    "not ie <= 10"
+    "not ie <= 11"
   ]
 }
