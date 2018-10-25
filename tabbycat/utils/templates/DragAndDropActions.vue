@@ -4,10 +4,10 @@
 
       <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group btn-group-sm">
-          <button :href="extra.backUrl" class="btn btn-outline-primary"
-             data-toggle="tooltip" data-placement="bottom" :title="gettext('Return to Draw')">
+          <a :href="extra.backUrl" class="btn btn-outline-primary"
+             data-toggle="tooltip" data-placement="bottom" :title="extra.backLabel">
             <i data-feather="chevron-left"></i>
-          </button>
+          </a>
           <auto-save-counter></auto-save-counter>
         </div>
         <div class="btn-group btn-group-sm ml-2">

@@ -381,6 +381,8 @@ class DragAndDropMixin(RoundMixin):
         automatically. Designed for simple key/value pairs"""
         extra_info = {} # Set by view for top bar toggles
         extra_info['highlights'] = {}
+        extra_info['backUrl'] = reverse_round('draw', self.round)
+        extra_info['backLabel'] = _("Return to Draw")
         return extra_info
 
     def get_meta_info(self):

@@ -1,8 +1,8 @@
 {% extends "tables/base_vue_table.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🎲</span> Private URLs{% endblock %}
-{% block page-title %}Private URLs{% endblock %}
+{% block head-title %}<span class="emoji">🎲</span> {% trans "Private URLs" %}{% endblock %}
+{% block page-title %}{% trans "Private URLs" %}{% endblock %}
 
 {% block page-subnav-sections %}
   {% include 'private_urls_nav.html' %}

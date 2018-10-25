@@ -8,7 +8,6 @@ from django.utils.translation import gettext_lazy as _
 
 from participants.models import Person
 from utils.managers import LookupByNameFieldsMixin
-from utils.misc import reverse_round
 
 import logging
 logger = logging.getLogger(__name__)
@@ -399,7 +398,6 @@ class Round(models.Model):
             'adjudicatorDoubling': self.tournament.pref('duplicate_adjs'),
             'teamsInDebate': self.tournament.pref('teams_in_debate'),
             'teamPositions': self.tournament.sides,
-            'backUrl': reverse_round('draw', self),
             'roundName' : self.abbreviation,
             'roundSeq' : self.seq,
             'roundIsPrelim' : not self.is_break_round,

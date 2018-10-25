@@ -86,6 +86,13 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
     template_name = "edit_panel_adjudicators.html"
     page_title = gettext_lazy("Edit Panels")
 
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['backUrl'] = reverse_tournament('panel-adjudicators-index',
+                                             self.tournament)  # Override
+        info['backLabel'] = _("Return to Panels Overview")
+        return info
+
     def get_draw_or_panels_objects(self):
         panels = self.round.preformedpanel_set.all().prefetch_related(
             Prefetch('preformedpaneladjudicator_set',
@@ -95,6 +102,11 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
 
     def debates_or_panels_factory(self, panels):
         return EditPanelAdjsPanelSerializer(panels, many=True)
+
+
+class PanelAdjudicatorsIndexView(TemplateView, AdministratorMixin):
+    template_name = "preformed_index.html"
+    page_title = gettext_lazy("Preformed Panels")
 
 
 # ==============================================================================

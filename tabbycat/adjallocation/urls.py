@@ -23,6 +23,9 @@ urlpatterns = [
             views.EditPanelAdjudicatorsView.as_view(),
             name='edit-panel-adjudicators'),
     ])),
+    path('panels/edit/',
+        views.PanelAdjudicatorsIndexView.as_view(),
+        name='panel-adjudicators-index'),
     path('conflicts/', include([
         path('adjudicator-team/',
             views.AdjudicatorTeamConflictsView.as_view(),
