@@ -6,12 +6,14 @@ from channels.consumer import SyncConsumer
 from channels.layers import get_channel_layer
 
 from actionlog.models import ActionLogEntry
+from breakqual.utils import calculate_live_thresholds
 from draw.consumers import BaseAdjudicatorContainerConsumer
 from tournaments.models import Round
 
 from .models import PreformedPanel
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed import copy_panels_to_debates
+from .preformed.anticipated import calculate_anticipated_draw
 from .preformed.dumb import DumbPreformedPanelAllocator
 from .serializers import (SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer,
                           SimplePanelAllocationSerializer, SimplePanelImportanceSerializer)
@@ -134,24 +136,37 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
 
         round = Round.objects.get(pk=event['extra']['round_id'])
         panels = round.preformedpanel_set.all()
-        for panel in panels:
-            panel.importance = random.randint(-2, 2)
-            panel.save()
+
+        open_category = round.tournament.breakcategory_set.filter(is_general=True).first()
+        if open_category:
+            safe, dead = calculate_live_thresholds(open_category, round.tournament, round)
+            for panel in panels:
+                if panel.bracket_min >= safe:
+                    panel.importance = 0
+                elif panel.bracket_max <= dead:
+                    panel.importance = -2
+                else:
+                    panel.importance = 1
+                panel.save()
+
+        # TODO: If there's no open category, pass back some error message
+        # indicating why nothing happened
 
         content = self.reserialize_panels(SimplePanelImportanceSerializer, round, panels)
         self.return_response(content, event['extra']['group_name'])
 
     def create_preformed_panels(self, event):
         self.log_action(event['extra'], ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_CREATE)
-        # TODO: PROOF OF CONCEPT DEMO
-        round = Round.objects.get(pk=event['extra']['round_id'])
-        teams_count = round.tournament.team_set.count()
-        if round.tournament.pref('teams_in_debate') == 'bp':
-            debates_count = teams_count // 4
-        else:
-            debates_count = teams_count // 2
 
-        new_panels = [PreformedPanel(round=round)] * debates_count
-        PreformedPanel.objects.bulk_create(new_panels)
+        round = Round.objects.get(pk=event['extra']['round_id'])
+        for i, (bracket_min, bracket_max, liveness) in enumerate(
+                calculate_anticipated_draw(round), start=1):
+            PreformedPanel.objects.update_or_create(round=round, room_rank=i,
+                defaults={
+                    'bracket_max': bracket_max,
+                    'bracket_min': bracket_min,
+                    'liveness': liveness
+                })
+
         content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
         self.return_response(content, event['extra']['group_name'])

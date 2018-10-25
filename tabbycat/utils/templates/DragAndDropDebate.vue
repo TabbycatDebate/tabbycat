@@ -6,6 +6,11 @@
           {{ debateOrPanel.bracket }}
         </div>
       </div>
+      <div v-else-if="debateOrPanel.bracket_min == debateOrPanel.bracket_max" class="flex-2 flex-truncate d-flex border-right">
+        <div class="align-self-center flex-fill text-center">
+          {{ debateOrPanel.bracket_min }}
+        </div>
+      </div>
       <div v-else class="flex-2 flex-truncate d-flex border-right">
         <div class="align-self-center flex-fill text-center">
           {{ debateOrPanel.bracket_min }}<span class="text-muted">-</span>{{ debateOrPanel.bracket_max }}
