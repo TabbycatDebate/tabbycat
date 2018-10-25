@@ -4,6 +4,7 @@ from channels.consumer import SyncConsumer
 from django.conf import settings
 from django.core import mail
 from django.template import Context, Template
+from django.utils.html import strip_spaces_between_tags, strip_tags
 from django.utils.translation import gettext_lazy as _
 
 from draw.models import Debate
@@ -47,6 +48,10 @@ class NotificationQueueConsumer(SyncConsumer):
         # Django wants the reply_to as an array
         return from_email, [reply_to]
 
+    def _get_plain_text(self, html):
+        """Strip tags and add spaces for paragraphs"""
+        return strip_tags(strip_spaces_between_tags(html).replace("</p>","\n\n</p>"))
+
     def email(self, event):
         # Get database objects
         if 'debate_id' in event['extra']:
@@ -63,7 +68,8 @@ class NotificationQueueConsumer(SyncConsumer):
         notification_type = event['message']
 
         subject = Template(event['subject'])
-        body = Template(event['body'])
+        html_body = Template(event['body'])
+        plain_body = Template(self._get_plain_text(event['body']))
 
         data = self.NOTIFICATION_GENERATORS[notification_type](to=event['send_to'], **event['extra'])
 
@@ -72,11 +78,13 @@ class NotificationQueueConsumer(SyncConsumer):
         records = []
         for instance, recipient in data:
             context = Context(instance)
-            email = mail.EmailMessage(
-                subject=subject.render(context), body=body.render(context),
+            email = mail.EmailMultiAlternatives(
+                subject=subject.render(context), body=plain_body.render(context),
                 from_email=from_email, to=[recipient.email], reply_to=reply_to
             )
+            email.attach_alternative(html_body.render(context), "text/html")
             messages.append(email)
+
             records.append(
                 SentMessageRecord(recipient=recipient, email=recipient.email,
                                   event=notification_type,
@@ -95,11 +103,13 @@ class NotificationQueueConsumer(SyncConsumer):
         from_email, reply_to = self._get_from_fields(t)
 
         for pk, address in event['send_to']:
-            email = mail.EmailMessage(
-                subject=event['subject'], body=event['message'],
+            email = mail.EmailMultiAlternatives(
+                subject=event['subject'], body=self._get_plain_text(event['body']),
                 from_email=from_email, to=[address], reply_to=reply_to
             )
+            email.attach_alternative(event['body'], "text/html")
             messages.append(email)
+
             records.append(
                 SentMessageRecord(
                     recipient_id=pk, email=address,

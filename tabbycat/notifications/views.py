@@ -122,7 +122,7 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
         async_to_sync(get_channel_layer().send)("notifications", {
             "type": "email_custom",
             "subject": request.POST['subject_line'],
-            "message": request.POST['message_body'],
+            "body": request.POST['message_body'],
             "tournament": self.tournament.id,
             "send_to": [(p.id, p.email) for p in people]
         })
