@@ -37,7 +37,7 @@ def calculate_anticipated_draw(round):
     # 1. Take the (actual) draw of the last round, with team point standings.
     debates = round.prev.debate_set_with_prefetches(ordering=('room_rank',),
         teams=True, adjudicators=False, speakers=False, divisions=False, venues=False)
-    teams = Team.objects.filter(debateteam__debate__round=round)
+    teams = Team.objects.filter(debateteam__debate__round=round.prev)
     generator = TeamStandingsGenerator(('points',), ())
     standings = generator.generate(teams, round=round.prev)
 
