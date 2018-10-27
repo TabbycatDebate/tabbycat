@@ -83,7 +83,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
                 debateteam = d.get_dt(side)
                 if debateteam.iron > 0 or debateteam.iron_prev:
                     iron_speeches.append({
-                        'venue': d.venue.display_name,
+                        'venue': d.venue.display_name if d.venue else None,
                         'team': team_name_for_data_entry(debateteam.team, use_code_names),
                         'current_round': debateteam.iron,
                         'previous_round': debateteam.iron_prev
