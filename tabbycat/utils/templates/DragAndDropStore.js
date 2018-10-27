@@ -77,7 +77,9 @@ export default new Vuex.Store({
     },
     toggleHighlight (state, type) {
       Object.entries(state.highlights).forEach(([key, value]) => {
-        value.active = false
+        if (key !== type) {
+          value.active = false
+        }
       })
       state.highlights[type].active = !state.highlights[type].active
     },

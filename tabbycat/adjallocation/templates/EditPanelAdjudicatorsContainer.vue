@@ -11,7 +11,9 @@
                 @click="showCreatePanels" v-text="gettext('Create Panels')"></button>
       </template>
       <template slot="default-highlights">
-        <button class="btn btn-outline-secondary disabled" v-text="gettext('Key')"></button>
+        <button class="btn btn-outline-secondary disabled d-xl-inline d-none">
+          <i data-feather="help-circle"></i>
+        </button>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
                 data-toggle="tooltip" v-text="gettext('Seen')"
                 title="This adjudicator has judged with this adjudicator previously"></button>
@@ -22,7 +24,7 @@
                 data-toggle="tooltip" v-text="gettext('Conflict')"
                 title="This adjudicator has a nominated conflict with this panelist."></button>
         <button class="btn panel-incomplete"
-                data-toggle="tooltip" v-text="gettext('Incomplete')"
+                data-toggle="tooltip" v-text="gettext('Missing')"
                 title="Panel is either missing a chair or enough adjudicators for a voting majority."></button>
       </template>
     </drag-and-drop-actions>

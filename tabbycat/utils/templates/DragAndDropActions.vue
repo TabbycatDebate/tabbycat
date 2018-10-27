@@ -9,15 +9,13 @@
             <i data-feather="chevron-left"></i>
           </a>
           <auto-save-counter></auto-save-counter>
-        </div>
-        <div class="btn-group btn-group-sm ml-2">
           <slot name="extra-actions"></slot>
           <button v-if="prioritise" @click="$emit('show-prioritise')"
                   :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
-                  v-text="gettext('Auto-Prioritise')"></button>
+                  v-text="gettext('Prioritise')"></button>
           <button v-if="allocate" @click="$emit('show-allocate')"
                   :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
-                  v-text="gettext('Auto-Allocate')"></button>
+                  v-text="gettext('Allocate')"></button>
           <button v-if="shard" @click="$emit('show-shard')"
                   :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']" >
             <i data-feather="server"></i>
@@ -29,11 +27,11 @@
         <template v-if="!currentHighlightKey">
           <slot name="default-highlights"></slot>
           <button class="btn btn-dark" v-text="gettext('Unavailable')" data-toggle="tooltip"
-                :title="('Item has not been marked as available for this round.')"></button>
+                :title="('Has not been marked as available for this round.')"></button>
         </template>
         <template v-else>
-          <button class="btn btn-outline-secondary disabled" data-toggle="tooltip"
-                :title="('Key for the color highlights.')">
+          <button class="btn btn-outline-secondary disabled d-xl-inline d-none"
+                  data-toggle="tooltip" :title="('Key for the color highlights.')">
             <i data-feather="help-circle"></i>
           </button>
           <button v-for="option in highlights[currentHighlightKey].options"

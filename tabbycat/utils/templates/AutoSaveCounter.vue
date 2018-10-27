@@ -1,8 +1,12 @@
 <template>
 
-  <button :class="['btn btn-link btn-no-hover border-primary auto-save', animationClass]">
-    <span v-if="lastSavedDisplay === ''" v-text="gettext('No changes')"></span>
-    <span v-else :class="[animationClass]">{{ lastSavedDisplay }}</span>
+  <button :class="['btn px-0 border-primary text-primary d-xl-inline d-none vc-auto-save', animationClass]"
+          data-toggle="tooltip" data-placement="bottom"
+          :title="gettext('The time of the last saved change (changes are automatically saved)')">
+    <span v-if="lastSavedDisplay === ''">
+      <span v-text="gettext('No ')"></span> <i data-feather="save"></i>
+    </span>
+    <span v-if="lastSavedDisplay !== ''" :class="[animationClass]">{{ lastSavedDisplay }}</span>
   </button>
 
 </template>
@@ -31,9 +35,9 @@ export default {
         this.animationClass = '' // Remove animation flash
       }
       if (secondsLastSaved > 59) {
-        this.lastSavedDisplay = `Saved at ${this.lastSaved.getHours()}:${this.paddedMinutes()}`
+        this.lastSavedDisplay = ` at ${this.lastSaved.getHours()}:${this.paddedMinutes()}`
       } else {
-        this.lastSavedDisplay = `Saved ${parseInt(secondsLastSaved)}s ago`
+        this.lastSavedDisplay = ` ${parseInt(secondsLastSaved)}s ago`
       }
     },
     paddedMinutes: function () {
@@ -51,3 +55,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+  .vc-auto-save {
+    min-width: 70px; /* Ensure no resize on save */
+  }
+</style>
