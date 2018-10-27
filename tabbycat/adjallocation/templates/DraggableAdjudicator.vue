@@ -3,7 +3,7 @@
                   :class="{ 'border-light': isTrainee, 'bg-dark text-white': !item.available }">
 
       <span slot="number">
-        <small class="vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>
+        <small class="pl-2 vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>
       </span>
       <span slot="title">
         {{ initialledName }}
@@ -29,7 +29,7 @@ export default {
       if (this.adjudicator.institution) {
         return this.$store.state.institutions[this.adjudicator.institution].code
       } else {
-        return 'Unaffiliated'
+        return this.gettext('Unaffiliated')
       }
     },
     initialledName: function () {

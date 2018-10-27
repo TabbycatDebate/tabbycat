@@ -28,7 +28,7 @@
       </div>
     </slot>
     <slot name="venue">
-      <div class="flex-8 flex-truncate border-right ">
+      <div class="flex-8 flex-truncate border-right">
         <span v-if="debateOrPanel.venue">{{ debateOrPanel.venue.display_name }}</span>
       </div>
     </slot>
@@ -37,7 +37,7 @@
         <div :class="['d-flex flex-truncate align-items-center py-1 px-2 border-right',
                       i < 2 ? 'border-bottom' : '']"
              v-for="(side, i) in sides">
-          <div class="text-truncate small" v-if="debateOrPanel.teams">
+          <div class="text-truncate small" v-if="debateOrPanel.teams[side]">
             {{ debateOrPanel.teams[side].short_name }}
           </div>
         </div>

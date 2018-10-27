@@ -4,10 +4,10 @@
        :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]">
 
     <slot>
-      <h4 class="mb-0 px-2 py-1 text-monospace vc-draggable-number vc-number">
+      <h4 class="mb-0 py-1 text-monospace vc-draggable-number vc-number">
         <slot name="number"></slot>
       </h4>
-      <div class="py-1 pr-2 d-flex flex-column flex-truncate">
+      <div class="py-1 pl-2 pr-2 d-flex flex-column flex-truncate">
         <h5 class="mb-0 vc-title text-truncate">
           <slot name="title"></slot>
         </h5>
