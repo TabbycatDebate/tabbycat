@@ -1,5 +1,6 @@
 <template>
-  <draggable-item :drag-payload="dragPayload" :class="{ 'border-light': isTrainee }">
+  <draggable-item :drag-payload="dragPayload"
+                  :class="{ 'border-light': isTrainee, 'bg-dark text-white': !item.available }">
 
       <span slot="number">
         <small class="vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>

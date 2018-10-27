@@ -15,4 +15,5 @@ class EditDebateTeamsTeamSerializer(TeamSerializer, VueDraggableItemMixin):
 
     class Meta:
         model = TeamSerializer.Meta.model
-        fields = (*TeamSerializer.Meta.fields, 'vue_is_locked', 'vue_last_modified')
+        fields = (*TeamSerializer.Meta.fields,
+                  *VueDraggableItemMixin.Meta.fields)
