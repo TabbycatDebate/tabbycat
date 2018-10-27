@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
 from participants.serializers import AdjudicatorSerializer
-from utils.serializers import DebateSerializerMixin
+from utils.serializers import DebateSerializerMixin, VueDraggableItemMixin
 
 from .models import PreformedPanel
 
 
-class EditPanelOrDebateAdjSerializer(AdjudicatorSerializer):
+class EditPanelOrDebateAdjSerializer(AdjudicatorSerializer, VueDraggableItemMixin):
     """ Returns adjudicators for use in views where they are allocated """
     score = serializers.SerializerMethodField(read_only=True)
 
@@ -15,7 +15,8 @@ class EditPanelOrDebateAdjSerializer(AdjudicatorSerializer):
 
     class Meta:
         model = AdjudicatorSerializer.Meta.model
-        fields = (*AdjudicatorSerializer.Meta.fields, 'score') # Add fields
+        fields = (*AdjudicatorSerializer.Meta.fields, 'score',
+                  'vue_is_locked', 'vue_last_modified')
 
 
 class EditDebateAdjsDebateSerializer(DebateSerializerMixin):
