@@ -25,7 +25,12 @@
         <div class="list-group">
           {% for iron in iron_speeches %}
             <div class="list-group-item">
-              <h5>For Current Debate in Venue {{ iron.venue }}</h5>
+              <h5>
+                For Current Debate
+                {% if iron.venue %}
+                  in Venue {{ iron.venue }}
+                {% endif %}
+              </h5>
               {% if iron.previous_round %}
                 <p class="text-warning mt-3 mb-0">
                   {% blocktrans trimmed with team=iron.team %}
