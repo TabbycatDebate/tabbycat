@@ -418,12 +418,14 @@ class Round(models.Model):
 
     @cached_property
     def duplicate_venues(self):
+        """Returns a QuerySet of venues that are allocated twice in the round."""
         from venues.models import Venue
         return Venue.objects.filter(debate__round=self).annotate(Count('debate')).filter(
                 debate__count__gt=1)
 
     @cached_property
     def duplicate_team_names(self):
+        """Returns a list of names of those teams allocated twice in the round."""
         from participants.models import Team
         return Team.objects.filter(debateteam__debate__round=self).annotate(
             Count('debateteam')).filter(debateteam__count__gt=1).values_list('short_name', flat=True)
@@ -458,6 +460,20 @@ class Round(models.Model):
     @cached_property
     def num_debates_with_sides_unconfirmed(self):
         return self.debate_set.filter(sides_confirmed=False).count()
+
+    @cached_property
+    def unavailable_adjudicators_allocated(self):
+        """Returns the number of adjudicators who are allocated but not available."""
+        from participants.models import Adjudicator
+        return Adjudicator.objects.filter(debateadjudicator__debate__round=self).exclude(
+            round_availabilities__round=self)
+
+    @cached_property
+    def num_available_adjudicators_not_allocated(self):
+        """Returns the number of adjudicators who are available but not allocated."""
+        from participants.models import Adjudicator
+        return Adjudicator.objects.exclude(debateadjudicator__debate__round=self).filter(
+            round_availabilities__round=self).count()
 
     @cached_property
     def is_break_round(self):

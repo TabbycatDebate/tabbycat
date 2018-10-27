@@ -1,6 +1,6 @@
 {% load humanize static debate_tags i18n %}
 
-{% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists %}
+{% with no_chair=round.num_debates_without_chair even_panel=round.num_debates_with_even_panel duplicates=round.duplicate_panellists unavailable_allocated=round.unavailable_adjudicators_allocated unallocated=round.num_available_adjudicators_not_allocated %}
 
   {% if no_chair > 0 %}
     {% blocktrans trimmed asvar text count ndebates=no_chair %}
@@ -34,6 +34,24 @@
       1 debate has an adjudicator conflict.
     {% plural %}
       {{ ndebates }} debates have adjudicator conflicts.
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="warning" %}
+  {% endif %}
+
+  {% if unavailable_allocated %}
+    {% blocktrans trimmed asvar text with adjudicators=unavailable_allocated|join:", " count nadjs=unavailable_allocated|length %}
+      <strong>{{ adjudicators }}</strong> is unavailable this round, but is assigned to a debate.
+    {% plural %}
+      The following <strong>{{ nadjs }}</strong> adjudicators are unavailable this round, but are assigned to debates: <strong>{{ adjudicators }}</strong>
+    {% endblocktrans %}
+    {% include "components/item-info.html" with type="danger" %}
+  {% endif %}
+
+  {% if unallocated > 0 %}
+    {% blocktrans trimmed asvar text count ndebates=unallocated %}
+      1 adjudicator is available but not assigned to a debate.
+    {% plural %}
+      {{ ndebates }} adjudicators are available but not assigned to a debate.
     {% endblocktrans %}
     {% include "components/item-info.html" with type="warning" %}
   {% endif %}
