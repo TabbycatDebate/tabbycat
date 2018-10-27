@@ -16,7 +16,12 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
-        <template slot="venues">fancy venues UI</template>
+        <droppable-item slot="venue" :handle-drop="handleVenueDrop" :drop-context="{ 'assignment': debate.id }"
+                        class="flex-8 flex-truncate border-right d-flex flex-wrap">
+          <draggable-venue v-if="debate.venue" :item="allVenues[debate.venue]" class="flex-fill"
+                           :drag-payload="{ 'item': debate.venue, 'assignment': debate.id }">
+          </draggable-venue>
+        </droppable-item>
       </drag-and-drop-debate>
     </template>
 
@@ -32,11 +37,12 @@
 <script>
 import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
 import ModalForAllocating from '../../utils/templates/modals/ModalForAllocating.vue'
+import DroppableItem from '../../utils/templates/DroppableItem.vue'
 
 import DraggableVenue from './DraggableVenue.vue'
 
 export default {
-  components: { ModalForAllocating },
+  components: { ModalForAllocating, DraggableVenue, DroppableItem },
   mixins: [DragAndDropContainerMixin],
   data: function () {
     return {
@@ -56,7 +62,16 @@ export default {
       unallocatedComponent: DraggableVenue,
     }
   },
+  computed: {
+    allVenues () {
+      return this.$store.getters.allocatableItems
+    },
+  },
   methods: {
+    handleVenueDrop: function (droppedData) {
+      console.log('handledrop', droppedData)
+      // Emit the 'send adj to this debate method'
+    },
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
       // Return the ID of the venue in this debate
       if (debateOrPanel.venue) {

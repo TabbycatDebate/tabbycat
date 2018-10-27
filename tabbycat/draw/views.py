@@ -22,6 +22,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
+from availability.utils import annotate_availability
 from divisions.models import Division
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
@@ -862,6 +863,7 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams
         teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
+        teams = annotate_availability(teams, self.round)
         populate_win_counts(teams)
         serialized_teams = EditDebateTeamsTeamSerializer(teams, many=True)
         return self.json_render(serialized_teams.data)
