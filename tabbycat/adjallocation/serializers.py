@@ -15,8 +15,9 @@ class EditPanelOrDebateAdjSerializer(AdjudicatorSerializer, VueDraggableItemMixi
 
     class Meta:
         model = AdjudicatorSerializer.Meta.model
-        fields = (*AdjudicatorSerializer.Meta.fields, 'score',
-                  'vue_is_locked', 'vue_last_modified')
+        fields = (*AdjudicatorSerializer.Meta.fields,
+                  *VueDraggableItemMixin.Meta.fields,
+                  'score')
 
 
 class EditDebateAdjsDebateSerializer(DebateSerializerMixin):

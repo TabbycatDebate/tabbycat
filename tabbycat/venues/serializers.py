@@ -16,5 +16,6 @@ class EditDebateVenuesVenueSerializer(VenueSerializer, VueDraggableItemMixin):
     # TODO: fetch constraints
     class Meta:
         model = VenueSerializer.Meta.model
-        fields = (*VenueSerializer.Meta.fields, 'priority'
-                  'vue_is_locked', 'vue_last_modified')
+        fields = (*VenueSerializer.Meta.fields,
+                  *VueDraggableItemMixin.Meta.fields,
+                  'priority')

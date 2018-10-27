@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from availability.utils import annotate_availability
 from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
@@ -36,6 +37,7 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
 
     def get_serialised_allocatable_items(self):
         venues = Venue.objects.filter(tournament=self.tournament).prefetch_related('venuecategory_set')
+        venues = annotate_availability(venues, self.round)
         serialized_venues = EditDebateVenuesVenueSerializer(venues, many=True)
         return self.json_render(serialized_venues.data)
 
