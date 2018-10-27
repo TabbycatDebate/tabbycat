@@ -36,7 +36,7 @@ export default {
 <style scoped>
   .vc-debates-container {
     padding-top: 100px; /* Need to ensure actions bar doesn't overlap */
-    padding-bottom: 100px; /* Need to ensure unallocated area doesn't overlap */
+    padding-bottom: 420px; /* Need to ensure unallocated doesn't overlap; matches its max height */
     margin: 0 -15px; /* Remove the container padding added from base layout */
   }
 </style>

@@ -1,15 +1,17 @@
 <template>
-  <div class="navbar-light fixed-bottom d-flex border-top flex-column p-0 vc-unallocated-container">
+  <div class="navbar-light fixed-bottom d-flex border-top flex-column p-0"
+       :style="{height: height + 'px'}" ref="resizeableElement">
 
-    <droppable-item class="d-flex flex-column px-2" :handle-drop="handleUnusedDrop"
+    <droppable-item class="flex-grow-1 px-2" :handle-drop="handleUnusedDrop"
                     :drop-context="{ 'assignment': null, 'position': null }">
 
-      <section class="flex-fill mb-2 d-flex">
+      <section class="mb-1 d-flex">
         <div class="small mt-2 pl-1 text-muted text-unselectable">
           <span v-for="(value, key) in sorts" v-text="gettext(value.label)" @click="setSort(key)"
                 :class="['pr-2', value.active ? 'font-weight-bold' : 'hoverable']"></span>
         </div>
         <div class="vc-resize-handler flex-grow-1 mt-2 text-center"
+             @dragover.prevent @mousedown="resizeStart"
              data-toggle="tooltip" :title="gettext('Drag to resize')">
           <i data-feather="menu" class="mx-auto d-block"></i>
         </div>
@@ -24,7 +26,7 @@
           </span>
         </div>
       </section>
-      <section class="d-flex flex-wrap pb-2 pt-2">
+      <section class="d-flex flex-wrap pb-2" ref="unallocatedHolder">
         <div v-for="item in currentSortingMethod" :is="unallocatedComponent" :item="item" :key="item.id"
              :drag-payload="{ 'item': item.id, 'assignment': null, 'position': null }"></div>
       </section>
@@ -55,9 +57,33 @@ export default {
           label: 'Sort By Score', active: false, property: 'sortedUnallocatedItemsByScore',
         },
       },
+      height: null,
+      minHeight: 45,
+      maxHeight: 400,
+      itemContainerHeight: null,
     }
   },
   props: ['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop'],
+  mounted: function () {
+    this.height = this.boundedHeight(this.$refs.resizeableElement.clientHeight)
+    this.itemContainerHeight = this.$refs.unallocatedHolder.clientHeight
+  },
+  watch: {
+    unallocatedItems: function (val, oldVal) {
+      this.$nextTick(function () {
+        // Reduce the height automatically as the items are dragged out
+        if (this.$refs.unallocatedHolder.clientHeight < this.itemContainerHeight) {
+          const difference = this.itemContainerHeight - this.$refs.unallocatedHolder.clientHeight
+          let newHeight = this.boundedHeight(this.height - difference)
+          if (newHeight < 82) { // Don't resize below a single row
+            newHeight = 82
+          }
+          this.height = newHeight
+        }
+        this.itemContainerHeight = this.$refs.unallocatedHolder.clientHeight
+      })
+    },
+  },
   computed: {
     filtedUnallocatedItems: function () {
       return this.showUnavailable ? this.filteredAll : this.filteredAvailable
@@ -95,14 +121,35 @@ export default {
         this.sorts[key].active = selectedKey === key
       })
     },
+    resizeStart: function (event) {
+      event.preventDefault()
+      this.startPosition = event.clientY
+      window.addEventListener('mousemove', this.resizeMotion)
+      window.addEventListener('mouseup', this.resizeEnd)
+    },
+    resizeMotion: function (event) {
+      this.height = this.boundedHeight(window.innerHeight - event.clientY)
+      if (this.height > this.maxHeight || this.height < this.minHeight) {
+        this.resizeEnd(event)
+      }
+    },
+    resizeEnd: function (event) {
+      window.removeEventListener('mousemove', this.resizeMotion)
+      window.removeEventListener('mouseup', this.resizeEnd)
+    },
+    boundedHeight: function (height) {
+      if (height > this.maxHeight) {
+        return this.maxHeight
+      } else if (height < this.minHeight) {
+        return this.minHeight
+      }
+      return height
+    },
   },
 }
 </script>
 
 <style scoped>
-  .vc-unallocated-container {
-    max-height: 300px; /* Don't ever be more than 50% of the screen */
-  }
   .vc-resize-handler:hover {
     cursor: ns-resize;
   }
