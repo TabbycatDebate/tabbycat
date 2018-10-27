@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from utils.serializers import DebateSerializerMixin, VenueSerializer
+from utils.serializers import DebateSerializerMixin, VenueSerializer, VueDraggableItemMixin
 
 
 class EditDebateVenuesDebateSerializer(DebateSerializerMixin):
@@ -9,11 +9,12 @@ class EditDebateVenuesDebateSerializer(DebateSerializerMixin):
     venue = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
-class EditDebateVenuesVenueSerializer(VenueSerializer):
+class EditDebateVenuesVenueSerializer(VenueSerializer, VueDraggableItemMixin):
     """ Returns venues for use in the allocate Debate Venues view """
 
     # TODO: fetch categories
     # TODO: fetch constraints
     class Meta:
         model = VenueSerializer.Meta.model
-        fields = (*VenueSerializer.Meta.fields, 'priority') # Add fields
+        fields = (*VenueSerializer.Meta.fields, 'priority'
+                  'vue_is_locked', 'vue_last_modified')

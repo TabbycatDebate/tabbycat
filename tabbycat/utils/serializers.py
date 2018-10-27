@@ -1,3 +1,5 @@
+import time
+
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
 
@@ -11,6 +13,16 @@ def django_rest_json_render(data):
     """ For some reason JSONRenderer produces byte strings which cant be parsed
     into templates or sent over a websocket; so need to intermediate """
     return bytes.decode(JSONRenderer().render(data))
+
+
+class VueDraggableItemMixin(serializers.Serializer):
+    """ Provides properties that the front end sets for draggable items """
+    vue_is_locked = serializers.BooleanField(default=False)
+    vue_last_modified = serializers.SerializerMethodField(read_only=True)
+
+    def get_vue_last_modified(self, object):
+        """ Serialise modified as unix time to get around TZ issues in JS """
+        return int(time.time())
 
 
 class VenueSerializer(serializers.ModelSerializer):

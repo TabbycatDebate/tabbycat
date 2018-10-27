@@ -1,7 +1,7 @@
 <template>
 
   <div draggable=true @dragstart="dragStart" @dragend="dragEnd"
-       :class="['d-flex m-1 align-items-center', dragableClasses]">
+       :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]">
 
     <slot>
       <h4 class="mb-0 px-2 py-1 text-monospace vc-draggable-number vc-number">

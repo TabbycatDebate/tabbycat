@@ -27,7 +27,7 @@
       'venues': {% if venues %}{{ venues|safe }}{% else %}null{% endif %},
       'assistantUrl': {% if user_role == "admin" %}{% if venues %}'{% tournamenturl "assistant-venues-statuses" %}'{% else %}'{% tournamenturl "assistant-people-statuses" %}'{% endif %}{% else %}''{% endif %},
       'teamCodes': {{ team_codes }},
-      'forAdmin': {{ for_admin }},
+      'forAdmin': {% if for_admin %}true{% else %}false{% endif %},
     }
   </script>
   {{ block.super }}

@@ -64,6 +64,17 @@ export default new Vuex.Store({
         }
       })
     },
+    setAllocatableAttributes (state, changes) {
+      changes.forEach((allocatableItem) => {
+        if (state.allocatableItems[allocatableItem.id]) {
+          Object.entries(allocatableItem).forEach(([key, value]) => {
+            if (key !== 'id') {
+              state.allocatableItems[allocatableItem.id][key] = value
+            }
+          })
+        }
+      })
+    },
     toggleHighlight (state, type) {
       Object.entries(state.highlights).forEach(([key, value]) => {
         value.active = false
@@ -96,6 +107,16 @@ export default new Vuex.Store({
       this.state.wsBridge.send(updatedDebatesOrPanels)
       commit('updateSaveCounter')
       // TODO: error handling; locking; checking if the result matches sent data
+    },
+    updateAllocableItemModified ({ commit }, unallocatedItemIDs) {
+      // To preserve the 'drag order' on the unallocated item we need to set the
+      // modified attribute to be the current date time
+      var changes = []
+      const now = Math.round((new Date()).getTime() / 1000) // Unix time
+      unallocatedItemIDs.forEach((id) => {
+        changes.push({ 'id': id, 'vue_last_modified': now })
+      })
+      commit('setAllocatableAttributes', changes)
     },
     receiveUpdatedupdateDebatesOrPanelsAttribute ({ commit }, payload) {
       // Commit changes from websockets i.e.
