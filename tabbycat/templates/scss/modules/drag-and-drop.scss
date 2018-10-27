@@ -12,8 +12,8 @@
   }
 
   &:hover {
-    background: $purple;
-    border-color: darken($purple, 7.5%);
+    background: $purple !important; // Override availability mark
+    border-color: darken($purple, 7.5%) !important; // Override trainee mark
     cursor: move;
     color: #fff;
 

@@ -19,10 +19,18 @@ class VueDraggableItemMixin(serializers.Serializer):
     """ Provides properties that the front end sets for draggable items """
     vue_is_locked = serializers.BooleanField(default=False)
     vue_last_modified = serializers.SerializerMethodField(read_only=True)
+    available = serializers.SerializerMethodField(read_only=True)
+
+    def get_available(self, debate_or_panel_adj):
+        """ Requires the queryset to be annotate with availabilities """
+        return debate_or_panel_adj.available
 
     def get_vue_last_modified(self, object):
         """ Serialise modified as unix time to get around TZ issues in JS """
         return int(time.time())
+
+    class Meta:
+        fields = ('vue_is_locked', 'vue_last_modified', 'available')
 
 
 class VenueSerializer(serializers.ModelSerializer):

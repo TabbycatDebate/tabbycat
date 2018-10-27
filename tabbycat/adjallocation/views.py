@@ -11,6 +11,7 @@ from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from availability.utils import annotate_availability
 from breakqual.models import BreakCategory
 from draw.models import Debate
 from participants.models import Adjudicator, Region
@@ -56,6 +57,7 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
     def get_serialised_allocatable_items(self):
         # TODO: account for shared adjs
         adjs = Adjudicator.objects.filter(tournament=self.tournament)
+        adjs = annotate_availability(adjs, self.round)
         populate_feedback_scores(adjs)
         weight = self.tournament.current_round.feedback_weight
         serialized_adjs = EditPanelOrDebateAdjSerializer(
@@ -79,7 +81,8 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
 
     def debates_or_panels_factory(self, debates):
         return EditDebateAdjsDebateSerializer(
-            debates, many=True, context={'sides': self.tournament.sides})
+            debates, many=True, context={'sides': self.tournament.sides,
+                                         'round': self.round})
 
 
 class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
@@ -101,7 +104,8 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
         return panels
 
     def debates_or_panels_factory(self, panels):
-        return EditPanelAdjsPanelSerializer(panels, many=True)
+        return EditPanelAdjsPanelSerializer(panels, many=True,
+                                            context={'round': self.round})
 
 
 class PanelAdjudicatorsIndexView(TemplateView, AdministratorMixin):
