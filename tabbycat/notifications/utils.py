@@ -12,7 +12,7 @@ from tournaments.models import Round, Tournament
 from .models import SentMessageRecord
 
 
-def adjudicator_assignment_email_generator(round_id):
+def adjudicator_assignment_email_generator(url, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
@@ -49,6 +49,9 @@ def adjudicator_assignment_email_generator(round_id):
             context_user = context.copy()
             context_user['USER'] = adj.name
             context_user['POSITION'] = adj_position_names[pos]
+
+            if adj.url_key:
+                context_user['URL'] = url + adj.url_key + '/'
 
             emails.append((context_user, adj))
 

@@ -689,10 +689,12 @@ class DrawReleaseView(DrawStatusEdit):
 
         success_message = _("Released the draw.")
         if self.tournament.pref('enable_adj_email'):
+            path = reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'})
+            url = request.build_absolute_uri(path)[:-2]
             async_to_sync(get_channel_layer().send)("notifications", {
                 "type": "email",
                 "message": "adj",
-                "extra": {'round_id': self.round.id}
+                "extra": {'url': url, 'round_id': self.round.id}
             })
 
             success_message += _(" Adjudicator emails queued to be sent.")
