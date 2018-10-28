@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
-from adjallocation.allocator import allocate_adjudicators
-from adjallocation.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
+from adjallocation.allocators import allocate_adjudicators
+from adjallocation.allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from availability.utils import activate_all
 from draw.models import Debate
 from draw.manager import DrawManager
