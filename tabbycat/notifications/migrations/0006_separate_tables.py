@@ -16,7 +16,7 @@ def create_bulk_notifications(apps, schema_editor):
         if m.timestamp not in timestamps: # Avoid DB hits
             timestamps.append(m.timestamp)
             BulkNotification.objects.create(event=m.event, timestamp=m.timestamp,
-                                                round=m.round, tournament=m.tournament)
+                                            round=m.round, tournament=m.tournament)
         m.notification_id = timestamps.index(m.timestamp)
         m.save()
 
@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
             name='BulkNotification',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('event', models.CharField(blank=True, choices=[('p', 'team points'), ('c', 'ballot confirmed'), ('f', 'feedback URL'), ('b', 'ballot URL'), ('u', 'landing page URL'), ('d', 'draw released'), ('t', 'team registration'), ('m', 'motion(s) released')], max_length=1, verbose_name='event')),
+                ('event', models.CharField(blank=True, choices=[('p', 'team points'), ('c', 'ballot confirmed'), ('f', 'feedback URL'), ('b', 'ballot URL'), ('u', 'landing page URL'), ('d', 'draw released'), ('t', 'registration'), ('m', 'motion(s) released')], max_length=1, verbose_name='event')),
                 ('timestamp', models.DateTimeField(auto_now=True, verbose_name='timestamp')),
                 ('round', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='tournaments.Round', verbose_name='round')),
                 ('tournament', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament', verbose_name='tournament')),
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timestamp', models.DateTimeField(auto_now=True, verbose_name='timestamp')),
-                ('event', models.CharField(max_length=20, verbose_name='event')),
+                ('event', models.CharField(choices=[('processed', 'Processed'), ('dropped', 'Dropped'), ('deferred', 'Deferred'), ('delivered', 'Delivered'), ('bounce', 'Bounced'), ('open', 'Opened'), ('click', 'Clicked'), ('unsubscribe', 'Unsubscribed'), ('spamreport', 'Marked as spam'), ('group_unsubscribe', 'Unsubscribed from group'), ('group_resubscribe', 'Resubscribed to group')], max_length=20, verbose_name='event')),
                 ('data', django.contrib.postgres.fields.jsonb.JSONField(verbose_name='context')),
             ],
             options={

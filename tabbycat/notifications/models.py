@@ -47,7 +47,7 @@ class BulkNotification(models.Model):
     EVENT_TYPE_BALLOT_URL = 'b'
     EVENT_TYPE_URL = 'u'
     EVENT_TYPE_DRAW = 'd'
-    EVENT_TYPE_TEAM = 't'
+    EVENT_TYPE_REGISTRATION = 't'
     EVENT_TYPE_MOTIONS = 'm'
 
     EVENT_TYPE_CHOICES = (
@@ -57,7 +57,7 @@ class BulkNotification(models.Model):
         (EVENT_TYPE_BALLOT_URL, _("ballot URL")),
         (EVENT_TYPE_URL, _("landing page URL")),
         (EVENT_TYPE_DRAW, _("draw released")),
-        (EVENT_TYPE_TEAM, _("team registration")),
+        (EVENT_TYPE_REGISTRATION, _("registration")),
         (EVENT_TYPE_MOTIONS, _("motion(s) released"))
     )
 
@@ -81,11 +81,38 @@ class BulkNotification(models.Model):
 
 
 class EmailStatus(models.Model):
+
+    EVENT_TYPE_PROCESSED = 'processed'
+    EVENT_TYPE_DROPPED = 'dropped'
+    EVENT_TYPE_DEFERRED = 'deferred'
+    EVENT_TYPE_DELIVERED = 'delivered'
+    EVENT_TYPE_BOUNCED = 'bounce'
+    EVENT_TYPE_OPENED = 'open'
+    EVENT_TYPE_CLICKED = 'click'
+    EVENT_TYPE_UNSUBSCRIBED = 'unsubscribe'
+    EVENT_TYPE_SPAM = 'spamreport'
+    EVENT_TYPE_ASM_UNSUBSCRIBED = 'group_unsubscribe'
+    EVENT_TYPE_ASM_RESUBSCRIBED = 'group_resubscribe'
+
+    EVENT_TYPE_CHOICES = (
+        (EVENT_TYPE_PROCESSED, _("Processed")),
+        (EVENT_TYPE_DROPPED, _("Dropped")),
+        (EVENT_TYPE_DEFERRED, _("Deferred")),
+        (EVENT_TYPE_DELIVERED, _("Delivered")),
+        (EVENT_TYPE_BOUNCED, _("Bounced")),
+        (EVENT_TYPE_OPENED, _("Opened")),
+        (EVENT_TYPE_CLICKED, _("Clicked")),
+        (EVENT_TYPE_UNSUBSCRIBED, _("Unsubscribed")),
+        (EVENT_TYPE_SPAM, _("Marked as spam")),
+        (EVENT_TYPE_ASM_UNSUBSCRIBED, _("Unsubscribed from group")),
+        (EVENT_TYPE_ASM_RESUBSCRIBED, _("Resubscribed to group"))
+    )
+
     email = models.ForeignKey('notifications.SentMessageRecord', models.CASCADE,
         verbose_name=_("email message"))
     timestamp = models.DateTimeField(auto_now=True,
         verbose_name=_("timestamp"))
-    event = models.CharField(max_length=20,
+    event = models.CharField(max_length=20, choices=EVENT_TYPE_CHOICES,
         verbose_name=_("event"))
     data = JSONField(verbose_name=_("context"))
 

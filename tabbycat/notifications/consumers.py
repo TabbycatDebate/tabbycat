@@ -23,7 +23,7 @@ class NotificationQueueConsumer(SyncConsumer):
         BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED: ballots_email_generator,
         BulkNotification.EVENT_TYPE_POINTS: standings_email_generator,
         BulkNotification.EVENT_TYPE_MOTIONS: motion_release_email_generator,
-        BulkNotification.EVENT_TYPE_TEAM: team_speaker_email_generator
+        BulkNotification.EVENT_TYPE_REGISTRATION: team_speaker_email_generator
     }
 
     def _send(self, event, messages, records):
