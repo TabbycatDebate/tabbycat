@@ -16,8 +16,10 @@ Change Log
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
 - When printing the per-participant private URLs they now feature QR codes in addition to the URL. Thanks to Étienne Beaulé for contributing this feature!
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
-    - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details).
-    - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development.
+    - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details)
+    - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development
+- A range of improvements to the email notifications contributed by Étienne Beaulé:
+    - Ballot receipt emails now provide more information about team scores/points
 - Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
 

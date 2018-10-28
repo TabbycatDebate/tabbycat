@@ -14,9 +14,9 @@ thus the object itself cannot be passed.
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
-from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
-from results.result import DebateResult
+from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.utils import side_and_position_names
 from options.utils import use_team_code_names
 from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
@@ -89,36 +89,57 @@ def ballots_email_generator(to, debate_id):
     emails = []
     debate = Debate.objects.get(id=debate_id)
     tournament = debate.round.tournament
-    ballots = DebateResult(debate.confirmed_ballot).as_dicts()
+    results = DebateResult(debate.confirmed_ballot)
     round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(tournament),
                                                              'round': debate.round.name, 'room': debate.venue.name}
 
-    context = {'DEBATE': round_name}
     use_codes = use_team_code_names(debate.round.tournament, False)
 
-    for ballot in ballots:
-        if 'adjudicator' in ballot:
-            judge = ballot['adjudicator']
-        else:
-            judge = debate.debateadjudicator_set.get(type=DebateAdjudicator.TYPE_CHAIR).adjudicator
+    def _create_ballot(result, scoresheet):
+        ballot = ""
 
-        if judge.email is None:
-            continue
+        for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
+            if tournament.pref('teams_in_debate') == 'bp':
+                side_string = _("%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)\n")
+                points = 4 - scoresheet.rank(side)
+            else:
+                side_string = _("%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)\n")
+                points = _("Win") if side == scoresheet.winner() else _("Loss")
 
-        scores = ""
-        for team in ballot['teams']:
+            ballot +=  side_string % {
+                'side': side_name,
+                'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
+                'speaks': scoresheet.get_total(side),
+                'points': points
+            }
 
-            team_name = team['team'].code_name if use_codes else team['team'].short_name
-            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team_name}
+            for pos, pos_name in zip(tournament.positions, pos_names):
+                ballot += _("- %(pos)s: %(speaker)s (%(score)s)\n") % {
+                    'pos': pos_name,
+                    'speaker': result.get_speaker(side, pos).name,
+                    'score': scoresheet.get_score(side, pos)
+                }
 
-            for speaker in team['speakers']:
-                scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
+        return ballot
 
-        context_user = context.copy()
-        context_user['USER'] = judge.name
-        context_user['SCORES'] = scores
+    if isinstance(results, VotingDebateResult):
+        for (adj, ballot) in results.scoresheets.items():
+            if adj.email is None:
+                continue
 
-        emails.append((context, judge))
+            context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
+            emails.append((context, adj))
+    elif isinstance(results, BaseConsensusDebateResultWithSpeakers):
+        context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
+
+        for adj in debate.debateadjudicator_set.all():
+            if adj.adjudicator.email is None:
+                continue
+
+            context_user = context.copy()
+            context_user['USER'] = adj.adjudicator.name
+
+            emails.append((context_user, adj.adjudicator))
 
     return emails
 
