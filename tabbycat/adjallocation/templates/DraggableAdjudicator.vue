@@ -3,7 +3,7 @@
                   :class="{ 'border-light': isTrainee, 'bg-dark text-white': !item.available }">
 
       <span slot="number">
-        <small class="pl-2 vue-draggable-muted ">{{ scoreInt }}.{{ scoreDecimal }}</small>
+        <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
       </span>
       <span slot="title">
         {{ initialledName }}
@@ -51,11 +51,16 @@ export default {
       // Scores can come through as integers; need to ensure they are re-rounded
       return parseFloat(Math.round(this.adjudicator.score * 100) / 100).toFixed(1)
     },
-    scoreInt: function () {
-      return String(this.score).split('.')[0]
+    scoreA: function () {
+      return String(this.score)[0] // First digit
     },
-    scoreDecimal: function () {
-      return String(this.score).split('.')[1]
+    scoreB: function () {
+      if (this.adjudicator.score >= 10.0) {
+        // For scores with that are double-digits ignore the decimal
+        return String(this.score)[1] + '.'
+      } else {
+        return '.' + String(this.score).split('.')[1]
+      }
     },
   },
 }

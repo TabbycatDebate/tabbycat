@@ -6,10 +6,11 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
-        <div slot="teams" class="flex-12 flex-truncate border-right d-flex flex-wrap">
+        <div slot="teams" class="flex-36 flex-truncate border-right d-flex flex-nowrap">
 
           <droppable-item v-for="side in sides" :handle-drop="handleTeamDrop" :key="side"
-                          :drop-context="{ 'assignment': debate.id, 'position': side }">
+                          :drop-context="{ 'assignment': debate.id, 'position': side }"
+                          class="flex-1 flex-truncate">
             <draggable-team v-if="debate.teams[side]" :item="allTeams[debate.teams[side]]" class="flex-fill"
                             :drag-payload="{ 'item': debate.teams[side], 'assignment': debate.id, 'position': side }">
             </draggable-team>

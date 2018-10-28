@@ -3,7 +3,7 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'availability-index' %}">
-    <i data-feather="chevron-left"></i> {% trans "Check-Ins" %}
+    <i data-feather="chevron-left"></i> {% trans "Availability" %}
   </a>
 
   {% if pref.allocation_confirmations %}
@@ -19,7 +19,7 @@
       {% trans "Edit S/M Old" %}
     </a>
     <a href="{% roundurl 'edit-panel-adjudicators' round %}" class="btn btn-outline-primary">
-      {% trans "Edit Preformed Panels" %}
+      {% trans "Edit Panels" %}
     </a>
   </div>
   <div class="btn-group flex-wrap" role="group">

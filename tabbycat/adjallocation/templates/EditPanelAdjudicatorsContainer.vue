@@ -11,9 +11,6 @@
                 @click="showCreatePanels" v-text="gettext('Create Panels')"></button>
       </template>
       <template slot="default-highlights">
-        <button class="btn btn-outline-secondary disabled d-xl-inline d-none">
-          <i data-feather="help-circle"></i>
-        </button>
         <button class="btn conflictable conflicts-toolbar hover-histories-2-ago"
                 data-toggle="tooltip" v-text="gettext('Seen')"
                 title="This adjudicator has judged with this adjudicator previously"></button>

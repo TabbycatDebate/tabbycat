@@ -24,16 +24,16 @@
       </div>
 
       <div class="btn-group btn-group-sm">
+        <button class="btn btn-outline-secondary disabled d-xl-inline d-none"
+                data-toggle="tooltip" :title="('Key for the color highlights.')">
+          <i data-feather="help-circle"></i>
+        </button>
         <template v-if="!currentHighlightKey">
           <slot name="default-highlights"></slot>
           <button class="btn btn-dark" v-text="gettext('Unavailable')" data-toggle="tooltip"
                 :title="('Has not been marked as available for this round.')"></button>
         </template>
         <template v-else>
-          <button class="btn btn-outline-secondary disabled d-xl-inline d-none"
-                  data-toggle="tooltip" :title="('Key for the color highlights.')">
-            <i data-feather="help-circle"></i>
-          </button>
           <button v-for="option in highlights[currentHighlightKey].options"
                   :class="['btn btn-primary', option.css]">
             {{ option.fields.name }}

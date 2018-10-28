@@ -1,12 +1,14 @@
 <template>
 
-  <div class="d-flex flex-36 pl-2 flex-truncate vue-droppable vue-droppable-parent">
-    <div class="d-flex flex-column justify-content-around small text-monospace">
+  <div class="d-flex flex-36 flex-truncate vue-droppable vue-droppable-parent">
+    <div class="d-flex flex-column pl-2 justify-content-around small text-monospace">
       <div class="py-1" data-toggle="tooltip" :title="gettext('Average score of panel (excluding trainees)')">
-        {{ averageScore }}
+        <span v-if="averageScore">{{ averageScore }}</span>
+        <span v-else class="text-muted" v-text="gettext('N/A')"></span>
       </div>
       <div class="py-1" data-toggle="tooltip" :title="gettext('Average score of voting majority in panel')">
-        {{ averageVotingScore }}
+        <span v-if="averageVotingScore">{{ averageVotingScore }}</span>
+        <span v-else class="text-muted" v-text="gettext('N/A')"></span>
       </div>
     </div>
     <draggable-allocation :handle-debate-or-panel-drop="handleDebateOrPanelDrop"
@@ -40,7 +42,6 @@ export default {
       if (this.adjudicatorScores.length > 0) {
         return this.uiRound(this.average(this.adjudicatorScores))
       }
-      return 'N/A'
     },
     averageVotingScore: function () {
       if (this.adjudicatorScores.length > 1) {
@@ -48,7 +49,6 @@ export default {
         let majorityScores = this.adjudicatorScores.slice(0, votingMajority)
         return this.uiRound(this.average(majorityScores))
       }
-      return 'N/A'
     },
   },
   methods: {
@@ -57,7 +57,7 @@ export default {
     },
     uiRound: function (number) {
       let fullRounded = Math.round(number * 10) / 10
-      return fullRounded.toFixed(1)
+      return fullRounded.toPrecision(2)
     },
   },
 }
