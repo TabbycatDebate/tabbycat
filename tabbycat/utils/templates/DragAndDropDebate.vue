@@ -36,7 +36,7 @@
       <div class="vc-bp-grid flex-12 flex-truncate" v-if="sides.length === 4">
         <div :class="['d-flex flex-truncate align-items-center py-1 px-2 border-right',
                       i < 2 ? 'border-bottom' : '']"
-             v-for="(side, i) in sides">
+             v-for="(side, i) in sides" v-if="debateOrPanel.teams">
           <div class="text-truncate small" v-if="debateOrPanel.teams[side]">
             {{ debateOrPanel.teams[side].short_name }}
           </div>
