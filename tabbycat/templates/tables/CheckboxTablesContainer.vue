@@ -53,7 +53,7 @@
           </div>
         </template>
 
-        <auto-save-counter :css="'btn-md'"></auto-save-counter>
+        <auto-save-counter v-if="!hideAutoSave" :css="'btn-md'"></auto-save-counter>
 
       </div>
     </div>
@@ -83,6 +83,7 @@ export default {
     navigation: Array,
     roundInfo: Object,
     translations: Object,
+    hideAutoSave: Boolean,
   },
   created: function () {
     // Watch for events on the global event hub
@@ -140,7 +141,9 @@ export default {
           }
         })
       })
-      this.saveChecks(type)
+      if (!this.hideAutoSave) {
+        this.saveChecks(type)
+      }
     },
   },
 }

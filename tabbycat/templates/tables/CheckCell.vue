@@ -26,6 +26,9 @@ export default {
   },
   methods: {
     checkUpdate: function () {
+      if (this.cellData.noSave) {
+        return // Some uses of CheckboxTablesContainer, e.g. emails, don't save
+      }
       const cd = this.cellData
       const checked = cd.checked // This is currently the pre-clicked value
       // Updates can be sent off individually via this component itself; or by

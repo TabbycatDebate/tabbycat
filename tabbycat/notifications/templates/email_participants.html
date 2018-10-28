@@ -25,6 +25,7 @@
                                   :translations=translations
                                   :urls=urls
                                   :navigation=navigation
+                                  :hide-auto-save=hideAutoSave
                                   orientation={{ tables_orientation|safe }} >
       </checkbox-tables-container>
     </div>
@@ -47,6 +48,7 @@
       tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
       roundInfo: null,
       categories: {% if categories %}{{ categories|safe }}{% else %}null{% endif %},
+      hideAutoSave: true,
       translations: null,
       urls: null,
       navigation: null

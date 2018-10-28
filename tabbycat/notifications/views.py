@@ -71,6 +71,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
             'id': p.id,
             'name': 'recipients',
             'value': p.id,
+            'noSave': True,
             'type': 'adj' if mixed_participants and hasattr(p, 'adjudicator') else 'spk'
         } for p in queryset])
 
@@ -91,7 +92,7 @@ class RoleColumnMixin:
     """Mixin to have a column Adjudicator/Speaker for email"""
 
     def get_table(self, mixed_participants=True):
-        table = super().get_table()
+        table = super().get_table(mixed_participants)
 
         table.add_column({'key': 'role', 'title': _("Role")}, [{
             'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker")
