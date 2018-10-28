@@ -1,9 +1,6 @@
 import json
 import logging
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,6 +17,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
 from notifications.models import SentMessageRecord
+from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
@@ -28,7 +26,7 @@ from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomi
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import ModelFormSetView, PostOnlyRedirectView, VueTableTemplateView
+from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
@@ -158,23 +156,27 @@ class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
 
 
 # ==============================================================================
-# Notification POST page
+# Email page
 # ==============================================================================
 
-class EmailParticipantRegistrationView(TournamentMixin, PostOnlyRedirectView):
+class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
+    page_subtitle = _("Team Registration")
 
-    tournament_redirect_pattern_name = 'participants-list'
+    event = SentMessageRecord.EVENT_TYPE_TEAM
+    subject_template = 'team_email_subject'
+    message_template = 'team_email_message'
 
-    def post(self, request, *args, **kwargs):
-        async_to_sync(get_channel_layer().send)("notifications", {
-            "type": "email",
-            "message": "team",
-            "extra": {'tournament_id': self.tournament.id}
-        })
+    def get_success_url(self):
+        return reverse_tournament('participants-list', self.tournament)
 
-        messages.success(self.request, _("Registration information emails have been queued for sending."))
+    def get_queryset(self):
+        return Speaker.objects.filter(team__tournament=self.tournament).select_related('team').prefetch_related('team__speaker_set')
 
-        return super().post(request, *args, **kwargs)
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_team_columns([s.team for s in self.get_queryset()])
+        return table
 
 
 # ==============================================================================

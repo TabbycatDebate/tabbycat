@@ -1,12 +1,13 @@
 <template>
 
-  <td :class="cellData['class'] ? cellData['class'] : null" >
+  <td :class="cellData.class ? cellData.class : null" >
 
-    <span v-if="cellData['sort']" hidden>
+    <span v-if="cellData.sort" hidden>
       {{ cellData.checked }}
     </span>
     <div class="form-check">
-      <input type="checkbox" class="form-check-input  position-static"
+      <input type="checkbox" class="form-check-input position-static"
+             :name="cellData.name" :value="cellData.value"
              @change="checkUpdate" v-model.lazy="cellData.checked">
     </div>
 
@@ -25,6 +26,9 @@ export default {
   },
   methods: {
     checkUpdate: function () {
+      if (this.cellData.noSave) {
+        return // Some uses of CheckboxTablesContainer, e.g. emails, don't save
+      }
       const cd = this.cellData
       const checked = cd.checked // This is currently the pre-clicked value
       // Updates can be sent off individually via this component itself; or by

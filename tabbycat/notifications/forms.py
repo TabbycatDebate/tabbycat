@@ -2,6 +2,7 @@ from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.translation import gettext as _, gettext_lazy
+from django_summernote.widgets import SummernoteWidget
 
 
 class TestEmailForm(forms.Form):
@@ -18,3 +19,12 @@ class TestEmailForm(forms.Form):
             [self.cleaned_data['recipient']],
         )
         return self.cleaned_data['recipient']
+
+
+class BasicEmailForm(forms.Form):
+    """A base class for an email form with fields for subject/message
+
+    Note that the list of recipients is handled by Vue, bypassing this Form."""
+
+    subject_line = forms.CharField(label=_("Subject"), required=True, max_length=78)
+    message_body = forms.CharField(label=_("Message"), required=True, widget=SummernoteWidget)

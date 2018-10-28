@@ -10,6 +10,7 @@
                                 :translations=translations
                                 :urls=urls
                                 :navigation=navigation
+                                :hide-auto-save=hideAutoSave
                                 orientation={{ tables_orientation|safe }} >
     </checkbox-tables-container>
   </div>
@@ -32,6 +33,7 @@
         'breakingAdjs': '{% roundurl "availability-checkin-breaking-adjudicators" %}',
         'save': '{{ saveURL|safe }}'
       },
+      hideAutoSave: false,
       translations: {
         'Select All': '{% trans "Select All" %}',
         'Select None': '{% trans "Select None" %}',

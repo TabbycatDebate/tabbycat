@@ -1,12 +1,9 @@
 import logging
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.views.generic.base import TemplateView
-from django.db.models import Exists, OuterRef, Q
+from django.db.models import Exists, OuterRef
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
@@ -15,6 +12,7 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
+from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -141,35 +139,31 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
         return super().post(request, *args, **kwargs)
 
 
-class EmailRandomizedUrlsView(RandomisedUrlsMixin, PostOnlyRedirectView):
+class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
+    page_subtitle = _("Private URLs")
 
-    tournament_redirect_pattern_name = 'privateurls-list'
+    event = SentMessageRecord.EVENT_TYPE_URL
+    subject_template = 'url_email_subject'
+    message_template = 'url_email_message'
 
-    def post(self, request, *args, **kwargs):
-        t = self.tournament
+    def get_success_url(self):
+        return reverse_tournament('privateurls-list', self.tournament)
 
-        path = reverse_tournament('privateurls-person-index', t, kwargs={'url_key': '0'})
-        url = request.build_absolute_uri(path)[:-2]
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['url'] = self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
+        return extra
 
-        async_to_sync(get_channel_layer().send)("notifications", {
-            "type": "email",
-            "message": "url",
-            "extra": {'url': url, 'tournament_id': t.id}
-        })
+    def get_table(self):
+        table = super().get_table()
 
-        messages.success(self.request, _("Private URL emails have been queued for sending."))
+        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, [{
+            'text': p.url_key,
+            'link': self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key})),
+            'class': 'small'
+        } for p in self.get_queryset()])
 
-        people_no_email = t.participants.filter(
-            Q(email__isnull=True) | Q(email__exact=""), url_key__isnull=False
-        ).values_list('name', flat=True)
-
-        if people_no_email:
-            messages.warning(self.request, ngettext(
-                "This participant does not have an email address: %(participants)s",
-                "These %(count)d participants do not have an email address: %(participants)s",
-                people_no_email.count()) % {'count': people_no_email.count(), 'participants': ", ".join(people_no_email)})
-
-        return super().post(request, *args, **kwargs)
+        return table
 
 
 class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):

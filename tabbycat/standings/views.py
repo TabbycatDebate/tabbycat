@@ -12,12 +12,14 @@ from django.views.generic.base import TemplateView
 from adjfeedback.views import BaseFeedbackOverview
 from breakqual.models import BreakCategory
 from motions.models import Motion
+from notifications.models import SentMessageRecord
+from notifications.views import RoundTemplateEmailCreateView
 from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import reverse_tournament
+from utils.misc import reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -668,3 +670,29 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             "individual pieces of feedback across all rounds. "
             "<a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."))
         return table
+
+
+# ==============================================================================
+# Send Emails
+# ==============================================================================
+
+class EmailTeamStandingsView(RoundTemplateEmailCreateView):
+    page_subtitle = _("Team Standings")
+
+    event = SentMessageRecord.EVENT_TYPE_POINTS
+    subject_template = 'team_points_email_subject'
+    message_template = 'team_points_email_message'
+
+    def get_success_url(self):
+        return reverse_round('tournament-complete-round-check', self.round)
+
+    def get_queryset(self):
+        return Speaker.objects.filter(team__tournament=self.tournament)
+
+    def get_default_send_queryset(self):
+        return Speaker.objects.filter(team__round_availabilities__round=self.round, email__isnull=False).exclude(email__exact="")
+
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        return extra

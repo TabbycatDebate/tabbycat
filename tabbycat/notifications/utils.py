@@ -1,4 +1,16 @@
-from django.db.models import Exists, OuterRef
+"""Email generator functions
+
+These functions assemble the necessary arguments to be parsed in email templates
+to be sent to relevant parties. All these functions return a tuple with the first
+element being a context dictionary with the available variables to be parsed in
+the message. The second element is the Participant object. All these functions are
+called by NotificationQueueConsumer, which inserts the variables into a message,
+using the participant object to fetch their email address and to record.
+
+Objects should be fetched from the database here as it is an asyncronous process,
+thus the object itself cannot be passed.
+"""
+
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
@@ -9,10 +21,8 @@ from options.utils import use_team_code_names
 from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
 
-from .models import SentMessageRecord
 
-
-def adjudicator_assignment_email_generator(round_id):
+def adjudicator_assignment_email_generator(to, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
@@ -43,7 +53,9 @@ def adjudicator_assignment_email_generator(round_id):
         }
 
         for adj, pos in debate.adjudicators.with_positions():
-            if adj.email is None:
+            try:
+                to.remove(adj.id)
+            except ValueError:
                 continue
 
             context_user = context.copy()
@@ -55,19 +67,15 @@ def adjudicator_assignment_email_generator(round_id):
     return emails
 
 
-def randomized_url_email_generator(url, tournament_id):
+def randomized_url_email_generator(to, url, tournament_id):
     emails = []
     tournament = Tournament.objects.get(id=tournament_id)
 
-    subquery = SentMessageRecord.objects.filter(
-        event=SentMessageRecord.EVENT_TYPE_URL,
-        tournament=tournament, email=OuterRef('email')
-    )
-    participants = tournament.participants.filter(
-        url_key__isnull=False, email__isnull=False
-    ).exclude(email__exact="").annotate(already_sent=Exists(subquery)).filter(already_sent=False)
-
-    for instance in participants:
+    for instance in tournament.participants:
+        try:
+            to.remove(instance.id)
+        except ValueError:
+            continue
         url_ind = url + instance.url_key + '/'
 
         variables = {'USER': instance.name, 'URL': url_ind, 'KEY': instance.url_key, 'TOURN': str(tournament)}
@@ -77,7 +85,7 @@ def randomized_url_email_generator(url, tournament_id):
     return emails
 
 
-def ballots_email_generator(debate_id):
+def ballots_email_generator(to, debate_id):
     emails = []
     debate = Debate.objects.get(id=debate_id)
     tournament = debate.round.tournament
@@ -91,11 +99,18 @@ def ballots_email_generator(debate_id):
         ballot = ""
 
         for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
-            ballot += _("%(side)s: %(team)s (%(points)d - %(rank)s)\n") % {
+            if tournament.pref('teams_in_debate') == 'bp':
+                side_string = _("%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)\n")
+                points = 4 - scoresheet.rank(side)
+            else:
+                side_string = _("%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)\n")
+                points = _("Win") if side == scoresheet.winner() else _("Loss")
+
+            ballot +=  side_string % {
                 'side': side_name,
                 'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
-                'points': scoresheet.get_total(side),
-                'rank': scoresheet.rank(side)
+                'speaks': scoresheet.get_total(side),
+                'points': points
             }
 
             for pos, pos_name in zip(tournament.positions, pos_names):
@@ -129,7 +144,7 @@ def ballots_email_generator(debate_id):
     return emails
 
 
-def standings_email_generator(url, round_id):
+def standings_email_generator(to, url, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
@@ -149,7 +164,9 @@ def standings_email_generator(url, round_id):
         context_team['TEAM'] = team.short_name
 
         for speaker in team.speaker_set.all():
-            if speaker.email is None:
+            try:
+                to.remove(speaker.id)
+            except ValueError:
                 continue
 
             context_user = context_team.copy()
@@ -160,7 +177,7 @@ def standings_email_generator(url, round_id):
     return emails
 
 
-def motion_release_email_generator(round_id):
+def motion_release_email_generator(to, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
 
@@ -183,7 +200,9 @@ def motion_release_email_generator(round_id):
     teams = round.tournament.team_set.filter(round_availabilities__round=round).prefetch_related('speaker_set')
     for team in teams:
         for speaker in team.speaker_set.all():
-            if speaker.email is None:
+            try:
+                to.remove(speaker.id)
+            except ValueError:
                 continue
 
             context_user = context.copy()
@@ -194,7 +213,7 @@ def motion_release_email_generator(round_id):
     return emails
 
 
-def team_speaker_email_generator(tournament_id):
+def team_speaker_email_generator(to, tournament_id):
     emails = []
     tournament = Tournament.objects.get(id=tournament_id)
 
@@ -212,7 +231,9 @@ def team_speaker_email_generator(tournament_id):
         }
 
         for speaker in team.speakers:
-            if speaker.email is None:
+            try:
+                to.remove(speaker.id)
+            except ValueError:
                 continue
 
             context_user = context.copy()

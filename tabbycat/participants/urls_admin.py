@@ -14,7 +14,7 @@ urlpatterns = [
         name='participants-code-names-list'),
 
     path('email/',
-        views.EmailParticipantRegistrationView.as_view(),
+        views.EmailTeamRegistrationView.as_view(),
         name='participants-email'),
 
     path('eligibility/',

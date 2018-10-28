@@ -28,6 +28,11 @@ urlpatterns = [
             views.DrawRegenerateView.as_view(),
             name='draw-regenerate'),
 
+        # Email
+        path('email/',
+            views.EmailAdjudicatorAssignmentsView.as_view(),
+            name='draw-email'),
+
         # Side and Matchup Editing
         path('matchups/edit/',
             views.EditMatchupsView.as_view(),

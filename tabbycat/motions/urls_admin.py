@@ -19,6 +19,11 @@ urlpatterns = [
         path('display/',
             views.AdminDisplayMotionsView.as_view(),
             name='motions-display'),
+
+        # Email
+        path('email/',
+            views.EmailMotionReleaseView.as_view(),
+            name='motions-email'),
     ])),
 
     path('statistics/',
