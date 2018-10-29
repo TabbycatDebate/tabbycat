@@ -389,6 +389,12 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     subject_template = 'adj_email_subject'
     message_template = 'adj_email_message'
 
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['url'] = self.request.build_absolute_uri(
+            reverse_tournament('results-public-ballotset-new-randomised', self.tournament, kwargs={'url_key': '0'}))[:-2]
+        return extra
+
     def get_success_url(self):
         return reverse_round('draw-display', self.round)
 
