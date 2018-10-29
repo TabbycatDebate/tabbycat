@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.utils.translation import ngettext
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
 from draw.models import TeamSideAllocation
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
@@ -145,7 +145,10 @@ class TeamAdmin(admin.ModelAdmin):
         team_speakers = [team.speaker_set.all() for team in queryset]
         for speakers in team_speakers:
             speakers.update(url_key=None)
-        message = _("%(count)d team's speakers had their URL key removed.") % {'count': len(team_speakers)}
+        message = ngettext_lazy(
+            "%(count)d speaker had their URL key removed.",
+            "%(count)d speakers had their URL keys removed.",
+            len(team_speakers)) % {'count': len(team_speakers)}
         self.message_user(request, message)
     delete_url_key.short_description = _("Delete URL key")
 

@@ -3,9 +3,10 @@
 
 {% block head-title %}
   <div class="text-center d-print-none">
-  {% blocktrans trimmed with venue_category=base_venue_category.name round_name=round.name %}
-  Room Sheets for Debates at {{ venue_category }} in {{ round_name }}</div>
-  {% endblocktrans %}
+    {% blocktrans trimmed with venue_category=base_venue_category.name round_name=round.name %}
+    Room Sheets for Debates at {{ venue_category }} in {{ round_name }}
+    {% endblocktrans %}
+  </div>
 {% endblock %}
 {% block page-title %}
   {% blocktrans trimmed with venue_category=base_venue_category.name %}
