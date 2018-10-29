@@ -235,6 +235,11 @@ class Debate(models.Model):
             return self._history
 
     @property
+    def related_adjudicator_set(self):
+        """Used by objects that work with both Debate and PreformedPanel."""
+        return self.debateadjudicator_set
+
+    @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
@@ -276,6 +281,7 @@ class Debate(models.Model):
             yield sdt
 
     def serialize(self, tournament=None):
+        """@depracate when legacy drag and drop UIs removed"""
         """`tournament` can be provided to avoid hitting the preference cache
         for each item if this is called for many different debates in the
         same tournament."""

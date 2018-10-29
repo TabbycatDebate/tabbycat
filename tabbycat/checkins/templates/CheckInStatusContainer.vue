@@ -165,6 +165,7 @@ export default {
     initialEvents: Array,
     assistantUrl: String,
     teamCodes: Boolean,
+    tournamentSlug: String,
     forAdmin: Boolean,
   },
   computed: {
@@ -247,6 +248,9 @@ export default {
         return this.entitiesByTime
       }
       return this.entitiesByTime
+    },
+    tournamentSlugForWSPath: function () {
+      return this.tournamentSlug
     },
   },
   methods: {

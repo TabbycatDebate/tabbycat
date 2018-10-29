@@ -27,12 +27,12 @@
 import _ from 'lodash'
 import DivisionDroppable from './DivisionDroppable.vue'
 import UnallocatedItemsContainer from '../../templates/draganddrops/UnallocatedItemsContainer.vue'
-import DraggableTeam from '../../templates/draganddrops/DraggableTeam.vue'
+import LegacyDraggableTeam from '../../templates/draganddrops/LegacyDraggableTeam.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],
-  components: { DraggableTeam, DivisionDroppable, UnallocatedItemsContainer },
+  components: { LegacyDraggableTeam, DivisionDroppable, UnallocatedItemsContainer },
   props: ['teams', 'divisions', 'venueCategories', 'roundInfo',
     'saveDivisionsUrl', 'saveVenueCategoryUrl'],
   created: function () {

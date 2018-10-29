@@ -115,12 +115,51 @@ class PreformedPanel(models.Model):
     importance = models.FloatField(default=0.0, choices=[(float(i), i) for i in range(-2, 3)],
         verbose_name=_("importance"))
 
+    bracket_min = models.FloatField(default=0,
+        verbose_name=_("minimum bracket"),
+        help_text=_("Estimate of the lowest bracket for which this panel might be"))
+    bracket_max = models.FloatField(default=0,
+        verbose_name=_("maximum bracket"),
+        help_text=_("Estimate of the highest bracket for which this panel might be"))
+    room_rank = models.IntegerField(default=0,
+        verbose_name=_("room rank"),
+        help_text=_("Sequential number of panel, not used in any algorithms"))
+    liveness = models.IntegerField(default=0,
+        verbose_name=_("liveness"),
+        help_text=_("Number of categories this room is expected to be live for"))
+
     class Meta:
         verbose_name = _("preformed panel")
         verbose_name_plural = _("preformed panels")
 
     def __str__(self):
         return "[{x.id}] {x.round.name} impt={x.importance}".format(x=self)
+
+    @property
+    def related_adjudicator_set(self):
+        """Used by objects that work with both Debate and PreformedPanel."""
+        return self.preformedpaneladjudicator_set
+
+    @property
+    def adjudicators(self):
+        """Returns an AdjudicatorAllocation containing the adjudicators on this
+        panel."""
+        try:
+            return self._adjudicators
+        except AttributeError:
+            from adjallocation.allocation import AdjudicatorAllocation
+            self._adjudicators = AdjudicatorAllocation(self, from_db=True)
+            return self._adjudicators
+
+    # Properties to make this look like Debate for the adjudicator allocators
+
+    @property
+    def bracket(self):
+        return self.bracket_max
+
+    @property
+    def teams(self):
+        return []
 
 
 class PreformedPanelAdjudicator(models.Model):

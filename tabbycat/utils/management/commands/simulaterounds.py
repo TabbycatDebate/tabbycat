@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from adjallocation.allocators import allocate_adjudicators
+from adjallocation.allocators import legacy_allocate_adjudicators
 from adjallocation.allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from availability.utils import activate_all
 from draw.models import Debate
@@ -39,7 +39,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
             allocator_class = VotingHungarianAllocator
         else:
             allocator_class = ConsensusHungarianAllocator
-        allocate_adjudicators(round, allocator_class)
+        legacy_allocate_adjudicators(round, allocator_class)
 
         self.stdout.write("Generating results for round '{}'...".format(round.name))
         add_results_to_round(round, **self.result_kwargs(options))

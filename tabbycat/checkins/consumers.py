@@ -1,14 +1,15 @@
 from asgiref.sync import async_to_sync
+from channels.generic.websocket import JsonWebsocketConsumer
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from utils.consumers import TournamentConsumer, WSPublicAccessMixin
+from tournaments.mixins import TournamentWebsocketMixin
 
 from .models import Event, Identifier
 from .utils import get_unexpired_checkins
 
 
-class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
+class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
 
     group_prefix = 'checkins'
 
@@ -29,7 +30,6 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
     # Issue the relevant checkins
     def broadcast_checkin(self, event):
         content = event['content']
-        tournament = self.tournament()
         barcode_ids = [b for b in content['barcodes'] if b is not None]
         return_content = {'created': content['status'], 'checkins': [],
                           'component_id': content['component_id']}
@@ -40,7 +40,7 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
                 if content['status'] is True:
                     # If checking-in someone
                     checkin = Event.objects.create(identifier=identifier,
-                                                   tournament=tournament)
+                                                   tournament=self.tournament)
                     return_content['checkins'].append(checkin.serialize())
                 else:
                     # If undoing/revoking a check-in
@@ -49,7 +49,7 @@ class CheckInEventConsumer(TournamentConsumer, WSPublicAccessMixin):
                     else:
                         window = 'checkin_window_venues'
 
-                    checkins = get_unexpired_checkins(tournament, window)
+                    checkins = get_unexpired_checkins(self.tournament, window)
                     checkins.filter(identifier=identifier).delete()
                     return_content['checkins'].append({'identifier': barcode})
 

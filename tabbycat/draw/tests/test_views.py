@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from draw.models import DebateTeam
 from tournaments.models import Round
-from utils.tests import CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
+from utils.tests import AdminTournamentViewSimpleLoadTestMixin, CompletedTournamentTestMixin, ConditionalTableViewTestsMixin, TableViewTestsMixin
 
 
 class PublicDrawForSpecificRoundViewPermissionTest(ConditionalTableViewTestsMixin, TestCase):
@@ -177,3 +177,8 @@ class PublicDrawEliminationCurrentRoundTest(CompletedTournamentTestMixin, TableV
 
         response = self.get_response('draw-public-current-rounds')
         self.assertResponseTableRowCountsEqual(response, [4, 2, 1])
+
+
+class EditDebateTeamsViewTest(AdminTournamentViewSimpleLoadTestMixin, TestCase):
+    view_name = 'edit-debate-teams'
+    round_seq = 1

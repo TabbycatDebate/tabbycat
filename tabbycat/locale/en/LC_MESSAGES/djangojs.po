@@ -149,3 +149,19 @@ msgstr ""
 #: results/templates/BallotsCells.vue:81
 msgid "Review"
 msgstr ""
+
+#: utils/templates/AutoSaveCounter.vue:4
+msgid "No changes"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:8
+msgid "Return to Draw"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:15
+msgid "Auto-Prioritise"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:17
+msgid "Auto-Allocate"
+msgstr ""

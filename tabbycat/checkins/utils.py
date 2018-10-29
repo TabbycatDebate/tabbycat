@@ -7,6 +7,8 @@ from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext as _
 
+from dynamic_preferences.exceptions import NotFoundInRegistry
+
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
 logger = logging.getLogger(__name__)
@@ -54,7 +56,12 @@ def get_unexpired_checkins(tournament, window_preference_type):
     if not window_preference_type:
         time_window = datetime.datetime.fromtimestamp(0)  # Unix start
     else:
-        start = datetime.timedelta(hours=tournament.pref(window_preference_type))
+        try:
+            start = datetime.timedelta(hours=tournament.pref(window_preference_type))
+        except (IndexError, NotFoundInRegistry):
+            logger.exception("Problem retrieving check-in window preference")
+            # TODO: This is a temporary workaround, need to fix preference issue properly
+            start = datetime.timedelta(hours=12)
         time_window = datetime.datetime.now() - start
 
     events = Event.objects.filter(tournament=tournament,

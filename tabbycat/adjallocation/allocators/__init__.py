@@ -1,7 +1,15 @@
-from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
+from tournaments.models import Round
 
-def allocate_adjudicators(round, alloc_class):
-    if round.draw_status != round.STATUS_CONFIRMED:
+from .base import registry
+# These imports add the allocator classes in those files to the registry.
+from . import hungarian
+from . import dumb
+from . import anneal
+
+
+def legacy_allocate_adjudicators(round, alloc_class):
+    """@deprecate when legacy drag and drop UIs removed"""
+    if round.draw_status != Round.STATUS_CONFIRMED:
         raise RuntimeError("Tried to allocate adjudicators on unconfirmed draw")
 
     debates = round.debate_set.all()
@@ -10,6 +18,3 @@ def allocate_adjudicators(round, alloc_class):
 
     for alloc in allocator.allocate():
         alloc.save()
-
-    round.adjudicator_status = round.STATUS_DRAFT
-    round.save()

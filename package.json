@@ -56,7 +56,7 @@
     "serve-sass": "npm run build-sass -- --watch --recursive --output-style expanded & npm run build-sass-print -- --watch --recursive --output-style expanded --sourcemap",
     "serve-sass-live": "livereload 'tabbycat/' --exts 'html,css' --exclusions 'tabbycat/static/vue/'",
     "serve-vue": "npx vue-cli-service serve",
-    "serve-worker": "dj runworker notifications",
+    "serve-worker": "dj runworker notifications adjallocation venues",
     "lint-vue": "npx vue-cli-service lint tabbycat/ --ext .vue --cache --ignore-pattern tabbycat/staticfiles/,tabbycat/static/",
     "lint-sass": "stylelint --cache \"tabbycat/templates/scss/**/*.scss\""
   },

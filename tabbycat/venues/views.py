@@ -4,13 +4,13 @@ import logging
 from django.contrib import messages
 from django.db.models import Q
 from django.forms import Select
-from django.utils.translation import ngettext
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import DrawForDragAndDropMixin, TournamentMixin
+from availability.utils import annotate_availability
+from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from utils.forms import SelectPrepopulated
@@ -21,22 +21,48 @@ from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelForm
 from .allocator import allocate_venues
 from .forms import venuecategoryform_factory
 from .models import Venue, VenueCategory, VenueConstraint
+from .serializers import EditDebateVenuesDebateSerializer, EditDebateVenuesVenueSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class VenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
+class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
+    template_name = "edit_debate_venues.html"
+    page_title = gettext_lazy("Edit Venues")
+    prefetch_venues = False # Fetched in full as get_serialised
+
+    def debates_or_panels_factory(self, debates):
+        return EditDebateVenuesDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides})
+
+    def get_serialised_allocatable_items(self):
+        venues = Venue.objects.filter(tournament=self.tournament).prefetch_related('venuecategory_set')
+        venues = annotate_availability(venues, self.round)
+        serialized_venues = EditDebateVenuesVenueSerializer(venues, many=True)
+        return self.json_render(serialized_venues.data)
+
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['highlights']['priority'] = [] # TODO - venue priority range
+        info['highlights']['category'] = [] # TODO - venue category
+        info['highlights']['break'] = [] # TODO
+        return info
+
+
+class LegacyVenueAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
+    """@depracate when legacy drag and drop UIs removed"""
 
     def get_unallocated_venues(self):
         unused_venues = self.round.unused_venues().prefetch_related('venuecategory_set')
         return json.dumps([v.serialize() for v in unused_venues])
 
 
-class EditVenuesView(VenueAllocationMixin, TemplateView):
+class LegacyEditVenuesView(LegacyVenueAllocationMixin, TemplateView):
+    """@depracate when legacy drag and drop UIs removed"""
 
-    template_name = "edit_venues.html"
-    auto_url = "venues-auto-allocate"
-    save_url = "save-debate-venues"
+    template_name = "legacy_edit_venues.html"
+    auto_url = "legacy-venues-auto-allocate"
+    save_url = "legacy-save-debate-venues"
 
     def get_context_data(self, **kwargs):
         vcs = VenueConstraint.objects.prefetch_related('subject')
@@ -45,10 +71,11 @@ class EditVenuesView(VenueAllocationMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class AutoAllocateVenuesView(VenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
+class LegacyAutoAllocateVenuesView(LegacyVenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
+    """@depracate when legacy drag and drop UIs removed"""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
-    round_redirect_pattern_name = 'venues-edit'
+    round_redirect_pattern_name = 'legacy-venues-edit'
 
     def post_data(self):
         self.log_action()
@@ -68,7 +95,8 @@ class AutoAllocateVenuesView(VenueAllocationMixin, LogActionMixin, JsonDataRespo
         }
 
 
-class SaveVenuesView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveVenuesView(BaseSaveDragAndDropDebateJsonView):
+    """@depracate when legacy drag and drop UIs removed"""
     action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
 
     def get_moved_item(self, id):

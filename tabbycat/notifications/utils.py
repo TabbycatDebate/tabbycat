@@ -22,7 +22,7 @@ from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
 
 
-def adjudicator_assignment_email_generator(to, round_id):
+def adjudicator_assignment_email_generator(to, url, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
@@ -61,6 +61,9 @@ def adjudicator_assignment_email_generator(to, round_id):
             context_user = context.copy()
             context_user['USER'] = adj.name
             context_user['POSITION'] = adj_position_names[pos]
+
+            if adj.url_key:
+                context_user['URL'] = url + adj.url_key + '/'
 
             emails.append((context_user, adj))
 
@@ -106,7 +109,7 @@ def ballots_email_generator(to, debate_id):
                 side_string = _("%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)\n")
                 points = _("Win") if side == scoresheet.winner() else _("Loss")
 
-            ballot +=  side_string % {
+            ballot += side_string % {
                 'side': side_name,
                 'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
                 'speaks': scoresheet.get_total(side),
