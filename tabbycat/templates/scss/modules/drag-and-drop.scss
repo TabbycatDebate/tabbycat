@@ -37,7 +37,6 @@
     opacity: 0.33;
     pointer-events: none;
   }
-
 }
 
 .vue-droppable {
@@ -52,8 +51,6 @@
     position: relative; // For the spinner
   }
 }
-
-
 
 .legacy-vue-draggable {
   // Don't let text selections get in the way of dragging
