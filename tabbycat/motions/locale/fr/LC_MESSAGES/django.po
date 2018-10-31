@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-11-01 22:26-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -414,15 +414,15 @@ msgstr "Controversée"
 
 #: motions/templates/public_motions.html:39
 msgid "There are no motions available for this round."
-msgstr "Il n'y a aucune motion disponible dans ce tour."
+msgstr "Il n'y a aucune motion disponible dans cette joute."
 
 #: motions/templates/public_motions.html:45
 msgid "The motions for this round have not been released."
-msgstr "Les motions de ce tour n'ont pas encore été publiées."
+msgstr "Les motions de cette joute n'ont pas encore été publiées."
 
 #: motions/templates/public_motions.html:50
 msgid "The motion for this round has not been released."
-msgstr "La motion de ce tour n'a pas encore été publiée."
+msgstr "La motion de cette joute n'a pas encore été publiée."
 
 #: motions/templates/show.html:16
 #, python-format
@@ -440,7 +440,7 @@ msgstr[1] "Révéler les motions de %(round_name)s"
 
 #: motions/templates/show.html:41
 msgid "There are no motions for this round entered into Tabbycat."
-msgstr "Aucune motion pour ce tour a été enregistrée dans Tabbycat."
+msgstr "Aucune motion pour cette joute a été enregistrée dans Tabbycat."
 
 #: motions/views.py:104
 msgid "The motion has been saved."

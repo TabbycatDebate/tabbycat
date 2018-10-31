@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-04-29 10:35-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -32,15 +32,15 @@ msgstr "identifiant d'objet"
 
 #: availability/models.py:20
 msgid "round"
-msgstr "tour"
+msgstr "joute"
 
 #: availability/models.py:24
 msgid "round availability"
-msgstr "disponibilité dans un tour"
+msgstr "disponibilité dans une joute"
 
 #: availability/models.py:25
 msgid "round availabilities"
-msgstr "disponibilités dans un tour"
+msgstr "disponibilités dans une joute"
 
 #: availability/templates/availability_index.html:11
 msgid "Mark All Breaking Adjs as Available"
@@ -169,10 +169,10 @@ msgid ""
 "\"%(complete_prev_round_url)s\" class=\"alert-link\"> mark "
 "%(prev_round_name)s as completed? </a>"
 msgstr ""
-"Il s'agit de <strong>%(round_name)s</strong>, cependant le tour actuel est "
-"toujours configuré comme <strong>%(current_round_name)s</strong>. Avez-vous "
-"oublié <a href=\"%(advance_round_url)s\" class=\"alert-link\">d'avancer au "
-"prochain tour?</a>"
+"Il s'agit de <strong>%(round_name)s</strong>, cependant la joute actuelle "
+"est toujours configuré comme <strong>%(current_round_name)s</strong>. Avez-"
+"vous oublié <a href=\"%(advance_round_url)s\" class=\"alert-link\">d'avancer "
+"฀à la prochaine joute ?</a>"
 
 #: availability/templates/availability_index.html:137
 #, python-format
@@ -182,11 +182,11 @@ msgid ""
 "can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
 "draw type in the Edit Database area.</a>"
 msgstr ""
-"Ce tour est le premier, mais son type de tirage est <strong>%(draw_type)s</"
-"strong>. Souhaitiez-vous pour qu’il soit plutôt <strong>aléatoire</strong> ? "
-"Vous pouvez <a href=\"%(change_round_url)s\" class=\"alert-link\">modifier "
-"le type de tirage de ce tour dans la zone pour modifier la base de données.</"
-"a>"
+"Cette joute est la première, mais son type de tirage est <strong>"
+"%(draw_type)s</strong>. Souhaitiez-vous pour qu’il soit plutôt "
+"<strong>aléatoire</strong> ? Vous pouvez <a href=\"%(change_round_url)s\" "
+"class=\"alert-link\">modifier le type de tirage de cette joute dans la zone "
+"pour modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:150
 #, python-format
@@ -196,11 +196,11 @@ msgid ""
 "\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
 "category in the Edit Database area.</a>"
 msgstr ""
-"Il s’agit d’un tour éliminatoire, mais le tour n'a pas de catégorie de "
-"qualification. Il faut que tous les tours éliminatoires soient associés à "
+"Il s’agit d’une joute éliminatoire, mais la joute n'a pas de catégorie de "
+"qualification. Il faut que tous les joutes éliminatoires soient associés à "
 "une catégorie de qualification. Veuillez <a href=\"%(change_round_url)s\" "
-"class=\"alert-link\">définir la catégorie de qualification de ce tour dans "
-"la zone pour modifier la base de données.</a>"
+"class=\"alert-link\">définir la catégorie de qualification de cette joute "
+"dans la zone pour modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:162
 #, python-format
@@ -210,11 +210,11 @@ msgid ""
 "Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this "
 "round's draw type in the Edit Database area.</a>"
 msgstr ""
-"Il s’agit d’un tour éliminatoire, mais son type de tirage est <strong>"
-"%(draw_type)s</strong>. Les types de tirage de tous les tours éliminatoires "
+"Il s’agit d’une joute éliminatoire, mais son type de tirage est <strong>"
+"%(draw_type)s</strong>. Le type de tirage de toute joute éliminatoire "
 "doivent être « Élimination ». Veuillez <a href=\"%(change_round_url)s\" "
-"class=\"alert-link\">modifier le type de tirage de ce tour dans la zone pour "
-"modifier la base de données.</a>"
+"class=\"alert-link\">modifier le type de tirage de cette joute dans la zone "
+"pour modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:175
 #, python-format
@@ -237,7 +237,7 @@ msgid ""
 "the %(break_category)s Break</a>."
 msgstr ""
 "Il n'y a qu'une équipe qualifiante dans la catégorie %(break_category)s. "
-"Vous ne pouvez pas générer le tirage pour un tour éliminatoire avec "
+"Vous ne pouvez pas générer le tirage pour une joute éliminatoire avec "
 "seulement une équipe. Vous voudriez peut-être <a href="
 "\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la qualification "
 "pour la catégorie %(break_category)s</a>."
@@ -260,7 +260,7 @@ msgstr "Enregistrer tous les juges qualifiant"
 
 #: availability/templates/base_availability.html:42
 msgid "Copy from Previous"
-msgstr "Copier du tour précédent"
+msgstr "Copier de la joute précédente"
 
 #: availability/templates/base_availability.html:43
 msgid "Save Selected"
@@ -289,14 +289,15 @@ msgstr "Pas de besoin à marquer la disponibilité d'équipes"
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams marked as available for this round."
 msgstr ""
-"Il y a un nombre impair d'équipes marquées comme disponibles pour ce tour."
+"Il y a un nombre impair d'équipes marquées comme disponibles pour cette "
+"joute."
 
 #: availability/templates/checkin_progress.html:53
 msgid ""
 "The number of teams marked as available for this round is not a multiple of "
 "4."
 msgstr ""
-"Le nombre d'équipes marquées comme disponibles pour ce tour n'est pas un "
+"Le nombre d'équipes marquées comme disponibles pour cette joute n'est pas un "
 "multiple de 4."
 
 #: availability/templates/checkin_progress.html:59
@@ -477,8 +478,8 @@ msgstr[1] "%(nteams)d équipes qualifiantes — aucun débat ne peut avoir lieu"
 #, python-format
 msgid "%(ndebating)d breaking team is debating this round"
 msgid_plural "%(ndebating)d breaking teams are debating this round"
-msgstr[0] "%(ndebating)d équipe qualifiante débat dans ce tour"
-msgstr[1] "%(ndebating)d équipes qualifiantes débattent dans ce tour"
+msgstr[0] "%(ndebating)d équipe qualifiante débat dans cette joute"
+msgstr[1] "%(ndebating)d équipes qualifiantes débattent dans cette joute"
 
 #. Translators: This gets appended to the previous string (the one with
 #. ndebating in it) if (and only if) nbypassing is greater than 0.
@@ -495,8 +496,8 @@ msgstr[1] "; %(nbypassing)d équipes le dépassent"
 #, python-format
 msgid "%(nadvancing)s advancing team is debating this round"
 msgid_plural "%(nadvancing)s advancing teams are debating this round"
-msgstr[0] "%(nadvancing)s équipe avançante débat dans ce tour"
-msgstr[1] "%(nadvancing)s équipes avançantes débattent dans ce tour"
+msgstr[0] "%(nadvancing)s équipe avançante débat dans cette joute"
+msgstr[1] "%(nadvancing)s équipes avançantes débattent dans cette joute"
 
 #: availability/views.py:190
 msgid "Active Now"
@@ -557,8 +558,8 @@ msgstr "Tous les juges qualifiants ont été enregistrés."
 #: availability/views.py:321
 msgid "Checked in all teams, adjudicators and venues from previous round."
 msgstr ""
-"Toutes les équipes, tous les juges et toutes les salles du tour précédent "
-"ont été enregistrés."
+"Toutes les équipes, tous les juges et toutes les salles de la joute "
+"précédente ont été enregistrés."
 
 #~ msgid "Check In Everything"
 #~ msgstr "Enregistrer tout"

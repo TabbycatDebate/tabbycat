@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-11-02 17:46-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -1594,7 +1594,7 @@ msgstr ""
 
 #: options/templates/preferences_index.html:99
 msgid "Manually Set Current Round"
-msgstr "Changer manuellement le tour actuel"
+msgstr "Changer manuellement la joute actuelle"
 
 #: options/templates/preferences_index.html:100
 msgid ""

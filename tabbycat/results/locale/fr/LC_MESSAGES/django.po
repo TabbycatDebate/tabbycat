@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-10-30 20:09-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -229,8 +229,8 @@ msgid ""
 "Debate is in round %(round)d but motion (%(motion)s) is from round "
 "%(motion_round)d"
 msgstr ""
-"Le débat est en tour %(round)d mais la motion (%(motion)s) est en tour "
-"%(motion_round)d"
+"Le débat est dans la joute %(round)d mais la motion (%(motion)s) vient de la "
+"joute %(motion_round)d"
 
 #: results/models.py:135
 msgid "A ballot can't be both confirmed and discarded!"
@@ -1144,22 +1144,22 @@ msgstr "Merci, %(user)s! Votre bulletin pour %(debate)s a été enregistré."
 
 #: results/views.py:469
 msgid "The draw for this round hasn't been released yet."
-msgstr "Le tirage de ce tour n'est pas encore publié."
+msgstr "Le tirage de cette joute n'est pas encore publié."
 
 #: results/views.py:473
 msgid "The motions for this round haven't been released yet."
-msgstr "Les motions de ce tour ne sont pas encore publiées."
+msgstr "Les motions de cette joute ne sont pas encore publiées."
 
 #: results/views.py:478
 msgid "It looks like you don't have a debate this round."
-msgstr "Il semble que vous n'ayez pas de débat ce tour."
+msgstr "Il semble que vous n'ayez pas de débat cette joute."
 
 #: results/views.py:480
 msgid ""
 "It looks like you're assigned to two or more debates this round. Please "
 "contact a tab room official."
 msgstr ""
-"Il semble que vous soyez attribué à plusieurs débats ce tour. Veuillez "
+"Il semble que vous soyez attribué à plusieurs débats cette joute. Veuillez "
 "contacter un rapporteur."
 
 #: results/views.py:488
@@ -1231,7 +1231,7 @@ msgstr "Juge"
 #~ msgstr " une soumission publique de %(ip_address)s"
 
 #~ msgid "Advance to Next Round"
-#~ msgstr "Avancer au tour prochain"
+#~ msgstr "Avancer à la prochaine joute"
 
 #, fuzzy
 #~| msgid "Checked In"
@@ -1277,7 +1277,7 @@ msgstr "Juge"
 
 #~ msgid "There wasn't a debate in venue %(venue_name)s this round."
 #~ msgstr ""
-#~ "Il n'y avait pas de débat dans le lieu %(venue_name)s pendant ce tour."
+#~ "Il n'y avait pas de débat dans le lieu %(venue_name)s pendant cette joute."
 
 #~ msgid "Status"
 #~ msgstr "Statut"

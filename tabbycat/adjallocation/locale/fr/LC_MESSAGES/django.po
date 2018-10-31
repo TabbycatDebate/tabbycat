@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-11-02 08:45-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -24,7 +24,7 @@ msgid ""
 "been marked as available for this round before auto-allocating."
 msgstr ""
 "Aucun juge n’est disponible. Assurez-vous qu’il y a des juges marqués comme "
-"disponibles pour ce tour avant de commencer l’allocation automatisée."
+"disponibles pour cette joute avant de commencer l’allocation automatisée."
 
 #: adjallocation/allocators/hungarian.py:99
 msgid ""
@@ -42,7 +42,32 @@ msgstr ""
 msgid ""
 "There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr ""
-"Il n’y a aucun débat dans ce tour. N’aurez-vous pas encore fait un tirage ?"
+"Il n’y a aucun débat dans cette joute. N’aurez-vous pas encore fait un "
+"tirage ?"
+
+#: adjallocation/apps.py:7
+msgid "Adjudicator Allocation"
+msgstr "Allocation des juges"
+
+#: adjallocation/consumers.py:74
+msgid "Succesfully auto-allocated adjudicators to debates."
+msgstr ""
+
+#: adjallocation/consumers.py:92
+msgid "Succesfully auto-allocated adjudicators to preformed panels."
+msgstr ""
+
+#: adjallocation/consumers.py:116
+msgid "Succesfully auto-prioritised debates."
+msgstr ""
+
+#: adjallocation/consumers.py:141
+msgid "Succesfully auto-prioritised preformed panels."
+msgstr ""
+
+#: adjallocation/consumers.py:159
+msgid "Succesfully created new preformed panels for this round."
+msgstr ""
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
