@@ -51,7 +51,7 @@ export default {
       allocation[position] = allocation[position].filter(id => id !== adjudicatorID)
       return allocation
     },
-    movedAdjudicator: function (dragData, dropData) {
+    moveAdjudicator: function (dragData, dropData) {
       if ((dragData.assignment === dropData.assignment && dragData.position === dropData.position) ||
           (dragData.assignment === null && dropData.assignment === null)) {
         return // Moving from Unused to Unused; or from the same position/debate and back again

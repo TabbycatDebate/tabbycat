@@ -130,8 +130,10 @@ export default new Vuex.Store({
     receiveUpdatedupdateDebatesOrPanelsAttribute ({ commit }, payload) {
       // Commit changes from websockets i.e.
       // { "componentID": 5711, "debatesOrPanels": [{ "id": 72, "importance": "0" }] }
-      $.fn.showAlert(payload.message.type, payload.message.text, 0)
-      commit('setLoadingState', false) // Hide and re-enable modals
+      if ('message' in payload) {
+        $.fn.showAlert(payload.message.type, payload.message.text, 0)
+        commit('setLoadingState', false) // Hide and re-enable modals
+      }
       // Don't update the data if it came from this store as it's mutated
       if (payload.componentID !== this.state.wsPseudoComponentID) {
         commit('setDebateOrPanelAttributes', payload.debatesOrPanels)

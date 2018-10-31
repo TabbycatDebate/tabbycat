@@ -2,7 +2,7 @@
 
   <drag-and-drop-layout :unallocatedItems="unallocatedItems"
                         :unallocatedComponent="unallocatedComponent"
-                        :handle-unused-drop="movedAdjudicator">
+                        :handle-unused-drop="moveAdjudicator">
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" prioritise="true" allocate="true" shard="true"
                            @show-shard="showShard" @show-allocate="showAllocate" @show-prioritise="showPrioritise">
@@ -26,7 +26,7 @@
       <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <debate-or-panel-importance slot="importance" :debate-or-panel="debate"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="debate"
-                                      :handle-debate-or-panel-drop="movedAdjudicator">
+                                      :handle-debate-or-panel-drop="moveAdjudicator">
         </debate-or-panel-adjudicators>
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
