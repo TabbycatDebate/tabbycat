@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex border-bottom bg-white">
     <slot name="bracket">
-      <div v-if="debateOrPanel.bracket >= 0" class="flex-1 flex-truncate d-flex border-right">
+      <div v-if="debateOrPanel.bracket >= 0" class="flex-2 flex-truncate d-flex border-right">
         <div class="align-self-center flex-fill text-center">
           {{ debateOrPanel.bracket }}
         </div>

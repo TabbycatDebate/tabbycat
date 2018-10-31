@@ -1,13 +1,10 @@
 import logging
 
-from asgiref.sync import async_to_sync
-from channels.consumer import SyncConsumer
-from channels.layers import get_channel_layer
 from django.utils.translation import gettext as _
 
 from actionlog.models import ActionLogEntry
 from breakqual.utils import calculate_live_thresholds
-from draw.consumers import BaseAdjudicatorContainerConsumer
+from draw.consumers import BaseAdjudicatorContainerConsumer, EditDebateOrPanelWorkerMixin
 from tournaments.models import Round
 
 from .models import PreformedPanel
@@ -29,37 +26,7 @@ class PanelEditConsumer(BaseAdjudicatorContainerConsumer):
     adjudicators_serializer = SimplePanelAllocationSerializer
 
 
-class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
-
-    def log_action(self, extra, round, type):
-        ActionLogEntry.objects.log(type=type, user_id=extra['user_id'],
-                round=round, tournament=round.tournament, content_object=round)
-
-    def return_response(self, serialized_debates_or_panels, group_name,
-                        message_text, message_type):
-        content = {
-            'debatesOrPanels': serialized_debates_or_panels.data,
-            'message': {'text': message_text, 'type': message_type}
-        }
-        async_to_sync(get_channel_layer().group_send)(
-            group_name, {
-                'type': 'broadcast_debates_or_panels',
-                'content': content
-            }
-        )
-
-    def reserialize_panels(self, serialiser, round, panels=None):
-        if not panels:
-            panels = round.preformedpanel_set.all() # TODO: prefetch
-
-        serialized_panels = serialiser(panels, many=True)
-        return serialized_panels
-
-    def reserialize_debates(self, serialiser, round, debates=None):
-        if not debates:
-            debates = round.debate_set.all() # TODO: prefetch
-        serialized_debates = serialiser(debates, many=True)
-        return serialized_debates
+class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
     def allocate_debate_adjs(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])

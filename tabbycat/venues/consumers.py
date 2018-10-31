@@ -1,16 +1,14 @@
-from channels.consumer import SyncConsumer
+from django.utils.translation import gettext as _
 
 from actionlog.models import ActionLogEntry
+from draw.consumers import EditDebateOrPanelWorkerMixin
 from tournaments.models import Round
 
 from .allocator import allocate_venues
+from .serializers import SimpleDebateVenueSerializer
 
 
-class VenuesWorkerConsumer(SyncConsumer):
-
-    def log_action(self, extra, round, type):
-        ActionLogEntry.objects.log(type=type, user_id=extra['user_id'],
-                round=round, tournament=round.tournament, content_object=round)
+class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
     def allocate_debate_venues(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
@@ -27,5 +25,6 @@ class VenuesWorkerConsumer(SyncConsumer):
         allocate_venues(round)
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE)
 
-        # TODO: return values (will require modifying the allocate function
-        # self.return_response(content, event['extra']['group_name'])
+        content = self.reserialize_debates(SimpleDebateVenueSerializer, round)
+        msg = _("Succesfully auto-allocated venues to debates.")
+        self.return_response(content, event['extra']['group_name'], msg, 'success')

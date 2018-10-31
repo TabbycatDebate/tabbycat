@@ -9,6 +9,12 @@ class EditDebateVenuesDebateSerializer(DebateSerializerMixin):
     venue = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
+class SimpleDebateVenueSerializer(DebateSerializerMixin):
+    class Meta:
+        model = DebateSerializerMixin.Meta.model
+        fields = ('id', 'venue',)
+
+
 class EditDebateVenuesVenueSerializer(VenueSerializer, VueDraggableItemMixin):
     """ Returns venues for use in the allocate Debate Venues view """
 

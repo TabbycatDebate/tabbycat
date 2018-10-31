@@ -16,7 +16,7 @@
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <droppable-item slot="venue" :handle-drop="handleVenueDrop" :drop-context="{ 'assignment': debate.id }"
-                        class="flex-8 flex-truncate border-right d-flex flex-wrap">
+                        class="flex-12 flex-truncate border-right d-flex flex-wrap">
           <draggable-venue v-if="debate.venue" :item="allVenues[debate.venue]" class="flex-fill"
                            :drag-payload="{ 'item': debate.venue, 'assignment': debate.id }">
           </draggable-venue>
