@@ -1,6 +1,6 @@
 <template>
 
-  <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body text-center p-4">
@@ -16,12 +16,14 @@
           <p v-text="gettext(`Note that 'liveness' doesn't factor in special rules other than a
                               strict mathematical break. Be sure to double-check the results`)"></p>
 
-          <button type="submit" class="btn btn-block btn-success"
-                  @click="createAutoPrioritisation('bracket')"
-                  v-text="gettext('Assign Automatic Priorities by Bracket')"></button>
-          <button type="submit" class="btn btn-block btn-success mt-4"
-                  @click="createAutoPrioritisation('liveness')"
-                  v-text="gettext('Assign Automatic Priorities by Liveness')"></button>
+          <button type="submit" @click="createAutoPrioritisation('bracket')"
+                  :class="['btn btn-block btn-success', loading ? 'disabled': '']"
+                  v-text="loading ? gettext('Loading...') : gettext('Assign Automatic Priorities by Bracket')">
+          </button>
+          <button type="submit" @click="createAutoPrioritisation('liveness')"
+                  :class="['btn btn-block btn-success mt-4', loading ? 'disabled': '']"
+                  v-text="loading ? gettext('Loading...') : gettext('Assign Automatic Priorities by Liveness')">
+          </button>
         </div>
       </div>
     </div>
@@ -30,27 +32,16 @@
 </template>
 
 <script>
+import ModalActionMixin from './ModalActionMixin.vue'
+
 export default {
-  props: { introText: String, contextOfAction: String },
+  mixins: [ModalActionMixin],
+  props: { introText: String },
   data: function () {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
       id: 'confirmPrioritiseModal',
     }
-  },
-  computed: {
-
-  },
-  methods: {
-    resetModal: function () {
-      $(this.id).modal('hide')
-    },
-    createAutoPrioritisation: function (type) {
-      this.resetModal()
-      this.$store.state.wsBridge.send({
-        'action': this.contextOfAction,
-      })
-    },
   },
 }
 </script>

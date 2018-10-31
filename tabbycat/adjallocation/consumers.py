@@ -3,6 +3,7 @@ import logging
 from asgiref.sync import async_to_sync
 from channels.consumer import SyncConsumer
 from channels.layers import get_channel_layer
+from django.utils.translation import gettext as _
 
 from actionlog.models import ActionLogEntry
 from breakqual.utils import calculate_live_thresholds
@@ -14,7 +15,8 @@ from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAl
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw
 from .preformed.dumb import DumbPreformedPanelAllocator
-from .serializers import (SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer,
+from .serializers import (EditPanelAdjsPanelSerializer,
+                          SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer,
                           SimplePanelAllocationSerializer, SimplePanelImportanceSerializer)
 
 logger = logging.getLogger(__name__)
@@ -33,8 +35,12 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         ActionLogEntry.objects.log(type=type, user_id=extra['user_id'],
                 round=round, tournament=round.tournament, content_object=round)
 
-    def return_response(self, serialized_debates_or_panels, group_name):
-        content = {'debatesOrPanels': serialized_debates_or_panels.data}
+    def return_response(self, serialized_debates_or_panels, group_name,
+                        message_text, message_type):
+        content = {
+            'debatesOrPanels': serialized_debates_or_panels.data,
+            'message': {'text': message_text, 'type': message_type}
+        }
         async_to_sync(get_channel_layer().group_send)(
             group_name, {
                 'type': 'broadcast_debates_or_panels',
@@ -98,7 +104,8 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
 
         # TODO: return debates directly from allocator function?
         content = self.reserialize_debates(SimpleDebateAllocationSerializer, round)
-        self.return_response(content, event['extra']['group_name'])
+        msg = _("Succesfully auto-allocated adjudicators to debates.")
+        self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def allocate_panel_adjs(self, event):
 
@@ -115,7 +122,8 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
         content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
-        self.return_response(content, event['extra']['group_name'])
+        msg = _("Succesfully auto-allocated adjudicators to preformed panels.")
+        self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def prioritise_debates(self, event):
         # TODO: Debates and panels should really be unified in a single function
@@ -138,7 +146,8 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_AUTO)
 
         content = self.reserialize_debates(SimpleDebateImportanceSerializer, round, debates)
-        self.return_response(content, event['extra']['group_name'])
+        msg = _("Succesfully auto-prioritised debates.")
+        self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def prioritise_panels(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
@@ -162,12 +171,14 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO)
 
         content = self.reserialize_panels(SimplePanelImportanceSerializer, round, panels)
-        self.return_response(content, event['extra']['group_name'])
+        msg = _("Succesfully auto-prioritised preformed panels.")
+        self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def create_preformed_panels(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
         for i, (bracket_min, bracket_max, liveness) in enumerate(
                 calculate_anticipated_draw(round), start=1):
+            print('i', i, bracket_min, bracket_max, liveness)
             PreformedPanel.objects.update_or_create(round=round, room_rank=i,
                 defaults={
                     'bracket_max': bracket_max,
@@ -177,5 +188,6 @@ class AdjudicatorAllocationWorkerConsumer(SyncConsumer):
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_CREATE)
 
-        content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
-        self.return_response(content, event['extra']['group_name'])
+        content = self.reserialize_panels(EditPanelAdjsPanelSerializer, round)
+        msg = _("Succesfully created new preformed panels for this round.")
+        self.return_response(content, event['extra']['group_name'], msg, 'success')

@@ -1,6 +1,6 @@
 <template>
 
-  <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body text-center p-4">
@@ -46,7 +46,10 @@
 </template>
 
 <script>
+import ModalActionMixin from './ModalActionMixin.vue'
+
 export default {
+  mixins: [ModalActionMixin],
   props: { introText: String },
   data: function () {
     // Internal state storing the status of which diversity highlight is being toggled
@@ -83,9 +86,6 @@ export default {
     },
   },
   methods: {
-    resetModal: function () {
-      $(this.id).modal('hide')
-    },
     openShard: function (shardIdentifier, index) {
       $.fn.showAlert('primary', `Opened shard ${this.split} ${shardIdentifier}
                                  (sorted by ${this.mix} using ${this.sort})`)

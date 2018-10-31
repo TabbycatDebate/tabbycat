@@ -28,7 +28,8 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="panel in allDebatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
-        <debate-or-panel-importance slot="importance" :debate-or-panel="panel"></debate-or-panel-importance>
+        <debate-or-panel-importance slot="importance"
+                                    :debate-or-panel="panel"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="panel"
                                       :handle-debate-or-panel-drop="movedAdjudicator">
         </debate-or-panel-adjudicators>
@@ -41,9 +42,8 @@
     </template>
 
     <template slot="modals">
-      <modal-for-creating-preformed-panels
-        :intro-text="gettext('Create Preformed Panels')"
-        :context-of-action="'create_preformed_panels'"></modal-for-creating-preformed-panels>
+      <modal-for-creating-preformed-panels :context-of-action="'create_preformed_panels'">
+      </modal-for-creating-preformed-panels>
       <modal-for-sharding :intro-text="gettext('shardIntro')"></modal-for-sharding>
       <modal-for-allocating :intro-text="gettext(allocateIntro)"
                             :context-of-action="'allocate_panel_adjs'"></modal-for-allocating>

@@ -1,6 +1,6 @@
 <template>
 
-  <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body text-center p-4">
@@ -26,9 +26,9 @@
             required to panel in settings.
           </div>
 
-          <button type="submit" @click="createAutoAllocation"
+          <button type="submit" @click="performWSAction"
                   :class="['btn btn-block btn-success', loading ? 'disabled': '']"
-                  v-text="gettext('Auto-Allocate')"></button>
+                  v-text="loading ? gettext('Loading...') : gettext('Auto-Allocate')"></button>
         </div>
       </div>
     </div>
@@ -39,27 +39,17 @@
 <script>
 import { mapState } from 'vuex'
 
+import ModalActionMixin from './ModalActionMixin.vue'
+
 export default {
-  props: { introText: String, contextOfAction: String },
+  mixins: [ModalActionMixin],
+  props: { introText: String },
   data: function () {
     // Internal state storing the status of which diversity highlight is being toggled
     return {
       id: 'confirmAllocateModal',
-      loading: false,
     }
   },
   computed: mapState(['extra']),
-  methods: {
-    resetModal: function () {
-      $(this.id).modal('hide')
-    },
-    createAutoAllocation: function () {
-      // this.loading = true
-      // Send the result over the websocket
-      this.$store.state.wsBridge.send({
-        'action': this.contextOfAction,
-      })
-    },
-  },
 }
 </script>
