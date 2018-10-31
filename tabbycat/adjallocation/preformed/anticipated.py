@@ -32,7 +32,7 @@ def calculate_anticipated_draw(round):
         # Just take all teams, rounded down -- if this is done, it'll typically
         # be done before availability is locked down.
         npanels = round.tournament.team_set.count() // nteamsindebate
-        return [(0, 0) for i in range(npanels)]
+        return [(0, 0, 0) for i in range(npanels)]
 
     # 1. Take the (actual) draw of the last round, with team point standings.
     debates = round.prev.debate_set_with_prefetches(ordering=('room_rank',),
@@ -79,5 +79,7 @@ def calculate_anticipated_draw(round):
         liveness_by_upper = [determine_liveness(live_thresholds, x) for x in uppers]
         liveness_by_team = [x == 'live' or y == 'live' for x, y in zip(liveness_by_lower, liveness_by_upper)]
         liveness = [x.count(True) for x in zip(*([iter(liveness_by_team)] * nteamsindebate))]
+    else:
+        liveness = [0] * len(debates)
 
     return zip(brackets_min, brackets_max, liveness)
