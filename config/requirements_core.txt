@@ -27,5 +27,5 @@ channels==2.1.4                         # Channels; also includes the Daphne ser
 channels_redis==2.3.1                   # Channels Layer
 
 # Misc
-ipython==7.0.1
+ipython==7.1.1
 qrcode==6.0
