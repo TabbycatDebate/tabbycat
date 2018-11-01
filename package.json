@@ -27,7 +27,7 @@
     "jquery-validation": "1.18.x",
     "jsbarcode": "^3.11.x",
     "lodash": "^4.17.11",
-    "node-sass": "^4.9.3",
+    "node-sass": "^4.9.4",
     "npm-run-all": "4.1.x",
     "popper.js": "^1.14.4",
     "quagga": "0.12.x",
