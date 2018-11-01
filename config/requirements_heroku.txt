@@ -13,4 +13,4 @@ django-redis==4.9.0                     # Use redis for cache (on heroku; local 
 
 # Misc
 sendgrid==5.4.1                         # Email service of choice on Heroku
-scout-apm==1.3.7                        # Performance monitoring
+scout-apm==1.3.8                        # Performance monitoring
