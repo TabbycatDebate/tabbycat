@@ -23,7 +23,7 @@ sqlparse==0.2.4                         # Parsing SQL statements
 dj-database-url==0.5.0                  # To obtain the Heroku service's database URL
 
 # Channels
-channels==2.1.4                         # Channels; also includes the Daphne server
+channels==2.1.5                         # Channels; also includes the Daphne server
 channels_redis==2.3.1                   # Channels Layer
 
 # Misc
