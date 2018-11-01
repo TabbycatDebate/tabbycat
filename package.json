@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "livereload": "0.x",
-    "stylelint": "^9.6.0",
+    "stylelint": "^9.7.1",
     "stylelint-config-standard": "18.x",
     "stylelint-scss": "^3.3.1"
   },
