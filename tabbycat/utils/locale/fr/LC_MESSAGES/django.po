@@ -7,344 +7,377 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: 2018-07-27 01:27-0300\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
+"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"PO-Revision-Date: 2018-10-30 20:38-0400\n"
+"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #: utils/forms.py:25
 msgid "E-mail address"
 msgstr "Adresse de courriel"
 
-#: utils/mixins.py:84
-#, python-format
-msgid ""
-"You have current used %(rows)s rows on your database. If you have not "
-"upgraded your Heroku database to a non-free tier it is limited to a maximum "
-"of 10,000 rows. As you are relatively close to this limit you should "
-"<strong>not create new tournaments</strong> on this tab site unless you "
-"first <a href=\" %(url)s \">upgrade the database</a> or have already "
-"upgraded it."
-msgstr ""
-
-#: utils/tables.py:43
+#: utils/tables.py:44
 msgid "No Data Available"
 msgstr "Aucune donnée disponible"
 
-#: utils/tables.py:150 utils/tables.py:151
+#: utils/tables.py:152 utils/tables.py:153
 msgid "ⓒ"
 msgstr "Ⓟ"
 
-#: utils/tables.py:152
+#: utils/tables.py:154
 msgid "ⓣ"
 msgstr "ⓟ"
 
-#: utils/tables.py:156
+#: utils/tables.py:158
 msgid "chair"
 msgstr "président"
 
-#: utils/tables.py:157
+#: utils/tables.py:159
 msgid "panellist"
 msgstr "panéliste"
 
-#: utils/tables.py:158
+#: utils/tables.py:160
 msgid "trainee"
 msgstr "stagiaire"
 
-#: utils/tables.py:219 utils/tables.py:225
-#, fuzzy, python-format
-#| msgid "View %(team)s's Team Record"
+#: utils/tables.py:221 utils/tables.py:227
+#, python-format
 msgid "View %(a)s's %(d)s Record"
-msgstr "Voir le dossier d'équipe de %(team)s"
+msgstr "Voir le dossier %(d)s de %(a)s"
 
-#: utils/tables.py:235 utils/tables.py:240
-#, fuzzy, python-format
-#| msgid "View %(team)s's Team Record"
+#: utils/tables.py:237 utils/tables.py:242
+#, python-format
 msgid "View %(team)s's Record"
 msgstr "Voir le dossier d'équipe de %(team)s"
 
-#: utils/tables.py:262
+#: utils/tables.py:264
 #, python-format
 msgid "Code name: <strong>%(name)s</strong>"
 msgstr "Nom de code : <strong>%(name)s</strong>"
 
-#: utils/tables.py:264
+#: utils/tables.py:266
 #, python-format
 msgid "Real name: <strong>%(name)s</strong>"
 msgstr "Vrai nom : <strong>%(name)s</strong>"
 
-#: utils/tables.py:276
+#: utils/tables.py:278
 #, python-format
 msgid "%(team)s won"
 msgstr "%(team)s a gagné"
 
-#: utils/tables.py:281
+#: utils/tables.py:283
 #, python-format
 msgid "%(team)s lost"
 msgstr "%(team)s a perdu"
 
-#: utils/tables.py:286 utils/tables.py:314 utils/tables.py:332
+#: utils/tables.py:288 utils/tables.py:316 utils/tables.py:334
 #, python-format
 msgid "%(team)s—no result"
 msgstr "%(team)s—aucun résultat"
 
-#: utils/tables.py:294
+#: utils/tables.py:296
 #, python-format
 msgid "%(team)s took 1st"
 msgstr "%(team)s a pris 1er"
 
-#: utils/tables.py:299
+#: utils/tables.py:301
 #, python-format
 msgid "%(team)s took 2nd"
 msgstr "%(team)s a pris 2ème"
 
-#: utils/tables.py:304
+#: utils/tables.py:306
 #, python-format
 msgid "%(team)s took 3rd"
 msgstr "%(team)s a pris 3ème"
 
-#: utils/tables.py:309
+#: utils/tables.py:311
 #, python-format
 msgid "%(team)s took 4th"
 msgstr "%(team)s a pris 4ème"
 
-#: utils/tables.py:322
+#: utils/tables.py:324
 #, python-format
 msgid "%(team)s is advancing"
 msgstr "%(team)s avance"
 
-#: utils/tables.py:327
+#: utils/tables.py:329
 #, python-format
 msgid "%(team)s was eliminated"
 msgstr "%(team)s a été eliminé"
 
-#: utils/tables.py:345
+#: utils/tables.py:347
 #, python-format
 msgid " vs %(opposition)s"
 msgstr " vs. %(opposition)s"
 
-#: utils/tables.py:351
+#: utils/tables.py:354
 #, python-format
 msgid "Won against %(team)s"
 msgstr "Gagné contre %(team)s"
 
-#: utils/tables.py:353
+#: utils/tables.py:356
 #, python-format
 msgid "Lost to %(team)s"
 msgstr "Perdu contre %(team)s"
 
-#: utils/tables.py:355
+#: utils/tables.py:358
 #, python-format
 msgid "No result for debate against %(team)s"
 msgstr "Aucun résultat pour débat contre %(team)s"
 
-#: utils/tables.py:363 utils/tables.py:441
+#: utils/tables.py:366 utils/tables.py:445
 #, python-format
 msgid "Total speaker score: <strong>%s</strong>"
 msgstr "Score d’orateur total : <strong>%s</strong>"
 
-#: utils/tables.py:368 utils/tables.py:446
+#: utils/tables.py:371 utils/tables.py:450
 msgid "View/edit debate ballot"
 msgstr "Afficher/modifier bulletin de débat"
 
-#: utils/tables.py:374 utils/tables.py:452
+#: utils/tables.py:377 utils/tables.py:456
 msgid "View debate ballot"
 msgstr "Afficher bulletin de débat"
 
-#: utils/tables.py:395
+#: utils/tables.py:398
 msgid "Teams in debate:"
 msgstr "Équipes au débat :"
 
-#: utils/tables.py:398
+#: utils/tables.py:401
 #, python-format
 msgid "%(team)s (%(side)s)"
 msgstr "%(team)s (%(side)s)"
 
-#: utils/tables.py:416
+#: utils/tables.py:420
 msgid "advancing"
 msgstr "avançant"
 
-#: utils/tables.py:417
+#: utils/tables.py:421
 msgid "Advancing"
 msgstr "Avançant"
 
-#: utils/tables.py:419
+#: utils/tables.py:423
 msgid "eliminated"
 msgstr "éliminé"
 
-#: utils/tables.py:420
+#: utils/tables.py:424
 msgid "Eliminated"
 msgstr "Éliminé"
 
-#: utils/tables.py:423 utils/tables.py:433
+#: utils/tables.py:427 utils/tables.py:437
 msgid "No result for debate"
 msgstr "Aucun résultat au débat"
 
-#: utils/tables.py:426
+#: utils/tables.py:430
 msgid "4th"
 msgstr "4ème"
 
-#: utils/tables.py:426
+#: utils/tables.py:430
 msgid "3rd"
 msgstr "3ème"
 
-#: utils/tables.py:426
+#: utils/tables.py:430
 msgid "2nd"
 msgstr "2ème"
 
-#: utils/tables.py:426
+#: utils/tables.py:430
 msgid "1st"
 msgstr "1er"
 
-#: utils/tables.py:430
+#: utils/tables.py:434
 #, python-format
 msgid "Placed %(place)s"
 msgstr "Placée %(place)s"
 
-#: utils/tables.py:461
+#: utils/tables.py:465
 msgid "Tournament"
 msgstr "Tournoi"
 
-#: utils/tables.py:470
+#: utils/tables.py:474
 msgid "Round"
 msgstr "Tour"
 
-#: utils/tables.py:488 utils/tables.py:666
+#: utils/tables.py:492 utils/tables.py:672
 msgid "Name"
 msgstr "Nom"
 
-#: utils/tables.py:494 utils/tables.py:644
+#: utils/tables.py:498 utils/tables.py:647
 msgid "Institution"
 msgstr "Institution"
 
-#: utils/tables.py:500
+#: utils/tables.py:504
 msgid "Member of the Adjudication Core"
-msgstr ""
+msgstr "Membre du "
 
-#: utils/tables.py:507
+#: utils/tables.py:511
 msgid "Independent Adjudicator"
-msgstr ""
+msgstr "Juge indépendant"
 
-#: utils/tables.py:515
+#: utils/tables.py:519
 msgid "Always Trainee"
-msgstr ""
+msgstr "Toujours stagière"
 
-#: utils/tables.py:581
+#: utils/tables.py:584
 msgid "Debate Adjudicators"
 msgstr "Juges du débat"
 
-#: utils/tables.py:605
+#: utils/tables.py:608
 msgid "Order as listed"
-msgstr ""
+msgstr "Ordre comme listé"
 
-#: utils/tables.py:615
+#: utils/tables.py:618
 msgid "Motion"
 msgstr "Motion"
 
-#: utils/tables.py:630
+#: utils/tables.py:633
 msgid "Team"
 msgstr "Équipe"
 
-#: utils/tables.py:635 utils/tables.py:688
+#: utils/tables.py:638 utils/tables.py:694
 msgid "Categories"
 msgstr "Catégories"
 
-#: utils/tables.py:655 utils/tables.py:731
+#: utils/tables.py:658 utils/tables.py:737
 msgid "Division"
 msgstr "Division"
 
-#: utils/tables.py:662
+#: utils/tables.py:665
 msgid "Redacted"
-msgstr ""
+msgstr "Caviardé"
 
-#: utils/tables.py:686
+#: utils/tables.py:692
 msgid "Category"
-msgstr ""
+msgstr "Catégorie"
 
-#: utils/tables.py:713
+#: utils/tables.py:719
 #, python-format
 msgid "This venue %(predicate)s."
 msgstr "Cette salle %(predicate)s."
 
-#: utils/tables.py:715
+#: utils/tables.py:721
 #, python-format
 msgid "This venue %(predicates)s, and %(last_predicate)s."
 msgstr "Cette salle %(predicates)s, et %(last_predicate)s."
 
-#: utils/tables.py:746
+#: utils/tables.py:752
 msgid "Venue"
 msgstr "Salle"
 
-#: utils/tables.py:752
+#: utils/tables.py:758
 msgid "Date"
-msgstr ""
-
-#: utils/tables.py:752
-msgid "Time"
-msgstr ""
-
-#: utils/tables.py:756
-msgid "Bye"
-msgstr ""
+msgstr "Jour"
 
 #: utils/tables.py:758
+msgid "Time"
+msgstr "Heure"
+
+#: utils/tables.py:762
+msgid "Bye"
+msgstr "Sans adversaire"
+
+#: utils/tables.py:764
 msgid "Postponed"
-msgstr ""
+msgstr "Repoussé"
 
-#: utils/tables.py:760
+#: utils/tables.py:766
 msgid "Forfeit"
-msgstr ""
+msgstr "Abandonné"
 
-#: utils/tables.py:781
+#: utils/tables.py:787
 #, python-format
 msgid "Teams have met once"
 msgid_plural "Teams have met %(count)d times"
-msgstr[0] ""
-msgstr[1] ""
-
-#: utils/tables.py:787
-msgid "Teams are from the same institution"
-msgstr ""
+msgstr[0] "Équipes se sont rencontrées une fois"
+msgstr[1] "Équipes se sont rencontrées %(count)d fois"
 
 #: utils/tables.py:793
+msgid "Teams are from the same institution"
+msgstr "Les équipes sont de la même institution"
+
+#: utils/tables.py:799
 msgid "Conflicts/Flags"
 msgstr "Conflits/signalements"
 
-#: utils/tables.py:850
+#: utils/tables.py:856
 msgid "View/Edit Ballot"
-msgstr ""
+msgstr "Afficher/Modifier Bulletin"
 
-#: utils/tables.py:865
+#: utils/tables.py:871
 msgid "View Ballot"
-msgstr ""
+msgstr "Afficher bulletin"
 
-#: utils/tables.py:872
+#: utils/tables.py:878
 msgid "Result"
 msgstr "Résultat"
 
 #. Translators: "TBC" stands for "to be confirmed".
-#: utils/tables.py:878
+#: utils/tables.py:884
 msgid "TBC"
-msgstr ""
+msgstr "ÀC"
 
-#: utils/tables.py:879
+#: utils/tables.py:885
 msgid "Side"
 msgstr "Côté"
 
-#: utils/tables.py:922
+#: utils/tables.py:923
+msgid "Team iron-manned this round and the last."
+msgstr ""
+"Équipe avait un orateur-seul pendant les joutes actuelle et précédente."
+
+#: utils/tables.py:926
+msgid "Team iron-manned this round."
+msgstr "Équipe avait un orateur-seul pendant la joute actuelle."
+
+#: utils/tables.py:929
+msgid "Team iron-manned last round."
+msgstr "Équipe avait un orateur-seul pendant la joute précédente."
+
+#: utils/tables.py:946 utils/tables.py:947
 #, python-format
 msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
 
+#: utils/templates/database_limit_warning.html:9
+#, python-format
+msgid ""
+"You're currently using %(nrows)s row in your database. If you haven't "
+"already upgraded your Heroku database to a paid tier, it's limited to a "
+"maximum of 10,000 rows. As you're close to this limit, you should "
+"<strong>not create new tournaments</strong> on this site unless and until "
+"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
+"postgres-databases\">upgraded your database</a> to a paid tier."
+msgid_plural ""
+"You're currently using %(nrows)s rows in your database. If you haven't "
+"already upgraded your Heroku database to a paid tier, it's limited to a "
+"maximum of 10,000 rows. As you're close to this limit, you should "
+"<strong>not create new tournaments</strong> on this site unless and until "
+"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
+"postgres-databases\">upgraded your database</a> to a paid tier."
+msgstr[0] ""
+"Vous utilisez actuellement %(nrows)s rangée dans votre base de données. Si "
+"vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le "
+"nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette "
+"limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur "
+"ce site et jusqu’à temps que vous avez <a href=\"https://devcenter.heroku."
+"com/articles/upgrading-heroku-postgres-databases\">mis à niveau votre base "
+"de données</a> à un tier payant."
+msgstr[1] ""
+"Vous utilisez actuellement %(nrows)s rangées dans votre base de données. Si "
+"vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le "
+"nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette "
+"limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur "
+"ce site et jusqu’à temps que vous avez <a href=« https://devcenter.heroku."
+"com/articles/upgrading-heroku-postgres-databases »>mis à niveau votre base "
+"de données</a> à un tier payant."
+
 #: utils/views.py:45
 msgid "Whoops! You're not meant to type that URL into your browser."
-msgstr ""
+msgstr "Oups ! Vous n’étiez pas sensé taper cet URL dans votre navigateur."
 
 #~ msgid "View %(adj)s's Adjudication Record"
 #~ msgstr "Voir le dossier de jugement de %(adj)s"

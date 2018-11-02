@@ -7,29 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: 2018-08-01 14:18-0300\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"PO-Revision-Date: 2018-11-01 22:37-0400\n"
+"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #: printing/templates/division_sheets_list.html:4
 #: printing/templates/division_sheets_list.html:5
 msgid "Division Sheets List"
-msgstr ""
+msgstr "Liste de feuilles de division"
 
 #: printing/templates/division_sheets_list.html:12
 msgid "Master Sheets"
-msgstr ""
+msgstr "Feuilles Maitre"
 
 #: printing/templates/division_sheets_list.html:29
 msgid "Room Sheets"
-msgstr ""
+msgstr "Feuilles de Salle"
 
 #: printing/templates/feedback_list.html:5
 msgid "Feedback Forms"
@@ -79,65 +79,63 @@ msgstr ""
 #: printing/templates/master_sheets_view.html:6
 #, python-format
 msgid "Master Sheet for Debates at %(category_name)s in %(round_name)s"
-msgstr ""
+msgstr "Feuille maitre pour les débats à %(category_name)s dans %(round_name)s"
 
 #: printing/templates/master_sheets_view.html:12
 #, python-format
-msgid "Master Sheet for Debates at %(venue_category.name)s"
-msgstr ""
+msgid "Master Sheet for Debates at %(venue_category)s"
+msgstr "Feuilles de Salle pour les Débats à %(venue_category)s"
 
 #: printing/templates/master_sheets_view.html:45
 msgctxt "Division"
 msgid "Div"
-msgstr ""
+msgstr "Div"
 
 #: printing/templates/master_sheets_view.html:46
 msgid "Room"
-msgstr ""
+msgstr "Salle"
 
 #: printing/templates/master_sheets_view.html:47
 msgid "Affirmative"
-msgstr ""
+msgstr "Affirmative"
 
 #: printing/templates/master_sheets_view.html:48
 msgid "Negative"
-msgstr ""
+msgstr "Négative"
 
 #: printing/templates/master_sheets_view.html:49
 msgid "Adjudicator"
-msgstr ""
+msgstr "Juge"
 
 #: printing/templates/master_sheets_view.html:50
 msgid "Winner of the Debate"
-msgstr ""
+msgstr "Gagnant du Débat"
 
 #: printing/templates/master_sheets_view.html:51
 msgid "Aff Score"
-msgstr ""
+msgstr "Score Aff"
 
 #: printing/templates/master_sheets_view.html:52
-#, fuzzy
-#| msgid "Overall Score"
 msgid "Neg Score"
-msgstr "Note globale"
+msgstr "Score Nég"
 
 #: printing/templates/master_sheets_view.html:68
 msgctxt "Odd number of teams"
 msgid "Bye"
-msgstr ""
+msgstr "Absence"
 
 #: printing/templates/master_sheets_view.html:70
 msgid "Postponed"
-msgstr ""
+msgstr "Repoussé"
 
 #: printing/templates/master_sheets_view.html:72
 #, python-format
 msgid "Forfeit by %(side_name)s"
-msgstr ""
+msgstr "Forfait par %(side_name)s"
 
 #: printing/templates/master_sheets_view.html:92
 msgid "Additional Comments from the Head Ajudicator"
-msgstr ""
+msgstr "Commentaires supplémentaires par le juge président"
 
 #: printing/templates/printables_list.html:9
 msgid ""
@@ -154,65 +152,66 @@ msgstr ""
 #: printing/templates/randomised_url_sheets.html:4
 #, python-format
 msgid "Printable %(sheet)s URLs"
-msgstr ""
+msgstr "URLs de %(sheet)s imprimables"
 
 #: printing/templates/randomised_url_sheets.html:13
 msgid ""
-"\n"
-"    This page is designed to be printed as double sided A4 sheets, with the\n"
-"    outside facing side showing the participant name and the inside facing "
-"side\n"
-"    showing the URL. Use CTRL-P to print; for best results use Chrome.\n"
-"    "
+"This page is designed to be printed as double sided A4 sheets, with the "
+"outside facing side showing the participant name and the inside facing side "
+"showing the URL. Use CTRL-P to print; for best results use Chrome."
 msgstr ""
+"Cette page est conçu pour être imprimé comme feuilles A4 recto-verso, avec "
+"un côté qui montre le nom du participant et l’autre son URL. Utilisez Ctrl-P "
+"pour imprimer ; pour les meilleurs résultats utilisez Chrome."
 
 #: printing/templates/randomised_url_sheets.html:27
 #: printing/templates/randomised_url_sheets.html:31
 #, python-format
 msgid "Private URL for %(name)s (%(group)s)"
-msgstr ""
+msgstr "URL privée pour %(name)s (%(group)s)"
 
 #: printing/templates/randomised_url_sheets.html:38
 msgid ""
-"\n"
-"      Please bookmark the following URL, you will use it to submit forms\n"
-"      throughout the tournament:\n"
-"      "
+"Please bookmark the following URL, you will use it to submit forms "
+"throughout the tournament:"
 msgstr ""
+"Ajoutez cette page à vos favoris, vous l’utiliseriez pour saisir des "
+"formulaires au fur du tournoi :"
 
 #: printing/templates/room_sheets_view.html:6
 #, python-format
-msgid "Room Sheets for Debates at %(venue_category)s in %(round_name)s</div>"
+msgid "Room Sheets for Debates at %(venue_category)s in %(round_name)s"
 msgstr ""
+"Feuilles de Salle pour les Débats à %(venue_category)s dans %(round_name)s"
 
-#: printing/templates/room_sheets_view.html:11
+#: printing/templates/room_sheets_view.html:12
 #, python-format
 msgid "Room Sheets for Debates at %(venue_category)s"
-msgstr ""
+msgstr "Feuilles de Salle pour les Débats à %(venue_category)s"
 
-#: printing/templates/room_sheets_view.html:32
+#: printing/templates/room_sheets_view.html:33
 #, python-format
 msgid "%(tournament)s Division %(division)s"
-msgstr ""
+msgstr "Division %(division)s de %(tournament)s"
 
-#: printing/templates/room_sheets_view.html:43
+#: printing/templates/room_sheets_view.html:44
 #, python-format
 msgid "<del>%(time)s</del> (Forfeit by %(side)s)"
-msgstr ""
+msgstr "<del>%(time)s</del> (Forfait par %(side)s)"
 
-#: printing/templates/room_sheets_view.html:49
+#: printing/templates/room_sheets_view.html:50
 msgid "(No time set)"
-msgstr ""
+msgstr "(Pas de temps reglé)"
 
-#: printing/templates/room_sheets_view.html:53
+#: printing/templates/room_sheets_view.html:54
 #, python-format
 msgid "<strong>Affirmative</strong>: %(team)s"
-msgstr ""
+msgstr "<strong>Affirmative</strong> : %(team)s"
 
-#: printing/templates/room_sheets_view.html:58
+#: printing/templates/room_sheets_view.html:59
 #, python-format
 msgid "<strong>Negative</strong>: %(team)s"
-msgstr ""
+msgstr "<strong>Négative</strong> : %(team)s"
 
 #: printing/templates/scoresheet_list.html:5
 msgid "Scoresheets"
@@ -230,14 +229,14 @@ msgstr ""
 "Il n’y a aucun bulletins de note disponible — le tour n’a-t-il pas encore de "
 "tirage ?"
 
-#: printing/views.py:91
+#: printing/views.py:95
 msgid "Overall Score"
 msgstr "Note globale"
 
-#: printing/views.py:118 printing/views.py:227 printing/views.py:247
+#: printing/views.py:122 printing/views.py:232 printing/views.py:252
 msgid "Unaffiliated"
 msgstr "Non-affilié"
 
-#: printing/views.py:131 printing/views.py:135
+#: printing/views.py:135 printing/views.py:139
 msgid "Team"
 msgstr "Équipe"

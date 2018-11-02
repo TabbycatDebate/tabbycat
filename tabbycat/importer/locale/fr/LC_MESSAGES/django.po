@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2018-11-02 09:35-0400\n"
 "PO-Revision-Date: 2018-04-29 10:38-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -113,17 +113,17 @@ msgstr ""
 msgid "There are more email addresses than speakers."
 msgstr ""
 
-#: importer/forms.py:313
+#: importer/forms.py:316
 msgid ""
 "Every team in a single tournament from the same institution must have a "
 "different name. Please correct the duplicate data."
 msgstr ""
 
-#: importer/forms.py:327
+#: importer/forms.py:330
 msgid "Rating"
 msgstr "Évaluation"
 
-#: importer/forms.py:335
+#: importer/forms.py:338
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
 msgstr ""
@@ -276,6 +276,13 @@ msgstr ""
 #: importer/templates/simple_import_index.html:55
 msgid "Add/Edit Adjudicator-Institution Conflicts"
 msgstr ""
+
+#: importer/templates/simple_import_index.html:59
+#, fuzzy
+#| msgctxt "page title"
+#| msgid "Add Adjudicators"
+msgid "Add/Edit Team-Institution Conflicts"
+msgstr "Addition de juges"
 
 #: importer/templates/simple_import_institutions_details.html:4
 #: importer/templates/simple_import_institutions_details.html:6
