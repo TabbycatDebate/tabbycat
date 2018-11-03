@@ -290,3 +290,11 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
+
+# ==============================================================================
+# Dynamic preferences
+# ==============================================================================
+
+DYNAMIC_PREFERENCES = {
+    'REGISTRY_MODULE': 'preferences',
+}
