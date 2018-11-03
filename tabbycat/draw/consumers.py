@@ -7,10 +7,12 @@ from channels.layers import get_channel_layer
 
 from actionlog.models import ActionLogEntry
 from adjallocation.serializers import SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer
+from draw.serializers import EditDebateTeamsDebateSerializer
 from tournaments.mixins import RoundWebsocketMixin
 from utils.mixins import SuperuserRequiredWebsocketMixin
+from venues.serializers import SimpleDebateVenueSerializer
 
-from .models import Debate
+from .models import Debate, DebateTeam
 
 logger = logging.getLogger(__name__)
 
@@ -114,6 +116,68 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
     model = Debate
     importance_serializer = SimpleDebateImportanceSerializer
     adjudicators_serializer = SimpleDebateAllocationSerializer
+    venues_serializer = SimpleDebateVenueSerializer
+    teams_serializer = EditDebateTeamsDebateSerializer
+
+    def receive_json(self, content):
+        for (key, value) in content.items():
+            if key == 'venues':
+                self.receive_venues(content)
+            if key == 'teams':
+                self.receive_teams(content)
+
+        return super().receive_json(content)
+
+    def modify_debate_teams(self, debate, sent_teams):
+        if set(sent_teams.keys()) != set(self.tournament.sides):
+            # TODO: raise error; "Sides in JSON object weren't correct"
+            print("Sides in JSON object weren't correct")
+
+        # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
+        delete_count, deleted = debate.debateteam_set.exclude(side__in=self.tournament.sides).delete()
+        logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
+
+        # if len(teams) != len(posted_debateteams):
+        #     # TODO: raise error
+        #     # raise BadJsonRequestError("Not all teams specified are associated with the tournament")
+        #     pass
+
+        # Update other DebateTeam objects
+        for side, team_id in sent_teams.items():
+            obj, created = DebateTeam.objects.update_or_create(
+                debate=debate, side=side, defaults={'team_id': team_id})
+            print("%s debate team: %s in [%s] is now %s" %
+                    ("Created" if created else "Updated", side, debate.matchup, team_id))
+            logger.debug("%s debate team: %s in [%s] is now %s",
+                         "Created" if created else "Updated",
+                         side, debate.matchup, team_id)
+
+        debate._populate_teams()
+
+    def receive_teams(self, content):
+        changes = {int(c['id']): c for c in content['teams']}
+        debates_or_panels = self.get_debates_or_panels(changes)
+        for d_or_p in debates_or_panels:
+            sent_teams = changes[d_or_p.id]['teams']
+            self.modify_debate_teams(d_or_p, sent_teams)
+
+        debates_or_panels = self.get_debates_or_panels(changes)
+        serialized = self.teams_serializer(debates_or_panels, many=True,
+            context={'sides': self.tournament.sides})
+        del content['teams']
+        self.return_attributes(content, serialized)
+
+    def receive_venues(self, content):
+        changes = {int(c['id']): c for c in content['venues']}
+        debates_or_panels = self.get_debates_or_panels(changes)
+        for d_or_p in debates_or_panels:
+            d_or_p.venue_id = changes[d_or_p.id]['venue']
+            d_or_p.save()
+
+        debates_or_panels = self.get_debates_or_panels(changes)
+        serialized = self.venues_serializer(debates_or_panels, many=True)
+        del content['venues']
+        self.return_attributes(content, serialized)
 
 
 class EditDebateOrPanelWorkerMixin(SyncConsumer):

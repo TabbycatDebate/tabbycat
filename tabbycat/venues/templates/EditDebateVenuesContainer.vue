@@ -1,6 +1,8 @@
 <template>
 
-  <drag-and-drop-layout :unallocatedItems="unallocatedItems" :unallocatedComponent="unallocatedComponent">
+  <drag-and-drop-layout :unallocatedItems="unallocatedItems"
+                        :unallocatedComponent="unallocatedComponent"
+                        :handle-unused-drop="moveVenue">
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" allocate="true" @show-allocate="showAllocate">
       <template slot="default-highlights">
@@ -15,7 +17,7 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
-        <droppable-item slot="venue" :handle-drop="handleVenueDrop" :drop-context="{ 'assignment': debate.id }"
+        <droppable-item slot="venue" :handle-drop="moveVenue" :drop-context="{ 'assignment': debate.id }"
                         class="flex-12 flex-truncate border-right d-flex flex-wrap">
           <draggable-venue v-if="debate.venue" :item="allVenues[debate.venue]" class="flex-fill"
                            :drag-payload="{ 'item': debate.venue, 'assignment': debate.id }">
@@ -67,9 +69,36 @@ export default {
     },
   },
   methods: {
-    handleVenueDrop: function (droppedData) {
-      console.log('handledrop', droppedData)
-      // Emit the 'send adj to this debate method'
+    getDebate: function (debateID) {
+      if (debateID === null) {
+        return null // Moving to or from Unused
+      }
+      let debate = this.allDebatesOrPanels[debateID]
+      debate = JSON.parse(JSON.stringify(debate)) // Clone so non-reactive
+      return debate
+    },
+    moveVenue: function (dragData, dropData) {
+      let venueChanges = []
+      let fromDebate = this.getDebate(dragData.assignment)
+      let toDebate = this.getDebate(dropData.assignment)
+      if (fromDebate !== null) { // Not moving FROM Unused
+        fromDebate.venue = null
+      }
+      if (toDebate !== null) { // Not moving TO Unused
+        if (toDebate.venue !== null) { // Swapping
+          fromDebate.venue = toDebate.venue
+        }
+        toDebate.venue = dragData.item
+      }
+      // Send results
+      if (fromDebate !== null) {
+        venueChanges.push({ 'id': fromDebate.id, 'venue': fromDebate.venue })
+      }
+      if (toDebate !== null && dragData.assignment !== dropData.assignment) {
+        venueChanges.push({ 'id': toDebate.id, 'venue': toDebate.venue })
+      }
+      this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'venues': venueChanges })
+      this.$store.dispatch('updateAllocableItemModified', [dragData.item])
     },
     getUnallocatedItemFromDebateOrPanel (debateOrPanel) {
       // Return the ID of the venue in this debate
