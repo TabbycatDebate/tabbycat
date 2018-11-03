@@ -4,7 +4,8 @@
                         :unallocatedComponent="unallocatedComponent"
                         :handle-unused-drop="moveVenue">
 
-    <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" allocate="true" @show-allocate="showAllocate">
+    <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount" allocate="true"
+                           @show-allocate="showAllocate">
       <template slot="default-highlights">
         <button class="btn conflictable conflicts-toolbar hover-adjudicator"
                 data-toggle="tooltip" v-text="gettext('Constraint')"
@@ -27,8 +28,9 @@
     </template>
 
     <template slot="modals">
-      <modal-for-allocating :intro-text="gettext(allocateIntro)"
-                            :context-of-action="'allocate_debate_venues'"></modal-for-allocating>
+      <modal-for-allocating-venues :intro-text="gettext(allocateIntro)"
+                                   :context-of-action="'allocate_debate_venues'">
+      </modal-for-allocating-venues>
     </template>
 
   </drag-and-drop-layout>
@@ -37,13 +39,13 @@
 
 <script>
 import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
-import ModalForAllocating from '../../utils/templates/modals/ModalForAllocating.vue'
 import DroppableItem from '../../utils/templates/DroppableItem.vue'
 
+import ModalForAllocatingVenues from './ModalForAllocatingVenues.vue'
 import DraggableVenue from './DraggableVenue.vue'
 
 export default {
-  components: { ModalForAllocating, DraggableVenue, DroppableItem },
+  components: { ModalForAllocatingVenues, DraggableVenue, DroppableItem },
   mixins: [DragAndDropContainerMixin],
   data: function () {
     return {

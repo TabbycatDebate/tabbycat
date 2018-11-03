@@ -45,7 +45,7 @@
       <modal-for-creating-preformed-panels :context-of-action="'create_preformed_panels'">
       </modal-for-creating-preformed-panels>
       <modal-for-sharding :intro-text="gettext('shardIntro')"></modal-for-sharding>
-      <modal-for-allocating :intro-text="gettext(allocateIntro)"
+      <modal-for-allocating :intro-text="gettext(allocateIntro)" :for-panels="true"
                             :context-of-action="'allocate_panel_adjs'"></modal-for-allocating>
       <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"
                               :context-of-action="'prioritise_panels'"></modal-for-prioritising>

@@ -49,9 +49,19 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
         ]
         info['highlights']['rank'] = ranks_dictionary()
         info['highlights']['region'] = [] # TODO
-        info['scoreForVote'] = self.tournament.pref('adj_min_score')
-        info['scoreMax'] = self.tournament.pref('adj_max_score')
-        info['scoreMin'] = self.tournament.pref('adj_min_voting_score')
+        info['adjMinScore'] = self.tournament.pref('adj_min_score')
+        info['adjMaxScore'] = self.tournament.pref('adj_max_score')
+        allocation_preferences = [
+            'draw_rules__adj_min_voting_score',
+            'draw_rules__adj_conflict_penalty',
+            'draw_rules__adj_history_penalty',
+            'draw_rules__preformed_panel_mismatch_penalty',
+            'draw_rules__no_trainee_position',
+            'draw_rules__no_panellist_position'
+        ]
+        info['allocationSettings'] = {}
+        for key in allocation_preferences:
+            info['allocationSettings'][key] = self.tournament.preferences[key]
         return info
 
     def get_serialised_allocatable_items(self):
