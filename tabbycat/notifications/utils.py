@@ -3,7 +3,7 @@
 These functions assemble the necessary arguments to be parsed in email templates
 to be sent to relevant parties. All these functions return a tuple with the first
 element being a context dictionary with the available variables to be parsed in
-the message. The second element is the Participant object. All these functions are
+the message. The second element is the Person object. All these functions are
 called by NotificationQueueConsumer, which inserts the variables into a message,
 using the participant object to fetch their email address and to record.
 
@@ -18,6 +18,7 @@ from draw.models import Debate
 from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
 from results.utils import side_and_position_names
 from options.utils import use_team_code_names
+from participants.models import Person
 from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
 
@@ -200,18 +201,12 @@ def motion_release_email_generator(to, round_id):
         'MOTIONS': _create_motion_list()
     }
 
-    teams = round.tournament.team_set.filter(round_availabilities__round=round).prefetch_related('speaker_set')
-    for team in teams:
-        for speaker in team.speaker_set.all():
-            try:
-                to.remove(speaker.id)
-            except ValueError:
-                continue
+    people = Person.objects.filter(id__in=to)
+    for person in people:
+        context_user = context.copy()
+        context_user['USER'] = person.name
 
-            context_user = context.copy()
-            context_user['USER'] = speaker.name
-
-            emails.append((context_user, speaker))
+        emails.append((context_user, speaker))
 
     return emails
 
