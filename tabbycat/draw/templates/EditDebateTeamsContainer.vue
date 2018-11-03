@@ -12,14 +12,15 @@
 
           <droppable-item v-for="side in sides" :handle-drop="moveTeam" :key="side"
                           :drop-context="{ 'assignment': debate.id, 'position': side }"
-                          class="flex-1 flex-truncate">
+                          class="flex-2 flex-truncate">
             <draggable-team v-if="debate.teams[side]" :item="allTeams[debate.teams[side]]" class="flex-fill"
                             :drag-payload="{ 'item': debate.teams[side], 'assignment': debate.id, 'position': side }">
             </draggable-team>
           </droppable-item>
 
-        </div>
+          <debate-side-status :debate="debate"></debate-side-status>
 
+        </div>
       </drag-and-drop-debate>
     </template>
 
@@ -32,9 +33,10 @@ import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContaine
 import DroppableItem from '../../utils/templates/DroppableItem.vue'
 
 import DraggableTeam from './DraggableTeam.vue'
+import DebateSideStatus from './DebateSideStatus.vue'
 
 export default {
-  components: { DraggableTeam, DroppableItem },
+  components: { DebateSideStatus, DraggableTeam, DroppableItem },
   mixins: [DragAndDropContainerMixin],
   data: () => ({
     unallocatedComponent: DraggableTeam,

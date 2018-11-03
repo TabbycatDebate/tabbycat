@@ -10,6 +10,13 @@ class EditDebateTeamsDebateSerializer(DebateSerializerMixin):
         return debate_team.team.pk
 
 
+class SimpleDebateSideStatusSerializer(DebateSerializerMixin):
+
+    class Meta:
+        model = DebateSerializerMixin.Meta.model
+        fields = ('id', 'sides_confirmed')
+
+
 class EditDebateTeamsTeamSerializer(TeamSerializer, VueDraggableItemMixin):
     """ Returns teams for use in the allocate Debate Teams view """
 

@@ -7,12 +7,12 @@ from channels.layers import get_channel_layer
 
 from actionlog.models import ActionLogEntry
 from adjallocation.serializers import SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer
-from draw.serializers import EditDebateTeamsDebateSerializer
 from tournaments.mixins import RoundWebsocketMixin
 from utils.mixins import SuperuserRequiredWebsocketMixin
 from venues.serializers import SimpleDebateVenueSerializer
 
 from .models import Debate, DebateTeam
+from .serializers import EditDebateTeamsDebateSerializer, SimpleDebateSideStatusSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -115,15 +115,18 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
     group_prefix = 'debates'
     model = Debate
     importance_serializer = SimpleDebateImportanceSerializer
+    sides_status_serializer = SimpleDebateSideStatusSerializer
     adjudicators_serializer = SimpleDebateAllocationSerializer
     venues_serializer = SimpleDebateVenueSerializer
     teams_serializer = EditDebateTeamsDebateSerializer
 
     def receive_json(self, content):
         for (key, value) in content.items():
-            if key == 'venues':
+            if key == 'sides_confirmed':
+                self.receive_sides_status(content)
+            elif key == 'venues':
                 self.receive_venues(content)
-            if key == 'teams':
+            elif key == 'teams':
                 self.receive_teams(content)
 
         return super().receive_json(content)
@@ -146,8 +149,6 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
         for side, team_id in sent_teams.items():
             obj, created = DebateTeam.objects.update_or_create(
                 debate=debate, side=side, defaults={'team_id': team_id})
-            print("%s debate team: %s in [%s] is now %s" %
-                    ("Created" if created else "Updated", side, debate.matchup, team_id))
             logger.debug("%s debate team: %s in [%s] is now %s",
                          "Created" if created else "Updated",
                          side, debate.matchup, team_id)
@@ -156,26 +157,38 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
 
     def receive_teams(self, content):
         changes = {int(c['id']): c for c in content['teams']}
-        debates_or_panels = self.get_debates_or_panels(changes)
-        for d_or_p in debates_or_panels:
-            sent_teams = changes[d_or_p.id]['teams']
-            self.modify_debate_teams(d_or_p, sent_teams)
+        debates = self.get_debates_or_panels(changes)
+        for debate in debates:
+            sent_teams = changes[debate.id]['teams']
+            self.modify_debate_teams(debate, sent_teams)
 
-        debates_or_panels = self.get_debates_or_panels(changes)
-        serialized = self.teams_serializer(debates_or_panels, many=True,
+        debates = self.get_debates_or_panels(changes)
+        serialized = self.teams_serializer(debates, many=True,
             context={'sides': self.tournament.sides})
         del content['teams']
         self.return_attributes(content, serialized)
 
+    def receive_sides_status(self, content):
+        changes = {int(c['id']): c for c in content['sides_confirmed']}
+        debates = self.get_debates_or_panels(changes)
+        for debate in debates:
+            debate.sides_confirmed = changes[debate.id]['sides_confirmed']
+            debate.save()
+
+        debates = self.get_debates_or_panels(changes)
+        serialized = self.sides_status_serializer(debates, many=True)
+        del content['sides_confirmed']
+        self.return_attributes(content, serialized)
+
     def receive_venues(self, content):
         changes = {int(c['id']): c for c in content['venues']}
-        debates_or_panels = self.get_debates_or_panels(changes)
-        for d_or_p in debates_or_panels:
-            d_or_p.venue_id = changes[d_or_p.id]['venue']
-            d_or_p.save()
+        debates = self.get_debates_or_panels(changes)
+        for debate in debates:
+            debate.venue_id = changes[debate.id]['venue']
+            debate.save()
 
-        debates_or_panels = self.get_debates_or_panels(changes)
-        serialized = self.venues_serializer(debates_or_panels, many=True)
+        debates = self.get_debates_or_panels(changes)
+        serialized = self.venues_serializer(debates, many=True)
         del content['venues']
         self.return_attributes(content, serialized)
 
