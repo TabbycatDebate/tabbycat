@@ -361,6 +361,7 @@ class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
 # ==============================================================================
 
 class BaseSaveDragAndDropDebateJsonView(AdministratorMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
+    """@depracate when legacy drag and drop UIs removed"""
     """For AJAX issued updates which post a Debate dictionary; which is then
     modified and return back via a JSON response"""
     allows_creation = False

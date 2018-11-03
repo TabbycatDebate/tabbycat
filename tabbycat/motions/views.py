@@ -9,7 +9,7 @@ from django.views.generic.base import TemplateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from notifications.models import BulkNotification
-from notifications.views import RoundTemplateEmailCreateView
+from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
 from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
@@ -180,7 +180,7 @@ class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournament
     assistant_page_permissions = ['all_areas']
 
 
-class EmailMotionReleaseView(RoundTemplateEmailCreateView):
+class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
     page_subtitle = _("Round Motions")
 
     event = BulkNotification.EVENT_TYPE_MOTIONS

@@ -11,12 +11,13 @@
   </a>
 </div>
 <div class="btn-group btn-group">
+  <a href="{% tournamenturl 'notifications-email' %}" class="btn btn-outline-primary">Send Emails</a>
   {% if email_sent %}
     <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "Emails have already been sent." %}">
   {% else %}
     <a href="{% tournamenturl 'participants-email' %}" class="btn btn-outline-primary">
   {% endif %}
-    {% trans "Email Registration" %}
+    {% trans "Team Registration" %}
   </a>
 </div>
 <div class="btn-group btn-group">

@@ -2,9 +2,12 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
-// Generic 'contains action'
 .hoverable:hover {
-  cursor: pointer;
+  cursor: pointer; // Generic 'contains action' indicator
+}
+
+.text-unselectable {
+  user-select: none; // Useful to prevent text selection during dragging
 }
 
 // Specific styling for tooltips/popovers

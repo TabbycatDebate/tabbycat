@@ -28,6 +28,7 @@ class Region(models.Model):
 
     @property
     def serialize(self):
+        """@depracate when legacy drag and drop UIs removed"""
         return {'name': self.name, 'id': self.id, 'class': None}
 
 
@@ -63,6 +64,7 @@ class Institution(models.Model):
 
     @property
     def serialize(self):
+        """@depracate when legacy drag and drop UIs removed"""
         return {'name': self.name, 'id': self.id, 'code': self.code}
 
 

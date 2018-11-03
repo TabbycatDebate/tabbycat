@@ -36,7 +36,7 @@ class TabbycatRavenClient(DjangoClient):
             if tournament is not None:
                 extra_info = result.setdefault('extra', {})
                 extra_info['tournament_prefs'] = request.tournament.preferences.all()
-        except Exception as e:
+        except Exception:
             pass  # again, best efforts only
 
         return result

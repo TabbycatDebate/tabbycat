@@ -170,7 +170,13 @@ class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
         return reverse_tournament('participants-list', self.tournament)
 
     def get_queryset(self):
-        return Speaker.objects.filter(team__tournament=self.tournament)
+        return Speaker.objects.filter(team__tournament=self.tournament).select_related('team').prefetch_related('team__speaker_set')
+
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_team_columns([s.team for s in self.get_queryset()])
+        return table
 
 
 # ==============================================================================

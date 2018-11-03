@@ -10,7 +10,7 @@
 
   {% url 'login' as login_url %}
   {% blocktrans trimmed asvar message %}
-    You have been logged out. <a href="{{ login }}">Log in again?</a>.
+    You have been logged out. <a href="{{ login }}">Log in again?</a>
   {% endblocktrans %}
   {% include "components/alert.html" with type="info" %}
 

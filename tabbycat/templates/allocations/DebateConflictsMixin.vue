@@ -40,14 +40,28 @@ export default {
       // institution clashes rather than object IDs. These are not unique.
 
       let adjInstitutionalClashes = _.map(this.adjudicators, 'conflicts.clashes.institution')
-      adjInstitutionalClashes = _.flatten(adjInstitutionalClashes).map(clash => clash.id)
+      let adjInstitutionalClashesIDs = []
+      _.flatten(adjInstitutionalClashes).forEach(clash => {
+        if (clash !== undefined) {
+          if (clash.id !== undefined) {
+            adjInstitutionalClashesIDs.push(clash.id)
+          }
+        }
+      })
 
       let teamInstitutionalClashes = _.map(this.teams, 'conflicts.clashes.institution')
-      teamInstitutionalClashes = _.flatten(teamInstitutionalClashes).map(clash => clash.id)
+      let teamInstitutionalClashIDs = []
+      _.flatten(teamInstitutionalClashes).forEach(clash => {
+        if (clash !== undefined) {
+          if (clash.id !== undefined) {
+            teamInstitutionalClashIDs.push(clash.id)
+          }
+        }
+      })
       // We don't want teams of the same institution clashing each other; so never allow dupe IDs
-      teamInstitutionalClashes = _.uniq(teamInstitutionalClashes)
+      teamInstitutionalClashIDs = _.uniq(teamInstitutionalClashIDs)
 
-      return [...adjInstitutionalClashes, ...teamInstitutionalClashes]
+      return [...adjInstitutionalClashesIDs, ...teamInstitutionalClashes]
     },
     allConflicts: function () {
       // Create an array of conflicts gathered from each team or adjudicator

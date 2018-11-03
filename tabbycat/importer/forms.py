@@ -261,7 +261,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         for email in emails:
             try:
                 validate_email(email)
-            except ValidationError as e:
+            except ValidationError:
                 self.add_error('emails', _("%(email)s is not a valid email address.") % {'email': email})
         return emails
 

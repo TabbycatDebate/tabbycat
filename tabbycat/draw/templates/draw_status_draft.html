@@ -5,7 +5,7 @@
   <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-danger">
     <i data-feather="chevron-left"></i> {% trans "Delete Draw" %}
   </a>
-  <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary">
+  <a href="{% roundurl 'legacy-draw-matchups-edit' round %}" class="btn btn-outline-primary">
     {% trans "Edit Sides/Matchups" %}
   </a>
 {% endblock %}
@@ -33,7 +33,7 @@
   {% endif %}
 
   {% if round.draw_type == round.DRAW_MANUAL and round.debate_set.count == 0 %}
-    {% roundurl 'draw-matchups-edit' round as edit_matchups_url %}
+    {% roundurl 'edit-debate-teams' round as edit_matchups_url %}
     {% blocktrans trimmed asvar message %}
       The draw type for this round is set to <strong>manual</strong>, so Tabbycat has just made a
       blank draw. Head on over to

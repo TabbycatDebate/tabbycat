@@ -12,7 +12,7 @@ from django.utils.translation import ngettext
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import BulkNotification, SentMessageRecord
-from notifications.views import TournamentTemplateEmailCreateView
+from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
@@ -139,7 +139,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
         return super().post(request, *args, **kwargs)
 
 
-class EmailRandomisedUrlsView(TournamentTemplateEmailCreateView):
+class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
 
     event = BulkNotification.EVENT_TYPE_URL
@@ -153,6 +153,17 @@ class EmailRandomisedUrlsView(TournamentTemplateEmailCreateView):
         extra = super().get_extra()
         extra['url'] = self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
         return extra
+
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, [{
+            'text': p.url_key,
+            'link': self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key})),
+            'class': 'small'
+        } for p in self.get_queryset()])
+
+        return table
 
 
 class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):

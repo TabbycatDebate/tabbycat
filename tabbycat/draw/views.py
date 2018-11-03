@@ -19,16 +19,18 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
+from availability.utils import annotate_availability
 from divisions.models import Division
 from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
+from participants.prefetch import populate_win_counts
 from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CurrentRoundMixin, DrawForDragAndDropMixin,
+from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin,
     OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
     TournamentMixin)
 from tournaments.models import Round, Tournament
@@ -49,6 +51,7 @@ from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
+from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -385,6 +388,12 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     event = BulkNotification.EVENT_TYPE_DRAW
     subject_template = 'adj_email_subject'
     message_template = 'adj_email_message'
+
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['url'] = self.request.build_absolute_uri(
+            reverse_tournament('results-public-ballotset-new-randomised', self.tournament, kwargs={'url_key': '0'}))[:-2]
+        return extra
 
     def get_success_url(self):
         return reverse_round('draw-display', self.round)
@@ -848,9 +857,32 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
-class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView):
-    template_name = 'edit_matchups.html'
-    save_url = "save-debate-teams"
+class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
+    template_name = "edit_debate_teams.html"
+    page_title = gettext_lazy("Edit Matchups")
+    prefetch_teams = False # Fetched in full as get_serialised
+
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['highlights']['break'] = [] # TODO
+        return info
+
+    def get_serialised_allocatable_items(self):
+        # TODO: account for shared teams
+        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
+        teams = annotate_availability(teams, self.round)
+        populate_win_counts(teams)
+        serialized_teams = EditDebateTeamsTeamSerializer(teams, many=True)
+        return self.json_render(serialized_teams.data)
+
+    def debates_or_panels_factory(self, debates):
+        return EditDebateTeamsDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides})
+
+
+class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):
+    template_name = 'legacy_edit_matchups.html'
+    save_url = "legacy-save-debate-teams"
 
     def annotate_draw(self, draw, serialised_draw):
         if self.round.tournament.pref('teams_in_debate') == 'bp':
@@ -876,11 +908,11 @@ class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView
             self.annotate_region_classes(serialt)
 
         kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
-        kwargs['saveSidesStatusUrl'] = reverse_round('save-debate-sides-status', self.round)
+        kwargs['saveSidesStatusUrl'] = reverse_round('legacy-save-debate-sides-status', self.round)
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
     allows_creation = True
 
@@ -917,7 +949,7 @@ class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
         return debate
 
 
-class SaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_SIDES_SAVE
     allows_creation = False
 

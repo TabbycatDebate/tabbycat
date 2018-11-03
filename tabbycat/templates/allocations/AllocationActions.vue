@@ -130,7 +130,7 @@ import _ from 'lodash'
 import AutoAllocationModal from '../allocations/AutoAllocationModal.vue'
 import AutoImportanceModal from '../allocations/AutoImportanceModal.vue'
 import ShardingModal from '../allocations/ShardingModal.vue'
-import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
+import AutoSaveCounter from '../draganddrops/LegacyAutoSaveCounter.vue'
 
 export default {
   props: {

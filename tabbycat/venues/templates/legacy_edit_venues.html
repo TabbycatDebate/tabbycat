@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">🏪</span>
+  {% blocktrans trimmed with round_abbr=round.abbreviation %}
+  Edit Venues for {{ round_abbr }}
+  {% endblocktrans %}
+{% endblock %}
+{% block page-title %}🏪
+  {% blocktrans trimmed with round_abbr=round.abbreviation %}
+  Edit Venues for {{ round_abbr }}
+  {% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+  <div id="vueMount">
+
+    <legacy-edit-venues-container :initial-debates="debates"
+                           :round-info="roundInfo"
+                           :initial-unallocated-items="unallocatedItems"
+                           :venue-constraints="venueConstraints"
+                           :default-sort-key="'bracket'"
+                           :default-sort-order="'desc'">
+    </legacy-edit-venues-container>
+
+  </div>
+{% endblock content %}
+
+{% block js %}
+
+  <script>
+    window.vueData = {
+      debates: {{ vueDebates|safe }},
+      roundInfo: {{ vueRoundInfo|safe }},
+      unallocatedItems: {{ vueUnusedVenues|safe }},
+      venueConstraints: {{ vueVenueConstraints|safe }},
+    }
+  </script>
+  {{ block.super }}
+
+{% endblock js %}

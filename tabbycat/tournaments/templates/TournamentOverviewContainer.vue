@@ -70,8 +70,7 @@ export default {
     UpdatesList,
     BallotsGraph: () => import('../../templates/graphs/BallotsGraph.vue'),
   },
-  props: ['tournamentSlug', 'totalDebates',
-    'initialActions', 'initialBallots', 'initialGraphData'],
+  props: ['tournamentSlug', 'totalDebates', 'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
       actionLogs: this.initialActions,
@@ -79,6 +78,11 @@ export default {
       ballotStatuses: this.initialGraphData,
       sockets: ['action_logs', 'ballot_results', 'ballot_statuses'],
     }
+  },
+  computed: {
+    tournamentSlugForWSPath: function () {
+      return this.tournamentSlug
+    },
   },
   methods: {
     handleSocketReceive: function (socketLabel, payload) {

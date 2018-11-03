@@ -1,0 +1,86 @@
+<template>
+
+    <nav class="navbar navbar-default navbar-light fixed-top px-2">
+
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group btn-group-sm">
+          <a :href="extra.backUrl" class="btn btn-outline-primary"
+             data-toggle="tooltip" data-placement="bottom" :title="extra.backLabel">
+            <i data-feather="chevron-left"></i>
+          </a>
+          <auto-save-counter></auto-save-counter>
+          <slot name="extra-actions"></slot>
+          <button v-if="prioritise" @click="$emit('show-prioritise')"
+                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  v-text="gettext('Prioritise')"></button>
+          <button v-if="allocate" @click="$emit('show-allocate')"
+                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  v-text="gettext('Allocate')"></button>
+          <button v-if="shard" @click="$emit('show-shard')"
+                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']" >
+            <i data-feather="server"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="btn-group btn-group-sm">
+        <button class="btn btn-outline-secondary disabled d-xl-inline d-none"
+                data-toggle="tooltip" :title="('Key for the color highlights.')">
+          <i data-feather="help-circle"></i>
+        </button>
+        <template v-if="!currentHighlightKey">
+          <slot name="default-highlights"></slot>
+          <button class="btn btn-dark" v-text="gettext('Unavailable')" data-toggle="tooltip"
+                :title="('Has not been marked as available for this round.')"></button>
+        </template>
+        <template v-else>
+          <button v-for="option in highlights[currentHighlightKey].options"
+                  :class="['btn btn-primary', option.css]">
+            {{ option.fields.name }}
+          </button>
+        </template>
+      </div>
+
+      <div class="btn-group btn-group-sm">
+        <button v-for="(highlight, highlightKey) in highlights"
+                @click="toggleHighlight(highlightKey)"
+                :class="['btn btn-outline-primary', highlight.active ? 'btn-primary active' : '']">
+          <span :class="highlight.active ? 'd-none' : ''"><i data-feather="eye"></i></span>
+          <span :class="highlight.active ? '' : 'd-none'"><i data-feather="eye-off"></i></span>
+          <span class="pl-1" v-text="gettext(titleCase(highlightKey))"></span>
+        </button>
+      </div>
+
+    </nav>
+
+</template>
+
+<script>
+import { mapMutations, mapState } from 'vuex'
+
+import AutoSaveCounter from './AutoSaveCounter.vue'
+
+export default {
+  components: { AutoSaveCounter },
+  props: ['prioritise', 'allocate', 'shard', 'count'],
+  methods: {
+    titleCase: function (title) {
+      return title.charAt(0).toUpperCase() + title.substr(1)
+    },
+    ...mapMutations(['toggleHighlight']),
+    startShard: function (event) {
+      window.alert('sharding')
+    },
+  },
+  computed: {
+    currentHighlightKey: function () {
+      let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
+      if (currentKey.length > 0) {
+        return currentKey[0]
+      }
+      return false
+    },
+    ...mapState(['highlights', 'extra']),
+  },
+}
+</script>

@@ -73,6 +73,9 @@ export default {
     },
   },
   computed: {
+    tournamentSlugForWSPath: function () {
+      return this.tournamentSlug
+    },
     debates: function () {
       const rows = this.localTableData[0].data.map(cells => ({
         identifier: cells[0].identifier,

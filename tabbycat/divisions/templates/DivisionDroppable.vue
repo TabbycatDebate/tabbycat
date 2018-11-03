@@ -30,12 +30,12 @@
 
 <script>
 import DroppableGeneric from '../../templates/draganddrops/DroppableGeneric.vue'
-import DraggableTeam from '../../templates/draganddrops/DraggableTeam.vue'
+import LegacyDraggableTeam from '../../templates/draganddrops/LegacyDraggableTeam.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],
-  components: { DroppableGeneric, DraggableTeam },
+  components: { DroppableGeneric, LegacyDraggableTeam },
   props: ['division', 'vcs', 'teams', 'saveVenueCategoryUrl', 'roundInfo'],
   computed: {
     hasEvenNumbers: function () {

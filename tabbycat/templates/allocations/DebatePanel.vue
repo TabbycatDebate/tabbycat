@@ -3,20 +3,20 @@
                 'flex-' + (12 * adjPositions.length)]">
 
     <div v-for="position in adjPositions" :key="position"
-         :class="['vue-droppable-container', 'position-container-' + position,
+         :class="['legacy-vue-droppable-container', 'position-container-' + position,
                   'positions-limited-' + adjPositions.length]">
       <droppable-generic :assignment-id="debateId"
                          :assignment-position="position"
                          :extra-css="getCSSForPosition(position)"
                          :locked="locked">
 
-        <draggable-adjudicator
+        <legacy-draggable-adjudicator
           v-for="da in getAdjudicatorsByPosition(panelAdjudicators, position)"
           :adjudicator="da.adjudicator" :debate-id="debateId"
           :percentiles="percentiles"
           :key="da.adjudicator.id"
           :locked="locked">
-        </draggable-adjudicator>
+        </legacy-draggable-adjudicator>
 
       </droppable-generic>
     </div>
@@ -27,12 +27,12 @@
 <script>
 import _ from 'lodash'
 import DroppableGeneric from '../draganddrops/DroppableGeneric.vue'
-import DraggableAdjudicator from '../draganddrops/DraggableAdjudicator.vue'
+import LegacyDraggableAdjudicator from '../draganddrops/LegacyDraggableAdjudicator.vue'
 import DebateConflictsMixin from '../allocations/DebateConflictsMixin.vue'
 
 export default {
   mixins: [DebateConflictsMixin],
-  components: { DroppableGeneric, DraggableAdjudicator },
+  components: { DroppableGeneric, LegacyDraggableAdjudicator },
   props: ['panelAdjudicators', 'adjPositions', 'panelTeams', 'debateId',
     'percentiles', 'locked', 'roundInfo'],
   computed: {

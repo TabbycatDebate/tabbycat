@@ -2,6 +2,11 @@
 // Flexbox Utility Classes
 //------------------------------------------------------------------------------
 
+.flex-truncate {
+  // Ensures child elements don't blow width of parent; useful for pseudo tables
+  overflow: hidden;
+}
+
 .flex-horizontal {
   display: flex;
   flex-direction: row;

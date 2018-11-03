@@ -1,4 +1,4 @@
-{% extends "tables/base_vue_table.html" %}
+{% extends "base.html" %}
 {% load debate_tags i18n %}
 
 {% block page-alerts %}
@@ -26,7 +26,17 @@
   <form method="POST">
     {% csrf_token %}
 
-    {{ block.super }}
+    <div id="vueMount">
+      <checkbox-tables-container  :tables-data=tablesData
+                                  :round-info=roundInfo
+                                  :categories=categories
+                                  :translations=translations
+                                  :urls=urls
+                                  :navigation=navigation
+                                  :hide-auto-save=hideAutoSave
+                                  orientation={{ tables_orientation|safe }} >
+      </checkbox-tables-container>
+    </div>
 
     {{ form.non_field_errors }}
     {% for field in form.visible_fields %}
@@ -38,3 +48,20 @@
   </form>
 
 {% endblock content %}
+
+{% block js %}
+
+  <script>
+    window.vueData = {
+      tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
+      roundInfo: null,
+      categories: {% if categories %}{{ categories|safe }}{% else %}null{% endif %},
+      hideAutoSave: true,
+      translations: null,
+      urls: null,
+      navigation: null
+    }
+  </script>
+  {{ block.super }}
+
+{% endblock %}
