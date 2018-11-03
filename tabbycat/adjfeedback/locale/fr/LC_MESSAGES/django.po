@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-08-15 23:59-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -212,7 +212,7 @@ msgstr "juge"
 
 #: adjfeedback/models.py:16
 msgid "round"
-msgstr "tour"
+msgstr "joute"
 
 #: adjfeedback/models.py:17 adjfeedback/models.py:215
 msgid "score"
@@ -443,7 +443,7 @@ msgstr ""
 
 #: adjfeedback/tables.py:105
 msgid "Feedback Per Round"
-msgstr "Évaluations par tour"
+msgstr "Évaluations par joute"
 
 #: adjfeedback/templates/add_feedback.html:5
 msgid "Who is the feedback from?"

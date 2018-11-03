@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-08-15 23:26-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -100,14 +100,14 @@ msgstr "Promouvoir équipe"
 #: draw/generator/bpelimination.py:36 draw/generator/elimination.py:68
 #, python-format
 msgid "%d debates in the previous round don't have a result."
-msgstr "%d débats au tour précédent n'ont pas un résultat."
+msgstr "%d débats à la joute précédente n'ont pas un résultat."
 
 #: draw/generator/bpelimination.py:38
 #, python-format
 msgid ""
 "%d debates in the previous round don't have exactly two teams advancing."
 msgstr ""
-"%d débats au tour précédent n'ont pas exactement deux équipes avançantes."
+"%d débats à la joute précédente n'ont pas exactement deux équipes avançantes."
 
 #: draw/generator/bpelimination.py:71
 #, python-format
@@ -127,7 +127,7 @@ msgstr ""
 #, python-format
 msgid "The number of debates (%d) in the last round is not a power of two."
 msgstr ""
-"Le nombre d’équipes (%d) dans le tour précédent n’est pas une puissance de "
+"Le nombre d’équipes (%d) dans la joute précédente n’est pas une puissance de "
 "deux."
 
 #: draw/generator/bphungarian.py:171
@@ -153,12 +153,13 @@ msgid ""
 "two to generate an elimination round draw."
 msgstr ""
 "Il n'y a que %d équipes « breaking » dans cette catégorie ; il faut au moins "
-"deux pour générer un tirage pour un tour d'éliminatoire."
+"deux pour générer un tirage pour une joute éliminatoire."
 
 #: draw/generator/elimination.py:75
 #, python-format
 msgid "The number of teams (%d) in this round is not a power of two."
-msgstr "Le nombre d’équipes (%d) dans ce tour n’est pas une puissance de deux."
+msgstr ""
+"Le nombre d’équipes (%d) dans cette joute n’est pas une puissance de deux."
 
 #: draw/generator/powerpair.py:74
 #, python-format
@@ -790,7 +791,7 @@ msgid ""
 "You have not generated a draw for this round yet. There is nothing to "
 "release."
 msgstr ""
-"Vous n'avez pas encore générer un tirage pour ce tour. Il n'y a rien à "
+"Vous n'avez pas encore générer un tirage pour cette joute. Il n'y a rien à "
 "publier."
 
 #: draw/templates/draw_display_admin.html:123
@@ -798,7 +799,7 @@ msgid ""
 "The draw for this round is still in a draft state. Confirm the draw before "
 "releasing it."
 msgstr ""
-"Le tirage de ce tour est encore un brouillon. Confirmez-le avant de le "
+"Le tirage de cette joute est encore un brouillon. Confirmez-le avant de le "
 "publier."
 
 #: draw/templates/draw_display_admin.html:128
@@ -939,7 +940,7 @@ msgid ""
 "Your tournament is configured to show the motion(s) for each round on the "
 "public site. You'll need to first release the motion(s) for it to show there."
 msgstr ""
-"Votre tournoi est configuré pour afficher la/les motion(s) de chaque tour "
+"Votre tournoi est configuré pour afficher la/les motion(s) de chaque joute "
 "sur la page publique. Pour que la/les motion(s) s'y affiche(nt), vous devez "
 "la/les publier."
 
@@ -1360,7 +1361,7 @@ msgstr "Le tirage de %(round_name)s n'a pas encore été publié."
 #: draw/views.py:229
 #, python-format
 msgid "All Debates for All Rounds of %(tournament)s"
-msgstr "Tous les débats pour tous les tours de %(tournament)s"
+msgstr "Tous les débats pour toutes les joutes de %(tournament)s"
 
 #: draw/views.py:386
 #, fuzzy

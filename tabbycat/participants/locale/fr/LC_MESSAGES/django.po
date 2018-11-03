@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 09:35-0400\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: 2018-11-01 22:24-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -426,7 +426,7 @@ msgstr "Scores"
 #: participants/templates/team_record.html:19
 #, python-format
 msgid "In This Round (%(round_name)s)"
-msgstr "Ce tour (%(round_name)s)"
+msgstr "Cette joute (%(round_name)s)"
 
 #: participants/templates/adjudicator_record.html:20
 #: participants/templates/team_record.html:23
@@ -487,7 +487,7 @@ msgstr "%(adj_name)s juge le débat à <strong>%(venue)s</strong>."
 #: participants/templates/team_record.html:84
 #, python-format
 msgid "The round begins at %(start_time)s"
-msgstr "Le tour commence à %(start_time)s"
+msgstr "La joute commence à %(start_time)s"
 
 #: participants/templates/adjudicator_record.html:83
 #: participants/templates/team_record.html:93
@@ -538,17 +538,18 @@ msgstr "Motion %(seq)s :"
 #: participants/templates/adjudicator_record.html:139
 #: participants/templates/team_record.html:143
 msgid "The motion(s) for this round haven't yet been released."
-msgstr "La motion/les motions de ce tour ne sont pas encore publiée."
+msgstr ""
+"La motion/les motions de cette joute n'est (ne sont) pas encore publiée(s)."
 
 #: participants/templates/adjudicator_record.html:150
 #, python-format
 msgid "%(adj_name)s is not adjudicating this round."
-msgstr "%(adj_name)s ne juge pas ce tour."
+msgstr "%(adj_name)s ne juge pas cette joute."
 
 #: participants/templates/adjudicator_record.html:161
 #: participants/templates/team_record.html:162
 msgid "The draw for this round hasn't yet been released."
-msgstr "Le tirage de ce tour n'est pas encore publié."
+msgstr "Le tirage de cette joute n'est pas encore publié."
 
 #: participants/templates/adjudicator_record.html:178
 #: participants/templates/team_record.html:177
@@ -847,7 +848,7 @@ msgstr "%(team_name)s débat à <strong>%(venue)s</strong>."
 #: participants/templates/team_record.html:153
 #, python-format
 msgid "%(team_name)s does not have a debate this round."
-msgstr "%(team_name)s n'a pas de débat ce tour."
+msgstr "%(team_name)s n'a pas de débat cette joute."
 
 #: participants/templates/team_record.html:185
 msgid "Full name:"
