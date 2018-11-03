@@ -206,7 +206,7 @@ def motion_release_email_generator(to, round_id):
         context_user = context.copy()
         context_user['USER'] = person.name
 
-        emails.append((context_user, speaker))
+        emails.append((context_user, person))
 
     return emails
 

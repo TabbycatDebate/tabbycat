@@ -98,7 +98,7 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
     def dispatch(self, request, *args, **kwargs):
         try:
             return super().dispatch(request, *args, **kwargs)
-        except (MultipleDebateTeamsError, NoDebateTeamFoundError) as e:
+        except (MultipleDebateTeamsError, NoDebateTeamFoundError):
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
                 logger.warning("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
                 messages.warning(request, _("You've been redirected to this page because of a problem with "

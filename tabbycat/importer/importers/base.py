@@ -273,7 +273,7 @@ class BaseTournamentDataImporter(object):
                 # Create (but don't save) an instance (or handle an error)
                 try:
                     inst = model.objects.get(**kwargs)
-                except ObjectDoesNotExist as e:
+                except ObjectDoesNotExist:
                     inst = model(**kwargs)  # normal case (create object)
                 except MultipleObjectsReturned as e:
                     if expect_unique:
