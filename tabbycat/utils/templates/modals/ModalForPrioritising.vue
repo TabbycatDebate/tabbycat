@@ -16,11 +16,11 @@
           <p v-text="gettext(`Note that 'liveness' doesn't factor in special rules other than a
                               strict mathematical break. Be sure to double-check the results`)"></p>
 
-          <button type="submit" @click="createAutoPrioritisation('bracket')"
+          <button type="submit" @click="performWSAction({ type: 'bracket'})"
                   :class="['btn btn-block btn-success', loading ? 'disabled': '']"
                   v-text="loading ? gettext('Loading...') : gettext('Assign Automatic Priorities by Bracket')">
           </button>
-          <button type="submit" @click="createAutoPrioritisation('liveness')"
+          <button type="submit" @click="performWSAction({ type: 'liveness'})"
                   :class="['btn btn-block btn-success mt-4', loading ? 'disabled': '']"
                   v-text="loading ? gettext('Loading...') : gettext('Assign Automatic Priorities by Liveness')">
           </button>

@@ -15,10 +15,11 @@ export default {
     resetModal: function () {
       $(this.$refs.modal).modal('hide')
     },
-    performWSAction: function (shardIdentifier, index) {
+    performWSAction: function (settings) {
       this.setLoading(true)
       this.$store.state.wsBridge.send({
         'action': this.contextOfAction,
+        'settings': settings,
       })
     },
   },

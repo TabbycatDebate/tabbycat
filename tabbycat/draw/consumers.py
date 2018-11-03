@@ -29,19 +29,20 @@ class BaseAdjudicatorContainerConsumer(SuperuserRequiredWebsocketMixin, RoundWeb
         i.e. from { "importance": { "73" : "1" }, "componentID": 2885 } """
         for (key, value) in content.items():
             if key == 'action':
-                self.receive_action(content['action'], self.scope["user"])
+                self.receive_action(content['action'], content['settings'], self.scope["user"])
             elif key == 'importance':
                 self.receive_importance(content)
             elif key == 'adjudicators':
                 self.receive_adjudicators(content)
 
-    def receive_action(self, action_function, user):
+    def receive_action(self, action_function, action_settings, user):
         # TODO: Make this selection mechanism more robust
         worker = "venues" if action_function == "allocate_debate_venues" else "adjallocation"
         async_to_sync(get_channel_layer().send)(worker, {
             "type": action_function, # Corresponds to the function
             "extra": {'user_id': user.id, 'round_id': self.round.id,
                       'tournament_id': self.tournament.id,
+                      'settings': action_settings,
                       'group_name': self.group_name()}
         })
 
@@ -213,6 +214,18 @@ class EditDebateOrPanelWorkerMixin(SyncConsumer):
             debates = round.debate_set.all() # TODO: prefetch
         serialized_debates = serialiser(debates, many=True)
         return serialized_debates
+
+    def return_error(self, group_name, error_text):
+        """ Because the worker can't do proper returns we can't really catch
+        exceptions across each function; provide a manual handler instead. """
+        logger.warning(error_text)
+        content = {'message': {'text': error_text, 'type': 'danger'}}
+        async_to_sync(get_channel_layer().group_send)(
+            group_name, {
+                'type': 'broadcast_debates_or_panels',
+                'content': content
+            }
+        )
 
     def return_response(self, serialized_debates_or_panels, group_name,
                         message_text, message_type):

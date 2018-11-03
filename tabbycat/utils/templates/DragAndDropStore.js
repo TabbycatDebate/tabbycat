@@ -136,7 +136,9 @@ export default new Vuex.Store({
       }
       // Don't update the data if it came from this store as it's mutated
       if (payload.componentID !== this.state.wsPseudoComponentID) {
-        commit('setDebateOrPanelAttributes', payload.debatesOrPanels)
+        if (payload.debatesOrPanels) {
+          commit('setDebateOrPanelAttributes', payload.debatesOrPanels)
+        }
       }
     },
   },
