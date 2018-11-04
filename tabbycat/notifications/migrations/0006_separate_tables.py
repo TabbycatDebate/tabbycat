@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timestamp', models.DateTimeField(auto_now=True, verbose_name='timestamp')),
                 ('event', models.CharField(choices=[('processed', 'Processed'), ('dropped', 'Dropped'), ('deferred', 'Deferred'), ('delivered', 'Delivered'), ('bounce', 'Bounced'), ('open', 'Opened'), ('click', 'Clicked'), ('unsubscribe', 'Unsubscribed'), ('spamreport', 'Marked as spam'), ('group_unsubscribe', 'Unsubscribed from group'), ('group_resubscribe', 'Resubscribed to group')], max_length=20, verbose_name='event')),
-                ('data', django.contrib.postgres.fields.jsonb.JSONField(verbose_name='context')),
+                ('data', django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True, verbose_name='context')),
             ],
             options={
                 'verbose_name': 'email status',

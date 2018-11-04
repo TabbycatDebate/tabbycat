@@ -114,7 +114,8 @@ class EmailStatus(models.Model):
         verbose_name=_("timestamp"))
     event = models.CharField(max_length=20, choices=EVENT_TYPE_CHOICES,
         verbose_name=_("event"))
-    data = JSONField(verbose_name=_("context"))
+    data = JSONField(blank=True, null=True,
+        verbose_name=_("context"))
 
     class Meta:
         verbose_name = _("email status")
