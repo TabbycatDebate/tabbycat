@@ -28,4 +28,5 @@ channels_redis==2.3.1                   # Channels Layer
 
 # Misc
 ipython==7.1.1
-qrcode==6.0
+qrcode==6.0                             # QR codes for printed private URL sheets
+html2text==2018.1.9                     # Compatibility with plain-text email clients
