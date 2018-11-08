@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
-"PO-Revision-Date: 2018-04-29 10:35-0700\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
+"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"PO-Revision-Date: 2019-01-11 23:42-0500\n"
+"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.2\n"
 
 #: availability/apps.py:7 availability/views.py:36
 msgid "Availability"
@@ -65,6 +65,8 @@ msgid ""
 "%(previous_unconfirmed)s debates from %(round_name)s do not have a completed "
 "ballot — this may lead to a draw that fails or is incorrect"
 msgstr ""
+"%(previous_unconfirmed)s débats de %(round_name)s n’ont pas de feuille "
+"complété — cela peut causer un tirage qui échoue ou qui est incorrect"
 
 #: availability/templates/availability_index.html:47
 #: availability/templates/availability_index.html:52
@@ -145,34 +147,29 @@ msgid_plural ""
 "incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s"
 "\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
 msgstr[0] ""
-"Un débat de %(prev_round)s <strong>n'a pas de bulletin complet</strong>. Ce "
+"Un débat de %(prev_round)s <strong>n'a pas de feuille complète</strong>. Ce "
 "manque peut engendrer un tirage qui échoue ou qui est incorrect, en fonction "
 "de vos règles du tirage. <a href=\"%(prev_round_results_url)s\" class="
 "\"alert-link\"> Entrez les résultats de %(prev_round)s. </a>"
 msgstr[1] ""
 "%(previous_unconfirmed)s débats de %(prev_round)s <strong>n'ont pas de "
-"bulletin complet</strong>. Ce manque peut engendrer un tirage qui échoue ou "
+"feuille complète</strong>. Ce manque peut engendrer un tirage qui échoue ou "
 "qui est incorrect, en fonction de vos règles du tirage. <a href="
 "\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de "
-"%(prev_round)s. </a>"
+"%(prev_round)s.</a>"
 
 #: availability/templates/availability_index.html:121
-#, fuzzy, python-format
-#| msgid ""
-#| "This is a page for <strong>%(round_name)s</strong>, however the current "
-#| "round is still set to <strong>%(current_round_name)s</strong>. Did you "
-#| "forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance "
-#| "to the next round?</a>"
+#, python-format
 msgid ""
 "This is a page for <strong>%(round_name)s</strong>, but the previous round "
 "is still not marked as completed. Did you forget to <a href="
 "\"%(complete_prev_round_url)s\" class=\"alert-link\"> mark "
 "%(prev_round_name)s as completed? </a>"
 msgstr ""
-"Il s'agit de <strong>%(round_name)s</strong>, cependant la joute actuelle "
-"est toujours configuré comme <strong>%(current_round_name)s</strong>. Avez-"
-"vous oublié <a href=\"%(advance_round_url)s\" class=\"alert-link\">d'avancer "
-"฀à la prochaine joute ?</a>"
+"Ceci est une page pour <strong>%(round_name)s</strong>, cependant la joute "
+"précédente n’est pas achevée. Avez-vous oublié <a href="
+"\"%(complete_prev_round_url)s\" class=\"alert-link\">de marquer "
+"%(prev_round_name)s comme achevée ?</a>"
 
 #: availability/templates/availability_index.html:137
 #, python-format
@@ -280,7 +277,7 @@ msgstr "Salles"
 
 #: availability/templates/checkin_progress.html:43
 msgid "Mark teams as available"
-msgstr ""
+msgstr "Marquer équipes comme disponible"
 
 #: availability/templates/checkin_progress.html:46
 msgid "No need to set team availability"
@@ -306,7 +303,7 @@ msgstr "Modifier disponibilité d'équipes"
 
 #: availability/templates/checkin_progress.html:66
 msgid "Mark adjudicators as available"
-msgstr "Disponibilité de juges"
+msgstr "Marquer juges comme disponibile"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
 #: availability/templates/checkin_progress.html:70
@@ -386,7 +383,7 @@ msgstr[1] ""
 
 #: availability/templates/checkin_progress.html:128
 msgid "Mark venues as available"
-msgstr ""
+msgstr "Marquer salles comme disponible"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
 #: availability/templates/checkin_progress.html:132
@@ -545,6 +542,8 @@ msgid ""
 "Failed to update some or all availabilities due to an integrityerror. You "
 "should retry this action or make individual updates."
 msgstr ""
+"La mise à jour de disponibilités a échoué suite à une faute d’intégrité des "
+"données. Vous devriez re-essayer ou faire des mises-à-jour individuelles."
 
 #: availability/views.py:306
 msgid "Checked in all teams, adjudicators and venues."
