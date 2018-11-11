@@ -74,7 +74,16 @@ class NotificationQueueConsumer(SyncConsumer):
         data = self.NOTIFICATION_GENERATORS[notification_type](to=event['send_to'], **event['extra'])
 
         # Prepare messages
-        bulk_notification = BulkNotification.objects.create(event=notification_type, round=round, tournament=t)
+
+        # Ballot receipts are grouped by round in the same BulkNotification
+        bulk_notification = BulkNotification.objects.none()
+        if notification_type is BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED:
+            bulk_notification = BulkNotification.objects.filter(event=BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED, round=round)[0]
+            if bulk_notification is None:
+                bulk_notification = BulkNotification.objects.create(event=notification_type, round=round, tournament=t)
+        else:
+            bulk_notification = BulkNotification.objects.create(event=notification_type, round=round, tournament=t)
+
         messages = []
         records = []
         for instance, recipient in data:

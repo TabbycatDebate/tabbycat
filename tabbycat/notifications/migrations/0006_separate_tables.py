@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='sentmessagerecord',
-            options={'ordering': ['-notification__timestamp', '-recipient__name'], 'verbose_name': 'sent message', 'verbose_name_plural': 'sent messages'},
+            options={'ordering': ['-notification__timestamp', '-timestamp', '-recipient__name'], 'verbose_name': 'sent message', 'verbose_name_plural': 'sent messages'},
         ),
         migrations.RemoveField(
             model_name='sentmessagerecord',
@@ -90,10 +90,6 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='sentmessagerecord',
             name='round',
-        ),
-        migrations.RemoveField(
-            model_name='sentmessagerecord',
-            name='timestamp',
         ),
         migrations.RemoveField(
             model_name='sentmessagerecord',

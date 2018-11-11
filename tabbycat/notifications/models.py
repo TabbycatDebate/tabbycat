@@ -29,11 +29,13 @@ class SentMessageRecord(models.Model):
 
     notification = models.ForeignKey('notifications.BulkNotification', models.CASCADE,
         verbose_name=_("notification"))
+    timestamp = models.DateTimeField(auto_now=True,
+        verbose_name=_("timestamp"))
 
     class Meta:
         verbose_name = _("sent message")
         verbose_name_plural = _("sent messages")
-        ordering = ['-notification__timestamp', '-recipient__name']
+        ordering = ['-notification__timestamp', '-timestamp', '-recipient__name']
 
     def __str__(self):
         return "%s: %s" % (self.recipient.name, self.notification.get_event_display())
