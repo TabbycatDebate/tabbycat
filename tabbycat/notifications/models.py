@@ -51,6 +51,7 @@ class BulkNotification(models.Model):
     EVENT_TYPE_DRAW = 'd'
     EVENT_TYPE_REGISTRATION = 't'
     EVENT_TYPE_MOTIONS = 'm'
+    EVENT_TYPE_TEAM_DRAW = 'r'
 
     EVENT_TYPE_CHOICES = (
         (EVENT_TYPE_POINTS, _("team points")),
@@ -58,9 +59,10 @@ class BulkNotification(models.Model):
         (EVENT_TYPE_FEEDBACK_URL, _("feedback URL")),
         (EVENT_TYPE_BALLOT_URL, _("ballot URL")),
         (EVENT_TYPE_URL, _("landing page URL")),
-        (EVENT_TYPE_DRAW, _("draw released")),
+        (EVENT_TYPE_DRAW, _("adjudicator draw released")),
         (EVENT_TYPE_REGISTRATION, _("registration")),
-        (EVENT_TYPE_MOTIONS, _("motion(s) released"))
+        (EVENT_TYPE_MOTIONS, _("motion(s) released")),
+        (EVENT_TYPE_TEAM_DRAW, _("team draw released"))
     )
 
     event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES, blank=True,

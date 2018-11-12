@@ -28,6 +28,18 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
       * ``{{ DRAW }}``: A list of the team matchup with their roles
       * ``{{ POSITION }}``: The target adjudicator's position in the panel
 
+  * - **Team draw notification**
+
+      Email to teams indicating their pairing.
+
+      Available through the admin draw page.
+    - * ``{{ ROUND }}``: The round name
+      * ``{{ VENUE }}``: The venue of the assigned debate
+      * ``{{ PANEL }}``: A list of all the adjudicators assigned to the venue (with positions)
+      * ``{{ DRAW }}``: A list of the team matchup with their roles
+      * ``{{ TEAM }}``: The team's code or short name
+      * ``{{ SIDE }}``: The team's side
+
   * - **Private URL distribution**
 
       Email to participants giving them their private URL for electronic forms.

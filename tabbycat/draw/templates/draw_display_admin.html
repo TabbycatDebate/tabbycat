@@ -331,8 +331,10 @@
 
     </ul>
     <ul class="list-group mt-3">
-      {% roundurl 'draw-email' as url %}
+      {% roundurl 'draw-adj-email' as url %}
       {% include "components/item-action.html" with text="Email Draw" subtext="(to active adjudicators)" emoji="✉️" %}
+      {% roundurl 'draw-team-email' as url %}
+      {% include "components/item-action.html" with text="Email Draw" subtext="(to active teams)" emoji="✉️" %}
       {% if pref.enable_motions or pref.motion_vetoes_enabled %}
         {% trans "Email Motions" as text %}
       {% else %}

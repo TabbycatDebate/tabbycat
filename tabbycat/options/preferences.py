@@ -1400,6 +1400,25 @@ class AdjudicatorDrawNotificationMessage(LongStringPreference):
 
 
 @tournament_preferences_registry.register
+class TeamDrawNotificationSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to teams with their draw.")
+    verbose_name = _("Team draw subject line")
+    name = 'team_draw_email_subject'
+    default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
+
+
+@tournament_preferences_registry.register
+class AdjudicatorDrawNotificationMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to teams with their draw.")
+    verbose_name = _("Team draw message")
+    name = 'team_draw_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>Your team {{ TEAM }}  is the <strong>{{ SIDE }}</strong> for {{ ROUND }} in <strong>{{ VENUE }}</strong>.</p>"
+        "<p>You are against: {{ DRAW }}</p>"
+        "<p>Members of the panel: {{ PANEL }}</p>")
+
+
+@tournament_preferences_registry.register
 class PrivateUrlEmailSubject(StringPreference):
     help_text = _("The subject-line for emails sent to participants with their private URLs.")
     verbose_name = _("Private URL notification subject line")

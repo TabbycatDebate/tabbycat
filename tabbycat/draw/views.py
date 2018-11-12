@@ -24,7 +24,7 @@ from divisions.models import Division
 from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
-from participants.models import Adjudicator, Institution, Team
+from participants.models import Adjudicator, Institution, Speaker, Team
 from participants.prefetch import populate_win_counts
 from participants.utils import get_side_history
 from standings.base import StandingsError
@@ -400,6 +400,20 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
 
     def get_queryset(self):
         return self.round.active_adjudicators
+
+
+class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
+    page_subtitle = _("Team Pairings")
+
+    event = BulkNotification.EVENT_TYPE_TEAM_DRAW
+    subject_template = 'team_draw_email_subject'
+    message_template = 'team_draw_email_message'
+
+    def get_success_url(self):
+        return reverse_round('draw-display', self.round)
+
+    def get_queryset(self):
+        return Speaker.objects.filter(team__in=self.round.active_teams)
 
 
 # ==============================================================================
