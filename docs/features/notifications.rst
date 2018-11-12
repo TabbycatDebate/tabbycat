@@ -84,4 +84,6 @@ With SendGrid, the status of sent emails can be sent to Tabbycat to be displayed
 2. Copy the "web-hook" link presented in a box at the top of the "email participants" page.
 3. Go to https://app.sendgrid.com/settings/mail_settings and select "Event Notifications"
 4. Enable the feature and paste the Tabbycat URL under "HTTP POST URL".
-5. Select the notifications to keep track of (or all of them).
+5. Select the notifications to keep track (or all of them).
+
+.. caution:: Each email and change in status sent to Tabbycat will add a row to the database. If the number of rows is limited, as is for free Heroku apps, enabling the webhook may use up a significant number of rows. Be selective in the events to keep track.
