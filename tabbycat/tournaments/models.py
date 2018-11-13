@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from participants.models import Person
+from participants.models import Person, Institution
 from utils.managers import LookupByNameFieldsMixin
 
 import logging
@@ -165,6 +165,12 @@ class Tournament(models.Model):
             return Venue.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
         else:
             return self.venue_set.all()
+
+    @property
+    def relevant_institutions(self):
+        adjs_inst = self.relevant_adjudicators.values_list('institution_id', flat=True)
+        teams_inst = self.team_set.all().values_list('institution_id', flat=True)
+        return Institution.objects.filter(Q(pk__in=teams_inst) | Q(pk__in=adjs_inst))
 
     @property
     def participants(self):

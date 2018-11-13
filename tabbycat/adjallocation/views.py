@@ -14,7 +14,7 @@ from actionlog.models import ActionLogEntry
 from availability.utils import annotate_availability
 from breakqual.models import BreakCategory
 from draw.models import Debate
-from participants.models import Adjudicator, Region
+from participants.models import Adjudicator, Institution, Region
 from participants.prefetch import populate_feedback_scores
 from tournaments.models import Round
 from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, RoundMixin, TournamentMixin
@@ -437,8 +437,10 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
     def get_formset(self):
         formset = super().get_formset()
         all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        all_inst = self.tournament.relevant_institutions.all()
         for form in formset:
             form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+            form.fields['institution'].queryset = all_inst
         return formset
 
     def get_formset_queryset(self):
@@ -479,8 +481,10 @@ class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
     def get_formset(self):
         formset = super().get_formset()
         all_teams = self.tournament.team_set.order_by('short_name').all()
+        all_inst = self.tournament.relevant_institutions.all()
         for form in formset:
             form.fields['team'].queryset = all_teams  # order alphabetically
+            form.fields['institution'].queryset = all_inst
         return formset
 
     def get_formset_queryset(self):
