@@ -70,7 +70,7 @@ class BreakCategory(models.Model):
 
     @property
     def serialize(self):
-        """@depracate when legacy drag and drop UIs removed"""
+        """@deprecate when legacy drag and drop UIs removed"""
         return {
             'id': self.id, 'name': self.name, 'seq': self.seq, 'class': None
         }
