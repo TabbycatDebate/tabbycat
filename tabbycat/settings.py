@@ -21,9 +21,9 @@ USE_WEBPACK_SERVER = False
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.2.5'
+TABBYCAT_VERSION = '2.2.6'
 TABBYCAT_CODENAME = 'Khao Manee'
-READTHEDOCS_VERSION = 'v2.2.5'
+READTHEDOCS_VERSION = 'v2.2.6'
 
 # ==============================================================================
 # Internationalization and Localization
