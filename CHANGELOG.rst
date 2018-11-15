@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.2.7
+-----
+*Release date: 16 November 2018*
+
+- Lock redis-py version to 2.10.6, as workaround for `compatibility issue between django-redis and redis-py <https://github.com/niwinz/django-redis/issues/342>`_
+- Fix login link on page shown after a user logs out
+
 2.2.6
 -----
 *Release date: 14 November 2018*
