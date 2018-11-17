@@ -313,7 +313,7 @@ class TeamChoiceField(ModelChoiceField):
         return obj.short_name
 
 
-class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
+class BaseConstraintsView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
 
     template_name = 'edit_conflicts.html'
     page_emoji = "🔶"
@@ -327,27 +327,30 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         kwargs['save_text'] = self.save_text
         return super().get_context_data(**kwargs)
 
-    def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.tournament)
-
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
         nsaved = len(self.instances)
         ndeleted = len(formset.deleted_objects)
         self.add_message(nsaved, ndeleted)
         if "add_more" in self.request.POST:
             return redirect_tournament(self.same_view, self.tournament)
-        return result
+        return redirect_tournament('importer-simple-index', self.tournament)
 
 
-class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
+class BaseConflictsView(BaseConstraintsView):
+
+    def formset_valid(self, formset):
+        self.instances = formset.save()
+        return super().formset_valid(formset)
+
+
+class AdjudicatorTeamConflictsView(BaseConflictsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
     formset_model = AdjudicatorTeamConflict
     page_title = gettext_lazy("Adjudicator-Team Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
     same_view = 'adjallocation-conflicts-adj-team'
-    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs = BaseConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({
         'fields': ('adjudicator', 'team'),
         'field_classes': {'team': TeamChoiceField},
@@ -364,7 +367,7 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(
-            adjudicator__tournament=self.tournament
+            team__tournament=self.tournament
         ).order_by('adjudicator__name')
 
     def add_message(self, nsaved, ndeleted):
@@ -384,14 +387,14 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
             messages.success(self.request, _("No changes were made to adjudicator-team conflicts."))
 
 
-class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
+class AdjudicatorAdjudicatorConflictsView(BaseConflictsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_ADJ_EDIT
     formset_model = AdjudicatorAdjudicatorConflict
     page_title = gettext_lazy("Adjudicator-Adjudicator Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
     same_view = 'adjallocation-conflicts-adj-adj'
-    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs = BaseConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({'fields': ('adjudicator1', 'adjudicator2')})
 
     def get_formset(self):
@@ -424,14 +427,14 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
             messages.success(self.request, _("No changes were made to adjudicator-adjudicator conflicts."))
 
 
-class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
+class AdjudicatorInstitutionConflictsView(BaseConflictsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_INST_EDIT
     formset_model = AdjudicatorInstitutionConflict
     page_title = gettext_lazy("Adjudicator-Institution Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Institution Conflicts")
     same_view = 'adjallocation-conflicts-adj-inst'
-    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs = BaseConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({'fields': ('adjudicator', 'institution')})
 
     def get_formset(self):
@@ -463,14 +466,14 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
             messages.success(self.request, _("No changes were made to adjudicator-institution conflicts."))
 
 
-class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
+class TeamInstitutionConflictsView(BaseConflictsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT
     formset_model = TeamInstitutionConflict
     page_title = gettext_lazy("Team-Institution Conflicts")
     save_text = gettext_lazy("Save Team-Institution Conflicts")
     same_view = 'adjallocation-conflicts-team-inst'
-    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs = BaseConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({
         'fields': ('team', 'institution'),
         'field_classes': {'team': TeamChoiceField},

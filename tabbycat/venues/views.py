@@ -2,6 +2,7 @@ import json
 import logging
 
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.forms import Select
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
@@ -9,11 +10,12 @@ from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from adjallocation.views import BaseConstraintsView
 from availability.utils import annotate_availability
+from participants.models import Institution
 from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, TournamentMixin
 from tournaments.models import Round
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
-from utils.forms import SelectPrepopulated
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
@@ -150,72 +152,172 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
         return reverse_tournament('importer-simple-index', self.tournament)
 
 
-class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, ModelFormSetView):
-    template_name = 'venue_constraints_edit.html'
+# ==============================================================================
+# Constraint formset views
+# ==============================================================================
+
+class BaseVenueConstraintsView(BaseConstraintsView):
     formset_model = VenueConstraint
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_EDIT
 
     def get_formset_factory_kwargs(self):
-        # Need to built a dynamic choices list for the widget; so override the
-        # standard method of getting args
-        formset_factory_kwargs = {
-            'fields': ('subject_content_type', 'subject_id', 'category', 'priority'),
-            'labels': {
-                'subject_content_type': 'Constrainee Type',
-                'subject_id': 'Constrainee ID',
-                'category': 'Venue Category'
-            },
-            'help_texts': {
-                'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.'
-            },
-            'widgets': {
-                'subject_content_type': Select(attrs={'data-filter': True}),
-                'subject_id': SelectPrepopulated(data_list=self.subject_choices())
-            },
-            'extra': 8
-        }
-        return formset_factory_kwargs
-
-    def get_formset_queryset(self):
-        # Show relevant venue constraints; not all venue constraints
-        q = Q(adjudicator__isnull=False, adjudicator__tournament=self.tournament)
-        q |= Q(team__isnull=False, team__tournament=self.tournament)
-        q |= Q(division__isnull=False, division__tournament=self.tournament)
-        q |= Q(institution__isnull=False)
-        if self.tournament.pref('share_adjs'):
-            q |= Q(adjudicator__isnull=False, adjudicator__tournament__isnull=True)
-
-        return VenueConstraint.objects.filter(q)
-
-    def subject_choices(self):
-        from participants.models import Institution
-
-        options = []
-
-        adjudicators = self.tournament.relevant_adjudicators.values('id', 'name')
-        options.extend([(a['id'], _('%s (Adjudicator)') % a['name']) for a in adjudicators])
-
-        teams = self.tournament.team_set.values('id', 'short_name')
-        options.extend([(t['id'], _('%s (Team)') % t['short_name']) for t in teams])
-
-        institutions = Institution.objects.values('id', 'name')
-        options.extend([(i['id'], _('%s (Institution)') % i['name']) for i in institutions])
-
-        divisions = self.tournament.division_set.values('id', 'name')
-        options.extend([(d['id'], _('%s (Division)') % d['name']) for d in divisions])
-
-        return sorted(options, key=lambda x: x[1])
+        subject_choices = [(None, '---------')] + list(self.get_subject_queryset())
+        factory_kwargs = super().get_formset_factory_kwargs()
+        factory_kwargs.update({
+            'fields': ['category', 'subject_id', 'priority'],
+            'labels': {'category': _("Venue Category"), 'subject_id': self.subject},
+            'widgets': {'subject_id': Select(choices=subject_choices)}
+        })
+        return factory_kwargs
 
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
-        if self.instances:
-            count = len(self.instances)
-            message = ngettext("Saved %(count)d venue constraint.",
-                "Saved %(count)d venue constraints.", count) % {'count': count}
-            messages.success(self.request, message)
-        if "add_more" in self.request.POST:
-            return redirect_tournament('venues-constraints', self.tournament)
-        return result
+        contenttype = self.get_contenttype()
 
-    def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('importer-simple-index', self.tournament)
+        self.instances = formset.save(commit=False)
+        for c in self.instances:
+            c.subject_content_type = contenttype
+            c.save()
+
+        for c in formset.deleted_objects:
+            c.delete()
+
+        return super().formset_valid(formset)
+
+
+class VenueTeamConstraintsView(BaseVenueConstraintsView):
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_TEAM_EDIT
+    page_title = gettext_lazy("Venue-Team Constraints")
+    save_text = gettext_lazy("Save Venue-Team Constraints")
+    same_view = 'venues-constraints-team'
+
+    subject = gettext_lazy("Team")
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(team__tournament=self.tournament)
+
+    def get_subject_queryset(self):
+        return self.tournament.team_set.all().values_list('id', 'short_name')
+
+    def get_contenttype(self):
+        return ContentType.objects.get(app_label='participants', model='team')
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
+                "Saved %(count)d venue-team constraint.",
+                "Saved %(count)d venue-team constraints.",
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d venue-team constraint.",
+                "Deleted %(count)d venue-team constraints.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, _("No changes were made to venue-team constraints."))
+
+
+class VenueAdjudicatorConstraintsView(BaseVenueConstraintsView):
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_ADJ_EDIT
+    page_title = gettext_lazy("Venue-Adjudicator Constraints")
+    save_text = gettext_lazy("Save Venue-Adjudicator Constraints")
+    same_view = 'venues-constraints-adjudicator'
+
+    subject = gettext_lazy("Adjudicator")
+
+    def get_formset_queryset(self):
+        q = Q(adjudicator__tournament=self.tournament)
+        if self.tournament.pref('share_adjs'):
+            q |= Q(adjudicator__tournament__isnull=True)
+
+        return self.formset_model.objects.filter(q)
+
+    def get_subject_queryset(self):
+        return self.tournament.adjudicator_set.all().values_list('id', 'name')
+
+    def get_contenttype(self):
+        return ContentType.objects.get(app_label='participants', model='adjudicator')
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
+                "Saved %(count)d venue-adjudicator constraint.",
+                "Saved %(count)d venue-adjudicator constraints.",
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d venue-adjudicator constraint.",
+                "Deleted %(count)d venue-adjudicator constraints.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, _("No changes were made to venue-adjudicator constraints."))
+
+
+class VenueInstitutionConstraintsView(BaseVenueConstraintsView):
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_INST_EDIT
+    page_title = gettext_lazy("Venue-Institution Constraints")
+    save_text = gettext_lazy("Save Venue-Institution Constraints")
+    same_view = 'venues-constraints-institution'
+
+    subject = gettext_lazy("Institution")
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(institution__team__tournament=self.tournament)
+
+    def get_subject_queryset(self):
+        return Institution.objects.filter(team__tournament=self.tournament).distinct().values_list('id', 'name')
+
+    def get_contenttype(self):
+        return ContentType.objects.get_for_model(Institution)
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
+                "Saved %(count)d venue-institution constraint.",
+                "Saved %(count)d venue-institution constraints.",
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d venue-institution constraint.",
+                "Deleted %(count)d venue-institution constraints.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, _("No changes were made to venue-institution constraints."))
+
+
+class VenueDivisionConstraintsView(BaseVenueConstraintsView):
+    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_DIV_EDIT
+    page_title = gettext_lazy("Venue-Division Constraints")
+    save_text = gettext_lazy("Save Venue-Division Constraints")
+    same_view = 'venues-constraints-division'
+
+    subject = gettext_lazy("Division")
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(division__tournament=self.tournament)
+
+    def get_subject_queryset(self):
+        return self.tournament.division_set.all().values_list('id', 'name')
+
+    def get_contenttype(self):
+        return ContentType.objects.get(app_label='divisions', model='division')
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
+                "Saved %(count)d venue-division constraint.",
+                "Saved %(count)d venue-division constraints.",
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d venue-division constraint.",
+                "Deleted %(count)d venue-division constraints.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, _("No changes were made to venue-division constraints."))

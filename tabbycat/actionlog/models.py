@@ -39,7 +39,11 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_VENUES_SAVE                       = 've.save'
     ACTION_TYPE_VENUES_AUTOALLOCATE               = 've.auto'
     ACTION_TYPE_VENUE_CATEGORIES_EDIT             = 've.ca.edit'
-    ACTION_TYPE_VENUE_CONSTRAINTS_EDIT            = 've.co.edit'
+    ACTION_TYPE_VENUE_CONSTRAINTS_EDIT            = 've.co.edit' # obsolete
+    ACTION_TYPE_VENUE_CONSTRAINTS_ADJ_EDIT        = 've.cj.edit'
+    ACTION_TYPE_VENUE_CONSTRAINTS_TEAM_EDIT       = 've.ct.edit'
+    ACTION_TYPE_VENUE_CONSTRAINTS_INST_EDIT       = 've.ci.edit'
+    ACTION_TYPE_VENUE_CONSTRAINTS_DIV_EDIT        = 've.cd.edit'
     ACTION_TYPE_MATCHUP_SAVE                      = 'mu.save'
     ACTION_TYPE_SIDES_SAVE                        = 'ms.save'
     ACTION_TYPE_DRAW_RELEASE                      = 'dr.rele'
@@ -102,6 +106,10 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_VENUES_AUTOALLOCATE              , _("Auto-allocated venues")),
         (ACTION_TYPE_VENUE_CATEGORIES_EDIT            , _("Edited venue categories")),
         (ACTION_TYPE_VENUE_CONSTRAINTS_EDIT           , _("Edited venue constraints")),
+        (ACTION_TYPE_VENUE_CONSTRAINTS_ADJ_EDIT       , _("Edited venue-adjudicator constraints")),
+        (ACTION_TYPE_VENUE_CONSTRAINTS_TEAM_EDIT      , _("Edited venue-team constraints")),
+        (ACTION_TYPE_VENUE_CONSTRAINTS_INST_EDIT      , _("Edited venue-institution constraints")),
+        (ACTION_TYPE_VENUE_CONSTRAINTS_DIV_EDIT       , _("Edited venue-division constraints")),
         (ACTION_TYPE_DRAW_CREATE                      , _("Created draw")),
         (ACTION_TYPE_DRAW_CONFIRM                     , _("Confirmed draw")),
         (ACTION_TYPE_DRAW_REGENERATE                  , _("Regenerated draw")),

@@ -36,9 +36,23 @@
     {% trans "Add/Edit Venue Categories" as text %}
     {% include "components/item-action.html" with emoji="🏪" %}
 
-    {% tournamenturl 'venues-constraints' as url %}
-    {% trans "Add/Edit Venue Constraints" as text %}
+    {% tournamenturl 'venues-constraints-team' as url %}
+    {% trans "Add/Edit Venue-Team Constraints" as text %}
     {% include "components/item-action.html" with emoji="🏰" %}
+
+    {% tournamenturl 'venues-constraints-adjudicator' as url %}
+    {% trans "Add/Edit Venue-Adjudicator Constraints" as text %}
+    {% include "components/item-action.html" with emoji="🏰" %}
+
+    {% tournamenturl 'venues-constraints-institution' as url %}
+    {% trans "Add/Edit Venue-Institution Constraints" as text %}
+    {% include "components/item-action.html" with emoji="🏰" %}
+
+    {% if pref.division_venues %}
+      {% tournamenturl 'venues-constraints-division' as url %}
+      {% trans "Add/Edit Venue-Division Constraints" as text %}
+      {% include "components/item-action.html" with emoji="🏰" %}
+    {% endif %}
 
   </ul>
   <ul class="list-group mt-3">
