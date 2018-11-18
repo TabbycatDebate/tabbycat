@@ -526,6 +526,7 @@ class LegacyDrawForDragAndDropMixin(RoundMixin):
             round_info['autoUrl'] = reverse_round(self.auto_url, self.round)
         if hasattr(self, 'save_url'):
             round_info['saveUrl'] = reverse_round(self.save_url, self.round)
+        round_info['backUrl'] = reverse_round('draw', self.round)
         return round_info
 
     def get_draw(self):
