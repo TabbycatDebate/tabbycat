@@ -2,53 +2,32 @@ import itertools
 import logging
 import random
 
-from .models import VenueConstraint
+from munkres import Munkres
+
+from django.db.models import Prefetch
+
+from adjallocation.models import DebateAdjudicator
+from draw.models import DebateTeam
+
+from .models import Venue, VenueCategory, VenueConstraint
 
 logger = logging.getLogger(__name__)
 
 
 def allocate_venues(round, debates=None):
-    allocator = VenueAllocator()
-    allocator.allocate(round, debates)
+    allocator = NaiveVenueAllocator(round, debates)
+    allocator.allocate()
 
 
-class VenueAllocator:
-    """Allocates venues in a draw to satisfy, as best it can, applicable venue
-    constraints.
+class BaseVenueAllocator:
 
-    The algorithm naïvely allocates from the debate with the highest-priority
-    constraint to the debate with the lowest-priority constraint, choosing at
-    random if more than one is available. This isn't guaranteed to be optimal,
-    since a flexible high-priority debate might randomly choose a room demanded
-    by a picky low-priority room.
-    """
+    def __init__(self, round, debates=None):
+        self.round = round
+        self.debates = debates or self.get_debate_queryset()
 
-    def allocate(self, round, debates=None):
-        if debates is None:
-            debates = round.debate_set_with_prefetches(speakers=False, institutions=True)
-        self._all_venues = list(round.active_venues.order_by('-priority'))
-        self._preferred_venues = self._all_venues[:len(debates)]
+        self.venues = round.active_venues.order_by('-priority').prefetch_related('venuecategory_set')
 
-        # take note of how many venues we expect to be short by (for error checking)
-        self._venue_shortage = max(0, len(debates) - len(self._all_venues))
-
-        debate_constraints = self.collect_constraints(debates)
-        debate_venues = self.allocate_constrained_venues(debate_constraints)
-
-        unconstrained_debates = [d for d in debates if d not in debate_venues]
-        unconstrained_venues = self.allocate_unconstrained_venues(unconstrained_debates)
-        debate_venues.update(unconstrained_venues)
-
-        # this set is only non-empty if there were too few venues overall
-        debates_without_venues = [d for d in debates if d not in debate_venues]
-        if len(debates_without_venues) != self._venue_shortage:
-            logger.error("Expected venue shortage %d, but %d debates without venues",
-                self._venue_shortage, len(debates_without_venues))
-        debate_venues.update({debate: None for debate in debates_without_venues})
-
-        self.save_venues(debate_venues)
-
-    def collect_constraints(self, debates):
+    def collect_constraints(self):
         """Returns a list of tuples `(debate, constraints)`, where `constraints`
         is a list of constraints. Each list of constraints is sorted by
         descending order of priority. Debates with no constraints are omitted
@@ -60,12 +39,12 @@ class VenueAllocator:
         debate."""
 
         all_constraints = {}
-        for vc in VenueConstraint.objects.filter_for_debates(debates).prefetch_related('subject'):
+        for vc in VenueConstraint.objects.filter_for_debates(self.debates).select_related('category').prefetch_related('subject', 'category__venues'):
             all_constraints.setdefault(vc.subject, []).append(vc)
 
         debate_constraints = []
 
-        for debate in debates:
+        for debate in self.debates:
             subjects = itertools.chain(
                 debate.teams,
                 debate.adjudicators.all(),
@@ -82,6 +61,54 @@ class VenueAllocator:
         debate_constraints.sort(key=lambda x: x[1][0].priority, reverse=True)
 
         return debate_constraints
+
+    def collect_dict_constraints(self):
+        constraints = self.collect_constraints()
+        return {x[0]: x[1] for x in constraints}
+
+    def save_venues(self, debate_venues):
+        for debate, venue in debate_venues.items():
+            logger.debug("Saving %s for %s", venue, debate)
+            debate.venue = venue
+            debate.save()
+
+
+class NaiveVenueAllocator(BaseVenueAllocator):
+    """Allocates venues in a draw to satisfy, as best it can, applicable venue
+    constraints.
+
+    The algorithm naïvely allocates from the debate with the highest-priority
+    constraint to the debate with the lowest-priority constraint, choosing at
+    random if more than one is available. This isn't guaranteed to be optimal,
+    since a flexible high-priority debate might randomly choose a room demanded
+    by a picky low-priority room.
+    """
+
+    def get_debate_queryset(self):
+        return self.round.debate_set_with_prefetches(speakers=False, institutions=True)
+
+    def allocate(self):
+        self._all_venues = list(self.venues)
+        self._preferred_venues = self._all_venues[:len(self.debates)]
+
+        # take note of how many venues we expect to be short by (for error checking)
+        self._venue_shortage = max(0, len(self.debates) - len(self._all_venues))
+
+        debate_constraints = self.collect_constraints()
+        debate_venues = self.allocate_constrained_venues(debate_constraints)
+
+        unconstrained_debates = [d for d in self.debates if d not in debate_venues]
+        unconstrained_venues = self.allocate_unconstrained_venues(unconstrained_debates)
+        debate_venues.update(unconstrained_venues)
+
+        # this set is only non-empty if there were too few venues overall
+        debates_without_venues = [d for d in self.debates if d not in debate_venues]
+        if len(debates_without_venues) != self._venue_shortage:
+            logger.error("Expected venue shortage %d, but %d debates without venues",
+                self._venue_shortage, len(debates_without_venues))
+        debate_venues.update({debate: None for debate in debates_without_venues})
+
+        self.save_venues(debate_venues)
 
     def allocate_constrained_venues(self, debate_constraints):
         """Allocates venues for debates that have one or more constraints on
@@ -168,8 +195,115 @@ class VenueAllocator:
         random.shuffle(debates)
         return {debate: venue for debate, venue in zip(debates, self._preferred_venues)}
 
-    def save_venues(self, debate_venues):
-        for debate, venue in debate_venues.items():
-            logger.debug("Saving %s for %s", venue, debate)
-            debate.venue = venue
-            debate.save()
+
+class BaseHungarianVenueAllocator(BaseVenueAllocator):
+    """Base class for venue allocations using the Hungarian algorithm.
+
+    Most of the costs would remain the same between allocators."""
+
+    def __init__(self, round, debates=None):
+        super().__init__(round, debates)
+
+        t = self.round.tournament
+        self.history_cost = t.pref('venue_history_cost')
+        self.constraint_cost = t.pref('venue_constraint_cost')
+        self.bad_venue_cost = t.pref('venue_score_cost')
+
+        self.munkres = Munkres()
+
+    def get_debate_queryset(self):
+        """For history constraints.
+
+        Get previous debates (with venues & categories) of participants in addition to current ones"""
+
+        return self.round.debate_set.all().select_related('division', 'division__venue_category', 'venue').prefetch_related(
+            Prefetch('debateadjudicator_set', queryset=DebateAdjudicator.objects.select_related('adjudicator', 'adjudicator__institution')),
+            Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team', 'team__institution'))
+        )
+
+    def allocate(self):
+        self.prev_venues = self.get_previous_venue_categories()
+        self.constraints = self.collect_dict_constraints()
+
+        self.max_venue_score = self.venues[0].priority
+        self.max_constraint_priority = list(self.constraints.values())[0][0].priority
+
+        cost_matrix = []
+        for d in self.debates:
+            cost_matrix.append(self.debate_cost_calc(d))
+
+        indices = self.munkres.compute(cost_matrix)
+
+        result = {self.debates[i]: self.venues[j] for i, j in indices}
+        self.save_venues(result)
+
+    def get_previous_venue_categories(self):
+        debate_prefetch = Prefetch('debateteam_set', queryset=DebateTeam.objects.filter(
+            debate__round__seq__lt=self.round.seq, debate__venue__isnull=False, debate__venue__venuecategory__rotate=True).distinct())
+        teams = self.round.active_teams.prefetch_related(debate_prefetch)
+
+        prev_team_vc = {}
+        for t in teams.all():
+            prev_team_vc[t] = []
+            for dt in t.debateteam_set.all():
+                prev_team_vc[t].extend(dt.debate.venue.venuecategory_set.all())
+
+        self.prev_venue_categories = {}
+        for debate in self.debates:
+            self.prev_venue_categories[debate] = []
+
+            # Ajudicators are excepted from this constraint
+            for dt in debate.debateteam_set.all():
+                self.prev_venue_categories[debate].extend(prev_team_vc[dt.team])
+
+    def debate_cost_calc(self, debate):
+        venue_costs = []
+        for v in self.venues:
+            v_cost = 0
+
+            # Constraints
+            for c in self.constraints.get(debate, []):
+                constraint_venues = c.category.venues.all()
+
+                if v not in constraint_venues:
+                    v_cost += c.priority / self.max_constraint_priority * self.constraint_cost
+
+            # Venue "score"
+            v_cost += -(v.priority / self.max_venue_score - 1) * self.bad_venue_cost
+
+            venue_costs.append(v_cost)
+
+        return venue_costs
+
+
+class RotationVenueAllocator(BaseHungarianVenueAllocator):
+    """Venue allocator with the Hungarian method.
+
+    Avoids placing teams in the same venue category as in previous debates."""
+
+    def debate_cost_calc(self, debate):
+        venue_costs = super().debate_cost_calc(debate)
+
+        # History constraints
+        for i, v in enumerate(self.venues):
+            for dv in self.prev_venue_categories[debate]:
+                venue_costs[i] += int(v in dv.venues.all()) * self.history_cost
+
+        return venue_costs
+
+
+class StationaryVenueAllocator(BaseHungarianVenueAllocator):
+    """Venue allocator with the Hungarian method.
+
+    Avoids placing teams in different venue categories as in previous debates."""
+
+    def debate_cost_calc(self, debate):
+        venue_costs = super().debate_cost_calc(debate)
+
+        # History constraints
+        for i, v in enumerate(self.venues):
+            for dv in self.prev_venue_categories[debate]:
+                if v not in dv.venues.all():
+                    venue_costs[i] += self.history_cost
+
+        return venue_costs
