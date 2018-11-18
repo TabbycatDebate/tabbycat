@@ -48,7 +48,7 @@ def adjudicator_assignment_email_generator(to, url, round_id):
         matchup = debate.matchup_codes if use_codes else debate.matchup
         context = {
             'ROUND': round.name,
-            'VENUE': debate.venue.name if hasattr(debate, 'venue') else _("TBA"),
+            'VENUE': debate.venue.display_name if debate.venue is not None else _("TBA"),
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
             'DRAW': matchup
         }
