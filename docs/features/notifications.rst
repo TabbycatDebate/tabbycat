@@ -27,7 +27,7 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
       * ``{{ PANEL }}``: A list of all the adjudicators assigned to the venue (with positions)
       * ``{{ DRAW }}``: A list of the team matchup with their roles
       * ``{{ POSITION }}``: The target adjudicator's position in the panel
-      * ``{{ URL }}`: A link to the adjudicator's private URL page
+      * ``{{ URL }}``: A link to the adjudicator's private URL page
 
   * - **Private URL distribution**
 
