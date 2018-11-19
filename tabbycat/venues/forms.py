@@ -16,6 +16,6 @@ def venuecategoryform_factory(venues_queryset):
         class Meta:
             model = VenueCategory
             fields = ('name', 'description', 'display_in_venue_name',
-                       'display_in_public_tooltip', 'venues')
+                       'display_in_public_tooltip', 'rotate', 'venues')
 
     return VenueCategoryForm

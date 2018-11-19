@@ -92,6 +92,12 @@ class VenueCategory(models.Model):
         help_text=_("Displays the description in the tooltip for the venue on public pages. "
             "The description, if not blank, will always show on admin pages."))
 
+    rotate = models.BooleanField(default=False,
+        verbose_name=_("Use in venue rotation"),
+        help_text=_((
+            "Marks this category to prioritise venues in the category to debates based on "
+            "the teams' previous debate venues.")))
+
     class Meta:
         verbose_name = _("venue category")
         verbose_name_plural = _("venue categories")
