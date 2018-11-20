@@ -19,18 +19,12 @@ That is, you specify that (say) a team should be given a venue from a particular
 *list* of venues. Of course, it's permissible for a venue category to
 have only one venue in it.
 
-The algorithm used to satisfy venue constraints is not guaranteed to be optimal.
-In some rare cases, it may propose an allocation that fails some constraints,
-even though some other allocation would have satisfied all (or more)
-constraints. In almost all practical circumstances, however, it should work, and
-save human effort (and time) in specially allocating rooms.
-
 Adding venue categories
 =======================
 
-Before you add venue constraints, you first need to add venue
-categories. Each venue category is a list of venues, typically
-satisfying a particular need. For example, you might have a category for each of the following:
+Before you add venue constraints, you first need to add venue categories. Each
+venue category is a list of venues, typically satisfying a particular need. For
+example, you might have a category for each of the following:
 
 - Venues with step-free access
 - Venues that are close to general assembly (the briefing room)
@@ -41,20 +35,36 @@ Each venue can be in as many categories as you like (or none at all).
 
 .. image:: images/add-venue-category.png
 
-To add or edit venue categories, go to the **Import Data** area (under
-Setup) then select **Add/Edit Venue Categories**. Note that this page will show all existing Venue Categories first before showing the blank forms that allow you to create new categories. Give your category a name (like "Step-free access"), assign it some venues, then click the "Save Venue Categories" button at the bottom of the page.
+To add or edit venue categories, go to the **Import Data** area (under Setup)
+then select **Add/Edit Venue Categories**. Note that this page will show all
+existing Venue Categories first before showing the blank forms that allow you
+to create new categories. Give your category a name (like "Step-free access"),
+assign it some venues, then click the "Save Venue Categories" button at the
+bottom of the page.
 
-Alternately you can add or edit a venue category by going to the **Edit Database** area (under Setup), scroll down to "Venues" and click "Venue categories". Then click the **+ Add venue category** button in the top-right of the page or click an existing item.
+If you are using venue rotation, there is a checkbox for whether the category
+should be used for this purpose. Rotation should be enabled for geographic
+categories, and not in categories such as for accessibility.
+
+Alternately you can add or edit a venue category by going to the **Edit Database**
+area (under Setup), scroll down to "Venues" and click "Venue categories". Then
+click the **+ Add venue category** button in the top-right of the page or click
+an existing item.
 
 Adding venue constraints
 ========================
 
-To add or edit venue constraints, go to the **Import Data** area (under
-Setup) then select **Add/Edit Venue Constraints**. Note that this page will show all existing Venue Constraints first before showing the blank forms that allow you to create new categories. Note that the "Constrainee ID" field should let you select from a dropdown or type in the name of an adjudicator, institution, or team (rather than having to lookup the exact ID).
+To add or edit venue constraints, go to the **Import Data** area (under Setup)
+then select **Add/Edit Venue Constraints** for the type of constraint. Note that
+this page will show all existing Venue Constraints first before showing the
+blank forms that allow you to create new constraints.
 
 .. image:: images/add-venue-constraint.png
 
-Alternately you can add or edit a venue category by going to the **Edit Database** area (under Setup), scroll down to "Venues" and click "Venue constraints". Then click the **+ Add venue category** button in the top-right of the page or click an existing item.
+Alternately you can add or edit a venue constraint by going to the **Edit Database**
+area (under Setup), scroll down to "Venues" and click "Venue constraints". Then
+click the **+ Add venue constraint** button in the top-right of the page or click
+an existing item.
 
 For each constraint, you need to specify four things:
 
@@ -81,6 +91,32 @@ For each constraint, you need to specify four things:
 |                     | to choose from. (You need to select the subject content |
 |                     | type first.)                                            |
 +---------------------+---------------------------------------------------------+
+
+Venue allocation
+================
+
+There are a few methods available to automatically allocate venues.
+
+The naive algorithm used to satisfy venue constraints is not guaranteed to be
+optimal. In some rare cases, it may propose an allocation that fails some
+constraints, even though some other allocation would have satisfied all (or more)
+constraints. In almost all practical circumstances, however, it should work, and
+save human effort (and time) in specially allocating rooms.
+
+The Hungarian algorithm guarantees an optimal allocation based on the given
+constraints. This does not mean all constraints can be met, and relies on all
+constraints being inputted. The disadvantage is that the Hungarian method is
+neccessarily slower than the naive method.
+
+There are also two methods that build from the Hungarian algorithm to prioritise
+venues to teams depending on their previous venues. Venue rotation attempts to
+place teams in venue categories which they have not been before, to balance the
+distances they trek each round. The Stagnate method has the inverse approach;
+preferring venue categories which the team has already been in. Venue rotation
+is more suited for large tournaments, with Stagnate for smaller ones.
+
+The method to be used is configurable in the Draw Rules section, along with the
+weights (costs) used for the Hungarian methods.
 
 Applying venue constraints
 ==========================

@@ -6,6 +6,7 @@ Change Log
 --------------
 *Release date: ?*
 
+- Venue allocation methods have been added which returns optimal venue assignments based on the given constraints. In addition, new methods allow for venue rotation so that teams are not always in distant venues, or so that they stay in the same area.
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
 - When printing the per-participant private URLs they now feature QR codes in addition to the URL. Thanks to Étienne Beaulé for contributing this feature!
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
