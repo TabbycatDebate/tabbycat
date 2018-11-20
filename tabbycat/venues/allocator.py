@@ -5,6 +5,7 @@ import random
 from munkres import Munkres
 
 from django.db.models import Prefetch
+from django.utils.translation import gettext_lazy as _
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
@@ -15,7 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def allocate_venues(round, debates=None):
-    allocator = NaiveVenueAllocator(round, debates)
+    pref = round.tournament.pref('venue_allocation_method')
+    allocator = VenueAllocatorChoices.ALLOCATOR_CLASSES[pref](round, debates)
     allocator.allocate()
 
 
@@ -83,6 +85,8 @@ class NaiveVenueAllocator(BaseVenueAllocator):
     since a flexible high-priority debate might randomly choose a room demanded
     by a picky low-priority room.
     """
+
+    description = _("Naïve venue assignment")
 
     def get_debate_queryset(self):
         return self.round.debate_set_with_prefetches(speakers=False, institutions=True)
@@ -199,7 +203,10 @@ class NaiveVenueAllocator(BaseVenueAllocator):
 class BaseHungarianVenueAllocator(BaseVenueAllocator):
     """Base class for venue allocations using the Hungarian algorithm.
 
-    Most of the costs would remain the same between allocators."""
+    Most of the costs would remain the same between allocators. Works as an
+    allocator on its own (no cost for history)"""
+
+    description = _("Hungarian venue assignment")
 
     def __init__(self, round, debates=None):
         super().__init__(round, debates)
@@ -281,6 +288,8 @@ class RotationVenueAllocator(BaseHungarianVenueAllocator):
 
     Avoids placing teams in the same venue category as in previous debates."""
 
+    description = _("Hungarian with Rotation")
+
     def debate_cost_calc(self, debate):
         venue_costs = super().debate_cost_calc(debate)
 
@@ -297,6 +306,8 @@ class StationaryVenueAllocator(BaseHungarianVenueAllocator):
 
     Avoids placing teams in different venue categories as in previous debates."""
 
+    description = _("Hungarian with Stagnate Rotation")
+
     def debate_cost_calc(self, debate):
         venue_costs = super().debate_cost_calc(debate)
 
@@ -307,3 +318,20 @@ class StationaryVenueAllocator(BaseHungarianVenueAllocator):
                     venue_costs[i] += self.history_cost
 
         return venue_costs
+
+
+class VenueAllocatorChoices:
+
+    ALLOCATOR_CLASSES = {
+        'naive': NaiveVenueAllocator,
+        'hungarian': BaseHungarianVenueAllocator,
+        'rotate': RotationVenueAllocator,
+        'stationary': StationaryVenueAllocator
+    }
+
+    @classmethod
+    def get_allocator_names(cls):
+        choices = []
+        for key, klass in cls.ALLOCATOR_CLASSES.items():
+            choices.append((key, klass.description))
+        return choices

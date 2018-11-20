@@ -9,6 +9,7 @@ from dynamic_preferences.types import BooleanPreference, ChoicePreference, Float
 from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
 from tournaments.utils import get_side_name_choices
+from venues.allocator import VenueAllocatorChoices
 
 from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
@@ -336,6 +337,47 @@ class HideTraineePosition(BooleanPreference):
     section = draw_rules
     name = 'no_trainee_position'
     default = False
+
+
+@tournament_preferences_registry.register
+class VenueAllocationMethod(ChoicePreference):
+    help_text = _("Which allocation method to use when auto-assigning venues")
+    verbose_name = _("Venue allocation method")
+    section = draw_rules
+    name = 'venue_allocation_method'
+    choices = VenueAllocatorChoices.get_allocator_names()
+    default = 'naive'
+
+
+@tournament_preferences_registry.register
+class VenueHistoryCost(IntegerPreference):
+    help_text = _("Penalty applied to venues if a team has been in a venue in the category."
+        "Applicable for venue rotation methods. Opposite effect in Stagnate method.")
+    verbose_name = _("Venue history penalty")
+    section = draw_rules
+    name = 'venue_history_cost'
+    default = 100
+
+
+@tournament_preferences_registry.register
+class VenueConstraintCost(IntegerPreference):
+    help_text = _("Penalty multiplier to constraint priority applied to venues if debate is constrained "
+        "to a subset of venues. Applicable for Hungarian methods.")
+    verbose_name = _("Venue constraint penalty")
+    section = draw_rules
+    name = 'venue_constraint_cost'
+    default = 1000000
+
+
+@tournament_preferences_registry.register
+class VenueScoreCost(IntegerPreference):
+    help_text = _("Penalty multiplier to venue priority applied to venues to prefer higher-ranking venues. "
+        "Applicable for Hungarian methods.")
+    verbose_name = _("Venue priority penalty")
+    section = draw_rules
+    name = 'venue_score_cost'
+    default = 10
+
 
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))
