@@ -111,9 +111,9 @@ neccessarily slower than the naive method.
 There are also two methods that build from the Hungarian algorithm to prioritise
 venues to teams depending on their previous venues. Venue rotation attempts to
 place teams in venue categories which they have not been before, to balance the
-distances they trek each round. The Stagnate method has the inverse approach;
+distances they trek each round. The Stationary method has the inverse approach;
 preferring venue categories which the team has already been in. Venue rotation
-is more suited for large tournaments, with Stagnate for smaller ones.
+is more suited for large tournaments, with stationary teams for smaller ones.
 
 The method to be used is configurable in the Draw Rules section, along with the
 weights (costs) used for the Hungarian methods.

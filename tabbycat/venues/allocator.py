@@ -86,7 +86,7 @@ class NaiveVenueAllocator(BaseVenueAllocator):
     by a picky low-priority room.
     """
 
-    description = _("Naïve venue assignment")
+    description = _("Naïve")
 
     def get_debate_queryset(self):
         return self.round.debate_set_with_prefetches(speakers=False, institutions=True)
@@ -206,7 +206,7 @@ class BaseHungarianVenueAllocator(BaseVenueAllocator):
     Most of the costs would remain the same between allocators. Works as an
     allocator on its own (no cost for history)"""
 
-    description = _("Hungarian venue assignment")
+    description = _("Hungarian")
 
     def __init__(self, round, debates=None):
         super().__init__(round, debates)
@@ -288,7 +288,7 @@ class RotationVenueAllocator(BaseHungarianVenueAllocator):
 
     Avoids placing teams in the same venue category as in previous debates."""
 
-    description = _("Hungarian with Rotation")
+    description = _("Rotation Hungarian")
 
     def debate_cost_calc(self, debate):
         venue_costs = super().debate_cost_calc(debate)
@@ -306,7 +306,7 @@ class StationaryVenueAllocator(BaseHungarianVenueAllocator):
 
     Avoids placing teams in different venue categories as in previous debates."""
 
-    description = _("Hungarian with Stagnate Rotation")
+    description = _("Stationary Hungarian")
 
     def debate_cost_calc(self, debate):
         venue_costs = super().debate_cost_calc(debate)
