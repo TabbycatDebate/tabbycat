@@ -12,6 +12,7 @@ class VenuesWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
     def allocate_debate_venues(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
+        self.apply_allocation_settings(round, event['extra']['settings'])
         group = event['extra']['group_name']
 
         if round.draw_status == Round.STATUS_RELEASED:

@@ -28,22 +28,9 @@ class PanelEditConsumer(BaseAdjudicatorContainerConsumer):
 
 class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
-    def _apply_allocation_settings(self, round, settings):
-        t = round.tournament
-        for key, value in settings.items():
-            # No way to force front-end to only accept floats/integers :(
-            if isinstance(t.preferences[key], bool):
-                t.preferences[key] = bool(value)
-            elif isinstance(t.preferences[key], int):
-                t.preferences[key] = int(value)
-            elif isinstance(t.preferences[key], float):
-                t.preferences[key] = float(value)
-            else:
-                t.preferences[key] = value
-
     def allocate_debate_adjs(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
-        self._apply_allocation_settings(round, event['extra']['settings'])
+        self.apply_allocation_settings(round, event['extra']['settings'])
 
         if round.draw_status == round.STATUS_RELEASED:
             self.return_error(event['extra']['group_name'],
@@ -86,7 +73,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
     def allocate_panel_adjs(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
-        self._apply_allocation_settings(round, event['extra']['settings'])
+        self.apply_allocation_settings(round, event['extra']['settings'])
 
         panels = round.preformedpanel_set.all()
         adjs = round.active_adjudicators.all()

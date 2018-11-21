@@ -198,6 +198,19 @@ class EditDebateOrPanelWorkerMixin(SyncConsumer):
     """ Mixin for consumers that are run by synchronous workers that perform
     actions to edit and re-serialise debates/panels """
 
+    def apply_allocation_settings(self, round, settings):
+        t = round.tournament
+        for key, value in settings.items():
+            # No way to force front-end to only accept floats/integers :(
+            if isinstance(t.preferences[key], bool):
+                t.preferences[key] = bool(value)
+            elif isinstance(t.preferences[key], int):
+                t.preferences[key] = int(value)
+            elif isinstance(t.preferences[key], float):
+                t.preferences[key] = float(value)
+            else:
+                t.preferences[key] = value
+
     def log_action(self, extra, round, type):
         ActionLogEntry.objects.log(type=type, user_id=extra['user_id'],
                 round=round, tournament=round.tournament, content_object=round)

@@ -48,6 +48,17 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
         info['highlights']['priority'] = [] # TODO - venue priority range
         info['highlights']['category'] = [] # TODO - venue category
         info['highlights']['break'] = [] # TODO
+
+        allocation_preferences = [
+            'draw_rules__venue_allocation_method',
+            'draw_rules__venue_history_cost',
+            'draw_rules__venue_constraint_cost',
+            'draw_rules__venue_score_cost'
+        ]
+        info['allocationSettings'] = {}
+        for key in allocation_preferences:
+            info['allocationSettings'][key] = self.tournament.preferences[key]
+
         return info
 
 
