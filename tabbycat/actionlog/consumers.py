@@ -1,6 +1,8 @@
-from utils.consumers import TournamentConsumer, WSLoginRequiredMixin
+from channels.generic.websocket import JsonWebsocketConsumer
+
+from tournaments.mixins import TournamentWebsocketMixin
+from utils.mixins import LoginRequiredWebsocketMixin
 
 
-class ActionLogEntryConsumer(TournamentConsumer, WSLoginRequiredMixin):
-
+class ActionLogEntryConsumer(LoginRequiredWebsocketMixin, TournamentWebsocketMixin, JsonWebsocketConsumer):
     group_prefix = 'actionlogs'

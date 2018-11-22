@@ -41,6 +41,27 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
             kwargs['previous_unconfirmed'] = self.round.prev.debate_set.filter(
                 result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
 
+            kwargs['new_adjs'] = Adjudicator.objects.filter(
+                round_availabilities__round=self.round,
+            ).exclude(
+                round_availabilities__round=self.round.prev,
+            )
+            kwargs['new_venues'] = Venue.objects.filter(
+                round_availabilities__round=self.round,
+            ).exclude(
+                round_availabilities__round=self.round.prev,
+            )
+            kwargs['lost_adjs'] = Adjudicator.objects.filter(
+                round_availabilities__round=self.round.prev,
+            ).exclude(
+                round_availabilities__round=self.round,
+            )
+            kwargs['lost_venues'] = Venue.objects.filter(
+                round_availabilities__round=self.round.prev,
+            ).exclude(
+                round_availabilities__round=self.round,
+            )
+
         if self.round.is_break_round:
             teams = self._get_breaking_teams_dict()
         else:
@@ -270,8 +291,14 @@ class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectVie
     round_redirect_pattern_name = 'availability-index'
 
     def post(self, request, *args, **kwargs):
-        self.activate_function()
-        messages.success(self.request, self.activation_msg)
+        try:
+            self.activate_function()
+            messages.success(self.request, self.activation_msg)
+        except IntegrityError:
+            messages.error(self.request, _("Failed to update some or all "
+                                           "availabilities due to an integrity"
+                                           "error. You should retry this "
+                                           "action or make individual updates."))
         return super().post(request, *args, **kwargs)
 
 

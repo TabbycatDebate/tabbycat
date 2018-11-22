@@ -25,7 +25,7 @@ def update_round_cache(sender, instance, **kwargs):
 
     # Update the tournament cache as well if either this is the current round,
     # or the current round is None (this might mean the current round was deleted).
-    current_round_id = instance.tournament.current_round_id
+    current_round_id = getattr(instance.tournament.current_round, 'id', None)
     if current_round_id == instance.id or current_round_id is None:
         logger.debug("Cleared %s tournament cache because the current round is %s" %
                 (instance.tournament.slug, instance if current_round_id == instance.id else current_round_id))

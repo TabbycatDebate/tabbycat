@@ -2,11 +2,9 @@ import os
 import logging
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import connection
 from django.utils.decorators import method_decorator
-from django.utils.translation import gettext_lazy
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import ContextMixin
 
@@ -44,12 +42,17 @@ class TabbycatPageTitlesMixin(ContextMixin):
         return super().get_context_data(**kwargs)
 
 
+# ==============================================================================
+# Mixins regulating access based on user account status
+# ==============================================================================
+
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for administrators.
-    Requires use to be a superuser."""
+    Requires user to be a superuser."""
+    view_role = "admin"
 
     def get_context_data(self, **kwargs):
-        kwargs["user_role"] = "admin"
+        kwargs["user_role"] = self.view_role
         return super().get_context_data(**kwargs)
 
     def test_func(self):
@@ -58,44 +61,59 @@ class AdministratorMixin(UserPassesTestMixin, ContextMixin):
 
 class AssistantMixin(LoginRequiredMixin, ContextMixin):
     """Mixin for views that are for assistants."""
+    view_role = "assistant"
 
     def get_context_data(self, **kwargs):
-        kwargs["user_role"] = "assistant"
+        kwargs["user_role"] = self.view_role
         return super().get_context_data(**kwargs)
 
 
+class AccessWebsocketMixin:
+    """Checks the user's permissions before allowing a connection.
+    Classes using this mixin must inherit from WebsocketConsumer."""
+
+    def connect(self):
+        if self.access_permitted():
+            return super().connect()
+        else:
+            return self.close()
+
+
+class LoginRequiredWebsocketMixin(AccessWebsocketMixin):
+
+    def access_permitted(self):
+        return self.scope["user"].is_authenticated
+
+
+class SuperuserRequiredWebsocketMixin(AccessWebsocketMixin):
+
+    def access_permitted(self):
+        return self.scope["user"].is_superuser
+
+
+# ==============================================================================
+# Miscellaneous mixins
+# ==============================================================================
+
 class WarnAboutDatabaseUseMixin(ContextMixin):
-    """Mixin for views that should stop people exceeding database counts"""
-    """ If a user has hit 8000 rows they have received Heroku's shut down
-    notification. They are probably fine to finish current tournament even if
-    it exceeds these limits because of the one-week grace period. However they
+    """Mixin for views that should stop people exceeding database counts.
+
+    If a user has hit 8000 rows they have received Heroku's shut down
+    notification. They are probably fine to finish current tournament even if it
+    exceeds these limits because of the one-week grace period. However they
     should not create new tournaments as this typically happens after the grace
-    period and is thus subject to major disruptions"""
-    db_warning_severity = messages.WARNING
+    period and is thus subject to major disruptions."""
 
     def get_database_row_count(self):
         cursor = connection.cursor()
         cursor.execute("SELECT schemaname,relname,n_live_tup FROM pg_stat_user_tables ORDER BY n_live_tup DESC;")
         return sum([row[2] for row in cursor.fetchall()])
 
-    def get_standings_error_message(self, rows):
-        url = "https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases"
-        return gettext_lazy(
-            "You have current used %(rows)s rows on your database. "
-            "If you have not upgraded your Heroku database to a non-free tier "
-            "it is limited to a maximum of 10,000 rows. As you are relatively "
-            "close to this limit you should <strong>not create new tournaments"
-            "</strong> on this tab site unless you first <a href=\" %(url)s \">"
-            "upgrade the database</a> or have already upgraded it."
-            % {'rows': rows, 'url': url}
-        )
-
     def get_context_data(self, **kwargs):
         if 'DATABASE_URL' in os.environ and self.request.user.is_authenticated:
             rows = self.get_database_row_count()
             if rows >= 8000:
-                messages.add_message(self.request, self.db_warning_severity,
-                                     self.get_standings_error_message(rows))
+                kwargs['database_rows_used'] = rows
 
         return super().get_context_data(**kwargs)
 

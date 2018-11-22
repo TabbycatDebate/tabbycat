@@ -55,7 +55,7 @@ Short version of the long way
 
 If you want to :ref:`import tournament data <importing-initial-data>` from CSV files, :ref:`install Tabbycat locally <install-local>`, put your CSV files in ``data/<yourtournamentname>``, then::
 
-  createdb <yourlocaldatabasename>     # Your local_settings.py file must point here from DATABASES
+  createdb <yourlocaldatabasename>     # Your settings_local.py file must point here from DATABASES
   dj migrate
   dj createsuperuser
   dj importtournament <yourtournamentname> --name <Your Tournament Name> --short-name <Tournament>
@@ -137,7 +137,7 @@ b. Create a new, blank local database::
 
     createdb <yourlocaldatabasename>
 
-  Reconfigure ``DATABASES`` in your local_settings.py file to point to this new database.
+  Reconfigure ``DATABASES`` in your settings_local.py file to point to this new database.
 
 c. Activate your virtual environment::
 

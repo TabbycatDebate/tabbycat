@@ -51,7 +51,7 @@ names are relevant, or to the team's real name if it is not. #}
 
                   {# (Two-team formats) #}
                   {% if pref.teams_in_debate == 'two' %}
-                    {% team_record_link debateteam.opponent.team admin_page as opponent %}
+                    {% team_record_link debateteam.opponent.team admin_page tournament as opponent %}
 
                     {% if debate.sides_confirmed %}
                       {% blocktrans trimmed with team_name=team_short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
@@ -93,11 +93,12 @@ names are relevant, or to the team's real name if it is not. #}
                     <strong>{% trans "Teams:" %}</strong>
                     {% for dt in debate.debateteams_ordered %}
                       {% if dt != debateteam %}
-                        {% team_record_link dt.team admin_page %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
+                        {% team_record_link dt.team admin_page tournament %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% else %} {# elif dt == debateteam #}
                         {% if use_code_names %}{{ dt.team.code_name }}{% else %}{{ dt.team.short_name }}{% endif %}{% if not debate.sides_confirmed and not forloop.last %},{% endif %}
                       {% endif %} {# dt != debateteam #}
-                      {% if debate.sides_confirmed %} ({{ dt.get_side_name }}){% if not forloop.last %},{% endif %}{% endif %}
+                      {% if debate.sides_confirmed %}
+                        ({% debate_team_side_name dt tournament %}){% endif %}{% if not forloop.last %},{% endif %}
                     {% endfor %}
                   </div>
                 {% endif %} {# pref.teams_in_debate == 'bp' #}
@@ -193,12 +194,14 @@ names are relevant, or to the team's real name if it is not. #}
             </div>
           {% endif %}
 
-          <div class="list-group-item">
-            <strong>{% trans "Speakers:" %}</strong>
-            {% for speaker in team.speakers %}
-              {{ speaker.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </div>
+          {% if pref.show_speakers_in_draw %}
+            <div class="list-group-item">
+              <strong>{% trans "Speakers:" %}</strong>
+              {% for speaker in team.speakers %}
+                {{ speaker.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
 
           {% if team.division %}
             <div class="list-group-item">

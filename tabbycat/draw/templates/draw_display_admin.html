@@ -135,7 +135,7 @@
 
             {% trans "View public draw page" as text %}
             {% if pref.public_draw == 'current' and round == current_round %}
-              {% tournamenturl 'draw-public-current-round' as public_link %}
+              {% tournamenturl 'draw-public-current-rounds' as public_link %}
               {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
             {% elif pref.public_draw == 'all-released' %}
               {% roundurl 'draw-public-for-round' as public_link %}
@@ -158,7 +158,6 @@
         {% else %}
 
           {% trans "Release draw to public" as release_text %}
-          {% trans "Your tournament is configured to send emails to adjudicators announcing which debate they were allocated to once the draw is released." as email_text %}
           <form id="releaseDrawForm" method="POST" action="{% roundurl 'draw-release' %}">{% csrf_token %}</form>
 
           {% if pref.participant_ballots != 'off' or pref.participant_feedback != 'off' or pref.public_draw != 'off' %}
@@ -177,9 +176,6 @@
               {% trans "Your tournament is configured to show the draw publicly. Releasing a draw will allow it to show it on the public page." as text %}
               {% include "components/item-info.html" with type="info" %}
             {% endif %}
-            {% if pref.enable_adj_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
 
             {% include "components/item-action.html" with type="success" id="triggerReleaseDrawForm" text=release_text url="" to_complete=True %}
 
@@ -187,10 +183,6 @@
 
             {% trans "Your configuration doesn't have a public draw page or feedback/ballot submissions. There's no reason to release the draw." as text %}
             {% include "components/item-info.html" with type="secondary" %}
-
-            {% if pref.enable_adj_email %}
-              {% include "components/item-info.html" with text=email_text %}
-            {% endif %}
 
             {% include "components/item-action.html" with id="triggerReleaseDrawForm" text=release_text url="" %}
 
@@ -283,14 +275,45 @@
   <div class="col-md-12">
     <ul class="list-group">
 
-      {% roundurl 'draw-display-by-venue' round as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Venue" subtext="(for the briefing room)" emoji="🏫" blank=True %}
+      {% trans "(for the briefing room)" as briefing_room_subtext %}
 
-      {% roundurl 'draw-display-by-team' round as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Team" subtext="(for the briefing room)" emoji="👭" blank=True %}
+      {% if not round.is_current or tournament.current_rounds|length == 1 %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-venue' as url %}
+        {% trans "Display Draw ordered by Venue" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-team' as url %}
+        {% trans "Display Draw ordered by Team" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+      {% else %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-venue' as url %}
+        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Venue" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% tournamenturl 'draw-display-current-rounds-by-team' as url %}
+        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Team" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+        {% roundurl 'draw-display-specific-round-by-venue' as url %}
+        {% blocktrans trimmed with round_name=round.name asvar text %}
+          Display Draw for <strong>{{ round_name }}</strong> ordered by Venue
+        {% endblocktrans %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% roundurl 'draw-display-specific-round-by-team' as url %}
+        {% blocktrans trimmed with round_name=round.name asvar text %}
+          Display Draw for <strong>{{ round_name }}</strong> ordered by Team
+        {% endblocktrans %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+      {% endif %}
 
       {% roundurl 'motions-display' round as url %}
-      {% include "components/item-action.html" with text="Display Motions" subtext="(for the briefing room)" emoji="📃" blank=True %}
+      {% trans "Display Motions" as text %}
+      {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="📃" blank=True %}
 
     </ul>
     <ul class="list-group mt-3">
@@ -306,6 +329,17 @@
         {% include "components/item-action.html" with text="View Division Sheet" subtext="(for printing)" emoji="📠" %}
       {% endif %}
 
+    </ul>
+    <ul class="list-group mt-3">
+      {% roundurl 'draw-email' as url %}
+      {% include "components/item-action.html" with text="Email Draw" subtext="(to active adjudicators)" emoji="✉️" %}
+      {% if pref.enable_motions or pref.motion_vetoes_enabled %}
+        {% trans "Email Motions" as text %}
+      {% else %}
+        {% trans "Email Motion" as text %}
+      {% endif %}
+      {% roundurl 'motions-email' as url %}
+      {% include "components/item-action.html" with emoji="📇" %}
     </ul>
   </div>
 </div>

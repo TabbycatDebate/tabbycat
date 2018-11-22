@@ -42,12 +42,12 @@ Short version
   sudo -u postgres createuser myusername --createdb --pwprompt    # skip if not first time
   createdb mydatabasename
 
-Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
+Then create settings/local.py as described :ref:`below <local-settings-linux>`, then::
 
   python3 -m venv venv
   source venv/bin/activate
   pip install --upgrade pip
-  pip install -r requirements.txt
+  pip install -r ./config/requirements_core.txt
   npm install
   cd tabbycat
   dj migrate
@@ -178,10 +178,10 @@ c. Run the ``activate`` script. This puts you "into" the virtual environment::
 d. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
-    $ pip install -r requirements.txt
+    $ pip install -r ./config/requirements_core.txt
     $ npm install
 
-e. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+e. Navigate to the **tabbycat/settings** sub folder and copy **local.example** to **local.py**. Find this part in your new local.py, and fill in the blanks as indicated:
 
   .. code:: python
 

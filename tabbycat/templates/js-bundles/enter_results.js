@@ -71,7 +71,7 @@ function refresh_totals(scoresheet) {
     var total_scores = {}
     var rank_elements = {}
 
-    for (var i = 0; i <= positions.length - 1; i++) {
+    for (var i = 0; i <= positions.length - 1; i += 1) {
       var team = positions[i];
       totals_elements[team] = $('.' + team + '_total', $scoresheet);
       margins_elements[team] = $('.' + team + '_margin', $scoresheet);
@@ -93,7 +93,7 @@ function refresh_totals(scoresheet) {
     });
 
     // Use sorted dictionary to assign relative margins and win indicators
-    for (var i = 0; i <= sortedScores.length - 1; i++) {
+    for (var i = 0; i <= sortedScores.length - 1; i += 1) {
 
       var team = sortedScores[i][0];
       if (total_scores[team] === 0) { continue }

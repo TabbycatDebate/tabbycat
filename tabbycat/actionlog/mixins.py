@@ -3,7 +3,7 @@ from channels.layers import get_channel_layer
 from django.contrib.auth import get_user_model
 
 from actionlog.consumers import ActionLogEntryConsumer
-from tournaments.models import Round
+from tournaments.models import Round, Tournament
 from utils.misc import get_ip_address
 
 from .models import ActionLogEntry
@@ -41,7 +41,7 @@ class LogActionMixin:
         set to "adj_feedback", it grabs `self.adj_feedback`.
 
         If `action_log_content_object_attr` is not provided, and there is a
-        `get_round()` or `get_tournament()` method, it returns the result of
+        `round` or `tournament` property, it returns the result of
         one of these calls, in that order. Therefore, subclasses need not set
         `action_log_content_object_attr` if the correct content object is a
         Round or Tournament.
@@ -53,9 +53,9 @@ class LogActionMixin:
         """
         if self.action_log_content_object_attr is not None:
             return getattr(self, self.action_log_content_object_attr)
-        elif hasattr(self, 'get_round') and callable(self.get_round):
+        elif hasattr(self, 'round') and isinstance(self.round, Round):
             return self.round
-        elif hasattr(self, 'get_tournament') and callable(self.get_tournament):
+        elif hasattr(self, 'tournament') and isinstance(self.tournament, Tournament):
             return self.tournament
         else:
             return None
@@ -67,8 +67,8 @@ class LogActionMixin:
         The default implementation adds the following:
             - the `type` field, from `get_action_log_type()`
             - the `content_object` field, from `get_action_log_content_object()`
-            - the `tournament` field if there is a `get_tournament()` method
-            - the `round` field if there is a `get_round()` method
+            - the `tournament` field if there is a valid `tournament` property
+            - the `round` field if there is a valid `round` property
             - the `user` field if there is a valid user
 
         If overriding this method, subclasses should call the super() method.
@@ -80,10 +80,8 @@ class LogActionMixin:
 
         if hasattr(self, 'round') and isinstance(self.round, Round):
             kwargs.setdefault('round', self.round)
-        elif hasattr(self, 'get_round') and callable(self.get_round):
-            kwargs.setdefault('round', self.round)
 
-        if hasattr(self, 'get_tournament') and callable(self.get_tournament):
+        if hasattr(self, 'tournament') and isinstance(self.tournament, Tournament):
             kwargs.setdefault('tournament', self.tournament)
 
         if hasattr(self.request, 'user') and isinstance(self.request.user, User):

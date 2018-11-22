@@ -55,6 +55,10 @@
     {% trans "Add/Edit Adjudicator-Institution Conflicts" as text %}
     {% include "components/item-action.html" with emoji="🙈" %}
 
+    {% tournamenturl 'adjallocation-conflicts-team-inst' as url %}
+    {% trans "Add/Edit Team-Institution Conflicts" as text %}
+    {% include "components/item-action.html" with emoji="🐒" %}
+
   </ul>
 
 {% endblock content %}

@@ -2,42 +2,42 @@ import logging
 
 from django.test import TestCase
 
-from utils.tests import ConditionalTournamentViewLoadTest, suppress_logs
+from utils.tests import ConditionalTournamentViewSimpleLoadTestMixin, suppress_logs
 
 
-class PublicTeamStandingsViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicStandingsTestMixin(ConditionalTournamentViewSimpleLoadTestMixin):
+    """Suppresses standings logging output."""
+
+    def test_view_enabled(self):
+        with suppress_logs('standings.metrics', logging.INFO):
+            super().test_view_enabled()
+
+
+class PublicTeamStandingsViewTest(ConditionalTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'standings-public-teams-current'
-    view_toggle = 'public_features__public_team_standings'
+    view_toggle_preference = 'public_features__public_team_standings'
 
 
-class PublicTeamTabViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicTeamTabViewTest(PublicStandingsTestMixin, TestCase):
     view_name = 'standings-public-tab-team'
-    view_toggle = 'tab_release__team_tab_released'
+    view_toggle_preference = 'tab_release__team_tab_released'
 
 
-class PublicSpeakerTabViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicSpeakerTabViewTest(PublicStandingsTestMixin, TestCase):
     view_name = 'standings-public-tab-speaker'
-    view_toggle = 'tab_release__speaker_tab_released'
+    view_toggle_preference = 'tab_release__speaker_tab_released'
 
 
-class PublicRepliesTabViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicRepliesTabViewTest(PublicStandingsTestMixin, TestCase):
     view_name = 'standings-public-tab-replies'
-    view_toggle = 'tab_release__replies_tab_released'
-
-    def test_set_preference(self):
-        with suppress_logs('standings.metrics', logging.INFO):
-            super().test_set_preference()
-
-    def test_unset_preference(self):
-        with suppress_logs('standings.metrics', logging.INFO):
-            super().test_unset_preference()
+    view_toggle_preference = 'tab_release__replies_tab_released'
 
 
-class PublicAdjudicatorTabViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicAdjudicatorTabViewTest(ConditionalTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'standings-public-adjudicators-tab'
-    view_toggle = 'tab_release__adjudicators_tab_released'
+    view_toggle_preference = 'tab_release__adjudicators_tab_released'
 
 
-class PublicDiversityViewTest(ConditionalTournamentViewLoadTest, TestCase):
+class PublicDiversityViewTest(ConditionalTournamentViewSimpleLoadTestMixin, TestCase):
     view_name = 'standings-public-diversity'
-    view_toggle = 'public_features__public_diversity'
+    view_toggle_preference = 'public_features__public_diversity'

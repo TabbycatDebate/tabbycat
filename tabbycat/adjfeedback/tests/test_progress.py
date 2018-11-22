@@ -23,32 +23,36 @@ class TestFeedbackProgress(TestCase):
     NUM_VENUES = 3
 
     def setUp(self):
-        self.t = Tournament.objects.create()
+        self.tournament = Tournament.objects.create()
         for i in range(self.NUM_TEAMS):
             inst = Institution.objects.create(code=i, name=i)
-            team = Team.objects.create(tournament=self.t, institution=inst, reference=i)
+            team = Team.objects.create(tournament=self.tournament, institution=inst, reference=i)
             for j in range(3):
                 Speaker.objects.create(team=team, name="%d-%d" % (i, j))
 
         adjsinst = Institution.objects.create(code="Adjs", name="Adjudicators")
         for i in range(self.NUM_ADJS):
-            Adjudicator.objects.create(tournament=self.t, institution=adjsinst, name=i)
+            Adjudicator.objects.create(tournament=self.tournament, institution=adjsinst, name=i)
         for i in range(self.NUM_VENUES):
             Venue.objects.create(name=i, priority=i)
 
-        self.rd = Round.objects.create(tournament=self.t, seq=1, abbreviation="R1")
+        self.rd = Round.objects.create(tournament=self.tournament, seq=1, abbreviation="R1")
 
     def tearDown(self):
         DebateTeam.objects.all().delete()
         Institution.objects.all().delete()
         Venue.objects.all().delete()
-        self.t.delete()
+        self.tournament.delete()
+
+    # These shouldn't use the related managers (e.g. `self.tournament.team_set`),
+    # because the teams and adjudicators change often and the related managers
+    # won't be updated to account for that.
 
     def _team(self, t):
-        return Team.objects.get(tournament=self.t, reference=t)
+        return Team.objects.get(tournament=self.tournament, reference=t)
 
     def _adj(self, a):
-        return Adjudicator.objects.get(tournament=self.t, name=a)
+        return Adjudicator.objects.get(tournament=self.tournament, name=a)
 
     def _dt(self, debate, t):
         return DebateTeam.objects.get(debate=debate, team=self._team(t))
@@ -300,8 +304,8 @@ class TestFeedbackProgress(TestCase):
 
     def assertTeamProgress(self, feedback_paths, show_splits, t, submitted, # noqa
                            expected, fulfilled, unsubmitted, coverage):
-        self.t.preferences['feedback__feedback_from_teams'] = feedback_paths
-        self.t.preferences['ui_options__show_splitting_adjudicators'] = show_splits
+        self.tournament.preferences['feedback__feedback_from_teams'] = feedback_paths
+        self.tournament.preferences['ui_options__show_splitting_adjudicators'] = show_splits
         progress = FeedbackProgressForTeam(self._team(t))
         self.assertEqual(progress.num_submitted(), submitted)
         self.assertEqual(progress.num_expected(), expected)
@@ -367,7 +371,7 @@ class TestFeedbackProgress(TestCase):
         progress = self.assertTeamProgress('orallist', True, 0, 2, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 2)
 
-        self.t.preferences['feedback__show_unexpected_feedback'] = False
+        self.tournament.preferences['feedback__show_unexpected_feedback'] = False
         progress = self.assertTeamProgress('orallist', True, 0, 2, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)
 
@@ -387,7 +391,7 @@ class TestFeedbackProgress(TestCase):
             self._create_feedback(self._da(debate3, 0), adj)
 
     def assertAdjudicatorProgress(self, feedback_paths, a, submitted, expected, fulfilled, unsubmitted, coverage): # noqa
-        self.t.preferences['feedback__feedback_paths'] = feedback_paths
+        self.tournament.preferences['feedback__feedback_paths'] = feedback_paths
         progress = FeedbackProgressForAdjudicator(self._adj(a))
         self.assertEqual(progress.num_submitted(), submitted)
         self.assertEqual(progress.num_expected(), expected)
@@ -441,6 +445,6 @@ class TestFeedbackProgress(TestCase):
         progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 3)
 
-        self.t.preferences['feedback__show_unexpected_feedback'] = False
+        self.tournament.preferences['feedback__show_unexpected_feedback'] = False
         progress = self.assertAdjudicatorProgress('with-p-on-c', 0, 3, 3, 0, 3, 0.0)
         self.assertEqual(len(progress.unexpected_trackers()), 0)

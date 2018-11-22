@@ -1,8 +1,11 @@
 import math
 
 from django.forms.fields import IntegerField
-from django.forms import CharField, ChoiceField, ModelChoiceField, ModelForm
+from django.forms.models import ModelChoiceIterator
+from django.forms import CharField, ChoiceField, Form, ModelChoiceField, ModelForm
 from django.utils.translation import gettext_lazy as _
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 from django_summernote.widgets import SummernoteWidget
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
@@ -131,20 +134,114 @@ class TournamentConfigureForm(ModelForm):
             auto_make_break_rounds(t, num_break_rounds, open_break)
 
 
-class CurrentRoundField(ModelChoiceField):
+class RoundWithCompleteOptionChoiceIterator(ModelChoiceIterator):
+
+    def __iter__(self):
+        yield from super().__iter__()
+        yield (self.field.complete_value, self.field.complete_label)
+
+    def __len__(self):
+        return super().__len__() + 1
+
+    def __bool__(self):
+        return True  # the "complete" option always exists
+
+
+class RoundField(ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.name
 
 
-class SetCurrentRoundForm(ModelForm):
+class RoundWithCompleteOptionField(RoundField):
 
-    current_round = CurrentRoundField(queryset=Round.objects.none(),
-            required=True, empty_label=None)
+    iterator = RoundWithCompleteOptionChoiceIterator
+    complete_value = "all-completed"
 
-    class Meta:
-        model = Tournament
-        fields = ('current_round',)
+    def __init__(self, *args, complete_label="", **kwargs):
+        self.complete_label = complete_label
+        return super().__init__(*args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
+    def to_python(self, value):
+        if value == self.complete_value:
+            return self.complete_value
+        return super().to_python(value)
+
+
+class SetCurrentRoundSingleBreakCategoryForm(Form):
+    """Form to set completed rounds in a tournament with a single break category."""
+
+    current_round = RoundField(queryset=Round.objects.none(), required=True, empty_label=None)
+
+    def __init__(self, tournament, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['current_round'].queryset = self.instance.round_set.all()
+        self.tournament = tournament
+        self.fields['current_round'].queryset = tournament.round_set.order_by('seq')
+        self.fields['current_round'].initial = tournament.current_round
+
+    def save(self):
+        seq = self.cleaned_data['current_round'].seq
+        self.tournament.round_set.filter(seq__lt=seq).update(completed=True)
+        self.tournament.round_set.filter(seq__gte=seq).update(completed=False)
+
+
+class SetCurrentRoundMultipleBreakCategoriesForm(Form):
+    """Form to set completed rounds in a tournament with multiple break categories."""
+
+    prelim = RoundWithCompleteOptionField(queryset=Round.objects.none(), required=True,
+        label=_("Current preliminary round"),
+        complete_label=_("All preliminary rounds have been completed"))
+
+    def __init__(self, tournament, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tournament = tournament
+        self.fields['prelim'].queryset = tournament.prelim_rounds()
+        current_prelim_round = tournament.prelim_rounds().filter(completed=False).order_by('seq').first()
+        self.fields['prelim'].initial = current_prelim_round or RoundWithCompleteOptionField.complete_value
+
+        for category in tournament.breakcategory_set.all():
+            self.fields['elim_' + category.slug] = RoundWithCompleteOptionField(
+                queryset=category.round_set.all(),
+                label=mark_safe(_("Current elimination round in <strong>%(category)s</strong> "
+                    "<em>(only if all preliminary rounds have been completed)</em>") % {
+                    'category': escape(category.name)}),
+                required=False,
+                initial=((category.round_set.filter(completed=False).order_by('seq').first() or
+                    RoundWithCompleteOptionField.complete_value) if current_prelim_round is None else None),
+                complete_label=_("All elimination rounds in %(category)s have been completed") % {
+                    'category': category.name},
+            )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        elim_fields = ['elim_' + category.slug for category in self.tournament.breakcategory_set.all()]
+
+        if cleaned_data.get('prelim') != RoundWithCompleteOptionField.complete_value:
+            for field in elim_fields:
+                if cleaned_data.get(field) is not None:
+                    self.add_error(field, _("If the current round is a preliminary round, "
+                        "this field must be blank."))
+
+        else:
+            for field in elim_fields:
+                if cleaned_data.get(field) is None:
+                    self.add_error(field, _("If all preliminary rounds have been completed, "
+                        "this field is required."))
+
+    def save(self):
+        if self.cleaned_data['prelim'] != RoundWithCompleteOptionField.complete_value:
+            seq = self.cleaned_data['prelim'].seq
+            self.tournament.prelim_rounds().filter(seq__lt=seq).update(completed=True)
+            self.tournament.prelim_rounds().filter(seq__gte=seq).update(completed=False)
+            self.tournament.break_rounds().update(completed=False)
+
+        else:
+            self.tournament.prelim_rounds().update(completed=True)
+            for category in self.tournament.breakcategory_set.all():
+                value = self.cleaned_data['elim_' + category.slug]
+                if value == RoundWithCompleteOptionField.complete_value:
+                    category.round_set.update(completed=True)
+                else:
+                    seq = self.cleaned_data['elim_' + category.slug].seq
+                    category.round_set.filter(seq__lt=seq).update(completed=True)
+                    category.round_set.filter(seq__gte=seq).update(completed=False)

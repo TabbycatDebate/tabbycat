@@ -62,7 +62,7 @@ class Command(BaseCommand):
 
         importer_class = self.get_importer_class()
         self.importer = importer_class(
-            self.t, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
+            self.tournament, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
 
         # Importer classes specify what they import, and in what order
         for item in self.importer.order:
@@ -198,11 +198,11 @@ class Command(BaseCommand):
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,
-        and sets self.t to be the newly-created tournament.
+        and sets self.tournament to be the newly-created tournament.
         """
         slug, name, short_name = self.resolve_tournament_fields()
         self.check_existing_tournament(slug)
-        self.t = self.create_tournament(slug, name, short_name)
+        self.tournament = self.create_tournament(slug, name, short_name)
 
     def make_rounds(self):
         """Makes rounds using an automatic rounds maker if --auto-rounds is
@@ -213,7 +213,7 @@ class Command(BaseCommand):
             if os.path.exists(self._csv_file_path('rounds')):
                 self._warning("Ignoring file 'rounds.csv' because --auto-rounds used")
             num_rounds = self.options['auto_rounds']
-            auto_make_rounds(self.t, num_rounds)
+            auto_make_rounds(self.tournament, num_rounds)
             self._print_stage("Auto-made %d rounds" % num_rounds)
 
     def resolve_tournament_fields(self):

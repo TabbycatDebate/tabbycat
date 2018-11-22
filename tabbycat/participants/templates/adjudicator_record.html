@@ -31,8 +31,8 @@
 
                   {# (Two-team formats) #}
                   {% if pref.teams_in_debate == 'two' %}
-                    {% team_record_link debate.aff_team admin_page as aff %}
-                    {% team_record_link debate.neg_team admin_page as neg %}
+                    {% team_record_link debate.aff_team admin_page tournament as aff %}
+                    {% team_record_link debate.neg_team admin_page tournament as neg %}
 
                     {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
                       {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:"Venue TBA" %}
@@ -82,7 +82,9 @@
                   <div class="list-group-item">
                     <strong>{% trans "Teams:" %}</strong>
                     {% for dt in debate.debateteams_ordered %}
-                      {% team_record_link dt.team admin_page %}{% if debate.sides_confirmed %} ({{ dt.get_side_name }}){% endif %}{% if not forloop.last %},{% endif %}
+                      {% team_record_link dt.team admin_page tournament %}
+                      {% if debate.sides_confirmed %}
+                         ({% debate_team_side_name dt tournament %}){% endif %}{% if not forloop.last %},{% endif %}
                     {% endfor %}
                   </div>
                 {% endif %} {# pref.teams_in_debate == 'bp' #}

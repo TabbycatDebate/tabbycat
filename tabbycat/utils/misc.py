@@ -50,3 +50,18 @@ def badge_datetime_format(timestamp):
 
     localized_time = timezone.localtime(timestamp)
     return formats.date_format(localized_time, format=fmt)
+
+
+def ranks_dictionary():
+    """ Used for both adjudicator ranks and venue priorities """
+    return [
+        {'pk': 'a+', 'fields': {'name': 'A+', 'cutoff': None}},
+        {'pk': 'a',  'fields': {'name': 'A', 'cutoff': None}},
+        {'pk': 'a-', 'fields': {'name': 'A-', 'cutoff': None}},
+        {'pk': 'b+', 'fields': {'name': 'B+', 'cutoff': None}},
+        {'pk': 'b',  'fields': {'name': 'B', 'cutoff': None}},
+        {'pk': 'b-', 'fields': {'name': 'B-', 'cutoff': None}},
+        {'pk': 'c+', 'fields': {'name': 'C+', 'cutoff': None}},
+        {'pk': 'c',  'fields': {'name': 'C', 'cutoff': None}},
+        {'pk': 'f',  'fields': {'name': 'F', 'cutoff': None}},
+    ]

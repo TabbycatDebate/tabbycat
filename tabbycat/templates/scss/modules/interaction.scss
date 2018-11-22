@@ -2,9 +2,12 @@
 // Hover Items
 //------------------------------------------------------------------------------
 
-// Generic 'contains action'
 .hoverable:hover {
-  cursor: pointer;
+  cursor: pointer; // Generic 'contains action' indicator
+}
+
+.text-unselectable {
+  user-select: none; // Useful to prevent text selection during dragging
 }
 
 // Specific styling for tooltips/popovers
@@ -29,15 +32,6 @@
 
   .popover a:hover {
     cursor: pointer; // De-inherit (popovers must be children of hover-target)
-  }
-}
-
-// Expand hover target by taking up the cells padding
-td > .touch-target {
-  margin: -8px -4px -8px -4px;
-
-  > .hover-target {
-    padding: 8px 4px; // Transfer padding to the element that triggers hovers
   }
 }
 

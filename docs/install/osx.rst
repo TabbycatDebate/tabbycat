@@ -105,7 +105,7 @@ a. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat/directory
 
-b. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+b. Copy **settings/local.example** to **settings/local.py**. Find this part in your new settings_local.py, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -124,7 +124,7 @@ b. Copy **local_settings.example** to **local_settings.py**. Find this part in y
 
     TIME_ZONE = 'Australia/Melbourne'
 
-c. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+c. Ensure you are in the main Tabbycat directory (not the config folder where **settings_local.py** is and start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
     $ python3 -m venv venv
 
@@ -135,7 +135,7 @@ d. Run the ``activate`` script. This puts you "into" the virtual environment::
 e. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
-    $ pip install -r requirements.txt
+    $ pip install -r ./config/requirements_core.txt
     $ npm install
 
 f. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::

@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.core.management.base import CommandError
 
 from adjfeedback.models import AdjudicatorFeedback
 from draw.models import Debate
-from utils.management.base import CommandError, RoundCommand
+from utils.management.base import RoundCommand
 
 from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_for_round, delete_feedback
 

@@ -16,6 +16,8 @@ from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from draw.prefetch import populate_opponents
+from notifications.models import SentMessageRecord
+from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
 from results.models import SpeakerScore, TeamScore
 from results.prefetch import populate_confirmed_ballots, populate_wins
@@ -59,6 +61,12 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
         speakers_table.add_team_columns([speaker.team for speaker in speakers])
 
         return [adjs_table, speakers_table]
+
+    def get_context_data(self, **kwargs):
+        # These are used to choose the nav display
+        kwargs['email_sent'] = SentMessageRecord.objects.filter(
+            tournament=self.tournament, event=SentMessageRecord.EVENT_TYPE_TEAM).exists()
+        return super().get_context_data(**kwargs)
 
 
 class AdminParticipantsListView(AdministratorMixin, BaseParticipantsListView):
@@ -128,13 +136,14 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
     page_emoji = '🕵'
 
     def get_table(self):
-        teams = self.tournament.team_set.select_related('institution').prefetch_related('speaker_set')
+        t = self.tournament
+        teams = t.team_set.select_related('institution').prefetch_related('speaker_set')
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'emoji': t.emoji, 'text': t.code_name or "—"} for t in teams]
+            [{'text': t.code_name or "—"} for t in teams]
         )
-        table.add_team_columns(teams, show_emoji=False)
+        table.add_team_columns(teams)
         return table
 
 
@@ -144,6 +153,30 @@ class AdminCodeNamesListView(AdministratorMixin, BaseCodeNamesListView):
 
 class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
     pass
+
+
+# ==============================================================================
+# Email page
+# ==============================================================================
+
+class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
+    page_subtitle = _("Team Registration")
+
+    event = SentMessageRecord.EVENT_TYPE_TEAM
+    subject_template = 'team_email_subject'
+    message_template = 'team_email_message'
+
+    def get_success_url(self):
+        return reverse_tournament('participants-list', self.tournament)
+
+    def get_queryset(self):
+        return Speaker.objects.filter(team__tournament=self.tournament).select_related('team').prefetch_related('team__speaker_set')
+
+    def get_table(self):
+        table = super().get_table()
+
+        table.add_team_columns([s.team for s in self.get_queryset()])
+        return table
 
 
 # ==============================================================================
@@ -219,7 +252,7 @@ class BaseTeamRecordView(BaseRecordView):
             teamscores = teamscores.filter(
                 debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
                 debate_team__debate__round__silent=False,
-                debate_team__debate__round__seq__lt=tournament.current_round.seq
+                debate_team__debate__round__completed=True,
             )
 
         debates = [ts.debate_team.debate for ts in teamscores]
@@ -284,7 +317,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
             debateadjs = debateadjs.filter(
                 debate__round__draw_status=Round.STATUS_RELEASED,
                 debate__round__silent=False,
-                debate__round__seq__lt=self.tournament.current_round.seq,
+                debate__round__completed=True,
             )
         debates = [da.debate for da in debateadjs]
         populate_wins(debates)

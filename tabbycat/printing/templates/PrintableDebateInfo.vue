@@ -10,14 +10,15 @@
           <span v-if="ballot.debateAdjudicators && ballot.debateAdjudicators.length > 1">
             Adjudicating with
             <span v-for="(da, i) in panellistsExcludingSelf">
-              <template v-if="i !== 0">&amp;</template>
+              <template v-if="i !== 0">; </template>
+              <template v-if="i == panellistsExcludingSelf.length - 1">&amp; </template>
               <strong>{{ da.adjudicator.name }}</strong>
-              <template v-if="da.position === 'c'">(Chair, </template>
-              <template v-if="da.position === 'o'">(Solo Chair, </template>
-              <template v-if="da.position === 'p'">(Panellist, </template>
-              <template v-if="da.position === 't'">(Trainee, </template>
-              {{ getAdjudicatorInstitution(da) }}).
-            </span>
+              <template v-if="da.position === 'c'"> (Chair, </template>
+              <template v-if="da.position === 'o'"> (Solo Chair, </template>
+              <template v-if="da.position === 'p'"> (Panellist, </template>
+              <template v-if="da.position === 't'"> (Trainee, </template>
+              <template>{{ getAdjudicatorInstitution(da) }})</template>
+            </span>.
           </span>
 
           <span v-if="showScoring">
@@ -46,7 +47,8 @@
         The motion is <em>{{ roundInfo.motions[0].text }}.</em>
       </div>
 
-      <!-- No need to worry about if there is not motion selection and no motions have been entered; there's no use recording/providing the motion -->
+      <!-- No need to worry about if there is not motion selection and no motions
+           have been entered; there's no use recording/providing the motion -->
 
       <!-- Has motion selection; but not vetoes — no defined format -->
       <div v-if="roundInfo.hasMotions && !roundInfo.hasVetoes"
@@ -57,7 +59,8 @@
               <div class="text-center pb-2">Circle {{ choice_type }}</div>
               <div class="d-flex text-monospace">
                 <div v-for="motion in motionsAccountingForBlanks"
-                     class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text m-1">
+                     class="db-align-horizontal-center db-align-vertical-start
+                            db-flex-item-1 db-center-text m-1">
                   <span class="db-circle">{{ motion.seq }}</span>
                 </div>
               </div>
@@ -66,7 +69,7 @@
           </template>
           <div class="flex-fill" v-if="!roundInfo.hideMotions">
             <div class="db-flex-item db-align-vertical-center"
-                 v-for="(motion, index) in roundInfo.motions">
+                 v-for="motion in roundInfo.motions">
               <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
             </div>
           </div>
@@ -90,7 +93,8 @@
             <div class="text-center pb-2">Circle {{ choice_type }}</div>
             <div class="d-flex text-monospace">
               <div v-for="motion in motionsAccountingForBlanks"
-                   class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text m-1">
+                   class="db-align-horizontal-center db-align-vertical-start
+                          db-flex-item-1 db-center-text m-1">
                 <span class="db-circle">{{ motion.seq }}</span>
               </div>
             </div>
@@ -99,7 +103,7 @@
         </template>
         <div class="flex-fill">
           <div class="db-flex-item db-align-vertical-center"
-               v-for="(motion, index) in roundInfo.motions"
+               v-for="motion in roundInfo.motions"
                v-if="!roundInfo.hideMotions">
             <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
           </div>
@@ -120,7 +124,8 @@
       <div class="db-flex-static d-flex align-content-center">
         <svg :id="ballot.barcode" class="barcode-placeholder"
              :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
-             jsbarcode-width="2.5" jsbarcode-height="85" v-if="roundInfo.hasMotions && roundInfo.hasVetoes">
+             jsbarcode-width="2.5" jsbarcode-height="85"
+             v-if="roundInfo.hasMotions && roundInfo.hasVetoes">
         </svg>
         <svg :id="ballot.barcode" class="barcode-placeholder"
              :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
@@ -155,7 +160,7 @@ export default {
   components: { PrintableTeamScores },
   methods: {
     getAdjudicatorInstitution: function (debateAdjudicator) {
-      var institution = debateAdjudicator.adjudicator.institution
+      const institution = debateAdjudicator.adjudicator.institution
       if (!_.isUndefined(institution) && institution !== null) {
         return institution.code
       }
@@ -164,26 +169,23 @@ export default {
     scoreDisplay: function (number) {
       if (number % 1 === 0) {
         return Math.round(number)
-      } else {
-        return number
       }
+      return number
     },
     getDisplayStep: function (number) {
       if (number % 1 === 0) {
-        return "no ½ marks"
+        return 'no ½ marks'
       } else if (number % 0.5 === 0) {
-        return "½ marks are allowed"
-      } else {
-        return "decimal marks are allowed"
+        return '½ marks are allowed'
       }
-    }
+      return 'decimal marks are allowed'
+    },
   },
   computed: {
     panellistsExcludingSelf: function () {
-      var ballotSource = this.ballot.author
-      var authoringPanellist = _.find(this.ballot.debateAdjudicators, function (panellist) {
-        return panellist.adjudicator.name === ballotSource
-      });
+      const ballotSource = this.ballot.author
+      const ballotAdjs = this.ballot.debateAdjudicators
+      const authoringPanellist = _.find(ballotAdjs, p => p.adjudicator.name === ballotSource)
       if (!_.isUndefined(authoringPanellist)) {
         return _.without(this.ballot.debateAdjudicators, authoringPanellist)
       }

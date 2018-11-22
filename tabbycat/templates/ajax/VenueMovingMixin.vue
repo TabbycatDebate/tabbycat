@@ -4,40 +4,44 @@ import MovingMixin from '../ajax/MovingMixin.vue'
 export default {
   mixins: [MovingMixin],
   methods: {
-    debateCheckIfShouldSave(debate) {
+    debateCheckIfShouldSave () {
       return true
     },
-    saveMoveForType(venueId, fromDebate, toDebate) {
-      var venue = this.allVenuesById[venueId]
-      var addToUnused = []
-      var removeFromUnused = []
+    saveMoveForType (venueId, fromDebate, toDebate) {
+      const venue = this.allVenuesById[venueId]
+      const addToUnused = []
+      const removeFromUnused = []
+      const newFromDebate = fromDebate
+      const newToDebate = toDebate
       // Data Logic
-      if (toDebate === 'unused') {
-        fromDebate.venue = null
+      if (newToDebate === 'unused') {
+        newFromDebate.venue = null
         addToUnused.push(venue)
       }
-      if (fromDebate === 'unused') {
-        if (toDebate.venue !== null) {
+      if (newFromDebate === 'unused') {
+        if (newToDebate.venue !== null) {
           // If replacing an in-place venue
-          addToUnused.push(toDebate.venue)
+          addToUnused.push(newToDebate.venue)
         }
-        toDebate.venue = venue
+        newToDebate.venue = venue
         removeFromUnused.push(venue)
       }
-      if (toDebate !== 'unused' && fromDebate !== 'unused') {
-        if (toDebate.venue !== null) {
+      if (newToDebate !== 'unused' && newFromDebate !== 'unused') {
+        if (newToDebate.venue !== null) {
           // If replacing an in-place venue
-          fromDebate.venue = toDebate.venue
+          newFromDebate.venue = newToDebate.venue
         } else {
-          fromDebate.venue = null
+          newFromDebate.venue = null
         }
-        toDebate.venue = venue
+        newToDebate.venue = venue
       }
       // Saving
-      var debatesToSave = this.determineDebatesToSave(fromDebate, toDebate)
-      this.postModifiedDebates(debatesToSave, addToUnused, removeFromUnused,
-                               null, 'debate venues of ')
+      const debatesToSave = this.determineDebatesToSave(fromDebate, newToDebate)
+      this.postModifiedDebates(
+        debatesToSave, addToUnused, removeFromUnused,
+        null, 'debate venues of '
+      )
     },
-  }
+  },
 }
 </script>

@@ -14,7 +14,9 @@ import SlideOverAdjudicatorMixin from '../info/SlideOverAdjudicatorMixin.vue'
 
 export default {
   mixins: [SlideOverSubjectMixin, SlideOverAdjudicatorMixin],
-  props: { 'adjudicator': Object,
-           'position': String },
+  props: {
+    adjudicator: Object,
+    position: String,
+  },
 }
 </script>

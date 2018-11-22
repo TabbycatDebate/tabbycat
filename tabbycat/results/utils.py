@@ -1,79 +1,43 @@
 import logging
-import datetime
 from itertools import combinations
-from smtplib import SMTPException
 
-from django.core.mail import get_connection
 from django.db.models import Count
-from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from draw.models import Debate
-from notifications.models import SentMessageRecord
-from notifications.utils import TournamentEmailMessage
+from options.utils import use_team_code_names
 from tournaments.utils import get_side_name
 
 logger = logging.getLogger(__name__)
 
 
-def graphable_debate_statuses(ballots, round):
-    # For each debate, find (a) the first non-discarded submission time, and
-    # (b) the last confirmed confirmation time. (Note that this means when
-    # a ballot is discarded, the graph will change retrospectively.)
-
-    # These two dictionaries record when a particular debate was first
-    # entered or drafted. These can then be compared to given time intervals
-    drafts = {}
-    confirmations = {}
-    for ballot in ballots:
-        d_id = ballot.debate_id
-        if ballot.timestamp and (d_id not in drafts or drafts[d_id] > ballot.timestamp):
-            drafts[d_id] = ballot.timestamp
-        if ballot.confirmed and ballot.confirm_timestamp and (d_id not in confirmations or
-                confirmations[d_id] < ballot.confirm_timestamp):
-            confirmations[d_id] = ballot.confirm_timestamp
-
-    # Collate timestamps into a single list.
-    # Tuples are (time, none_change, draft_change, confirmed_change)
-    first_draft_timestamps = [(time, -1, +1, 0) for time in drafts.values()]
-    confirmation_timestamps = [(time, 0, -1, +1) for time in confirmations.values()]
-    timestamps = sorted(first_draft_timestamps + confirmation_timestamps)
-    if len(timestamps) == 0:
-        return []
-
-    # Generate the timeline, including a one-minute margin before starting
-    margin = datetime.timedelta(minutes=1)
-    none = round.debate_set.count()
-    draft = 0
-    confirmed = 0
-
-    stats = []
-    stats.append({"time": (timestamps[0][0] - margin).isoformat(), "none": none, "draft": draft, "confirmed": confirmed})
-
-    for time, none_change, draft_change, confirmed_change in timestamps:
-        time_iso = time.isoformat()
-        stats.append({"time": time_iso, "none": none, "draft": draft, "confirmed": confirmed})
-        none += none_change
-        draft += draft_change
-        confirmed += confirmed_change
-        stats.append({"time": time_iso, "none": none, "draft": draft, "confirmed": confirmed})
-
-    return stats
+def get_status_meta(debate):
+    if debate.result_status == Debate.STATUS_NONE:
+        return "x", "text-danger", 0, _("No Ballot")
+    elif debate.result_status == Debate.STATUS_DRAFT:
+        return "circle", "text-info", 2, _("Ballot is Unconfirmed")
+    elif debate.result_status == Debate.STATUS_CONFIRMED:
+        return "check", "text-success", 3, _("Ballot is Confirmed")
+    elif debate.result_status == Debate.STATUS_POSTPONED:
+        return "pause", "", 4, _("Debate was Postponed")
+    else:
+        raise ValueError('Debate has no discernable status')
 
 
 def readable_ballotsub_result(ballotsub):
     """ Make a human-readable representation of a debate result """
 
-    def format_dt(dt, t):
+    def format_dt(dt, t, use_codes):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
         return _("%(team_name)s as %(side_abbr)s") % {
-            'team_name': dt.team.short_name,
-            'side_abbr': dt.get_side_name(t, 'abbr')
+            'team_name': dt.team.code_name if use_codes else dt.team.short_name,
+            'side_abbr': dt.get_side_abbr(t)
         }
 
     t = ballotsub.debate.round.tournament
     team_scores = ballotsub.teamscore_set.all()
+    use_codes = use_team_code_names(t, True)
 
     try:
         if t.pref('teams_in_debate') == 'two':
@@ -87,13 +51,13 @@ def readable_ballotsub_result(ballotsub):
 
             result_winner = _("%(winner)s (%(winner_side)s) won")
             result_winner = result_winner % {
-                'winner': winner.team.short_name,
-                'winner_side': winner.get_side_name(t, 'abbr'),
+                'winner': winner.team.code_name if use_codes else winner.team.short_name,
+                'winner_side': winner.get_side_abbr(t),
             }
             result = _("vs %(loser)s (%(loser_side)s)")
             result = result % {
-                'loser': loser.team.short_name,
-                'loser_side': loser.get_side_name(t, 'abbr'),
+                'loser': loser.team.code_name if use_codes else loser.team.short_name,
+                'loser_side': loser.get_side_abbr(t),
             }
 
         elif ballotsub.debate.round.is_break_round:
@@ -107,11 +71,11 @@ def readable_ballotsub_result(ballotsub):
 
             result_winner = _("Advancing: %(advancing_list)s<br>\n")
             result_winner = result_winner % {
-                'advancing_list': ", ".join(format_dt(dt, t) for dt in advancing)
+                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in advancing)
             }
             result = _("Eliminated: %(eliminated_list)s")
             result = result % {
-                'eliminated_list': ", ".join(format_dt(dt, t) for dt in eliminated),
+                'eliminated_list': ", ".join(format_dt(dt, t, use_codes) for dt in eliminated),
             }
 
         else:  # BP preliminary round
@@ -120,19 +84,23 @@ def readable_ballotsub_result(ballotsub):
                 ordered[teamscore.points] = teamscore.debate_team
 
             result_winner = _("1st: %(first_team)s<br>\n")
-            result_winner = result_winner % {'first_team':  format_dt(ordered[3], t)}
+            result_winner = result_winner % {'first_team':  format_dt(ordered[3], t, use_codes)}
             result = _("2nd: %(second_team)s<br>\n"
                        "3rd: %(third_team)s<br>\n"
                        "4th: %(fourth_team)s")
             result = result % {
-                'second_team': format_dt(ordered[2], t),
-                'third_team':  format_dt(ordered[1], t),
-                'fourth_team': format_dt(ordered[0], t),
+                'second_team': format_dt(ordered[2], t, use_codes),
+                'third_team':  format_dt(ordered[1], t, use_codes),
+                'fourth_team': format_dt(ordered[0], t, use_codes),
             }
 
     except (IndexError, AttributeError):
         logger.warning("Error constructing latest result string", exc_info=True)
-        result_winner = _("Error with result for %(debate)s") % {'debate': ballotsub.debate.matchup}
+        if use_codes:
+            matchup = ballotsub.debate.matchup_codes
+        else:
+            matchup = ballotsub.debate.matchup
+        result_winner = _("Error with result for %(debate)s") % {'debate': matchup}
         result = ""
 
     return result_winner, result
@@ -242,47 +210,3 @@ def side_and_position_names(tournament):
                 else _ORDINALS[pos]
                 for pos in tournament.positions]
             yield side, positions
-
-
-def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
-
-    messages = []
-
-    round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(debate.round.tournament),
-                                                             'round': debate.round.name, 'room': debate.venue.name}
-    subject = Template(debate.round.tournament.pref('ballot_email_subject'))
-    message = Template(debate.round.tournament.pref('ballot_email_message'))
-
-    context = {'DEBATE': round_name}
-
-    for ballot in ballots:
-        if 'adjudicator' in ballot:
-            judge = ballot['adjudicator']
-        else:
-            judge = debate.debateadjudicator_set.get(type="C").adjudicator
-
-        if judge.email is None:
-            continue
-
-        scores = ''
-        for team in ballot['teams']:
-            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team['team'].short_name}
-
-            for speaker in team['speakers']:
-                scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
-
-        context['USER'] = judge.name
-        context['SCORES'] = scores
-
-        messages.append(TournamentEmailMessage(subject, message, debate.round.tournament, debate.round, SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context))
-
-    try:
-        get_connection().send_messages(messages)
-    except SMTPException:
-        logger.exception("Failed to send ballot receipt e-mails")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending ballot receipt e-mails")
-        raise
-    else:
-        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])

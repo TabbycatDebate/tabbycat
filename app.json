@@ -7,6 +7,7 @@
   "addons": [
     "papertrail",
     "sendgrid:starter",
+    "rediscloud:30",
     "heroku-postgresql:hobby-dev",
     {
       "plan": "heroku-redis:hobby-dev",
@@ -35,6 +36,10 @@
   },
   "formation": {
     "web": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "worker": {
       "quantity": 1,
       "size": "free"
     }

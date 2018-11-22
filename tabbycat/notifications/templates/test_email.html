@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head-title %}{% endblock %}
+{% block page-title %}{% trans "Send Test Email" context "page title" %}{% endblock %}
+{% block nav %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-lg-8 ml-lg-auto mr-md-auto">
+
+    <div class="card">
+      <form action="." method="POST">
+      {% csrf_token %}
+
+      {% trans "Send Test Email" context "page title" as title %}
+      {% trans "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants." as text %}
+      {% include "components/form-title.html" with emoji="📧" %}
+
+      {% include "components/form-main.html" %}
+
+      {% trans "Send Test Email" as title %}
+      {% trans "Go back to the site home page" as subtitle %}
+      {% url 'tabbycat-index' as suburl %}
+      {% include "components/form-submit.html" %}
+
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -261,7 +261,7 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
         for email in emails:
             try:
                 validate_email(email)
-            except ValidationError as e:
+            except ValidationError:
                 self.add_error('emails', _("%(email)s is not a valid email address.") % {'email': email})
         return emails
 
@@ -301,6 +301,9 @@ class TeamDetailsForm(BaseInstitutionObjectDetailsForm):
             for name, email in zip_longest(self.cleaned_data['speakers'], self.cleaned_data['emails']):
                 team.speaker_set.create(name=name, email=email)
             team.break_categories.set(team.tournament.breakcategory_set.filter(is_general=True))
+
+            if team.institution:
+                team.teaminstitutionconflict_set.create(institution=team.institution)
 
         return team
 

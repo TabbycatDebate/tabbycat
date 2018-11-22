@@ -147,15 +147,15 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
     page_emoji = '🔍'
 
     def get_table(self):
-        tournament = self.tournament
+        adjudicators = self.tournament.adjudicator_set.annotate(feedback_count=Count('adjudicatorfeedback'))
         table = TabbycatTableBuilder(view=self, sort_key="name")
-        table.add_adjudicator_columns(tournament.adjudicator_set.all())
+        table.add_adjudicator_columns(adjudicators)
         feedback_data = []
-        for adj in tournament.adjudicator_set.all().annotate(feedback_count=Count('adjudicatorfeedback')):
+        for adj in adjudicators:
             count = adj.feedback_count
             feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
-                'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
+                'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.id}),
             })
         table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, feedback_data)
         return table
@@ -185,12 +185,12 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             })
         team_table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, team_feedback_data)
 
-        adjs = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
+        adjudicators = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
         adj_table = TabbycatTableBuilder(
             view=self, title=_('From Adjudicators'), sort_key='name')
-        adj_table.add_adjudicator_columns(adjs)
+        adj_table.add_adjudicator_columns(adjudicators)
         adj_feedback_data = []
-        for adj in adjs:
+        for adj in adjudicators:
             count = adj.feedback_count
             adj_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
@@ -238,6 +238,7 @@ class FeedbackMixin(TournamentMixin):
             'source_adjudicator__debate__round',
             'source_team__debate__round',
             'source_team__team',
+            'source_team__team__tournament',
         )
 
 
@@ -713,11 +714,11 @@ class PublicFeedbackProgress(PublicTournamentPageMixin, BaseFeedbackProgressView
     public_page_preference = 'feedback_progress'
 
 
-class IgnoreFeedbackView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
+class BaseFeedbackToggleView(AdministratorMixin, TournamentMixin, PostOnlyRedirectView):
 
     def post(self, request, *args, **kwargs):
         feedback = AdjudicatorFeedback.objects.get(id=kwargs['feedback_id'])
-        feedback.ignored = False if feedback.ignored else True
+        feedback = self.modify_feedback(feedback)
         feedback.save()
 
         # Make message
@@ -725,7 +726,7 @@ class IgnoreFeedbackView(AdministratorMixin, TournamentMixin, PostOnlyRedirectVi
             source = feedback.source_adjudicator.adjudicator.name
         else:
             source = feedback.source_team.team.short_name
-        result = _("ignored") if feedback.ignored else _("recognized")
+        result = self.feedback_result(feedback)
         messages.success(self.request, _(
             "Feedback for %(adj)s from %(source)s is now %(result)s.")
             % {'adj': feedback.adjudicator.name, 'source': source, 'result': result})
@@ -733,7 +734,29 @@ class IgnoreFeedbackView(AdministratorMixin, TournamentMixin, PostOnlyRedirectVi
         return super().post(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse_tournament('adjfeedback-overview', self.tournament)
+        # Returns to the referring page (by way of hidden input with the path)
+        fallback = reverse_tournament('adjfeedback-overview', self.tournament)
+        return self.request.POST.get('next', fallback)
+
+
+class ConfirmFeedbackView(BaseFeedbackToggleView):
+
+    def feedback_result(self, feedback):
+        return _("confirmed") if feedback.confirmed else _("un-confirmed")
+
+    def modify_feedback(self, feedback):
+        feedback.confirmed = False if feedback.confirmed else True
+        return feedback
+
+
+class IgnoreFeedbackView(BaseFeedbackToggleView):
+
+    def feedback_result(self, feedback):
+        return _("ignored") if feedback.ignored else _("un-ignored")
+
+    def modify_feedback(self, feedback):
+        feedback.ignored = False if feedback.ignored else True
+        return feedback
 
 
 # ==============================================================================

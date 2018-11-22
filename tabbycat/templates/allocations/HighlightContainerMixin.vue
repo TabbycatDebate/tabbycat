@@ -8,23 +8,21 @@ export default {
     this.$eventHub.$on('set-highlights', this.setHighlights)
   },
   methods: {
-    setHighlights(highlights) {
+    setHighlights (highlights) {
       // Highlights come in as more expansive dictionary;
       // reduce them back to a simple key/state
-      var simpleHighlights = _.mapValues(highlights, function (highlight) {
-        return highlight.state;
-      });
-      console.log(simpleHighlights)
-      _.forEach(this.teams, function (item) {
+      const simpleHighlights = _.mapValues(highlights, highlight => highlight.state)
+
+      this.teams.forEach((item) => {
         item.highlights = simpleHighlights
       })
-      _.forEach(this.adjudicators, function (item) {
+      this.adjudicators.forEach((item) => {
         item.highlights = simpleHighlights
       })
-      _.forEach(this.unallocatedItems, function (item) {
+      this.unallocatedItems.forEach((item) => {
         item.highlights = simpleHighlights
       })
-    }
-  }
+    },
+  },
 }
 </script>

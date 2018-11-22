@@ -74,6 +74,10 @@ urlpatterns = [
     # Draws Cross Tournament
     path('draw/',
         include('draw.urls_crosst')),
+
+    # Notifications
+    path('notifications/',
+        include('notifications.urls')),
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG

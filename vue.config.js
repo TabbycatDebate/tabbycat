@@ -14,6 +14,7 @@ module.exports = {
       chunkFilename: '[name].js',
     },
   },
+  lintOnSave: process.env.NODE_ENV !== 'production', // Lint if not in production
   // Don't split out vendors file
   chainWebpack: config => {
     config.optimization.delete('splitChunks')

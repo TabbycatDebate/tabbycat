@@ -2,29 +2,107 @@
 Change Log
 ==========
 
-2.2.0 (Khao Manee)
-------------------
-*Release date: TBD*
+2.3.0 (LaPerm)
+--------------
+*Release date: ?*
 
 - Made it possible to re-use an existing motion for multiple rounds.
-- Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds.
-- Renamed the "average speaker score" to "average total speaker score."
-- Implemented a new server architecture on Heroku that should significantly improve performance under load. If upgrading an existing Heroku instance this requires a few tweaks:
-    - Adding the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
-    - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the `heroku stack:set heroku-16 --app APP_NAME` command
-- Added email notification to adjudicators on round release.
-- Implemented participant self-check-in through the use of their private URLs.
-- Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key.
-- Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable.
-- Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version.
-- Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.
-- Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score. Thanks Étienne Beaulé for the pull request!
-- Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request
-- Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments.
-- Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
-- Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6.
+- The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
+- When printing the per-participant private URLs they now feature QR codes in addition to the URL. Thanks to Étienne Beaulé for contributing this feature!
+- Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
+    - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details)
+    - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development
+- A range of improvements to the email notifications contributed by Étienne Beaulé:
+    - Ballot receipt emails now provide more information about team scores/points
+    - Emails are now in a rich-text format
+    - Custom emails may be sent out to select participants through the web-interface
+    - Participants can be specifically included or excluded from receiving a notification before sending
+- Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
-  This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_.
+
+2.2.7
+-----
+*Release date: 16 November 2018*
+
+- Lock redis-py version to 2.10.6, as workaround for `compatibility issue between django-redis and redis-py <https://github.com/niwinz/django-redis/issues/342>`_
+- Fix login link on page shown after a user logs out
+
+
+2.2.6
+-----
+*Release date: 14 November 2018*
+
+- Fix issue where check-ins could not be revoked
+- Fix issue where the standings overview 'dashboard' included scores from elimination rounds. Thanks to Étienne for this fix
+- Fix issue where the Average Individual Speaker Score metric would fail to calculate in some circumstances. Thanks to Étienne for this fix
+- Fix issue where draw emails would crash if venues were unspecified. Thanks, again, to Étienne for this fix!
+
+
+2.2.5
+-----
+*Release date: 21 October 2018*
+
+- Remove the buttons from the public check-ins page (as these do nothing unless the user is logged in)
+- Hopefully fixed error that could cause Team- and Adjudicator- Institutional conflicts to not show properly on Allocation pages
+- Thanks to Étienne for pull requests fixing rare bugs in the user creation form and break generation when rounds are not present
+
+
+2.2.4
+-----
+*Release date: 9 October 2018*
+
+- Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics
+
+
+2.2.3
+-----
+*Release date: 28 September 2018*
+
+- *Literally* fix the issue causing public views of released scoresheets to throw errors (thanks for the pull request Étienne)
+- Fix minor spacing issues in printed ballots (thanks for the pull request Étienne)
+- Fix issue where institution-less adjudicators would cause some draw views to crash (thanks for the pull request Étienne)
+
+
+2.2.2
+-----
+*Release date: 22 September 2018*
+
+- *Actually* fix the issue causing public views of released scoresheets to throw errors
+
+
+2.2.1
+-----
+*Release date: 21 September 2018*
+
+- Fix issue causing public views of released scoresheets to throw errors
+
+
+2.2.0 (Khao Manee)
+------------------
+*Release date: 20 September 2018*
+
+- Implemented a new server architecture on Heroku along with other optimisation that should significantly improve the performance of sites receiving lots of traffic. Note that if you are upgrading an existing Heroku instance this requires a few tweaks before you deploy the update:
+    - Add the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
+    - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the ``heroku stack:set heroku-16 --app APP_NAME`` command
+- Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version
+- Added support for Japanese and Portuguese. Let us know if you'd like to help contribute translations for either language (or a new one)!
+- The results-entry page now updates its data live, giving you a more up to date look at data entry progress and reducing the cases of old data leading people to enter new ballots when they meant to confirm them
+- A huge thanks to Étienne Beaulé for contributing a number of major new features and bug fixes. Notably:
+    - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score
+    - Added email notification to adjudicators on round release
+    - Implemented participant self-check-in through the use of their private URLs
+    - Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key
+    - Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable
+    - Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds. The old "average speaker score" metric has been renamed to to "average total speaker score"
+    - Reworked the ballots status graph to be an area chart
+- Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request!
+- Added the ability to unconfirm feedback from any of the views that show it
+- BP motion statistics now also show average points split by bench and half
+- Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments
+- Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
+- Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6
+
+  This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_
 
 
 2.1.3

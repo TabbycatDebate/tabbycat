@@ -1,7 +1,6 @@
 import json
 import datetime
 import logging
-from smtplib import SMTPException
 import unicodedata
 from itertools import product
 from math import floor
@@ -12,26 +11,29 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.utils.functional import cached_property
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy
+from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
+from availability.utils import annotate_availability
 from divisions.models import Division
+from notifications.models import SentMessageRecord
+from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
 from participants.models import Adjudicator, Institution, Team
+from participants.prefetch import populate_win_counts
 from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CrossTournamentPageMixin, CurrentRoundMixin,
-    DrawForDragAndDropMixin, OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin,
-    RoundMixin, TournamentMixin)
-from tournaments.models import Round
+from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin,
+    OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
+    TournamentMixin)
+from tournaments.models import Round, Tournament
 from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from tournaments.utils import get_side_name
 from utils.mixins import AdministratorMixin
@@ -49,12 +51,12 @@ from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
-from .utils import send_mail_to_adjs
+from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
+class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
     """Base class for views showing a draw table to the public in some way.
     Subclasses are *not* necessarily public views; they may be admin/assistant
     views intended to facilitate displaying the draw in the general assembly
@@ -64,94 +66,164 @@ class BasePublicDrawTableView(RoundMixin, VueTableTemplateView):
 
     template_name = 'draw_display_by.html'
     sort_key = 'venue'
+    page_emoji = '👏'
+    empty_table_title = gettext_lazy("No debates in this round")
+
+    @property
+    def rounds(self):
+        raise NotImplementedError  # leave for subclasses
 
     def get_page_title(self):
-        return _("Draw for %(round)s") % {'round': self.round.name}
-
-    def get_page_emoji(self):
-        if not self.round:
-            return None # Cross-Tournament pages
-        elif self.round.draw_status == Round.STATUS_RELEASED:
-            return '👏'
+        if len(self.rounds) == 1:
+            return _("Draw for %(round)s") % {'round': self.rounds[0].name}
         else:
-            return '😴'
+            return _("Draws for Current Rounds")
 
     def get_page_subtitle(self):
-        round = self.round
-        if round and round.starts_at:
+        if len(self.rounds) == 1 and getattr(self.rounds[0], 'starts_at', None):
             return _("debates start at %(time)s (in %(time_zone)s)") % {
-                     'time': round.starts_at.strftime('%H:%M'),
+                     'time': self.rounds[0].starts_at.strftime('%H:%M'),
                      'time_zone': settings.TIME_ZONE}
+        elif any(getattr(r, 'starts_at', None) for r in self.rounds):
+            return _("start times in time zone: %(time_zone)s") % {'time_zone': settings.TIME_ZONE}
         else:
-            return ''
+            return ""
+
+    def populate_table(self, debates, table, highlight=[]):
+        table.add_debate_venue_columns(debates)
+        table.add_debate_team_columns(debates, highlight)
+        if self.tournament.pref('enable_division_motions'):
+            table.add_motion_column(d.division_motion for d in debates)
+        if not self.tournament.pref('hide_adjudicators'):
+            table.add_debate_adjudicators_column(debates, show_splits=False)
+
+    @classmethod
+    def get_debates_for_round(cls, round):
+        """Not used if the `get_debates()` method is defined. Overridden by
+        `PublicDrawMixin` to blank the table if the round hasn't been
+        released."""
+        return round.debate_set_with_prefetches()
+
+    def get_tables(self):
+
+        # If the view has debates specified specifically, use those in a single table
+        if hasattr(self, 'get_debates'):
+            table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
+                    admin=False, empty_title=self.empty_table_title)
+            self.populate_table(self.get_debates(), table)
+            return [table]
+
+        # If there's only one round, use that in a single table
+        if len(self.rounds) == 1:
+            table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
+                    admin=False, empty_title=self.empty_table_title)
+            debates = self.get_debates_for_round(self.rounds[0])
+            self.populate_table(debates, table)
+            return [table]
+
+        tables = []
+        for r in self.tournament.current_rounds:
+            debates = self.get_debates_for_round(r)
+            if r.starts_at:
+                subtitle = ngettext(
+                    "debate starts at %(time)s",
+                    "debates start at %(time)s",
+                    debates.count()
+                ) % {'round_name': r.name, 'time': r.starts_at.strftime('%H:%M')}
+            else:
+                subtitle = ""
+            table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key,
+                admin=False, title=r.name, subtitle=subtitle,
+                empty_title=self.empty_table_title)
+            self.populate_table(debates, table)
+            tables.append(table)
+
+        return tables
+
+
+class BaseDisplayDrawForSpecificRoundTableView(RoundMixin, BaseDisplayDrawTableView):
+
+    @property
+    def rounds(self):
+        return [self.round]
+
+    def get_page_subtitle(self):
+        # Skip the RoundMixin implementation
+        return BaseDisplayDrawTableView.get_page_subtitle(self)
 
     def get_context_data(self, **kwargs):
-        kwargs['round'] = self.round
+        kwargs["round"] = self.round
         return super().get_context_data(**kwargs)
 
-    def get_draw(self):
-        round = self.round
-        draw = round.debate_set_with_prefetches()
-        return draw
 
-    def populate_table(self, draw, table, round, tournament, highlight=[]):
-        if hasattr(self, 'cross_tournament') and self.cross_tournament is True:
-            table.add_tournament_column(d.round.tournament for d in draw) # For cross-tournament draws
+class BaseDisplayDrawForCurrentRoundsTableView(BaseDisplayDrawTableView):
 
-        if not round:
-            table.add_round_column(d.round for d in draw) # For mass draws
+    tables_orientation = 'rows'
 
-        table.add_debate_venue_columns(draw)
-        table.add_debate_team_columns(draw, highlight)
-
-        if tournament.pref('enable_division_motions'):
-            table.add_motion_column(d.division_motion for d in draw)
-
-        if not tournament.pref('hide_adjudicators'):
-            table.add_debate_adjudicators_column(draw, show_splits=False)
-
-    def get_table(self):
-        table = PublicDrawTableBuilder(view=self, sort_key=self.sort_key, admin=False)
-        self.populate_table(self.get_draw(), table, self.round, self.tournament)
-        return table
+    @property
+    def rounds(self):
+        return self.tournament.current_rounds
 
 
 # ==============================================================================
 # Viewing Draw (Public)
 # ==============================================================================
 
-class PublicDrawForRoundView(PublicTournamentPageMixin, BasePublicDrawTableView):
+
+class PublicDrawMixin(PublicTournamentPageMixin):
+    """Governs permissions, particularly those relating to draw release."""
+
+    empty_table_title = gettext_lazy("The draw for this round hasn't been released.")
+
+    @cached_property
+    def draws_available(self):
+        return any(r.draw_status == Round.STATUS_RELEASED for r in self.rounds)
+
+    @classmethod
+    def get_debates_for_round(cls, round):
+        if round.draw_status != Round.STATUS_RELEASED:
+            return Debate.objects.none()
+        return super().get_debates_for_round(round)
+
+    def get_template_names(self):
+        if not self.draws_available:
+            return ['draw_not_released.html']
+        return super().get_template_names()
+
+    def get_tables(self):
+        if not self.draws_available:
+            return []
+        return super().get_tables()
+
+    def get_page_emoji(self):
+        if not self.draws_available:
+            return '😴'
+        return super().get_page_emoji()
+
+    def get_page_subtitle(self):
+        if not self.draws_available:
+            return ""
+        return super().get_page_subtitle()
+
+
+class PublicDrawForRoundView(PublicDrawMixin, BaseDisplayDrawForSpecificRoundTableView):
 
     def is_page_enabled(self, tournament):
         return tournament.pref('public_draw') == 'all-released'
 
-    def get_template_names(self):
-        if self.round.draw_status != Round.STATUS_RELEASED:
-            return ['draw_not_released.html']
-        else:
-            return super().get_template_names()
 
-    def get_context_data(self, **kwargs):
-        round = self.round
-        if round.draw_status != Round.STATUS_RELEASED:
-            kwargs["round"] = self.round
-            return super(BasePublicDrawTableView, self).get_context_data(**kwargs) # skip BasePublicDrawTableView
-        else:
-            return super().get_context_data(**kwargs)
-
-
-class PublicDrawForCurrentRoundView(CurrentRoundMixin, PublicDrawForRoundView):
+class PublicDrawForCurrentRoundsView(PublicDrawMixin, BaseDisplayDrawForCurrentRoundsTableView):
 
     def is_page_enabled(self, tournament):
         return tournament.pref('public_draw') == 'current'
 
 
-class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BasePublicDrawTableView):
+class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BaseDisplayDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     @property
-    def round(self):
-        return None
+    def rounds(self):
+        return []
 
     def get_page_title(self):
         return _("All Debates for All Rounds of %(tournament)s") % {'tournament': self.tournament.name}
@@ -161,6 +233,10 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BasePublicDraw
 
     def get_page_emoji(self):
         return None
+
+    def populate_table(self, debates, table, highlight=[]):
+        table.add_round_column(d.round for d in debates)
+        super().populate_table(debates, table, highlight=highlight)
 
     def get_draw(self):
         all_rounds = Round.objects.filter(tournament=self.tournament,
@@ -172,11 +248,91 @@ class PublicAllDrawsAllTournamentsView(PublicTournamentPageMixin, BasePublicDraw
 
 
 # ==============================================================================
+# Viewing Draw (Briefing Room)
+# ==============================================================================
+
+class BriefingRoomDrawTableMixin:
+    """Mixin for views that get projected in the briefing room, to be accessed
+    only by admins and assistants."""
+
+    def get_context_data(self, **kwargs):
+        kwargs['no_popovers'] = True
+        return super().get_context_data(**kwargs)
+
+
+class BriefingRoomDrawByVenueTableMixin(BriefingRoomDrawTableMixin):
+    # inherit everything, this class is kept in code for ease of reading
+    pass
+
+
+class BriefingRoomDrawByTeamTableMixin(BriefingRoomDrawTableMixin):
+
+    sort_key = '' # Leave with default sort order
+
+    def populate_table(self, debates, table):
+        # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
+        draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(debates, self.tournament.sides)]
+        draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', table._team_short_name(x[1])))
+
+        if len(draw_by_team) == 0:
+            debates, teams = [], []  # next line can't unpack if draw_by_team is empty
+        else:
+            debates, teams = zip(*draw_by_team)
+        super().populate_table(debates, table, highlight=teams)
+
+
+class AdminDrawDisplayForSpecificRoundByVenueView(AdministratorMixin,
+        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForSpecificRoundTableView):
+    pass
+
+
+class AdminDrawDisplayForSpecificRoundByTeamView(AdministratorMixin,
+        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForSpecificRoundTableView):
+    pass
+
+
+class AdminDrawDisplayForCurrentRoundsByVenueView(AdministratorMixin,
+        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
+    pass
+
+
+class AdminDrawDisplayForCurrentRoundsByTeamView(AdministratorMixin,
+        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
+    pass
+
+
+class AssistantDrawDisplayForSpecificRoundByVenueView(OptionalAssistantTournamentPageMixin,
+        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForSpecificRoundTableView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+    def is_page_enabled(self, tournament):
+        return self.round.is_current and super().is_page_enabled(tournament)
+
+
+class AssistantDrawDisplayForSpecificRoundByTeamView(OptionalAssistantTournamentPageMixin,
+        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForSpecificRoundTableView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+    def is_page_enabled(self, tournament):
+        return self.round.is_current and super().is_page_enabled(tournament)
+
+
+class AssistantDrawDisplayForCurrentRoundsByVenueView(OptionalAssistantTournamentPageMixin,
+        BriefingRoomDrawByVenueTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+class AssistantDrawDisplayForCurrentRoundsByTeamView(OptionalAssistantTournamentPageMixin,
+        BriefingRoomDrawByTeamTableMixin, BaseDisplayDrawForCurrentRoundsTableView):
+    assistant_page_permissions = ['all_areas', 'results_draw']
+
+
+# ==============================================================================
 # Draw Alerts Utilities (Admin)
 # ==============================================================================
 
 class AdminDrawUtiltiesMixin:
-    """ Shared between the Admin Draw page and Admin Display Page"""
+    """Shared between the admin draw and admin display pages."""
 
     def get_draw(self):
         if not hasattr(self, '_draw'):
@@ -210,67 +366,40 @@ class AdminDrawUtiltiesMixin:
 
 
 # ==============================================================================
-# Viewing Draw (Admin)
+# Draw Display Index (Admin)
 # ==============================================================================
 
-class BaseDrawDisplayView(AdminDrawUtiltiesMixin, RoundMixin, TemplateView):
+class BaseDrawDisplayIndexView(AdminDrawUtiltiesMixin, RoundMixin, TemplateView):
     pass
 
 
-class BaseBriefingRoomDrawTableView(BasePublicDrawTableView):
-    """Despite the inheritance, this is a base class for views that can be
-    accessed only by admins and assistants, and is intended for views of the
-    draw that get projected in the briefing room."""
-
-    def get_context_data(self, **kwargs):
-        kwargs['no_popovers'] = True  # Note: can't do so in BaseDrawDisplayView
-        return super().get_context_data(**kwargs)
-
-
-class BaseDrawDisplayForRoundByVenueView(BaseBriefingRoomDrawTableView):
-    # inherit everything, this class is kept in code for ease of reading
-    pass
-
-
-class BaseDrawDisplayForRoundByTeamView(BaseBriefingRoomDrawTableView):
-
-    sort_key = '' # Leave with default sort order
-
-    def populate_table(self, draw, table, round, tournament):
-        # unicodedata.normalize gets accented characters (e.g. "Éothéod") to sort correctly
-        draw_by_team = [(debate, debate.get_team(side)) for debate, side in product(draw, tournament.sides)]
-        draw_by_team.sort(key=lambda x: unicodedata.normalize('NFKD', table._team_short_name(x[1])))
-
-        if len(draw_by_team) == 0:
-            draw, teams = [], []  # next line can't unpack if draw_by_team is empty
-        else:
-            draw, teams = zip(*draw_by_team)
-        super().populate_table(draw, table, round, tournament, highlight=teams)
-
-
-class AdminDrawDisplayView(AdministratorMixin, BaseDrawDisplayView):
+class AdminDrawDisplayView(AdministratorMixin, BaseDrawDisplayIndexView):
     template_name = 'draw_display_admin.html'
 
 
-class AdminDrawDisplayForRoundByVenueView(AdministratorMixin, BaseDrawDisplayForRoundByVenueView):
-    pass
-
-
-class AdminDrawDisplayForRoundByTeamView(AdministratorMixin, BaseDrawDisplayForRoundByTeamView):
-    pass
-
-
-class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayView):
+class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayIndexView):
     template_name = 'draw_display_assistant.html'
     assistant_page_permissions = ['all_areas', 'results_draw']
 
 
-class AssistantDrawDisplayForRoundByVenueView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByVenueView):
-    assistant_page_permissions = ['all_areas', 'results_draw']
+class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
+    page_subtitle = _("Adjudicator Assignments")
 
+    event = SentMessageRecord.EVENT_TYPE_DRAW
+    subject_template = 'adj_email_subject'
+    message_template = 'adj_email_message'
 
-class AssistantDrawDisplayForRoundByTeamView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDrawDisplayForRoundByTeamView):
-    assistant_page_permissions = ['all_areas', 'results_draw']
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['url'] = self.request.build_absolute_uri(
+            reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': '0'}))[:-2]
+        return extra
+
+    def get_success_url(self):
+        return reverse_round('draw-display', self.round)
+
+    def get_queryset(self):
+        return self.round.active_adjudicators
 
 
 # ==============================================================================
@@ -320,7 +449,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
 
         table = AdminDrawTableBuilder(view=self, sort_key=sort_key,
                                       sort_order=sort_order,
-                                      empty_title=_("No Debates for this Round"))
+                                      empty_title=_("No debates in this round"))
 
         draw = self.get_draw()
         populate_history(draw)
@@ -578,20 +707,7 @@ class DrawReleaseView(DrawStatusEdit):
         self.round.save()
         self.log_action()
 
-        email_success_message = ""
-        if self.tournament.pref('enable_adj_email'):
-            try:
-                send_mail_to_adjs(self.round)
-            except SMTPException:
-                messages.error(self.request, _("There was a problem sending adjudication assignment emails."))
-            except ConnectionError as e:
-                messages.error(self.request, _(
-                    "There was a problem connecting to the e-mail server when trying to send adjudication assigment emails: %(error)s"
-                ) % {'error': str(e)})
-            else:
-                email_success_message = _("Adjudicator emails successfully sent.")
-
-        messages.success(request, format_lazy(_("Released the draw."), " ", email_success_message))
+        messages.success(request, _("Released the draw."))
         return super().post(request, *args, **kwargs)
 
 
@@ -741,9 +857,32 @@ class PublicSideAllocationsView(PublicTournamentPageMixin, BaseSideAllocationsVi
     public_page_preference = 'public_side_allocations'
 
 
-class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView):
-    template_name = 'edit_matchups.html'
-    save_url = "save-debate-teams"
+class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
+    template_name = "edit_debate_teams.html"
+    page_title = gettext_lazy("Edit Matchups")
+    prefetch_teams = False # Fetched in full as get_serialised
+
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['highlights']['break'] = [] # TODO
+        return info
+
+    def get_serialised_allocatable_items(self):
+        # TODO: account for shared teams
+        teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
+        teams = annotate_availability(teams, self.round)
+        populate_win_counts(teams)
+        serialized_teams = EditDebateTeamsTeamSerializer(teams, many=True)
+        return self.json_render(serialized_teams.data)
+
+    def debates_or_panels_factory(self, debates):
+        return EditDebateTeamsDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides})
+
+
+class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):
+    template_name = 'legacy_edit_matchups.html'
+    save_url = "legacy-save-debate-teams"
 
     def annotate_draw(self, draw, serialised_draw):
         if self.round.tournament.pref('teams_in_debate') == 'bp':
@@ -765,15 +904,15 @@ class EditMatchupsView(DrawForDragAndDropMixin, AdministratorMixin, TemplateView
         serialized_unused = [t.serialize() for t in unused]
         break_thresholds = self.break_thresholds
         for t, serialt in zip(unused, serialized_unused):
-            serialt = self.annotate_break_classes(serialt, break_thresholds)
-            serialt = self.annotate_region_classes(serialt)
+            self.annotate_break_classes(serialt, break_thresholds)
+            self.annotate_region_classes(serialt)
 
         kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
-        kwargs['saveSidesStatusUrl'] = reverse_round('save-debate-sides-status', self.round)
+        kwargs['saveSidesStatusUrl'] = reverse_round('legacy-save-debate-sides-status', self.round)
         return super().get_context_data(**kwargs)
 
 
-class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
     allows_creation = True
 
@@ -810,7 +949,7 @@ class SaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
         return debate
 
 
-class SaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
+class LegacySaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
     action_log_type = ActionLogEntry.ACTION_TYPE_SIDES_SAVE
     allows_creation = False
 
@@ -824,7 +963,34 @@ class SaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
 # Cross-Tournament Draw Views
 # ==============================================================================
 
-class AllTournamentsAllInstitutionsView(CrossTournamentPageMixin, TemplateView):
+class CrossTournamentDrawMixin(PublicTournamentPageMixin):
+    """Mixin for views that show pages with data drawn from multiple tournaments
+    but are optionally viewed. They check the last available tournament object
+    and check its preferences"""
+    cross_tournament = True
+
+    @property
+    def rounds(self):
+        return []  # override
+
+    def get_page_emoji(self):
+        return None
+
+    @property
+    def tournament(self):
+        return Tournament.objects.order_by('id').last()
+
+    def get_context_data(self, **kwargs):
+        kwargs['tournament'] = self.tournament
+        return super().get_context_data(**kwargs)
+
+    def populate_table(self, debates, table, highlight=[]):
+        table.add_tournament_column(d.round.tournament for d in debates)
+        table.add_round_column(d.round for d in debates)
+        super().populate_table(debates, table, highlight=highlight)
+
+
+class AllTournamentsAllInstitutionsView(CrossTournamentDrawMixin, TemplateView):
     public_page_preference = 'enable_mass_draws'
     template_name = 'public_all_tournament_institutions.html'
 
@@ -833,7 +999,7 @@ class AllTournamentsAllInstitutionsView(CrossTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class AllTournamentsAllVenuesView(CrossTournamentPageMixin, TemplateView):
+class AllTournamentsAllVenuesView(CrossTournamentDrawMixin, TemplateView):
     public_page_preference = 'enable_mass_draws'
     template_name = 'public_all_tournament_venues.html'
 
@@ -842,19 +1008,17 @@ class AllTournamentsAllVenuesView(CrossTournamentPageMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class AllDrawsForAllTeamsView(CrossTournamentPageMixin, BasePublicDrawTableView):
+class AllDrawsForAllTeamsView(CrossTournamentDrawMixin, BaseDisplayDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_page_title(self):
         return _("All Draws for All Teams")
 
-    def get_draw(self):
-        draw = Debate.objects.all().select_related('round', 'round__tournament',
-                                                   'division')
-        return draw
+    def get_debates(self):
+        return Debate.objects.all().select_related('round__tournament', 'division')
 
 
-class AllDrawsForInstitutionView(CrossTournamentPageMixin, BasePublicDrawTableView):
+class AllDrawsForInstitutionView(CrossTournamentDrawMixin, BaseDisplayDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_institution(self):
@@ -863,7 +1027,7 @@ class AllDrawsForInstitutionView(CrossTournamentPageMixin, BasePublicDrawTableVi
     def get_page_title(self):
         return _("All Debates for Teams from %(institution)s") % {'institution': self.get_institution().name}
 
-    def get_draw(self):
+    def get_debates(self):
         institution = self.get_institution()
         debate_teams = DebateTeam.objects.filter(
             team__institution=institution).select_related(
@@ -873,7 +1037,7 @@ class AllDrawsForInstitutionView(CrossTournamentPageMixin, BasePublicDrawTableVi
         return draw
 
 
-class AllDrawsForVenueView(CrossTournamentPageMixin, BasePublicDrawTableView):
+class AllDrawsForVenueView(CrossTournamentDrawMixin, BaseDisplayDrawTableView):
     public_page_preference = 'enable_mass_draws'
 
     def get_venue_category(self):
@@ -891,7 +1055,7 @@ class AllDrawsForVenueView(CrossTournamentPageMixin, BasePublicDrawTableView):
         else:
             return _("Unknown Venue Category")
 
-    def get_draw(self):
+    def get_debates(self):
         draw = Debate.objects.filter(
             division__venue_category=self.get_venue_category()).select_related(
             'round', 'round__tournament', 'division')

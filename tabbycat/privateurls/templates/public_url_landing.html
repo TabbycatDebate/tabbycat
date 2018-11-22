@@ -30,8 +30,15 @@
 
   <div class="list-group mt-2">
 
+    {% if pref.team_code_names != 'off' and person.speaker.team %}
+      {% blocktrans trimmed asvar text with code_name=person.speaker.team.code_name %}
+        Your team's code name is <strong>{{ code_name }}</strong>.
+      {% endblocktrans %}
+      {% include "components/item-info.html" with type="primary" %}
+    {% endif %}
+
     {% if pref.public_checkins_submit %}
-      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm">
+      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
         {% csrf_token %}
         {% if event %}
           <input type="hidden" name="action" value="revoke" />
@@ -44,7 +51,7 @@
             Check in
           {% endblocktrans %}
         {% endif %}
-        {% include "components/item-action.html" with id="triggerCheckInForm" url="" %}
+        {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
     {% endif %}
 

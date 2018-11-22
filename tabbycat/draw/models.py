@@ -100,6 +100,20 @@ class Debate(models.Model):
         return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
                 for dt in self.debateteam_set.all()])
 
+    @property
+    def matchup_codes(self):
+        # Like matchup, but uses team codes. It is not as protected.
+        if not self.sides_confirmed:
+            teams_list = ", ".join([dt.team.code_name for dt in self.debateteam_set.all()])
+            return teams_list + gettext(" (sides not confirmed)")
+
+        try:
+            sides = self.round.tournament.sides
+            return gettext(" vs ").join(self.get_team(side).code_name for side in sides)
+        except (IndexError, ObjectDoesNotExist, MultipleObjectsReturned):
+            return ", ".join(["%s (%s)" % (dt.team.code_name, dt.get_side_display())
+                for dt in self.debateteam_set.all()])
+
     # --------------------------------------------------------------------------
     # Team properties
     # --------------------------------------------------------------------------
@@ -117,13 +131,14 @@ class Debate(models.Model):
     # `self._populate_teams()`.
     #
     # Callers that wish to retrieve the teams of many debates should add
-    #   prefetch_related(Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team'))
+    #   prefetch_related(Prefetch('debateteam_set',
+    #       queryset=DebateTeam.objects.select_related('team'))
     # to their query set.
 
     def _populate_teams(self):
         """Populates the team attributes from self.debateteam_set."""
         dts = self.debateteam_set.all()
-        if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet model
+        if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet class
             dts = dts.select_related('team')
 
         self._teams = []
@@ -220,6 +235,11 @@ class Debate(models.Model):
             return self._history
 
     @property
+    def related_adjudicator_set(self):
+        """Used by objects that work with both Debate and PreformedPanel."""
+        return self.debateadjudicator_set
+
+    @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
@@ -242,12 +262,16 @@ class Debate(models.Model):
             return Motion(text='-', reference='-')
 
     # For the front end need to ensure that there are no gaps in the debateTeams
-    def serial_debateteams_ordered(self):
-        t = self.round.tournament
-        for side in t.sides:
+    def serial_debateteams_ordered(self, tournament=None):
+        """`tournament` can be provided to avoid hitting the preference cache
+        for each item if this is called for many different debates in the
+        same tournament."""
+        if tournament is None:
+            tournament = self.round.tournament
+        for side in tournament.sides:
             sdt = {'side': side, 'team': None,
-                   'position': get_side_name(t, side, 'full'),
-                   'abbr': get_side_name(t, side, 'abbr')}
+                   'position': get_side_name(tournament, side, 'full'),
+                   'abbr': get_side_name(tournament, side, 'abbr')}
             try:
                 debate_team = self.get_dt(side)
                 sdt['team'] = debate_team.team.serialize()
@@ -256,11 +280,18 @@ class Debate(models.Model):
 
             yield sdt
 
-    def serialize(self):
+    def serialize(self, tournament=None):
+        """@deprecate when legacy drag and drop UIs removed"""
+        """`tournament` can be provided to avoid hitting the preference cache
+        for each item if this is called for many different debates in the
+        same tournament."""
+        if tournament is None:
+            tournament = self.round.tournament
+
         debate = {'id': self.id, 'bracket': self.bracket,
                   'importance': self.importance, 'locked': False}
         debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['debateTeams'] = list(self.serial_debateteams_ordered())
+        debate['debateTeams'] = list(self.serial_debateteams_ordered(tournament=tournament))
         debate['debateAdjudicators'] = [{
             'position': position,
             'adjudicator': adj.serialize(round=self.round),
@@ -389,6 +420,10 @@ class DebateTeam(models.Model):
                                  self.side, name_type)
         except KeyError:
             return self.get_side_display()  # fallback
+
+    def get_side_abbr(self, tournament=None):
+        """Convenience function, mainly for use in templates."""
+        return self.get_side_name(tournament, 'abbr')
 
 
 class MultipleDebateTeamsError(DebateTeam.MultipleObjectsReturned):

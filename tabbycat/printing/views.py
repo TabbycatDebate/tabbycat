@@ -1,5 +1,8 @@
 import json
 
+import qrcode
+from qrcode.image import svg
+
 from django.db.models import Q
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
@@ -15,6 +18,7 @@ from results.utils import side_and_position_names
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
 from tournaments.models import Tournament
+from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from venues.models import VenueCategory
 
@@ -182,7 +186,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
     template_name = 'scoresheet_list.html'
 
     def get_ballots_dicts(self):
-        draw = self.round.debate_set_with_prefetches()
+        draw = self.round.debate_set_with_prefetches(iron=True)
 
         # Create the DebateIdentifiers for the ballots if needed
         create_identifiers(DebateIdentifier, draw)
@@ -214,6 +218,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
                         'short_name': team.short_name,
                         'code_name': team.code_name,
                         'speakers': [{'name': s.name} for s in team.speakers],
+                        'iron': debate.get_dt(side).iron_prev > 0,
                     }
                 except DebateTeam.DoesNotExist:
                     dt_dict['team'] = None
@@ -280,13 +285,28 @@ class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView)
 
     template_name = 'randomised_url_sheets.html'
 
+    def add_urls(self, participants):
+        for participant in participants:
+            url = reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': participant['url_key']})
+            abs_url = self.request.build_absolute_uri(url)
+            qr_code = qrcode.make(abs_url, image_factory=svg.SvgPathImage)
+
+            participant['url'] = abs_url
+            participant['qr'] = ' '.join(qr_code._generate_subpaths())
+
+        return participants
+
     def get_context_data(self, **kwargs):
-        kwargs['tournament_slug'] = self.tournament.slug
 
         if not self.tournament.pref('share_adjs'):
-            kwargs['parts'] = self.tournament.participants.filter(url_key__isnull=False)
+            participants = self.tournament.participants.filter(url_key__isnull=False)
         else:
-            kwargs['parts'] = Person.objects.filter(Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament__isnull=True) & Q(url_key__isnull=False))
+            participants = Person.objects.filter(
+                Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament__isnull=True) & Q(url_key__isnull=False))
+
+        participants_array = list(participants.select_related('speaker', 'speaker__team', 'adjudicator__institution', 'adjudicator')
+            .values('name', 'speaker__team__short_name', 'adjudicator__institution__code', 'url_key'))
+        kwargs['parts'] = self.add_urls(participants_array)
 
         kwargs['exists'] = self.tournament.participants.filter(url_key__isnull=False).exists()
 

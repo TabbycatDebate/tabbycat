@@ -58,7 +58,7 @@
         {% for top_margin in top_margins %}
           <li class="list-group-item">
             {% blocktrans trimmed with team=top_margin.debate_team.team.short_name opp=top_margin.debate_team.opponent.team.short_name round=top_margin.debate_team.debate.round.abbreviation %}
-            {{ team }}  vs {{ opp }} in {{ round }}
+            {{ team }} vs {{ opp }} in {{ round }}
             {% endblocktrans %}
             <span class="badge badge-secondary float-right">{{ top_margin.margin|floatformat }}</span>
           </li>
@@ -79,7 +79,7 @@
         {% for bottom_margin in bottom_margins %}
           <li class="list-group-item">
             {% blocktrans trimmed with team=bottom_margin.debate_team.team.short_name opp=bottom_margin.debate_team.opponent.team.short_name round=bottom_margin.debate_team.debate.round.abbreviation %}
-            {{ team }}  vs {{ opp }} in {{ round }}
+            {{ team }} vs {{ opp }} in {{ round }}
             {% endblocktrans %}
             <span class="badge badge-secondary float-right">{{ bottom_margin.margin|floatformat }}</span>
           </li>

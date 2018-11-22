@@ -8,6 +8,18 @@ import re
 import subprocess
 import sys
 
+try:
+    from django.core.management.utils import get_random_secret_key
+except ImportError:
+    try:
+        from secrets import SystemRandom
+    except ImportError:  # for Python 3.5 compatibility
+        from random import SystemRandom
+
+    def get_random_secret_key():
+        chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+        return ''.join(SystemRandom().choice(chars) for _ in range(50))
+
 # Arguments
 parser = argparse.ArgumentParser(description="Deploy Tabbycat to a new Heroku app.")
 
@@ -135,11 +147,11 @@ def get_git_push_spec():
     exit(1)
 
 # Create the app with addons
-addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan]
+addons = ["papertrail", "sendgrid:starter", "heroku-postgresql:%s" % args.pg_plan, "rediscloud:30"]
 command = ["heroku", "apps:create"]
 
 # Ensure on the right stack (for NGINX compatability)
-command.extend(["--stack", "cedar-16"])
+command.extend(["--stack", "heroku-16"])
 
 if addons:
     command.extend(["--addons", ",".join(addons)])
@@ -150,20 +162,18 @@ match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku
 urlname = match.group(1)
 heroku_url = match.group(2)
 
-# Add the redis app (it needs a config flag)
-run_heroku_command(["addons:create", "heroku-redis:hobby-dev", "--maxmemory_policy", "allkeys-lru"])
+# Add the redis add-ons (the heroku one needs a config flag)
+run_heroku_command(["addons:create", "heroku-redis:hobby-dev",
+                    "--maxmemory_policy", "allkeys-lru"])
 
 # Set build packs
 run_heroku_command(["buildpacks:set", "https://github.com/heroku/heroku-buildpack-nginx.git"])
-run_heroku_command(["buildpacks:set", "--index", "1", "heroku/python"])
-run_heroku_command(["buildpacks:add", "--index", "2", "heroku/nodejs"])
-
-# Disable automatic collectstatic; do so on post_compile after gulp
-command = ["config:add", "DISABLE_COLLECTSTATIC=1"]
-run_heroku_command(command)
+run_heroku_command(["buildpacks:add", "--index", "1", "heroku/nodejs"])
+run_heroku_command(["buildpacks:add", "--index", "2", "heroku/python"])
 
 # Set config variables
-command = ["config:add"]
+secret_key = get_random_secret_key()
+command = ["config:set", "DISABLE_COLLECTSTATIC=1", "DJANGO_SECRET_KEY=%s" % secret_key]
 command.append("DEBUG=1" if args.enable_debug else "DEBUG=0")
 if args.fast_cache_timeout:
     command.append("PUBLIC_FAST_CACHE_TIMEOUT=%d" % args.fast_cache_timeout)
@@ -186,19 +196,7 @@ push_spec = get_git_push_spec()
 run_command(["git", "push", remote_name, push_spec])
 
 # Scale dynos (by default it only adds 1 web dyno)
-run_heroku_command(["ps:scale", "web=%s" % args.web_dynos])
-
-# Make secret key
-command = make_heroku_command(["run", "python", "tabbycat/manage.py", "generate_secret_key"])
-secret_key = get_output_from_command(command)
-secret_key = secret_key.strip().split()[-1].strip()  # turn command output into string of just the key
-print_yellow("Made secret key: \"%s\"" % secret_key)
-command = ["config:add", "DJANGO_SECRET_KEY=%s" % secret_key]
-run_heroku_command(command)
-
-print_yellow("Now creating a superuser for the Heroku site.")
-print_yellow("You'll need to respond to the prompts:")
-run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
+run_heroku_command(["ps:scale", "worker=1", "web=%s" % args.web_dynos])
 
 # Import tournament, if provided
 if args.import_tournament:
@@ -211,6 +209,16 @@ if args.import_tournament:
         command += ["--short-name", args.tournament_short_name]
     run_heroku_command(command)
 
+# Create superuser
+print_yellow("Now creating a superuser for the Heroku site.")
+print_yellow("You'll need to respond to the prompts:")
+run_heroku_command(["run", "python", "tabbycat/manage.py", "createsuperuser"])
+
 # Open in browser
 if args.open:
-    run_heroku_command(["open"])
+    try:
+        run_heroku_command(["open"])
+    except subprocess.CalledProcessError:
+        print_yellow("There was a problem automatically opening your browser, but your new Tabbycat")
+        print_yellow("site itself did deploy successfully. Just visit this URL in your browser:")
+        print_yellow("http://%s.herokuapp.com/" % urlname)

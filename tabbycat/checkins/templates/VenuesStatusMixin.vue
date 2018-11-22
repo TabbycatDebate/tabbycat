@@ -6,7 +6,7 @@ export default {
     return {
       venuesFilterByType: null,
       venuesSortByGroup: {
-        'Category': true, 'Name': false, 'Time': false, 'Priority': false,
+        Category: true, Name: false, Time: false, Priority: false,
       },
     }
   },
@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     getToolTipForVenue: function (entity) {
-      var tt = entity.name
+      let tt = entity.name
       if (entity.categories.length > 0) {
         tt += ' ('
         _.forEach(entity.categories, (c) => {
@@ -35,8 +35,8 @@ export default {
   },
   computed: {
     annotatedVenues: function () {
-      var events = this.events
-      _.forEach(this.venues, (venue) => {
+      const events = this.events
+      this.venues.forEach((venue) => {
         if (venue.identifier !== null) {
           venue.status = _.find(events, ['identifier', venue.identifier[0]])
         }
@@ -48,12 +48,10 @@ export default {
       return this.venues
     },
     venuesByType: function () {
-      return _.forEach(this.annotatedVenues, (venue) => {
-        return venue
-      })
+      return _.forEach(this.annotatedVenues, venue => venue)
     },
     venuesByCategory: function () {
-      var sortedByCategory = _.sortBy(this.entitiesSortedByName, (v) => {
+      const sortedByCategory = _.sortBy(this.entitiesSortedByName, (v) => {
         if (v.categories.length === 0) {
           return 'Uncategorised'
         }
@@ -67,9 +65,7 @@ export default {
       })
     },
     venuesByPriority: function () {
-      return _.groupBy(this.entitiesSortedByName, (v) => {
-        return `Priority ${v.priority}`
-      })
+      return _.groupBy(this.entitiesSortedByName, v => `Priority ${v.priority}`)
     },
   },
 }

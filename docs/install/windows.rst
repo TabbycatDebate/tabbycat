@@ -152,7 +152,7 @@ a. Open a Windows PowerShell. Navigate to the folder where you cloned/extracted 
 
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat
 
-b. Make a copy of **local_settings.example** and rename it to **local_settings.py**. Open your new local_settings.py. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
+b. Make a copy of **settings\local.example** and rename it to **settings\local.py**. Open your new settings_local.py. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
 
   .. code:: python
 
@@ -191,21 +191,21 @@ e. Install Tabbycat's requirements.
 
     > python -m pip install --upgrade pip
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
-    > pip install -r requirements.txt
+    > pip install -r .\config\requirements_core.txt
     > npm install
 
   If you installed **64-bit Python**::
 
     > python -m pip install --upgrade pip
     > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
-    > pip install -r requirements.txt
+    > pip install -r .\config\requirements_core.txt
     > npm install
 
   If you're using a version of **Python other than 3.5**, replace the URL in the
   second line with the appropriate link from the
   `win-psycopg page <http://www.stickpeople.com/projects/python/win-psycopg/>`_.
 
-  .. note:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r requirements.txt`` so that the latter doesn't try to install the Unix version.
+  .. note:: The second line above is an extra step just for Windows. It installs the Windows version of ``psycopg2``, `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_, and must be done before ``pip install -r .\config\requirements_core.txt`` so that the latter doesn't try to install the Unix version.
 
   .. hint:: You might be wondering: I thought I already installed the requirements. Why am I installing more? And the answer is: Before, you were installing the requirements to create a Python virtual environment for Tabbycat to live in. Now, you're *in* the virtual environment, and you're installing everything required for *Tabbycat* to operate.
 

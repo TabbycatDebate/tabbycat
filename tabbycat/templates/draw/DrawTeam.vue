@@ -39,29 +39,30 @@ export default {
       debugMode: false,
       // Adjs get this from Draggable(); teams must get it from there otherwise
       // it gets overwritten when merging options between Mixins
-      isHovering: false
-   }
+      isHovering: false,
+    }
   },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
-           HighlightableMixin, ConflictableMixin],
-  props: { 'team': Object, 'roundInfo': Object },
+    HighlightableMixin, ConflictableMixin],
+  props: { team: Object, roundInfo: Object },
   computed: {
     highlightableObject: function () {
       return this.team
     },
     liveness: function () {
+      let shortCode = ''
       if (this.team.break_categories === null) {
         return ''
       }
-      var short_code = ''
-      for (var i = 0; i < this.team.break_categories.length; i++) {
-        if ((this.team.break_categories[i].will_break === "live") ||
-            (this.team.break_categories[i].will_break === "?")) {
-          short_code += "☆"
+
+      for (let i = 0; i < this.team.break_categories.length; i += 1) {
+        if ((this.team.break_categories[i].will_break === 'live') ||
+            (this.team.break_categories[i].will_break === '?')) {
+          shortCode += '☆'
         }
       }
-      return short_code
-    }
+      return shortCode
+    },
   },
 }
 </script>

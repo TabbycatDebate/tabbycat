@@ -5,6 +5,9 @@
       <div class="db-padding-horizontal flex-grow-1 db-align-vertical-center">
         <strong>{{ titleCasePosition }}, {{ teamName }}</strong>
       </div>
+      <div class="db-padding-horizontal db-align-vertical-center strong small" v-if="this.team.iron">
+        IMPORTANT: Check and explicitly note if a speaker gives multiple speeches
+      </div>
       <div class="db-padding-horizontal db-align-vertical-center">
         {{ speakersList }}
       </div>
@@ -77,8 +80,7 @@
       </div>
     </div>
 
-    <div v-if="roundInfo.showDigits"
-         class="db-flex-item-2 align-items-center d-flex pr-1 small">
+    <div v-if="roundInfo.showDigits" class="db-flex-item-2 align-items-center d-flex pr-1 small">
       <div class="db-flex-item-2 db-padding-horizontal text-secondary">
         Circle the last digit of the team's total:
       </div>
@@ -105,36 +107,38 @@ import _ from 'lodash'
 export default {
   props: {
     dt: Object,
-    roundInfo: Object
+    roundInfo: Object,
   },
   computed: {
     team: function () {
-      if (this.dt.team === null) {
-        console.log('null')
-      } else {
+      if (this.dt.team !== null) {
         return this.dt.team
+      } else {
+        // Fallback if no team is assigned
+        return {
+          code_name: '____________________________________________________________',
+          short_name: '____________________________________________________________',
+          speakers: [],
+        }
       }
     },
     teamName: function () {
       if (this.roundInfo.teamCodes === true) {
         return this.team.code_name
-      } else {
-        return this.team.short_name
       }
+      return this.team.short_name
     },
     speakersList: function () {
-      var speakersList = ''
-      _.forEach(this.dt.team.speakers, function (speaker) {
-        speakersList += speaker.name + ", "
+      let speakersList = ''
+      _.forEach(this.team.speakers, (speaker) => {
+        speakersList += `${speaker.name}, `
       })
-      return speakersList.slice(0, -2);
+      return speakersList.slice(0, -2)
     },
     titleCasePosition: function () {
-      var upperWords = _.map(_.words(this.dt.side_name), function (word) {
-        return _.upperFirst(word)
-      })
-      return _.join(upperWords, " ")
-    }
-  }
+      const upperWords = _.map(_.words(this.dt.side_name), word => _.upperFirst(word))
+      return _.join(upperWords, ' ')
+    },
+  },
 }
 </script>

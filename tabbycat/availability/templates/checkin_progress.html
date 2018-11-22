@@ -80,11 +80,44 @@
         {% trans "Edit adjudicator availability" as title_text %}
         {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
       {% endif %}
+
       {% if adjs_no_t > 0 %}
         {% blocktrans trimmed asvar text count count=adjs_no_t %}
-          One adjudicator does not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+          One adjudicator does not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
         {% plural %}
-          {{ count }} adjudicators do not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+          {{ count }} adjudicators do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% endif %}
+
+      {% if new_adjs|length > 10 %}
+        {% blocktrans trimmed asvar text count count=new_adjs|length %}
+          {{ count }} adjudicator who was not available last round, is available this round.
+        {% plural %}
+          {{ count }} adjudicators who were not available last round, are available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% elif new_adjs %}
+        {% blocktrans trimmed asvar text count count=new_adjs|length with adjs_list=new_adjs|join:", " %}
+          The following {{ count }} adjudicator, who was not available last round, is available this round: {{ adjs_list }}
+        {% plural %}
+          The following {{ count }} adjudicators, who were not available last round, are available this round: {{ adjs_list }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% endif %}
+
+      {% if lost_adjs|length > 10 %}
+        {% blocktrans trimmed asvar text count count=lost_adjs|length %}
+          {{ count }} adjudicator who was available last round, is not available this round.
+        {% plural %}
+          {{ count }} adjudicators who were available last round, are not available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% elif lost_adjs %}
+        {% blocktrans trimmed asvar text count count=lost_adjs|length with adjs_list=lost_adjs|join:", " %}
+          The following {{ count }} adjudicator, who was available last round, is not available this round: {{ adjs_list }}
+        {% plural %}
+          The following {{ count }} adjudicators, who were available last round, are not available this round: {{ adjs_list }}
         {% endblocktrans %}
         {% include "components/item-info.html" with type="info" %}
       {% endif %}
@@ -113,9 +146,41 @@
       {% endif %}
       {% if venues_no_t > 0 %}
         {% blocktrans trimmed asvar text count count=venues_no_t %}
-          One venue does not have an associated Tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
+          One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
         {% plural %}
-          {{ count }} venues do not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+          {{ count }} venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% endif %}
+
+      {% if new_venues|length > 10 %}
+        {% blocktrans trimmed asvar text count count=new_venues|length %}
+          {{ count }} venue that was not available last round, is available this round.
+        {% plural %}
+          {{ count }} venues that were not available last round, are available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% elif new_venues %}
+        {% blocktrans trimmed asvar text count count=new_venues|length with venues_list=new_venues|join:", " %}
+          The following {{ count }} venue, which was not available last round, is available this round: {{ venues_list }}
+        {% plural %}
+          The following {{ count }} venues, which were not available last round, are available this round: {{ venues_list }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% endif %}
+
+      {% if lost_venues|length > 10 %}
+        {% blocktrans trimmed asvar text count count=lost_venues|length %}
+          {{ count }} venue that was available last round, is not available this round.
+        {% plural %}
+          {{ count }} venues that were available last round, are not available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" %}
+      {% elif lost_venues %}
+        {% blocktrans trimmed asvar text count count=lost_venues|length with venues_list=lost_venues|join:", " %}
+          The following {{ count }} venue, which was available last round, is not available this round: {{ venues_list }}
+        {% plural %}
+          The following {{ count }} venues, which were available last round, are not available this round: {{ venues_list }}
         {% endblocktrans %}
         {% include "components/item-info.html" with type="info" %}
       {% endif %}

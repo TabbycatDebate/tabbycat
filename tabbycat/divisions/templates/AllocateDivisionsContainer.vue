@@ -15,7 +15,7 @@
     </div>
 
     <unallocated-items-container>
-      <div v-for="team in unallocatedTeams">
+      <div v-for="team in unallocatedTeams" :key="team.id">
         <draggable-team :team="team" :round-info="roundInfo"></draggable-team>
       </div>
     </unallocated-items-container>
@@ -25,16 +25,16 @@
 
 <script>
 import _ from 'lodash'
-import DivisionDroppable from  './DivisionDroppable.vue'
-import UnallocatedItemsContainer from  '../../templates/draganddrops/UnallocatedItemsContainer.vue'
-import DraggableTeam from  '../../templates/draganddrops/DraggableTeam.vue'
+import DivisionDroppable from './DivisionDroppable.vue'
+import UnallocatedItemsContainer from '../../templates/draganddrops/UnallocatedItemsContainer.vue'
+import LegacyDraggableTeam from '../../templates/draganddrops/LegacyDraggableTeam.vue'
 import AjaxMixin from '../../templates/ajax/AjaxMixin.vue'
 
 export default {
   mixins: [AjaxMixin],
-  components: { DraggableTeam, DivisionDroppable, UnallocatedItemsContainer },
+  components: { LegacyDraggableTeam, DivisionDroppable, UnallocatedItemsContainer },
   props: ['teams', 'divisions', 'venueCategories', 'roundInfo',
-          'saveDivisionsUrl', 'saveVenueCategoryUrl'],
+    'saveDivisionsUrl', 'saveVenueCategoryUrl'],
   created: function () {
     // Watch for events on the global event hub
     this.$eventHub.$on('unassign-draggable', this.moveToUnused)
@@ -48,25 +48,25 @@ export default {
       return _.orderBy(this.divisions, 'name')
     },
     unallocatedTeams: function () {
-      return _.filter(this.teams, { 'division': null })
-    }
+      return _.filter(this.teams, { division: null })
+    },
   },
   methods: {
     teamsInDivision: function (divisionId) {
-      return _.filter(this.teams, { 'division': divisionId })
+      return _.filter(this.teams, { division: divisionId })
     },
-    moveToDivision(payload, assignedId) {
+    moveToDivision (payload, assignedId) {
       this.teamsById[payload.team].division = assignedId
-      var payload = { 'team': payload.team, 'division': assignedId }
-      var message = 'Assigning team ' + payload.team + ' to ' + assignedId
-      this.ajaxSave(this.saveDivisionsUrl, payload, message, null, null, null)
+      const returnPayload = { team: payload.team, division: assignedId }
+      const message = `Assigning team ${returnPayload.team} to ${assignedId}`
+      this.ajaxSave(this.saveDivisionsUrl, returnPayload, message, null, null, null)
     },
-    moveToUnused(payload) {
+    moveToUnused (payload) {
       this.teamsById[payload.team].division = null
-      var payload = { 'team': payload.team, 'division': null }
-      var message = 'Assigning team ' + payload.team + ' to no division'
-      this.ajaxSave(this.saveDivisionsUrl, payload, message, null, null, null)
+      const returnPayload = { team: payload.team, division: null }
+      const message = `Assigning team ${payload.team} to no division`
+      this.ajaxSave(this.saveDivisionsUrl, returnPayload, message, null, null, null)
     },
-  }
+  },
 }
 </script>

@@ -2,11 +2,13 @@ from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.utils.translation import ngettext
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
 from draw.models import TeamSideAllocation
-from adjallocation.models import AdjudicatorAdjudicatorConflict, AdjudicatorConflict, AdjudicatorInstitutionConflict
+from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+                                  AdjudicatorTeamConflict, TeamInstitutionConflict)
 from adjfeedback.models import AdjudicatorTestScoreHistory
+from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
 from tournaments.models import Tournament
 from venues.admin import VenueConstraintInline
@@ -95,6 +97,21 @@ class TeamForm(forms.ModelForm):
         return categories
 
 
+class TeamInstitutionConflictInline(admin.TabularInline):
+    model = TeamInstitutionConflict
+    extra = 1
+
+
+class AdjudicatorTeamConflictInline(admin.TabularInline):
+    model = AdjudicatorTeamConflict
+    extra = 1
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'team':
+            kwargs["queryset"] = Team.objects.select_related('tournament')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
@@ -103,7 +120,9 @@ class TeamAdmin(admin.ModelAdmin):
     search_fields = ('reference', 'short_name', 'institution__name',
                      'institution__code', 'tournament__name')
     list_filter = ('tournament', 'division', 'institution', 'break_categories')
-    inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline)
+    inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
+               AdjudicatorTeamConflictInline, TeamInstitutionConflictInline,
+               RoundAvailabilityInline)
     raw_id_fields = ('division', )
     actions = ['delete_url_key']
 
@@ -123,12 +142,13 @@ class TeamAdmin(admin.ModelAdmin):
         return super().formfield_for_manytomany(db_field, request, **kwargs)
 
     def delete_url_key(self, request, queryset):
-        updated = queryset.update(url_key=None)
-        message = ngettext(
-            "%(count)d team had its URL key removed.",
-            "%(count)d teams had their URL keys removed.",
-            updated
-        ) % {'count': updated}
+        team_speakers = [team.speaker_set.all() for team in queryset]
+        for speakers in team_speakers:
+            speakers.update(url_key=None)
+        message = ngettext_lazy(
+            "%(count)d speaker had their URL key removed.",
+            "%(count)d speakers had their URL keys removed.",
+            len(team_speakers)) % {'count': len(team_speakers)}
         self.message_user(request, message)
     delete_url_key.short_description = _("Delete URL key")
 
@@ -137,21 +157,11 @@ class TeamAdmin(admin.ModelAdmin):
 # Adjudicator
 # ==============================================================================
 
-class AdjudicatorConflictInline(admin.TabularInline):
-    model = AdjudicatorConflict
-    extra = 1
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'team':
-            kwargs["queryset"] = Team.objects.select_related('tournament')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-
 class AdjudicatorAdjudicatorConflictInline(admin.TabularInline):
     model = AdjudicatorAdjudicatorConflict
-    fk_name = "adjudicator"
+    fk_name = "adjudicator1"
     extra = 1
-    raw_id_fields = ('conflict_adjudicator', )
+    raw_id_fields = ('adjudicator2',)
 
 
 class AdjudicatorInstitutionConflictInline(admin.TabularInline):
@@ -182,8 +192,9 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'name', 'institution')
     list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
-    inlines = (AdjudicatorConflictInline, AdjudicatorInstitutionConflictInline,
-               AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline)
+    inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
+               AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline,
+               RoundAvailabilityInline)
     actions = ['delete_url_key']
 
     def get_queryset(self, request):

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block page-title %}{% trans "Ballot Not Available" %}{% endblock %}
+{% block head-title %}
+  <h2><span class="emoji">😾</span> {% trans "Ballot Not Available" %}</h2>
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-body">
+      {{ message }}
+      {% tournamenturl 'tournament-public-index' as url %}
+      {% blocktrans trimmed %}
+        <a href="{{ url }}">Back to the tournament home page.</a>
+      {% endblocktrans %}
+    </div>
+  </div>
+{% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2018-11-02 18:20-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -33,58 +33,58 @@ msgstr ""
 "dans la précédence de classement des équipes pour qu'elle puisse se faire "
 "marcher : %(required)s; et elle manque de ce qui suit : %(missing)s."
 
-#: breakqual/models.py:8
+#: breakqual/models.py:10
 msgid "tournament"
 msgstr "tournoi"
 
-#: breakqual/models.py:10
+#: breakqual/models.py:12
 msgid "name"
 msgstr "nom"
 
-#: breakqual/models.py:11
+#: breakqual/models.py:13
 msgid "Name to be displayed, e.g., \"ESL\""
 msgstr "Nom à afficher, par exemple, « ESL »"
 
-#: breakqual/models.py:13
+#: breakqual/models.py:15
 msgid "slug"
 msgstr "slug"
 
-#: breakqual/models.py:14
+#: breakqual/models.py:16
 msgid "Slug for URLs, e.g., \"esl\""
 msgstr "Slug pour les URL, par exemple, « esl »"
 
-#: breakqual/models.py:16
+#: breakqual/models.py:18
 msgid "sequence number"
 msgstr "numéro de séquence"
 
-#: breakqual/models.py:17
+#: breakqual/models.py:19
 msgid "The order in which the categories are displayed"
 msgstr "L’ordre dans lequel les catégories sont affichées"
 
-#: breakqual/models.py:19
+#: breakqual/models.py:21
 msgid "break size"
 msgstr "taille de la qualification"
 
-#: breakqual/models.py:20
+#: breakqual/models.py:22
 msgid "Number of breaking teams in this category"
 msgstr "Nombre d’équipes qualifiantes dans cette catégorie"
 
-#: breakqual/models.py:22
+#: breakqual/models.py:24
 msgid "is general"
 msgstr "est général"
 
-#: breakqual/models.py:23
+#: breakqual/models.py:25
 msgid ""
 "True if most teams eligible for this category, e.g. Open, False otherwise"
 msgstr ""
 "Vrai si la plupart des équipes sont admissibles pour cette catégorie, par "
 "exemple Open, sinon faux"
 
-#: breakqual/models.py:25
+#: breakqual/models.py:27
 msgid "priority"
 msgstr "priorité"
 
-#: breakqual/models.py:26
+#: breakqual/models.py:28
 msgid ""
 "If a team breaks in multiple categories, higher priority numbers take "
 "precedence; teams can break into multiple categories if and only if they all "
@@ -94,45 +94,45 @@ msgstr ""
 "ont priorité ; équipes peuvent diviser en plusieurs catégories, si et "
 "seulement s'elles ont toutes la même priorité"
 
-#: breakqual/models.py:30
+#: breakqual/models.py:32
 msgid "limit"
 msgstr ""
 
-#: breakqual/models.py:31
+#: breakqual/models.py:33
 msgid ""
 "At most this many teams will be shown on the public tab for this category, "
 "or use 0 for no limit"
 msgstr ""
 
-#: breakqual/models.py:34
+#: breakqual/models.py:36
 msgid "Standard"
 msgstr "Standard"
 
-#: breakqual/models.py:35
+#: breakqual/models.py:37
 msgid "AIDA 1996"
 msgstr "AIDA 1996"
 
-#: breakqual/models.py:36
+#: breakqual/models.py:38
 msgid "AIDA 2016 (Easters)"
 msgstr "AIDA 2016 (Easters)"
 
-#: breakqual/models.py:37
+#: breakqual/models.py:39
 msgid "AIDA 2016 (Australs)"
 msgstr "AIDA 2016 (Australs)"
 
-#: breakqual/models.py:38
+#: breakqual/models.py:40
 msgid "WADL division winners first"
 msgstr "WADL vainqueurs de division d'abord"
 
-#: breakqual/models.py:39
+#: breakqual/models.py:41
 msgid "WADL division winners guaranteed"
 msgstr "WADL vainqueurs de division garantis"
 
-#: breakqual/models.py:43
+#: breakqual/models.py:45
 msgid "rule"
 msgstr "règle"
 
-#: breakqual/models.py:44
+#: breakqual/models.py:46
 msgid ""
 "Rule for how the break is calculated (most tournaments should use \"Standard"
 "\")"
@@ -140,65 +140,65 @@ msgstr ""
 "Règle pour le calcul de la qualification (la plupart des tournois devraient "
 "utiliser « Standard »)"
 
-#: breakqual/models.py:47 breakqual/models.py:103
+#: breakqual/models.py:49 breakqual/models.py:110
 msgid "breaking teams"
 msgstr "qualification des équipes"
 
-#: breakqual/models.py:56 breakqual/models.py:74
+#: breakqual/models.py:58 breakqual/models.py:81
 msgid "break category"
 msgstr "catégorie de break"
 
-#: breakqual/models.py:57
+#: breakqual/models.py:59
 msgid "break categories"
 msgstr "catégories de break"
 
-#: breakqual/models.py:76
+#: breakqual/models.py:83
 msgid "team"
 msgstr "équipe"
 
-#: breakqual/models.py:78
+#: breakqual/models.py:85
 msgid "rank"
 msgstr "rang"
 
-#: breakqual/models.py:80
+#: breakqual/models.py:87
 msgid "break rank"
 msgstr "rang dans la qualification"
 
-#: breakqual/models.py:89
+#: breakqual/models.py:96
 msgid "Capped"
 msgstr "Exclue à cause de la limite"
 
-#: breakqual/models.py:90
+#: breakqual/models.py:97
 msgid "Ineligible"
 msgstr "Non admissible"
 
-#: breakqual/models.py:91
+#: breakqual/models.py:98
 msgid "Different break"
 msgstr "Qualification différente"
 
-#: breakqual/models.py:92
+#: breakqual/models.py:99
 msgid "Disqualified"
 msgstr "Disqualifiée"
 
-#: breakqual/models.py:93
+#: breakqual/models.py:100
 msgid "Lost coin toss"
 msgstr "Perdu le tirage au sort"
 
-#: breakqual/models.py:94
+#: breakqual/models.py:101
 msgid "Withdrawn"
 msgstr "Retirée"
 
-#: breakqual/models.py:97
+#: breakqual/models.py:104
 msgid "remark"
 msgstr "remarque"
 
-#: breakqual/models.py:98
+#: breakqual/models.py:105
 msgid "Used to explain why an otherwise-qualified team didn't break"
 msgstr ""
 "Utilisé pour expliquer pourquoi une équipe qui qualifierait autrement n’a "
 "pas qualifié"
 
-#: breakqual/models.py:102
+#: breakqual/models.py:109
 msgid "breaking team"
 msgstr "équipe qualifiante"
 
@@ -365,8 +365,8 @@ msgid ""
 msgstr ""
 "La qualification n'a pas encore été générée. Souhaitez-vous générer la "
 "qualification pour toutes les catégories ? Il est sûr de générer la "
-"qualification avant que tous les tours préliminaires sont terminés, si vous "
-"êtes curieux : vous pouvez toujours le régénérer plus tard."
+"qualification avant que toutes les joutes préliminaires sont terminés, si "
+"vous êtes curieux : vous pouvez toujours le régénérer plus tard."
 
 #: breakqual/templates/breaking_teams.html:107
 msgid ""
