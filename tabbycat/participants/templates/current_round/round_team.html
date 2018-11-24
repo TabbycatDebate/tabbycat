@@ -1,0 +1,59 @@
+{% load debate_tags team_link i18n %}
+
+{# Position, opponent and venue #}
+<div class="list-group-item lead {% if draw_released %}active{% endif %}">
+
+  {# (Two-team formats) #}
+  {% if pref.teams_in_debate == 'two' %}
+    {% team_record_link debateteam.opponent.team admin_page tournament as opponent %}
+
+    {% if debate.sides_confirmed %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with team_name=team_short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+          {{ team_name }} is debating as the <strong>{{ side }}</strong> team against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+          You are debating as the <strong>{{ side }}</strong> team against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% else %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with team_name=team_short_name venue=debate.venue.display_name|default:venue_tba %}
+          {{ team_name }} is debating against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with venue=debate.venue.display_name|default:venue_tba %}
+          You are debating against <strong>{{ opponent }}</strong> in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% endif %}
+
+  {# (British Parliamentary) #}
+  {% elif pref.teams_in_debate == 'bp' %}
+
+    {% if debate.sides_confirmed %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with team_name=team_short_name side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+          {{ team_name }} is debating as the <strong>{{ side }}</strong> team in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with side=debateteam.get_side_name venue=debate.venue.display_name|default:venue_tba %}
+          You are debating as the <strong>{{ side }}</strong> team in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% else %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with team_name=team_short_name venue=debate.venue.display_name|default:venue_tba %}
+          {{ team_name }} is debating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with venue=debate.venue.display_name|default:venue_tba %}
+          You are debating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</div>
+
+{% include "current_round/common.html" %}
