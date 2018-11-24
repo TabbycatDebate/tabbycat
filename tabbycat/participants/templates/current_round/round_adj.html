@@ -1,0 +1,81 @@
+{% load debate_tags team_link i18n %}
+
+{# Position, teams and venue #}
+<div class="list-group-item lead {% if draw_released %}active{% endif %}">
+
+  {# (Two-team formats) #}
+  {% if pref.teams_in_debate == 'two' %}
+    {% team_record_link debate.aff_team admin_page tournament as aff %}
+    {% team_record_link debate.neg_team admin_page tournament as neg %}
+
+    {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:venue_tba %}
+          {{ adj_name }} is the <strong>chair</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with venue=debate.venue.display_name|default:venue_tba %}
+          You are the <strong>chair</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% elif debate.adjudicators|length > 1 %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with adj_name=adjudicator.name type=debateadjudicator.get_type_display venue=debate.venue.display_name|default:venue_tba %}
+          {{ adj_name }} is a <strong>{{ type }}</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with type=debateadjudicator.get_type_display venue=debate.venue.display_name|default:venue_tba %}
+          You are a <strong>{{ type }}</strong> adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% else %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:venue_tba %}
+          {{ adj_name }} is adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with venue=debate.venue.display_name|default:venue_tba %}
+          You are adjudicating {{ aff }} vs {{ neg }} in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% endif %}
+
+  {# (British Parliamentary) #}
+  {% elif pref.teams_in_debate == 'bp' %}
+
+    {% if debate.adjudicators|length > 1 and debateadjudicator.type == debateadjudicator.TYPE_CHAIR %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:venue_tba %}
+          {{ adj_name }} is the <strong>chair</strong> adjudicating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with venue=debate.venue.display_name|default:venue_tba %}
+          You are the <strong>chair</strong> adjudicating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% elif debate.adjudicators|length > 1 %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with adj_name=adjudicator.name type=debateadjudicator.get_type_display venue=debate.venue.display_name|default:venue_tba %}
+          {{ adj_name }} is a <strong>{{ type }}</strong> adjudicating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with type=debateadjudicator.get_type_display venue=debate.venue.display_name|default:venue_tba %}
+          You are a <strong>{{ type }}</strong> adjudicating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% else %}
+      {% if grammatical_person == "3" %}
+        {% blocktrans trimmed with adj_name=adjudicator.name venue=debate.venue.display_name|default:venue_tba %}
+          {{ adj_name }} is adjudicating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with venue=debate.venue.display_name|default:venue_tba %}
+          You are adjudicating in <strong>{{ venue }}</strong>.
+        {% endblocktrans %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+
+</div>
+
+{% include "current_round/common.html" %}

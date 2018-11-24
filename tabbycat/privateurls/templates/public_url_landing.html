@@ -28,6 +28,8 @@
 
 {% block content %}
 
+  {% include "in_this_round.html" with grammatical_person="2" %}
+
   <div class="list-group mt-2">
 
     {% if pref.team_code_names != 'off' and person.speaker.team %}

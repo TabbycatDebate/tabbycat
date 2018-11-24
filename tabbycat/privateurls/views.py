@@ -15,6 +15,7 @@ from notifications.models import SentMessageRecord
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
+from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -173,7 +174,7 @@ class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):
     template_name = 'public_url_landing.html'
 
     def is_page_enabled(self, tournament):
-        return self.tournament.pref('participant_feedback') == 'private-urls' or self.tournament.pref('participant_ballots') == 'private-urls' or self.tournament.pref('public_checkins_submit')
+        return True
 
     def get_context_data(self, **kwargs):
         t = self.tournament
@@ -186,6 +187,15 @@ class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):
         except ObjectDoesNotExist:
             kwargs['event'] = False
 
+        if hasattr(participant, 'adjudicator'):
+            kwargs['debateadjudications'] = participant.adjudicator.debateadjudicator_set.filter(
+                debate__round=t.current_round).select_related('debate__round').prefetch_related('debate__round__motion_set')
+        else:
+            kwargs['debateteams'] = participant.speaker.team.debateteam_set.select_related(
+                'debate__round').prefetch_related('debate__round__motion_set').filter(
+                debate__round=t.current_round)
+
+        kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'
         kwargs['ballots_pref'] = t.pref('participant_ballots') == 'private-urls'
 
