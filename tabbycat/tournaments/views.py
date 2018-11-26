@@ -19,7 +19,7 @@ from django.views.generic.edit import CreateView, FormView, UpdateView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from draw.models import Debate
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from results.models import BallotSubmission
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
@@ -127,8 +127,8 @@ class CompleteRoundCheckView(AdministratorMixin, RoundMixin, TemplateView):
         kwargs['num_unconfirmed'] = self.round.debate_set.filter(
             result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
         kwargs['increment_ok'] = kwargs['num_unconfirmed'] == 0
-        kwargs['emails_sent'] = SentMessageRecord.objects.filter(
-            tournament=self.tournament, round=self.round, event=SentMessageRecord.EVENT_TYPE_POINTS).exists()
+        kwargs['emails_sent'] = BulkNotification.objects.filter(
+            tournament=self.tournament, round=self.round, event=BulkNotification.EVENT_TYPE_POINTS).exists()
         return super().get_context_data(**kwargs)
 
 

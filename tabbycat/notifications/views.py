@@ -1,11 +1,16 @@
+from datetime import datetime
+import json
 from smtplib import SMTPException
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Prefetch, Q
+from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.views.generic.base import View
 from django.views.generic.edit import FormView
 
 from participants.models import Person
@@ -16,6 +21,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
 
 from .forms import BasicEmailForm, TestEmailForm
+from .models import EmailStatus, SentMessageRecord
 
 
 class TestEmailView(AdministratorMixin, FormView):
@@ -37,12 +43,112 @@ class TestEmailView(AdministratorMixin, FormView):
         return super().form_valid(form)
 
 
+class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
+    page_title = gettext_lazy("Email Status")
+    page_emoji = '📤'
+
+    tables_orientation = 'rows'
+
+    def _create_status_timeline(self, status):
+        statuses = []
+        for s in status:
+            text = _("%(status)s @ %(time)s") % {'status': s.get_event_display(), 'time': s.timestamp}
+            statuses.append({
+                'text': '<span class="%s">%s</span>' % (self._get_event_class(s.event), text)
+            })
+        return statuses
+
+    def _get_event_class(self, event):
+        return {
+            EmailStatus.EVENT_TYPE_BOUNCED: 'text-warning',
+            EmailStatus.EVENT_TYPE_DROPPED: 'text-warning',
+            EmailStatus.EVENT_TYPE_SPAM: 'text-warning',
+            EmailStatus.EVENT_TYPE_DEFERRED: 'text-warning',
+            EmailStatus.EVENT_TYPE_PROCESSED: 'text-info',
+            EmailStatus.EVENT_TYPE_DELIVERED: 'text-info',
+            EmailStatus.EVENT_TYPE_OPENED: 'text-success',
+            EmailStatus.EVENT_TYPE_CLICKED: 'text-success',
+            EmailStatus.EVENT_TYPE_UNSUBSCRIBED: None,
+            EmailStatus.EVENT_TYPE_ASM_UNSUBSCRIBED: None,
+            EmailStatus.EVENT_TYPE_ASM_RESUBSCRIBED: None
+        }[event]
+
+    def get_tables(self):
+        tables = []
+        notifications = self.tournament.bulknotification_set.select_related('round').prefetch_related(
+            Prefetch('sentmessagerecord_set', queryset=SentMessageRecord.objects.select_related('recipient').prefetch_related('emailstatus_set')))
+
+        for n in notifications:
+            emails = n.sentmessagerecord_set.all()
+
+            subtitle = n.round.name if n.round is not None else _("@ %s") % n.timestamp
+            table = TabbycatTableBuilder(view=self, title=n.get_event_display(), subtitle=subtitle)
+
+            # Create arrays for columns
+            emails_status = []
+            emails_time = []
+            for e in emails:
+                status = e.emailstatus_set.all()
+                if status.count() == 0:
+                    na_email = {'text': _("N/A"), 'class': 'text-muted'}
+                    emails_status.append(na_email)
+                    emails_time.append(na_email)
+                    continue
+
+                first_status = status.first()
+                status_cell = {
+                    "text": first_status.get_event_display(),
+                    "class": self._get_event_class(first_status.event),
+                    "popover": {"title": _("Timeline"), "content": self._create_status_timeline(status)}
+                }
+                emails_status.append(status_cell)
+                emails_time.append(first_status.timestamp)
+
+            table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [e.recipient.name for e in emails])
+            table.add_column({'key': 'name', 'title': _("Status")}, emails_status)
+            table.add_column({'key': 'name', 'title': _("Time")}, emails_time)
+
+            tables.append(table)
+
+        return tables
+
+
+class EmailEventWebhookView(TournamentMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        if kwargs['key'] is not self.tournament.pref('email_hook_key'):
+            return HttpResponse(status=404) # 404: Not Found
+
+        data = json.loads(request.body)
+
+        records = SentMessageRecord.objects.filter(message_id__in=[obj['smtp-id'] for obj in data])
+        record_lookup = {smr.message_id: smr.id for smr in records}
+        statuses = []
+
+        for obj in data:
+            dt = datetime.fromtimestamp(obj['timestamp'])
+            timestamp = timezone.make_aware(dt, timezone.utc)
+            email_id = record_lookup.get(obj['smtp-id'], None)
+            if email_id is None:
+                continue
+            statuses.append(EmailStatus(email_id=email_id, timestamp=timestamp, event=obj['event'], data=obj))
+
+        EmailStatus.objects.bulk_create(statuses)
+
+        return HttpResponse(status=201) # 201: Created
+
+
 class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTemplateView, FormView):
     template_name = "email_participants.html"
     page_title = gettext_lazy("Email Participants")
     page_emoji = '📤'
 
     form_class = BasicEmailForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sg_webhook'] = EmailStatus.objects.filter(email__notification__tournament=self.tournament).exists()
+        return context
 
     def get_default_send_queryset(self):
         return self.get_queryset().filter(email__isnull=False).exclude(email__exact="")

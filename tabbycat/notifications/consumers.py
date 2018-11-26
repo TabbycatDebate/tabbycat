@@ -10,7 +10,7 @@ from html2text import html2text
 from draw.models import Debate
 from tournaments.models import Round, Tournament
 
-from .models import SentMessageRecord
+from .models import BulkNotification, SentMessageRecord
 from .utils import (adjudicator_assignment_email_generator, ballots_email_generator,
                     motion_release_email_generator, randomized_url_email_generator,
                     standings_email_generator, team_speaker_email_generator)
@@ -19,12 +19,12 @@ from .utils import (adjudicator_assignment_email_generator, ballots_email_genera
 class NotificationQueueConsumer(SyncConsumer):
 
     NOTIFICATION_GENERATORS = {
-        SentMessageRecord.EVENT_TYPE_DRAW: adjudicator_assignment_email_generator,
-        SentMessageRecord.EVENT_TYPE_URL: randomized_url_email_generator,
-        SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED: ballots_email_generator,
-        SentMessageRecord.EVENT_TYPE_POINTS: standings_email_generator,
-        SentMessageRecord.EVENT_TYPE_MOTIONS: motion_release_email_generator,
-        SentMessageRecord.EVENT_TYPE_TEAM: team_speaker_email_generator
+        BulkNotification.EVENT_TYPE_DRAW: adjudicator_assignment_email_generator,
+        BulkNotification.EVENT_TYPE_URL: randomized_url_email_generator,
+        BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED: ballots_email_generator,
+        BulkNotification.EVENT_TYPE_POINTS: standings_email_generator,
+        BulkNotification.EVENT_TYPE_MOTIONS: motion_release_email_generator,
+        BulkNotification.EVENT_TYPE_REGISTRATION: team_speaker_email_generator
     }
 
     def _send(self, event, messages, records):
@@ -69,6 +69,16 @@ class NotificationQueueConsumer(SyncConsumer):
         data = self.NOTIFICATION_GENERATORS[notification_type](to=event['send_to'], **event['extra'])
 
         # Prepare messages
+
+        # Ballot receipts are grouped by round in the same BulkNotification
+        bulk_notification = BulkNotification.objects.none()
+        if notification_type is BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED:
+            bulk_notification = BulkNotification.objects.filter(event=BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED, round=round)[0]
+            if bulk_notification is None:
+                bulk_notification = BulkNotification.objects.create(event=notification_type, round=round, tournament=t)
+        else:
+            bulk_notification = BulkNotification.objects.create(event=notification_type, round=round, tournament=t)
+
         messages = []
         records = []
         for instance, recipient in data:
@@ -81,12 +91,13 @@ class NotificationQueueConsumer(SyncConsumer):
             email.attach_alternative(body, "text/html")
             messages.append(email)
 
+            raw_message = email.message()
             records.append(
                 SentMessageRecord(recipient=recipient, email=recipient.email,
-                                  event=notification_type,
                                   method=SentMessageRecord.METHOD_TYPE_EMAIL,
-                                  round=round, tournament=t,
-                                  context=instance, message=email.message())
+                                  context=instance, message=raw_message,
+                                  message_id=raw_message['Message-ID'],
+                                  notification=bulk_notification)
             )
 
         self._send(event, messages, records)
@@ -98,6 +109,7 @@ class NotificationQueueConsumer(SyncConsumer):
         t = Tournament.objects.get(id=event['tournament'])
         from_email, reply_to = self._get_from_fields(t)
 
+        bulk_notification = BulkNotification.objects.create(tournament=t)
         for pk, address in event['send_to']:
             email = mail.EmailMultiAlternatives(
                 subject=event['subject'], body=self._get_plain_text(event['body']),
@@ -106,11 +118,14 @@ class NotificationQueueConsumer(SyncConsumer):
             email.attach_alternative(event['body'], "text/html")
             messages.append(email)
 
+            raw_message = email.message()
             records.append(
                 SentMessageRecord(
                     recipient_id=pk, email=address,
                     method=SentMessageRecord.METHOD_TYPE_EMAIL,
-                    tournament=t, message=email.message())
+                    tournament=t, messsage=raw_message,
+                    message_id=raw_message['Message-ID'],
+                    notification=bulk_notification)
             )
 
         self._send(event, messages, records)

@@ -11,6 +11,14 @@
   {% include "components/explainer-card.html" with type="warning" %}
 {% endif %}
 
+{% if pref.email_hook_key != "" and not sg_webhook %}
+  {% tournament_absurl 'notifications-webhook' key=pref.email_hook_key as notifications_webhook_url %}
+  {% blocktrans trimmed asvar p1 %}
+    The webhook URL for use in SendGrid is <a href="{{ notifications_webhook_url }}">{{ notifications_webhook_url }}</a>. Please point the HTTP POST URL in <a href="https://app.sendgrid.com/settings/mail_settings">SendGrid</a> to that.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+{% endif %}
+
 {% endblock %}
 
 {% block content %}
