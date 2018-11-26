@@ -48,8 +48,9 @@ class BulkNotification(models.Model):
     EVENT_TYPE_FEEDBACK_URL = 'f'
     EVENT_TYPE_BALLOT_URL = 'b'
     EVENT_TYPE_URL = 'u'
-    EVENT_TYPE_DRAW = 'd'
-    EVENT_TYPE_REGISTRATION = 't'
+    EVENT_TYPE_ADJ_DRAW = 'd'
+    EVENT_TYPE_TEAM_REG = 't'
+    EVENT_TYPE_ADJ_REG = 'a'
     EVENT_TYPE_MOTIONS = 'm'
     EVENT_TYPE_TEAM_DRAW = 'r'
 
@@ -59,8 +60,9 @@ class BulkNotification(models.Model):
         (EVENT_TYPE_FEEDBACK_URL, _("feedback URL")),
         (EVENT_TYPE_BALLOT_URL, _("ballot URL")),
         (EVENT_TYPE_URL, _("landing page URL")),
-        (EVENT_TYPE_DRAW, _("adjudicator draw released")),
-        (EVENT_TYPE_REGISTRATION, _("registration")),
+        (EVENT_TYPE_ADJ_DRAW, _("adjudicator draw released")),
+        (EVENT_TYPE_TEAM_REG, _("team registration")),
+        (EVENT_TYPE_ADJ_REG, _("adjudicator registration")),
         (EVENT_TYPE_MOTIONS, _("motion(s) released")),
         (EVENT_TYPE_TEAM_DRAW, _("team draw released"))
     )

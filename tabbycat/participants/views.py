@@ -65,7 +65,7 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
         kwargs['email_sent'] = BulkNotification.objects.filter(
-            tournament=self.tournament, event=BulkNotification.EVENT_TYPE_REGISTRATION).exists()
+            tournament=self.tournament, event=BulkNotification.EVENT_TYPE_TEAM_REG).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -162,7 +162,7 @@ class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
 class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     page_subtitle = _("Team Registration")
 
-    event = BulkNotification.EVENT_TYPE_REGISTRATION
+    event = BulkNotification.EVENT_TYPE_TEAM_REG
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 
