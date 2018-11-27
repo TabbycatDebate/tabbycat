@@ -1,0 +1,38 @@
+{% load debate_tags i18n %}
+
+<div class="card">
+  <div class="list-group list-group-flush">
+    <div class="list-group-item">
+      <h4 class="card-title mb-0">
+        {{ card_title|safe }}
+      </h4>
+    </div>
+
+    {% if adjudicator.independent or adjudicator.adj_core %}
+      <div class="list-group-item">
+        <ul>
+          {% if adjudicator.independent %}
+            <li><em>{% trans "Independent adjudicator" %}</em></li>
+          {% endif %}
+          {% if adjudicator.adj_core %}
+            <li><em>{% trans "Member of the adjudication core" %}</em></li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if adjudicator.institution %}
+      <div class="list-group-item">
+        <strong>{% trans "Institution:" %}</strong>
+        {{ adjudicator.institution.name }}
+      </div>
+    {% endif %}
+
+    {% if adjudicator.institution.region %}
+      <div class="list-group-item">
+        <strong>{% trans "Region:" %}</strong>
+        {{ adjudicator.institution.region.name }}
+      </div>
+    {% endif %}
+  </div>
+</div>

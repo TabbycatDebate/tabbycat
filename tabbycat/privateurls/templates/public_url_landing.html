@@ -5,18 +5,18 @@
 {% block head-title %}{% trans "Private URL" %}{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans trimmed with name=person.name %}for {{ name }}{% endblocktrans %}
-  {% if person.speaker %}
-    {% blocktrans trimmed with team=person.speaker.team.short_name %}({{ team }}){% endblocktrans %}
+  {% blocktrans trimmed with name=object.name %}for {{ name }}{% endblocktrans %}
+  {% if object.speaker %}
+    {% blocktrans trimmed with team=object.speaker.team.short_name %}({{ team }}){% endblocktrans %}
   {% endif %}
-  {% if person.speaker %}
+  {% if object.speaker %}
 
   {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
 
-  {% blocktrans trimmed with name=person.name asvar p1 %}
+  {% blocktrans trimmed with name=object.name asvar p1 %}
     The URL of this page is personalised to you, {{ name }}. <strong>Do not
     share it with anyone;</strong> anyone who knows this URL can submit results and/or
     feedback for your debates. You may bookmark this page and return here after each
@@ -32,8 +32,8 @@
 
   <div class="list-group mt-2">
 
-    {% if pref.team_code_names != 'off' and person.speaker.team %}
-      {% blocktrans trimmed asvar text with code_name=person.speaker.team.code_name %}
+    {% if pref.team_code_names != 'off' and object.speaker.team %}
+      {% blocktrans trimmed asvar text with code_name=object.speaker.team.code_name %}
         Your team's code name is <strong>{{ code_name }}</strong>.
       {% endblocktrans %}
       {% include "components/item-info.html" with type="primary" %}
@@ -57,19 +57,19 @@
       </form>
     {% endif %}
 
-    {% if person.adjudicator and pref.participant_ballots == 'private-urls' %}
+    {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
       {% tournamenturl 'results-public-ballotset-new-randomised' url_key as url %}
       {% trans  "Submit Ballot" as text %}
       {% include "components/item-action.html" %}
     {% endif %}
 
-    {% if person.adjudicator and pref.participant_feedback == 'private-urls' %}
+    {% if object.adjudicator and pref.participant_feedback == 'private-urls' %}
       {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}
       {% trans "Submit Feedback" as text %}
       {% include "components/item-action.html" %}
     {% endif %}
 
-    {% if person.speaker and pref.participant_feedback == 'private-urls' %}
+    {% if object.speaker and pref.participant_feedback == 'private-urls' %}
       {% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key as url %}
       {% trans "Submit Feedback" as text %}
       {% include "components/item-action.html" %}

@@ -286,16 +286,10 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return _("Record for %(name)s") % {'name': self.object.name}
 
     def get_context_data(self, **kwargs):
-        try:
-            kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round=self.tournament.current_round
-            ).select_related(
-                'debate__round'
-            ).prefetch_related(
-                'debate__round__motion_set'
-            )
-        except ObjectDoesNotExist:
-            kwargs['debateadjudications'] = None
+        
+        kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
+            debate__round=self.tournament.current_round
+        ).select_related('debate__round').prefetch_related('debate__round__motion_set')
 
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, self.tournament)
 
