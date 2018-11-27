@@ -13,52 +13,12 @@
 
     {% if pref.public_participants or admin_page %}
 
-      <div class="card">
-        <div class="list-group list-group-flush">
-          <div class="list-group-item">
-            <h4 class="card-title mb-0">
-              {# Just call it 'name' since this string is also used with teams #}
-              {% blocktrans trimmed with name=adjudicator.name %}
-                About {{ name }}
-              {% endblocktrans %}
-            </h4>
-          </div>
+      {# Just call it 'name' since this string is also used with teams #}
+      {% blocktrans trimmed with name=adjudicator.name asvar card_title %}
+        About {{ name }}
+      {% endblocktrans %}
 
-          {% if adjudicator.institution %}
-            <div class="list-group-item">
-              <strong>{% trans "Institution:" %}</strong>
-              {{ adjudicator.institution.name }}
-            </div>
-          {% endif %}
-
-          {% if adjudicator.institution.region %}
-            <div class="list-group-item">
-              <strong>{% trans "Region:" %}</strong>
-              {{ adjudicator.institution.region.name }}
-            </div>
-          {% endif %}
-
-          {% if adjudicator.independent %}
-            <div class="list-group-item">
-              <em>
-                {% blocktrans trimmed with adj_name=adjudicator.name %}
-                  {{ adj_name }} is an independent adjudicator.
-                {% endblocktrans %}
-              </em>
-            </div>
-          {% endif %}
-
-          {% if adjudicator.adj_core %}
-            <div class="list-group-item">
-              <em>
-                {% blocktrans trimmed with adj_name=adjudicator.name %}
-                  {{ adj_name }} is on the adjudication core.
-                {% endblocktrans %}
-              </em>
-            </div>
-          {% endif %}
-        </div>
-      </div>
+      {% include "adjudicator_registration_card.html" %}
 
     {% endif %} {# pref.public_participants or admin_page #}
 

@@ -15,73 +15,11 @@ names are relevant, or to the team's real name if it is not. #}
     {% endif %} {# pref.public_draw != 'off' or admin_page #}
 
     {% if pref.public_participants or admin_page %}
-      <div class="card">
-        <div class="list-group list-group-flush">
-
-          <div class="list-group-item">
-            <h4 class="card-title mb-0">
-              {# Just call it 'name' since this string is also used with adjudicators #}
-              {% blocktrans trimmed with name=team_short_name %}
-                About {{ name }}
-              {% endblocktrans %}
-            </h4>
-          </div>
-
-          {% if not use_code_names and team.short_name != team.long_name %}
-            <div class="list-group-item">
-              <strong>{% trans "Full name:" %}</strong>
-              {{ team.long_name }}
-            </div>
-          {% endif %}
-
-          {% if not use_code_names and team.code_name and pref.team_code_names != 'off' %}
-            <div class="list-group-item">
-              <strong>{% trans "Code name:" %}</strong>
-              {{ team.code_name }}
-            </div>
-          {% endif %}
-
-          {% if pref.show_speakers_in_draw %}
-            <div class="list-group-item">
-              <strong>{% trans "Speakers:" %}</strong>
-              {% for speaker in team.speakers %}
-                {{ speaker.name }}{% if not forloop.last %}, {% endif %}
-              {% endfor %}
-            </div>
-          {% endif %}
-
-          {% if team.division %}
-            <div class="list-group-item">
-              <strong>{% trans "Division:" %}</strong>
-              {{ team.division.name }}
-            </div>
-          {% endif %}
-
-          {% if pref.public_break_categories or admin_page %}
-            <div class="list-group-item">
-              <strong>{% trans "Eligible for break categories:" %}</strong>
-              {% for category in team.break_categories.all %}
-                {{ category.name }}{% if not forloop.last %}, {% endif %}
-              {% endfor %}
-            </div>
-          {% endif %} {# pref.public_break_categories or admin_page #}
-
-          {% if team.institution and pref.show_team_institutions %}
-            <div class="list-group-item">
-              <strong>{% trans "Institution:" %}</strong>
-              {{ team.institution.name }}
-            </div>
-          {% endif %}
-
-          {% if team.institution.region %}
-            <div class="list-group-item">
-              <strong>{% trans "Region:" %}</strong>
-              {{ team.institution.region.name }}
-            </div>
-          {% endif %}
-
-        </div>
-      </div>
+      {# Just call it 'name' since this string is also used with adjudicators #}
+      {% blocktrans trimmed with name=team_short_name asvar card_title %}
+        About {{ name }}
+      {% endblocktrans %}
+      {% include "team_registration_card.html" %}
     {% endif %} {# pref.public_participants or admin_page #}
 
   </div>
