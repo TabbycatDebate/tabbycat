@@ -3,7 +3,6 @@ import logging
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.db.models import Exists, OuterRef, Q
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
@@ -181,7 +180,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             adj_filter |= Q(adjudicator__tournament=None)
 
         q = self.model.objects.filter(adj_filter | Q(speaker__team__tournament=self.tournament))
-        return get_object_or_404(self.model, url_key=url_key)
+        return get_object_or_404(q, url_key=url_key)
 
     def get_context_data(self, **kwargs):
         self.private_url_key = kwargs['url_key']

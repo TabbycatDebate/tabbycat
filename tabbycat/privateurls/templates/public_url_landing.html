@@ -28,16 +28,20 @@
 
 {% block content %}
 
-  {% include "in_this_round.html" with grammatical_person="2" %}
+  <div class="card-deck">
+    {% include "in_this_round.html" with grammatical_person="2" %}
+
+    {% blocktrans trimmed with name=object.name asvar card_title %}
+      Registration ({{ name }})
+    {% endblocktrans %}
+    {% if object.adjudicator %}
+      {% include "adjudicator_registration_card.html" with adjudicator=object.adjudicator %}
+    {% else %}
+      {% include "team_registration_card.html" with team=object.speaker.team participant=object.speaker %}
+    {% endif %}
+  </div>
 
   <div class="list-group mt-2">
-
-    {% if pref.team_code_names != 'off' and object.speaker.team %}
-      {% blocktrans trimmed asvar text with code_name=object.speaker.team.code_name %}
-        Your team's code name is <strong>{{ code_name }}</strong>.
-      {% endblocktrans %}
-      {% include "components/item-info.html" with type="primary" %}
-    {% endif %}
 
     {% if pref.public_checkins_submit %}
       <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
