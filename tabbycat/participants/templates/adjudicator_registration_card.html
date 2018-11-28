@@ -34,5 +34,57 @@
         {{ adjudicator.institution.region.name }}
       </div>
     {% endif %}
+
+    {% if admin_page or private_url %}
+      <div class="list-group-item">
+        <strong>{% trans "Conflicts:" %}</strong>
+        <ul>
+
+          <li>
+            <strong>{% trans "Institutions:" %}</strong>
+            {% for ic in adjudicator.adjudicatorinstitutionconflict_set.all %}
+              {{ ic.institution.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% empty %}
+              <span class="text-muted">{% trans "None" %}</span>
+            {% endfor %}
+          </li>
+
+          <li>
+            <strong>{% trans "Teams:" %}</strong>
+            {% for tc in adjudicator.adjudicatorteamconflict_set.all %}
+              {% if use_code_names %}{{ tc.team.code_name }}{% else %}{{ tc.team.short_name }}{% endif %}
+              {% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% empty %}
+              <span class="text-muted">{% trans "None" %}</span>
+            {% endfor %}
+          </li>
+
+          <li>
+            <strong>{% trans "Adjudicators:" %}</strong>
+            {% for adj in adjadj_conflicts %}
+              {% if pref.public_record %}
+                <a href="{% if admin_page %}{% tournamenturl 'participants-adjudicator-record' adj.pk %}{% else %}{% tournamenturl 'participants-public-adjudicator-record' adj.pk %}{% endif %}">{{ adj.name }}</a>
+              {% else %}
+                {{ adj.name }}
+              {% endif %}
+              {% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% empty %}
+              <span class="text-muted">{% trans "None" %}</span>
+            {% endfor %}
+          </li>
+
+        </ul>
+      </div>
+
+      <div class="list-group-item">
+        <strong>{% trans "Venue Constraints:" %}</strong>
+        {% for vc in adjudicator.venue_constraints.all %}
+          {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+        {% empty %}
+          <span class="text-muted">{% trans "None" %}</span>
+        {% endfor %}
+      </div>
+
+    {% endif %}
   </div>
 </div>
