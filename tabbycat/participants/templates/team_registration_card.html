@@ -11,15 +11,13 @@
 
     {% if not use_code_names and team.short_name != team.long_name %}
       <div class="list-group-item">
-        <strong>{% trans "Full name:" %}</strong>
+        <strong>{% if participant %}{% trans "Team name:" %}{% else %}{% trans "Full name:" %}{% endif %}</strong>
         {{ team.long_name }}
-      </div>
-    {% endif %}
-
-    {% if not use_code_names and team.code_name and pref.team_code_names != 'off' %}
-      <div class="list-group-item">
-        <strong>{% trans "Code name:" %}</strong>
-        {{ team.code_name }}
+        {% if not use_code_names and team.code_name and pref.team_code_names != 'off' %}
+          <br />
+          <strong>{% trans "Code name:" %}</strong>
+          {{ team.code_name }} {% if pref.show_emoji %}({{ team.emoji }}){% endif %}
+        {% endif %}
       </div>
     {% endif %}
 
@@ -41,7 +39,7 @@
       </div>
     {% endif %}
 
-    {% if pref.public_break_categories or admin_page %}
+    {% if pref.public_break_categories or admin_page or private_url %}
       <div class="list-group-item">
         <strong>{% trans "Eligible for break categories:" %}</strong>
         {% for category in team.break_categories.all %}
@@ -49,6 +47,15 @@
         {% empty %}
           <span class="text-muted">{% trans "None" %}</span>
         {% endfor %}
+        {% if participant %}
+          <br />
+          <strong>{% trans "Speaker categories:" %}</strong>
+          {% for category in participant.categories.all %}
+            {{ category.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+          {% empty %}
+            <span class="text-muted">{% trans "None" %}</span>
+          {% endfor %}
+        {% endif %}
       </div>
     {% endif %} {# pref.public_break_categories or admin_page #}
 
@@ -56,10 +63,13 @@
       <div class="list-group-item">
         <strong>{% trans "Institution:" %}</strong>
         {{ team.institution.name }}
+        {% if team.institution.region %}
+          <br />
+          <strong>{% trans "Region:" %}</strong>
+          {{ team.institution.region.name }}
+        {% endif %}
       </div>
-    {% endif %}
-
-    {% if team.institution.region %}
+    {% elif team.institution.region %}
       <div class="list-group-item">
         <strong>{% trans "Region:" %}</strong>
         {{ team.institution.region.name }}

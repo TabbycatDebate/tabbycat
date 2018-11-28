@@ -294,7 +294,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return adjs
 
     def get_context_data(self, **kwargs):
-        
+
         kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
             debate__round=self.tournament.current_round
         ).select_related('debate__round').prefetch_related('debate__round__motion_set')
