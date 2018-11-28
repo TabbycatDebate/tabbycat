@@ -285,6 +285,14 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_page_title(self):
         return _("Record for %(name)s") % {'name': self.object.name}
 
+    def _get_adj_adj_conflicts(self):
+        adjs = []
+        for ac in self.object.adjudicatoradjudicatorconflict_source_set.all():
+            adjs.append(ac.adjudicator2)
+        for ac in self.object.adjudicatoradjudicatorconflict_target_set.all():
+            adjs.append(ac.adjudicator1)
+        return adjs
+
     def get_context_data(self, **kwargs):
         
         kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
@@ -292,6 +300,7 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         ).select_related('debate__round').prefetch_related('debate__round__motion_set')
 
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, self.tournament)
+        kwargs['adjadj_conflicts'] = self._get_adj_adj_conflicts()
 
         return super().get_context_data(**kwargs)
 

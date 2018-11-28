@@ -52,7 +52,7 @@
       </div>
     {% endif %} {# pref.public_break_categories or admin_page #}
 
-    {% if team.institution and pref.show_team_institutions %}
+    {% if team.institution and pref.show_team_institutions or admin_page or private_url %}
       <div class="list-group-item">
         <strong>{% trans "Institution:" %}</strong>
         {{ team.institution.name }}
@@ -64,6 +64,44 @@
         <strong>{% trans "Region:" %}</strong>
         {{ team.institution.region.name }}
       </div>
+    {% endif %}
+
+    {% if admin_page or private_url %}
+      <div class="list-group-item">
+        <strong>{% trans "Conflicts:" %}</strong>
+        <ul>
+
+          <li>
+            <strong>{% trans "Institutions:" %}</strong>
+            {% for ic in team.teaminstitutionconflict_set.all %}
+              {{ ic.institution.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% empty %}
+              <span class="text-muted">{% trans "None" %}</span>
+            {% endfor %}
+          </li>
+
+          <li>
+            <strong>{% trans "Adjudicators:" %}</strong>
+            {% for ac in team.adjudicatorteamconflict_set.all %}
+              {{ ac.adjudicator.name }}
+              {% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% empty %}
+              <span class="text-muted">{% trans "None" %}</span>
+            {% endfor %}
+          </li>
+
+        </ul>
+      </div>
+
+      <div class="list-group-item">
+        <strong>{% trans "Venue Constraints:" %}</strong>
+        {% for vc in team.venue_constraints.all %}
+          {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+        {% empty %}
+          <span class="text-muted">{% trans "None" %}</span>
+        {% endfor %}
+      </div>
+
     {% endif %}
 
   </div>
