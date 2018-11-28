@@ -1,4 +1,4 @@
-{% load debate_tags team_link i18n %}
+{% load debate_tags participant_link i18n %}
 
 {# Round start time #}
 {% if current_round.starts_at %}
@@ -35,7 +35,7 @@
         </strong>
         {% for adj, adjtype in adjudicators.with_positions %}
           {% if adj != debateadjudicator.adjudicator %}
-            <a href="{% if admin_page %}{% tournamenturl 'participants-adjudicator-record' adj.pk %}{% else %}{% tournamenturl 'participants-public-adjudicator-record' adj.pk %}{% endif %}">
+            <a href="{% adj_record_link adj admin_page tournament %}">
               {{ adj.name }}</a>{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
           {% else %}
             {{ adj.name }}{% if adjtype == adjudicators.POSITION_CHAIR %} {% trans "Ⓒ" context "chair icon" %}{% elif adjtype == adjudicators.POSITION_TRAINEE %} {% trans "Ⓣ" context "trainee icon" %}{% endif %}{% if not forloop.last %},{% endif %}
