@@ -28,7 +28,11 @@
     <div class="btn-group">
       <form action="{% roundurl 'motions-previous' %}" method="POST">
         {% csrf_token %}
-        <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
+        {% if round.roundmotions_set.all.length == 0 %}
+          <button class="btn btn-outline-primary" id="repeatMotions" type="submit">
+        {% else %}
+          <button class="btn btn-outline-primary" id="repeatMotions" type="submit" data-toggle="tooltip" title="{% trans "This will replace all existing motions for this round. The motions themselves will still be in the database." %}">
+        {% endif %}
           {% trans "Copy Motions from Last Round" %}
         </button>
       </form>

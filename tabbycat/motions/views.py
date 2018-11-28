@@ -13,7 +13,6 @@ from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
 from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
-from tournaments.models import Round
 from utils.misc import redirect_round, reverse_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
@@ -152,7 +151,8 @@ class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Po
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
 
     def post(self, request, *args, **kwargs):
-        motions = Round.objects.get(tournament=self.tournament, seq=self.round.seq - 1).roundmotions_set.select_related('motion')
+        self.round.roundmotions_set.all().delete()
+        motions = self.round.prev.roundmotions_set.select_related('motion')
         new_motions = []
 
         for motion in motions:
