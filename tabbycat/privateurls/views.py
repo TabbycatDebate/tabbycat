@@ -2,19 +2,20 @@ import logging
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.views.generic.base import TemplateView
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
+from django.views.generic.base import TemplateView
 
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
-from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
+from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
@@ -167,31 +168,38 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
         return table
 
 
-class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):
-    slug_field = 'url_key'
-    slug_url_kwarg = 'url_key'
-
+class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTournamentPageMixin, TemplateView):
     template_name = 'public_url_landing.html'
+    model = Person
 
     def is_page_enabled(self, tournament):
         return True
 
+    def get_object(self, url_key):
+        adj_filter = Q(adjudicator__tournament=self.tournament)
+        if self.tournament.pref('share_adjs'):
+            adj_filter |= Q(adjudicator__tournament=None)
+
+        q = self.model.objects.filter(adj_filter | Q(speaker__team__tournament=self.tournament))
+        return get_object_or_404(self.model, url_key=url_key)
+
     def get_context_data(self, **kwargs):
+        self.private_url_key = kwargs['url_key']
+        self.object = self.get_object(kwargs['url_key'])
         t = self.tournament
-        participant = get_object_or_404(Person, url_key=kwargs['url_key'])
-        kwargs['person'] = participant
+
         try:
-            checkin_id = PersonIdentifier.objects.get(person=participant)
+            checkin_id = PersonIdentifier.objects.get(person=self.object)
             checkins = get_unexpired_checkins(t, 'checkin_window_people')
             kwargs['event'] = checkins.filter(identifier=checkin_id).first()
         except ObjectDoesNotExist:
             kwargs['event'] = False
 
-        if hasattr(participant, 'adjudicator'):
-            kwargs['debateadjudications'] = participant.adjudicator.debateadjudicator_set.filter(
+        if hasattr(self.object, 'adjudicator'):
+            kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(
                 debate__round=t.current_round).select_related('debate__round').prefetch_related('debate__round__motion_set')
         else:
-            kwargs['debateteams'] = participant.speaker.team.debateteam_set.select_related(
+            kwargs['debateteams'] = self.object.speaker.team.debateteam_set.select_related(
                 'debate__round').prefetch_related('debate__round__motion_set').filter(
                 debate__round=t.current_round)
 
