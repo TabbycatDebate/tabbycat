@@ -13,6 +13,7 @@ from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
 from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
+from tournaments.models import Round
 from utils.misc import redirect_round, reverse_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
@@ -258,6 +259,7 @@ class BaseMotionStatisticsView(TournamentMixin, TemplateView):
         kwargs['statistics'] = self.get_statistics()
         kwargs['type'] = self.stats_type
         kwargs['for_public'] = self.for_public
+        kwargs['stage'] = {'PRELIM': Round.STAGE_PRELIMINARY, 'ELIM': Round.STAGE_ELIMINATION}
         return super().get_context_data(**kwargs)
 
 

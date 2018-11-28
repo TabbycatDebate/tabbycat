@@ -124,7 +124,7 @@ class BallotSubmission(Submission):
     def clean(self):
         # The motion must be from the relevant round
         super().clean()
-        if self.motion is not None and self.motion.round != self.debate.round:
+        if self.motion is not None and self.debate.round not in self.motion.rounds.all():
             raise ValidationError(_("Debate is in round %(round)d but motion (%(motion)s) is "
                     "from round %(motion_round)d") % {
                     'round': self.debate.round,

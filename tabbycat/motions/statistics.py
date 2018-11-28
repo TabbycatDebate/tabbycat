@@ -181,23 +181,23 @@ class MotionBPStatsCalculator:
         self.prelim_motions = Motion.objects.filter(
             rounds__tournament=self.tournament,
             rounds__stage=Round.STAGE_PRELIMINARY,
-            rounds__debate__ballotsubmission__confirmed=True,
-        ).select_related('rounds')
+            ballotsubmission__confirmed=True,
+        )
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
-        annotations['ndebates'] = Count('rounds__debate__ballotsubmission', distinct=True)
+        annotations['ndebates'] = Count('ballotsubmission', distinct=True)
 
         annotations.update({'%s_average' % side: Avg(
-            'rounds__debate__ballotsubmission__teamscore__points',
-            filter=Q(rounds__debate__ballotsubmission__teamscore__debate_team__side=side),
+            'ballotsubmission__teamscore__points',
+            filter=Q(ballotsubmission__teamscore__debate_team__side=side),
             distinct=True,
         ) for side in self.tournament.sides})
 
         annotations.update({'%s_%d_count' % (side, points): Count(
-            'rounds__round__debate__ballotsubmission__teamscore',
+            'ballotsubmission__teamscore',
             filter=Q(
-                rounds__debate__ballotsubmission__teamscore__debate_team__side=side,
-                rounds__debate__ballotsubmission__teamscore__points=points
+                ballotsubmission__teamscore__debate_team__side=side,
+                ballotsubmission__teamscore__points=points
             ), distinct=True
         ) for side in self.tournament.sides for points in range(4)})
 
@@ -248,17 +248,17 @@ class MotionBPStatsCalculator:
         self.elim_motions = Motion.objects.filter(
             rounds__tournament=self.tournament,
             rounds__stage=Round.STAGE_ELIMINATION,
-            rounds__debate__ballotsubmission__confirmed=True,
-        ).order_by('round__seq', 'seq').select_related('round', 'motion')
+            ballotsubmission__confirmed=True,
+        )
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
-        annotations['ndebates'] = Count('rounds__debate__ballotsubmission', distinct=True)
+        annotations['ndebates'] = Count('ballotsubmission', distinct=True)
 
         annotations.update({'%s_%s' % (side, status): Count(
-            'rounds__debate__ballotsubmission__teamscore',
+            'ballotsubmission__teamscore',
             filter=Q(
-                rounds__debate__ballotsubmission__teamscore__debate_team__side=side,
-                rounds__debate__ballotsubmission__teamscore__win=value,
+                ballotsubmission__teamscore__debate_team__side=side,
+                ballotsubmission__teamscore__win=value,
             ), distinct=True)
             for side in self.tournament.sides
             for (status, value) in [("advancing", True), ("eliminated", False)]
@@ -288,32 +288,35 @@ class RoundMotionsBPStatsCalculator(MotionBPStatsCalculator):
 
         The annotations are (1) the average team points by teams in each
         position, and (2) the number of teams receiving n points from each
-        position for each n = 0, 1, 2, 3.
-
-        Assumes that motion selection is disabled, so there's only one motion
-        per round. We'll implement motion selection if and when we discover that
-        it's used by someone with BP."""
+        position for each n = 0, 1, 2, 3."""
 
         self.prelim_motions = RoundMotions.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_PRELIMINARY,
-            round__debate__ballotsubmission__confirmed=True,
+            motion__ballotsubmission__confirmed=True,
         ).order_by('round__seq', 'seq').select_related('motion')
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
-        annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
+        annotations['ndebates'] = Count(
+            'motion__ballotsubmission',
+            filter=Q(
+                motion__ballotsubmission__debate__round=F('round')
+            ), distinct=True)
 
         annotations.update({'%s_average' % side: Avg(
-            'round__debate__ballotsubmission__teamscore__points',
-            filter=Q(round__debate__ballotsubmission__teamscore__debate_team__side=side),
-            distinct=True,
+            'motion__ballotsubmission__teamscore__points',
+            filter=Q(
+                motion__ballotsubmission__debate__round=F('round'),
+                motion__ballotsubmission__teamscore__debate_team__side=side
+            ), distinct=True,
         ) for side in self.tournament.sides})
 
         annotations.update({'%s_%d_count' % (side, points): Count(
-            'round__round__debate__ballotsubmission__teamscore',
+            'motion__ballotsubmission__teamscore',
             filter=Q(
-                round__debate__ballotsubmission__teamscore__debate_team__side=side,
-                round__debate__ballotsubmission__teamscore__points=points
+                motion__ballotsubmission__debate__round=F('round'),
+                motion__ballotsubmission__teamscore__debate_team__side=side,
+                motion__ballotsubmission__teamscore__points=points
             ), distinct=True
         ) for side in self.tournament.sides for points in range(4)})
 
@@ -323,26 +326,27 @@ class RoundMotionsBPStatsCalculator(MotionBPStatsCalculator):
         """Constructs the database query for elimination round motions.
 
         Elimination rounds in BP are advancing/eliminated, so this just collates
-        information on who advanced and who did not.
-
-        Assumes that motion selection is disabled, so there's only one motion
-        per round. We'll implement motion selection if and when we discover that
-        it's used by someone with BP."""
+        information on who advanced and who did not."""
 
         self.elim_motions = RoundMotions.objects.filter(
             round__tournament=self.tournament,
             round__stage=Round.STAGE_ELIMINATION,
-            round__debate__ballotsubmission__confirmed=True,
-        ).order_by('round__seq', 'seq').select_related('round', 'motion')
+            motion__ballotsubmission__confirmed=True,
+        ).order_by('round__seq', 'seq').select_related('motion')
 
         annotations = {}  # dict of keyword arguments to pass to .annotate()
-        annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
+        annotations['ndebates'] = Count(
+            'motion__ballotsubmission',
+            filter=Q(
+                motion__ballotsubmission__debate__round=F('round')
+            ), distinct=True)
 
         annotations.update({'%s_%s' % (side, status): Count(
-            'round__debate__ballotsubmission__teamscore',
+            'motion__ballotsubmission__teamscore',
             filter=Q(
-                round__debate__ballotsubmission__teamscore__debate_team__side=side,
-                round__debate__ballotsubmission__teamscore__win=value,
+                motion__ballotsubmission__debate__round=F('round'),
+                motion__ballotsubmission__teamscore__debate_team__side=side,
+                motion__ballotsubmission__teamscore__win=value,
             ), distinct=True)
             for side in self.tournament.sides
             for (status, value) in [("advancing", True), ("eliminated", False)]

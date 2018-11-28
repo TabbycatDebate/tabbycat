@@ -818,6 +818,18 @@ class BPEliminationResultForm(BaseResultForm):
     def __init__(self, ballotsub, *args, **kwargs):
         super().__init__(ballotsub, *args, **kwargs)
 
+        self.using_motions = self.tournament.pref('enable_motions')
+
+        self.motions = self.debate.round.roundmotions_set.order_by('seq').select_related('motion')
+        if self.using_motions and self.motions.count() > 1:
+            self.fields['motion'] = MotionModelChoiceField(queryset=self.motions,
+                required=not self.using_forfeits)
+
+            if not self.ballotsub.motion:
+                self.initial['motion'] = self.motions.get()
+            else:
+                self.initial['motion'] = self.ballotsub.motion
+
         side_choices = [(side, _("%(team)s (%(side)s)") % {
             'team': self.debate.get_team(side).short_name,
             'side': self._side_name(side)}) for side in self.tournament.sides]
@@ -829,6 +841,12 @@ class BPEliminationResultForm(BaseResultForm):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        if 'motion' not in cleaned_data:
+            if self.motions.count() == 1:
+                cleaned_data['motion'] = self.motions.get().motion
+            else: # Motions not enabled
+                cleaned_data['motion'] = None
 
         if not self.debate.sides_confirmed:
             self.add_error(None, forms.ValidationError(
@@ -846,6 +864,7 @@ class BPEliminationResultForm(BaseResultForm):
         return cleaned_data
 
     def save_ballot(self):
+        self.ballotsub.motion = self.cleaned_data['motion']
         result = BPEliminationDebateResult(self.ballotsub)
         result.set_advancing(self.cleaned_data['advancing'])
         result.save()
