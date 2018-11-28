@@ -369,6 +369,10 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
 
+    def get_context_data(self, **kwargs):
+        kwargs['private_url'] = True
+        return super().get_context_data(**kwargs)
+
 
 # ==============================================================================
 # Drag-and-drop mixins

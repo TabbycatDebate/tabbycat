@@ -11,6 +11,7 @@ from draw.models import Debate
 from options.utils import use_team_code_names
 from participants.models import Team
 from standings.templatetags.standingsformat import metricformat, rankingformat
+from tournaments.mixins import SingleObjectByRandomisedUrlMixin
 from tournaments.utils import get_side_name
 from utils.misc import reverse_tournament
 
@@ -180,6 +181,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
             self.admin = True
         else:
             self.admin = kwargs.get('admin', False)
+
+        if isinstance(view, SingleObjectByRandomisedUrlMixin):
+            self.private_url = True
+            self.private_url_key = view.private_url_key
+        else:
+            self.private_url = kwargs.get('private_url', False)
 
         if self.tournament.pref('teams_in_debate') == 'bp':
             self._result_cell = self._result_cell_bp
@@ -848,7 +855,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             data.append(row)
         self.add_columns(headers, data)
 
-    def add_debate_ballot_link_column(self, debates):
+    def add_debate_ballot_link_column(self, debates, show_ballot=False):
         ballot_links_header = {'key': "ballot", 'icon': 'search'}
 
         if self.admin:
@@ -858,8 +865,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             } if debate.confirmed_ballot else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 
-        elif self.tournament.pref('ballots_released'):
-            ballot_links_header = {'key': "ballot", 'icon': 'search'}
+        elif self.private_url:
             ballot_links_data = []
             for debate in debates:
                 if not debate.confirmed_ballot:
@@ -869,7 +875,20 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 else:
                     ballot_links_data.append({
                         'text': _("View Ballot"),
-                        'link': reverse_tournament('results-public-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
+                        'link': reverse_tournament('results-privateurl-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
+                    })
+            self.add_column(ballot_links_header, ballot_links_data)
+
+        elif self.tournament.pref('ballots_released'):
+            ballot_links_data = []
+            for debate in debates:
+                if self.tournament.pref('teams_in_debate') == 'bp' and debate.round.is_break_round:
+                    ballot_links_data.append("")
+                else:
+                    ballot_links_data.append({
+                        'text': _("View Ballot"),
+                        'link': reverse_tournament('results-public-scoresheet-view', self.tournament,
+                            kwargs={'url_key': self.private_url_key,'pk': debate.id})
                     })
             self.add_column(ballot_links_header, ballot_links_data)
 
