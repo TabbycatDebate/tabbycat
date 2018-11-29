@@ -63,7 +63,7 @@
             <strong>{% trans "Adjudicators:" %}</strong>
             {% for adj in adjadj_conflicts %}
               {% if pref.public_record %}
-                <a href="<a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>">{{ adj.name }}</a>
+                <a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>
               {% else %}
                 {{ adj.name }}
               {% endif %}

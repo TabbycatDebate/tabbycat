@@ -2,18 +2,19 @@ import logging
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.db.models import Exists, OuterRef, Q
+from django.db.models import Exists, OuterRef, Prefetch, Q
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
-from django.views.generic.base import TemplateView
 
+from adjallocation.models import DebateAdjudicator
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
+from participants.views import AdjudicatorDebateTable, TeamDebateTable
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
@@ -167,9 +168,11 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
         return table
 
 
-class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTournamentPageMixin, TemplateView):
+class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTournamentPageMixin, VueTableTemplateView):
     template_name = 'public_url_landing.html'
     model = Person
+
+    table_title = _("Debates")
 
     def is_page_enabled(self, tournament):
         return True
@@ -181,6 +184,12 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
         q = self.model.objects.filter(adj_filter | Q(speaker__team__tournament=self.tournament))
         return get_object_or_404(q, url_key=url_key)
+
+    def get_table(self):
+        if hasattr(self.object, 'adjudicator'):
+            return AdjudicatorDebateTable.get_table(self, self.object)
+        else:
+            return TeamDebateTable.get_table(self, self.object.speaker.team)
 
     def get_context_data(self, **kwargs):
         self.private_url_key = kwargs['url_key']

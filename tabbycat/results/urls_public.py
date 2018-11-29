@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
@@ -23,9 +23,14 @@ urlpatterns = [
         name='results-public-ballotset-new-pk'),
 
     # Private Ballots
-    path('add/a<slug:url_key>/',
-        views.PublicNewBallotSetByRandomisedUrlView.as_view(),
-        name='results-public-ballotset-new-randomised'),
+    path('<slug:url_key>/', include([
+        path('add/',
+            views.PublicNewBallotSetByRandomisedUrlView.as_view(),
+            name='results-public-ballotset-new-randomised'),
+        path('<int:round_seq>/view/',
+            views.PrivateUrlBallotScoresheetView.as_view(),
+            name='results-privateurl-scoresheet-view'),
+    ])),
 
     path('added/',
         views.PostPublicBallotSetSubmissionURLView.as_view(),
