@@ -13,7 +13,7 @@ from participants.models import Team
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
 from tournaments.utils import get_side_name
-from utils.misc import reverse_tournament
+from utils.misc import reverse_tournament, reverse_round
 
 from .mixins import AdministratorMixin
 
@@ -184,7 +184,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
         if isinstance(view, SingleObjectByRandomisedUrlMixin):
             self.private_url = True
-            self.private_url_key = view.private_url_key
+            self.private_url_key = view.kwargs.get('url_key')
         else:
             self.private_url = kwargs.get('private_url', False)
 
@@ -875,7 +875,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 else:
                     ballot_links_data.append({
                         'text': _("View Ballot"),
-                        'link': reverse_tournament('results-privateurl-scoresheet-view', self.tournament, kwargs={'pk': debate.id})
+                        'link': reverse_round('results-privateurl-scoresheet-view', debate.round, kwargs={'url_key': self.private_url_key})
                     })
             self.add_column(ballot_links_header, ballot_links_data)
 
@@ -888,7 +888,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                     ballot_links_data.append({
                         'text': _("View Ballot"),
                         'link': reverse_tournament('results-public-scoresheet-view', self.tournament,
-                            kwargs={'url_key': self.private_url_key,'pk': debate.id})
+                            kwargs={'pk': debate.id})
                     })
             self.add_column(ballot_links_header, ballot_links_data)
 

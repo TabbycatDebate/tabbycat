@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tables/base_vue_table.html" %}
 {% load i18n debate_tags %}
 
 {% block page-title %}{% trans "Private URL" %}{% endblock %}
@@ -27,19 +27,6 @@
 {% endblock %}
 
 {% block content %}
-
-  <div class="card-deck">
-    {% include "in_this_round.html" with grammatical_person="2" %}
-
-    {% blocktrans trimmed with name=object.name asvar card_title %}
-      Registration ({{ name }})
-    {% endblocktrans %}
-    {% if object.adjudicator %}
-      {% include "adjudicator_registration_card.html" with adjudicator=object.adjudicator %}
-    {% else %}
-      {% include "team_registration_card.html" with team=object.speaker.team participant=object.speaker %}
-    {% endif %}
-  </div>
 
   <div class="list-group mt-2">
 
@@ -79,6 +66,23 @@
       {% include "components/item-action.html" %}
     {% endif %}
 
+  </div>
+
+  <div class="card-deck">
+    {% include "in_this_round.html" with grammatical_person="2" %}
+
+    {% blocktrans trimmed with name=object.name asvar card_title %}
+      Registration ({{ name }})
+    {% endblocktrans %}
+    {% if object.adjudicator %}
+      {% include "adjudicator_registration_card.html" with adjudicator=object.adjudicator %}
+    {% else %}
+      {% include "team_registration_card.html" with team=object.speaker.team participant=object.speaker %}
+    {% endif %}
+  </div>
+
+  <div class="mt-md-4">
+    {{ block.super }} {# this is the Vue table, which is populated with previous results #}
   </div>
 
 {% endblock %}

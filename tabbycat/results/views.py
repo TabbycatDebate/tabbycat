@@ -575,7 +575,7 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
         return super().get_context_data(**kwargs)
 
     def get(self, request, *args, **kwargs):
-        self.object = super().get_object()
+        self.object = self.get_object()
 
         error = self.check_permissions()
         if error:
@@ -589,6 +589,20 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
             )
 
         return super().get(self, request, *args, **kwargs)
+
+
+class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, PublicBallotScoresheetsView):
+
+    def is_page_enabled(self, tournament):
+        return True
+
+    def get_object(self):
+        d_adj = DebateAdjudicator.objects.select_related(
+            'debate'
+        ).prefetch_related(
+            'debate__debateteam_set__team'
+        ).get(debate__round=self.round, adjudicator__url_key=self.kwargs.get('url_key'))
+        return d_adj.debate
 
 
 class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplateView):
