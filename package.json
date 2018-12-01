@@ -24,7 +24,7 @@
     "feather-icons": "4.9.x",
     "inter-ui": "3.0.x",
     "jquery": "^3.3.0",
-    "jquery-validation": "1.18.x",
+    "jquery-validation": "1.19.x",
     "jsbarcode": "^3.11.x",
     "lodash": "^4.17.11",
     "node-sass": "^4.9.4",
