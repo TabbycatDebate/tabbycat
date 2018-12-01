@@ -40,8 +40,12 @@ class AssistantCheckInPreScanView(AssistantMixin, CheckInPreScanView):
 class BaseCheckInStatusView(TournamentMixin, TemplateView):
     template_name = 'checkin_status.html'
     scan_view = False
+    for_admin = True
 
     def get_context_data(self, **kwargs):
+
+        kwargs["for_admin"] = json.dumps(self.for_admin)
+
         events = get_unexpired_checkins(self.tournament, self.window_preference)
         kwargs["events"] = json.dumps([e.serialize() for e in events])
         if self.scan_view:
@@ -56,12 +60,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
 
     def get_context_data(self, **kwargs):
 
-        for_admin = True
-        if hasattr(self, '_user_role') and self._user_role == 'public':
-            for_admin = False
-        kwargs["for_admin"] = json.dumps(for_admin)
-
-        team_codes = use_team_code_names(self.tournament, admin=for_admin)
+        team_codes = use_team_code_names(self.tournament, admin=self.for_admin)
         kwargs["team_codes"] = json.dumps(team_codes)
 
         adjudicators = []
@@ -105,6 +104,7 @@ class AssistantCheckInPeopleStatusView(AssistantMixin, CheckInPeopleStatusView):
 
 
 class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CheckInPeopleStatusView):
+    for_admin = False
     public_page_preference = 'public_checkins'
 
 
