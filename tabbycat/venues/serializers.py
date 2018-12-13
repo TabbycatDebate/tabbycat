@@ -10,6 +10,8 @@ class EditDebateVenuesDebateSerializer(DebateSerializerMixin):
 
 
 class SimpleDebateVenueSerializer(DebateSerializerMixin):
+    venue = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = DebateSerializerMixin.Meta.model
         fields = ('id', 'venue',)

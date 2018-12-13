@@ -281,7 +281,7 @@ class Debate(models.Model):
             yield sdt
 
     def serialize(self, tournament=None):
-        """@depracate when legacy drag and drop UIs removed"""
+        """@deprecate when legacy drag and drop UIs removed"""
         """`tournament` can be provided to avoid hitting the preference cache
         for each item if this is called for many different debates in the
         same tournament."""

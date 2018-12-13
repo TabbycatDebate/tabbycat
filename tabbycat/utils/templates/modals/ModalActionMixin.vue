@@ -15,7 +15,7 @@ export default {
     resetModal: function () {
       $(this.$refs.modal).modal('hide')
     },
-    performWSAction: function (settings) {
+    performWSAction: function (settings = null) {
       this.setLoading(true)
       this.$store.state.wsBridge.send({
         'action': this.contextOfAction,

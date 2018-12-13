@@ -19,20 +19,38 @@ Change Log
 - Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
 
+2.2.7
+-----
+*Release date: 16 November 2018*
+
+- Lock redis-py version to 2.10.6, as workaround for `compatibility issue between django-redis and redis-py <https://github.com/niwinz/django-redis/issues/342>`_
+- Fix login link on page shown after a user logs out
+
+
+2.2.6
+-----
+*Release date: 14 November 2018*
+
+- Fix issue where check-ins could not be revoked
+- Fix issue where the standings overview 'dashboard' included scores from elimination rounds. Thanks to Étienne for this fix
+- Fix issue where the Average Individual Speaker Score metric would fail to calculate in some circumstances. Thanks to Étienne for this fix
+- Fix issue where draw emails would crash if venues were unspecified. Thanks, again, to Étienne for this fix!
+
+
 2.2.5
 -----
 *Release date: 21 October 2018*
 
 - Remove the buttons from the public check-ins page (as these do nothing unless the user is logged in)
 - Hopefully fixed error that could cause Team- and Adjudicator- Institutional conflicts to not show properly on Allocation pages
-- Thanks to Étienne for pull requests fixing rare bugs in the user creation form and break generation when rounds are not present.
+- Thanks to Étienne for pull requests fixing rare bugs in the user creation form and break generation when rounds are not present
 
 
 2.2.4
 -----
 *Release date: 9 October 2018*
 
-- Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics.
+- Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics
 
 
 2.2.3

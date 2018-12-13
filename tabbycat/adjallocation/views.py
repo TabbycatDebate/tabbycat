@@ -128,7 +128,7 @@ class PanelAdjudicatorsIndexView(TemplateView, AdministratorMixin):
 # ==============================================================================
 
 class LegacyAdjudicatorAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
-    """@depracate when legacy drag and drop UIs removed"""
+    """@deprecate when legacy drag and drop UIs removed"""
 
     @cached_property
     def conflicts_and_history(self):
@@ -183,7 +183,7 @@ class LegacyAdjudicatorAllocationMixin(LegacyDrawForDragAndDropMixin, Administra
 
 
 class LegacyEditAdjudicatorAllocationView(LegacyAdjudicatorAllocationMixin, TemplateView):
-    """@depracate when legacy drag and drop UIs removed"""
+    """@deprecate when legacy drag and drop UIs removed"""
 
     template_name = 'legacy_edit_adjudicators.html'
     auto_url = "legacy-adjallocation-auto-allocate"
@@ -226,7 +226,7 @@ class LegacyEditAdjudicatorAllocationView(LegacyAdjudicatorAllocationMixin, Temp
 
 
 class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixin, JsonDataResponsePostView):
-    """@depracate when legacy drag and drop UIs removed"""
+    """@deprecate when legacy drag and drop UIs removed"""
 
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
 
@@ -255,7 +255,7 @@ class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixi
 
 
 class LegacySaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View):
-    """@depracate when legacy drag and drop UIs removed"""
+    """@deprecate when legacy drag and drop UIs removed"""
     action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
 
     def post(self, request, *args, **kwargs):
@@ -271,7 +271,7 @@ class LegacySaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin,
 
 
 class LegacySaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
-    """@depracate when legacy drag and drop UIs removed"""
+    """@deprecate when legacy drag and drop UIs removed"""
     action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
 
     def get_moved_item(self, id):
