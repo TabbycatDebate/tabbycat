@@ -19,6 +19,14 @@ Change Log
 - Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
 
+2.2.8
+-----
+*Release date: 14 December 2018*
+
+- Fix issue where the check-in buttons were always disabled on admin and assistant pages
+- Other minor fixes. Thanks to Étienne for these and for the check-in button fix!
+
+
 2.2.7
 -----
 *Release date: 16 November 2018*
