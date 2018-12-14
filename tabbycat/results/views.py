@@ -484,7 +484,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         context = {'adjudicator': self.object, 'message': message}
         return self.response_class(
             request=self.request,
-            template='public_enter_results_error.html',
+            template=['public_enter_results_error.html'],
             context=context,
             using=self.template_engine
         )
@@ -566,7 +566,7 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
             status, message = error
             return self.response_class(
                 request=self.request,
-                template='public_ballot_set_error.html',
+                template=['public_ballot_set_error.html'],
                 context={'message': message},
                 using=self.template_engine,
                 status=status,
