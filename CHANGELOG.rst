@@ -2,12 +2,21 @@
 Change Log
 ==========
 
+2.2.8
+-----
+*Release date: 14 December 2018*
+
+- Fix issue where the check-in buttons were always disabled on admin and assistant pages
+- Other minor fixes. Thanks to Étienne for these and for the check-in button fix!
+
+
 2.2.7
 -----
 *Release date: 16 November 2018*
 
 - Lock redis-py version to 2.10.6, as workaround for `compatibility issue between django-redis and redis-py <https://github.com/niwinz/django-redis/issues/342>`_
 - Fix login link on page shown after a user logs out
+
 
 2.2.6
 -----
