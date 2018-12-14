@@ -78,29 +78,22 @@
 
     {% if admin_page or private_url %}
       <div class="list-group-item">
-        <strong>{% trans "Conflicts:" %}</strong>
-        <ul>
 
-          <li>
-            <strong>{% trans "Institutions:" %}</strong>
-            {% for ic in team.teaminstitutionconflict_set.all %}
-              {{ ic.institution.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
-            {% empty %}
-              <span class="text-muted">{% trans "None" %}</span>
-            {% endfor %}
-          </li>
+        <strong>{% trans "Institutional Conflicts:" %}</strong>
+        {% for ic in team.teaminstitutionconflict_set.all %}
+          {{ ic.institution.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+        {% empty %}
+          <span class="text-muted">{% trans "None" %}</span>
+        {% endfor %}
 
-          <li>
-            <strong>{% trans "Adjudicators:" %}</strong>
-            {% for ac in team.adjudicatorteamconflict_set.all %}
-              {{ ac.adjudicator.name }}
-              {% if not forloop.last %}{% trans ", " %}{% endif %}
-            {% empty %}
-              <span class="text-muted">{% trans "None" %}</span>
-            {% endfor %}
-          </li>
+        <strong><br>{% trans "Adjudicator Conflicts:" %}</strong>
+        {% for ac in team.adjudicatorteamconflict_set.all %}
+          {{ ac.adjudicator.name }}
+          {% if not forloop.last %}{% trans ", " %}{% endif %}
+        {% empty %}
+          <span class="text-muted">{% trans "None" %}</span>
+        {% endfor %}
 
-        </ul>
       </div>
 
       <div class="list-group-item">
