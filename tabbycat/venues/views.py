@@ -169,6 +169,8 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
 
 class BaseVenueConstraintsView(BaseConstraintsView):
     formset_model = VenueConstraint
+    page_emoji = '🏰'
+    template_name = 'venue_constraints_edit.html'
 
     def get_formset_factory_kwargs(self):
         subject_choices = [(None, '---------')] + list(self.get_subject_queryset())
@@ -206,7 +208,7 @@ class VenueTeamConstraintsView(BaseVenueConstraintsView):
         return self.formset_model.objects.filter(team__tournament=self.tournament)
 
     def get_subject_queryset(self):
-        return self.tournament.team_set.all().values_list('id', 'short_name')
+        return self.tournament.team_set.order_by('short_name').values_list('id', 'short_name')
 
     def get_contenttype(self):
         return ContentType.objects.get(app_label='participants', model='team')
@@ -244,7 +246,7 @@ class VenueAdjudicatorConstraintsView(BaseVenueConstraintsView):
         return self.formset_model.objects.filter(q)
 
     def get_subject_queryset(self):
-        return self.tournament.adjudicator_set.all().values_list('id', 'name')
+        return self.tournament.relevant_adjudicators.order_by('name').values_list('id', 'name')
 
     def get_contenttype(self):
         return ContentType.objects.get(app_label='participants', model='adjudicator')
@@ -275,10 +277,12 @@ class VenueInstitutionConstraintsView(BaseVenueConstraintsView):
     subject = gettext_lazy("Institution")
 
     def get_formset_queryset(self):
-        return self.formset_model.objects.filter(institution__team__tournament=self.tournament)
+        return self.formset_model.objects.filter(institution__team__tournament=self.tournament).distinct()
 
     def get_subject_queryset(self):
-        return Institution.objects.filter(team__tournament=self.tournament).distinct().values_list('id', 'name')
+        return Institution.objects.filter(
+            team__tournament=self.tournament
+        ).distinct().order_by('name').values_list('id', 'name')
 
     def get_contenttype(self):
         return ContentType.objects.get_for_model(Institution)

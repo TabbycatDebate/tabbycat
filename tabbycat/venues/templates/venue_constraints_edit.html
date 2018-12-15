@@ -1,11 +1,7 @@
 {% extends "base.html" %}
-{% load add_field_css debate_tags i18n %}
-
-{% block head-title %}<span class="emoji">🏰</span>{% trans "Venue Constraints" %}{% endblock %}
-{% block page-title %}🏰{% trans "Venue Constraints" %}{% endblock %}
+{% load i18n %}
 
 {% block content %}
-
   {% blocktrans trimmed asvar p1 %}
     Venue constraints tell the venue allocator to try to keep the specified
     team or adjudicator, or all teams (but not adjudicators) from the
@@ -17,47 +13,5 @@
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
-  {% trans "Save Venue Constraints" as save_text %}
   {% include "components/formset.html" with quadruple=True %}
-
 {% endblock content %}
-
-{% block js %}
-
-  {{ block.super }}
-
-  <script>
-    $(document).ready( function() {
-
-      function filterContentIDs(filteredList, filterToType) {
-        $(filteredList).children().each(function() {
-          // For each element in the data list check if contains the type
-          // This works as we suffixed the text; ie John Smith (Adjudicator)
-          if ($(this).text().toLowerCase().indexOf(filterToType) !== -1) {
-            $(this).prop('disabled', false);
-          } else {
-            $(this).prop('disabled', true);
-          }
-        });
-      }
-
-      // Initial filtering of the options based on preset content type
-      $("select[data-filter]").each(function() {
-        var selectedType = $(this).find(":selected").text(); // Get selected type
-        var filteredList = $(this).parent().parent().parent().find("datalist")
-        filterContentIDs(filteredList, selectedType)
-      });
-
-      // Update filters on change of selected content type
-      $("select[data-filter]").change(function() {
-        var subjectIDInput = $(this).parent().parent().parent().find("input[list]")
-        $(subjectIDInput).val(null); // Set ID to none when type changes
-        var filteredList = $(this).parent().parent().parent().find("datalist")
-        var selectedType = $(this).find(":selected").text(); // Get selected type
-        filterContentIDs(filteredList, selectedType)
-      });
-
-    });
-  </script>
-
-{% endblock %}
