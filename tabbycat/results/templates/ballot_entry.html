@@ -3,20 +3,51 @@
 
 {% block content %}
 
-check
-
   <div id="vueMount">
     <ballot-entry-container></ballot-entry-container>
   </div>
 
+  <form id="resultsForm" action="." method="POST">
+
+    {% csrf_token %}
+
+    {% if form.errors %}
+      {% trans "There are some problems with this scoresheet. Please review and correct them." as message %}
+      {% include "components/form-errors.html" with errors=form.non_field_errors %}
+    {% endif %}
+
+    {% for sheet in form.scoresheets %}
+      {% for team in sheet.teams %}
+        {% for position in team.speakers %}
+          {{ position.speaker }}
+          {{ position.speaker.errors }}
+          {{ position.ghost }}
+          {{ position.ghost.label_tag }}
+          {{ position.ghost.errors }}
+          {{ position.score }}
+          {{ position.score.errors }}
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}
+
+    {% if pref.enable_forfeits %}
+      {{ form.forfeit }}
+      {{ form.forfeit.errors }}
+    {% endif %}
+
+  </form>
+
 {% endblock content %}
 
 {% block js %}
-<script>
-  window.vueData = {
-    allData: {
-      // debatesOrPanels: {{ vueDebatesOrPanels|safe }},
+
+  <script>
+    window.vueData = {
+      allData: {
+        // debatesOrPanels: {{ vueDebatesOrPanels|safe }},
+      }
     }
-  }
-</script>
+  </script>
+  {{ block.super }}
+
 {% endblock js %}
