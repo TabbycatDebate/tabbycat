@@ -1,0 +1,22 @@
+{% extends "ballot_entry_base.html" %}
+{% load add_field_css debate_tags static i18n team_name_for_data_entry %}
+
+{% block content %}
+
+check
+
+  <div id="vueMount">
+    <ballot-entry-container></ballot-entry-container>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+<script>
+  window.vueData = {
+    allData: {
+      // debatesOrPanels: {{ vueDebatesOrPanels|safe }},
+    }
+  }
+</script>
+{% endblock js %}

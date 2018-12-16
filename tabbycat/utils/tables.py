@@ -13,7 +13,7 @@ from participants.models import Team
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
 from tournaments.utils import get_side_name
-from utils.misc import reverse_tournament, reverse_round
+from utils.misc import reverse_round, reverse_tournament
 
 from .mixins import AdministratorMixin
 
@@ -376,13 +376,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.admin:
                 cell['popover']['content'].append({
                     'text': _("View/edit debate ballot"),
-                    'link': reverse_tournament('results-ballotset-edit',
+                    'link': reverse_tournament('old-results-ballotset-edit',
                             self.tournament, kwargs={'pk': ts.ballot_submission_id})
                 })
             elif self.tournament.pref('ballots_released'):
                 cell['popover']['content'].append({
                     'text': _("View debate ballot"),
-                    'link': reverse_tournament('results-public-scoresheet-view',
+                    'link': reverse_tournament('old-results-public-scoresheet-view',
                             self.tournament, kwargs={'pk': ts.debate_team.debate_id})
                 })
 
@@ -861,7 +861,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         if self.admin:
             ballot_links_data = [{
                 'text': _("View/Edit Ballot"),
-                'link': reverse_tournament('results-ballotset-edit', self.tournament, kwargs={'pk': debate.confirmed_ballot.id})
+                'link': reverse_tournament('old-results-ballotset-edit', self.tournament, kwargs={'pk': debate.confirmed_ballot.id})
             } if debate.confirmed_ballot else "" for debate in debates]
             self.add_column(ballot_links_header, ballot_links_data)
 

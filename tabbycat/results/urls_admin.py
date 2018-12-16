@@ -23,4 +23,12 @@ urlpatterns = [
     path('debate/<int:debate_id>/new/',
         views.AdminNewBallotSetView.as_view(),
         name='results-ballotset-new'),
+
+    # Ballots Old
+    path('ballots/old/<int:pk>/edit/',
+        views.OldAdminEditBallotSetView.as_view(),
+        name='old-results-ballotset-edit'),
+    path('debate/old/<int:debate_id>/new/',
+        views.OldAdminNewBallotSetView.as_view(),
+        name='old-results-ballotset-new'),
 ]

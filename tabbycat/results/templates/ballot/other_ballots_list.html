@@ -39,9 +39,9 @@
     <li class="list-group-item small">
       {% if other != ballotsub %}
         {% if user_role == "admin" %}
-          <a href="{% tournamenturl 'results-ballotset-edit' other.id %}">
+          <a href="{% tournamenturl 'old-results-ballotset-edit' other.id %}">
         {% else %}
-          <a href="{% tournamenturl 'results-assistant-ballotset-edit' other.id %}">
+          <a href="{% tournamenturl 'old-results-assistant-ballotset-edit' other.id %}">
         {% endif %}
       {% endif %}
 
