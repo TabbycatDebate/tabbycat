@@ -1,14 +1,19 @@
 <template>
   <div class="card mt-3">
     <div class="card-body">
-      <button v-if="isNew" class="btn btn-block btn-success">Save draft results</button>
+      <button v-if="isNew" tabindex="299" class="btn btn-block btn-success">
+        Save draft results
+      </button>
       <div v-if="!isNew" class="row">
         <div class="col">
-          <button :class="['btn btn-block', author === ballotAuthor ? 'btn-danger' : 'btn-success']"
-                  :disabled="author === ballotAuthor">Confirm results</button>
+          <button tabindex="300" :disabled="author === ballotAuthor"
+                  :class="['btn btn-block', author === ballotAuthor ? 'btn-danger' : 'btn-success']"
+                  >Confirm results</button>
         </div>
         <div class="col">
-          <button class="btn btn-danger btn-block" type="button">Results are incorrect</button>
+          <button tabindex="301" class="btn btn-danger btn-block" type="button">
+            Results are incorrect
+          </button>
         </div>
       </div>
       <div v-if="!isNew && sendReceipts && author !== ballotAuthor"

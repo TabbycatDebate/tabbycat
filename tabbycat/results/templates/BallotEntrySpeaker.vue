@@ -3,11 +3,11 @@
   <div class="list-group-item">
     <div class="row">
 
-      <div class="col-2 pt-2 p-lg-2 pr-0 p-1 speaker-position-label">
+      <div class="col-2 mt-1 mb-0 pt-4 p-lg-2 pr-0 p-1 h6 text-muted">
         {{ speaker.position }}
       </div>
 
-      <div class="col mb-0 pr-md-2 pr-1 form-group">
+      <div class="col mb-0 pr-md-1 pr-1 form-group">
         <select v-model="speakerName" class="custom-select" v-bind="selectAttributes">
           <option v-for="option in selectOptions" v-bind:value="option.value"
                   :selected="speakerName.value === option.value">
@@ -15,15 +15,16 @@
           </option>
         </select>
 
-        <div class="small pt-0 m-0">
-          <input type="checkbox" v-model.number="speakerDuplicate" @change="setShadowDuplicate(speakerScore)" />
+        <div class="small pt-0 m-0" v-if="showDuplicates">
+          <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicate"
+                 @change="setShadowDuplicate(speakerScore)" />
           <span class="mt-2"></span>
           <label class="ml-2">Mark as a duplicate speech</label>
         </div>
 
       </div>
 
-      <div class="col-4 form-group pr-md-2 pr-1 score">
+      <div class="col-3 form-group pr-md-2 pr-1 score">
         <input class="form-control" @change="setShadowScore(speakerScore)"
                v-model.number="speakerScore" v-bind="scoreAttributes">
       </div>
@@ -37,17 +38,23 @@
 <script>
 
 export default {
-  props: { speaker: Object },
+  props: { speaker: Object, index: Number, showDuplicates: Boolean },
   data: function () {
     return {
       speakerName: this.speaker.nameField.options[this.speaker.nameField.selectedIndex].value,
       speakerDuplicate: this.speaker.duplicateField.checked,
-      speakerScore: this.speaker.scoreField.getAttribute('value'),
+      speakerScore: Number(this.speaker.scoreField.getAttribute('value')),
     }
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.$emit('update-speaker-score', this.index, this.speakerScore)
+    })
   },
   methods: {
     setShadowScore: function (setValue) {
       document.getElementById(this.speaker.scoreField.getAttribute('id')).value = setValue
+      this.$emit('update-speaker-score', this.index, setValue)
     },
     setShadowDuplicate: function (setValue) {
       document.getElementById(this.speaker.duplicateField.getAttribute('id')).checked = setValue

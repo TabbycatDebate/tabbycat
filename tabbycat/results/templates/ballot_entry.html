@@ -1,5 +1,5 @@
 {% extends "ballot_entry_base.html" %}
-{% load add_field_css debate_tags static i18n team_name_for_data_entry %}
+{% load debate_tags i18n %}
 
 {% block head-title %}<!-- Pass title to Vue instead -->{% endblock %}
 
@@ -29,6 +29,16 @@
 
 {% block content %}
 
+  <div id="vueMount">
+    <ballot-entry-container
+      :debate-name="'{{ debate_name|safe }}'"
+      :debate-venue="'{{ debate.venue }}'" :debate-round="'{{ debate.round.name }}'"
+      :is-new="{% if new %}true{% else %}false{% endif %}"
+      :send-receipts=" {% if pref.enable_ballot_receipts %}true{% else %}false{% endif %}"
+      :author="'{{ request.user|safe }}'" :ballot-author="'{{ ballotsub.submitter|safe }}'">
+    </ballot-entry-container>
+  </div>
+
   <form id="resultsForm" action="." method="POST">
 
     {% csrf_token %}
@@ -39,67 +49,17 @@
     {% endif %}
 
     <div id="ballot"><!-- Parsed by Vue for data and as a mirror input -->
-      {% for sheet in form.scoresheets %}
-      <div data-type="sheet" data-id="">
-
-        {% for team in sheet.teams %}
-        <div data-type="team" data-id="{{ team.team.id }}" data-name="{% team_name_for_data_entry team.team use_team_code_names %}" data-side="{{ team.side_code }}">
-
-            {% for position in team.speakers %}
-            <div data-type="speaker" data-position="{{ position.name }}">
-
-              {{ position.speaker }}
-              {{ position.speaker.errors }}
-              {{ position.ghost }}
-              {{ position.ghost.label_tag }}
-              {{ position.ghost.errors }}
-              {{ position.score }}
-              {{ position.score.errors }}
-
-            </div>
-            {% endfor %}
-
-        </div>
-        {% endfor %}
-      </div>
-      {% endfor %}
-      {% if new and not pref.disable_ballot_confirms %}
-        {# After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. #}
-        <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
-        <input id="id_discarded" type="hidden" name="discarded" value="False" />
-        <input id="id_confirmed" type="hidden" name="confirmed" value="False" />
-        <input class="btn btn-block btn-success" type="submit" value="Save draft results" tabindex="{{ form.nexttabindex }}" />
-      {% else %}
-        <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
-        <input id="id_discarded" type="hidden" name="discarded" value="False" />
-        <input id="id_confirmed" type="hidden" name="confirmed" value="True" />
-      {% endif %}
+      {% include "ballot_entry_form.html" %}
     </div>
 
   </form>
 
-  <div id="vueMount">
-    <ballot-entry-container
-      :debate-name="debateName" :is-new="isNew" :send-receipts="sendReceipts"
-      :author="author" :ballot-author="ballotAuthor">
-    </ballot-entry-container>
-  </div>
-
-
 {% endblock content %}
 
 {% block js %}
-
   <script>
     window.vueData = {
-      debateName: "{{ debate_name|safe }}",
-      isNew: {% if new %}true{% else %}false{% endif %},
-      isBP: {% if pref.teams_in_debate == 'bp' %}true{% else %}false{% endif %},
-      sendReceipts: {% if pref.enable_ballot_receipts %}true{% else %}false{% endif %},
-      author: "{{ request.user|safe }}",
-      ballotAuthor: "{{ ballotsub.submitter|safe }}",
     }
   </script>
   {{ block.super }}
-
 {% endblock js %}
