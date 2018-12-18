@@ -820,9 +820,11 @@ class AdjudicatorScoresCsvView(TournamentMixin, AdministratorMixin, BaseCsvView)
     filename = "scores.csv"
 
     def write_rows(self, writer):
-        writer.writerow(["id", "name", "test_score"])
+        writer.writerow(["id", "name", "test_score", "gender", "region"])
         for adj in self.tournament.adjudicator_set.all():
-            writer.writerow([adj.id, adj.name, adj.test_score])
+            row = [adj.id, adj.name, adj.test_score, adj.gender]
+            row.append(adj.region.name if adj.region else "")
+            writer.writerow(row)
 
 
 class AdjudicatorFeedbackCsvView(FeedbackMixin, AdministratorMixin, TournamentMixin, BaseCsvView):
@@ -837,7 +839,7 @@ class AdjudicatorFeedbackCsvView(FeedbackMixin, AdministratorMixin, TournamentMi
             "adjudicator.id", "adjudicator.name", "adjudicator.type",
             "source_adjudicator.id","source_adjudicator.name", "source_adjudicator.type",
             "source_team.id", "source_team.short_name", "source_team.result",
-            "score"
+            "score", "ignored",
         ]
         question_references = [q.reference for q in self.tournament.adj_feedback_questions]
         headers.extend(question_references)
@@ -861,6 +863,7 @@ class AdjudicatorFeedbackCsvView(FeedbackMixin, AdministratorMixin, TournamentMi
                 row.extend([""] * 3)
 
             row.append(f.score)
+            row.append(f.ignored)
 
             answers = {q['question'].reference: q['answer'] for q in f.items}
             row.extend([answers.get(ref, '') for ref in question_references])
