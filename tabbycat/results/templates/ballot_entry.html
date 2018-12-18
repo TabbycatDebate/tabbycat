@@ -1,11 +1,33 @@
 {% extends "ballot_entry_base.html" %}
 {% load add_field_css debate_tags static i18n team_name_for_data_entry %}
 
-{% block content %}
+{% block head-title %}<!-- Pass title to Vue instead -->{% endblock %}
 
-  <div id="vueMount">
-    <ballot-entry-container></ballot-entry-container>
-  </div>
+{% block page-alerts %}
+
+  {% if new %}
+    {% if user_role == "admin" %}
+      {% tournamenturl 'old-results-ballotset-new' debate_id=debate.id as old_url %}
+    {% else %}
+      {% tournamenturl 'old-results-assistant-ballotset-new' debate_id=debate.id as old_url %}
+    {% endif %}
+  {% else %}
+    {% if user_role == "admin" %}
+      {% tournamenturl 'old-results-ballotset-edit' pk=ballotsub.id as old_url %}
+    {% else %}
+      {% tournamenturl 'old-results-assistant-ballotset-edit' pk=ballotsub.id as old_url %}
+    {% endif %}
+  {% endif %}
+  {% blocktrans trimmed asvar message %}
+    This ballot entry interface is in beta, if you encounter any problems you can use the older
+    version of the interface by <a href="{{ old_url }}" class="alert-link">following this link</a>.
+  {% endblocktrans %}
+  {% include "components/alert.html" with type="info" %}
+  {{ block.super }}
+
+{% endblock %}
+
+{% block content %}
 
   <form id="resultsForm" action="." method="POST">
 
@@ -16,26 +38,53 @@
       {% include "components/form-errors.html" with errors=form.non_field_errors %}
     {% endif %}
 
-    {% for sheet in form.scoresheets %}
-      {% for team in sheet.teams %}
-        {% for position in team.speakers %}
-          {{ position.speaker }}
-          {{ position.speaker.errors }}
-          {{ position.ghost }}
-          {{ position.ghost.label_tag }}
-          {{ position.ghost.errors }}
-          {{ position.score }}
-          {{ position.score.errors }}
-        {% endfor %}
-      {% endfor %}
-    {% endfor %}
+    <div id="ballot"><!-- Parsed by Vue for data and as a mirror input -->
+      {% for sheet in form.scoresheets %}
+      <div data-type="sheet" data-id="">
 
-    {% if pref.enable_forfeits %}
-      {{ form.forfeit }}
-      {{ form.forfeit.errors }}
-    {% endif %}
+        {% for team in sheet.teams %}
+        <div data-type="team" data-id="{{ team.team.id }}" data-name="{% team_name_for_data_entry team.team use_team_code_names %}" data-side="{{ team.side_code }}">
+
+            {% for position in team.speakers %}
+            <div data-type="speaker" data-position="{{ position.name }}">
+
+              {{ position.speaker }}
+              {{ position.speaker.errors }}
+              {{ position.ghost }}
+              {{ position.ghost.label_tag }}
+              {{ position.ghost.errors }}
+              {{ position.score }}
+              {{ position.score.errors }}
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      {% if new and not pref.disable_ballot_confirms %}
+        {# After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. #}
+        <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
+        <input id="id_discarded" type="hidden" name="discarded" value="False" />
+        <input id="id_confirmed" type="hidden" name="confirmed" value="False" />
+        <input class="btn btn-block btn-success" type="submit" value="Save draft results" tabindex="{{ form.nexttabindex }}" />
+      {% else %}
+        <input id="id_debate_result_status" type="hidden" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
+        <input id="id_discarded" type="hidden" name="discarded" value="False" />
+        <input id="id_confirmed" type="hidden" name="confirmed" value="True" />
+      {% endif %}
+    </div>
 
   </form>
+
+  <div id="vueMount">
+    <ballot-entry-container
+      :debate-name="debateName" :is-new="isNew" :send-receipts="sendReceipts"
+      :author="author" :ballot-author="ballotAuthor">
+    </ballot-entry-container>
+  </div>
+
 
 {% endblock content %}
 
@@ -43,9 +92,12 @@
 
   <script>
     window.vueData = {
-      allData: {
-        // debatesOrPanels: {{ vueDebatesOrPanels|safe }},
-      }
+      debateName: "{{ debate_name|safe }}",
+      isNew: {% if new %}true{% else %}false{% endif %},
+      isBP: {% if pref.teams_in_debate == 'bp' %}true{% else %}false{% endif %},
+      sendReceipts: {% if pref.enable_ballot_receipts %}true{% else %}false{% endif %},
+      author: "{{ request.user|safe }}",
+      ballotAuthor: "{{ ballotsub.submitter|safe }}",
     }
   </script>
   {{ block.super }}

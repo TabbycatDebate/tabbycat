@@ -344,20 +344,20 @@ class AdministratorBallotSetMixin(AdministratorMixin):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
 
 
-class AssistantBallotSetMixin(AssistantMixin):
-    template_name = 'ballot_entry.html'
-    tabroom = True
-
-    def get_success_url(self):
-        return reverse_tournament('results-assistant-round-list', self.tournament)
-
-
 class OldAdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'enter_results.html'
     tabroom = True
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
+
+
+class AssistantBallotSetMixin(AssistantMixin):
+    template_name = 'ballot_entry.html'
+    tabroom = True
+
+    def get_success_url(self):
+        return reverse_tournament('results-assistant-round-list', self.tournament)
 
 
 class OldAssistantBallotSetMixin(AssistantMixin):

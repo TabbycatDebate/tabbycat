@@ -376,13 +376,13 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.admin:
                 cell['popover']['content'].append({
                     'text': _("View/edit debate ballot"),
-                    'link': reverse_tournament('old-results-ballotset-edit',
+                    'link': reverse_tournament('results-ballotset-edit',
                             self.tournament, kwargs={'pk': ts.ballot_submission_id})
                 })
             elif self.tournament.pref('ballots_released'):
                 cell['popover']['content'].append({
                     'text': _("View debate ballot"),
-                    'link': reverse_tournament('old-results-public-scoresheet-view',
+                    'link': reverse_tournament('results-public-scoresheet-view',
                             self.tournament, kwargs={'pk': ts.debate_team.debate_id})
                 })
 

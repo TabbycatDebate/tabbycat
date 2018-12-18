@@ -4,7 +4,9 @@
 
       <div class="list-group-item pt-4">
         <h4 class="card-title mt-0 mb-2 d-inline-block">
-          Debate Information
+          <span v-if="isNew">New Ballot Set for </span>
+          <span v-if="!isNew">Edit Ballot Set for </span>
+          {{ debateName }}
         </h4>
       </div>
       <!-- TODO: Side choosing -->
@@ -22,6 +24,11 @@
             </option>
           </select>
         </div>
+        <div class="alert alert-info mb-0">
+          Speeches marked as 'duplicates' are hidden from the speaker tab and often need to be
+          tracked in order to determine break eligibility. If a speaker is 'iron-manning' you would
+          typically set their lowest-scoring speech as a duplicate.
+        </div>
       </div>
 
     </div>
@@ -29,5 +36,12 @@
 </template>
 
 <script>
-
+export default {
+  props: { debateName: String, isNew: Boolean },
+  data: function () {
+    return {
+    }
+  },
+  methods: { },
+}
 </script>

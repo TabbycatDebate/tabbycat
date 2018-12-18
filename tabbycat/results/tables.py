@@ -57,9 +57,9 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         # These are prefetched, so sort using Python rather than generating an SQL query
         ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
         if view_role == 'admin':
-            link = 'old-results-ballotset-new'
+            link = 'results-ballotset-new'
         else:
-            link = 'old-results-assistant-ballotset-new'
+            link = 'results-assistant-ballotset-new'
 
         return {
             'component': 'ballots-cell',
