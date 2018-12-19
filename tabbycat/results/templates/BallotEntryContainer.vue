@@ -21,7 +21,7 @@
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(0,2)"
               v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
-              :team="team" :key="team.id" :teams-count="sheet.teams.length"
+              :team="team" :key="team.id" :teams-count="sheet.teams.length" :is-new="isNew"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>
@@ -29,7 +29,7 @@
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(2)"
               v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
-              :team="team" :key="team.id" :teams-count="sheet.teams.length"
+              :team="team" :key="team.id" :teams-count="sheet.teams.length" :is-new="isNew"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>
@@ -73,16 +73,16 @@ export default {
   computed: {
     canSubmit: function () {
       const individualTeamScores = Object.values(this.teamScores)
-      if (this.author === this.ballotAuthor) {
-        return false // Can't confirm own ballots
+      if (this.author === this.ballotAuthor && !this.isNew) {
+        return 'Ballot cannot be confirmed because you authored it'
       }
-      if (individualTeamScores.indexOf(0) >= 0) {
-        return false // No complete team scores
+      if (individualTeamScores.indexOf(0) >= 0 || individualTeamScores.indexOf('') >= 0) {
+        return 'Ballot cannot be submitted because a team score is missing'
       }
-      if ([...new Set(individualTeamScores)].length < individualTeamScores.length()) {
-        return false // Team scores are not unique
+      if ([...new Set(individualTeamScores)].length < individualTeamScores.length) {
+        return 'Ballot cannot be submitted because there is a tie'
       }
-      return true
+      return ''
     },
   },
   methods: {
@@ -91,7 +91,7 @@ export default {
     },
     setSpeakerScore: function (teamPosition, speakerPosition, speakerScore) {
       var changedScores = this.speakerScores[teamPosition]
-      changedScores[speakerPosition] = speakerScore
+      changedScores[speakerPosition] = Number(speakerScore)
       this.$set(this.speakerScores, teamPosition, changedScores)
       let teamScore = Object.values(changedScores).reduce((a, b) => a + b, 0)
       this.$set(this.teamScores, teamPosition, teamScore)
@@ -99,7 +99,7 @@ export default {
   },
   mounted: function () {
     let ballotForm = $('#ballot').first()
-    for (let sheet of ballotForm.find('div[data-type="sheet"]')) {
+    for (let sheet of $(ballotForm).find('div[data-type="sheet"]')) {
       var sheetData = {
         'teams': [],
         'title': sheet.getAttribute('data-title'),

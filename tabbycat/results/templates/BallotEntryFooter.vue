@@ -1,14 +1,17 @@
 <template>
   <div class="card mt-3">
     <div class="card-body">
-      <button v-if="isNew" tabindex="299" :disabled="!canSubmit" class="btn btn-block btn-success">
-        Save draft results
+      <button v-if="isNew" tabindex="299" :disabled="canSubmit !== '' || submitting" @click="submit"
+              class="btn btn-block btn-success">
+        <span v-if="!submitting">Save draft results</span>
+        <span v-if="submitting">Loading...</span>
       </button>
       <div v-if="!isNew" class="row">
         <div class="col">
-          <button tabindex="300" :disabled="!canSubmit"
-            :class="['btn btn-block', author === ballotAuthor ? 'btn-danger' : 'btn-success']">
-            Confirm results
+          <button tabindex="300" :disabled="canSubmit !== '' || submitting" @click="submit"
+                  class="btn btn-block btn-success">
+            <span v-if="!submitting">Confirm results</span>
+            <span v-if="submitting">Loading...</span>
           </button>
         </div>
         <div class="col">
@@ -17,15 +20,12 @@
           </button>
         </div>
       </div>
-      <div v-if="!isNew && sendReceipts && canSubmit"
+      <div v-if="canSubmit !== ''" class="text-center pt-3 small text-danger">
+        {{ canSubmit }}
+      </div>
+      <div v-if="!isNew && sendReceipts"
            class="text-center pt-3 small text-muted">
         Emails will be sent to adjudicators when the ballot is confirmed.
-      </div>
-      <div v-if="!canSubmit && isNew" class="text-center pt-3 small text-danger">
-        Ballot cannot be confirmed because it contains errors.
-      </div>
-      <div v-if="!canSubmit && !isNew" class="text-center pt-3 small text-danger">
-        Ballot cannot be saved because it contains errors.
       </div>
     </div>
   </div>
@@ -35,8 +35,19 @@
 export default {
   props: {
     isNew: Boolean,
-    canSubmit: Boolean,
+    canSubmit: String,
     sendReceipts: Boolean,
+  },
+  data: function () {
+    return {
+      submitting: false,
+    }
+  },
+  methods: {
+    submit: function () {
+      this.submitting = true
+      document.getElementById('resultsForm').submit()
+    },
   },
 }
 </script>

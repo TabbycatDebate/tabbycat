@@ -14,7 +14,7 @@
       </div>
 
       <ballot-entry-speaker v-for="(speaker, index) in team.speakers"
-                            v-on:set-speaker-score="setSpeakerScore"
+                            v-on:set-speaker-score="setSpeakerScore" :is-new="isNew"
                             :speaker="speaker" :team="team" :index="index" :key="index"
                             :show-duplicates="showDuplicates"></ballot-entry-speaker>
 
@@ -57,7 +57,7 @@ import BallotEntrySpeaker from './BallotEntrySpeaker.vue'
 
 export default {
   components: { BallotEntrySpeaker },
-  props: { team: Object, teamScores: Object, teamsCount: Number, showDuplicates: Boolean },
+  props: { team: Object, teamScores: Object, teamsCount: Number, showDuplicates: Boolean, isNew: Boolean },
   data: function () {
     return {
       speakerScores: [],

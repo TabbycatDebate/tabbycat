@@ -1,5 +1,5 @@
 <template>
-  <div class="card mt-1">
+  <div class="card">
     <div class="list-group list-group-flush">
 
       <div class="list-group-item pt-4">

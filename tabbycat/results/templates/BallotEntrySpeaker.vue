@@ -9,10 +9,10 @@
 
       <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
         <select :class="['custom-select', speakerError ? 'border-danger text-danger' : '']"
-                v-model="speakerName" v-bind="selectAttributes"
+                v-model="speakerName" v-bind="selectAttributes" :disabled="!isNew"
                 @change="setShadowSpeaker(speakerName)">
           <option v-for="option in selectOptions" v-bind:value="option.value"
-                  :selected="speakerName.value === option.value">
+                  :selected="speakerName === option.value">
             {{ option.text }}
           </option>
         </select>
@@ -20,7 +20,7 @@
 
         <div class="small pt-0 m-0" v-if="showDuplicates">
           <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicate"
-                 @change="setShadowDuplicate(speakerScore)" />
+                 @change="setShadowDuplicate(speakerScore)" :readonly="!isNew" />
           <span class="mt-2"></span>
           <label class="ml-2">Mark as a duplicate speech</label>
         </div>
@@ -29,13 +29,12 @@
 
       <div class="col-3 form-group pr-1 pl-1">
         <input :class="['form-control', scoreError ? 'border-danger text-danger' : '']"
-               @change="setShadowScore(speakerScore)"
+               @change="setShadowScore(speakerScore)" :readonly="!isNew"
                v-model.number="speakerScore" v-bind="scoreAttributes">
         <label v-if="scoreError" class="error pt-2">{{ scoreError }}</label>
       </div>
 
     </div>
-
   </div>
 
 </template>
@@ -43,7 +42,7 @@
 <script>
 
 export default {
-  props: { speaker: Object, team: Object, index: Number, showDuplicates: Boolean },
+  props: { speaker: Object, team: Object, index: Number, showDuplicates: Boolean, isNew: Boolean },
   data: function () {
     return {
       speakerName: null,
@@ -58,6 +57,7 @@ export default {
     this.$nextTick(function () {
       this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScore)
     })
+    this.speaker.duplicateField.setAttribute('tabindex', -1) // Remove old tab order
   },
   methods: {
     setShadowScore: function (setValue) {
@@ -78,8 +78,8 @@ export default {
   },
   computed: {
     speakerError: function () {
-      return 'Speaker selected multiple times but none is marked as a duplicate'
-      // return false
+      // return 'Speaker selected multiple times but none is marked as a duplicate'
+      return false
     },
     scoreError: function () {
       if (this.speakerScore !== null && this.speakerScore > 9) {
@@ -101,10 +101,12 @@ export default {
       return options
     },
     selectAttributes: function () {
-      return {
+      var attributes = {
         'tabindex': this.speaker.nameField.getAttribute('tabindex'),
         'data-counterpart': this.speaker.nameField.getAttribute('id'),
       }
+      this.speaker.nameField.setAttribute('tabindex', -1) // Remove old tab order
+      return attributes
     },
     scoreAttributes: function () {
       var attributes = {}
@@ -112,6 +114,7 @@ export default {
         attributes[label] = this.speaker.scoreField.getAttribute(label)
       }
       attributes['data-counterpart'] = this.speaker.scoreField.getAttribute('id')
+      this.speaker.scoreField.setAttribute('tabindex', -1) // Remove old tab order
       return attributes
     },
   },
