@@ -238,4 +238,5 @@ def subtract(number_a, number_b):
 @register.filter(name='abbreviatename')
 def abbreviatename(name):
     """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
-    return "%s.%s" % (name[0], name.split(" ")[-1][:5]) # Used for barcodes
+    parts = name.split(" ")
+    return "%s.%s" % (parts[0][:5], parts[-1][:5]) # Used for barcodes
