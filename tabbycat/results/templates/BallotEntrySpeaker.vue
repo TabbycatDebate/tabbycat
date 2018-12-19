@@ -7,13 +7,16 @@
         {{ speaker.position }}
       </div>
 
-      <div class="col mb-0 pr-md-1 pr-1 form-group">
-        <select v-model="speakerName" class="custom-select" v-bind="selectAttributes">
+      <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
+        <select :class="['custom-select', speakerError ? 'border-danger text-danger' : '']"
+                v-model="speakerName" v-bind="selectAttributes"
+                @change="setShadowSpeaker(speakerName)">
           <option v-for="option in selectOptions" v-bind:value="option.value"
                   :selected="speakerName.value === option.value">
             {{ option.text }}
           </option>
         </select>
+        <label v-if="speakerError" class="error pt-2">{{ speakerError }}</label>
 
         <div class="small pt-0 m-0" v-if="showDuplicates">
           <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicate"
@@ -24,9 +27,11 @@
 
       </div>
 
-      <div class="col-3 form-group pr-md-2 pr-1 score">
-        <input class="form-control" @change="setShadowScore(speakerScore)"
+      <div class="col-3 form-group pr-1 pl-1">
+        <input :class="['form-control', scoreError ? 'border-danger text-danger' : '']"
+               @change="setShadowScore(speakerScore)"
                v-model.number="speakerScore" v-bind="scoreAttributes">
+        <label v-if="scoreError" class="error pt-2">{{ scoreError }}</label>
       </div>
 
     </div>
@@ -38,29 +43,56 @@
 <script>
 
 export default {
-  props: { speaker: Object, index: Number, showDuplicates: Boolean },
+  props: { speaker: Object, team: Object, index: Number, showDuplicates: Boolean },
   data: function () {
     return {
-      speakerName: this.speaker.nameField.options[this.speaker.nameField.selectedIndex].value,
-      speakerDuplicate: this.speaker.duplicateField.checked,
-      speakerScore: Number(this.speaker.scoreField.getAttribute('value')),
+      speakerName: null,
+      speakerDuplicate: false,
+      speakerScore: null,
     }
   },
   mounted: function () {
+    this.speakerName = this.speaker.nameField.options[this.speaker.nameField.selectedIndex].value
+    this.speakerDuplicate = this.speaker.duplicateField.checked
+    this.speakerScore = this.speaker.scoreField.getAttribute('value')
     this.$nextTick(function () {
-      this.$emit('update-speaker-score', this.index, this.speakerScore)
+      this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScore)
     })
   },
   methods: {
     setShadowScore: function (setValue) {
       document.getElementById(this.speaker.scoreField.getAttribute('id')).value = setValue
-      this.$emit('update-speaker-score', this.index, setValue)
+      this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScore)
+    },
+    setShadowSpeaker: function (setValue) {
+      let select = document.getElementById(this.speaker.nameField.getAttribute('id'))
+      for (let option of select.options) {
+        if (option.value === setValue) {
+          option.selected = true
+        }
+      }
     },
     setShadowDuplicate: function (setValue) {
       document.getElementById(this.speaker.duplicateField.getAttribute('id')).checked = setValue
     },
   },
   computed: {
+    speakerError: function () {
+      return 'Speaker selected multiple times but none is marked as a duplicate'
+      // return false
+    },
+    scoreError: function () {
+      if (this.speakerScore !== null && this.speakerScore > 9) {
+        // > 9 is so it doesn't flash up before the full score has been typed
+        if (this.speakerScore > this.scoreAttributes.max) {
+          return 'Score larger than allowed'
+        }
+        if (this.speakerScore < this.scoreAttributes.min) {
+          return 'Score smaller than allowed'
+        }
+      }
+      return false
+    },
     selectOptions: function () {
       var options = []
       for (let speaker of this.speaker.nameField) {

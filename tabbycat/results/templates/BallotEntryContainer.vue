@@ -20,7 +20,7 @@
           <div class="card-deck px-md-2 p-0">
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(0,2)"
-              v-on:update-team-score="calculateTeamRanks" :team-scores="teamScores"
+              v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
               :team="team" :key="team.id" :teams-count="sheet.teams.length"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
@@ -28,7 +28,7 @@
           <div v-if="sheet.teams.length > 2" class="card-deck px-md-2 p-0" >
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(2)"
-              v-on:update-team-score="calculateTeamRanks" :team-scores="teamScores"
+              v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
               :team="team" :key="team.id" :teams-count="sheet.teams.length"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
@@ -39,7 +39,7 @@
     </div>
 
     <ballot-entry-footer
-      :is-new="isNew" :send-receipts="sendReceipts"
+      :is-new="isNew" :can-submit="canSubmit" :send-receipts="sendReceipts"
       :author="author" :ballot-author="ballotAuthor"></ballot-entry-footer>
 
   </div>
@@ -65,17 +65,36 @@ export default {
   data: function () {
     return {
       ballotSheets: [],
+      speakerScores: {},
       teamScores: {},
       showDuplicates: false,
     }
   },
+  computed: {
+    canSubmit: function () {
+      const individualTeamScores = Object.values(this.teamScores)
+      if (this.author === this.ballotAuthor) {
+        return false // Can't confirm own ballots
+      }
+      if (individualTeamScores.indexOf(0) >= 0) {
+        return false // No complete team scores
+      }
+      if ([...new Set(individualTeamScores)].length < individualTeamScores.length()) {
+        return false // Team scores are not unique
+      }
+      return true
+    },
+  },
   methods: {
     revealDuplicates: function () {
-      console.log('reveal iro')
       this.showDuplicates = true
     },
-    calculateTeamRanks: function (position, score) {
-      this.$set(this.teamScores, position, score)
+    setSpeakerScore: function (teamPosition, speakerPosition, speakerScore) {
+      var changedScores = this.speakerScores[teamPosition]
+      changedScores[speakerPosition] = speakerScore
+      this.$set(this.speakerScores, teamPosition, changedScores)
+      let teamScore = Object.values(changedScores).reduce((a, b) => a + b, 0)
+      this.$set(this.teamScores, teamPosition, teamScore)
     },
   },
   mounted: function () {
@@ -102,6 +121,7 @@ export default {
           'id': team.getAttribute('data-id'),
           'speakers': speakersData,
         })
+        this.speakerScores[team.getAttribute('data-side')] = {}
       }
       this.ballotSheets.push(sheetData)
     }

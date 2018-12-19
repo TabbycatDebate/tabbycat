@@ -19,8 +19,8 @@
     {% endif %}
   {% endif %}
   {% blocktrans trimmed asvar message %}
-    This ballot entry interface is in beta, if you encounter any problems you can use the older
-    version of the interface by <a href="{{ old_url }}" class="alert-link">following this link</a>.
+    This ballot entry interface is in beta, if you encounter any problems the older
+    version of the interface is <a href="{{ old_url }}" class="alert-link">available here</a>.
   {% endblocktrans %}
   {% include "components/alert.html" with type="info" %}
   {{ block.super }}

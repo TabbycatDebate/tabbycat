@@ -14,27 +14,31 @@
       </div>
 
       <ballot-entry-speaker v-for="(speaker, index) in team.speakers"
-                            v-on:update-speaker-score="calculateTeamPoints"
-                            :speaker="speaker" :index="index" :key="index"
+                            v-on:set-speaker-score="setSpeakerScore"
+                            :speaker="speaker" :team="team" :index="index" :key="index"
                             :show-duplicates="showDuplicates"></ballot-entry-speaker>
 
       <div class="list-group-item">
         <div class="row">
 
-          <div class="col-2 p-lg-2 pr-0 p-1"></div>
-
-          <div class="col mb-0 pr-md-1 pr-1 btn-group d-flex">
-            <button tabindex="-1" class="btn w-100 btn-outline-secondary btn-no-hover" readonly>Rank</button>
-            <button tabindex="-1" :class="['btn w-100 btn-no-hover text-monospace border-right-0 ', rankClasses[teamRank]]" readonly>
-              {{ rankLabels[teamRank] }}
-            </button>
-            <button tabindex="-1" class="btn w-100 btn-outline-secondary btn-no-hover" readonly>Margin</button>
-            <button tabindex="-1" :class="['btn w-100 btn-no-hover text-monospace', rankClasses[teamRank]]" readonly>
-              <span v-if="teamMargin >= 0">+</span>{{ teamMargin }}
-            </button>
+          <div class="col offset-md-2 mb-0 pr-md-2 pr-1 pl-1">
+            <div class="btn-group d-flex">
+              <button tabindex="-1" class="btn btn-outline-secondary btn-no-hover" readonly>
+                R<span class="d-none d-md-inline">ank</span>
+              </button>
+              <button tabindex="-1" :class="['btn btn-no-hover flex-grow-1 text-monospace border-right-0 ', rankClasses[teamRank]]" readonly>
+                {{ rankLabels[teamRank] }}
+              </button>
+              <button tabindex="-1" class="btn btn-outline-secondary btn-no-hover" readonly>
+                M<span class="d-none d-md-inline">argin</span>
+              </button>
+              <button tabindex="-1" :class="['btn btn-no-hover flex-grow-1 text-monospace', rankClasses[teamRank]]" readonly>
+                <span v-if="teamMargin >= 0">+</span>{{ teamMargin }}
+              </button>
+            </div>
           </div>
 
-          <div class="col-3 btn-group pr-md-2 pr-1">
+          <div class="col-3 form-group pr-1 pl-1">
             <button tabindex="-1" :class="['btn btn-block btn-no-hover', rankClasses[teamRank]]" readonly>
               {{ teamPoints }}
             </button>
@@ -100,14 +104,8 @@ export default {
     },
   },
   methods: {
-    calculateTeamPoints: function (index, score) {
-      if (typeof this.speakerScores[index] === 'undefined') {
-        this.speakerScores.push(score)
-      } else {
-        this.speakerScores[index] = score
-      }
-      let totalSpeaks = this.speakerScores.reduce((a, b) => a + b, 0) // Can't call from computed
-      this.$emit('update-team-score', this.team.position, totalSpeaks)
+    setSpeakerScore: function (teamPosition, speakerPosition, speakerScore) {
+      this.$emit('update-speaker-score', teamPosition, speakerPosition, speakerScore)
     },
   },
 }
