@@ -36,7 +36,7 @@ module.exports = {
   },
   pluginOptions: {
     webpackBundleAnalyzer: {
-      analyzerMode: 'static', // Serve results as flat page
+      analyzerMode: 'disabled', // Disabled for speed
       defaultSizes: 'gzip', // Show the filesizes as if gzipped
       openAnalyzer: false, // Enable to view a heatmap of dependency sizes
     },
