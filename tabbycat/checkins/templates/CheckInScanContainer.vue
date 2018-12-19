@@ -183,7 +183,7 @@ export default {
       Quagga.onDetected((result) => {
         const code = result.codeResult.code
         // Check length
-        if (code.length === 5) {
+        if (code.length === 6) {
           // Check numeric
           if (code.match(/^[0-9]+$/) !== null) {
             // Check not already posted
@@ -200,7 +200,7 @@ export default {
   },
   watch: {
     barcode: function (current) {
-      if (current.length >= 5) {
+      if (current.length >= 6) {
         this.processing = true
         this.checkInIdentifier(current)
       }
