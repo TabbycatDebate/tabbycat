@@ -233,12 +233,14 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
     action_log_content_object_attr = 'ballotsub'
     tabroom = False
+    for_admin = False
 
     def get_context_data(self, **kwargs):
         kwargs['ballotsub'] = self.ballotsub
         kwargs['debate'] = self.debate
         kwargs['all_ballotsubs'] = self.get_all_ballotsubs()
         kwargs['new'] = self.relates_to_new_ballotsub
+        kwargs['for_admin'] = self.for_admin
 
         use_team_code_names = use_team_code_names_data_entry(self.tournament, self.tabroom)
         kwargs['use_team_code_names'] = use_team_code_names
@@ -251,6 +253,9 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
         kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
             filter=Q(team__debateteam__debate__round=self.debate.round.prev) & Q(team__debateteam__speakerscore__ghost=True),
+            distinct=True)).filter(iron__gt=0)
+        kwargs['currentIron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
+            filter=Q(team__debateteam__debate__round=self.debate.round) & Q(team__debateteam__speakerscore__ghost=True),
             distinct=True)).filter(iron__gt=0)
 
         return super().get_context_data(**kwargs)
@@ -339,6 +344,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'ballot_entry.html'
     tabroom = True
+    for_admin = True
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)

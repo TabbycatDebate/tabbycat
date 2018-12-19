@@ -21,7 +21,8 @@
 
       <div class="list-group-item pb-3 pt-3">
         <div class="form-group" v-if="!showDuplicates">
-          <select class="required custom-select form-control" v-model="hasIron" @change="setIron()">
+          <select class="required custom-select form-control" v-model="ironStatus"
+                  @change="setIron()" :disabled="!isNew">
             <option value="No">
               There were no speakers who spoke multiple times (i.e. no 'Iron' person speeches)
             </option>
@@ -43,10 +44,17 @@
 
 <script>
 export default {
-  props: { debate: String, venue: String, round: String, isNew: Boolean, showDuplicates: Boolean },
+  props: {
+    debate: String,
+    venue: String,
+    round: String,
+    isNew: Boolean,
+    showDuplicates: Boolean,
+    hasIron: Boolean,
+  },
   data: function () {
     return {
-      hasIron: 'No',
+      ironStatus: this.hasIron ? 'Yes' : 'No',
     }
   },
   methods: {

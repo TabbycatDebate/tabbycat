@@ -2,7 +2,7 @@
   <div>
 
     <ballot-entry-header :debate="debateName" :venue="debateVenue" :round="debateRound"
-                         :is-new="isNew" :show-duplicates="showDuplicates"
+                         :is-new="isNew" :has-iron="hasIron" :show-duplicates="showDuplicates"
                          v-on:set-duplicates="revealDuplicates">
     </ballot-entry-header>
 
@@ -21,7 +21,8 @@
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(0,2)"
               v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
-              :team="team" :key="team.id" :teams-count="sheet.teams.length" :is-new="isNew"
+              :team="team" :key="team.id" :teams-count="sheet.teams.length"
+              :is-new="isNew" :blind-entry="blindEntry"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>
@@ -29,7 +30,8 @@
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(2)"
               v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
-              :team="team" :key="team.id" :teams-count="sheet.teams.length" :is-new="isNew"
+              :team="team" :key="team.id" :teams-count="sheet.teams.length"
+              :is-new="isNew" :blind-entry="blindEntry"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>
@@ -39,7 +41,7 @@
     </div>
 
     <ballot-entry-footer
-      :is-new="isNew" :can-submit="canSubmit" :send-receipts="sendReceipts"
+      :is-new="isNew" :is-admin="isAdmin" :can-submit="canSubmit" :send-receipts="sendReceipts"
       :author="author" :ballot-author="ballotAuthor"></ballot-entry-footer>
 
   </div>
@@ -58,6 +60,9 @@ export default {
     debateVenue: String,
     debateRound: String,
     isNew: Boolean,
+    isAdmin: Boolean,
+    hasIron: Boolean,
+    blindEntry: Boolean,
     author: String,
     ballotAuthor: String,
     sendReceipts: Boolean,
