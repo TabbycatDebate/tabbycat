@@ -42,6 +42,7 @@
 
     <ballot-entry-footer
       :is-new="isNew" :is-admin="isAdmin" :can-submit="canSubmit" :send-receipts="sendReceipts"
+      :is-confirmed="isConfirmed" :is-discarded="isDiscarded" :current-status="currentStatus"
       :author="author" :ballot-author="ballotAuthor"></ballot-entry-footer>
 
   </div>
@@ -61,6 +62,9 @@ export default {
     debateRound: String,
     isNew: Boolean,
     isAdmin: Boolean,
+    isConfirmed: Boolean,
+    isDiscarded: Boolean,
+    currentStatus: String,
     hasIron: Boolean,
     blindEntry: Boolean,
     author: String,

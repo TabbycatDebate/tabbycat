@@ -28,21 +28,23 @@
 {% endblock %}
 
 {% block content %}
-
   <div id="vueMount">
     <ballot-entry-container
       :debate-name="'{{ debate_name|safe }}'"
       :debate-venue="'{{ debate.venue }}'" :debate-round="'{{ debate.round.name }}'"
       :is-new="{% if new %}true{% else %}false{% endif %}"
       :is-admin="{% if for_admin %}true{% else %}false{% endif %}"
+      :is-confirmed="{% if new and not pref.disable_ballot_confirms %}false{% else %}true{% endif %}"
+      :is-discarded="{% if ballotsub.discarded %}true{% else %}false{% endif %}"
+      :current-status="{% if new and not pref.disable_ballot_confirms %}'{{ debate.STATUS_DRAFT }}'{% else %}'{{ debate.STATUS_CONFIRMED }}'{% endif %}"
       :has-iron="{% if currentIron|length > 0 %}true{% else %}false{% endif %}"
       :blind-entry="{% if pref.enable_blind_checks and not new %}true{% else %}false{% endif %}"
-      :send-receipts=" {% if pref.enable_ballot_receipts %}true{% else %}false{% endif %}"
+      :send-receipts="{% if pref.enable_ballot_receipts %}true{% else %}false{% endif %}"
       :author="'{{ request.user|safe }}'" :ballot-author="'{{ ballotsub.submitter|safe }}'">
     </ballot-entry-container>
   </div>
 
-  <form id="resultsForm" action="." method="POST" class="" hidden>
+  <form id="resultsForm" action="." method="POST" hidden>
 
     {% csrf_token %}
 
