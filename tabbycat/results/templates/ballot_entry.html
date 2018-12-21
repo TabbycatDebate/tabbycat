@@ -39,6 +39,7 @@
       :current-status="{% if new and not pref.disable_ballot_confirms %}'{{ debate.STATUS_DRAFT }}'{% else %}'{{ debate.STATUS_CONFIRMED }}'{% endif %}"
       :has-iron="{% if currentIron|length > 0 %}true{% else %}false{% endif %}"
       :blind-entry="{% if pref.enable_blind_checks and not new %}true{% else %}false{% endif %}"
+      :total-ballotsubs="{{ all_ballotsubs.count }}"
       :send-receipts="{% if pref.enable_ballot_receipts %}true{% else %}false{% endif %}"
       :author="'{{ request.user|safe }}'" :ballot-author="'{{ ballotsub.submitter|safe }}'">
     </ballot-entry-container>

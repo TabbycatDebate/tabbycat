@@ -1,9 +1,36 @@
 <template>
 
   <div class="list-group-item">
-    <div class="row">
 
-      <div class="col-2 mt-1 mb-0 pt-4 p-lg-2 pr-0 p-1 h6 text-muted">
+    <div v-if="blindEntry" class="row">
+
+      <div class="col-2 d-flex align-items-center mb-0 pl-2 pr-0 h6 text-muted">
+        {{ speaker.position }}
+      </div>
+
+      <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
+        <select class="custom-select mb-2" v-model="speakerNameShadow">
+          <option v-bind:value="0" selected>{{ selectOptions[0].text }}</option>
+          <option v-for="option in selectOptions.slice(1)" v-bind:value="option.value">
+            {{ option.text }}
+          </option>
+        </select>
+        <div class="small pt-0 m-0" v-if="showDuplicates || speakerDuplicate">
+          <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicateShadow"/>
+          <span class="mt-2"></span>
+          <label class="ml-2">Mark as a duplicate speech</label>
+        </div>
+      </div>
+
+      <div class="col-3 form-group pr-1 pl-1">
+        <input class="form-control mb-2" v-model.number="speakerScoreShadow" v-bind="scoreAttributes">
+      </div>
+
+    </div>
+
+    <div v-if="blindReveal || !blindEntry || isNew" class="row mt-2">
+
+      <div class="col-2 d-flex align-items-center mb-0 pl-2 pr-0 h6 text-muted">
         <span v-if="blindEntry">Draft</span>
         <span v-if="!blindEntry">{{ speaker.position }}</span>
       </div>
@@ -37,32 +64,6 @@
 
     </div>
 
-    <div v-if="blindEntry" class="row mt-2">
-
-      <div class="col-2 mt-1 mb-0 pt-4 p-lg-2 pr-0 p-1 h6 text-muted">
-        {{ speaker.position }}
-      </div>
-
-      <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
-        <select class="custom-select mb-2" v-model="speakerNameShadow">
-          <option v-bind:value="0" selected>{{ selectOptions[0].text }}</option>
-          <option v-for="option in selectOptions.slice(1)" v-bind:value="option.value">
-            {{ option.text }}
-          </option>
-        </select>
-        <div class="small pt-0 m-0" v-if="showDuplicates || speakerDuplicate">
-          <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicateShadow"/>
-          <span class="mt-2"></span>
-          <label class="ml-2">Mark as a duplicate speech</label>
-        </div>
-      </div>
-
-      <div class="col-3 form-group pr-1 pl-1">
-        <input class="form-control mb-2" v-model.number="speakerScoreShadow" v-bind="scoreAttributes">
-      </div>
-
-    </div>
-
   </div>
 
 </template>
@@ -77,6 +78,7 @@ export default {
     showDuplicates: Boolean,
     isNew: Boolean,
     blindEntry: Boolean,
+    blindReveal: Boolean,
   },
   data: function () {
     return {

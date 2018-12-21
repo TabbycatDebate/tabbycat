@@ -12,14 +12,14 @@
           <div class="col-lg-2 pt-1">
             <div class="form-check form-check-inline">
               <input type="checkbox" id="shadowConfirmed" tabindex="17" class="form-check-input"
-                     @change="setConfirmed" v-model="confirmed">
+                     @change="setConfirmed(discarded)" v-model="confirmed">
               <label class="form-check-label pt-0" for="shadowConfirmed">Confirmed</label>
             </div>
           </div>
           <div class="col-lg-2 pt-1">
             <div class="form-check form-check-inline">
               <input type="checkbox" id="shadowDiscarded" tabindex="18" class="form-check-input"
-                     @change="setDiscarded" v-model="discarded">
+                     @change="setDiscarded(discarded)" v-model="discarded">
               <label class="form-check-label pt-0" for="shadowDiscarded">Discarded</label>
             </div>
           </div>
@@ -32,7 +32,7 @@
         </h4>
       </div>
       <div v-if="isAdmin" class="list-group-item">
-        <select v-model="status" @change="setStatus" tabindex="19" class="form-control">
+        <select v-model="status" @change="setStatus(status)" tabindex="19" class="form-control">
           <option value="N">none</option>
           <option value="P">postponed</option>
           <option value="D">draft</option>
@@ -40,7 +40,12 @@
         </select>
       </div>
       <div class="list-group-item">
-        <div class="row">
+        <div v-if="!isNew && blindEntry && !blindReveal" class="row">
+          <button tabindex="299" class="btn btn-primary btn-block" type="button">
+            Check Against Draft Ballot
+          </button>
+        </div>
+        <div v-if="isNew || !blindEntry" class="row">
           <div class="col">
             <button tabindex="300" :disabled="canSubmit !== '' || submitting" @click="submit"
                     class="btn btn-block btn-success">
@@ -51,12 +56,12 @@
             </button>
           </div>
           <div v-if="!isNew" class="col">
-            <button tabindex="301" class="btn btn-danger btn-block" type="button">
+            <button tabindex="301" @click="invalidate" class="btn btn-danger btn-block">
               Results are incorrect <!-- TODO: needs to set status field to false-->
             </button>
           </div>
         </div>
-        <div v-if="canSubmit !== ''" class="text-center pt-3 small text-danger">
+        <div v-if="canSubmit !== ''" :disabled="submitting" class="text-center pt-3 small text-danger">
           {{ canSubmit }}
         </div>
         <div v-if="!isNew && sendReceipts"
@@ -78,6 +83,9 @@ export default {
     sendReceipts: Boolean,
     isConfirmed: Boolean,
     isDiscarded: Boolean,
+    blindEntry: Boolean,
+    blindReveal: Boolean,
+    totalBallotsubs: Number,
   },
   data: function () {
     return {
@@ -88,19 +96,24 @@ export default {
     }
   },
   methods: {
-    setStatus: function () {
-      console.log(this.status)
-      document.getElementById('id_debate_result_status').value = this.status
+    setStatus: function (state) {
+      document.getElementById('id_debate_result_status').value = state
     },
-    setConfirmed: function () {
-      document.getElementById('id_confirmed').value = this.confirmed ? 'True' : 'False'
+    setConfirmed: function (state) {
+      document.getElementById('id_confirmed').value = state ? 'True' : 'False'
     },
-    setDiscarded: function () {
-      document.getElementById('id_discarded').value = this.discarded ? 'True' : 'False'
+    setDiscarded: function (state) {
+      document.getElementById('id_discarded').value = state ? 'True' : 'False'
     },
     submit: function () {
       this.submitting = true
       document.getElementById('resultsForm').submit()
+    },
+    invalidate: function () {
+      this.setStatus(this.totalBallotsubs > 1 ? "D" : "N")
+      this.setConfirmed(false)
+      this.setDiscarded(true)
+      this.submit()
     },
   },
 }

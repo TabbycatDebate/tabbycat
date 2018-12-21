@@ -22,7 +22,7 @@
               v-for="team in sheet.teams.slice(0,2)"
               v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
               :team="team" :key="team.id" :teams-count="sheet.teams.length"
-              :is-new="isNew" :blind-entry="blindEntry"
+              :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>
@@ -31,7 +31,7 @@
               v-for="team in sheet.teams.slice(2)"
               v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
               :team="team" :key="team.id" :teams-count="sheet.teams.length"
-              :is-new="isNew" :blind-entry="blindEntry"
+              :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>
@@ -43,7 +43,8 @@
     <ballot-entry-footer
       :is-new="isNew" :is-admin="isAdmin" :can-submit="canSubmit" :send-receipts="sendReceipts"
       :is-confirmed="isConfirmed" :is-discarded="isDiscarded" :current-status="currentStatus"
-      :author="author" :ballot-author="ballotAuthor"></ballot-entry-footer>
+      :author="author" :ballot-author="ballotAuthor" :total-ballotsubs="totalBallotsubs"
+      :blind-entry="blindEntry" :blind-reveal="blindReveal"></ballot-entry-footer>
 
   </div>
 </template>
@@ -69,10 +70,12 @@ export default {
     blindEntry: Boolean,
     author: String,
     ballotAuthor: String,
+    totalBallotsubs: Number,
     sendReceipts: Boolean,
   },
   data: function () {
     return {
+      blindReveal: false,
       ballotSheets: [],
       speakerScores: {},
       teamScores: {},
@@ -82,7 +85,7 @@ export default {
   computed: {
     canSubmit: function () {
       const individualTeamScores = Object.values(this.teamScores)
-      if (this.author === this.ballotAuthor && !this.isNew) {
+      if (this.author === this.ballotAuthor && !this.isNew && !this.isAdmin) {
         return 'Ballot cannot be confirmed because you authored it'
       }
       if (individualTeamScores.indexOf(0) >= 0 || individualTeamScores.indexOf('') >= 0) {
