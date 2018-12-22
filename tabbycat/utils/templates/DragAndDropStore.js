@@ -40,8 +40,8 @@ export default new Vuex.Store({
       Object.entries(initialData.extra.highlights).forEach(([key, value]) => {
         Vue.set(state.highlights, key, { active: false, options: {} })
         value.forEach((item, index) => {
-          item.css = key + '-display ' + key + '-' + index
-          state.highlights[key].options[item.id] = item
+          item.css = key + '-' + index
+          state.highlights[key].options[item.pk] = item
         })
       })
     },

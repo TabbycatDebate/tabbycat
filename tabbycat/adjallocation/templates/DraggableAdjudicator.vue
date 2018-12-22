@@ -1,6 +1,6 @@
 <template>
-  <draggable-item :drag-payload="dragPayload"
-                  :class="{ 'border-light': isTrainee, 'bg-dark text-white': !item.available }">
+  <draggable-item :drag-payload="dragPayload" :class="[highlightsCSS,
+      { 'border-light': isTrainee, 'bg-dark text-white': !item.available }]">
 
       <span slot="number">
         <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
@@ -17,11 +17,16 @@
 
 <script>
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
+import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
 
 export default {
+  mixins: [HighlightableMixin],
   components: { DraggableItem },
   props: { item: Object, dragPayload: Object, isTrainee: false },
   computed: {
+    highlightData: function () {
+      return this.adjudicator
+    },
     adjudicator: function () {
       return this.item
     },

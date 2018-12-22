@@ -48,7 +48,8 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
             {'pk': 'u', 'fields': {'name': _('Unknown')}},
         ]
         info['highlights']['rank'] = ranks_dictionary()
-        info['highlights']['region'] = [] # TODO
+        regions = [{'pk': r.id, 'fields': {'name': r.name}} for r in Region.objects.all()]
+        info['highlights']['region'] = regions
         info['adjMinScore'] = self.tournament.pref('adj_min_score')
         info['adjMaxScore'] = self.tournament.pref('adj_max_score')
         allocation_preferences = [

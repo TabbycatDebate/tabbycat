@@ -32,22 +32,19 @@
     </slot>
     <slot name="teams">
       <div class="vc-bp-grid flex-12 flex-truncate" v-if="sides.length === 4">
-        <div :class="['d-flex flex-truncate align-items-center py-1 px-2 border-right',
+        <div :class="['d-flex flex-truncate align-items-center border-right',
                       i < 2 ? 'border-bottom' : '']"
              v-for="(side, i) in sides" v-if="debateOrPanel.teams">
-          <div class="text-truncate small" v-if="debateOrPanel.teams[side]">
-            {{ debateOrPanel.teams[side].short_name }}
-          </div>
+          <inline-team v-if="debateOrPanel.teams[side]" :team="debateOrPanel.teams[side]"></inline-team>
+          <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
         </div>
       </div>
       <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
-        <div :class="['d-flex flex-fill align-items-center py-1 px-2 border-right',
+        <div :class="['d-flex flex-fill align-items-center border-right',
                       i % 2 === 0 ? 'border-bottom' : '']"
              v-for="(side, i) in sides">
-          <div class="text-truncate small" v-if="debateOrPanel.teams">
-            <span v-if="debateOrPanel.teams[side]">{{ debateOrPanel.teams[side].short_name }}</span>
-            <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
-          </div>
+          <inline-team v-if="debateOrPanel.teams[side]" :team="debateOrPanel.teams[side]"></inline-team>
+          <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
         </div>
       </div>
     </slot>
@@ -65,7 +62,10 @@
 // Provides the base template for a debate object used across all edit adjudicator screens
 // Uses slots so that parent components can override them with custom components for editing the
 // specific type of data they are responsible for
+import InlineTeam from '../../draw/templates/InlineTeam.vue'
+
 export default {
+  components: { InlineTeam },
   props: ['debateOrPanel'],
   computed: {
     sides: function () {
