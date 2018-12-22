@@ -38,7 +38,7 @@ class Command(TournamentCommand):
                 ]))
 
         elif options['subcommand'] == "adjs":
-            self.stdout.write("institution,name")
+            self.stdout.write("institution,name,email")
             for adj in tournament.relevant_adjudicators.all():
                 self.stdout.write(",".join([
                     (adj.institution.name if options['full_institution_name'] else adj.institution.code)
