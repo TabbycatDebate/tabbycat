@@ -1,3 +1,5 @@
+import csv
+
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                                   AdjudicatorTeamConflict, TeamInstitutionConflict)
 from utils.management.base import TournamentCommand
@@ -16,33 +18,37 @@ class Command(TournamentCommand):
 
     def handle_tournament(self, tournament, **options):
 
+        def institution_name(inst):
+            if options['full_institution_name']:
+                return inst.name
+            else:
+                return inst.code
+
+        writer = csv.writer(self.stdout)
+
         self.stdout.write(" === Adjudicator-team conflicts ===")
-        self.stdout.write("adjudicator,team")
+        writer.writerow(["adjudicator", "team"])
         for conflict in AdjudicatorTeamConflict.objects.filter(
                 adjudicator__tournament=tournament, team__tournament=tournament):
-            self.stdout.write(",".join([conflict.adjudicator.name, conflict.team.short_name]))
+            writer.writerow([conflict.adjudicator.name, conflict.team.short_name])
         self.stdout.write("")
 
         self.stdout.write(" === Adjudicator-adjudicator conflicts ===")
-        self.stdout.write("adjudicator1,adjudicator2")
+        writer.writerow(["adjudicator1", "adjudicator2"])
         for conflict in AdjudicatorAdjudicatorConflict.objects.filter(
                 adjudicator1__tournament=tournament, adjudicator2__tournament=tournament):
-            self.stdout.write(",".join([conflict.adjudicator1.name, conflict.adjudicator2.name]))
+            writer.writerow([conflict.adjudicator1.name, conflict.adjudicator2.name])
         self.stdout.write("")
 
         self.stdout.write(" === Adjudicator-institution conflicts ===")
-        self.stdout.write("adjudicator,institution")
+        writer.writerow(["adjudicator", "institution"])
         for conflict in AdjudicatorInstitutionConflict.objects.filter(adjudicator__tournament=tournament):
             if options['include_own_institution'] or conflict.adjudicator.institution != conflict.institution:
-                self.stdout.write(",".join([conflict.adjudicator.name,
-                    conflict.institution.name if options['full_institution_name']
-                    else conflict.institution.code]))
+                writer.writerow([conflict.adjudicator.name, institution_name(conflict.institution)])
         self.stdout.write("")
 
         self.stdout.write(" === Team-institution conflicts ===")
-        self.stdout.write("team,institution")
+        writer.writerow(["team", "institution"])
         for conflict in TeamInstitutionConflict.objects.filter(team__tournament=tournament):
             if options['include_own_institution'] or conflict.team.institution != conflict.institution:
-                self.stdout.write(",".join([conflict.team.short_name,
-                    conflict.institution.name if options['full_institution_name']
-                    else conflict.institution.code]))
+                writer.writerow([conflict.team.short_name, institution_name(conflict.institution)])
