@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Adjudicator, Institution, Region, Speaker, Team
+from .models import Adjudicator, Institution, Speaker, Team
 
 
 class SpeakerSerializer(serializers.ModelSerializer):
@@ -17,12 +17,6 @@ class InstitutionSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'code', 'region')
 
 
-class RegionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Region
-        fields = ('id', 'name')
-
-
 class AdjudicatorSerializer(serializers.ModelSerializer):
     institution = serializers.PrimaryKeyRelatedField(read_only=True)
 
@@ -35,6 +29,7 @@ class TeamSerializer(serializers.ModelSerializer):
     institution = serializers.PrimaryKeyRelatedField(read_only=True)
     speakers = SpeakerSerializer(read_only=True, many=True)
     points = serializers.SerializerMethodField(read_only=True)
+    break_categories = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
 
     def get_points(self, obj):
         return obj.points_count
@@ -42,4 +37,4 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = ('id', 'short_name', 'long_name', 'points',
-                  'institution', 'speakers')
+                  'institution', 'speakers', 'break_categories')

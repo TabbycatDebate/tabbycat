@@ -47,7 +47,7 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
             {'pk': 'o', 'fields': {'name': _('Other')}},
             {'pk': 'u', 'fields': {'name': _('Unknown')}},
         ]
-        info['highlights']['rank'] = ranks_dictionary()
+        info['highlights']['rank'] = ranks_dictionary(self.tournament)
         regions = [{'pk': r.id, 'fields': {'name': r.name}} for r in Region.objects.all()]
         info['highlights']['region'] = regions
         info['adjMinScore'] = self.tournament.pref('adj_min_score')
@@ -87,7 +87,6 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
 
     def get_extra_info(self):
         info = super().get_extra_info()
-        info['highlights']['break'] = [] # TODO construct adj score ranges from settings
         return info
 
     def debates_or_panels_factory(self, debates):

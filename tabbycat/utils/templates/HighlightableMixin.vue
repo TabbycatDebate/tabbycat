@@ -6,12 +6,27 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     highlightsCSS: function () {
-      return [this.activeClass, this.genderClass, this.regionClass].join(' ')
+      return [this.activeClass, this.breakClass, this.genderClass, this.regionClass, this.rankClass].join(' ')
     },
     activeClass: function () {
       let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
       if (currentKey.length > 0) {
         return currentKey + '-display'
+      }
+      return ''
+    },
+    breakClass: function () {
+      if (this.highlightData && 'break_categories' in this.highlightData) {
+        var breakClasses = []
+        let highlightCategories = Object.keys(this.highlights.break.options)
+        for (let breakCategory of this.highlightData.break_categories) {
+          let matchingCategory = highlightCategories.filter(
+            bc => this.highlights.break.options[bc].pk === breakCategory)
+          if (matchingCategory.length > 0) {
+            breakClasses += ' ' + this.highlights.break.options[matchingCategory[0]].css
+          }
+        }
+        return breakClasses
       }
       return ''
     },
@@ -30,15 +45,24 @@ export default {
     },
     regionClass: function () {
       const itemsInstitutionID = this.highlightData.institution
-      console.log('itemsInstitutionID', itemsInstitutionID)
       if (itemsInstitutionID) {
         if (itemsInstitutionID in this.institutions) {
           const itemsInstitution = this.institutions[itemsInstitutionID]
           const itemsRegion = this.highlights.region.options[itemsInstitution.region]
-          console.log('itemsInstitution', itemsInstitution)
-          console.log('itemsRegion', itemsRegion)
           if (itemsRegion) {
             return this.highlights.region.options[itemsInstitution.region].css
+          }
+        }
+      }
+      return ''
+    },
+    rankClass: function () {
+      if ('score' in this.highlightData) {
+        let rankCategories = Object.keys(this.highlights.rank.options)
+        for (let rankCategory of rankCategories) {
+          console.log(this.highlightData.score, rankCategory, this.highlights.rank.options[rankCategory])
+          if (this.highlightData.score > this.highlights.rank.options[rankCategory].fields.cutoff) {
+            return this.highlights.rank.options[rankCategory].css
           }
         }
       }

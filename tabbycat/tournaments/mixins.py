@@ -16,11 +16,12 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
 from adjallocation.models import DebateAdjudicator
+from breakqual.models import BreakCategory
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
 from participants.models import Institution, Region, Speaker
 from participants.prefetch import populate_feedback_scores, populate_win_counts
-from participants.serializers import InstitutionSerializer, RegionSerializer
+from participants.serializers import InstitutionSerializer
 from tournaments.serializers import RoundSerializer, TournamentSerializer
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
@@ -385,6 +386,11 @@ class DragAndDropMixin(RoundMixin):
         automatically. Designed for simple key/value pairs"""
         extra_info = {} # Set by view for top bar toggles
         extra_info['highlights'] = {}
+
+        bcs = BreakCategory.objects.filter(tournament=self.tournament)
+        serialized_bcs = [{'pk': bc.id, 'fields': {'name': bc.name}} for bc in bcs]
+        extra_info['highlights']['break'] = serialized_bcs
+
         extra_info['backUrl'] = reverse_round('draw', self.round)
         extra_info['backLabel'] = _("Return to Draw")
         return extra_info
@@ -404,11 +410,6 @@ class DragAndDropMixin(RoundMixin):
         # For some reason JSONRenderer produces byte strings
         return django_rest_json_render(data)
 
-    def get_serialised_regions(self):
-        regions = Region.objects.all()
-        serialized_regions = RegionSerializer(regions, many=True)
-        return self.json_render(serialized_regions.data)
-
     def get_serialised_institutions(self):
         institutions = Institution.objects.all()
         serialized_institutions = InstitutionSerializer(institutions, many=True)
@@ -422,7 +423,6 @@ class DragAndDropMixin(RoundMixin):
     def get_context_data(self, **kwargs):
         kwargs['vueDebatesOrPanels'] = self.get_serialised_debates_or_panels()
         kwargs['vueAllocatableItems'] = self.get_serialised_allocatable_items()
-        kwargs['vueRegions'] = self.get_serialised_regions()
         kwargs['vueInstitutions'] = self.get_serialised_institutions()
         kwargs['vueMetaInfo'] = self.get_meta_info()
         return super().get_context_data(**kwargs)
