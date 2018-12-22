@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 
-from .models import Venue, VenueCategory, VenueConstraint
+from .models import VenueConstraint
 
 logger = logging.getLogger(__name__)
 
