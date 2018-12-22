@@ -9,21 +9,26 @@
       </div>
 
       <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
-        <select class="custom-select mb-2" v-model="speakerNameShadow">
+        <select v-model="speakerNameShadow" :disabled="blindReveal"
+          :class="['custom-select mb-2', blindSpeakerMatches ? '' : 'is-invalid bg-dark text-white']">
           <option v-bind:value="0" selected>{{ selectOptions[0].text }}</option>
           <option v-for="option in selectOptions.slice(1)" v-bind:value="option.value">
             {{ option.text }}
           </option>
         </select>
+        <span class="text-danger" v-if="blindReveal && !blindSpeakerMatches">Does not match</span>
         <div class="small pt-0 m-0" v-if="showDuplicates || speakerDuplicate">
-          <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicateShadow"/>
+          <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicateShadow"
+                 :disabled="blindReveal" />
           <span class="mt-2"></span>
           <label class="ml-2">Mark as a duplicate speech</label>
         </div>
       </div>
 
       <div class="col-3 form-group pr-1 pl-1">
-        <input class="form-control mb-2" v-model.number="speakerScoreShadow" v-bind="scoreAttributes">
+        <input :class="['form-control mb-2', blindScoreMatches ? '' : 'is-invalid bg-dark text-white']"
+               :readonly="blindReveal" v-model.number="speakerScoreShadow" v-bind="scoreAttributes">
+        <span class="text-danger" v-if="blindReveal && !blindScoreMatches">No match</span>
       </div>
 
     </div>
@@ -37,7 +42,8 @@
 
       <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
 
-        <select :class="['custom-select', speakerError ? 'border-danger text-danger' : '']"
+        <select :class="['custom-select', speakerError ? 'border-danger text-danger' : '',
+                                          !blindSpeakerMatches ? 'is-invalid' : '']"
                 v-model="speakerName" v-bind="selectAttributes" :disabled="!isNew"
                 @change="setShadowSpeaker(speakerName)">
           <option v-for="option in selectOptions" v-bind:value="option.value"
@@ -56,7 +62,8 @@
       </div>
 
       <div class="col-3 form-group pr-1 pl-1">
-        <input :class="['form-control', scoreError ? 'border-danger text-danger' : '']"
+        <input :class="['form-control', scoreError ? 'border-danger text-danger' : '',
+                                        blindScoreMatches ? '' : 'is-invalid']"
                @change="setShadowScore(speakerScore)" :readonly="!isNew"
                v-model.number="speakerScore" v-bind="scoreAttributes">
         <label v-if="scoreError" class="error pt-2">{{ scoreError }}</label>
@@ -93,7 +100,7 @@ export default {
   mounted: function () {
     this.speakerName = this.speaker.nameField.options[this.speaker.nameField.selectedIndex].value
     this.speakerDuplicate = this.speaker.duplicateField.checked
-    this.speakerScore = this.speaker.scoreField.getAttribute('value')
+    this.speakerScore = Number(this.speaker.scoreField.getAttribute('value'))
     this.speaker.duplicateField.setAttribute('tabindex', -1) // Remove old tab order
     this.$nextTick(function () {
       this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScore)
@@ -117,6 +124,20 @@ export default {
     },
   },
   computed: {
+    blindSpeakerMatches: function () {
+      if (!this.blindReveal || this.speakerNameShadow === this.speakerName) {
+        return true
+      }
+      this.$emit('blind-validation-fail')
+      return false
+    },
+    blindScoreMatches: function () {
+      if (!this.blindReveal || this.speakerScoreShadow === this.speakerScore) {
+        return true
+      }
+      this.$emit('blind-validation-fail')
+      return false
+    },
     speakerError: function () {
       // return 'Speaker selected multiple times but none is marked as a duplicate'
       return false

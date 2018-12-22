@@ -15,6 +15,7 @@
 
       <ballot-entry-speaker v-for="(speaker, index) in team.speakers"
                             v-on:set-speaker-score="setSpeakerScore"
+                            v-on:blind-validation-fail="blindValidationFail"
                             :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
                             :speaker="speaker" :team="team" :index="index" :key="index"
                             :show-duplicates="showDuplicates"></ballot-entry-speaker>
@@ -115,6 +116,10 @@ export default {
   methods: {
     setSpeakerScore: function (teamPosition, speakerPosition, speakerScore) {
       this.$emit('update-speaker-score', teamPosition, speakerPosition, speakerScore)
+    },
+    blindValidationFail: function () {
+      console.log('blindValidationFail from Scoresheet')
+      this.$emit('blind-validation-fail')
     },
   },
 }

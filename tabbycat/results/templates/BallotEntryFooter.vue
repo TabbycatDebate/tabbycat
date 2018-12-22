@@ -40,32 +40,31 @@
         </select>
       </div>
       <div class="list-group-item">
-        <div v-if="!isNew && blindEntry && !blindReveal" class="row">
+        <div v-if="!isNew && blindEntry && !blindReveal" class="row" @click="check">
           <button tabindex="299" class="btn btn-primary btn-block" type="button">
             Check Against Draft Ballot
           </button>
         </div>
-        <div v-if="isNew || !blindEntry" class="row">
+        <div v-if="isNew || !blindEntry || blindReveal" class="row">
           <div class="col">
             <button tabindex="300" :disabled="canSubmit !== '' || submitting" @click="submit"
                     class="btn btn-block btn-success">
               <span v-if="isAdmin && !submitting">Save ballot</span>
-              <span v-if="!isAdmin && !isNew && !submitting">Confirm results</span>
-              <span v-if="!isAdmin && isNew && !submitting">Confirm results</span>
+              <span v-if="!isAdmin && !isNew && !submitting">Confirm draft ballot</span>
+              <span v-if="!isAdmin && isNew && !submitting">Add ballot</span>
               <span v-if="submitting">Loading...</span>
             </button>
           </div>
           <div v-if="!isNew" class="col">
             <button tabindex="301" @click="invalidate" class="btn btn-danger btn-block">
-              Results are incorrect <!-- TODO: needs to set status field to false-->
+              Ballot is incorrect
             </button>
           </div>
         </div>
         <div v-if="canSubmit !== ''" :disabled="submitting" class="text-center pt-3 small text-danger">
           {{ canSubmit }}
         </div>
-        <div v-if="!isNew && sendReceipts"
-             class="text-center pt-3 small text-muted">
+        <div v-if="!isNew && sendReceipts" class="text-center pt-3 small text-muted">
           Emails will be sent to adjudicators when the ballot is confirmed.
         </div>
       </div>
@@ -109,8 +108,11 @@ export default {
       this.submitting = true
       document.getElementById('resultsForm').submit()
     },
+    check: function () {
+      this.$emit('reveal-blind-check')
+    },
     invalidate: function () {
-      this.setStatus(this.totalBallotsubs > 1 ? "D" : "N")
+      this.setStatus(this.totalBallotsubs > 1 ? 'D' : 'N')
       this.setConfirmed(false)
       this.setDiscarded(true)
       this.submit()

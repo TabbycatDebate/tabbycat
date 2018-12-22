@@ -20,7 +20,8 @@
           <div class="card-deck px-md-2 p-0">
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(0,2)"
-              v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
+              v-on:update-speaker-score="setSpeakerScore"
+              v-on:blind-validation-fail="blindValidationFail" :team-scores="teamScores"
               :team="team" :key="team.id" :teams-count="sheet.teams.length"
               :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates">
@@ -29,7 +30,8 @@
           <div v-if="sheet.teams.length > 2" class="card-deck px-md-2 p-0" >
             <ballot-entry-scoresheet
               v-for="team in sheet.teams.slice(2)"
-              v-on:update-speaker-score="setSpeakerScore" :team-scores="teamScores"
+              v-on:update-speaker-score="setSpeakerScore"
+              v-on:blind-validation-fail="blindValidationFail" :team-scores="teamScores"
               :team="team" :key="team.id" :teams-count="sheet.teams.length"
               :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates">
@@ -44,7 +46,8 @@
       :is-new="isNew" :is-admin="isAdmin" :can-submit="canSubmit" :send-receipts="sendReceipts"
       :is-confirmed="isConfirmed" :is-discarded="isDiscarded" :current-status="currentStatus"
       :author="author" :ballot-author="ballotAuthor" :total-ballotsubs="totalBallotsubs"
-      :blind-entry="blindEntry" :blind-reveal="blindReveal"></ballot-entry-footer>
+      :blind-entry="blindEntry" :blind-reveal="blindReveal"
+      v-on:reveal-blind-check="revealBlindCheck"></ballot-entry-footer>
 
   </div>
 </template>
@@ -76,6 +79,7 @@ export default {
   data: function () {
     return {
       blindReveal: false,
+      blindFormIsValid: true,
       ballotSheets: [],
       speakerScores: {},
       teamScores: {},
@@ -94,12 +98,22 @@ export default {
       if ([...new Set(individualTeamScores)].length < individualTeamScores.length) {
         return 'Ballot cannot be submitted because there is a tie'
       }
+      if (this.blindValidationFail && this.blindReveal) {
+        return 'Ballot cannot be confirmed because the re-entered data does not match the original'
+      }
       return ''
     },
   },
   methods: {
     revealDuplicates: function () {
       this.showDuplicates = true
+    },
+    revealBlindCheck: function () {
+      this.blindReveal = true
+    },
+    blindValidationFail: function () {
+      this.blindValidationFail = true
+      console.log('fail final validation')
     },
     setSpeakerScore: function (teamPosition, speakerPosition, speakerScore) {
       var changedScores = this.speakerScores[teamPosition]
