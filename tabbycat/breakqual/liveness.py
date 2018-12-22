@@ -6,18 +6,33 @@ from math import ceil, factorial, floor
 from itertools import accumulate
 
 
-COEFFICIENTS_BP = [
-    [1],
-    [1,1,1,1],
-    [1,2,3,4,3,2,1],
-    [1,3,6,10,12,12,10,6,3,1],
-    [1,4,10,20,31,40,44,40,31,20,10,4,1],
-    [1,5,15,35,65,101,135,155,155,135,101,65,35,15,5,1],
-    [1,6,21,56,120,216,336,456,546,580,546,456,336,216,120,56,21,6,1],
-    [1,7,28,84,203,413,728,1128,1554,1918,2128,2128,1918,1554,1128,728,413,203,84,28,7,1],
-    [1,8,36,120,322,728,1428,2472,3823,5328,6728,7728,8092,7728,6728,5328,3823,2472,1428,728,322,120,36,8,1],
-    [1,9,45,165,486,1206,2598,4950,8451,13051,18351,23607,27876,30276,30276,27876,23607,18351,13051,8451,4950,2598,1206,486,165,45,9,1]
-]
+def ncr(n, r):
+    try:
+        binom = factorial(n) // factorial(r) // factorial(n - r)
+    except ValueError:
+        binom = 0
+    return binom
+
+
+def get_bp_coefficients(rounds):
+    # Get row of of the number of rounds from the quadrinomial coefficients
+    # triangle (Similar to Pascal's Triangle)
+
+    def get_coefficient(m, k):
+        coeff = 0
+        for i in range(0, floor(k / 2) + 1):
+            coeff += ncr(m, i) * ncr(m, k - 2 * i)
+        return coeff
+
+    half_row = [get_coefficient(rounds, k) for k in range(0, ceil((3 * rounds + 1) / 2))]
+
+    if rounds == 0:
+        return half_row
+
+    if rounds % 2 == 1:
+        return half_row + half_row[::-1]
+
+    return half_row + half_row[-2::-1]
 
 
 def liveness_twoteam(is_general, current_round, break_size, total_teams, total_rounds, team_scores=None):
@@ -25,8 +40,7 @@ def liveness_twoteam(is_general, current_round, break_size, total_teams, total_r
     if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
         return 0, -1  # special case, everyone is safe
 
-    coefficients = [factorial(total_rounds) / factorial(i) / factorial(total_rounds - i)
-                    for i in range(total_rounds+1)]
+    coefficients = [ncr(total_rounds, i) for i in range(total_rounds+1)]
     originals = [total_teams / (2**total_rounds) * coeff for coeff in coefficients]
     ceilings = [ceil(x) for x in originals]
     floors = [floor(x) for x in originals]
@@ -66,7 +80,7 @@ def liveness_bp(is_general, current_round, break_size, total_teams, total_rounds
     if total_teams < break_size or (not is_general and len(team_scores) <= break_size):
         return -1, -1  # special case, everyone is safe
 
-    originals = [total_teams / (4**total_rounds) * coeff for coeff in COEFFICIENTS_BP[total_rounds]]
+    originals = [total_teams / (4**total_rounds) * coeff for coeff in get_bp_coefficients(total_rounds)]
     ceilings = [ceil(x) for x in originals]
     floors = [floor(x) for x in originals]
     sum_u = list(accumulate(ceilings))  # most teams that can be on i wins
