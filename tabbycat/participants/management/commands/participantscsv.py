@@ -57,7 +57,7 @@ class Command(TournamentCommand):
                 writer.writerow(row)
 
         elif options['subcommand'] == "adjs":
-            writer.writerow(["institution","name","email"])
+            writer.writerow(["name","email","institution"])
             for adj in tournament.relevant_adjudicators.all():
-                row = [institution_name(adj.institution), adj.name, adj.email]
+                row = [adj.name, adj.email, institution_name(adj.institution)]
                 writer.writerow(row)
