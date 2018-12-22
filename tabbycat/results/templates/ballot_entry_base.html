@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags static i18n team_name_for_data_entry %}
+
+{% block head-title %}
+  {% if new %}
+    {% blocktrans trimmed %}
+      New Ballot Set for {{ debate_name }}
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed %}
+      Edit Ballot Set for {{ debate_name }}
+    {% endblocktrans %}
+  {% endif %}
+{% endblock %}
+
+{% block page-title %}{% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}: {{ debate_name }}{% endblock %}
+
+{% block page-subnav-sections %}
+  <a class="btn btn-outline-primary" href="{% roundurl 'results-round-list' debate.round %}">
+    <i data-feather="chevron-left"></i>
+    {% trans "Back to All Results" %}
+  </a>
+  {% if not new %}
+    <a class="btn btn-primary" href="{% tournamenturl 'results-ballotset-new' debate.id %}">
+      {% trans "Create a new ballot set for this debate" %}
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% if pref.ballots_per_debate == 'per-adj' and debate.adjudicators.is_even %}
+    {% blocktrans trimmed asvar message %}
+      This debate has a panel with an even number of voting adjudicators.
+      If the adjudicators split evenly, the debate will be awarded to the team
+      for which the chair voted.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
+  {% endif %}
+
+  {% if pref.teams_in_debate != 'two' and debate.round.next == None %}
+    {% url 'admin:results_teamscore_changelist' as admin_fix %}
+    {% blocktrans trimmed asvar message %}
+      In the grand-final rounds of a British Parliamentary format this form will not let you
+      nominate a single winner. To work around this, you need to first nominate a second 'fake'
+      winner in this ballot and save/complete the ballot as normal. To then correct this result,
+      you go to the <a href="{{ admin_fix }}" target="_blank">Team Scores page of the Edit Database
+      area</a>, click the <em>Team Score</em> of the 'fake' winner of this debate, set the
+      <em>Win</em> field to <strong>No</strong>, and then <em>Save</em> the change.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" %}
+  {% endif %}
+
+  {% if iron %}
+    {% for i in iron %}
+      {% team_name_for_data_entry i.team use_team_code_names as i_team %}
+      {% blocktrans trimmed asvar message %}
+        {{ i_team }} had speakers who spoke multiple times in the last round — i.e. an 'iron' person
+        speech. Please carefully check the ballot to see if that is still the case for this round.
+        If it is, ensure the speakers selected below reflect this.
+      {% endblocktrans %}
+      {% include "components/alert.html" with type="danger" icon="user-x" %}
+    {% endfor %}
+  {% endif %}
+
+  {% include "ballot/other_ballots_list.html" %}
+
+{% endblock %}

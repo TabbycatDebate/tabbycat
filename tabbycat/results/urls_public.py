@@ -19,17 +19,17 @@ urlpatterns = [
         views.PublicBallotSubmissionIndexView.as_view(),
         name='results-public-ballot-submission-index'),
     path('add/adjudicator/<int:adj_id>/',
-        views.PublicNewBallotSetByIdUrlView.as_view(),
-        name='results-public-ballotset-new-pk'),
+        views.OldPublicNewBallotSetByIdUrlView.as_view(),
+        name='old-results-public-ballotset-new-pk'),
 
     # Private Ballots
     path('<slug:url_key>/', include([
         path('add/',
-            views.PublicNewBallotSetByRandomisedUrlView.as_view(),
+            views.OldPublicNewBallotSetByRandomisedUrlView.as_view(),
             name='results-public-ballotset-new-randomised'),
         path('<int:round_seq>/view/',
-            views.PrivateUrlBallotScoresheetView.as_view(),
-            name='results-privateurl-scoresheet-view'),
+            views.OldPrivateUrlBallotScoresheetView.as_view(),
+            name='old-results-privateurl-scoresheet-view'),
     ])),
 
     path('added/',

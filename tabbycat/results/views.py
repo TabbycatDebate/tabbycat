@@ -233,12 +233,14 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
     action_log_content_object_attr = 'ballotsub'
     tabroom = False
+    for_admin = False
 
     def get_context_data(self, **kwargs):
         kwargs['ballotsub'] = self.ballotsub
         kwargs['debate'] = self.debate
         kwargs['all_ballotsubs'] = self.get_all_ballotsubs()
         kwargs['new'] = self.relates_to_new_ballotsub
+        kwargs['for_admin'] = self.for_admin
 
         use_team_code_names = use_team_code_names_data_entry(self.tournament, self.tabroom)
         kwargs['use_team_code_names'] = use_team_code_names
@@ -251,6 +253,9 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
         kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
             filter=Q(team__debateteam__debate__round=self.debate.round.prev) & Q(team__debateteam__speakerscore__ghost=True),
+            distinct=True)).filter(iron__gt=0)
+        kwargs['currentIron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
+            filter=Q(team__debateteam__debate__round=self.debate.round) & Q(team__debateteam__speakerscore__ghost=True),
             distinct=True)).filter(iron__gt=0)
 
         return super().get_context_data(**kwargs)
@@ -337,6 +342,15 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
 
 class AdministratorBallotSetMixin(AdministratorMixin):
+    template_name = 'ballot_entry.html'
+    tabroom = True
+    for_admin = True
+
+    def get_success_url(self):
+        return reverse_round('results-round-list', self.ballotsub.debate.round)
+
+
+class OldAdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'enter_results.html'
     tabroom = True
 
@@ -345,6 +359,14 @@ class AdministratorBallotSetMixin(AdministratorMixin):
 
 
 class AssistantBallotSetMixin(AssistantMixin):
+    template_name = 'ballot_entry.html'
+    tabroom = True
+
+    def get_success_url(self):
+        return reverse_tournament('results-assistant-round-list', self.tournament)
+
+
+class OldAssistantBallotSetMixin(AssistantMixin):
     template_name = 'assistant_enter_results.html'
     tabroom = True
 
@@ -396,6 +418,14 @@ class AssistantNewBallotSetView(AssistantBallotSetMixin, BaseNewBallotSetView):
     pass
 
 
+class OldAdminNewBallotSetView(OldAdministratorBallotSetMixin, BaseNewBallotSetView):
+    pass
+
+
+class OldAssistantNewBallotSetView(OldAssistantBallotSetMixin, BaseNewBallotSetView):
+    pass
+
+
 class BaseEditBallotSetView(SingleObjectFromTournamentMixin, BaseBallotSetView):
 
     model = BallotSubmission
@@ -436,6 +466,14 @@ class AdminEditBallotSetView(AdministratorBallotSetMixin, BaseEditBallotSetView)
 
 
 class AssistantEditBallotSetView(AssistantBallotSetMixin, BaseEditBallotSetView):
+    pass
+
+
+class OldAdminEditBallotSetView(OldAdministratorBallotSetMixin, BaseEditBallotSetView):
+    pass
+
+
+class OldAssistantEditBallotSetView(OldAssistantBallotSetMixin, BaseEditBallotSetView):
     pass
 
 
@@ -506,7 +544,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         )
 
 
-class PublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicNewBallotSetView):
+class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicNewBallotSetView):
     model = Adjudicator
     pk_url_kwarg = 'adj_id'
     allow_null_tournament = True
@@ -516,7 +554,7 @@ class PublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePublicN
         return tournament.pref('participant_ballots') == 'public'
 
 
-class PublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
+class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin, BasePublicNewBallotSetView):
     model = Adjudicator
     allow_null_tournament = True
     private_url = True
@@ -591,7 +629,7 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
         return super().get(self, request, *args, **kwargs)
 
 
-class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, PublicBallotScoresheetsView):
+class OldPrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, PublicBallotScoresheetsView):
 
     def is_page_enabled(self, tournament):
         return True
@@ -638,7 +676,7 @@ class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplat
 
         data = [{
             'text': _("Add result from %(adjudicator)s") % {'adjudicator': da.adjudicator.name},
-            'link': reverse_tournament('results-public-ballotset-new-pk', self.tournament,
+            'link': reverse_tournament('old-results-public-ballotset-new-pk', self.tournament,
                     kwargs={'adj_id': da.adjudicator.id}),
         } for da in debateadjs]
         header = {'key': 'adj', 'title': _("Adjudicator")}
