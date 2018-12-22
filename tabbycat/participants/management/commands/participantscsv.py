@@ -13,9 +13,13 @@ class Command(TournamentCommand):
         subparsers.required = True
 
         teams = subparsers.add_parser("teams")
+        teams.add_argument("--full-institution-name", action="store_true", default=False,
+            help="Use full institution name (rather than code)")
         super(Command, self).add_arguments(teams)
 
         adjs = subparsers.add_parser("adjs")
+        adjs.add_argument("--full-institution-name", action="store_true", default=False,
+            help="Use full institution name (rather than code)")
         super(Command, self).add_arguments(adjs)
 
     def handle_tournament(self, tournament, **options):
@@ -24,7 +28,8 @@ class Command(TournamentCommand):
             self.stdout.write("institution,short_name,code_name,speakers")
             for team in tournament.team_set.all():
                 self.stdout.write(",".join([
-                    team.institution.code if team.institution else "",
+                    (team.institution.name if options['full_institution_name'] else team.institution.code)
+                    if team.institution else "",
                     team.short_name,
                     team.code_name
                 ] + [speaker.name for speaker in team.speaker_set.all()]))
@@ -33,6 +38,7 @@ class Command(TournamentCommand):
             self.stdout.write("institution,name")
             for adj in tournament.relevant_adjudicators.all():
                 self.stdout.write(",".join([
-                    adj.institution.code if adj.institution else "",
+                    (adj.institution.name if options['full_institution_name'] else adj.institution.code)
+                    if adj.institution else "",
                     adj.name
                 ]))
