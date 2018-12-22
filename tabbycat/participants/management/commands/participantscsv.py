@@ -31,8 +31,11 @@ class Command(TournamentCommand):
                     (team.institution.name if options['full_institution_name'] else team.institution.code)
                     if team.institution else "",
                     team.short_name,
-                    team.code_name
-                ] + [speaker.name for speaker in team.speaker_set.all()]))
+                    team.code_name,
+                ] + [
+                    x for speaker in team.speaker_set.all()
+                    for x in (speaker.name, speaker.email)
+                ]))
 
         elif options['subcommand'] == "adjs":
             self.stdout.write("institution,name")
@@ -40,5 +43,6 @@ class Command(TournamentCommand):
                 self.stdout.write(",".join([
                     (adj.institution.name if options['full_institution_name'] else adj.institution.code)
                     if adj.institution else "",
-                    adj.name
+                    adj.name,
+                    adj.email,
                 ]))
