@@ -7,7 +7,7 @@
     <div class="d-flex vc-chair-flex flex-truncate flex-nowrap border-left">
       <droppable-item class="d-flex flex-grow-1" :handle-drop="handleDebateOrPanelDrop"
                       :drop-context="{ assignment: debateOrPanel.id, position: 'C'}">
-        <div :class="['align-items-center flex-fill', chairID ? 'd-none' : 'd-flex']">
+        <div :class="['align-items-center flex-fill', chairID ? 'd-none' : 'd-flex panel-incomplete']">
           <div class="mx-auto py-2 px-3">ⓒ</div>
         </div>
         <draggable-adjudicator v-if="chairID" class="flex-fill" :item="allAdjudicators[chairID]"
@@ -16,8 +16,9 @@
         </draggable-adjudicator>
       </droppable-item>
     </div>
-    <div class="d-flex flex-grow-1 border-left">
-      <droppable-item class="d-flex flex-grow-1 flex-wrap" :handle-drop="handleDebateOrPanelDrop"
+    <div :class="'d-flex flex-grow-1 border-left'">
+      <droppable-item :class="['d-flex flex-grow-1 flex-wrap', adjudicators.P.length % 2 ? 'panel-incomplete' : '']"
+                      :handle-drop="handleDebateOrPanelDrop"
                       :drop-context="{ assignment: debateOrPanel.id, position: 'P'}">
         <draggable-adjudicator v-for="adjID in adjudicators.P" :item="allAdjudicators[adjID]"
                                :drag-payload="getDragPayload(adjID, 'P')" :key="adjID">
