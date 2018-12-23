@@ -1,10 +1,14 @@
+from itertools import groupby
+from operator import attrgetter
 import logging
 
+from django.db.models import F
 from django.utils.translation import gettext as _
 
 from actionlog.models import ActionLogEntry
 from breakqual.utils import calculate_live_thresholds
 from draw.consumers import BaseAdjudicatorContainerConsumer, EditDebateOrPanelWorkerMixin
+from participants.prefetch import populate_win_counts
 from tournaments.models import Round
 
 from .models import PreformedPanel
@@ -103,32 +107,52 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         msg = _("Succesfully auto-allocated adjudicators to preformed panels.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
+    def _prioritise_by_bracket(self, instances, bracket_attrname):
+        instances = instances.order_by('-' + bracket_attrname)
+        nimportancelevels = 4
+        importance = 1
+        boundary = round(len(instances) / nimportancelevels)
+        n = 0
+        for k, group in groupby(instances, key=attrgetter(bracket_attrname)):
+            group = list(group)
+            for panel in group:
+                panel.importance = importance
+                panel.save()
+            n += len(group)
+            if n >= boundary:
+                importance -= 1
+                boundary = round((nimportancelevels - 2 - importance) * len(instances) / nimportancelevels)
+
     def prioritise_debates(self, event):
         # TODO: Debates and panels should really be unified in a single function
         round = Round.objects.get(pk=event['extra']['round_id'])
-        debates = round.debate_set.all()
+        debates = round.debate_set_with_prefetches(teams=True, adjudicators=False,
+            speakers=False, divisions=False, venues=False)
 
         priority_method = event['extra']['settings']['type']
         if priority_method == 'liveness':
+            populate_win_counts([team for debate in debates for team in debate.teams], round.prev)
             open_category = round.tournament.breakcategory_set.filter(is_general=True).first()
             if open_category:
                 safe, dead = calculate_live_thresholds(open_category, round.tournament, round)
                 for debate in debates:
-                    if debate.bracket >= safe:
+                    points_now = [team.points_count for team in debate.teams]
+                    highest = max(points_now)
+                    lowest = min(points_now)
+                    if lowest >= safe:
                         debate.importance = 0
-                    elif debate.bracket <= dead:
+                    elif highest <= dead:
                         debate.importance = -2
                     else:
                         debate.importance = 1
                     debate.save()
             else:
                 self.return_error(event['extra']['group_name'],
-                    _("You have no break category set as 'open' so debate importances can't be calculated."))
+                    _("You have no break category set as 'is general' so debate importances can't be calculated."))
                 return
+
         elif priority_method == 'bracket':
-            self.return_error(event['extra']['group_name'],
-                _("Prioritising by bracket is not yet implemented."))
-            return
+            self._prioritise_by_bracket(debates, 'bracket')
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_AUTO)
         content = self.reserialize_debates(SimpleDebateImportanceSerializer, round, debates)
@@ -136,33 +160,33 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def prioritise_panels(self, event):
-        round = Round.objects.get(pk=event['extra']['round_id'])
-        panels = round.preformedpanel_set.all()
+        rd = Round.objects.get(pk=event['extra']['round_id'])
+        panels = rd.preformedpanel_set.all()
         priority_method = event['extra']['settings']['type']
 
         if priority_method == 'liveness':
-            open_category = round.tournament.breakcategory_set.filter(is_general=True).first()
+            open_category = rd.tournament.breakcategory_set.filter(is_general=True).first()
             if open_category:
-                safe, dead = calculate_live_thresholds(open_category, round.tournament, round)
+                safe, dead = calculate_live_thresholds(open_category, rd.tournament, rd)
                 for panel in panels:
-                    if panel.bracket_min >= safe:
-                        panel.importance = 0
-                    elif panel.bracket_max <= dead:
-                        panel.importance = -2
-                    else:
+                    if panel.liveness > 0:
                         panel.importance = 1
+                    elif panel.bracket_min >= safe:
+                        panel.importance = 0
+                    else:
+                        panel.importance = -2
                     panel.save()
             else:
                 self.return_error(event['extra']['group_name'],
-                    _("You have no break category set as 'open' so panel importances can't be calculated."))
+                    _("You have no break category set as 'is general' so panel importances can't be calculated."))
                 return
-        elif priority_method == 'bracket':
-            self.return_error(event['extra']['group_name'],
-                _("Prioritising by bracket is not yet implemented."))
-            return
 
-        self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO)
-        content = self.reserialize_panels(SimplePanelImportanceSerializer, round, panels)
+        elif priority_method == 'bracket':
+            panels = panels.annotate(bracket_mid=(F('bracket_max') + F('bracket_min')) / 2)
+            self._prioritise_by_bracket(panels, 'bracket_mid')
+
+        self.log_action(event['extra'], rd, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO)
+        content = self.reserialize_panels(SimplePanelImportanceSerializer, rd, panels)
         msg = _("Succesfully auto-prioritised preformed panels.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
