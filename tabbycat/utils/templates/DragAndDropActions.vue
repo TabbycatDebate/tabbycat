@@ -21,6 +21,23 @@
             <i data-feather="server"></i>
           </button>
         </div>
+        <div class="dropdown">
+          <button class="btn btn-sm ml-2 btn-outline-primary dropdown-toggle"
+                  data-toggle="dropdown" id="dropdownMenuOffset" title="Sort the draw">
+            <i data-feather="list"></i>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+            <a class="dropdown-item" href="#" @click="setSorting('bracket')">
+              Sort by Bracket
+            </a>
+            <a class="dropdown-item" href="#" @click="setSorting('importance')">
+              Sort by Importance
+            </a>
+            <a class="dropdown-item" href="#" @click="setSorting('liveness')">
+              Sort by Liveness
+            </a>
+          </div>
+        </div>
       </div>
 
       <div class="btn-group btn-group-sm">
@@ -67,7 +84,7 @@ export default {
     titleCase: function (title) {
       return title.charAt(0).toUpperCase() + title.substr(1)
     },
-    ...mapMutations(['toggleHighlight']),
+    ...mapMutations(['toggleHighlight', 'setSorting']),
     startShard: function (event) {
       window.alert('sharding')
     },

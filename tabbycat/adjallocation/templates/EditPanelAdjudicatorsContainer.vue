@@ -27,7 +27,7 @@
     </drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="panel in allDebatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
+      <drag-and-drop-debate v-for="panel in sortedDebatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
         <debate-or-panel-importance slot="importance"
                                     :debate-or-panel="panel"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="panel"

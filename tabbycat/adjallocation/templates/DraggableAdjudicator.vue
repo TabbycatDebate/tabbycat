@@ -1,16 +1,17 @@
 <template>
-  <draggable-item :drag-payload="dragPayload" :class="[highlightsCSS,
-      { 'border-light': isTrainee, 'bg-dark text-white': !item.available }]">
+  <draggable-item :drag-payload="dragPayload"
+    :enable-hover="true" :hover-item="hoverableData" :hover-type="hoverableType"
+    :class="[highlightsCSS, { 'border-light': isTrainee, 'bg-dark text-white': !item.available }]">
 
-      <span slot="number">
-        <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
-      </span>
-      <span slot="title">
-        {{ initialledName }}
-      </span>
-      <span slot="subtitle">
-        {{ institutionCode }}
-      </span>
+    <span slot="number">
+      <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
+    </span>
+    <span slot="title">
+      {{ initialledName }}
+    </span>
+    <span slot="subtitle">
+      {{ institutionCode }}
+    </span>
 
   </draggable-item>
 </template>
@@ -18,14 +19,21 @@
 <script>
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
+import HoverableMixin from '../../utils/templates/HoverableMixin.vue'
 
 export default {
-  mixins: [HighlightableMixin],
+  mixins: [HoverableMixin, HighlightableMixin],
   components: { DraggableItem },
   props: { item: Object, dragPayload: Object, isTrainee: false },
   computed: {
     highlightData: function () {
       return this.adjudicator
+    },
+    hoverableData: function () {
+      return this.adjudicator
+    },
+    hoverableType: function () {
+      return 'adjudicator'
     },
     adjudicator: function () {
       return this.item

@@ -1,7 +1,9 @@
 <template>
 
   <div draggable=true @dragstart="dragStart" @dragend="dragEnd"
-       :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]">
+       :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]"
+       @mouseenter="enableHover ? showHoverPanel(hoverItem, hoverType) : ''"
+       @mouseleave="enableHover ? hideHoverPanel() : ''">
 
     <slot>
       <h4 class="mb-0 py-1 text-monospace vc-draggable-number vc-number">
@@ -23,9 +25,16 @@
 
 <script>
 import DraggableMixin from './DraggableMixin.vue'
+import HoverableMixin from './HoverableMixin.vue'
 
 export default {
-  mixins: [DraggableMixin],
+  mixins: [DraggableMixin, HoverableMixin],
+  // Passed down from the parent because the trigger for the show/hide needs to be on this element
+  props: {
+    enableHover: false,
+    hoverItem: Object,
+    hoverType: String,
+  },
 }
 </script>
 

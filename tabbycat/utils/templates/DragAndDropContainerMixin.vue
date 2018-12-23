@@ -23,7 +23,7 @@ export default {
     this.$store.commit('setupWebsocketBridge', this.bridges[this.sockets[0]])
   },
   computed: {
-    ...mapGetters(['allDebatesOrPanels']),
+    ...mapGetters(['allDebatesOrPanels', 'sortedDebatesOrPanels']),
     debatesOrPanelsCount: function () {
       return Object.keys(this.allDebatesOrPanels).length
     },
