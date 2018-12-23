@@ -98,7 +98,7 @@ export default {
       if ([...new Set(individualTeamScores)].length < individualTeamScores.length) {
         return 'Ballot cannot be submitted because there is a tie'
       }
-      if (this.blindValidationFail && this.blindReveal) {
+      if (!this.blindFormIsValid && this.blindReveal) {
         return 'Ballot cannot be confirmed because the re-entered data does not match the original'
       }
       return ''
@@ -112,8 +112,7 @@ export default {
       this.blindReveal = true
     },
     blindValidationFail: function () {
-      this.blindValidationFail = true
-      console.log('fail final validation')
+      this.blindFormIsValid = true
     },
     setSpeakerScore: function (teamPosition, speakerPosition, speakerScore) {
       var changedScores = this.speakerScores[teamPosition]

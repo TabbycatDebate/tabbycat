@@ -9,7 +9,7 @@
       </div>
 
       <div class="col mb-0 pr-md-1 pr-md-2 pr-1 pl-1 form-group">
-        <select v-model="speakerNameShadow" :disabled="blindReveal"
+        <select v-model="speakerNameShadow" :disabled="blindReveal" v-bind="selectAttributes"
           :class="['custom-select mb-2', blindSpeakerMatches ? '' : 'is-invalid bg-dark text-white']">
           <option v-bind:value="0" selected>{{ selectOptions[0].text }}</option>
           <option v-for="option in selectOptions.slice(1)" v-bind:value="option.value">
@@ -167,7 +167,7 @@ export default {
       for (let speaker of this.speaker.nameField) {
         options.push({ 'text': speaker.textContent, 'value': speaker.getAttribute('value') })
       }
-      return options
+      return options.sort((a, b) => a.text.localeCompare(b.text))
     },
     selectAttributes: function () {
       var attributes = {

@@ -4,10 +4,12 @@
 
       <div class="list-group-item pt-4">
         <h4 class="card-title mt-0 mb-2 d-inline-block">
-          <span v-if="isNew">New Ballot Set for </span>
-          <span v-if="!isNew">Edit Ballot Set for </span>
-          {{ debate }}
+          <span v-if="isNew">New Ballot Set</span>
+          <span v-if="!isNew">Edit Ballot Set</span>
         </h4>
+        <div class="badge badge-secondary float-right ml-2 mt-1">
+          {{ debate }}
+        </div>
         <div class="badge badge-secondary float-right ml-2 mt-1">
           {{ round }}
         </div>

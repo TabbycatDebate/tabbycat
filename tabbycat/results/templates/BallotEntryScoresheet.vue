@@ -101,7 +101,7 @@ export default {
     teamRank: function () {
       let nonZeroScores = Object.values(this.teamScores).filter(s => s > 0)
       if (nonZeroScores.length !== this.teamsCount) { return '?' }
-      let scores = Object.values(this.teamScores).sort().reverse()
+      let scores = Object.values(this.teamScores).sort((a, b) => a - b).reverse()
       for (const [index, score] of scores.entries()) {
         if (score === this.teamScores[this.team.position]) {
           if (Object.values(this.teamScores).filter(s => s === score).length > 1) {
