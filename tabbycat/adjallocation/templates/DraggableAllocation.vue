@@ -1,8 +1,8 @@
 <template>
 
   <div class="d-flex flex-fill align-items-stretch align-items-center">
-    <div class="p-2 d-flex align-items-center">
-      <i data-feather="move"></i>
+    <div class="p-1 d-flex align-items-center">
+      <i class="d-none" data-feather="move"></i>
     </div>
     <div class="d-flex vc-chair-flex flex-truncate flex-nowrap border-left">
       <droppable-item class="d-flex flex-grow-1" :handle-drop="handleDebateOrPanelDrop"

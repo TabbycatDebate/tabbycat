@@ -1,7 +1,10 @@
 <template>
-  <div class="text-truncate small py-1 px-2 flex-fill" :class="highlightsCSS"
+  <div class="text-truncate small py-1 px-2 inline-team flex-fill d-flex align-items-center"
+       :class="highlightsCSS"
        @mouseenter="showHoverPanel(team, 'team')" @mouseleave="hideHoverPanel">
-    {{ team.short_name }}
+    <div>
+      {{ team.short_name }}
+    </div>
   </div>
 </template>
 
@@ -19,3 +22,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+  .inline-team {
+    height: 100%;
+  }
+</style>

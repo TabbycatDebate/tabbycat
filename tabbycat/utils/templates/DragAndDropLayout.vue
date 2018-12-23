@@ -16,19 +16,20 @@
                                      :handle-unused-drop="handleUnusedDrop">
     </drag-and-drop-unallocated-items>
 
-    <slot name=""></slot><!-- SlideOver Item -->
-
     <slot name="modals"></slot>
+
+    <hover-panel></hover-panel>
 
   </div>
 </template>
 
 <script>
 import DragAndDropUnallocatedItems from './DragAndDropUnallocatedItems.vue'
+import HoverPanel from './HoverPanel.vue'
 // The master layout for drag and drop screens; to using slots for content
 
 export default {
-  components: { DragAndDropUnallocatedItems },
+  components: { DragAndDropUnallocatedItems, HoverPanel },
   props: ['unallocatedItems', 'unallocatedComponent', 'handleUnusedDrop'],
 }
 </script>

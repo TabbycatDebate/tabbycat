@@ -45,7 +45,7 @@ export default {
     },
     regionClass: function () {
       const itemsInstitutionID = this.highlightData.institution
-      if (itemsInstitutionID) {
+      if (itemsInstitutionID && 'region' in this.highlights) {
         if (itemsInstitutionID in this.institutions) {
           const itemsInstitution = this.institutions[itemsInstitutionID]
           const itemsRegion = this.highlights.region.options[itemsInstitution.region]
@@ -60,7 +60,6 @@ export default {
       if ('score' in this.highlightData) {
         let rankCategories = Object.keys(this.highlights.rank.options)
         for (let rankCategory of rankCategories) {
-          console.log(this.highlightData.score, rankCategory, this.highlights.rank.options[rankCategory])
           if (this.highlightData.score > this.highlights.rank.options[rankCategory].fields.cutoff) {
             return this.highlights.rank.options[rankCategory].css
           }

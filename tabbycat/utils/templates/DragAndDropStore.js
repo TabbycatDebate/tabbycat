@@ -22,6 +22,9 @@ export default new Vuex.Store({
     wsBridge: null,
     wsPseudoComponentID: null,
     lastSaved: null,
+    // For hover panels
+    hoverSubject: null,
+    hoverType: null,
   },
   mutations: {
     setupInitialData (state, initialData) {
@@ -83,6 +86,14 @@ export default new Vuex.Store({
         }
       })
       state.highlights[type].active = !state.highlights[type].active
+    },
+    setHoverPanel (state, payload) {
+      state.hoverSubject = payload.subject
+      state.hoverType = payload.type
+    },
+    unsetHoverPanel (state) {
+      state.hoverSubject = null
+      state.hoverType = null
     },
     updateSaveCounter (state) {
       state.lastSaved = new Date()
