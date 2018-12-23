@@ -27,7 +27,8 @@
 
       <div class="col-3 form-group pr-1 pl-1">
         <input :class="['form-control mb-2', blindScoreMatches ? '' : 'is-invalid bg-dark text-white']"
-               :readonly="blindReveal" v-model.number="speakerScoreShadow" v-bind="scoreAttributes">
+               :readonly="blindReveal" v-model.number="speakerScoreShadow" v-bind="scoreAttributes"
+               @change="setShadowScore(speakerScoreShadow)">
         <span class="text-danger" v-if="blindReveal && !blindScoreMatches">No match</span>
       </div>
 
@@ -103,13 +104,13 @@ export default {
     this.speakerScore = Number(this.speaker.scoreField.getAttribute('value'))
     this.speaker.duplicateField.setAttribute('tabindex', -1) // Remove old tab order
     this.$nextTick(function () {
-      this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScore)
+      this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScoreForBallotType)
     })
   },
   methods: {
     setShadowScore: function (setValue) {
       document.getElementById(this.speaker.scoreField.getAttribute('id')).value = setValue
-      this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScore)
+      this.$emit('set-speaker-score', this.team.position, this.speaker.position, this.speakerScoreForBallotType)
     },
     setShadowSpeaker: function (setValue) {
       let select = document.getElementById(this.speaker.nameField.getAttribute('id'))
@@ -124,6 +125,13 @@ export default {
     },
   },
   computed: {
+    speakerScoreForBallotType: function () {
+      if (this.blindEntry && !this.isNew) {
+        return this.speakerScoreShadow
+      } else {
+        return this.speakerScore
+      }
+    },
     blindSpeakerMatches: function () {
       if (!this.blindReveal || this.speakerNameShadow === this.speakerName) {
         return true
