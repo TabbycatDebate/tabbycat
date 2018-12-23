@@ -23,7 +23,7 @@
     </drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
+      <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <debate-or-panel-importance slot="importance" :debate-or-panel="debate"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="debate"
                                       :handle-debate-or-panel-drop="moveAdjudicator">

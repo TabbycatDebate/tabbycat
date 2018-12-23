@@ -25,6 +25,8 @@ export default new Vuex.Store({
     // For hover panels
     hoverSubject: null,
     hoverType: null,
+    // For sorting
+    sortType: null,
   },
   mutations: {
     setupInitialData (state, initialData) {
@@ -87,6 +89,9 @@ export default new Vuex.Store({
       })
       state.highlights[type].active = !state.highlights[type].active
     },
+    setSorting (state, type) {
+      state.sortType = type
+    },
     setHoverPanel (state, payload) {
       state.hoverSubject = payload.subject
       state.hoverType = payload.type
@@ -105,6 +110,17 @@ export default new Vuex.Store({
   getters: {
     allDebatesOrPanels: state => {
       return state.debatesOrPanels
+    },
+    sortedDebatesOrPanels: state => {
+      let itemsArray = Object.values(state.debatesOrPanels)
+      if (state.sortType === null || state.sortType === 'bracket') {
+        return itemsArray.sort((a, b) => a.bracket - b.bracket).reverse()
+      } else if (state.sortType === 'importance') {
+        return itemsArray.sort((a, b) => a.importance - b.importance).reverse()
+      } else if (state.sortType === 'liveness') {
+        return itemsArray.sort((a, b) => a.liveness - b.liveness).reverse()
+      }
+      return itemsArray
     },
     allocatableItems: state => {
       return state.allocatableItems
