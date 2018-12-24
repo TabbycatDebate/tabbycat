@@ -2,7 +2,8 @@
   <div>
 
     <ballot-entry-header :debate="debateName" :venue="debateVenue" :round="debateRound"
-                         :is-new="isNew" :has-iron="hasIron" :show-duplicates="showDuplicates"
+                         :is-new="isNew" :is-admin="isAdmin"
+                         :has-iron="hasIron" :show-duplicates="showDuplicates"
                          v-on:set-duplicates="revealDuplicates">
     </ballot-entry-header>
 
@@ -22,8 +23,8 @@
               v-for="team in sheet.teams.slice(0,2)"
               v-on:update-speaker-score="setSpeakerScore"
               v-on:blind-validation-fail="blindValidationFail" :team-scores="teamScores"
-              :team="team" :key="team.id" :teams-count="sheet.teams.length"
-              :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
+              :team="team" :key="team.id" :teams-count="sheet.teams.length" :has-iron="hasIron"
+              :is-new="isNew" :is-admin="isAdmin" :blind-entry="blindEntry" :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>
@@ -32,8 +33,8 @@
               v-for="team in sheet.teams.slice(2)"
               v-on:update-speaker-score="setSpeakerScore"
               v-on:blind-validation-fail="blindValidationFail" :team-scores="teamScores"
-              :team="team" :key="team.id" :teams-count="sheet.teams.length"
-              :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
+              :team="team" :key="team.id" :teams-count="sheet.teams.length" :has-iron="hasIron"
+              :is-new="isNew" :is-admin="isAdmin" :blind-entry="blindEntry" :blind-reveal="blindReveal"
               :show-duplicates="showDuplicates">
             </ballot-entry-scoresheet>
           </div>

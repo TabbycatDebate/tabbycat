@@ -16,12 +16,20 @@
             {{ option.text }}
           </option>
         </select>
-        <span class="text-danger" v-if="blindReveal && !blindSpeakerMatches">Does not match</span>
-        <div class="small pt-0 m-0" v-if="showDuplicates || speakerDuplicate">
+        <span class="text-danger" v-if="blindReveal && !blindSpeakerMatches">
+          Speaker does not match
+        </span>
+        <span class="text-danger" v-if="blindReveal && !blindDuplicateMatches">
+          Duplicate status does not match
+        </span>
+        <div class="small pt-0 m-0" v-if="showDuplicates || speakerDuplicate || hasIron">
           <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicateShadow"
-                 :disabled="blindReveal" />
+                 :disabled="blindReveal" :id="'dupeCheck' + speaker.position" />
           <span class="mt-2"></span>
-          <label class="ml-2">Mark as a duplicate speech</label>
+          <label :for="'dupeCheck' + speaker.position"
+                 :class="['ml-2 hoverable', blindDuplicateMatches ? '' : 'text-danger']">
+            Mark as a duplicate speech
+          </label>
         </div>
       </div>
 
@@ -45,7 +53,7 @@
 
         <select :class="['custom-select', speakerError ? 'border-danger text-danger' : '',
                                           !blindSpeakerMatches ? 'is-invalid' : '']"
-                v-model="speakerName" v-bind="selectAttributes" :disabled="!isNew"
+                v-model="speakerName" v-bind="selectAttributes" :disabled="!isNew && !isAdmin"
                 @change="setShadowSpeaker(speakerName)">
           <option v-for="option in selectOptions" v-bind:value="option.value"
                   :selected="speakerName === option.value">
@@ -53,11 +61,15 @@
           </option>
         </select>
         <label v-if="speakerError" class="error pt-2">{{ speakerError }}</label>
-        <div class="small pt-0 m-0" v-if="showDuplicates || speakerDuplicate">
+        <div class="small pt-0 m-0" v-if="showDuplicates || speakerDuplicate || hasIron">
           <input tabindex="-1" type="checkbox" v-model.number="speakerDuplicate"
-                 @change="setShadowDuplicate(speakerScore)" :disabled="!isNew" />
+                 @change="setShadowDuplicate(speakerScore)" :disabled="!isNew && !isAdmin"
+                 :id="'check' + speaker.position" />
           <span class="mt-2"></span>
-          <label class="ml-2">Mark as a duplicate speech</label>
+          <label :for="'check' + speaker.position"
+                 :class="['ml-2 hoverable', blindDuplicateMatches ? '' : 'text-danger']">
+            Mark as a duplicate speech
+          </label>
         </div>
 
       </div>
@@ -65,7 +77,7 @@
       <div class="col-3 form-group pr-1 pl-1">
         <input :class="['form-control', scoreError ? 'border-danger text-danger' : '',
                                         blindScoreMatches ? '' : 'is-invalid']"
-               @change="setShadowScore(speakerScore)" :readonly="!isNew"
+               @change="setShadowScore(speakerScore)" :readonly="!isNew && !isAdmin"
                v-model.number="speakerScore" v-bind="scoreAttributes">
         <label v-if="scoreError" class="error pt-2">{{ scoreError }}</label>
       </div>
@@ -85,8 +97,10 @@ export default {
     index: Number,
     showDuplicates: Boolean,
     isNew: Boolean,
+    isAdmin: Boolean,
     blindEntry: Boolean,
     blindReveal: Boolean,
+    hasIron: Boolean,
   },
   data: function () {
     return {
@@ -134,6 +148,13 @@ export default {
     },
     blindSpeakerMatches: function () {
       if (!this.blindReveal || this.speakerNameShadow === this.speakerName) {
+        return true
+      }
+      this.$emit('blind-validation-fail')
+      return false
+    },
+    blindDuplicateMatches: function () {
+      if (!this.blindReveal || this.speakerDuplicate === this.speakerDuplicateShadow) {
         return true
       }
       this.$emit('blind-validation-fail')

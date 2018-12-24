@@ -57,7 +57,7 @@
           </div>
           <div v-if="!isNew" class="col">
             <button tabindex="301" @click="invalidate" class="btn btn-danger btn-block">
-              Ballot is incorrect
+              Reject draft ballot
             </button>
           </div>
         </div>

@@ -16,9 +16,11 @@
       <ballot-entry-speaker v-for="(speaker, index) in team.speakers"
                             v-on:set-speaker-score="setSpeakerScore"
                             v-on:blind-validation-fail="blindValidationFail"
-                            :is-new="isNew" :blind-entry="blindEntry" :blind-reveal="blindReveal"
+                            :is-new="isNew" :is-admin="isAdmin"
+                            :blind-entry="blindEntry" :blind-reveal="blindReveal"
                             :speaker="speaker" :team="team" :index="index" :key="index"
-                            :show-duplicates="showDuplicates"></ballot-entry-speaker>
+                            :show-duplicates="showDuplicates" :has-iron="hasIron">
+      </ballot-entry-speaker>
 
       <div class="list-group-item">
         <div class="row">
@@ -65,8 +67,10 @@ export default {
     teamsCount: Number,
     showDuplicates: Boolean,
     isNew: Boolean,
+    isAdmin: Boolean,
     blindEntry: Boolean,
     blindReveal: Boolean,
+    hasIron: Boolean,
   },
   data: function () {
     return {

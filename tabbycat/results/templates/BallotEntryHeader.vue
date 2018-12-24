@@ -24,7 +24,7 @@
       <div class="list-group-item pb-3 pt-3">
         <div class="form-group" v-if="!showDuplicates">
           <select class="required custom-select form-control" v-model="ironStatus"
-                  @change="setIron()" :disabled="!isNew">
+                  @change="setIron()" :disabled="!isNew && !isAdmin">
             <option value="No">
               There were no speakers who spoke multiple times (i.e. no 'Iron' person speeches)
             </option>
@@ -53,6 +53,7 @@ export default {
     isNew: Boolean,
     showDuplicates: Boolean,
     hasIron: Boolean,
+    isAdmin: Boolean,
   },
   data: function () {
     return {
@@ -61,7 +62,8 @@ export default {
   },
   methods: {
     setIron: function () {
-      if (this.hasIron === 'Yes') {
+      console.log('set', this.hasIron)
+      if (this.ironStatus === 'Yes') {
         this.$emit('set-duplicates')
       }
     },
