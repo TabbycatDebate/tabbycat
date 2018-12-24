@@ -83,7 +83,7 @@ export default {
     },
     finishCheckIn: function (payload) {
       const checkin = payload.checkins[0]
-      const msg = `${checkin.time} checked in identifier ${checkin.identifier}`
+      const msg = `${checkin.time} checked in ${checkin.identifier}: ${checkin.owner_name}`
       $.fn.showAlert('success', msg, 0)
       this.playSound('finishedScanSound')
     },

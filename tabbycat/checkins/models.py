@@ -4,7 +4,8 @@ from string import digits
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
+from polymorphic.models import PolymorphicModel
 
 
 def generate_identifier():
@@ -18,7 +19,7 @@ def generate_identifier():
         return generate_identifier()
 
 
-class Identifier(models.Model):
+class Identifier(PolymorphicModel):
     """A unique string that will be matched to either a Person, Debate,
     or Venue (of which only Person is supported at present)"""
 
@@ -33,8 +34,14 @@ class Identifier(models.Model):
     @property
     def owner(self):
         if self.instance_attr is None:
-            return None
+            return gettext("<Not the child instance>")
         return getattr(self, self.instance_attr)
+
+    def __str__(self):
+        return gettext("%(classname)s %(barcode)s") % {
+            'classname': self.__class__.__name__,
+            'barcode': str(self.barcode),
+        }
 
 
 class PersonIdentifier(Identifier):
@@ -89,6 +96,8 @@ class Event(models.Model):
         verbose_name_plural = _("check-in events")
 
     def serialize(self):
-        event = {'id': self.id, 'identifier': self.identifier.barcode,
-                 'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S")}
-        return event
+        return {
+            'id': self.id,
+            'identifier': self.identifier.barcode,
+            'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S")
+        }
