@@ -12,6 +12,7 @@ from participants.prefetch import populate_win_counts
 from tournaments.models import Round
 
 from .models import PreformedPanel
+from .allocators import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw
@@ -78,7 +79,13 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             else:
                 allocator = ConsensusHungarianAllocator(debates, adjs, round)
 
-            for alloc in allocator.allocate():
+            try:
+                allocation = allocator.allocate()
+            except AdjudicatorAllocationError as e:
+                self.return_error(event['extra']['group_name'], str(e))
+                return
+
+            for alloc in allocation:
                 alloc.save()
 
             self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO)
@@ -99,7 +106,13 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         else:
             allocator = ConsensusHungarianAllocator(panels, adjs, round)
 
-        for alloc in allocator.allocate():
+        try:
+            allocation = allocator.allocate()
+        except AdjudicatorAllocationError as e:
+            self.return_error(event['extra']['group_name'], str(e))
+            return
+
+        for alloc in allocation:
             alloc.save()
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)

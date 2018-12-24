@@ -5,8 +5,8 @@ from django.utils.translation import gettext as _
 
 from adjallocation.models import PreformedPanelAdjudicator
 from participants.models import Adjudicator, Team
-from utils.views import BadJsonRequestError
 
+from ..allocators import AdjudicatorAllocationError
 from ..conflicts import ConflictsInfo, HistoryInfo
 
 logger = logging.getLogger(__name__)
@@ -42,7 +42,7 @@ class BasePreformedPanelAllocator:
                      "preformed panels for this round? If not, try just auto-allocating "
                      "adjudicators instead.")
             logger.info(info)
-            raise BadJsonRequestError(info)
+            raise AdjudicatorAllocationError(info)
 
         teams = Team.objects.filter(debateteam__debate__in=debates)
         adjudicators = Adjudicator.objects.filter(preformedpaneladjudicator__panel__in=panels)
