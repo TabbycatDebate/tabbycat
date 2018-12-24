@@ -16,7 +16,7 @@ from .allocators import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw
-from .preformed.dumb import DumbPreformedPanelAllocator
+from .preformed.hungarian import HungarianPreformedPanelAllocator
 from .serializers import (EditPanelAdjsPanelSerializer,
                           SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer,
                           SimplePanelAllocationSerializer, SimplePanelImportanceSerializer)
@@ -64,7 +64,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             debates = round.debate_set.all()
             panels = round.preformedpanel_set.all()
-            allocator = DumbPreformedPanelAllocator(debates, panels, round)
+            allocator = HungarianPreformedPanelAllocator(debates, panels, round)
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
 
