@@ -100,6 +100,12 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         self._apply_allocation_settings(round, event['extra']['settings'])
 
         panels = round.preformedpanel_set.all()
+
+        if not panels.exists():
+            self.return_error(event['extra']['group_name'],
+                _("There aren't any panels to fill. Create panels first."))
+            return
+
         adjs = round.active_adjudicators.all()
         if round.ballots_per_debate == 'per-adj':
             allocator = VotingHungarianAllocator(panels, adjs, round)
