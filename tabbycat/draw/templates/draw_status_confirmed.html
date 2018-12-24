@@ -23,7 +23,7 @@
 
             {% if active_adjs < debates_in_round %}
 
-              {% trans "There are currently fewer checked-in adjudicators than there are rooms." as message %}
+              {% trans "There are currently fewer adjudicators checked in than there are rooms." as message %}
               {% include "components/item-info.html" with type=danger text=message %}
 
             {% else %}

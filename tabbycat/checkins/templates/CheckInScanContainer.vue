@@ -83,7 +83,7 @@ export default {
     },
     finishCheckIn: function (payload) {
       const checkin = payload.checkins[0]
-      const msg = `${checkin.time} checked-in identifier ${checkin.identifier}`
+      const msg = `${checkin.time} checked in identifier ${checkin.identifier}`
       $.fn.showAlert('success', msg, 0)
       this.playSound('finishedScanSound')
     },
@@ -191,7 +191,7 @@ export default {
               self.checkInIdentifier(code)
               self.scannedResults.push(code)
             } else {
-              // $.fn.showAlert("info", 'Already checked-in identifier ' + code, 0)
+              // $.fn.showAlert("info", 'Already checked in identifier ' + code, 0)
             }
           }
         }
