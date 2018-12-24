@@ -1,4 +1,5 @@
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
   computed: {
@@ -22,12 +23,16 @@ export default {
     },
     bottomleftteam: function () {
       // Conflicts
-      return []
+      let clashes = this.teamClashesForItem(this.subject.id)
+      if (clashes) {
+        return this.makeClashItems(clashes)
+      }
     },
     bottomrightteam: function () {
       // History
       return []
     },
+    ...mapGetters(['teamClashesForItem', 'teamHistoriesForItem']),
   },
 }
 </script>

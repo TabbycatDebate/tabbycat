@@ -1,7 +1,7 @@
 <script>
 // Must provide a computer properaty of highlightData pointing to adj/team/etc
 // Then uses highlightsCSS within a :class property
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   computed: {
@@ -46,8 +46,8 @@ export default {
     regionClass: function () {
       const itemsInstitutionID = this.highlightData.institution
       if (itemsInstitutionID && 'region' in this.highlights) {
-        if (itemsInstitutionID in this.institutions) {
-          const itemsInstitution = this.institutions[itemsInstitutionID]
+        if (itemsInstitutionID in this.allInstitutions) {
+          const itemsInstitution = this.allInstitutions[itemsInstitutionID]
           const itemsRegion = this.highlights.region.options[itemsInstitution.region]
           if (itemsRegion) {
             return this.highlights.region.options[itemsInstitution.region].css
@@ -67,7 +67,8 @@ export default {
       }
       return ''
     },
-    ...mapState(['institutions', 'highlights']),
+    ...mapState(['highlights']),
+    ...mapGetters(['allInstitutions']),
   },
   methods: { },
 }

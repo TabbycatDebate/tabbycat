@@ -1,7 +1,7 @@
 <template>
 
-  <div>
-    <div v-for="group in groups" class="btn-group btn-group-sm mr-2">
+  <div class="btn-toolbar">
+    <div v-if="group.length > 0" v-for="group in groups" class="btn-group btn-group-sm mr-2">
       <button :class="['btn', item.css]" v-for="item in group">
         <i v-html="getFeatherIcon"></i>{{ item.title }}
       </button>

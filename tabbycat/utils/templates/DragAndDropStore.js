@@ -111,6 +111,24 @@ export default new Vuex.Store({
     allDebatesOrPanels: state => {
       return state.debatesOrPanels
     },
+    allInstitutions: state => {
+      return state.institutions
+    },
+    allAdjudicators: state => {
+      return state.allocatableItems
+    },
+    allTeams: state => {
+      let teams = {}
+      for (let debateOrPanelID in state.debatesOrPanels) {
+        let debateOrPanel = state.debatesOrPanels[debateOrPanelID]
+        if ('teams' in debateOrPanel) {
+          for (let position in debateOrPanel.teams) {
+            teams[debateOrPanel.teams[position].id] = debateOrPanel.teams[position]
+          }
+        }
+      }
+      return teams
+    },
     sortedDebatesOrPanels: state => {
       let itemsArray = Object.values(state.debatesOrPanels)
       if (state.sortType === null || state.sortType === 'bracket') {
@@ -127,6 +145,18 @@ export default new Vuex.Store({
     },
     loadingState: state => {
       return state.loading
+    },
+    teamClashesForItem: (state) => (id) => {
+      return state.extra.clashes.teams[id]
+    },
+    adjudicatorClashesForItem: (state) => (id) => {
+      return state.extra.clashes.adjudicators[id]
+    },
+    teamHistoriesForItem: (state) => (id) => {
+      return state.extra.histories.teams[id]
+    },
+    adjudicatorHistoriesForItem: (state) => (id) => {
+      return state.extra.histories.adjudicators[id]
     },
   },
   // Note actions are async

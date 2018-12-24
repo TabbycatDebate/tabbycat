@@ -4,10 +4,10 @@
     <div class="panel slideover-info" v-if="this.subject">
 
       <div v-if="row" v-for="row in rows" class="list-group-item flex-horizontal pl-2 flex-justify">
-        <div class="btn-toolbar flex-align-start">
+        <div class="flex-align-start">
           <hover-panel-group :groups="row['left']"></hover-panel-group>
         </div>
-        <div class="btn-toolbar">
+        <div>
           <hover-panel-group :groups="row['right']"></hover-panel-group>
         </div>
       </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import HoverPanelTeamMixin from './HoverPanelTeamMixin.vue'
 import HoverPanelAdjudicatorMixin from './HoverPanelAdjudicatorMixin.vue'
 import HoverPanelSharedMixin from './HoverPanelSharedMixin.vue'
@@ -44,7 +44,8 @@ export default {
       let rightFeatures = this.hoverType ? this['bottomright' + this.hoverType] : []
       return { left: leftFeatures, right: rightFeatures }
     },
-    ...mapState(['hoverSubject', 'hoverType', 'highlights', 'institutions']),
+    ...mapState(['hoverSubject', 'hoverType', 'highlights']),
+    ...mapGetters(['allTeams', 'allInstitutions', 'allAdjudicators']),
   },
 }
 </script>

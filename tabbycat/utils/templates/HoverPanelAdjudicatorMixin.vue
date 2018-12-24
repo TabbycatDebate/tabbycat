@@ -1,4 +1,5 @@
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
   computed: {
@@ -23,12 +24,17 @@ export default {
     },
     bottomleftadjudicator: function () {
       // Conflicts
-      return []
+      let clashes = this.adjudicatorClashesForItem(this.subject.id)
+      if (clashes) {
+        return this.makeClashItems(clashes)
+      }
     },
     bottomrightadjudicator: function () {
       // History
-      return []
+      let histories = this.adjudicatorHistoriesForItem(this.subject.id)
+      return this.makeHistoryItems(histories)
     },
+    ...mapGetters(['adjudicatorClashesForItem', 'adjudicatorHistoriesForItem']),
   },
 }
 </script>
