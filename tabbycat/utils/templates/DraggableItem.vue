@@ -17,6 +17,7 @@
           <slot name="subtitle"></slot>
         </h6>
       </div>
+      <slot name="tooltip"></slot>
     </slot>
 
   </div>
@@ -39,6 +40,13 @@ export default {
 </script>
 
 <style scoped>
+  .vue-draggable {
+    position: relative; /* For the position of the tooltip */
+  }
+  .vue-draggable .history-tooltip {
+    bottom: 1px;
+    font-size: 12px;
+  }
   .vc-title {
     line-height: 0.9;
     font-size: 1.1rem;

@@ -5,6 +5,11 @@
     <div>
       {{ team.short_name }}
     </div>
+    <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
+      <div :class="['tooltip-inner conflictable', 'hover-histories-' + hasHistoryConflict + '-ago']">
+        {{ hasHistoryConflict }} ago
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,9 +32,14 @@ export default {
 <style scoped>
   .inline-team {
     height: 100%; /* Need to fill space */
+    position: relative; /* Need to allow for the seen marker */
   }
   .inline-team.conflictable {
     border-width: 5px; /* For conflicts */
     border-style: solid;
+  }
+  .inline-team .history-tooltip {
+    bottom: 3px;
+    font-size: 12px;
   }
 </style>

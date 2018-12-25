@@ -1,7 +1,8 @@
 <template>
   <draggable-item :drag-payload="dragPayload"
     :enable-hover="true" :hover-item="hoverableData" :hover-type="hoverableType"
-    :class="[highlightsCSS, conflictsCSS, { 'border-light': isTrainee, 'bg-dark text-white': !item.available }]">
+    :class="[{'border-light': isTrainee && conflictsCSS === '',
+              'bg-dark text-white': !item.available }, highlightsCSS, conflictsCSS]">
 
     <span slot="number">
       <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
@@ -12,6 +13,11 @@
     <span slot="subtitle">
       {{ institutionCode }}
     </span>
+    <div slot="tooltip" class="history-tooltip tooltip" v-if="hasHistoryConflict">
+      <div :class="['tooltip-inner conflictable', 'hover-histories-' + hasHistoryConflict + '-ago']">
+        {{ hasHistoryConflict }} ago
+      </div>
+    </div>
 
   </draggable-item>
 </template>
