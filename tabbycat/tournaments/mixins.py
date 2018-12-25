@@ -16,7 +16,6 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
 from adjallocation.models import DebateAdjudicator
-from breakqual.models import BreakCategory
 from breakqual.utils import calculate_live_thresholds, determine_liveness
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
 from participants.models import Institution, Region, Speaker
@@ -387,9 +386,17 @@ class DragAndDropMixin(RoundMixin):
         extra_info = {} # Set by view for top bar toggles
         extra_info['highlights'] = {}
 
-        bcs = BreakCategory.objects.filter(tournament=self.tournament)
-        serialized_bcs = [{'pk': bc.id, 'fields': {'name': bc.name}} for bc in bcs]
-        extra_info['highlights']['break'] = serialized_bcs
+        bcs = self.tournament.breakcategory_set.all()
+        serialised_bcs = []
+        for bc in bcs:
+            safe, dead = calculate_live_thresholds(bc, self.tournament, self.round)
+            serialised_bc = {
+                'pk': bc.id,
+                'fields': {'name': bc.name, 'safe': safe, 'dead': dead},
+            }
+            serialised_bcs.append(serialised_bc)
+        print(serialised_bcs)
+        extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)
         extra_info['backLabel'] = _("Return to Draw")

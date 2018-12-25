@@ -2,8 +2,6 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
-from .utils import calculate_live_thresholds
-
 
 class BreakCategory(models.Model):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
@@ -57,10 +55,6 @@ class BreakCategory(models.Model):
         index_together = ['tournament', 'seq']
         verbose_name = _("break category")
         verbose_name_plural = _("break categories")
-
-    @property
-    def liveness_thresholds(self, tournament, round):
-        return calculate_live_thresholds(self, tournament, round)
 
     @property
     def breakingteam_set_competing(self):
