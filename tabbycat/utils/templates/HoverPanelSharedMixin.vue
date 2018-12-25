@@ -49,7 +49,7 @@ export default {
           formattedHistories[history.ago].push(this.makeItem(adjName, css, false))
         }
       }
-      if ('team' in histories) {
+      if ('team' in histories && Object.keys(this.allTeams).length > 0) {
         for (let history of histories['team']) {
           if (!(history.ago in formattedHistories)) {
             let css = `conflictable conflicts-toolbar hover-histories-${history.ago}-ago`
