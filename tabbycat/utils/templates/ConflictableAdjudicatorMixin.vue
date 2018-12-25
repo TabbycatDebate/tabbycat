@@ -26,6 +26,13 @@ export default {
       return false
     },
     hasHistoryConflict: function () {
+      if (this.debateOrPanelId) {
+        if (this.hasPanelHistoryConflict) {
+          return this.hasPanelHistoryConflict
+        } else if (this.hasTeamHistoryConflict) {
+          return this.hasTeamHistoryConflict
+        }
+      }
       return false
     },
     hasPanelClashConflict: function () {
@@ -69,9 +76,26 @@ export default {
       return false
     },
     hasPanelHistoryConflict: function () {
+      // adj-adj history conflicts
+      let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
+      for (let clash of this.adjudicatorHistoriesForItem(this.adjudicator.id).adjudicator) {
+        if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
+          return clash.ago
+        }
+      }
       return false
     },
-    ...mapGetters(['adjudicatorClashesForItem', 'allDebatesOrPanels']),
+    hasTeamHistoryConflict: function () {
+      // adj-team history conflicts
+      let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
+      for (let clash of this.adjudicatorHistoriesForItem(this.adjudicator.id).team) {
+        if (this.isTeamInDebateTeams(clash.id, debateTeams)) {
+          return clash.ago
+        }
+      }
+      return false
+    },
+    ...mapGetters(['allDebatesOrPanels']),
   },
 }
 </script>

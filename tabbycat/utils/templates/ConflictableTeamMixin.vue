@@ -6,7 +6,6 @@ export default {
   mixins: [ConflictableMixin],
   computed: {
     hasClashConflict: function () {
-      // let teamConflicts =
       let debateAdjudicators = this.allDebatesOrPanels[this.debateId].adjudicators
       for (let clash of this.teamClashesForItem(this.team.id).adjudicator) {
         if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
@@ -25,9 +24,18 @@ export default {
       return false
     },
     hasHistoryConflict: function () {
+      let debateAdjudicators = this.allDebatesOrPanels[this.debateId].adjudicators
+      let histories = this.teamHistoriesForItem(this.team.id)
+      if (histories && 'adjudicator' in histories) {
+        for (let clash of this.teamHistoriesForItem(this.team.id).adjudicator) {
+          if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
+            return clash.ago
+          }
+        }
+      }
       return false
     },
-    ...mapGetters(['teamClashesForItem', 'allDebatesOrPanels']),
+    ...mapGetters(['allDebatesOrPanels']),
   },
 }
 </script>

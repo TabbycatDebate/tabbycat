@@ -66,20 +66,12 @@ export default {
       } else if (this.hasInstitutionalConflict) {
         return 'conflictable panel-institution'
       } else if (this.hasHistoryConflict) {
-        return 'conflictable '
+        return `conflictable panel-histories-${this.hasHistoryConflict}-ago`
       }
       return ''
     },
-    hasInstitutionalConflict: function () {
-      return false
-    },
-    hasClashConflict: function () {
-      return false
-    },
-    hasHistoryConflict: function () {
-      return false
-    },
-    ...mapGetters(['adjudicatorClashesForItem', 'teamClashesForItem']),
+    ...mapGetters(['adjudicatorClashesForItem', 'teamClashesForItem',
+      'adjudicatorHistoriesForItem', 'teamHistoriesForItem']),
   },
 }
 </script>

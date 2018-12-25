@@ -12,7 +12,8 @@ export default {
       return [teamDetails, institutionDetails]
     },
     toprightteam: function () {
-      let pointsDetails = [this.makeItem(`On ${this.subject.points} Points`, 'btn-outline-secondary', false)]
+      let points = this.subject.points ? this.subject.points : 0 // Points can be null
+      let pointsDetails = [this.makeItem(`On ${points} Points`, 'btn-outline-secondary', false)]
       for (let bc of this.subject.break_categories) {
         let category = this.highlights.break.options[bc]
         let regionCSS = 'region-display ' + this.highlights.region.options[bc].css
