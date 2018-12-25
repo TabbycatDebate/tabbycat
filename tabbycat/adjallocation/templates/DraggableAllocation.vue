@@ -11,6 +11,7 @@
           <div class="mx-auto py-2 px-3">ⓒ</div>
         </div>
         <draggable-adjudicator v-if="chairID" class="flex-fill" :item="allAdjudicators[chairID]"
+                               :debate-or-panel-id="debateOrPanel.id"
                                :drag-payload="getDragPayload(chairID, 'C')"
                                style="max-width: 160px">
         </draggable-adjudicator>
@@ -21,6 +22,7 @@
                       :handle-drop="handleDebateOrPanelDrop"
                       :drop-context="{ assignment: debateOrPanel.id, position: 'P'}">
         <draggable-adjudicator v-for="adjID in adjudicators.P" :item="allAdjudicators[adjID]"
+                               :debate-or-panel-id="debateOrPanel.id"
                                :drag-payload="getDragPayload(adjID, 'P')" :key="adjID">
         </draggable-adjudicator>
       </droppable-item>
@@ -32,6 +34,7 @@
           <div class="mx-auto py-2 px-4">ⓣ</div>
         </div>
         <draggable-adjudicator v-for="adjID in adjudicators.T" :item="allAdjudicators[adjID]"
+                               :debate-or-panel-id="debateOrPanel.id"
                                :drag-payload="getDragPayload(adjID, 'T')" :key="adjID"
                                :isTrainee="true">
         </draggable-adjudicator>

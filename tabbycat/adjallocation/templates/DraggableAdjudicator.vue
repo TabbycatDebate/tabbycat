@@ -1,7 +1,7 @@
 <template>
   <draggable-item :drag-payload="dragPayload"
     :enable-hover="true" :hover-item="hoverableData" :hover-type="hoverableType"
-    :class="[highlightsCSS, { 'border-light': isTrainee, 'bg-dark text-white': !item.available }]">
+    :class="[highlightsCSS, conflictsCSS, { 'border-light': isTrainee, 'bg-dark text-white': !item.available }]">
 
     <span slot="number">
       <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
@@ -20,11 +20,12 @@
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
 import HoverableMixin from '../../utils/templates/HoverableMixin.vue'
+import ConflictableAdjudicatorMixin from '../../utils/templates/ConflictableAdjudicatorMixin.vue'
 
 export default {
-  mixins: [HoverableMixin, HighlightableMixin],
+  mixins: [HoverableMixin, HighlightableMixin, ConflictableAdjudicatorMixin],
   components: { DraggableItem },
-  props: { item: Object, dragPayload: Object, isTrainee: false },
+  props: { item: Object, dragPayload: Object, isTrainee: false, debateOrPanelId: Number },
   computed: {
     highlightData: function () {
       return this.adjudicator
