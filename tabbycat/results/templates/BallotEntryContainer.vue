@@ -131,9 +131,9 @@ export default {
         'title': sheet.getAttribute('data-title'),
         'subtitle': sheet.getAttribute('data-subtitle'),
       }
-      for (let team of $(sheet).children()) {
+      for (let team of $(sheet).find('div[data-type="team"]')) {
         var speakersData = []
-        for (let speaker of $(team).children()) {
+        for (let speaker of $(team).find('div[data-type="speaker"]')) {
           speakersData.push({
             'position': speaker.getAttribute('data-position'),
             'nameField': $(speaker).find('select')[0],

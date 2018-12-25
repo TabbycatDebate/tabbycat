@@ -122,7 +122,6 @@ export default {
       this.$emit('update-speaker-score', teamPosition, speakerPosition, speakerScore)
     },
     blindValidationFail: function () {
-      console.log('blindValidationFail from Scoresheet')
       this.$emit('blind-validation-fail')
     },
   },

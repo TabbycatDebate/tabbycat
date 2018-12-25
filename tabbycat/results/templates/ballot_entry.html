@@ -28,6 +28,17 @@
 {% endblock %}
 
 {% block content %}
+
+  <form id="resultsForm" action="." method="POST">
+
+    {% csrf_token %}
+
+    <div id="ballot"><!-- Parsed by Vue for data and as a mirror input -->
+      {% include "ballot_entry_form.html" %}
+    </div>
+
+  </form>
+
   <div id="vueMount">
     <ballot-entry-container
       :debate-name="'{{ debate_name|safe }}'"
@@ -44,21 +55,6 @@
       :author="'{{ request.user|safe }}'" :ballot-author="'{{ ballotsub.submitter|safe }}'">
     </ballot-entry-container>
   </div>
-
-  <form id="resultsForm" action="." method="POST" hidden>
-
-    {% csrf_token %}
-
-    {% if form.errors %}
-      {% trans "There are some problems with this scoresheet. Please review and correct them." as message %}
-      {% include "components/form-errors.html" with errors=form.non_field_errors %}
-    {% endif %}
-
-    <div id="ballot"><!-- Parsed by Vue for data and as a mirror input -->
-      {% include "ballot_entry_form.html" %}
-    </div>
-
-  </form>
 
 {% endblock content %}
 

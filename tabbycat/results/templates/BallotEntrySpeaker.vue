@@ -42,7 +42,7 @@
 
     </div>
 
-    <div v-if="blindReveal || !blindEntry || isNew" class="row mt-2">
+    <div v-if="blindReveal || !blindEntry || isNew" class="row">
 
       <div class="col-2 d-flex align-items-center mb-0 pl-2 pr-0 h6 text-muted">
         <span v-if="blindEntry">Draft</span>
