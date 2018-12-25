@@ -444,18 +444,23 @@ class DebateDragAndDropMixin(DragAndDropMixin):
         selects = ('round__tournament', 'venue')
         prefetches = ()
         if self.prefetch_venues:
-            prefetches = (*prefetches, 'venue__venuecategory_set')
+            prefetches += ('venue__venuecategory_set',)
         if self.prefetch_adjs:
-            prefetches = (*prefetches, Prefetch('debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator')))
+            prefetches += (Prefetch('debateadjudicator_set',
+                queryset=DebateAdjudicator.objects.select_related('adjudicator')),)
         if self.prefetch_teams:
-            prefetches = (*prefetches, Prefetch('debateteam_set',
+            prefetches += (Prefetch('debateteam_set',
                 queryset=DebateTeam.objects.select_related('team').prefetch_related(
                     Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
-                )))
+                    'team__break_categories',
+                )),
+            )
         else:
-            prefetches = (*prefetches, Prefetch('debateteam_set',
-                queryset=DebateTeam.objects.select_related('team')))
+            prefetches += (Prefetch('debateteam_set',
+                queryset=DebateTeam.objects.select_related('team').prefetch_related(
+                    'team__break_categories'
+                )),
+            )
 
         draw = self.round.debate_set.select_related(*selects).prefetch_related(*prefetches)
 
