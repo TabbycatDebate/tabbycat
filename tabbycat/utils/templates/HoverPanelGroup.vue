@@ -1,6 +1,6 @@
 <template>
 
-  <div class="btn-toolbar">
+  <div class="btn-toolbar flex-nowrap">
     <div v-if="group.length > 0" v-for="group in groups" class="btn-group btn-group-sm mr-2">
       <button :class="['btn', item.css]" v-for="item in group">
         <i v-html="getFeatherIcon"></i>{{ item.title }}
@@ -28,3 +28,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+  .btn-xs-text {
+    font-size: 12px; /* Need to be extra small and can't override the btn style*/
+  }
+</style>

@@ -32,7 +32,9 @@ export default {
     bottomrightadjudicator: function () {
       // History
       let histories = this.adjudicatorHistoriesForItem(this.subject.id)
-      return this.makeHistoryItems(histories)
+      if (histories) {
+        return this.makeHistoryItems(histories)
+      }
     },
     ...mapGetters(['adjudicatorClashesForItem', 'adjudicatorHistoriesForItem']),
   },

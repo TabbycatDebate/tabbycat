@@ -37,7 +37,35 @@ export default {
       return [institutions, teams, adjudicators]
     },
     makeHistoryItems: function (histories) {
-
+      let formattedHistories = {}
+      if ('adjudicator' in histories) {
+        for (let history of histories['adjudicator']) {
+          if (!(history.ago in formattedHistories)) {
+            let css = `conflictable conflicts-toolbar hover-histories-${history.ago}-ago`
+            formattedHistories[history.ago] = [this.makeItem(`-${history.ago}R`, css, false)]
+          }
+          let adjName = this.allAdjudicators[history.id].name.split(' ')[0]
+          let css = `btn-xs-text btn-outline-info conflictable panel-histories-${history.ago}-ago`
+          formattedHistories[history.ago].push(this.makeItem(adjName, css, false))
+        }
+      }
+      if ('team' in histories) {
+        for (let history of histories['team']) {
+          if (!(history.ago in formattedHistories)) {
+            let css = `conflictable conflicts-toolbar hover-histories-${history.ago}-ago`
+            formattedHistories[history.ago] = [this.makeItem(`-${history.ago}R`, css, false)]
+          }
+          let teamName = this.allTeams[history.id].short_name
+          let css = `btn-xs-text btn-outline-info conflictable panel-histories-${history.ago}-ago`
+          formattedHistories[history.ago].push(this.makeItem(teamName, css, false))
+        }
+      }
+      let historyItems = [] // Needs to be 2D array for display
+      let roundKeys = Object.keys(formattedHistories).sort()
+      for (let roundKey of roundKeys) {
+        historyItems.push(formattedHistories[roundKey])
+      }
+      return historyItems
     },
     makeInstitutionItem: function (subject) {
       let institutionDetails = []

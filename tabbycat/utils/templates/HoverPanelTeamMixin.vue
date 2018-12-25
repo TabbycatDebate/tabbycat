@@ -30,7 +30,10 @@ export default {
     },
     bottomrightteam: function () {
       // History
-      return []
+      let histories = this.teamHistoriesForItem(this.subject.id)
+      if (histories) {
+        return this.makeHistoryItems(histories)
+      }
     },
     ...mapGetters(['teamClashesForItem', 'teamHistoriesForItem']),
   },
