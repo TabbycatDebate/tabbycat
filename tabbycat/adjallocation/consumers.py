@@ -221,7 +221,15 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 })
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_CREATE)
-
         content = self.reserialize_panels(EditPanelAdjsPanelSerializer, round)
-        msg = _("Succesfully created new preformed panels for this round.")
-        self.return_response(content, event['extra']['group_name'], msg, 'success')
+
+        if round.prev is None:
+            msg, level = _("Since this is the first round, the preformed panels aren't annotated "
+                    "with brackets and liveness."), 'warning'
+        elif not round.prev.debate_set.exists():
+            msg, level = _("The previous round's draw doesn't exist, so preformed panels can't be "
+                    "annotated with brackets and liveness."), 'warning'
+        else:
+            msg, level = _("Succesfully created new preformed panels for this round."), 'success'
+
+        self.return_response(content, event['extra']['group_name'], msg, level)

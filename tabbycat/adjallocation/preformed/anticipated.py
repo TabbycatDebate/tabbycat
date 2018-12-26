@@ -26,10 +26,12 @@ def calculate_anticipated_draw(round):
 
     nteamsindebate = 4 if round.tournament.pref('teams_in_debate') == 'bp' else 2
 
-    if round.prev is None:
+    if round.prev is None or not round.prev.debate_set.exists():
         # Special case: If this is the first round, everyone will be on zero.
         # Just take all teams, rounded down -- if this is done, it'll typically
-        # be done before availability is locked down.
+        # be done before availability is locked down. Also do this if the last
+        # round hasn't yet been drawn, since that's premature for bracket
+        # predictions.
         npanels = round.tournament.team_set.count() // nteamsindebate
         return [(0, 0, 0) for i in range(npanels)]
 
