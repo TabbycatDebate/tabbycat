@@ -33,9 +33,6 @@
             <a class="dropdown-item" href="#" @click="setSorting('importance')">
               Sort by Importance
             </a>
-            <a class="dropdown-item" href="#" @click="setSorting('liveness')">
-              Sort by Liveness
-            </a>
           </div>
         </div>
       </div>

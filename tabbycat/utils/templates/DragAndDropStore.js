@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { splitDebates, sortInterleaved } from './DragAndDropShardingMethods.js'
 
 Vue.use(Vuex)
 
@@ -27,6 +28,13 @@ export default new Vuex.Store({
     hoverType: null,
     // For sorting
     sortType: null,
+    // For sharding
+    sharding: {
+      split: null,
+      mix: null,
+      sort: null,
+      index: null,
+    },
   },
   mutations: {
     setupInitialData (state, initialData) {
@@ -92,6 +100,9 @@ export default new Vuex.Store({
     setSorting (state, type) {
       state.sortType = type
     },
+    setSharding (state, payload) {
+      state.sharding[payload.option] = payload.value
+    },
     setHoverPanel (state, payload) {
       state.hoverSubject = payload.subject
       state.hoverType = payload.type
@@ -129,16 +140,33 @@ export default new Vuex.Store({
       }
       return teams
     },
-    sortedDebatesOrPanels: state => {
-      let itemsArray = Object.values(state.debatesOrPanels)
-      if (state.sortType === null || state.sortType === 'bracket') {
-        return itemsArray.sort((a, b) => a.bracket - b.bracket).reverse()
-      } else if (state.sortType === 'importance') {
-        return itemsArray.sort((a, b) => a.importance - b.importance).reverse()
-      } else if (state.sortType === 'liveness') {
-        return itemsArray.sort((a, b) => a.liveness - b.liveness).reverse()
+    shardedDebatesOrPanels: state => {
+      let debatesArray = Object.values(state.debatesOrPanels)
+      if (state.sharding.index === null) {
+        return debatesArray
       }
-      return itemsArray
+      // Order debates
+      if (state.sharding.sort === 'Bracket') {
+        debatesArray.sort((a, b) => a.bracket - b.bracket).reverse()
+      } else if (state.sharding.sort === 'Importance') {
+        debatesArray.sort((a, b) => a.importance - b.importance).reverse()
+      }
+      // Re-order them to be evenly distributed single array if interleaved
+      if (state.sharding.mix === 'Interleaved') {
+        debatesArray = sortInterleaved(debatesArray, state.sharding.split)
+      }
+      // Split up into sub arrays based on nominated shard size / index
+      const shardedDebates = splitDebates(debatesArray, state.sharding.split)
+      return shardedDebates[state.sharding.index]
+    },
+    sortedDebatesOrPanels: (state, getters) => {
+      let debatesOrPanel = getters.shardedDebatesOrPanels
+      if (state.sortType === null || state.sortType === 'bracket') {
+        return debatesOrPanel.sort((a, b) => a.bracket - b.bracket).reverse()
+      } else if (state.sortType === 'importance') {
+        return debatesOrPanel.sort((a, b) => a.importance - b.importance).reverse()
+      }
+      return debatesOrPanel
     },
     allocatableItems: state => {
       return state.allocatableItems
