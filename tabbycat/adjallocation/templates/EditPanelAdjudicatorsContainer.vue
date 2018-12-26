@@ -37,7 +37,7 @@
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
       <div class="text-center lead mx-5 p-5" v-if="debatesOrPanelsCount === 0">
-        <p class="mx-5 lead px-5" v-text="gettext(createPanelsInline)"></p>
+        <p class="mx-5 lead mt-2 px-5" v-text="gettext(createPanelsInline)"></p>
       </div>
     </template>
 

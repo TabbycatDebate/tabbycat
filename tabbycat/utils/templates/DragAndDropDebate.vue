@@ -100,7 +100,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   .vc-bp-grid {
     display: inline-grid;
     grid-template-columns: 1fr 1fr;
