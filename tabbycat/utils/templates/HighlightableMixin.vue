@@ -60,7 +60,7 @@ export default {
       if ('score' in this.highlightData) {
         let rankCategories = Object.keys(this.highlights.rank.options)
         for (let rankCategory of rankCategories) {
-          if (this.highlightData.score > this.highlights.rank.options[rankCategory].fields.cutoff) {
+          if (this.highlightData.score >= this.highlights.rank.options[rankCategory].fields.cutoff) {
             return this.highlights.rank.options[rankCategory].css
           }
         }

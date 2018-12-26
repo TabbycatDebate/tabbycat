@@ -147,16 +147,28 @@ export default new Vuex.Store({
       return state.loading
     },
     teamClashesForItem: (state) => (id) => {
-      return state.extra.clashes.teams[id]
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.clashes.teams[id]
+      }
+      return false
     },
     adjudicatorClashesForItem: (state) => (id) => {
-      return state.extra.clashes.adjudicators[id]
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.clashes.adjudicators[id]
+      }
+      return false
     },
     teamHistoriesForItem: (state) => (id) => {
-      return state.extra.histories.teams[id]
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.histories.teams[id]
+      }
+      return false
     },
     adjudicatorHistoriesForItem: (state) => (id) => {
-      return state.extra.histories.adjudicators[id]
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.histories.adjudicators[id]
+      }
+      return false
     },
   },
   // Note actions are async

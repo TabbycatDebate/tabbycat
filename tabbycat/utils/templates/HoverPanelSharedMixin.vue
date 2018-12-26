@@ -28,10 +28,12 @@ export default {
         }
       }
       let teams = null
-      if ('team' in clashes) {
+      if ('team' in clashes && this.allTeams) {
         teams = []
         for (let clash of clashes.team) {
-          teams.push(this.makeItem(this.allTeams[clash.id].short_name, 'conflictable hover-team', ''))
+          if (clash.id in this.allTeams) {
+            teams.push(this.makeItem(this.allTeams[clash.id].short_name, 'conflictable hover-team', ''))
+          }
         }
       }
       return [institutions, teams, adjudicators]

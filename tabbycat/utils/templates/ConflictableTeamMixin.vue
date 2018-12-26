@@ -7,18 +7,24 @@ export default {
   computed: {
     hasClashConflict: function () {
       let debateAdjudicators = this.allDebatesOrPanels[this.debateId].adjudicators
-      for (let clash of this.teamClashesForItem(this.team.id).adjudicator) {
-        if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
-          return true
+      let clashes = this.teamClashesForItem(this.team.id)
+      if (clashes && 'adjudicator' in clashes) {
+        for (let clash of clashes.adjudicator) {
+          if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
+            return true
+          }
         }
       }
       return false
     },
     hasInstitutionalConflict: function () {
       let debateAdjudicators = this.allDebatesOrPanels[this.debateId].adjudicators
-      for (let clash of this.teamClashesForItem(this.team.id).institution) {
-        if (this.isInstitutionInPanel(clash.id, debateAdjudicators, null)) {
-          return true
+      let clashes = this.teamClashesForItem(this.team.id)
+      if (clashes && 'institution' in clashes) {
+        for (let clash of clashes.institution) {
+          if (this.isInstitutionInPanel(clash.id, debateAdjudicators, null)) {
+            return true
+          }
         }
       }
       return false
@@ -27,7 +33,7 @@ export default {
       let debateAdjudicators = this.allDebatesOrPanels[this.debateId].adjudicators
       let histories = this.teamHistoriesForItem(this.team.id)
       if (histories && 'adjudicator' in histories) {
-        for (let clash of this.teamHistoriesForItem(this.team.id).adjudicator) {
+        for (let clash of histories.adjudicator) {
           if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
             return clash.ago
           }

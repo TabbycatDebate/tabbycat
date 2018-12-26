@@ -1,15 +1,15 @@
 <template>
   <div class="d-flex border-bottom bg-white">
     <slot name="bracket">
-      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right"
-           data-toggle="tooltip" title="The debate's bracket">
-        <div class="align-self-center flex-fill text-center">
+      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right">
+        <div class="align-self-center flex-fill text-center"
+             data-toggle="tooltip" title="The debate's bracket">
           {{ debateOrPanel.bracket }}
         </div>
       </div>
-      <div v-else class="flex-2 flex-truncate d-flex border-right"
-           data-toggle="tooltip" title="The bracket range of the hypothetical debate">
-        <div class="align-self-center flex-fill text-center">
+      <div v-else class="flex-1-25 flex-truncate d-flex border-right">
+        <div class="align-self-center flex-fill text-center"
+             data-toggle="tooltip" title="The bracket range of the hypothetical debate">
           <span v-if="debateOrPanel.bracket_min !== debateOrPanel.bracket_max">
             {{ debateOrPanel.bracket_min }}<span class="text-muted">-</span>{{ debateOrPanel.bracket_max }}
           </span>
@@ -75,17 +75,23 @@ export default {
       return this.$store.state.tournament.sides
     },
     liveness: function () {
-      let liveness = 0
-      for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
-        let team = keyAndEntry[1]
-        for (let bc of team.break_categories) {
-          let category = this.highlights.break.options[bc]
-          if (team.points > category.fields.dead && team.points < category.fields.safe) {
-            liveness += 1
+      if ('liveness' in this.debateOrPanel) {
+        // For preformed panel screens liveness is attached to the panel itself
+        return this.debateOrPanel.liveness
+      } else {
+        // For allocation screens its a property of the teams that is then summed
+        let liveness = 0
+        for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
+          let team = keyAndEntry[1]
+          for (let bc of team.break_categories) {
+            let category = this.highlights.break.options[bc]
+            if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
+              liveness += 1
+            }
           }
         }
+        return liveness
       }
-      return liveness
     },
     ...mapState(['highlights']),
   },

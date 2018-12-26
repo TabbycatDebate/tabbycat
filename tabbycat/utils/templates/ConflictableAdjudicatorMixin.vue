@@ -38,19 +38,28 @@ export default {
     hasPanelClashConflict: function () {
       // adj-adj personal clashes
       let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
-      for (let clash of this.adjudicatorClashesForItem(this.adjudicator.id).adjudicator) {
-        if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
-          return true
+      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      if (clashes && 'adjudicator' in clashes) {
+        for (let clash of clashes.adjudicator) {
+          if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
+            return true
+          }
         }
       }
       return false
     },
     hasTeamClashConflict: function () {
       // adj-team personal clashes
+      if (!('teams' in this.allDebatesOrPanels[this.debateOrPanelId])) {
+        return false // For preformed panels
+      }
       let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
-      for (let clash of this.adjudicatorClashesForItem(this.adjudicator.id).team) {
-        if (this.isTeamInDebateTeams(clash.id, debateTeams)) {
-          return true
+      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      if (clashes && 'team' in clashes) {
+        for (let clash of clashes.team) {
+          if (this.isTeamInDebateTeams(clash.id, debateTeams)) {
+            return true
+          }
         }
       }
       return false
@@ -58,19 +67,28 @@ export default {
     hasPanelInstitutionalConflict: function () {
       // adj-adj institutional clashes
       let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
-      for (let clash of this.adjudicatorClashesForItem(this.adjudicator.id).institution) {
-        if (this.isInstitutionInPanel(clash.id, debateAdjudicators, this.adjudicator.id)) {
-          return true
+      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      if (clashes && 'institution' in clashes) {
+        for (let clash of clashes.institution) {
+          if (this.isInstitutionInPanel(clash.id, debateAdjudicators, this.adjudicator.id)) {
+            return true
+          }
         }
       }
       return false
     },
     hasTeamInstitutionalConflict: function () {
       // adj-team institutional conflicts
+      if (!('teams' in this.allDebatesOrPanels[this.debateOrPanelId])) {
+        return false // For preformed panels
+      }
       let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
-      for (let clash of this.adjudicatorClashesForItem(this.adjudicator.id).institution) {
-        if (this.isInstitutionInDebateTeams(clash.id, debateTeams)) {
-          return true
+      let clashes = this.adjudicatorClashesForItem(this.adjudicator.id)
+      if (clashes && 'institution' in clashes) {
+        for (let clash of clashes.institution) {
+          if (this.isInstitutionInDebateTeams(clash.id, debateTeams)) {
+            return true
+          }
         }
       }
       return false
@@ -78,19 +96,28 @@ export default {
     hasPanelHistoryConflict: function () {
       // adj-adj history conflicts
       let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
-      for (let clash of this.adjudicatorHistoriesForItem(this.adjudicator.id).adjudicator) {
-        if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
-          return clash.ago
+      let histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
+      if (histories && 'institution' in histories) {
+        for (let history of histories.adjudicator) {
+          if (this.isAdjudicatorInPanel(history.id, debateAdjudicators)) {
+            return history.ago
+          }
         }
       }
       return false
     },
     hasTeamHistoryConflict: function () {
       // adj-team history conflicts
+      if (!('teams' in this.allDebatesOrPanels[this.debateOrPanelId])) {
+        return false // For preformed panels
+      }
       let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
-      for (let clash of this.adjudicatorHistoriesForItem(this.adjudicator.id).team) {
-        if (this.isTeamInDebateTeams(clash.id, debateTeams)) {
-          return clash.ago
+      let histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
+      if (histories && 'team' in histories) {
+        for (let history of histories.team) {
+          if (this.isTeamInDebateTeams(history.id, debateTeams)) {
+            return history.ago
+          }
         }
       }
       return false

@@ -12,13 +12,14 @@ export default {
       let rankCategories = Object.keys(this.highlights.rank.options)
       let relevantCategory = null
       for (let rankCategory of rankCategories) {
-        if (this.subject.score > this.highlights.rank.options[rankCategory].fields.cutoff) {
+        if (this.subject.score >= this.highlights.rank.options[rankCategory].fields.cutoff) {
           relevantCategory = this.highlights.rank.options[rankCategory]
           break
         }
       }
       let css = 'rank-display ' + relevantCategory.css // Derived from highlight
-      let score = this.makeItem(`${this.subject.score} Feedback Score`, css, false)
+      let roundedScore = Number.parseFloat(this.subject.score).toFixed(1) // Round to 1DP
+      let score = this.makeItem(`${roundedScore} Feedback Score`, css, false)
       let rank = this.makeItem(`${relevantCategory.fields.name} Relevant Rank`, css, false)
       return [[score, rank]]
     },

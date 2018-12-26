@@ -57,7 +57,6 @@ def ranks_dictionary(tournament):
     score_min = tournament.pref('adj_min_score')
     score_max = tournament.pref('adj_max_score')
     score_range = score_max - score_min
-    print('score_range', score_range)
     return [
         {'pk': 'a+', 'fields': {'name': 'A+', 'cutoff': (score_range * 0.9) + score_min}},
         {'pk': 'a',  'fields': {'name': 'A', 'cutoff': (score_range * 0.8) + score_min}},
