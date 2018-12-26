@@ -66,5 +66,5 @@ def ranks_dictionary(tournament):
         {'pk': 'b-', 'fields': {'name': 'B-', 'cutoff': (score_range * 0.4) + score_min}},
         {'pk': 'c+', 'fields': {'name': 'C+', 'cutoff': (score_range * 0.3) + score_min}},
         {'pk': 'c',  'fields': {'name': 'C', 'cutoff': (score_range * 0.2) + score_min}},
-        {'pk': 'f',  'fields': {'name': 'F', 'cutoff': (score_range * 0.1) + score_min}},
+        {'pk': 'f',  'fields': {'name': 'F', 'cutoff': score_min}},
     ]

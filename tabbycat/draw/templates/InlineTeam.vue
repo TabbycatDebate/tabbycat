@@ -2,7 +2,7 @@
   <div class="text-truncate small py-1 px-2 inline-team flex-fill d-flex align-items-center hover-target"
        :class="[highlightsCSS, conflictsCSS]"
        @mouseenter="showHoverPanel(team, 'team')" @mouseleave="hideHoverPanel">
-    <div>
+    <div :class="[this.isLive ? '' : 'not-live']">
       {{ team.short_name }}
     </div>
     <div class="history-tooltip tooltip" v-if="hasHistoryConflict">
@@ -25,6 +25,17 @@ export default {
     highlightData: function () {
       return this.team
     },
+    isLive: function () {
+      for (let bc of this.team.break_categories) {
+        let category = this.highlights.break.options[bc]
+        if (category) {
+          if (this.team.points > category.fields.dead && this.team.points < category.fields.safe) {
+            return true
+          }
+        }
+      }
+      return false
+    },
   },
 }
 </script>
@@ -33,6 +44,9 @@ export default {
   .inline-team {
     height: 100%; /* Need to fill space */
     position: relative; /* Need to allow for the seen marker */
+  }
+  .not-live {
+    text-decoration: line-through;
   }
   .inline-team:hover {
     color: #663da0;

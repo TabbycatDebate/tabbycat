@@ -83,10 +83,12 @@ export default {
         let liveness = 0
         for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
           let team = keyAndEntry[1]
-          for (let bc of team.break_categories) {
-            let category = this.highlights.break.options[bc]
-            if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
-              liveness += 1
+          if (typeof team === 'object' && 'break_categories' in team) { // Team can be a number
+            for (let bc of team.break_categories) {
+              let category = this.highlights.break.options[bc]
+              if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
+                liveness += 1
+              }
             }
           }
         }

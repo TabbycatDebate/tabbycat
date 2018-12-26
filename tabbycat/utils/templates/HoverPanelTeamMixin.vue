@@ -16,17 +16,19 @@ export default {
       let pointsDetails = [this.makeItem(`On ${points} Points`, 'btn-outline-secondary', false)]
       for (let bc of this.subject.break_categories) {
         let category = this.highlights.break.options[bc]
-        let regionCSS = 'region-display ' + this.highlights.region.options[bc].css
-        let status = '?'
-        if (this.subject.points >= category.fields.safe) {
-          status = 'SAFE'
-        } else if (this.subject.points <= category.fields.dead) {
-          status = 'DEAD'
-        } else if (this.subject.points > category.fields.dead && this.subject.points < category.fields.safe) {
-          status = 'LIVE'
+        if (category) {
+          let breakCSS = 'break-display ' + category.css
+          let status = '?'
+          if (this.subject.points >= category.fields.safe) {
+            status = 'SAFE'
+          } else if (this.subject.points <= category.fields.dead) {
+            status = 'DEAD'
+          } else if (this.subject.points > category.fields.dead && this.subject.points < category.fields.safe) {
+            status = 'LIVE'
+          }
+          let item = this.makeItem(`${status} for ${category.fields.name}`, breakCSS, false)
+          pointsDetails.push(item)
         }
-        let item = this.makeItem(`${status} for ${category.fields.name}`, regionCSS, false)
-        pointsDetails.push(item)
       }
       return [pointsDetails]
     },
