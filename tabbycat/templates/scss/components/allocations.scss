@@ -23,13 +23,13 @@
     color: $primary;
   }
 
-  .not-live {
-    text-decoration: line-through;
-  }
-
-  .conflictable {
+  &.conflictable {
     border-width: 5px; // For conflicts
     border-style: solid;
+  }
+
+  .not-live {
+    text-decoration: line-through;
   }
 
   .history-tooltip {
@@ -51,13 +51,16 @@
     bottom: 1px;
     font-size: 12px;
   }
+
   .vc-title {
     line-height: 0.9;
     font-size: 1.1rem;
   }
+
   .vc-number {
     letter-spacing: -3px;
   }
+
   .vc-subtitle {
     font-weight: normal;
     font-size: 0.65rem;
@@ -78,7 +81,7 @@
 
   .alert {
     margin-top: 8px; /* Override default to tighten */
-    margin-bottom: 0px; /* Use bottom padding as per above */
+    margin-bottom: 0; /* Use bottom padding as per above */
   }
 }
 

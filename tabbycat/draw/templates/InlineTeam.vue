@@ -29,34 +29,17 @@ export default {
       for (let bc of this.team.break_categories) {
         let category = this.highlights.break.options[bc]
         if (category) {
-          if (this.team.points > category.fields.dead && this.team.points < category.fields.safe) {
+          if (this.team.points >= category.fields.safe) {
+            return true
+          } else if (this.team.points <= category.fields.dead) {
+            return false
+          } else if (this.team.points > category.fields.dead && this.team.points < category.fields.safe) {
             return true
           }
         }
       }
-      return false
+      return true // Default for pages which don't calculate it
     },
   },
 }
 </script>
-
-<style scoped>
-  .inline-team {
-    height: 100%; /* Need to fill space */
-    position: relative; /* Need to allow for the seen marker */
-  }
-  .not-live {
-    text-decoration: line-through;
-  }
-  .inline-team:hover {
-    color: #663da0;
-  }
-  .inline-team.conflictable {
-    border-width: 5px; /* For conflicts */
-    border-style: solid;
-  }
-  .inline-team .history-tooltip {
-    bottom: 3px;
-    font-size: 12px;
-  }
-</style>
