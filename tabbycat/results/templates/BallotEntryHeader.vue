@@ -62,7 +62,6 @@ export default {
   },
   methods: {
     setIron: function () {
-      console.log('set', this.hasIron)
       if (this.ironStatus === 'Yes') {
         this.$emit('set-duplicates')
       }
