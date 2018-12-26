@@ -1,4 +1,93 @@
 //------------------------------------------------------------------------------
+// V2 Screens (styled moved from inline vue styles as they don't load)
+//------------------------------------------------------------------------------
+
+// For DragAndDropDebate.vue
+.vc-bp-grid {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+// For DraggableAllocation.vue
+.vc-chair-flex {
+  flex: 0 0 168px; // Don't grow or shrink; remain at fixed width (must match style on chair)
+}
+
+// For InlineTeam.vue
+.inline-team {
+  height: 100%; // Need to fill space
+  position: relative; // Need to allow for the seen marker
+
+  &:hover {
+    color: $primary;
+  }
+
+  .not-live {
+    text-decoration: line-through;
+  }
+
+  .conflictable {
+    border-width: 5px; // For conflicts
+    border-style: solid;
+  }
+
+  .history-tooltip {
+    bottom: 3px;
+    font-size: 12px;
+  }
+}
+
+// AutoSaveCounter.vue
+.vc-auto-save {
+  min-width: 70px; /* Ensure no resize on save */
+}
+
+// DraggableItem.vue
+.vue-draggable {
+  position: relative; /* For the position of the tooltip */
+
+  .history-tooltip {
+    bottom: 1px;
+    font-size: 12px;
+  }
+  .vc-title {
+    line-height: 0.9;
+    font-size: 1.1rem;
+  }
+  .vc-number {
+    letter-spacing: -3px;
+  }
+  .vc-subtitle {
+    font-weight: normal;
+    font-size: 0.65rem;
+  }
+}
+
+// DragAndDropUnallocatedItems.vue
+.vc-resize-handler:hover {
+  cursor: ns-resize;
+}
+
+// DragAndDropLayout.vue
+.vc-header {
+  min-height: 118px; /* Need to accomodate messages without resizing vertically */
+  margin: 0 -7px; /* Stretch to meet full window width */
+  padding-top: 52px; /* Push down notifications below toolbar */
+  padding-bottom: 8px; /* Push down notifications below toolbar */
+
+  .alert {
+    margin-top: 8px; /* Override default to tighten */
+    margin-bottom: 0px; /* Use bottom padding as per above */
+  }
+}
+
+.vc-debates-container {
+  padding-bottom: 420px; /* Need to ensure unallocated doesn't overlap; matches its max height */
+  margin: 0 -15px; /* Remove the container padding added from base layout */
+}
+
+//------------------------------------------------------------------------------
 // General Layout
 //------------------------------------------------------------------------------
 

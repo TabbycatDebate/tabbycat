@@ -148,9 +148,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-  .vc-resize-handler:hover {
-    cursor: ns-resize;
-  }
-</style>

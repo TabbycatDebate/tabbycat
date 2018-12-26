@@ -28,9 +28,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-  .btn-xs-text {
-    font-size: 12px; /* Need to be extra small and can't override the btn style*/
-  }
-</style>

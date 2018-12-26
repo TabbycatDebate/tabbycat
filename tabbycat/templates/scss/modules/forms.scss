@@ -7,6 +7,11 @@
   margin-top: -2.5px;
 }
 
+// HoverPanelGroup.vue
+.btn-xs-text {
+  font-size: 12px; /* Need to be extra small and can't override the btn style*/
+}
+
 // Fix bad inheritance
 .list-group-item .btn .feather {
   margin-right: 0;

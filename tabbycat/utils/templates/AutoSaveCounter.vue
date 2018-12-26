@@ -55,9 +55,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-  .vc-auto-save {
-    min-width: 70px; /* Ensure no resize on save */
-  }
-</style>

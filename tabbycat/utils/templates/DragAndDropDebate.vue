@@ -99,11 +99,3 @@ export default {
   },
 }
 </script>
-
-<style>
-  .vc-bp-grid {
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-  }
-</style>

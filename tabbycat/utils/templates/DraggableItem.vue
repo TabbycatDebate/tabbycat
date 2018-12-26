@@ -38,24 +38,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-  .vue-draggable {
-    position: relative; /* For the position of the tooltip */
-  }
-  .vue-draggable .history-tooltip {
-    bottom: 1px;
-    font-size: 12px;
-  }
-  .vc-title {
-    line-height: 0.9;
-    font-size: 1.1rem;
-  }
-  .vc-number {
-    letter-spacing: -3px;
-  }
-  .vc-subtitle {
-    font-weight: normal;
-    font-size: 0.65rem;
-  }
-</style>

@@ -77,9 +77,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-  .vc-chair-flex {
-    flex: 0 0 168px; /* Don't grow or shrink; remain at fixed width (must match style on chair) */
-  }
-</style>

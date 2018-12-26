@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Checkins Statis
+// Checkins Status
 //------------------------------------------------------------------------------
 
 .animated-list-enter-active {
@@ -14,6 +14,22 @@
 .animated-list-leave-to /* .list-leave-active below version 2.1.8 */ {
   transform: translateX(10px);
   opacity: 0;
+}
+
+//------------------------------------------------------------------------------
+// Results Entry
+//------------------------------------------------------------------------------
+
+// BallotsCell.vue
+.ballot-link {
+  white-space: nowrap;
+  padding: 3px 0;
+  display: block;
+}
+
+.ballot-info {
+  margin-top: -4px; /* Tighten spacing to subhead */
+  display: block;
 }
 
 //------------------------------------------------------------------------------
