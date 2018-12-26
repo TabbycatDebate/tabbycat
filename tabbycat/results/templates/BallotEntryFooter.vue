@@ -12,7 +12,7 @@
           <div class="col-lg-2 pt-1">
             <div class="form-check form-check-inline">
               <input type="checkbox" id="shadowConfirmed" tabindex="17" class="form-check-input"
-                     @change="setConfirmed(discarded)" v-model="confirmed">
+                     @change="setConfirmed(confirmed)" v-model="confirmed">
               <label class="form-check-label pt-0" for="shadowConfirmed">Confirmed</label>
             </div>
           </div>
@@ -34,7 +34,6 @@
       <div v-if="isAdmin" class="list-group-item">
         <select v-model="status" @change="setStatus(status)" tabindex="19" class="form-control">
           <option value="N">none</option>
-          <option value="P">postponed</option>
           <option value="D">draft</option>
           <option value="C">confirmed</option>
         </select>

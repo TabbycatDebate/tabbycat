@@ -38,7 +38,7 @@
               data-name="{% team_name_for_data_entry team.team use_team_code_names %}">
           {% for position in team.speakers %}
 
-            <div data-type="speaker" data-position="{{ position.name }}" hidden>
+            <div hidden data-type="speaker" data-position="{{ position.name }}" >
               {{ position.speaker }}
               {{ position.ghost }}
               {{ position.ghost.label_tag }}
@@ -71,14 +71,16 @@
 
   {% endfor %}
 
-  {% if new and not pref.disable_ballot_confirms %}
-    {# After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. #}
-    <input hidden id="id_debate_result_status" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
-    <input hidden id="id_confirmed" name="confirmed" value="False" />
-  {% else %}
-    <input hidden id="id_debate_result_status" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
-    <input hidden id="id_confirmed" name="confirmed" value="True" />
-  {% endif %}
-  <input hidden id="id_discarded" name="discarded" value="False" />
+  <div hidden>
+    {% if new and not pref.disable_ballot_confirms %}
+      {# After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. #}
+      result: <input id="id_debate_result_status" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
+      confirmed: <input id="id_confirmed" name="confirmed" value="False" />
+    {% else %}
+      result: <input id="id_debate_result_status" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
+      confirmed: <input id="id_confirmed" name="confirmed" value="True" />
+    {% endif %}
+    discarded: <input id="id_discarded" name="discarded" value="False" />
+  </div>
 
 {% endblock content %}
