@@ -81,7 +81,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
         for n in notifications:
             emails = n.sentmessagerecord_set.all()
 
-            subtitle = n.round.name if n.round is not None else _("@ %s") % n.timestamp
+            subtitle = n.round.name if n.round is not None else _("@ %s") % timezone.localtime(n.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
             table = TabbycatTableBuilder(view=self, title=n.get_event_display(), subtitle=subtitle)
 
             # Create arrays for columns
