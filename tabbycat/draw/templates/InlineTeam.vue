@@ -1,5 +1,5 @@
 <template>
-  <div class="text-truncate small py-1 px-2 inline-team flex-fill d-flex align-items-center"
+  <div class="text-truncate small py-1 px-2 inline-team flex-fill d-flex align-items-center hover-target"
        :class="[highlightsCSS, conflictsCSS]"
        @mouseenter="showHoverPanel(team, 'team')" @mouseleave="hideHoverPanel">
     <div>
@@ -33,6 +33,9 @@ export default {
   .inline-team {
     height: 100%; /* Need to fill space */
     position: relative; /* Need to allow for the seen marker */
+  }
+  .inline-team:hover {
+    color: #663da0;
   }
   .inline-team.conflictable {
     border-width: 5px; /* For conflicts */
