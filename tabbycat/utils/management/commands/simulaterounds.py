@@ -30,7 +30,6 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))
         DrawManager(round).create()
-        allocate_venues(round)
         round.draw_status = Round.STATUS_CONFIRMED
         round.save()
 
@@ -40,6 +39,8 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         else:
             allocator_class = ConsensusHungarianAllocator
         legacy_allocate_adjudicators(round, allocator_class)
+
+        allocate_venues(round)
 
         self.stdout.write("Generating results for round '{}'...".format(round.name))
         add_results_to_round(round, **self.result_kwargs(options))
