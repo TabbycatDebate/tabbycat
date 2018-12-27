@@ -11,10 +11,10 @@
           <auto-save-counter></auto-save-counter>
           <slot name="extra-actions"></slot>
           <button v-if="prioritise" @click="$emit('show-prioritise')"
-                  :class="['btn btn-outline-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  :class="['btn btn-outline-primary', count > 0 ? '' : 'disabled btn-no-hover']"
                   v-text="gettext('Prioritise')"></button>
           <button v-if="allocate" @click="$emit('show-allocate')"
-                  :class="['btn btn-outline-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  :class="['btn btn-outline-primary', count > 0 ? '' : 'disabled btn-no-hover']"
                   v-text="gettext('Allocate')"></button>
           <button v-if="shard" @click="$emit('show-shard')"
                   :class="['btn ', count > 0 ? '' : 'disabled btn-no-hover',

@@ -1,6 +1,7 @@
 <script>
 // Note parent component can pass the handledrop function; i.e. @handledrop="handledrop"
 // Note the kebab case — is required by vue
+import { mapMutations } from 'vuex'
 
 export default {
   props: {
@@ -26,6 +27,10 @@ export default {
     },
   },
   methods: {
+    hideHovers: function () {
+      this.unsetHoverPanel()
+      this.unsetHoverConflicts()
+    },
     dragEnter: function (event) {
       this.dragCounter += 1
       this.aboutToDrop = true
@@ -35,6 +40,10 @@ export default {
       if (this.dragCounter === 0) {
         this.aboutToDrop = false
       }
+    },
+    dragEnd: function () {
+      // When dropped there is no event fired that would normally dismiss hover panels or conflicts
+      this.hideHovers()
     },
     drop: function (event) {
       // Firefox needs to prevent original actions
@@ -48,7 +57,9 @@ export default {
       // Send data to parent's handler method (after deserialising it)
       const dragPayload = JSON.parse(event.dataTransfer.getData('text'))
       this['handleDrop'](dragPayload, this.dropContext) // Call page-specific method handler passed down
+      this.hideHovers()
     },
+    ...mapMutations(['unsetHoverPanel', 'unsetHoverConflicts']),
   },
 }
 </script>
