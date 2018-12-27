@@ -28,8 +28,8 @@ urlpatterns = [
             views.OldPublicNewBallotSetByRandomisedUrlView.as_view(),
             name='results-public-ballotset-new-randomised'),
         path('<int:round_seq>/view/',
-            views.OldPrivateUrlBallotScoresheetView.as_view(),
-            name='old-results-privateurl-scoresheet-view'),
+            views.PrivateUrlBallotScoresheetView.as_view(),
+            name='results-privateurl-scoresheet-view'),
     ])),
 
     path('added/',
