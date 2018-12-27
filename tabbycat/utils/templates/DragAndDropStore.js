@@ -157,11 +157,14 @@ export default new Vuex.Store({
         return debatesArray
       }
       // Order debates
+      let sortKey = 'bracket' // Default
       if (state.sharding.sort === 'Bracket') {
-        debatesArray.sort((a, b) => a.bracket - b.bracket).reverse()
+        sortKey = 'bracket_min' in debatesArray[0] ? 'bracket_min' : 'bracket'
       } else if (state.sharding.sort === 'Importance') {
-        debatesArray.sort((a, b) => a.importance - b.importance).reverse()
+        sortKey = 'importance'
       }
+      debatesArray.sort((a, b) => a[sortKey] - b[sortKey]).reverse()
+
       // Re-order them to be evenly distributed single array if interleaved
       if (state.sharding.mix === 'Interleaved') {
         debatesArray = sortInterleaved(debatesArray, state.sharding.split)
@@ -172,8 +175,10 @@ export default new Vuex.Store({
     },
     sortedDebatesOrPanels: (state, getters) => {
       let debatesOrPanel = getters.shardedDebatesOrPanels
+      let sortKey = 'bracket' // Default
       if (state.sortType === null || state.sortType === 'bracket') {
-        return debatesOrPanel.sort((a, b) => a.bracket - b.bracket).reverse()
+        sortKey = 'bracket_min' in debatesOrPanel[0] ? 'bracket_min' : 'bracket'
+        return debatesOrPanel.sort((a, b) => a[sortKey] - b[sortKey]).reverse()
       } else if (state.sortType === 'importance') {
         return debatesOrPanel.sort((a, b) => a.importance - b.importance).reverse()
       }
