@@ -153,7 +153,7 @@ export default new Vuex.Store({
     },
     shardedDebatesOrPanels: state => {
       let debatesArray = Object.values(state.debatesOrPanels)
-      if (state.sharding.index === null) {
+      if (state.sharding.index === null || debatesArray.length === 0) {
         return debatesArray
       }
       // Order debates
@@ -174,15 +174,17 @@ export default new Vuex.Store({
       return shardedDebates[state.sharding.index]
     },
     sortedDebatesOrPanels: (state, getters) => {
-      let debatesOrPanel = getters.shardedDebatesOrPanels
-      let sortKey = 'bracket' // Default
+      let debatesOrPanels = getters.shardedDebatesOrPanels
       if (state.sortType === null || state.sortType === 'bracket') {
-        sortKey = 'bracket_min' in debatesOrPanel[0] ? 'bracket_min' : 'bracket'
-        return debatesOrPanel.sort((a, b) => a[sortKey] - b[sortKey]).reverse()
+        if (debatesOrPanels.length > 0 && 'bracket_min' in debatesOrPanels[0]) {
+          return debatesOrPanels.sort((a, b) => a.bracket_min - b.bracket_min).reverse()
+        } else {
+          return debatesOrPanels.sort((a, b) => a.bracket - b.bracket).reverse()
+        }
       } else if (state.sortType === 'importance') {
-        return debatesOrPanel.sort((a, b) => a.importance - b.importance).reverse()
+        return debatesOrPanels.sort((a, b) => a.importance - b.importance).reverse()
       }
-      return debatesOrPanel
+      return debatesOrPanels
     },
     allocatableItems: state => {
       return state.allocatableItems
