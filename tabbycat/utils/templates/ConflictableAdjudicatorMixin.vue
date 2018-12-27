@@ -97,14 +97,21 @@ export default {
       // adj-adj history conflicts
       let debateAdjudicators = this.allDebatesOrPanels[this.debateOrPanelId].adjudicators
       let histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
-      if (histories && 'institution' in histories) {
+      let smallestAgo = 99
+      if (histories && 'adjudicator' in histories) {
         for (let history of histories.adjudicator) {
           if (this.isAdjudicatorInPanel(history.id, debateAdjudicators)) {
-            return history.ago
+            if (history.ago < smallestAgo) {
+              smallestAgo = history.ago // Want to ensure we show the most recent clash
+            }
           }
         }
       }
-      return false
+      if (smallestAgo === 99) {
+        return false
+      } else {
+        return smallestAgo
+      }
     },
     hasTeamHistoryConflict: function () {
       // adj-team history conflicts

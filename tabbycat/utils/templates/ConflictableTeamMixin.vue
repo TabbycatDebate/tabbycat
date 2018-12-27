@@ -32,14 +32,21 @@ export default {
     hasHistoryConflict: function () {
       let debateAdjudicators = this.allDebatesOrPanels[this.debateId].adjudicators
       let histories = this.teamHistoriesForItem(this.team.id)
+      let smallestAgo = 99
       if (histories && 'adjudicator' in histories) {
         for (let clash of histories.adjudicator) {
           if (this.isAdjudicatorInPanel(clash.id, debateAdjudicators)) {
-            return clash.ago
+            if (clash.ago < smallestAgo) {
+              smallestAgo = clash.ago // Want to ensure we show the most recent clash
+            }
           }
         }
       }
-      return false
+      if (smallestAgo === 99) {
+        return false
+      } else {
+        return smallestAgo
+      }
     },
     ...mapGetters(['allDebatesOrPanels']),
   },

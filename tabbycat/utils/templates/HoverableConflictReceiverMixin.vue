@@ -59,11 +59,14 @@ export default {
         return false // This is called by template directly; hence the need to check for null
       }
       let sourceHistories = this.currentHoverHistories
+      let smallestAgo = 99
       // Hovered over an adj; highlight a team
       if ('team' in sourceHistories && this.clashableType === 'team') {
         for (const sourceHistory of sourceHistories.team) {
           if (sourceHistory.id === this.clashableID) {
-            return sourceHistory.ago
+            if (sourceHistory.ago < smallestAgo) {
+              smallestAgo = sourceHistory.ago // Want to ensure we show the most recent clash
+            }
           }
         }
       }
@@ -71,11 +74,17 @@ export default {
       if ('adjudicator' in sourceHistories && this.clashableType === 'adjudicator') {
         for (const sourceHistory of sourceHistories.adjudicator) {
           if (sourceHistory.id === this.clashableID) {
-            return sourceHistory.ago
+            if (sourceHistory.ago < smallestAgo) {
+              smallestAgo = sourceHistory.ago // Want to ensure we show the most recent clash
+            }
           }
         }
       }
-      return false
+      if (smallestAgo === 99) {
+        return false
+      } else {
+        return smallestAgo
+      }
     },
     hoverConflictsCSS: function () {
       if (this.currentHoverClashes === null && this.currentHoverHistories === null) {

@@ -9,6 +9,7 @@
 
   &.hover-histories-1-ago {
     @include hover-highlights(darken($conflict-history-base, 20%));
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
@@ -16,6 +17,7 @@
 
   &.hover-histories-2-ago {
     @include hover-highlights(lighten($conflict-history-base, 0%));
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
@@ -23,6 +25,7 @@
 
   &.hover-histories-3-ago {
     @include hover-highlights(lighten($conflict-history-base, 15%));
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
@@ -30,6 +33,7 @@
 
   &.hover-histories-4-ago {
     @include hover-highlights(lighten($conflict-history-base, 25%));
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
