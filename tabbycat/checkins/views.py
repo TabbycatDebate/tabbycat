@@ -46,13 +46,11 @@ class BaseCheckInStatusView(TournamentMixin, TemplateView):
     for_admin = True
 
     def get_context_data(self, **kwargs):
-
-        kwargs["for_admin"] = json.dumps(self.for_admin)
-
         events = get_unexpired_checkins(self.tournament, self.window_preference)
         kwargs["events"] = json.dumps([e.serialize() for e in events])
         if self.scan_view:
             kwargs["scan_url"] = self.tournament.slug + '/checkins/'
+        kwargs["for_admin"] = self.for_admin
         return super().get_context_data(**kwargs)
 
 

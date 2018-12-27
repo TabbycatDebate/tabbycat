@@ -58,7 +58,7 @@
     </div>
 
     <transition-group :name="mainTransitions" tag="div">
-      <div v-for="(entities, grouper) in entitiesBySortingSetting" :key="grouper" class="card mt-1">
+      <div v-for="(entities, grouper) in entitiesBySortingSetting" :key="entities[0].id" class="card mt-1">
 
         <div class="card-body p-0">
           <div class="row no-gutters">
