@@ -21,6 +21,7 @@ export default {
     hasHoverClashConflict: function () {
       // These are many to one; no need to lookup the target's conflicts as can be inferred via ID
       let sourceClashes = this.currentHoverClashes
+      if (!sourceClashes) { return false }
       // Hovered over an adj; highlight a team
       if ('team' in sourceClashes && this.clashableType === 'team') {
         for (const sourceClash of sourceClashes.team) {
@@ -41,6 +42,7 @@ export default {
     },
     hasHoverInstitutionalConflict: function () {
       let sourceClashes = this.currentHoverClashes
+      if (!sourceClashes) { return false }
       let itemClashes = this.getConflictsForType('clash')
       if ('institution' in sourceClashes && 'institution' in itemClashes) {
         for (const sourceClash of sourceClashes.institution) {

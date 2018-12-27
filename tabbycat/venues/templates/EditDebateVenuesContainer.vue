@@ -86,9 +86,9 @@ export default {
       if (fromDebate !== null) { // Not moving FROM Unused
         fromDebate.venue = null
       }
-      if (toDebate !== null) { // Not moving TO Unused
-        if (toDebate.venue !== null) { // Swapping
-          fromDebate.venue = toDebate.venue
+      if (toDebate !== null) { // Moving to an actual debate
+        if (toDebate.venue !== null && fromDebate !== null) {
+          fromDebate.venue = toDebate.venue // Straight swap between two debates
         }
         toDebate.venue = dragData.item
       }
