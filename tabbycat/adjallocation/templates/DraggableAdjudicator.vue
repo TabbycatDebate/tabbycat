@@ -1,8 +1,9 @@
 <template>
   <draggable-item :drag-payload="dragPayload"
-    :enable-hover="true" :hover-item="hoverableData" :hover-type="hoverableType"
+    :hover-panel="true" :hover-panel-item="adjudicator" :hover-panel-type="'adjudicator'"
+    :hover-conflicts="true" :hover-conflicts-item="adjudicator.id" :hover-conflicts-type="'adjudicator'"
     :class="[{'border-light': isTrainee && conflictsCSS === '',
-              'bg-dark text-white': !item.available }, highlightsCSS, conflictsCSS]">
+              'bg-dark text-white': !item.available }, highlightsCSS, conflictsCSS, hoverConflictsCSS]">
 
     <span slot="number">
       <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
@@ -13,9 +14,9 @@
     <span slot="subtitle">
       {{ institutionCode }}
     </span>
-    <div slot="tooltip" class="history-tooltip tooltip" v-if="hasHistoryConflict">
-      <div :class="['tooltip-inner conflictable', 'hover-histories-' + hasHistoryConflict + '-ago']">
-        {{ hasHistoryConflict }} ago
+    <div slot="tooltip" class="history-tooltip tooltip" v-if="hasHistory">
+      <div :class="['tooltip-inner conflictable', 'hover-histories-' + hasHistory + '-ago']">
+        {{ hasHistory }} ago
       </div>
     </div>
 
@@ -25,25 +26,33 @@
 <script>
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
 import ConflictableAdjudicatorMixin from '../../utils/templates/ConflictableAdjudicatorMixin.vue'
+import HoverableConflictReceiverMixin from '../../utils/templates/HoverableConflictReceiverMixin.vue'
 
 export default {
-  mixins: [HoverablePanelMixin, HighlightableMixin, ConflictableAdjudicatorMixin],
+  mixins: [HighlightableMixin, ConflictableAdjudicatorMixin, HoverableConflictReceiverMixin],
   components: { DraggableItem },
   props: { item: Object, dragPayload: Object, isTrainee: false, debateOrPanelId: Number },
   computed: {
     highlightData: function () {
       return this.adjudicator
     },
-    hoverableData: function () {
-      return this.adjudicator
-    },
-    hoverableType: function () {
-      return 'adjudicator'
-    },
     adjudicator: function () {
       return this.item
+    },
+    clashableType: function () {
+      return 'adjudicator'
+    },
+    clashableID: function () {
+      return this.item.id
+    },
+    hasHistory: function () {
+      if (this.hasHoverHistoryConflict) {
+        return this.hasHoverHistoryConflict
+      } else if (this.hasHistoryConflict) {
+        return this.hasHistoryConflict
+      }
+      return false
     },
     institutionCode: function () {
       if (this.adjudicator.institution) {

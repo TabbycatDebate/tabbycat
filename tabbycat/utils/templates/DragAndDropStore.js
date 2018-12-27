@@ -26,6 +26,9 @@ export default new Vuex.Store({
     // For hover panels
     hoverSubject: null,
     hoverType: null,
+    // For hover conflicts
+    hoverClashes: null,
+    hoverHistories: null,
     // For sorting
     sortType: null,
     // For sharding
@@ -110,6 +113,14 @@ export default new Vuex.Store({
     unsetHoverPanel (state) {
       state.hoverSubject = null
       state.hoverType = null
+    },
+    setHoverConflicts (state, payload) {
+      state.hoverClashes = payload.clashes
+      state.hoverHistories = payload.histories
+    },
+    unsetHoverConflicts (state) {
+      state.hoverClashes = null
+      state.hoverHistories = null
     },
     updateSaveCounter (state) {
       state.lastSaved = new Date()
@@ -197,6 +208,12 @@ export default new Vuex.Store({
         return state.extra.histories.adjudicators[id]
       }
       return false
+    },
+    currentHoverClashes: (state) => {
+      return state.hoverClashes
+    },
+    currentHoverHistories: (state) => {
+      return state.hoverHistories
     },
   },
   // Note actions are async

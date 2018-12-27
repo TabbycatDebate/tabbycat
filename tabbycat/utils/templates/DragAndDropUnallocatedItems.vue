@@ -59,7 +59,7 @@ export default {
       },
       height: null,
       minHeight: 45,
-      maxHeight: 400,
+      maxHeight: 300,
       itemContainerHeight: null,
     }
   },

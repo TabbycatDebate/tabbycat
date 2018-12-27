@@ -18,9 +18,11 @@
 .inline-team {
   height: 100%; // Need to fill space
   position: relative; // Need to allow for the seen marker
+  border: 5px solid #fff; // Placeholder; so doesn't resize with highlights
 
-  &:hover {
-    color: $primary;
+  &:hover { // Need to override conflict hovers
+    background: $purple !important;
+    border-color: darken($purple, 7.5%) !important;
   }
 
   &.conflictable {

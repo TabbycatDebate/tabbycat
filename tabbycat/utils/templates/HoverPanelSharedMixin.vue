@@ -77,7 +77,7 @@ export default {
       let institutionDetails = []
       if (subject.institution) {
         let institution = this.allInstitutions[this.subject.institution]
-        if (institution.region) {
+        if (institution.region && this.highlights.region) {
           let regionName = this.highlights.region.options[institution.region].fields.name
           let name = institution.code + ` (${!regionName ? 'No Region' : regionName})`
           let css = 'region-display ' + this.highlights.region.options[institution.region].css
