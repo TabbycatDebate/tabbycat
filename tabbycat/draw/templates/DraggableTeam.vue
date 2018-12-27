@@ -16,10 +16,10 @@
 <script>
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import HoverableMixin from '../../utils/templates/HoverableMixin.vue'
+import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
 
 export default {
-  mixins: [HoverableMixin, HighlightableMixin],
+  mixins: [HoverablePanelMixin, HighlightableMixin],
   components: { DraggableItem },
   props: { item: Object, dragPayload: Object, isTrainee: false },
   computed: {

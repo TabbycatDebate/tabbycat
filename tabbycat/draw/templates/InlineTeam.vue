@@ -15,11 +15,11 @@
 
 <script>
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import HoverableMixin from '../../utils/templates/HoverableMixin.vue'
+import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
 import ConflictableTeamMixin from '../../utils/templates/ConflictableTeamMixin.vue'
 
 export default {
-  mixins: [HighlightableMixin, HoverableMixin, ConflictableTeamMixin],
+  mixins: [HighlightableMixin, HoverablePanelMixin, ConflictableTeamMixin],
   props: { team: Object, debateId: Number },
   computed: {
     highlightData: function () {

@@ -26,10 +26,10 @@
 
 <script>
 import DraggableMixin from './DraggableMixin.vue'
-import HoverableMixin from './HoverableMixin.vue'
+import HoverablePanelMixin from './HoverablePanelMixin.vue'
 
 export default {
-  mixins: [DraggableMixin, HoverableMixin],
+  mixins: [DraggableMixin, HoverablePanelMixin],
   // Passed down from the parent because the trigger for the show/hide needs to be on this element
   props: {
     enableHover: false,

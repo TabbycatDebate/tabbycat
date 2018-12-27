@@ -25,11 +25,11 @@
 <script>
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import HoverableMixin from '../../utils/templates/HoverableMixin.vue'
+import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
 import ConflictableAdjudicatorMixin from '../../utils/templates/ConflictableAdjudicatorMixin.vue'
 
 export default {
-  mixins: [HoverableMixin, HighlightableMixin, ConflictableAdjudicatorMixin],
+  mixins: [HoverablePanelMixin, HighlightableMixin, ConflictableAdjudicatorMixin],
   components: { DraggableItem },
   props: { item: Object, dragPayload: Object, isTrainee: false, debateOrPanelId: Number },
   computed: {
