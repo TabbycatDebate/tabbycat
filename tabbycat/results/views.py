@@ -648,6 +648,7 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         kwargs['motion'] = ballot.motion
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
+        kwargs['url_key'] = self.kwargs.get('url_key')
         return super().get_context_data(**kwargs)
 
     def get_object(self):
