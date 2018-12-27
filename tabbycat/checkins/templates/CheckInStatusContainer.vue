@@ -290,6 +290,7 @@ export default {
       return `${this.clock(time.getHours())}:${this.clock(time.getMinutes())}`
     },
     getToolTipForEntity: function (entity) {
+      if (!this.forAdmin) return null
       return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
     },
     setListContext: function (metaKey, selectedKey, selectedValue) {

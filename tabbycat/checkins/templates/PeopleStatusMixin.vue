@@ -8,7 +8,7 @@ export default {
         All: true, Adjudicators: false, Debaters: false,
       },
       peopleSortByGroup: {
-        Institution: true, Name: false, Time: false,
+        Institution: !this.teamCodes, Name: this.teamCodes, Time: false,
       },
       speakerGroupings: {
         Speaker: false, Team: true,
