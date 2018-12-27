@@ -3,7 +3,8 @@
     :hover-panel="true" :hover-panel-item="adjudicator" :hover-panel-type="'adjudicator'"
     :hover-conflicts="true" :hover-conflicts-item="adjudicator.id" :hover-conflicts-type="'adjudicator'"
     :class="[{'border-light': isTrainee && conflictsCSS === '',
-              'bg-dark text-white': !item.available }, highlightsCSS, conflictsCSS, hoverConflictsCSS]">
+              'bg-dark text-white': !item.available || doubleAllocated },
+              highlightsCSS, conflictsCSS, hoverConflictsCSS]">
 
     <span slot="number">
       <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
@@ -45,6 +46,9 @@ export default {
     },
     clashableID: function () {
       return this.item.id
+    },
+    doubleAllocated: function () {
+      return this.$store.getters.duplicateAdjudicatorAllocations.includes(this.item.id)
     },
     hasHistory: function () {
       if (this.hasHoverHistoryConflict) {

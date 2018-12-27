@@ -46,7 +46,7 @@
         <template v-if="!currentHighlightKey">
           <slot name="default-highlights"></slot>
           <button class="btn btn-dark" v-text="gettext('Unavailable')" data-toggle="tooltip"
-                :title="('Has not been marked as available for this round.')"></button>
+                :title="('Has not been marked as available for this round or has been allocated twice.')"></button>
         </template>
         <template v-else>
           <button v-for="option in highlights[currentHighlightKey].options"

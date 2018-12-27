@@ -215,6 +215,23 @@ export default new Vuex.Store({
     currentHoverHistories: (state) => {
       return state.hoverHistories
     },
+    duplicateAdjudicatorAllocations: (state) => {
+      let allocatedIDs = []
+      let doubleAllocatedIDs = []
+      for (let debateOrPanelID in state.debatesOrPanels) {
+        const debate = state.debatesOrPanels[debateOrPanelID]
+        for (let position in debate.adjudicators) {
+          for (let adjudicatorID of debate.adjudicators[position]) {
+            if (allocatedIDs.includes(adjudicatorID)) {
+              doubleAllocatedIDs.push(adjudicatorID)
+            } else {
+              allocatedIDs.push(adjudicatorID)
+            }
+          }
+        }
+      }
+      return doubleAllocatedIDs
+    },
   },
   // Note actions are async
   actions: {
