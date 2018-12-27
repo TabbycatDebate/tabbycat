@@ -66,6 +66,7 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
 
         info['clashes'] = self.get_adjudicator_conflicts()
         info['histories'] = self.get_history_conflicts()
+        info['hasPreformedPanels'] = self.round.preformedpanel_set.exists()
         return info
 
     def get_serialised_allocatable_items(self):

@@ -36,6 +36,9 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
     def _apply_allocation_settings(self, round, settings):
         t = round.tournament
         for key, value in settings.items():
+            if key == "usePreformedPanels":
+                # Passing this here is much easier than splitting the function
+                continue # (Not actually a preference; just a toggle from Vue)
             # No way to force front-end to only accept floats/integers :(
             if isinstance(t.preferences[key], bool):
                 t.preferences[key] = bool(value)
@@ -59,7 +62,12 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return
 
-        if round.preformedpanel_set.exists():
+        if event['extra']['settings']['usePreformedPanels']:
+            if not round.preformedpanel_set.exists():
+                self.return_error(event['extra']['group_name'],
+                    _("There are not preformed panels available to allocate."))
+                return
+
             logger.info("Preformed panels exist, allocating panels to debates")
 
             debates = round.debate_set.all()
