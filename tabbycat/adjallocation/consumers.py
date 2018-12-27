@@ -82,12 +82,12 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             debates = round.debate_set.all()
             adjs = round.active_adjudicators.all()
-            if round.ballots_per_debate == 'per-adj':
-                allocator = VotingHungarianAllocator(debates, adjs, round)
-            else:
-                allocator = ConsensusHungarianAllocator(debates, adjs, round)
 
             try:
+                if round.ballots_per_debate == 'per-adj':
+                    allocator = VotingHungarianAllocator(debates, adjs, round)
+                else:
+                    allocator = ConsensusHungarianAllocator(debates, adjs, round)
                 allocation = allocator.allocate()
             except AdjudicatorAllocationError as e:
                 self.return_error(event['extra']['group_name'], str(e))
@@ -115,12 +115,13 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             return
 
         adjs = round.active_adjudicators.all()
-        if round.ballots_per_debate == 'per-adj':
-            allocator = VotingHungarianAllocator(panels, adjs, round)
-        else:
-            allocator = ConsensusHungarianAllocator(panels, adjs, round)
 
         try:
+            if round.ballots_per_debate == 'per-adj':
+                allocator = VotingHungarianAllocator(panels, adjs, round)
+            else:
+                allocator = ConsensusHungarianAllocator(panels, adjs, round)
+
             allocation = allocator.allocate()
         except AdjudicatorAllocationError as e:
             self.return_error(event['extra']['group_name'], str(e))
