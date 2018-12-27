@@ -575,8 +575,8 @@ class PostPublicBallotSetSubmissionURLView(TournamentMixin, TemplateView):
 # Other public views
 # ==============================================================================
 
-class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
-    """Public view showing the confirmed ballots for a debate as scoresheets."""
+class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TemplateView):
+    """Base Public view showing the ballots for a debate as scoresheets."""
 
     model = Debate
     public_page_preference = 'ballots_released'
@@ -588,6 +588,26 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
             return self.object.matchup_codes
         else:
             return self.object.matchup
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        error = self.check_permissions()
+        if error:
+            status, message = error
+            return self.response_class(
+                request=self.request,
+                template=['public_ballot_set_error.html'],
+                context={'message': message},
+                using=self.template_engine,
+                status=status,
+            )
+
+        return super().get(self, request, *args, **kwargs)
+
+
+class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
+    """Public view showing the confirmed ballots for a debate as scoresheets."""
 
     def check_permissions(self):
         debate = self.object
@@ -612,27 +632,23 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
         return super().get_context_data(**kwargs)
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
 
-        error = self.check_permissions()
-        if error:
-            status, message = error
-            return self.response_class(
-                request=self.request,
-                template=['public_ballot_set_error.html'],
-                context={'message': message},
-                using=self.template_engine,
-                status=status,
-            )
-
-        return super().get(self, request, *args, **kwargs)
-
-
-class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, PublicBallotScoresheetsView):
+class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
     def is_page_enabled(self, tournament):
         return True
+
+    def check_permissions(self):
+        if not self.object.ballotsubmission_set.filter(discarded=False).exists():
+            logger.warning("Refused public view of ballots for %s: no ballot", self.object)
+            return (404, _("There is no result yet for debate %s.") % self.matchup_description())
+
+    def get_context_data(self, **kwargs):
+        ballot = self.object.ballotsubmission_set.filter(discarded=False).order_by('version').last()
+        kwargs['motion'] = ballot.motion
+        kwargs['result'] = ballot.result
+        kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
+        return super().get_context_data(**kwargs)
 
     def get_object(self):
         d_adj = DebateAdjudicator.objects.select_related(
