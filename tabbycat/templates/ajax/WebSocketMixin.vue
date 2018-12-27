@@ -6,15 +6,13 @@
 // - a handleSocketReceive() function that will handle the different
 // sockets' messages as appropriate
 
-import _ from 'lodash'
 import { WebSocketBridge } from 'django-channels'
-
 import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
 
 export default {
   mixins: [ModalErrorMixin],
   data: function () {
-    return { bridges: {}, componentId: Math.floor(Math.random() * 10000) }
+    return { bridges: {}, didLoseConnection: false, componentId: Math.floor(Math.random() * 10000) }
   },
   created: function () {
     // Check if this is being run over HTTP(S); match the WS(S) procol
@@ -26,7 +24,7 @@ export default {
     const self = this
 
     // Setup each websocket connection
-    _.forEach(this.sockets, function (socketLabel) {
+    for (let socketLabel of this.sockets) {
       // Customise path per-socket
       const socketPath = self.getPathAdditions(path, socketLabel)
 
@@ -47,14 +45,16 @@ export default {
       // Logs
       webSocketBridge.socket.addEventListener('open', (() => {
         console.debug('Connected to WebSocket path:', socketPath)
+        self.dismissLostConnectionAlert()
       }).bind(socketPath, self))
       webSocketBridge.socket.addEventListener('close', (() => {
         console.debug('Disconnected to WebSocket path:', socketPath)
+        self.showLostConnectionAlert()
       }).bind(socketPath, self))
 
       // Set the data to contain the socket bridge so we can send to it
       self.$set(self.bridges, socketLabel, webSocketBridge)
-    })
+    }
   },
   methods: {
     getPathAdditions: function (path, socketLabel) {
@@ -84,6 +84,22 @@ export default {
       // console.log(`Sent payload ${JSON.stringify(payload)} to socket ${socketLabel}`)
       payload.component_id = this.componentId // Pass on originating Vue instance
       this.bridges[socketLabel].send(payload)
+    },
+    showLostConnectionAlert: function () {
+      this.didLoseConnection = true
+      let explanation = `This page maintains a live connection to the server. That connection has
+                         been lost. This page will attempt to reconnect and will update this message
+                         if it succeeds. You can dismiss this warning if needed, just be aware that
+                         you should not change data on this page until the connection resumes.`
+      this.showErrorAlert(explanation, null, 'Connection Lost', 'text-danger', true, true)
+    },
+    dismissLostConnectionAlert: function () {
+      if (this.didLoseConnection) { // Only show the modal when a connection is re-opened not opened
+        let explanation = `This page lost its connection to the server but has succesfully reopened
+                           it. Changes made to data on this page will now be saved. However, you may
+                           want to refresh the page to verify that earlier changes were saved.`
+        this.showErrorAlert(explanation, null, 'Connection Resumed', 'text-success', true, true)
+      }
     },
   },
 }
