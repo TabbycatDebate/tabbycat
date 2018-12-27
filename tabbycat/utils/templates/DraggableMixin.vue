@@ -8,6 +8,8 @@ export default {
   data: function () {
     return {
       isDragging: false,
+      scrollStop: false,
+      windowThresholds: 150, // Number of pixels to trigger scrolling
     }
   },
   computed: {
@@ -36,6 +38,24 @@ export default {
     },
     dragEnd: function (event) {
       this.isDragging = false
+      this.scrollStop = true
+    },
+    drag: function (event) {
+      // Setup the top and bottom of the windows as hover zones so we can scroll while dragging
+      this.scrollStop = true
+      if (event.clientY < this.windowThresholds) {
+        this.scrollStop = false
+        this.scrollPage(event.clientY < (this.windowThresholds / 3) ? -2 : -1) // Faster close to top
+      }
+      let windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      if (event.clientY > (windowHeight - this.windowThresholds)) {
+        this.scrollStop = false
+        this.scrollPage(event.clientY < (windowHeight - (this.windowThresholds / 3)) ? 1 : 2)
+      }
+    },
+    scrollPage: function (step) {
+      var scrollY = $(window).scrollTop()
+      $(window).scrollTop(scrollY + step)
     },
   },
 }

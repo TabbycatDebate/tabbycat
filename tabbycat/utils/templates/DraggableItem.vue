@@ -1,6 +1,6 @@
 <template>
 
-  <div draggable=true @dragstart="dragStart" @dragend="dragEnd"
+  <div draggable=true @drag="drag" @dragstart="dragStart" @dragend="dragEnd"
        :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]"
        @mouseenter="showHovers" @mouseleave="hideHovers">
 
