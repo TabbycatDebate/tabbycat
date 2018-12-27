@@ -33,9 +33,13 @@
           <div class="btn-group d-block" role="group">
             <button v-if="!split || !sort || !mix" disabled class="btn btn-secondary disabled"
                     v-text="gettext('Select a count, sort, and mix to open a shard')"></button>
-            <button v-else type="button" class="btn btn-success" @click="openShard(shard, index)"
-                    v-for="(shard, index) in shardOptions"
+            <button v-else type="button" v-for="(shard, shardIndex) in shardOptions"
+                    @click="openShard(shard, shardIndex)"
+                    :class="['btn btn-success', index === shardIndex ? 'active': '']"
                     v-text="gettext('Open') + ' ' + gettext(split) + ' ' + shard"></button>
+            <button v-if="index !== null" class="btn btn-danger"
+                    @click="closeShard()"
+                    v-text="gettext('Close Shard')"></button>
           </div>
 
         </div>
@@ -90,6 +94,9 @@ export default {
       }
       return null
     },
+    index () {
+      return this.$store.state.sharding.index
+    },
     split () {
       return this.$store.state.sharding.split
     },
@@ -106,6 +113,11 @@ export default {
       this.setSharding({ 'option': 'index', 'value': selectedIndex })
       $.fn.showAlert('success', `Opened shard ${this.split} ${shardIdentifier}
                                  (sorted by ${this.mix} using ${this.sort})`)
+    },
+    closeShard: function () {
+      this.resetModal()
+      this.setState('index', null)
+      $.fn.showAlert('success', `Closed shard`)
     },
     setState: function (key, value) {
       this.setSharding({ 'option': key, 'value': value })

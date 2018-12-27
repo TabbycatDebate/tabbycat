@@ -11,13 +11,14 @@
           <auto-save-counter></auto-save-counter>
           <slot name="extra-actions"></slot>
           <button v-if="prioritise" @click="$emit('show-prioritise')"
-                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  :class="['btn btn-outline-success', count > 0 ? '' : 'disabled btn-no-hover']"
                   v-text="gettext('Prioritise')"></button>
           <button v-if="allocate" @click="$emit('show-allocate')"
-                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']"
+                  :class="['btn btn-outline-success', count > 0 ? '' : 'disabled btn-no-hover']"
                   v-text="gettext('Allocate')"></button>
           <button v-if="shard" @click="$emit('show-shard')"
-                  :class="['btn btn-success', count > 0 ? '' : 'disabled btn-no-hover']" >
+                  :class="['btn ', count > 0 ? '' : 'disabled btn-no-hover',
+                                   shardingEnabled ? 'btn-primary' : 'btn-outline-primary']" >
             <i data-feather="server"></i>
           </button>
         </div>
@@ -82,9 +83,6 @@ export default {
       return title.charAt(0).toUpperCase() + title.substr(1)
     },
     ...mapMutations(['toggleHighlight', 'setSorting']),
-    startShard: function (event) {
-      window.alert('sharding')
-    },
   },
   computed: {
     currentHighlightKey: function () {
@@ -93,6 +91,9 @@ export default {
         return currentKey[0]
       }
       return false
+    },
+    shardingEnabled: function () {
+      return this.$store.state.sharding.index !== null
     },
     ...mapState(['highlights', 'extra']),
   },
