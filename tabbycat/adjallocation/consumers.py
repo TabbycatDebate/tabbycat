@@ -65,7 +65,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         if event['extra']['settings']['usePreformedPanels']:
             if not round.preformedpanel_set.exists():
                 self.return_error(event['extra']['group_name'],
-                    _("There are not preformed panels available to allocate."))
+                    _("There are no preformed panels available to allocate."))
                 return
 
             logger.info("Preformed panels exist, allocating panels to debates")
