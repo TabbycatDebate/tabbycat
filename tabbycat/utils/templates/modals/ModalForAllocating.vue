@@ -7,7 +7,7 @@
 
           <p class="lead" v-text="introText"></p>
 
-          <div v-if="extra.hasPreformedPanels && !notUsingPreformed && !forPanels">
+          <div v-if="!forPanels && extra.hasPreformedPanels && !notUsingPreformed">
             <p v-text="gettext(`You can automatically allocate adjudicators to debates by either
                                 assigning preformed panels or by using the standard
                                 auto-allocator method that places individual adjudicators.`)"></p>
@@ -18,7 +18,7 @@
                     v-text="gettext('Allocate Individual Adjudicators')"></button>
           </div>
 
-          <div v-if="notUsingPreformed || forPanels">
+          <div v-if="notUsingPreformed || forPanels || !extra.hasPreformedPanels">
 
             <p v-text="gettext(`The allocator creates stronger panels for debates that were given
                                 higher importances. If importances have not been set it will allocate
