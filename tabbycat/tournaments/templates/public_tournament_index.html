@@ -143,7 +143,7 @@
       {% include "components/item-action.html" with icon="shuffle" %}
     {% endif %}
 
-    {% if pref.public_team_standings and results_available and not pref.team_tab_released %}
+    {% if pref.public_team_standings and current_round.prev and not pref.team_tab_released %}
       {% trans "Team Standings" as text %}
       {% tournamenturl 'standings-public-teams-current' as url %}
       {% include "components/item-action.html" with icon="bar-chart-2" %}
