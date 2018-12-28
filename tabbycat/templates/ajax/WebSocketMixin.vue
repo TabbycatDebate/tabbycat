@@ -33,7 +33,7 @@ export default {
       webSocketBridge.connect(socketPath, undefined, {
         minReconnectionDelay: 5 * 1000, // Wait 5s inbetween attempts
         maxReconnectionDelay: 240 * 1000, // Cap waits at 4m inbetween attempts
-        reconnectionDelayGrowFactor: 2, // Wait extra 10s inbetween
+        reconnectionDelayGrowFactor: 1.5, // Wait extra 7.5s inbetween
         connectionTimeout: 10 * 1000,
       })
 
@@ -46,6 +46,9 @@ export default {
       webSocketBridge.socket.addEventListener('open', (() => {
         self.logConnectionInfo('connected to', socketPath)
         self.dismissLostConnectionAlert()
+      }).bind(socketPath, self))
+      webSocketBridge.socket.addEventListener('error', (() => {
+        self.logConnectionInfo('error in', socketPath)
       }).bind(socketPath, self))
       webSocketBridge.socket.addEventListener('close', (() => {
         self.lostConnections += 1
