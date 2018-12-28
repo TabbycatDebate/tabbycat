@@ -58,14 +58,17 @@ http {
     # This is needed to maintain the websocket connection; otherwise
     # it closes in the limit defined by keepalive_timeout
     # DOCS: Defines a timeout for reading a response from the proxied server. The timeout is set only between two successive read operations, not for the transmission of the whole response. If the proxied server does not transmit anything within this time, the connection is closed.
-    proxy_read_timeout 600s;
+    # In practice this seems to be essentially the maximum time a socket will live for
+    # Sending data seems to reset this process. Unclear what the interaction is
+    # with the the keepalive_timeout && # Enabling keep-alive timeouts below
+    proxy_read_timeout 1800s; # 30m
 
     server {
         listen <%= ENV["PORT"] %>;
         server_name _;
         # Set as-is this stops websocket connection for lasting as long as specified TODO: return to default once other settings compensate?
         # DOCS: A timeout during which a keep-alive client connection will stay open on the server side
-        keepalive_timeout 300;
+        keepalive_timeout 6000; # 100m
 
         # Actual websocket paths to listen on
         location /ws/ {
@@ -89,8 +92,10 @@ http {
 
             # Enabling keep-alive
             # As per https://ma.ttias.be/enable-keepalive-connections-in-nginx-upstream-proxy-configurations/
-            proxy_read_timeout     300;
-            proxy_connect_timeout  300;
+            # Set at 100minutes — may mean that passive pages which haven't
+            # received any socket data need to be refreshed after that time.
+            proxy_read_timeout     6000; # 100m
+            proxy_connect_timeout  6000; # 100m
             proxy_set_header Connection "";
         }
 
