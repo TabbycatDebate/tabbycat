@@ -46,8 +46,8 @@
         </div>
         <div v-if="isNew || !blindEntry || blindReveal" class="row">
           <div class="col">
-            <button tabindex="300" :disabled="canSubmit !== '' || submitting" @click="submit"
-                    class="btn btn-block btn-success">
+            <button tabindex="300" :disabled="canSubmit !== '' || !blindFormIsValid || submitting"
+                    @click="submit" class="btn btn-block btn-success">
               <span v-if="isAdmin && !submitting">Save ballot</span>
               <span v-if="!isAdmin && !isNew && !submitting">Confirm draft ballot</span>
               <span v-if="!isAdmin && isNew && !submitting">Add ballot</span>
@@ -84,6 +84,7 @@ export default {
     blindEntry: Boolean,
     blindReveal: Boolean,
     totalBallotsubs: Number,
+    blindFormIsValid: Boolean,
   },
   data: function () {
     return {
