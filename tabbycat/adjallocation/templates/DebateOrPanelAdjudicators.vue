@@ -29,14 +29,19 @@ export default {
     ...mapGetters(['allocatableItems']),
     adjudicatorScores: function () {
       let adjIds = [] // Strange logic below is to avoid mutating VueX state
+      let scores = []
       if (this.debateOrPanel.adjudicators.C.length > 0) {
         adjIds.push(this.debateOrPanel.adjudicators.C[0])
       }
       adjIds = [...adjIds, ...this.debateOrPanel.adjudicators.P]
       if (adjIds.length > 0) {
-        return adjIds.map(id => this.allocatableItems[id].score).sort().reverse()
+        for (let adjID of adjIds) {
+          if (adjID in this.allocatableItems) {
+            scores.push(this.allocatableItems[adjID].score)
+          }
+        }
       }
-      return []
+      return scores.sort().reverse()
     },
     averageScore: function () {
       if (this.adjudicatorScores.length > 0) {

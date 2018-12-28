@@ -44,20 +44,22 @@ export default {
       return '' // Fallback
     },
     regionClass: function () {
-      const itemsInstitutionID = this.highlightData.institution
-      if (itemsInstitutionID && 'region' in this.highlights) {
-        if (itemsInstitutionID in this.allInstitutions) {
-          const itemsInstitution = this.allInstitutions[itemsInstitutionID]
-          const itemsRegion = this.highlights.region.options[itemsInstitution.region]
-          if (itemsRegion) {
-            return this.highlights.region.options[itemsInstitution.region].css
+      if (this.highlightData && 'institution' in this.highlightData) {
+        const itemsInstitutionID = this.highlightData.institution
+        if (itemsInstitutionID && 'region' in this.highlights) {
+          if (itemsInstitutionID in this.allInstitutions) {
+            const itemsInstitution = this.allInstitutions[itemsInstitutionID]
+            const itemsRegion = this.highlights.region.options[itemsInstitution.region]
+            if (itemsRegion) {
+              return this.highlights.region.options[itemsInstitution.region].css
+            }
           }
         }
       }
       return ''
     },
     rankClass: function () {
-      if ('score' in this.highlightData) {
+      if (this.highlightData && 'score' in this.highlightData) {
         let rankCategories = Object.keys(this.highlights.rank.options)
         for (let rankCategory of rankCategories) {
           if (this.highlightData.score >= this.highlights.rank.options[rankCategory].fields.cutoff) {

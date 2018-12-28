@@ -11,11 +11,13 @@ export default {
             continue
           }
           // Need to find the adjudicator's own institutional conflicts to compare
-          let adjsInstitutionalConflicts = this.adjudicatorClashesForItem(adjudicatorId).institution
-          for (const institutionalConflict of adjsInstitutionalConflicts) {
-            if (institutionalConflict.id === idToFind) {
-              found = true
-              break
+          let adjsInstitutionalConflicts = this.adjudicatorClashesForItem(adjudicatorId)
+          if (adjsInstitutionalConflicts && 'institution' in adjsInstitutionalConflicts) {
+            for (const institutionalConflict of adjsInstitutionalConflicts.institution) {
+              if (institutionalConflict.id === idToFind) {
+                found = true
+                break
+              }
             }
           }
         }

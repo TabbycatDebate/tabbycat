@@ -6,7 +6,7 @@ export default {
   mixins: [ConflictableMixin],
   computed: {
     hasClashConflict: function () {
-      if (this.debateOrPanelId) {
+      if (this.debateOrPanelId && this.adjudicator) {
         if (this.hasPanelClashConflict) {
           return true
         } else if (this.hasTeamClashConflict) {
@@ -16,7 +16,7 @@ export default {
       return false
     },
     hasInstitutionalConflict: function () {
-      if (this.debateOrPanelId) {
+      if (this.debateOrPanelId && this.adjudicator) {
         if (this.hasPanelInstitutionalConflict) {
           return true
         } else if (this.hasTeamInstitutionalConflict) {
@@ -26,7 +26,7 @@ export default {
       return false
     },
     hasHistoryConflict: function () {
-      if (this.debateOrPanelId) {
+      if (this.debateOrPanelId && this.adjudicator) {
         if (this.hasPanelHistoryConflict) {
           return this.hasPanelHistoryConflict
         } else if (this.hasTeamHistoryConflict) {

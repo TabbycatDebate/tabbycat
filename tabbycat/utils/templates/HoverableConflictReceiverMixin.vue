@@ -44,6 +44,7 @@ export default {
       let sourceClashes = this.currentHoverClashes
       if (!sourceClashes) { return false }
       let itemClashes = this.getConflictsForType('clash')
+      if (!itemClashes) { return false }
       if ('institution' in sourceClashes && 'institution' in itemClashes) {
         for (const sourceClash of sourceClashes.institution) {
           for (const itemClash of itemClashes.institution) {
