@@ -820,10 +820,11 @@ class AdjudicatorScoresCsvView(TournamentMixin, AdministratorMixin, BaseCsvView)
     filename = "scores.csv"
 
     def write_rows(self, writer):
-        writer.writerow(["id", "name", "test_score", "gender", "region"])
+        writer.writerow(["id", "name", "test_score", "gender", "region", "nrounds"])
         for adj in self.tournament.adjudicator_set.all():
             row = [adj.id, adj.name, adj.test_score, adj.gender]
             row.append(adj.region.name if adj.region else "")
+            row.append(adj.debateadjudicator_set.count())
             writer.writerow(row)
 
 
