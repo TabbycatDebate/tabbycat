@@ -12,7 +12,7 @@ import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
 export default {
   mixins: [ModalErrorMixin],
   data: function () {
-    return { bridges: {}, didLoseConnection: false, componentId: Math.floor(Math.random() * 10000) }
+    return { bridges: {}, lostConnections: 0, componentId: Math.floor(Math.random() * 10000) }
   },
   created: function () {
     // Check if this is being run over HTTP(S); match the WS(S) procol
@@ -44,11 +44,12 @@ export default {
 
       // Logs
       webSocketBridge.socket.addEventListener('open', (() => {
-        console.debug('Connected to WebSocket path:', socketPath)
+        self.logConnectionInfo('connected to', socketPath)
         self.dismissLostConnectionAlert()
       }).bind(socketPath, self))
       webSocketBridge.socket.addEventListener('close', (() => {
-        console.debug('Disconnected to WebSocket path:', socketPath)
+        self.lostConnections += 1
+        self.logConnectionInfo('disconnected from', socketPath)
         self.showLostConnectionAlert()
       }).bind(socketPath, self))
 
@@ -68,6 +69,12 @@ export default {
       path = `${path + socketLabel}/`
       return path
     },
+    logConnectionInfo: function (statusType, socketPath) {
+      const now = new Date()
+      const paddedMinutes = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes()
+      const msg = `${now.getHours()}:${paddedMinutes} ${statusType} path:\n${socketPath}`
+      console.debug(`${msg}\n(${this.lostConnections} prior loses)`)
+    },
     // Passes to inheriting components; receives a payload from a socket
     receiveFromSocket: function (socketLabel, payload) {
       // console.log(`Received payload ${JSON.stringify(payload)} from socket ${socketLabel}`)
@@ -86,7 +93,6 @@ export default {
       this.bridges[socketLabel].send(payload)
     },
     showLostConnectionAlert: function () {
-      this.didLoseConnection = true
       let explanation = `This page maintains a live connection to the server. That connection has
                          been lost. This page will attempt to reconnect and will update this message
                          if it succeeds. You can dismiss this warning if needed, just be aware that
@@ -94,7 +100,7 @@ export default {
       this.showErrorAlert(explanation, null, 'Connection Lost', 'text-danger', true, true)
     },
     dismissLostConnectionAlert: function () {
-      if (this.didLoseConnection) { // Only show the modal when a connection is re-opened not opened
+      if (this.lostConnections > 0) { // Only show modal when a connection is re-opened not opened
         let explanation = `This page lost its connection to the server but has succesfully reopened
                            it. Changes made to data on this page will now be saved. However, you may
                            want to refresh the page to verify that earlier changes were saved.`
