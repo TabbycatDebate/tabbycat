@@ -87,9 +87,7 @@
                    class="col-lg-3 col-md-4 col-6 check-in-person">
                 <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
 
-                  <div :class="['col p-2 text-truncate ',
-                        entity.status ? 'bg-success' : 'bg-secondary',
-                        entity.type === 'Adjudicator' ? 'text-capitalize' : 'text-uppercase']"
+                  <div :class="['col p-2 text-truncate ', getEntityStatusClass(entity)]"
                         data-toggle="tooltip" :title="getToolTipForEntity(entity)">
                     {{ entity.name }}
                   </div>
@@ -247,6 +245,22 @@ export default {
     clock: function (timeRead) {
       const paddedTime = (`0${timeRead}`).slice(-2)
       return paddedTime
+    },
+    getEntityStatusClass: function (entity) {
+      let css = ''
+      if (entity.type === 'Adjudicator') {
+        css += 'text-capitalize '
+      } else {
+        css += 'text-uppercase '
+      }
+      if (entity.speakersIn === 1) {
+        css += 'half-in-team ' // One speaker checked in
+      } else if (entity.status === false) {
+        css += 'bg-secondary ' // Nothing checked in
+      } else {
+        css += 'bg-success '
+      }
+      return css
     },
     checkInOrOutGroup: function (entity, setStatus) {
       const identifiersForEntities = _.flatten(_.map(entity, 'identifier'))
