@@ -11,6 +11,7 @@ Objects should be fetched from the database here as it is an asyncronous process
 thus the object itself cannot be passed.
 """
 
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
@@ -100,14 +101,15 @@ def ballots_email_generator(to, debate_id):
     use_codes = use_team_code_names(debate.round.tournament, False)
 
     def _create_ballot(result, scoresheet):
-        ballot = ""
+        ballot = "<ul>"
 
         for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
+            side_string = ""
             if tournament.pref('teams_in_debate') == 'bp':
-                side_string = _("%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)\n")
+                side_string += _("<li>%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)")
                 points = 4 - scoresheet.rank(side)
             else:
-                side_string = _("%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)\n")
+                side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)")
                 points = _("Win") if side == scoresheet.winner() else _("Loss")
 
             ballot += side_string % {
@@ -117,14 +119,20 @@ def ballots_email_generator(to, debate_id):
                 'points': points
             }
 
+            ballot += "<ul>"
+
             for pos, pos_name in zip(tournament.positions, pos_names):
-                ballot += _("- %(pos)s: %(speaker)s (%(score)s)\n") % {
+                ballot += _("<li>%(pos)s: %(speaker)s (%(score)s)</li>") % {
                     'pos': pos_name,
                     'speaker': result.get_speaker(side, pos).name,
                     'score': scoresheet.get_score(side, pos)
                 }
 
-        return ballot
+            ballot += "</ul></li>"
+
+        ballot += "</ul>"
+
+        return mark_safe(ballot)
 
     if isinstance(results, VotingDebateResult):
         for (adj, ballot) in results.scoresheets.items():
@@ -186,14 +194,16 @@ def motion_release_email_generator(to, round_id):
     round = Round.objects.get(id=round_id)
 
     def _create_motion_list():
-        motion_list = ""
+        motion_list = "<ul>"
         for motion in round.motion_set.all():
-            motion_list += _(" - %(text)s (%(ref)s)\n") % {'text': motion.text, 'ref': motion.reference}
+            motion_list += _("<li>%(text)s (%(ref)s)</li>") % {'text': motion.text, 'ref': motion.reference}
 
             if motion.info_slide:
                 motion_list += "   %s\n" % (motion.info_slide)
 
-        return motion_list
+        motion_list += "</ul>"
+
+        return mark_safe(motion_list)
 
     context = {
         'TOURN': str(round.tournament),
