@@ -3,6 +3,7 @@ import logging
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy
 from django.utils.translation import gettext as _
@@ -386,7 +387,7 @@ class UpdateAdjudicatorScoresForm(forms.Form):
             name, score = [x.strip() for x in line[:2]]
 
             try:
-                adj = self.tournament.relevant_adjudicators.get(name=name)
+                adj = self.tournament.relevant_adjudicators.get(Q(name=name) | Q(id=name))
             except Adjudicator.MultipleObjectsReturned:
                 errors_in_line.append(ImportValidationError(i,
                     _("There are several adjudicators called \"%(adjudicator)s\", so "
@@ -410,6 +411,7 @@ class UpdateAdjudicatorScoresForm(forms.Form):
                 errors.extend(errors_in_line)
                 continue
 
+            logger.info("Cleaned for bulk update: [%d] %s, %s", adj.id, adj.name, score)
             records.append((adj, score))
 
         if errors:
@@ -422,14 +424,19 @@ class UpdateAdjudicatorScoresForm(forms.Form):
 
     def save(self):
         records = self.cleaned_data.get('scores_raw', [])
+        history_instances = []
         for adj, score in records:
             adj.test_score = score
             adj.save()
 
-            AdjudicatorTestScoreHistory.objects.create(
+            history_instances.append(AdjudicatorTestScoreHistory(
                 adjudicator=adj,
                 round=self.tournament.current_round,
                 score=score
-            )
+            ))
+
+            logger.info("Saved: [%d] %s, %s", adj.id, adj.name, score)
+
+        AdjudicatorTestScoreHistory.objects.bulk_create(history_instances)
 
         return len(records)
