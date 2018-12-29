@@ -9,7 +9,7 @@ export default {
     return {
       isDragging: false,
       scrollStop: false,
-      windowThresholds: 150, // Number of pixels to trigger scrolling
+      windowThresholds: 100, // Number of pixels to trigger scrolling
     }
   },
   computed: {
@@ -45,12 +45,12 @@ export default {
       this.scrollStop = true
       if (event.clientY < this.windowThresholds) {
         this.scrollStop = false
-        this.scrollPage(event.clientY < (this.windowThresholds / 3) ? -2 : -1) // Faster close to top
+        this.scrollPage(-1) // Faster close to top
       }
       let windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       if (event.clientY > (windowHeight - this.windowThresholds)) {
         this.scrollStop = false
-        this.scrollPage(event.clientY < (windowHeight - (this.windowThresholds / 3)) ? 1 : 2)
+        this.scrollPage(1)
       }
     },
     scrollPage: function (step) {
