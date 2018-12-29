@@ -96,14 +96,16 @@ export default {
       this.bridges[socketLabel].send(payload)
     },
     showLostConnectionAlert: function () {
-      let explanation = `This page maintains a live connection to the server. That connection has
-                         been lost. This page will attempt to reconnect and will update this message
-                         if it succeeds. You can dismiss this warning if needed, just be aware that
-                         you should not change data on this page until the connection resumes.`
-      this.showErrorAlert(explanation, null, 'Connection Lost', 'text-danger', true, true)
+      if (this.lostConnections > 1) {
+        let explanation = `This page maintains a live connection to the server. That connection has
+                           been lost. This page will attempt to reconnect and will update this message
+                           if it succeeds. You can dismiss this warning if needed, just be aware that
+                           you should not change data on this page until the connection resumes.`
+        this.showErrorAlert(explanation, null, 'Connection Lost', 'text-danger', true, true)
+      }
     },
     dismissLostConnectionAlert: function () {
-      if (this.lostConnections > 0) { // Only show modal when a connection is re-opened not opened
+      if (this.lostConnections > 1) { // Only show modal when a connection is re-opened not opened
         let explanation = `This page lost its connection to the server but has succesfully reopened
                            it. Changes made to data on this page will now be saved. However, you may
                            want to refresh the page to verify that earlier changes were saved.`
