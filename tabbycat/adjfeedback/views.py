@@ -27,7 +27,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
@@ -205,6 +205,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
 
 class FeedbackMixin(TournamentMixin):
+    only_comments = False
 
     def get_feedbacks(self):
         feedbacks = self.get_feedback_queryset()
@@ -214,6 +215,9 @@ class FeedbackMixin(TournamentMixin):
 
         # Can't prefetch an abstract model effectively; so get all answers...
         questions = list(self.tournament.adj_feedback_questions)
+        if self.only_comments:
+            questions = [q for q in questions if q.answer_type == AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT]
+
         for question in questions:
             question.answers = list(question.answer_set.values())
 
@@ -268,11 +272,23 @@ class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
     page_title = gettext_lazy("Latest Feedback")
     page_subtitle = gettext_lazy("(30 most recent)")
-    page_emoji = '🕗 '
+    page_emoji = '🕗'
 
     def get_feedback_queryset(self):
         queryset = super().get_feedback_queryset()
         return queryset.order_by('-timestamp')[:30]
+
+
+class CommentsFeedbackView(FeedbackCardsView):
+    """View displaying the latest feedback."""
+    page_title = gettext_lazy("Only Comments")
+    page_subtitle = gettext_lazy("(250 most recent)")
+    page_emoji = '💬'
+    only_comments = True
+
+    def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
+        return queryset.order_by('-timestamp')[:250]
 
 
 class ImportantFeedbackView(FeedbackCardsView):
