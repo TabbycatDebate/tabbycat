@@ -41,7 +41,7 @@
 
   <div id="vueMount">
     <ballot-entry-container
-      :debate-name="'{{ debate_name|safe }}'"
+      :debate-name="'{{ debate_name|escapejs }}'"
       :debate-venue="'{{ debate.venue }}'" :debate-round="'{{ debate.round.name }}'"
       :is-new="{% if new %}true{% else %}false{% endif %}"
       :is-admin="{% if for_admin %}true{% else %}false{% endif %}"
@@ -52,7 +52,7 @@
       :blind-entry="{% if pref.enable_blind_checks and not new and not ballotsub.confirmed and not for_admin %}true{% else %}false{% endif %}"
       :total-ballotsubs="{{ all_ballotsubs.count }}"
       :send-receipts="{% if pref.enable_ballot_receipts %}true{% else %}false{% endif %}"
-      :author="'{{ request.user|safe }}'" :ballot-author="'{{ ballotsub.submitter|safe }}'">
+      :author="'{{ request.user|escapejs }}'" :ballot-author="'{{ ballotsub.submitter|escapejs }}'">
     </ballot-entry-container>
   </div>
 
