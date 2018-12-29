@@ -369,6 +369,8 @@ class UpdateAdjudicatorScoresForm(forms.Form):
         errors = []
         records = []
 
+        logger.info("UpdateAdjudicatorScoresForm: Cleaning started (1 of 5)")
+
         for i, line in enumerate(csv.reader(lines), start=1):
             errors_in_line = []
 
@@ -411,8 +413,9 @@ class UpdateAdjudicatorScoresForm(forms.Form):
                 errors.extend(errors_in_line)
                 continue
 
-            logger.info("Cleaned for bulk update: [%d] %s, %s", adj.id, adj.name, score)
             records.append((adj, score))
+
+        logger.info("UpdateAdjudicatorScoresForm: Cleaning done (2 of 5)")
 
         if errors:
             raise ValidationError(errors)
@@ -425,6 +428,9 @@ class UpdateAdjudicatorScoresForm(forms.Form):
     def save(self):
         records = self.cleaned_data.get('scores_raw', [])
         history_instances = []
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving to database started (3 of 5)")
+
         for adj, score in records:
             adj.test_score = score
             adj.save()
@@ -435,8 +441,10 @@ class UpdateAdjudicatorScoresForm(forms.Form):
                 score=score
             ))
 
-            logger.info("Saved: [%d] %s, %s", adj.id, adj.name, score)
+        logger.info("UpdateAdjudicatorScoresForm: Saving scores to database done (4 of 5)")
 
         AdjudicatorTestScoreHistory.objects.bulk_create(history_instances)
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving test score histories to database done (5 of 5)")
 
         return len(records)
