@@ -29,7 +29,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Person, Team
+from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from .tables import TeamResultTableBuilder
 
 logger = logging.getLogger(__name__)

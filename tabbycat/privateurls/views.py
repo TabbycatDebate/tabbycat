@@ -2,13 +2,12 @@ import logging
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.db.models import Exists, OuterRef, Prefetch, Q
+from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from adjallocation.models import DebateAdjudicator
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
