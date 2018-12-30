@@ -186,7 +186,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
     def get_table(self):
         if hasattr(self.object, 'adjudicator'):
-            return AdjudicatorDebateTable.get_table(self, self.object)
+            return AdjudicatorDebateTable.get_table(self, self.object.adjudicator)
         else:
             return TeamDebateTable.get_table(self, self.object.speaker.team)
 
