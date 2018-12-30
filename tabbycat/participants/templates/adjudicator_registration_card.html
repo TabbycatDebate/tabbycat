@@ -21,17 +21,15 @@
       </div>
     {% endif %}
 
-    {% if adjudicator.institution %}
+    {% if adjudicator.institution and pref.show_adjudicator_institutions or admin_page or private_url %}
       <div class="list-group-item">
         <strong>{% trans "Institution:" %}</strong>
         {{ adjudicator.institution.name }}
-      </div>
-    {% endif %}
-
-    {% if adjudicator.institution.region %}
-      <div class="list-group-item">
-        <strong>{% trans "Region:" %}</strong>
-        {{ adjudicator.institution.region.name }}
+        {% if adjudicator.institution.region %}
+          <br />
+          <strong>{% trans "Region:" %}</strong>
+          {{ adjudicator.institution.region.name }}
+        {% endif %}
       </div>
     {% endif %}
 

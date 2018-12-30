@@ -69,11 +69,6 @@
           {{ team.institution.region.name }}
         {% endif %}
       </div>
-    {% elif team.institution.region %}
-      <div class="list-group-item">
-        <strong>{% trans "Region:" %}</strong>
-        {{ team.institution.region.name }}
-      </div>
     {% endif %}
 
     {% if admin_page %}
