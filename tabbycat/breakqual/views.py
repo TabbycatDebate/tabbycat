@@ -3,6 +3,7 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from django.views.generic import FormView, TemplateView, View
@@ -235,6 +236,14 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         table = TabbycatTableBuilder(view=self, sort_key='team')
         teams = t.team_set.all().select_related(
             'institution').prefetch_related('break_categories', 'speaker_set')
+        speaker_categories = t.speakercategory_set.order_by('seq')
+
+        nspeaker_annotations = {}
+        for sc in speaker_categories:
+            nspeaker_annotations['nspeakers_%s' % sc.slug] = Count(
+                'speaker', filter=Q(speaker__categories=sc))
+        teams = teams.annotate(**nspeaker_annotations)
+
         table.add_team_columns(teams)
 
         break_categories = t.breakcategory_set.order_by('seq')
@@ -247,10 +256,9 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
             } for team in teams])
 
         # Provide list of members within speaker categories for convenient entry
-        speaker_categories = t.speakercategory_set.order_by('seq')
         for sc in speaker_categories:
             table.add_column({'title': _('%s Speakers') % sc.name, 'key': sc.name}, [{
-                'text': team.speaker_set.filter(categories=sc).count(),
+                'text': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'),
                 'tooltip': _('Team has %s speakers with the %s speaker category assigned') % (0, sc.name)
             } for team in teams])
 
