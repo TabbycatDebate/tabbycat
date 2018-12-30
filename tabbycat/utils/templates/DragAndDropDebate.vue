@@ -7,7 +7,7 @@
           {{ debateOrPanel.bracket }}
         </div>
       </div>
-      <div v-else class="flex-1-25 flex-truncate d-flex border-right">
+      <div v-else class="flex-2 flex-truncate d-flex border-right"><!-- Can be wide; needs flex-2-->
         <div class="align-self-center flex-fill text-center"
              data-toggle="tooltip" title="The bracket range of the hypothetical debate">
           <span v-if="debateOrPanel.bracket_min !== debateOrPanel.bracket_max">
