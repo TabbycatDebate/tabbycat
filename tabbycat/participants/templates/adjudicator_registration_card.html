@@ -38,15 +38,14 @@
 
           <strong>{% trans "Institutional Conflicts:" %}</strong>
           {% for ic in adjudicator.adjudicatorinstitutionconflict_set.all %}
-            {{ ic.institution.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+            {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
           {% empty %}
             <span class="text-muted">{% trans "None" %}</span>
           {% endfor %}
 
           <strong><br>{% trans "Team Conflicts:" %}</strong>
           {% for tc in adjudicator.adjudicatorteamconflict_set.all %}
-            {% team_record_link tc.team admin_page tournament False %}
-            {% if not forloop.last %}{% trans ", " %}{% endif %}
+            {% team_record_link tc.team admin_page tournament False %}{% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
             <span class="text-muted">{% trans "None" %}</span>
           {% endfor %}
@@ -54,11 +53,10 @@
           <strong><br>{% trans "Adjudicator Conflicts:" %}</strong>
           {% for adj in adjadj_conflicts %}
             {% if pref.public_record %}
-              <a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>
+              <a href="{% adj_record_link adj admin_page tournament %}">{{ adj.name }}</a>{% if not forloop.last %}{% trans ", " %}{% endif %}
             {% else %}
-              {{ adj.name }}
+              {{ adj.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
             {% endif %}
-            {% if not forloop.last %}{% trans ", " %}{% endif %}
           {% empty %}
             <span class="text-muted">{% trans "None" %}</span>
           {% endfor %}
