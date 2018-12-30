@@ -236,8 +236,8 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         teams = t.team_set.all().select_related(
             'institution').prefetch_related('break_categories', 'speaker_set')
         table.add_team_columns(teams)
-        break_categories = t.breakcategory_set.all()
 
+        break_categories = t.breakcategory_set.order_by('seq')
         for bc in break_categories:
             table.add_column({'title': bc.name, 'key': bc.name}, [{
                 'component': 'check-cell',
@@ -245,6 +245,15 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
                 'id': team.id,
                 'type': bc.id
             } for team in teams])
+
+        # Provide list of members within speaker categories for convenient entry
+        speaker_categories = t.speakercategory_set.order_by('seq')
+        for sc in speaker_categories:
+            table.add_column({'title': _('%s Speakers') % sc.name, 'key': sc.name}, [{
+                'text': team.speaker_set.filter(categories=sc).count(),
+                'tooltip': _('Team has %s speakers with the %s speaker category assigned') % (0, sc.name)
+            } for team in teams])
+
         return table
 
     def get_context_data(self, **kwargs):
