@@ -26,10 +26,10 @@
           <select class="required custom-select form-control" v-model="ironStatus"
                   @change="setIron()" :disabled="!isNew && !isAdmin">
             <option value="No">
-              There were no speakers who spoke multiple times (i.e. no 'Iron' person speeches)
+              No speakers spoke twice (no 'iron-person' speeches)
             </option>
             <option value="Yes">
-              There were speakers who spoke multiple times (i.e. one or more 'Iron' person speeches)
+              A speaker spoke twice (an 'iron-person' speech)
             </option>
           </select>
         </div>
