@@ -384,6 +384,7 @@ class DragAndDropMixin(RoundMixin):
         """ Unlike meta_info everything under extra info is json serialised
         automatically. Designed for simple key/value pairs"""
         extra_info = {} # Set by view for top bar toggles
+        extra_info['codeNames'] = self.tournament.pref('team_code_names')
         extra_info['highlights'] = {}
 
         bcs = self.tournament.breakcategory_set.all()
@@ -395,7 +396,6 @@ class DragAndDropMixin(RoundMixin):
                 'fields': {'name': bc.name, 'safe': safe, 'dead': dead},
             }
             serialised_bcs.append(serialised_bc)
-        print(serialised_bcs)
         extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)

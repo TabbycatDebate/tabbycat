@@ -4,12 +4,17 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     topleftteam: function () {
-      let teamDetails = [this.makeItem(this.subject.short_name, 'btn-outline-secondary', false)]
+      let teamDetails = []
+      teamDetails.push(this.makeItem(this.subject.short_name, 'btn-outline-secondary', false))
+      if (this.extra.codeNames !== 'off') {
+        teamDetails.push(this.makeItem(this.subject.code_name, 'btn-outline-secondary', false))
+      }
+      let speakerDetails = []
       for (let speaker of this.subject.speakers) {
-        teamDetails.push(this.makePersonItem(speaker))
+        speakerDetails.push(this.makePersonItem(speaker))
       }
       let institutionDetails = this.makeInstitutionItem(this.subject)
-      return [teamDetails, institutionDetails]
+      return [teamDetails, speakerDetails, institutionDetails]
     },
     toprightteam: function () {
       let points = this.subject.points ? this.subject.points : 0 // Points can be null
