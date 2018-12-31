@@ -120,14 +120,21 @@ export default {
       }
       let debateTeams = this.allDebatesOrPanels[this.debateOrPanelId].teams
       let histories = this.adjudicatorHistoriesForItem(this.adjudicator.id)
+      let smallestAgo = 99
       if (histories && 'team' in histories) {
         for (let history of histories.team) {
           if (this.isTeamInDebateTeams(history.id, debateTeams)) {
-            return history.ago
+            if (history.ago < smallestAgo) {
+              smallestAgo = history.ago // Want to ensure we show the most recent clash
+            }
           }
         }
       }
-      return false
+      if (smallestAgo === 99) {
+        return false
+      } else {
+        return smallestAgo
+      }
     },
     ...mapGetters(['allDebatesOrPanels']),
   },
