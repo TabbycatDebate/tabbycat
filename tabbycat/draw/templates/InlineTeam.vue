@@ -52,19 +52,20 @@ export default {
       return false
     },
     isLive: function () {
+      let breakCategoriesCount = this.team.break_categories.length
+      let letDeadCategoriesCount = 0
       for (let bc of this.team.break_categories) {
         let category = this.highlights.break.options[bc]
         if (category) {
           if (this.team.points >= category.fields.safe) {
-            return true
-          } else if (this.team.points <= category.fields.dead) {
-            return false
-          } else if (this.team.points > category.fields.dead && this.team.points < category.fields.safe) {
-            return true
+            letDeadCategoriesCount += 1
+          }
+          if (this.team.points <= category.fields.dead) {
+            letDeadCategoriesCount += 1
           }
         }
       }
-      return true // Default for pages which don't calculate it
+      return (breakCategoriesCount - letDeadCategoriesCount) > 0
     },
   },
 }
