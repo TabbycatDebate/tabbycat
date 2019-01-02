@@ -702,8 +702,15 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
     def get_page_subtitle(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
-        total_missing = sum([progress.num_unsubmitted() for progress in teams_progress + adjs_progress])
-        return ngettext_lazy("%d missing feedback submission", "%d missing feedback submissions", total_missing) % (total_missing,)
+        all_progress = teams_progress + adjs_progress
+        total_missing = sum([progress.num_unsubmitted() for progress in all_progress])
+        total_expected = sum([progress.num_expected() for progress in all_progress])
+        percentage_fulfilled = (1 - total_missing / total_expected) * 100
+        return ngettext_lazy(
+            "%d missing feedback submission (%.1f%% returned)",
+            "%d missing feedback submissions (%.1f%% returned)",
+            total_missing
+        ) % (total_missing, percentage_fulfilled)
 
     def get_tables(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
