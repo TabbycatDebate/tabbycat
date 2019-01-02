@@ -223,6 +223,17 @@ class Tournament(models.Model):
     # --------------------------------------------------------------------------
 
     @cached_property
+    def rounds_with_released_results(self):
+        if self.pref('all_results_released'):
+            return self.round_set.filter(completed=True)
+        else:
+            return self.round_set.filter(
+                completed=True,
+                silent=False,
+                draw_status=Round.STATUS_RELEASED,
+            )
+
+    @cached_property
     def current_round(self):
         current = self.round_set.filter(completed=False).order_by('seq').first()
         if current is None:
@@ -274,12 +285,6 @@ class Tournament(models.Model):
         """Returns True if draws are available for public viewing. Used in
         public navigation menus."""
         return any(r.draw_status == Round.STATUS_RELEASED for r in self.current_rounds)
-
-    @cached_property
-    def public_results_available(self):
-        """Returns True if results are available for public viewing. Used in
-        public navigation menus."""
-        return self.round_set.filter(completed=True, silent=False).exists()
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):

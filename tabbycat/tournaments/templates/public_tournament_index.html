@@ -119,7 +119,7 @@
       {% include "components/item-action.html" with icon="compass" %}
     {% endif %}
 
-    {% if pref.public_results and tournament.public_results_available %}
+    {% if pref.public_results and tournament.rounds_with_released_results.exists %}
       {% trans "Results" as text %}
       {% tournamenturl 'results-public-index' as url %}
       {% include "components/item-action.html" with icon="trending-up" %}
