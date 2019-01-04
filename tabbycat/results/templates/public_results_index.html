@@ -7,16 +7,12 @@
 {% block content %}
 
 <ul class="list-group">
-  {% for r in tournament.round_set.all %}
-    {% if not r.silent or pref.all_results_released %}
-      {% if r.seq < current_round.seq or pref.all_results_released %}
-        {% roundurl 'results-public-round' r as url %}
-        {% blocktrans trimmed with round_name=r.name asvar text %}
-          Results for {{ round_name }}
-        {% endblocktrans %}
-        {% include "components/item-action.html" with icon="trending-up" %}
-      {% endif %}
-    {% endif %}
+  {% for r in tournament.rounds_with_released_results %}
+    {% roundurl 'results-public-round' r as url %}
+    {% blocktrans trimmed with round_name=r.name asvar text %}
+      Results for {{ round_name }}
+    {% endblocktrans %}
+    {% include "components/item-action.html" with icon="trending-up" %}
   {% endfor %}
 </ul>
 

@@ -225,13 +225,9 @@ class Tournament(models.Model):
     @cached_property
     def rounds_with_released_results(self):
         if self.pref('all_results_released'):
-            return self.round_set.filter(completed=True)
+            return self.round_set.all()
         else:
-            return self.round_set.filter(
-                completed=True,
-                silent=False,
-                draw_status=Round.STATUS_RELEASED,
-            )
+            return self.round_set.filter(completed=True, silent=False)
 
     @cached_property
     def current_round(self):
