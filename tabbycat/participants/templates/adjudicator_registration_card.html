@@ -21,6 +21,20 @@
       </div>
     {% endif %}
 
+    {% if admin_page or private_url %}
+      <div class="list-group-item">
+        <strong>{% trans "Gender:" %}</strong>
+        {% if adjudicator.gender %}
+          {{ adjudicator.get_gender_display|capfirst }}
+        {% else %}
+          <span class="text-muted">{% trans "Unspecified" %}</span>
+        {% endif %}
+        {% if adjudicator.pronoun %}
+          ({{ adjudicator.pronoun }})
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% if adjudicator.institution and pref.show_adjudicator_institutions or admin_page or private_url %}
       <div class="list-group-item">
         <strong>{% trans "Institution:" %}</strong>

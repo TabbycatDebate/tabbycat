@@ -9,6 +9,20 @@
       </h4>
     </div>
 
+    {% if participant and admin_page or private_url %}
+      <div class="list-group-item">
+        <strong>{% trans "Gender:" %}</strong>
+        {% if participant.gender %}
+          {{ participant.get_gender_display|capfirst }}
+        {% else %}
+          <span class="text-muted">{% trans "Unspecified" %}</span>
+        {% endif %}
+        {% if participant.pronoun %}
+          ({{ participant.pronoun }})
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% if not use_code_names and team.short_name != team.long_name %}
       <div class="list-group-item">
         <strong>{% if participant %}{% trans "Team name:" %}{% else %}{% trans "Full name:" %}{% endif %}</strong>
@@ -21,7 +35,7 @@
       </div>
     {% endif %}
 
-    {% if pref.show_speakers_in_draw %}
+    {% if pref.show_speakers_in_draw or admin_page or private_url %}
       <div class="list-group-item">
         <strong>{% trans "Speakers:" %}</strong>
         {% for speaker in team.speakers %}
