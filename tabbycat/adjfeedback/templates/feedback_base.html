@@ -31,14 +31,13 @@
        href="{% tournamenturl 'adjfeedback-view-by-target' %}">
       {% trans "By Target" %}
     </a>
-    <a class="btn btn-outline-primary"
-       href="{% tournamenturl 'adjfeedback-update-scores-bulk' %}">
-      {% trans "Bulk Update Scores" %}
-    </a>
   </div>
 {% endblock %}
 
 {% block page-subnav-actions %}
+  <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-update-scores-bulk' %}">
+    {% trans "Bulk Update Scores" %}
+  </a>
   <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-add-index' %}">
     {% trans "Add Feedback" %}
   </a>
