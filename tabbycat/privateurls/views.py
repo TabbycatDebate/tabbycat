@@ -13,7 +13,7 @@ from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
-from participants.views import AdjudicatorDebateTable, TeamDebateTable
+from participants.tables import AdjudicatorDebateTable, TeamDebateTable
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
