@@ -33,7 +33,7 @@
       </span>
       <span class="badge mr-2 badge-light float-right" data-toggle="tooltip">
         {% blocktrans trimmed with test=feedback.adjudicator.test_score %}
-          Test {{ test }}
+          Test {{ test|floatformat }}
         {% endblocktrans %}
       </span>
       {% blocktrans trimmed with adj=feedback.adjudicator.name as=feedback.debate_adjudicator.get_type_display %}

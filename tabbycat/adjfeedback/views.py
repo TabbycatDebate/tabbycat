@@ -216,7 +216,8 @@ class FeedbackMixin(TournamentMixin):
         # Can't prefetch an abstract model effectively; so get all answers...
         questions = list(self.tournament.adj_feedback_questions)
         if self.only_comments:
-            questions = [q for q in questions if q.answer_type == AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT]
+            long_text = AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT
+            questions = [q for q in questions if q.answer_type == long_text]
 
         for question in questions:
             question.answers = list(question.answer_set.values())
@@ -231,6 +232,8 @@ class FeedbackMixin(TournamentMixin):
                                                'answer': answer['answer']})
                         break # Should only be one match
 
+        if self.only_comments:
+            feedbacks = [f for f in feedbacks if len(f.items) > 0] # Remove null
         return feedbacks
 
     def get_feedback_queryset(self):
