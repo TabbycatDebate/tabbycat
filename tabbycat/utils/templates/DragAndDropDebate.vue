@@ -38,14 +38,15 @@
         <div :class="['d-flex flex-truncate align-items-center']"
              v-for="side in sides" v-if="debateOrPanel.teams">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :team="debateOrPanel.teams[side]"></inline-team>
+                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
           <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
         </div>
       </div>
       <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
         <div :class="['d-flex flex-fill align-items-center']"
              v-for="side in sides">
-          <inline-team v-if="debateOrPanel.teams[side]" :team="debateOrPanel.teams[side]"></inline-team>
+          <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
+                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
           <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
         </div>
       </div>
@@ -74,6 +75,9 @@ export default {
     sides: function () {
       return this.$store.state.tournament.sides
     },
+    isElimination: function () {
+      return this.round.stage === 'E'
+    },
     liveness: function () {
       if ('liveness' in this.debateOrPanel) {
         // For preformed panel screens liveness is attached to the panel itself
@@ -95,7 +99,7 @@ export default {
         return liveness
       }
     },
-    ...mapState(['highlights']),
+    ...mapState(['highlights', 'round']),
   },
 }
 </script>

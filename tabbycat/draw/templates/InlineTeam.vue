@@ -22,7 +22,7 @@ import ConflictableTeamMixin from '../../utils/templates/ConflictableTeamMixin.v
 
 export default {
   mixins: [HighlightableMixin, HoverablePanelMixin, HoverableConflictMixin, HoverableConflictReceiverMixin, ConflictableTeamMixin],
-  props: { team: Object, debateId: Number },
+  props: { team: Object, debateId: Number, isElimination: Boolean },
   methods: {
     showHovers: function () {
       this.showHoverPanel(this.team, 'team')
@@ -52,6 +52,9 @@ export default {
       return false
     },
     isLive: function () {
+      if (this.isElimination) {
+        return true // Never show strikeouts in out rounds
+      }
       let breakCategoriesCount = this.team.break_categories.length
       let letDeadCategoriesCount = 0
       for (let bc of this.team.break_categories) {
