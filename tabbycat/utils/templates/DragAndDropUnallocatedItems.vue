@@ -2,7 +2,7 @@
   <div class="navbar-light fixed-bottom d-flex border-top flex-column p-0"
        :style="{height: height + 'px'}" ref="resizeableElement">
 
-    <droppable-item class="flex-grow-1 px-2" :handle-drop="handleUnusedDrop"
+    <droppable-item class="flex-grow-1 px-2 overflow-auto" :handle-drop="handleUnusedDrop"
                     :drop-context="{ 'assignment': null, 'position': null }">
 
       <section class="mb-1 d-flex">
