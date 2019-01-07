@@ -7,12 +7,12 @@
           <div class="progress">
             <div class="progress-bar bg-secondary" role="progressbar"
                  :style="{ width: checksWidths.checked }"
-                 data-toggle="tooltip" :title="gettext('Checked-In')">
+                 data-toggle="tooltip" :title="checks.checked + ' ' + gettext('Checked-In')">
               <i data-feather="x"></i>&nbsp;&nbsp;{{ checks.checked }}
             </div>
             <div class="progress-bar bg-dark" role="progressbar"
                  :style="{ width: checksWidths.missing }"
-                 data-toggle="tooltip" :title="gettext('Not Checked-In')">
+                 data-toggle="tooltip" :title="checks.missing + ' ' + gettext('Not Checked-In')">
               <i data-feather="circle"></i>&nbsp;&nbsp;{{ checks.missing }}
             </div>
           </div>
@@ -23,17 +23,17 @@
           <div class="progress">
             <div class="progress-bar bg-danger" role="progressbar"
                 :style="{ width: statusWidths.none }"
-                 data-toggle="tooltip" :title="gettext('Unknown')">
+                 data-toggle="tooltip" :title="statuses.none + ' ' + gettext('Unknown')">
               <i data-feather="x"></i>&nbsp;&nbsp;{{ statuses.none }}
             </div>
             <div class="progress-bar bg-info" role="progressbar"
                  :style="{ width: statusWidths.draft }"
-                 data-toggle="tooltip" :title="gettext('Unconfirmed')">
+                 data-toggle="tooltip" :title="statuses.draft + ' ' + gettext('Unconfirmed')">
               <i data-feather="circle"></i>&nbsp;&nbsp;{{ statuses.draft }}
             </div>
             <div class="progress-bar bg-success" role="progressbar"
                  :style="{ width: statusWidths.confirmed }"
-                 data-toggle="tooltip" :title="gettext('Confirmed')">
+                 data-toggle="tooltip" :title="statuses.confirmed + ' ' + gettext('Confirmed')">
               <i data-feather="check"></i>&nbsp;&nbsp;{{ statuses.confirmed }}
             </div>
           </div>
