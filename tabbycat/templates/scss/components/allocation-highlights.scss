@@ -59,7 +59,6 @@
     @include hover-highlights(lighten($conflict-history-base, 46%), theme-color('dark'));
   }
 
-
   // Must be below histories (to take precedence)
   &.hover-institution {
     @include hover-highlights($conflict-institution);
