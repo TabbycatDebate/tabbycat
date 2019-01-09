@@ -1675,7 +1675,7 @@ msgstr "Modifier la Configuration : %(section_name)s"
 #: options/views.py:68
 #, python-format
 msgid "Tournament options (%(section)s) saved."
-msgstr "Options de tournoi (%(section)s sauvegardés."
+msgstr "Options de tournoi (%(section)s) sauvegardés."
 
 #: options/views.py:118
 #, python-format
