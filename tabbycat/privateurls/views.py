@@ -13,7 +13,7 @@ from checkins.utils import get_unexpired_checkins
 from notifications.models import SentMessageRecord
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
-from participants.views import AdjudicatorDebateTable, TeamDebateTable
+from participants.tables import AdjudicatorDebateTable, TeamDebateTable
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
@@ -186,7 +186,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
     def get_table(self):
         if hasattr(self.object, 'adjudicator'):
-            return AdjudicatorDebateTable.get_table(self, self.object)
+            return AdjudicatorDebateTable.get_table(self, self.object.adjudicator)
         else:
             return TeamDebateTable.get_table(self, self.object.speaker.team)
 
