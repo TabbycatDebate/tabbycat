@@ -19,5 +19,5 @@ chromedriver_installer==0.0.6               # Functional testing Chrome interfac
 transifex-client==0.13.*                    # Translations
 
 # Debug
-django-debug-toolbar==1.10.*
+django-debug-toolbar==1.11.*
 django-debug-toolbar-request-history==0.0.9 # Debug POSTs/AJAX
