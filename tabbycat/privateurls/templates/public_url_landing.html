@@ -28,7 +28,7 @@
 
 {% block content %}
 
-  <div class="list-group mt-2">
+  <div class="list-group">
 
     {% if pref.public_checkins_submit %}
       <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
@@ -54,7 +54,7 @@
         {% include "components/item-info.html" %}
       {% else %}
         {% blocktrans trimmed asvar text %}
-          You are not checked-in
+          You are not currently checked-in
         {% endblocktrans %}
         {% include "components/item-info.html" with type='warning' %}
       {% endif %}
