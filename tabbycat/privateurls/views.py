@@ -195,9 +195,11 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
         self.object = self.get_object(kwargs['url_key'])
         t = self.tournament
 
+        checkin_id = PersonIdentifier.objects.get(person=self.object)
+        checkins = get_unexpired_checkins(t, 'checkin_window_people')
+        kwargs['checkins_used'] = checkins.exists()
+
         try:
-            checkin_id = PersonIdentifier.objects.get(person=self.object)
-            checkins = get_unexpired_checkins(t, 'checkin_window_people')
             kwargs['event'] = checkins.filter(identifier=checkin_id).first()
         except ObjectDoesNotExist:
             kwargs['event'] = False

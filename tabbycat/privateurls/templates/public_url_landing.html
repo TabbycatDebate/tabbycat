@@ -28,7 +28,7 @@
 
 {% block content %}
 
-  <div class="list-group mt-2">
+  <div class="list-group">
 
     {% if pref.public_checkins_submit %}
       <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
@@ -46,6 +46,18 @@
         {% endif %}
         {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
+    {% elif checkins_used %}
+      {% if event %}
+        {% blocktrans trimmed with check_time=event.time asvar text %}
+          You have been checked-in at {{ check_time }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" %}
+      {% else %}
+        {% blocktrans trimmed asvar text %}
+          You are not currently checked-in
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type='warning' %}
+      {% endif %}
     {% endif %}
 
     {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}

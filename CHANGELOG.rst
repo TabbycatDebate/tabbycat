@@ -17,6 +17,7 @@ Change Log
     - Custom emails may be sent out to select participants through the web-interface
     - Participants can be specifically included or excluded from receiving a notification before sending
 - When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions.
+- Private URL pages will now display check-in status (if check-ins have been used) along with further details regarding break categories, regions, etc. Thanks to Étienne Beaulé for these contributions!
 - Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
 
