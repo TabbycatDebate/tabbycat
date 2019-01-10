@@ -52,8 +52,8 @@ export default {
       return false
     },
     isLive: function () {
-      if (this.isElimination) {
-        return true // Never show strikeouts in out rounds
+      if (this.isElimination || this.team.break_categories.length === 0) {
+        return true // Never show strikeouts in out rounds; don't show if no categories are set
       }
       let breakCategoriesCount = this.team.break_categories.length
       let letDeadCategoriesCount = 0
