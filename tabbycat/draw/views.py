@@ -399,7 +399,7 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
         return reverse_round('draw-display', self.round)
 
     def get_queryset(self):
-        return self.round.active_adjudicators
+        return Adjudicator.objects.filter(debateadjudicator__debate__round=self.round)
 
 
 # ==============================================================================
