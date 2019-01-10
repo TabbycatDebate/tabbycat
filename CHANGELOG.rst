@@ -7,7 +7,6 @@ Change Log
 *Release date: ?*
 
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
-- When printing the per-participant private URLs they now feature QR codes in addition to the URL. Private URL pages now also feature information about each specific user, such as their team's break category eligibility. Thanks to Étienne Beaulé for contributing these features!
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
     - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details)
     - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development
@@ -16,9 +15,12 @@ Change Log
     - Emails are now in a rich-text format
     - Custom emails may be sent out to select participants through the web-interface
     - Participants can be specifically included or excluded from receiving a notification before sending
+- Expanded the use of private URLs (Encore Étienne Beaulé...):
+    - QR codes are now included in addition to the URL when printing private URLs
+    - Private landing pages will now display check-in status (if check-ins are used) along with further details regarding break categories, regions, etc.
+    - Current and former draw assignments will display along with submitted ballots (for adjudicators) on landing pages
 - When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions.
-- Private URL pages will now display check-in status (if check-ins have been used) along with further details regarding break categories, regions, etc. Thanks to Étienne Beaulé for these contributions!
-- Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
+- Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
 
 2.2.8
