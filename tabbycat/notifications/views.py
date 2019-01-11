@@ -44,8 +44,9 @@ class TestEmailView(AdministratorMixin, FormView):
 
 
 class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
-    page_title = gettext_lazy("Email Status")
+    page_title = gettext_lazy("Email Statuses")
     page_emoji = '📤'
+    template_name = 'email_statuses.html'
 
     tables_orientation = 'rows'
 
@@ -82,7 +83,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             emails = n.sentmessagerecord_set.all()
 
             subtitle = n.round.name if n.round is not None else _("@ %s") % timezone.localtime(n.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
-            table = TabbycatTableBuilder(view=self, title=n.get_event_display(), subtitle=subtitle)
+            table = TabbycatTableBuilder(view=self, title=n.get_event_display().title(), subtitle=subtitle)
 
             # Create arrays for columns
             emails_status = []
