@@ -276,12 +276,20 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
 
 class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
 
+    def get_default_send_queryset(self):
+        return super().get_default_send_queryset().exclude(
+            sentmessagerecord__notification__event=self.event, sentmessagerecord__notification__tournament=self.tournament)
+
     def get_extra(self):
         extra = {'tournament_id': self.tournament.id}
         return extra
 
 
 class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):
+
+    def get_default_send_queryset(self):
+        return super().get_default_send_queryset().exclude(
+            sentmessagerecord__notification__event=self.event, sentmessagerecord__notification__round=self.round)
 
     def get_extra(self):
         extra = {'round_id': self.round.id}
