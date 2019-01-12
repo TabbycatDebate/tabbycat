@@ -31,6 +31,7 @@ adj_position_names = {
     AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
 }
 
+
 def _assemble_panel(adjs):
         adj_string = []
         for adj, pos in adjs:
@@ -271,10 +272,10 @@ def team_draw_email_generator(to, url, round_id):
 
         for dt in debate.debateteam_set.all():
             context_team = context.copy()
-            context_team['TEAM'] = dt.team.code_name if use_codes else team.team.short_name
+            context_team['TEAM'] = dt.team.code_name if use_codes else dt.team.short_name
             context_team['SIDE'] = dt.get_side_name(tournament=tournament)
 
-            for speaker in dt.team.speakers;
+            for speaker in dt.team.speakers:
                 try:
                     to.remove(speaker.id)
                 except ValueError:
