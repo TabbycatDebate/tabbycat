@@ -54,7 +54,7 @@
     "cp-i18n": "cpx \"tabbycat/locale/jsi18n/**/*.js\" tabbycat/static/jsi18n",
     "serve-django": "dj r 0.0.0.0:8000",
     "serve-sass": "npm run build-sass -- --watch --recursive --output-style expanded & npm run build-sass-print -- --watch --recursive --output-style expanded --sourcemap",
-    "serve-live": "livereload 'tabbycat/' --exts 'html,css' --exclusions 'tabbycat/static/vue/'",
+    "serve-live": "livereload 'tabbycat/' --exts 'css' --exclusions 'tabbycat/static/vue/'",
     "serve-vue": "npx vue-cli-service serve",
     "serve-worker": "dj runworker notifications adjallocation venues",
     "lint-vue": "npx vue-cli-service lint tabbycat/ --ext .vue --cache --ignore-pattern tabbycat/staticfiles/,tabbycat/static/",
