@@ -13,18 +13,19 @@ from tournaments.models import Round, Tournament
 from .models import BulkNotification, SentMessageRecord
 from .utils import (adjudicator_assignment_email_generator, ballots_email_generator,
                     motion_release_email_generator, randomized_url_email_generator,
-                    standings_email_generator, team_speaker_email_generator)
+                    standings_email_generator, team_draw_email_generator, team_speaker_email_generator)
 
 
 class NotificationQueueConsumer(SyncConsumer):
 
     NOTIFICATION_GENERATORS = {
-        BulkNotification.EVENT_TYPE_DRAW: adjudicator_assignment_email_generator,
+        BulkNotification.EVENT_TYPE_ADJ_DRAW: adjudicator_assignment_email_generator,
         BulkNotification.EVENT_TYPE_URL: randomized_url_email_generator,
         BulkNotification.EVENT_TYPE_BALLOT_CONFIRMED: ballots_email_generator,
         BulkNotification.EVENT_TYPE_POINTS: standings_email_generator,
         BulkNotification.EVENT_TYPE_MOTIONS: motion_release_email_generator,
-        BulkNotification.EVENT_TYPE_REGISTRATION: team_speaker_email_generator
+        BulkNotification.EVENT_TYPE_TEAM_REG: team_speaker_email_generator,
+        BulkNotification.EVENT_TYPE_TEAM_DRAW: team_draw_email_generator
     }
 
     def _send(self, event, messages, records):

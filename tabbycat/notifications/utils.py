@@ -24,26 +24,27 @@ from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
 
 
+adj_position_names = {
+    AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
+    AdjudicatorAllocation.POSITION_ONLY: _("the only"),
+    AdjudicatorAllocation.POSITION_PANELLIST: _("a panellist"),
+    AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
+}
+
+def _assemble_panel(adjs):
+        adj_string = []
+        for adj, pos in adjs:
+            adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
+
+        return ", ".join(adj_string)
+
+
 def adjudicator_assignment_email_generator(to, url, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
     draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
     use_codes = use_team_code_names(tournament, False)
-
-    adj_position_names = {
-        AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
-        AdjudicatorAllocation.POSITION_ONLY: _("the only"),
-        AdjudicatorAllocation.POSITION_PANELLIST: _("a panellist"),
-        AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
-    }
-
-    def _assemble_panel(adjs):
-        adj_string = []
-        for adj, pos in adjs:
-            adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
-
-        return ", ".join(adj_string)
 
     for debate in draw:
         matchup = debate.matchup_codes if use_codes else debate.matchup
@@ -248,5 +249,40 @@ def team_speaker_email_generator(to, tournament_id):
             context_user['USER'] = speaker.name
 
             emails.append((context_user, speaker))
+
+    return emails
+
+
+def team_draw_email_generator(to, url, round_id):
+    emails = []
+    round = Round.objects.get(id=round_id)
+    tournament = round.tournament
+    draw = round.debate_set_with_prefetches(speakers=True, divisions=False).all()
+    use_codes = use_team_code_names(tournament, False)
+
+    for debate in draw:
+        matchup = debate.matchup_codes if use_codes else debate.matchup
+        context = {
+            'ROUND': round.name,
+            'VENUE': debate.venue.name,
+            'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
+            'DRAW': matchup
+        }
+
+        for dt in debate.debateteam_set.all():
+            context_team = context.copy()
+            context_team['TEAM'] = dt.team.code_name if use_codes else team.team.short_name
+            context_team['SIDE'] = dt.get_side_name(tournament=tournament)
+
+            for speaker in dt.team.speakers;
+                try:
+                    to.remove(speaker.id)
+                except ValueError:
+                    continue
+
+                context_user = context_team.copy()
+                context_user['USER'] = speaker.name
+
+                emails.append((context_user, speaker))
 
     return emails
