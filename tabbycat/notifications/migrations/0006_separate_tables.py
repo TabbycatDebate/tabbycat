@@ -17,7 +17,7 @@ def create_bulk_notifications(apps, schema_editor):
             timestamps.append(m.timestamp)
             BulkNotification.objects.create(event=m.event, timestamp=m.timestamp,
                                             round=m.round, tournament=m.tournament)
-        m.notification_id = timestamps.index(m.timestamp)
+        m.notification_id = timestamps.index(m.timestamp) + 1
         m.save()
 
 
