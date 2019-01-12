@@ -1,5 +1,9 @@
-{% extends "email_overview.html" %}
+{% extends "tables/base_vue_table.html" %}
 {% load i18n %}
+
+{% block page-subnav-sections %}
+  {% include 'notifications_nav.html' %}
+{% endblock page-subnav-sections %}
 
 {% block page-alerts %}
 
@@ -12,4 +16,3 @@
   {% include "components/item-info.html" with type="info" %}
 
 {% endblock %}
-

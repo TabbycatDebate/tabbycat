@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
+{% block page-subnav-sections %}
+  {% include 'notifications_nav.html' %}
+{% endblock page-subnav-sections %}
+
 {% block page-alerts %}
 
 {% if pref.reply_to_address == "" %}
