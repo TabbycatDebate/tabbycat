@@ -73,18 +73,6 @@
       <a href="{% tournamenturl 'importer-simple-index' %}" class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="download-cloud"></i>{% trans "Import Data" %}
       </a>
-      <a href="{% tournamenturl 'participants-list' %}"
-         class="list-group-item" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="book"></i>{% trans "Participants" %}
-      </a>
-      <a href="{% tournamenturl 'privateurls-list' %}"
-         class="list-group-item" data-parent="#setuph}">
-        <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}
-      </a>
-      <a href="{% tournamenturl 'notifications-status' %}"
-         class="list-group-item" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="mail"></i>{% trans "Emails" %}
-      </a>
       <a href="{% tournamenturl 'panel-adjudicators-index' %}"
          class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="box"></i>{% trans "Preformed Panels" %}
@@ -92,6 +80,29 @@
       <a href="{% url 'admin:index' %}" target="_blank"
          class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="database"></i>{% trans "Edit Database" %}
+      </a>
+    </div>
+  </div>
+
+  <div class="list-group-item d-inline-block">
+    <a href="#participantsh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false">
+       <i data-feather="users"></i>
+       <span class="d-none d-md-inline">{% trans "Participants" %}</span>
+       <i data-feather="chevron-down" class="sidebar-expand d-none d-md-inline"></i>
+       <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
+    </a>
+    <div class="collapse" id="participantsh">
+      <a href="{% tournamenturl 'participants-list' %}"
+         class="list-group-item" data-parent="#participantsh">
+        <span class="circle-icon small-circle"></span><i data-feather="book"></i>{% trans "Participants" %}
+      </a>
+      <a href="{% tournamenturl 'privateurls-list' %}"
+         class="list-group-item" data-parent="#participantsh}">
+        <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}
+      </a>
+      <a href="{% tournamenturl 'notifications-status' %}"
+         class="list-group-item" data-parent="#participantsh">
+        <span class="circle-icon small-circle"></span><i data-feather="mail"></i>{% trans "Emails" %}
       </a>
     </div>
   </div>
