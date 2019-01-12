@@ -15,7 +15,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
@@ -61,8 +61,8 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
-        kwargs['email_sent'] = SentMessageRecord.objects.filter(
-            tournament=self.tournament, event=SentMessageRecord.EVENT_TYPE_TEAM).exists()
+        kwargs['email_sent'] = BulkNotification.objects.filter(
+            tournament=self.tournament, event=BulkNotification.EVENT_TYPE_REGISTRATION).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -159,7 +159,7 @@ class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
 class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     page_subtitle = _("Team Registration")
 
-    event = SentMessageRecord.EVENT_TYPE_TEAM
+    event = BulkNotification.EVENT_TYPE_REGISTRATION
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 
@@ -253,10 +253,16 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return adjs
 
     def get_context_data(self, **kwargs):
-
-        kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-            debate__round=self.tournament.current_round
-        ).select_related('debate__round').prefetch_related('debate__round__motion_set')
+        try:
+            kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
+                debate__round=self.tournament.current_round
+            ).select_related(
+                'debate__round'
+            ).prefetch_related(
+                'debate__round__motion_set'
+            )
+        except ObjectDoesNotExist:
+            kwargs['debateadjudications'] = None
 
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, self.tournament)
         kwargs['adjadj_conflicts'] = self._get_adj_adj_conflicts()
