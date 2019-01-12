@@ -1,4 +1,4 @@
-{% extends "email_overview.html" %}
+{% extends "base.html" %}
 {% load debate_tags i18n %}
 
 {% block page-alerts %}
@@ -27,14 +27,14 @@
     {% csrf_token %}
 
     <div id="vueMount">
-      <checkbox-tables-container  :tables-data=tablesData
-                                  :round-info=roundInfo
-                                  :categories=categories
-                                  :translations=translations
-                                  :urls=urls
-                                  :navigation=navigation
-                                  :hide-auto-save=hideAutoSave
-                                  orientation={{ tables_orientation|safe }} >
+      <checkbox-tables-container :tables-data=tablesData
+                                 :round-info=roundInfo
+                                 :categories=categories
+                                 :translations=translations
+                                 :urls=urls
+                                 :navigation=navigation
+                                 :hide-auto-save=hideAutoSave
+                                 orientation={{ tables_orientation|safe }} >
       </checkbox-tables-container>
     </div>
 
@@ -59,7 +59,7 @@
       hideAutoSave: true,
       translations: null,
       urls: null,
-      navigation: null
+      navigation: null,
     }
   </script>
   {{ block.super }}
