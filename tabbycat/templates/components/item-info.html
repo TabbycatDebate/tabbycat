@@ -1,6 +1,6 @@
 <div class="list-group-item {% if not nopad %}mb-3{% endif %}
             text-{% if type %}{{ type }}{% else %}info{% endif %}
-            border-{% if type %}{{ type }}{% else %}info{% endif %}">
+            {% if not nopad %}border-{% if type %}{{ type }}{% else %}info{% endif %}{% endif %}">
 
   <div class="row align-items-center">
 
