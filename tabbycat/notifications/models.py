@@ -1,5 +1,6 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -83,7 +84,11 @@ class BulkNotification(models.Model):
         ordering = ['-timestamp']
 
     def __str__(self):
-        return "[%s] %s: %s" % (self.tournament.short_name, self.get_event_display(), self.timestamp)
+        return "[%s] %s: %s" % (
+            self.tournament.short_name,
+            self.get_event_display(),
+            timezone.localtime(self.timestamp).isoformat(),
+        )
 
 
 class EmailStatus(models.Model):
