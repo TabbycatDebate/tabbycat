@@ -46,8 +46,8 @@ class NotificationQueueConsumer(SyncConsumer):
         if t.pref('reply_to_address'):
             reply_to = "%s <%s>" % (t.pref('reply_to_name'), t.pref('reply_to_address'))
 
-        # Django wants the reply_to as an array
-        return from_email, [reply_to]
+            return from_email, [reply_to] # Django wants the reply_to as an array
+        return from_email, reply_to # Shouldn't have array of None
 
     def email(self, event):
         # Get database objects
