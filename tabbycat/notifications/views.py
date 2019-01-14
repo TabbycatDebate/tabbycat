@@ -117,8 +117,11 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 class EmailEventWebhookView(TournamentMixin, View):
 
     def post(self, request, *args, **kwargs):
-        if kwargs['key'] is not self.tournament.pref('email_hook_key'):
-            return HttpResponse(status=404) # 404: Not Found
+        if not self.tournament.pref('email_hook_key'):
+            return HttpResponse(status=403) # 403: Forbidden
+
+        if kwargs['key'] != self.tournament.pref('email_hook_key'):
+            return HttpResponse(status=403) # 403: Forbidden
 
         data = json.loads(request.body)
 
