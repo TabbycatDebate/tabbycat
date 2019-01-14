@@ -36,7 +36,6 @@ class SentMessageRecord(models.Model):
     class Meta:
         verbose_name = _("sent message")
         verbose_name_plural = _("sent messages")
-        ordering = ['-notification__timestamp', '-timestamp', '-recipient__name']
 
     def __str__(self):
         return "%s: %s" % (self.recipient.name, self.notification.get_event_display())

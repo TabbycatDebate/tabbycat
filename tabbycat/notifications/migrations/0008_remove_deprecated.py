@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='sentmessagerecord',
-            options={'ordering': ['-notification__timestamp', '-timestamp', '-recipient__name'], 'verbose_name': 'sent message', 'verbose_name_plural': 'sent messages'},
+            options={'verbose_name': 'sent message', 'verbose_name_plural': 'sent messages'},
         ),
         migrations.AlterField(
             model_name='sentmessagerecord',
