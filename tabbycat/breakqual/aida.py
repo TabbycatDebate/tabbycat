@@ -157,6 +157,7 @@ class Aida2019AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
     def calculate_cap(self):
         additional_teams = self.break_size - 16
         self.institution_cap = 3 + math.floor(additional_teams / 4)
+        logger.info("Break size of %d teams exceeds the base by %d. The institutional cap is set at %d.",self.break_size,additional_teams, self.institution_cap)
     
     
 
