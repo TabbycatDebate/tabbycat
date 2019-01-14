@@ -2,32 +2,33 @@
 # Extended manually to create BulkNotification objects and Message-IDs
 import email
 import itertools
-import re
+import operator
 
 from django.db import migrations
 
 
 def create_bulk_notifications(apps, schema_editor):
-    SentMessageRecord = apps.get_model("notifications", "SentMessageRecord")
-    BulkNotification = apps.get_model("notifications", "BulkNotification")
+    SentMessageRecord = apps.get_model("notifications", "SentMessageRecord")  # noqa: N806
+    BulkNotification = apps.get_model("notifications", "BulkNotification")    # noqa: N806
 
-    current_bulk = None
-    for key, group in itertools.groupby(SentMessageRecord.objects.all(), lambda x: (x.event, x.round, x.tournament)):
+    message_queryset = SentMessageRecord.objects.order_by('event', 'round', 'tournament', 'timestamp')
+    key_getter = operator.attrgetter('event', 'round', 'tournament')
+
+    for (event, r, t), group in itertools.groupby(message_queryset, key_getter):
         messages = list(group)
-
-        current_bulk = BulkNotification.objects.create(event=key[0], timestamp=messages[0].timestamp,
-                                                       round=key[1], tournament=key[2]).id
+        notification = BulkNotification.objects.create(event=event,
+                timestamp=messages[0].timestamp, round=r, tournament=t)
+        notification_id = notification.id
         for m in messages:
-            m.notification_id = current_bulk
+            m.notification_id = notification_id
             m.save()
 
 
 def get_message_ids(apps, schema_editor):
-    SentMessageRecord = apps.get_model("notifications", "SentMessageRecord")
+    SentMessageRecord = apps.get_model("notifications", "SentMessageRecord")  # noqa: N806
 
     for m in SentMessageRecord.objects.all():
         message = email.message_from_string(m.message)
-
         m.message_id = message.get('Message-ID')
         m.save()
 
