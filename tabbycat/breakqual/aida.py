@@ -130,8 +130,16 @@ class Aida2016EastersBreakGenerator(BaseAida2016BreakGenerator):
 
 
 @register
-class Aida2016AustralsBreakGenerator(BaseAida2016BreakGenerator):
-    key = "aida-2016-australs"
+class Aida2016Australs3CapBreakGenerator(BaseAida2016BreakGenerator):
+    key = "aida-2016-australs-3cap"
 
+    def reinsert_capped_teams(self):
+        self._reinsert_capped_teams(self.capped_teams)
+
+@register
+class Aida2016Australs4CapBreakGenerator(BaseAida2016BreakGenerator):
+    key = "aida-2016-australs-4cap"
+    institution_cap = 4
+    
     def reinsert_capped_teams(self):
         self._reinsert_capped_teams(self.capped_teams)
