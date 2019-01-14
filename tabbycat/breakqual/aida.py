@@ -149,8 +149,16 @@ class Aida2019AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
     key = "aida-2019-australs-open"
     """Calculates the number of teams by which the break exceeds the base of 16 teams.
         Then expands the institutional cap by 1 team for every 4 additional teams."""
-
-    additional_teams = self.break_size - 16
-
-    institution_cap = 3 + math.floor(additional_teams / 4)
     
+    def compute_break(self):
+        self.calculate_cap()
+        super().compute_break()
+
+    def calculate_cap(self):
+        additional_teams = self.break_size - 16
+        self.institution_cap = 3 + math.floor(additional_teams / 4)
+    
+    
+
+
+
