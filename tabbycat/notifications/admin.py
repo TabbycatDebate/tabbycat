@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from utils.admin import TabbycatModelAdminFieldsMixin
 
-from .models import BulkNotification, EmailStatus, SentMessageRecord
+from .models import BulkNotification, EmailStatus, SentMessage
 
 
 def precise_timestamp_isoformat(model, field_name):
@@ -13,8 +13,8 @@ def precise_timestamp_isoformat(model, field_name):
     return precise_timestamp
 
 
-@admin.register(SentMessageRecord)
-class SentMessageRecordAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+@admin.register(SentMessage)
+class SentMessageAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('recipient', 'email', 'precise_timestamp', 'notification')
     list_filter = ('notification__round', 'method', 'notification__event')
     search_fields = ('message_id', 'recipient__name', 'email', 'recipient__email')
@@ -23,7 +23,7 @@ class SentMessageRecordAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('recipient', 'notification__tournament')
 
-    precise_timestamp = precise_timestamp_isoformat(SentMessageRecord, 'timestamp')
+    precise_timestamp = precise_timestamp_isoformat(SentMessage, 'timestamp')
 
 
 @admin.register(BulkNotification)

@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
-class SentMessageRecord(models.Model):
+class SentMessage(models.Model):
 
     METHOD_TYPE_EMAIL = 'e'
     METHOD_TYPE_SMS = 's'
@@ -118,7 +118,7 @@ class EmailStatus(models.Model):
         (EVENT_TYPE_ASM_RESUBSCRIBED, _("Resubscribed to group"))
     )
 
-    email = models.ForeignKey('notifications.SentMessageRecord', models.CASCADE,
+    email = models.ForeignKey('notifications.SentMessage', models.CASCADE,
         verbose_name=_("email message"))
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
