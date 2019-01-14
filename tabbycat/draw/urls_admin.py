@@ -33,7 +33,7 @@ urlpatterns = [
             views.EmailAdjudicatorAssignmentsView.as_view(),
             name='draw-adj-email'),
         path('email-debaters',
-            views.EmailAdjudicatorAssignmentsView.as_view(),
+            views.EmailTeamAssignmentsView.as_view(),
             name='draw-team-email'),
 
         # Side and Matchup Editing
