@@ -136,19 +136,14 @@ class Aida2016EastersBreakGenerator(BaseAida2016BreakGenerator):
 
 
 @register
-class Aida2016Australs3CapBreakGenerator(BaseAida2016AustralsBreakGenerator):
+class Aida2016AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
     key = "aida-2016-australs"
-
-@register
-class Aida2016Australs4CapBreakGenerator(BaseAida2016AustralsBreakGenerator):
-    key = "aida-2016-australs-4cap"
-    institution_cap = 4
 
 @register
 class Aida2019AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
     key = "aida-2019-australs-open"
     """Calculates the number of teams by which the break exceeds the base of 16 teams.
-        Then expands the institutional cap by 1 team for every 4 additional teams."""
+        Then expands the institutional cap by 1 team for every 8 additional teams."""
     
     def compute_break(self):
         self.calculate_cap()
@@ -156,7 +151,7 @@ class Aida2019AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
 
     def calculate_cap(self):
         additional_teams = self.break_size - 16 if self.break_size - 16 >= 0 else 0
-        self.institution_cap = 3 + math.floor(additional_teams / 4)
+        self.institution_cap = 3 + math.floor(additional_teams / 8)
         logger.info("Break size of %d teams exceeds the 16-team base by %d. The institutional cap is set at %d.",self.break_size,additional_teams, self.institution_cap)
     
     
