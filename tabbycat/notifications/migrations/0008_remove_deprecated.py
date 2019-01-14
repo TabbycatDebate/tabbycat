@@ -40,6 +40,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='bulknotification',
             name='timestamp',
-            field=models.DateTimeField(auto_now=True, verbose_name='timestamp')
+            field=models.DateTimeField(auto_now_add=True, verbose_name='timestamp')
         ),
     ]

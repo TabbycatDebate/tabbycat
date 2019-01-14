@@ -29,7 +29,7 @@ class SentMessageRecord(models.Model):
 
     notification = models.ForeignKey('notifications.BulkNotification', models.CASCADE,
         verbose_name=_("notification"))
-    timestamp = models.DateTimeField(auto_now=True,
+    timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
 
     class Meta:
@@ -69,7 +69,7 @@ class BulkNotification(models.Model):
 
     event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES, blank=True,
         verbose_name=_("event"))
-    timestamp = models.DateTimeField(auto_now=True,
+    timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
 
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
@@ -116,7 +116,7 @@ class EmailStatus(models.Model):
 
     email = models.ForeignKey('notifications.SentMessageRecord', models.CASCADE,
         verbose_name=_("email message"))
-    timestamp = models.DateTimeField(auto_now=True,
+    timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
     event = models.CharField(max_length=20, choices=EVENT_TYPE_CHOICES,
         verbose_name=_("event"))

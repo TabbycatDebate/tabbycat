@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('event', models.CharField(blank=True, choices=[('p', 'team points'), ('c', 'ballot confirmed'), ('f', 'feedback URL'), ('b', 'ballot URL'), ('u', 'landing page URL'), ('d', 'draw released'), ('t', 'registration'), ('m', 'motion(s) released')], max_length=1, verbose_name='event')),
-                ('timestamp', models.DateTimeField(auto_now=False, verbose_name='timestamp')),
+                ('timestamp', models.DateTimeField(auto_now_add=False, verbose_name='timestamp')),
                 ('round', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='tournaments.Round', verbose_name='round')),
                 ('tournament', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tournaments.Tournament', verbose_name='tournament')),
             ],
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
             name='EmailStatus',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('timestamp', models.DateTimeField(auto_now=True, verbose_name='timestamp')),
+                ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name='timestamp')),
                 ('event', models.CharField(choices=[('processed', 'Processed'), ('dropped', 'Dropped'), ('deferred', 'Deferred'), ('delivered', 'Delivered'), ('bounce', 'Bounced'), ('open', 'Opened'), ('click', 'Clicked'), ('unsubscribe', 'Unsubscribed'), ('spamreport', 'Marked as spam'), ('group_unsubscribe', 'Unsubscribed from group'), ('group_resubscribe', 'Resubscribed to group')], max_length=20, verbose_name='event')),
                 ('data', django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True, verbose_name='context')),
             ],
@@ -59,5 +59,10 @@ class Migration(migrations.Migration):
             model_name='emailstatus',
             name='email',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='notifications.SentMessageRecord', verbose_name='email message'),
+        ),
+        migrations.AlterField(
+            model_name='sentmessagerecord',
+            name='timestamp',
+            field=models.DateTimeField(auto_now_add=True, verbose_name='timestamp'),
         ),
     ]
