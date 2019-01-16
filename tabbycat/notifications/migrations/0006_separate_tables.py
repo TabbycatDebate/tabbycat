@@ -56,6 +56,11 @@ class Migration(migrations.Migration):
             preserve_default=False,
         ),
         migrations.AddField(
+            model_name='sentmessagerecord',
+            name='hook_id',
+            field=models.CharField(blank=True, max_length=16, unique=True, verbose_name='Hook-ID'),
+        ),
+        migrations.AddField(
             model_name='emailstatus',
             name='email',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='notifications.SentMessageRecord', verbose_name='email message'),
