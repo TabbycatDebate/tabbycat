@@ -195,14 +195,18 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
         self.object = self.get_object(kwargs['url_key'])
         t = self.tournament
 
-        checkin_id = PersonIdentifier.objects.get(person=self.object)
-        checkins = get_unexpired_checkins(t, 'checkin_window_people')
-        kwargs['checkins_used'] = checkins.exists()
-
         try:
-            kwargs['event'] = checkins.filter(identifier=checkin_id).first()
+            checkin_id = PersonIdentifier.objects.get(person=self.object)
+            kwargs['checkins_used'] = True
+
+            checkins = get_unexpired_checkins(t, 'checkin_window_people')
+
+            try:
+                kwargs['event'] = checkins.filter(identifier=checkin_id).first()
+            except ObjectDoesNotExist:
+                kwargs['event'] = False
         except ObjectDoesNotExist:
-            kwargs['event'] = False
+            kwargs['checkins_used'] = False
 
         if hasattr(self.object, 'adjudicator'):
             kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(
