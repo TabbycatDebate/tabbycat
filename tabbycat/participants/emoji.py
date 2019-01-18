@@ -1506,6 +1506,71 @@ EMOJI_LIST = (
     ("🛸",  True , "Flying Saucer"),
     ("🛷",  True , "Sled"),
     ("🥌",  True , "Curling"),
+              
+    # Unicode Version 11.0
+              
+    ("🥰",  False , "Smiling Face With 3 Hearts"),      # too similar to another
+    ("🥵",  False , "Overheated"),                      # too similar to another
+    ("🥶",  True ,  "Freezing Face"),
+    ("🥴",  False , "Face With Uneven Eyes and Wavy Mouth"), # potentially offensive
+    ("🥳",  True , "Face With Party Horn and Party Hat"),
+    ("🥺",  True , "Pleading Face"),
+    ("🦵",  False , "Leg"),                             # dull
+    ("🦶",  True , "Foot"),
+    ("🦷",  True , "Tooth"),
+    ("🦴",  True , "Bone"),
+    ("🦸",  False , "Superhero"),                       # too similar to another
+    ("🦹",  False , "Supervillain"),                    # too similar to another
+    ("🦝",  False , "Raccoon"),                         # too similar to another
+    ("🦙",  True , "Llama"),
+    ("🦛",  True , "Hippopotamus"),
+    ("🦘",  True , "Kangaroo"),
+    ("🦡",  False , "Badger"),                          # too similar to another
+    ("🦢",  True , "Swan"),
+    ("🦚",  True , "Peacock"),
+    ("🦜",  True , "Parrot"),
+    ("🦟",  False , "Mosquito"),                        # potentially offensive
+    ("🦠",  False , "Microbe"),                         # potentially offensive
+    ("🥭",  True , "Mango"),
+    ("🥬",  True , "Leafy Green"),
+    ("🥯",  True , "Bagel"),
+    ("🧂",  False , "Salt"),                            # dull
+    ("🥮",  False , "Moon Cake"),                       # potentially offensive
+    ("🦞",  True , "Lobster"),
+    ("🧁",  True , "Cupcake"),
+    ("🧭",  False , "Compass"),                         # derivative glyph used in UI (check-ins)
+    ("🧱",  False , "Brick"),                           # dull
+    ("🛹",  True , "Skateboard"),
+    ("🧳",  True , "Luggage"),
+    ("🧨",  False , "Firecracker"),                     # potentially offensive
+    ("🧧",  False , "Red Envelope"),                    # potentially offensive
+    ("🥎",  False , "Softball"),                        # too similar to another
+    ("🥏",  True , "Flying Disc"),
+    ("🥍",  True , "Lacrosse"),
+    ("🧿",  False , "Nazar Amulet"),                    # potentially offensive
+    ("🧩",  True , "Jigsaw"),
+    ("🧸",  False , "Teddy Bear"),                      # too similar to another
+    ("🧵",  True , "Thread"),
+    ("🧶",  True , "Yarn"),
+    ("🥽",  True , "Goggles"),
+    ("🥼",  False , "Lab Coat"),                        # dull
+    ("🥾",  False , "Hiking Boot"),                     # too similar to another
+    ("🥿",  True , "Flat Shoe"),
+    ("🧮",  True , "Abacus"),
+    ("🧾",  False , "Receipt"),                         # dull
+    ("🧰",  True , "Toolbox"),
+    ("🧲",  True , "Magnet"),
+    ("🧪",  True , "Test Tube"),
+    ("🧫",  True , "Petri Dish"),
+    ("🧬",  True , "DNA"),
+    ("🧴",  False , "Lotion"),                          # dull
+    ("🧷",  True , "Safety Pin"),
+    ("🧹",  True , "Broom"),
+    ("🧺",  True , "Basket"),
+    ("🧻",  False , "Roll of Paper"),                   # potentially offensive
+    ("🧼",  True , "Soap"),
+    ("🧽",  True , "Sponge"),
+    ("🧯",  True , "Fire Extinguisher"),
 )
 
 # The field choices are the permissible values
