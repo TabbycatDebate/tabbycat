@@ -19,6 +19,11 @@ Change Log
     - QR codes are now included in addition to the URL when printing private URLs
     - Private landing pages will now display check-in status (if check-ins are used) along with further details regarding break categories, regions, etc.
     - Current and former draw assignments will display along with submitted ballots (for adjudicators) on landing pages
+- Reworked how conflicts are determined to support double-past institutional conflicts:
+    - Added a "team-institution conflict" model
+    - Like adjudicator-institution conflicts, team-institution conflicts are automatically created if you use the simple importer or the command-line importer; but if you edit the database, it's your responsibility to add/edit them
+    - Institutional affiliations no longer matter for determining conflicts for either teams or adjudicators; only institutions listed in the team's or adjudicator's conflicts matter
+    - A adjudicator/team conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
 - When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions.
 - Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
 
