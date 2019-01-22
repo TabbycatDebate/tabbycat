@@ -78,7 +78,10 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     if r.ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
         return VotingDebateResult(ballotsub, *args, **kwargs)
     elif r.ballots_per_debate == 'per-debate' and teams_in_debate == 'two':
-        return ConsensusDebateResult(ballotsub, *args, **kwargs)
+        if r.is_break_round:
+            return ConsensusEliminationDebateResult(ballotsub, *args, **kwargs)
+        else:
+            return ConsensusDebateResult(ballotsub, *args, **kwargs)
     elif r.ballots_per_debate == 'per-debate' and teams_in_debate == 'bp':
         if r.is_break_round:
             return BPEliminationDebateResult(ballotsub, *args, **kwargs)
@@ -808,13 +811,12 @@ class BPDebateResult(BaseConsensusDebateResultWithSpeakers):
         return self.scoresheet.get_total(side)
 
 
-class BPEliminationDebateResult(BaseDebateResult):
-    """For British Parliamentary elimination rounds.  Does not take speaker
+class BaseEliminationDebateResult(BaseDebateResult):
+    """For non-scored elimination rounds.  Does not take speaker
     identities, speaker scores or ranks.  Instead, it just notes the two
     advancing teams, using the `win` field, which is set to True for both of
     the advancing teams."""
 
-    is_voting = False
     uses_advancing = True
 
     # --------------------------------------------------------------------------
@@ -823,14 +825,14 @@ class BPEliminationDebateResult(BaseDebateResult):
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
-        # To be complete, this list must have two sides in it, but we don't
-        # enforce anything before checking completeness.
+        # To be complete, this list must have a specific number of sides in it,
+        # but we don't enforce anything before checking completeness.
         self.advancing = []
 
     def is_complete(self):
         if not super().is_complete():
             return False
-        if len(set(self.advancing)) != 2:
+        if len(set(self.advancing)) != self.num_advancing:
             return False
         return all(x in self.sides for x in self.advancing)
 
@@ -865,8 +867,8 @@ class BPEliminationDebateResult(BaseDebateResult):
         a ValueError."""
         if not all(x in self.sides for x in self.advancing):
             raise ValueError("Found invalid sides: %s" % sides)
-        if len(sides) != 2:
-            raise ValueError("Exactly two sides should be advancing, found: %s" % sides)
+        if len(sides) != self.num_advancing:
+            raise ValueError("Exactly %d sides should be advancing, found: %s" % (self.num_advancing, sides))
         self.advancing = sides
 
     def advancing_sides(self):
@@ -885,6 +887,23 @@ class BPEliminationDebateResult(BaseDebateResult):
 
     def teamscorefield_win(self, side):
         return side in self.advancing
+
+
+class BPEliminationDebateResult(BaseEliminationDebateResult):
+    """For BP elimination rounds, where result is decided by consensus to advance two teams."""
+
+    is_voting = False
+    num_advancing = 2
+
+
+class ConsensusEliminationDebateResult(BaseEliminationDebateResult):
+    """For two-team elimination rounds where speaking scores are not attributed."""
+
+    is_voting = False
+    num_advancing = 1
+
+    def winning_team(self):
+        return self.advancing_teams()[0]
 
 
 class ForfeitDebateResult(BaseDebateResult):

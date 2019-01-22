@@ -9,7 +9,11 @@
 
   <div class="card mt-3">
     <div class="list-group list-group-flush">
-      {% trans "Advancing Teams" as title %}
+      {% if pref.teams_in_debate == 'bp' %}
+        {% trans "Advancing Teams" as title %}
+      {% else %}
+        {% trans "Advancing Team" as title %}
+      {% endif %}
       {% include "components/form-title.html" %}
 
       {% if form.advancing.errors %}

@@ -32,7 +32,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
+from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotEliminationResultForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
@@ -269,9 +269,13 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 
     def get_form_class(self):
         if self.tournament.pref('teams_in_debate') == 'bp' and self.debate.round.is_break_round:
+            if self.debate.round.next is None:
+                return SingleBallotEliminationResultForm
             return BPEliminationResultForm
         elif self.debate.round.ballots_per_debate == 'per-adj':
             return PerAdjudicatorBallotSetForm
+        elif self.debate.round.is_break_round:
+            return SingleBallotEliminationResultForm
         else:
             return SingleBallotSetForm
 
@@ -353,6 +357,7 @@ class AdministratorBallotSetMixin(AdministratorMixin):
 class OldAdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'enter_results.html'
     tabroom = True
+    for_admin = True
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)

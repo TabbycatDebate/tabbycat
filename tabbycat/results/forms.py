@@ -14,7 +14,7 @@ from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
 from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
-                     ForfeitDebateResult, VotingDebateResult)
+                     ConsensusEliminationDebateResult, ForfeitDebateResult, VotingDebateResult)
 from .utils import get_status_meta, side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -813,7 +813,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
             yield sheet_dict
 
 
-class BPEliminationResultForm(BaseResultForm):
+class BaseEliminationResultForm(BaseResultForm):
 
     def __init__(self, ballotsub, *args, **kwargs):
         super().__init__(ballotsub, *args, **kwargs)
@@ -821,10 +821,11 @@ class BPEliminationResultForm(BaseResultForm):
         side_choices = [(side, _("%(team)s (%(side)s)") % {
             'team': self.debate.get_team(side).short_name,
             'side': self._side_name(side)}) for side in self.tournament.sides]
+
         self.fields['advancing'] = forms.MultipleChoiceField(choices=side_choices,
                 widget=forms.CheckboxSelectMultiple)
 
-        result = BPEliminationDebateResult(self.ballotsub)
+        result = self.result_type(self.ballotsub)
         self.initial['advancing'] = result.advancing_sides()
 
     def clean(self):
@@ -837,15 +838,31 @@ class BPEliminationResultForm(BaseResultForm):
                 code='sides_unconfirmed'
             ))
 
-        if 'advancing' in cleaned_data and len(cleaned_data['advancing']) != 2:
+        if 'advancing' in cleaned_data and len(cleaned_data['advancing']) != self.num_advancing:
             self.add_error('advancing', forms.ValidationError(
-                _("There must be exactly two teams advancing."),
+                ngettext(
+                    "There must be exactly %d team advancing.",
+                    "There must be exactly %d teams advancing.",
+                    self.num_advancing
+                ) % self.num_advancing,
                 code='num_advancing'
             ))
 
         return cleaned_data
 
     def save_ballot(self):
-        result = BPEliminationDebateResult(self.ballotsub)
+        result = self.result_type(self.ballotsub)
         result.set_advancing(self.cleaned_data['advancing'])
         result.save()
+
+
+class BPEliminationResultForm(BaseEliminationResultForm):
+
+    result_type = BPEliminationDebateResult
+    num_advancing = 2
+
+
+class SingleBallotEliminationResultForm(BaseEliminationResultForm):
+
+    result_type = ConsensusEliminationDebateResult
+    num_advancing = 1
