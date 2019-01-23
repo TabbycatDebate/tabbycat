@@ -274,7 +274,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
             return BPEliminationResultForm
         elif self.debate.round.ballots_per_debate == 'per-adj':
             return PerAdjudicatorBallotSetForm
-        elif self.debate.round.is_break_round:
+        elif self.debate.round.is_break_round and self.tournament.pref('elim_ballot_nom'):
             return SingleBallotEliminationResultForm
         else:
             return SingleBallotSetForm

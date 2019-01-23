@@ -115,6 +115,7 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     debate_rules__teams_in_debate              = 'bp'
     debate_rules__ballots_per_debate_prelim    = 'per-debate'
     debate_rules__ballots_per_debate_elim      = 'per-debate'
+    debate_rules__elim_ballot_nom              = True
     debate_rules__side_names                   = 'gov-opp'
     debate_rules__reply_scores_enabled         = False
     debate_rules__motion_vetoes_enabled        = False

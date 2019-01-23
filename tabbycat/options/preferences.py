@@ -460,6 +460,15 @@ class BallotsPerDebateElimination(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class BallotTeamNomination(BooleanPreference):
+    help_text = _("Should ballots for elimination rounds be a choice between competing teams without speaker scores")
+    verbose_name = _("Nominate winning team(s), elimination rounds")
+    section = debate_rules
+    name = 'elim_ballot_nom'
+    default = True
+
+
+@tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
     help_text = _("How many substantive speakers on a team")
     verbose_name = _("Substantive speakers")

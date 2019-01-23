@@ -1,4 +1,4 @@
-{% if debate.round.ballots_per_debate == 'per-debate' and debate.round.is_break_round %}
+{% if pref.elim_ballot_nom and debate.round.is_break_round %}
   {% include "ballot/elimination_ballot.html" %}
 {% else %}
   {% include "ballot/standard_ballot_set.html" %}
