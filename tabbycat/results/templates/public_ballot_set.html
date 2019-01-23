@@ -72,29 +72,11 @@
           {% for team in sheet.teams %}
             <div class="col-6 list-group mb-3">
 
-              {% for position in team.speakers %}
-                <li class="list-group-item">
-                  <strong>{{ position.name }}</strong>
-                  {{ position.speaker }}
-                  <span class="badge badge-secondary float-right">
-                    {{ position.score }}
-                  </span>
-                </li>
-              {% endfor %}
-              <li class="list-group-item list-group-item-{{ team.win_style }}">
-                {% if use_code_names %}
-                  {% blocktrans trimmed with name=team.team.code_name side=team.side %}
-                    <em>Total for {{ name }} ({{ side }})</em>
-                  {% endblocktrans %}
-                {% else %}
-                  {% blocktrans trimmed with name=team.team.short_name side=team.side %}
-                    <em>Total for {{ name }} ({{ side }})</em>
-                  {% endblocktrans %}
-                {% endif %}
-                <span class="badge badge-secondary float-right">
-                  {{ team.total }}
-                </span>
-              </li>
+              {% if pref.elim_ballot_nom and debate.round.is_break_round %}
+                {% include "nomination_ballot_team.html" %}
+              {% else %}
+                {% include "speaker_score_ballot_team.html" %}
+              {% endif %}
 
             </div>
           {% endfor %}

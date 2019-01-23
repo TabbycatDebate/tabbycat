@@ -42,6 +42,8 @@ import logging
 from functools import wraps
 from statistics import mean
 
+from django.utils.translation import gettext as _
+
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
@@ -279,6 +281,23 @@ class BaseDebateResult:
         self.debate._populate_teams()  # refresh
         self.load_debateteams()  # refresh
 
+    # --------------------------------------------------------------------------
+    # UI method
+    # --------------------------------------------------------------------------
+
+    def sheet_as_dicts(self):
+        """Returns a list of dicts, each being a team in the debate. Used by
+        subclasses' `as_dicts()` methods."""
+        teams = []
+        for side, (side_name, pos_names) in zip(self.sides, side_and_position_names(self.tournament)):
+            side_dict = {
+                "side": side_name,
+                "team": self.debateteams[side].team
+            }
+
+            teams.append(side_dict)
+        return teams
+
 
 class BaseDebateResultWithSpeakers(BaseDebateResult):
     """Adds management of speaker identities, ghosts and scores."""
@@ -417,31 +436,30 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
     def sheet_as_dicts(self, sheet):
         """Returns a list of dicts, each being a team in the debate. Used by
         subclasses' `as_dicts()` methods."""
-        teams = []
-        for side, (side_name, pos_names) in zip(self.sides, side_and_position_names(self.tournament)):
-            side_dict = {
-                "side": side_name,
-                "team": self.debateteams[side].team,
-                "total": sheet.get_total(side),
-                "speakers": [],
-            }
+        teams = super().sheet_as_dicts()
+
+        for i, (side, (side_name, pos_names)) in enumerate(zip(self.sides, side_and_position_names(self.tournament))):
+            teams[i]['total'] = sheet.get_total(side)
+            teams[i]['speakers'] = []
 
             # Colour result according to outcome of debate
             if hasattr(sheet, 'winner'):
-                side_dict["win_style"] = "success" if sheet.winner() == side else "danger"
+                teams[i]["win_style"] = "success" if sheet.winner() == side else "danger"
+                teams[i]["win_text"] = _("Won") if sheet.winner() == side else _("Lost")
             elif hasattr(sheet, 'rank'):
                 rank = sheet.rank(side)
                 if rank:
-                    side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+                    teams[i]["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+                    teams[i]["win_text"] = [_("1st"), _("2nd"), _("3rd"), _("4th")][rank-1]
 
             for pos, pos_name in zip(self.positions, pos_names):
-                side_dict["speakers"].append({
+                teams[i]["speakers"].append({
                     "pos": pos,
                     "name": pos_name,
                     "speaker": self.get_speaker(side, pos),
                     "score": sheet.get_score(side, pos),
                 })
-            teams.append(side_dict)
+
         return teams
 
 
@@ -887,6 +905,23 @@ class BaseEliminationDebateResult(BaseDebateResult):
 
     def teamscorefield_win(self, side):
         return side in self.advancing
+
+    # --------------------------------------------------------------------------
+    # Methods for UI
+    # --------------------------------------------------------------------------
+
+    def sheet_as_dicts(self):
+        """Returns a list of dicts, each being a team in the debate. Used by
+        subclasses' `as_dicts()` methods."""
+        teams = super().sheet_as_dicts()
+
+        for i, side in enumerate(self.sides):
+            teams[i]['win_style'] = "success" if self.teamscorefield_win(side) else "danger"
+            teams[i]['win_text'] = _("Advancing") if self.teamscorefield_win(side) else _("Eliminated")
+        return teams
+
+    def as_dicts(self):
+        return [{"teams": self.sheet_as_dicts()}]
 
 
 class BPEliminationDebateResult(BaseEliminationDebateResult):

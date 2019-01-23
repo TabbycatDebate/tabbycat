@@ -1,0 +1,16 @@
+{% load debate_tags i18n %}
+
+<li class="list-group-item list-group-item-{{ team.win_style }}">
+  {% if use_code_names %}
+    {% blocktrans trimmed with name=team.team.code_name side=team.side %}
+      <em>{{ name }} ({{ side }})</em>
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with name=team.team.short_name side=team.side %}
+      <em>{{ name }} ({{ side }})</em>
+    {% endblocktrans %}
+  {% endif %}
+  <span class="badge badge-secondary float-right">
+    {{ team.win_text }}
+  </span>
+</li>
