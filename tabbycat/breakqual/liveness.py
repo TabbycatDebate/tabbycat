@@ -14,9 +14,10 @@ def ncr(n, r):
     return binom
 
 
-def get_bp_coefficients(rounds):
-    # Get row of of the number of rounds from the quadrinomial coefficients
-    # triangle (Similar to Pascal's Triangle)
+def get_bp_coefficients(nrounds):
+    # Get row of the number of rounds from the quadrinomial coefficients
+    # triangle (similar to Pascal's triangle).
+    # See: https://oeis.org/A008287
 
     def get_coefficient(m, k):
         coeff = 0
@@ -24,12 +25,12 @@ def get_bp_coefficients(rounds):
             coeff += ncr(m, i) * ncr(m, k - 2 * i)
         return coeff
 
-    half_row = [get_coefficient(rounds, k) for k in range(0, ceil((3 * rounds + 1) / 2))]
+    half_row = [get_coefficient(nrounds, k) for k in range(0, ceil((3 * nrounds + 1) / 2))]
 
-    if rounds == 0:
+    if nrounds == 0:
         return half_row
 
-    if rounds % 2 == 1:
+    if nrounds % 2 == 1:
         return half_row + half_row[::-1]
 
     return half_row + half_row[-2::-1]
