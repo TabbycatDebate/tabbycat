@@ -498,7 +498,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         self.load_scoresheets()
 
     def load_scoresheets(self):
-        debateadjs = self.debate.debateadjudicator_set.exclude(type=DebateAdjudicator.TYPE_TRAINEE)
+        debateadjs = self.debate.debateadjudicator_set.exclude(type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator')
         self.debateadjs = {da.adjudicator: da for da in debateadjs}
         self.scoresheets = {adj: self.scoresheet_class(self.positions) for adj in self.debateadjs.keys()}
 
@@ -506,7 +506,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             debate_adjudicator__in=debateadjs,
             debate_team__side__in=self.sides,
             position__in=self.positions,
-        ).select_related('debate_adjudicator__adjudicator', 'debate_team')
+        ).select_related('debate_adjudicator__adjudicator', 'debate_adjudicator__adjudicator__institution', 'debate_team')
 
         for ssba in speakerscorebyadjs:
             self.set_score(ssba.debate_adjudicator.adjudicator,

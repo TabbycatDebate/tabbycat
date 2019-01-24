@@ -589,6 +589,14 @@ class PublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFromTou
         else:
             return self.object.matchup
 
+    def get_object(self):
+        debate = self.model.objects.select_related(
+            'round'
+        ).prefetch_related(
+            'debateteam_set__team'
+        ).get(id=self.kwargs.get('pk'))
+        return debate
+
     def check_permissions(self):
         debate = self.object
         round = debate.round
