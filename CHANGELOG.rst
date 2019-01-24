@@ -2,6 +2,14 @@
 Change Log
 ==========
 
+2.2.9
+-----
+*Release date: 24 January 2019*
+
+- Fixed an issue that could cause errors for tournaments when using an atypical number of rounds and break sizes. Thanks to Étienne for this fix
+- Fixed an issue where the display of adjudicator's record links would display their name twice
+
+
 2.2.8
 -----
 *Release date: 14 December 2018*
