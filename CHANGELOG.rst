@@ -29,6 +29,14 @@ Change Log
 - Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run ``heroku ps:scale worker=1``
 
 
+2.2.9
+-----
+*Release date: 24 January 2019*
+
+- Fixed an issue that could cause errors for tournaments when using an atypical number of rounds and break sizes. Thanks to Étienne for this fix
+- Fixed an issue where the display of adjudicator's record links would display their name twice
+
+
 2.2.8
 -----
 *Release date: 14 December 2018*
