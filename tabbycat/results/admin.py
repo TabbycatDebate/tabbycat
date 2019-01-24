@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.models import Prefetch
 from django.db.models.expressions import RawSQL
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
 
 from draw.models import DebateTeam
 from utils.admin import TabbycatModelAdminFieldsMixin
@@ -41,13 +41,29 @@ class TeamScoreAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_filter = ('debate_team__debate__round', )
     raw_id_fields = ('ballot_submission', 'debate_team')
 
-    def get_round(self, obj):
-        return obj.ballot_submission.debate.round.name
-    get_round.short_description = "Round"
-
     def get_queryset(self, request):
         return super(TeamScoreAdmin, self).get_queryset(request).select_related(
             'ballot_submission__debate__round__tournament',
+            'debate_team__team__tournament').prefetch_related(
+            Prefetch('ballot_submission__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
+
+
+# ==============================================================================
+# TeamScoreByAdj
+# ==============================================================================
+
+@admin.register(TeamScoreByAdj)
+class TeamScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
+    list_display = ('id', 'ballot_submission', 'get_round', 'get_adj_name', 'get_team', 'win', 'margin', 'score')
+    search_fields = ('debate_team__debate__round__seq', 'debate_team__debate__round__tournament__name',
+                     'debate_team__team__reference', 'debate_team__team__institution__code')
+    list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
+    raw_id_fields = ('ballot_submission', 'debate_adjudicator', 'debate_team')
+
+    def get_queryset(self, request):
+        return super(TeamScoreByAdjAdmin, self).get_queryset(request).select_related(
+            'ballot_submission__debate__round__tournament',
+            'debate_adjudicator__adjudicator',
             'debate_team__team__tournament').prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set', queryset=DebateTeam.objects.select_related('team')))
 
@@ -90,14 +106,6 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_filter = ('debate_team__debate__round', 'debate_adjudicator__adjudicator__name')
     raw_id_fields = ('debate_team', 'debate_adjudicator', 'ballot_submission')
 
-    def get_round(self, obj):
-        return obj.ballot_submission.debate.round.name
-    get_round.short_description = "Round"
-
-    def get_adj_name(self, obj):
-        return obj.debate_adjudicator.adjudicator.name
-    get_adj_name.short_description = "Adjudicator"
-
     def get_queryset(self, request):
         return super(SpeakerScoreByAdjAdmin, self).get_queryset(request).select_related(
             'ballot_submission__debate__round__tournament',
@@ -116,7 +124,3 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
                 AND results_speakerscore.ballot_submission_id = results_speakerscorebyadj.ballot_submission_id""",
                 ()),
         )
-
-    def get_speaker_name(self, obj):
-        return obj.speaker_name
-    get_speaker_name.short_description = "Speaker"

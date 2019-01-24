@@ -214,6 +214,44 @@ class SpeakerScoreByAdj(models.Model):
                     "submission must all relate to the same debate."))
 
 
+class TeamScoreByAdj(models.Model):
+    """Holds team result given by a particular adjudicator in a debate.
+    Mostly redundant; is necessary however for voting elimination ballots."""
+    ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE,
+        verbose_name=_("ballot submission"))
+    debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE,
+        verbose_name=_("debate adjudicator"))
+    debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
+        verbose_name=_("debate team"))
+
+    win = models.NullBooleanField(null=True, blank=True,
+        verbose_name=_("win"))
+    margin = ScoreField(null=True, blank=True,
+        verbose_name=_("margin"))
+    score = ScoreField(verbose_name=_("score"))
+
+    class Meta:
+        unique_together = [('debate_adjudicator', 'debate_team', 'ballot_submission')]
+        index_together = ['ballot_submission', 'debate_adjudicator']
+        verbose_name = _("team score by adjudicator")
+        verbose_name_plural = _("team scores by adjudicator")
+
+    def __str__(self):
+        return ("[{0.ballot_submission_id}/{0.id}] {0.points} for "
+            "{0.debate_team!s} from {0.debate_adjudicator!s}").format(self)
+
+    @property
+    def debate(self):
+        return self.debate_team.debate
+
+    def clean(self):
+        super().clean()
+        if (self.debate_team.debate != self.debate_adjudicator.debate or
+                self.debate_team.debate != self.ballot_submission.debate):
+            raise ValidationError(_("The debate team, debate adjudicator and ballot "
+                    "submission must all relate to the same debate."))
+
+
 class TeamScore(models.Model):
     """Stores information about a team's result in a debate. This is all
     redundant information — it can all be derived from indirectly-related
