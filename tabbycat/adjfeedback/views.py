@@ -710,10 +710,10 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         total_expected = sum([progress.num_expected() for progress in all_progress])
         percentage_fulfilled = (1 - total_missing / total_expected) * 100
         return ngettext_lazy(
-            "%d missing feedback submission (%.1f%% returned)",
-            "%d missing feedback submissions (%.1f%% returned)",
+            "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)",
+            "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)",
             total_missing
-        ) % (total_missing, percentage_fulfilled)
+        ) % {'nmissing': total_missing, 'fulfilled': percentage_fulfilled}
 
     def get_tables(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
