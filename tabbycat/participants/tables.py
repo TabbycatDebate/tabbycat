@@ -50,7 +50,7 @@ class AdjudicatorDebateTable:
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=participant,
         ).select_related(
-            'debate__round'
+            'debate__round', 'debate__round__tournament'
         ).prefetch_related(
             Prefetch('debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
