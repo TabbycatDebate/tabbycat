@@ -540,10 +540,21 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             da = self.debateadjs[adj]
             for side in self.sides:
                 dt = self.debateteams[side]
+
+                teamscorebyadjfields = {}
+                for field in ['points', 'win']:
+                    get_field = getattr(self, 'teamscorebyadjfield_%s' % field, None)
+                    if get_field is not None:
+                        teamscorebyadjfields[field] = get_field(adj, side)
+
                 for pos in self.positions:
                     self.ballotsub.speakerscorebyadj_set.update_or_create(
                         debate_team=dt, debate_adjudicator=da, position=pos,
                         defaults=dict(score=self.get_score(adj, side, pos)))
+
+                self.ballotsub.teamscorebyadj_set.update_or_create(
+                    debate_team=dt, debate_adjudicator=da,
+                    defaults=teamscorebyadjfields)
 
     # --------------------------------------------------------------------------
     # Data setting and retrieval
@@ -678,6 +689,16 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
 
     def teamscorefield_votes_possible(self, side):
         return len(self.scoresheets)
+
+    # --------------------------------------------------------------------------
+    # Team score by adjudicator fields
+    # --------------------------------------------------------------------------
+
+    def teamscorebyadjfield_points(self, adj, side):
+        return int(side == self.scoresheets[adj].winner())
+
+    def teamscorebyadjfield_win(self, adj, side):
+        return side == self.scoresheets[adj].winner()
 
     # --------------------------------------------------------------------------
     # Method for UI display
@@ -829,7 +850,7 @@ class BPDebateResult(BaseConsensusDebateResultWithSpeakers):
         return self.scoresheet.get_total(side)
 
 
-class BaseEliminationDebateResult(BaseDebateResult):
+class BaseNominationDebateResult(BaseDebateResult):
     """For non-scored elimination rounds.  Does not take speaker
     identities, speaker scores or ranks.  Instead, it just notes the two
     advancing teams, using the `win` field, which is set to True for both of
@@ -924,14 +945,14 @@ class BaseEliminationDebateResult(BaseDebateResult):
         return [{"teams": self.sheet_as_dicts()}]
 
 
-class BPEliminationDebateResult(BaseEliminationDebateResult):
+class BPEliminationDebateResult(BaseNominationDebateResult):
     """For BP elimination rounds, where result is decided by consensus to advance two teams."""
 
     is_voting = False
     num_advancing = 2
 
 
-class ConsensusEliminationDebateResult(BaseEliminationDebateResult):
+class ConsensusEliminationDebateResult(BaseNominationDebateResult):
     """For two-team elimination rounds where speaking scores are not attributed."""
 
     is_voting = False
