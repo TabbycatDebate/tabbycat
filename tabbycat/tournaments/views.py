@@ -7,8 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.urls import reverse_lazy
-from django.db.models import Q
-from django.db.models.expressions import RawSQL
+from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import is_safe_url
 from django.utils.html import format_html_join
@@ -309,11 +308,7 @@ class FixDebateTeamsView(AdministratorMixin, TournamentMixin, TemplateView):
 
     def get_incomplete_debates(self):
         annotations = {  # annotates with the number of DebateTeams on each side in the debate
-            side: RawSQL("""
-                SELECT DISTINCT COUNT('a')
-                FROM draw_debateteam
-                WHERE draw_debate.id = draw_debateteam.debate_id
-                AND draw_debateteam.side = %s""", (side,))
+            side: Count('debateteam', filter=Q(debateteam__side=side), distinct=True)
             for side in self.tournament.sides
         }
         debates = Debate.objects.filter(round__tournament=self.tournament)

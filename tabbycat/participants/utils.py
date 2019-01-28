@@ -1,4 +1,4 @@
-from django.db.models.expressions import RawSQL
+from django.db.models import Count, Q
 
 from tournaments.models import Round
 
@@ -30,17 +30,11 @@ def annotate_side_count_kwargs(sides, seq):
             print(team.aff_count, team.neg_count)
     """
 
-    query = """
-        SELECT DISTINCT COUNT(draw_debateteam.id)
-        FROM draw_debateteam
-        JOIN draw_debate ON draw_debateteam.debate_id = draw_debate.id
-        JOIN tournaments_round ON draw_debate.round_id = tournaments_round.id
-        WHERE participants_team.id = draw_debateteam.team_id
-        AND draw_debateteam.side = %s
-        AND tournaments_round.stage = %s
-        AND tournaments_round.seq <= %s"""
-
-    return {'%s_count' % side: RawSQL(query, (side, Round.STAGE_PRELIMINARY, seq)) for side in sides}
+    return {'%s_count' % side: Count('debateteam', filter=Q(
+        debateteam__side=side,
+        debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
+        debateteam__debate__round__seq__lte=seq), distinct=True
+    ) for side in sides}
 
 
 def get_side_history(teams, sides, seq):
@@ -49,6 +43,8 @@ def get_side_history(teams, sides, seq):
     that team has had on the corresponding side in `sides`, up to and including
     the given `seq` (of a round)."""
     team_ids = [team.id for team in teams]
-    queryset = Team.objects.filter(id__in=team_ids).annotate(
+    queryset = Team.objects.filter(id__in=team_ids).prefetch_related(
+        'debateteam_set__debate__round'
+    ).annotate(
         **annotate_side_count_kwargs(sides, seq))
     return {team.id: [getattr(team, '%s_count' % side) for side in sides] for team in queryset}
