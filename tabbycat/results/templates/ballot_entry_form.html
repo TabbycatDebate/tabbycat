@@ -46,19 +46,19 @@
             </div>
 
             {% for error in position.speaker.errors %}
-              {% blocktrans asvar message with pos=position.name error=error %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
                 Error with {{ pos }}'s speaker field: {{ error }}
               {% endblocktrans %}
               {% include "components/form-errors.html" %}
             {% endfor %}
             {% for error in position.ghost.errors %}
-              {% blocktrans asvar message with pos=position.name error=error %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
                 Error with {{ pos }}'s duplicate speaker field: {{ error }}
               {% endblocktrans %}
               {% include "components/form-errors.html" %}
             {% endfor %}
             {% for error in position.score.errors %}
-              {% blocktrans asvar message with pos=position.name error=error %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
                 Error with {{ pos }}'s score field: {{ error }}
               {% endblocktrans %}
               {% include "components/form-errors.html" %}
