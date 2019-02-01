@@ -21,7 +21,7 @@
     "d3": "5.7.x",
     "django-channels": "1.1.8",
     "eslint-plugin-html": "^5.0.0",
-    "feather-icons": "^4.10.0",
+    "feather-icons": "^4.15.0",
     "inter-ui": "3.2.x",
     "jquery": "^3.3.0",
     "jquery-validation": "1.19.x",
