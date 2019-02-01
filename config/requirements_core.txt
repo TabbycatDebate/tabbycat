@@ -19,7 +19,7 @@ dj-cmd==1.0                             # Provides the dj command alias
 raven==6.10.0                            # Client for Sentry error tracking
 
 # Database
-psycopg2-binary==2.7.6                  # For Django to talk to postgres
+psycopg2-binary==2.7.7                  # For Django to talk to postgres
 sqlparse==0.2.4                         # Parsing SQL statements
 dj-database-url==0.5.0                  # To obtain the Heroku service's database URL
 
