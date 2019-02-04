@@ -25,7 +25,8 @@ Change Log
     - Like adjudicator-institution conflicts, team-institution conflicts are automatically created if you use the simple importer or the command-line importer; but if you edit the database, it's your responsibility to add/edit them
     - Institutional affiliations no longer matter for determining conflicts for either teams or adjudicators; only institutions listed in the team's or adjudicator's conflicts matter
     - A adjudicator/team conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
-- When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions.
+- When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions
+- Info-slides can now be split into paragraphs
 - Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run ``heroku ps:scale worker=1``
 
 
