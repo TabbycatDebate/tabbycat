@@ -1417,6 +1417,16 @@ class TeamDrawNotificationSubject(StringPreference):
 
 
 @tournament_preferences_registry.register
+class TeamDrawNotificationMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants with their private URLs.")
+    verbose_name = _("Private URL notification message")
+    name = 'team_draw_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You have been assigned as <strong>{{ SIDE }}</strong> for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
+        "<p>The debate is between: {{ DRAW }}</p>")
+
+
+@tournament_preferences_registry.register
 class PrivateUrlEmailSubject(StringPreference):
     help_text = _("The subject-line for emails sent to participants with their private URLs.")
     verbose_name = _("Private URL notification subject line")
