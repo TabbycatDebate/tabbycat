@@ -490,7 +490,7 @@ class Adjudicator(Person):
             return self._feedback_score_cache
         except AttributeError:
             from adjallocation.models import DebateAdjudicator
-            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
+            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True, ignored=False).exclude(
                 source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
                     avg=models.Avg('score'))['avg']
             return self._feedback_score_cache

@@ -39,7 +39,8 @@ def populate_feedback_scores(adjudicators):
 
     adjfeedbacks = AdjudicatorFeedback.objects.filter(
         adjudicator_id__in=adjs_by_id.keys(),
-        confirmed=True
+        confirmed=True,
+        ignored=False,
     ).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
 
     adjs_annotated = Adjudicator.objects.filter(
