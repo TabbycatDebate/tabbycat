@@ -30,6 +30,14 @@ Change Log
 - Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run ``heroku ps:scale worker=1``
 
 
+2.2.10
+-----
+*Release date: 10 February 2019*
+
+- Fixed the display of feedback quantities on the Feedback Overview Page
+- Fixed issue where 'ignored' feedback would hide the result from the feedback graph but not affect an adjudicator's current score. Thanks to Étienne for this fix
+
+
 2.2.9
 -----
 *Release date: 24 January 2019*
