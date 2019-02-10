@@ -4,9 +4,10 @@ Change Log
 
 2.2.10
 -----
-*Release date: ?*
+*Release date: 10 February 2019*
 
 - Fixed the display of feedback quantities on the Feedback Overview Page
+- Fixed issue where 'ignored' feedback would hide the result from the feedback graph but not affect an adjudicator's current score. Thanks to Étienne for this fix
 
 
 2.2.9
