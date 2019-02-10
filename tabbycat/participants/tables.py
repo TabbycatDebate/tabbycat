@@ -120,7 +120,7 @@ class TeamDebateTable:
         table.add_debate_result_by_team_column(teamscores)
         table.add_cumulative_team_points_column(teamscores)
         if table.admin or tournament.pref('all_results_released') and tournament.pref('speaker_tab_released') and tournament.pref('speaker_tab_limit') == 0:
-                table.add_speaker_scores_column(teamscores)
+            table.add_speaker_scores_column(teamscores)
         table.add_debate_side_by_team_column(teamscores)
         table.add_debate_adjudicators_column(debates, show_splits=True)
 

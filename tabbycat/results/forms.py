@@ -792,8 +792,8 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
 
     def populate_result_with_scores(self, result):
         for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
-                score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                result.set_score(adj, side, pos, score)
+            score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
+            result.set_score(adj, side, pos, score)
 
     # --------------------------------------------------------------------------
     # Template access methods

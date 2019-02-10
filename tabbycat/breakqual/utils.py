@@ -59,19 +59,19 @@ def liveness(self, team, teams_count, prelims, current_round):
         import random
         status = random.choice([1,2,3])
         highest_liveness = 3
-        if status is 1:
+        if status == 1:
             live_info['tooltip'] += 'Definitely in for the %s break<br>test' % bc.name
             if highest_liveness != 2:
                 highest_liveness = 1  # Live not ins are the most important highlight
-        elif status is 2:
+        elif status == 2:
             live_info['tooltip'] += 'Still live for the %s break<br>test' % bc.name
             highest_liveness = 2
-        elif status is 3:
+        elif status == 3:
             live_info['tooltip'] += 'Cannot break in %s break<br>test' % bc.name
 
-    if highest_liveness is 1:
+    if highest_liveness == 1:
         live_info['class'] = 'bg-success'
-    elif highest_liveness is 2:
+    elif highest_liveness == 2:
         live_info['class'] = 'bg-warning'
 
     return live_info

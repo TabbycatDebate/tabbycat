@@ -33,11 +33,11 @@ adj_position_names = {
 
 
 def _assemble_panel(adjs):
-        adj_string = []
-        for adj, pos in adjs:
-            adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
+    adj_string = []
+    for adj, pos in adjs:
+        adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
 
-        return ", ".join(adj_string)
+    return ", ".join(adj_string)
 
 
 def adjudicator_assignment_email_generator(to, url, round_id):

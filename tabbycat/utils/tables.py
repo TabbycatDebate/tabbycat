@@ -299,22 +299,22 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
     def _result_cell_class_four(self, points, cell):
         team_name = cell['popover']['title']
-        if points is 3:
+        if points == 3:
             cell['popover']['title'] = _("%(team)s took 1st") % {'team': team_name}
             cell['icon'] = "chevrons-up"
             cell['iconClass'] = "text-success result-icon"
             cell['sort'] = 4
-        elif points is 2:
+        elif points == 2:
             cell['popover']['title'] = _("%(team)s took 2nd") % {'team': team_name}
             cell['icon'] = "chevron-up"
             cell['iconClass'] = "text-info result-icon"
             cell['sort'] = 3
-        elif points is 1:
+        elif points == 1:
             cell['popover']['title'] = _("%(team)s took 3rd") % {'team': team_name}
             cell['icon'] = "chevron-down"
             cell['iconClass'] = "text-warning result-icon"
             cell['sort'] = 2
-        elif points is 0:
+        elif points == 0:
             cell['popover']['title'] = _("%(team)s took 4th") % {'team': team_name}
             cell['icon'] = "chevrons-down"
             cell['iconClass'] = "text-danger result-icon"
