@@ -6,13 +6,13 @@
 -r requirements_heroku.txt
 
 # Linting
-flake8==3.6.*
+flake8==3.7.*
 flake8-import-order==0.18                   # Flake plugin for import order
 flake8-quotes==1.0.*                        # Flake plugin for quotes
-pep8-naming==0.7.*                          # Flake plugin for naming conventions
+pep8-naming==0.8.*                          # Flake plugin for naming conventions
 
 # Tests
-selenium==3.13.*                            # Functional testing (in here for CI tests)
+selenium==3.141.*                           # Functional testing (in here for CI tests)
 chromedriver_installer==0.0.6               # Functional testing Chrome interface
 
 # Translation
