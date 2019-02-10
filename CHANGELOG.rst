@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+2.2.10
+-----
+*Release date: ?*
+
+- Fixed the display of feedback quantities on the Feedback Overview Page
+
+
 2.2.9
 -----
 *Release date: 24 January 2019*
