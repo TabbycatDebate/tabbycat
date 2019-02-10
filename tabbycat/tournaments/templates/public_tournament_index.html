@@ -43,7 +43,7 @@
         {% blocktrans asvar text trimmed with category_name=category.name %}
           {{ category_name }} Team Tab
         {% endblocktrans %}
-        {% tournamenturl 'standings-public-tab-speaker-category' category=category.slug as url %}
+        {% tournamenturl 'standings-public-tab-break-category' category=category.slug as url %}
         {% include "components/item-action.html" with icon="users" %}
       {% endfor %}
     {% endif %}
