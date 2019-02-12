@@ -708,7 +708,12 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
         all_progress = teams_progress + adjs_progress
         total_missing = sum([progress.num_unsubmitted() for progress in all_progress])
         total_expected = sum([progress.num_expected() for progress in all_progress])
-        percentage_fulfilled = (1 - total_missing / total_expected) * 100
+
+        try:
+            percentage_fulfilled = (1 - total_missing / total_expected) * 100
+        except ZeroDivisionError:
+            percentage_fulfilled = 100
+
         return ngettext_lazy(
             "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)",
             "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)",
