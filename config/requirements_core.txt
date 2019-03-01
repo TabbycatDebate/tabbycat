@@ -4,7 +4,7 @@
 Django==2.1.5
 django-appconf==1.0.2                   # Helper for handling app configs
 git+https://github.com/EliotBerriot/django-dynamic-preferences.git@66dcbfbf # Settings management
-django-extensions==2.1.5                # For the generate secret command
+django-extensions==2.1.6                # For the generate secret command
 django-formtools==2.1                   # Form wizards
 django-ipware==2.1.0                    # IP Address logging
 django-jet==1.0.8                       # Admin Backend
