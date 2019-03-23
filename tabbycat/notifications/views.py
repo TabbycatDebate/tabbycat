@@ -168,6 +168,15 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
         """Whether the person should be emailed by default"""
         return p in default_send_queryset
 
+    def add_sent_notification(self, email_count):
+        text = ngettext("%(email_count)s email has been queued for sending.",
+                        "%(email_count)s emails have been queued for sending.",
+                        email_count)
+        if email_count > 0:
+            messages.success(self.request, text)
+        else:
+            messages.warning(self.request, _("No emails were sent — likely because no recipients were selected."))
+
     def get_table(self, mixed_participants=False):
         table = TabbycatTableBuilder(view=self, sort_key='name')
 
@@ -237,11 +246,7 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
             "send_to": [(p.id, p.email) for p in people]
         })
 
-        messages.success(request, ngettext(
-            "%(count)s email has been queued for sending.",
-            "%(count)s emails have been queued for sending.",
-            len(people)
-        ) % {'count': len(people)})
+        self.add_sent_notification(len(people))
         return super().post(request, *args, **kwargs)
 
 
@@ -268,11 +273,7 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
             "body": request.POST['message_body']
         })
 
-        messages.success(request, ngettext(
-            "%(count)s email has been queued for sending.",
-            "%(count)s emails have been queued for sending.",
-            len(email_recipients)
-        ) % {'count': len(email_recipients)})
+        self.add_sent_notification(len(email_recipients))
         return super().post(request, *args, **kwargs)
 
 
