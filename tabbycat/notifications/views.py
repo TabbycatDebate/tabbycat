@@ -21,7 +21,7 @@ from utils.tables import TabbycatTableBuilder
 from utils.views import VueTableTemplateView
 
 from .forms import BasicEmailForm, TestEmailForm
-from .models import EmailStatus, SentMessageRecord
+from .models import EmailStatus, SentMessage
 
 
 class TestEmailView(AdministratorMixin, FormView):
@@ -77,10 +77,10 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
     def get_tables(self):
         tables = []
         notifications = self.tournament.bulknotification_set.select_related('round').prefetch_related(
-            Prefetch('sentmessagerecord_set', queryset=SentMessageRecord.objects.select_related('recipient').prefetch_related('emailstatus_set')))
+            Prefetch('sentmessage_set', queryset=SentMessage.objects.select_related('recipient').prefetch_related('emailstatus_set')))
 
         for n in notifications:
-            emails = n.sentmessagerecord_set.all()
+            emails = n.sentmessage_set.all()
 
             subtitle = n.round.name if n.round is not None else _("@ %s") % timezone.localtime(n.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
             table = TabbycatTableBuilder(view=self, title=n.get_event_display().title(), subtitle=subtitle)
@@ -117,19 +117,22 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 class EmailEventWebhookView(TournamentMixin, View):
 
     def post(self, request, *args, **kwargs):
-        if kwargs['key'] is not self.tournament.pref('email_hook_key'):
-            return HttpResponse(status=404) # 404: Not Found
+        if not self.tournament.pref('email_hook_key'):
+            return HttpResponse(status=403) # 403: Forbidden
+
+        if kwargs['key'] != self.tournament.pref('email_hook_key'):
+            return HttpResponse(status=403) # 403: Forbidden
 
         data = json.loads(request.body)
 
-        records = SentMessageRecord.objects.filter(message_id__in=[obj['smtp-id'] for obj in data])
-        record_lookup = {smr.message_id: smr.id for smr in records}
+        records = SentMessage.objects.filter(hook_id__in=[obj['hook-id'] for obj in data])
+        record_lookup = {smr.hook_id: smr.id for smr in records}
         statuses = []
 
         for obj in data:
             dt = datetime.fromtimestamp(obj['timestamp'])
             timestamp = timezone.make_aware(dt, timezone.utc)
-            email_id = record_lookup.get(obj['smtp-id'], None)
+            email_id = record_lookup.get(obj['hook-id'], None)
             if email_id is None:
                 continue
             statuses.append(EmailStatus(email_id=email_id, timestamp=timestamp, event=obj['event'], data=obj))
@@ -281,7 +284,7 @@ class TournamentTemplateEmailCreateView(TemplateEmailCreateView):
 
     def get_default_send_queryset(self):
         return super().get_default_send_queryset().exclude(
-            sentmessagerecord__notification__event=self.event, sentmessagerecord__notification__tournament=self.tournament)
+            sentmessage__notification__event=self.event, sentmessage__notification__tournament=self.tournament)
 
     def get_extra(self):
         extra = {'tournament_id': self.tournament.id}
@@ -292,7 +295,7 @@ class RoundTemplateEmailCreateView(TemplateEmailCreateView, RoundMixin):
 
     def get_default_send_queryset(self):
         return super().get_default_send_queryset().exclude(
-            sentmessagerecord__notification__event=self.event, sentmessagerecord__notification__round=self.round)
+            sentmessage__notification__event=self.event, sentmessage__notification__round=self.round)
 
     def get_extra(self):
         extra = {'round_id': self.round.id}

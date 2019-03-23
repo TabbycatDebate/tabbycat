@@ -1,9 +1,10 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
-class SentMessageRecord(models.Model):
+class SentMessage(models.Model):
 
     METHOD_TYPE_EMAIL = 'e'
     METHOD_TYPE_SMS = 's'
@@ -14,6 +15,8 @@ class SentMessageRecord(models.Model):
 
     message_id = models.CharField(max_length=254, unique=True, null=True,
         verbose_name="Message-ID") # Technical, Untranslatable term
+    hook_id = models.CharField(max_length=16, unique=True, blank=True, # ids <= 5 long; null doesn't apply
+        verbose_name="Hook-ID")
 
     recipient = models.ForeignKey('participants.Person', models.SET_NULL, null=True,
         verbose_name=_("recipient"))
@@ -29,13 +32,12 @@ class SentMessageRecord(models.Model):
 
     notification = models.ForeignKey('notifications.BulkNotification', models.CASCADE,
         verbose_name=_("notification"))
-    timestamp = models.DateTimeField(auto_now=True,
+    timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
 
     class Meta:
         verbose_name = _("sent message")
         verbose_name_plural = _("sent messages")
-        ordering = ['-notification__timestamp', '-timestamp', '-recipient__name']
 
     def __str__(self):
         return "%s: %s" % (self.recipient.name, self.notification.get_event_display())
@@ -69,7 +71,7 @@ class BulkNotification(models.Model):
 
     event = models.CharField(max_length=1, choices=EVENT_TYPE_CHOICES, blank=True,
         verbose_name=_("event"))
-    timestamp = models.DateTimeField(auto_now=True,
+    timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
 
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
@@ -83,7 +85,11 @@ class BulkNotification(models.Model):
         ordering = ['-timestamp']
 
     def __str__(self):
-        return "[%s] %s: %s" % (self.tournament.short_name, self.get_event_display(), self.timestamp)
+        return "[%s] %s: %s" % (
+            self.tournament.short_name,
+            self.get_event_display(),
+            timezone.localtime(self.timestamp).isoformat(),
+        )
 
 
 class EmailStatus(models.Model):
@@ -114,9 +120,9 @@ class EmailStatus(models.Model):
         (EVENT_TYPE_ASM_RESUBSCRIBED, _("Resubscribed to group"))
     )
 
-    email = models.ForeignKey('notifications.SentMessageRecord', models.CASCADE,
+    email = models.ForeignKey('notifications.SentMessage', models.CASCADE,
         verbose_name=_("email message"))
-    timestamp = models.DateTimeField(auto_now=True,
+    timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
     event = models.CharField(max_length=20, choices=EVENT_TYPE_CHOICES,
         verbose_name=_("event"))

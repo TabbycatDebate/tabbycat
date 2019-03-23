@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifications', '0006_separate_tables'),
+        ('notifications', '0008_remove_deprecated'),
     ]
 
     operations = [
