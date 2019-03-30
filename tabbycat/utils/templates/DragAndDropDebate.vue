@@ -44,7 +44,7 @@
       </div>
       <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
         <div :class="['d-flex flex-fill align-items-center']"
-             v-for="side in sides">
+             v-for="side in sides" v-if="debateOrPanel.teams">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
                        :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
           <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
