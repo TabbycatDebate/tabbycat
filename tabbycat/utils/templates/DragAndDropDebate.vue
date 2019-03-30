@@ -24,7 +24,8 @@
       </div>
     </slot>
     <slot name="importance">
-      <div class="flex-1 flex-truncate border-right d-flex">
+      <div class="flex-1-25 flex-truncate border-right d-flex"
+           data-toggle="tooltip" title="This debate's priority">
         <div class="align-self-center flex-fill text-center">{{ debateOrPanel.importance }}</div>
       </div>
     </slot>
