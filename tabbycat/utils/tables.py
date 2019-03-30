@@ -856,7 +856,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
         self.add_columns(headers, data)
 
     def add_debate_ballot_link_column(self, debates, show_ballot=False):
-        ballot_links_header = {'key': "ballot", 'icon': 'search'}
+        ballot_links_header = {'key': "ballot", 'icon': 'search',
+                               'tooltip': _("The ballot you submitted")}
 
         if self.admin:
             ballot_links_data = [{
