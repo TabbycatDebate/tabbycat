@@ -25,7 +25,7 @@ dj-database-url==0.5.0                  # To obtain the Heroku service's databas
 
 # Channels
 channels==2.1.7                         # Channels; also includes the Daphne server
-channels_redis==2.3.3                   # Channels Layer
+channels_redis==2.3.2                   # Channels Layer
 
 # Misc
 ipython==7.3
