@@ -13,7 +13,6 @@ pep8-naming==0.8.*                          # Flake plugin for naming convention
 
 # Tests
 selenium==3.141.*                           # Functional testing (in here for CI tests)
-chromedriver_installer==0.0.6               # Functional testing Chrome interface
 
 # Translation
 transifex-client==0.13.*                    # Translations
