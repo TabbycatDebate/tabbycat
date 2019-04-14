@@ -24,7 +24,7 @@
         <div class="form-group">
           <label>Selected Motion</label>
           <select class="required custom-select form-control" @change="setSelected()"
-                  v-model="selectedMotion" :disabled="!isNew && !isAdmin">
+                  v-model="selectedMotion" :disabled="!isNew && !isAdmin" tabindex="1">
             <option value="" :selected="selectedMotion === ''">---------</option>
             <option v-for="(motionText, motionID) in motionOptions" :value="motionID">
               {{ motionText }}
@@ -35,10 +35,10 @@
       <!-- TODO: Veto choosing -->
       <div class="list-group-item pb-3 pt-3">
         <div class="row">
-          <div class="form-group col-lg-6" v-for="(teamVeto, team) in motionVetoes">
+          <div class="form-group col-lg-6" v-for="(teamVeto, team, index) in motionVetoes">
             <label>{{ team }}'s Veto</label>
             <select class="required custom-select form-control" @change="setVetoed(team)"
-                    v-model="motionVetoes[team]['value']" :disabled="!isNew && !isAdmin">
+                    v-model="motionVetoes[team]['value']" :disabled="!isNew && !isAdmin" :tabindex="index + 1">
               <option value="" :selected="motionVetoes[team]['value'] === ''">---------</option>
               <option v-for="(motionText, motionID) in motionOptions" :value="motionID">
                 {{ motionText }}
@@ -51,7 +51,7 @@
       <div class="list-group-item pb-3 pt-3">
         <div class="form-group" v-if="!showDuplicates">
           <select class="required custom-select form-control" v-model="ironStatus"
-                  @change="setIron()" :disabled="!isNew && !isAdmin">
+                  @change="setIron()" :disabled="!isNew && !isAdmin" :tabindex="4">
             <option value="No">
               No speakers spoke twice (no 'iron-person' speeches)
             </option>

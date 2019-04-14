@@ -436,7 +436,7 @@ class BaseBallotSetForm(BaseResultForm):
             order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
         # now, set
-        for i, name in enumerate(order, start=1):
+        for i, name in enumerate(order, start=3): # Start at 3 to account for front-end only fields
             try:
                 self.fields[name].widget.attrs['tabindex'] = i
             except KeyError as e:
