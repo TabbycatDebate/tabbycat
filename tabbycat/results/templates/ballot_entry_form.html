@@ -2,6 +2,20 @@
 
 {% block content %}
 
+  <div data-type="motion_selection" hidden>
+    {% if pref.enable_motions %}
+      {% with field=form.motion %}{{ field }}{% endwith %}
+    {% endif %}
+  </div>
+
+  {% if pref.motion_vetoes_enabled %}
+    {% for field in form.motion_veto_fields %}
+      <div data-type="motion_veto" hidden>
+        <label>{{ field.help_text|title }}</label>{{ field }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
   {% for sheet in form.scoresheets %}
 
     {% if sheet.adjudicator %}

@@ -48,7 +48,8 @@
       :is-confirmed="isConfirmed" :is-discarded="isDiscarded" :current-status="currentStatus"
       :author="author" :ballot-author="ballotAuthor" :total-ballotsubs="totalBallotsubs"
       :blind-entry="blindEntry" :blind-reveal="blindReveal" :blind-form-is-valid="blindFormIsValid"
-      v-on:reveal-blind-check="revealBlindCheck"></ballot-entry-footer>
+      v-on:reveal-blind-check="revealBlindCheck">
+    </ballot-entry-footer>
 
   </div>
 </template>
@@ -125,6 +126,7 @@ export default {
   },
   mounted: function () {
     let ballotForm = $('#ballot').first()
+    // Get per-adj scoresheets
     for (let sheet of $(ballotForm).find('div[data-type="sheet"]')) {
       var sheetData = {
         'teams': [],

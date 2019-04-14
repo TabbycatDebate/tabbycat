@@ -323,7 +323,7 @@ class BaseBallotSetForm(BaseResultForm):
             for side in self.sides:
                 self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(
                     label=_("%(side_abbr)s's motion veto") % {'side_abbr': get_side_name(self.tournament, side, 'abbr')},
-                    queryset=self.motions, required=False
+                    queryset=self.motions, required=False, help_text=get_side_name(self.tournament, side, 'full'),
                 )
 
         # 3. Speaker fields
