@@ -8,7 +8,7 @@ from django.urls import NoReverseMatch
 from django.utils.encoding import force_text
 from django.contrib import messages
 from django.db.models import Prefetch, Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -96,6 +96,21 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
         return super().get_redirect_url(*args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
+        # Lack of current_round could be caused by directly creating a tournament without rounds
+        set_path = reverse_tournament('tournament-set-current-round', self.tournament)
+        # Need to check we are not already redirecting to set round; else it will loop endlessly
+        if self.tournament.current_round is None and request.path != set_path:
+            if hasattr(self.request, 'user') and self.request.user.is_superuser:
+                logger.warning("Current round wasn't set, redirecting to set-current-round page")
+                # return redirect_tournament('tournament-set-current-round', self.tournament)
+                return redirect('tournament-set-current-round', tournament_slug=self.tournament.slug)
+            else:
+                logger.warning("Current round wasn't set, redirecting to site index")
+                messages.warning(request, _("There's a problem with the data for the tournament "
+                    "%(tournament_name)s. Please contact a tab director and ask them to set its "
+                    "current round.") % {'tournament_name': self.tournament.name})
+                return redirect('tabbycat-index')
+
         try:
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError):
