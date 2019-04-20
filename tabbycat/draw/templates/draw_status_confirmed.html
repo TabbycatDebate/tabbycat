@@ -105,7 +105,7 @@
               {% plural %}
                 {{ ndebates }} debates do not have their sides confirmed.
               {% endblocktrans %}
-              {% include "components/item-info.html" with type="danger" %}
+              {% include "components/item-action.html" with type="danger" %}
 
               {% roundurl 'legacy-draw-matchups-edit' as url %}
               {% include "components/item-action.html" with text="Allocate Sides" type="success" to_complete=True %}
