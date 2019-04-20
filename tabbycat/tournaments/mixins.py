@@ -4,7 +4,7 @@ import logging
 from asgiref.sync import async_to_sync
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import NoReverseMatch
+from django.urls import NoReverseMatch, reverse
 from django.utils.encoding import force_text
 from django.contrib import messages
 from django.db.models import Prefetch, Q
@@ -96,34 +96,41 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
         return super().get_redirect_url(*args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
-        # Lack of current_round could be caused by directly creating a tournament without rounds
-        set_path = reverse_tournament('tournament-set-current-round', self.tournament)
-        # Need to check we are not already redirecting to set round; else it will loop endlessly
-        if self.tournament.current_round is None and request.path != set_path:
+        t = self.tournament
+        # Lack of current_round caused by creating a tournament without rounds
+        if t.current_round is None:
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.warning("Current round wasn't set, redirecting to set-current-round page")
-                # return redirect_tournament('tournament-set-current-round', self.tournament)
-                return redirect('tournament-set-current-round', tournament_slug=self.tournament.slug)
+                messages.warning(request, _("You've been redirected to this "
+                    "page because tournament %(tournament_name)s has no rounds."
+                    "Please create some before returning to the admin site") %
+                    {'tournament_name': t.name})
+                admin_url = reverse('admin:tournaments_round_changelist')
+                return redirect(admin_url)
             else:
                 logger.warning("Current round wasn't set, redirecting to site index")
-                messages.warning(request, _("There's a problem with the data for the tournament "
-                    "%(tournament_name)s. Please contact a tab director and ask them to set its "
-                    "current round.") % {'tournament_name': self.tournament.name})
+                messages.warning(request, _("There's a problem with the data "
+                    "for the tournament %(tournament_name)s. Please contact a "
+                    "tab director and ask them to investigate.") %
+                    {'tournament_name': t.name})
                 return redirect('tabbycat-index')
 
         try:
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError):
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.warning("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
-                messages.warning(request, _("You've been redirected to this page because of a problem with "
-                        "how teams are assigned to sides in a debate."))
-                return redirect_tournament('tournament-fix-debate-teams', self.tournament)
+                logger.warning("Debate team side assignment error, redirecting "
+                               "to tournament-fix-debate-teams")
+                messages.warning(request, _("You've been redirected to this "
+                    "page because of a problem with how teams are assigned to "
+                    "sides in a debate."))
+                return redirect_tournament('tournament-fix-debate-teams', t)
             else:
-                logger.warning("Debate team side assignment error, redirecting to tournament-public-index")
-                messages.warning(request, _("There's a problem with how teams are assigned to sides "
-                        "in a debate. The tab director will need to resolve this issue."))
-                return redirect_tournament('tournament-public-index', self.tournament)
+                logger.warning("Debate team side assignment error, redirecting "
+                               "to tournament-public-index")
+                messages.warning(request, _("There's a problem with how teams "
+                    "are assigned to sides in a debate. The tab director will "
+                    "need to resolve this issue."))
+                return redirect_tournament('tournament-public-index', t)
 
 
 class TournamentWebsocketMixin(TournamentFromUrlMixin):
@@ -225,7 +232,7 @@ class RoundMixin(RoundFromUrlMixin, TournamentMixin):
         if self.round_redirect_pattern_name:
             try:
                 return reverse_round(self.round_redirect_pattern_name,
-                        self.round, args=args, kwargs=kwargs)
+                                     self.round, args=args, kwargs=kwargs)
             except NoReverseMatch:
                 pass
         return super().get_redirect_url(*args, **kwargs)
