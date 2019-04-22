@@ -124,7 +124,7 @@ class DivisionAllocator():
                 vcs_with_capacity = [
                     v_g for v_g in list(division_dict.keys()) if len(division_dict[v_g]) <= v_g.venues.count() - 1]
 
-                if len(vcs_with_capacity) is 0:
+                if len(vcs_with_capacity) == 0:
                     continue
 
                 random_vc = random.choice(vcs_with_capacity)

@@ -4,7 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy, ngettext
@@ -15,12 +15,9 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
-from draw.prefetch import populate_opponents
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
-from results.models import SpeakerScore, TeamScore
-from results.prefetch import populate_confirmed_ballots, populate_wins
 from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
@@ -29,8 +26,8 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Person, Team
-from .tables import TeamResultTableBuilder
+from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
+from .tables import AdjudicatorDebateTable, TeamDebateTable
 
 logger = logging.getLogger(__name__)
 
@@ -64,8 +61,8 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
-        kwargs['email_sent'] = SentMessageRecord.objects.filter(
-            tournament=self.tournament, event=SentMessageRecord.EVENT_TYPE_TEAM).exists()
+        kwargs['email_sent'] = BulkNotification.objects.filter(
+            tournament=self.tournament, event=BulkNotification.EVENT_TYPE_TEAM_REG).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -162,7 +159,7 @@ class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
 class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     page_subtitle = _("Team Registration")
 
-    event = SentMessageRecord.EVENT_TYPE_TEAM
+    event = BulkNotification.EVENT_TYPE_TEAM_REG
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 
@@ -199,99 +196,6 @@ class BaseRecordView(SingleObjectFromTournamentMixin, VueTableTemplateView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().get(request, *args, **kwargs)
-
-
-class AdjudicatorDebateTable:
-
-    @classmethod
-    def get_table(cls, view, participant):
-        """On adjudicator record pages, the table is the previous debates table."""
-        table = TabbycatTableBuilder(view=view, title=view.table_title, sort_key="round")
-
-        debateadjs = DebateAdjudicator.objects.filter(
-            adjudicator=participant,
-        ).select_related(
-            'debate__round'
-        ).prefetch_related(
-            Prefetch('debate__debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate__debateteam_set__team__speaker_set',
-            'debate__round__motion_set',
-        )
-        if not table.admin and not view.tournament.pref('all_results_released') and not table.private_url:
-            debateadjs = debateadjs.filter(
-                debate__round__draw_status=Round.STATUS_RELEASED,
-                debate__round__silent=False,
-                debate__round__completed=True,
-            )
-        elif table.private_url:
-            debateadjs = debateadjs.filter(debate__round__draw_status=Round.STATUS_RELEASED)
-
-        debates = [da.debate for da in debateadjs]
-        populate_wins(debates)
-        populate_confirmed_ballots(debates, motions=True, results=True)
-
-        table.add_round_column([debate.round for debate in debates])
-        table.add_debate_results_columns(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=participant)
-
-        if table.admin or view.tournament.pref('public_motions'):
-            table.add_debate_motion_column(debates)
-
-        table.add_debate_ballot_link_column(debates)
-        return table
-
-
-class TeamDebateTable:
-
-    @classmethod
-    def get_table(cls, view, participant):
-        """On team record pages, the table is the results table."""
-
-        table = TeamResultTableBuilder(view=view, title=view.table_title, sort_key="round")
-
-        tournament = view.tournament
-        teamscores = TeamScore.objects.filter(
-            debate_team__team=participant,
-            ballot_submission__confirmed=True,
-        ).select_related(
-            'debate_team__debate__round__tournament'
-        ).prefetch_related(
-            Prefetch('debate_team__debate__debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate_team__debate__debateteam_set__team',
-            'debate_team__debate__round__motion_set',
-            Prefetch('debate_team__speakerscore_set',
-                queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
-                to_attr='speaker_scores'),
-        ).order_by('debate_team__debate__round__seq')
-
-        if not table.admin and not tournament.pref('all_results_released'):
-            teamscores = teamscores.filter(
-                debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
-                debate_team__debate__round__silent=False,
-                debate_team__debate__round__completed=True,
-            )
-
-        debates = [ts.debate_team.debate for ts in teamscores]
-        populate_opponents([ts.debate_team for ts in teamscores])
-        populate_confirmed_ballots(debates, motions=True, results=True)
-
-        table.add_round_column([debate.round for debate in debates])
-        table.add_debate_result_by_team_column(teamscores)
-        table.add_cumulative_team_points_column(teamscores)
-        if table.admin or tournament.pref('all_results_released') and tournament.pref('speaker_tab_released') and tournament.pref('speaker_tab_limit') == 0:
-                table.add_speaker_scores_column(teamscores)
-        table.add_debate_side_by_team_column(teamscores)
-        table.add_debate_adjudicators_column(debates, show_splits=True)
-
-        if table.admin or tournament.pref('public_motions'):
-            table.add_debate_motion_column(debates)
-
-        if not table.private_url:
-            table.add_debate_ballot_link_column(debates)
-
-        return table
 
 
 class BaseTeamRecordView(BaseRecordView):
@@ -349,10 +253,16 @@ class BaseAdjudicatorRecordView(BaseRecordView):
         return adjs
 
     def get_context_data(self, **kwargs):
-
-        kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-            debate__round=self.tournament.current_round
-        ).select_related('debate__round').prefetch_related('debate__round__motion_set')
+        try:
+            kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
+                debate__round=self.tournament.current_round
+            ).select_related(
+                'debate__round'
+            ).prefetch_related(
+                'debate__round__motion_set'
+            )
+        except ObjectDoesNotExist:
+            kwargs['debateadjudications'] = None
 
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, self.tournament)
         kwargs['adjadj_conflicts'] = self._get_adj_adj_conflicts()

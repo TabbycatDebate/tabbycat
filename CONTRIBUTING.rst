@@ -28,7 +28,7 @@ Getting started with development
 - We broadly use the `git-flow workflow <http://danielkummer.github.io/git-flow-cheatsheet/>`_.
 - We use Django's testing tools — adding unit tests to new features is greatly appreciated
 
-  - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser installed.
+  - A number of our tests use `Selenium <http://selenium-python.readthedocs.io>`_ and `ChromeDriver <https://sites.google.com/a/chromium.org/chromedriver/>`_ to simulate in-browser functionality. They will fail if you do not have the Chrome browser and ChromeDriver installed.
 
 - A number of extra dependencies are required for running tests, linting, and serving the documentation. These can be installed with::
 

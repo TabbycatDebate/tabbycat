@@ -32,7 +32,7 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
             preset_class.slugified_name = slugify(preset_class.__name__)
             preset_options.append(preset_class)
 
-        preset_options.sort(key=lambda x: x.name)
+        preset_options.sort(key=lambda x: (x.show_in_list, x.name))
         if not settings.LEAGUE:
             return [p for p in preset_options if p.name != "WADL Options"]
         else:

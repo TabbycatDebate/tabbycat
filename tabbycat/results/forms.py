@@ -323,7 +323,7 @@ class BaseBallotSetForm(BaseResultForm):
             for side in self.sides:
                 self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(
                     label=_("%(side_abbr)s's motion veto") % {'side_abbr': get_side_name(self.tournament, side, 'abbr')},
-                    queryset=self.motions, required=False
+                    queryset=self.motions, required=False, help_text=get_side_name(self.tournament, side, 'full'),
                 )
 
         # 3. Speaker fields
@@ -436,7 +436,7 @@ class BaseBallotSetForm(BaseResultForm):
             order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
         # now, set
-        for i, name in enumerate(order, start=1):
+        for i, name in enumerate(order, start=3): # Start at 3 to account for front-end only fields
             try:
                 self.fields[name].widget.attrs['tabindex'] = i
             except KeyError as e:
@@ -792,8 +792,8 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
 
     def populate_result_with_scores(self, result):
         for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
-                score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                result.set_score(adj, side, pos, score)
+            score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
+            result.set_score(adj, side, pos, score)
 
     # --------------------------------------------------------------------------
     # Template access methods

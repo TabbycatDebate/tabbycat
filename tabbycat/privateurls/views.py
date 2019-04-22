@@ -2,19 +2,18 @@ import logging
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.db.models import Exists, OuterRef, Prefetch, Q
+from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from adjallocation.models import DebateAdjudicator
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
-from participants.views import AdjudicatorDebateTable, TeamDebateTable
+from participants.tables import AdjudicatorDebateTable, TeamDebateTable
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
 from utils.misc import reverse_tournament
@@ -38,9 +37,9 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
         return super().get_context_data(**kwargs)
 
     def get_participants_to_email(self, already_sent=False):
-        subquery = SentMessageRecord.objects.filter(
-            event=SentMessageRecord.EVENT_TYPE_URL,
-            tournament=self.tournament, email=OuterRef('email')
+        subquery = SentMessage.objects.filter(
+            notification__event=BulkNotification.EVENT_TYPE_URL,
+            notification__tournament=self.tournament, email=OuterRef('email')
         )
         people = self.tournament.participants.filter(
             url_key__isnull=False, email__isnull=False
@@ -144,7 +143,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
 
-    event = SentMessageRecord.EVENT_TYPE_URL
+    event = BulkNotification.EVENT_TYPE_URL
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
 
@@ -187,7 +186,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
     def get_table(self):
         if hasattr(self.object, 'adjudicator'):
-            return AdjudicatorDebateTable.get_table(self, self.object)
+            return AdjudicatorDebateTable.get_table(self, self.object.adjudicator)
         else:
             return TeamDebateTable.get_table(self, self.object.speaker.team)
 
@@ -198,10 +197,16 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
 
         try:
             checkin_id = PersonIdentifier.objects.get(person=self.object)
+            kwargs['checkins_used'] = True
+
             checkins = get_unexpired_checkins(t, 'checkin_window_people')
-            kwargs['event'] = checkins.filter(identifier=checkin_id).first()
+
+            try:
+                kwargs['event'] = checkins.filter(identifier=checkin_id).first()
+            except ObjectDoesNotExist:
+                kwargs['event'] = False
         except ObjectDoesNotExist:
-            kwargs['event'] = False
+            kwargs['checkins_used'] = False
 
         if hasattr(self.object, 'adjudicator'):
             kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(

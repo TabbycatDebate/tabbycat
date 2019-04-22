@@ -223,6 +223,13 @@ class Tournament(models.Model):
     # --------------------------------------------------------------------------
 
     @cached_property
+    def rounds_with_released_results(self):
+        if self.pref('all_results_released'):
+            return self.round_set.all()
+        else:
+            return self.round_set.filter(completed=True, silent=False)
+
+    @cached_property
     def current_round(self):
         current = self.round_set.filter(completed=False).order_by('seq').first()
         if current is None:
@@ -274,12 +281,6 @@ class Tournament(models.Model):
         """Returns True if draws are available for public viewing. Used in
         public navigation menus."""
         return any(r.draw_status == Round.STATUS_RELEASED for r in self.current_rounds)
-
-    @cached_property
-    def public_results_available(self):
-        """Returns True if results are available for public viewing. Used in
-        public navigation menus."""
-        return self.round_set.filter(completed=True, silent=False).exists()
 
 
 class RoundManager(LookupByNameFieldsMixin, models.Manager):
@@ -524,9 +525,16 @@ class Round(models.Model):
                     Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')))
             if iron:
                 debateteam_prefetch_queryset = debateteam_prefetch_queryset.annotate(
-                    iron=Count('speakerscore', filter=Q(speakerscore__ghost=True), distinct=True),
-                    iron_prev=Count('team__debateteam__speakerscore', distinct=True,
-                        filter=Q(team__debateteam__speakerscore__ghost=True) & Q(team__debateteam__debate__round=self.prev)))
+                    iron=Count('speakerscore', filter=Q(
+                        speakerscore__ghost=True,
+                        speakerscore__ballot_submission__confirmed=True,
+                    ), distinct=True),
+                    iron_prev=Count('team__debateteam__speakerscore', filter=Q(
+                        team__debateteam__speakerscore__ghost=True,
+                        team__debateteam__speakerscore__ballot_submission__confirmed=True,
+                        team__debateteam__debate__round=self.prev,
+                    ), distinct=True),
+                )
 
             debates = debates.prefetch_related(
                 Prefetch('debateteam_set', queryset=debateteam_prefetch_queryset))

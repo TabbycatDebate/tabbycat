@@ -100,7 +100,10 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
         # TODO: return debates directly from allocator function?
         content = self.reserialize_debates(SimpleDebateAllocationSerializer, round)
-        msg = _("Succesfully auto-allocated adjudicators to debates.")
+        if event['extra']['settings']['usePreformedPanels']:
+            msg = _("Succesfully auto-allocated preformed panels to debates.")
+        else:
+            msg = _("Succesfully auto-allocated adjudicators to debates.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def allocate_panel_adjs(self, event):

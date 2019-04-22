@@ -24,9 +24,15 @@
       <i data-feather="chevron-left"></i>{% trans "Back to All Results" %}
     </a>
   {% if not new %}
-    <a class="btn btn-primary" href="{% tournamenturl 'results-ballotset-new' debate.id %}">
-      {% trans "Create a new ballot set for this debate" %}
-    </a>
+    {% if for_admin %}
+      <a class="btn btn-primary" href="{% tournamenturl 'results-ballotset-new' debate.id %}">
+        {% trans "Create a new ballot set for this debate" %}
+      </a>
+    {% else %}
+      <a class="btn btn-primary" href="{% tournamenturl 'results-assistant-ballotset-new' debate.id %}">
+        {% trans "Create a new ballot set for this debate" %}
+      </a>
+    {% endif %}
   {% endif %}
 {% endblock %}
 

@@ -44,7 +44,7 @@ export default {
       let rightFeatures = this.hoverType ? this['bottomright' + this.hoverType] : []
       return { left: leftFeatures, right: rightFeatures }
     },
-    ...mapState(['hoverSubject', 'hoverType', 'highlights']),
+    ...mapState(['hoverSubject', 'hoverType', 'highlights', 'extra']),
     ...mapGetters(['allTeams', 'allInstitutions', 'allAdjudicators']),
   },
 }

@@ -1,22 +1,4 @@
 //------------------------------------------------------------------------------
-// Checkins Status
-//------------------------------------------------------------------------------
-
-.animated-list-enter-active {
-  transition: all 0.3s ease;
-}
-
-.animated-list-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.animated-list-enter,
-.animated-list-leave-to /* .list-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
-  opacity: 0;
-}
-
-//------------------------------------------------------------------------------
 // Results Entry
 //------------------------------------------------------------------------------
 
@@ -71,6 +53,14 @@
   position: absolute;
   left: 0;
   top: 0;
+}
+
+//------------------------------------------------------------------------------
+// Check-In Status
+//------------------------------------------------------------------------------
+
+.half-in-team {
+  background: repeating-linear-gradient(45deg, $success, $success 10px, $secondary 10px, $secondary 20px);
 }
 
 //------------------------------------------------------------------------------

@@ -62,12 +62,12 @@
             {% plural %}
               {{ motions_count }} motions have been entered.
             {% endblocktrans %}
-            {% include "components/item-info.html" with type="secondary" %}
+            {% include "components/item-info.html" with nopad=True type="secondary" %}
             {% trans "Edit motions" as edit_text %}
             {% include "components/item-action.html" with text=edit_text type="primary" %}
           {% else %}
             {% trans "Your configuration/format requires motions to be specified as part of ballot entry. Make sure they are added before results come in!" as text %}
-            {% include "components/item-info.html" with type="danger" %}
+            {% include "components/item-info.html" with nopad=True type="danger" %}
             {% trans "Enter motions" as enter_text %}
             {% include "components/item-action.html" with text=enter_text type="success" to_complete=True  %}
           {% endif %}
@@ -79,7 +79,7 @@
             {% if round.motion_set.count == 1 %}
               {# As expected. #}
               {% trans "The motion has been entered." as text %}
-              {% include "components/item-info.html" with type="" %}
+              {% include "components/item-info.html" with nopad=True type="" %}
             {% else %}
               {# The singular below never gets used, but is required for i18n. #}
               {# Translators: Used when only one motion is expected, but there is more than one. #}
@@ -88,13 +88,13 @@
               {% plural %}
                 {{ motions_count }} motions have been entered.
               {% endblocktrans %}
-              {% include "components/item-info.html" with type="secondary" %}
+              {% include "components/item-info.html" with nopad=True type="secondary" %}
             {% endif %}
             {% trans "Edit the motion" as edit_text %}
             {% include "components/item-action.html" with text=edit_text type="primary" %}
           {% else %}
             {% trans "A motion should be added if you want to display it to the auditorium or print in on your ballots (using the links below) or to display it (later) on the public motions page." as text %}
-            {% include "components/item-info.html" with type="warning" %}
+            {% include "components/item-info.html" with nopad=True type="warning" %}
             {% trans "Enter a motion" as enter_text %}
             {% include "components/item-action.html" with text=enter_text type="success" to_complete=True %}
           {% endif %}
@@ -116,12 +116,12 @@
         {% if round.draw_status == round.STATUS_NONE %}
 
           {% trans "You have not generated a draw for this round yet. There is nothing to release." as text %}
-          {% include "components/item-info.html" with type="info" %}
+          {% include "components/item-info.html" with nopad=True type="info" %}
 
         {% elif round.draw_status == round.STATUS_DRAFT %}
 
           {% trans "The draw for this round is still in a draft state. Confirm the draw before releasing it." as text %}
-          {% include "components/item-info.html" with type="warning" %}
+          {% include "components/item-info.html" with nopad=True type="warning" %}
 
         {% elif round.draw_status == round.STATUS_RELEASED %}
 
@@ -131,7 +131,7 @@
 
           {% if pref.public_draw != 'off' %}
             {% trans "The draw has been released publicly." as text %}
-            {% include "components/item-info.html" with type="" %}
+            {% include "components/item-info.html" with nopad=True type="" %}
 
             {% trans "View public draw page" as text %}
             {% if pref.public_draw == 'current' and round == current_round %}
@@ -145,12 +145,12 @@
             {% blocktrans trimmed asvar text %}
               You have released the draw, so ballots and/or feedback can be submitted from the public forms (if enabled). However, the draw itself will not show to the public unless the "public view of draw" setting is enabled in <a class="alert-link" href="{{ alert_link }}"> this tournament's configuration</a>.
             {% endblocktrans %}
-            {% include "components/item-info.html" with type="" %}
+            {% include "components/item-info.html" with nopad=True type="" %}
           {% else %}
             {% blocktrans trimmed asvar text %}
               You have released the draw, but it will not show to the public unless the "public view of draw" setting is enabled in <a class="alert-link" href="{{ alert_link }}"> this tournament's configuration</a>.
             {% endblocktrans %}
-            {% include "components/item-info.html" with type="warning" %}
+            {% include "components/item-info.html" with nopad=True type="warning" %}
           {% endif %}
 
           {% include "components/item-action.html" with id="triggerReleaseDrawForm" url="" text=un_release_text %}
@@ -164,17 +164,17 @@
 
             {% if pref.participant_ballots != 'off' and pref.participant_feedback != 'off' %}
               {% trans "Your tournament allows ballots and feedback to be submitted online by adjudicators. The draw must be released before they can do so." as text %}
-              {% include "components/item-info.html" with type="danger" %}
+              {% include "components/item-info.html" with nopad=True type="danger" %}
             {% elif pref.participant_ballots != 'off' %}
               {% trans "Your tournament allows ballots to be submitted online by adjudicators. The draw must be released before they can do so." as text %}
-              {% include "components/item-info.html" with type="danger" %}
+              {% include "components/item-info.html" with nopad=True type="danger" %}
             {% elif pref.participant_feedback != 'off' %}
               {% trans "Your tournament allows feedback to be submitted online by participants. The draw must be released before they can do so." as text %}
-              {% include "components/item-info.html" with type="danger" %}
+              {% include "components/item-info.html" with nopad=True type="danger" %}
             {% endif %}
             {% if pref.public_draw != 'off' %}
               {% trans "Your tournament is configured to show the draw publicly. Releasing a draw will allow it to show it on the public page." as text %}
-              {% include "components/item-info.html" with type="info" %}
+              {% include "components/item-info.html" with nopad=True type="info" %}
             {% endif %}
 
             {% include "components/item-action.html" with type="success" id="triggerReleaseDrawForm" text=release_text url="" to_complete=True %}
@@ -182,7 +182,7 @@
           {% else %}
 
             {% trans "Your configuration doesn't have a public draw page or feedback/ballot submissions. There's no reason to release the draw." as text %}
-            {% include "components/item-info.html" with type="secondary" %}
+            {% include "components/item-info.html" with nopad=True type="secondary" %}
 
             {% include "components/item-action.html" with id="triggerReleaseDrawForm" text=release_text url="" %}
 
@@ -220,19 +220,19 @@
 
           {% if pref.participant_ballots != 'off' and pref.enable_motions %}
             {% trans "Your tournament is configured to require motions to be selected in ballots and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to be submitted." as text %}
-            {% include "components/item-info.html" with type="danger" %}
+            {% include "components/item-info.html" with nopad=True type="danger" %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.participant_ballots != 'off' and pref.motion_vetoes_enabled %}
             {% trans "Your tournament is configured to allow motions to be vetoed and to allow ballots to be submitted by adjudicators. Ensure that you release the motions before debates finish, otherwise ballots will not be able to nominate vetoes." as text %}
-            {% include "components/item-info.html" with type="danger" %}
+            {% include "components/item-info.html" with nopad=True type="danger" %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% elif pref.public_motions %}
             {% trans "Your tournament is configured to show the motion(s) for each round on the public site. You'll need to first release the motion(s) for it to show there." as text %}
-            {% include "components/item-info.html" with type="" %}
+            {% include "components/item-info.html" with nopad=True type="" %}
             {% include "components/item-action.html" with type="success" id="triggerReleaseMotionsForm" text=release_text url="" to_complete=True %}
           {% else %}
             {% trans "Your tournament is not configured to show the motion(s) for each round on the public site. There's no need to release the motion(s)." as text %}
-            {% include "components/item-info.html" with type="secondary" %}
+            {% include "components/item-info.html" with nopad=True type="secondary" %}
             {% include "components/item-action.html" with id="triggerReleaseMotionsForm" text=release_text url="" %}
           {% endif %}
 
@@ -247,7 +247,7 @@
             {% else %}
               {% trans "The motion has been released publicly." as text %}
             {% endif %}
-            {% include "components/item-info.html" with type="" %}
+            {% include "components/item-info.html" with nopad=True type="" %}
             {% trans "View public motions page" as text %}
             {% tournamenturl 'motions-public' as public_link %}
             {% include "components/item-action.html" with type="info" url=public_link icon="eye" %}
@@ -258,7 +258,7 @@
               the "public view of motions" setting is enabled in
               <a class="alert-link" href="{{ alert_link }}">this tournament's configuration</a>.
             {% endblocktrans %}
-            {% include "components/item-info.html" with type="warning" %}
+            {% include "components/item-info.html" with nopad=True type="warning" %}
           {% endif %}
 
           {% include "components/item-action.html" with id="triggerReleaseMotionsForm" url="" text=unrelease_text %}
@@ -331,8 +331,10 @@
 
     </ul>
     <ul class="list-group mt-3">
-      {% roundurl 'draw-email' as url %}
+      {% roundurl 'draw-adj-email' as url %}
       {% include "components/item-action.html" with text="Email Draw" subtext="(to active adjudicators)" emoji="✉️" %}
+      {% roundurl 'draw-team-email' as url %}
+      {% include "components/item-action.html" with text="Email Draw" subtext="(to active teams)" emoji="✉️" %}
       {% if pref.enable_motions or pref.motion_vetoes_enabled %}
         {% trans "Email Motions" as text %}
       {% else %}

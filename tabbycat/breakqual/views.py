@@ -3,8 +3,9 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Count, Q
 from django.http import JsonResponse
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 from django.views.generic import FormView, TemplateView, View
 
 from actionlog.mixins import LogActionMixin
@@ -235,9 +236,17 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         table = TabbycatTableBuilder(view=self, sort_key='team')
         teams = t.team_set.all().select_related(
             'institution').prefetch_related('break_categories', 'speaker_set')
-        table.add_team_columns(teams)
-        break_categories = t.breakcategory_set.all()
+        speaker_categories = t.speakercategory_set.order_by('seq')
 
+        nspeaker_annotations = {}
+        for sc in speaker_categories:
+            nspeaker_annotations['nspeakers_%s' % sc.slug] = Count(
+                'speaker', filter=Q(speaker__categories=sc))
+        teams = teams.annotate(**nspeaker_annotations)
+
+        table.add_team_columns(teams)
+
+        break_categories = t.breakcategory_set.order_by('seq')
         for bc in break_categories:
             table.add_column({'title': bc.name, 'key': bc.name}, [{
                 'component': 'check-cell',
@@ -245,6 +254,18 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
                 'id': team.id,
                 'type': bc.id
             } for team in teams])
+
+        # Provide list of members within speaker categories for convenient entry
+        for sc in speaker_categories:
+            table.add_column({'title': _('%s Speakers') % sc.name, 'key': sc.name}, [{
+                'text': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'),
+                'tooltip': ngettext(
+                    'Team has %(nspeakers)s speaker with the %(category)s speaker category assigned',
+                    'Team has %(nspeakers)s speakers with the %(category)s speaker category assigned',
+                    getattr(team, 'nspeakers_%s' % sc.slug, 0)
+                ) % {'nspeakers': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'), 'category': sc.name}
+            } for team in teams])
+
         return table
 
     def get_context_data(self, **kwargs):

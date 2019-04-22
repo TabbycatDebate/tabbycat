@@ -29,9 +29,12 @@ urlpatterns = [
             name='draw-regenerate'),
 
         # Email
-        path('email/',
+        path('email-adjudicators',
             views.EmailAdjudicatorAssignmentsView.as_view(),
-            name='draw-email'),
+            name='draw-adj-email'),
+        path('email-debaters',
+            views.EmailTeamAssignmentsView.as_view(),
+            name='draw-team-email'),
 
         # Side and Matchup Editing
         path('edit/',

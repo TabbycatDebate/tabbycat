@@ -1,6 +1,6 @@
 {% load debate_tags i18n %}
 
-<div class="card mt-md-4">
+<div class="card mt-md-3">
   <div class="list-group list-group-flush">
 
     <div class="list-group-item">
@@ -69,11 +69,6 @@
           {{ team.institution.region.name }}
         {% endif %}
       </div>
-    {% elif team.institution.region %}
-      <div class="list-group-item">
-        <strong>{% trans "Region:" %}</strong>
-        {{ team.institution.region.name }}
-      </div>
     {% endif %}
 
     {% if admin_page %}
@@ -81,15 +76,14 @@
 
         <strong>{% trans "Institutional Conflicts:" %}</strong>
         {% for ic in team.teaminstitutionconflict_set.all %}
-          {{ ic.institution.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
+          {{ ic.institution.name }}{% if not forloop.last %}{% trans "; " %}{% endif %}
         {% empty %}
           <span class="text-muted">{% trans "None" %}</span>
         {% endfor %}
 
         <strong><br>{% trans "Adjudicator Conflicts:" %}</strong>
         {% for ac in team.adjudicatorteamconflict_set.all %}
-          {{ ac.adjudicator.name }}
-          {% if not forloop.last %}{% trans ", " %}{% endif %}
+          {{ ac.adjudicator.name }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}
           <span class="text-muted">{% trans "None" %}</span>
         {% endfor %}

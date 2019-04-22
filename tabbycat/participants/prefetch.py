@@ -25,9 +25,9 @@ def populate_win_counts(teams, round=None):
         teams_by_id[team.id]._points = team.points_annotation
 
     for team in teams:
-        if not hasattr(team, '_wins_count'):
+        if getattr(team, '_wins_count', None) is None:
             team._wins_count = 0
-        if not hasattr(team, '_points'):
+        if getattr(team, '_points', None) is None:
             team._points = 0
 
 
@@ -40,7 +40,8 @@ def populate_feedback_scores(adjudicators):
 
     adjfeedbacks = AdjudicatorFeedback.objects.filter(
         adjudicator_id__in=adjs_by_id.keys(),
-        confirmed=True
+        confirmed=True,
+        ignored=False,
     ).exclude(source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE)
 
     adjs_annotated = Adjudicator.objects.filter(

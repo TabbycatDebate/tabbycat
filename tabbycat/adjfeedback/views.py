@@ -27,7 +27,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
@@ -205,6 +205,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
 
 class FeedbackMixin(TournamentMixin):
+    only_comments = False
 
     def get_feedbacks(self):
         feedbacks = self.get_feedback_queryset()
@@ -214,6 +215,10 @@ class FeedbackMixin(TournamentMixin):
 
         # Can't prefetch an abstract model effectively; so get all answers...
         questions = list(self.tournament.adj_feedback_questions)
+        if self.only_comments:
+            long_text = AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT
+            questions = [q for q in questions if q.answer_type == long_text]
+
         for question in questions:
             question.answers = list(question.answer_set.values())
 
@@ -227,6 +232,8 @@ class FeedbackMixin(TournamentMixin):
                                                'answer': answer['answer']})
                         break # Should only be one match
 
+        if self.only_comments:
+            feedbacks = [f for f in feedbacks if len(f.items) > 0] # Remove null
         return feedbacks
 
     def get_feedback_queryset(self):
@@ -268,11 +275,23 @@ class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
     page_title = gettext_lazy("Latest Feedback")
     page_subtitle = gettext_lazy("(30 most recent)")
-    page_emoji = '🕗 '
+    page_emoji = '🕗'
 
     def get_feedback_queryset(self):
         queryset = super().get_feedback_queryset()
         return queryset.order_by('-timestamp')[:30]
+
+
+class CommentsFeedbackView(FeedbackCardsView):
+    """View displaying the latest feedback."""
+    page_title = gettext_lazy("Only Comments")
+    page_subtitle = gettext_lazy("(250 most recent)")
+    page_emoji = '💬'
+    only_comments = True
+
+    def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
+        return queryset.order_by('-timestamp')[:250]
 
 
 class ImportantFeedbackView(FeedbackCardsView):
@@ -686,8 +705,20 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
     def get_page_subtitle(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
-        total_missing = sum([progress.num_unsubmitted() for progress in teams_progress + adjs_progress])
-        return ngettext_lazy("%d missing feedback submission", "%d missing feedback submissions", total_missing) % (total_missing,)
+        all_progress = teams_progress + adjs_progress
+        total_missing = sum([progress.num_unsubmitted() for progress in all_progress])
+        total_expected = sum([progress.num_expected() for progress in all_progress])
+
+        try:
+            percentage_fulfilled = (1 - total_missing / total_expected) * 100
+        except ZeroDivisionError:
+            percentage_fulfilled = 100
+
+        return ngettext_lazy(
+            "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)",
+            "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)",
+            total_missing
+        ) % {'nmissing': total_missing, 'fulfilled': percentage_fulfilled}
 
     def get_tables(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
@@ -820,10 +851,11 @@ class AdjudicatorScoresCsvView(TournamentMixin, AdministratorMixin, BaseCsvView)
     filename = "scores.csv"
 
     def write_rows(self, writer):
-        writer.writerow(["id", "name", "test_score", "gender", "region"])
+        writer.writerow(["id", "name", "test_score", "gender", "region", "nrounds"])
         for adj in self.tournament.adjudicator_set.all():
             row = [adj.id, adj.name, adj.test_score, adj.gender]
             row.append(adj.region.name if adj.region else "")
+            row.append(adj.debateadjudicator_set.count())
             writer.writerow(row)
 
 

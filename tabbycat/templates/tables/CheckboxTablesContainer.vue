@@ -16,10 +16,10 @@
             {{ bc.name }}
           </button>
           <button @click="massSelect(true, bc.id)" class="btn btn-primary" type="button">
-            <i data-feather="check-circle"></i> Set All
+            <i data-feather="check-circle"></i> All
           </button>
           <button @click="massSelect(false, bc.id)" class="btn btn-primary" type="button">
-            <i data-feather="x-circle"></i> Set None
+            <i data-feather="x-circle"></i> None
           </button>
         </div>
 
@@ -28,7 +28,7 @@
           <form v-if="roundInfo.break === 'True' && roundInfo.model === 'participants.Adjudicator'"
                 :action="urls.breakingAdjs" method="post">
             <button class="btn btn-primary" type="submit">
-              {{ gettext("Set All Breaking as Available") }}
+              <i data-feather="star"></i> {{ gettext("Set Breaking") }}
             </button>
           </form>
           <div class="btn-group">

@@ -4,11 +4,11 @@ import logging
 from asgiref.sync import async_to_sync
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import NoReverseMatch
+from django.urls import NoReverseMatch, reverse
 from django.utils.encoding import force_text
 from django.contrib import messages
 from django.db.models import Prefetch, Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
@@ -96,19 +96,41 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
         return super().get_redirect_url(*args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
+        t = self.tournament
+        # Lack of current_round caused by creating a tournament without rounds
+        if t.current_round is None:
+            if hasattr(self.request, 'user') and self.request.user.is_superuser:
+                messages.warning(request, _("You've been redirected to this "
+                    "page because tournament %(tournament_name)s has no rounds."
+                    "Please create some before returning to the admin site") %
+                    {'tournament_name': t.name})
+                admin_url = reverse('admin:tournaments_round_changelist')
+                return redirect(admin_url)
+            else:
+                logger.warning("Current round wasn't set, redirecting to site index")
+                messages.warning(request, _("There's a problem with the data "
+                    "for the tournament %(tournament_name)s. Please contact a "
+                    "tab director and ask them to investigate.") %
+                    {'tournament_name': t.name})
+                return redirect('tabbycat-index')
+
         try:
             return super().dispatch(request, *args, **kwargs)
         except (MultipleDebateTeamsError, NoDebateTeamFoundError):
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
-                logger.warning("Debate team side assignment error, redirecting to tournament-fix-debate-teams")
-                messages.warning(request, _("You've been redirected to this page because of a problem with "
-                        "how teams are assigned to sides in a debate."))
-                return redirect_tournament('tournament-fix-debate-teams', self.tournament)
+                logger.warning("Debate team side assignment error, redirecting "
+                               "to tournament-fix-debate-teams")
+                messages.warning(request, _("You've been redirected to this "
+                    "page because of a problem with how teams are assigned to "
+                    "sides in a debate."))
+                return redirect_tournament('tournament-fix-debate-teams', t)
             else:
-                logger.warning("Debate team side assignment error, redirecting to tournament-public-index")
-                messages.warning(request, _("There's a problem with how teams are assigned to sides "
-                        "in a debate. The tab director will need to resolve this issue."))
-                return redirect_tournament('tournament-public-index', self.tournament)
+                logger.warning("Debate team side assignment error, redirecting "
+                               "to tournament-public-index")
+                messages.warning(request, _("There's a problem with how teams "
+                    "are assigned to sides in a debate. The tab director will "
+                    "need to resolve this issue."))
+                return redirect_tournament('tournament-public-index', t)
 
 
 class TournamentWebsocketMixin(TournamentFromUrlMixin):
@@ -210,7 +232,7 @@ class RoundMixin(RoundFromUrlMixin, TournamentMixin):
         if self.round_redirect_pattern_name:
             try:
                 return reverse_round(self.round_redirect_pattern_name,
-                        self.round, args=args, kwargs=kwargs)
+                                     self.round, args=args, kwargs=kwargs)
             except NoReverseMatch:
                 pass
         return super().get_redirect_url(*args, **kwargs)
@@ -384,6 +406,7 @@ class DragAndDropMixin(RoundMixin):
         """ Unlike meta_info everything under extra info is json serialised
         automatically. Designed for simple key/value pairs"""
         extra_info = {} # Set by view for top bar toggles
+        extra_info['codeNames'] = self.tournament.pref('team_code_names')
         extra_info['highlights'] = {}
 
         bcs = self.tournament.breakcategory_set.all()
@@ -395,7 +418,6 @@ class DragAndDropMixin(RoundMixin):
                 'fields': {'name': bc.name, 'safe': safe, 'dead': dead},
             }
             serialised_bcs.append(serialised_bc)
-        print(serialised_bcs)
         extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)

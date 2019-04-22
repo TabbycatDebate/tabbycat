@@ -7,7 +7,7 @@
           {{ debateOrPanel.bracket }}
         </div>
       </div>
-      <div v-else class="flex-1-25 flex-truncate d-flex border-right">
+      <div v-else class="flex-2 flex-truncate d-flex border-right"><!-- Can be wide; needs flex-2-->
         <div class="align-self-center flex-fill text-center"
              data-toggle="tooltip" title="The bracket range of the hypothetical debate">
           <span v-if="debateOrPanel.bracket_min !== debateOrPanel.bracket_max">
@@ -24,7 +24,8 @@
       </div>
     </slot>
     <slot name="importance">
-      <div class="flex-1 flex-truncate border-right d-flex">
+      <div class="flex-1-25 flex-truncate border-right d-flex"
+           data-toggle="tooltip" title="This debate's priority">
         <div class="align-self-center flex-fill text-center">{{ debateOrPanel.importance }}</div>
       </div>
     </slot>
@@ -38,14 +39,15 @@
         <div :class="['d-flex flex-truncate align-items-center']"
              v-for="side in sides" v-if="debateOrPanel.teams">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
-                       :team="debateOrPanel.teams[side]"></inline-team>
+                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
           <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
         </div>
       </div>
       <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
         <div :class="['d-flex flex-fill align-items-center']"
-             v-for="side in sides">
-          <inline-team v-if="debateOrPanel.teams[side]" :team="debateOrPanel.teams[side]"></inline-team>
+             v-for="side in sides" v-if="debateOrPanel.teams">
+          <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
+                       :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
           <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
         </div>
       </div>
@@ -74,6 +76,9 @@ export default {
     sides: function () {
       return this.$store.state.tournament.sides
     },
+    isElimination: function () {
+      return this.round.stage === 'E'
+    },
     liveness: function () {
       if ('liveness' in this.debateOrPanel) {
         // For preformed panel screens liveness is attached to the panel itself
@@ -95,7 +100,7 @@ export default {
         return liveness
       }
     },
-    ...mapState(['highlights']),
+    ...mapState(['highlights', 'round']),
   },
 }
 </script>

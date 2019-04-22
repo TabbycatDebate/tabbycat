@@ -35,6 +35,7 @@ class BreakCategory(models.Model):
         ('aida-1996', _("AIDA 1996")),
         ('aida-2016-easters', _("AIDA 2016 (Easters)")),
         ('aida-2016-australs', _("AIDA 2016 (Australs)")),
+        ('aida-2019-australs-open', _("AIDA 2019 (Australs, Dynamic Cap)")),
         ('wadl-div-first', _("WADL division winners first")),
         ('wadl-div-guaranteed', _("WADL division winners guaranteed")),
     ]

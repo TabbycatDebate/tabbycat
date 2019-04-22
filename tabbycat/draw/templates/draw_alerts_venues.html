@@ -7,7 +7,7 @@
     {% plural %}
       {{ ndebates }} debates do not have a venue.
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="danger" %}
+    {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
   {% if duplicates %}
@@ -16,7 +16,7 @@
     {% plural %}
       The following <strong>{{ ndebates }}</strong> venues have multiple debates in them: <strong>{{ venues }}</strong>
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="danger" %}
+    {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
   {% if debates_with_venue_conflicts > 0 %}
@@ -25,7 +25,7 @@
     {% plural %}
       {{ ndebates }} debates have venue constraint violations.
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="danger" %}
+    {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
 {% endwith %}

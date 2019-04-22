@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, validate_slug
 from django.forms import ValidationError
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
@@ -1326,6 +1326,17 @@ class ReplyToEmailAddress(StringPreference):
 
 
 @tournament_preferences_registry.register
+class EmailWebhookKey(StringPreference):
+    help_text = _("A secret key to accept email status events")
+    verbose_name = _("Email status secret key")
+    section = email
+    name = 'email_hook_key'
+    default = ""
+    required = False
+    field_kwargs = {'validators': [validate_slug]}
+
+
+@tournament_preferences_registry.register
 class EnableEmailBallotReceipts(BooleanPreference):
     help_text = _("Enables a copy of judges' ballots to be automatically sent to them (by email) after they are entered in Tabbycat (for confirmation or checking)")
     verbose_name = _("Ballot receipts")
@@ -1350,7 +1361,11 @@ class BallotEmailMessageBody(LongStringPreference):
     verbose_name = _("Ballot receipt message")
     section = email
     name = 'ballot_email_message'
-    default = "Hi {{ USER }},\n\nYour ballot for {{ DEBATE }} has been successfully received, with these scores:\n\n{{ SCORES }}\n\nIf there are any problems, please contact the tab team."
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>Your ballot for {{ DEBATE }} has been successfully received, with these scores:</p>"
+        "{{ SCORES }}"
+        "<p>If there are any problems, please contact the tab team.</p>")
+    widget = SummernoteWidget
 
 
 # -----
@@ -1370,7 +1385,9 @@ class PointsEmailMessageBody(LongStringPreference):
     help_text = _("The message body for emails sent to speakers with their team points.")
     verbose_name = _("Team points message")
     name = 'team_points_email_message'
-    default = "Hi {{ USER }},\n\nAfter {{ ROUND }}, your team ({{ TEAM }}) currently has {{ POINTS }} wins in the {{ TOURN }}.\n\n{{ URL }}"
+    default = ("<p>Hi {{ USER }},</p>"
+        "After {{ ROUND }}, your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> wins in the {{ TOURN }}.</p>"
+        "<p>Current Standings: <a href='{{ URL }}'>{{ URL }}</a></p>")
 
 
 @tournament_preferences_registry.register
@@ -1386,8 +1403,27 @@ class AdjudicatorDrawNotificationMessage(LongStringPreference):
     help_text = _("The message body for emails sent to adjudicators with their assignments.")
     verbose_name = _("Adjudicator draw message")
     name = 'adj_email_message'
-    default = "Hi {{ USER }},\n\nYou have been assigned as {{ POSITION }} adjudicator for {{ ROUND }} in room {{ VENUE }} with the following panel: {{ PANEL }}\n\n" \
-            + "The debate is between these teams: {{ DRAW }}"
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You have been assigned as <strong>{{ POSITION }}</strong> adjudicator for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
+        "<p>The debate is between these teams: {{ DRAW }}</p>")
+
+
+@tournament_preferences_registry.register
+class TeamDrawNotificationSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to teams with their draw.")
+    verbose_name = _("Team draw subject line")
+    name = 'team_draw_email_subject'
+    default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
+
+
+@tournament_preferences_registry.register
+class TeamDrawNotificationMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants with their private URLs.")
+    verbose_name = _("Private URL notification message")
+    name = 'team_draw_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You have been assigned as <strong>{{ SIDE }}</strong> for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
+        "<p>The debate is between: {{ DRAW }}</p>")
 
 
 @tournament_preferences_registry.register
@@ -1403,13 +1439,13 @@ class PrivateUrlEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants with their private URLs.")
     verbose_name = _("Private URL notification message")
     name = 'url_email_message'
-    default = ("Hi {{ USER }},\n\n"
-        "At {{ TOURN }}, we are using an online tabulation system. You can submit "
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>At {{ TOURN }}, we are using an online tabulation system. You can submit "
         "your ballots and/or feedback at the following URL. This URL is unique to you — do not share it with "
         "anyone, as anyone who knows it can submit forms on your behalf. This URL "
-        "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
-        "Your personal private URL is:\n"
-        "{{ URL }}")
+        "will not change throughout this tournament, so we suggest bookmarking it.</p>"
+        "<p>Your personal private URL is:<br />"
+        "<a href='{{ URL }}'>{{ URL }}</a></p>")
 
 
 @tournament_preferences_registry.register
@@ -1425,7 +1461,8 @@ class MotionReleaseEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants on motion release.")
     verbose_name = _("Motion release notification message")
     name = 'motion_email_message'
-    default = "The motion(s) for {{ ROUND }} are:\n {{ MOTIONS }}"
+    default = ("<p>The motion(s) for {{ ROUND }} are:</p>"
+        "{{ MOTIONS }}")
 
 
 @tournament_preferences_registry.register
@@ -1441,5 +1478,5 @@ class TeamNameEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants informing them of their team registration.")
     verbose_name = _("Team registration notification message")
     name = 'team_email_message'
-    default = ("Hi {{ USER }},\n\n"
-        "You are registered as {{ LONG }} in {{ TOURN }} with {{ SPEAKERS }}.")
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You are registered as <strong>{{ LONG }}</strong> in {{ TOURN }} with {{ SPEAKERS }}.</p>")

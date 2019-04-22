@@ -7,7 +7,7 @@
 
           <p class="lead" v-text="gettext(`Auto-Allocate Venues to Debates`)"></p>
           <p v-text="gettext(`The allocator assigns venues to debates while trying to match
-                              all of the venue constrainst that have been specified.`)"></p>
+                              all of the venue constraints that have been specified.`)"></p>
           <button type="submit" @click="performWSAction()"
                   :class="['btn btn-block btn-success', loading ? 'disabled': '']"
                   v-text="loading ? gettext('Loading...') : gettext('Auto-Allocate')"></button>

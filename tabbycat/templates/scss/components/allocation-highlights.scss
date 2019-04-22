@@ -47,16 +47,16 @@
     @include hover-highlights(lighten($conflict-history-base, 44%), theme-color('dark'));
   }
 
-  &.hover-histories-7-ago {
+  &.hover-histories-7-ago,
+  &.hover-histories-8-ago,
+  &.hover-histories-9-ago,
+  &.hover-histories-10-ago,
+  &.hover-histories-11-ago,
+  &.hover-histories-12-ago,
+  &.hover-histories-13-ago,
+  &.hover-histories-14-ago,
+  &.hover-histories-15-ago {
     @include hover-highlights(lighten($conflict-history-base, 46%), theme-color('dark'));
-  }
-
-  &.hover-histories-8-ago {
-    @include hover-highlights(lighten($conflict-history-base, 48%), theme-color('dark'));
-  }
-
-  &.hover-histories-9-ago {
-    @include hover-highlights(lighten($conflict-history-base, 50%), theme-color('dark'));
   }
 
   // Must be below histories (to take precedence)
@@ -102,16 +102,16 @@
     border-color: lighten($conflict-history-base, 36%);
   }
 
-  &.panel-histories-7-ago {
-    border-color: lighten($conflict-history-base, 40%);
-  }
-
-  &.panel-histories-8-ago {
-    border-color: lighten($conflict-history-base, 44%);
-  }
-
-  &.panel-histories-9-ago {
-    border-color: lighten($conflict-history-base, 48%);
+  &.panel-histories-7-ago,
+  &.panel-histories-8-ago,
+  &.panel-histories-9-ago,
+  &.panel-histories-10-ago,
+  &.panel-histories-11-ago,
+  &.panel-histories-12-ago,
+  &.panel-histories-13-ago,
+  &.panel-histories-14-ago,
+  &.panel-histories-15-ago {
+    border-color: lighten($conflict-history-base, 38%);
   }
 
   // Must appear after seens

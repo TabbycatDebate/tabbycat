@@ -11,10 +11,7 @@ import sys
 try:
     from django.core.management.utils import get_random_secret_key
 except ImportError:
-    try:
-        from secrets import SystemRandom
-    except ImportError:  # for Python 3.5 compatibility
-        from random import SystemRandom
+    from secrets import SystemRandom
 
     def get_random_secret_key():
         chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'

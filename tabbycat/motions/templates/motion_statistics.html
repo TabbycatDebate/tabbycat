@@ -8,6 +8,15 @@
 
   {% if statistics.motions %}
 
+    {% if pref.teams_in_debate == 'bp' %}
+      {% blocktrans trimmed asvar text %}
+        The results data displayed here is presented without tests for statistical significance.
+        Correlations should not be automatically considered reliable; particularly at small
+        tournaments and during elimination rounds.
+      {% endblocktrans %}
+      {% include "components/item-info.html" with type="info" %}
+    {% endif %}
+
     {% regroup statistics.motions by round as motions_by_round %}
 
     {% for round, motions in motions_by_round %}

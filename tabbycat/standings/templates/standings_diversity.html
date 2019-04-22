@@ -19,7 +19,12 @@
 
 {% block page-alerts %}
 
-  {% trans "The speaker and adjudicator results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments." as p1 %}
+  {% blocktrans trimmed asvar text %}
+    The results data displayed here is presented without tests for statistical significance.
+    Correlations should not be automatically considered reliable; particularly at small tournaments.
+    A 'region' is a customisable category assigned to a set of institutions, and counted using the
+    number of participants assigned to those institutions.
+  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
 {% endblock %}
@@ -32,7 +37,7 @@
         {% trans "Non-cis male identifying" %}
       </button>
       <button class="btn btn-primary gender-display gender-male h6">
-        {% trans "Male identifying" %}
+        {% trans "Cis-male identifying" %}
       </button>
       <button class="btn btn-primary gender-display gender-unknown h6">
         {% trans "Unspecified/unrecorded" %}
