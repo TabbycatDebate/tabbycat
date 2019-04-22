@@ -125,7 +125,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
         }
 
     def get_team_feedbacks(self, debate, team):
-        if len(debate.adjudicators) is 0:
+        if len(debate.adjudicators) == 0:
             return []
 
         team_paths = self.tournament.pref('feedback_from_teams')

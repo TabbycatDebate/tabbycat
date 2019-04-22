@@ -1,6 +1,8 @@
 from tournaments.models import Round
 
-from .base import registry
+from utils.views import BadJsonRequestError
+
+from .base import AdjudicatorAllocationError, registry
 # These imports add the allocator classes in those files to the registry.
 from . import hungarian
 from . import dumb
@@ -16,5 +18,11 @@ def legacy_allocate_adjudicators(round, alloc_class):
     adjs = list(round.active_adjudicators.all())
     allocator = alloc_class(debates, adjs, round)
 
-    for alloc in allocator.allocate():
+    try:
+        allocation = allocator.allocate()
+    except AdjudicatorAllocationError as e:
+        # legacy views expect BadJsonRequestError, not AdjudicatorAllocationError
+        raise BadJsonRequestError(e)
+
+    for alloc in allocation:
         alloc.save()

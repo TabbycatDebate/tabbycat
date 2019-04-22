@@ -75,7 +75,7 @@
         {% if infos|length == 1 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            <small>{{ infos.0.info_slide }}</small>
+            <small>{{ infos.0.info_slide|linebreaks }}</small>
           </div>
 
         {% else %}
@@ -87,7 +87,7 @@
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
-                  <small>{{ info.motion.info_slide }}</small>
+                  <small>{{ info.motion.info_slide|linebreaks }}</small>
                 </p>
               </div>
             {% endfor %}

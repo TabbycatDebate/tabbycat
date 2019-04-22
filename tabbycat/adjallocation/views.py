@@ -47,8 +47,9 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
             {'pk': 'o', 'fields': {'name': _('Other')}},
             {'pk': 'u', 'fields': {'name': _('Unknown')}},
         ]
-        info['highlights']['rank'] = ranks_dictionary()
-        info['highlights']['region'] = [] # TODO
+        info['highlights']['rank'] = ranks_dictionary(self.tournament)
+        regions = [{'pk': r.id, 'fields': {'name': r.name}} for r in Region.objects.all()]
+        info['highlights']['region'] = regions
         info['adjMinScore'] = self.tournament.pref('adj_min_score')
         info['adjMaxScore'] = self.tournament.pref('adj_max_score')
         allocation_preferences = [
@@ -62,10 +63,13 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
         info['allocationSettings'] = {}
         for key in allocation_preferences:
             info['allocationSettings'][key] = self.tournament.preferences[key]
+
+        info['clashes'] = self.get_adjudicator_conflicts()
+        info['histories'] = self.get_history_conflicts()
+        info['hasPreformedPanels'] = self.round.preformedpanel_set.exists()
         return info
 
     def get_serialised_allocatable_items(self):
-        # TODO: account for shared adjs
         adjs = Adjudicator.objects.filter(tournament=self.tournament)
         adjs = annotate_availability(adjs, self.round)
         populate_feedback_scores(adjs)
@@ -73,6 +77,17 @@ class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, Administrato
         serialized_adjs = EditPanelOrDebateAdjSerializer(
             adjs, many=True, context={'feedback_weight': weight})
         return self.json_render(serialized_adjs.data)
+
+    def get_adjudicator_conflicts(self):
+        conflicts = ConflictsInfo(teams=self.tournament.team_set.all(),
+                                  adjudicators=self.tournament.adjudicator_set.all())
+        team_conflicts, adj_conflicts = conflicts.serialized_by_participant()
+        return {'teams': team_conflicts, 'adjudicators': adj_conflicts}
+
+    def get_history_conflicts(self):
+        history = HistoryInfo(self.round)
+        team_history, adj_history = history.serialized_by_participant()
+        return {'teams': team_history,  'adjudicators': adj_history}
 
     def get_context_data(self, **kwargs):
         kwargs['vueDebatesOrPanelAdjudicators'] = json.dumps(None)
@@ -86,7 +101,6 @@ class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
 
     def get_extra_info(self):
         info = super().get_extra_info()
-        info['highlights']['break'] = [] # TODO construct adj score ranges from settings
         return info
 
     def debates_or_panels_factory(self, debates):

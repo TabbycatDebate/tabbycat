@@ -2,7 +2,7 @@
   <div class="navbar-light fixed-bottom d-flex border-top flex-column p-0"
        :style="{height: height + 'px'}" ref="resizeableElement">
 
-    <droppable-item class="flex-grow-1 px-2" :handle-drop="handleUnusedDrop"
+    <droppable-item class="flex-grow-1 px-2 overflow-auto" :handle-drop="handleUnusedDrop"
                     :drop-context="{ 'assignment': null, 'position': null }">
 
       <section class="mb-1 d-flex">
@@ -11,8 +11,7 @@
                 :class="['pr-2', value.active ? 'font-weight-bold' : 'hoverable']"></span>
         </div>
         <div class="vc-resize-handler flex-grow-1 mt-2 text-center"
-             @dragover.prevent @mousedown="resizeStart"
-             data-toggle="tooltip" :title="gettext('Drag to resize')">
+             @dragover.prevent @mousedown="resizeStart">
           <i data-feather="menu" class="mx-auto d-block"></i>
         </div>
         <div class="small text-muted mt-2 mx-1 text-unselectable">
@@ -58,8 +57,8 @@ export default {
         },
       },
       height: null,
-      minHeight: 45,
-      maxHeight: 400,
+      minHeight: 55,
+      maxHeight: 300,
       itemContainerHeight: null,
     }
   },
@@ -67,6 +66,9 @@ export default {
   mounted: function () {
     this.height = this.boundedHeight(this.$refs.resizeableElement.clientHeight)
     this.itemContainerHeight = this.$refs.unallocatedHolder.clientHeight
+    if (this.filteredAvailable.length === 0) {
+      this.showUnavailable = true // Show all adjs if none are available (prevents confusion)
+    }
   },
   watch: {
     unallocatedItems: function (val, oldVal) {
@@ -148,9 +150,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-  .vc-resize-handler:hover {
-    cursor: ns-resize;
-  }
-</style>

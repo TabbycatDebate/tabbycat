@@ -1,22 +1,22 @@
-{% extends "base.html" %}
+{% extends "tables/base_vue_table.html" %}
 {% load i18n debate_tags %}
 
 {% block page-title %}{% trans "Private URL" %}{% endblock %}
 {% block head-title %}{% trans "Private URL" %}{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans trimmed with name=person.name %}for {{ name }}{% endblocktrans %}
-  {% if person.speaker %}
-    {% blocktrans trimmed with team=person.speaker.team.short_name %}({{ team }}){% endblocktrans %}
+  {% blocktrans trimmed with name=object.name %}for {{ name }}{% endblocktrans %}
+  {% if object.speaker %}
+    {% blocktrans trimmed with team=object.speaker.team.short_name %}({{ team }}){% endblocktrans %}
   {% endif %}
-  {% if person.speaker %}
+  {% if object.speaker %}
 
   {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
 
-  {% blocktrans trimmed with name=person.name asvar p1 %}
+  {% blocktrans trimmed with name=object.name asvar p1 %}
     The URL of this page is personalised to you, {{ name }}. <strong>Do not
     share it with anyone;</strong> anyone who knows this URL can submit results and/or
     feedback for your debates. You may bookmark this page and return here after each
@@ -28,14 +28,7 @@
 
 {% block content %}
 
-  <div class="list-group mt-2">
-
-    {% if pref.team_code_names != 'off' and person.speaker.team %}
-      {% blocktrans trimmed asvar text with code_name=person.speaker.team.code_name %}
-        Your team's code name is <strong>{{ code_name }}</strong>.
-      {% endblocktrans %}
-      {% include "components/item-info.html" with type="primary" %}
-    {% endif %}
+  <div class="list-group">
 
     {% if pref.public_checkins_submit %}
       <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
@@ -53,26 +46,55 @@
         {% endif %}
         {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
+    {% elif checkins_used %}
+      {% if event %}
+        {% blocktrans trimmed with check_time=event.time asvar text %}
+          You have been checked-in at {{ check_time }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" %}
+      {% else %}
+        {% blocktrans trimmed asvar text %}
+          You are not currently checked-in
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type='warning' %}
+      {% endif %}
     {% endif %}
 
-    {% if person.adjudicator and pref.participant_ballots == 'private-urls' %}
+    {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
       {% tournamenturl 'results-public-ballotset-new-randomised' url_key as url %}
       {% trans  "Submit Ballot" as text %}
       {% include "components/item-action.html" %}
     {% endif %}
 
-    {% if person.adjudicator and pref.participant_feedback == 'private-urls' %}
+    {% if object.adjudicator and pref.participant_feedback == 'private-urls' %}
       {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}
       {% trans "Submit Feedback" as text %}
       {% include "components/item-action.html" %}
     {% endif %}
 
-    {% if person.speaker and pref.participant_feedback == 'private-urls' %}
+    {% if object.speaker and pref.participant_feedback == 'private-urls' %}
       {% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key as url %}
       {% trans "Submit Feedback" as text %}
       {% include "components/item-action.html" %}
     {% endif %}
 
+  </div>
+
+  <div class="card-deck">
+    {% include "in_this_round.html" with grammatical_person="2" %}
+
+    {% blocktrans trimmed with name=object.name asvar card_title %}
+      Registration ({{ name }})
+    {% endblocktrans %}
+    {% if object.adjudicator %}
+      {% include "adjudicator_registration_card.html" with adjudicator=object.adjudicator %}
+    {% else %}
+      {% include "team_registration_card.html" with team=object.speaker.team participant=object.speaker %}
+    {% endif %}
+  </div>
+
+  <div class="mt-md-4">
+    {{ block.super }} {# this is the Vue table, which is populated with previous results #}
   </div>
 
 {% endblock %}

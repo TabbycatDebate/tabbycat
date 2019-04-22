@@ -1,6 +1,5 @@
 from django.contrib import admin
-from django.db.models import Prefetch
-from django.db.models.expressions import RawSQL
+from django.db.models import OuterRef, Prefetch, Subquery
 
 from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 
@@ -99,6 +98,12 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     get_adj_name.short_description = "Adjudicator"
 
     def get_queryset(self, request):
+        speaker_person = SpeakerScore.objects.filter(
+            ballot_submission_id=OuterRef('ballot_submission_id'),
+            debate_team_id=OuterRef('debate_team_id'),
+            position=OuterRef('position')
+        ).select_related('speaker')
+
         return super(SpeakerScoreByAdjAdmin, self).get_queryset(request).select_related(
             'ballot_submission__debate__round__tournament',
             'debate_adjudicator__adjudicator',
@@ -106,16 +111,7 @@ class SpeakerScoreByAdjAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
         ).prefetch_related(
             Prefetch('ballot_submission__debate__debateteam_set',
                 queryset=DebateTeam.objects.select_related('team'))
-        ).annotate(
-            speaker_name=RawSQL("""
-                SELECT participants_person.name
-                FROM results_speakerscore
-                INNER JOIN participants_person ON results_speakerscore.speaker_id = participants_person.id
-                WHERE results_speakerscore.debate_team_id = results_speakerscorebyadj.debate_team_id
-                AND results_speakerscore.position = results_speakerscorebyadj.position
-                AND results_speakerscore.ballot_submission_id = results_speakerscorebyadj.ballot_submission_id""",
-                ()),
-        )
+        ).annotate(speaker_name=Subquery(speaker_person.values('speaker__name')))
 
     def get_speaker_name(self, obj):
         return obj.speaker_name

@@ -1,7 +1,7 @@
 <template>
 
-  <div @dragover.prevent @dragenter="dragEnter" @dragleave="dragLeave" @drop="drop"
-       :class="droppableClasses">
+  <div @dragover.prevent  @drop="drop" :class="droppableClasses"
+       @dragenter="dragEnter" @dragleave="dragLeave" @dragend="dragEnd">
 
     <slot></slot>
 

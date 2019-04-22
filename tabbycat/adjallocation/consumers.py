@@ -1,17 +1,22 @@
+from itertools import groupby
+from operator import attrgetter
 import logging
 
+from django.db.models import F
 from django.utils.translation import gettext as _
 
 from actionlog.models import ActionLogEntry
 from breakqual.utils import calculate_live_thresholds
 from draw.consumers import BaseAdjudicatorContainerConsumer, EditDebateOrPanelWorkerMixin
+from participants.prefetch import populate_win_counts
 from tournaments.models import Round
 
 from .models import PreformedPanel
+from .allocators import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw
-from .preformed.dumb import DumbPreformedPanelAllocator
+from .preformed.hungarian import HungarianPreformedPanelAllocator
 from .serializers import (EditPanelAdjsPanelSerializer,
                           SimpleDebateAllocationSerializer, SimpleDebateImportanceSerializer,
                           SimplePanelAllocationSerializer, SimplePanelImportanceSerializer)
@@ -31,6 +36,9 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
     def _apply_allocation_settings(self, round, settings):
         t = round.tournament
         for key, value in settings.items():
+            if key == "usePreformedPanels":
+                # Passing this here is much easier than splitting the function
+                continue # (Not actually a preference; just a toggle from Vue)
             # No way to force front-end to only accept floats/integers :(
             if isinstance(t.preferences[key], bool):
                 t.preferences[key] = bool(value)
@@ -54,12 +62,17 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return
 
-        if round.preformedpanel_set.exists():
+        if event['extra']['settings']['usePreformedPanels']:
+            if not round.preformedpanel_set.exists():
+                self.return_error(event['extra']['group_name'],
+                    _("There are no preformed panels available to allocate."))
+                return
+
             logger.info("Preformed panels exist, allocating panels to debates")
 
             debates = round.debate_set.all()
             panels = round.preformedpanel_set.all()
-            allocator = DumbPreformedPanelAllocator(debates, panels, round)
+            allocator = HungarianPreformedPanelAllocator(debates, panels, round)
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
 
@@ -69,19 +82,28 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             debates = round.debate_set.all()
             adjs = round.active_adjudicators.all()
-            if round.ballots_per_debate == 'per-adj':
-                allocator = VotingHungarianAllocator(debates, adjs, round)
-            else:
-                allocator = ConsensusHungarianAllocator(debates, adjs, round)
 
-            for alloc in allocator.allocate():
+            try:
+                if round.ballots_per_debate == 'per-adj':
+                    allocator = VotingHungarianAllocator(debates, adjs, round)
+                else:
+                    allocator = ConsensusHungarianAllocator(debates, adjs, round)
+                allocation = allocator.allocate()
+            except AdjudicatorAllocationError as e:
+                self.return_error(event['extra']['group_name'], str(e))
+                return
+
+            for alloc in allocation:
                 alloc.save()
 
             self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO)
 
         # TODO: return debates directly from allocator function?
         content = self.reserialize_debates(SimpleDebateAllocationSerializer, round)
-        msg = _("Succesfully auto-allocated adjudicators to debates.")
+        if event['extra']['settings']['usePreformedPanels']:
+            msg = _("Succesfully auto-allocated preformed panels to debates.")
+        else:
+            msg = _("Succesfully auto-allocated adjudicators to debates.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def allocate_panel_adjs(self, event):
@@ -89,13 +111,26 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         self._apply_allocation_settings(round, event['extra']['settings'])
 
         panels = round.preformedpanel_set.all()
-        adjs = round.active_adjudicators.all()
-        if round.ballots_per_debate == 'per-adj':
-            allocator = VotingHungarianAllocator(panels, adjs, round)
-        else:
-            allocator = ConsensusHungarianAllocator(panels, adjs, round)
 
-        for alloc in allocator.allocate():
+        if not panels.exists():
+            self.return_error(event['extra']['group_name'],
+                _("There aren't any panels to fill. Create panels first."))
+            return
+
+        adjs = round.active_adjudicators.all()
+
+        try:
+            if round.ballots_per_debate == 'per-adj':
+                allocator = VotingHungarianAllocator(panels, adjs, round)
+            else:
+                allocator = ConsensusHungarianAllocator(panels, adjs, round)
+
+            allocation = allocator.allocate()
+        except AdjudicatorAllocationError as e:
+            self.return_error(event['extra']['group_name'], str(e))
+            return
+
+        for alloc in allocation:
             alloc.save()
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
@@ -103,32 +138,52 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         msg = _("Succesfully auto-allocated adjudicators to preformed panels.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
+    def _prioritise_by_bracket(self, instances, bracket_attrname):
+        instances = instances.order_by('-' + bracket_attrname)
+        nimportancelevels = 4
+        importance = 1
+        boundary = round(len(instances) / nimportancelevels)
+        n = 0
+        for k, group in groupby(instances, key=attrgetter(bracket_attrname)):
+            group = list(group)
+            for panel in group:
+                panel.importance = importance
+                panel.save()
+            n += len(group)
+            if n >= boundary:
+                importance -= 1
+                boundary = round((nimportancelevels - 2 - importance) * len(instances) / nimportancelevels)
+
     def prioritise_debates(self, event):
         # TODO: Debates and panels should really be unified in a single function
         round = Round.objects.get(pk=event['extra']['round_id'])
-        debates = round.debate_set.all()
+        debates = round.debate_set_with_prefetches(teams=True, adjudicators=False,
+            speakers=False, divisions=False, venues=False)
 
         priority_method = event['extra']['settings']['type']
         if priority_method == 'liveness':
+            populate_win_counts([team for debate in debates for team in debate.teams], round.prev)
             open_category = round.tournament.breakcategory_set.filter(is_general=True).first()
             if open_category:
                 safe, dead = calculate_live_thresholds(open_category, round.tournament, round)
                 for debate in debates:
-                    if debate.bracket >= safe:
+                    points_now = [team.points_count for team in debate.teams]
+                    highest = max(points_now)
+                    lowest = min(points_now)
+                    if lowest >= safe:
                         debate.importance = 0
-                    elif debate.bracket <= dead:
+                    elif highest <= dead:
                         debate.importance = -2
                     else:
                         debate.importance = 1
                     debate.save()
             else:
                 self.return_error(event['extra']['group_name'],
-                    _("You have no break category set as 'open' so debate importances can't be calculated."))
+                    _("You have no break category set as 'is general' so debate importances can't be calculated."))
                 return
+
         elif priority_method == 'bracket':
-            self.return_error(event['extra']['group_name'],
-                _("Prioritising by bracket is not yet implemented."))
-            return
+            self._prioritise_by_bracket(debates, 'bracket')
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_AUTO)
         content = self.reserialize_debates(SimpleDebateImportanceSerializer, round, debates)
@@ -136,33 +191,33 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
     def prioritise_panels(self, event):
-        round = Round.objects.get(pk=event['extra']['round_id'])
-        panels = round.preformedpanel_set.all()
+        rd = Round.objects.get(pk=event['extra']['round_id'])
+        panels = rd.preformedpanel_set.all()
         priority_method = event['extra']['settings']['type']
 
         if priority_method == 'liveness':
-            open_category = round.tournament.breakcategory_set.filter(is_general=True).first()
+            open_category = rd.tournament.breakcategory_set.filter(is_general=True).first()
             if open_category:
-                safe, dead = calculate_live_thresholds(open_category, round.tournament, round)
+                safe, dead = calculate_live_thresholds(open_category, rd.tournament, rd)
                 for panel in panels:
-                    if panel.bracket_min >= safe:
-                        panel.importance = 0
-                    elif panel.bracket_max <= dead:
-                        panel.importance = -2
-                    else:
+                    if panel.liveness > 0:
                         panel.importance = 1
+                    elif panel.bracket_min >= safe:
+                        panel.importance = 0
+                    else:
+                        panel.importance = -2
                     panel.save()
             else:
                 self.return_error(event['extra']['group_name'],
-                    _("You have no break category set as 'open' so panel importances can't be calculated."))
+                    _("You have no break category set as 'is general' so panel importances can't be calculated."))
                 return
-        elif priority_method == 'bracket':
-            self.return_error(event['extra']['group_name'],
-                _("Prioritising by bracket is not yet implemented."))
-            return
 
-        self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO)
-        content = self.reserialize_panels(SimplePanelImportanceSerializer, round, panels)
+        elif priority_method == 'bracket':
+            panels = panels.annotate(bracket_mid=(F('bracket_max') + F('bracket_min')) / 2)
+            self._prioritise_by_bracket(panels, 'bracket_mid')
+
+        self.log_action(event['extra'], rd, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_IMPORTANCE_AUTO)
+        content = self.reserialize_panels(SimplePanelImportanceSerializer, rd, panels)
         msg = _("Succesfully auto-prioritised preformed panels.")
         self.return_response(content, event['extra']['group_name'], msg, 'success')
 
@@ -178,7 +233,15 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 })
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_CREATE)
-
         content = self.reserialize_panels(EditPanelAdjsPanelSerializer, round)
-        msg = _("Succesfully created new preformed panels for this round.")
-        self.return_response(content, event['extra']['group_name'], msg, 'success')
+
+        if round.prev is None:
+            msg, level = _("Since this is the first round, the preformed panels aren't annotated "
+                    "with brackets and liveness."), 'warning'
+        elif not round.prev.debate_set.exists():
+            msg, level = _("The previous round's draw doesn't exist, so preformed panels can't be "
+                    "annotated with brackets and liveness."), 'warning'
+        else:
+            msg, level = _("Succesfully created new preformed panels for this round."), 'success'
+
+        self.return_response(content, event['extra']['group_name'], msg, level)

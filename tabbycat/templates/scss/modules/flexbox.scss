@@ -51,6 +51,10 @@
   flex: 1;
 }
 
+.flex-1-25 {
+  flex: 1.25; // Used for precise control on allocation UIs
+}
+
 .flex-2 {
   flex: 2;
 }

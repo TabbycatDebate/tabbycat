@@ -17,6 +17,7 @@ import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisi
 import LegacyEditMatchupsContainer from '../../draw/templates/LegacyEditMatchupsContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
+import BallotEntryContainer from '../../results/templates/BallotEntryContainer.vue'
 import ResultsTablesContainer from '../../results/templates/ResultsTablesContainer.vue'
 import LegacyEditVenuesContainer from '../../venues/templates/LegacyEditVenuesContainer.vue'
 import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
@@ -199,6 +200,8 @@ vueComponents.EditDebateAdjudicatorsContainer = EditDebateAdjudicatorsContainer
 vueComponents.EditPanelAdjudicatorsContainer = EditPanelAdjudicatorsContainer
 vueComponents.EditDebateTeamsContainer = EditDebateTeamsContainer
 vueComponents.EditDebateVenuesContainer = EditDebateVenuesContainer
+// Ballots New
+vueComponents.BallotEntryContainer = BallotEntryContainer
 
 // -----------------------------------------------------------------------------
 // Asynchronously Loaded Components Setup (defer loading to reduce bundle)

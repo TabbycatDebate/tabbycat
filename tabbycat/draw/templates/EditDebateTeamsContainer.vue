@@ -7,7 +7,7 @@
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount"></drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
+      <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <div slot="teams" class="flex-36 flex-truncate border-right d-flex flex-nowrap">
 
           <droppable-item v-for="side in sides" :handle-drop="moveTeam" :key="side"

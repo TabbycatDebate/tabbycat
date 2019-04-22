@@ -1,10 +1,6 @@
 import logging
 import string
-
-try:
-    from secrets import SystemRandom
-except ImportError:  # for Python 3.5 compatibility
-    from random import SystemRandom
+from secrets import SystemRandom
 
 from django.db import IntegrityError
 

@@ -8,7 +8,7 @@ export default {
         All: true, Adjudicators: false, Debaters: false,
       },
       peopleSortByGroup: {
-        Institution: true, Name: false, Time: false,
+        Institution: !this.teamCodes, Name: this.teamCodes, Time: false,
       },
       speakerGroupings: {
         Speaker: false, Team: true,
@@ -74,6 +74,7 @@ export default {
           locked: false,
           type: 'Team',
           speakers: teamSpeakers,
+          speakersIn: teamSpeakers.length - _.filter(teamSpeakers, ['status', false]).length,
           institution: institution,
           identifier: _.flatten(_.map(teamSpeakers, 'identifier')),
         }

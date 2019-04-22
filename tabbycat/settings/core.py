@@ -122,7 +122,8 @@ INSTALLED_APPS = (
     'django_extensions',  # For Secret Generation Command
     'gfklookupwidget',
     'formtools',
-    'statici18n' # Compile js translations as static file; saving requests
+    'statici18n', # Compile js translations as static file; saving requests
+    'polymorphic',
 )
 
 ROOT_URLCONF = 'urls'

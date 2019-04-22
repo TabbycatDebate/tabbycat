@@ -15,7 +15,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
         status_header = {
             'key': key,
-            'tooltip': _("Whether this debate's ballot has been checked-in"),
+            'tooltip': _("Whether this debate's ballot has been checked in"),
             'icon': "compass",
         }
         status_cells = []

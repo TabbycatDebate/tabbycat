@@ -199,7 +199,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
 
         if self.round.prev:
             title = _("Active in %(prev_round)s") % {'prev_round': self.round.prev.abbreviation}
-            table.add_column({'key': 'active', 'title': title}, [{
+            table.add_column({'key': 'active-prev', 'title': title}, [{
                 'sort': inst.prev_available,
                 'icon': 'check' if inst.prev_available else ''
             } for inst in queryset])

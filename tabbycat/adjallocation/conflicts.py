@@ -1,5 +1,6 @@
 """Utilities for querying and listing conflicts and history between
 participants."""
+import logging
 
 from itertools import combinations, product
 
@@ -8,6 +9,8 @@ from participants.models import Adjudicator, Team
 
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, TeamInstitutionConflict)
+
+logger = logging.getLogger(__name__)
 
 
 class ConflictsInfo:
@@ -76,14 +79,22 @@ class ConflictsInfo:
         ).select_related('institution').distinct()
         self.teaminstconflicts = {team_id: set() for team_id in self.team_ids}
         for conflict in teaminstconflict_instances:
-            self.teaminstconflicts[conflict.team_id].add(conflict.institution)
+            if conflict.team_id in self.teaminstconflicts:
+                self.teaminstconflicts[conflict.team_id].add(conflict.institution)
+            else:
+                logger.warning("Couldnt add conflict for team ID %s to \
+                                institution %s" % (conflict.team_id, conflict.institution))
 
         adjinstconflict_instances = AdjudicatorInstitutionConflict.objects.filter(
             adjudicator__in=self.adjudicators,
         ).select_related('institution').distinct()
         self.adjinstconflicts = {adj_id: set() for adj_id in self.adjudicator_ids}
         for conflict in adjinstconflict_instances:
-            self.adjinstconflicts[conflict.adjudicator_id].add(conflict.institution)
+            if conflict.adjudicator_id in self.adjinstconflicts:
+                self.adjinstconflicts[conflict.adjudicator_id].add(conflict.institution)
+            else:
+                logger.warning("Couldnt add conflict for adjudicator ID %s to \
+                                institution %s" % (conflict.adjudicator_id, conflict.institution))
 
     def personal_conflict_adj_team(self, adj, team):
         """Returns True if the adjudicator and team personally conflict."""
@@ -248,6 +259,11 @@ class HistoryInfo:
             history['adjudicator'].extend([{'id': adj_id, 'ago': now - r} for r in rseqs])
 
         for (adj1_id, adj2_id), rseqs in self.adjadjhistories.items():
+            history = adjudicators.setdefault(adj1_id, {'team': [], 'adjudicator': []})
+            history['adjudicator'].extend([{'id': adj2_id, 'ago': now - r} for r in rseqs])
+
+        # Need to reverse the order so the second adj also has a record
+        for (adj2_id, adj1_id), rseqs in self.adjadjhistories.items():
             history = adjudicators.setdefault(adj1_id, {'team': [], 'adjudicator': []})
             history['adjudicator'].extend([{'id': adj2_id, 'ago': now - r} for r in rseqs])
 

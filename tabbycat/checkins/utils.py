@@ -78,18 +78,18 @@ def single_checkin(instance, events):
     try:
         identifier = instance.checkin_identifier
         instance.barcode = identifier.barcode
-        instance.checked_tooltip = _("Not checked-in (barcode %(barcode)s)") % {'barcode': identifier.barcode}
+        instance.checked_tooltip = _("Not checked in (barcode %(barcode)s)") % {'barcode': identifier.barcode}
     except ObjectDoesNotExist:
         identifier = None
         instance.barcode = None
-        instance.checked_tooltip = _("Not checked-in; no barcode assigned")
+        instance.checked_tooltip = _("Not checked in; no barcode assigned")
 
     if identifier:
         instance.time = next((e['time'] for e in events if e['identifier__barcode'] == identifier.barcode), None)
         if instance.time:
             instance.checked_in = True
             instance.checked_icon = 'check'
-            instance.checked_tooltip = _("Checked-in at %(time)s") % {'time': instance.time.strftime('%H:%M')}
+            instance.checked_tooltip = _("checked in at %(time)s") % {'time': instance.time.strftime('%H:%M')}
     return instance
 
 
@@ -101,7 +101,7 @@ def multi_checkin(team, events, t):
     for speaker in team.speaker_set.all():
         speaker = single_checkin(speaker, events)
         if speaker.checked_in:
-            tooltip = _("%(speaker)s checked-in at %(time)s.") % {'speaker': speaker.name, 'time': speaker.time.strftime('%H:%M')}
+            tooltip = _("%(speaker)s checked in at %(time)s.") % {'speaker': speaker.name, 'time': speaker.time.strftime('%H:%M')}
         else:
             tooltip = _("%(speaker)s is missing.") % {'speaker': speaker.name}
         tooltips.append(tooltip)

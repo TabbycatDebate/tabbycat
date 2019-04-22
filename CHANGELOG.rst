@@ -8,16 +8,54 @@ Change Log
 
 - Made it possible to re-use an existing motion for multiple rounds.
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
-- When printing the per-participant private URLs they now feature QR codes in addition to the URL. Thanks to Étienne Beaulé for contributing this feature!
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
-    - Copy `tabbycat/settings/local.example` to become `local.py` (and fill in your original database details)
-    - Optional: repeat the same copying procedure for `development.example` and set the `LOCAL_DEVELOPMENT` environmental variable to `True` if you would like to use the settings designed to aid local development
+    - Copy ``tabbycat/settings/local.example`` to become ``local.py`` (and fill in your original database details)
+    - Optional: repeat the same copying procedure for ``development.example`` and set the ``LOCAL_DEVELOPMENT`` environmental variable to ``True`` if you would like to use the settings designed to aid local development
 - A range of improvements to the email notifications contributed by Étienne Beaulé:
     - Ballot receipt emails now provide more information about team scores/points
     - Emails are now in a rich-text format
     - Custom emails may be sent out to select participants through the web-interface
-    - Participants can be specifically included or excluded from receiving a notification before sending
-- Several Tabbycat functions have been shifted to worker processes [TODO: confirm which] to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run `heroku ps:scale worker=1`
+    - Participants can be specifically included or excluded from receiving a notification before sending with checks for duplicate messages
+    - Teams can be sent emails with their draw details
+    - Emails can be tracked to determine if sent or read (Heroku-specific)
+- Expanded the use of private URLs (Encore Étienne Beaulé):
+    - QR codes are now included in addition to the URL when printing private URLs
+    - Private landing pages will now display check-in status (if check-ins are used) along with further details regarding break categories, regions, etc.
+    - Current and former draw assignments will display along with submitted ballots (for adjudicators) on landing pages
+- Reworked how conflicts are determined to support double-past institutional conflicts:
+    - Added a "team-institution conflict" model
+    - Like adjudicator-institution conflicts, team-institution conflicts are automatically created if you use the simple importer or the command-line importer; but if you edit the database, it's your responsibility to add/edit them
+    - Institutional affiliations no longer matter for determining conflicts for either teams or adjudicators; only institutions listed in the team's or adjudicator's conflicts matter
+    - A adjudicator/team conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
+- When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions
+- Info-slides can now be split into paragraphs
+- Instiututional caps in breaks can be based on the number of teams in the break. Thanks to Viran Weerasekera for this feature!
+- Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run ``heroku ps:scale worker=1``
+- Upgraded to Python 3.6, dropped support for Python 3.5 and below. Note that this will require you to upgrade your python versions if running locally.
+
+
+2.2.10
+-----
+*Release date: 10 February 2019*
+
+- Fixed the display of feedback quantities on the Feedback Overview Page
+- Fixed issue where 'ignored' feedback would hide the result from the feedback graph but not affect an adjudicator's current score. Thanks to Étienne for this fix
+
+
+2.2.9
+-----
+*Release date: 24 January 2019*
+
+- Fixed an issue that could cause errors for tournaments when using an atypical number of rounds and break sizes. Thanks to Étienne for this fix
+- Fixed an issue where the display of adjudicator's record links would display their name twice
+
+
+2.2.8
+-----
+*Release date: 14 December 2018*
+
+- Fix issue where the check-in buttons were always disabled on admin and assistant pages
+- Other minor fixes. Thanks to Étienne for these and for the check-in button fix!
 
 
 2.2.7

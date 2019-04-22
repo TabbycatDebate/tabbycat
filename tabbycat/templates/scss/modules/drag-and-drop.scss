@@ -4,8 +4,9 @@
 
 .vue-draggable {
   background: #fff;
-  border: 3px solid $gray-600;
+  border: 4px solid $gray-600;
   border-radius: $border-radius;
+  overflow: hidden; // Need to cut off text (because it doesn't wrap)
 
   .vue-draggable-muted {
     color: $text-muted; // Can't rely on text-muted as we need to override on hover

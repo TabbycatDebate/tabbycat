@@ -6,10 +6,8 @@ from munkres import Munkres
 
 from django.utils.translation import gettext as _
 
-from utils.views import BadJsonRequestError
-
 from ..allocation import AdjudicatorAllocation
-from .base import BaseAdjudicatorAllocator, register
+from .base import AdjudicatorAllocationError, BaseAdjudicatorAllocator, register
 
 logger = logging.getLogger(__name__)
 
@@ -97,17 +95,17 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
     def check_matrix_exists(self, n_debates, n_voting):
         if n_voting == 0:
             info = _("There are no adjudicators eligible to be a chair or "
-                     "panellist. This usually means that you need to go to the "
-                     "Draw Rules section of the Configuration area and "
-                     "decrease the \"Minimum adjudicator score to vote\" setting "
-                     "in order to allow some adjudicators to be allocated.")
+                     "panellist. Try changing the \"Minimum feedback score "
+                     "required to be allocated as chair or panellist\" setting "
+                     "to something lower than at least some adjudicators' "
+                     "current scores, and try again.")
             logger.info("No adjudicators able to panel or chair")
-            raise BadJsonRequestError(info)
+            raise AdjudicatorAllocationError(info)
         if n_debates == 0:
             info = _("There are no debates for this round. "
                      "Maybe you haven't created a draw yet?")
             logger.info("No debates available for allocator")
-            raise BadJsonRequestError(info)
+            raise AdjudicatorAllocationError(info)
 
 
 @register

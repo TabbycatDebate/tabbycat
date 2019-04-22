@@ -8,7 +8,7 @@
     {% plural %}
       {{ ndebates }} debates do not have a chair.
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="danger" %}
+    {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
   {% if not pref.duplicate_adjs and duplicates %}
@@ -17,7 +17,7 @@
     {% plural %}
       The following <strong>{{ nadjs }}</strong> adjudicators are adjudicating multiple debates: <strong>{{ adjudicators }}</strong>
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="danger" %}
+    {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
   {% if pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
@@ -26,7 +26,7 @@
     {% plural %}
       {{ ndebates }} debates have panels with an even number of adjudicators.
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="warning" %}
+    {% include "components/item-info.html" with nopad=True type="warning" %}
   {% endif %}
 
   {% if debates_with_adj_conflicts > 0 %}
@@ -35,7 +35,7 @@
     {% plural %}
       {{ ndebates }} debates have adjudicator conflicts.
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="warning" %}
+    {% include "components/item-info.html" with nopad=True type="warning" %}
   {% endif %}
 
   {% if unavailable_allocated %}
@@ -44,7 +44,7 @@
     {% plural %}
       The following <strong>{{ nadjs }}</strong> adjudicators are unavailable this round, but are assigned to debates: <strong>{{ adjudicators }}</strong>
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="danger" %}
+    {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
   {% if unallocated > 0 %}
@@ -53,7 +53,7 @@
     {% plural %}
       {{ ndebates }} adjudicators are available but not assigned to a debate.
     {% endblocktrans %}
-    {% include "components/item-info.html" with type="warning" %}
+    {% include "components/item-info.html" with nopad=True type="warning" %}
   {% endif %}
 
 {% endwith %}

@@ -21,10 +21,10 @@ from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from availability.utils import annotate_availability
 from divisions.models import Division
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
-from participants.models import Adjudicator, Institution, Team
+from participants.models import Adjudicator, Institution, Speaker, Team
 from participants.prefetch import populate_win_counts
 from participants.utils import get_side_history
 from standings.base import StandingsError
@@ -385,7 +385,7 @@ class AssistantDrawDisplayView(CurrentRoundMixin, OptionalAssistantTournamentPag
 class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Adjudicator Assignments")
 
-    event = SentMessageRecord.EVENT_TYPE_DRAW
+    event = BulkNotification.EVENT_TYPE_ADJ_DRAW
     subject_template = 'adj_email_subject'
     message_template = 'adj_email_message'
 
@@ -399,7 +399,21 @@ class EmailAdjudicatorAssignmentsView(RoundTemplateEmailCreateView):
         return reverse_round('draw-display', self.round)
 
     def get_queryset(self):
-        return self.round.active_adjudicators
+        return Adjudicator.objects.filter(debateadjudicator__debate__round=self.round)
+
+
+class EmailTeamAssignmentsView(RoundTemplateEmailCreateView):
+    page_subtitle = _("Team Pairings")
+
+    event = BulkNotification.EVENT_TYPE_TEAM_DRAW
+    subject_template = 'team_draw_email_subject'
+    message_template = 'team_draw_email_message'
+
+    def get_success_url(self):
+        return reverse_round('draw-display', self.round)
+
+    def get_queryset(self):
+        return Speaker.objects.filter(team__in=self.round.active_teams)
 
 
 # ==============================================================================

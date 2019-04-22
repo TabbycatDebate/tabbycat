@@ -83,7 +83,7 @@ export default {
     },
     finishCheckIn: function (payload) {
       const checkin = payload.checkins[0]
-      const msg = `${checkin.time} checked-in identifier ${checkin.identifier}`
+      const msg = `${checkin.time} checked in ${checkin.identifier}: ${checkin.owner_name}`
       $.fn.showAlert('success', msg, 0)
       this.playSound('finishedScanSound')
     },
@@ -183,7 +183,7 @@ export default {
       Quagga.onDetected((result) => {
         const code = result.codeResult.code
         // Check length
-        if (code.length === 5) {
+        if (code.length === 6) {
           // Check numeric
           if (code.match(/^[0-9]+$/) !== null) {
             // Check not already posted
@@ -191,7 +191,7 @@ export default {
               self.checkInIdentifier(code)
               self.scannedResults.push(code)
             } else {
-              // $.fn.showAlert("info", 'Already checked-in identifier ' + code, 0)
+              // $.fn.showAlert("info", 'Already checked in identifier ' + code, 0)
             }
           }
         }
@@ -200,7 +200,7 @@ export default {
   },
   watch: {
     barcode: function (current) {
-      if (current.length >= 5) {
+      if (current.length >= 6) {
         this.processing = true
         this.checkInIdentifier(current)
       }

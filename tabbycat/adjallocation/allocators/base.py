@@ -5,7 +5,6 @@ from django.utils.translation import gettext as _
 
 from draw.models import Debate
 from participants.models import Team
-from utils.views import BadJsonRequestError
 
 from ..conflicts import ConflictsInfo, HistoryInfo
 
@@ -17,6 +16,10 @@ registry = {}
 def register(cls):
     registry[cls.key] = cls
     return cls
+
+
+class AdjudicatorAllocationError(RuntimeError):
+    pass
 
 
 class BaseAdjudicatorAllocator:
@@ -32,7 +35,7 @@ class BaseAdjudicatorAllocator:
                      "adjudicators who have been marked as available for this "
                      "round before auto-allocating.")
             logger.info(info)
-            raise BadJsonRequestError(info)
+            raise AdjudicatorAllocationError(info)
 
         if (isinstance(debates, QuerySet) and debates.model == Debate) or \
                 (isinstance(debates, list) and len(debates) > 0 and isinstance(debates[0], Debate)):

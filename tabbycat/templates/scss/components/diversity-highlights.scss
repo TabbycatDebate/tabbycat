@@ -9,6 +9,10 @@
 // @deprecate post legacy allocations remove
 .category-display {
 
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
+
   &.category-0 {
     @include hover-highlights($break-cat-0);
   }
@@ -103,6 +107,10 @@
 
 .gender-display {
 
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
+
   &.gender-male,
   &.gender-m,
   &.gender-M,
@@ -193,6 +201,10 @@ path.gender-other {
 // For diversity graphs and allocation
 .region-display {
 
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
+
   &.region-0 {
     @include hover-highlights($region-cat-0);
   }
@@ -272,6 +284,10 @@ path.region-8 {
 .ranking-display,
 .rank-display,
 .priority-display {
+
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
 
   &.ranking-90,
   &.rank-0,

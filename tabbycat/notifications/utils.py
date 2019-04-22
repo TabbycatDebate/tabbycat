@@ -11,6 +11,7 @@ Objects should be fetched from the database here as it is an asyncronous process
 thus the object itself cannot be passed.
 """
 
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
@@ -23,6 +24,22 @@ from participants.prefetch import populate_win_counts
 from tournaments.models import Round, Tournament
 
 
+adj_position_names = {
+    AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
+    AdjudicatorAllocation.POSITION_ONLY: _("the only"),
+    AdjudicatorAllocation.POSITION_PANELLIST: _("a panellist"),
+    AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
+}
+
+
+def _assemble_panel(adjs):
+    adj_string = []
+    for adj, pos in adjs:
+        adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
+
+    return ", ".join(adj_string)
+
+
 def adjudicator_assignment_email_generator(to, url, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
@@ -30,25 +47,11 @@ def adjudicator_assignment_email_generator(to, url, round_id):
     draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
     use_codes = use_team_code_names(tournament, False)
 
-    adj_position_names = {
-        AdjudicatorAllocation.POSITION_CHAIR: _("the chair"),
-        AdjudicatorAllocation.POSITION_ONLY: _("the only"),
-        AdjudicatorAllocation.POSITION_PANELLIST: _("a panellist"),
-        AdjudicatorAllocation.POSITION_TRAINEE: _("a trainee"),
-    }
-
-    def _assemble_panel(adjs):
-        adj_string = []
-        for adj, pos in adjs:
-            adj_string.append("%s (%s)" % (adj.name, adj_position_names[pos]))
-
-        return ", ".join(adj_string)
-
     for debate in draw:
         matchup = debate.matchup_codes if use_codes else debate.matchup
         context = {
             'ROUND': round.name,
-            'VENUE': debate.venue.name if hasattr(debate, 'venue') else _("TBA"),
+            'VENUE': debate.venue.display_name if debate.venue is not None else _("TBA"),
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
             'DRAW': matchup
         }
@@ -100,14 +103,15 @@ def ballots_email_generator(to, debate_id):
     use_codes = use_team_code_names(debate.round.tournament, False)
 
     def _create_ballot(result, scoresheet):
-        ballot = ""
+        ballot = "<ul>"
 
         for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
+            side_string = ""
             if tournament.pref('teams_in_debate') == 'bp':
-                side_string = _("%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)\n")
+                side_string += _("<li>%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)")
                 points = 4 - scoresheet.rank(side)
             else:
-                side_string = _("%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)\n")
+                side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)")
                 points = _("Win") if side == scoresheet.winner() else _("Loss")
 
             ballot += side_string % {
@@ -117,14 +121,20 @@ def ballots_email_generator(to, debate_id):
                 'points': points
             }
 
+            ballot += "<ul>"
+
             for pos, pos_name in zip(tournament.positions, pos_names):
-                ballot += _("- %(pos)s: %(speaker)s (%(score)s)\n") % {
+                ballot += _("<li>%(pos)s: %(speaker)s (%(score)s)</li>") % {
                     'pos': pos_name,
                     'speaker': result.get_speaker(side, pos).name,
                     'score': scoresheet.get_score(side, pos)
                 }
 
-        return ballot
+            ballot += "</ul></li>"
+
+        ballot += "</ul>"
+
+        return mark_safe(ballot)
 
     if isinstance(results, VotingDebateResult):
         for (adj, ballot) in results.scoresheets.items():
@@ -186,14 +196,16 @@ def motion_release_email_generator(to, round_id):
     round = Round.objects.get(id=round_id)
 
     def _create_motion_list():
-        motion_list = ""
+        motion_list = "<ul>"
         for motion in round.motion_set.all():
-            motion_list += _(" - %(text)s (%(ref)s)\n") % {'text': motion.text, 'ref': motion.reference}
+            motion_list += _("<li>%(text)s (%(ref)s)</li>") % {'text': motion.text, 'ref': motion.reference}
 
             if motion.info_slide:
                 motion_list += "   %s\n" % (motion.info_slide)
 
-        return motion_list
+        motion_list += "</ul>"
+
+        return mark_safe(motion_list)
 
     context = {
         'TOURN': str(round.tournament),
@@ -238,5 +250,40 @@ def team_speaker_email_generator(to, tournament_id):
             context_user['USER'] = speaker.name
 
             emails.append((context_user, speaker))
+
+    return emails
+
+
+def team_draw_email_generator(to, url, round_id):
+    emails = []
+    round = Round.objects.get(id=round_id)
+    tournament = round.tournament
+    draw = round.debate_set_with_prefetches(speakers=True, divisions=False).all()
+    use_codes = use_team_code_names(tournament, False)
+
+    for debate in draw:
+        matchup = debate.matchup_codes if use_codes else debate.matchup
+        context = {
+            'ROUND': round.name,
+            'VENUE': debate.venue.name,
+            'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
+            'DRAW': matchup
+        }
+
+        for dt in debate.debateteam_set.all():
+            context_team = context.copy()
+            context_team['TEAM'] = dt.team.code_name if use_codes else dt.team.short_name
+            context_team['SIDE'] = dt.get_side_name(tournament=tournament)
+
+            for speaker in dt.team.speakers:
+                try:
+                    to.remove(speaker.id)
+                except ValueError:
+                    continue
+
+                context_user = context_team.copy()
+                context_user['USER'] = speaker.name
+
+                emails.append((context_user, speaker))
 
     return emails

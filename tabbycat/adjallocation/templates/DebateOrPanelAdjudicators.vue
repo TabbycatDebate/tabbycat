@@ -1,7 +1,7 @@
 <template>
 
   <div class="d-flex flex-36 flex-truncate vue-droppable vue-droppable-parent">
-    <div class="d-flex flex-column pl-2 justify-content-around small text-monospace">
+    <div class="d-flex flex-column pl-2 pr-2 justify-content-around small text-monospace">
       <div class="py-1" data-toggle="tooltip" :title="gettext('Average score of panel (excluding trainees)')">
         <span v-if="averageScore">{{ averageScore }}</span>
         <span v-else class="text-muted" v-text="gettext('N/A')"></span>
@@ -29,14 +29,19 @@ export default {
     ...mapGetters(['allocatableItems']),
     adjudicatorScores: function () {
       let adjIds = [] // Strange logic below is to avoid mutating VueX state
+      let scores = []
       if (this.debateOrPanel.adjudicators.C.length > 0) {
         adjIds.push(this.debateOrPanel.adjudicators.C[0])
       }
       adjIds = [...adjIds, ...this.debateOrPanel.adjudicators.P]
       if (adjIds.length > 0) {
-        return adjIds.map(id => this.allocatableItems[id].score).sort().reverse()
+        for (let adjID of adjIds) {
+          if (adjID in this.allocatableItems) {
+            scores.push(this.allocatableItems[adjID].score)
+          }
+        }
       }
-      return []
+      return scores.sort().reverse()
     },
     averageScore: function () {
       if (this.adjudicatorScores.length > 0) {

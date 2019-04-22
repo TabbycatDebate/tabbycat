@@ -114,21 +114,17 @@
 {% endif %}
 
 <!-- RESULTS RELEASES -->
-{% if pref.public_results and tournament.public_results_available %}
+{% if pref.public_results and tournament.rounds_with_released_results %}
   <li class="nav-item dropdown {% if results_nav %}active{% endif %}">
     <a class="nav-link dropdown-toggle" href="#" id="roundsDrop"
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        {% trans "Results" %}
     </a>
     <div class="dropdown-menu" aria-labelledby="roundsDrop">
-      {% for r in tournament.round_set.all %}
-        {% if not r.silent or pref.all_results_released %}
-          {% if r.seq < current_round.seq or pref.all_results_released %}
-            <a class="dropdown-item" href="{% roundurl 'results-public-round' r %}">
-              {{ r.name }}
-            </a>
-          {% endif %}
-        {% endif %}
+      {% for r in tournament.rounds_with_released_results %}
+        <a class="dropdown-item" href="{% roundurl 'results-public-round' r %}">
+          {{ r.name }}
+        </a>
       {% endfor %}
     </div>
   </li>

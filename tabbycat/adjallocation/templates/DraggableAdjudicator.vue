@@ -1,32 +1,79 @@
 <template>
   <draggable-item :drag-payload="dragPayload"
-                  :class="{ 'border-light': isTrainee, 'bg-dark text-white': !item.available }">
+    :hover-panel="true" :hover-panel-item="adjudicator" :hover-panel-type="'adjudicator'"
+    :hover-conflicts="true" :hover-conflicts-item="clashableID" :hover-conflicts-type="'adjudicator'"
+    :class="[{'border-light': isTrainee && conflictsCSS === '', 'bg-dark text-white': unavailable },
+              highlightsCSS, conflictsCSS, hoverConflictsCSS]">
 
-      <span slot="number">
-        <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
-      </span>
-      <span slot="title">
-        {{ initialledName }}
-      </span>
-      <span slot="subtitle">
-        {{ institutionCode }}
-      </span>
+    <span slot="number">
+      <small class="pl-2 vue-draggable-muted ">{{ scoreA }}{{ scoreB }}</small>
+    </span>
+    <span slot="title">
+      {{ initialledName }}
+    </span>
+    <span slot="subtitle">
+      {{ institutionCode }}
+    </span>
+    <div slot="tooltip" class="history-tooltip tooltip" v-if="hasHistory">
+      <div :class="['tooltip-inner conflictable', 'hover-histories-' + hasHistory + '-ago']">
+        {{ hasHistory }} ago
+      </div>
+    </div>
 
   </draggable-item>
 </template>
 
 <script>
+// Note the checks for "this.adjudicator" are a means of coping when an adj is assigned that is not
+// in the master list — i.e. those from another tournament or that were added since the page was loaded
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
+import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
+import ConflictableAdjudicatorMixin from '../../utils/templates/ConflictableAdjudicatorMixin.vue'
+import HoverableConflictReceiverMixin from '../../utils/templates/HoverableConflictReceiverMixin.vue'
 
 export default {
+  mixins: [HighlightableMixin, ConflictableAdjudicatorMixin, HoverableConflictReceiverMixin],
   components: { DraggableItem },
-  props: { item: Object, dragPayload: Object, isTrainee: false },
+  props: { item: Object, dragPayload: Object, isTrainee: false, debateOrPanelId: Number },
   computed: {
+    highlightData: function () {
+      return this.adjudicator
+    },
     adjudicator: function () {
       return this.item
     },
+    clashableType: function () {
+      return 'adjudicator'
+    },
+    clashableID: function () {
+      if (this.item && 'id' in this.item) {
+        return this.item.id
+      }
+    },
+    unavailable: function () {
+      if (this.doubleAllocated) {
+        return true
+      } else if (this.item && !this.item.available) {
+        return true
+      }
+      return false
+    },
+    doubleAllocated: function () {
+      if (this.item && 'id' in this.item) {
+        return this.$store.getters.duplicateAdjudicatorAllocations.includes(this.item.id)
+      }
+      return false
+    },
+    hasHistory: function () {
+      if (this.hasHoverHistoryConflict) {
+        return this.hasHoverHistoryConflict
+      } else if (this.hasHistoryConflict) {
+        return this.hasHistoryConflict
+      }
+      return false
+    },
     institutionCode: function () {
-      if (this.adjudicator.institution) {
+      if (this.adjudicator && this.adjudicator.institution) {
         return this.$store.state.institutions[this.adjudicator.institution].code
       } else {
         return this.gettext('Unaffiliated')
@@ -34,6 +81,9 @@ export default {
     },
     initialledName: function () {
       // Translate Joe Blogs into Joe B.
+      if (!this.adjudicator) {
+        return 'Unknown Adj'
+      }
       const names = this.adjudicator.name.split(' ')
       if (names.length > 1) {
         const lastname = names[names.length - 1]
@@ -49,13 +99,18 @@ export default {
     },
     score: function () {
       // Scores can come through as integers; need to ensure they are re-rounded
-      return parseFloat(Math.round(this.adjudicator.score * 100) / 100).toFixed(1)
+      if (this.adjudicator) {
+        return parseFloat(Math.round(this.adjudicator.score * 100) / 100).toFixed(1)
+      }
+      return 0
     },
     scoreA: function () {
       return String(this.score)[0] // First digit
     },
     scoreB: function () {
-      if (this.adjudicator.score >= 10.0) {
+      if (!this.adjudicator) {
+        return ''
+      } else if (this.adjudicator.score >= 10.0) {
         // For scores with that are double-digits ignore the decimal
         return String(this.score)[1] + '.'
       } else {

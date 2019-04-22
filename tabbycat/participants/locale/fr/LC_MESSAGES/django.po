@@ -717,7 +717,7 @@ msgid ""
 "(whoever gave the oral adjudication)"
 msgstr ""
 "N’a pas présenté d’évaluation pour un d’entre eux : <strong>"
-"%(adjudicators)s</stong> (celui qui a rendu la décision)"
+"%(adjudicators)s</strong> (celui qui a rendu la décision)"
 
 #: participants/templates/feedback_progress_panel.html:30
 #, python-format

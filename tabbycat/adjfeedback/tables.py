@@ -120,7 +120,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'icon': 'eye'
         }
         link_cell = [{
-            'text': 'View %s<br>feedbacks' % adj.debates,
+            'text': 'View %s<br>feedbacks' % (len(adj.feedback_data) - 1), # -1 to account for test score
             'class': 'view-feedback',
             'sort': adj.debates,
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})

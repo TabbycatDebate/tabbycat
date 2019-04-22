@@ -19,22 +19,25 @@
        href="{% tournamenturl 'adjfeedback-view-important' %}">
       {% trans "Important" %}
     </a>
+    <a class="btn btn-outline-primary {% if feedback_comments_nav %}active disabled{% endif %}"
+       href="{% tournamenturl 'adjfeedback-view-comments' %}">
+      {% trans "Comments" %}
+    </a>
     <a class="btn btn-outline-primary {% if feedback_source_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-source' %}">
-      {% trans "Find by Source" %}
+      {% trans "By Source" %}
     </a>
     <a class="btn btn-outline-primary {% if feedback_target_nav %}active disabled{% endif %}"
        href="{% tournamenturl 'adjfeedback-view-by-target' %}">
-      {% trans "Find by Target" %}
-    </a>
-    <a class="btn btn-outline-primary"
-       href="{% tournamenturl 'adjfeedback-update-scores-bulk' %}">
-      {% trans "Bulk Update Scores" %}
+      {% trans "By Target" %}
     </a>
   </div>
 {% endblock %}
 
 {% block page-subnav-actions %}
+  <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-update-scores-bulk' %}">
+    {% trans "Bulk Update Scores" %}
+  </a>
   <a class="btn btn-outline-success" href="{% tournamenturl 'adjfeedback-add-index' %}">
     {% trans "Add Feedback" %}
   </a>

@@ -1,7 +1,8 @@
 <template>
 
-  <div draggable=true @dragstart="dragStart" @dragend="dragEnd"
-       :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]">
+  <div draggable=true @drag="drag" @dragstart="dragStart" @dragend="dragEnd"
+       :class="['d-flex m-1 align-items-center align-self-center', dragableClasses]"
+       @mouseenter="showHovers" @mouseleave="hideHovers">
 
     <slot>
       <h4 class="mb-0 py-1 text-monospace vc-draggable-number vc-number">
@@ -15,6 +16,7 @@
           <slot name="subtitle"></slot>
         </h6>
       </div>
+      <slot name="tooltip"></slot>
     </slot>
 
   </div>
@@ -23,22 +25,37 @@
 
 <script>
 import DraggableMixin from './DraggableMixin.vue'
+import HoverablePanelMixin from './HoverablePanelMixin.vue'
+import HoverableConflictMixin from '../../utils/templates/HoverableConflictMixin.vue'
 
 export default {
-  mixins: [DraggableMixin],
+  mixins: [DraggableMixin, HoverablePanelMixin, HoverableConflictMixin],
+  // Passed down from the parent because the trigger for the show/hide needs to be on this element
+  props: {
+    hoverPanel: false,
+    hoverPanelItem: Object,
+    hoverPanelType: String,
+    hoverConflicts: false,
+    hoverConflictsItem: Number,
+    hoverConflictsType: String,
+  },
+  methods: {
+    showHovers: function () {
+      if (this.hoverPanel) {
+        this.showHoverPanel(this.hoverPanelItem, this.hoverPanelType)
+      }
+      if (this.hoverConflicts) {
+        this.showHoverConflicts(this.hoverConflictsItem, this.hoverConflictsType)
+      }
+    },
+    hideHovers: function () {
+      if (this.hoverPanel) {
+        this.hideHoverPanel()
+      }
+      if (this.hoverConflicts) {
+        this.hideHoverConflicts()
+      }
+    },
+  },
 }
 </script>
-
-<style scoped>
-  .vc-title {
-    line-height: 0.9;
-    font-size: 1.1rem;
-  }
-  .vc-number {
-    letter-spacing: -3px;
-  }
-  .vc-subtitle {
-    font-weight: normal;
-    font-size: 0.65rem;
-  }
-</style>
