@@ -24,7 +24,7 @@
     "eslint-plugin-html": "^5.0.x",
     "feather-icons": "^4.x.x",
     "inter-ui": "^3.3.4",
-    "jquery": "^3.3.0",
+    "jquery": "^3.4.0",
     "jquery-validation": "1.19.x",
     "jsbarcode": "^3.11.x",
     "lodash": "^4.17.11",
