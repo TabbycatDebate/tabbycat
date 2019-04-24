@@ -1,13 +1,17 @@
 import logging
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.core import management
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
 from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 
 from formtools.wizard.views import SessionWizardView
 
@@ -24,7 +28,7 @@ from venues.models import Venue
 
 from .management.commands import importtournament
 from .importers import TournamentDataImporterError
-from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
+from .forms import (AdjudicatorDetailsForm, ArchiveImportForm, ImportInstitutionsRawForm,
                     ImportVenuesRawForm, NumberForEachInstitutionForm,
                     TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
 
@@ -230,3 +234,19 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
 
         new_tournament = Tournament.objects.get(slug=source)
         return redirect_tournament('tournament-configure', tournament=new_tournament)
+
+
+class TournamentImportArchiveView(AdministratorMixin, FormView):
+
+    form_class = ArchiveImportForm
+    success_url = reverse_lazy('tabbycat-index')
+    template_name = 'archive_importer.html'
+
+    def post(self, request, *args, **kwargs):
+        async_to_sync(get_channel_layer().send)("importer", {
+            "type": "import_tournament",
+            "data": request.FILES['file']
+        })
+
+        messages.success(self.request, _("Debate XML is being imported..."))
+        return super().post(request, *args, **kwargs)

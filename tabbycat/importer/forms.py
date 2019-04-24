@@ -344,3 +344,9 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
         if commit and adj.institution:
             adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
         return adj
+
+
+class ArchiveImportForm(forms.Form):
+
+    file = forms.FileField(required=True,
+        help_text=_("The Debate XML archive to parse"))

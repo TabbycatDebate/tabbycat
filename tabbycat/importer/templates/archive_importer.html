@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head-title %}{% endblock %}
+{% block nav %}{% endblock %}
+{% block page-title %}{% trans "Import Tournament Archive" context "page title" %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-lg-8 ml-lg-auto mr-md-auto">
+
+    <div class="card">
+      <form action="." method="POST">
+      {% csrf_token %}
+
+      {% trans "Import Tournament Archive" context "page title" as title %}
+      {% trans "This form will create a tournament with the data provided as a Debate XML format." as text %}
+      {% include "components/form-title.html" with emoji="🗂️" %}
+
+      {% include "components/form-main.html" %}
+
+      {% trans "Import" as title %}
+      {% trans "Go back to the site home page" as subtitle %}
+      {% url 'tabbycat-index' as suburl %}
+      {% include "components/form-submit.html" %}
+
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

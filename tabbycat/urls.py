@@ -78,6 +78,10 @@ urlpatterns = [
     # Notifications
     path('notifications/',
         include('notifications.urls')),
+
+    # Archive import/export
+    path('archive/',
+        include('importer.urls_archive')),
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG
