@@ -33,12 +33,19 @@
 {% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-outline-primary" href="{% roundurl 'results-public-round' debate.round %}">
-    <i data-feather="chevron-left"></i>
-    {% blocktrans trimmed with round_name=debate.round.name %}
-      Return to Results for {{ round_name }}
-    {% endblocktrans %}
-  </a>
+  {% if private_url %}
+    <a class="btn btn-outline-primary" href="{% tournamenturl 'privateurls-person-index' url_key %}">
+      <i data-feather="chevron-left"></i>
+      {% trans "Return to landing page" %}
+    </a>
+  {% else %}
+    <a class="btn btn-outline-primary" href="{% roundurl 'results-public-round' debate.round %}">
+      <i data-feather="chevron-left"></i>
+      {% blocktrans trimmed with round_name=debate.round.name %}
+        Return to Results for {{ round_name }}
+      {% endblocktrans %}
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
