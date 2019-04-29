@@ -125,14 +125,14 @@ class EmailEventWebhookView(TournamentMixin, View):
 
         data = json.loads(request.body)
 
-        records = SentMessage.objects.filter(hook_id__in=[obj['hook-id'] for obj in data])
+        records = SentMessage.objects.filter(hook_id__in=[obj['hook-id'] for obj in data if 'hook-id' in obj])
         record_lookup = {smr.hook_id: smr.id for smr in records}
         statuses = []
 
         for obj in data:
             dt = datetime.fromtimestamp(obj['timestamp'])
             timestamp = timezone.make_aware(dt, timezone.utc)
-            email_id = record_lookup.get(obj['hook-id'], None)
+            email_id = record_lookup.get(obj.get('hook-id'))
             if email_id is None:
                 continue
             statuses.append(EmailStatus(email_id=email_id, timestamp=timestamp, event=obj['event'], data=obj))
