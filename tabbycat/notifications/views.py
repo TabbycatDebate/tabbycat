@@ -174,7 +174,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def add_sent_notification(self, email_count):
         text = ngettext("%(email_count)s email has been queued for sending.",
                         "%(email_count)s emails have been queued for sending.",
-                        email_count)
+                        email_count) % {'email_count': email_count}
         if email_count > 0:
             messages.success(self.request, text)
         else:
