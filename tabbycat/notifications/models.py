@@ -15,7 +15,7 @@ class SentMessage(models.Model):
 
     message_id = models.CharField(max_length=254, unique=True, null=True,
         verbose_name="Message-ID") # Technical, Untranslatable term
-    hook_id = models.CharField(max_length=16, unique=True, blank=True, # ids <= 5 long; null doesn't apply
+    hook_id = models.CharField(max_length=16, unique=True, blank=True, null=True,
         verbose_name="Hook-ID")
 
     recipient = models.ForeignKey('participants.Person', models.SET_NULL, null=True,
