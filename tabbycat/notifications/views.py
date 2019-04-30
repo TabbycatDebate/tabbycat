@@ -125,6 +125,8 @@ class EmailEventWebhookView(TournamentMixin, View):
 
         data = json.loads(request.body)
 
+        # Ignore all objects without a Tabbycat-specified hook ID
+        data = [obj for obj in data if 'hook-id' in obj and obj['hook-id'] is not None]
         records = SentMessage.objects.filter(hook_id__in=[obj['hook-id'] for obj in data])
         record_lookup = {smr.hook_id: smr.id for smr in records}
         statuses = []
