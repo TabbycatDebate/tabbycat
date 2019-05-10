@@ -5,11 +5,12 @@ from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.core import management
 from django.forms import modelformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
+from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
@@ -250,3 +251,20 @@ class TournamentImportArchiveView(AdministratorMixin, FormView):
 
         messages.success(self.request, _("Debate XML is being imported..."))
         return super().post(request, *args, **kwargs)
+
+
+class ExportArchiveIndexView(AdministratorMixin, TournamentMixin, TemplateView):
+
+    template_name = 'archive_export_index.html'
+
+
+class ExportArchiveAllView(AdministratorMixin, TournamentMixin, View):
+    
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(self.get_xml(), content_type='text/xml; charset=utf-8')
+        response['Content-Disposition'] = 'attachment; filename="' + self.tournament.short_name + '.xml"'
+
+        return response
+
+    def get_xml(self):
+        pass
