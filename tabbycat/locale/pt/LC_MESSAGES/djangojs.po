@@ -17,7 +17,7 @@ msgstr ""
 "Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/tables/TablesContrainer.vue:8
+#: templates/tables/TablesContainer.vue:8
 msgid "Find in Table"
 msgstr ""
 
@@ -53,59 +53,59 @@ msgstr ""
 msgid "Copy From Check-Ins"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:6
+#: participants/templates/DiversityContainer.vue:6
 msgid "Speaker Demographics"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:11
+#: participants/templates/DiversityContainer.vue:11
 msgid "No Gender Information"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:18
+#: participants/templates/DiversityContainer.vue:18
 msgid "No Speaker Categories Information"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:33
+#: participants/templates/DiversityContainer.vue:33
 msgid "Speaker Results"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:36
+#: participants/templates/DiversityContainer.vue:36
 msgid "speakers with gender data"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:38
+#: participants/templates/DiversityContainer.vue:38
 msgid "speaker scores total"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:49
+#: participants/templates/DiversityContainer.vue:49
 msgid "No Region Information"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:56
+#: participants/templates/DiversityContainer.vue:56
 msgid "Adjudicator Demographics"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:68
+#: participants/templates/DiversityContainer.vue:68
 msgid "No Position Information"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:83
+#: participants/templates/DiversityContainer.vue:83
 msgid "Adjudicator Results"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:86
+#: participants/templates/DiversityContainer.vue:86
 msgid "adjudicators with gender data"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:88
+#: participants/templates/DiversityContainer.vue:88
 msgid "feedback scores total"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:94
+#: participants/templates/DiversityContainer.vue:94
 msgid "No Adjudicator Ratings Information"
 msgstr ""
 
-#: participants/templates/DiversityContrainer.vue:99
+#: participants/templates/DiversityContainer.vue:99
 msgid "No Adjudicator-Adjudicator Feedback Information"
 msgstr ""
 
