@@ -19,7 +19,7 @@ msgstr ""
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "X-Generator: Poedit 2.2\n"
 
-#: templates/tables/TablesContrainer.vue:8
+#: templates/tables/TablesContainer.vue:8
 msgid "Find in Table"
 msgstr "Trouver dans la table"
 
@@ -60,59 +60,59 @@ msgstr ""
 msgid "Copy From Check-Ins"
 msgstr "Copier à partir des enregistrements"
 
-#: participants/templates/DiversityContrainer.vue:6
+#: participants/templates/DiversityContainer.vue:6
 msgid "Speaker Demographics"
 msgstr "Démographiques des Orateurs"
 
-#: participants/templates/DiversityContrainer.vue:11
+#: participants/templates/DiversityContainer.vue:11
 msgid "No Gender Information"
 msgstr "Pas d’information de genre"
 
-#: participants/templates/DiversityContrainer.vue:18
+#: participants/templates/DiversityContainer.vue:18
 msgid "No Speaker Categories Information"
 msgstr "Pas d’information des catégories d’orateur"
 
-#: participants/templates/DiversityContrainer.vue:33
+#: participants/templates/DiversityContainer.vue:33
 msgid "Speaker Results"
 msgstr "Résultats d’orateur"
 
-#: participants/templates/DiversityContrainer.vue:36
+#: participants/templates/DiversityContainer.vue:36
 msgid "speakers with gender data"
 msgstr "orateurs avec données de genre"
 
-#: participants/templates/DiversityContrainer.vue:38
+#: participants/templates/DiversityContainer.vue:38
 msgid "speaker scores total"
 msgstr "total des scores d’orateur"
 
-#: participants/templates/DiversityContrainer.vue:49
+#: participants/templates/DiversityContainer.vue:49
 msgid "No Region Information"
 msgstr "Pas d’information de région"
 
-#: participants/templates/DiversityContrainer.vue:56
+#: participants/templates/DiversityContainer.vue:56
 msgid "Adjudicator Demographics"
 msgstr "Démographiques des juges"
 
-#: participants/templates/DiversityContrainer.vue:68
+#: participants/templates/DiversityContainer.vue:68
 msgid "No Position Information"
 msgstr "Pas d’information de rôle"
 
-#: participants/templates/DiversityContrainer.vue:83
+#: participants/templates/DiversityContainer.vue:83
 msgid "Adjudicator Results"
 msgstr "Résultats de juge"
 
-#: participants/templates/DiversityContrainer.vue:86
+#: participants/templates/DiversityContainer.vue:86
 msgid "adjudicators with gender data"
 msgstr "juges avec données de genre"
 
-#: participants/templates/DiversityContrainer.vue:88
+#: participants/templates/DiversityContainer.vue:88
 msgid "feedback scores total"
 msgstr "totale des scores d’évaluation"
 
-#: participants/templates/DiversityContrainer.vue:94
+#: participants/templates/DiversityContainer.vue:94
 msgid "No Adjudicator Ratings Information"
 msgstr "Pas d’information de rang de juge"
 
-#: participants/templates/DiversityContrainer.vue:99
+#: participants/templates/DiversityContainer.vue:99
 msgid "No Adjudicator-Adjudicator Feedback Information"
 msgstr "Pas d’information d’évaluations juge-juge"
 
