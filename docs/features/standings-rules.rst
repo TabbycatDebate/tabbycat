@@ -74,8 +74,8 @@ metrics that will be shown in the team standings, but not used to rank teams.
   * - Draw strength
     - The sum of the number of wins of every team this team has faced so far.
 
-      This is also known in some circuits as *win points*, *opp wins* or *opp
-      strength*.
+      This is also known in some circuits as *win points*, *opponent wins* or
+      *opponent strength*.
 
   * - Votes/ballots carried
     - The number of adjudicators that gave this team a win across all of their
