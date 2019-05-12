@@ -191,7 +191,12 @@ class PowerPairedDrawManager(BaseDrawManager):
             annotate_npullups(teams, self.round.prev)
 
         metrics = self.round.tournament.pref('team_standings_precedence')
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
+
+        extra_metrics = ()
+        if self.round.tournament.pref('draw_pullup_restriction') == 'easy_draw':
+            extra_metrics = ("draw_strength_score",)
+
+        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), extra_metrics=extra_metrics, tiebreak="random")
         standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []

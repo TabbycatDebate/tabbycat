@@ -217,7 +217,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
         points_queryset = PointsMetricAnnotator().get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), 'points', round).prefetch_related(
-                Prefetch('debateteam_set',queryset=prefetch_queryset, to_attr='debateteams'))
+                Prefetch('debateteam_set', queryset=prefetch_queryset, to_attr='debateteams'))
         points_queryset_teams = {team.id: team for team in points_queryset}
         points_queryset_debateteams = {team.id: list(team.debateteams) for team in points_queryset}
 
@@ -229,6 +229,39 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
                 points = points_queryset_teams[dt.opponent.team_id].points
                 if points is not None: # points is None when no debates have happened
                     draw_strength += points
+            standings.add_metric(team, self.key, draw_strength)
+
+
+class ScoreDrawStrengthMetricAnnotator(BaseMetricAnnotator):
+    """Metric annotator for draw strength by score."""
+    key = "draw_strength_score"
+    name = _("draw strength by speaks")
+    abbr = _("DSS")
+
+    def annotate(self, queryset, standings, round=None):
+        if not queryset.exists():
+            return
+
+        logger.info("Running points query for draw strength by speaks:")
+
+        prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
+        if round is not None:
+            prefetch_queryset = prefetch_queryset.filter(debate__round__seq__lte=round.seq)
+
+        speaks_queryset = TotalSpeakerScoreMetricAnnotator().get_annotated_queryset(
+                queryset[0].tournament.team_set.all(), 'speaks_sum', round).prefetch_related(
+                Prefetch('debateteam_set', queryset=prefetch_queryset, to_attr='debateteams'))
+        speaks_queryset_teams = {team.id: team for team in speaks_queryset}
+        speaks_queryset_debateteams = {team.id: list(team.debateteams) for team in speaks_queryset}
+
+        populate_opponents([dt for dts in speaks_queryset_debateteams.values() for dt in dts])
+
+        for team in queryset:
+            draw_strength = 0
+            for dt in speaks_queryset_debateteams[team.id]:
+                speaks = speaks_queryset_teams[dt.opponent.team_id].speaks_sum
+                if speaks is not None: # points is None when no debates have happened
+                    draw_strength += speaks
             standings.add_metric(team, self.key, draw_strength)
 
 
@@ -378,21 +411,22 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.team.institution.name)
 
     metric_annotator_classes = {
-        "points"        : PointsMetricAnnotator,
-        "points210"     : Points210MetricAnnotator,
-        "wins"          : WinsMetricAnnotator,
-        "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
-        "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
-        "speaks_ind_avg": AverageIndividualScoreMetricAnnotator,
-        "speaks_stddev" : SpeakerScoreStandardDeviationMetricAnnotator,
-        "draw_strength" : DrawStrengthMetricAnnotator,
-        "margin_sum"    : SumMarginMetricAnnotator,
-        "margin_avg"    : AverageMarginMetricAnnotator,
-        "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
-        "firsts"        : NumberOfFirstsMetricAnnotator,
-        "seconds"       : NumberOfSecondsMetricAnnotator,
-        "wbw"           : WhoBeatWhomMetricAnnotator,
-        "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
+        "points"             : PointsMetricAnnotator,
+        "points210"          : Points210MetricAnnotator,
+        "wins"               : WinsMetricAnnotator,
+        "speaks_sum"         : TotalSpeakerScoreMetricAnnotator,
+        "speaks_avg"         : AverageSpeakerScoreMetricAnnotator,
+        "speaks_ind_avg"     : AverageIndividualScoreMetricAnnotator,
+        "speaks_stddev"      : SpeakerScoreStandardDeviationMetricAnnotator,
+        "draw_strength"      : DrawStrengthMetricAnnotator,
+        "draw_strength_score": ScoreDrawStrengthMetricAnnotator,
+        "margin_sum"         : SumMarginMetricAnnotator,
+        "margin_avg"         : AverageMarginMetricAnnotator,
+        "num_adjs"           : NumberOfAdjudicatorsMetricAnnotator,
+        "firsts"             : NumberOfFirstsMetricAnnotator,
+        "seconds"            : NumberOfSecondsMetricAnnotator,
+        "wbw"                : WhoBeatWhomMetricAnnotator,
+        "wbwd"               : DivisionsWhoBeatWhomMetricAnnotator,
     }
 
     ranking_annotator_classes = {

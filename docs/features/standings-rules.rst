@@ -77,6 +77,10 @@ metrics that will be shown in the team standings, but not used to rank teams.
       This is also known in some circuits as *win points*, *opponent wins* or
       *opponent strength*.
 
+  * - Draw strength by speaker score
+    - The sum of speaker scores of every team this team has faced so far.
+      Similar to draw strength (by wins).
+
   * - Votes/ballots carried
     - The number of adjudicators that gave this team a win across all of their
       debates. Also known as the number of *ballots* or *judges* a team has.

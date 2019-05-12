@@ -480,6 +480,10 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
+
+            if self.tournament.pref('draw_pullup_restriction') == 'easy_draw':
+                metrics.append("draw_strength_score")
+
             # subrank only makes sense if there's a second metric to rank on
             rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
             generator = TeamStandingsGenerator(metrics, rankings)
