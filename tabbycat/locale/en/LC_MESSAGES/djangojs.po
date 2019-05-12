@@ -18,6 +18,148 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "Scan Using Camera"
+msgstr ""
+
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "Stop Camera Scan"
+msgstr ""
+
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "Turn On Sounds"
+msgstr ""
+
+#. Translators: %1: Time of checkin, %2: Barcode number, %3: Name of "owner"
+#: checkins/templates/CheckInScanContainer.vue:
+msgid "%1 checked in %2: %3"
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "All"
+msgstr ""
+
+#. Translators: %1: Option name
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "By %1"
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "No matching venues found."
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "No matching people found."
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "This page will live-update with new check-ins as they occur although the initial list may be up to a minute old."
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "<strong>✓</strong> All"
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "<strong>☓</strong> All"
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "Click to check-in manually"
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "saving..."
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "This person does not have a check-in identifier so they can't be checked in"
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version."
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "Open the assistant version."
+msgstr ""
+
+#: checkins/templates/CheckInStatusContainer.vue:
+msgid "Click to undo a check-in"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 of no institutional affiliation with identifier of %3"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 of no institutional affiliation with no assigned identifier"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 from %3 with identifier of %4"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2 from %3 with no assigned identifier"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1 (Present; id=%2)"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1 (Absent; id=%2)"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a team with speakers %2"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "%1, a %2"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "Anonymous (due to team codes)"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "Anon"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "Independent"
+msgstr ""
+
+#: checkins/templates/PeopleStatusMixin.vue:
+msgid "Unaffiliated"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (%2) with identifier of %3"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (no category) with identifier of %2"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (%2) with no assigned identifier"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "%1 (no category) with no assigned identifier"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "Uncategorised"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
+msgid "Priority %1"
+msgstr ""
+
 #: templates/tables/TablesContainer.vue:8
 msgid "Find in Table"
 msgstr ""
