@@ -1,4 +1,5 @@
 import logging
+from xml.etree.ElementTree import tostring
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -32,6 +33,7 @@ from .importers import TournamentDataImporterError
 from .forms import (AdjudicatorDetailsForm, ArchiveImportForm, ImportInstitutionsRawForm,
                     ImportVenuesRawForm, NumberForEachInstitutionForm,
                     TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
+from .xml import Exporter
 
 logger = logging.getLogger(__name__)
 
@@ -259,7 +261,7 @@ class ExportArchiveIndexView(AdministratorMixin, TournamentMixin, TemplateView):
 
 
 class ExportArchiveAllView(AdministratorMixin, TournamentMixin, View):
-    
+
     def get(self, request, *args, **kwargs):
         response = HttpResponse(self.get_xml(), content_type='text/xml; charset=utf-8')
         response['Content-Disposition'] = 'attachment; filename="' + self.tournament.short_name + '.xml"'
@@ -267,4 +269,4 @@ class ExportArchiveAllView(AdministratorMixin, TournamentMixin, View):
         return response
 
     def get_xml(self):
-        pass
+        return tostring(Exporter(self.tournament).create_all())
