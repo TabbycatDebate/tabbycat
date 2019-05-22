@@ -162,6 +162,7 @@ export default {
     teamCodes: Boolean,
     tournamentSlug: String,
     forAdmin: Boolean,
+    teamSize: Number,
   },
   computed: {
     statsAbsent: function () {
@@ -253,8 +254,8 @@ export default {
       } else {
         css += 'text-uppercase '
       }
-      if (entity.speakersIn === 1) {
-        css += 'half-in-team ' // One speaker checked in
+      if (entity.speakersIn < this.teamSize && entity.speakersIn !== 0) {
+        css += 'half-in-team ' // Not all speakers checked-in
       } else if (entity.status === false) {
         css += 'bg-secondary ' // Nothing checked in
       } else {
