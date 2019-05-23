@@ -10,7 +10,6 @@ from tournaments.utils import get_side_name
 from utils.tables import TabbycatTableBuilder
 
 from .generator.bphungarian import BPHungarianDrawGenerator
-from .utils import annotate_npullups
 
 
 class BaseDrawTableBuilder(TabbycatTableBuilder):
@@ -154,23 +153,6 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
             return x[0] or 99999
         return self._add_debate_standing_columns(debates, standings, 'iterrankings',
                 'rankings_info', rankingformat, formatsort)
-
-    def add_number_of_pullups_columns(self, debates, round):
-        # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
-        teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
-        all_teams = [team for d in debates for team in d.teams]
-        annotate_npullups(all_teams, until=round)
-
-        for i, (side, teams) in enumerate(zip(self.tournament.sides, teams_by_side)):
-            name = _("number of pullups before this round")
-            # Translators: Abbreviation for "side history"
-            abbr = _("PU")
-            header = self._prepend_side_header(side, name, abbr)
-            cells = [{'text': str(team.npullups)} for team in teams]
-            if i == 0:
-                for cell in cells:
-                    cell['class'] = 'highlight-col'
-            self.add_column(header, cells)
 
     def add_debate_side_history_columns(self, debates, round):
         # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams

@@ -10,7 +10,6 @@ from standings.teams import TeamStandingsGenerator
 from .models import Debate, DebateTeam
 from .generator import BPEliminationResultPairing, DrawGenerator, DrawUserError, ResultPairing
 from .generator.utils import ispow2
-from .utils import annotate_npullups
 
 logger = logging.getLogger(__name__)
 
@@ -187,14 +186,15 @@ class PowerPairedDrawManager(BaseDrawManager):
     def get_teams(self):
         """Get teams in ranked order."""
         teams = super().get_teams()
-        if self.round.tournament.pref('draw_pullup_restriction') == 'least_to_date':
-            annotate_npullups(teams, self.round.prev)
 
         metrics = self.round.tournament.pref('team_standings_precedence')
+        extra_metrics = []
 
-        extra_metrics = ()
+        if self.round.tournament.pref('draw_pullup_restriction') == 'least_to_date':
+            extra_metrics.append('npullups')
+
         if self.round.tournament.pref('draw_pullup_restriction') == 'easy_draw':
-            extra_metrics = ("draw_strength_score",)
+            extra_metrics.append('draw_strength_score')
 
         generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), extra_metrics=extra_metrics, tiebreak="random")
         standings = generator.generate(teams, round=self.round.prev)

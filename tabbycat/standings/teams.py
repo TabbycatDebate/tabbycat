@@ -39,21 +39,27 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     exclude_forfeits = False
     where_value = None
 
+    exclude_unconfirmed = True
+
     def get_field(self):
         """Subclasses with complicated fields override this method."""
         return 'debateteam__teamscore__' + self.field
 
+    def get_where_field(self):
+        return self.get_field()
+
     def get_annotation(self, round=None):
         annotation_filter = Q(
-            debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
         if self.exclude_forfeits:
             annotation_filter &= Q(debateteam__teamscore__forfeit=False)
+        if self.exclude_unconfirmed:
+            annotation_filter &= Q(debateteam__teamscore__ballot_submission__confirmed=True)
         if self.where_value is not None:
-            annotation_filter &= Q(**{self.get_field(): self.where_value})
+            annotation_filter &= Q(**{self.get_where_field(): self.where_value})
 
         return self.function(self.get_field(), filter=annotation_filter)
 
@@ -265,6 +271,27 @@ class ScoreDrawStrengthMetricAnnotator(BaseMetricAnnotator):
             standings.add_metric(team, self.key, draw_strength)
 
 
+class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for number of times pulled up.
+
+    How many teams the team has been pulled up (i.e., has a pullup flag in
+    an associated DebateTeam object)."""
+
+    key = "npullups"
+    name = _("number of pullups before this round")
+    abbr = _("PU")
+
+    function = Count
+    where_value = r'(^|,)pullup($|,)'
+    exclude_unconfirmed = False
+
+    def get_field(self):
+        return 'debateteam'
+
+    def get_where_field(self):
+        return 'debateteam__flags__regex'
+
+
 class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     """Metric annotator for number of votes given by a panel.
 
@@ -422,6 +449,7 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "draw_strength_score": ScoreDrawStrengthMetricAnnotator,
         "margin_sum"         : SumMarginMetricAnnotator,
         "margin_avg"         : AverageMarginMetricAnnotator,
+        "npullups"           : TeamPullupsMetricAnnotator,
         "num_adjs"           : NumberOfAdjudicatorsMetricAnnotator,
         "firsts"             : NumberOfFirstsMetricAnnotator,
         "seconds"            : NumberOfSecondsMetricAnnotator,
