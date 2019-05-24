@@ -192,6 +192,26 @@ msgstr ""
 msgid "Copy From Check-Ins"
 msgstr ""
 
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "Ballots Status"
+msgstr ""
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "Latest Actions"
+msgstr ""
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "No Actions Yet"
+msgstr ""
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "Latest Results"
+msgstr ""
+
+#: tournaments/templates/TournamentOverviewContainer.vue:
+msgid "No Confirmed Results Yet"
+msgstr ""
+
 #: participants/templates/DiversityContainer.vue:6
 msgid "Speaker Demographics"
 msgstr ""
