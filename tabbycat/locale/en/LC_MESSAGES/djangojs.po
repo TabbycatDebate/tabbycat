@@ -160,6 +160,278 @@ msgstr ""
 msgid "Priority %1"
 msgstr ""
 
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 %4"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 on %4 (Chair)"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 on %4 (Panellist)"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "%1 %2 from %3 on %4 (Trainee)"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "ID %1,"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Venue:"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Chair for Panel of %1"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Solo Chair"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Panellist"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Trainee"
+msgstr ""
+
+#: printing/templates/PrintableBallotHeader.vue:
+msgid "Team"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Mark speeches %1 to %2; <strong>%3</strong>."
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Mark replies %1 to %2; <strong>%3</strong>."
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Return ballots to %1."
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "The motion is <em>%1</em>"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Debated"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Circle %1"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "<strong>%1</strong>: %2"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Aff Veto"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Neg Veto"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "1"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "2"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "3"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "%1:"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "tab entry"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "tab check"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Unaffiliated"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "no ½ marks"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "½ marks are allowed"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "decimal marks are allowed"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Chair"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Solo Chair"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Panellist"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Trainee"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "%1 (%2, %3)"
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "Adjudicating with %1."
+msgstr ""
+
+#: printing/templates/PrintableDebateInfo.vue:
+msgid "; "
+msgstr ""
+
+#: printing/templates/PrintableFeedback.vue:
+msgid "Did %1 deliver the adjudication?"
+msgstr ""
+
+#: printing/templates/PrintableFeedback.vue:
+msgid "Yes"
+msgstr ""
+
+#: printing/templates/PrintableFeedback.vue:
+msgid "No, I am submitting feedback on:"
+msgstr ""
+
+#: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "Yes"
+msgstr ""
+
+#: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "Unsure"
+msgstr ""
+
+#: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "No"
+msgstr ""
+
+#: printing/templates/PrintableScoresheet.vue:
+msgid "Which team won the debate:"
+msgstr ""
+
+#: printing/templates/PrintableScoresheet.vue:
+msgid "By how many points did they win:"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "%1, %2"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "%1:"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Score:"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Circle the last digit of the %1's score:"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "0"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "1"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "2"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "3"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "4"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "5"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "6"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "7"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "8"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "9"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Circle Rank:"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "1st"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "2nd"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "3rd"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "4th"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Total:"
+msgstr ""
+
+#: printing/templates/PrintableTeamScores.vue:
+msgid "Circle the last digit of the team's total:"
+msgstr ""
+
 #: templates/tables/TablesContainer.vue:8
 msgid "Find in Table"
 msgstr ""
