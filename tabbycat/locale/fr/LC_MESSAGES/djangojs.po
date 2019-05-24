@@ -144,19 +144,19 @@ msgstr "Confirmé"
 msgid "Ballot Statuses"
 msgstr "Statuts de bulletins"
 
-#: results/templates/BallotsCells.vue:18
+#: results/templates/BallotsCell.vue:18
 msgid "You cannot confirm this ballot because you entered it"
 msgstr "Vous pouvez pas confirmer ce bulletin parce que vous l’avez saisi"
 
-#: results/templates/BallotsCells.vue:34
+#: results/templates/BallotsCell.vue:34
 msgid "Add Ballot"
 msgstr "Ajouter bulletin"
 
-#: results/templates/BallotsCells.vue:79
+#: results/templates/BallotsCell.vue:79
 msgid "Re-Edit"
 msgstr "Re-modifier"
 
-#: results/templates/BallotsCells.vue:81
+#: results/templates/BallotsCell.vue:81
 msgid "Review"
 msgstr "Réviser"
 
