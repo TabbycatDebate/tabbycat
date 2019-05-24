@@ -1,10 +1,10 @@
 .. _backups:
 
-=======
-Backups
-=======
+================
+Database Backups
+================
 
-Tabbycat doesn't provide an in-built backup system; instead you should create
+Tabbycat doesn't provide an in-built database backup system; instead you should create
 copies of your database directly. Heroku provides a very good backup utility for
 all sites hosted on Heroku which makes this easy, and for Heroku-based Tabbycat
 sites, we strongly recommend it.
