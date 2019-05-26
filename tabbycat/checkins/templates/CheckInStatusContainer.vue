@@ -162,6 +162,7 @@ export default {
     teamCodes: Boolean,
     tournamentSlug: String,
     forAdmin: Boolean,
+    teamSize: Number,
   },
   computed: {
     statsAbsent: function () {
@@ -253,12 +254,18 @@ export default {
       } else {
         css += 'text-uppercase '
       }
-      if (entity.speakersIn === 1) {
-        css += 'half-in-team ' // One speaker checked in
-      } else if (entity.status === false) {
-        css += 'bg-secondary ' // Nothing checked in
+      if (entity.type !== 'Team' && entity.status !== false) {
+        css += 'bg-success ' // For venues/adjudicators that are checked in
+      } else if (entity.speakersIn >= this.teamSize && entity.speakersIn !== 0) {
+        css += 'bg-success ' // All speakers checked in
+      } else if (this.teamSize === 2 && entity.speakersIn === 1) {
+        css += 'viable-checkins-team ' // Half present in BP (viable to debate)
+      } else if (this.teamSize === 3 && entity.speakersIn === 2) {
+        css += 'viable-checkins-team ' // 2/3rds present in Australs (viable to debate)
+      } else if (this.teamSize === 3 && entity.speakersIn === 1) {
+        css += 'not-viable-checkins-team ' // 1/3rd present in Australs (not viable to debate)
       } else {
-        css += 'bg-success '
+        css += 'bg-secondary ' // Nothing checked in
       }
       return css
     },
