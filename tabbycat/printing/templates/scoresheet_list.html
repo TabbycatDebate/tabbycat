@@ -36,22 +36,26 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">Edit Ballot Motions</h3>
+            <h3 class="modal-title">{% trans "Edit Ballot Motions" %}</h3>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true">{% trans "&times;" %}</span>
             </button>
           </div>
           <div class="modal-body">
-            <p class="lead">Editing motions here will not save them permanently — it will only
-            update the text used in the printed ballots below. This can be useful if using
-            placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print
-            ballots with correct motions.</p>
+            <p class="lead">
+              {% blocktrans %}
+              Editing motions here will not save them permanently — it will only
+              update the text used in the printed ballots below. This can be useful if using
+              placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print
+              ballots with correct motions.
+              {% endblocktrans %}
+            </p>
             <div v-for="motion in roundInfo.motions">
-              <h5 class="mt-3">Motion<span v-if="roundInfo.motions.length > 1"></span></h5>
+              <h5 class="mt-3">{% trans "Motion" %}<span v-if="roundInfo.motions.length > 1"></span></h5>
               <textarea v-model="motion.text" class="form-control"></textarea>
             </div>
             <div class="text-info text-center mt-3">
-              Changes to motions will update in the displayed ballots automatically
+              {% trans "Changes to motions will update in the displayed ballots automatically" %}
             </div>
           </div>
         </div>
@@ -88,7 +92,7 @@
         showDigits: {% if pref.ballots_confirm_digits %}true{% else %}false{% endif %},
         hideMotions: {% if pref.ballots_hide_motions %}true{% else %}false{% endif %},
         // Rules
-        infoText: 'Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.',
+        infoText: '{% trans "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication." %}',
         hasMotions: {% if pref.enable_motions %}true{% else %}false{% endif %},
         hasVetoes: {% if pref.motion_vetoes_enabled %}true{% else %}false{% endif %},
         // Formatting
