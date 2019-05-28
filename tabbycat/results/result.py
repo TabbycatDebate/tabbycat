@@ -808,7 +808,11 @@ class BPDebateResult(BaseConsensusDebateResultWithSpeakers):
         return self.scoresheet.get_total(side)
 
 
-class BPEliminationDebateResult(BaseDebateResult):
+class BaseEliminationDebateResult(BaseDebateResult):
+    pass
+
+
+class BPEliminationDebateResult(BaseEliminationDebateResult):
     """For British Parliamentary elimination rounds.  Does not take speaker
     identities, speaker scores or ranks.  Instead, it just notes the two
     advancing teams, using the `win` field, which is set to True for both of

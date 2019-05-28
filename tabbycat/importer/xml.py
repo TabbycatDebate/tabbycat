@@ -7,7 +7,7 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from draw.models import Debate
 from motions.models import Motion
-from participants.models import Institution
+from participants.models import Institution, Speaker
 from results.models import BallotSubmission
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from results.result import (BaseConsensusDebateResultWithSpeakers, BaseDebateResultWithSpeakers,
@@ -21,6 +21,8 @@ MOTION_PREFIX = "M"
 DEBATE_PREFIX = "D"
 TEAM_PREFIX = "T"
 SPEAKER_PREFIX = "S"
+SPEAKER_CATEGORY_PREFIX = "SC"
+BREAK_CATEGORY_PREFIX = "BC"
 VENUE_PREFIX = "V"
 INST_PREFIX = "I"
 QUESTION_PREFIX = "Q"
@@ -35,6 +37,7 @@ class Exporter:
     def create_all(self):
         self.add_rounds()
         self.add_participants()
+        self.add_break_categories()
         self.add_institutions()
         self.add_motions()
         self.add_venues()
@@ -54,63 +57,74 @@ class Exporter:
 
             round_tag = SubElement(self.root, 'round', {
                 'name': round.name,
-                'elimination': str(round.stage == Round.STAGE_ELIMINATION)
+                'elimination': str(round.stage == Round.STAGE_ELIMINATION),
+                'feedback-weight': str(round.feedback_weight)
             })
+
+            if round.stage == Round.STAGE_ELIMINATION:
+                round_tag.set('break-category', BREAK_CATEGORY_PREFIX + str(round.break_category_id))
+
+            if round.starts_at is not None and round.starts_at != "":
+                round_tag.set('start', str(round.starts_at))
 
             motion = round.motion_set.first()
 
             for debate in round.debate_set.all():
-                debate_tag = SubElement(round_tag, 'debate', {
-                    'id': DEBATE_PREFIX + str(debate.id)
+                self.add_debates(round_tag, motion, debate)
+
+    def add_debates(self, round_tag, motion, debate):
+        debate_tag = SubElement(round_tag, 'debate', {
+            'id': DEBATE_PREFIX + str(debate.id)
+        })
+
+        # Add list of motions as attribute
+        adjs = " ".join([ADJ_PREFIX + str(d_adj.adjudicator_id) for d_adj in debate.debateadjudicator_set.all()])
+        if adjs != "":
+            debate_tag.set('adjudicators', adjs)
+
+            chair = debate.debateadjudicator_set.get(type=DebateAdjudicator.TYPE_CHAIR).adjudicator_id
+            debate_tag.set('chair', ADJ_PREFIX + str(chair))
+
+        # Venue
+        if debate.venue_id is not None:
+            debate_tag.set('venue', VENUE_PREFIX + str(debate.venue_id))
+
+        # Motion is optional
+        if self.t.pref('enable_motions') and debate.confirmed_ballot is not None:
+            motion = debate.confirmed_ballot.motion
+        if motion is not None:
+            debate_tag.set('motion', MOTION_PREFIX + str(motion.id))
+
+        if debate.confirmed_ballot is not None:
+            result = DebateResult(debate.confirmed_ballot, tournament=self.t)
+
+            for side in self.t.sides:
+                side_tag = SubElement(debate_tag, 'side', {
+                    'team': TEAM_PREFIX + str(debate.get_team(side).id)
                 })
 
-                # Add list of motions as attribute
-                adjs = " ".join([ADJ_PREFIX + str(d_adj.adjudicator_id) for d_adj in debate.debateadjudicator_set.all()])
-                if adjs != "":
-                    debate_tag.set('adjudicators', adjs)
+                if isinstance(result, VotingDebateResult):
+                    for (adj, scoresheet) in result.scoresheets.items():
+                        self.add_team_ballots(side_tag, result, adj, scoresheet, side)
+                elif isinstance(result, BaseEliminationDebateResult):
+                    adv = side in result.advancing_sides()
+                    ballot_tag = SubElement(side_tag, 'ballot', {
+                        'adjudicators': adjs,
+                        'rank': str(1 if adv else 2),
+                        'ignored': 'False'
+                    })
+                    ballot_tag.text = str(adv)
+                else:
+                    self.add_team_ballots(
+                        side_tag,
+                        result,
+                        adjs,
+                        result.scoresheet,
+                        side
+                    )
 
-                    chair = debate.debateadjudicator_set.get(type=DebateAdjudicator.TYPE_CHAIR).adjudicator_id
-                    debate_tag.set('chair', ADJ_PREFIX + str(chair))
-
-                # Venue
-                if debate.venue_id is not None:
-                    debate_tag.set('venue', VENUE_PREFIX + str(debate.venue_id))
-
-                # Motion is optional
-                if self.t.pref('enable_motions') and debate.confirmed_ballot is not None:
-                    motion = debate.confirmed_ballot.motion
-                if motion is not None:
-                    debate_tag.set('motion', MOTION_PREFIX + str(motion.id))
-
-                if debate.confirmed_ballot is not None:
-                    result = DebateResult(debate.confirmed_ballot, tournament=self.t)
-
-                    for side in self.t.sides:
-                        side_tag = SubElement(debate_tag, 'side', {
-                            'team': TEAM_PREFIX + str(debate.get_team(side).id)
-                        })
-
-                        if isinstance(result, VotingDebateResult):
-                            for (adj, scoresheet) in result.scoresheets.items():
-                                self.add_team_ballots(side_tag, result, adj, scoresheet, side)
-                        elif isinstance(result, BaseEliminationDebateResult):
-                            adv = side in result.advancing_sides()
-                            ballot_tag = SubElement(side_tag, 'ballot', {
-                                'adjudicators': adjs,
-                                'rank': str(1 if adv else 0)
-                            })
-                            ballot_tag.text = str(adv)
-                        else:
-                            self.add_team_ballots(
-                                side_tag,
-                                result,
-                                adjs,
-                                result.scoresheet,
-                                side
-                            )
-
-                        if isinstance(result, BaseDebateResultWithSpeakers):
-                            self.add_speakers(side_tag, debate, result, side)
+                if isinstance(result, BaseDebateResultWithSpeakers):
+                    self.add_speakers(side_tag, debate, result, side)
 
     def add_team_ballots(self, side_tag, result, adj, scoresheet, side):
         ballot_tag = SubElement(side_tag, 'ballot')
@@ -119,12 +133,16 @@ class Exporter:
             majority = result.majority_adjudicators()
 
             ballot_tag.set('adjudicators', ADJ_PREFIX + str(adj.id))
-            ballot_tag.set('minority', str(adj not in majority))
+
+            minority = adj not in majority
+            ballot_tag.set('minority', str(minority))
+            ballot_tag.set('ignored', str(minority and not self.t.pref('margin_includes_dissenters')))
         else:
             ballot_tag.set('adjudicators', adj)
+            ballot_tag.set('ignored', 'False')
 
         if hasattr(scoresheet, 'winner'):
-            ballot_tag.set('rank', str(1 if scoresheet.winner() == side else 0))
+            ballot_tag.set('rank', str(1 if scoresheet.winner() == side else 2))
         else:
             ballot_tag.set('rank', str(scoresheet.rank(side)))
 
@@ -157,13 +175,16 @@ class Exporter:
 
     def add_participants(self):
         participants_tag = SubElement(self.root, 'participants')
-        for team in self.t.team_set.all().prefetch_related('speaker_set'):
+
+        speaker_category_prefetch = Prefetch('speaker_set', queryset=Speaker.objects.all().prefetch_related('categories'))
+        for team in self.t.team_set.all().prefetch_related(speaker_category_prefetch, 'break_categories'):
             team_tag = SubElement(participants_tag, 'team', {
                 'name': team.long_name,
-                'short': team.short_name,
                 'code': team.code_name,
                 'id': TEAM_PREFIX + str(team.id)
             })
+
+            team_tag.set('break-eligibilities', " ".join([BREAK_CATEGORY_PREFIX + str(bc.id) for bc in team.break_categories.all()]))
 
             for speaker in team.speaker_set.all():
                 speaker_tag = SubElement(team_tag, 'speaker', {
@@ -174,16 +195,25 @@ class Exporter:
                 if team.institution is not None:
                     speaker_tag.set('institution', INST_PREFIX + str(team.institution_id))
 
+                if speaker.gender != "":
+                    speaker_tag.set('gender', speaker.get_gender_display())
+
+                speaker_tag.set('categories', " ".join([SPEAKER_CATEGORY_PREFIX + str(sc.id) for sc in speaker.categories.all()]))
+
         for adj in self.t.relevant_adjudicators.prefetch_related('adjudicatorfeedback_set'):
             adj_tag = SubElement(participants_tag, 'adjudicator', {
                 'id': ADJ_PREFIX + str(adj.id),
                 'name': adj.name,
                 'core': str(adj.adj_core),
-                'independent': str(adj.independent)
+                'independent': str(adj.independent),
+                'score': str(adj.test_score)
             })
 
             if adj.institution is not None:
                 adj_tag.set('institution', INST_PREFIX + str(adj.institution_id))
+
+            if adj.gender != "":
+                adj_tag.set('gender', adj.get_gender_display())
 
             for feedback in adj.adjudicatorfeedback_set.filter(confirmed=True):
                 feedback_tag = SubElement(adj_tag, 'feedback', {
@@ -193,7 +223,7 @@ class Exporter:
                     feedback_tag.set('source-adjudicator', ADJ_PREFIX + str(feedback.source_adjudicator.adjudicator_id))
                     feedback_tag.set('debate', DEBATE_PREFIX + str(feedback.source_adjudicator.debate_id))
                 else:
-                    feedback_tag.set('source-team', ADJ_PREFIX + str(feedback.source_team.team_id))
+                    feedback_tag.set('source-team', TEAM_PREFIX + str(feedback.source_team.team_id))
                     feedback_tag.set('debate', DEBATE_PREFIX + str(feedback.source_team.debate_id))
 
                 for question in self.t.adjudicatorfeedbackquestion_set.all():
@@ -209,6 +239,23 @@ class Exporter:
                         'question': QUESTION_PREFIX + str(answer.question_id)
                     })
                     answer_tag.text = str(answer.answer)
+
+    def add_break_categories(self):
+        speaker_categories = self.t.speakercategory_set.all().order_by('seq')
+
+        for category in speaker_categories:
+            sc_tag = SubElement(self.root, 'speaker-category', {
+                'id': SPEAKER_CATEGORY_PREFIX + str(category.id),
+            })
+            sc_tag.text = category.name
+
+        break_categories = self.t.breakcategory_set.all().order_by('seq')
+
+        for category in break_categories:
+            bc_tag = SubElement(self.root, 'break-category', {
+                'id': BREAK_CATEGORY_PREFIX + str(category.id)
+            })
+            bc_tag.text = category.name
 
     def add_institutions(self):
         institution_query = Institution.objects.filter(
@@ -251,6 +298,7 @@ class Exporter:
                 'id': QUESTION_PREFIX + str(question.id),
                 'name': question.name,
                 'from-teams': str(question.from_team),
-                'from-adjudicators': str(question.from_adj)
+                'from-adjudicators': str(question.from_adj),
+                'type': question.answer_type
             })
             question_tag.text = question.text
