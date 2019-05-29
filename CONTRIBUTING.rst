@@ -116,8 +116,10 @@ Project structure
     - All other folders are the Django apps that contain specific views, models, and templates for functions such as ``draw`` generation/display, or recording ``results``. Each has sub-folders for tests and templates.
 - In the root directory there are a number of files defining our python and javascript dependencies, core configuration files, and key documents like the ``README``
 
-Translations
-============
+Internationalization/Localization
+=================================
+
+The `gettext <https://docs.djangoproject.com/en/2.2/topics/i18n/translation/>`_ framework is used to enable the translation of strings in Python files and Django templates. Backend in this context signifies these types of files.
 
 The backend's translation files can be updated from the ``tabbycat`` directory using one or more of the supporting language codes (see settings.py)::
 
@@ -131,12 +133,12 @@ These can then be compiled using::
 
 As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files should not be compiled; their sole purpose is to provide a source language for Transifex.
 
-The frontend's translation files are manually updated in ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``. These can then compiled to javascript bundles using::
+Strings defined in Vue files must similarily be marked with ``gettext`` but must be added manually to ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``, for each language supported. These can then compiled to javascript bundles using::
 
     $ dj compilemessages -l es        # or whichever language(s) you want to update
     $ dj compilejsi18n -l es
 
-These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of the npm build task.
+These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of the npm build task. Updating these translations in development (live-reload) requires the use of the ``cp-i18n`` npm task.
 
 Release checklist
 =================

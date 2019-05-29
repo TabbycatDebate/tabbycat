@@ -15,22 +15,23 @@ export default {
   },
   methods: {
     getToolTipForVenue: function (entity) {
-      let tt = entity.name
+      let categories = []
+      _.forEach(entity.categories, (c) => {
+        categories.push(c.name)
+      })
+      if (entity.categories.length > 0 && entity.identifier !== null) {
+        return this.gettext('%1 (%2) with identifier of %3', entity.name, categories.join(', '), entity.identifier[0])
+      }
+      if (entity.categories.length === 0 && entity.identifier !== null) {
+        return this.gettext('%1 (no category) with identifier of %2', entity.name, entity.identifier[0])
+      }
       if (entity.categories.length > 0) {
-        tt += ' ('
-        _.forEach(entity.categories, (c) => {
-          tt += `${c.name}; `
-        })
-        tt += ') '
-      } else {
-        tt += ' (no category) '
+        return this.gettext('%1 (%2) with no assigned identifier', entity.name, categories.join(', '))
       }
-      if (entity.identifier !== null) {
-        tt += ` with identifier of ${entity.identifier[0]}`
-      } else {
-        tt += ' with no assigned identifier '
+      if (entity.categories.length === 0) {
+        return this.gettext('%1 (no category) with no assigned identifier', entity.name)
       }
-      return tt
+      return entity.name
     },
   },
   computed: {
@@ -53,19 +54,19 @@ export default {
     venuesByCategory: function () {
       const sortedByCategory = _.sortBy(this.entitiesSortedByName, (v) => {
         if (v.categories.length === 0) {
-          return 'Uncategorised'
+          return this.gettext('Uncategorised')
         }
         return v.categories[0].name
       })
       return _.groupBy(sortedByCategory, (v) => {
         if (v.categories.length === 0) {
-          return 'Uncategorised'
+          return this.gettext('Uncategorised')
         }
         return v.categories[0].name
       })
     },
     venuesByPriority: function () {
-      return _.groupBy(this.entitiesSortedByName, v => `Priority ${v.priority}`)
+      return _.groupBy(this.entitiesSortedByName, v => this.gettext('Priority %1', v.priority))
     },
   },
 }
