@@ -913,7 +913,9 @@ class PublicDiversity(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicCheckinStatuses(BooleanPreference):
-    help_text = _("Enables the public page showing checkin statuses for individuals, institutions, and teams")
+    help_text = _("Enables the public page showing checkin statuses for "
+                  "individuals, institutions, and teams. Note that this page "
+                  "can be slow when used at very large tournaments.")
     verbose_name = _("Enable public view of the checkin statuses")
     section = public_features
     name = 'public_checkins'
@@ -1268,7 +1270,8 @@ class ShareVenues(BooleanPreference):
 
 @tournament_preferences_registry.register
 class DeriveVenueFromDivison(BooleanPreference):
-    help_text = 'Don\'t show individual venue names in public draws; instead show the division\'s Venue Category'
+    help_text = _("Don't show individual venue names in public draws; instead "
+                  "show the division's Venue Category")
     verbose_name = _("Use division venue categories")
     section = league_options
     name = 'division_venues'
