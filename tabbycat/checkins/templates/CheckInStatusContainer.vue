@@ -30,7 +30,7 @@
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('speakerGroupings', optionKey, !optionState)"
-                v-text="gettext('By %1', optionKey)"></button>
+                v-text="gettext('By ' + optionKey)"></button>
       </div>
 
       <div class="btn-group mb-md-0 mb-3">
@@ -69,11 +69,11 @@
             <button v-if="forAdmin && statusForGroup(entities) === false"
               @click="checkInOrOutGroup(entities, true)"
               class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
-              v-text="gettext('<strong>✓</strong> All')"></button>
+              v-text="gettext('✓ All')"></button>
             <button v-if="forAdmin && statusForGroup(entities) === true"
               @click="checkInOrOutGroup(entities, false)"
               class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
-              v-text="gettext('<strong>☓</strong> All')"></button>
+              v-text="gettext('☓ All')"></button>
 
           </div>
 
