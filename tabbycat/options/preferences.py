@@ -1024,7 +1024,7 @@ class TournamentStaff(LongStringPreference):
     section = public_features
     name = 'tournament_staff'
     default = ""
-    widget = SummernoteWidget(attrs={'height': 150})
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -1035,7 +1035,7 @@ class WelcomeMessage(LongStringPreference):
     section = public_features
     name = 'welcome_message'
     default = ""
-    widget = SummernoteWidget
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -1368,7 +1368,7 @@ class BallotEmailMessageBody(LongStringPreference):
         "<p>Your ballot for {{ DEBATE }} has been successfully received, with these scores:</p>"
         "{{ SCORES }}"
         "<p>If there are any problems, please contact the tab team.</p>")
-    widget = SummernoteWidget
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
 
 
 # -----

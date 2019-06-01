@@ -97,7 +97,7 @@ class TournamentConfigureForm(ModelForm):
         initial=_("<strong>Tabulation:</strong> [list tabulation staff here]<br />"
             "<strong>Organisation:</strong> [list organising committee members here]<br />"
             "<strong>Adjudication:</strong> [list chief adjudicators here]"),
-        widget=SummernoteWidget,
+        widget=SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'}),
     )
 
     def save(self):
