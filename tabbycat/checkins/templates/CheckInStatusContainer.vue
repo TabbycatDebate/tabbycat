@@ -195,10 +195,10 @@ export default {
       return _.filter(this.entitiesByType, p => p.status !== false)
     },
     entitiesSortedByName: function () {
-      return _.sortBy(this.entitiesByPresence, ['name'])
+      return _.sortBy(this.entitiesByPresence, p => p.name.toLowerCase())
     },
     entitiesByName: function () {
-      return _.groupBy(this.entitiesSortedByName, p => p.name[0])
+      return _.groupBy(this.entitiesSortedByName, p => p.name[0].toUpperCase())
     },
     entitiesByTime: function () {
       const sortedByTime = _.sortBy(this.entitiesSortedByName, (p) => {
