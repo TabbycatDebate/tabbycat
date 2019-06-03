@@ -117,6 +117,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
         AdjudicatorFeedbackBooleanAnswer:
         [ANSWER_TYPE_BOOLEAN_SELECT, ANSWER_TYPE_BOOLEAN_CHECKBOX],
     }
+    NUMERICAL_ANSWER_TYPES = [ANSWER_TYPE_INTEGER_TEXTBOX, ANSWER_TYPE_INTEGER_SCALE, ANSWER_TYPE_FLOAT]
 
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
