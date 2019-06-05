@@ -348,5 +348,5 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
 
 class ArchiveImportForm(forms.Form):
 
-    file = forms.FileField(required=True,
-        help_text=_("The Debate XML archive to parse"))
+    xml = forms.CharField(required=True, label=_("XML"),
+        widget=forms.Textarea(), help_text=_("The Debate XML archive to parse")) # attrs={'rows': 20}
