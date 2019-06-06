@@ -14,7 +14,7 @@ from tournaments.mixins import TournamentMixin
 from utils.mixins import AdministratorMixin
 from utils.misc import reverse_tournament
 
-from .presets import all_presets, get_preferences_data
+from .presets import all_presets, get_preferences_data, save_presets
 from .forms import tournament_preference_form_builder
 from .preferences import tournament_preferences_registry
 
@@ -108,11 +108,7 @@ class ConfirmTournamentPreferencesView(AdministratorMixin, TournamentMixin, Temp
 
     def save_presets(self):
         selected_preset = self.get_selected_preset()
-        preset_preferences = get_preferences_data(selected_preset, self.tournament)
-
-        for pref in preset_preferences:
-            self.tournament.preferences[pref['key']] = pref['new_value']
-
+        save_presets(self.tournament, selected_preset)
         ActionLogEntry.objects.log(type=ActionLogEntry.ACTION_TYPE_OPTIONS_EDIT,
                 user=self.request.user, tournament=self.tournament, content_object=self.tournament)
         messages.success(self.request, _("Tournament options saved according to preset "

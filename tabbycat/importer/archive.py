@@ -10,6 +10,7 @@ from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
 from motions.models import Motion
+from options.presets import BritishParliamentaryPreferences, save_presets
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, Submission, TeamScore
@@ -329,6 +330,7 @@ class Importer:
         self.tournament.save()
 
         # Import all the separate parts
+        self.set_preferences()
         self.import_institutions()
         self.import_categories()
         self.import_venues()
@@ -340,6 +342,35 @@ class Importer:
         self.import_motions()
         self.import_results()
         self.import_feedback()
+
+    def set_preferences(self):
+
+        def _is_consensus_ballot(self, elimination):
+            xpath = "round[@elimination='" + elimination + "']/debate/side"
+            return len(self.root.findall(xpath + "/ballot")) == len(self.root.findall(xpath))
+
+        def _margin_includes_dissenters(self):
+            return len(self.root.findall("round/debate/side/ballot[@minority='True'][@ignored='True']")) == 0
+
+        def _reply_scores_enabled(self):
+            return len(self.root.findall("round/debate/side/speech[@reply='True']")) != 0
+
+        def _substantive_speakers(self):
+            return len(self.root.find('round').find('debate').find('side').findall("speech[@reply='False']"))
+
+        self.is_bp = len(self.root.find('round').find('debate').findall('side')) == 4
+        if self.is_bp:
+            self.preliminary_consensus = True
+            self.elimination_consensus = True
+            save_presets(self.tournament, BritishParliamentaryPreferences)
+        else:
+            self.preliminary_consensus = self._is_consensus_ballot('False')
+            self.elimination_consensus = self._is_consensus_ballot('True')
+            self.tournament.preferences['debate_rules__substantive_speakers'] = self._substantive_speakers()
+            self.tournament.preferences['debate_rules__reply_scores_enabled'] = self._reply_scores_enabled()
+            self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = self.preliminary_consensus
+            self.tournament.preferences['debate_rules__ballots_per_debate_elim'] = self.elimination_consensus
+            self.tournament.preferences['scoring__margin_includes_dissenters'] = self._margin_includes_dissenters()
 
     def import_institutions(self):
         self.institutions = {}
@@ -570,17 +601,6 @@ class Importer:
             side_ts.append(mean(scores))
         return (max(side_ts), max(side_ts) - min(side_ts))
 
-    def _is_consensus(self, round):
-        if self.is_bp:
-            return True
-        for d in round.findall('debate'):
-            adjs = d.get('adjudicators').split()
-            if adjs == d.get('adjudicators'):
-                continue # Only one adj
-            if len(d.findall('side/ballot')) != 2:
-                return False
-        return True
-
     def _get_adj_split(self, debate, numeric):
         split = [0, 0, 0, 0]
         side_ballot_by_adj = {adj: [] for adj in self._get_voting_adjs(debate)}
@@ -605,7 +625,7 @@ class Importer:
         speakerscores_adj = []
 
         for round in self.root.findall('round'):
-            consensus = self._is_consensus(round)
+            consensus = self.preliminary_consensus if round.get('elimination') == 'False' else self.elimination_consensus
 
             for debate in round.findall('debate'):
                 bs_obj = BallotSubmission(

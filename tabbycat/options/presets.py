@@ -57,6 +57,13 @@ def get_preferences_data(selected_preset, tournament):
     return preset_preferences
 
 
+def save_presets(tournament, preset):
+    preset_preferences = get_preferences_data(preset, tournament)
+
+    for pref in preset_preferences:
+        tournament.preferences[pref['key']] = pref['new_value']
+
+
 class PreferencesPreset:
     show_in_list                               = False
 
