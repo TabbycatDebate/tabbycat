@@ -1,12 +1,11 @@
 """Base class for standings generators."""
 
-from operator import itemgetter
 import random
 import logging
 
 from django.utils.translation import gettext as _
 
-from .metrics import RepeatedMetricAnnotator
+from .metrics import metricgetter, RepeatedMetricAnnotator
 
 logger = logging.getLogger(__name__)
 
@@ -226,19 +225,7 @@ class Standings:
         if tiebreak_func:
             tiebreak_func(self._standings)
 
-        metricitemgetter = itemgetter(*precedence)
-
-        # Like standings.metrics.metricgetter, but negates metrics ranked in ascending order
-        if len(precedence) == 1 and self.metric_ascending[0]:
-            def metrics_for_ranking(info):
-                return -metricitemgetter(info.metrics)
-        elif len(precedence) == 1 and not self.metric_ascending[0]:
-            def metrics_for_ranking(info):
-                return metricitemgetter(info.metrics)
-        else:
-            def metrics_for_ranking(info):
-                metrics = metricitemgetter(info.metrics)
-                return tuple(-x if asc else x for x, asc in zip(metrics, self.metric_ascending))
+        metrics_for_ranking = metricgetter(precedence, self.metric_ascending)
 
         try:
             self._standings.sort(key=metrics_for_ranking, reverse=True)

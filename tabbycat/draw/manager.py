@@ -197,7 +197,7 @@ class PowerPairedDrawManager(BaseDrawManager):
         ranked = []
         for standing in standings:
             team = standing.team
-            team.points = next(standing.itermetrics())
+            team.points = next(standing.itermetrics(), 0)
             ranked.append(team)
 
         return ranked
