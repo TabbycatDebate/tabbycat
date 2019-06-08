@@ -138,7 +138,7 @@ Strings defined in Vue files must similarily be marked with ``gettext`` but must
     $ dj compilemessages -l es        # or whichever language(s) you want to update
     $ dj compilejsi18n -l es
 
-These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of the npm build task. Updating these translations in development (live-reload) requires the use of the ``cp-i18n`` npm task.
+Please note that these cannot have parameters or HTML tags. These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of the npm build task. Updating these translations in development (live-reload) requires the use of the ``cp-i18n`` npm task.
 
 Release checklist
 =================

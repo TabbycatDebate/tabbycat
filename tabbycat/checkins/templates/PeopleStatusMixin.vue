@@ -21,30 +21,26 @@ export default {
   },
   methods: {
     getToolTipForPerson: function (entity) {
-      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null && entity.identifier !== null) {
-        return this.gettext('%1, a %2 of no institutional affiliation with identifier of %3', entity.name, entity.type, entity.identifier[0])
-      }
-      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null) {
-        return this.gettext('%1, a %2 of no institutional affiliation with no assigned identifier', entity.name, entity.type)
-      }
-      if (!this.teamCodes && entity.type !== 'Team' && entity.identifier !== null) {
-        return this.gettext('%1, a %2 from %3 with identifier of %4', entity.name, entity.type, entity.institution.name, entity.identifier[0])
-      }
+      let tt = `${entity.name}, a ${entity.type}`
       if (!this.teamCodes && entity.type !== 'Team') {
-        return this.gettext('%1, a %2 from %3 with no assigned identifier', entity.name, entity.type, entity.institution.name)
+        if (entity.institution === null) {
+          tt += ' of no institutional affiliation'
+        } else {
+          tt += ` from ${entity.institution.name}`
+        }
       }
       if (entity.speakers !== null && entity.type === 'Team') {
-        let speakers = []
+        tt += ' with speakers '
         _.forEach(entity.speakers, (speaker) => {
-          if (speaker.status) {
-            speakers.push(this.gettext('%1 (Present; id=%2)', speaker.name, speaker.identifier[0]))
-          } else {
-            speakers.push(this.gettext('%1 (Absent; id=%2)', speaker.name, speaker.identifier[0]))
-          }
+          const status = speaker.status ? 'Present; id=' : 'Absent; id='
+          tt += `${speaker.name} (${status} ${speaker.identifier[0]}) `
         })
-        return this.gettext('%1, a team with speakers %2', entity.name, speakers.join(', '))
+      } else if (entity.identifier !== null) {
+        tt += ` with identifier of ${entity.identifier[0]}`
+      } else {
+        tt += ' with no assigned identifier '
       }
-      return this.gettext('%1, a %2', entity.name, entity.type)
+      return tt
     },
     annotatePeople: function (peopleType) {
       const self = this
@@ -62,7 +58,7 @@ export default {
       const speakers = this.annotatePeople('speakers')
       if (this.teamCodes) {
         _.forEach(speakers, (speaker) => {
-          speaker.institution = { code: this.gettext('Anonymous (due to team codes)'), name: this.gettext('Anon') }
+          speaker.institution = { code: 'Anonymous (due to team codes)', name: 'Anon' }
         })
       }
       return speakers
@@ -104,7 +100,7 @@ export default {
     annotatedAdjudicators: function () {
       _.forEach(this.adjudicators, (adjudicator) => {
         if (adjudicator.independent) {
-          adjudicator.institution = { code: this.gettext('Independent'), name: this.gettext('Independent') }
+          adjudicator.institution = { code: 'Independent', name: 'Independent' }
         }
       })
       return this.annotatePeople('adjudicators')
@@ -126,13 +122,13 @@ export default {
     peopleByInstitution: function () {
       const sortedByInstitution = _.sortBy(this.entitiesSortedByName, (p) => {
         if (p.institution === null) {
-          return this.gettext('Unaffiliated')
+          return 'Unaffiliated'
         }
         return p.institution.code
       })
       return _.groupBy(sortedByInstitution, (p) => {
         if (p.institution === null) {
-          return this.gettext('Unaffiliated')
+          return 'Unaffiliated'
         }
         return p.institution.code
       })

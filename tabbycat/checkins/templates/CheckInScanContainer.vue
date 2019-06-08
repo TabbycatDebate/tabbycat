@@ -9,11 +9,17 @@
     <div class="list-group-item pb-3">
       <div class="d-flex">
         <div class="flex-fill pr-2">
-          <button v-if="!liveScanning" v-text="gettext('Scan Using Camera')" class="btn btn-block btn-success" @click="toggleScan"></button>
-          <button v-if="liveScanning" v-text="gettext('Stop Camera Scan')" class="btn btn-block btn-danger" @click="toggleScan"></button>
+          <button v-if="!liveScanning" class="btn btn-block btn-success" @click="toggleScan">
+            Scan Using Camera
+          </button>
+          <button v-if="liveScanning" class="btn btn-block btn-danger" @click="toggleScan">
+            Stop Camera Scan
+          </button>
         </div>
         <div v-if="!sound" class="flex-fill pl-2">
-          <button v-text="gettext('Turn On Sounds')" class="btn btn-block btn-success" @click="unMute"></button>
+          <button class="btn btn-block btn-success" @click="unMute">
+            Turn On Sounds
+          </button>
         </div>
       </div>
       <div id="scanCanvas" v-if="liveScanning"
@@ -77,7 +83,7 @@ export default {
     },
     finishCheckIn: function (payload) {
       const checkin = payload.checkins[0]
-      const msg = this.gettext('%1 checked in %2: %3', checkin.time, checkin.identifier, checkin.owner_name)
+      const msg = `${checkin.time} checked in ${checkin.identifier}: ${checkin.owner_name}`
       $.fn.showAlert('success', msg, 0)
       this.playSound('finishedScanSound')
     },
