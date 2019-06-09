@@ -3,7 +3,7 @@
 
     <div class="db-flex-item-2 db-flex-row db-bottom-border">
       <div class="db-padding-horizontal flex-grow-1 db-align-vertical-center">
-        <strong v-text="gettext('%1, %2', titleCasePosition, teamName)"></strong>
+        <strong v-text="tct('%s, %s', [titleCasePosition, teamName])"></strong>
       </div>
       <div class="db-padding-horizontal db-align-vertical-center strong small" v-if="this.team.iron"
            v-text="gettext('IMPORTANT: Check and explicitly note if a speaker gives multiple speeches')"></div>
@@ -16,7 +16,8 @@
     <template v-for="pos in this.dt.positions">
 
       <div class="db-flex-item-3 db-flex-row db-bottom-border">
-        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal" v-text="gettext('%1:', pos)"></div>
+        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal"
+             v-text="tct('%s:', [pos])"></div>
         <div class="db-fill-in db-flex-item-8 d-flex"></div>
         <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
           <span v-text="gettext('Score:')"></span>
@@ -27,7 +28,7 @@
       <div v-if="roundInfo.showDigits"
            class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border">
         <div class="db-flex-item-2 db-padding-horizontal text-secondary"
-             v-text="gettext('Circle the last digit of the %1\'s score:', pos)"></div>
+             v-text="tct('Circle the last digit of the %s\'s score:', [pos])"></div>
         <div class="db-flex-item-3 d-flex">
           <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('0')"></span></div>
           <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('1')"></span></div>

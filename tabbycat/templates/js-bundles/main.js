@@ -222,6 +222,12 @@ const vueData = window.vueData // We need to mount props from the window itself
 // Mixin that maps methods in Vue to what django's equivalents; passing args
 const vueTranslationMixin = {
   methods: {
+    tct: function (text, variables) {
+      // Convenience function to wrap interpolate and translate at once
+      const fmt = window.gettext(text) // E.g. "Did %s deliver the adj?"
+      // Variables must be an array
+      return window.interpolate(fmt, variables)
+    },
     gettext: function () {
       return window.gettext.apply(this, arguments)
     },

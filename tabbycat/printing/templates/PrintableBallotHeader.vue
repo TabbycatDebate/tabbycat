@@ -3,26 +3,27 @@
 
     <div class="db-flex-item">
       <span v-if="!roundInfo.votingBallots && !ballot.target"
-            v-text="gettext('%1 %2 from %3', roundInfo.round, roundInfo.kind, ballot.author)">
+            v-text="tct('%s from %s', [roundInfo.round, ballot.author])">
       </span>
       <span v-if="roundInfo.votingBallots"
-            v-text="gettext('%1 %2 from %3 %4', roundInfo.round, roundInfo.kind, ballot.author,
-              authorPositionWithSoloCheck(ballot.authorPosition))">
+            v-text="tct('%s from %s %s', [roundInfo.round, ballot.author, authorPositionWithSoloCheck(ballot.authorPosition)])">
       </span>
       <span v-if="ballot.target">
         <span v-if="ballot.targetPosition === 'c' || ballot.targetPosition === 'o'"
-              v-text="gettext('%1 %2 from %3 on %4 (Chair)', roundInfo.round, roundInfo.kind, ballot.author, ballot.target)"></span>
+              v-text="tct('%s from %s on %s (Chair)', [roundInfo.round, ballot.author, ballot.target])"></span>
         <span v-if="ballot.targetPosition === 'p'"
-              v-text="gettext('%1 %2 from %3 on %4 (Panellist)', roundInfo.round, roundInfo.kind, ballot.author, ballot.target)"></span>
+              v-text="tct('%s from %s on %s (Panellist)', [roundInfo.round, ballot.author, ballot.target])"></span>
         <span v-if="ballot.targetPosition === 't'"
-              v-text="gettext('%1 %2 from %3 on %4 (Trainee)', roundInfo.round, roundInfo.kind, ballot.author, ballot.target)"></span>
+              v-text="tct('%s from %s on %s (Trainee)', [roundInfo.round, ballot.author, ballot.target])"></span>
+        <span v-if="ballot.targetPosition === ''"
+              v-text="tct('%s from %s on %s (unknown position)', [roundInfo.round, ballot.author, ballot.target])"></span>
       </span>
 
     </div>
 
     <div v-if="ballot.venue === '' || ballot.venue === null" class="ml-auto" >
       <span v-if="ballot.barcode"
-            v-text="gettext('ID %1,', ballot.barcode)"></span>
+            v-text="tct('ID %s,', [ballot.barcode])"></span>
       <span v-text="gettext('Venue:')"></span>
       <span class="db-padding-horizontal db-fill-in"
             style="width: 232px; margin: 0 3px 0 5px; display: inline-block">
@@ -31,7 +32,7 @@
 
     <div v-else class="ml-auto ">
       <span v-if="ballot.barcode"
-            v-text="gettext('ID %1,', ballot.barcode)"></span>
+            v-text="tct('ID %s,', [ballot.barcode])"></span>
       {{ ballot.venue.display_name }}
     </div>
 
@@ -49,7 +50,7 @@ export default {
         const panellists = _.filter(this.ballot.debateAdjudicators, da => da.position === 'p')
         if (!_.isUndefined(panellists) && panellists.length > 0) {
           const voters = _.filter(this.ballot.debateAdjudicators, da => da.position !== 't')
-          return this.gettext('Chair for Panel of %1', voters.length)
+          return this.tct('Chair for Panel of %s', [voters.length])
         }
         return this.gettext('Solo Chair')
       } else if (position === 'o') {

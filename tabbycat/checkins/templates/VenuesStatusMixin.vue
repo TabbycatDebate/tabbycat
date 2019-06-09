@@ -20,16 +20,19 @@ export default {
         categories.push(c.name)
       })
       if (entity.categories.length > 0 && entity.identifier !== null) {
-        return this.gettext('%1 (%2) with identifier of %3', entity.name, categories.join(', '), entity.identifier[0])
+        const substitutions = [entity.name, categories.join(', '), entity.identifier[0]]
+        return this.gettext('%s (%s) with identifier of %s', substitutions)
       }
       if (entity.categories.length === 0 && entity.identifier !== null) {
-        return this.gettext('%1 (no category) with identifier of %2', entity.name, entity.identifier[0])
+        const substitutions = [entity.name, entity.identifier[0]]
+        return this.gettext('%s (no category) with identifier of %s', substitutions)
       }
       if (entity.categories.length > 0) {
-        return this.gettext('%1 (%2) with no assigned identifier', entity.name, categories.join(', '))
+        const substitutions = [entity.name, categories.join(', ')]
+        return this.gettext('%s (%s) with no assigned identifier', substitutions)
       }
       if (entity.categories.length === 0) {
-        return this.gettext('%1 (no category) with no assigned identifier', entity.name)
+        return this.gettext('%s (no category) with no assigned identifier', [entity.name])
       }
       return entity.name
     },
