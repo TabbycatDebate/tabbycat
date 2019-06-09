@@ -42,6 +42,7 @@ export default {
         payload[cd.type] = checked
         this.ajaxSave(cd.saveURL, payload, message, null, null, null)
       }
+      this.cellData.sort = checked // Needs to be kept in sync with checkbox state
     },
   },
 }
