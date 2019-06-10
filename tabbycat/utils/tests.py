@@ -84,12 +84,13 @@ class CompletedTournamentTestMixin:
         return self.client.get(url)
 
     def assertResponseOK(self, response):  # noqa: N802
-        if response.status_code == 302:
-            self.fail("View %r gave response with status code 302, redirecting "
-                      "to %s (expected 200)" % (self.view_name, response.url))
+        if response.status_code in [301, 302]:
+            self.fail("View %r gave response with status code %d, redirecting "
+                      "to %s (expected 200)" %
+                      (self.view_name, response.status_code, response.url))
         elif response.status_code != 200:
             self.fail("View %r gave response with status code %d (expected 200)" %
-                    (self.view_name, response.status_code))
+                      (self.view_name, response.status_code))
 
     def assertResponsePermissionDenied(self, response):  # noqa: N802
         self.assertEqual(response.status_code, 403)
