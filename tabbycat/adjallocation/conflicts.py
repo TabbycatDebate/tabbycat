@@ -6,8 +6,7 @@ from itertools import combinations, product
 
 from draw.models import Debate
 from participants.models import Adjudicator, Team
-
-from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, TeamInstitutionConflict)
 
 logger = logging.getLogger(__name__)
