@@ -19,11 +19,9 @@ matrix:
     - os: linux
       python: 3.7
       before_install:
-        - python --version
         - node --version
         - npm --version
       install:
-        - pip install --upgrade pip
         - pip install -r ./config/requirements_development.txt
         - npm install
       script:
@@ -36,11 +34,9 @@ matrix:
     - os: linux
       python: 3.6
       before_install:
-        - python --version
         - node --version
         - npm --version
       install:
-        - pip install --upgrade pip
         - pip install -r ./config/requirements_development.txt
         - pip install coverage
         - npm install
