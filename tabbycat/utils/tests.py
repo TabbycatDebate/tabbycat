@@ -82,7 +82,7 @@ class CompletedTournamentTestMixin:
     def assertResponsePermissionDenied(self, response):  # noqa: N802
         self.assertEqual(response.status_code, 403)
 
-    def assertResponseRedirect(self, response, url):  # noqa: N802
+    def assertResponseRedirects(self, response, url):  # noqa: N802
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url.split('?', 1)[0], url)
 
@@ -98,7 +98,8 @@ class SingleViewTestMixin(CompletedTournamentTestMixin):
 
     def get_response(self):
         kwargs = self.get_view_reverse_kwargs()
-        return super().get_response(self.view_name, **kwargs)
+        response = super().get_response(self.view_name, **kwargs)
+        return response
 
 
 class TournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
@@ -118,23 +119,23 @@ class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
     def test_unauthenticated_response(self):
         self.client.logout()
         response = self.get_response()
-        self.assertResponseRedirect(response, reverse('login'))
+        self.assertResponseRedirects(response, reverse('login'))
 
 
 class AssistantTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
-    """ For testing that admin pages resolve """
-
-    def authenticate(self):
-        get_user_model().objects.create_user('test_assistant', 'test@t.org', 'test')
-        self.client.login(username='test_assistant', password='test')
-
-
-class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
     """ For testing that assistant pages resolve """
 
     def authenticate(self):
-        get_user_model().objects.create_superuser('test_admin', 'test@t.org', 'test')
-        self.client.login(username='test_admin', password='test')
+        user = get_user_model().objects.get_or_create(username='test_assistant', is_staff=True)[0]
+        self.client.force_login(user)
+
+
+class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
+    """ For testing that admin pages resolve """
+
+    def authenticate(self):
+        user = get_user_model().objects.get_or_create(username='test_admin', is_superuser=True)[0]
+        self.client.force_login(user)
 
 
 class ConditionalTournamentTestsMixin(SingleViewTestMixin):
