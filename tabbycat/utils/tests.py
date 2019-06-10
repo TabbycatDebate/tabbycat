@@ -3,7 +3,7 @@ import json
 import logging
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user, get_user_model
 from django.core.cache import cache
 from django.urls import reverse
 from django.test import Client, tag, TestCase
@@ -141,6 +141,10 @@ class AssistantTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimp
         user, _ = get_user_model().objects.get_or_create(username='test_assistant')
         self.client.force_login(user)
 
+        # Double-check authentication, raise error if it looks wrong
+        if not get_user(self.client).is_authenticated:
+            raise RuntimeError("User authentication failed")
+
 
 class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
     """Mixin for testing that admin pages resolve when user is logged in, and
@@ -149,6 +153,13 @@ class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLo
     def authenticate(self):
         user, _ = get_user_model().objects.get_or_create(username='test_admin', is_superuser=True)
         self.client.force_login(user)
+
+        # Double-check authentication, raise error if it looks wrong
+        user = get_user(self.client)
+        if not user.is_authenticated:
+            raise RuntimeError("User authentication failed")
+        if not user.is_superuser:
+            raise RuntimeError("User is not a superuser")
 
 
 class ConditionalTournamentTestsMixin(SingleViewTestMixin):
