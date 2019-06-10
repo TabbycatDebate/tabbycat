@@ -1,13 +1,16 @@
 # Globals
 language: python
-dist: trusty
+dist: xenial
 sudo: required
 group: edge
 env:
   global:
     - CC_TEST_REPORTER_ID=c18003eb2d4d191e9ebd68d9c3cf8082ba690eccac12df6660a098a78fc8713b
 addons:
-  postgresql: "9.6"
+  postgresql:
+    - "9.6"
+    - "10"
+    - "11"
   # chrome: stable # Re-enable for functional tests if/when they work on Travis
 services:
   - postgresql
@@ -33,9 +36,8 @@ matrix:
     #     - python tabbycat/manage.py collectstatic
     #     # TODO: get working later; currently lacks a database connection
     #     #- python tabbycat/manage.py test -v 2 --exclude-tag=selenium
-    # Python 3.7 disabled below until https://github.com/travis-ci/travis-ci/issues/9815 resolved
-    # - os: linux
-    #   python: 3.7 # Future-focused python version branch
+    - os: linux
+      python: 3.7 # Future-focused python version branch
     - os: linux
       python: 3.6 # Latest currently-supported python version branch
       # Setup/run/report code coverage tool (Only one build needs to do so)
