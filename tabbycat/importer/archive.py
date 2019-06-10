@@ -199,7 +199,7 @@ class Exporter:
                 speaker_tag.text = speaker.name
 
                 if team.institution is not None:
-                    speaker_tag.set('institution', INST_PREFIX + str(team.institution_id))
+                    speaker_tag.set('institutions', INST_PREFIX + str(team.institution_id))
 
                 if speaker.gender != "":
                     speaker_tag.set('gender', speaker.get_gender_display())
@@ -216,7 +216,7 @@ class Exporter:
             })
 
             if adj.institution is not None:
-                adj_tag.set('institution', INST_PREFIX + str(adj.institution_id))
+                adj_tag.set('institutions', INST_PREFIX + str(adj.institution_id))
 
             if adj.gender != "":
                 adj_tag.set('gender', adj.get_gender_display())
@@ -454,7 +454,7 @@ class Importer:
                 team_obj.emoji = emoji
 
             # Find institution from speakers
-            p_institutions = set([p.get('institution') for p in team.findall('speaker')])
+            p_institutions = set([p.get('institutions') for p in team.findall('speaker')])
             team_institution = list(p_institutions)[0]
 
             if len(p_institutions) == 1 and team_institution is not None:
@@ -501,7 +501,7 @@ class Importer:
         for adj in self.root.find('participants').findall('adjudicator'):
             adj_obj = Adjudicator(
                 tournament=self.tournament, test_score=adj.get('score', 0),
-                institution=self.institutions.get(adj.get('institution')),
+                institution=self.institutions.get(adj.get('institutions')),
                 independent=adj.get('independent'), adj_core=adj.get('core'),
                 name=adj.get('name'), gender=adj.get('gender', ''))
             adj_obj.save()
