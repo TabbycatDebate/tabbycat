@@ -75,10 +75,9 @@ class CompletedTournamentTestMixin:
         return self.client.get(url)
 
     def assertResponseOK(self, response):  # noqa: N802
-        try:
-            self.assertEqual(response.status_code, 200)
-        except:
-            self.fail("%s raised exception unexpectedly" % self.view_name)
+        if response.status_code != 200:
+            self.fail("View %r gave response with status code %d (expected 200)" %
+                    (self.view_name, response.status_code))
 
     def assertResponsePermissionDenied(self, response):  # noqa: N802
         self.assertEqual(response.status_code, 403)
