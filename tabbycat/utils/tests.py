@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 import json
 import logging
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
@@ -40,6 +41,14 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(level+1)
     yield
     suppressed_logger.setLevel(returnto)
+
+
+def add_query_string_parameter(url, key, value):
+    scheme, netloc, path, params, query, fragment = urlparse(url)
+    query_parts = parse_qs(query)
+    query_parts[key] = value
+    query = urlencode(query_parts, safe='/')
+    return urlunparse((scheme, netloc, path, params, query, fragment))
 
 
 class CompletedTournamentTestMixin:
@@ -82,10 +91,6 @@ class CompletedTournamentTestMixin:
     def assertResponsePermissionDenied(self, response):  # noqa: N802
         self.assertEqual(response.status_code, 403)
 
-    def assertResponseRedirects(self, response, url):  # noqa: N802
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url.split('?', 1)[0], url)
-
 
 class SingleViewTestMixin(CompletedTournamentTestMixin):
     """Mixin for TestCases relating to a single view."""
@@ -111,6 +116,9 @@ class TournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
 
 class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
 
+    def authenticate(self):
+        raise NotImplementedError
+
     def test_authenticated_response(self):
         self.authenticate()
         response = self.get_response()
@@ -119,22 +127,27 @@ class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
     def test_unauthenticated_response(self):
         self.client.logout()
         response = self.get_response()
-        self.assertResponseRedirects(response, reverse('login'))
+        target_url = self.reverse_url(self.view_name, **self.get_view_reverse_kwargs())
+        login_url = reverse('login')
+        expected_url = add_query_string_parameter(login_url, 'next', target_url)
+        self.assertRedirects(response, expected_url)  # in django.test.SimpleTestCase
 
 
 class AssistantTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
-    """ For testing that assistant pages resolve """
+    """Mixin for testing that assistant pages resolve when user is logged in,
+    and don't when user is logged out."""
 
     def authenticate(self):
-        user = get_user_model().objects.get_or_create(username='test_assistant', is_staff=True)[0]
+        user, _ = get_user_model().objects.get_or_create(username='test_assistant')
         self.client.force_login(user)
 
 
 class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
-    """ For testing that admin pages resolve """
+    """Mixin for testing that admin pages resolve when user is logged in, and
+    don't when user is logged out."""
 
     def authenticate(self):
-        user = get_user_model().objects.get_or_create(username='test_admin', is_superuser=True)[0]
+        user, _ = get_user_model().objects.get_or_create(username='test_admin', is_superuser=True)
         self.client.force_login(user)
 
 
