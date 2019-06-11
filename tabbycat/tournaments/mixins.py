@@ -2,6 +2,7 @@ import json
 import logging
 
 from asgiref.sync import async_to_sync
+from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import NoReverseMatch, reverse
@@ -14,6 +15,8 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
+
+from sentry_sdk import configure_scope
 
 from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds, determine_liveness
@@ -97,6 +100,12 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
 
     def dispatch(self, request, *args, **kwargs):
         t = self.tournament
+
+        with configure_scope() as scope:
+            if hasattr(settings, 'TAB_DIRECTOR_EMAIL'):
+                scope.set_extra('tab_director_email', settings.TAB_DIRECTOR_EMAIL)
+            scope.set_extra('tournament_prefs', self.tournament.preferences.all())
+
         # Lack of current_round caused by creating a tournament without rounds
         if t.current_round is None:
             if hasattr(self.request, 'user') and self.request.user.is_superuser:
