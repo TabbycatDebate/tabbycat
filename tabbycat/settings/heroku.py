@@ -112,7 +112,8 @@ if environ.get('SENDGRID_USERNAME', ''):
 
 sentry_sdk.init(
     dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
-    integrations=[DjangoIntegration()]
+    integrations=[DjangoIntegration()],
+    send_default_pii=True
 )
 
 if environ.get('DISABLE_SENTRY'):
