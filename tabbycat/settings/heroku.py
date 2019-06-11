@@ -1,6 +1,8 @@
 from os import environ
 
 import dj_database_url
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 # ==============================================================================
@@ -108,18 +110,15 @@ if environ.get('SENDGRID_USERNAME', ''):
 # Sentry
 # ==============================================================================
 
+sentry_sdk.init(
+    dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
+    integrations=[DjangoIntegration()]
+)
+
 if environ.get('DISABLE_SENTRY'):
     DISABLE_SENTRY = True
 else:
     DISABLE_SENTRY = False
-
-RAVEN_CONFIG = {
-    'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
-    'release': TABBYCAT_VERSION,
-}
-
-# Custom implementation makes the user ID the e-mail address, rather than the primary key
-SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
 
 # ==============================================================================
 # Scout
