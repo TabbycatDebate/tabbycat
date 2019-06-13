@@ -101,10 +101,10 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
     def dispatch(self, request, *args, **kwargs):
         t = self.tournament
 
-        with configure_scope() as scope:
-            if hasattr(settings, 'TAB_DIRECTOR_EMAIL'):
-                scope.set_extra('tab_director_email', settings.TAB_DIRECTOR_EMAIL)
-            scope.set_extra('tournament_prefs', self.tournament.preferences.all())
+        if not getattr(settings, 'DISABLE_SENTRY', False):
+            with configure_scope() as scope:
+                scope.set_extra('tab_director_email', getattr(settings, 'TAB_DIRECTOR_EMAIL', "not provided"))
+                scope.set_extra('tournament_prefs', self.tournament.preferences.all())
 
         # Lack of current_round caused by creating a tournament without rounds
         if t.current_round is None:

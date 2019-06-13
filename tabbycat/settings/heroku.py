@@ -110,16 +110,16 @@ if environ.get('SENDGRID_USERNAME', ''):
 # Sentry
 # ==============================================================================
 
-sentry_sdk.init(
-    dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
-    integrations=[DjangoIntegration()],
-    send_default_pii=True
-)
-
 if environ.get('DISABLE_SENTRY'):
     DISABLE_SENTRY = True
 else:
     DISABLE_SENTRY = False
+
+    sentry_sdk.init(
+        dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
+        integrations=[DjangoIntegration()],
+        send_default_pii=True
+    )
 
 # ==============================================================================
 # Scout
