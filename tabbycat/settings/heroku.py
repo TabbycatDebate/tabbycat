@@ -1,7 +1,9 @@
+import logging
 from os import environ
 
 import dj_database_url
 import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
 
@@ -117,8 +119,11 @@ else:
 
     sentry_sdk.init(
         dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
-        integrations=[DjangoIntegration()],
-        send_default_pii=True
+        integrations=[
+            DjangoIntegration(),
+            LoggingIntegration(event_level=logging.WARNING),
+        ],
+        send_default_pii=True,
     )
 
     # Override dictionary trimming so that all preferences will be included in Sentry reports
