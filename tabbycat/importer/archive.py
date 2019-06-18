@@ -9,8 +9,10 @@ from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from breakqual.models import BreakCategory
 from draw.models import Debate, DebateTeam
-from motions.models import Motion
-from options.presets import BritishParliamentaryPreferences, save_presets
+from motions.models import DebateTeamMotionPreference, Motion
+from options.presets import (AustralianEastersPreferences, AustralsPreferences, BritishParliamentaryPreferences,
+                             CanadianParliamentaryPreferences, JoyntPreferences, NZEastersPreferences, save_presets,
+                             UADCPreferences, WADLPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, Submission, TeamScore
@@ -202,7 +204,7 @@ class Exporter:
                     speaker_tag.set('institutions', INST_PREFIX + str(team.institution_id))
 
                 if speaker.gender != "":
-                    speaker_tag.set('gender', speaker.get_gender_display())
+                    speaker_tag.set('gender', speaker.gender)
 
                 speaker_tag.set('categories', " ".join([SPEAKER_CATEGORY_PREFIX + str(sc.id) for sc in speaker.categories.all()]))
 
@@ -219,7 +221,7 @@ class Exporter:
                 adj_tag.set('institutions', INST_PREFIX + str(adj.institution_id))
 
             if adj.gender != "":
-                adj_tag.set('gender', adj.get_gender_display())
+                adj_tag.set('gender', adj.gender)
 
             for feedback in adj.adjudicatorfeedback_set.filter(confirmed=True):
                 feedback_tag = SubElement(adj_tag, 'feedback', {
@@ -316,17 +318,14 @@ class Importer:
         self.root = tournament
 
     def import_tournament(self):
-        self.tournament = Tournament(
-            name=self.root.get('name'), short_name=self.root.get('name')[:25],
-            slug=slugify(self.root.get('name')[:50]))
+        self.tournament = Tournament(name=self.root.get('name'))
 
         if self.root.get('short') is not None:
             self.tournament.short_name = self.root.get('short')
-            self.tournament_slug = slugify(self.root.get('short'))
+            self.tournament.slug = slugify(self.root.get('short'))
         else:
             self.tournament.short_name = self.root.get('name')[:25]
-            self.tournament_slug = slugify(self.root.get('short')[:50])
-        self.tournament.slug = self.tournament_slug
+            self.tournament.slug = slugify(self.root.get('name')[:50])
         self.tournament.save()
 
         # Import all the separate parts
@@ -343,20 +342,36 @@ class Importer:
         self.import_results()
         self.import_feedback()
 
+    def _is_consensus_ballot(self, elimination):
+        xpath = "round[@elimination='" + elimination + "']/debate/side"
+        return len(self.root.findall(xpath + "/ballot")) == len(self.root.findall(xpath))
+
     def set_preferences(self):
-
-        def _is_consensus_ballot(self, elimination):
-            xpath = "round[@elimination='" + elimination + "']/debate/side"
-            return len(self.root.findall(xpath + "/ballot")) == len(self.root.findall(xpath))
-
-        def _margin_includes_dissenters(self):
-            return len(self.root.findall("round/debate/side/ballot[@minority='True'][@ignored='True']")) == 0
-
-        def _reply_scores_enabled(self):
-            return len(self.root.findall("round/debate/side/speech[@reply='True']")) != 0
-
-        def _substantive_speakers(self):
-            return len(self.root.find('round').find('debate').find('side').findall("speech[@reply='False']"))
+        styles = {
+            "apda": None,
+            "asians": None,
+            "aus-easters": AustralianEastersPreferences,
+            "australs": AustralsPreferences,
+            "bp": BritishParliamentaryPreferences,
+            "cndc": None,
+            "cp": CanadianParliamentaryPreferences,
+            "ffd": None,
+            "joynt": JoyntPreferences,
+            "npda": None,
+            "nz-easters": NZEastersPreferences,
+            "opd": None,
+            "paris-v": None,
+            "uadc": UADCPreferences,
+            "wadl": WADLPreferences,
+            "wsdc": WSDCPreferences,
+            "": None
+        }
+        if self.root.get('style') is not None and styles[self.root.get('style', '')] is not None:
+            style = styles[self.root.get('style')]
+            save_presets(self.tournament, style)
+            self.preliminary_consensus = style.debate_rules__ballots_per_debate_prelim == 'per-debate'
+            self.elimination_consensus = style.debate_rules__ballots_per_debate_elim == 'per-debate'
+            return True # Exit method
 
         self.is_bp = len(self.root.find('round').find('debate').findall('side')) == 4
         if self.is_bp:
@@ -366,11 +381,15 @@ class Importer:
         else:
             self.preliminary_consensus = self._is_consensus_ballot('False')
             self.elimination_consensus = self._is_consensus_ballot('True')
-            self.tournament.preferences['debate_rules__substantive_speakers'] = self._substantive_speakers()
-            self.tournament.preferences['debate_rules__reply_scores_enabled'] = self._reply_scores_enabled()
-            self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = self.preliminary_consensus
-            self.tournament.preferences['debate_rules__ballots_per_debate_elim'] = self.elimination_consensus
-            self.tournament.preferences['scoring__margin_includes_dissenters'] = self._margin_includes_dissenters()
+            substantive_speakers = len(self.root.find('round').find('debate').find('side').findall("speech[@reply='False']"))
+            reply_scores_enabled = len(self.root.findall("round/debate/side/speech[@reply='True']")) != 0
+            margin_includes_dissenters = len(self.root.findall("round/debate/side/ballot[@minority='True'][@ignored='True']")) == 0
+
+            self.tournament.preferences['debate_rules__substantive_speakers'] = substantive_speakers
+            self.tournament.preferences['debate_rules__reply_scores_enabled'] = reply_scores_enabled
+            self.tournament.preferences['debate_rules__ballots_per_debate_prelim'] = 'per-debate' if self.preliminary_consensus else 'per-adj'
+            self.tournament.preferences['debate_rules__ballots_per_debate_elim'] = 'per-debate' if self.elimination_consensus else 'per-adj'
+            self.tournament.preferences['scoring__margin_includes_dissenters'] = margin_includes_dissenters
 
     def import_institutions(self):
         self.institutions = {}
@@ -471,7 +490,7 @@ class Importer:
             team_obj.short_reference = team_obj.reference[:35]
 
             # Break eligibilities
-            for bc in team.get('break-eligibilities').split():
+            for bc in team.get('break-eligibilities', "").split():
                 team_categories.append((through_model(breakcategory=self.team_breaks[bc]), team_obj))
 
         Team.objects.bulk_create(self.teams.values())
@@ -490,7 +509,7 @@ class Importer:
                 speaker_obj.save()
                 self.speakers[speaker.get('id')] = speaker_obj
 
-                for sc in speaker.get('categories').split():
+                for sc in speaker.get('categories', "").split():
                     categories.append((through_model(speakercategory=self.speaker_categories[sc]), speaker_obj))
 
         through_model.objects.bulk_create(self._add_foreign_key(categories, 'speaker'))
@@ -501,8 +520,8 @@ class Importer:
         for adj in self.root.find('participants').findall('adjudicator'):
             adj_obj = Adjudicator(
                 tournament=self.tournament, test_score=adj.get('score', 0),
-                institution=self.institutions.get(adj.get('institutions')),
-                independent=adj.get('independent'), adj_core=adj.get('core'),
+                institution=self.institutions.get(adj.get('institutions', "").split()[0]),
+                independent=adj.get('independent', False), adj_core=adj.get('core', False),
                 name=adj.get('name'), gender=adj.get('gender', ''))
             adj_obj.save()
             self.adjudicators[adj.get('id')] = adj_obj
@@ -530,7 +549,7 @@ class Importer:
             round_obj = Round(
                 tournament=self.tournament, seq=i, completed=True, name=round.get('name'),
                 abbreviation=round.get('name')[:10], stage=round_stage, draw_type=draw_type,
-                draw_status=Round.STATUS_RELEASED, feedback_weight=round.get('feedback-weight'),
+                draw_status=Round.STATUS_RELEASED, feedback_weight=round.get('feedback-weight', 0),
                 starts_at=round.get('start')
             )
             rounds.append(round_obj)
@@ -637,7 +656,7 @@ class Importer:
                 ts_max, ts_margin = (0, 0)
                 numeric_scores = True
                 try:
-                    float(debate.find("side/ballot[@ignored='False']").text)
+                    float(debate.find("side/ballot").text)
                 except ValueError:
                     numeric_scores = False
 

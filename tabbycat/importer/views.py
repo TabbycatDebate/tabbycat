@@ -252,7 +252,7 @@ class TournamentImportArchiveView(AdministratorMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_tournament('tournament-admin-home', self.importer.tournament_slug)
+        return reverse_tournament('tournament-admin-home', self.importer.tournament)
 
 
 class ExportArchiveIndexView(AdministratorMixin, TournamentMixin, TemplateView):
