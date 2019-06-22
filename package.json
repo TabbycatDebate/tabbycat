@@ -16,7 +16,7 @@
     "babel-plugin-lodash": "3.3.x",
     "bootstrap": "^4.3.1",
     "browserify": "16.2.x",
-    "browserslist": "^4.5.5",
+    "browserslist": "^4.6.3",
     "core-js": "^2.6.4",
     "cpx": "1.5.x",
     "d3": "5.9.x",
@@ -62,7 +62,7 @@
     "lint-sass": "stylelint --cache \"tabbycat/templates/scss/**/*.scss\""
   },
   "devDependencies": {
-    "livereload": "0.x",
+    "livereload": "^0.8.0",
     "stylelint": "^9.10.x",
     "stylelint-config-standard": "^18.3.0",
     "stylelint-scss": "^3.6.x"
