@@ -40,7 +40,10 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
         for adj in adjudicators:
             adj._weighted_score = adj.weighted_score(self.feedback_weight)  # used in min_voting_score filter
-            adj._normalized_score = (adj._weighted_score - score_min) / score_range * 5  # to 0-5 range
+            try:
+                adj._normalized_score = (adj._weighted_score - score_min) / score_range * 5  # to 0-5 range
+            except ZeroDivisionError:
+                adj._normalized_score = 0.0
 
         ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
         if ntoolarge > 0:
