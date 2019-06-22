@@ -42,6 +42,14 @@
     {% endblocktrans %}
     {% include "components/alert.html" with type="info" icon='alert-circle' %}
   {% endif %}
+
+  {% if pref.adj_min_score == pref.adj_max_score %}
+    {% tournamenturl 'options-tournament-section' section='feedback' as feedback_config_url %}
+    {% blocktrans trimmed asvar message %}
+      The adjudicator score range is 0, and so adjudicator scores will be ignored when allocating. You can <a href="{{ feedback_config_url }}" class="alert-link">change the adjudicator score range in the feedback configuration page</a>.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="info" icon='alert-circle' %}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
