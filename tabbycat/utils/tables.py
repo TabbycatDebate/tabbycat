@@ -376,7 +376,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.admin:
                 cell['popover']['content'].append({
                     'text': _("View/edit debate ballot"),
-                    'link': reverse_tournament('results-ballotset-edit',
+                    'link': reverse_tournament('old-results-ballotset-edit',
                             self.tournament, kwargs={'pk': ts.ballot_submission_id})
                 })
             elif self.tournament.pref('ballots_released'):
