@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sentmessagerecord',
             name='hook_id',
-            field=models.CharField(blank=True, max_length=16, unique=True, verbose_name='Hook-ID'),
+            field=models.CharField(blank=True, max_length=16, unique=True, null=True, verbose_name='Hook-ID'),
         ),
         migrations.AddField(
             model_name='emailstatus',

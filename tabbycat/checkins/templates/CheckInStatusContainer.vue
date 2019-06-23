@@ -9,7 +9,7 @@
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('filterByPresence', optionKey, !optionState)">
-          <span v-if="optionKey === 'All'">All</span>
+          <span v-if="optionKey === 'All'" v-text="gettext('All')"></span>
           <i v-if="optionKey === 'Absent'" data-feather="x"></i>
           <i v-if="optionKey === 'Present'" data-feather="check"></i>
           {{ stats[optionKey] }}
@@ -29,9 +29,8 @@
         <button v-for="(optionState, optionKey) in this.speakerGroupings"
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
-                @click="setListContext('speakerGroupings', optionKey, !optionState)">
-          By {{ optionKey }}
-        </button>
+                @click="setListContext('speakerGroupings', optionKey, !optionState)"
+                v-text="gettext('By ' + optionKey)"></button>
       </div>
 
       <div class="btn-group mb-md-0 mb-3">
@@ -46,15 +45,15 @@
 
     </div>
 
-    <div class="alert alert-info" v-if="entitiesByPresence.length === 0">
-      No matching <span v-if="isForVenues">venues</span><span v-else>people</span> found.
-    </div>
-    <div class="alert alert-info">
-      This page will live-update with new check-ins as they occur although the initial list may be
-      up to a minute old.
-      <template v-if="assistantUrl">
-        If you want to view this page without the sidebar (i.e. for displaying to an auditorium)
-        you can <a :href="assistantUrl" target="_blank"> open the assistant version.</a></template>
+    <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && isForVenues"
+         v-text="gettext('No matching venues found.')"></div>
+    <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && !isForVenues"
+         v-text="gettext('No matching people found.')"></div>
+    <div class="alert alert-info"
+         v-text="gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.')">
+
+      <template v-if="assistantUrl" v-text="gettext('If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version.')">
+        <a :href="assistantUrl" target="_blank" v-text="gettext('Open the assistant version.')"></a></template>
     </div>
 
     <div v-for="(entities, grouper) in entitiesBySortingSetting" :key="entities[0].id" class="card mt-1">
@@ -69,14 +68,12 @@
             </div>
             <button v-if="forAdmin && statusForGroup(entities) === false"
               @click="checkInOrOutGroup(entities, true)"
-              class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
-              <strong>✓</strong> All
-            </button>
+              class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
+              v-text="gettext('✓ All')"></button>
             <button v-if="forAdmin && statusForGroup(entities) === true"
               @click="checkInOrOutGroup(entities, false)"
-              class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
-              <strong>☓</strong> All
-            </button>
+              class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
+              v-text="gettext('☓ All')"></button>
 
           </div>
 
@@ -94,22 +91,20 @@
                   <template v-if="forAdmin">
                     <a v-if="!entity.status && entity.identifier[0] && !entity.locked"
                        class="col-auto p-2 btn-info text-center hoverable"
-                       title="Click to check-in manually"
+                       :title="gettext('Click to check-in manually')"
                        @click="checkInOrOutIdentifiers(entity.identifier, true)">
                       ✓
                     </a>
                     <div v-if="!entity.status && entity.identifier[0] && entity.locked"
-                         class="col-auto p-2 btn-secondary text-center btn-no-hover">
-                      saving...
-                    </div>
+                         class="col-auto p-2 btn-secondary text-center btn-no-hover"
+                         v-text="gettext('saving...')"></div>
                     <div v-if="!entity.identifier[0]"
                          class="col-auto p-2 btn-secondary text-white text-center"
                          data-toggle="tooltip"
-                         title="`This person does not have a check-in identifier so
-                                 they can't be checked in`">
+                         :title="gettext('This person does not have a check-in identifier so they can\'t be checked in')">
                       ?
                     </div>
-                    <div v-if="entity.status" title="Click to undo a check-in"
+                    <div v-if="entity.status" :title="gettext('Click to undo a check-in')"
                          class="col-auto p-2 btn-success hoverable text-center"
                          @click="checkInOrOutIdentifiers(entity.identifier, false)">
                       {{ lastSeenTime(entity.status.time) }}
@@ -162,6 +157,7 @@ export default {
     teamCodes: Boolean,
     tournamentSlug: String,
     forAdmin: Boolean,
+    teamSize: Number,
   },
   computed: {
     statsAbsent: function () {
@@ -199,10 +195,10 @@ export default {
       return _.filter(this.entitiesByType, p => p.status !== false)
     },
     entitiesSortedByName: function () {
-      return _.sortBy(this.entitiesByPresence, ['name'])
+      return _.sortBy(this.entitiesByPresence, p => p.name.toLowerCase())
     },
     entitiesByName: function () {
-      return _.groupBy(this.entitiesSortedByName, p => p.name[0])
+      return _.groupBy(this.entitiesSortedByName, p => p.name[0].toUpperCase())
     },
     entitiesByTime: function () {
       const sortedByTime = _.sortBy(this.entitiesSortedByName, (p) => {
@@ -215,7 +211,7 @@ export default {
         const time = new Date(Date.parse(p.status.time))
         const hours = this.clock(time.getHours())
         if (_.isUndefined(p.status) || p.status === false) {
-          return 'Not Checked In'
+          return this.gettext('Not Checked In')
         }
         if (time.getMinutes() < 30) {
           return `${hours}:00 - ${hours}:29`
@@ -253,12 +249,18 @@ export default {
       } else {
         css += 'text-uppercase '
       }
-      if (entity.speakersIn === 1) {
-        css += 'half-in-team ' // One speaker checked in
-      } else if (entity.status === false) {
-        css += 'bg-secondary ' // Nothing checked in
+      if (entity.type !== 'Team' && entity.status !== false) {
+        css += 'bg-success ' // For venues/adjudicators that are checked in
+      } else if (entity.speakersIn >= this.teamSize && entity.speakersIn !== 0) {
+        css += 'bg-success ' // All speakers checked in
+      } else if (this.teamSize === 2 && entity.speakersIn === 1) {
+        css += 'viable-checkins-team ' // Half present in BP (viable to debate)
+      } else if (this.teamSize === 3 && entity.speakersIn === 2) {
+        css += 'viable-checkins-team ' // 2/3rds present in Australs (viable to debate)
+      } else if (this.teamSize === 3 && entity.speakersIn === 1) {
+        css += 'not-viable-checkins-team ' // 1/3rd present in Australs (not viable to debate)
       } else {
-        css += 'bg-success '
+        css += 'bg-secondary ' // Nothing checked in
       }
       return css
     },

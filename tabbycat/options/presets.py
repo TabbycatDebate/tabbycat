@@ -195,7 +195,7 @@ class AustralianEastersPreferences(AustralsPreferences):
 
 
 class NZEastersPreferences(AustralsPreferences):
-    name         = "New Zealand Easters Rules"
+    name         = "2 vs 2 Impromptu"
     show_in_list = True
     description  = ("2 vs 2 with replies, chosen motions, chosen sides, and "
         "novice statuses.")
@@ -222,9 +222,9 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    name         = "Joynt Scroll Rules"
+    name         = "3 vs 3 Prepared"
     show_in_list = True
-    description  = ("3 vs 3 with replies, set sides, publicly displayed sides "
+    description  = ("3 vs 3 with preallocated sides, publicly displayed sides "
         "and motions, and novice statuses.")
 
     # Scoring

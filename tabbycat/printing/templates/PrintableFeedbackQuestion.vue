@@ -17,16 +17,16 @@
            class="db-flex-item db-flex-row">
         <div class="db-align-horizontal-center db-align-vertical-center db-flex-item
                     db-center-text db-vertical-center-text">
-          <span class="db-circle">Yes</span>
+          <span class="db-circle" v-text="gettext('Yes')"></span>
         </div>
         <div v-if="question.type === 'bc'"
              class="db-align-horizontal-center db-align-vertical-center db-flex-item
                     db-center-text db-vertical-center-text">
-          <span class="db-circle">Unsure</span>
+          <span class="db-circle" v-text="gettext('Unsure')"></span>
         </div>
         <div class="db-align-horizontal-center db-align-vertical-center db-flex-item
                     db-center-text db-vertical-center-text">
-          <span class="db-circle">No</span>
+          <span class="db-circle" v-text="gettext('No')"></span>
         </div>
       </div>
 

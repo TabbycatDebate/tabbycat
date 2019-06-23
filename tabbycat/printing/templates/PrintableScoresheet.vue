@@ -19,18 +19,16 @@
     <section class="db-margins-m db-bordered db-flex-row db-flex-item-1" v-if="!roundInfo.isBP">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row"><!-- Aff holder -->
         <div class="db-flex-item db-align-vertical-center db-flex-static
-                    db-vertical-center-text small">
-          Which team won the debate:
-        </div>
+                    db-vertical-center-text small"
+             v-text="gettext('Which team won the debate:')"></div>
         <div class="db-flex-item db-fill-in">
         </div>
       </div>
       <div class="db-item-gutter"></div>
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row"><!-- Aff holder -->
         <div class="db-align-vertical-center db-flex-item db-flex-static
-                    db-vertical-center-text small">
-          By how many points did they win:
-        </div>
+                    db-vertical-center-text small"
+             v-text="gettext('By how many points did they win:')"></div>
         <div class="db-flex-item db-fill-in">
         </div>
       </div>

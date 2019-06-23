@@ -59,7 +59,11 @@
 // Check-In Status
 //------------------------------------------------------------------------------
 
-.half-in-team {
+.not-viable-checkins-team {
+  background: repeating-linear-gradient(45deg, $primary, $primary 10px, $secondary 10px, $secondary 20px);
+}
+
+.viable-checkins-team {
   background: repeating-linear-gradient(45deg, $success, $success 10px, $secondary 10px, $secondary 20px);
 }
 

@@ -51,6 +51,7 @@ class BaseCheckInStatusView(TournamentMixin, TemplateView):
         if self.scan_view:
             kwargs["scan_url"] = self.tournament.slug + '/checkins/'
         kwargs["for_admin"] = self.for_admin
+        kwargs["team_size"] = self.tournament.pref('substantive_speakers')
         return super().get_context_data(**kwargs)
 
 

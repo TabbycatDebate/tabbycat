@@ -125,6 +125,8 @@ class EmailEventWebhookView(TournamentMixin, View):
 
         data = json.loads(request.body)
 
+        # Ignore all objects without a Tabbycat-specified hook ID
+        data = [obj for obj in data if 'hook-id' in obj and obj['hook-id'] is not None]
         records = SentMessage.objects.filter(hook_id__in=[obj['hook-id'] for obj in data])
         record_lookup = {smr.hook_id: smr.id for smr in records}
         statuses = []
@@ -174,7 +176,7 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def add_sent_notification(self, email_count):
         text = ngettext("%(email_count)s email has been queued for sending.",
                         "%(email_count)s emails have been queued for sending.",
-                        email_count)
+                        email_count) % {'email_count': email_count}
         if email_count > 0:
             messages.success(self.request, text)
         else:

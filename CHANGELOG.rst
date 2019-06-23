@@ -28,13 +28,14 @@ Change Log
     - A adjudicator/team conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
 - When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions
 - Info-slides can now be split into paragraphs
-- Instiututional caps in breaks can be based on the number of teams in the break. Thanks to Viran Weerasekera for this feature!
+- Check-in pages now differentiate between teams with 1 and 2 checked-in people in two-team formats
+- Institutional caps in breaks can be based on the number of teams in the break. Thanks to Viran Weerasekera for this feature!
 - Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run ``heroku ps:scale worker=1``
 - Upgraded to Python 3.6, dropped support for Python 3.5 and below. Note that this will require you to upgrade your python versions if running locally.
 
 
 2.2.10
------
+------
 *Release date: 10 February 2019*
 
 - Fixed the display of feedback quantities on the Feedback Overview Page

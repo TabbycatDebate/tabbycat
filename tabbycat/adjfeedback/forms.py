@@ -3,7 +3,6 @@ import logging
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import Q
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy
 from django.utils.translation import gettext as _
@@ -389,7 +388,11 @@ class UpdateAdjudicatorScoresForm(forms.Form):
             name, score = [x.strip() for x in line[:2]]
 
             try:
-                adj = self.tournament.relevant_adjudicators.get(Q(name=name) | Q(id=name))
+                try:
+                    name = int(name)
+                    adj = self.tournament.relevant_adjudicators.get(id=name)
+                except ValueError:
+                    adj = self.tournament.relevant_adjudicators.get(name=name)
             except Adjudicator.MultipleObjectsReturned:
                 errors_in_line.append(ImportValidationError(i,
                     _("There are several adjudicators called \"%(adjudicator)s\", so "
