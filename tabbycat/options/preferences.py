@@ -793,8 +793,8 @@ class EnableBlindBallotConfirmation(BooleanPreference):
 
 @tournament_preferences_registry.register
 class EnableMotions(BooleanPreference):
-    help_text = _("If checked, ballots require a motion to be entered")
-    verbose_name = _("Enable motions")
+    help_text = _("If checked, ballots require a motion to be selected from a list of options. ")
+    verbose_name = _("Enable motion selection")
     section = data_entry
     name = 'enable_motions'
     default = True
