@@ -37,12 +37,12 @@ class MotionTwoTeamStatsCalculator:
     def _prefetch_motions(self):
 
         self.motions = Motion.objects.filter(round__tournament=self.tournament).order_by(
-            'round__seq').select_related('round')
+            'round__seq').select_related('round').filter(round__debate__ballotsubmission__confirmed=True)
         annotations = {}  # dict of keyword arguments to pass to .annotate()
 
         # This if-else block could be simplified using **kwargs notation, but it'd be miserable to read
         if self.by_motion:
-            self.motions = self.motions.filter(ballotsubmission__confirmed=True)
+            self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
             annotations['ndebates'] = Count('ballotsubmission', distinct=True)
             annotations.update({'%s_wins' % side: Count(
                 'ballotsubmission__teamscore',
@@ -50,9 +50,7 @@ class MotionTwoTeamStatsCalculator:
                     ballotsubmission__teamscore__debate_team__side=side,
                     ballotsubmission__teamscore__win=True,
                 ), distinct=True) for side in self.tournament.sides})
-
         else:
-            self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
             annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
             annotations.update({'%s_wins' % side: Count(
                 'round__debate__ballotsubmission__teamscore',
