@@ -72,7 +72,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             debates = round.debate_set.all()
             panels = round.preformedpanel_set.all()
-            allocator = HungarianPreformedPanelAllocator(debates, panels, round)
+            allocator, extra_msgs = HungarianPreformedPanelAllocator(debates, panels, round)
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
 
@@ -88,7 +88,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                     allocator = VotingHungarianAllocator(debates, adjs, round)
                 else:
                     allocator = ConsensusHungarianAllocator(debates, adjs, round)
-                allocation = allocator.allocate()
+                allocation, extra_msgs = allocator.allocate()
             except AdjudicatorAllocationError as e:
                 self.return_error(event['extra']['group_name'], str(e))
                 return
@@ -104,7 +104,12 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             msg = _("Succesfully auto-allocated preformed panels to debates.")
         else:
             msg = _("Succesfully auto-allocated adjudicators to debates.")
-        self.return_response(content, event['extra']['group_name'], msg, 'success')
+        if extra_msgs != "":
+            msg += _(" However there was a warning:") + extra_msgs
+            level = 'warning'
+        else:
+            level = 'success'
+        self.return_response(content, event['extra']['group_name'], msg, level)
 
     def allocate_panel_adjs(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
@@ -125,7 +130,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             else:
                 allocator = ConsensusHungarianAllocator(panels, adjs, round)
 
-            allocation = allocator.allocate()
+            allocation, extra_msgs = allocator.allocate()
         except AdjudicatorAllocationError as e:
             self.return_error(event['extra']['group_name'], str(e))
             return
@@ -136,7 +141,12 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
         content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
         msg = _("Succesfully auto-allocated adjudicators to preformed panels.")
-        self.return_response(content, event['extra']['group_name'], msg, 'success')
+        if extra_msgs != "":
+            msg += _("However there was a warning:") + extra_msgs
+            level = 'warning'
+        else:
+            level = 'success'
+        self.return_response(content, event['extra']['group_name'], msg, level)
 
     def _prioritise_by_bracket(self, instances, bracket_attrname):
         instances = instances.order_by('-' + bracket_attrname)
