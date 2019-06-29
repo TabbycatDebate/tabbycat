@@ -379,7 +379,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         # Points of team
         metric_info = next(self.standings.metrics_info())
         header = {
-            'key': "pts",  # always use 'pts' to make it more predictable
+            'key': "pts" + side_abbr,  # always use 'pts' to make it more predictable
             'tooltip': _("%(team)s: %(metric)s") % {'team': side_abbr, 'metric': metric_info['name']},
             'icon': 'star'
         }

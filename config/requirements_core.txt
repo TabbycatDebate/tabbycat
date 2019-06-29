@@ -1,34 +1,34 @@
 # The necessary dependencies to run Tabbycat
 
 # Django
-Django==2.1.7
-django-appconf==1.0.2                   # Helper for handling app configs
+Django==2.1.9
+django-appconf==1.0.3                   # Helper for handling app configs
 git+https://github.com/EliotBerriot/django-dynamic-preferences.git@66dcbfbf # Settings management
-django-extensions==2.1.6                # For the generate secret command
+django-extensions==2.1.7                # For the generate secret command
 django-formtools==2.1                   # Form wizards
 django-ipware==2.1.0                    # IP Address logging
 django-jet==1.0.8                       # Admin Backend
 django-gfklookupwidget==1.0.7           # Replaces object_id field with a search link
-djangorestframework==3.9.*              # For serialising objects
+djangorestframework==3.9.4              # For serialising objects
 django-polymorphic==2.0.3               # Permits model polymorphism
 django-split-settings==0.3.0            # Modularise settings files
-django-statici18n==1.8.2                # Compile translations files as static file
-django-summernote==0.8.8.8              # WYSIWYG editor
+django-statici18n==1.8.3                # Compile translations files as static file
+django-summernote==0.8.11.4             # WYSIWYG editor
 munkres==1.1.2                          # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
-raven==6.10.0                           # Client for Sentry error tracking
+sentry-sdk==0.9.0                       # Client for Sentry error tracking
 
 # Database
-psycopg2-binary==2.7.7                  # For Django to talk to postgres
-sqlparse==0.2.4                         # Parsing SQL statements
+psycopg2-binary==2.8.2                  # For Django to talk to postgres
+sqlparse==0.3.0                         # Parsing SQL statements
 dj-database-url==0.5.0                  # To obtain the Heroku service's database URL
 
 # Channels
-channels==2.1.7                         # Channels; also includes the Daphne server
-channels_redis==2.3.2                   # Channels Layer
+channels==2.2.0                         # Channels; also includes the Daphne server
+channels_redis==2.4.0                   # Channels Layer
 
 # Misc
-ipython==7.3
-redis==2.10.6
+ipython==7.5
+redis==3.2.1
 qrcode==6.1                             # QR codes for printed private URL sheets
 html2text==2018.1.9                     # Compatibility with plain-text email clients

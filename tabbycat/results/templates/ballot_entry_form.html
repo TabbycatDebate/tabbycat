@@ -2,11 +2,11 @@
 
 {% block content %}
 
-  <div data-type="motion_selection" hidden>
-    {% if pref.enable_motions %}
+  {% if pref.enable_motions %}
+    <div data-type="motion_selection" hidden>
       {% with field=form.motion %}{{ field }}{% endwith %}
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
   {% if pref.motion_vetoes_enabled %}
     {% for field in form.motion_veto_fields %}

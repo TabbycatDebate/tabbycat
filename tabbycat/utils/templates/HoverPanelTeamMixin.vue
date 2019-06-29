@@ -28,14 +28,18 @@ export default {
           if (category) {
             let breakCSS = 'break-display ' + category.css
             let status = '?'
+            let info = ''
             if (this.subject.points >= category.fields.safe) {
               status = 'SAFE'
+              info = `(>${category.fields.safe - 1})`
             } else if (this.subject.points <= category.fields.dead) {
               status = 'DEAD'
+              info = `(<${category.fields.dead + 1})`
             } else if (this.subject.points > category.fields.dead && this.subject.points < category.fields.safe) {
               status = 'LIVE'
+              info = `(>${category.fields.dead})`
             }
-            let item = this.makeItem(`${status} for ${category.fields.name}`, breakCSS, false)
+            let item = this.makeItem(`${status} for ${category.fields.name} ${info}`, breakCSS, false)
             pointsDetails.push(item)
           }
         }

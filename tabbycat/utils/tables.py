@@ -376,7 +376,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
             if self.admin:
                 cell['popover']['content'].append({
                     'text': _("View/edit debate ballot"),
-                    'link': reverse_tournament('results-ballotset-edit',
+                    'link': reverse_tournament('old-results-ballotset-edit',
                             self.tournament, kwargs={'pk': ts.ballot_submission_id})
                 })
             elif self.tournament.pref('ballots_released'):
@@ -859,10 +859,10 @@ class TabbycatTableBuilder(BaseTableBuilder):
         elif self.private_url:
             ballot_links_data = []
             for debate in debates:
-                if not debate.confirmed_ballot:
-                    ballot_links_data.append("")
+                if not debate.ballotsubmission_set.exclude(discarded=True).exists():
+                    ballot_links_data.append(_("No ballot"))
                 elif self.tournament.pref('teams_in_debate') == 'bp' and debate.round.is_break_round:
-                    ballot_links_data.append("")
+                    ballot_links_data.append(_("Elimination"))
                 else:
                     ballot_links_data.append({
                         'text': _("View Ballot"),

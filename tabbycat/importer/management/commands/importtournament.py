@@ -21,34 +21,34 @@ class Command(BaseCommand):
         parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
         parser.add_argument('-i', '--importer', type=str, default=None, choices=importer_registry,
-                            help='Which importer to use (default: read from .importer file)')
+                            help="Which importer to use (default: read from .importer file)")
 
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
-                            help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
+                            help="Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.")
         parser.add_argument('--force', action='store_true', default=False,
-                            help='Do not prompt before deleting tournament that already exists.')
+                            help="Do not prompt before deleting tournament that already exists.")
         parser.add_argument('--keep-existing', action='store_true', default=False,
-                            help='Keep existing tournament and data, skipping lines if they are duplicates.')
+                            help="Keep existing tournament and data, skipping lines if they are duplicates.")
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
-                            help='Don\'t crash if there is an error, just skip and keep going.')
+                            help="Don't crash if there is an error, just skip and keep going.")
 
         # Cleaning shared objects
         parser.add_argument('--clean-shared', action='store_true', default=False,
-                            help='Delete all shared objects from the database. Overrides --keep-existing.')
+                            help="Delete all shared objects from the database. Overrides --keep-existing.")
         parser.add_argument('--delete-institutions', action='store_true', default=False,
-                            help='Delete all institutions from the database. Overrides --keep-existing.')
+                            help="Delete all institutions from the database. Overrides --keep-existing.")
         parser.add_argument('--delete-venue-categories', action='store_true', default=False,
-                            help='Delete all venue categories from the database. Overrides --keep-existing.')
+                            help="Delete all venue categories from the database. Overrides --keep-existing.")
         parser.add_argument('--delete-regions', action='store_true', default=False,
-                            help='Delete all regions categories from the database. Overrides --keep-existing.')
+                            help="Delete all regions categories from the database. Overrides --keep-existing.")
 
         # Tournament options
         parser.add_argument('-s', '--slug', type=str, action='store', default=None,
-                            help='Override tournament slug. (Default: use name of directory.)'),
+                            help="Override tournament slug. (Default: use name of directory.)")
         parser.add_argument('--name', type=str, action='store', default=None,
-                            help='Override tournament name. (Default: use name of directory.)'),
+                            help="Override tournament name. (Default: use name of directory.)")
         parser.add_argument('--short-name', type=str, action='store', default=None,
-                            help='Override tournament short name. (Default: use name of directory.)'),
+                            help="Override tournament short name. (Default: use name of directory.)")
 
     def handle(self, *args, **options):
         self.options = options

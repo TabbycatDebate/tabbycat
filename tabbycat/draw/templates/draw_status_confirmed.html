@@ -24,7 +24,7 @@
             {% if active_adjs < debates_in_round %}
 
               {% trans "There are currently fewer adjudicators checked in than there are rooms." as message %}
-              {% include "components/item-info.html" with type=danger text=message %}
+              {% include "components/item-info.html" with nopad=True type="danger" text=message %}
 
             {% else %}
 

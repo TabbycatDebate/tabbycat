@@ -124,6 +124,7 @@ export default {
     copyFromPrevious: function () {
       _.forEach(this.tablesData[0].data, (row) => {
         row[0].checked = row[0].prev
+        row[0].sort = row[0].prev
       })
       this.saveChecks(0)
     },
@@ -131,8 +132,10 @@ export default {
       _.forEach(this.tablesData[0].data, (row) => {
         if (set && row[0].checked_in) {
           row[0].checked = true
+          row[0].sort = true
         } else if (unset && !row[0].checked_in) {
           row[0].checked = false
+          row[0].sort = false
         }
       })
       this.saveChecks(0)
@@ -142,6 +145,7 @@ export default {
         _.forEach(row, (column) => {
           if (column.type === type) {
             column.checked = state
+            column.sort = state
           }
         })
       })

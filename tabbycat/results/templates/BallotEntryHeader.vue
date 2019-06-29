@@ -19,8 +19,7 @@
       </div>
       <!-- TODO: Side choosing -->
 
-      <!-- TODO: Motion choosing -->
-      <div class="list-group-item pb-3 pt-3">
+      <div class="list-group-item pb-3 pt-3" v-if="motionSelectionEnabled">
         <div class="form-group">
           <label>Selected Motion</label>
           <select class="required custom-select form-control" @change="setSelected()"
@@ -32,8 +31,17 @@
           </select>
         </div>
       </div>
-      <!-- TODO: Veto choosing -->
-      <div class="list-group-item pb-3 pt-3">
+
+      <div class="list-group-item pb-3 pt-3 list-group-item-warning"
+           v-if="isAdmin && motionVetoesEnabled && !motionSelectionEnabled">
+        <div class="form-group">
+          The "motion vetoes" preference is enabled, but the "motion selection" preference is not.
+          If running an Australs-stype tournament you probably want both enabled. Motion
+          selection can be enabled in the "Data Entry" section of your tournament's configuration.
+        </div>
+      </div>
+
+      <div class="list-group-item pb-3 pt-3" v-if="motionVetoesEnabled">
         <div class="row">
           <div class="form-group col-lg-6" v-for="(teamVeto, team, index) in motionVetoes">
             <label>{{ team }}'s Veto</label>
@@ -85,6 +93,8 @@ export default {
   data: function () {
     return {
       selectedMotion: '',
+      motionSelectionEnabled: false,
+      motionVetoesEnabled: false,
       motionVetoes: {},
       motionOptions: {},
       ironStatus: this.hasIron ? 'Yes' : 'No',
@@ -122,25 +132,40 @@ export default {
     let ballotForm = $('#ballot').first()
     // Get ballot selection info
     let motionData = $(ballotForm).find('div[data-type="motion_selection"]')
-    if (motionData.length > 0) {
-      for (let option of $(motionData[0]).find('option')) {
-        if (option.getAttribute('value') != null && option.getAttribute('value')) {
-          let optionID = option.getAttribute('value')
-          this.$set(this.motionOptions, optionID, option.innerText) // Must be reactive
-          if (option.getAttribute('selected') != null) {
-            this.selectedMotion = optionID
+    if (motionData.length > 0) { // If it has found any matching elements
+      if ($(motionData[0]).find('option').length > 0) { // If the element has motion options
+        this.motionSelectionEnabled = true
+        for (let option of $(motionData[0]).find('option')) {
+          if (option.getAttribute('value') != null && option.getAttribute('value')) {
+            let optionID = option.getAttribute('value')
+            this.$set(this.motionOptions, optionID, option.innerText) // Must be reactive
+            if (option.getAttribute('selected') != null) {
+              this.selectedMotion = optionID
+            }
           }
         }
       }
     }
     // Get ballot veto info
     let motionVetoes = $(ballotForm).find('div[data-type="motion_veto"]')
-    for (let teamVeto of $(motionVetoes)) {
-      let teamName = $(teamVeto).find('label')[0].innerText
-      for (let option of $(teamVeto).find('option')) {
-        if (option.getAttribute('selected') != null) {
-          let optionDictionary = { 'value': option.getAttribute('value'), 'element': teamVeto }
-          this.$set(this.motionVetoes, teamName, optionDictionary) // Must be reactive
+    if (motionVetoes.length > 0) {
+      this.motionVetoesEnabled = true
+      if (Object.keys(this.motionOptions).length === 0) {
+        // If motion selection is disabled but vetoes are enabled then grab motions list from vetos
+        for (let option of $(motionVetoes[0]).find('option')) {
+          if (option.getAttribute('value') != null && option.getAttribute('value')) {
+            let optionID = option.getAttribute('value')
+            this.$set(this.motionOptions, optionID, option.innerText) // Must be reactive
+          }
+        }
+      }
+      for (let teamVeto of $(motionVetoes)) {
+        let teamName = $(teamVeto).find('label')[0].innerText
+        for (let option of $(teamVeto).find('option')) {
+          if (option.getAttribute('selected') != null) {
+            let optionDictionary = { 'value': option.getAttribute('value'), 'element': teamVeto }
+            this.$set(this.motionVetoes, teamName, optionDictionary) // Must be reactive
+          }
         }
       }
     }

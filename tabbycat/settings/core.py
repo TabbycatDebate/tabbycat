@@ -112,7 +112,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'channels', # For Websockets / real-time connections (above whitenoise)
-    'raven.contrib.django.raven_compat',  # Client for Sentry error tracking
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_summernote',  # Keep above our apps; as we unregister an admin model
@@ -208,24 +207,11 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
-        'sentry': {
-            'level': 'WARNING',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-        },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        },
-        'django.request': {
-            'handlers': ['sentry'],
-            'level': 'ERROR',
-        },
-        'raven': {
-            'level': 'INFO',
-            'handlers': ['console'],
-            'propagate': False,
         },
         'sentry.errors': {
             'level': 'INFO',
@@ -242,7 +228,7 @@ LOGGING = {
 
 for app in TABBYCAT_APPS:
     LOGGING['loggers'][app] = {
-        'handlers': ['console', 'sentry'],
+        'handlers': ['console'],
         'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
     }
 
@@ -256,18 +242,19 @@ MESSAGE_TAGS = {messages.ERROR: 'danger', }
 # Summernote (WYSWIG)
 # ==============================================================================
 
+SUMMERNOTE_THEME = 'bs4' # Bootstrap 4
+
 SUMMERNOTE_CONFIG = {
     'width': '100%',
     'height': '480',
     'toolbar': [
         ['style', ['bold', 'italic', 'underline', 'fontsize', 'color', 'clear']],
         ['para', ['ul', 'ol']],
-        ['insert', ['link', 'picture', 'video', 'hr']],
+        ['insert', ['link', 'picture']],
         ['misc', ['undo', 'redo', 'codeview']],
-        ['help', ['help']]
     ],
     'disable_upload': True,
-    'iframe': True, # When django-summernote supports Bootstrap4 change this
+    'iframe': True, # Necessary; if just to compartmentalise jQuery dependency
 }
 
 # ==============================================================================

@@ -1,6 +1,10 @@
+import logging
 from os import environ
 
 import dj_database_url
+import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 # ==============================================================================
@@ -113,13 +117,18 @@ if environ.get('DISABLE_SENTRY'):
 else:
     DISABLE_SENTRY = False
 
-RAVEN_CONFIG = {
-    'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
-    'release': TABBYCAT_VERSION,
-}
+    sentry_sdk.init(
+        dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
+        integrations=[
+            DjangoIntegration(),
+            LoggingIntegration(event_level=logging.WARNING),
+        ],
+        send_default_pii=True,
+    )
 
-# Custom implementation makes the user ID the e-mail address, rather than the primary key
-SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
+    # Override dictionary trimming so that all preferences will be included in Sentry reports
+    # https://forum.sentry.io/t/python-sdk-extra-data-capped-at-400-characters/6909
+    sentry_sdk.serializer.MAX_DATABAG_BREADTH = 200
 
 # ==============================================================================
 # Scout
