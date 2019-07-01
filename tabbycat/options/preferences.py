@@ -1380,7 +1380,7 @@ class PointsEmailSubjectLine(StringPreference):
     help_text = _("The subject line for emails sent to speakers with their team points.")
     verbose_name = _("Team points subject line")
     name = 'team_points_email_subject'
-    default = "{{ TEAM }}'s current points after {{ ROUND }}: {{ POINTS }}"
+    default = "{{ TEAM }}'s current wins after {{ ROUND }}: {{ POINTS }}"
 
 
 @tournament_preferences_registry.register
@@ -1389,7 +1389,7 @@ class PointsEmailMessageBody(LongStringPreference):
     verbose_name = _("Team points message")
     name = 'team_points_email_message'
     default = ("<p>Hi {{ USER }},</p>"
-        "After {{ ROUND }}, your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> points in the {{ TOURN }}.</p>"
+        "After {{ ROUND }}, your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> wins in the {{ TOURN }}.</p>"
         "<p>Current Standings: <a href='{{ URL }}'>{{ URL }}</a></p>")
 
 

@@ -135,8 +135,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
-    # Email Sending
-    team_points_email_subject                  = 'Your current number of points after {{ ROUND }} for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}'
+    # Email Sending - replace "wins" by "points"
+    team_points_email_subject                  = "{{ TEAM }}'s current points after {{ ROUND }}: {{ POINTS }}"
     team_points_email_message                  = ("<p>Hi {{ USER }},</p>",
         "<p>Your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> points in the {{ TOURN }}.",
         "<p>Current Standings: {{ URL }}</p>")
