@@ -248,11 +248,11 @@ class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixi
         round = self.round
         self.log_action()
         if round.draw_status == Round.STATUS_RELEASED:
-            info = _("Draw is already released, unrelease draw to redo auto-allocations.")
+            info = "Draw is already released, unrelease draw to redo auto-allocations."
             logger.warning(info)
             raise BadJsonRequestError(info)
         if round.draw_status != Round.STATUS_CONFIRMED:
-            info = _("Draw is not confirmed, confirm draw to run auto-allocations.")
+            info = "Draw is not confirmed, confirm draw to run auto-allocations."
             logger.warning(info)
             raise BadJsonRequestError(info)
 
