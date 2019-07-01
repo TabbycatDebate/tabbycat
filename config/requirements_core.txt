@@ -28,7 +28,7 @@ channels==2.2.0                         # Channels; also includes the Daphne ser
 channels_redis==2.4.0                   # Channels Layer
 
 # Misc
-ipython==7.5
+ipython==7.6.0
 redis==3.2.1
 qrcode==6.1                             # QR codes for printed private URL sheets
 html2text==2018.1.9                     # Compatibility with plain-text email clients
