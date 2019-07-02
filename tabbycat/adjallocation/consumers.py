@@ -62,6 +62,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return
 
+        extra_msgs = "" # Account for HungarianPPA not returning messages
         if event['extra']['settings']['usePreformedPanels']:
             if not round.preformedpanel_set.exists():
                 self.return_error(event['extra']['group_name'],
@@ -72,7 +73,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             debates = round.debate_set.all()
             panels = round.preformedpanel_set.all()
-            allocator, extra_msgs = HungarianPreformedPanelAllocator(debates, panels, round)
+            allocator = HungarianPreformedPanelAllocator(debates, panels, round)
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
 
