@@ -51,7 +51,7 @@
     "cp-jquery": "cpx node_modules/jquery/dist/jquery.js tabbycat/static/js/vendor",
     "cp-validate": "cpx node_modules/jquery-validation/dist/jquery.validate.js tabbycat/static/js/vendor",
     "cp-barcode": "cpx node_modules/jsbarcode/dist/JsBarcode.all.min.js tabbycat/static/js/vendor",
-    "cp-fonts": "cpx \"node_modules/inter-ui/Inter UI (web)/*\" tabbycat/static/fonts",
+    "cp-fonts": "cpx \"node_modules/inter-ui/Inter (web)/*\" tabbycat/static/fonts",
     "cp-i18n": "cpx \"tabbycat/locale/jsi18n/**/*.js\" tabbycat/static/jsi18n",
     "serve-django": "dj r 0.0.0.0:8000",
     "serve-sass": "npm run build-sass -- --watch --recursive --output-style expanded & npm run build-sass-print -- --watch --recursive --output-style expanded --sourcemap",
