@@ -4,7 +4,7 @@ from math import exp
 
 from munkres import Munkres
 
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 
 from ..allocation import AdjudicatorAllocation
 from .base import AdjudicatorAllocationError, BaseAdjudicatorAllocator, register
@@ -48,7 +48,11 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
         ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
         if ntoolarge > 0:
-            warning_msg = _("%(count)s normalised scores are larger than 5.0.") % {'counts': ntoolarge}
+            warning_msg = ngettext(
+                "%(count)s normalised score is larger than 5.0.",
+                "%(count)s normalised scores are larger than 5.0.",
+                ntoolarge
+            ) % {'count': ntoolarge}
             self.extra_messages += " " + warning_msg
             logger.warning(warning_msg)
         ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
