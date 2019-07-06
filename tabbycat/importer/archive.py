@@ -56,8 +56,15 @@ class Exporter:
     def add_rounds(self):
         results_prefetch = Prefetch('ballotsubmission_set', queryset=BallotSubmission.objects.filter(confirmed=True).prefetch_related(
             'speakerscore_set', 'speakerscorebyadj_set', 'teamscore_set'))
+        veto_prefetch = Prefetch('debateteammotionpreference_set', queryset=DebateTeamMotionPreference.objects.filter(
+            preference=3, ballot_submission__confirmed=True
+        ))
+        dt_prefetch = Prefetch('debateteam_set', queryset=DebateTeam.objects.all().select_related(
+            'team', 'team__institution'
+        ).prefetch_related(veto_prefetch))
         debate_prefetch = Prefetch('debate_set', queryset=Debate.objects.all().prefetch_related(
-            'debateteam_set', 'debateteam_set__team', 'debateteam_set__team__institution', 'debateadjudicator_set', results_prefetch))
+            'debateadjudicator_set', dt_prefetch, results_prefetch
+        ))
 
         for round in self.t.round_set.all().prefetch_related(debate_prefetch, 'motion_set').order_by('seq'):
             populate_confirmed_ballots(round.debate_set.all(), motions=True, results=True)
@@ -110,6 +117,10 @@ class Exporter:
                 side_tag = SubElement(debate_tag, 'side', {
                     'team': TEAM_PREFIX + str(debate.get_team(side).id)
                 })
+
+                dt = debate.get_dt(side)
+                if dt.debateteammotionpreference_set.exists():
+                    side_tag.set('motion-veto', MOTION_PREFIX + str(dt.debateteammotionpreference_set.first().motion_id))
 
                 if isinstance(result, VotingDebateResult):
                     for (adj, scoresheet) in result.scoresheets.items():
@@ -449,6 +460,10 @@ class Importer:
         AdjudicatorFeedbackQuestion.objects.bulk_create(self.questions.values())
 
     def _add_foreign_key(self, tupl, foreign):
+        """Helper method to add a foreign key (1) to an object (0).
+
+        Needed as the array of tuples is populated before the insertion of the foreign
+        objects, and so do not have IDs until then."""
         elements = []
         for element, key in tupl:
             elements.append(element)
@@ -642,6 +657,7 @@ class Importer:
         teamscores = []
         speakerscores = []
         speakerscores_adj = []
+        motion_vetos_bs = []
 
         for round in self.root.findall('round'):
             consensus = self.preliminary_consensus if round.get('elimination') == 'False' else self.elimination_consensus
@@ -669,6 +685,12 @@ class Importer:
 
                 for i, side in enumerate(debate.findall('side')):
                     dt = self.debateteams.get((debate.get('id'), side.get('team')))
+
+                    if side.get('motion-veto') is not None:
+                        motion_veto = DebateTeamMotionPreference(
+                            debate_team=dt, motion=self.motions.get(side.get('motion-veto')), preference=3
+                        )
+                        motion_vetos_bs.append((motion_veto, bs_obj))
 
                     team_ballot = side.find("ballot[@ignored='False']")
                     points = 4 - int(team_ballot.get('rank')) if self.is_bp else 2 - int(team_ballot.get('rank'))
@@ -724,6 +746,7 @@ class Importer:
 
         BallotSubmission.objects.bulk_create(ballotsubmissions)
 
+        DebateTeamMotionPreference.objects.bulk_create(self._add_foreign_key(motion_vetos_bs, 'ballot_submission'))
         TeamScore.objects.bulk_create(self._add_foreign_key(teamscores, 'ballot_submission'))
         SpeakerScore.objects.bulk_create(self._add_foreign_key(speakerscores, 'ballot_submission'))
         SpeakerScoreByAdj.objects.bulk_create(self._add_foreign_key(speakerscores_adj, 'ballot_submission'))
