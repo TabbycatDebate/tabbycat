@@ -27,32 +27,32 @@
             {% elif feedback.score > score_thresholds.high_score %}badge-success
             {% else %}badge-primary{% endif %}" data-toggle="tooltip"
             title="{% trans "The score given in this piece of feedback." %}">
-        {% blocktrans trimmed with score=feedback.score %}
-          {{ score }}
+        {% blocktrans trimmed with score=feedback.score rname=feedback.round.abbreviation %}
+          {{ rname }} {{ score }}
         {% endblocktrans %}
       </span>
-      <span class="badge mr-2 badge-light float-right" data-toggle="tooltip">
-        {% blocktrans trimmed with test=feedback.adjudicator.test_score %}
-          Test {{ test|floatformat }}
-        {% endblocktrans %}
-      </span>
-      {% blocktrans trimmed with adj=feedback.adjudicator.name as=feedback.debate_adjudicator.get_type_display %}
-        On {{ adj }} <span class="text-secondary small">as {{ as }}</span>
+      {% blocktrans with adj=feedback.adjudicator.name %}
+        On {{ adj }}
       {% endblocktrans %}
     </div>
     <div class="list-group-item h5">
-      <span class="badge badge-info float-right">
-        {% blocktrans trimmed with rname=feedback.round.abbreviation %}
-          In {{ rname }}
+      {% blocktrans trimmed with as=feedback.debate_adjudicator.get_type_display %}
+        <span class="text-secondary small">Received as {{ as }}</span>
+      {% endblocktrans %}
+      <span class="badge float-right badge-secondary" data-toggle="tooltip">
+        {% blocktrans trimmed with test=feedback.adjudicator.test_score|floatformat:"1" %}
+          Test {{ test }}
         {% endblocktrans %}
       </span>
+    </div>
+    <div class="list-group-item h5">
       {% if feedback.source_adjudicator %}
         {% blocktrans trimmed with source=feedback.source_adjudicator.adjudicator.name relationship=feedback.source_adjudicator.get_type_display %}
-          From {{ source }} <span class="text-secondary small">their {{ relationship }}</span>
+          From {{ source }} <span class="text-secondary small">(their {{ relationship }})</span>
         {% endblocktrans %}
       {% elif feedback.source_team %}
         {% blocktrans trimmed with source=feedback.source_team.team.short_name relationship=feedback.source_team.get_result_display side=feedback.source_team.get_side_abbr %}
-          From {{ source }} <span class="text-secondary small">who {{ relationship }} from {{ side }}</span>
+          From {{ source }} <span class="text-secondary small">({{ relationship }} from {{ side }})</span>
         {% endblocktrans %}
       {% else %}
         {% trans "From unknown" %}
@@ -83,7 +83,7 @@
     <div class="list-group-item text-secondary">
       <span class="pt-3 small">
         {% blocktrans trimmed with time=feedback.timestamp|naturaltime %}
-          Submitted {{ time }}
+          {{ time }}
         {% endblocktrans %}
       </span>
       <span class="float-right" data-toggle="tooltip"
