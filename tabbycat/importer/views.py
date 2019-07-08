@@ -14,6 +14,7 @@ from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
 from formtools.wizard.views import SessionWizardView
+from defusedxml.ElementTree import fromstring
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -245,7 +246,7 @@ class TournamentImportArchiveView(AdministratorMixin, FormView):
     view_role = ""
 
     def form_valid(self, form):
-        self.importer = Importer(ElementTree.fromstring(form.cleaned_data['xml']))
+        self.importer = Importer(fromstring(form.cleaned_data['xml']))
         self.importer.import_tournament()
 
         messages.success(self.request, _("Tournament archive has been imported."))
