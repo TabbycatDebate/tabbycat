@@ -1,22 +1,20 @@
-# Tabbycat translations, printing module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
-"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"PO-Revision-Date: 2019-07-11 23:50\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Arabic\n"
+"Language: ar_SA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ar\n"
+"X-Crowdin-File: /develop/tabbycat/printing/locale/en/LC_MESSAGES/django.po\n"
 
 #: printing/templates/division_sheets_list.html:4
 #: printing/templates/division_sheets_list.html:5
@@ -41,9 +39,7 @@ msgid "Printable Feedback Forms for %(round_name)s"
 msgstr ""
 
 #: printing/templates/feedback_list.html:14
-msgid ""
-"No feedback questions have been added for either teams or adjudicators to "
-"answer."
+msgid "No feedback questions have been added for either teams or adjudicators to answer."
 msgstr "لم يتم إضافة أي سؤال للتغذية الراجعة "
 
 #: printing/templates/feedback_list.html:16
@@ -56,17 +52,11 @@ msgstr "لم يتم إضافة أي سؤال للتغذية الراجعة من 
 
 #: printing/templates/feedback_list.html:20
 #, python-format
-msgid ""
-"%(first_sentence)s Check the <a "
-"href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-"
-"feedback.html\" target=\"_blank\">documentation</a> for information on how "
-"to add these (otherwise these forms will be quite bare)."
+msgid "%(first_sentence)s Check the <a href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</a> for information on how to add these (otherwise these forms will be quite bare)."
 msgstr ""
 
 #: printing/templates/feedback_list.html:41
-msgid ""
-"There are no feedback sheets available — perhaps adjudicators have not been "
-"allocated?"
+msgid "There are no feedback sheets available — perhaps adjudicators have not been allocated?"
 msgstr "لا توجد أوراق ملاحظات متاحة — ربما لم يتم تخصيص الحكام؟"
 
 #: printing/templates/master_sheets_view.html:6
@@ -131,11 +121,7 @@ msgid "Additional Comments from the Head Ajudicator"
 msgstr ""
 
 #: printing/templates/printables_list.html:9
-msgid ""
-"Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
-"<strong>page orientation</strong>, to turn off "
-"<strong>headers/footers</strong> and turn on <strong>background "
-"graphics</strong>. Works best in Chrome."
+msgid "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
 msgstr ""
 
 #: printing/templates/randomised_url_sheets.html:4
@@ -144,8 +130,7 @@ msgid "Printable %(sheet)s URLs"
 msgstr ""
 
 #: printing/templates/randomised_url_sheets.html:13
-msgid ""
-"\n"
+msgid "\n"
 "    This page is designed to be printed as double sided A4 sheets, with the\n"
 "    outside facing side showing the participant name and the inside facing side\n"
 "    showing the URL. Use CTRL-P to print; for best results use Chrome.\n"
@@ -159,8 +144,7 @@ msgid "Private URL for %(name)s (%(group)s)"
 msgstr ""
 
 #: printing/templates/randomised_url_sheets.html:38
-msgid ""
-"\n"
+msgid "\n"
 "      Please bookmark the following URL, you will use it to submit forms\n"
 "      throughout the tournament:\n"
 "      "
@@ -210,8 +194,7 @@ msgid "Printable Scoresheets for %(round_name)s"
 msgstr "ورقة النتائج جاهزة للطباعة  %(round_name)s"
 
 #: printing/templates/scoresheet_list.html:23
-msgid ""
-"There are no scoresheets available — perhaps the round has not been drawn?"
+msgid "There are no scoresheets available — perhaps the round has not been drawn?"
 msgstr "لم تتوفر نموذج درجات لهذه الجولة — "
 
 #: printing/views.py:91
@@ -225,3 +208,4 @@ msgstr "غير منتسبين"
 #: printing/views.py:131 printing/views.py:135
 msgid "Team"
 msgstr "فريق"
+
