@@ -1,22 +1,20 @@
-# Tabbycat translations, tournaments module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: João Gustavo Rocha Lima <joaogustavol@hotmail.com>, 2018\n"
-"Language-Team: Portuguese (https://www.transifex.com/tabbycat-jp/teams/86216/pt/)\n"
+"PO-Revision-Date: 2019-07-11 23:49\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Portuguese\n"
+"Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: pt-PT\n"
+"X-Crowdin-File: /develop/tabbycat/tournaments/locale/en/LC_MESSAGES/django.po\n"
 
 #: tournaments/apps.py:7
 msgid "Tournaments"
@@ -64,41 +62,24 @@ msgid "Public Configuration"
 msgstr ""
 
 #: tournaments/forms.py:88
-msgid ""
-"Show non-sensitive information on the public-facing side of this site, like "
-"draws (once released) and the motions of previous rounds"
+msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
 msgstr ""
 
 #: tournaments/forms.py:94
-msgid ""
-"<strong>Tabulation:</strong> [list tabulation staff here]<br "
-"/><strong>Organisation:</strong> [list organising committee members here]<br"
-" /><strong>Adjudication:</strong> [list chief adjudicators here]"
-msgstr ""
-"<strong>Tabulação</strong>[liste a equipe de tabulação aqui<br "
-"/><strong>Organização:</strong>[liste o comitê de organização aqui]<br "
-"/><strong>Juízes:</strong>[liste os juízes-chefes aqui]"
+msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
+msgstr "<strong>Tabulação</strong>[liste a equipe de tabulação aqui<br /><strong>Organização:</strong>[liste o comitê de organização aqui]<br /><strong>Juízes:</strong>[liste os juízes-chefes aqui]"
 
 #: tournaments/mixins.py:102
 #, python-format
-msgid ""
-"There's a problem with the data for the tournament %(tournament_name)s. "
-"Please contact a tab director and ask them to set its current round."
-msgstr ""
-"Existe um problema com os dados para o torneio %(tournament_name)s. Favor "
-"contactar um diretor de tabulação e pedir para que eles configurem a rodada "
-"atual."
+msgid "There's a problem with the data for the tournament %(tournament_name)s. Please contact a tab director and ask them to set its current round."
+msgstr "Existe um problema com os dados para o torneio %(tournament_name)s. Favor contactar um diretor de tabulação e pedir para que eles configurem a rodada atual."
 
 #: tournaments/mixins.py:114
-msgid ""
-"You've been redirected to this page because of a problem with how teams are "
-"assigned to sides in a debate."
+msgid "You've been redirected to this page because of a problem with how teams are assigned to sides in a debate."
 msgstr ""
 
 #: tournaments/mixins.py:119
-msgid ""
-"There's a problem with how teams are assigned to sides in a debate. The tab "
-"director will need to resolve this issue."
+msgid "There's a problem with how teams are assigned to sides in a debate. The tab director will need to resolve this issue."
 msgstr ""
 
 #: tournaments/mixins.py:142
@@ -107,9 +88,7 @@ msgid "for %(round)s"
 msgstr "para %(round)s"
 
 #: tournaments/models.py:27
-msgid ""
-"You can't use this as a tournament slug, because it's reserved for a "
-"Tabbycat system URL. Please try another one."
+msgid "You can't use this as a tournament slug, because it's reserved for a Tabbycat system URL. Please try another one."
 msgstr ""
 
 #: tournaments/models.py:34 tournaments/models.py:262
@@ -117,12 +96,8 @@ msgid "name"
 msgstr "nome"
 
 #: tournaments/models.py:35
-msgid ""
-"The full name, e.g. \"Australasian Intervarsity Debating Championships "
-"2016\""
-msgstr ""
-"O nome completo, por exemplo, \"Australasian Intervarsity Debating "
-"Championships 2016\""
+msgid "The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""
+msgstr "O nome completo, por exemplo, \"Australasian Intervarsity Debating Championships 2016\""
 
 #: tournaments/models.py:37
 msgid "short name"
@@ -137,9 +112,7 @@ msgid "sequence number"
 msgstr "número sequencial"
 
 #: tournaments/models.py:41
-msgid ""
-"A number that determines the relative order in which tournaments are "
-"displayed on the homepage."
+msgid "A number that determines the relative order in which tournaments are displayed on the homepage."
 msgstr ""
 
 #: tournaments/models.py:43
@@ -155,8 +128,7 @@ msgid "current round"
 msgstr "rodada atual"
 
 #: tournaments/models.py:47
-msgid ""
-"Must be set for the tournament to start! (Set after rounds are inputted)"
+msgid "Must be set for the tournament to start! (Set after rounds are inputted)"
 msgstr ""
 
 #: tournaments/models.py:48
@@ -178,7 +150,7 @@ msgstr "Aleatório"
 
 #: tournaments/models.py:237
 msgid "Manual"
-msgstr "Manual"
+msgstr ""
 
 #: tournaments/models.py:238
 msgid "Round-robin"
@@ -214,12 +186,8 @@ msgid "Released"
 msgstr "Publicado"
 
 #: tournaments/models.py:261
-msgid ""
-"A number that determines the order of the round, should count consecutively "
-"from 1 for the first round"
-msgstr ""
-"Um número que determina a sequência da rodada, o qual deve contar de forma "
-"consecutiva a partir de 1 para a primeira rodada"
+msgid "A number that determines the order of the round, should count consecutively from 1 for the first round"
+msgstr "Um número que determina a sequência da rodada, o qual deve contar de forma consecutiva a partir de 1 para a primeira rodada"
 
 #: tournaments/models.py:262
 msgid "e.g. \"Round 1\""
@@ -271,37 +239,25 @@ msgstr ""
 
 #: tournaments/models.py:282
 #, no-python-format
-msgid ""
-"The extent to which each adjudicator's overall score depends on feedback vs "
-"their test score. At 0, it is 100% drawn from their test score, at 1 it is "
-"100% drawn from feedback."
+msgid "The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback."
 msgstr ""
 
-#. Translators: A silent round is a round for which results are not disclosed
-#. once the round is over.
+#. Translators: A silent round is a round for which results are not disclosed once the round is over.
 #: tournaments/models.py:285
 msgid "silent"
 msgstr "muda"
 
 #: tournaments/models.py:286
-msgid ""
-"If marked silent, information about this round (such as its results) will "
-"not be shown publicly."
-msgstr ""
-"Se selecionado como \"muda\", as informações sobre essa rodada (assim como "
-"os resultados) não serão mostradas publicamente."
+msgid "If marked silent, information about this round (such as its results) will not be shown publicly."
+msgstr "Se selecionado como \"muda\", as informações sobre essa rodada (assim como os resultados) não serão mostradas publicamente."
 
 #: tournaments/models.py:288
 msgid "motions released"
 msgstr "moções publicadas"
 
 #: tournaments/models.py:289
-msgid ""
-"Whether motions will appear on the public website, assuming that feature is "
-"turned on"
-msgstr ""
-"Se as moções aparecerão no website público, desde que essa função esteja "
-"ligada"
+msgid "Whether motions will appear on the public website, assuming that feature is turned on"
+msgstr "Se as moções aparecerão no website público, desde que essa função esteja ligada"
 
 #: tournaments/models.py:290
 msgid "starts at"
@@ -316,15 +272,11 @@ msgid "rounds"
 msgstr "rodadas"
 
 #: tournaments/models.py:307
-msgid ""
-"A round in the elimination stage must have its draw type set to "
-"\"Elimination\"."
+msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
 msgstr ""
 
 #: tournaments/models.py:310
-msgid ""
-"A round in the preliminary stage cannot have its draw type set to "
-"\"Elimination\"."
+msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
 msgstr ""
 
 #: tournaments/models.py:315
@@ -333,21 +285,12 @@ msgstr ""
 
 #: tournaments/templates/admin/tournaments/tournament/change_form.html:11
 #, python-format
-msgid ""
-"Looking for the welcome message? That's been moved to the tournament "
-"configuration, under <a href=\"%(features_url)s\">Public Features</a>."
-msgstr ""
-"Procurando por uma mensagem de boas-vindas? Ela foi movida para as "
-"configurações do torneio, em <a href=\"%(features_url)s\">Funções "
-"Públicas</a>."
+msgid "Looking for the welcome message? That's been moved to the tournament configuration, under <a href=\"%(features_url)s\">Public Features</a>."
+msgstr "Procurando por uma mensagem de boas-vindas? Ela foi movida para as configurações do torneio, em <a href=\"%(features_url)s\">Funções Públicas</a>."
 
 #: tournaments/templates/admin/tournaments/tournament/change_form.html:15
-msgid ""
-"Looking for the welcome message? That's moved to the tournament "
-"configuration, under Public Features."
-msgstr ""
-"Procurando por uma mensagem de boas-vindas? Ela foi movida para as "
-"configurações do torneio, em Funções Públicas."
+msgid "Looking for the welcome message? That's moved to the tournament configuration, under Public Features."
+msgstr "Procurando por uma mensagem de boas-vindas? Ela foi movida para as configurações do torneio, em Funções Públicas."
 
 #: tournaments/templates/assistant_tournament_index.html:4
 msgid "Dashboard"
@@ -371,33 +314,16 @@ msgid "Welcome to Tabbycat!"
 msgstr "Bem-vindo ao Tabbycat!"
 
 #: tournaments/templates/blank_site_start.html:23
-msgid ""
-"To get started, you'll need to create the first user account. This account "
-"is a \"superuser\" account: it will be able to edit anything on the site. "
-"Therefore, you should use a strong password."
-msgstr ""
-"Para começar, você precisará criar a primeira conta. Essa conta é uma conta "
-"de \"super usuário\": ela será capaz de editar qualquer coisa no site. Logo,"
-" você deverá ter uma senha forte."
+msgid "To get started, you'll need to create the first user account. This account is a \"superuser\" account: it will be able to edit anything on the site. Therefore, you should use a strong password."
+msgstr "Para começar, você precisará criar a primeira conta. Essa conta é uma conta de \"super usuário\": ela será capaz de editar qualquer coisa no site. Logo, você deverá ter uma senha forte."
 
 #: tournaments/templates/blank_site_start.html:28
-msgid ""
-"You can only create this account once, but if you like, you can change the "
-"username and password after it's created, or add new superusers afterwards."
-msgstr ""
-"Você só pode criar essa conta uma vez, mas, caso queira, poderá modificar o "
-"login e a senha depois de criado, ou adicionar novos super usuários "
-"posteriormente."
+msgid "You can only create this account once, but if you like, you can change the username and password after it's created, or add new superusers afterwards."
+msgstr "Você só pode criar essa conta uma vez, mas, caso queira, poderá modificar o login e a senha depois de criado, ou adicionar novos super usuários posteriormente."
 
 #: tournaments/templates/blank_site_start.html:32
-msgid ""
-"The e-mail address is used for password resets. You don't have to provide "
-"one, but if you don't, you won't be able to reset your password if you "
-"forget it."
-msgstr ""
-"O endereço eletrônico é utilizado para reconfigurações da senha. Você não "
-"precisa informar um, mas caso não o faça, não poderá reconfigurar sua senha "
-"caso a esqueça."
+msgid "The e-mail address is used for password resets. You don't have to provide one, but if you don't, you won't be able to reset your password if you forget it."
+msgstr "O endereço eletrônico é utilizado para reconfigurações da senha. Você não precisa informar um, mas caso não o faça, não poderá reconfigurar sua senha caso a esqueça."
 
 #: tournaments/templates/blank_site_start.html:40
 msgid "Create Account"
@@ -414,14 +340,8 @@ msgid "Tabbycat"
 msgstr ""
 
 #: tournaments/templates/configure_tournament.html:20
-msgid ""
-"To finish creating your tournament select a basic configuration options. "
-"Note that these can always be changed later (and with more precise control) "
-"if needed."
-msgstr ""
-"Para finalizar a criação do seu torneio, selecione uma configuração básica. "
-"Note que isso sempre poderá ser alterado (e com maior controle preciso) caso"
-" necessário."
+msgid "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed."
+msgstr "Para finalizar a criação do seu torneio, selecione uma configuração básica. Note que isso sempre poderá ser alterado (e com maior controle preciso) caso necessário."
 
 #: tournaments/templates/configure_tournament.html:25
 msgid "Configure Tournament"
@@ -433,37 +353,16 @@ msgstr "Criar Novo Torneio"
 
 #: tournaments/templates/create_tournament.html:11
 #, python-format
-msgid ""
-"Tabbycat is free to use for non-profit and non-fundraising tournaments "
-"(although donations are encouraged). If your tournament is run for profit or"
-" for fundraising, please note that there is a <a "
-"href=\"%(donations_url)s\">required payment</a>. For more details, see the "
-"<a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\"> "
-"Tabbycat licence agreement</a>."
-msgstr ""
-"Tabbycat é livre para utilizar em torneios sem fins lucrativos e/ou sem "
-"captação de recursos (apesar de que doações são encorajadas). Se o seu "
-"torneio tem como objetivo lucro ou captação de recursos, favor notar que há "
-"um <a href=\"%(donations_url)s\">pagamento necessário</a>. Para mais "
-"detalhes, acessar o <a "
-"href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\">Contrato"
-" de Licença do Tabbycat</a>."
+msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
+msgstr "Tabbycat é livre para utilizar em torneios sem fins lucrativos e/ou sem captação de recursos (apesar de que doações são encorajadas). Se o seu torneio tem como objetivo lucro ou captação de recursos, favor notar que há um <a href=\"%(donations_url)s\">pagamento necessário</a>. Para mais detalhes, acessar o <a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\">Contrato de Licença do Tabbycat</a>."
 
 #: tournaments/templates/create_tournament.html:23
 msgid "Just trying out Tabbycat?"
 msgstr "Apenas experimentando o Tabbycat?"
 
 #: tournaments/templates/create_tournament.html:24
-msgid ""
-"If you're learning or playing around with Tabbycat, it's easiest to create a"
-" demo tournament that is prepopulated with a fake (but typical) set of "
-"teams, adjudicators, venues, and the like. You can then delete this demo "
-"tournament later on, or deploy a new instance for your real tournament."
-msgstr ""
-"Se você estivar aprendendo ou brincando c om o Tabbycat, é mais fácil criar "
-"um torneio demo que já vem preenchido com falsos (mas normais) conjuntos de "
-"duplas, juízes, locais, etc. Você poderá deletar esse torneio demo "
-"posteriormente ou utilizar uma nova instância para o seu torneio real."
+msgid "If you're learning or playing around with Tabbycat, it's easiest to create a demo tournament that is prepopulated with a fake (but typical) set of teams, adjudicators, venues, and the like. You can then delete this demo tournament later on, or deploy a new instance for your real tournament."
+msgstr "Se você estivar aprendendo ou brincando c om o Tabbycat, é mais fácil criar um torneio demo que já vem preenchido com falsos (mas normais) conjuntos de duplas, juízes, locais, etc. Você poderá deletar esse torneio demo posteriormente ou utilizar uma nova instância para o seu torneio real."
 
 #: tournaments/templates/create_tournament.html:38
 #, python-format
@@ -471,9 +370,7 @@ msgid "Load %(name)s"
 msgstr "Carregar %(name)s"
 
 #: tournaments/templates/create_tournament.html:45
-msgid ""
-"You already have a tournament set up using this data set. Reloading the data"
-" will delete <strong>all data</strong> from that tourament."
+msgid "You already have a tournament set up using this data set. Reloading the data will delete <strong>all data</strong> from that tourament."
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:65
@@ -491,106 +388,51 @@ msgid "Donate to Tabbycat"
 msgstr "Doar para o Tabbycat"
 
 #: tournaments/templates/donations.html:11
-msgid ""
-"Tabbycat is a volunteer effort. Since 2012, its maintainers have spent "
-"thousands of hours working on it."
-msgstr ""
-"Tabbycat é um esforço voluntário. Desde 2012, seus responsáveis têm gasto "
-"milhares de horas trabalho nele."
+msgid "Tabbycat is a volunteer effort. Since 2012, its maintainers have spent thousands of hours working on it."
+msgstr "Tabbycat é um esforço voluntário. Desde 2012, seus responsáveis têm gasto milhares de horas trabalho nele."
 
 #: tournaments/templates/donations.html:17
-msgid ""
-"Donating to Tabbycat helps the maintainers to meet recurring costs and "
-"justify our ongoing contributions in responding to support enquiries, "
-"keeping the software up to date, fixing bugs, and developing new features."
-msgstr ""
-"Doar para o Tabbycat ajuda seus responsáveis a cobrir os custos fixos e "
-"justificar nossas contínuas contribuições em responder pedidos de suporte, "
-"mantendo atualizado o software, corrigindo falhas e desenvolvendo novas "
-"funções."
+msgid "Donating to Tabbycat helps the maintainers to meet recurring costs and justify our ongoing contributions in responding to support enquiries, keeping the software up to date, fixing bugs, and developing new features."
+msgstr "Doar para o Tabbycat ajuda seus responsáveis a cobrir os custos fixos e justificar nossas contínuas contribuições em responder pedidos de suporte, mantendo atualizado o software, corrigindo falhas e desenvolvendo novas funções."
 
 #: tournaments/templates/donations.html:24
-msgid ""
-"We suggest that tournaments budget for a donation of A$1 (Australian dollar)"
-" per team. For tournaments run for fundraising or for profit, whether partly"
-" or solely, this payment is <strong>required</strong> and your licence to "
-"use Tabbycat is conditional upon it. General donations from individuals or "
-"organisations are of course also much appreciated."
-msgstr ""
-"Sugerimos uma doação de A$1 (dólar australiano) por dupla. Para torneio com "
-"captação de recursos ou com fins lucrativos, independentemente se for o "
-"objetivo único ou parcial, esse pagamento é <strong>necessário</strong>e sua"
-" licença de uso do Tabbycat está condicionada a ele. Doações gerais de "
-"indivíduos ou organizações são muito apreciadas."
+msgid "We suggest that tournaments budget for a donation of A$1 (Australian dollar) per team. For tournaments run for fundraising or for profit, whether partly or solely, this payment is <strong>required</strong> and your licence to use Tabbycat is conditional upon it. General donations from individuals or organisations are of course also much appreciated."
+msgstr "Sugerimos uma doação de A$1 (dólar australiano) por dupla. Para torneio com captação de recursos ou com fins lucrativos, independentemente se for o objetivo único ou parcial, esse pagamento é <strong>necessário</strong>e sua licença de uso do Tabbycat está condicionada a ele. Doações gerais de indivíduos ou organizações são muito apreciadas."
 
 #: tournaments/templates/donations.html:34
 #, python-format
-msgid ""
-"Our suggested donation from %(tournament)s, based on its size, is "
-"<strong>A$%(nteams)s</strong>. The easiest way to donate is <a "
-"href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, but "
-"please don’t hesitate to <a "
-"href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">email"
-" us</a> if other methods would work better for you. Also, feel free to get "
-"in touch if you require an invoice or receipt for the payment."
-msgstr ""
-"Nossa sugestão de doação do %(tournament)s, baseado em seu tamanho, é de "
-"<strong>A$%(nteams)s</strong>. A forma mais fácil de doar é <a "
-"href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, mas "
-"não hesite em nos <a "
-"href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">enviar"
-" um e-mail</a>caso outras formas de pagamento sejam melhores para você. Além"
-" disso, sinta-se livre para contactar caso precise de uma fatura ou recibo "
-"de pagamento."
+msgid "Our suggested donation from %(tournament)s, based on its size, is <strong>A$%(nteams)s</strong>. The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, but please don’t hesitate to <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">email us</a> if other methods would work better for you. Also, feel free to get in touch if you require an invoice or receipt for the payment."
+msgstr "Nossa sugestão de doação do %(tournament)s, baseado em seu tamanho, é de <strong>A$%(nteams)s</strong>. A forma mais fácil de doar é <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, mas não hesite em nos <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">enviar um e-mail</a>caso outras formas de pagamento sejam melhores para você. Além disso, sinta-se livre para contactar caso precise de uma fatura ou recibo de pagamento."
 
 #: tournaments/templates/donations.html:46
-msgid ""
-"The easiest way to donate is <a "
-"href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Please <a "
-"href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contact"
-" us</a> if you require other options."
-msgstr ""
-"A forma mais fácil de doar é <a "
-"href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Favor <a "
-"href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html"
-"\">contacte-nos</a> se você precisar de outras opções."
+msgid "The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Please <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contact us</a> if you require other options."
+msgstr "A forma mais fácil de doar é <a href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Favor <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contacte-nos</a> se você precisar de outras opções."
 
 #: tournaments/templates/fix_debate_teams.html:6
 msgid "Debate Team Missing"
 msgstr ""
 
 #: tournaments/templates/fix_debate_teams.html:16
-msgid ""
-"Tabbycat always requires that, in every debate, one and only one team is "
-"assigned to each side. When that is not the case, this error occurs. "
-"Usually, this is the result of debates having been manually edited."
+msgid "Tabbycat always requires that, in every debate, one and only one team is assigned to each side. When that is not the case, this error occurs. Usually, this is the result of debates having been manually edited."
 msgstr ""
 
 #: tournaments/templates/fix_debate_teams.html:24
-msgid ""
-"A list of offending debates is presented below. To fix them, you'll need to "
-"do the following:"
+msgid "A list of offending debates is presented below. To fix them, you'll need to do the following:"
 msgstr ""
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:33
 msgid "Click the <strong>Fix this debate</strong> button for that debate."
-msgstr ""
-"Aperte o botão <strong>Consertar este debate</strong> para aquele debate."
+msgstr "Aperte o botão <strong>Consertar este debate</strong> para aquele debate."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:39
-msgid ""
-"Ensure that every <strong>side</strong> that should be present in the debate"
-" is present and has a <strong>team</strong> assigned. If a team is missing, "
-"find an empty row and use the magnifying glass to select a team. Then set "
-"the new team's <strong>side</strong> accordingly."
+msgid "Ensure that every <strong>side</strong> that should be present in the debate is present and has a <strong>team</strong> assigned. If a team is missing, find an empty row and use the magnifying glass to select a team. Then set the new team's <strong>side</strong> accordingly."
 msgstr ""
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:48
-msgid ""
-"Ensure that no <strong>side</strong> appears more than once in the debate."
+msgid "Ensure that no <strong>side</strong> appears more than once in the debate."
 msgstr ""
 
 #. Translators: This is in a list of instructions.
@@ -599,21 +441,13 @@ msgid "<strong>Save</strong> the changes."
 msgstr "<strong>Salve</strong> as modificações."
 
 #: tournaments/templates/fix_debate_teams.html:62
-msgid ""
-"Once you've fixed all the debates, you should then be able to return to "
-"whatever page you were originally on without the error reoccurring."
-msgstr ""
-"Uma vez que você consertou todos os debates, você poderá retornar a qualquer"
-" página que você estava originalmente sem que este erro ocorra novamente."
+msgid "Once you've fixed all the debates, you should then be able to return to whatever page you were originally on without the error reoccurring."
+msgstr "Uma vez que você consertou todos os debates, você poderá retornar a qualquer página que você estava originalmente sem que este erro ocorra novamente."
 
 #: tournaments/templates/fix_debate_teams.html:68
 #, python-format
-msgid ""
-"You can also see all the debates in the <a href=\"%(edit_debates_url)s\" "
-"target=\"_blank\">Debates section of the Edit Database Area</a>."
-msgstr ""
-"Você também pode ver todos os debates na <a href=\"%(edit_debates_url)s\" "
-"target=\"_blank\">seção de Debates da Área de Edição da Base de Dados</a>."
+msgid "You can also see all the debates in the <a href=\"%(edit_debates_url)s\" target=\"_blank\">Debates section of the Edit Database Area</a>."
+msgstr "Você também pode ver todos os debates na <a href=\"%(edit_debates_url)s\" target=\"_blank\">seção de Debates da Área de Edição da Base de Dados</a>."
 
 #: tournaments/templates/fix_debate_teams.html:82
 msgid "Debate ID"
@@ -646,12 +480,8 @@ msgid "It looks like all debates are in good shape!"
 msgstr "Parece que todos os debate estão bem configurados!"
 
 #: tournaments/templates/fix_debate_teams.html:128
-msgid ""
-"If you keep getting redirected to this page and you're not sure why, please "
-"contact the developers of Tabbycat."
-msgstr ""
-"Se você continuar sendo redirecionado a esta pagina e você não sabe o "
-"motivo, favor contactar os desenvolvedores do Tabbycat."
+msgid "If you keep getting redirected to this page and you're not sure why, please contact the developers of Tabbycat."
+msgstr "Se você continuar sendo redirecionado a esta pagina e você não sabe o motivo, favor contactar os desenvolvedores do Tabbycat."
 
 #: tournaments/templates/public_tournament_index.html:5
 #: tournaments/templates/public_tournament_index.html:9
@@ -660,8 +490,7 @@ msgid "Welcome to %(tournament_name)s"
 msgstr "Bem-vindo ao %(tournament_name)s"
 
 #: tournaments/templates/public_tournament_index.html:18
-msgid ""
-"There is currently no public information available for this tournament."
+msgid "There is currently no public information available for this tournament."
 msgstr "Não há informações públicas disponíveis para este torneio."
 
 #: tournaments/templates/public_tournament_index.html:36
@@ -809,40 +638,24 @@ msgstr ""
 
 #: tournaments/templates/round_advance_check.html:55
 #, python-format
-msgid ""
-"All ballots from %(round_name)s are confirmed. You should be good to go!"
+msgid "All ballots from %(round_name)s are confirmed. You should be good to go!"
 msgstr ""
 
 #: tournaments/templates/round_advance_check.html:60
 #, python-format
-msgid ""
-"There is still %(num_unconfirmed)s ballot that is not confirmed. You should "
-"<strong>not</strong> proceed to the next round until all ballots are "
-"confirmed."
-msgid_plural ""
-"There are still %(num_unconfirmed)s ballots that are not confirmed. You "
-"should <strong>not</strong> proceed to the next round until all ballots are "
-"confirmed."
+msgid "There is still %(num_unconfirmed)s ballot that is not confirmed. You should <strong>not</strong> proceed to the next round until all ballots are confirmed."
+msgid_plural "There are still %(num_unconfirmed)s ballots that are not confirmed. You should <strong>not</strong> proceed to the next round until all ballots are confirmed."
 msgstr[0] ""
 msgstr[1] ""
 
 #: tournaments/templates/round_advance_check.html:75
 #, python-format
-msgid ""
-"The \"show public results\" setting is on and this round is marked as a "
-"<strong>silent</strong> round, so results will <strong>not</strong> show on "
-"the public page when you advance. You can mark or unmark rounds as silent in"
-" the <a href=\"%(round_changelist_url)s\">Edit Database area</a>."
+msgid "The \"show public results\" setting is on and this round is marked as a <strong>silent</strong> round, so results will <strong>not</strong> show on the public page when you advance. You can mark or unmark rounds as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>."
 msgstr ""
 
 #: tournaments/templates/round_advance_check.html:83
 #, python-format
-msgid ""
-"The \"show public results\" setting is on and this round is "
-"<strong>not</strong> marked as a silent round so the <strong>results "
-"<u>will</u> show on the public page</strong> when you advance. You can mark "
-"or unmark rounds as silent in the <a href=\"%(round_changelist_url)s\">Edit "
-"Database area</a>."
+msgid "The \"show public results\" setting is on and this round is <strong>not</strong> marked as a silent round so the <strong>results <u>will</u> show on the public page</strong> when you advance. You can mark or unmark rounds as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>."
 msgstr ""
 
 #: tournaments/templates/set_current_round.html:5
@@ -857,34 +670,18 @@ msgstr ""
 
 #: tournaments/templates/set_current_round.html:33
 #, python-format
-msgid ""
-"No round is currently set. In order for Tabbycat to work, please set the "
-"<strong>current round</strong> of the tournament "
-"<strong>%(tournament_name)s</strong>."
-msgstr ""
-"Nenhuma rodada está configurada. Para que o Tabbycat funcione, favor "
-"<strong>configurar a rodada</strong> do torneio "
-"<strong>%(tournament_name)s</strong>."
+msgid "No round is currently set. In order for Tabbycat to work, please set the <strong>current round</strong> of the tournament <strong>%(tournament_name)s</strong>."
+msgstr "Nenhuma rodada está configurada. Para que o Tabbycat funcione, favor <strong>configurar a rodada</strong> do torneio <strong>%(tournament_name)s</strong>."
 
 #: tournaments/templates/set_current_round.html:42
 #, python-format
-msgid ""
-"On this page, you can set the <strong>current round</strong> of the "
-"tournament <strong>%(tournament_name)s</strong>."
-msgstr ""
-"Nesta página, você poderá configurar a <strong>rodada atual</strong> do "
-"torneio<strong>%(tournament_name)s</strong>."
+msgid "On this page, you can set the <strong>current round</strong> of the tournament <strong>%(tournament_name)s</strong>."
+msgstr "Nesta página, você poderá configurar a <strong>rodada atual</strong> do torneio<strong>%(tournament_name)s</strong>."
 
 #: tournaments/templates/set_current_round.html:53
 #, python-format
-msgid ""
-"The tournament <strong>%(tournament_name)s</strong> has no rounds. You'll "
-"need to <a href=\"%(round_changelist_url)s\">add rounds and associate them "
-"with this tournament</a> before you can set the current round."
-msgstr ""
-"O torneio <strong>%(tournament_name)s</strong> não tem rodadas. Você "
-"precisar <a href=\"%(round_changelist_url)s\">adicionar rodadas e associá-"
-"las a este torneio</a> antes que você configure a rodada atual."
+msgid "The tournament <strong>%(tournament_name)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
+msgstr "O torneio <strong>%(tournament_name)s</strong> não tem rodadas. Você precisar <a href=\"%(round_changelist_url)s\">adicionar rodadas e associá-las a este torneio</a> antes que você configure a rodada atual."
 
 #: tournaments/templates/site_index.html:4
 msgid "Welcome!"
@@ -906,11 +703,8 @@ msgid "Public area for <strong>%(tn)s</strong>"
 msgstr "Área pública para <strong>%(tn)s</strong>"
 
 #: tournaments/templates/site_index.html:47
-msgid ""
-"It looks like there aren't any tournaments on this site. Would you like to "
-"create one?"
-msgstr ""
-"Parece que não há nenhum torneio neste site. Você gostaria de criar um?"
+msgid "It looks like there aren't any tournaments on this site. Would you like to create one?"
+msgstr "Parece que não há nenhum torneio neste site. Você gostaria de criar um?"
 
 #: tournaments/templates/site_index.html:55
 msgid "There are currently no tournaments set up on this site."
@@ -952,52 +746,22 @@ msgstr "Entrar como Administrador"
 
 #: tournaments/templates/tournament_index.html:8
 #, python-format
-msgid ""
-"We hope you've enjoyed using Tabbycat for your tournament. We would "
-"appreciate if you would make a donation to the project in order to support "
-"its ongoing development and maintenance. For a tournament of this size, we "
-"suggest a donation of <strong>$%(amount)s</strong>. Note that if your "
-"tournament is run for profit, or for fundraising, making this payment is a "
-"mandatory condition of Tabbycat's software license. <a "
-"href=\"%(url)s\">Learn more about donating.</a>"
-msgstr ""
-"Esperamos que você tenha gostado de utilizar o Tabbycat para o seu torneio. "
-"Nós apreciaríamos caso você fizesse uma doação para o projeto a fim de "
-"apoiar os contínuos desenvolvimentos e manutenções. Para um torneio deste "
-"tamanho, nós sugerimos uma doação de <strong>$%(amount)s</strong>. Note que "
-"se seu torneio tem fins lucrativos, ou de captação de recursos, fazer este "
-"pagamento é condição mandatória para a licença de software do Tabbycat. <a "
-"href=\"%(url)s\">Leia mais sobre doações."
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
+msgstr "Esperamos que você tenha gostado de utilizar o Tabbycat para o seu torneio. Nós apreciaríamos caso você fizesse uma doação para o projeto a fim de apoiar os contínuos desenvolvimentos e manutenções. Para um torneio deste tamanho, nós sugerimos uma doação de <strong>$%(amount)s</strong>. Note que se seu torneio tem fins lucrativos, ou de captação de recursos, fazer este pagamento é condição mandatória para a licença de software do Tabbycat. <a href=\"%(url)s\">Leia mais sobre doações."
 
 #: tournaments/templates/tournament_index.html:24
 msgid "Welcome to your new tournament!"
 msgstr "Bem-vindo ao seu novo torneio!"
 
 #: tournaments/templates/tournament_index.html:26
-msgid ""
-"The next step is to import your initial tournament data: the institutions, "
-"teams, adjudicators and venues that are in your tournament. There are a "
-"number of ways to do this. For small-to-medium tournaments, the simple "
-"importer is your best bet."
-msgstr ""
-"O próximo passo é importar os dados iniciais do torneio: as instituições, "
-"times, juízes e locais do seu torneio. Há algumas formas de fazer isso. Para"
-" pequenos a médios torneios, o importador simples é a sua melhor escolha."
+msgid "The next step is to import your initial tournament data: the institutions, teams, adjudicators and venues that are in your tournament. There are a number of ways to do this. For small-to-medium tournaments, the simple importer is your best bet."
+msgstr "O próximo passo é importar os dados iniciais do torneio: as instituições, times, juízes e locais do seu torneio. Há algumas formas de fazer isso. Para pequenos a médios torneios, o importador simples é a sua melhor escolha."
 
-#. Translators: The documentation where the link goes to is in English;
-#. translations should mention this with "(in English)" after the link.
+#. Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link.
 #: tournaments/templates/tournament_index.html:33
 #, python-format
-msgid ""
-"For more information, please consult our <a "
-"href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use"
-"/importing-data.html\" class=\"alert-link\" target=\"_blank\"> documentation"
-" on importing initial data</a>."
-msgstr ""
-"Para mais informações, favor consultar nosso <a "
-"href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use"
-"/importing-data.html\" class=\"alert-link\" target=\"_blank\">documento "
-"sobre importar dados iniciais</a> (in English)."
+msgid "For more information, please consult our <a href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use/importing-data.html\" class=\"alert-link\" target=\"_blank\"> documentation on importing initial data</a>."
+msgstr "Para mais informações, favor consultar nosso <a href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use/importing-data.html\" class=\"alert-link\" target=\"_blank\">documento sobre importar dados iniciais</a> (in English)."
 
 #: tournaments/templates/tournament_index.html:43
 msgid "Use the simple importer to add your initial data."
@@ -1025,7 +789,7 @@ msgstr "Grande Final"
 
 #: tournaments/utils.py:22
 msgid "GF"
-msgstr "GF"
+msgstr ""
 
 #. Translators: abbreviation for "semifinals"
 #: tournaments/utils.py:24
@@ -1034,7 +798,7 @@ msgstr "Semifinais"
 
 #: tournaments/utils.py:24
 msgid "SF"
-msgstr "SF"
+msgstr ""
 
 #. Translators: abbreviation for "quarterfinals"
 #: tournaments/utils.py:26
@@ -1043,7 +807,7 @@ msgstr "Quartas de final"
 
 #: tournaments/utils.py:26
 msgid "QF"
-msgstr "QF"
+msgstr ""
 
 #. Translators: abbreviation for "octofinals"
 #: tournaments/utils.py:28
@@ -1052,7 +816,7 @@ msgstr "Oitavas de final"
 
 #: tournaments/utils.py:28
 msgid "OF"
-msgstr "OF"
+msgstr ""
 
 #. Translators: abbreviation for "double-octofinals"
 #: tournaments/utils.py:30
@@ -1090,11 +854,11 @@ msgstr "time de negação"
 
 #: tournaments/utils.py:41
 msgid "Aff"
-msgstr "Aff"
+msgstr ""
 
 #: tournaments/utils.py:42
 msgid "Neg"
-msgstr "Neg"
+msgstr ""
 
 #: tournaments/utils.py:45
 msgid "government"
@@ -1114,11 +878,11 @@ msgstr "time da oposição"
 
 #: tournaments/utils.py:49
 msgid "Gov"
-msgstr "Gov"
+msgstr ""
 
 #: tournaments/utils.py:50 tournaments/utils.py:58
 msgid "Opp"
-msgstr "Opp"
+msgstr ""
 
 #: tournaments/utils.py:53
 msgid "proposition"
@@ -1130,7 +894,7 @@ msgstr "time propositivo"
 
 #: tournaments/utils.py:57
 msgid "Prop"
-msgstr "Prop"
+msgstr ""
 
 #: tournaments/utils.py:61
 msgid "pro"
@@ -1241,10 +1005,9 @@ msgstr "Rodada %(number)d"
 #: tournaments/utils.py:105
 #, python-format
 msgid "R%(number)d"
-msgstr "R%(number)d"
+msgstr ""
 
-#. Translators: "UBR" stands for "unknown break round" (used as a fallback
-#. when we don't know what it's called)
+#. Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
 #: tournaments/utils.py:120
 msgid "Unknown break round"
 msgstr ""
@@ -1255,10 +1018,7 @@ msgstr ""
 
 #: tournaments/views.py:150
 #, python-format
-msgid ""
-"The current round has been advanced to %(round)s. You've made it to the end "
-"of the preliminary rounds! Congratulations! The next step is to generate the"
-" break."
+msgid "The current round has been advanced to %(round)s. You've made it to the end of the preliminary rounds! Congratulations! The next step is to generate the break."
 msgstr ""
 
 #: tournaments/views.py:155
@@ -1267,11 +1027,8 @@ msgid "The current round has been advanced to %(round)s. Woohoo! Keep it up!"
 msgstr "A rodada atual foi progredida a %(round)s. Woohoo! Continue assim!"
 
 #: tournaments/views.py:160
-msgid ""
-"Whoops! Could not advance round, because there's no round after this round!"
-msgstr ""
-"Whoops! Não foi possível progredir de rodada, pois não há rodadas depois "
-"desta!"
+msgid "Whoops! Could not advance round, because there's no round after this round!"
+msgstr "Whoops! Não foi possível progredir de rodada, pois não há rodadas depois desta!"
 
 #: tournaments/views.py:174
 msgid "Team point emails could not be sent."
@@ -1292,3 +1049,4 @@ msgstr "Conjunto de dados do Australs de 24 times"
 #: tournaments/views.py:229
 msgid "88-team BP dataset"
 msgstr "Conjunto de dados do BP de 88 times"
+

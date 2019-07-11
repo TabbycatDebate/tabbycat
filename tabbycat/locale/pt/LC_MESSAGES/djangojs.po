@@ -1,22 +1,20 @@
-# Tabbycat translations, JavaScript strings
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: Portuguese (https://www.transifex.com/tabbycat-jp/teams/86216/pt/)\n"
+"PO-Revision-Date: 2019-07-12 00:04\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Portuguese\n"
+"Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: pt-PT\n"
+"X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/djangojs.po\n"
 
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "Scan Using Camera"
@@ -441,9 +439,7 @@ msgid "Set All Breaking as Available"
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:36
-msgid ""
-"Set all the availabilities to exactly match what they were in the previous "
-"round."
+msgid "Set all the availabilities to exactly match what they were in the previous round."
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:37
@@ -458,10 +454,8 @@ msgstr ""
 msgid "Match Check-Ins"
 msgstr ""
 
-#: templates/tables/CheckboxTables.vue
-msgid ""
-"Set people as available only if they have a check-in and are currently "
-"unavailable — i.e. it will not overwrite any existing availabilities."
+#: templates/tables/CheckboxTables.vue:
+msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:47
@@ -603,3 +597,4 @@ msgstr ""
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
 msgstr ""
+
