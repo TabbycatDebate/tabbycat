@@ -1,0 +1,5 @@
+files:
+  - source: /tabbycat/**/locale/en/LC_MESSAGES/django.po
+    translation: //tabbycat/**/locale/%two_letters_code%/LC_MESSAGES/%original_file_name%
+  - source: /tabbycat/locale/en/LC_MESSAGES/djangojs.po
+    translation: //tabbycat/locale/%two_letters_code%/LC_MESSAGES/%original_file_name%
