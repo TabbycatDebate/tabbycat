@@ -1,27 +1,23 @@
-# Tabbycat translations, adjallocation module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
-"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
+"PO-Revision-Date: 2019-07-11 23:48\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Japanese\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
 
 #: adjallocation/allocator.py:31
-msgid ""
-"There are no available adjudicators. Ensure there are adjudicators who have "
-"been marked as available for this round before auto-allocating."
+msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
 msgstr "使えるジャッジがいません。このラウンドの自動配置をする前に配配置可能なジャッジがいることを確認してください！"
 
 #: adjallocation/apps.py:7
@@ -29,17 +25,11 @@ msgid "Adjudicator Allocation"
 msgstr "ジャッジ配置"
 
 #: adjallocation/hungarian.py:98
-msgid ""
-"There are no adjudicators eligible to be a chair or panellist. This usually "
-"means that you need to go to the Draw Rules section of the Configuration "
-"area and decrease the \"Minimum adjudicator score to vote\" setting in order"
-" to allow some adjudicators to be allocated."
-msgstr ""
-"チェアやパネルに適したジャッジがいません。ドロールールの設定へ移り、『投票するために必要なジャッジスコアの最低値』を下げて、配置できるジャッジを増やしてください。"
+msgid "There are no adjudicators eligible to be a chair or panellist. This usually means that you need to go to the Draw Rules section of the Configuration area and decrease the \"Minimum adjudicator score to vote\" setting in order to allow some adjudicators to be allocated."
+msgstr "チェアやパネルに適したジャッジがいません。ドロールールの設定へ移り、『投票するために必要なジャッジスコアの最低値』を下げて、配置できるジャッジを増やしてください。"
 
 #: adjallocation/hungarian.py:106
-msgid ""
-"There are no debates for this round. Maybe you haven't created a draw yet?"
+msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr "このラウンドにはディベーターがいません。ひょっとしたら、対戦表をまだ作っていないかもしれません！"
 
 #: adjallocation/models.py:18
@@ -207,3 +197,4 @@ msgstr[0] "%(count)d件のジャッジ・インスティチューション間の
 #: adjallocation/views.py:343
 msgid "No changes were made to adjudicator-institution conflicts."
 msgstr "ジャッジ・インスティチューション間のコンフリクトに変更された点はありません。"
+

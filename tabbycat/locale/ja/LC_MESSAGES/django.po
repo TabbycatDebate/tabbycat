@@ -1,22 +1,20 @@
-# Tabbycat translations, base directory
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
-"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
+"PO-Revision-Date: 2019-07-11 23:48\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Japanese\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/django.po\n"
 
 #: checkins/apps.py:7 templates/nav/admin_nav.html:119
 #: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:94
@@ -112,37 +110,20 @@ msgid "Generate all identifiers"
 msgstr "すべての識別コードを作成する"
 
 #: checkins/templates/checkin_ids.html:49
-msgid ""
-"There are no identifiers available to view. An admin will need to generate "
-"them."
-msgstr ""
-"表示すべき識別コードがありません。\n"
+msgid "There are no identifiers available to view. An admin will need to generate them."
+msgstr "表示すべき識別コードがありません。\n"
 "管理者が作成する必要があります。"
 
 #: checkins/templates/checkin_printables.html:10
-msgid ""
-"Each of the barcodes below is also an image file that can be download "
-"individually. If you want to download them all at once try using a 'bulk "
-"downloader' extension/plugin for your browser, such as <a "
-"href=\"https://chrome.google.com/webstore/detail/svg-"
-"export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for "
-"Chrome)</a>. To download them as a list you can go to Check-Ins section of "
-"the Edit Database area and copy/paste from the relevant table."
+msgid "Each of the barcodes below is also an image file that can be download individually. If you want to download them all at once try using a 'bulk downloader' extension/plugin for your browser, such as <a href=\"https://chrome.google.com/webstore/detail/svg-export/naeaaedieihlkmdajjefioajbbdbdjgp?hl=en-GB\">this one (for Chrome)</a>. To download them as a list you can go to Check-Ins section of the Edit Database area and copy/paste from the relevant table."
 msgstr ""
 
 #: checkins/templates/checkin_printables.html:15
-msgid ""
-"You can use Ctrl+P for printing or saving the barcodes PDF. Be sure to set "
-"the appropriate <strong>page orientation</strong>, to turn off "
-"<strong>headers/footers</strong> and turn on <strong>background "
-"graphics</strong>. Works best in Chrome."
+msgid "You can use Ctrl+P for printing or saving the barcodes PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
 msgstr ""
 
 #: checkins/templates/checkin_scan.html:18
-msgid ""
-"To scan an identifier type the number below (it will auto-submit). You can "
-"also use a barcode scanner (configured to work as as a keyboard) or scan "
-"from a webcam or phone camera using the button below."
+msgid "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as as a keyboard) or scan from a webcam or phone camera using the button below."
 msgstr ""
 
 #: checkins/utils.py:82
@@ -209,9 +190,7 @@ msgid "Identifiers"
 msgstr "識別コード"
 
 #: checkins/views.py:262
-msgid ""
-"Could not check you in as you do not have an identifying code — your tab "
-"director may need to make you an identifier."
+msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
 msgstr ""
 
 #: checkins/views.py:270
@@ -307,9 +286,7 @@ msgid "You need to delete the above objects first."
 msgstr "まず上記のものを削除しないといけません。"
 
 #: templates/admin/style_guide.html:30
-msgid ""
-"This style of info card announces critical information. <a "
-"href=\"\">Link</a>."
+msgid "This style of info card announces critical information. <a href=\"\">Link</a>."
 msgstr ""
 
 #: templates/admin/style_guide.html:33
@@ -341,15 +318,11 @@ msgstr ""
 
 #: templates/base.html:13
 #, python-format
-msgid ""
-"The tab for %(tournament_name)s runs on Tabbycat, an open-source tab system "
-"for a variety of parliamentary debating formats"
+msgid "The tab for %(tournament_name)s runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats"
 msgstr ""
 
 #: templates/base.html:17
-msgid ""
-"This tab runs on Tabbycat, an open-source tab system for a variety of "
-"parliamentary debating formats"
+msgid "This tab runs on Tabbycat, an open-source tab system for a variety of parliamentary debating formats"
 msgstr ""
 
 #: templates/components/form-errors.html:4
@@ -367,41 +340,31 @@ msgstr "アクセス権限がなし（403）"
 
 #: templates/errors/assistant_403.html:13
 #, python-format
-msgid ""
-"This assistant page isn't enabled for this tournament. <a "
-"href=\"%(url)s\">Back to the assistant home page.</a>"
+msgid "This assistant page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the assistant home page.</a>"
 msgstr ""
 
 #: templates/errors/public_403.html:13
 #, python-format
-msgid ""
-"Whoops! This page isn't enabled for this tournament. <a "
-"href=\"%(url)s\">Back to the tournament home page.</a>"
+msgid "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s\">Back to the tournament home page.</a>"
 msgstr ""
 
 #: templates/footer.html:14
 #, python-format
-msgid ""
-"%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
+msgid "%(tournament)s runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
 #: templates/footer.html:16
 #, python-format
-msgid ""
-"This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
+msgid "This site runs on Tabbycat %(tabbycat_version)s (%(tabbycat_codename)s)"
 msgstr ""
 
 #: templates/footer.html:20
-msgid ""
-"Tabbycat is an open-source project developed by volunteers, and is free to "
-"use for tabbing non-profit, non-fundraising tournaments."
+msgid "Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments."
 msgstr ""
 
 #: templates/footer.html:24
 #, python-format
-msgid ""
-"For a tournament of this size, we suggest a donation of "
-"<strong>$%(amount)s</strong>."
+msgid "For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>."
 msgstr ""
 
 #: templates/footer.html:28
@@ -410,9 +373,7 @@ msgstr ""
 
 #: templates/footer.html:32
 #, python-format
-msgid ""
-"<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or "
-"organisations</a> are much appreciated."
+msgid "<a href=\"%(donations_link)s\">Donations to Tabbycat from individuals or organisations</a> are much appreciated."
 msgstr ""
 
 #: templates/footer.html:40
@@ -421,13 +382,7 @@ msgstr ""
 
 #: templates/footer.html:42
 #, python-format
-msgid ""
-"Using an app designed for debate timekeeping makes speaking and adjudicating"
-" easier! Check out <a href=\"https://itunes.apple.com/app/apple-"
-"store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> "
-"(iPhone/iPad) or <a "
-"href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a>"
-" (Android)."
+msgid "Using an app designed for debate timekeeping makes speaking and adjudicating easier! Check out <a href=\"https://itunes.apple.com/app/apple-store/id1156065589?pt=814172&ct=Tabbycat%%20Installs&mt=8\">Timekept</a> (iPhone/iPad) or <a href=\"https://play.google.com/store/apps/details?id=net.czlee.debatekeeper&referrer=utm_source%%3Dtabbycat%%26utm_medium%%3Dfooter\">Debatekeeper</a> (Android)."
 msgstr ""
 
 #: templates/footer.html:51
@@ -435,15 +390,12 @@ msgid "Need ballots?"
 msgstr "バロットが必要？"
 
 #: templates/footer.html:53
-msgid ""
-"You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" "
-"rel=\"noreferrer\" target=\"_blank\"> customise and print</a> great ballots "
-"from your browser."
+msgid "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel=\"noreferrer\" target=\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 
 #: templates/footer.html:72
 msgid "GitHub"
-msgstr "GitHub"
+msgstr ""
 
 #: templates/footer.html:78
 msgid "Documentation"
@@ -455,7 +407,7 @@ msgstr "サポート"
 
 #: templates/footer.html:90
 msgid "Facebook"
-msgstr "Facebook"
+msgstr ""
 
 #: templates/footer.html:96
 msgid "Set Up A Copy"
@@ -605,7 +557,7 @@ msgstr "ブレイク"
 #: templates/nav/admin_nav.html:258
 #, python-format
 msgid "%(category_name)s"
-msgstr "%(category_name)s"
+msgstr ""
 
 #: templates/nav/admin_nav.html:277 templates/nav/top_nav_base.html:101
 msgid "Log Out"
@@ -746,9 +698,7 @@ msgid "Your username and password didn't match."
 msgstr "ユーザーネームとパスワードが一致しません"
 
 #: templates/registration/login.html:46
-msgid ""
-"Your account doesn't have access to this page. To proceed, please log in "
-"with an account that has access."
+msgid "Your account doesn't have access to this page. To proceed, please log in with an account that has access."
 msgstr "あなたのアカウントからではこのページにはアクセスできません。アクセスできるアカウントからログインしてください。"
 
 #: templates/registration/login.html:49
@@ -799,8 +749,7 @@ msgstr "パスワード変更完了しました"
 msgid "Your password has been reset."
 msgstr "あなたのパスワードは変更されました。"
 
-#. Translators: This text appears on a button that takes the user to the login
-#. page after a password reset.
+#. Translators: This text appears on a button that takes the user to the login page after a password reset.
 #: templates/registration/password_reset_complete.html:23
 msgid "Go to the login page"
 msgstr "ログインページへ移る"
@@ -816,9 +765,7 @@ msgid "Please enter a new password (twice):"
 msgstr "新しいパスワードを入力してください（2回）"
 
 #: templates/registration/password_reset_confirm.html:44
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
+msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
 msgstr "パスワード変更のためのリンクが使用できません。もうすでに使ってる可能性があるので、改めて変更手続きを行ってください。"
 
 #: templates/registration/password_reset_done.html:4
@@ -828,19 +775,14 @@ msgid "Password reset e-mail sent"
 msgstr "パスワード変更のためのメールが送信されました"
 
 #: templates/registration/password_reset_done.html:16
-msgid ""
-"We've e-mailed you instructions for setting your password, if an account "
-"exists with the e-mail address you entered. You should receive them shortly."
+msgid "We've e-mailed you instructions for setting your password, if an account exists with the e-mail address you entered. You should receive them shortly."
 msgstr "新しいパスワードにするための手続きのメールを送りました。もうまもなく受診されると思いますので、ご確認ください。"
 
 #: templates/registration/password_reset_done.html:19
-msgid ""
-"If you don't receive an e-mail, please make sure you've entered the address "
-"you registered with, and check your spam folder."
+msgid "If you don't receive an e-mail, please make sure you've entered the address you registered with, and check your spam folder."
 msgstr "もし受け取らなかった場合、正しいメールアドレスを入力したか確認したり、迷惑メールなども確認してください。"
 
-#. Translators: This text appears on a button that takes the user back to the
-#. login page from the password reset page.
+#. Translators: This text appears on a button that takes the user back to the login page from the password reset page.
 #: templates/registration/password_reset_done.html:26
 msgid "Return to the login page"
 msgstr "ログインページに戻る"
@@ -852,11 +794,8 @@ msgstr "%(username)s、こんにちは！"
 
 #: templates/registration/password_reset_email.html:6
 #, python-format
-msgid ""
-"Someone asked for a password reset for the e-mail address %(email)s on the "
-"Tabbycat site at %(protocol)s://%(domain)s."
-msgstr ""
-"誰かが、%(email)sのアカウントの%(protocol)s://%(domain)sのTabbycatのサイトのパスワード変更申請を行おうとしています。"
+msgid "Someone asked for a password reset for the e-mail address %(email)s on the Tabbycat site at %(protocol)s://%(domain)s."
+msgstr "誰かが、%(email)sのアカウントの%(protocol)s://%(domain)sのTabbycatのサイトのパスワード変更申請を行おうとしています。"
 
 #: templates/registration/password_reset_email.html:10
 msgid "If this was you, follow the link below to reset your password:"
@@ -864,10 +803,7 @@ msgstr "もしこれがあなたであれば、パスワードをリセットす
 
 #: templates/registration/password_reset_email.html:13
 #, python-format
-msgid ""
-"If this wasn't you, that probably means someone else typed your e-mail "
-"address into the password reset form on the Tabbycat site at "
-"%(protocol)s://%(domain)s."
+msgid "If this wasn't you, that probably means someone else typed your e-mail address into the password reset form on the Tabbycat site at %(protocol)s://%(domain)s."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:4
@@ -877,8 +813,7 @@ msgid "Password Reset"
 msgstr ""
 
 #: templates/registration/password_reset_form.html:27
-msgid ""
-"Enter your e-mail address below, and we'll e-mail you a password reset link."
+msgid "Enter your e-mail address below, and we'll e-mail you a password reset link."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:34
@@ -913,17 +848,10 @@ msgid "Welcome! You just logged in!"
 msgstr "ようこそ！ログインできました！"
 
 #: users/admin.py:19
-msgid ""
-"Users with staff status can view and edit the Edit Database area. This is "
-"potentially dangerous and should be reserved for the actual tab director(s)."
+msgid "Users with staff status can view and edit the Edit Database area. This is potentially dangerous and should be reserved for the actual tab director(s)."
 msgstr ""
 
 #: users/admin.py:22
-msgid ""
-"Superusers have full access all areas of Tabbycat necessary to run a "
-"tournament. Users who are not superusers are still able to perform data "
-"entry tasks such as adding results and feedback but can't access "
-"confidential areas such as the Breaks and Feedback sections. Chief "
-"adjudicators and their deputies are generally given superuser status if they"
-" know what they are doing."
+msgid "Superusers have full access all areas of Tabbycat necessary to run a tournament. Users who are not superusers are still able to perform data entry tasks such as adding results and feedback but can't access confidential areas such as the Breaks and Feedback sections. Chief adjudicators and their deputies are generally given superuser status if they know what they are doing."
 msgstr ""
+
