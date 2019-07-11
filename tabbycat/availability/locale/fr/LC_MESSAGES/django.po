@@ -1,22 +1,20 @@
-# Tabbycat translations, availability module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
-"PO-Revision-Date: 2018-04-29 10:35-0700\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
-"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-08-15 14:44\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/availability/locale/en/LC_MESSAGES/django.po\n"
 
 #: availability/apps.py:7 availability/views.py:36
 msgid "Availability"
@@ -61,10 +59,8 @@ msgstr "Voir le tirage"
 
 #: availability/templates/availability_index.html:45
 #, python-format
-msgid ""
-"%(previous_unconfirmed)s debates from %(round_name)s do not have a completed "
-"ballot — this may lead to a draw that fails or is incorrect"
-msgstr ""
+msgid "%(previous_unconfirmed)s debates from %(round_name)s do not have a completed ballot — this may lead to a draw that fails or is incorrect"
+msgstr "%(previous_unconfirmed)s débats de %(round_name)s n’ont pas de feuille complété — cela peut causer un tirage qui échoue ou qui est incorrect"
 
 #: availability/templates/availability_index.html:47
 #: availability/templates/availability_index.html:52
@@ -79,168 +75,69 @@ msgid "Generate Draw"
 msgstr "Générer le tirage"
 
 #: availability/templates/availability_index.html:51
-msgid ""
-"The draw cannot be generated until some teams have been marked as available."
-msgstr ""
-"La génération du tirage n'est pas possible avant que des équipes aient été "
-"marquées comme disponibles."
+msgid "The draw cannot be generated until some teams have been marked as available."
+msgstr "La génération du tirage n'est pas possible avant que des équipes aient été marquées comme disponibles."
 
 #: availability/templates/availability_index.html:56
-msgid ""
-"The draw cannot be generated until some adjudicators have been marked as "
-"available."
-msgstr ""
-"La génération du tirage n'est pas possible avant que des juges aient été "
-"marqués comme disponibles."
+msgid "The draw cannot be generated until some adjudicators have been marked as available."
+msgstr "La génération du tirage n'est pas possible avant que des juges aient été marqués comme disponibles."
 
 #: availability/templates/availability_index.html:61
-msgid ""
-"The draw cannot be generated until some venues have been marked as available."
-msgstr ""
-"La génération du tirage n'est pas possible avant que des salles aient été "
-"marquées comme disponibles."
+msgid "The draw cannot be generated until some venues have been marked as available."
+msgstr "La génération du tirage n'est pas possible avant que des salles aient été marquées comme disponibles."
 
 #: availability/templates/availability_index.html:66
-msgid ""
-"There aren't enough venues marked as available for the number of debates — "
-"the draw may not generate properly."
-msgstr ""
-"Il n'y a pas assez de salles marquées comme disponibles pour le nombre de "
-"débats — le tirage ne se générera peut-être pas correctement."
+msgid "There aren't enough venues marked as available for the number of debates — the draw may not generate properly."
+msgstr "Il n'y a pas assez de salles marquées comme disponibles pour le nombre de débats — le tirage ne se générera peut-être pas correctement."
 
 #: availability/templates/availability_index.html:71
-msgid ""
-"There aren't enough adjudicators marked as available for the number of "
-"debates — the draw may not generate properly."
-msgstr ""
-"Il n'y a pas assez de juges marqués comme disponibles pour le nombre de "
-"débats — le tirage ne se générera peut-être pas correctement."
+msgid "There aren't enough adjudicators marked as available for the number of debates — the draw may not generate properly."
+msgstr "Il n'y a pas assez de juges marqués comme disponibles pour le nombre de débats — le tirage ne se générera peut-être pas correctement."
 
 #: availability/templates/availability_index.html:76
-msgid ""
-"There is an uneven number of teams marked as available — the draw may not "
-"generate properly."
-msgstr ""
-"Il y a un nombre impair d'équipes marquées comme disponibles — le tirage ne "
-"se générera peut-être pas correctement."
+msgid "There is an uneven number of teams marked as available — the draw may not generate properly."
+msgstr "Il y a un nombre impair d'équipes marquées comme disponibles — le tirage ne se générera peut-être pas correctement."
 
 #: availability/templates/availability_index.html:81
-msgid ""
-"The number of teams marked as available is not a multiple of 4 — the draw "
-"may not generate properly."
-msgstr ""
-"Le nombre d’équipes marquées comme disponibles n’est pas un multiple de 4 — "
-"le tirage ne se générera peut-être pas correctement."
+msgid "The number of teams marked as available is not a multiple of 4 — the draw may not generate properly."
+msgstr "Le nombre d’équipes marquées comme disponibles n’est pas un multiple de 4 — le tirage ne se générera peut-être pas correctement."
 
 #: availability/templates/availability_index.html:99
 #, python-format
-msgid ""
-"One debate from %(prev_round)s <strong>does not have a completed ballot</"
-"strong>. This may lead to a draw that fails or is incorrect, depending on "
-"your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link"
-"\"> Enter results from %(prev_round)s. </a>"
-msgid_plural ""
-"%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a "
-"completed ballot</strong>. This may lead to a draw that fails or is "
-"incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s"
-"\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
-msgstr[0] ""
-"Un débat de %(prev_round)s <strong>n'a pas de bulletin complet</strong>. Ce "
-"manque peut engendrer un tirage qui échoue ou qui est incorrect, en fonction "
-"de vos règles du tirage. <a href=\"%(prev_round_results_url)s\" class="
-"\"alert-link\"> Entrez les résultats de %(prev_round)s. </a>"
-msgstr[1] ""
-"%(previous_unconfirmed)s débats de %(prev_round)s <strong>n'ont pas de "
-"bulletin complet</strong>. Ce manque peut engendrer un tirage qui échoue ou "
-"qui est incorrect, en fonction de vos règles du tirage. <a href="
-"\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de "
-"%(prev_round)s. </a>"
+msgid "One debate from %(prev_round)s <strong>does not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+msgid_plural "%(previous_unconfirmed)s debates from %(prev_round)s <strong>do not have a completed ballot</strong>. This may lead to a draw that fails or is incorrect, depending on your draw rules. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Enter results from %(prev_round)s. </a>"
+msgstr[0] "Un débat de %(prev_round)s <strong>n'a pas de feuille complète</strong>. Ce manque peut engendrer un tirage qui échoue ou qui est incorrect, en fonction de vos règles du tirage. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de %(prev_round)s. </a>"
+msgstr[1] "%(previous_unconfirmed)s débats de %(prev_round)s <strong>n'ont pas de feuille complète</strong>. Ce manque peut engendrer un tirage qui échoue ou qui est incorrect, en fonction de vos règles du tirage. <a href=\"%(prev_round_results_url)s\" class=\"alert-link\"> Entrez les résultats de %(prev_round)s.</a>"
 
 #: availability/templates/availability_index.html:121
-#, fuzzy, python-format
-#| msgid ""
-#| "This is a page for <strong>%(round_name)s</strong>, however the current "
-#| "round is still set to <strong>%(current_round_name)s</strong>. Did you "
-#| "forget to <a href=\"%(advance_round_url)s\" class=\"alert-link\"> advance "
-#| "to the next round?</a>"
-msgid ""
-"This is a page for <strong>%(round_name)s</strong>, but the previous round "
-"is still not marked as completed. Did you forget to <a href="
-"\"%(complete_prev_round_url)s\" class=\"alert-link\"> mark "
-"%(prev_round_name)s as completed? </a>"
-msgstr ""
-"Il s'agit de <strong>%(round_name)s</strong>, cependant la joute actuelle "
-"est toujours configuré comme <strong>%(current_round_name)s</strong>. Avez-"
-"vous oublié <a href=\"%(advance_round_url)s\" class=\"alert-link\">d'avancer "
-"฀à la prochaine joute ?</a>"
+#, python-format
+msgid "This is a page for <strong>%(round_name)s</strong>, but the previous round is still not marked as completed. Did you forget to <a href=\"%(complete_prev_round_url)s\" class=\"alert-link\"> mark %(prev_round_name)s as completed? </a>"
+msgstr "Ceci est une page pour <strong>%(round_name)s</strong>, cependant la joute précédente n’est pas achevée. Avez-vous oublié <a href=\"%(complete_prev_round_url)s\" class=\"alert-link\">de marquer %(prev_round_name)s comme achevée ?</a>"
 
 #: availability/templates/availability_index.html:137
 #, python-format
-msgid ""
-"This is the first round, but its draw type is <strong>%(draw_type)s</"
-"strong>. Did you intend for it to be <strong>Random</strong> instead? You "
-"can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's "
-"draw type in the Edit Database area.</a>"
-msgstr ""
-"Cette joute est la première, mais son type de tirage est <strong>"
-"%(draw_type)s</strong>. Souhaitiez-vous pour qu’il soit plutôt "
-"<strong>aléatoire</strong> ? Vous pouvez <a href=\"%(change_round_url)s\" "
-"class=\"alert-link\">modifier le type de tirage de cette joute dans la zone "
-"pour modifier la base de données.</a>"
+msgid "This is the first round, but its draw type is <strong>%(draw_type)s</strong>. Did you intend for it to be <strong>Random</strong> instead? You can <a href=\"%(change_round_url)s\" class=\"alert-link\"> edit this round's draw type in the Edit Database area.</a>"
+msgstr "Cette joute est la première, mais son type de tirage est <strong>%(draw_type)s</strong>. Souhaitiez-vous pour qu’il soit plutôt <strong>aléatoire</strong> ? Vous pouvez <a href=\"%(change_round_url)s\" class=\"alert-link\">modifier le type de tirage de cette joute dans la zone pour modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:150
 #, python-format
-msgid ""
-"This is an elimination round, but it doesn't have a break category. "
-"Elimination rounds must be associated with a break category. Please <a href="
-"\"%(change_round_url)s\" class=\"alert-link\"> set this round's break "
-"category in the Edit Database area.</a>"
-msgstr ""
-"Il s’agit d’une joute éliminatoire, mais la joute n'a pas de catégorie de "
-"qualification. Il faut que tous les joutes éliminatoires soient associés à "
-"une catégorie de qualification. Veuillez <a href=\"%(change_round_url)s\" "
-"class=\"alert-link\">définir la catégorie de qualification de cette joute "
-"dans la zone pour modifier la base de données.</a>"
+msgid "This is an elimination round, but it doesn't have a break category. Elimination rounds must be associated with a break category. Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> set this round's break category in the Edit Database area.</a>"
+msgstr "Il s’agit d’une joute éliminatoire, mais la joute n'a pas de catégorie de qualification. Il faut que tous les joutes éliminatoires soient associés à une catégorie de qualification. Veuillez <a href=\"%(change_round_url)s\" class=\"alert-link\">définir la catégorie de qualification de cette joute dans la zone pour modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:162
 #, python-format
-msgid ""
-"This is an elimination round, but its draw type is <strong>%(draw_type)s</"
-"strong>. The draw type of all elimination rounds must be \"Elimination\". "
-"Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this "
-"round's draw type in the Edit Database area.</a>"
-msgstr ""
-"Il s’agit d’une joute éliminatoire, mais son type de tirage est <strong>"
-"%(draw_type)s</strong>. Le type de tirage de toute joute éliminatoire "
-"doivent être « Élimination ». Veuillez <a href=\"%(change_round_url)s\" "
-"class=\"alert-link\">modifier le type de tirage de cette joute dans la zone "
-"pour modifier la base de données.</a>"
+msgid "This is an elimination round, but its draw type is <strong>%(draw_type)s</strong>. The draw type of all elimination rounds must be \"Elimination\". Please <a href=\"%(change_round_url)s\" class=\"alert-link\"> change this round's draw type in the Edit Database area.</a>"
+msgstr "Il s’agit d’une joute éliminatoire, mais son type de tirage est <strong>%(draw_type)s</strong>. Le type de tirage de toute joute éliminatoire doivent être « Élimination ». Veuillez <a href=\"%(change_round_url)s\" class=\"alert-link\">modifier le type de tirage de cette joute dans la zone pour modifier la base de données.</a>"
 
 #: availability/templates/availability_index.html:175
 #, python-format
-msgid ""
-"There don't appear to be any teams breaking in the %(break_category)s Break. "
-"Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated "
-"the break for the %(break_category)s Break</a> yet?"
-msgstr ""
-"Il semble qu'il n'y ait aucune équipe qualifiante dans la catégorie "
-"%(break_category)s. Avez-vous <a href=\"%(breakqual_teams_url)s\" class="
-"\"alert-link\">générer la qualification pour la catégorie "
-"%(break_category)s</a>?"
+msgid "There don't appear to be any teams breaking in the %(break_category)s Break. Have you <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> generated the break for the %(break_category)s Break</a> yet?"
+msgstr "Il semble qu'il n'y ait aucune équipe qualifiante dans la catégorie %(break_category)s. Avez-vous <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\">générer la qualification pour la catégorie %(break_category)s</a>?"
 
 #: availability/templates/availability_index.html:187
 #, python-format
-msgid ""
-"There's only one team breaking in the %(break_category)s Break. You can't "
-"generate an elimination round draw with only one team — you might like to <a "
-"href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for "
-"the %(break_category)s Break</a>."
-msgstr ""
-"Il n'y a qu'une équipe qualifiante dans la catégorie %(break_category)s. "
-"Vous ne pouvez pas générer le tirage pour une joute éliminatoire avec "
-"seulement une équipe. Vous voudriez peut-être <a href="
-"\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la qualification "
-"pour la catégorie %(break_category)s</a>."
+msgid "There's only one team breaking in the %(break_category)s Break. You can't generate an elimination round draw with only one team — you might like to <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\"> review the break for the %(break_category)s Break</a>."
+msgstr "Il n'y a qu'une équipe qualifiante dans la catégorie %(break_category)s. Vous ne pouvez pas générer le tirage pour une joute éliminatoire avec seulement une équipe. Vous voudriez peut-être <a href=\"%(breakqual_teams_url)s\" class=\"alert-link\">réexaminer la qualification pour la catégorie %(break_category)s</a>."
 
 #: availability/templates/base_availability.html:38
 msgid "Select All"
@@ -280,7 +177,7 @@ msgstr "Salles"
 
 #: availability/templates/checkin_progress.html:43
 msgid "Mark teams as available"
-msgstr ""
+msgstr "Marquer équipes comme disponible"
 
 #: availability/templates/checkin_progress.html:46
 msgid "No need to set team availability"
@@ -288,178 +185,117 @@ msgstr "Pas de besoin à marquer la disponibilité d'équipes"
 
 #: availability/templates/checkin_progress.html:49
 msgid "There is an uneven number of teams marked as available for this round."
-msgstr ""
-"Il y a un nombre impair d'équipes marquées comme disponibles pour cette "
-"joute."
+msgstr "Il y a un nombre impair d'équipes marquées comme disponibles pour cette joute."
 
 #: availability/templates/checkin_progress.html:53
-msgid ""
-"The number of teams marked as available for this round is not a multiple of "
-"4."
-msgstr ""
-"Le nombre d'équipes marquées comme disponibles pour cette joute n'est pas un "
-"multiple de 4."
+msgid "The number of teams marked as available for this round is not a multiple of 4."
+msgstr "Le nombre d'équipes marquées comme disponibles pour cette joute n'est pas un multiple de 4."
 
 #: availability/templates/checkin_progress.html:59
 msgid "Edit team availability"
 msgstr "Modifier disponibilité d'équipes"
 
-#: availability/templates/checkin_progress.html:66
+#: availability/templates/checkin_progress.html:68
+#, python-format
+msgid "One adjudicator does not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
+msgid_plural "%(count)s adjudicators do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
+msgstr[0] "Un juge n'a pas de tournoi associé. Réglez leur tournoi dans la zone de la base de données pour pouvoir le marquer comme disponible."
+msgstr[1] "%(count)s juges n'ont pas de tournoi associé. Réglez leur tournoi dans la zone de la base de données pour pouvoir les marquer comme disponibles."
+
+#: availability/templates/checkin_progress.html:77
+#, python-format
+msgid "%(count)s adjudicator who was not available last round, is available this round."
+msgid_plural "%(count)s adjudicators who were not available last round, are available this round."
+msgstr[0] "Le %(count)s juge, qui n'était pas disponible la dernière joute, l'est désormais."
+msgstr[1] "Les %(count)s juges, qui n'étaient pas disponibles la dernière joute, le sont désormais."
+
+#: availability/templates/checkin_progress.html:84
+#, python-format
+msgid "The following %(count)s adjudicator, who was not available last round, is available this round: %(adjs_list)s"
+msgid_plural "The following %(count)s adjudicators, who were not available last round, are available this round: %(adjs_list)s"
+msgstr[0] "Les %(count)s juges suivants, qui n'étaient pas disponibles la dernière joute, le sont désormais&nbsp;: %(adjs_list)s"
+msgstr[1] "Les %(count)s juges suivants, qui n'étaient pas disponibles la dernière joute, le sont désormais&nbsp;: %(adjs_list)s"
+
+#: availability/templates/checkin_progress.html:93
+#, python-format
+msgid "%(count)s adjudicator who was available last round, is not available this round."
+msgid_plural "%(count)s adjudicators who were available last round, are not available this round."
+msgstr[0] "%(count)s juge, qui était disponible la dernière joute, ne l'est plus."
+msgstr[1] "%(count)s juges, qui étaient disponibles la dernière joute, ne le sont plus."
+
+#: availability/templates/checkin_progress.html:100
+#, python-format
+msgid "The following %(count)s adjudicator, who was available last round, is not available this round: %(adjs_list)s"
+msgid_plural "The following %(count)s adjudicators, who were available last round, are not available this round: %(adjs_list)s"
+msgstr[0] "Le %(count)s juge suivant, qui était disponible la dernière joute, ne l'est plus&nbsp;: %(adjs_list)s"
+msgstr[1] "Les %(count)s juges suivants, qui étaient disponible la dernière joute, ne le sont plus&nbsp;: %(adjs_list)s"
+
+#: availability/templates/checkin_progress.html:108
 msgid "Mark adjudicators as available"
-msgstr "Disponibilité de juges"
+msgstr "Marquer juges comme disponibles"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/checkin_progress.html:70
+#: availability/templates/checkin_progress.html:111
 #, python-format
-msgid ""
-"There needs to be at least one adjudicator marked as available, given the "
-"number of debates."
-msgid_plural ""
-"There need to be at least %(required_count)s adjudicators marked as "
-"available, given the number of debates."
-msgstr[0] ""
-"Il faut au moins un juge marqué comme disponible pour le nombre de débats."
-msgstr[1] ""
-"Il faut au moins %(required_count)s juges enregistrés pour le nombre de "
-"débats."
+msgid "There needs to be at least one adjudicator marked as available, given the number of debates."
+msgid_plural "There need to be at least %(required_count)s adjudicators marked as available, given the number of debates."
+msgstr[0] "Il faut au moins un juge marqué comme disponible pour le nombre de débats."
+msgstr[1] "Il faut au moins %(required_count)s juges enregistrés pour le nombre de débats."
 
-#: availability/templates/checkin_progress.html:80
+#: availability/templates/checkin_progress.html:121
 msgid "Edit adjudicator availability"
 msgstr "Modifier disponibilité de juges"
 
-#: availability/templates/checkin_progress.html:85
+#: availability/templates/checkin_progress.html:130
 #, python-format
-msgid ""
-"One adjudicator does not have an associated tournament. Set their "
-"'Tournament' field in the Edit Database area if you want them to be marked "
-"as available."
-msgid_plural ""
-"%(count)s adjudicators do not have an associated tournament. Set their "
-"'Tournament' field in the Edit Database area if you want them to be marked "
-"as available."
-msgstr[0] ""
-msgstr[1] ""
+msgid "%(count)s venue that was not available last round, is available this round."
+msgid_plural "%(count)s venues that were not available last round, are available this round."
+msgstr[0] "%(count)s salle, qui n'était pas disponible la dernière joute, l'est désormais."
+msgstr[1] "%(count)s salles, qui n'étaient pas disponibles la dernière joute, le sont désormais."
 
-#: availability/templates/checkin_progress.html:94
+#: availability/templates/checkin_progress.html:137
 #, python-format
-msgid ""
-"%(count)s adjudicator who was not available last round, is available this "
-"round."
-msgid_plural ""
-"%(count)s adjudicators who were not available last round, are available this "
-"round."
-msgstr[0] ""
-msgstr[1] ""
+msgid "The following %(count)s venue, which was not available last round, is available this round: %(venues_list)s"
+msgid_plural "The following %(count)s venues, which were not available last round, are available this round: %(venues_list)s"
+msgstr[0] "La %(count)s salle suivante, qui n'était pas disponible la dernière joute, l'est désormais&nbsp;: %(venues_list)s"
+msgstr[1] "Les %(count)s salles suivantes, qui n'étaient pas disponibles la dernière joute, le sont désormais&nbsp;: %(venues_list)s"
 
-#: availability/templates/checkin_progress.html:101
+#: availability/templates/checkin_progress.html:146
 #, python-format
-msgid ""
-"The following %(count)s adjudicator, who was not available last round, is "
-"available this round: %(adjs_list)s"
-msgid_plural ""
-"The following %(count)s adjudicators, who were not available last round, are "
-"available this round: %(adjs_list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgid "%(count)s venue that was available last round, is not available this round."
+msgid_plural "%(count)s venues that were available last round, are not available this round."
+msgstr[0] "%(count)s salle qui était disponible la dernière joute ne l'est plus."
+msgstr[1] "%(count)s salles qui étaient disponibles la dernière joute ne le sont plus."
 
-#: availability/templates/checkin_progress.html:110
+#: availability/templates/checkin_progress.html:153
 #, python-format
-msgid ""
-"%(count)s adjudicator who was available last round, is not available this "
-"round."
-msgid_plural ""
-"%(count)s adjudicators who were available last round, are not available this "
-"round."
-msgstr[0] ""
-msgstr[1] ""
+msgid "The following %(count)s venue, which was available last round, is not available this round: %(venues_list)s"
+msgid_plural "The following %(count)s venues, which were available last round, are not available this round: %(venues_list)s"
+msgstr[0] "La %(count)s salle suivante, qui était disponible la dernière joute, ne l'est plus&nbsp;: %(venues_list)s"
+msgstr[1] "Les %(count)s salles suivantes, qui étaient disponibles la dernière joute, ne le sont plus&nbsp;: %(venues_list)s"
 
-#: availability/templates/checkin_progress.html:117
-#, python-format
-msgid ""
-"The following %(count)s adjudicator, who was available last round, is not "
-"available this round: %(adjs_list)s"
-msgid_plural ""
-"The following %(count)s adjudicators, who were available last round, are not "
-"available this round: %(adjs_list)s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:128
+#: availability/templates/checkin_progress.html:161
 msgid "Mark venues as available"
-msgstr ""
+msgstr "Marquer salles comme disponible"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/checkin_progress.html:132
+#: availability/templates/checkin_progress.html:164
 #, python-format
-msgid ""
-"There needs to be at least one venue marked as available, given the number "
-"of debates."
-msgid_plural ""
-"There need to be at least %(required_count)s venues marked as available, "
-"given the number of debates."
-msgstr[0] ""
-"Il faut au moins une salle marquée comme disponible pour le nombre de débats."
-msgstr[1] ""
-"Il faut au moins %(required_count)s salles marquées comme disponibles pour "
-"satisfier le nombre de débats."
+msgid "There needs to be at least one venue marked as available, given the number of debates."
+msgid_plural "There need to be at least %(required_count)s venues marked as available, given the number of debates."
+msgstr[0] "Il faut au moins une salle marquée comme disponible pour le nombre de débats."
+msgstr[1] "Il faut au moins %(required_count)s salles marquées comme disponibles pour satisfier le nombre de débats."
 
-#: availability/templates/checkin_progress.html:144
+#: availability/templates/checkin_progress.html:176
 msgid "Edit venue availability"
 msgstr "Modifier la disponibilité des salles"
 
-#: availability/templates/checkin_progress.html:148
-#, python-format
-msgid ""
-"One venue does not have an associated tournament. Set its 'Tournament' field "
-"in the Edit Database area if you want it to be marked as available."
-msgid_plural ""
-"%(count)s venues do not have an associated tournament. Set their "
-"'Tournament' field in the Edit Database area if you want them to be marked "
-"as available."
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:157
-#, python-format
-msgid ""
-"%(count)s venue that was not available last round, is available this round."
-msgid_plural ""
-"%(count)s venues that were not available last round, are available this "
-"round."
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:164
-#, python-format
-msgid ""
-"The following %(count)s venue, which was not available last round, is "
-"available this round: %(venues_list)s"
-msgid_plural ""
-"The following %(count)s venues, which were not available last round, are "
-"available this round: %(venues_list)s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:173
-#, python-format
-msgid ""
-"%(count)s venue that was available last round, is not available this round."
-msgid_plural ""
-"%(count)s venues that were available last round, are not available this "
-"round."
-msgstr[0] ""
-msgstr[1] ""
-
 #: availability/templates/checkin_progress.html:180
 #, python-format
-msgid ""
-"The following %(count)s venue, which was available last round, is not "
-"available this round: %(venues_list)s"
-msgid_plural ""
-"The following %(count)s venues, which were available last round, are not "
-"available this round: %(venues_list)s"
-msgstr[0] ""
-msgstr[1] ""
+msgid "One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available."
+msgid_plural "%(count)s venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
+msgstr[0] "Une salle n'a pas de tournoi associé. Ajoutez-le dans la zone de la base de données si vous voulez le marquer comme disponible."
+msgstr[1] "%(count)s salles n'ont pas de tournoi associé. Ajoutez-les dans la zone de la base de données si vous voulez les marquer comme disponibles."
 
 #: availability/views.py:101
 msgid "no teams are debating"
@@ -541,15 +377,12 @@ msgid "Priority"
 msgstr "Priorité"
 
 #: availability/views.py:298
-msgid ""
-"Failed to update some or all availabilities due to an integrityerror. You "
-"should retry this action or make individual updates."
-msgstr ""
+msgid "Failed to update some or all availabilities due to an integrityerror. You should retry this action or make individual updates."
+msgstr "La mise à jour de disponibilités a échoué suite à une faute d’intégrité des données. Vous devriez re-essayer ou faire des mises-à-jour individuelles."
 
 #: availability/views.py:306
 msgid "Checked in all teams, adjudicators and venues."
-msgstr ""
-"Toutes les équipes, tous les juges et toutes les salles ont été enregistrés."
+msgstr "Toutes les équipes, tous les juges et toutes les salles ont été enregistrés."
 
 #: availability/views.py:313
 msgid "Checked in all breaking adjudicators."
@@ -557,27 +390,5 @@ msgstr "Tous les juges qualifiants ont été enregistrés."
 
 #: availability/views.py:321
 msgid "Checked in all teams, adjudicators and venues from previous round."
-msgstr ""
-"Toutes les équipes, tous les juges et toutes les salles de la joute "
-"précédente ont été enregistrés."
+msgstr "Toutes les équipes, tous les juges et toutes les salles de la joute précédente ont été enregistrés."
 
-#~ msgid "Check In Everything"
-#~ msgstr "Enregistrer tout"
-
-#~ msgid "Check in teams"
-#~ msgstr "Enregistrement des équipes"
-
-#~ msgid "Edit team check-ins"
-#~ msgstr "Modifier la disponibilité des équipes"
-
-#~ msgid "Check in adjudicators"
-#~ msgstr "Enregistrement des juges"
-
-#~ msgid "Edit adjudicator check-ins"
-#~ msgstr "Modifier la disponibilité des juges"
-
-#~ msgid "Check in venues"
-#~ msgstr "Enregistrement des lieux"
-
-#~ msgid "Edit venue check-ins"
-#~ msgstr "Modifier la disponibilité des lieux"
