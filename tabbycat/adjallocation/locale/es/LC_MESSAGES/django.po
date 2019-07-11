@@ -1,53 +1,36 @@
-# Tabbycat translations, adjallocation module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2018\n"
-"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
+"PO-Revision-Date: 2019-07-11 23:49\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Spanish\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
 
 #: adjallocation/allocator.py:31
-msgid ""
-"There are no available adjudicators. Ensure there are adjudicators who have "
-"been marked as available for this round before auto-allocating."
-msgstr ""
-"No hay jueces disponibles. Asegúrese de que haya jueces que se hayan marcado"
-" como disponibles para esta ronda antes de la asignación automática."
+msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
+msgstr "No hay jueces disponibles. Asegúrese de que haya jueces que se hayan marcado como disponibles para esta ronda antes de la asignación automática."
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
 msgstr "Asignación de Jueces"
 
 #: adjallocation/hungarian.py:98
-msgid ""
-"There are no adjudicators eligible to be a chair or panellist. This usually "
-"means that you need to go to the Draw Rules section of the Configuration "
-"area and decrease the \"Minimum adjudicator score to vote\" setting in order"
-" to allow some adjudicators to be allocated."
-msgstr ""
-"No hay jueces elegibles para ser principales o panelistas. Esto usualmente "
-"significa que necesitas ir al area de \"Reglas de emparejamiento\" en la "
-"sección de configuración y reducir el \"Puntaje mínimo del juez para votar\""
-" para que la configuración permita que algunos jueces sean asignados."
+msgid "There are no adjudicators eligible to be a chair or panellist. This usually means that you need to go to the Draw Rules section of the Configuration area and decrease the \"Minimum adjudicator score to vote\" setting in order to allow some adjudicators to be allocated."
+msgstr "No hay jueces elegibles para ser principales o panelistas. Esto usualmente significa que necesitas ir al area de \"Reglas de emparejamiento\" en la sección de configuración y reducir el \"Puntaje mínimo del juez para votar\" para que la configuración permita que algunos jueces sean asignados."
 
 #: adjallocation/hungarian.py:106
-msgid ""
-"There are no debates for this round. Maybe you haven't created a draw yet?"
-msgstr ""
-"No hay debates para esta ronda. Tal vez aún no haz creado el enfrentamiento "
-"de equipos aún."
+msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
+msgstr "No hay debates para esta ronda. Tal vez aún no haz creado el enfrentamiento de equipos aún."
 
 #: adjallocation/models.py:18
 msgid "chair"
@@ -63,7 +46,7 @@ msgstr "sombra"
 
 #: adjallocation/models.py:26
 msgid "debate"
-msgstr "debate"
+msgstr ""
 
 #: adjallocation/models.py:28 adjallocation/models.py:44
 #: adjallocation/models.py:74
@@ -133,15 +116,11 @@ msgstr "Editar Jueces para %(round_abbr)s"
 
 #: adjallocation/views.py:140
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
-msgstr ""
-"El cuadro ya fue publicado, despubliquelo para rehacer la asignación "
-"automática."
+msgstr "El cuadro ya fue publicado, despubliquelo para rehacer la asignación automática."
 
 #: adjallocation/views.py:144
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
-msgstr ""
-"El cuadro no ha sido confirmado, confirma el cuadro para hacer la asignación"
-" automática."
+msgstr "El cuadro no ha sido confirmado, confirma el cuadro para hacer la asignación automática."
 
 #: adjallocation/views.py:193
 msgid "Not all adjudicators specified are associated with the tournament."
@@ -224,3 +203,4 @@ msgstr[1] "Eliminar %(count)dincompatibilidades juez-institución"
 #: adjallocation/views.py:343
 msgid "No changes were made to adjudicator-institution conflicts."
 msgstr "No se hizo ningún cambio en las incompatibilidades juez-institución"
+
