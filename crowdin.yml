@@ -1,3 +1,3 @@
 files:
   - source: /tabbycat/**/locale/en/LC_MESSAGES/django.po
-    translation: //tabbycat/**/locale/%two_letters_code%/LC_MESSAGES/%original_file_name%
+    translation: /tabbycat/**/locale/%two_letters_code%/LC_MESSAGES/%original_file_name%
