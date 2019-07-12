@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
+"POT-Creation-Date: 2019-01-25 23:03-0500\n"
 "PO-Revision-Date: 2018-11-01 22:39-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -18,81 +18,92 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2\n"
 
-#: checkins/apps.py:7 templates/nav/admin_nav.html:122
+#: checkins/apps.py:7 templates/nav/admin_nav.html:126
 #: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:98
 msgid "Check-Ins"
 msgstr "Enregistrements"
 
-#: checkins/consumers.py:60
+#: checkins/consumers.py:73
 msgid "Sent checkin identifier doesn't exist"
 msgstr "L'identifiant d'enregistrement envoyé n'existe pas"
 
-#: checkins/consumers.py:61 checkins/consumers.py:66
+#: checkins/consumers.py:74 checkins/consumers.py:79
 msgid "Checkins"
 msgstr "Enregistrements"
 
-#: checkins/consumers.py:65
+#: checkins/consumers.py:78
 msgid "No checkin identifiers exist for sent barcodes"
 msgstr ""
 "Aucun identifiant d'enregistrement n'existe pour les codes-barres envoyés"
 
-#: checkins/models.py:28
-msgid "The barcode must contain between 4 and 20 digits."
+#: checkins/models.py:29
+#, fuzzy
+#| msgid "The barcode must contain between 4 and 20 digits."
+msgid "The barcode must contain exactly six digits."
 msgstr "Le code-barres doit contenir entre 4 et 20 chiffres."
 
-#: checkins/models.py:31
+#: checkins/models.py:32
 msgid "barcode"
 msgstr "code-barres"
 
-#: checkins/models.py:45
+#: checkins/models.py:37
+msgid "<Not the child instance>"
+msgstr ""
+
+#: checkins/models.py:41
+#, python-format
+msgid "%(classname)s %(barcode)s"
+msgstr ""
+
+#: checkins/models.py:52
 msgid "person"
 msgstr "personne"
 
-#: checkins/models.py:48
+#: checkins/models.py:55
 msgid "person identifier"
 msgstr "identifiant de personne"
 
-#: checkins/models.py:49
+#: checkins/models.py:56
 msgid "person identifiers"
 msgstr "identifiants de personnes"
 
-#: checkins/models.py:57
+#: checkins/models.py:64
 msgid "debate"
 msgstr "débat"
 
-#: checkins/models.py:60
+#: checkins/models.py:67
 msgid "debate identifier"
 msgstr "identifiant de débat"
 
-#: checkins/models.py:61
+#: checkins/models.py:68
 msgid "debate identifiers"
 msgstr "identifiants de débats"
 
-#: checkins/models.py:72
+#: checkins/models.py:79
 msgid "venue identifier"
 msgstr "identifiant de salle"
 
-#: checkins/models.py:73
+#: checkins/models.py:80
 msgid "venue identifiers"
 msgstr "identifiants de salles"
 
-#: checkins/models.py:80
+#: checkins/models.py:87
 msgid "identifier"
 msgstr "identifiant"
 
-#: checkins/models.py:83
+#: checkins/models.py:90
 msgid "check-in time"
 msgstr "heure d’arrivée"
 
-#: checkins/models.py:85
+#: checkins/models.py:92
 msgid "tournament"
 msgstr "tournoi"
 
-#: checkins/models.py:88
+#: checkins/models.py:95
 msgid "check-in event"
 msgstr "événement d'arrivée"
 
-#: checkins/models.py:89
+#: checkins/models.py:96
 msgid "check-in events"
 msgstr "événements d'arrivée"
 
@@ -162,70 +173,75 @@ msgstr ""
 "code-barres (équivalent à un clavier) ou un appareil photo (webcam ou "
 "portable) avec le bouton ci-contre."
 
-#: checkins/utils.py:88
-#, python-format
-msgid "Not checked-in (barcode %(barcode)s)"
+#: checkins/utils.py:81
+#, fuzzy, python-format
+#| msgid "Not checked-in (barcode %(barcode)s)"
+msgid "Not checked in (barcode %(barcode)s)"
 msgstr "Pas enregistré (identifiant %(barcode)s)"
 
-#: checkins/utils.py:92
-msgid "Not checked-in; no barcode assigned"
+#: checkins/utils.py:85
+#, fuzzy
+#| msgid "Not checked-in; no barcode assigned"
+msgid "Not checked in; no barcode assigned"
 msgstr "Pas enregistré; aucun identifiant"
 
-#: checkins/utils.py:99
-#, python-format
-msgid "Checked-in at %(time)s"
+#: checkins/utils.py:92
+#, fuzzy, python-format
+#| msgid "Checked-in at %(time)s"
+msgid "checked in at %(time)s"
 msgstr "Enregistré à %(time)s"
 
-#: checkins/utils.py:111
-#, python-format
-msgid "%(speaker)s checked-in at %(time)s."
+#: checkins/utils.py:104
+#, fuzzy, python-format
+#| msgid "%(speaker)s checked-in at %(time)s."
+msgid "%(speaker)s checked in at %(time)s."
 msgstr "%(speaker)s est enregistré à %(time)s."
 
-#: checkins/utils.py:113
+#: checkins/utils.py:106
 #, python-format
 msgid "%(speaker)s is missing."
 msgstr "%(speaker)s est manquant(e)."
 
-#: checkins/views.py:27 templates/nav/admin_nav.html:133
+#: checkins/views.py:27 templates/nav/admin_nav.html:137
 #: templates/nav/assistant_nav.html:42
 msgid "Scan Identifiers"
 msgstr "Numériser les identifiants"
 
-#: checkins/views.py:57
+#: checkins/views.py:59
 msgid "People's Check-In Statuses"
 msgstr "Statuts d’enregistrement des personnes"
 
-#: checkins/views.py:116
+#: checkins/views.py:114
 msgid "Venue's Check-In Statuses"
 msgstr "Statuts d’enregistrement des salles"
 
-#: checkins/views.py:165 templates/nav/admin_nav.html:129
+#: checkins/views.py:163 templates/nav/admin_nav.html:133
 msgid "Make Identifiers"
 msgstr "Créer les identifiants"
 
-#: checkins/views.py:172 templates/nav/admin_nav.html:217
+#: checkins/views.py:170 templates/nav/admin_nav.html:224
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: checkins/views.py:177 templates/nav/admin_nav.html:265
-#: templates/nav/public_nav.html:142
+#: checkins/views.py:175 templates/nav/admin_nav.html:272
+#: templates/nav/public_nav.html:138
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: checkins/views.py:182
+#: checkins/views.py:180
 msgid "Venues"
 msgstr "Salles"
 
-#: checkins/views.py:223
+#: checkins/views.py:221
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr "Identifiants générés฀pour %s"
 
-#: checkins/views.py:230
+#: checkins/views.py:228
 msgid "Identifiers"
 msgstr "Identifiants"
 
-#: checkins/views.py:266
+#: checkins/views.py:264
 msgid ""
 "Could not check you in as you do not have an identifying code — your tab "
 "director may need to make you an identifier."
@@ -233,19 +249,19 @@ msgstr ""
 "N’a pas pu vous enregistrer parce que vous n’avez pas d’identifiant — le "
 "rapporteur pourrait devoir vous en créer."
 
-#: checkins/views.py:273
+#: checkins/views.py:271
 msgid "You have revoked your check-in."
 msgstr "Vous vous êtes dé-enregistré."
 
-#: checkins/views.py:275
+#: checkins/views.py:273
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr "Oups ! Vous étiez déjà désinscrit."
 
-#: checkins/views.py:278
+#: checkins/views.py:276
 msgid "Whoops! Looks like you're already checked in."
 msgstr "Oups ! Vous étiez déjà enregistré."
 
-#: checkins/views.py:280
+#: checkins/views.py:278
 msgid "You are now checked in."
 msgstr "Vous êtes désormais enregistré."
 
@@ -449,7 +465,7 @@ msgid ""
 "strong>."
 msgstr ""
 "Pour un tournoi de cette taille, nous suggérons une donation de <strong>"
-"%(amount)s $</strong>."
+"%(amount)s$</strong>."
 
 #: templates/footer.html:28
 msgid "Learn more about donating."
@@ -487,7 +503,7 @@ msgstr ""
 
 #: templates/footer.html:51
 msgid "Need ballots?"
-msgstr "Avez-vous besoin de bulletins&nbsp;?"
+msgstr "Avez-vous besoin de feuilles&nbsp;?"
 
 #: templates/footer.html:53
 msgid ""
@@ -497,7 +513,7 @@ msgid ""
 msgstr ""
 "Vous pouvez <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel="
 "\"noreferrer\" target=\"_blank\">personnaliser et imprimer</a> de beaux "
-"bulletins à partir de votre navigateur."
+"feuilles à partir de votre navigateur."
 
 #: templates/footer.html:72
 msgid "GitHub"
@@ -543,8 +559,8 @@ msgstr "Zone d'assistants"
 msgid "Public Area"
 msgstr "Zone publique"
 
-#: templates/nav/admin_nav.html:57 templates/nav/admin_nav.html:155
-#: templates/nav/admin_nav.html:192 templates/nav/admin_nav.html:257
+#: templates/nav/admin_nav.html:57 templates/nav/admin_nav.html:159
+#: templates/nav/admin_nav.html:199 templates/nav/admin_nav.html:264
 msgid "Overview"
 msgstr "Vue d’ensemble"
 
@@ -561,7 +577,7 @@ msgid "Import Data"
 msgstr "Importer des données"
 
 #: templates/nav/admin_nav.html:78 templates/nav/assistant_nav.html:18
-#: templates/nav/public_nav.html:177
+#: templates/nav/public_nav.html:173
 msgid "Participants"
 msgstr "Participants"
 
@@ -570,110 +586,120 @@ msgid "Private URLs"
 msgstr "URLs privées"
 
 #: templates/nav/admin_nav.html:86
+#, fuzzy
+#| msgid "email"
+msgid "Emails"
+msgstr "courriel"
+
+#: templates/nav/admin_nav.html:90
 msgid "Preformed Panels"
 msgstr "Jurys préformés"
 
-#: templates/nav/admin_nav.html:90
+#: templates/nav/admin_nav.html:94
 msgid "Edit Database"
 msgstr "Modification de la base de données"
 
-#: templates/nav/admin_nav.html:100 templates/nav/public_nav.html:162
+#: templates/nav/admin_nav.html:104 templates/nav/public_nav.html:158
 msgid "Sides"
 msgstr "Côtés"
 
-#: templates/nav/admin_nav.html:112 templates/nav/admin_nav.html:210
-#: templates/nav/public_nav.html:152
+#: templates/nav/admin_nav.html:116 templates/nav/admin_nav.html:217
+#: templates/nav/public_nav.html:148
 msgid "Divisions"
 msgstr "Divisions"
 
-#: templates/nav/admin_nav.html:137 templates/nav/assistant_nav.html:48
+#: templates/nav/admin_nav.html:141 templates/nav/assistant_nav.html:48
 msgid "People's Status"
 msgstr "Statuts des Personnes"
 
-#: templates/nav/admin_nav.html:141
+#: templates/nav/admin_nav.html:145
 msgid "Rooms' Status"
 msgstr "Statuts des Salles"
 
-#: templates/nav/admin_nav.html:149
+#: templates/nav/admin_nav.html:153
 msgid "Feedback"
 msgstr "Évaluations"
 
-#: templates/nav/admin_nav.html:158
+#: templates/nav/admin_nav.html:162
 msgid "Latest"
 msgstr "Récents"
 
-#: templates/nav/admin_nav.html:161
+#: templates/nav/admin_nav.html:165
 msgid "Important"
 msgstr "Important"
 
-#: templates/nav/admin_nav.html:164
+#: templates/nav/admin_nav.html:168
+msgid "Comments"
+msgstr ""
+
+#: templates/nav/admin_nav.html:171
 msgid "Find by Source"
 msgstr "Trouver par source"
 
-#: templates/nav/admin_nav.html:167
+#: templates/nav/admin_nav.html:174
 msgid "Find by Target"
 msgstr "Trouver par cible"
 
-#: templates/nav/admin_nav.html:170
+#: templates/nav/admin_nav.html:177
 msgid "Unsubmitted"
 msgstr "Non soumis"
 
-#: templates/nav/admin_nav.html:173
+#: templates/nav/admin_nav.html:180
 msgid "Add Feedback"
 msgstr "Saisir des commentaires"
 
-#: templates/nav/admin_nav.html:176
+#: templates/nav/admin_nav.html:183
 msgid "Bulk Update"
 msgstr "Mise à jour par lots"
 
-#: templates/nav/admin_nav.html:185 templates/nav/public_nav.html:167
+#: templates/nav/admin_nav.html:192 templates/nav/public_nav.html:163
 msgid "Standings"
 msgstr "Classement"
 
-#: templates/nav/admin_nav.html:196
+#: templates/nav/admin_nav.html:203
 msgid "All Teams"
 msgstr "Toutes les équipes"
 
-#: templates/nav/admin_nav.html:198
+#: templates/nav/admin_nav.html:205
 msgid "Teams"
 msgstr "Équipes"
 
-#: templates/nav/admin_nav.html:203 templates/nav/public_nav.html:13
+#: templates/nav/admin_nav.html:210 templates/nav/public_nav.html:13
 #, python-format
 msgid "%(category_name)s Teams"
 msgstr "Équipes %(category_name)s"
 
-#: templates/nav/admin_nav.html:215
+#: templates/nav/admin_nav.html:222
 msgid "All Speakers"
 msgstr "Tous les orateurs"
 
-#: templates/nav/admin_nav.html:222 templates/nav/public_nav.html:30
+#: templates/nav/admin_nav.html:229 templates/nav/public_nav.html:30
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr "Orateurs %(category_name)s"
 
-#: templates/nav/admin_nav.html:230
+#: templates/nav/admin_nav.html:237
 msgid "Replies"
 msgstr "Répliques"
 
-#: templates/nav/admin_nav.html:234 templates/nav/public_nav.html:157
+#: templates/nav/admin_nav.html:241 templates/nav/public_nav.html:153
 msgid "Motions"
 msgstr "Motions"
 
-#: templates/nav/admin_nav.html:237 templates/nav/public_nav.html:172
+#: templates/nav/admin_nav.html:244 templates/nav/public_nav.html:168
 msgid "Diversity"
 msgstr "Diversité"
 
-#: templates/nav/admin_nav.html:250
+#: templates/nav/admin_nav.html:257
 msgid "Breaks"
 msgstr "Qualifications"
 
-#: templates/nav/admin_nav.html:261
+#: templates/nav/admin_nav.html:268
 #, python-format
 msgid "%(category_name)s"
 msgstr "%(category_name)s"
 
-#: templates/nav/admin_nav.html:280 templates/nav/top_nav_base.html:101
+#: templates/nav/admin_nav.html:287 templates/nav/top_nav_base.html:101
 msgid "Log Out"
 msgstr "Deconnexion"
 
@@ -681,7 +707,7 @@ msgstr "Deconnexion"
 msgid "Enter Results"
 msgstr "Saisie des résultats"
 
-#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:197
+#: templates/nav/assistant_nav.html:11 templates/nav/public_nav.html:193
 msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
@@ -689,7 +715,7 @@ msgstr "Saisie d'une commentaire"
 msgid "Participants List"
 msgstr "Liste de participants"
 
-#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:182
+#: templates/nav/assistant_nav.html:25 templates/nav/public_nav.html:178
 msgid "Institutions"
 msgstr "Institutions"
 
@@ -754,17 +780,17 @@ msgstr "Tirages actuelles"
 msgid "Results"
 msgstr "Résultats"
 
-#: templates/nav/public_nav.html:130
+#: templates/nav/public_nav.html:126
 msgid "Break"
 msgstr "Qualification"
 
-#: templates/nav/public_nav.html:187
+#: templates/nav/public_nav.html:183
 msgid "Feedback Progress"
 msgstr "Progrès des commentaires"
 
-#: templates/nav/public_nav.html:192
+#: templates/nav/public_nav.html:188
 msgid "Enter Ballot"
-msgstr "Saisie d'un bulletin"
+msgstr "Saisie d'une feuille"
 
 #: templates/nav/round_panel.html:27
 msgid "Availability"
@@ -806,8 +832,9 @@ msgid "Goodbye"
 msgstr "Au revoir"
 
 #: templates/registration/logged_out.html:12
-#, python-format
-msgid "You have been logged out. <a href=\"%(login)s\">Log in again?</a>"
+#, fuzzy, python-format
+#| msgid "You have been logged out. <a href=\"%(login)s\">Log in again?</a>"
+msgid "You have been logged out. <a href=\"%(login_url)s\">Log in again?</a>"
 msgstr ""
 "Vous avez été déconnecté. Voulez-vous vous <a href=\"%(login)s"
 "\">reconnecter</a> ?"
@@ -1052,21 +1079,18 @@ msgstr ""
 #~ msgstr "note d’équipe"
 
 #~ msgid "ballot confirmed"
-#~ msgstr "bulletin confirmé"
+#~ msgstr "feuille confirmé"
 
 #~ msgid "feedback URL"
 #~ msgstr "URL de commentaires"
 
 #~ msgid "ballot URL"
-#~ msgstr "URL de bulletin"
+#~ msgstr "URL de feuille"
 
 #, fuzzy
 #~| msgid "splash page URL"
 #~ msgid "landing page URL"
 #~ msgstr "URL d’écran de lancement"
-
-#~ msgid "email"
-#~ msgstr "courriel"
 
 #~ msgid "recipient"
 #~ msgstr "destinataire"
@@ -1084,7 +1108,7 @@ msgstr ""
 #~ msgstr "tour"
 
 #~ msgid "Check In Ballots"
-#~ msgstr "Enregistrement de la présence des bulletins de vote"
+#~ msgstr "Enregistrement de la présence des feuilles de jugement"
 
 #~ msgid "Later, %(username)s — you were logged out!"
 #~ msgstr "Salut, %(username)s — vous venez de vous déconnecter !"

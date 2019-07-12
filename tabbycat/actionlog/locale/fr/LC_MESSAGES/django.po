@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
+"POT-Creation-Date: 2019-01-25 23:03-0500\n"
 "PO-Revision-Date: 2018-11-01 23:13-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -24,31 +24,31 @@ msgstr "Journal des actions"
 
 #: actionlog/models.py:89
 msgid "Discarded ballot set"
-msgstr "Rejeté un ensemble de bulletins de vote"
+msgstr "Rejeté un ensemble de feuilles de jugement"
 
 #: actionlog/models.py:90
 msgid "Checked in ballot set"
-msgstr "Enregistré la présence d'un ensemble de bulletins de vote"
+msgstr "Enregistré la présence d'un ensemble de feuilles de jugement"
 
 #: actionlog/models.py:91
 msgid "Created ballot set"
-msgstr "Créé un ensemble de bulletins de vote"
+msgstr "Créé un ensemble de feuilles de jugement"
 
 #: actionlog/models.py:92
 msgid "Edited ballot set"
-msgstr "Modifié un ensemble de bulletins de vote"
+msgstr "Modifié un ensemble de feuilles de jugement"
 
 #: actionlog/models.py:93
 msgid "Confirmed ballot set"
-msgstr "Confirmé un ensemble de bulletins de vote"
+msgstr "Confirmé un ensemble de feuilles de jugement"
 
 #: actionlog/models.py:94
 msgid "Submitted ballot set from the public form"
-msgstr "Saisi un ensemble de bulletins de vote de la formulaire publique"
+msgstr "Saisi un ensemble de feuilles de jugement du formulaire publique"
 
 #: actionlog/models.py:95
 msgid "Submitted feedback from the public form"
-msgstr "Saisi un commentaire de la formulaire publique"
+msgstr "Saisi un commentaire du formulaire publique"
 
 #: actionlog/models.py:96
 msgid "Saved feedback"

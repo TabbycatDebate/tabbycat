@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
+"POT-Creation-Date: 2019-01-25 23:03-0500\n"
 "PO-Revision-Date: 2018-11-01 22:26-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -93,7 +93,7 @@ msgstr "préférences"
 
 #: motions/models.py:46
 msgid "ballot submission"
-msgstr "soumission de bulletin"
+msgstr "soumission de feuille"
 
 #: motions/models.py:50
 msgid "debate team motion preference"
@@ -180,7 +180,14 @@ msgstr "Sauvegarder"
 msgid "Motion Statistics"
 msgstr "Statistiques des Motions"
 
-#: motions/templates/motion_statistics.html:30
+#: motions/templates/motion_statistics.html:12
+msgid ""
+"The results data displayed here is presented without tests for statistical "
+"significance. Correlations should not be automatically considered reliable; "
+"particularly at small tournaments and during elimination rounds."
+msgstr ""
+
+#: motions/templates/motion_statistics.html:39
 #: motions/templates/public_motions.html:31
 msgid "View Info Slide"
 msgstr "Voir la diapositive d'information"

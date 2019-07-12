@@ -561,7 +561,7 @@ msgstr "Pas enregistré"
 
 #: results/templates/ResultsStats.vue:19
 msgid "Ballot Check-Ins"
-msgstr "Enregistrements de bulletins"
+msgstr "Enregistrements de feuilles"
 
 #: results/templates/ResultsStats.vue:26
 msgid "Unknown"
@@ -577,15 +577,15 @@ msgstr "Confirmé"
 
 #: results/templates/ResultsStats.vue:40
 msgid "Ballot Statuses"
-msgstr "Statuts de bulletins"
+msgstr "Statuts de feuilles"
 
 #: results/templates/BallotsCell.vue:18
 msgid "You cannot confirm this ballot because you entered it"
-msgstr "Vous pouvez pas confirmer ce bulletin parce que vous l’avez saisi"
+msgstr "Vous pouvez pas confirmer ce feuille parce que vous l’avez saisi"
 
 #: results/templates/BallotsCell.vue:34
 msgid "Add Ballot"
-msgstr "Ajouter bulletin"
+msgstr "Ajouter feuille"
 
 #: results/templates/BallotsCell.vue:79
 msgid "Re-Edit"

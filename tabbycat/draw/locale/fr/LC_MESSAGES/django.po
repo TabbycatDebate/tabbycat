@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
+"POT-Creation-Date: 2019-01-25 23:03-0500\n"
 "PO-Revision-Date: 2018-08-15 23:26-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -45,7 +45,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: draw/apps.py:7 draw/views.py:421 draw/views.py:424
+#: draw/apps.py:7 draw/views.py:435 draw/views.py:438
 msgid "Draw"
 msgstr "Tirage"
 
@@ -753,7 +753,7 @@ msgid ""
 "entry. Make sure they are added before results come in!"
 msgstr ""
 "Votre configuration/format nécessite la spécification des motions dans le "
-"cadre de la saisie des bulletins. Assurez-vous que vous les ajoutiez avant "
+"cadre de la saisie des feuilles. Assurez-vous que vous les ajoutiez avant "
 "que les résultats arrivent !"
 
 #: draw/templates/draw_display_admin.html:71
@@ -775,7 +775,7 @@ msgid ""
 "the public motions page."
 msgstr ""
 "Vous devriez enregistrer une motion si vous voulez l'afficher dans "
-"l'auditorium, l'imprimer sur vos bulletins (en utilisant les liens ci-"
+"l'auditorium, l'imprimer sur vos feuilles (en utilisant les liens ci-"
 "dessous), ou l'afficher (plus tard) sur la page publique pour les motions."
 
 #: draw/templates/draw_display_admin.html:98
@@ -825,7 +825,7 @@ msgid ""
 "\"alert-link\" href=\"%(alert_link)s\"> this tournament's configuration</a>."
 msgstr ""
 "Puisque vous avez publié le tirage, il est possible d'utiliser les "
-"formulaires publics afin de soumettre les bulletins ou les commentaires (si "
+"formulaires publics afin de soumettre les feuilles ou les évaluations (si "
 "ces formulaires sont activés). Cependant, le tirage ne s'affichera pas à "
 "moins que le paramètre « affichage public du tirage » soit activé dans <a "
 "class=\"alert-link\" href=\"%(alert_link)s\">la configuration de ce tournoi</"
@@ -851,8 +851,8 @@ msgid ""
 "Your tournament allows ballots and feedback to be submitted online by "
 "adjudicators. The draw must be released before they can do so."
 msgstr ""
-"Votre tournoi permet aux juges de soumettre en ligne les bulletins et les "
-"commentaires. Avant qu'ils puissent le faire, il faut que le tirage soit "
+"Votre tournoi permet aux juges de soumettre en ligne les feuilles et les "
+"évaluations. Avant qu'ils puissent le faire, il faut que le tirage soit "
 "publié."
 
 #: draw/templates/draw_display_admin.html:169
@@ -860,7 +860,7 @@ msgid ""
 "Your tournament allows ballots to be submitted online by adjudicators. The "
 "draw must be released before they can do so."
 msgstr ""
-"Votre tournoi permet aux juges de soumettre en ligne les bulletins. Avant "
+"Votre tournoi permet aux juges de soumettre en ligne les feuilles. Avant "
 "qu'ils puissent le faire, il faut que le tirage soit publié."
 
 #: draw/templates/draw_display_admin.html:172
@@ -868,7 +868,7 @@ msgid ""
 "Your tournament allows feedback to be submitted online by participants. The "
 "draw must be released before they can do so."
 msgstr ""
-"Votre tournoi permet aux juges de soumettre en ligne les commentaires. Avant "
+"Votre tournoi permet aux juges de soumettre en ligne les évaluations. Avant "
 "qu'ils puissent le faire, il faut que le tirage soit publié."
 
 #: draw/templates/draw_display_admin.html:176
@@ -885,7 +885,7 @@ msgid ""
 "submissions. There's no reason to release the draw."
 msgstr ""
 "Votre configuration n'a ni de page publique pour le tirage ni les "
-"soumissions des bulletins et/ou commentaires. Il n'y a aucune raison de "
+"soumissions des feuilles et/ou évaluations. Il n'y a aucune raison de "
 "publier le tirage."
 
 #: draw/templates/draw_display_admin.html:202
@@ -920,9 +920,9 @@ msgid ""
 "able to be submitted."
 msgstr ""
 "Selon la configuration de votre tournoi, les motions peuvent être "
-"sélectionnées dans les bulletins, que soumettent les juges. Assurez-vous que "
-"vous publiez les motions avant que les débats terminent, sinon les bulletins "
-"ne pourront pas être soumis."
+"sélectionnées dans les feuilles, que soumettent les juges. Assurez-vous que "
+"vous publiez les motions avant que les débats terminent, sinon les feuilles "
+"ne pourront pas être soumisses."
 
 #: draw/templates/draw_display_admin.html:226
 msgid ""
@@ -931,9 +931,9 @@ msgid ""
 "before debates finish, otherwise ballots will not be able to nominate vetoes."
 msgstr ""
 "Selon la configuration de votre tournoi, les équipes peuvent opposer leur "
-"veto aux motions, et les juges soumettent les bulletins. Assurez-vous que "
-"vous publiez les motions avant que les débats terminent, sinon les bulletins "
-"ne pourront pas être soumis."
+"veto aux motions, et les juges soumettent les feuilles. Assurez-vous que "
+"vous publiez les motions avant que les débats terminent, sinon les feuilles "
+"ne pourront pas être soumisses."
 
 #: draw/templates/draw_display_admin.html:230
 msgid ""
@@ -1025,19 +1025,19 @@ msgstr ""
 msgid "Display Motions"
 msgstr "Publication des motions"
 
-#: draw/templates/draw_display_admin.html:337
+#: draw/templates/draw_display_admin.html:339
 #, fuzzy
 #| msgid "Edit motions"
 msgid "Email Motions"
 msgstr "Modifier les motions"
 
-#: draw/templates/draw_display_admin.html:339
+#: draw/templates/draw_display_admin.html:341
 #, fuzzy
 #| msgid "Release Motions"
 msgid "Email Motion"
 msgstr "Publication des motions"
 
-#: draw/templates/draw_display_admin.html:359
+#: draw/templates/draw_display_admin.html:361
 msgid "Start at"
 msgstr ""
 
@@ -1132,7 +1132,7 @@ msgid "Adjudicator Allocations"
 msgstr "Attributions de juges"
 
 #: draw/templates/draw_status_confirmed.html:26
-msgid "There are currently fewer checked-in adjudicators than there are rooms."
+msgid "There are currently fewer adjudicators checked in than there are rooms."
 msgstr ""
 
 #: draw/templates/draw_status_confirmed.html:37
@@ -1161,19 +1161,19 @@ msgstr "Attribution de salles"
 
 #: draw/templates/draw_status_confirmed.html:71
 msgid "Allocate venues (legacy interface)"
-msgstr ""
+msgstr "Attribuer les salles (vieux interface)"
 
 #: draw/templates/draw_status_confirmed.html:74
 msgid "Edit venue allocation (legacy interface)"
-msgstr ""
+msgstr "Modifier attribution de salles (vieux interface)"
 
 #: draw/templates/draw_status_confirmed.html:80
 msgid "Allocate venues"
-msgstr ""
+msgstr "Attribuer les salles"
 
 #: draw/templates/draw_status_confirmed.html:83
 msgid "Edit venue allocation"
-msgstr ""
+msgstr "Modifier attribution de salles"
 
 #: draw/templates/draw_status_confirmed.html:98
 msgid "Side Allocations"
@@ -1315,7 +1315,7 @@ msgstr ""
 msgid "Draws for %(vc)s"
 msgstr "Tirage de %(round)s"
 
-#: draw/views.py:70 draw/views.py:452
+#: draw/views.py:70 draw/views.py:466
 #, fuzzy
 #| msgid "No Debates for this Round"
 msgid "No debates in this round"
@@ -1369,61 +1369,65 @@ msgstr "Tous les débats pour toutes les joutes de %(tournament)s"
 msgid "Adjudicator Assignments"
 msgstr "Attributions de juges"
 
-#: draw/views.py:416
+#: draw/views.py:406
+msgid "Team Pairings"
+msgstr ""
+
+#: draw/views.py:430
 msgid "No Draw"
 msgstr "Aucun tirage"
 
-#: draw/views.py:418
+#: draw/views.py:432
 msgid "Draft Draw"
 msgstr "Tirage brouillon"
 
 #. Translators: e.g. "Affirmative: Break rank"
-#: draw/views.py:505
+#: draw/views.py:519
 #, python-format
 msgid "%(side_name)s: Break rank"
 msgstr "%(side_name)s : rang dans la qualification"
 
 #. Translators: "BR" stands for "Break rank"
-#: draw/views.py:510
+#: draw/views.py:524
 msgid "BR"
 msgstr "RQ"
 
-#: draw/views.py:535
+#: draw/views.py:549
 msgid "Draw with Details"
 msgstr "Tirage detaillé"
 
-#: draw/views.py:543
+#: draw/views.py:557
 msgid "Position Balance Report"
 msgstr "Rapport sur l'équilibre des positions"
 
-#: draw/views.py:554
+#: draw/views.py:568
 #, python-format
 msgid "Rényi entropy of order %(order)s"
 msgstr ""
 
 #. Translators: This is appended to the string "Rényi entropy of order 1.0"
-#: draw/views.py:557
+#: draw/views.py:571
 msgid " (<i>i.e.</i>, Shannon entropy)"
 msgstr ""
 
-#: draw/views.py:587
+#: draw/views.py:601
 msgid "Teams with position imbalances"
 msgstr ""
 
-#: draw/views.py:588
+#: draw/views.py:602
 msgid "No teams with position imbalances! Hooray!"
 msgstr ""
 
-#: draw/views.py:591
+#: draw/views.py:605
 msgid "Annotated draw"
 msgstr ""
 
-#: draw/views.py:622
+#: draw/views.py:636
 #, python-format
 msgid "Could not create draw for %(round)s, there was already a draw!"
 msgstr ""
 
-#: draw/views.py:630
+#: draw/views.py:644
 #, python-format
 msgid ""
 "<p>The draw could not be created, for the following reason: <em>%(message)s</"
@@ -1431,7 +1435,7 @@ msgid ""
 "<p>Please fix this issue before attempting to create the draw.</p>"
 msgstr ""
 
-#: draw/views.py:638
+#: draw/views.py:652
 #, python-format
 msgid ""
 "The draw could not be created, because the following error occurred: <em>"
@@ -1440,7 +1444,7 @@ msgid ""
 "contact the developers.</p>"
 msgstr ""
 
-#: draw/views.py:647
+#: draw/views.py:661
 #, python-format
 msgid ""
 "<p>The team standings could not be generated, because the following error "
@@ -1449,63 +1453,66 @@ msgid ""
 "prevents the draw from being generated.</p>"
 msgstr ""
 
-#: draw/views.py:663
+#: draw/views.py:677
 msgid ""
 "Venues were not auto-allocated because there are one or more adjudicator "
 "venue constraints. You should run venue allocations after allocating "
 "adjudicators."
 msgstr ""
+"Les salles n'ont pas été automatiquement attribués car il y a des juges avec "
+"des contraintes de salle. Vous devriez allouer les salles après d'avoir "
+"assigné les juges."
 
-#: draw/views.py:690
+#: draw/views.py:704
 msgid "Deleted the draw. You can now recreate it as normal."
 msgstr ""
 
-#: draw/views.py:710
+#: draw/views.py:724
 msgid "Released the draw."
 msgstr ""
 
-#: draw/views.py:725
+#: draw/views.py:739
 msgid "Unreleased the draw."
 msgstr ""
 
-#: draw/views.py:738
+#: draw/views.py:752
 #, python-format
 msgid ""
 "Sorry, \"%(input)s\" isn't a valid time. It must be in 24-hour format, with "
 "a colon, for example: \"13:57\"."
 msgstr ""
 
-#: draw/views.py:829
+#: draw/views.py:843
 msgid "Side Pre-Allocations"
 msgstr "Pré-Répartition des côtés aux équipes"
 
-#: draw/views.py:862
+#: draw/views.py:876
 #, fuzzy
 #| msgid "Edit Sides/Matchups"
 msgid "Edit Matchups"
 msgstr "Modifier les côtés/appariements"
 
-#: draw/views.py:1015
+#: draw/views.py:1029
 msgid "All Draws for All Teams"
 msgstr ""
 
-#: draw/views.py:1028
+#: draw/views.py:1042
 #, python-format
 msgid "All Debates for Teams from %(institution)s"
 msgstr ""
 
-#: draw/views.py:1047
+#: draw/views.py:1061
 msgid ""
 "This venue category does not exist or the URL for it might have changed. Try "
 "finding it again from the homepage."
 msgstr ""
 
-#: draw/views.py:1054
+#: draw/views.py:1068
 #, python-format
 msgid "All Debates at %(venue_category)s"
 msgstr ""
 
-#: draw/views.py:1056
+#: draw/views.py:1070
 msgid "Unknown Venue Category"
 msgstr ""
 
@@ -1541,7 +1548,7 @@ msgstr ""
 #~ msgstr "Points"
 
 #~ msgid "ballot in"
-#~ msgstr "bulletin reçu"
+#~ msgstr "feuille reçu"
 
 #~ msgid "Room rank"
 #~ msgstr "Rang de salle"
