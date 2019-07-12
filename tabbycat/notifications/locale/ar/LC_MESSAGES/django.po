@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: 2019-07-11 23:50\n"
+"PO-Revision-Date: 2019-07-12 00:26\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Arabic\n"
 "Language: ar_SA\n"
@@ -70,11 +70,11 @@ msgstr ""
 
 #: notifications/models.py:41
 msgid "tournament"
-msgstr ""
+msgstr "البطولة"
 
 #: notifications/models.py:43
 msgid "round"
-msgstr ""
+msgstr "جولة"
 
 #: notifications/models.py:48
 msgid "context"
