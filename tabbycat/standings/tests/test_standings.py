@@ -59,6 +59,14 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, True))
         self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, True))
 
+    def test_only_extra_metrics(self):
+        generator = TeamStandingsGenerator((), ('rank', 'subrank'), extra_metrics=('points',))
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, True))
+
     def test_no_rankings(self):
         generator = TeamStandingsGenerator(('points',), ())
         standings = generator.generate(self.tournament.team_set.all())

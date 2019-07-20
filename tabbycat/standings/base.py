@@ -139,7 +139,7 @@ class Standings:
         self._rank_limit = None
 
         self.metric_keys = list()
-        self.metric_ascending = list()
+        self.metric_ascending = dict()
         self.ranking_keys = list()
         self._metric_specs = list()
         self._ranking_specs = list()
@@ -208,7 +208,7 @@ class Standings:
 
     def record_added_metric(self, key, name, abbr, icon, ascending):
         self.metric_keys.append(key)
-        self.metric_ascending.append(ascending)
+        self.metric_ascending[key] = ascending
         self._metric_specs.append((key, name, abbr, icon))
 
     def record_added_ranking(self, key, name, abbr, icon):
@@ -225,7 +225,8 @@ class Standings:
         if tiebreak_func:
             tiebreak_func(self._standings)
 
-        metrics_for_ranking = metricgetter(precedence, self.metric_ascending)
+        ascending = [self.metric_ascending[key] for key in precedence]
+        metrics_for_ranking = metricgetter(precedence, ascending)
 
         try:
             self._standings.sort(key=metrics_for_ranking, reverse=True)
