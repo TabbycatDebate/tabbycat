@@ -18,7 +18,7 @@ class BallotSubmissionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_editable = ('confirmed',)
     search_fields = ('debate__debateteam__team__reference', 'debate__debateteam__team__institution__code')
     raw_id_fields = ('debate', 'motion', 'forfeit')
-    list_filter = ('debate__round', 'submitter', 'confirmer')
+    list_filter = ('debate__round', 'debate__round__tournament', 'submitter', 'confirmer')
     # This incurs a massive performance hit
     # inlines = (SpeakerScoreByAdjInline, SpeakerScoreInline, TeamScoreInline)
 
