@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-11-02 08:45-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -26,7 +26,19 @@ msgstr ""
 "Aucun juge n’est disponible. Assurez-vous qu’il y a des juges marqués comme "
 "disponibles pour cette joute avant de commencer l’allocation automatisée."
 
-#: adjallocation/allocators/hungarian.py:97
+#: adjallocation/allocators/hungarian.py:52
+#, python-format
+msgid "%(count)s normalised score is larger than 5.0."
+msgid_plural "%(count)s normalised scores are larger than 5.0."
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/allocators/hungarian.py:60
+#, python-format
+msgid "%(count)s normalised scores are smaller than 0.0."
+msgstr ""
+
+#: adjallocation/allocators/hungarian.py:109
 #, fuzzy
 #| msgid ""
 #| "There are no adjudicators eligible to be a chair or panellist. This "
@@ -44,12 +56,33 @@ msgstr ""
 "juge pour le droit de vote » dans la section Règles du tirage des paramètres "
 "pour permettre à quelques juges de se faire allouer."
 
-#: adjallocation/allocators/hungarian.py:105
+#: adjallocation/allocators/hungarian.py:117
 msgid ""
 "There are no debates for this round. Maybe you haven't created a draw yet?"
 msgstr ""
 "Il n’y a aucun débat dans cette joute. N’aurez-vous pas encore fait un "
 "tirage ?"
+
+#: adjallocation/allocators/hungarian.py:164
+#, python-format
+msgid ""
+"There are %(debate_count)s debates but only %(adj_count)s voting "
+"adjudicators."
+msgstr ""
+
+#: adjallocation/allocators/hungarian.py:172
+#, python-format
+msgid ""
+"There are %(panel_debates)s panel debates but only %(panellists)s available "
+"panellists (less than %(needed)s)."
+msgstr ""
+
+#: adjallocation/allocators/hungarian.py:282
+#, python-format
+msgid ""
+"There are %(debates_count)s debates but only %(voting_count)s voting "
+"adjudicators."
+msgstr ""
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
@@ -67,59 +100,67 @@ msgstr ""
 "Le tirage n'est pas encore confirmé; il faut le confirmer pour pouvoir faire "
 "la répartition automatique."
 
-#: adjallocation/consumers.py:68
+#: adjallocation/consumers.py:69
 msgid "There are no preformed panels available to allocate."
 msgstr ""
 
-#: adjallocation/consumers.py:104
+#: adjallocation/consumers.py:105
 msgid "Succesfully auto-allocated preformed panels to debates."
 msgstr ""
 
-#: adjallocation/consumers.py:106
+#: adjallocation/consumers.py:107
 msgid "Succesfully auto-allocated adjudicators to debates."
 msgstr ""
 
-#: adjallocation/consumers.py:117
+#: adjallocation/consumers.py:109
+msgid " However there was a warning:"
+msgstr ""
+
+#: adjallocation/consumers.py:123
 msgid "There aren't any panels to fill. Create panels first."
 msgstr ""
 
-#: adjallocation/consumers.py:138
+#: adjallocation/consumers.py:144
 msgid "Succesfully auto-allocated adjudicators to preformed panels."
 msgstr ""
 
-#: adjallocation/consumers.py:182
+#: adjallocation/consumers.py:146
+msgid "However there was a warning:"
+msgstr ""
+
+#: adjallocation/consumers.py:193
 msgid ""
 "You have no break category set as 'is general' so debate importances can't "
 "be calculated."
 msgstr ""
 
-#: adjallocation/consumers.py:190
+#: adjallocation/consumers.py:201
 msgid "Succesfully auto-prioritised debates."
 msgstr ""
 
-#: adjallocation/consumers.py:212
+#: adjallocation/consumers.py:223
 msgid ""
 "You have no break category set as 'is general' so panel importances can't be "
 "calculated."
 msgstr ""
 
-#: adjallocation/consumers.py:221
+#: adjallocation/consumers.py:232
 msgid "Succesfully auto-prioritised preformed panels."
 msgstr ""
 
-#: adjallocation/consumers.py:239
+#: adjallocation/consumers.py:250
 msgid ""
 "Since this is the first round, the preformed panels aren't annotated with "
 "brackets and liveness."
 msgstr ""
 
-#: adjallocation/consumers.py:242
+#: adjallocation/consumers.py:253
 msgid ""
 "The previous round's draw doesn't exist, so preformed panels can't be "
 "annotated with brackets and liveness."
 msgstr ""
 
-#: adjallocation/consumers.py:245
+#: adjallocation/consumers.py:256
 msgid "Succesfully created new preformed panels for this round."
 msgstr ""
 

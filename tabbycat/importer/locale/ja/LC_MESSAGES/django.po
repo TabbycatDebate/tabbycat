@@ -2,20 +2,21 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
-"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
+"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/"
+"ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: importer/forms.py:20
@@ -60,8 +61,8 @@ msgstr "スピーカーのメールアドレス"
 
 #: importer/forms.py:212
 msgid ""
-"Optional, useful to include if distributing private URLs, list in same order"
-" as speakers' names"
+"Optional, useful to include if distributing private URLs, list in same order "
+"as speakers' names"
 msgstr ""
 
 #: importer/forms.py:219
@@ -113,17 +114,17 @@ msgstr ""
 msgid "There are more email addresses than speakers."
 msgstr ""
 
-#: importer/forms.py:313
+#: importer/forms.py:316
 msgid ""
 "Every team in a single tournament from the same institution must have a "
 "different name. Please correct the duplicate data."
 msgstr ""
 
-#: importer/forms.py:327
+#: importer/forms.py:330
 msgid "Rating"
 msgstr ""
 
-#: importer/forms.py:335
+#: importer/forms.py:338
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
 msgstr ""
@@ -161,18 +162,18 @@ msgid ""
 "As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this "
 "tournament's configuration</a>, an adjudicator's rating must be between "
 "<strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email "
-"addresses is optional but can be useful if using <a "
-"href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for "
-"feedback or ballots."
+"addresses is optional but can be useful if using <a href="
+"\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback "
+"or ballots."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:29
 #, python-format
 msgid ""
 "Adjudicators marked as 'shared' will not be associated with any particular "
-"tournament but will be available to any tournament which has the \"<a "
-"href=\"%(options_league_url)s\" class=\"alert-link\">Share "
-"adjudicators</a>\" setting enabled."
+"tournament but will be available to any tournament which has the \"<a href="
+"\"%(options_league_url)s\" class=\"alert-link\">Share adjudicators</a>\" "
+"setting enabled."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:58
@@ -191,8 +192,8 @@ msgstr "すべてのジャッジを保存する"
 #: importer/templates/simple_import_adjudicators_numbers.html:14
 #, python-format
 msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add"
-" institutions</a> before adding adjudicators."
+"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
+"institutions</a> before adding adjudicators."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_numbers.html:23
@@ -221,10 +222,10 @@ msgstr "簡単入力"
 #: importer/templates/simple_import_index.html:9
 msgid ""
 "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-"
-"data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>."
-" Which one is best depends on the size of your tournament and your technical"
-" background. This <strong>simple importer</strong> is the easiest to use and"
-" works well for small- and medium-sized tournaments."
+"data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. "
+"Which one is best depends on the size of your tournament and your technical "
+"background. This <strong>simple importer</strong> is the easiest to use and "
+"works well for small- and medium-sized tournaments."
 msgstr ""
 
 #: importer/templates/simple_import_index.html:16
@@ -261,6 +262,12 @@ msgstr "ジャッジ間コンフリクトを追加・修正する"
 
 #: importer/templates/simple_import_index.html:55
 msgid "Add/Edit Adjudicator-Institution Conflicts"
+msgstr "ジャッジ - 大学間のコンフリクトを追加・修正する"
+
+#: importer/templates/simple_import_index.html:59
+#, fuzzy
+#| msgid "Add/Edit Adjudicator-Institution Conflicts"
+msgid "Add/Edit Team-Institution Conflicts"
 msgstr "ジャッジ - 大学間のコンフリクトを追加・修正する"
 
 #: importer/templates/simple_import_institutions_details.html:4
@@ -304,14 +311,14 @@ msgstr ""
 #: importer/templates/simple_import_teams_numbers.html:15
 #, python-format
 msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add"
-" institutions</a> before adding teams."
+"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
+"institutions</a> before adding teams."
 msgstr ""
 
 #: importer/templates/simple_import_teams_numbers.html:24
 msgid ""
-"Specify the number of new teams to add per institution. In the next step you"
-" can specify team and speaker names."
+"Specify the number of new teams to add per institution. In the next step you "
+"can specify team and speaker names."
 msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:4

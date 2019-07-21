@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-10-30 20:38-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -303,41 +303,57 @@ msgstr "Les équipes sont de la même institution"
 msgid "Conflicts/Flags"
 msgstr "Conflits/signalements"
 
-#: utils/tables.py:863
+#: utils/tables.py:860
+msgid "The ballot you submitted"
+msgstr ""
+
+#: utils/tables.py:864
 msgid "View/Edit Ballot"
 msgstr "Afficher/Modifier feuille"
 
-#: utils/tables.py:877 utils/tables.py:889
+#: utils/tables.py:873
+#, fuzzy
+#| msgid "Ballot"
+msgid "No ballot"
+msgstr "Feuille"
+
+#: utils/tables.py:875
+#, fuzzy
+#| msgid "Eliminated"
+msgid "Elimination"
+msgstr "Éliminé"
+
+#: utils/tables.py:878 utils/tables.py:890
 msgid "View Ballot"
 msgstr "Afficher feuille"
 
-#: utils/tables.py:897
+#: utils/tables.py:898
 msgid "Result"
 msgstr "Résultat"
 
 #. Translators: "TBC" stands for "to be confirmed".
-#: utils/tables.py:903
+#: utils/tables.py:904
 msgid "TBC"
 msgstr "ÀC"
 
-#: utils/tables.py:904
+#: utils/tables.py:905
 msgid "Side"
 msgstr "Côté"
 
-#: utils/tables.py:942
+#: utils/tables.py:943
 msgid "Team iron-manned this round and the last."
 msgstr ""
 "Équipe avait un orateur-seul pendant les joutes actuelle et précédente."
 
-#: utils/tables.py:945
+#: utils/tables.py:946
 msgid "Team iron-manned this round."
 msgstr "Équipe avait un orateur-seul pendant la joute actuelle."
 
-#: utils/tables.py:948
+#: utils/tables.py:949
 msgid "Team iron-manned last round."
 msgstr "Équipe avait un orateur-seul pendant la joute précédente."
 
-#: utils/tables.py:965 utils/tables.py:966
+#: utils/tables.py:966 utils/tables.py:967
 #, python-format
 msgid "Team %(num)d"
 msgstr "Équipe %(num)d"
@@ -387,6 +403,3 @@ msgstr "Oups ! Vous n’étiez pas sensé taper cet URL dans votre navigateur."
 
 #~ msgid "Adjs"
 #~ msgstr "Juges"
-
-#~ msgid "Ballot"
-#~ msgstr "Feuille"

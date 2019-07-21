@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-11-01 22:39-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -207,41 +207,41 @@ msgstr "%(speaker)s est manquant(e)."
 msgid "Scan Identifiers"
 msgstr "Numériser les identifiants"
 
-#: checkins/views.py:59
+#: checkins/views.py:60
 msgid "People's Check-In Statuses"
 msgstr "Statuts d’enregistrement des personnes"
 
-#: checkins/views.py:114
+#: checkins/views.py:115
 msgid "Venue's Check-In Statuses"
 msgstr "Statuts d’enregistrement des salles"
 
-#: checkins/views.py:163 templates/nav/admin_nav.html:133
+#: checkins/views.py:164 templates/nav/admin_nav.html:133
 msgid "Make Identifiers"
 msgstr "Créer les identifiants"
 
-#: checkins/views.py:170 templates/nav/admin_nav.html:224
+#: checkins/views.py:171 templates/nav/admin_nav.html:224
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: checkins/views.py:175 templates/nav/admin_nav.html:272
+#: checkins/views.py:176 templates/nav/admin_nav.html:272
 #: templates/nav/public_nav.html:138
 msgid "Adjudicators"
 msgstr "Juges"
 
-#: checkins/views.py:180
+#: checkins/views.py:181
 msgid "Venues"
 msgstr "Salles"
 
-#: checkins/views.py:221
+#: checkins/views.py:222
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr "Identifiants générés฀pour %s"
 
-#: checkins/views.py:228
+#: checkins/views.py:229
 msgid "Identifiers"
 msgstr "Identifiants"
 
-#: checkins/views.py:264
+#: checkins/views.py:265
 msgid ""
 "Could not check you in as you do not have an identifying code — your tab "
 "director may need to make you an identifier."
@@ -249,19 +249,19 @@ msgstr ""
 "N’a pas pu vous enregistrer parce que vous n’avez pas d’identifiant — le "
 "rapporteur pourrait devoir vous en créer."
 
-#: checkins/views.py:271
+#: checkins/views.py:272
 msgid "You have revoked your check-in."
 msgstr "Vous vous êtes dé-enregistré."
 
-#: checkins/views.py:273
+#: checkins/views.py:274
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr "Oups ! Vous étiez déjà désinscrit."
 
-#: checkins/views.py:276
+#: checkins/views.py:277
 msgid "Whoops! Looks like you're already checked in."
 msgstr "Oups ! Vous étiez déjà enregistré."
 
-#: checkins/views.py:278
+#: checkins/views.py:279
 msgid "You are now checked in."
 msgstr "Vous êtes désormais enregistré."
 

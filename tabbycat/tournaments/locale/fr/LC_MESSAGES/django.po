@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-10-30 10:41-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -115,7 +115,32 @@ msgstr ""
 "Si toutes les joutes préliminaires ont été achevées, cette plage est "
 "obligatoire."
 
-#: tournaments/mixins.py:104
+#: tournaments/mixins.py:112
+#, fuzzy, python-format
+#| msgid ""
+#| "You've been redirected to this page because of a problem with how teams "
+#| "are assigned to sides in a debate."
+msgid ""
+"You've been redirected to this page because tournament %(tournament_name)s "
+"has no rounds.Please create some before returning to the admin site"
+msgstr ""
+"Vous avez été redirigé(e) vers cette page en raison d’un problème avec "
+"l'attribution des équipes aux côtés dans un débat."
+
+#: tournaments/mixins.py:120
+#, fuzzy, python-format
+#| msgid ""
+#| "There's a problem with the data for the tournament %(tournament_name)s. "
+#| "Please contact a tab director and ask them to set its current round."
+msgid ""
+"There's a problem with the data for the tournament %(tournament_name)s. "
+"Please contact a tab director and ask them to investigate."
+msgstr ""
+"Les données du tournoi %(tournament_name)s ont un problème. Veuillez "
+"contacter un(e) directeur/directrice de tabulation et lui demander de "
+"définir la joute actuelle."
+
+#: tournaments/mixins.py:132
 msgid ""
 "You've been redirected to this page because of a problem with how teams are "
 "assigned to sides in a debate."
@@ -123,7 +148,7 @@ msgstr ""
 "Vous avez été redirigé(e) vers cette page en raison d’un problème avec "
 "l'attribution des équipes aux côtés dans un débat."
 
-#: tournaments/mixins.py:109
+#: tournaments/mixins.py:139
 msgid ""
 "There's a problem with how teams are assigned to sides in a debate. The tab "
 "director will need to resolve this issue."
@@ -131,12 +156,12 @@ msgstr ""
 "Il y a un problème avec comment les équipes sont assignées les côtés du "
 "débat. Les rapporteurs va devoir résoudre ce problème."
 
-#: tournaments/mixins.py:203
+#: tournaments/mixins.py:234
 #, python-format
 msgid "for %(round)s"
 msgstr "pour %(round)s"
 
-#: tournaments/mixins.py:402
+#: tournaments/mixins.py:433
 msgid "Return to Draw"
 msgstr "Retour au Tirage"
 
@@ -1359,7 +1384,7 @@ msgstr "Joute éliminatoire inconnue"
 msgid "UBR"
 msgstr "JÉI"
 
-#: tournaments/views.py:147
+#: tournaments/views.py:146
 #, python-format
 msgid ""
 "%(round)s has been marked as completed. All rounds are now completed, so "
@@ -1368,7 +1393,7 @@ msgstr ""
 "%(round)s a été marquée comme achevée. Maintenant que toutes les joutes le "
 "sont, vous avez terminé le tournoi ! Félicitations !"
 
-#: tournaments/views.py:153
+#: tournaments/views.py:152
 #, python-format
 msgid ""
 "%(round)s has been marked as completed. That's the last round in that "
@@ -1378,7 +1403,7 @@ msgstr ""
 "séquence. Retournant à la première joute qui n’a pas été marquée comme "
 "achevée."
 
-#: tournaments/views.py:166
+#: tournaments/views.py:165
 #, python-format
 msgid ""
 "%(round)s has been marked as completed. You've made it to the end of the "
@@ -1388,7 +1413,7 @@ msgstr ""
 "joutes préliminaires ! Félicitations ! L'étape suivante consiste à générer "
 "les équipes qualifiant aux joutes éliminatoires."
 
-#: tournaments/views.py:172
+#: tournaments/views.py:171
 #, python-format
 msgid ""
 "%(round)s has been marked as completed. That was the last preliminary round, "
@@ -1399,7 +1424,7 @@ msgstr ""
 "préliminaire, mais une ou plusieurs joutes ne sont pas encore achevée(s). "
 "Retournant à la dernière joute préliminaire inachevée."
 
-#: tournaments/views.py:180
+#: tournaments/views.py:179
 #, python-format
 msgid ""
 "%(this_round)s has been marked as completed. Moving on to %(next_round)s! "
@@ -1408,15 +1433,15 @@ msgstr ""
 "%(this_round)s est désormais marqué comme achevé. Continuant à "
 "%(next_round)s ! Woohoo ! Continuez !"
 
-#: tournaments/views.py:232
+#: tournaments/views.py:231
 msgid "8-team generic dataset"
 msgstr "données génériques à 8 équipes"
 
-#: tournaments/views.py:233
+#: tournaments/views.py:232
 msgid "24-team Australs dataset"
 msgstr "données à 24 équipes d'Australs"
 
-#: tournaments/views.py:234
+#: tournaments/views.py:233
 msgid "88-team BP dataset"
 msgstr "données à 88 équipes de PB"
 
@@ -1424,14 +1449,6 @@ msgstr "données à 88 équipes de PB"
 #~| msgid "Team point emails have been sent to the speakers."
 #~ msgid "Team point emails have been queued to be sent to the speakers."
 #~ msgstr "Les courriels de notes des équipes ont été envoyés aux orateurs."
-
-#~ msgid ""
-#~ "There's a problem with the data for the tournament %(tournament_name)s. "
-#~ "Please contact a tab director and ask them to set its current round."
-#~ msgstr ""
-#~ "Les données du tournoi %(tournament_name)s ont un problème. Veuillez "
-#~ "contacter un(e) directeur/directrice de tabulation et lui demander de "
-#~ "définir la joute actuelle."
 
 #~ msgid "current round"
 #~ msgstr "joute actuelle"

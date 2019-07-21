@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2019-01-27 23:53-0500\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -675,19 +675,19 @@ msgstr[0] "<em>(identique à version %(others)s)</em>"
 msgstr[1] "<em>(identique à versions %(others)s)</em>"
 
 #: results/templates/ballot/standard_ballot_set.html:19
-#: results/templates/ballot_entry_form.html:9
+#: results/templates/ballot_entry_form.html:23
 #, python-format
 msgid "Ballot from %(name)s (%(institution)s)"
 msgstr "Feuille de %(name)s (%(institution)s)"
 
 #: results/templates/ballot/standard_ballot_set.html:23
-#: results/templates/ballot_entry_form.html:13
+#: results/templates/ballot_entry_form.html:27
 #, python-format
 msgid "Ballot from %(name)s"
 msgstr "Feuille de %(name)s"
 
 #: results/templates/ballot/standard_ballot_set.html:31
-#: results/templates/public_ballot_set.html:66
+#: results/templates/public_ballot_set.html:73
 msgid "Scoresheet"
 msgstr "Feuille de jugement"
 
@@ -696,12 +696,12 @@ msgid "Solo Chair"
 msgstr "Président Seul"
 
 #: results/templates/ballot/standard_ballot_set.html:35
-#: results/templates/ballot_entry_form.html:18
+#: results/templates/ballot_entry_form.html:32
 msgid "Chair"
 msgstr "Président"
 
 #: results/templates/ballot/standard_ballot_set.html:35
-#: results/templates/ballot_entry_form.html:20
+#: results/templates/ballot_entry_form.html:34
 msgid "Panellist"
 msgstr "Membre"
 
@@ -779,26 +779,26 @@ msgstr ""
 "c’est encore le cas. Si ce l’est encore, assurez-vous que la feuille le "
 "reflète."
 
-#: results/templates/ballot_entry_form.html:24
+#: results/templates/ballot_entry_form.html:38
 #, python-format
 msgid "Scoresheet from chair %(chair)s"
 msgstr "Feuille par le président %(chair)s"
 
-#: results/templates/ballot_entry_form.html:28
+#: results/templates/ballot_entry_form.html:42
 msgid "Scoresheet, no chair set"
 msgstr "Feuille, aucun président"
 
-#: results/templates/ballot_entry_form.html:49
+#: results/templates/ballot_entry_form.html:63
 #, python-format
 msgid "Error with %(pos)s's speaker field: %(error)s"
 msgstr "Faute avec le champ d’orateur du %(pos)s : %(error)s"
 
-#: results/templates/ballot_entry_form.html:55
+#: results/templates/ballot_entry_form.html:69
 #, python-format
 msgid "Error with %(pos)s's duplicate speaker field: %(error)s"
 msgstr "Faute avec le champ d’orateur dupliqué du %(pos)s : %(error)s"
 
-#: results/templates/ballot_entry_form.html:61
+#: results/templates/ballot_entry_form.html:75
 #, python-format
 msgid "Error with %(pos)s's score field: %(error)s"
 msgstr "Faute avec le champ de note du %(pos)s : %(error)s"
@@ -870,22 +870,26 @@ msgstr ""
 msgid "Ballot for %(matchup)s"
 msgstr "Feuille pour %(matchup)s"
 
-#: results/templates/public_ballot_set.html:38
+#: results/templates/public_ballot_set.html:39
+msgid "Return to landing page"
+msgstr ""
+
+#: results/templates/public_ballot_set.html:44
 #, python-format
 msgid "Return to Results for %(round_name)s"
 msgstr "Retour aux résultats de %(round_name)s"
 
-#: results/templates/public_ballot_set.html:49
+#: results/templates/public_ballot_set.html:56
 msgid "Motion"
 msgstr "Motion"
 
-#: results/templates/public_ballot_set.html:62
+#: results/templates/public_ballot_set.html:69
 #, python-format
 msgid "From %(name)s (%(institution)s)"
 msgstr "De %(name)s (%(institution)s)"
 
-#: results/templates/public_ballot_set.html:86
-#: results/templates/public_ballot_set.html:90
+#: results/templates/public_ballot_set.html:93
+#: results/templates/public_ballot_set.html:97
 #, python-format
 msgid "<em>Total for %(name)s (%(side)s)</em>"
 msgstr "<em>Total pour %(name)s (%(side)s)</em>"
@@ -1214,33 +1218,40 @@ msgstr ""
 "n'est pas encore possible de saisir son résultat. Veuillez contacter un "
 "rapporteur."
 
-#: results/views.py:605
+#: results/views.py:625
 #, python-format
 msgid "This debate is in %s, which is a silent round."
 msgstr "Le débat est dans %s, ce qui est une joute silencieuse."
 
-#: results/views.py:608
+#: results/views.py:628
 #, python-format
 msgid "This debate is in %s, the results for which aren't available yet."
 msgstr ""
 "Le débat est dans %s, les résultats pour lequel n’est pas encore disponible."
 
-#: results/views.py:612
+#: results/views.py:632
 #, python-format
 msgid "The result for debate %s is not confirmed."
 msgstr "Le résultat pour le débat %s n’est pas confirmé."
 
-#: results/views.py:615
+#: results/views.py:635
 #, python-format
 msgid "The debate %s does not have a confirmed ballot."
 msgstr "Le débat %s n’a pas de feuille confirmé."
 
-#: results/views.py:686
+#: results/views.py:652
+#, fuzzy, python-format
+#| msgid "There is %(number)s existing ballot set for this debate."
+#| msgid_plural "There are %(number)s existing ballot sets for this debate."
+msgid "There is no result yet for debate %s."
+msgstr "Il y a %(number)s ensemble de feuilles existant pour ce débat."
+
+#: results/views.py:703
 #, python-format
 msgid "Add result from %(adjudicator)s"
 msgstr "Ajouter résultat par %(adjudicator)s"
 
-#: results/views.py:690
+#: results/views.py:707
 msgid "Adjudicator"
 msgstr "Juge"
 

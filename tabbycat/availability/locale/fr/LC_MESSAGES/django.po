@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2019-01-11 23:42-0500\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -301,12 +301,69 @@ msgstr ""
 msgid "Edit team availability"
 msgstr "Modifier disponibilité d'équipes"
 
-#: availability/templates/checkin_progress.html:66
+#: availability/templates/checkin_progress.html:68
+#, python-format
+msgid ""
+"One adjudicator does not have an associated tournament. Set their "
+"'Tournament' field in the Edit Database area if you want them to be marked "
+"as available."
+msgid_plural ""
+"%(count)s adjudicators do not have an associated tournament. Set their "
+"'Tournament' field in the Edit Database area if you want them to be marked "
+"as available."
+msgstr[0] ""
+msgstr[1] ""
+
+#: availability/templates/checkin_progress.html:77
+#, python-format
+msgid ""
+"%(count)s adjudicator who was not available last round, is available this "
+"round."
+msgid_plural ""
+"%(count)s adjudicators who were not available last round, are available this "
+"round."
+msgstr[0] ""
+msgstr[1] ""
+
+#: availability/templates/checkin_progress.html:84
+#, python-format
+msgid ""
+"The following %(count)s adjudicator, who was not available last round, is "
+"available this round: %(adjs_list)s"
+msgid_plural ""
+"The following %(count)s adjudicators, who were not available last round, are "
+"available this round: %(adjs_list)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: availability/templates/checkin_progress.html:93
+#, python-format
+msgid ""
+"%(count)s adjudicator who was available last round, is not available this "
+"round."
+msgid_plural ""
+"%(count)s adjudicators who were available last round, are not available this "
+"round."
+msgstr[0] ""
+msgstr[1] ""
+
+#: availability/templates/checkin_progress.html:100
+#, python-format
+msgid ""
+"The following %(count)s adjudicator, who was available last round, is not "
+"available this round: %(adjs_list)s"
+msgid_plural ""
+"The following %(count)s adjudicators, who were available last round, are not "
+"available this round: %(adjs_list)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: availability/templates/checkin_progress.html:108
 msgid "Mark adjudicators as available"
 msgstr "Marquer juges comme disponibile"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/checkin_progress.html:70
+#: availability/templates/checkin_progress.html:111
 #, python-format
 msgid ""
 "There needs to be at least one adjudicator marked as available, given the "
@@ -320,73 +377,58 @@ msgstr[1] ""
 "Il faut au moins %(required_count)s juges enregistrés pour le nombre de "
 "débats."
 
-#: availability/templates/checkin_progress.html:80
+#: availability/templates/checkin_progress.html:121
 msgid "Edit adjudicator availability"
 msgstr "Modifier disponibilité de juges"
 
-#: availability/templates/checkin_progress.html:85
+#: availability/templates/checkin_progress.html:130
 #, python-format
 msgid ""
-"One adjudicator does not have an associated tournament. Set their "
-"'Tournament' field in the Edit Database area if you want them to be marked "
-"as available."
+"%(count)s venue that was not available last round, is available this round."
 msgid_plural ""
-"%(count)s adjudicators do not have an associated tournament. Set their "
-"'Tournament' field in the Edit Database area if you want them to be marked "
-"as available."
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:94
-#, python-format
-msgid ""
-"%(count)s adjudicator who was not available last round, is available this "
-"round."
-msgid_plural ""
-"%(count)s adjudicators who were not available last round, are available this "
+"%(count)s venues that were not available last round, are available this "
 "round."
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/templates/checkin_progress.html:101
+#: availability/templates/checkin_progress.html:137
 #, python-format
 msgid ""
-"The following %(count)s adjudicator, who was not available last round, is "
-"available this round: %(adjs_list)s"
+"The following %(count)s venue, which was not available last round, is "
+"available this round: %(venues_list)s"
 msgid_plural ""
-"The following %(count)s adjudicators, who were not available last round, are "
-"available this round: %(adjs_list)s"
+"The following %(count)s venues, which were not available last round, are "
+"available this round: %(venues_list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/templates/checkin_progress.html:110
+#: availability/templates/checkin_progress.html:146
 #, python-format
 msgid ""
-"%(count)s adjudicator who was available last round, is not available this "
+"%(count)s venue that was available last round, is not available this round."
+msgid_plural ""
+"%(count)s venues that were available last round, are not available this "
 "round."
-msgid_plural ""
-"%(count)s adjudicators who were available last round, are not available this "
-"round."
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/templates/checkin_progress.html:117
+#: availability/templates/checkin_progress.html:153
 #, python-format
 msgid ""
-"The following %(count)s adjudicator, who was available last round, is not "
-"available this round: %(adjs_list)s"
+"The following %(count)s venue, which was available last round, is not "
+"available this round: %(venues_list)s"
 msgid_plural ""
-"The following %(count)s adjudicators, who were available last round, are not "
-"available this round: %(adjs_list)s"
+"The following %(count)s venues, which were available last round, are not "
+"available this round: %(venues_list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/templates/checkin_progress.html:128
+#: availability/templates/checkin_progress.html:161
 msgid "Mark venues as available"
 msgstr "Marquer salles comme disponible"
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/checkin_progress.html:132
+#: availability/templates/checkin_progress.html:164
 #, python-format
 msgid ""
 "There needs to be at least one venue marked as available, given the number "
@@ -400,11 +442,11 @@ msgstr[1] ""
 "Il faut au moins %(required_count)s salles marquées comme disponibles pour "
 "satisfier le nombre de débats."
 
-#: availability/templates/checkin_progress.html:144
+#: availability/templates/checkin_progress.html:176
 msgid "Edit venue availability"
 msgstr "Modifier la disponibilité des salles"
 
-#: availability/templates/checkin_progress.html:148
+#: availability/templates/checkin_progress.html:180
 #, python-format
 msgid ""
 "One venue does not have an associated tournament. Set its 'Tournament' field "
@@ -413,48 +455,6 @@ msgid_plural ""
 "%(count)s venues do not have an associated tournament. Set their "
 "'Tournament' field in the Edit Database area if you want them to be marked "
 "as available."
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:157
-#, python-format
-msgid ""
-"%(count)s venue that was not available last round, is available this round."
-msgid_plural ""
-"%(count)s venues that were not available last round, are available this "
-"round."
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:164
-#, python-format
-msgid ""
-"The following %(count)s venue, which was not available last round, is "
-"available this round: %(venues_list)s"
-msgid_plural ""
-"The following %(count)s venues, which were not available last round, are "
-"available this round: %(venues_list)s"
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:173
-#, python-format
-msgid ""
-"%(count)s venue that was available last round, is not available this round."
-msgid_plural ""
-"%(count)s venues that were available last round, are not available this "
-"round."
-msgstr[0] ""
-msgstr[1] ""
-
-#: availability/templates/checkin_progress.html:180
-#, python-format
-msgid ""
-"The following %(count)s venue, which was available last round, is not "
-"available this round: %(venues_list)s"
-msgid_plural ""
-"The following %(count)s venues, which were available last round, are not "
-"available this round: %(venues_list)s"
 msgstr[0] ""
 msgstr[1] ""
 

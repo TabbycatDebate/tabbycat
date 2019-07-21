@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-11-01 22:37-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -235,6 +235,41 @@ msgid ""
 msgstr ""
 "Il n’y a aucune feuilles de note disponible — la joute n’a-t-elle pas encore "
 "de tirage ?"
+
+#: printing/templates/scoresheet_list.html:39
+msgid "Edit Ballot Motions"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:41
+msgid "&times;"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:46
+msgid ""
+"\n"
+"              Editing motions here will not save them permanently — it will "
+"only\n"
+"              update the text used in the printed ballots below. This can be "
+"useful if using\n"
+"              placeholder motions (to ensure confidentiality) in Tabbycat, "
+"but you still want to print\n"
+"              ballots with correct motions.\n"
+"              "
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:54
+msgid "Motion"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:58
+msgid "Changes to motions will update in the displayed ballots automatically"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:95
+msgid ""
+"Speeches are x minutes, the speaker score range is from x to x. You have x "
+"minutes to form an adjudication."
+msgstr ""
 
 #: printing/views.py:95
 msgid "Overall Score"

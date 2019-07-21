@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-08-15 23:59-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -98,89 +98,89 @@ msgstr[1] "%(count)d évaluations sont désormais tenus en compte."
 msgid "Adjudicator Feedback"
 msgstr "Évaluations de juges"
 
-#: adjfeedback/forms.py:26
+#: adjfeedback/forms.py:25
 msgid "chair"
 msgstr "président"
 
-#: adjfeedback/forms.py:27
+#: adjfeedback/forms.py:26
 msgid "solo"
 msgstr "seul"
 
-#: adjfeedback/forms.py:28
+#: adjfeedback/forms.py:27
 msgid "panellist"
 msgstr "panéliste"
 
-#: adjfeedback/forms.py:29
+#: adjfeedback/forms.py:28
 msgid "trainee"
 msgstr "stagiaire"
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:57
+#: adjfeedback/forms.py:56
 msgid "Yes"
 msgstr "Oui"
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:59
+#: adjfeedback/forms.py:58
 msgid "No"
 msgstr "Non"
 
 #. Translators: Please leave this blank, it should be left for the base Django translations.
-#: adjfeedback/forms.py:74 adjfeedback/forms.py:83
+#: adjfeedback/forms.py:73 adjfeedback/forms.py:82
 msgid "This field is required."
 msgstr "Ce champ est obligatoire."
 
-#: adjfeedback/forms.py:170
+#: adjfeedback/forms.py:169
 #, python-format
 msgid "Overall score (%(min)d=worst; %(max)d=best)"
 msgstr "Note globale (%(min)d=le pire; %(max)d=le meilleur)"
 
-#: adjfeedback/forms.py:182
+#: adjfeedback/forms.py:181
 msgid "Ignored"
 msgstr "Pas tenu en compte"
 
 #. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2", adjpos="chair"
 #. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round 3", adjpos="panellist"
-#: adjfeedback/forms.py:241 adjfeedback/forms.py:300
+#: adjfeedback/forms.py:240 adjfeedback/forms.py:299
 #, python-format
 msgid "%(name)s (%(round)s %(adjpos)s)"
 msgstr "%(name)s (%(adjpos)s dans %(round)s)"
 
-#: adjfeedback/forms.py:259 adjfeedback/forms.py:321
+#: adjfeedback/forms.py:258 adjfeedback/forms.py:320
 msgid "-- Adjudicators --"
 msgstr "-- Juges --"
 
-#: adjfeedback/forms.py:274
+#: adjfeedback/forms.py:273
 msgid "Adjudicator this feedback is about"
 msgstr "Juge dont l’évaluation concerne"
 
-#: adjfeedback/forms.py:297
+#: adjfeedback/forms.py:296
 #, python-format
 msgid "%(name)s (%(round)s)"
 msgstr "%(name)s (%(round)s)"
 
-#: adjfeedback/forms.py:303
+#: adjfeedback/forms.py:302
 #, python-format
 msgid "%(name)s (%(round)s — chair gave oral)"
 msgstr "%(name)s (%(round)s — le(a) président(e) a rendu les commentaires)"
 
-#: adjfeedback/forms.py:305
+#: adjfeedback/forms.py:304
 #, python-format
 msgid "%(name)s (%(round)s — chair rolled, this panellist gave oral)"
 msgstr ""
 "%(name)s (%(round)s — le(a) président(e) a délégué les commentaires à "
 "cet(te) panéliste)"
 
-#: adjfeedback/forms.py:381
+#: adjfeedback/forms.py:380
 #, python-format
 msgid "This line (for %(adjudicator)s) didn't have a score"
 msgstr "La ligne (pour %(adjudicator)s) n’avait pas de note"
 
-#: adjfeedback/forms.py:386
+#: adjfeedback/forms.py:385
 #, python-format
 msgid "This line (for %(adjudicator)s) had too many columns"
 msgstr "La ligne (pour %(adjudicator)s) avait trop de colonnes"
 
-#: adjfeedback/forms.py:395
+#: adjfeedback/forms.py:398
 #, python-format
 msgid ""
 "There are several adjudicators called \"%(adjudicator)s\", so you can't use "
@@ -191,18 +191,18 @@ msgstr ""
 "utiliser l’outil d’import d’ensemble pour mettre leurs notes à jour. "
 "Veuillez le faire sur la page de vue d’ensemble d’évaluations à la place."
 
-#: adjfeedback/forms.py:401
+#: adjfeedback/forms.py:404
 #, python-format
 msgid ""
 "There is no adjudicator in this tournament with the name \"%(adjudicator)s\""
 msgstr "Il n’y a pas de juge dans ce tournoi avec le nom « %(adjudicator)s »"
 
-#: adjfeedback/forms.py:409
+#: adjfeedback/forms.py:412
 #, python-format
 msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
 msgstr "La note pour %(adjudicator)s, « %(score)s », n’est pas un nombre"
 
-#: adjfeedback/forms.py:424
+#: adjfeedback/forms.py:427
 msgid "There were no scores to import."
 msgstr "Il n’y a aucun note à importer."
 
@@ -407,7 +407,7 @@ msgstr "question d’un évaluation de juge"
 msgid "adjudicator feedback questions"
 msgstr "questions d’un évaluation de juge"
 
-#: adjfeedback/models.py:224 adjfeedback/views.py:782
+#: adjfeedback/models.py:224 adjfeedback/views.py:787
 msgid "ignored"
 msgstr "pas tenu en compte"
 
@@ -441,9 +441,84 @@ msgstr ""
 msgid "Adjudicator did not see this debate."
 msgstr ""
 
+#: adjfeedback/tables.py:19
+msgid "Whether the adj is marked as breaking (click to mark)"
+msgstr ""
+
+#: adjfeedback/tables.py:45
+msgid "Current weighted score"
+msgstr ""
+
+#: adjfeedback/tables.py:50
+msgid "This adjudicator's current rating."
+msgstr ""
+
+#: adjfeedback/tables.py:58
+#, fuzzy
+#| msgid "Test score"
+msgid "Test score result"
+msgstr "Note de base"
+
+#: adjfeedback/tables.py:65
+msgid "Click to edit test score"
+msgstr ""
+
+#: adjfeedback/tables.py:70
+#, fuzzy
+#| msgid "Test score"
+msgid "Assigned test score"
+msgstr "Note de base"
+
+#: adjfeedback/tables.py:79
+msgid ""
+"The current difference between an adjudicator's test score and current score"
+msgstr ""
+
+#: adjfeedback/tables.py:83
+msgid "The difference between this adjudicator's test score and current score"
+msgstr ""
+
+#: adjfeedback/tables.py:92
+msgid ""
+"The standard deviation of this adjudicator's current scores; with larger "
+"numbers meaning less consistent feedback scores."
+msgstr ""
+
+#: adjfeedback/tables.py:96
+msgid "The standard deviation of this adjudicator's current scores"
+msgstr ""
+
 #: adjfeedback/tables.py:105
 msgid "Feedback Per Round"
 msgstr "Évaluations par joute"
+
+#: adjfeedback/tables.py:106
+msgid ""
+"Hover over the data points to show the average score received in that round"
+msgstr ""
+
+#: adjfeedback/tables.py:123
+#, fuzzy, python-format
+#| msgid "%(count)d feedback"
+#| msgid_plural "%(count)d feedbacks"
+msgid "View %(count)s<br>feedbacks"
+msgstr "%(count)d évaluation"
+
+#: adjfeedback/tables.py:136
+#, fuzzy
+#| msgid "Edit Note"
+msgid "Edit<br>Note"
+msgstr "Modifier le commentaire"
+
+#: adjfeedback/tables.py:156
+msgid "Unsubmitted feedback ballots"
+msgstr ""
+
+#: adjfeedback/tables.py:180
+#, fuzzy
+#| msgid "Find Feedback"
+msgid "View Missing Feedback"
+msgstr "Trouver Évaluation"
 
 #: adjfeedback/templates/add_feedback.html:5
 msgid "Who is the feedback from?"
@@ -586,37 +661,40 @@ msgstr ""
 
 #: adjfeedback/templates/feedback_card.html:30
 #, fuzzy, python-format
-#| msgid "score"
-msgid "%(score)s"
-msgstr "note"
+#| msgid "%(name)s (%(round)s)"
+msgid "%(rname)s %(score)s"
+msgstr "%(name)s (%(round)s)"
 
-#: adjfeedback/templates/feedback_card.html:35
+#: adjfeedback/templates/feedback_card.html:34
 #, python-format
-msgid "Test %(test|floatformat)s"
+msgid ""
+"\n"
+"        On %(adj)s\n"
+"      "
 msgstr ""
 
 #: adjfeedback/templates/feedback_card.html:39
 #, python-format
-msgid "On %(adj)s <span class=\"text-secondary small\">as %(as)s</span>"
+msgid "<span class=\"text-secondary small\">Received as %(as)s</span>"
 msgstr ""
 
-#: adjfeedback/templates/feedback_card.html:45
+#: adjfeedback/templates/feedback_card.html:43
 #, python-format
-msgid "In %(rname)s"
+msgid "Test %(test)s"
 msgstr ""
 
 #: adjfeedback/templates/feedback_card.html:50
 #, python-format
 msgid ""
-"From %(source)s <span class=\"text-secondary small\">their %(relationship)s</"
-"span>"
+"From %(source)s <span class=\"text-secondary small\">(their "
+"%(relationship)s)</span>"
 msgstr ""
 
 #: adjfeedback/templates/feedback_card.html:54
 #, python-format
 msgid ""
-"From %(source)s <span class=\"text-secondary small\">who %(relationship)s "
-"from %(side)s</span>"
+"From %(source)s <span class=\"text-secondary small\">(%(relationship)s from "
+"%(side)s)</span>"
 msgstr ""
 
 #: adjfeedback/templates/feedback_card.html:58
@@ -624,8 +702,9 @@ msgid "From unknown"
 msgstr "Par inconnu"
 
 #: adjfeedback/templates/feedback_card.html:85
-#, python-format
-msgid "Submitted %(time)s"
+#, fuzzy, python-format
+#| msgid "Submitted %(time)s"
+msgid "%(time)s"
 msgstr "Envoyé %(time)s"
 
 #: adjfeedback/templates/feedback_card.html:90
@@ -925,11 +1004,11 @@ msgstr "Évaluations"
 msgid "Find Feedback"
 msgstr "Trouver Évaluation"
 
-#: adjfeedback/views.py:176 adjfeedback/views.py:727
+#: adjfeedback/views.py:176 adjfeedback/views.py:732
 msgid "From Teams"
 msgstr "Par les équipes"
 
-#: adjfeedback/views.py:191 adjfeedback/views.py:721
+#: adjfeedback/views.py:191 adjfeedback/views.py:726
 msgid "From Adjudicators"
 msgstr "Par les juges"
 
@@ -1009,7 +1088,7 @@ msgstr ""
 msgid "Feedback Progress"
 msgstr "L’avance des évaluations"
 
-#: adjfeedback/views.py:713
+#: adjfeedback/views.py:718
 #, fuzzy, python-format
 #| msgid "%d missing feedback submission"
 #| msgid_plural "%d missing feedback submissions"
@@ -1019,32 +1098,37 @@ msgid_plural ""
 msgstr[0] "%d envoi d’évaluation manquant"
 msgstr[1] "%d envois d’évaluation manquants"
 
-#: adjfeedback/views.py:758
+#: adjfeedback/views.py:763
 #, python-format
 msgid "Feedback for %(adj)s from %(source)s is now %(result)s."
 msgstr "Évaluation de %(adj)s par %(source)s est désormais %(result)s."
 
-#: adjfeedback/views.py:772
+#: adjfeedback/views.py:777
 msgid "confirmed"
 msgstr ""
 
-#: adjfeedback/views.py:772
+#: adjfeedback/views.py:777
 msgid "un-confirmed"
 msgstr ""
 
-#: adjfeedback/views.py:782
+#: adjfeedback/views.py:787
 #, fuzzy
 #| msgid "Un-ignore"
 msgid "un-ignored"
 msgstr "Tiendre en compte"
 
-#: adjfeedback/views.py:818
+#: adjfeedback/views.py:823
 #, fuzzy, python-format
 #| msgid "Updated test scores for %(count)d adjudicators."
 msgid "Updated test score for %(count)d adjudicator."
 msgid_plural "Updated test scores for %(count)d adjudicators."
 msgstr[0] "Mis à jour les notes de base pour %(count)d juges."
 msgstr[1] "Mis à jour les notes de base pour %(count)d juges."
+
+#, fuzzy
+#~| msgid "score"
+#~ msgid "%(score)s"
+#~ msgstr "note"
 
 #~ msgid "recognized"
 #~ msgstr "tenu en compte"

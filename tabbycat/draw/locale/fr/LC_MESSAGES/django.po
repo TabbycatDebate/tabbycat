@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 23:03-0500\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-08-15 23:26-0300\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -195,7 +195,7 @@ msgstr ""
 msgid "Unrecognised \"teams in debate\" option: %(option)s"
 msgstr ""
 
-#: draw/manager.py:264
+#: draw/manager.py:267
 #, python-format
 msgid ""
 "The break size (%(size)d) for this break category was invalid. It must be "
@@ -1214,7 +1214,16 @@ msgid ""
 "\" class=\"alert-link\">Edit Sides/Matchups</a> to fill it in."
 msgstr ""
 
-#: draw/templates/draw_status_draft.html:50
+#: draw/templates/draw_status_draft.html:48
+#, python-format
+msgid ""
+"The adjudicator score range is 0, and so adjudicator scores will be ignored "
+"when allocating. You can <a href=\"%(feedback_config_url)s\" class=\"alert-"
+"link\">change the adjudicator score range in the feedback configuration "
+"page</a>."
+msgstr ""
+
+#: draw/templates/draw_status_draft.html:58
 msgid ""
 "Tabbycat assigns sides in elimination rounds randomly. However, because in "
 "elimination rounds, many tournaments draw lots for sides in front of an "
@@ -1224,7 +1233,7 @@ msgid ""
 "accept Tabbycat's random assignment."
 msgstr ""
 
-#: draw/templates/draw_status_draft.html:57
+#: draw/templates/draw_status_draft.html:65
 msgid ""
 "Highlighted cells relate to changes in position balance, as follows: <ul> "
 "<li>Red cells indicates that the team could not be allocated a position that "
