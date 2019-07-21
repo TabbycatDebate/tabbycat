@@ -12,5 +12,5 @@ gunicorn==19.9.0                        # Primary server for wsgi
 django-redis==4.10.0                    # Use redis for cache (on heroku; local optional)
 
 # Misc
-sendgrid==6.0.4                         # Email service of choice on Heroku
-scout-apm==2.0.4                        # Performance monitoring
+sendgrid==6.0.5                         # Email service of choice on Heroku
+scout-apm==2.1.0                        # Performance monitoring

@@ -18,5 +18,5 @@ selenium==3.141.*                           # Functional testing (in here for CI
 transifex-client==0.13.*                    # Translations
 
 # Debug
-django-debug-toolbar==1.11.*
-django-debug-toolbar-request-history==0.0.10 # Debug POSTs/AJAX
+django-debug-toolbar==2.0.*
+django-debug-toolbar-request-history==0.0.11 # Debug POSTs/AJAX
