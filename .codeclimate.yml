@@ -34,6 +34,8 @@ engines:
     exclude_paths:
       - "tabbycat/draw/generator/*.py"
       - "tabbycat/adjallocation/munkres.py"
+    config: 
+      threshold: "C"
 ratings:
   paths:
   - "**.css"
