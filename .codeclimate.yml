@@ -1,4 +1,11 @@
 ---
+checks:
+  file-lines:
+    config:
+      threshold: 600
+  method-complexity:
+    config:
+      threshold: 8
 engines:
   csslint:
     enabled: true
