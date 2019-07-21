@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2019-01-25 22:20-0500\n"
+"PO-Revision-Date: 2019-07-21 14:49+0200\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: participants/admin.py:95
 #, python-format
@@ -25,7 +25,7 @@ msgid ""
 "remove: %(category)s"
 msgstr ""
 "L’équipe ne peut pas être dans la catégorie de qualification d’un autre "
-"tournoi. Veuillez enlèver : %(category)s"
+"tournoi. Veuillez enlever : %(category)s"
 
 #: participants/admin.py:150
 #, python-format
