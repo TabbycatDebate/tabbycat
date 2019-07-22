@@ -82,7 +82,7 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             self.check_teams_for_attribute("npullups", checkfunc=lambda x: isinstance(x, int))
 
         if self.options["pullup_restriction"] == "easy_draw":
-            self.check_teams_for_attribute("drawstrength", checkfunc=lambda x: isinstance(x, float))
+            self.check_teams_for_attribute("draw_strength_score", checkfunc=lambda x: isinstance(x, float))
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
