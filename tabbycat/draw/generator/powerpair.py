@@ -31,11 +31,11 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
 
         "pullup_restriction" - Restriction on who can be pulled up. Permitted values:
 
-            "none"          - No restriction.
-            "least_to_date" - Choose from teams who have been pulled up the
-                              least number of times in previous rounds.
-            "easy_draw"     - Choose from teams who have the lowest draw strength
-                              (indicative of having been against easier teams)
+            "none"             - No restriction.
+            "least_to_date"    - Choose from teams who have been pulled up the
+                                 least number of times in previous rounds.
+            "lowest_ds_speaks" - Choose from teams who have the lowest draw strength by
+                                 speaks (indicative of having been against easier teams)
 
         "pairing_method" - How to pair teams. Permitted values:
             (best explained by example, these examples have a ten-team bracket)
@@ -81,8 +81,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         if self.options["pullup_restriction"] == "least_to_date":
             self.check_teams_for_attribute("npullups", checkfunc=lambda x: isinstance(x, int))
 
-        if self.options["pullup_restriction"] == "easy_draw":
-            self.check_teams_for_attribute("draw_strength_score", checkfunc=lambda x: isinstance(x, float))
+        if self.options["pullup_restriction"] == "lowest_ds_speaks":
+            self.check_teams_for_attribute("draw_strength_speaks", checkfunc=lambda x: isinstance(x, float))
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
@@ -114,9 +114,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
     # Pullup restrictions
 
     PULLUP_ELIGIBILITY_FILTERS = {
-        "none"         : "_pullup_filter_none",
-        "least_to_date": "_pullup_filter_least_to_date",
-        "easy_draw"    : "_pullup_filter_easy_draw"
+        "none"            : "_pullup_filter_none",
+        "least_to_date"   : "_pullup_filter_least_to_date",
+        "lowest_ds_speaks": "_pullup_filter_lowest_ds_speaks"
     }
 
     def _pullup_filter(self, teams):
@@ -132,9 +132,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
         fewest = min(team.npullups for team in teams)
         return [team for team in teams if team.npullups == fewest]
 
-    def _pullup_filter_easy_draw(self, teams):
-        fewest = min(team.draw_strength_score for team in teams)
-        return [team for team in teams if team.draw_strength_score == fewest]
+    def _pullup_filter_lowest_ds_speaks(self, teams):
+        fewest = min(team.draw_strength_speaks for team in teams)
+        return [team for team in teams if team.draw_strength_speaks == fewest]
 
     # Odd bracket resolutions
 

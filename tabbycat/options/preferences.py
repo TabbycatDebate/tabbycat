@@ -242,7 +242,7 @@ class DrawPullupRestriction(ChoicePreference):
     choices = (
         ('none', _("No restriction")),
         ('least_to_date', _("Choose from teams who have been pulled up the fewest times so far")),
-        ('easy_draw', _("Choose from teams with a low draw strength from previous rounds"))
+        ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far"))
     )
     default = 'none'
 

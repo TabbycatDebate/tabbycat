@@ -46,7 +46,7 @@ from venues.utils import venue_conflicts_display
 
 from .dbutils import delete_round_draw
 from .generator import DrawFatalError, DrawUserError
-from .manager import DrawManager
+from .manager import DrawManager, PULLUP_RESTRICTION_METRICS
 from .models import Debate, DebateTeam, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
@@ -480,16 +480,11 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
-
-            if self.tournament.pref('draw_pullup_restriction') == 'least_to_date':
-                metrics.append("npullups")
-
-            if self.tournament.pref('draw_pullup_restriction') == 'easy_draw':
-                metrics.append("draw_strength_score")
+            pullup_metric = PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
 
             # subrank only makes sense if there's a second metric to rank on
             rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-            generator = TeamStandingsGenerator(metrics, rankings)
+            generator = TeamStandingsGenerator(metrics, rankings, extra_metrics=pullup_metric)
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:
                 table.add_debate_ranking_columns(draw, standings)

@@ -242,7 +242,7 @@ class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
 class ScoreDrawStrengthMetricAnnotator(DrawStrengthMetricAnnotator):
     """Metric annotator for draw strength by score."""
-    key = "draw_strength_score"
+    key = "draw_strength_speaks"
     name = _("draw strength by speaks")
     abbr = _("DSS")
 
@@ -416,23 +416,23 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.team.institution.name)
 
     metric_annotator_classes = {
-        "points"             : PointsMetricAnnotator,
-        "points210"          : Points210MetricAnnotator,
-        "wins"               : WinsMetricAnnotator,
-        "speaks_sum"         : TotalSpeakerScoreMetricAnnotator,
-        "speaks_avg"         : AverageSpeakerScoreMetricAnnotator,
-        "speaks_ind_avg"     : AverageIndividualScoreMetricAnnotator,
-        "speaks_stddev"      : SpeakerScoreStandardDeviationMetricAnnotator,
-        "draw_strength"      : DrawStrengthMetricAnnotator,
-        "draw_strength_score": ScoreDrawStrengthMetricAnnotator,
-        "margin_sum"         : SumMarginMetricAnnotator,
-        "margin_avg"         : AverageMarginMetricAnnotator,
-        "npullups"           : TeamPullupsMetricAnnotator,
-        "num_adjs"           : NumberOfAdjudicatorsMetricAnnotator,
-        "firsts"             : NumberOfFirstsMetricAnnotator,
-        "seconds"            : NumberOfSecondsMetricAnnotator,
-        "wbw"                : WhoBeatWhomMetricAnnotator,
-        "wbwd"               : DivisionsWhoBeatWhomMetricAnnotator,
+        "points"              : PointsMetricAnnotator,
+        "points210"           : Points210MetricAnnotator,
+        "wins"                : WinsMetricAnnotator,
+        "speaks_sum"          : TotalSpeakerScoreMetricAnnotator,
+        "speaks_avg"          : AverageSpeakerScoreMetricAnnotator,
+        "speaks_ind_avg"      : AverageIndividualScoreMetricAnnotator,
+        "speaks_stddev"       : SpeakerScoreStandardDeviationMetricAnnotator,
+        "draw_strength"       : DrawStrengthMetricAnnotator,
+        "draw_strength_speaks": ScoreDrawStrengthMetricAnnotator,
+        "margin_sum"          : SumMarginMetricAnnotator,
+        "margin_avg"          : AverageMarginMetricAnnotator,
+        "npullups"            : TeamPullupsMetricAnnotator,
+        "num_adjs"            : NumberOfAdjudicatorsMetricAnnotator,
+        "firsts"              : NumberOfFirstsMetricAnnotator,
+        "seconds"             : NumberOfSecondsMetricAnnotator,
+        "wbw"                 : WhoBeatWhomMetricAnnotator,
+        "wbwd"                : DivisionsWhoBeatWhomMetricAnnotator,
     }
 
     ranking_annotator_classes = {

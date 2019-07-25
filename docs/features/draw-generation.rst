@@ -57,7 +57,7 @@ Options are set in the **Configuration** page as described in :ref:`starting a t
     - Whether and how to restrict pullups
     - - No restriction
       - Choose from teams who have been pulled up the fewest times so far
-      - Choose from teams with a low draw strength from previous rounds
+      - Choose from teams with the lowest draw strength by speaks so far
 
 .. caution:: The valid options for intermediate brackets change depending on whether sides are pre-allocated, but these are **not** checked for validity. If you choose an invalid combination, Tabbycat will just crash. This won't corrupt the database, but it might be momentarily annoying.
 
@@ -189,7 +189,7 @@ You can restrict which teams can be pulled up, by configuring the draw generator
 
 Teams may be chosen as those who have been pulled up the fewest times in rounds preceding the current round. Most of the time, this is equivalent to saying that a team cannot be pulled up more than once. The difference is that if *all* teams in a bracket have been pulled up at least once, it then chooses from among teams who have been pulled up *only* once (if any), and so on.
 
-Another available criterion is to pull up teams that have had the easiest matchups in previous rounds, and thus their opponents would have lower scores (as speaker points) than in more balanced matchups.
+Another available criterion is to pull up teams that have had the easiest matchups in previous rounds, and thus their opponents would have lower scores (as speaker points) than in more balanced matchups. This rule would likely only match one team in each bracket where teams are to be pulled from.
 
 Pullup restrictions only apply when the :ref:`odd bracket resolution method <draw-odd-bracket>` is a pullup method. They have no effect on intermediate brackets.
 
