@@ -128,7 +128,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
             ) % {'nblank_people': nblank_people}
             non_generated_urls_message = ngettext(
                 "The already-existing private URL for %(nexisting_people)d person was left intact.",
-                "The already-existing private URLs for %(nexisting_people)d people were left intact",
+                "The already-existing private URLs for %(nexisting_people)d people were left intact.",
                 nexisting_people
             ) % {'nexisting_people': nexisting_people}
 
