@@ -11,6 +11,10 @@ addons:
 services:
   - postgresql
 
+branches:
+  except:
+  - l10n_develop
+
 matrix:
   include:
 
