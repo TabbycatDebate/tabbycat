@@ -481,7 +481,11 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
-            pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+
+            if self.tournament.pref('teams_in_debate') == 'two':
+                pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+            else:
+                pullup_metric = None
 
             # subrank only makes sense if there's a second metric to rank on
             rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
