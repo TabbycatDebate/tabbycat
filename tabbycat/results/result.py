@@ -865,6 +865,8 @@ class BPEliminationDebateResult(BaseDebateResult):
         a ValueError."""
         if not all(x in self.sides for x in self.advancing):
             raise ValueError("Found invalid sides: %s" % sides)
+        if len(sides) != len(set(sides)):
+            raise ValueError("Sides advancing must be unique, found: %s" % sides)
         if len(sides) != 2:
             raise ValueError("Exactly two sides should be advancing, found: %s" % sides)
         self.advancing = sides
