@@ -1,3 +1,5 @@
+.. _draw-generation:
+
 ===============
 Draw Generation
 ===============
@@ -185,11 +187,15 @@ It's a bit more complicated than that, for two reasons:
 
 Pullup restriction
 ------------------
-You can restrict which teams can be pulled up, by configuring the draw generator to choose a pullup team from among only a certain selection of the teams from a rule.
+You can restrict which teams can be pulled up by configuring the draw generator to choose a pullup team from among only those teams who are the "best off" according to a given metric. If several teams are equally "best off" within the lower bracket, the draw generator chooses among them using the same **pull-up method** already specified (*e.g.*, "pull up from top")
 
-Teams may be chosen as those who have been pulled up the fewest times in rounds preceding the current round. Most of the time, this is equivalent to saying that a team cannot be pulled up more than once. The difference is that if *all* teams in a bracket have been pulled up at least once, it then chooses from among teams who have been pulled up *only* once (if any), and so on.
+.. rst-class:: spaced-list
 
-Another available criterion is to pull up teams that have had the easiest matchups in previous rounds, and thus their opponents would have lower scores (as speaker points) than in more balanced matchups. This rule would likely only match one team in each bracket where teams are to be pulled from.
+* You can **choose from teams who have been pulled up the fewest times so far**, that is, in rounds before the current round. Most of the time, this is equivalent to saying that a team cannot be pulled up more than once. But if *all* teams in a bracket have been pulled up at least once, it then chooses from among teams who have been pulled up *only* once (if any), and so on.
+
+* You can **choose from teams with the lowest draw strength so far**, by **wins** or **speaks**.
+
+  If you choose speaks, it's unlikely that two teams will have the same draw strength by speaks, so most of the time this will just choose the team in the lower bracket that's had the easiest draw so far (as measured by their opponents' speaker scores).
 
 Pullup restrictions only apply when the :ref:`odd bracket resolution method <draw-odd-bracket>` is a pullup method. They have no effect on intermediate brackets.
 
