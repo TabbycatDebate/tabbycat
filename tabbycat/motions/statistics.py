@@ -169,7 +169,6 @@ class MotionBPStatsCalculator:
         annotations.update({'%s_average' % side: Avg(
             'round__debate__ballotsubmission__teamscore__points',
             filter=Q(round__debate__ballotsubmission__teamscore__debate_team__side=side),
-            distinct=True,
         ) for side in self.tournament.sides})
 
         annotations.update({'%s_%d_count' % (side, points): Count(
@@ -177,7 +176,7 @@ class MotionBPStatsCalculator:
             filter=Q(
                 round__debate__ballotsubmission__teamscore__debate_team__side=side,
                 round__debate__ballotsubmission__teamscore__points=points
-            ), distinct=True
+            ),
         ) for side in self.tournament.sides for points in range(4)})
 
         self.prelim_motions = self.prelim_motions.annotate(**annotations)
@@ -238,7 +237,7 @@ class MotionBPStatsCalculator:
             filter=Q(
                 round__debate__ballotsubmission__teamscore__debate_team__side=side,
                 round__debate__ballotsubmission__teamscore__win=value,
-            ), distinct=True)
+            ))
             for side in self.tournament.sides
             for (status, value) in [("advancing", True), ("eliminated", False)]
         })
