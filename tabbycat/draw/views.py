@@ -484,7 +484,8 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
 
             # subrank only makes sense if there's a second metric to rank on
             rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-            generator = TeamStandingsGenerator(metrics, rankings, extra_metrics=pullup_metric)
+            generator = TeamStandingsGenerator(metrics, rankings,
+                extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:
                 table.add_debate_ranking_columns(draw, standings)

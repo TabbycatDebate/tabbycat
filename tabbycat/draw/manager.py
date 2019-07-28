@@ -32,9 +32,9 @@ OPTIONS_TO_CONFIG_MAPPING = {
 
 
 PULLUP_RESTRICTION_METRICS = {
-    'least_to_date': ['npullups'],
-    'lowest_ds_speaks': ['draw_strength_speaks'],
-    'none': []
+    'least_to_date': 'npullups',
+    'lowest_ds_speaks': 'draw_strength_speaks',
+    'none': None
 }
 
 
@@ -197,15 +197,16 @@ class PowerPairedDrawManager(BaseDrawManager):
         metrics = self.round.tournament.pref('team_standings_precedence')
         pullup_metric = PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
 
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), extra_metrics=pullup_metric, tiebreak="random")
+        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
+            extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
         standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []
         for standing in standings:
             team = standing.team
             team.points = next(standing.itermetrics())
-            for metric in pullup_metric: # pullup_metric is an array of 0 or 1 items
-                setattr(team, metric, standing.metrics[metric])
+            if pullup_metric:
+                setattr(team, pullup_metric, standing.metrics[pullup_metric])
             ranked.append(team)
 
         return ranked
