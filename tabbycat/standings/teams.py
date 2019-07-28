@@ -205,47 +205,50 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         return super().get_annotated_queryset(queryset, column_name, round)
 
 
-class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
-    """Metric annotator for draw strength."""
-    key = "draw_strength"
-    name = _("draw strength")
-    abbr = _("DS")
+class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
-    opponent_annotator = PointsMetricAnnotator()
+    opponent_annotator = None
 
     def annotate(self, queryset, standings, round=None):
         if not queryset.exists():
             return
 
-        logger.info("Running points query for draw strength:")
+        logger.info("Running opponents query for draw strength:")
 
         prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
         if round is not None:
             prefetch_queryset = prefetch_queryset.filter(debate__round__seq__lte=round.seq)
 
-        points_queryset = self.opponent_annotator.get_annotated_queryset(
+        opponents_queryset = self.opponent_annotator.get_annotated_queryset(
                 queryset[0].tournament.team_set.all(), 'opp_metric', round).prefetch_related(
                 Prefetch('debateteam_set', queryset=prefetch_queryset, to_attr='debateteams'))
-        points_queryset_teams = {team.id: team for team in points_queryset}
-        points_queryset_debateteams = {team.id: list(team.debateteams) for team in points_queryset}
+        opponents_queryset_teams = {team.id: team for team in opponents_queryset}
+        opponents_queryset_debateteams = {team.id: list(team.debateteams) for team in opponents_queryset}
 
-        populate_opponents([dt for dts in points_queryset_debateteams.values() for dt in dts])
+        populate_opponents([dt for dts in opponents_queryset_debateteams.values() for dt in dts])
 
         for team in queryset:
             draw_strength = 0
-            for dt in points_queryset_debateteams[team.id]:
-                points = points_queryset_teams[dt.opponent.team_id].opp_metric
-                if points is not None: # points is None when no debates have happened
-                    draw_strength += points
+            for dt in opponents_queryset_debateteams[team.id]:
+                opp_metric = opponents_queryset_teams[dt.opponent.team_id].opp_metric
+                if opp_metric is not None: # opp_metric is None when no debates have happened
+                    draw_strength += opp_metric
             standings.add_metric(team, self.key, draw_strength)
 
 
-class ScoreDrawStrengthMetricAnnotator(DrawStrengthMetricAnnotator):
+class DrawStrengthByWinsMetricAnnotator(BaseDrawStrengthMetricAnnotator):
+    """Metric annotator for draw strength."""
+    key = "draw_strength"  # keep this key for backwards compatibility
+    name = _("draw strength by wins")
+    abbr = _("DS")
+    opponent_annotator = PointsMetricAnnotator()
+
+
+class DrawStrengthBySpeakerScoreMetricAnnotator(BaseDrawStrengthMetricAnnotator):
     """Metric annotator for draw strength by score."""
     key = "draw_strength_speaks"
-    name = _("draw strength by speaks")
+    name = _("draw strength by total speaker score")
     abbr = _("DSS")
-
     opponent_annotator = TotalSpeakerScoreMetricAnnotator()
 
 
@@ -423,8 +426,8 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "speaks_avg"          : AverageSpeakerScoreMetricAnnotator,
         "speaks_ind_avg"      : AverageIndividualScoreMetricAnnotator,
         "speaks_stddev"       : SpeakerScoreStandardDeviationMetricAnnotator,
-        "draw_strength"       : DrawStrengthMetricAnnotator,
-        "draw_strength_speaks": ScoreDrawStrengthMetricAnnotator,
+        "draw_strength"       : DrawStrengthByWinsMetricAnnotator,
+        "draw_strength_speaks": DrawStrengthBySpeakerScoreMetricAnnotator,
         "margin_sum"          : SumMarginMetricAnnotator,
         "margin_avg"          : AverageMarginMetricAnnotator,
         "npullups"            : TeamPullupsMetricAnnotator,
