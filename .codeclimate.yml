@@ -22,7 +22,7 @@ engines:
       - "tabbycat/*/migrations/*.py"
       - "tabbycat/*/tests/*.py"
       - "tabbycat/*/urls*.py"
-      - "tabbycat/options/dynamic_preferences_registry.py"
+      - "tabbycat/options/preferences.py"
     exclude_fingerprints:
       - 5eb53f480bfbacf8ed37c29d64a9555e
   eslint:
@@ -34,7 +34,7 @@ engines:
     exclude_paths:
       - "tabbycat/draw/generator/*.py"
       - "tabbycat/adjallocation/munkres.py"
-    config: 
+    config:
       threshold: "C"
 ratings:
   paths:
