@@ -108,6 +108,13 @@ class TestTrivialStandings(TestCase):
         # losing team has faced winning team twice, so draw strength is 2 * 2 = 4
         self.assertEqual(standings.get_standing(self.team2).metrics['draw_strength'], 4)
 
+    def test_draw_strength_speaks(self):
+        generator = TeamStandingsGenerator(('draw_strength_speaks',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        # teams have faced each other twice, so draw strength is twice opponent's score
+        self.assertEqual(standings.get_standing(self.team1).metrics['draw_strength_speaks'], 394)
+        self.assertEqual(standings.get_standing(self.team2).metrics['draw_strength_speaks'], 406)
+
     def test_margin_sum(self):
         generator = TeamStandingsGenerator(('margin_sum',), ())
         standings = generator.generate(self.tournament.team_set.all())
@@ -132,6 +139,12 @@ class TestTrivialStandings(TestCase):
         standings = generator.generate(self.tournament.team_set.all())
         self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 'n/a')
         self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 'n/a')
+
+    def test_npullups(self):
+        generator = TeamStandingsGenerator(('npullups',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).metrics['npullups'], 0)
+        self.assertEqual(standings.get_standing(self.team2).metrics['npullups'], 0)
 
     def test_points_ranked(self):
         generator = TeamStandingsGenerator(('points',), ('rank',))
