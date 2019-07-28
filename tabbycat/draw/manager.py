@@ -3,6 +3,7 @@ import random
 
 from django.utils.translation import gettext as _
 
+from draw.generator.powerpair import PowerPairedDrawGenerator
 from participants.utils import get_side_history
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
@@ -28,13 +29,6 @@ OPTIONS_TO_CONFIG_MAPPING = {
     "assignment_method"     : "draw_rules__bp_assignment_method",
     "renyi_order"           : "draw_rules__bp_renyi_order",
     "exponent"              : "draw_rules__bp_position_cost_exponent",
-}
-
-
-PULLUP_RESTRICTION_METRICS = {
-    'least_to_date': 'npullups',
-    'lowest_ds_speaks': 'draw_strength_speaks',
-    'none': None
 }
 
 
@@ -195,7 +189,7 @@ class PowerPairedDrawManager(BaseDrawManager):
         teams = super().get_teams()
 
         metrics = self.round.tournament.pref('team_standings_precedence')
-        pullup_metric = PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
+        pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
 
         generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
             extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())

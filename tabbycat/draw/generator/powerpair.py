@@ -34,6 +34,8 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
             "none"             - No restriction.
             "least_to_date"    - Choose from teams who have been pulled up the
                                  least number of times in previous rounds.
+            "lowest_ds_wins"   - Choose from teams who have the lowest draw strength by
+                                 wins (indicative of having been against easier teams)
             "lowest_ds_speaks" - Choose from teams who have the lowest draw strength by
                                  speaks (indicative of having been against easier teams)
 
@@ -78,11 +80,9 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
                     "team standings metric to be an integer (typically points or wins).") % {
                     'noninteger': noninteger, 'total': len(self.teams)})
 
-        if self.options["pullup_restriction"] == "least_to_date":
-            self.check_teams_for_attribute("npullups", checkfunc=lambda x: isinstance(x, int))
-
-        if self.options["pullup_restriction"] == "lowest_ds_speaks":
-            self.check_teams_for_attribute("draw_strength_speaks", checkfunc=lambda x: isinstance(x, float))
+        pullup_metric = self.PULLUP_RESTRICTION_METRICS[self.options["pullup_restriction"]]
+        if pullup_metric is not None:
+            self.check_teams_for_attribute(pullup_metric, checkfunc=lambda x: isinstance(x, (int, float)))
 
     def generate(self):
         self._brackets = self._make_raw_brackets()
@@ -113,28 +113,27 @@ class PowerPairedDrawGenerator(BasePairDrawGenerator):
 
     # Pullup restrictions
 
-    PULLUP_ELIGIBILITY_FILTERS = {
-        "none"            : "_pullup_filter_none",
-        "least_to_date"   : "_pullup_filter_least_to_date",
-        "lowest_ds_speaks": "_pullup_filter_lowest_ds_speaks"
+    PULLUP_RESTRICTION_METRICS = {
+        "least_to_date": "npullups",
+        "lowest_ds_wins": "draw_strength",
+        "lowest_ds_speaks": "draw_strength_speaks",
+        "none": None
     }
 
     def _pullup_filter(self, teams):
         """Returns a function that takes one argument, a team, and returns a
         bool, indicating whether that team is eligible to be pulled up."""
-        function = self.get_option_function("pullup_restriction", self.PULLUP_ELIGIBILITY_FILTERS)
-        return function(teams)
+        option = self.options["pullup_restriction"]
+        try:
+            metric = self.PULLUP_RESTRICTION_METRICS[option]
+        except KeyError:
+            raise ValueError("Invalid option for pullup_restriction: {0}".format(option))
 
-    def _pullup_filter_none(self, teams):
-        return teams
-
-    def _pullup_filter_least_to_date(self, teams):
-        fewest = min(team.npullups for team in teams)
-        return [team for team in teams if team.npullups == fewest]
-
-    def _pullup_filter_lowest_ds_speaks(self, teams):
-        fewest = min(team.draw_strength_speaks for team in teams)
-        return [team for team in teams if team.draw_strength_speaks == fewest]
+        if metric is None:
+            return teams
+        else:
+            least = min(getattr(team, metric) for team in teams)
+            return [team for team in teams if getattr(team, metric) == least]
 
     # Odd bracket resolutions
 
