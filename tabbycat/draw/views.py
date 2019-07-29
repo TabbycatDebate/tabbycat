@@ -21,6 +21,7 @@ from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from availability.utils import annotate_availability
 from divisions.models import Division
+from draw.generator.powerpair import PowerPairedDrawGenerator
 from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
@@ -480,17 +481,22 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
+
+            if self.tournament.pref('teams_in_debate') == 'two':
+                pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+            else:
+                pullup_metric = None
+
             # subrank only makes sense if there's a second metric to rank on
             rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-            generator = TeamStandingsGenerator(metrics, rankings)
+            generator = TeamStandingsGenerator(metrics, rankings,
+                extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:
                 table.add_debate_ranking_columns(draw, standings)
             else:
                 self._add_break_rank_columns(table, draw, r.break_category)
             table.add_debate_metric_columns(draw, standings)
-            if self.tournament.pref('draw_pullup_restriction') == 'least_to_date':
-                table.add_number_of_pullups_columns(draw, r.prev)
             table.add_debate_side_history_columns(draw, r.prev)
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False)

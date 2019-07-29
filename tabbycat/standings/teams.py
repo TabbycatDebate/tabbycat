@@ -39,21 +39,27 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     exclude_forfeits = False
     where_value = None
 
+    exclude_unconfirmed = True
+
     def get_field(self):
         """Subclasses with complicated fields override this method."""
         return 'debateteam__teamscore__' + self.field
 
+    def get_where_field(self):
+        return self.get_field()
+
     def get_annotation(self, round=None):
         annotation_filter = Q(
-            debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
         if self.exclude_forfeits:
             annotation_filter &= Q(debateteam__teamscore__forfeit=False)
+        if self.exclude_unconfirmed:
+            annotation_filter &= Q(debateteam__teamscore__ballot_submission__confirmed=True)
         if self.where_value is not None:
-            annotation_filter &= Q(**{self.get_field(): self.where_value})
+            annotation_filter &= Q(**{self.get_where_field(): self.where_value})
 
         return self.function(self.get_field(), filter=annotation_filter)
 
@@ -199,37 +205,72 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         return super().get_annotated_queryset(queryset, column_name, round)
 
 
-class DrawStrengthMetricAnnotator(BaseMetricAnnotator):
-    """Metric annotator for draw strength."""
-    key = "draw_strength"
-    name = _("draw strength")
-    abbr = _("DS")
+class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
+
+    opponent_annotator = None
 
     def annotate(self, queryset, standings, round=None):
         if not queryset.exists():
             return
 
-        logger.info("Running points query for draw strength:")
+        logger.info("Running opponents query for draw strength:")
 
         prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
         if round is not None:
             prefetch_queryset = prefetch_queryset.filter(debate__round__seq__lte=round.seq)
 
-        points_queryset = PointsMetricAnnotator().get_annotated_queryset(
-                queryset[0].tournament.team_set.all(), 'points', round).prefetch_related(
-                Prefetch('debateteam_set',queryset=prefetch_queryset, to_attr='debateteams'))
-        points_queryset_teams = {team.id: team for team in points_queryset}
-        points_queryset_debateteams = {team.id: list(team.debateteams) for team in points_queryset}
+        opponents_queryset = self.opponent_annotator.get_annotated_queryset(
+                queryset[0].tournament.team_set.all(), 'opp_metric', round).prefetch_related(
+                Prefetch('debateteam_set', queryset=prefetch_queryset, to_attr='debateteams'))
+        opponents_queryset_teams = {team.id: team for team in opponents_queryset}
+        opponents_queryset_debateteams = {team.id: list(team.debateteams) for team in opponents_queryset}
 
-        populate_opponents([dt for dts in points_queryset_debateteams.values() for dt in dts])
+        populate_opponents([dt for dts in opponents_queryset_debateteams.values() for dt in dts])
 
         for team in queryset:
             draw_strength = 0
-            for dt in points_queryset_debateteams[team.id]:
-                points = points_queryset_teams[dt.opponent.team_id].points
-                if points is not None: # points is None when no debates have happened
-                    draw_strength += points
+            for dt in opponents_queryset_debateteams[team.id]:
+                opp_metric = opponents_queryset_teams[dt.opponent.team_id].opp_metric
+                if opp_metric is not None: # opp_metric is None when no debates have happened
+                    draw_strength += opp_metric
             standings.add_metric(team, self.key, draw_strength)
+
+
+class DrawStrengthByWinsMetricAnnotator(BaseDrawStrengthMetricAnnotator):
+    """Metric annotator for draw strength."""
+    key = "draw_strength"  # keep this key for backwards compatibility
+    name = _("draw strength by wins")
+    abbr = _("DS")
+    opponent_annotator = PointsMetricAnnotator()
+
+
+class DrawStrengthBySpeakerScoreMetricAnnotator(BaseDrawStrengthMetricAnnotator):
+    """Metric annotator for draw strength by score."""
+    key = "draw_strength_speaks"
+    name = _("draw strength by total speaker score")
+    abbr = _("DSS")
+    opponent_annotator = TotalSpeakerScoreMetricAnnotator()
+
+
+class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
+    """Metric annotator for number of times pulled up.
+
+    How many teams the team has been pulled up (i.e., has a pullup flag in
+    an associated DebateTeam object)."""
+
+    key = "npullups"
+    name = _("number of pullups before this round")
+    abbr = _("PU")
+
+    function = Count
+    where_value = r'(^|,)pullup($|,)'
+    exclude_unconfirmed = False
+
+    def get_field(self):
+        return 'debateteam'
+
+    def get_where_field(self):
+        return 'debateteam__flags__regex'
 
 
 class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -378,21 +419,23 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
     TIEBREAK_FUNCTIONS["institution"] = lambda x: x.sort(key=lambda y: y.team.institution.name)
 
     metric_annotator_classes = {
-        "points"        : PointsMetricAnnotator,
-        "points210"     : Points210MetricAnnotator,
-        "wins"          : WinsMetricAnnotator,
-        "speaks_sum"    : TotalSpeakerScoreMetricAnnotator,
-        "speaks_avg"    : AverageSpeakerScoreMetricAnnotator,
-        "speaks_ind_avg": AverageIndividualScoreMetricAnnotator,
-        "speaks_stddev" : SpeakerScoreStandardDeviationMetricAnnotator,
-        "draw_strength" : DrawStrengthMetricAnnotator,
-        "margin_sum"    : SumMarginMetricAnnotator,
-        "margin_avg"    : AverageMarginMetricAnnotator,
-        "num_adjs"      : NumberOfAdjudicatorsMetricAnnotator,
-        "firsts"        : NumberOfFirstsMetricAnnotator,
-        "seconds"       : NumberOfSecondsMetricAnnotator,
-        "wbw"           : WhoBeatWhomMetricAnnotator,
-        "wbwd"          : DivisionsWhoBeatWhomMetricAnnotator,
+        "points"              : PointsMetricAnnotator,
+        "points210"           : Points210MetricAnnotator,
+        "wins"                : WinsMetricAnnotator,
+        "speaks_sum"          : TotalSpeakerScoreMetricAnnotator,
+        "speaks_avg"          : AverageSpeakerScoreMetricAnnotator,
+        "speaks_ind_avg"      : AverageIndividualScoreMetricAnnotator,
+        "speaks_stddev"       : SpeakerScoreStandardDeviationMetricAnnotator,
+        "draw_strength"       : DrawStrengthByWinsMetricAnnotator,
+        "draw_strength_speaks": DrawStrengthBySpeakerScoreMetricAnnotator,
+        "margin_sum"          : SumMarginMetricAnnotator,
+        "margin_avg"          : AverageMarginMetricAnnotator,
+        "npullups"            : TeamPullupsMetricAnnotator,
+        "num_adjs"            : NumberOfAdjudicatorsMetricAnnotator,
+        "firsts"              : NumberOfFirstsMetricAnnotator,
+        "seconds"             : NumberOfSecondsMetricAnnotator,
+        "wbw"                 : WhoBeatWhomMetricAnnotator,
+        "wbwd"                : DivisionsWhoBeatWhomMetricAnnotator,
     }
 
     ranking_annotator_classes = {
