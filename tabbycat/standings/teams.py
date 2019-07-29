@@ -359,7 +359,7 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
         return ts
 
     def annotate(self, queryset, standings, round=None):
-        key = metricgetter(*self.keys)
+        key = metricgetter(self.keys)
 
         def who_beat_whom(tsi):
             equal_teams = [x for x in standings.infoview() if key(x) == key(tsi)]
@@ -384,7 +384,7 @@ class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
     choice_name = _("who-beat-whom (in divisions)")
 
     def annotate(self, queryset, standings, round=None):
-        key = metricgetter(*self.keys)
+        key = metricgetter(self.keys)
 
         def who_beat_whom_divisions(tsi):
             equal_teams = [x for x in standings.infoview() if key(x) == key(tsi) and x.team.division == tsi.team.division]

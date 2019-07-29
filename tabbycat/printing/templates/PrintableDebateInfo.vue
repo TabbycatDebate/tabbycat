@@ -200,7 +200,7 @@ export default {
         adjs.push(adjInfo)
       })
       const otherAdjsList = adjs.join(this.gettext('; '))
-      return this.gettext('Adjudicating with ' + otherAdjsList + '.')
+      return this.tct('Adjudicating with %s.', [otherAdjsList])
     },
     motionsAccountingForBlanks: function () {
       if (this.roundInfo.motions.length > 0) {

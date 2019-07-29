@@ -21,18 +21,18 @@ export default {
       })
       if (entity.categories.length > 0 && entity.identifier !== null) {
         const substitutions = [entity.name, categories.join(', '), entity.identifier[0]]
-        return this.gettext('%s (%s) with identifier of %s', substitutions)
+        return this.tct('%s (%s) with identifier of %s', substitutions)
       }
       if (entity.categories.length === 0 && entity.identifier !== null) {
         const substitutions = [entity.name, entity.identifier[0]]
-        return this.gettext('%s (no category) with identifier of %s', substitutions)
+        return this.tct('%s (no category) with identifier of %s', substitutions)
       }
       if (entity.categories.length > 0) {
         const substitutions = [entity.name, categories.join(', ')]
-        return this.gettext('%s (%s) with no assigned identifier', substitutions)
+        return this.tct('%s (%s) with no assigned identifier', substitutions)
       }
       if (entity.categories.length === 0) {
-        return this.gettext('%s (no category) with no assigned identifier', [entity.name])
+        return this.tct('%s (no category) with no assigned identifier', [entity.name])
       }
       return entity.name
     },
@@ -69,7 +69,7 @@ export default {
       })
     },
     venuesByPriority: function () {
-      return _.groupBy(this.entitiesSortedByName, v => this.gettext('Priority %1', v.priority))
+      return _.groupBy(this.entitiesSortedByName, v => this.tct('Priority %1', [v.priority]))
     },
   },
 }

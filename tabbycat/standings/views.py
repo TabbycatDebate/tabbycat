@@ -318,7 +318,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
 
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
-    template_name = 'speaker_standings.html'  # add an info alert
+    template_name = 'speaker_standings.html'  # add info alerts
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -488,6 +488,7 @@ class BaseTeamStandingsView(BaseStandingsView):
 
 class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
+    template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
 
     def show_ballots(self):
