@@ -58,7 +58,7 @@ class BasicRankAnnotator(BaseRankAnnotator):
     icon = "bar-chart"
 
     def __init__(self, metrics):
-        self.rank_key = metricgetter(*metrics)
+        self.rank_key = metricgetter(metrics)
 
     def annotate(self, standings):
         rank = 1
@@ -93,8 +93,8 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "Sub"
 
     def __init__(self, metrics):
-        self.group_key = metricgetter(metrics[0])
-        self.rank_key = metricgetter(*metrics[1:])
+        self.group_key = metricgetter(metrics[:1])  # don't crash if there are no metrics
+        self.rank_key = metricgetter(metrics[1:])
 
 
 class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
@@ -104,7 +104,7 @@ class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "Div"
 
     def __init__(self, metrics):
-        self.rank_key = metricgetter(*metrics)
+        self.rank_key = metricgetter(metrics)
 
     @staticmethod
     def group_key(tsi):
@@ -118,7 +118,7 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "Inst"
 
     def __init__(self, metrics):
-        self.rank_key = metricgetter(*metrics)
+        self.rank_key = metricgetter(metrics)
 
     @staticmethod
     def group_key(tsi):
