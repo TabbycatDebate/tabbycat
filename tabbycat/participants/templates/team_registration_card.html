@@ -32,13 +32,6 @@
       </div>
     {% endif %}
 
-    {% if team.division %}
-      <div class="list-group-item">
-        <strong>{% trans "Division:" %}</strong>
-        {{ team.division.name }}
-      </div>
-    {% endif %}
-
     {% if pref.public_break_categories or admin_page or private_url %}
       <div class="list-group-item">
         <strong>{% trans "Eligible for break categories:" %}</strong>

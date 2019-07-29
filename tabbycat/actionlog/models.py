@@ -30,7 +30,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_FEEDBACK_SUBMIT                   = 'fb.subm'
     ACTION_TYPE_FEEDBACK_SAVE                     = 'fb.save'
     ACTION_TYPE_TEST_SCORE_EDIT                   = 'ts.edit'
-    ACTION_TYPE_ADJUDICATOR_NOTE_SET              = 'aj.note'
+    ACTION_TYPE_ADJUDICATOR_NOTE_SET              = 'aj.note'   # obsolete
     ACTION_TYPE_DRAW_CREATE                       = 'dr.crea'
     ACTION_TYPE_DRAW_CONFIRM                      = 'dr.conf'
     ACTION_TYPE_DRAW_REGENERATE                   = 'dr.rege'
@@ -44,7 +44,7 @@ class ActionLogEntry(models.Model):
     ACTION_TYPE_SIDES_SAVE                        = 'ms.save'
     ACTION_TYPE_DRAW_RELEASE                      = 'dr.rele'
     ACTION_TYPE_DRAW_UNRELEASE                    = 'dr.unre'
-    ACTION_TYPE_DIVISIONS_SAVE                    = 'dv.save'
+    ACTION_TYPE_DIVISIONS_SAVE                    = 'dv.save'   # obsolete
     ACTION_TYPE_MOTION_EDIT                       = 'mo.edit'
     ACTION_TYPE_MOTIONS_RELEASE                   = 'mo.rele'
     ACTION_TYPE_MOTIONS_UNRELEASE                 = 'mo.unre'

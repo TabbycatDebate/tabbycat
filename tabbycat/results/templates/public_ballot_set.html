@@ -25,11 +25,7 @@
 {% endblock %}
 
 {% block sub-title %}
-  {{ debate.round.name }} @
-  {% if debate.division.venue_category %}
-    {{ debate.division.venue_category.short_name }}
-  {% endif %}
-  {{ debate.venue.display_name }}
+  {{ debate.round.name }} @ {{ debate.venue.display_name }}
 {% endblock %}
 
 {% block page-subnav-sections %}

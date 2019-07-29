@@ -25,7 +25,6 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         self.history_penalty = t.pref('adj_history_penalty')
         self.no_panellists = t.pref('no_panellist_position')
         self.no_trainees = t.pref('no_trainee_position')
-        self.duplicate_allocations = t.pref('duplicate_adjs')
         self.feedback_weight = self.round.feedback_weight
         self.extra_messages = "" # Surfaced to users for non-error disclosures
 
@@ -166,9 +165,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
             self.extra_messages += " " + warning_msg
             logger.warning(warning_msg)
 
-        # For tournaments with duplicate allocations there are typically not
-        # enough adjudicators to form full panels, so don't crash in that case
-        if not self.duplicate_allocations and len(panellists) < len(panel_debates) * 3:
+        if len(panellists) < len(panel_debates) * 3:
             warning_msg = _("There are %(panel_debates)s panel debates but only %(panellists)s "
                     "available panellists (less than %(needed)s).") % {
                         'panel_debates': len(panel_debates),

@@ -92,7 +92,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     def get_adjudicators_table(self):
         tournament = self.tournament
 
-        adjudicators = Adjudicator.objects.all() if tournament.pref('share_adjs') else Adjudicator.objects.filter(tournament=tournament)
+        adjudicators = Adjudicator.objects.filter(tournament=tournament)
         table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         table.add_adjudicator_columns(adjudicators, show_institutions=False, show_metadata=False)
         self.add_url_columns(table, adjudicators, self.request)
@@ -177,11 +177,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
         return True
 
     def get_object(self, url_key):
-        adj_filter = Q(adjudicator__tournament=self.tournament)
-        if self.tournament.pref('share_adjs'):
-            adj_filter |= Q(adjudicator__tournament=None)
-
-        q = self.model.objects.filter(adj_filter | Q(speaker__team__tournament=self.tournament))
+        q = self.model.objects.filter(Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
         return get_object_or_404(q, url_key=url_key)
 
     def get_table(self):

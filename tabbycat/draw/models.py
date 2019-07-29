@@ -21,7 +21,7 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE = 'N'
-    STATUS_POSTPONED = 'P'
+    STATUS_POSTPONED = 'P' # obsolete
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = ((STATUS_NONE, _("none")),
@@ -35,18 +35,11 @@ class Debate(models.Model):
         verbose_name=_("round"))
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
         verbose_name=_("venue"))
-    # cascade to keep draws clean in event of division deletion
-    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True,
-        verbose_name=_("division"))
 
     bracket = models.FloatField(default=0,
         verbose_name=_("bracket"))
     room_rank = models.IntegerField(default=0,
         verbose_name=_("room rank"))
-
-    time = models.DateTimeField(blank=True, null=True,
-        verbose_name=_("time"),
-        help_text=_("The time/date of a debate if it is specifically scheduled"))
 
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True)
@@ -249,17 +242,6 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
-
-    @property
-    def division_motion(self):
-        from motions.models import Motion
-        try:
-            # Pretty sure there should never be > 1
-            return Motion.objects.filter(round=self.round, divisions=self.division).first()
-        except ObjectDoesNotExist:
-            # It's easiest to assume a division motion is always present, so
-            # return a fake one if it is not
-            return Motion(text='-', reference='-')
 
     # For the front end need to ensure that there are no gaps in the debateTeams
     def serial_debateteams_ordered(self, tournament=None):

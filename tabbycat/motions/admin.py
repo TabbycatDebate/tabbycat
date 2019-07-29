@@ -11,7 +11,7 @@ from utils.admin import TabbycatModelAdminFieldsMixin
 
 class MotionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('reference', 'round', 'seq', 'get_tournament')
-    list_filter = ('round__tournament', 'round', 'divisions')
+    list_filter = ('round__tournament', 'round')
     ordering = ('round',)
 
 admin.site.register(Motion, MotionAdmin)

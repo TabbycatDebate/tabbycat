@@ -13,7 +13,7 @@
   {% endif %}
 {% endblock %}
 
-{% block page-title %}{% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}: {{ debate_name }}{% endblock %}
+{% block page-title %}{{ debate.venue.display_name }}: {{ debate_name }}{% endblock %}
 
 {% block page-subnav-sections %}
   {% if for_admin %}

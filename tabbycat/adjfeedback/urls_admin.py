@@ -20,9 +20,6 @@ urlpatterns = [
     path('breaking/set/',
         views.SetAdjudicatorBreakingStatusView.as_view(),
         name='adjfeedback-set-adj-breaking-status'),
-    path('notes/test/set/',
-        views.SetAdjudicatorNoteView.as_view(),
-        name='adjfeedback-set-adj-note'),
 
     # Source
     path('latest/',

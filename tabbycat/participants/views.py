@@ -13,12 +13,11 @@ from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
 from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
-from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
+from tournaments.mixins import (PublicTournamentPageMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
@@ -402,50 +401,3 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
             return JsonResponse({'status': 'false', 'message': message}, status=500)
 
         return JsonResponse(json.dumps(True), safe=False)
-
-
-# ==============================================================================
-# Shift scheduling
-# ==============================================================================
-
-class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, ModelFormSetView):
-    # Django doesn't have a class-based view for formsets, so this implements
-    # the form processing analogously to FormView, with less decomposition.
-    # See also: motions.views.EditMotionsView.
-
-    public_page_preference = 'allocation_confirmations'
-    template_name = 'confirm_shifts.html'
-    formset_factory_kwargs = dict(can_delete=False, extra=0, fields=['timing_confirmed'])
-    model = Adjudicator
-    allow_null_tournament = True
-    formset_model = DebateAdjudicator
-
-    def get_success_url(self):
-        return reverse_tournament('participants-public-confirm-shift',
-                self.tournament, kwargs={'url_key': self.object.url_key})
-
-    def get_formset_queryset(self):
-        return self.object.debateadjudicator_set.all()
-
-    def get_context_data(self, **kwargs):
-        kwargs['adjudicator'] = self.get_object()
-        return super().get_context_data(**kwargs)
-
-    def formset_valid(self, formset):
-        messages.success(self.request, _("Your shift check-ins have been saved"))
-        return super().formset_valid(formset)
-
-    def formset_invalid(self, formset):
-        messages.error(self.request, _("Whoops! There was a problem with the form."))
-        return super().formset_invalid(formset)
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().post(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)

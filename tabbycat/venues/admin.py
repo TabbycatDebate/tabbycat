@@ -54,7 +54,7 @@ class VenueConstraintAdmin(admin.ModelAdmin):
     list_display = ('subject', 'category', 'priority')
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',
             'adjudicator__institution__name', 'team__short_name', 'team__long_name',
-            'institution__name', 'institution__code', 'division__name',
+            'institution__name', 'institution__code',
             'category__name', 'priority')
     list_filter = ('subject_content_type', 'category', 'priority')
     ordering = ('subject_content_type', 'category')

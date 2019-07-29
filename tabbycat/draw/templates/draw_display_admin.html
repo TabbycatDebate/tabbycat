@@ -17,22 +17,16 @@
     <i data-feather="chevron-left"></i> {% trans "View Draw" %}
   </a>
 
-  {% if not pref.enable_debate_scheduling %}
-    <a href="" class="btn {% if round.starts_at %}btn-outline-primary{% else %}btn-primary{% endif %}"
-       data-toggle="modal" data-target="#editStartTime">
-      {% if round.starts_at %}
-        {% blocktrans trimmed with start_time=round.starts_at %}
-          Debates start at {{ start_time }}
-        {% endblocktrans %}
-      {% else %}
-        {% trans "Add Start Time" %}
-      {% endif %}
-    </a>
-  {% else %}
-    <a href="{% roundurl 'draw-schedule-debates' %}" class="btn btn-outline-primary">
-      {% trans "Schedule Debates" %}
-    </a>
-  {% endif %}
+  <a href="" class="btn {% if round.starts_at %}btn-outline-primary{% else %}btn-primary{% endif %}"
+     data-toggle="modal" data-target="#editStartTime">
+    {% if round.starts_at %}
+      {% blocktrans trimmed with start_time=round.starts_at %}
+        Debates start at {{ start_time }}
+      {% endblocktrans %}
+    {% else %}
+      {% trans "Add Start Time" %}
+    {% endif %}
+  </a>
 {% endblock %}
 
 {% block page-subnav-actions %}
@@ -323,11 +317,6 @@
 
       {% roundurl 'printing-feedback' round as url %}
       {% include "components/item-action.html" with text="View Feedback Forms" subtext="(for printing)" emoji="🙅" %}
-
-      {% if pref.public_divisions %}
-        {% roundurl 'printing-master-sheets-list' round as url %}
-        {% include "components/item-action.html" with text="View Division Sheet" subtext="(for printing)" emoji="📠" %}
-      {% endif %}
 
     </ul>
     <ul class="list-group mt-3">
