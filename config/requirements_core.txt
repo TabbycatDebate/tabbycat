@@ -10,7 +10,7 @@ django-ipware==2.1.0                    # IP Address logging
 django-jet==1.0.8                       # Admin Backend
 django-gfklookupwidget==1.0.7           # Replaces object_id field with a search link
 djangorestframework==3.9.4              # For serialising objects
-django-polymorphic==2.0.3               # Permits model polymorphism
+django-polymorphic==2.1.2               # Permits model polymorphism
 django-split-settings==0.3.0            # Modularise settings files
 django-statici18n==1.8.3                # Compile translations files as static file
 django-summernote==0.8.11.4             # WYSIWYG editor
