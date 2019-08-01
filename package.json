@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@vue/cli-plugin-babel": "^3.5.4",
-    "@vue/cli-plugin-eslint": "^3.5.3",
+    "@vue/cli-plugin-eslint": "^3.9.2",
     "@vue/cli-service": "^3.5.3",
     "@vue/eslint-config-standard": "^4.0.0",
     "ajv": "6.9.2",
