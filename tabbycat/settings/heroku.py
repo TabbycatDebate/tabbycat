@@ -6,6 +6,8 @@ import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 
+from .core import TABBYCAT_VERSION
+
 
 # ==============================================================================
 # Heroku
@@ -124,6 +126,7 @@ else:
             LoggingIntegration(event_level=logging.WARNING),
         ],
         send_default_pii=True,
+        release=TABBYCAT_VERSION,
     )
 
     # Override dictionary trimming so that all preferences will be included in Sentry reports
