@@ -57,7 +57,11 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
             logger.warning(warning_msg)
         ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
         if ntoosmall > 0:
-            warning_msg = _("%(count)s normalised scores are smaller than 0.0.") % {'counts': ntoosmall}
+            warning_msg = ngettext(
+                "%(count)s normalised score is smaller than 0.0.",
+                "%(count)s normalised scores are smaller than 0.0.",
+                ntoosmall
+            ) % {'count': ntoosmall}
             self.extra_messages += " " + warning_msg
             logger.warning(warning_msg)
 
