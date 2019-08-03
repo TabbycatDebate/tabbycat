@@ -319,7 +319,7 @@ Change Log
     - Sidebar menu items now display all sub-items within a section, such as for Feedback, Standings, and Breaks
     - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area that maximises the content area
     - More explicit and obvious calls-to-action for the key tasks necessary to running a round, with better interface alerts and text to help users understand when and why to perform crucial actions
-    - Redesigned motions tab page that gives a better idea of the sample size and distribution of results in both two- and three- team formats
+    - Redesigned motions tab page that gives a better idea of the sample size and distribution of results in both two- and four- team formats
 - Improved handling of Break Rounds ballots and sides allocation
     - The positions of teams within a break round are now created by the initial draw generation in an 'unset' state in recognition that most tournaments assign these manually (through say a coin toss). This should help clarify when showing break rounds draws when sides are or are not finalised
     - Break rounds ballots for formats where scores are not typically entered (i.e. BP) will only specify that you nominate the teams advancing rather than enter in all of the speakers' scores
