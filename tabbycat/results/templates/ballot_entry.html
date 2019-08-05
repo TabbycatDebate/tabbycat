@@ -48,7 +48,7 @@
       :is-confirmed="{% if new and not pref.disable_ballot_confirms %}false{% else %}true{% endif %}"
       :is-discarded="{% if ballotsub.discarded %}true{% else %}false{% endif %}"
       :current-status="{% if new and not pref.disable_ballot_confirms %}'{{ debate.STATUS_DRAFT }}'{% else %}'{{ debate.STATUS_CONFIRMED }}'{% endif %}"
-      :has-iron="{% if currentIron|length > 0 %}true{% else %}false{% endif %}"
+      :has-iron="{% if current_iron|length > 0 %}true{% else %}false{% endif %}"
       :blind-entry="{% if pref.enable_blind_checks and not new and not ballotsub.confirmed and not for_admin %}true{% else %}false{% endif %}"
       :total-ballotsubs="{{ all_ballotsubs.count }}"
       :send-receipts="{% if pref.enable_ballot_receipts %}true{% else %}false{% endif %}"

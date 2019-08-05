@@ -8,8 +8,6 @@ from .utils import get_status_meta
 
 
 class ResultsTableBuilder(TabbycatTableBuilder):
-    """Painfully construct the edit links; this is the only case where
-    a cell has multiple links; hence the creating HTML directly"""
 
     def add_ballot_check_in_columns(self, debates, key):
 
