@@ -79,19 +79,21 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
         notifications = self.tournament.bulknotification_set.select_related('round').prefetch_related(
             Prefetch('sentmessage_set', queryset=SentMessage.objects.select_related('recipient').prefetch_related('emailstatus_set')))
 
-        for n in notifications:
+        for n in notifications.all():
             emails = n.sentmessage_set.all()
 
             subtitle = n.round.name if n.round is not None else _("@ %s") % timezone.localtime(n.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
             table = TabbycatTableBuilder(view=self, title=n.get_event_display().title(), subtitle=subtitle)
 
             # Create arrays for columns
+            na_email = {'text': _("N/A"), 'class': 'text-muted'}
+
+            emails_recipient = []
             emails_status = []
             emails_time = []
             for e in emails:
                 status = e.emailstatus_set.all()
                 if status.count() == 0:
-                    na_email = {'text': _("N/A"), 'class': 'text-muted'}
                     emails_status.append(na_email)
                     emails_time.append(na_email)
                     continue
@@ -102,10 +104,16 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
                     "class": self._get_event_class(first_status.event),
                     "popover": {"title": _("Timeline"), "content": self._create_status_timeline(status)}
                 }
+
+                if e.recipient is None:
+                    emails_recipient.append(na_email)
+                else:
+                    emails_recipient.append(e.recipient.name)
+
                 emails_status.append(status_cell)
                 emails_time.append(first_status.timestamp)
 
-            table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [e.recipient.name for e in emails])
+            table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, emails_recipient)
             table.add_column({'key': 'name', 'title': _("Status")}, emails_status)
             table.add_column({'key': 'name', 'title': _("Time")}, emails_time)
 
