@@ -40,7 +40,7 @@ class SentMessage(models.Model):
         verbose_name_plural = _("sent messages")
 
     def __str__(self):
-        return "%s: %s" % (self.recipient.name, self.notification.get_event_display())
+        return "%s (%s) %s" % (self.recipient, self.email, self.notification.get_event_display())
 
 
 class BulkNotification(models.Model):
