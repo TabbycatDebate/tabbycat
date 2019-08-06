@@ -4,7 +4,9 @@ import random
 import string
 
 from django.db import IntegrityError
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
@@ -51,15 +53,13 @@ def delete_identifiers(queryset):
 
 
 def get_unexpired_checkins(tournament, window_preference_type):
-    if not window_preference_type:
-        time_window = datetime.datetime.fromtimestamp(0)  # Unix start
-    else:
+    filters = Q(tournament=tournament)
+    if window_preference_type:
         start = datetime.timedelta(hours=tournament.pref(window_preference_type))
-        time_window = datetime.datetime.now() - start
+        time_window = timezone.now() - start
+        filters &= Q(time_gte=time_window)
 
-    events = Event.objects.filter(tournament=tournament,
-        time__gte=time_window).select_related('identifier').order_by('time')
-    return events
+    return Event.objects.filter(filters).select_related('identifier').order_by('time')
 
 
 def create_identifiers(model_to_make, items_to_check):
