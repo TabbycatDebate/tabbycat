@@ -5,8 +5,13 @@ group: edge
 env:
   global:
     - CC_TEST_REPORTER_ID=c18003eb2d4d191e9ebd68d9c3cf8082ba690eccac12df6660a098a78fc8713b
+    - PGPORT=5433
 addons:
-  postgresql: "10"
+  postgresql: "11"
+  apt:
+    packages:
+      - postgresql-11
+      - postgresql-client-11
   # chrome: stable # Re-enable for functional tests if/when they work on Travis
 services:
   - postgresql
@@ -28,6 +33,11 @@ matrix:
       install:
         - pip install -r ./config/requirements_development.txt
         - npm install
+      before_script:
+        - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+        - sudo systemctl restart postgresql@11-main
+        - pg_lsclusters
+        - createdb travisci -U postgres
       script:
         - flake8 tabbycat
         - npm run lint
@@ -45,6 +55,10 @@ matrix:
         - pip install coverage
         - npm install
       before_script:
+        - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+        - sudo systemctl restart postgresql@11-main
+        - pg_lsclusters
+        - createdb travisci -U postgres
         - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         - chmod +x ./cc-test-reporter
         - ./cc-test-reporter before-build
