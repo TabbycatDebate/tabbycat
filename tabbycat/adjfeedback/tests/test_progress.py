@@ -7,7 +7,7 @@ from adjfeedback.models import AdjudicatorFeedback
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission
-from results.result import VotingDebateResult
+from results.result import DebateResultByAdjudicatorWithScores
 from tournaments.models import Round, Tournament
 from utils.tests import suppress_logs
 from venues.models import Venue
@@ -90,7 +90,7 @@ class TestFeedbackProgress(TestCase):
                     type=DebateAdjudicator.TYPE_TRAINEE)
 
         ballotsub = BallotSubmission(debate=debate, submitter_type=BallotSubmission.SUBMITTER_TABROOM)
-        result = VotingDebateResult(ballotsub)
+        result = DebateResultByAdjudicatorWithScores(ballotsub)
 
         for t, side in zip(teams, ('aff', 'neg')):
             team = self._team(t)

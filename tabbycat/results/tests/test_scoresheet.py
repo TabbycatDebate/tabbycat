@@ -83,46 +83,59 @@ class TestTwoTeamScoresheets(unittest.TestCase):
     @on_all_testdata
     def test_result_only(self, testdata):
         scoresheet = ResultOnlyScoresheet()
-        scoresheet.set_declared_winner(testdata['declared_winner'])
+        scoresheet.add_declared_winner(testdata['declared_winner'])
         self.assertEqual(scoresheet.is_complete(), testdata['complete_declared'])
-        self.assertEqual(scoresheet.winner(), testdata['declared_winner'])
+        if scoresheet.is_complete():
+            self.assertEqual(scoresheet.winners()[0], testdata['declared_winner'])
+            self.assertEqual(len(scoresheet.winners()), 1)
+        else:
+            self.assertEqual(len(scoresheet.winners()), 0)
 
     @on_all_testdata
     def test_high_points_required(self, testdata):
         scoresheet = HighPointWinsRequiredScoresheet(testdata['positions'])
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'])
-        self.assertEqual(scoresheet.winner(), testdata['calculated_winner'])
+        if testdata['calculated_winner'] is None:
+            self.assertEqual(len(scoresheet.winners()), 0)
+        else:
+            self.assertEqual(scoresheet.winners()[0], testdata['calculated_winner'])
         self.assert_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_valid(), testdata['calculated_winner'] is not None)
 
     @on_all_testdata
     def test_low_point_win(self, testdata):
         scoresheet = LowPointWinsAllowedScoresheet(testdata['positions'])
-        scoresheet.set_declared_winner(testdata['declared_winner'])
+        scoresheet.add_declared_winner(testdata['declared_winner'])
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'] and testdata['complete_declared'])
-        self.assertEqual(scoresheet.winner(), testdata['declared_winner'] if scoresheet.is_complete() else None)
+        if scoresheet.is_complete():
+            self.assertEqual(len(scoresheet.winners()), 1)
+            self.assertEqual(scoresheet.winners()[0], testdata['declared_winner'])
+        else:
+            self.assertEqual(len(scoresheet.winners()), 0)
         self.assert_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_valid(), testdata['complete_scores'] and testdata['complete_declared'])
 
     @on_all_testdata
     def test_tie_point_win(self, testdata):
         scoresheet = TiedPointWinsAllowedScoresheet(testdata['positions'])
-        scoresheet.set_declared_winner(testdata['declared_winner'])
+        scoresheet.add_declared_winner(testdata['declared_winner'])
         self.load_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'] and testdata['complete_declared'])
         if scoresheet.is_complete() and (testdata['calculated_winner'] in [testdata['declared_winner'], None]):
             winner = testdata['declared_winner']
+            self.assertEqual(scoresheet.winners()[0], winner)
+            self.assertEqual(len(scoresheet.winners()), 1)
         else:
             winner = None
-        self.assertEqual(scoresheet.winner(), winner)
+            self.assertEqual(len(scoresheet.winners()), 0)
         self.assert_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_valid(), winner is not None)
 
     def test_declared_winner_error(self):
         scoresheet = ResultOnlyScoresheet()
-        self.assertRaises(AssertionError, scoresheet.set_declared_winner, 'hello')
+        self.assertRaises(AssertionError, scoresheet.set_declared_winners, 'hello')
 
 
 class TestBPScoresheets(unittest.TestCase):
