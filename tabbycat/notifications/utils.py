@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate
-from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.result import ConsensusDebateResultWithScores, DebateResult, DebateResultByAdjudicatorWithScores
 from results.utils import side_and_position_names
 from options.utils import use_team_code_names
 from participants.models import Person
@@ -136,14 +136,14 @@ def ballots_email_generator(to, debate_id):
 
         return mark_safe(ballot)
 
-    if isinstance(results, VotingDebateResult):
+    if isinstance(results, DebateResultByAdjudicatorWithScores):
         for (adj, ballot) in results.scoresheets.items():
             if adj.email is None:
                 continue
 
             context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
             emails.append((context, adj))
-    elif isinstance(results, BaseConsensusDebateResultWithSpeakers):
+    elif isinstance(results, ConsensusDebateResultWithScores):
         context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
 
         for adj in debate.debateadjudicator_set.all():

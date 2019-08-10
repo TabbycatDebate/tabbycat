@@ -162,8 +162,8 @@ def populate_results(ballotsubs):
 
     for ts in teamscores:
         result = results_by_ballotsub_id[ts.ballot_submission_id]
-        if result.uses_advancing and ts.win:
-            result.advancing.append(ts.debate_team.side)
+        if result.uses_declared_winners and ts.win:
+            result.add_winner(ts.debate_team.side)
 
     # Finally, check that everything is in order
 

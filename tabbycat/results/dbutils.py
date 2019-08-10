@@ -101,8 +101,8 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     if result.is_voting:
         for scoresheet in result.scoresheets.values():
             fill_scoresheet_randomly(scoresheet, t)
-    elif result.uses_advancing:
-        result.set_advancing(random.sample(t.sides, 2))
+    elif result.uses_declared_winners:
+        result.set_winners(random.sample(t.sides, 2))
     else:
         fill_scoresheet_randomly(result.scoresheet, t)
 
@@ -134,7 +134,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
             'motion': bsub.motion and bsub.motion.reference or "<No motion>"
         })
     elif t.pref('teams_in_debate') == 'bp':
-        if result.uses_advancing:
+        if result.uses_declared_winners:
             logger.info("%(debate)s: %(advancing)s on %(motion)s", {
                 'debate': debate.matchup,
                 'advancing': ", ".join(result.advancing_sides()),
