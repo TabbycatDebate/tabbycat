@@ -344,7 +344,6 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'ballot_entry.html'
     tabroom = True
-    for_admin = True
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
