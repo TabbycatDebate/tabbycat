@@ -13,8 +13,8 @@ from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
-from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
-                     ForfeitDebateResult, VotingDebateResult)
+from .result import (ConsensusDebateResult, ConsensusDebateResultWithScores,
+                     DebateResultByAdjudicatorWithScores)
 from .utils import get_status_meta, side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -36,11 +36,11 @@ class TournamentPasswordField(forms.CharField):
             self.password = tournament.pref('public_password')
         else:
             raise TypeError("'tournament' is a required keyword argument")
-        kwargs.setdefault('label', "Tournament password")
-        super(TournamentPasswordField, self).__init__(*args, **kwargs)
+        kwargs.setdefault('label', _("Tournament password"))
+        super().__init__(*args, **kwargs)
 
     def clean(self, value):
-        value = super(TournamentPasswordField, self).clean(value)
+        value = super().clean(value)
         if value != self.password:
             raise forms.ValidationError(_("That password isn't correct."))
         return value
@@ -65,10 +65,10 @@ class BaseScoreField(forms.FloatField):
         kwargs.setdefault('min_value', self.coerce_for_ui(min_value))
         kwargs.setdefault('max_value', self.coerce_for_ui(max_value))
 
-        super(BaseScoreField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def validate(self, value):
-        super(BaseScoreField, self).validate(value)
+        super().validate(value)
         self.check_value(value)
 
     def check_value(self, value):
@@ -80,7 +80,7 @@ class BaseScoreField(forms.FloatField):
             raise forms.ValidationError(msg, code='decimal')
 
     def widget_attrs(self, widget):
-        attrs = super(BaseScoreField, self).widget_attrs(widget)
+        attrs = super().widget_attrs(widget)
         if isinstance(widget, forms.NumberInput):
             attrs['step'] = self.coerce_for_ui(self.step_value) # override
         return attrs
@@ -159,7 +159,8 @@ class BaseResultForm(forms.Form):
                     code='discard_confirm'
                 ))
 
-        if cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed') and self.debate.confirmed_ballot is None:
+        data_confirmed = cleaned_data.get('debate_result_status') == Debate.STATUS_CONFIRMED and not cleaned_data.get('confirmed')
+        if data_confirmed and self.debate.confirmed_ballot is None:
             self.add_error('debate_result_status', forms.ValidationError(
                 _("The debate status can't be confirmed unless one of the ballot sets is confirmed."),
                 code='status_confirm'
@@ -538,13 +539,8 @@ class BaseBallotSetForm(BaseResultForm):
 
     def save_ballot(self):
 
-        # 3. Check if there was a forfeit
-        if self.using_forfeits and self.cleaned_data.get('forfeit'):
-            result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
-            self.ballotsub.forfeit = result.debateteams[self.cleaned_data['forfeit']]
-        else:
-            result_class = self.get_result_class()
-            result = result_class(self.ballotsub)
+        result_class = self.get_result_class()
+        result = result_class(self.ballotsub)
 
         # 4. Save the sides
         if self.choosing_sides:
@@ -629,13 +625,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
         return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
 
     def get_result_class(self):
-        teams_in_debate = self.tournament.pref('teams_in_debate')
-        if teams_in_debate == 'two':
-            return ConsensusDebateResult
-        elif teams_in_debate == 'bp':
-            return BPDebateResult
-        else:
-            raise ValueError("Unrecognised teams_in_debate option: {}".format(teams_in_debate))
+        return ConsensusDebateResultWithScores
 
     def create_score_fields(self):
         """Adds the speaker score fields:
@@ -729,7 +719,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
         return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
 
     def get_result_class(self):
-        return VotingDebateResult
+        return DebateResultByAdjudicatorWithScores
 
     def create_score_fields(self):
         """Adds the speaker score fields:
@@ -824,8 +814,8 @@ class BPEliminationResultForm(BaseResultForm):
         self.fields['advancing'] = forms.MultipleChoiceField(choices=side_choices,
                 widget=forms.CheckboxSelectMultiple)
 
-        result = BPEliminationDebateResult(self.ballotsub)
-        self.initial['advancing'] = result.advancing_sides()
+        result = ConsensusDebateResult(self.ballotsub)
+        self.initial['advancing'] = result.get_winner()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -846,6 +836,6 @@ class BPEliminationResultForm(BaseResultForm):
         return cleaned_data
 
     def save_ballot(self):
-        result = BPEliminationDebateResult(self.ballotsub)
-        result.set_advancing(self.cleaned_data['advancing'])
+        result = ConsensusDebateResult(self.ballotsub)
+        result.set_winner(self.cleaned_data['advancing'])
         result.save()

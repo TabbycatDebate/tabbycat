@@ -5,7 +5,7 @@ from checkins.utils import get_checkins
 from draw.models import DebateTeam
 from tournaments.models import Tournament
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore, TeamScoreByAdj
 from .result import DebateResult
 
 
@@ -162,8 +162,19 @@ def populate_results(ballotsubs):
 
     for ts in teamscores:
         result = results_by_ballotsub_id[ts.ballot_submission_id]
-        if result.uses_declared_winners and ts.win:
+        if result.uses_declared_winners and ts.win and not result.is_voting:
             result.add_winner(ts.debate_team.side)
+
+    # Populate advancing (load_advancing)
+    teamscoresbyadj = TeamScoreByAdj.objects.filter(
+        ballot_submission__in=ballotsubs,
+        debate_team__side__in=sides
+    ).select_related('debate_team')
+
+    for tsba in teamscoresbyadj:
+        result = results_by_ballotsub_id[tsba.ballot_submission_id]
+        if result.uses_declared_winners and tsba.win:
+            result.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
 
     # Finally, check that everything is in order
 

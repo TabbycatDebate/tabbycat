@@ -406,7 +406,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
         ).select_related('debate_adjudicator__adjudicator', 'debate_adjudicator__adjudicator__institution', 'debate_team')
 
         for tsba in teamscorebyadjs:
-            if tsba.win and hasattr(self.scoresheet_class, 'add_declared_winner'):
+            if tsba.win:
                 self.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
 
     def save(self):
