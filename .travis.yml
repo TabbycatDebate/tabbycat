@@ -98,10 +98,6 @@ matrix:
     #     # TODO: get working later; currently lacks a database connection
     #     #- python tabbycat/manage.py test -v 2 --exclude-tag=selenium
 
-  # Allow Docker built to fail; remove below two lines when fixed
-  allow_failures:
-    - language: generic
-
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/
 # Currently it runs and loads the view; but doesn't seem to resolve the asserts
