@@ -112,8 +112,19 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     # Pick a motion
     motions = debate.round.motion_set.all()
     if motions:
-        motion = random.choice(motions)
+        num_motions = 3 if motions.count() > 3 else motions.count()
+        sample = random.sample(list(motions), k=num_motions)
+        motion = sample[0]
         bsub.motion = motion
+
+        if t.pref('motion_vetoes_enabled') and len(sample) == len(t.sides) + 1:
+            for i, side in enumerate(t.sides, 1):
+                dt = debate.get_dt(side)
+                dt.debateteammotionpreference_set.create(
+                    motion=sample[i],
+                    preference=3,
+                    ballot_submission=bsub,
+                )
 
     bsub.discarded = discarded
     bsub.confirmed = confirmed
