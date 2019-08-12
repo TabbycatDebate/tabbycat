@@ -57,8 +57,7 @@ def fill_scoresheet_randomly(scoresheet, tournament):
             scoresheet.set_score(side, pos, score)
 
 
-def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
-                  min_score=72, max_score=78, reply_random=False):
+def add_result(debate, submitter_type, user, discarded=False, confirmed=False, reply_random=False):
     """Adds a ballot set to a debate.
 
     ``debate`` is the Debate to which the ballot set should be added.
