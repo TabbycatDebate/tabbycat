@@ -94,7 +94,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
                 result.set_ghost(side, i, False)
 
             if t.reply_position is not None:
-                reply_speaker = random.randint(0, t.last_substantive_position-1) if reply_random else 0
+                reply_speaker = random.randint(0, t.last_substantive_position-2) if reply_random else 0
                 result.set_speaker(side, t.reply_position, speakers[reply_speaker])
                 result.set_ghost(side, t.reply_position, False)
 
