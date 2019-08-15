@@ -6,7 +6,8 @@ Change Log
 --------------
 *Release date: ?*
 
-- Pull-ups can now be restricted to teams with the lowest draw strength (by speaker points) of their bracket. In addition, draw strength by speaker score is now an available team ranking metric.
+- Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket.
+- The number of pull-ups and draw strength by speaker score are now available as team standing metrics.
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
     - Copy ``tabbycat/settings/local.example`` to become ``local.py`` (and fill in your original database details)
