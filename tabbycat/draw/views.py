@@ -655,7 +655,7 @@ class CreateDrawView(DrawStatusEdit):
             return HttpResponseRedirect(reverse_round('availability-index', self.round))
         except DrawFatalError as e:
             messages.error(request, mark_safe(_(
-                "The draw could not be created, because the following error occurred: "
+                "<p>The draw could not be created, because the following error occurred: "
                 "<em>%(message)s</em></p>\n"
                 "<p>If this issue persists and you're not sure how to resolve it, please "
                 "contact the developers.</p>"
