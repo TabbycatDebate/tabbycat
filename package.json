@@ -36,7 +36,7 @@
     "quagga": "0.12.x",
     "stats-percentile": "^3.1.0",
     "vue": "^2.6.7",
-    "vue-cli-plugin-webpack-bundle-analyzer": "^1.3.0",
+    "vue-cli-plugin-webpack-bundle-analyzer": "^1.4.0",
     "vue-template-compiler": "^2.6.7",
     "vue-touch": "^2.0.0-beta.4",
     "vuex": "^3.1.0"
