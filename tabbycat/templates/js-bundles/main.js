@@ -1,8 +1,8 @@
 // The base template with universal or near-universal functionality (imported on all pages)
 import Vue from 'vue'
 import VueTouch from 'vue-touch'
-import Raven from 'raven-js'
-import RavenVue from 'raven-js/plugins/vue'
+import * as Sentry from '@sentry/browser'
+import * as Integrations from '@sentry/integrations'
 import Popper from 'popper.js'
 import feather from 'feather-icons'
 import 'bootstrap' // Import bootstrap javascript plugins
@@ -36,10 +36,14 @@ var $ = require('jquery')
 
 // Setup error logging (should happen before other imports)
 if (window.buildData.sentry === true) {
-  Raven.config('https://88a028d7eb504d93a1e4c92e077d6ce5@sentry.io/185378', {
+  Sentry.init({
+    dsn: 'https://88a028d7eb504d93a1e4c92e077d6ce5@sentry.io/185378',
+    integrations: [new Integrations.Vue({ Vue, attachProps: true })],
     release: window.buildData.version,
-  }).addPlugin(RavenVue, Vue).install()
+  })
 }
+
+Sentry.captureException(new Error('TESTING NEW SENTRY JS SDK'))
 
 // -----------------------------------------------------------------------------
 // TCI: jQuery, Lodash, and Boostrap
