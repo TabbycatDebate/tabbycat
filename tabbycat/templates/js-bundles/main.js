@@ -43,8 +43,6 @@ if (window.buildData.sentry === true) {
   })
 }
 
-Sentry.captureException(new Error('TESTING NEW SENTRY JS SDK'))
-
 // -----------------------------------------------------------------------------
 // TCI: jQuery, Lodash, and Boostrap
 // -----------------------------------------------------------------------------
