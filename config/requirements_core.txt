@@ -16,7 +16,7 @@ django-statici18n==1.8.3                # Compile translations files as static f
 django-summernote==0.8.11.4             # WYSIWYG editor
 munkres==1.1.2                          # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
-sentry-sdk==0.10.2                      # Client for Sentry error tracking
+sentry-sdk==0.11.0                      # Client for Sentry error tracking
 
 # Database
 psycopg2-binary==2.8.3                  # For Django to talk to postgres
