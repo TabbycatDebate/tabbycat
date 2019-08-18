@@ -375,6 +375,8 @@ class BaseBallotSetForm(BaseResultForm):
                 initial['motion'] = self.motions.get()
             else:
                 initial['motion'] = self.ballotsub.motion
+
+        if self.using_vetoes:
             for side in self.sides:
                 dtmp = self.ballotsub.debateteammotionpreference_set.filter(
                         debate_team__side=side, preference=3).first()
