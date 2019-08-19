@@ -131,7 +131,7 @@ These can then be compiled using::
 
     $ dj compilemessages -l es
 
-As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files should not be compiled; their sole purpose is to provide a source language for Transifex.
+As it stands Heroku needs the .mo files pre-compiled (see `issue in Heroku Python buildpack <https://github.com/heroku/heroku-buildpack-python/issues/198>`_, so these are committed to Git. Note that the English (``en``) language files should not be compiled; their sole purpose is to provide a source language for `Crowdin <https://crowdin.com/project/tabbycat>`_.
 
 Strings defined in Vue files must similarily be marked with ``gettext`` but must be added manually to ``tabbycat/locale/LANGUAGE_CODE/djangojs.po``, for each language supported. These can then compiled to javascript bundles using::
 
