@@ -1379,16 +1379,16 @@ class BallotEmailMessageBody(LongStringPreference):
 
 @tournament_preferences_registry.register
 class PointsEmailSubjectLine(StringPreference):
-    help_text = _("The subject line for emails sent to speakers with their team points.")
-    verbose_name = _("Team points subject line")
+    help_text = "The subject line for emails sent to speakers with their team points."
+    verbose_name = "Team points subject line"
     name = 'team_points_email_subject'
     default = "{{ TEAM }}'s current wins after {{ ROUND }}: {{ POINTS }}"
 
 
 @tournament_preferences_registry.register
 class PointsEmailMessageBody(LongStringPreference):
-    help_text = _("The message body for emails sent to speakers with their team points.")
-    verbose_name = _("Team points message")
+    help_text = "The message body for emails sent to speakers with their team points."
+    verbose_name = "Team points message"
     name = 'team_points_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "After {{ ROUND }}, your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> wins in the {{ TOURN }}.</p>"
@@ -1397,16 +1397,16 @@ class PointsEmailMessageBody(LongStringPreference):
 
 @tournament_preferences_registry.register
 class AdjudicatorDrawNotificationSubject(StringPreference):
-    help_text = _("The subject-line for emails sent to adjudicators with their assignments.")
-    verbose_name = _("Adjudicator draw subject line")
+    help_text = "The subject-line for emails sent to adjudicators with their assignments."
+    verbose_name = "Adjudicator draw subject line"
     name = 'adj_email_subject'
     default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
 
 
 @tournament_preferences_registry.register
 class AdjudicatorDrawNotificationMessage(LongStringPreference):
-    help_text = _("The message body for emails sent to adjudicators with their assignments.")
-    verbose_name = _("Adjudicator draw message")
+    help_text = "The message body for emails sent to adjudicators with their assignments."
+    verbose_name = "Adjudicator draw message"
     name = 'adj_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "<p>You have been assigned as <strong>{{ POSITION }}</strong> adjudicator for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
@@ -1415,16 +1415,16 @@ class AdjudicatorDrawNotificationMessage(LongStringPreference):
 
 @tournament_preferences_registry.register
 class TeamDrawNotificationSubject(StringPreference):
-    help_text = _("The subject-line for emails sent to teams with their draw.")
-    verbose_name = _("Team draw subject line")
+    help_text = "The subject-line for emails sent to teams with their draw."
+    verbose_name = "Team draw subject line"
     name = 'team_draw_email_subject'
     default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
 
 
 @tournament_preferences_registry.register
 class TeamDrawNotificationMessage(LongStringPreference):
-    help_text = _("The message body for emails sent to participants with their private URLs.")
-    verbose_name = _("Private URL notification message")
+    help_text = "The message body for emails sent to participants with their private URLs."
+    verbose_name = "Private URL notification message"
     name = 'team_draw_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "<p>You have been assigned as <strong>{{ SIDE }}</strong> for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
@@ -1433,16 +1433,16 @@ class TeamDrawNotificationMessage(LongStringPreference):
 
 @tournament_preferences_registry.register
 class PrivateUrlEmailSubject(StringPreference):
-    help_text = _("The subject-line for emails sent to participants with their private URLs.")
-    verbose_name = _("Private URL notification subject line")
+    help_text = "The subject-line for emails sent to participants with their private URLs."
+    verbose_name = "Private URL notification subject line"
     name = 'url_email_subject'
     default = "Your personal private URL for {{ TOURN }}"
 
 
 @tournament_preferences_registry.register
 class PrivateUrlEmailMessage(LongStringPreference):
-    help_text = _("The message body for emails sent to participants with their private URLs.")
-    verbose_name = _("Private URL notification message")
+    help_text = "The message body for emails sent to participants with their private URLs."
+    verbose_name = "Private URL notification message"
     name = 'url_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "<p>At {{ TOURN }}, we are using an online tabulation system. You can submit "
@@ -1455,16 +1455,16 @@ class PrivateUrlEmailMessage(LongStringPreference):
 
 @tournament_preferences_registry.register
 class MotionReleaseEmailSubject(StringPreference):
-    help_text = _("The subject-line for emails sent to participants on motion release.")
-    verbose_name = _("Motion release notification subject line")
+    help_text = "The subject-line for emails sent to participants on motion release."
+    verbose_name = "Motion release notification subject line"
     name = 'motion_email_subject'
     default = "Motions for {{ ROUND }}"
 
 
 @tournament_preferences_registry.register
 class MotionReleaseEmailMessage(LongStringPreference):
-    help_text = _("The message body for emails sent to participants on motion release.")
-    verbose_name = _("Motion release notification message")
+    help_text = "The message body for emails sent to participants on motion release."
+    verbose_name = "Motion release notification message"
     name = 'motion_email_message'
     default = ("<p>The motion(s) for {{ ROUND }} are:</p>"
         "{{ MOTIONS }}")
@@ -1472,16 +1472,16 @@ class MotionReleaseEmailMessage(LongStringPreference):
 
 @tournament_preferences_registry.register
 class TeamNameEmailSubject(StringPreference):
-    help_text = _("The subject-line for emails sent to participants informing them of their team registration.")
-    verbose_name = _("Team registration notification subject line")
+    help_text = "The subject-line for emails sent to participants informing them of their team registration."
+    verbose_name = "Team registration notification subject line"
     name = 'team_email_subject'
     default = "Registration for {{ SHORT }}"
 
 
 @tournament_preferences_registry.register
 class TeamNameEmailMessage(LongStringPreference):
-    help_text = _("The message body for emails sent to participants informing them of their team registration.")
-    verbose_name = _("Team registration notification message")
+    help_text = "The message body for emails sent to participants informing them of their team registration."
+    verbose_name = "Team registration notification message"
     name = 'team_email_message'
     default = ("<p>Hi {{ USER }},</p>"
         "<p>You are registered as <strong>{{ LONG }}</strong> in {{ TOURN }} with {{ SPEAKERS }}.</p>")
