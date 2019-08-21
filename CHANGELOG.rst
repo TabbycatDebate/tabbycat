@@ -18,8 +18,6 @@ Change Log
     - Average scores for all adjudicators, and a voting majority, are now shown next to the panel
     - Various allocation-relevant settings, such as the minimum feedback score needed for a voting position, are now available inline on the allocation page itself. This should enable much faster tweaks/iterations of these values
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
-- Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket.
-- The number of pull-ups and draw strength by speaker score are now available as team standing metrics.
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
     - Copy ``tabbycat/settings/local.example`` to become ``local.py`` (and fill in your original database details)
     - Optional: repeat the same copying procedure for ``development.example`` and set the ``LOCAL_DEVELOPMENT`` environmental variable to ``True`` if you would like to use the settings designed to aid local development
@@ -40,7 +38,7 @@ Change Log
     - Institutional affiliations no longer matter for determining conflicts for either teams or adjudicators; only institutions listed in the team's or adjudicator's conflicts matter
     - An adjudicator/team now conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
 - When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions
-- Tabbycat no longer tracks which round is the 'current' round and instead tracks the completion of individual rounds. This change does not alter any existing workflows, but makes it easier to run simultaneous draws in out-rounds and/or run tournaments with simultaneous in-rounds
+- Tabbycat no longer tracks which round is the 'current' round and instead tracks the completion of individual rounds. This change does not alter any existing workflows, but makes it easier to run simultaneous draws in out-rounds
 - Info-slides can now be split into paragraphs
 - Check-in pages now differentiate between teams with 1 and 2 checked-in people in two-team formats
 - Institutional caps in breaks can be based on the number of teams in the break. Thanks to Viran Weerasekera for this feature!
