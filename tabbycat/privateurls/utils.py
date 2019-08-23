@@ -2,7 +2,7 @@ import logging
 import string
 from secrets import SystemRandom
 
-from django.db import IntegrityError
+from participants.models import Person
 
 logger = logging.getLogger(__name__)
 
@@ -13,20 +13,19 @@ def generate_url_key(length=8):
     return ''.join(SystemRandom().choice(chars) for _ in range(length))
 
 
-def populate_url_keys(queryset, length=8, num_attempts=10):
+def populate_url_keys(people, length=8, num_attempts=10):
     """Populates the URL key field for every instance in the given QuerySet."""
-    for instance in queryset:
+    existing_keys = list(Person.objects.exclude(url_key__isnull=True).values_list('url_key', flat=True))
+    for person in people:
         for i in range(num_attempts):
-            instance.url_key = generate_url_key(length)
-            try:
-                instance.save()
-            except IntegrityError:
-                logger.warning("URL key was not unique, trying again (%d of %d)", i, num_attempts)
-                continue
-            else:
+            new_key = generate_url_key(length)
+            if new_key not in existing_keys:
+                person.url_key = new_key
+                existing_keys.append(new_key)
                 break
         else:
-            logger.error("Could not generate unique URL for %r after %d tries", instance, num_attempts)
+            logger.error("Could not generate unique URL for %r after %d tries", person, num_attempts)
+    Person.objects.bulk_update(people, ['url_key'])
 
 
 def delete_url_keys(queryset):
