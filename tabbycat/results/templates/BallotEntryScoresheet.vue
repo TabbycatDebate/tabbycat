@@ -122,7 +122,7 @@ export default {
       this.$emit('update-speaker-score', teamPosition, speakerPosition, speakerScore)
     },
     blindValidationFail: function () {
-      this.$emit('blind-validation-fail')
+      this.$emit('blind-validation-fail', {})
     },
   },
 }
