@@ -15,6 +15,6 @@ pep8-naming==0.8.*                          # Flake plugin for naming convention
 selenium==3.141.*                           # Functional testing (in here for CI tests)
 
 # Debug
-django-debug-toolbar==2.0.*
+django-debug-toolbar==2.0
 # django-debug-toolbar-request-history==0.0.11 # Debug POSTs/AJAX
 git+https://github.com/djsutho/django-debug-toolbar-request-history.git@django-debug-toolbar-2
