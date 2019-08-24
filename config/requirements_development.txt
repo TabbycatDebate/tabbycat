@@ -14,9 +14,7 @@ pep8-naming==0.8.*                          # Flake plugin for naming convention
 # Tests
 selenium==3.141.*                           # Functional testing (in here for CI tests)
 
-# Translation
-transifex-client==0.13.*                    # Translations
-
 # Debug
 django-debug-toolbar==2.0.*
-django-debug-toolbar-request-history==0.0.11 # Debug POSTs/AJAX
+# django-debug-toolbar-request-history==0.0.11 # Debug POSTs/AJAX
+git+https://github.com/djsutho/django-debug-toolbar-request-history.git@django-debug-toolbar-2
