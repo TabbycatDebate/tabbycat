@@ -59,10 +59,14 @@
       </div>
     {% endif %} {# pref.public_break_categories or admin_page #}
 
-    {% if team.institution and pref.show_team_institutions or admin_page or private_url %}
+    {% if pref.show_team_institutions or admin_page or private_url %}
       <div class="list-group-item">
         <strong>{% trans "Institution:" %}</strong>
-        {{ team.institution.name }}
+        {% if team.institution %}
+          {{ team.institution.name }}
+        {% else %}
+          <span class="text-muted">{% trans "Unaffiliated" %}</span>
+        {% endif %}
         {% if team.institution.region %}
           <br />
           <strong>{% trans "Region:" %}</strong>
