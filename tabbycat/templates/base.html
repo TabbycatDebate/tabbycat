@@ -175,7 +175,7 @@
 
     <script src="{% statici18n LANGUAGE_CODE %}"></script>
     <script>
-      window.buildData = { // Pass to Raven
+      window.buildData = { // Pass to Sentry
         version: '{% if tabbycat_version %}{{ tabbycat_version }}{% else %}?{% endif %}',
         sentry: {% if disable_sentry %}false{% else %}true{% endif %}
       }

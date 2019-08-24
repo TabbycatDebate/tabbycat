@@ -5,6 +5,7 @@ import dj_database_url
 import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
 
@@ -124,6 +125,7 @@ else:
         integrations=[
             DjangoIntegration(),
             LoggingIntegration(event_level=logging.WARNING),
+            RedisIntegration(),
         ],
         send_default_pii=True,
         release=TABBYCAT_VERSION,

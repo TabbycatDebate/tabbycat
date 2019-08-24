@@ -2,7 +2,7 @@ import os
 
 import dj_database_url
 
-from settings.base import DEBUG, INSTALLED_APPS, TABBYCAT_VERSION
+from settings.base import DEBUG, INSTALLED_APPS
 
 
 # ==============================================================================
@@ -92,22 +92,10 @@ if os.environ.get('SENDGRID_USERNAME', ''):
     EMAIL_USE_TLS = True
 
 # ==============================================================================
-# Sentry
+# Instrumentation
 # ==============================================================================
 
 DISABLE_SENTRY = DEBUG
-
-RAVEN_CONFIG = {
-    'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
-    'release': TABBYCAT_VERSION,
-}
-
-# Custom implementation makes the user ID the e-mail address, rather than the primary key
-SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
-
-# ==============================================================================
-# Scout
-# ==============================================================================
 
 SCOUT_NAME = "Tabbycat"
 
