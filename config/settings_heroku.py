@@ -2,7 +2,7 @@ import os
 
 import dj_database_url
 
-from settings.base import DEBUG, INSTALLED_APPS
+from settings.base import INSTALLED_APPS
 
 
 # ==============================================================================
@@ -94,8 +94,6 @@ if os.environ.get('SENDGRID_USERNAME', ''):
 # ==============================================================================
 # Instrumentation
 # ==============================================================================
-
-DISABLE_SENTRY = DEBUG
 
 SCOUT_NAME = "Tabbycat"
 

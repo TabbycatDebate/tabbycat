@@ -20,7 +20,6 @@ from settings.core import TABBYCAT_VERSION
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
 if not os.environ.get('DISABLE_SENTRY'):
-    DISABLE_SENTRY = True
     sentry_sdk.init(
         dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
         integrations=[

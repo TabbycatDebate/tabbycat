@@ -49,10 +49,10 @@ DATABASES = {
 
 # Use a separate Redis addon for channels to reduce number of connections
 # With fallback for Tabbykitten installs (no addons) or pre-2.2 instances
-if os.environ.get('REDISCLOUD_URL'):
-    ALT_REDIS_URL = os.environ.get('REDISCLOUD_URL') # 30 clients on free
+if environ.get('REDISCLOUD_URL'):
+    ALT_REDIS_URL = environ.get('REDISCLOUD_URL') # 30 clients on free
 else:
-    ALT_REDIS_URL = os.environ.get('REDIS_URL') # 20 clients on free
+    ALT_REDIS_URL = environ.get('REDIS_URL') # 20 clients on free
 
 # Connection/Pooling Notes
 # ========================
@@ -89,7 +89,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL')],
+            "hosts": [environ.get('REDIS_URL')],
             # Remove channels from groups after 3 hours
             # This matches websocket_timeout in Daphne
             "group_expiry": 10800,
@@ -115,11 +115,7 @@ if environ.get('SENDGRID_USERNAME', ''):
 # Sentry
 # ==============================================================================
 
-if environ.get('DISABLE_SENTRY'):
-    DISABLE_SENTRY = True
-else:
-    DISABLE_SENTRY = False
-
+if not environ.get('DISABLE_SENTRY'):
     sentry_sdk.init(
         dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
         integrations=[
