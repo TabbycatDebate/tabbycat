@@ -2,12 +2,11 @@
 
 import logging
 
-from django.db.models import Avg, Count, FloatField, Func, Prefetch, Q, StdDev, Sum
+from django.contrib.postgres.aggregates import ArrayAgg
+from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
-from draw.models import DebateTeam
-from draw.prefetch import populate_opponents
 from participants.models import Team
 from tournaments.models import Round
 from results.models import TeamScore
@@ -215,22 +214,25 @@ class BaseDrawStrengthMetricAnnotator(BaseMetricAnnotator):
 
         logger.info("Running opponents query for draw strength:")
 
-        prefetch_queryset = DebateTeam.objects.filter(debate__round__stage=Round.STAGE_PRELIMINARY)
+        # Make a copy of teams queryset and annotate with opponents
+        opponents_filter = ~Q(debateteam__debate__debateteam__team_id=F('id'))
+        opponents_filter &= Q(debateteam__debate__round__stage=Round.STAGE_PRELIMINARY)
         if round is not None:
-            prefetch_queryset = prefetch_queryset.filter(debate__round__seq__lte=round.seq)
+            opponents_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+        opponents_annotation = ArrayAgg('debateteam__debate__debateteam__team_id',
+                filter=opponents_filter)
+        logger.info("Opponents annotation: %s", str(opponents_annotation))
+        teams_with_opponents = queryset.all().annotate(opponent_ids=opponents_annotation)
+        opponents_by_team = {team.id: team.opponent_ids for team in teams_with_opponents}
 
-        opponents_queryset = self.opponent_annotator.get_annotated_queryset(
-                queryset[0].tournament.team_set.all(), 'opp_metric', round).prefetch_related(
-                Prefetch('debateteam_set', queryset=prefetch_queryset, to_attr='debateteams'))
-        opponents_queryset_teams = {team.id: team for team in opponents_queryset}
-        opponents_queryset_debateteams = {team.id: list(team.debateteams) for team in opponents_queryset}
-
-        populate_opponents([dt for dts in opponents_queryset_debateteams.values() for dt in dts])
+        opp_metric_queryset = self.opponent_annotator().get_annotated_queryset(
+                queryset[0].tournament.team_set.all(), 'opp_metric', round)
+        opp_metric_queryset_teams = {team.id: team for team in opp_metric_queryset}
 
         for team in queryset:
             draw_strength = 0
-            for dt in opponents_queryset_debateteams[team.id]:
-                opp_metric = opponents_queryset_teams[dt.opponent.team_id].opp_metric
+            for opponent_id in opponents_by_team[team.id]:
+                opp_metric = opp_metric_queryset_teams[opponent_id].opp_metric
                 if opp_metric is not None: # opp_metric is None when no debates have happened
                     draw_strength += opp_metric
             standings.add_metric(team, self.key, draw_strength)
@@ -241,7 +243,7 @@ class DrawStrengthByWinsMetricAnnotator(BaseDrawStrengthMetricAnnotator):
     key = "draw_strength"  # keep this key for backwards compatibility
     name = _("draw strength by wins")
     abbr = _("DS")
-    opponent_annotator = PointsMetricAnnotator()
+    opponent_annotator = PointsMetricAnnotator
 
 
 class DrawStrengthBySpeakerScoreMetricAnnotator(BaseDrawStrengthMetricAnnotator):
@@ -249,7 +251,7 @@ class DrawStrengthBySpeakerScoreMetricAnnotator(BaseDrawStrengthMetricAnnotator)
     key = "draw_strength_speaks"
     name = _("draw strength by total speaker score")
     abbr = _("DSS")
-    opponent_annotator = TotalSpeakerScoreMetricAnnotator()
+    opponent_annotator = TotalSpeakerScoreMetricAnnotator
 
 
 class TeamPullupsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
