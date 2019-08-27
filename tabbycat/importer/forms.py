@@ -3,15 +3,19 @@ import logging
 from itertools import zip_longest
 
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
 
 logger = logging.getLogger(__name__)
 TEAM_SHORT_REFERENCE_LENGTH = Team._meta.get_field('short_reference').max_length
+
+# There are 7 fields for formset/wizard management and CSRF detection
+MAX_FORM_DATA_FIELDS = settings.DATA_UPLOAD_MAX_NUMBER_FIELDS - 7
 
 
 class ImportValidationError(ValidationError):
@@ -37,18 +41,34 @@ class NumberForEachInstitutionForm(forms.Form):
         label=_("Unaffiliated (no institution)"),
         widget=forms.NumberInput(attrs={'placeholder': 0}))
 
-    def __init__(self, institutions, *args, **kwargs):
+    def __init__(self, institutions, num_detail_fields, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._create_fields(institutions)
+        self.institutions = institutions
+        self.num_detail_fields = num_detail_fields
+        self._create_fields()
 
-    def _create_fields(self, institutions):
+    def _create_fields(self):
         """Dynamically generate one integer field for each institution, for the
         user to indicate how many teams are from that institution."""
-        for institution in institutions:
+        for institution in self.institutions:
             label = _("%(name)s (%(code)s)") % {'name': institution.name, 'code': institution.code}
             self.fields['number_institution_%d' % institution.id] = forms.IntegerField(
                     min_value=0, label=label, required=False,
                     widget=forms.NumberInput(attrs={'placeholder': 0}))
+
+    def clean(self):
+        super().clean()
+
+        total = self.cleaned_data.get('number_unaffiliated') or 0  # data might be None
+        for institution in self.institutions:
+            total += self.cleaned_data.get('number_institution_%d' % institution.id) or 0  # data might be None
+        max_allowed = MAX_FORM_DATA_FIELDS // self.num_detail_fields
+        if total > max_allowed:
+            raise ValidationError(_(
+                "Sorry, you can only import up to %(max_allowed)d at a time. "
+                "(These numbers currently add to %(total)d.) "
+                "Try splitting your import into smaller chunks.") % {
+                'max_allowed': max_allowed, 'total': total})
 
 
 class ImportInstitutionsRawForm(forms.Form):
@@ -84,6 +104,15 @@ class ImportInstitutionsRawForm(forms.Form):
         if len(institutions) == 0:
             raise ValidationError(_("There were no institutions to import."))
 
+        max_allowed = MAX_FORM_DATA_FIELDS // 3  # 3 fields per institution
+        if len(institutions) > max_allowed:
+            raise ValidationError(ngettext(
+                "Sorry, you can only import up to %(max_allowed)d institution at a "
+                "time. Try splitting your import into smaller chunks.",
+                "Sorry, you can only import up to %(max_allowed)d institutions at a "
+                "time. Try splitting your import into smaller chunks.",
+                max_allowed) % {'max_allowed': max_allowed})
+
         return institutions
 
 
@@ -109,6 +138,15 @@ class ImportVenuesRawForm(forms.Form):
 
         if len(venues) == 0:
             raise ValidationError(_("There were no venues to import."))
+
+        max_allowed = MAX_FORM_DATA_FIELDS // 3  # 3 fields per venue
+        if len(venues) > max_allowed:
+            raise ValidationError(ngettext(
+                "Sorry, you can only import up to %(max_allowed)d venue at a "
+                "time. Try splitting your import into smaller chunks.",
+                "Sorry, you can only import up to %(max_allowed)d venues at a "
+                "time. Try splitting your import into smaller chunks.",
+                max_allowed) % {'max_allowed': max_allowed})
 
         return venues
 

@@ -27,11 +27,8 @@
     {% csrf_token %}
     {{ wizard.management_form }}
 
-    {% if wizard.form.non_form_errors %}
-    <div class="alert alert-danger">
-      <p>{% trans "There are some problems with the data on this form:" %}</p>
-      {{ wizard.form.non_form_errors }}
-    </div>
+    {% if wizard.form.errors %}
+      {% include "components/form-errors.html" with errors=wizard.form.non_field_errors %}
     {% endif %}
 
     <div class="card pt-3">
