@@ -6,7 +6,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils.translation import gettext as _, ngettext
+from django.utils.translation import gettext as _, ngettext, ngettext_lazy
 
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
@@ -29,47 +29,8 @@ class ImportValidationError(ValidationError):
 
 
 # ==============================================================================
-# Numbers and raw forms
+# Raw forms (CSV-style import)
 # ==============================================================================
-
-class NumberForEachInstitutionForm(forms.Form):
-    """Form that presents one numeric field for each institution, for the user
-    to indicate how many objects to create from that institution. This is used
-    for importing teams and adjudicators."""
-
-    number_unaffiliated = forms.IntegerField(min_value=0, required=False,
-        label=_("Unaffiliated (no institution)"),
-        widget=forms.NumberInput(attrs={'placeholder': 0}))
-
-    def __init__(self, institutions, num_detail_fields, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.institutions = institutions
-        self.num_detail_fields = num_detail_fields
-        self._create_fields()
-
-    def _create_fields(self):
-        """Dynamically generate one integer field for each institution, for the
-        user to indicate how many teams are from that institution."""
-        for institution in self.institutions:
-            label = _("%(name)s (%(code)s)") % {'name': institution.name, 'code': institution.code}
-            self.fields['number_institution_%d' % institution.id] = forms.IntegerField(
-                    min_value=0, label=label, required=False,
-                    widget=forms.NumberInput(attrs={'placeholder': 0}))
-
-    def clean(self):
-        super().clean()
-
-        total = self.cleaned_data.get('number_unaffiliated') or 0  # data might be None
-        for institution in self.institutions:
-            total += self.cleaned_data.get('number_institution_%d' % institution.id) or 0  # data might be None
-        max_allowed = MAX_FORM_DATA_FIELDS // self.num_detail_fields
-        if total > max_allowed:
-            raise ValidationError(_(
-                "Sorry, you can only import up to %(max_allowed)d at a time. "
-                "(These numbers currently add to %(total)d.) "
-                "Try splitting your import into smaller chunks.") % {
-                'max_allowed': max_allowed, 'total': total})
-
 
 class ImportInstitutionsRawForm(forms.Form):
     """Form that takes in a CSV-style list of institutions, splits it and stores
@@ -104,14 +65,16 @@ class ImportInstitutionsRawForm(forms.Form):
         if len(institutions) == 0:
             raise ValidationError(_("There were no institutions to import."))
 
-        max_allowed = MAX_FORM_DATA_FIELDS // 3  # 3 fields per institution
+        max_allowed = MAX_FORM_DATA_FIELDS // 3  # 3 fields: 'name', 'code', 'id'.
         if len(institutions) > max_allowed:
             raise ValidationError(ngettext(
                 "Sorry, you can only import up to %(max_allowed)d institution at a "
-                "time. Try splitting your import into smaller chunks.",
+                "time. (You currently have %(given)d.) "
+                "Try splitting your import into smaller chunks.",
                 "Sorry, you can only import up to %(max_allowed)d institutions at a "
-                "time. Try splitting your import into smaller chunks.",
-                max_allowed) % {'max_allowed': max_allowed})
+                "time. (You currently have %(given)d.) "
+                "Try splitting your import into smaller chunks.",
+                max_allowed) % {'max_allowed': max_allowed, 'given': len(institutions)})
 
         return institutions
 
@@ -139,14 +102,16 @@ class ImportVenuesRawForm(forms.Form):
         if len(venues) == 0:
             raise ValidationError(_("There were no venues to import."))
 
-        max_allowed = MAX_FORM_DATA_FIELDS // 3  # 3 fields per venue
+        max_allowed = MAX_FORM_DATA_FIELDS // (len(VenueDetailsForm.base_fields) + 1)
         if len(venues) > max_allowed:
             raise ValidationError(ngettext(
                 "Sorry, you can only import up to %(max_allowed)d venue at a "
-                "time. Try splitting your import into smaller chunks.",
+                "time. (You currently have %(given)d.) "
+                "Try splitting your import into smaller chunks.",
                 "Sorry, you can only import up to %(max_allowed)d venues at a "
-                "time. Try splitting your import into smaller chunks.",
-                max_allowed) % {'max_allowed': max_allowed})
+                "time. (You currently have %(given)d.) "
+                "Try splitting your import into smaller chunks.",
+                max_allowed) % {'max_allowed': max_allowed, 'given': len(venues)})
 
         return venues
 
@@ -382,3 +347,69 @@ class AdjudicatorDetailsForm(SharedBetweenTournamentsObjectForm, BaseInstitution
         if commit and adj.institution:
             adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
         return adj
+
+
+# ==============================================================================
+# Numbers forms
+# ==============================================================================
+# These reference the details forms, so must come after them.
+
+class BaseNumberForEachInstitutionForm(forms.Form):
+    """Form that presents one numeric field for each institution, for the user
+    to indicate how many objects to create from that institution. This is used
+    for importing teams and adjudicators."""
+
+    number_unaffiliated = forms.IntegerField(min_value=0, required=False,
+        label=_("Unaffiliated (no institution)"),
+        widget=forms.NumberInput(attrs={'placeholder': 0}))
+
+    def __init__(self, institutions, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.institutions = institutions
+        self._create_fields()
+
+    def _create_fields(self):
+        """Dynamically generate one integer field for each institution, for the
+        user to indicate how many teams are from that institution."""
+        for institution in self.institutions:
+            label = _("%(name)s (%(code)s)") % {'name': institution.name, 'code': institution.code}
+            self.fields['number_institution_%d' % institution.id] = forms.IntegerField(
+                    min_value=0, label=label, required=False,
+                    widget=forms.NumberInput(attrs={'placeholder': 0}))
+
+    def clean(self):
+        super().clean()
+
+        given = self.cleaned_data.get('number_unaffiliated') or 0  # data might be None
+        for institution in self.institutions:
+            given += self.cleaned_data.get('number_institution_%d' % institution.id) or 0  # data might be None
+        max_allowed = MAX_FORM_DATA_FIELDS // self.num_detail_fields
+        if given > max_allowed:
+            raise ValidationError(self.too_many_error_message % {
+                'max_allowed': max_allowed, 'given': given})
+
+
+class ImportTeamsNumbersForm(BaseNumberForEachInstitutionForm):
+
+    num_detail_fields = len(TeamDetailsForm.base_fields) + 1
+    too_many_error_message = ngettext_lazy(
+        "Sorry, you can only import up to %(max_allowed)d team at a time. "
+        "(These numbers currently add to %(given)d.) "
+        "Try splitting your import into smaller chunks.",
+        "Sorry, you can only import up to %(max_allowed)d teams at a time. "
+        "(These numbers currently add to %(given)d.) "
+        "Try splitting your import into smaller chunks.",
+        'max_allowed')
+
+
+class ImportAdjudicatorsNumbersForm(BaseNumberForEachInstitutionForm):
+
+    num_detail_fields = len(AdjudicatorDetailsForm.base_fields) + 1
+    too_many_error_message = ngettext_lazy(
+        "Sorry, you can only import up to %(max_allowed)d adjudicator at a time. "
+        "(These numbers currently add to %(given)d.) "
+        "Try splitting your import into smaller chunks.",
+        "Sorry, you can only import up to %(max_allowed)d adjudicators at a time. "
+        "(These numbers currently add to %(given)d.) "
+        "Try splitting your import into smaller chunks.",
+        'max_allowed')

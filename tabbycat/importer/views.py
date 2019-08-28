@@ -24,9 +24,10 @@ from venues.models import Venue
 
 from .management.commands import importtournament
 from .importers import TournamentDataImporterError
-from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
-                    ImportVenuesRawForm, NumberForEachInstitutionForm,
-                    TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
+from .forms import (AdjudicatorDetailsForm, ImportAdjudicatorsNumbersForm,
+                    ImportInstitutionsRawForm, ImportTeamsNumbersForm,
+                    ImportVenuesRawForm, TeamDetailsForm, TeamDetailsFormSet,
+                    VenueDetailsForm)
 
 logger = logging.getLogger(__name__)
 
@@ -126,14 +127,10 @@ class ImportVenuesWizardView(BaseImportWizardView):
 class BaseImportByInstitutionWizardView(BaseImportWizardView):
     """Common functionality in teams and institutions wizards."""
 
-    # The number of fields per instance on the detail form. Must be defined by subclasses.
-    num_detail_fields = None
-
     def get_form_kwargs(self, step):
         if step == 'numbers':
             return {
                 'institutions': Institution.objects.all(),
-                'num_detail_fields': self.num_detail_fields,
             }
         elif step == 'details':
             return {'form_kwargs': {'tournament': self.tournament}}
@@ -168,11 +165,10 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
 class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     model = Team
     form_list = [
-        ('numbers', NumberForEachInstitutionForm),
+        ('numbers', ImportTeamsNumbersForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_TEAMS
-    num_detail_fields = 7
 
     def get_details_instance_initial(self, i):
         return {'reference': str(i), 'use_institution_prefix': True}
@@ -190,11 +186,10 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
     form_list = [
-        ('numbers', NumberForEachInstitutionForm),
+        ('numbers', ImportAdjudicatorsNumbersForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
-    num_detail_fields = 5
 
     def get_default_test_score(self):
         """Returns the midpoint of the configured allowable score range."""
