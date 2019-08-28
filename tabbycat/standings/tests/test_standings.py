@@ -155,11 +155,26 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team1).metrics['num_adjs'], 6)
         self.assertEqual(standings.get_standing(self.team2).metrics['num_adjs'], 0)
 
-    def test_wbw(self):
+    def test_wbw_not_tied(self):
         generator = TeamStandingsGenerator(('points', 'wbw'), ())
         standings = generator.generate(self.tournament.team_set.all())
         self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 'n/a')
         self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 'n/a')
+
+    def test_wbw_first(self):
+        # tests wbw when it appears as the first metric
+        generator = TeamStandingsGenerator(('wbw',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 2)
+        self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 0)
+
+    def test_wbw_tied(self):
+        # npullups should be 0 for both teams, so is a tied first metric,
+        # allowing wbw to be tested as a second metric (the normal use case)
+        generator = TeamStandingsGenerator(('npullups', 'wbw',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 2)
+        self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 0)
 
     def test_npullups(self):
         generator = TeamStandingsGenerator(('npullups',), ())
@@ -194,9 +209,6 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
         self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, False))
         self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, False))
-
-    def test_wbw_first_error(self):
-        self.assertRaises(ValueError, TeamStandingsGenerator, ('wbw', 'points'), ('rank',))
 
     def test_double_metric_error(self):
         self.assertRaises(StandingsError, TeamStandingsGenerator, ('points', 'wbw', 'points'), ('rank',))

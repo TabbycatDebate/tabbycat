@@ -338,11 +338,6 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
     abbr_prefix = _("WBW")
     choice_name = _("who-beat-whom")
 
-    def __init__(self, index, keys):
-        if len(keys) == 0:
-            raise ValueError("keys must not be empty")
-        super(WhoBeatWhomMetricAnnotator, self).__init__(index, keys)
-
     def get_team_scores(self, key, equal_teams, tsi, round):
         equal_teams.remove(tsi)
         other = equal_teams[0]
