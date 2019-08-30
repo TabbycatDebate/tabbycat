@@ -1,4 +1,4 @@
-from unittest import TestCase
+from django.test import TestCase
 
 from ..liveness import get_bp_coefficients, liveness_bp, liveness_twoteam
 
