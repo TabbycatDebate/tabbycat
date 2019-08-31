@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-2.4.0 (Maine Coon)
+2.4.0 (Maine)
 ---------
 *Release date: ?*
 

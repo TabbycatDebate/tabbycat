@@ -27,7 +27,7 @@ LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
 # ==============================================================================
 
 TABBYCAT_VERSION = '2.4.0a'
-TABBYCAT_CODENAME = 'M'
+TABBYCAT_CODENAME = 'Maine'
 READTHEDOCS_VERSION = 'v2.4.0'
 
 # ==============================================================================
