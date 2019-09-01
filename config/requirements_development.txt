@@ -8,7 +8,7 @@
 # Linting
 flake8==3.7.*
 flake8-import-order==0.18.1                 # Flake plugin for import order
-flake8-quotes==2.0.1                        # Flake plugin for quotes
+flake8-quotes==2.1.0                        # Flake plugin for quotes
 pep8-naming==0.8.*                          # Flake plugin for naming conventions
 
 # Tests
