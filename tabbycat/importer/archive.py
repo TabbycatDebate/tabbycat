@@ -1,4 +1,3 @@
-from statistics import mean
 from xml.etree.ElementTree import Element, SubElement
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,7 +14,7 @@ from options.presets import (AustralianEastersPreferences, AustralsPreferences, 
                              UADCPreferences, WADLPreferences, WSDCPreferences)
 from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
-from results.models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, Submission, TeamScore
+from results.models import BallotSubmission, Submission
 from results.prefetch import populate_confirmed_ballots, populate_wins
 from results.result import (BaseConsensusDebateResultWithSpeakers, BaseDebateResultWithSpeakers,
                             BaseEliminationDebateResult, DebateResult, VotingDebateResult)
@@ -595,35 +594,6 @@ class Importer:
                     motion_obj.save()
                     self.motions[motion.get('id')] = motion_obj
 
-    def _get_margin(self, debate):
-        side_ts = []
-        for side in debate.findall('side'):
-            scores = []
-            for b in side.findall("ballot[@ignored='False']"):
-                try:
-                    scores.append(float(b.text))
-                except ValueError:
-                    continue
-            side_ts.append(mean(scores))
-        return (max(side_ts), max(side_ts) - min(side_ts))
-
-    def _get_adj_split(self, debate, numeric):
-        split = [0, 0, 0, 0]
-        side_ballot_by_adj = {adj: [] for adj in self._get_voting_adjs(debate)}
-        for side in debate.findall('side'):
-            for ballot in side.findall('ballot'):
-                for adj in ballot.get('adjudicators').split():
-                    if numeric:
-                        side_ballot_by_adj[adj] = float(ballot.text)
-                    else:
-                        side_ballot_by_adj[adj] = int(ballot.text == 'True')
-        for adj, scores in side_ballot_by_adj.items():
-            max_score = max(scores)
-            for i, score in enumerate(split):
-                if score == max_score:
-                    split[i] += 1
-        return (split, len(side_ballot_by_adj))
-
     def import_results(self):
         for round in self.root.findall('round'):
             consensus = self.preliminary_consensus if round.get('elimination') == 'False' else self.elimination_consensus
@@ -633,89 +603,41 @@ class Importer:
                     version=1, submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True,
                     debate=self.debates[debate.get('id')], motion=self.motions.get(debate.get('motion'))
                 )
-                ballotsubmissions.append(bs_obj)
+                bs_obj.save()
+                dr = DebateResult(bs_obj)
 
-                ts_max, ts_margin = (0, 0)
                 numeric_scores = True
                 try:
                     float(debate.find("side/ballot").text)
                 except ValueError:
                     numeric_scores = False
 
-                if not self.is_bp and numeric_scores:
-                    ts_max, ts_margin = self._get_margin(debate)
-
-                adj_split, num_adjs = (None, None)
-                if not consensus:
-                    adj_split, num_adjs = self._get_adj_split(debate, numeric_scores)
-
-                for i, side in enumerate(debate.findall('side')):
-                    dt = self.debateteams.get((debate.get('id'), side.get('team')))
+                for side, side_code in zip(debate.findall('side'), self.tournament.sides):
 
                     if side.get('motion-veto') is not None:
-                        motion_veto = DebateTeamMotionPreference(
-                            debate_team=dt, motion=self.motions.get(side.get('motion-veto')), preference=3
+                        bs_obj.debateteammotionpreference_set.add(
+                            debate_team=self.debateteams.get((debate.get('id'), side.get('team'))),
+                            motion=self.motions.get(side.get('motion-veto')), preference=3
                         )
-                        motion_vetos_bs.append((motion_veto, bs_obj))
 
-                    team_ballot = side.find("ballot[@ignored='False']")
-                    points = 4 - int(team_ballot.get('rank')) if self.is_bp else 2 - int(team_ballot.get('rank'))
-
-                    not_ignored = side.findall("ballot[@ignored='False']")
-
-                    ts_obj = TeamScore(debate_team=dt, points=points)
-                    teamscores.append((ts_obj, bs_obj))
-
-                    if not self.is_bp:
-                        ts_obj.win = points == 1
-
-                    if numeric_scores:
-                        scores = []
-                        for b in not_ignored:
-                            try:
-                                scores.append(float(b.text))
-                            except ValueError:
-                                continue
-                        ts_obj.score = mean(scores)
-                        if not self.is_bp:
-                            ts_obj.margin = ts_margin if float(team_ballot.text) == ts_max else -ts_margin
-                    else:
-                        ts_obj.win = team_ballot.text # Boolean for advancing otherwise
-
+                    for speech, pos in zip(side.findall('speech'), self.tournament.positions):
+                        if numeric_scores:
+                            if consensus:
+                                dr.set_score(side_code, pos, float(speech.find('ballot').get('score')))
+                            else:
+                                for ballot in speech.findall('ballot'):
+                                    for adj in [self.adjudicators[a] for a in ballot.get('adjudicators', []).split(" ")]:
+                                        dr.set_score(adj, side_code, pos, ballot.get('score'))
+                    # Note: Dependent on #1180
                     if consensus:
-                        ts_obj.votes_given = 1 if ts_obj.win else 0
-                        ts_obj.votes_possible = 1
+                        if side.find('ballot').get('rank') == 1:
+                            dr.add_winner(side_code)
                     else:
-                        ts_obj.votes_given = adj_split[i]
-                        ts_obj.votes_possible = num_adjs
-
-                    for i, speech in enumerate(side.findall('speech'), 1):
-                        ss_obj = None
-                        if consensus:
-                            speech_ballot = speech.find('ballot')
-
-                            ss_obj = SpeakerScore(debate_team=dt, speaker=self.speakers[speech.get('speaker')],
-                                score=float(speech_ballot.text), position=i)
-                        else:
-                            speech_ballots = speech.findall('ballot')
-                            for speech_ballot in speech_ballots:
-                                d_adj = self.debateadjudicators.get((debate.get('id'), speech_ballot.get('adjudicators')))
-                                ss_adj_obj = SpeakerScoreByAdj(debate_adjudicator=d_adj,
-                                    debate_team=dt, score=float(speech_ballot.text), position=i)
-                                speakerscores_adj.append((ss_adj_obj, bs_obj))
-
-                            included_adjs = [b.get('adjudicators') for b in not_ignored]
-                            ss_obj = SpeakerScore(debate_team=dt, speaker=self.speakers[speech.get('speaker')], position=i,
-                                score=mean([float(b.score) for b in speech_ballots if b.adjudicators in included_adjs])
-                            )
-                        speakerscores.append((ss_obj, bs_obj))
-
-        BallotSubmission.objects.bulk_create(ballotsubmissions)
-
-        DebateTeamMotionPreference.objects.bulk_create(self._add_foreign_key(motion_vetos_bs, 'ballot_submission'))
-        TeamScore.objects.bulk_create(self._add_foreign_key(teamscores, 'ballot_submission'))
-        SpeakerScore.objects.bulk_create(self._add_foreign_key(speakerscores, 'ballot_submission'))
-        SpeakerScoreByAdj.objects.bulk_create(self._add_foreign_key(speakerscores_adj, 'ballot_submission'))
+                        for ballot in side.findall('ballot'):
+                            for adj in [self.adjudicators[a] for a in ballot.get('adjudicators', []).split(" ")]:
+                                if ballot.get('rank') == 1:
+                                    dr.add_winner(adj, side_code, side_code)
+                dr.save()
 
     def import_feedback(self):
         for adj in self.root.findall('participants/adjudicator'):
