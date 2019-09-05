@@ -426,56 +426,45 @@ class Importer:
         self.speaker_categories = {}
 
         for i, breakqual in enumerate(self.root.findall('break-category'), 1):
-            self.team_breaks[breakqual.get('id')] = BreakCategory(
+            bc = BreakCategory(
                 tournament=self.tournament, name=breakqual.text,
                 slug=slugify(breakqual.text[:50]), seq=i,
                 break_size=0, is_general=False, priority=0
             )
-        BreakCategory.objects.bulk_create(self.team_breaks.values())
+            bc.save()
+            self.team_breaks[breakqual.get('id')] = bc
 
         for i, category in enumerate(self.root.findall('speaker-category'), 1):
-            self.speaker_categories[category.get('id')] = SpeakerCategory(
+            sc = SpeakerCategory(
                 tournament=self.tournament, name=category.text,
                 slug=slugify(category.text[:50]), seq=i
             )
-        SpeakerCategory.objects.bulk_create(self.speaker_categories.values())
+            sc.save()
+            self.speaker_categories[category.get('id')] = sc
 
     def import_venues(self):
         self.venues = {}
 
         for venue in self.root.findall('venue'):
-            self.venues[venue.get('id')] = Venue(tournament=self.tournament, name=venue.text, priority=0)
-        Venue.objects.bulk_create(self.venues.values())
+            v = Venue(tournament=self.tournament, name=venue.text, priority=venue.get('priority', 0))
+            v.save()
+            self.venues[venue.get('id')] = v
 
     def import_questions(self):
         self.questions = {}
 
         for i, question in enumerate(self.root.findall('question'), 1):
-            self.questions[question.get('id')] = AdjudicatorFeedbackQuestion(
+            q = AdjudicatorFeedbackQuestion(
                 tournament=self.tournament, seq=i, text=question.text,
                 name=question.get('name'), reference=slugify(question.get('name')[:50]),
                 from_adj=question.attrib['from-adjudicators'], from_team=question.get('from-teams'),
                 answer_type=question.get('type'), required=False
             )
-        AdjudicatorFeedbackQuestion.objects.bulk_create(self.questions.values())
-
-    def _add_foreign_key(self, tupl, foreign):
-        """Helper method to add a foreign key (1) to an object (0).
-
-        Needed as the array of tuples is populated before the insertion of the foreign
-        objects, and so do not have IDs until then."""
-        elements = []
-        for element, key in tupl:
-            elements.append(element)
-            setattr(element, foreign, key)
-        return elements
+            q.save()
+            self.questions[question.get('id')] = q
 
     def import_teams(self):
         self.teams = {}
-
-        through_model = Team.break_categories.through
-        team_categories = []
-
         for team in self.root.find('participants').findall('team'):
             team_obj = Team(tournament=self.tournament, long_name=team.get('name'))
             self.teams[team.get('id')] = team_obj
@@ -487,8 +476,8 @@ class Importer:
             if emoji is not None:
                 team_obj.emoji = emoji
 
-            # Find institution from speakers
-            p_institutions = set([p.get('institutions') for p in team.findall('speaker')])
+            # Find institution from speakers - Get first institution from each speaker to compare
+            p_institutions = set([p.get('institutions').split(" ")[0] for p in team.findall('speaker')])
             team_institution = list(p_institutions)[0]
 
             if len(p_institutions) == 1 and team_institution is not None:
@@ -503,20 +492,14 @@ class Importer:
                 team_obj.reference = team_obj.long_name
                 team_obj.short_name = team_obj.reference[:50]
             team_obj.short_reference = team_obj.reference[:35]
+            team.obj.save()
 
             # Break eligibilities
             for bc in team.get('break-eligibilities', "").split():
-                team_categories.append((through_model(breakcategory=self.team_breaks[bc]), team_obj))
-
-        Team.objects.bulk_create(self.teams.values())
-
-        through_model.objects.bulk_create(self._add_foreign_key(team_categories, 'team'))
+                team_obj.break_categories.add(self.team_breaks[bc])
 
     def import_speakers(self):
         self.speakers = {}
-
-        through_model = Speaker.categories.through
-        categories = []
 
         for team in self.root.find('participants').findall('team'):
             for speaker in team.findall('speaker'):
@@ -525,9 +508,7 @@ class Importer:
                 self.speakers[speaker.get('id')] = speaker_obj
 
                 for sc in speaker.get('categories', "").split():
-                    categories.append((through_model(speakercategory=self.speaker_categories[sc]), speaker_obj))
-
-        through_model.objects.bulk_create(self._add_foreign_key(categories, 'speaker'))
+                    speaker_obj.categories.add(self.speaker_categories[sc])
 
     def import_adjudicators(self):
         self.adjudicators = {}
@@ -549,12 +530,8 @@ class Importer:
 
     def import_debates(self):
         self.debates = {}
-        debates_rounds = []
-
         self.debateteams = {}
-        debateteams_debates = []
         self.debateadjudicators = {}
-        debateadjudicators_debates = []
 
         rounds = []
         for i, round in enumerate(self.root.findall('round'), 1):
@@ -571,20 +548,21 @@ class Importer:
 
             if round_stage == Round.STAGE_ELIMINATION:
                 round_obj.break_category = self.team_breaks.get(round.get('break-category'))
+            round_obj.save()
 
             side_start = 2 if self.is_bp else 0
 
             for debate in round.findall('debate'):
-                debate_obj = Debate(venue=self.venues.get(debate.get('venue')), result_status=Debate.STATUS_CONFIRMED)
+                debate_obj = Debate(round=round_obj, venue=self.venues.get(debate.get('venue')), result_status=Debate.STATUS_CONFIRMED)
+                debate_obj.save()
                 self.debates[debate.get('id')] = debate_obj
-                debates_rounds.append((debate_obj, round_obj))
 
                 # Debate-teams
                 for i, side in enumerate(debate.findall('side'), side_start):
                     position = DebateTeam.SIDE_CHOICES[i][0]
-                    debateteam_obj = DebateTeam(team=self.teams[side.get('team')], side=position)
+                    debateteam_obj = DebateTeam(debate=debate_obj, team=self.teams[side.get('team')], side=position)
+                    debateteam_obj.save()
                     self.debateteams[(debate.get('id'), side.get('team'))] = debateteam_obj
-                    debateteams_debates.append((debateteam_obj, debate_obj))
 
                 # Debate-adjudicators
                 voting_adjs = self._get_voting_adjs(debate)
@@ -592,14 +570,8 @@ class Importer:
                     adj_type = DebateAdjudicator.TYPE_PANEL if adj in voting_adjs else DebateAdjudicator.TYPE_TRAINEE
                     if debate.get('chair') == adj:
                         adj_type = DebateAdjudicator.TYPE_CHAIR
-                    adj_obj = DebateAdjudicator(adjudicator=self.adjudicators[adj], type=adj_type)
+                    adj_obj = DebateAdjudicator(debate=debate_obj, adjudicator=self.adjudicators[adj], type=adj_type)
                     self.debateadjudicators[(debate.get('id'), adj)] = adj_obj
-                    debateadjudicators_debates.append((adj_obj, debate_obj))
-
-        Round.objects.bulk_create(rounds)
-        Debate.objects.bulk_create(self._add_foreign_key(debates_rounds, 'round'))
-        DebateTeam.objects.bulk_create(self._add_foreign_key(debateteams_debates, 'debate'))
-        DebateAdjudicator.objects.bulk_create(self._add_foreign_key(debateadjudicators_debates, 'debate'))
 
     def import_motions(self):
         # Can cause data consistency problems if motions are re-used between rounds: See #645
@@ -620,8 +592,8 @@ class Importer:
                         seq=seq_by_round[r], text=motion.text, reference=motion.get('reference'),
                         info_slide=getattr(motion.find('info-slide'), 'text', ''), round_id=r
                     )
+                    motion_obj.save()
                     self.motions[motion.get('id')] = motion_obj
-        Motion.objects.bulk_create(self.motions.values())
 
     def _get_margin(self, debate):
         side_ts = []
@@ -653,12 +625,6 @@ class Importer:
         return (split, len(side_ballot_by_adj))
 
     def import_results(self):
-        ballotsubmissions = []
-        teamscores = []
-        speakerscores = []
-        speakerscores_adj = []
-        motion_vetos_bs = []
-
         for round in self.root.findall('round'):
             consensus = self.preliminary_consensus if round.get('elimination') == 'False' else self.elimination_consensus
 
@@ -752,10 +718,6 @@ class Importer:
         SpeakerScoreByAdj.objects.bulk_create(self._add_foreign_key(speakerscores_adj, 'ballot_submission'))
 
     def import_feedback(self):
-        feedbacks = []
-
-        answers = {q[0]: [] for q in AdjudicatorFeedbackQuestion.ANSWER_TYPE_CHOICES}
-
         for adj in self.root.findall('participants/adjudicator'):
             adj_obj = self.adjudicators[adj.get('id')]
 
@@ -765,7 +727,7 @@ class Importer:
                 feedback_obj = AdjudicatorFeedback(adjudicator=adj_obj, score=feedback.get('score'), version=1,
                     source_adjudicator=d_adj, source_team=d_team,
                     submitter_type=Submission.SUBMITTER_TABROOM, confirmed=True)
-                feedbacks.append(feedback_obj)
+                feedback_obj.save()
 
                 for answer in feedback.findall('answer'):
                     question = self.questions[answer.get('question')]
@@ -774,12 +736,5 @@ class Importer:
                     # if question.answer_type in AdjudicatorFeedbackQuestion.NUMERICAL_ANSWER_TYPES:
                     #     cast_answer = float(cast_answer)
 
-                    answers[question.answer_type].append(
-                        (AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type](
-                            question=question, answer=cast_answer), feedback_obj))
-
-        AdjudicatorFeedback.objects.bulk_create(feedbacks)
-
-        for ans_type, objects in answers.items():
-            AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[ans_type].objects.bulk_create(
-                self._add_foreign_key(objects, 'feedback'))
+                    answer = AdjudicatorFeedbackQuestion.ANSWER_TYPE_CLASSES[question.answer_type](
+                        question=question, answer=cast_answer, feedback=feedback_obj)
