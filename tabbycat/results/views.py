@@ -32,10 +32,12 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
+from .forms import (PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm, SingleBallotSetForm,
+                    SingleEliminationBallotSetForm)
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
+from .result import get_class_name
 from .utils import populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
@@ -268,12 +270,12 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return all_ballotsubs
 
     def get_form_class(self):
-        if self.tournament.pref('teams_in_debate') == 'bp' and self.debate.round.is_break_round:
-            return BPEliminationResultForm
-        elif self.debate.round.ballots_per_debate == 'per-adj':
-            return PerAdjudicatorBallotSetForm
-        else:
-            return SingleBallotSetForm
+        return {
+            'DebateResultByAdjudicator': PerAdjudicatorEliminationBallotSetForm,
+            'DebateResultByAdjudicatorWithScores': PerAdjudicatorBallotSetForm,
+            'ConsensusDebateResult': SingleEliminationBallotSetForm,
+            'ConsensusDebateResultWithScores': SingleBallotSetForm,
+        }[get_class_name(self.debate.round, self.tournament)]
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

@@ -601,6 +601,11 @@ class Round(models.Model):
         category or is a preliminary round."""
         return self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').first()
 
+    @cached_property
+    def is_last(self):
+        """Returns a boolean if no next round in the sequence exists."""
+        return not self._rounds_in_same_sequence().filter(seq__gt=self.seq).order_by('seq').exists()
+
     @property
     def is_current(self):
         """Returns True if this round is a current round."""

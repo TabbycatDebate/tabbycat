@@ -62,17 +62,26 @@ def get_result_class(round, tournament=None):
 
     teams_in_debate = tournament.pref('teams_in_debate')
     ballots_per_debate = round.ballots_per_debate
+    scores_in_debate = tournament.pref('speakers_in_ballots')
 
     if ballots_per_debate == 'per-adj' and teams_in_debate == 'two':
-        return DebateResultByAdjudicatorWithScores
+        if scores_in_debate == 'prelim' and round.is_break_round or scores_in_debate == 'never':
+            return DebateResultByAdjudicator
+        else:
+            return DebateResultByAdjudicatorWithScores
     elif ballots_per_debate == 'per-debate':
-        if round.is_break_round and teams_in_debate == 'bp':
+        uses_scores_in_break = teams_in_debate == 'bp' or scores_in_debate == 'prelim'
+        if uses_scores_in_break and round.is_break_round or scores_in_debate == 'never':
             return ConsensusDebateResult
         else:
             return ConsensusDebateResultWithScores
     else:
         raise ValueError("Invalid combination for 'ballots_per_debate' and 'teams_in_debate' preferences: %s, %s" %
                 (ballots_per_debate, teams_in_debate))
+
+
+def get_class_name(round, tournament=None):
+    return get_result_class(round, tournament).__name__
 
 
 def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
@@ -431,7 +440,8 @@ class DebateResultByAdjudicator(BaseDebateResult):
         self.scoresheets[adjudicator].add_declared_winner(winner)
 
     def set_winner(self, adjudicator, winner):
-        self.scoresheets[adjudicator].set_declared_winners([winner])
+        assert isinstance(winner, list)
+        self.scoresheets[adjudicator].set_declared_winners(winner)
 
     # --------------------------------------------------------------------------
     # Decision calculation

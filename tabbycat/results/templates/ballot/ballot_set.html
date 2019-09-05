@@ -1,5 +1,105 @@
-{% if pref.teams_in_debate == 'bp' and debate.round.is_break_round %}
-  {% include "ballot/bp_elimination_ballot.html" %}
-{% else %}
-  {% include "ballot/standard_ballot_set.html" %}
-{% endif %}
+{% load add_field_css debate_tags i18n %}
+
+<div id="ballot_set">
+
+  {% if form.errors %}
+    {% trans "There are some problems with this scoresheet. Please review and correct them." as message %}
+    {% include "components/form-errors.html" with errors=form.non_field_errors %}
+  {% endif %}
+
+  {% include "ballot/ballot_debate_info.html" %}
+
+  {% for sheet in form.scoresheets %}
+
+  <div class="card mt-3">
+    <div class="list-group list-group-flush">
+
+      {% if sheet.adjudicator %}
+        {% if sheet.adjudicator.institution %}
+          {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
+            Ballot from {{ name }} ({{ institution }})
+          {% endblocktrans %}
+        {% else %}
+          {% blocktrans trimmed with name=sheet.adjudicator.name asvar title %}
+            Ballot from {{ name }}
+          {% endblocktrans %}
+        {% endif %}
+        {% include "components/form-title.html" %}
+      {% else %}
+        <div class="list-group-item pt-4">
+          <h4 class="card-title  float-left mt-0 {% if not text %}mb-2{% endif %}">
+            {% trans "Scoresheet" %}
+          </h4>
+            {% for da in debate.adjudicators.voting_with_positions reversed %}
+              <div class="badge badge-secondary float-right ml-2 mt-1">
+                <p class="mb-0">{{ da.0.name }} ({% if da.1 == "o" %}{% trans "Solo Chair" %}{% elif da.1 == "c" %}{% trans "Chair" %}{% elif da.1 == "p" %}{% trans "Panellist" %}{% elif da.1 == "t" %}{% trans "Trainee" %}{% endif %})</p>
+              </div>
+            {% endfor %}
+
+        </div>
+      {% endif %}
+
+      {% if form.choosing_sides %}
+        <div class="sides-before-scores-warning list-group-item-warning list-group-item">
+          {% trans "Assign sides before entering scores" %}
+        </div>
+      {% endif %}
+
+      <div class="list-group-item scoresheet px-md-3 py-md-2 p-0">
+        <div class="card-deck px-md-2 p-0">
+          {% if form.has_scores %}
+
+            {% for team in sheet.teams %}
+              {# Break for four team formats #}
+              {% if forloop.counter == 3 %}
+                </div><div class="card-deck px-md-2 p-0">
+              {% endif %}
+              {% include "ballot/ballot_scoresheet.html" %}
+            {% endfor %}
+
+          {% else %}
+
+            {% for checkbox in sheet.advancing %}
+              {% if forloop.counter == 3 %}
+                {# Break for four team formats #}
+                </div><div class="card-deck px-2">
+              {% endif %}
+              <div class="card m-2 px-3">
+                <div class="form-check pl-4 pt-1 h6">
+                  {{ checkbox|addboundwidgetcss:"form-check-input" }}
+                </div>
+              </div>
+            {% endfor %}
+
+          {% endif %}
+        </div>
+        {% if sheet.advancing.errors %}
+          <div class="list-group-item">
+            {{ sheet.advancing.errors }}
+          </div>
+        {% endif %}
+
+      </div>
+      {% if form.using_declared_winner %}
+        <div class="list-group-item">
+          {% include "components/form-field.html" with field=sheet.declared_winner %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endfor %}
+
+  {% if pref.enable_forfeits %}
+    <div class="card mt-3">
+      <div class="panel-heading">
+        <h4 class="panel-title">{% trans "Forfeits" %}</h4>
+      </div>
+      <div class="card-body">
+        {{ form.forfeit|addcss:"forfeits-group" }}
+        {{ form.forfeit.errors }}
+      </div>
+    </div>
+  {% endif %}
+
+</div>

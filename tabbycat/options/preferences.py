@@ -477,6 +477,20 @@ class BallotMustConfirmWinner(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class BallotUsesScores(ChoicePreference):
+    help_text = _("When ballots should ask for speaker scores.")
+    verbose_name = _("Require speaker scores")
+    section = debate_rules
+    name = 'speakers_in_ballots'
+    choices = (
+        ('always', _("Always require speaker scores")),
+        ('prelim', _("Only require speaker scores in preliminary rounds")),
+        ('never', _("Never require speaker scores"))
+    )
+    default = 'always'
+
+
+@tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
     help_text = _("How many substantive speakers on a team")
     verbose_name = _("Substantive speakers")
