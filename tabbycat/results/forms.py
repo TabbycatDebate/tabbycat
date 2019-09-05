@@ -177,7 +177,7 @@ class BaseResultForm(forms.Form):
                 self.debate.confirmed_ballot.save()
 
         # 2. Save ballot submission so that we can create related objects
-        if self.ballotsub.pk is None:
+        if self.ballotsub.id is None:
             self.ballotsub.save()
 
         # 3. Save the specifics of the ballot
@@ -252,6 +252,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
         self.using_forfeits = self.tournament.pref('enable_forfeits')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
+        self.using_declared_winner = True
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
@@ -349,6 +350,13 @@ class BaseBallotSetForm(BaseResultForm):
             choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.sides]
             self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)
 
+    def create_declared_winner_dropdown(self):
+        """This method creates a drop-down with a list of the teams in the debate"""
+        return forms.TypedChoiceField(
+            label=_("Winner"), required=True, empty_value=None,
+            choices=[(None, _("---------"))] + [(s, t.short_name) for s, t in zip(self.sides, self.debate.teams)],
+        )
+
     def initial_data(self):
         """Generates dictionary of initial form data."""
 
@@ -403,7 +411,7 @@ class BaseBallotSetForm(BaseResultForm):
             speaker = result.get_speaker(side, pos)
             is_ghost = result.get_ghost(side, pos)
             if speaker:
-                initial[self._fieldname_speaker(side, pos)] = speaker.pk
+                initial[self._fieldname_speaker(side, pos)] = speaker.id
                 initial[self._fieldname_ghost(side, pos)] = is_ghost
 
         return initial
@@ -624,6 +632,10 @@ class SingleBallotSetForm(BaseBallotSetForm):
     def _fieldname_score(side, pos):
         return '%(side)s_score_s%(pos)d' % {'side': side, 'pos': pos}
 
+    @staticmethod
+    def _fieldname_declared_winner():
+        return 'declared_winner'
+
     def get_result_class(self):
         return ConsensusDebateResultWithScores
 
@@ -647,6 +659,9 @@ class SingleBallotSetForm(BaseBallotSetForm):
             coerce_for_ui = self.fields[self._fieldname_score(side, pos)].coerce_for_ui
             initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
 
+        if self.using_declared_winner:
+            initial[self._fieldname_declared_winner()] = result.get_winning_side()
+
         return initial
 
     def list_score_fields(self):
@@ -654,6 +669,9 @@ class SingleBallotSetForm(BaseBallotSetForm):
         order = []
         for side, pos in product(self.sides, self.positions):
             order.append(self._fieldname_score(side, pos))
+
+        if self.using_declared_winner:
+            order.append(self._fieldname_declared_winner())
         return order
 
     # --------------------------------------------------------------------------
@@ -670,7 +688,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
 
         else:
             # Check that no teams had the same total.
-            if len(totals) == 2 and totals[0] == totals[1]:
+            if len(totals) == 2 and totals[0] == totals[1] and not hasattr(cleaned_data, self._fieldname_declared_winner()):
                 self.add_error(None, forms.ValidationError(
                     _("The total scores for the teams are the same (i.e. a draw)."),
                     code='draw'
@@ -700,6 +718,10 @@ class SingleBallotSetForm(BaseBallotSetForm):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
             result.set_score(side, pos, score)
 
+        declared_winner = getattr(self.cleaned_data, self._fieldname_declared_winner())
+        if declared_winner is not None:
+            result.set_winner(declared_winner)
+
     # --------------------------------------------------------------------------
     # Template access methods
     # --------------------------------------------------------------------------
@@ -718,6 +740,10 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
     def _fieldname_score(adj, side, pos):
         return '%(side)s_score_a%(adj)d_s%(pos)d' % {'adj': adj.id, 'side': side, 'pos': pos}
 
+    @staticmethod
+    def _fieldname_declared_winner(adj):
+        return 'declared_winner_a%(adj)d' % {'adj': adj.id}
+
     def get_result_class(self):
         return DebateResultByAdjudicatorWithScores
 
@@ -733,22 +759,32 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                     tournament=self.tournament,
                     required=not self.using_forfeits,
                 )
+        for adj in self.adjudicators:
+            self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
 
-        for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
-            score = result.get_score(adj, side, pos)
-            coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
-            initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
+        for adj in self.adjudicators:
+            for side, pos in product(self.sides, self.positions):
+                score = result.get_score(adj, side, pos)
+                coerce_for_ui = self.fields[self._fieldname_score(adj, side, pos)].coerce_for_ui
+                initial[self._fieldname_score(adj, side, pos)] = coerce_for_ui(score)
+
+            if self.using_declared_winner:
+                initial[self._fieldname_declared_winner(adj)] = result.get_winner(adj)
 
         return initial
 
     def list_score_fields(self):
         """Lists all the score fields. Called by super().set_tab_indices()."""
         order = []
-        for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
-            order.append(self._fieldname_score(adj, side, pos))
+        for adj in self.adjudicators:
+            for side, pos in product(self.sides, self.positions):
+                order.append(self._fieldname_score(adj, side, pos))
+
+            if self.using_declared_winner:
+                order.append(self._fieldname_declared_winner(adj))
         return order
 
     # --------------------------------------------------------------------------
@@ -766,7 +802,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
 
             else:
                 # Check that it was not a draw.
-                if totals[0] == totals[1]:
+                if totals[0] == totals[1] and not hasattr(cleaned_data, self._fieldname_declared_winner(adj)):
                     self.add_error(None, forms.ValidationError(
                         _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
                         params={'adj': adj.name}, code='draw'
@@ -781,9 +817,15 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                     ))
 
     def populate_result_with_scores(self, result):
-        for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
-            score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-            result.set_score(adj, side, pos, score)
+        for adj in self.adjudicators:
+            for side, pos in product(self.sides, self.positions):
+                score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
+                result.set_score(adj, side, pos, score)
+
+            declared_winner = self.cleaned_data.get(self._fieldname_declared_winner(adj))
+            if declared_winner is not None:
+                result.set_winner(adj, declared_winner)
+
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -791,7 +833,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
 
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
-        through the form. Used in the ballot_set.html.html template."""
+        through the form. Used in the ballot_set.html template."""
 
         for adj in self.adjudicators:
             sheet_dict = {
@@ -800,6 +842,8 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                     lambda side, pos: self._fieldname_score(adj, side, pos)
                 ),
             }
+            if self.using_declared_winner:
+                sheet_dict['declared_winner'] = self[self._fieldname_declared_winner(adj)]
             yield sheet_dict
 
 

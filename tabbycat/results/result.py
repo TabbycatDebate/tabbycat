@@ -425,6 +425,8 @@ class DebateResultByAdjudicator(BaseDebateResult):
     # --------------------------------------------------------------------------
 
     def get_winner(self, adjudicator):
+        if len(self.scoresheets[adjudicator].winners()) == 0:
+            return None
         return self.scoresheets[adjudicator].winners()[0]
 
     def add_winner(self, adjudicator, winner):
@@ -743,6 +745,8 @@ class ConsensusDebateResult(BaseDebateResult):
             return BPEliminationScoresheet
 
     def get_winner(self):
+        if len(self.scoresheet.winners()) == 0:
+            return None
         return self.scoresheet.winners()
 
     def add_winner(self, winner):
@@ -752,6 +756,8 @@ class ConsensusDebateResult(BaseDebateResult):
         self.scoresheet.set_declared_winners(winner)
 
     def winning_side(self):
+        if self.get_winner() is None:
+            return None
         assert len(self.get_winner()) == 1
         return self.get_winner()[0]
 

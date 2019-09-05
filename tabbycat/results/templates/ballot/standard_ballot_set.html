@@ -57,6 +57,11 @@
         </div>
 
       </div>
+      {% if form.using_declared_winner %}
+        <div class="list-group-item">
+          {% include "components/form-field.html" with field=sheet.declared_winner %}
+        </div>
+      {% endif %}
     </div>
   </div>
 
