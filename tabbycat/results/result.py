@@ -45,7 +45,8 @@ from statistics import mean
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 
-from .scoresheet import BPEliminationScoresheet, BPScoresheet, HighPointWinsRequiredScoresheet, ResultOnlyScoresheet
+from .scoresheet import (BPEliminationScoresheet, BPScoresheet, HighPointWinsRequiredScoresheet, LowPointWinsAllowedScoresheet,
+                         ResultOnlyScoresheet, TiedPointWinsAllowedScoresheet)
 from .utils import side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -74,7 +75,6 @@ def get_result_class(round, tournament=None):
                 (ballots_per_debate, teams_in_debate))
 
 
-
 def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     """Factory function. Returns an instance of a subclass of BaseDebateResult
     appropriate for the ballot submission's tournament's settings.
@@ -93,11 +93,9 @@ def DebateResult(ballotsub, *args, **kwargs):  # noqa: N802 (factory function)
     tournament = kwargs.pop('tournament', None)
     if tournament is None:
         tournament = ballotsub.debate.round.tournament
-    teams_in_debate = tournament.pref('teams_in_debate')
 
     result_class = get_result_class(r, tournament)
     return result_class(ballotsub, *args, **kwargs)
-
 
 
 class BaseDebateResult:
@@ -160,6 +158,9 @@ class BaseDebateResult:
         self.tournament = self.debate.round.tournament
         self.sides = self.tournament.sides
 
+        # Needed here (not in ScoresMixin) as is called by `.get_scoresheet_class()`
+        self.winners_declared = self.tournament.pref('winners_in_ballots')
+
         self.scoresheet_class = self.get_scoresheet_class()
 
         if load:
@@ -174,7 +175,7 @@ class BaseDebateResult:
     # --------------------------------------------------------------------------
 
     def get_scoresheet_class(self):
-        raise NotImplementedError
+        return ResultOnlyScoresheet
 
     def full_load(self):
         self.init_blank_buffer()
@@ -358,9 +359,6 @@ class DebateResultByAdjudicator(BaseDebateResult):
     # Management methods
     # --------------------------------------------------------------------------
 
-    def get_scoresheet_class(self):
-        return ResultOnlyScoresheet
-
     def init_blank_buffer(self):
         super().init_blank_buffer()
         self.debateadjs = {}
@@ -430,10 +428,10 @@ class DebateResultByAdjudicator(BaseDebateResult):
         return self.scoresheets[adjudicator].winners()[0]
 
     def add_winner(self, adjudicator, winner):
-        try:
-            return self.scoresheets[adjudicator].add_declared_winner(winner)
-        except AttributeError:
-            logger.exception("Tried to set declared winner, but scoresheet doesn't do declared winners.")
+        self.scoresheets[adjudicator].add_declared_winner(winner)
+
+    def set_winner(self, adjudicator, winner):
+        self.scoresheets[adjudicator].set_declared_winners([winner])
 
     # --------------------------------------------------------------------------
     # Decision calculation
@@ -587,7 +585,12 @@ class DebateResultWithScoresMixin:
     # --------------------------------------------------------------------------
 
     def get_scoresheet_class(self):
-        return HighPointWinsRequiredScoresheet
+        return {
+            'none': HighPointWinsRequiredScoresheet,
+            'high-points': HighPointWinsRequiredScoresheet,
+            'tied-points': TiedPointWinsAllowedScoresheet,
+            'low-points': LowPointWinsAllowedScoresheet,
+        }[self.winners_declared]
 
     def init_blank_buffer(self):
         super().init_blank_buffer()
@@ -740,7 +743,7 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def get_scoresheet_class(self):
         if len(self.sides) == 2:
-            return ResultOnlyScoresheet
+            return super().get_scoresheet_class()
         elif len(self.sides) == 4:
             return BPEliminationScoresheet
 
@@ -753,7 +756,7 @@ class ConsensusDebateResult(BaseDebateResult):
         self.scoresheet.add_declared_winner(winner)
 
     def set_winner(self, winner):
-        self.scoresheet.set_declared_winners(winner)
+        self.scoresheet.set_declared_winners([winner])
 
     def winning_side(self):
         if self.get_winner() is None:
@@ -789,7 +792,7 @@ class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDeba
 
     def get_scoresheet_class(self):
         if len(self.sides) == 2:
-            return HighPointWinsRequiredScoresheet
+            return super().get_scoresheet_class()
         elif len(self.sides) == 4:
             return BPScoresheet
 

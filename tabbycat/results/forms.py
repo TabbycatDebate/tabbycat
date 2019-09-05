@@ -252,7 +252,8 @@ class BaseBallotSetForm(BaseResultForm):
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
         self.using_forfeits = self.tournament.pref('enable_forfeits')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
-        self.using_declared_winner = True
+        self.using_declared_winner = self.tournament.pref('winners_in_ballots') != 'none'
+        self.declared_winner_overrides = self.tournament.pref('winners_in_ballots') in ['tied-points', 'low-points']
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
@@ -680,19 +681,30 @@ class SingleBallotSetForm(BaseBallotSetForm):
 
     def clean_scoresheet(self, cleaned_data):
         try:
-            totals = [sum(cleaned_data[self._fieldname_score(side, pos)]
-                       for pos in self.positions) for side in self.sides]
+            side_totals = {side: sum(cleaned_data[self._fieldname_score(side, pos)]
+                           for pos in self.positions) for side in self.sides}
+            totals = list(side_totals.values())
 
         except KeyError as e:
             logger.warning("Field %s not found", str(e))
 
         else:
-            # Check that no teams had the same total.
-            if len(totals) == 2 and totals[0] == totals[1] and not hasattr(cleaned_data, self._fieldname_declared_winner()):
-                self.add_error(None, forms.ValidationError(
-                    _("The total scores for the teams are the same (i.e. a draw)."),
-                    code='draw'
-                ))
+            if len(totals) == 2 and not self.declared_winner_overrides:
+                # Check that no teams had the same total
+                if totals[0] == totals[1]:
+                    self.add_error(None, forms.ValidationError(
+                        _("The total scores for the teams are the same (i.e. a draw)."),
+                        code='draw'
+                    ))
+
+                # Check that the high-point team is declared the winner
+                has_declared = hasattr(cleaned_data, self._fieldname_declared_winner())
+                highest_score = max(side_totals, key=lambda key: side_totals[key])
+                if has_declared and highest_score != cleaned_data[self._fieldname_declared_winner()]:
+                    self.add_error(None, forms.ValidationError(
+                        _("The declared winner does not correspond to the team with the highest score."),
+                        code='wrong_winner'
+                    ))
 
             elif len(totals) > 2:
                 for total in set(totals):
@@ -794,18 +806,28 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
     def clean_scoresheet(self, cleaned_data):
         for adj in self.adjudicators:
             try:
-                totals = [sum(cleaned_data[self._fieldname_score(adj, side, pos)]
-                           for pos in self.positions) for side in self.sides]
+                side_totals = {side: sum(cleaned_data[self._fieldname_score(adj, side, pos)]
+                           for pos in self.positions) for side in self.sides}
+                totals = list(side_totals.values())
 
             except KeyError as e:
                 logger.warning("Field %s not found", str(e))
 
             else:
                 # Check that it was not a draw.
-                if totals[0] == totals[1] and not hasattr(cleaned_data, self._fieldname_declared_winner(adj)):
+                if totals[0] == totals[1] and not self.declared_winner_overrides:
                     self.add_error(None, forms.ValidationError(
                         _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
                         params={'adj': adj.name}, code='draw'
+                    ))
+
+                # Check that the high-point team is declared the winner
+                has_declared = hasattr(cleaned_data, self._fieldname_declared_winner(adj))
+                highest_score = max(side_totals, key=lambda key: side_totals[key])
+                if has_declared and highest_score != cleaned_data[self._fieldname_declared_winner(adj)]:
+                    self.add_error(None, forms.ValidationError(
+                        _("The declared winner does not correspond to the team with the highest score for adjudicator %(adj)s."),
+                        params={'adj': adj.name}, code='wrong_winner'
                     ))
 
                 # Check that the margin did not exceed the maximum permissible.
@@ -826,7 +848,6 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
             if declared_winner is not None:
                 result.set_winner(adj, declared_winner)
 
-
     # --------------------------------------------------------------------------
     # Template access methods
     # --------------------------------------------------------------------------
@@ -834,7 +855,6 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
         through the form. Used in the ballot_set.html template."""
-
         for adj in self.adjudicators:
             sheet_dict = {
                 "adjudicator": adj,

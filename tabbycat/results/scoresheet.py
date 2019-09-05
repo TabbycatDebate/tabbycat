@@ -35,6 +35,18 @@ class BaseScoresheet:
             return []
         return self._get_winners()
 
+    # Default methods
+    # Winners may be declared by the form as validation; by default do nothing.
+
+    def set_declared_winners(self, winners):
+        pass
+
+    def add_declared_winner(self, winner):
+        pass
+
+    def get_declared_winners(self):
+        pass
+
 
 class ScoresMixin:
     """Provides functionality for speaker scores.

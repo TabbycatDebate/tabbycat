@@ -462,6 +462,21 @@ class BallotsPerDebateElimination(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class BallotMustConfirmWinner(ChoicePreference):
+    help_text = _("Whether adjudicator(s) must select the winning team in their ballot, and how it should be treated. Note: Not supported in BP.")
+    verbose_name = _("Winner Declaration in ballot(s)")
+    section = debate_rules
+    name = 'winners_in_ballots'
+    choices = (
+        ('none', _("Do not require separate winner selection")),
+        ('high-points', _("Require separate winner selection as a check on correct scores")),
+        ('tied-points', _("Require winner selection to break tied-point debates")),
+        ('low-points', _("Require winner selection, overriding scores")),
+    )
+    default = 'none'
+
+
+@tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
     help_text = _("How many substantive speakers on a team")
     verbose_name = _("Substantive speakers")
