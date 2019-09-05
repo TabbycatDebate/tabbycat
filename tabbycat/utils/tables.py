@@ -556,7 +556,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 if a['adj'].institution is not None:
                     descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
-                    descriptors.append("<span class='text-danger'>in minority</span>")
+                    descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
                 text = a['adj'].name
 
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
