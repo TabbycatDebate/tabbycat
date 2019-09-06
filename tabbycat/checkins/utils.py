@@ -9,15 +9,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
+from utils.misc import generate_identifier
+
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
 logger = logging.getLogger(__name__)
-
-
-def generate_identifier(length=6):
-    """Generates a random identifier and saves it to the database."""
-    chars = string.ascii_uppercase + string.digits
-    return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
 
 
 IDENTIFIER_CLASSES = {
@@ -29,11 +25,12 @@ IDENTIFIER_CLASSES = {
 
 def generate_identifiers(queryset, length=6, num_attempts=10):
     """Generates identifiers for every instance in the given QuerySet."""
+    chars = string.ascii_uppercase + string.digits
     klass = IDENTIFIER_CLASSES[queryset.model._meta.label]
     attr = klass.instance_attr
 
     for instance in queryset:
-        identifier = generate_identifier(length=length)
+        identifier = generate_identifier(chars, length)
         for i in range(num_attempts):
             try:
                 klass.objects.create(identifier=identifier, **{attr: instance})

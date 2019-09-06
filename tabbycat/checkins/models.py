@@ -7,12 +7,12 @@ from django.utils import timezone
 from django.utils.translation import gettext, gettext_lazy as _
 from polymorphic.models import PolymorphicModel
 
+from utils.misc import generate_identifier_string
+
 
 def generate_identifier():
     # First number should not be 0 so it is easier import into Excel etc
-    numbers = [str(random.choice([1,2,3,4,5,6,7,8,9]))]
-    numbers.extend([str(random.choice(digits)) for n in range(5)])
-    new_id = ''.join(numbers)
+    new_id = str(random.choice([1,2,3,4,5,6,7,8,9])) + generate_identifier_string(digits, 5)
     if Identifier.objects.filter(barcode=new_id).count() == 0:
         return new_id
     else:
