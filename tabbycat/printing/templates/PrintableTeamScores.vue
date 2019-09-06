@@ -17,7 +17,7 @@
 
       <div class="db-flex-item-3 db-flex-row db-bottom-border">
         <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal"
-             v-text="tct('%s:', [pos])"></div>
+             v-html="tct('%s:', [pos])"></div>
         <div class="db-fill-in db-flex-item-8 d-flex"></div>
         <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
           <span v-text="gettext('Score:')"></span>
@@ -28,7 +28,7 @@
       <div v-if="roundInfo.showDigits"
            class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border">
         <div class="db-flex-item-2 db-padding-horizontal text-secondary"
-             v-text="tct('Circle the last digit of the %s\'s score:', [pos])"></div>
+             v-html="tct('Circle the last digit of the %s\'s score:', [pos])"></div>
         <div class="db-flex-item-3 d-flex">
           <div class="flex-fill text-center" v-for="(n, i) in 10"><span class="db-circle">{{ i }}</span></div>
         </div>
