@@ -4,6 +4,7 @@ import qrcode
 from qrcode.image import svg
 
 from django.db.models import Q
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 
@@ -267,6 +268,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['ballots'] = json.dumps(self.get_ballots_dicts())
+        kwargs['ordinals'] = [ordinal(i) for i in range(1, 5)]
         motions = self.round.motion_set.order_by('seq')
         kwargs['motions'] = json.dumps([{'seq': m.seq, 'text': m.text} for m in motions])
         kwargs['use_team_code_names'] = use_team_code_names(self.tournament, False)

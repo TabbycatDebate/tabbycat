@@ -2,6 +2,7 @@ import logging
 from itertools import combinations
 
 from django.db.models import Count
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
@@ -158,18 +159,6 @@ def populate_identical_ballotsub_lists(ballotsubs):
         ballotsub.identical_ballotsub_versions.sort()
 
 
-_ORDINALS = {
-    1: gettext_lazy("1st"),
-    2: gettext_lazy("2nd"),
-    3: gettext_lazy("3rd"),
-    4: gettext_lazy("4th"),
-    5: gettext_lazy("5th"),
-    6: gettext_lazy("6th"),
-    7: gettext_lazy("7th"),
-    8: gettext_lazy("8th"),
-}
-
-
 _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Prime Minister
     [gettext_lazy("PM"),
@@ -207,6 +196,6 @@ def side_and_position_names(tournament):
     else:
         for side in sides:
             positions = [_("Reply") if pos == tournament.reply_position
-                else _ORDINALS[pos]
+                else ordinal(pos)
                 for pos in tournament.positions]
             yield side, positions

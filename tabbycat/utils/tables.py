@@ -1,6 +1,7 @@
 import logging
 import warnings
 
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.utils import formats
 from django.utils.encoding import force_text
 from django.utils.translation import gettext as _
@@ -434,7 +435,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['title'] = _("No result for debate")
         else:
             cell = self._result_cell_class_four(ts.points, cell)
-            places = {0: _("4th"), 1: _("3rd"), 2: _("2nd"), 3: _("1st")}
+            places = {n: ordinal(n) for n in range(0, 4)}
             if ts.points is not None:
                 place = places.get(ts.points, "??")
                 cell['text'] = place

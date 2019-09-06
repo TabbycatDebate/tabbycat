@@ -1,5 +1,5 @@
 {% extends "printables_list.html" %}
-{% load i18n l10n %}
+{% load humanize i18n l10n %}
 
 {% block header %}
   <div class="row d-print-none p-3 d-flex justify-content-between">
@@ -24,7 +24,8 @@
       <div class="db-page-holder">
   		  <main role="main" class="db-page db-flex-column db-page-landscape">
           <printable-ballot :ballot="ballot" :kind="'Scoresheet'"
-                            :round-info="roundInfo"></printable-ballot>
+                            :round-info="roundInfo"
+                            :ordinals="ordinals"></printable-ballot>
         </main>
       </div>
     </template>
@@ -109,6 +110,7 @@
       },
       // From Django
       ballots: {{ ballots|safe }},
+      ordinals: {{ ordinals|safe }},
     }
   </script>
   {{ block.super }}
