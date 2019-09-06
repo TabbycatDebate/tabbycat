@@ -1,15 +1,10 @@
 import datetime
 import logging
-import random
-import string
 
-from django.db import IntegrityError
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.translation import gettext as _
-
-from utils.misc import generate_identifier
 
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
@@ -21,26 +16,6 @@ IDENTIFIER_CLASSES = {
     'draw.Debate': DebateIdentifier,
     'venues.Venue': VenueIdentifier,
 }
-
-
-def generate_identifiers(queryset, length=6, num_attempts=10):
-    """Generates identifiers for every instance in the given QuerySet."""
-    chars = string.ascii_uppercase + string.digits
-    klass = IDENTIFIER_CLASSES[queryset.model._meta.label]
-    attr = klass.instance_attr
-
-    for instance in queryset:
-        identifier = generate_identifier(chars, length)
-        for i in range(num_attempts):
-            try:
-                klass.objects.create(identifier=identifier, **{attr: instance})
-            except IntegrityError:
-                logger.warning("Identifier was not unique, trying again (%d of %d)", i, num_attempts)
-                continue
-            else:
-                break
-        else:
-            logger.error("Could not generate unique identifier for %r after %d tries", instance, num_attempts)
 
 
 def delete_identifiers(queryset):
