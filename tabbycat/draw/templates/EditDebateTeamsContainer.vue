@@ -6,6 +6,15 @@
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount"></drag-and-drop-actions>
 
+    <template slot="extra-messages">
+      <div id="alertdiv" class="alert alert-warning show">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span></button>
+        <span v-text="gettext(`This page will only save changes to debate teams if all positions
+        in a debate have a team. Ensure all gaps are filled before leaving this page.`)"></span>
+      </div>
+    </template>
+
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
 
@@ -89,7 +98,6 @@ export default {
       if (toDebateTeams !== null && dragData.assignment !== dropData.assignment) {
         teamChanges.push({ 'id': dropData.assignment, 'teams': toDebateTeams })
       }
-      console.log(teamChanges)
       this.$store.dispatch('updateDebatesOrPanelsAttribute', { 'teams': teamChanges })
       this.$store.dispatch('updateAllocableItemModified', [dragData.item])
     },
