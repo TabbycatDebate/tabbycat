@@ -407,11 +407,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for side in self.tournament.sides:
             if ts.debate_team.debate.sides_confirmed:
                 line = _("%(team)s (%(side)s)") % {
-                    'team': other_teams.get(side, "??"),
+                    'team': other_teams.get(side, _("??")),
                     'side': get_side_name(self.tournament, side, 'abbr')
                 }
             else:
-                line = other_teams.get(side, "??")
+                line = other_teams.get(side, _("??"))
             if side == ts.debate_team.side:
                 line = "<strong>" + line + "</strong>"
             other_team_strs.append(line)
@@ -435,9 +435,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['title'] = _("No result for debate")
         else:
             cell = self._result_cell_class_four(ts.points, cell)
-            places = {n: ordinal(n) for n in range(0, 4)}
+            places = [ordinal(n) for n in reversed(range(1, 5))]
             if ts.points is not None:
-                place = places.get(ts.points, "??")
+                place = places[ts.points] if ts.points < 4 else _("??")
                 cell['text'] = place
                 cell['popover']['title'] = _("Placed %(place)s") % {'place': place}
             else:
