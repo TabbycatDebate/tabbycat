@@ -169,7 +169,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         # TODO: Debates and panels should really be unified in a single function
         round = Round.objects.get(pk=event['extra']['round_id'])
         debates = round.debate_set_with_prefetches(teams=True, adjudicators=False,
-            speakers=False, divisions=False, venues=False)
+            speakers=False, venues=False)
 
         priority_method = event['extra']['settings']['type']
         if priority_method == 'liveness':

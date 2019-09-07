@@ -185,8 +185,6 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def get_queryset(self):
         """All the people from the tournament who could receive the message"""
         queryset_filter = Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
-        if self.tournament.pref('share_adjs'):
-            queryset_filter |= Q(adjudicator__tournament__isnull=True)
 
         return Person.objects.filter(queryset_filter).select_related('speaker', 'adjudicator')
 

@@ -105,7 +105,6 @@ class BaseDrawManager:
 
         for pairing in pairings:
             debate = Debate(round=self.round)
-            debate.division = pairing.division
             debate.bracket = pairing.bracket
             debate.room_rank = pairing.room_rank
             debate.flags = ",".join(pairing.flags)  # comma-separated list
@@ -230,7 +229,7 @@ class BaseEliminationDrawManager(BaseDrawManager):
     def get_results(self):
         if self.round.prev is not None and self.round.prev.is_break_round:
             debates = self.round.prev.debate_set_with_prefetches(ordering=('room_rank',), results=True,
-                    adjudicators=False, speakers=False, divisions=False, venues=False)
+                    adjudicators=False, speakers=False, venues=False)
             pairings = [self.result_pairing_class.from_debate(debate, tournament=self.round.tournament)
                         for debate in debates]
             return pairings

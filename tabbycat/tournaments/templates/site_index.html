@@ -66,24 +66,6 @@
 
 {% endfor %}
 
-{% if tournaments.0.preferences.league_options__enable_mass_draws %}
-  <div class="list-group mt-2">
-
-    {% trans "All Draws by Venue" as text %}
-    {% url 'all-tournaments-all-venues' as url %}
-    {% include "components/item-action.html" with icon="map" %}
-
-    {% trans "All Draws by School" as text %}
-    {% url 'all-tournaments-all-institutions' as url %}
-    {% include "components/item-action.html" with icon="home" %}
-
-    {% trans "All Teams and Divisions" as text %}
-    {% url 'all-tournaments-all-teams' as url %}
-    {% include "components/item-action.html" with icon="users" %}
-
-  </div>
-{% endif %}
-
 <div class="list-group mt-2">
   {% if user.is_superuser %}
 

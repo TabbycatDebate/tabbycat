@@ -7,12 +7,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.db.models import Count, Q
-from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
-from django.views.generic import FormView, TemplateView, View
+from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -27,7 +27,7 @@ from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamen
                                 RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
                                 TournamentMixin)
 from tournaments.models import Round
-from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
+from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -197,31 +197,6 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
     def get_context_data(self, **kwargs):
         kwargs['view_type'] = self.request.session.get('results_view', self.default_view)
         return super().get_context_data(**kwargs)
-
-
-# ==============================================================================
-# Views that update the debate status (only)
-# ==============================================================================
-
-class BaseUpdateDebateStatusView(AdministratorMixin, RoundMixin, View):
-
-    def post(self, request, *args, **kwargs):
-        debate_id = request.POST['debate_id']
-        try:
-            debate = Debate.objects.get(round=self.round, id=debate_id)
-        except Debate.DoesNotExist:
-            return HttpResponseBadRequest("Error: There isn't a debate in %s with id %d." % (self.round.name, debate_id))
-        debate.result_status = self.new_status
-        debate.save()
-        return redirect_round('results-round-list', debate.round)
-
-
-class PostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_POSTPONED
-
-
-class UnpostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_NONE
 
 
 # ==============================================================================

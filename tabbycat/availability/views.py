@@ -5,7 +5,7 @@ from collections import OrderedDict
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.db import IntegrityError
-from django.db.models import Min, Q
+from django.db.models import Min
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView, View
@@ -71,12 +71,6 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
         adjs = self._get_dict(self.tournament.relevant_adjudicators)
         venues = self._get_dict(self.tournament.relevant_venues)
         kwargs['can_advance'] = teams['in_now'] > 1 and adjs['in_now'] > 0 and venues['in_now'] > 0
-
-        # People often add adjs/venues then get confused why they are not here
-        if not self.tournament.pref('share_adjs'):
-            kwargs['adjs_no_t'] = Adjudicator.objects.filter(tournament__isnull=True).count()
-        if not self.tournament.pref('share_venues'):
-            kwargs['venues_no_t'] = Venue.objects.filter(tournament__isnull=True).count()
 
         # Order needs to be predictable when iterating through values
         kwargs['availability_info'] = OrderedDict([('teams', teams), ('adjs', adjs), ('venues', venues)])
@@ -169,7 +163,6 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
 
 class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView):
     template_name = "base_availability.html"
-    share_key = None  # The relevant pref to include tournament-less objects
 
     def get_context_data(self, **kwargs):
         kwargs['model'] = self.model._meta.label  # does not get translated
@@ -177,10 +170,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        q = Q(tournament=self.tournament)
-        if self.share_key is not None and self.tournament.pref(self.share_key):
-            q |= Q(tournament__isnull=True)  # include shared objects, if relevant
-        return self.model.objects.filter(q)
+        return self.model.objects.filter(tournament=self.tournament)
 
     def get_table(self):
         table = TabbycatTableBuilder(view=self, sort_key=self.sort_key)
@@ -239,7 +229,6 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
     model = Adjudicator
     sort_key = 'name'
     update_view = 'availability-update-adjudicators'
-    share_key = 'share_adjs'
 
     def get_queryset(self):
         return super().get_queryset().select_related('checkin_identifier')
@@ -259,7 +248,6 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
     model = Venue
     sort_key = 'venue'
     update_view = 'availability-update-venues'
-    share_key = 'share_venues'
 
     def get_queryset(self):
         return super().get_queryset().select_related('checkin_identifier').prefetch_related('venuecategory_set')

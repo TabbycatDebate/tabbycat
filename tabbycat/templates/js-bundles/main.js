@@ -13,7 +13,6 @@ import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
 import LegacyEditAdjudicatorsContainer from '../../adjallocation/templates/LegacyEditAdjudicatorsContainer.vue'
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
-import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
 import LegacyEditMatchupsContainer from '../../draw/templates/LegacyEditMatchupsContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
@@ -188,7 +187,6 @@ vueComponents.ResultsTablesContainer = ResultsTablesContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
 // Divisions Containers
-vueComponents.AllocateDivisionsContainer = AllocateDivisionsContainer
 vueComponents.DiversityContainer = DiversityContainer
 vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
 // Printables

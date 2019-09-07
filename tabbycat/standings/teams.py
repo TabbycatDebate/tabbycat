@@ -7,13 +7,12 @@ from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
-from participants.models import Team
 from tournaments.models import Round
 from results.models import TeamScore
 
 from .base import BaseStandingsGenerator
 from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator
-from .ranking import BasicRankAnnotator, DivisionRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
+from .ranking import BasicRankAnnotator, RankFromInstitutionAnnotator, SubrankAnnotator
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +34,6 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
     function = None  # must be set by subclasses
     field = None  # must be set by subclasses
 
-    exclude_forfeits = False
     where_value = None
 
     exclude_unconfirmed = True
@@ -53,46 +51,10 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
-        if self.exclude_forfeits:
-            annotation_filter &= Q(debateteam__teamscore__forfeit=False)
-        if self.exclude_unconfirmed:
-            annotation_filter &= Q(debateteam__teamscore__ballot_submission__confirmed=True)
         if self.where_value is not None:
             annotation_filter &= Q(**{self.get_where_field(): self.where_value})
 
         return self.function(self.get_field(), filter=annotation_filter)
-
-
-class Points210MetricAnnotator(TeamScoreQuerySetMetricAnnotator):
-    """Metric annotator for team points using win = 2, loss = 1, loss by forfeit = 0."""
-    key = "points210"
-    name = _("points")
-    abbr = _("Pts")
-
-    choice_name = _("Points (2/1/0)")
-
-    class WinsIncludingForfeits(TeamScoreQuerySetMetricAnnotator):
-        function = Count
-        field = 'win'
-        exclude_forfeits = False
-        where_value = True
-
-    class LossesExcludingForfeits(TeamScoreQuerySetMetricAnnotator):
-        function = Count
-        field = 'win'
-        exclude_forfeits = True
-        where_value = False
-
-    def get_annotation(self, round=None):
-        wins = self.WinsIncludingForfeits().get_annotation(round)
-        losses = self.LossesExcludingForfeits().get_annotation(round)
-
-        bye_filter = Q(debateteam__team__type=Team.TYPE_BYE,
-                debateteam__debate__round__stage=Round.STAGE_PRELIMINARY)
-        if round is not None:
-            bye_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
-        byes = Count('debateteam', filter=bye_filter)
-        return wins * 2 + byes * 2 + losses
 
 
 class PointsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -131,7 +93,6 @@ class AverageSpeakerScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     key = "speaks_avg"
     name = _("average total speaker score")
     abbr = _("ATSS")
-    exclude_forfeits = True
 
     function = Avg
     field = "score"
@@ -142,7 +103,6 @@ class SpeakerScoreStandardDeviationMetricAnnotator(TeamScoreQuerySetMetricAnnota
     key = "speaks_stddev"
     name = _("speaker score standard deviation")
     abbr = _("SSD")
-    exclude_forfeits = True
     ascending = True
 
     function = StdDev
@@ -160,14 +120,13 @@ class SumMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
 
 
 class AverageMarginMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
-    """Metric annotator for average margin, excluding forfeit ballots."""
+    """Metric annotator for average margin."""
     key = "margin_avg"
     name = _("average margin")
     abbr = _("AWM")
 
     function = Avg
     field = "margin"
-    exclude_forfeits = True
 
 
 class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
@@ -180,7 +139,6 @@ class AverageIndividualScoreMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
         annotation_filter = Q(
             debateteam__teamscore__ballot_submission__confirmed=True,
             debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
-            debateteam__teamscore__forfeit=False,
             debateteam__speakerscore__ghost=False
         )
         if round is not None:
@@ -371,31 +329,6 @@ class WhoBeatWhomMetricAnnotator(RepeatedMetricAnnotator):
             tsi.add_metric(self.key, wbw)
 
 
-class DivisionsWhoBeatWhomMetricAnnotator(WhoBeatWhomMetricAnnotator):
-    """Metric annotator for who-beat-whom within divisions. Use once for
-    every who-beat-whom in the precedence."""
-
-    key_prefix = "wbwd"
-    name_prefix = _("Who-beat-whom (in division)")
-    abbr_prefix = _("WBWD")
-    choice_name = _("who-beat-whom (in divisions)")
-
-    def annotate(self, queryset, standings, round=None):
-        key = metricgetter(self.keys)
-
-        def who_beat_whom_divisions(tsi):
-            equal_teams = [x for x in standings.infoview() if key(x) == key(tsi) and x.team.division == tsi.team.division]
-            if len(equal_teams) != 2:
-                return 0  # Fail fast if attempt to compare with an int
-
-            ts = self.get_team_scores(key, equal_teams, tsi, round)
-            return ts["points__sum"] or 0
-
-        for tsi in standings.infoview():
-            wbwd = who_beat_whom_divisions(tsi)
-            tsi.add_metric(self.key, wbwd)
-
-
 # ==============================================================================
 # Standings generator
 # ==============================================================================
@@ -417,7 +350,6 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
 
     metric_annotator_classes = {
         "points"              : PointsMetricAnnotator,
-        "points210"           : Points210MetricAnnotator,
         "wins"                : WinsMetricAnnotator,
         "speaks_sum"          : TotalSpeakerScoreMetricAnnotator,
         "speaks_avg"          : AverageSpeakerScoreMetricAnnotator,
@@ -432,12 +364,10 @@ class TeamStandingsGenerator(BaseStandingsGenerator):
         "firsts"              : NumberOfFirstsMetricAnnotator,
         "seconds"             : NumberOfSecondsMetricAnnotator,
         "wbw"                 : WhoBeatWhomMetricAnnotator,
-        "wbwd"                : DivisionsWhoBeatWhomMetricAnnotator,
     }
 
     ranking_annotator_classes = {
         "rank"        : BasicRankAnnotator,
         "subrank"     : SubrankAnnotator,
-        "division"    : DivisionRankAnnotator,
         "institution" : RankFromInstitutionAnnotator,
     }

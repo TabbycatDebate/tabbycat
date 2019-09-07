@@ -68,15 +68,6 @@ urlpatterns = [
             name='draw-unrelease'),
 
         # Scheduling
-        path('schedule/',
-            views.ScheduleDebatesView.as_view(),
-            name='draw-schedule-debates'),
-        path('schedule/save/',
-            views.ApplyDebateScheduleView.as_view(),
-            name='draw-schedule-apply'),
-        path('confirms/',
-            views.ScheduleConfirmationsView.as_view(),
-            name='draw-schedule-confirmations'),
         path('start-time/set/',
             views.SetRoundStartTimeView.as_view(),
             name='draw-start-time-set'),

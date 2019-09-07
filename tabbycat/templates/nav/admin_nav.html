@@ -106,18 +106,6 @@
     </div>
   {% endif %}
 
-  {% if pref.enable_divisions %}
-    <div class="list-group-item d-inline-block">
-      <a href="{% tournamenturl 'division_allocations' %}" data-parent="#sidebar"
-         class="collapsed">
-        <span class="circle-icon icon-container">
-          <i data-feather="layers"></i>
-        </span>
-        {% trans "Divisions" %}
-      </a>
-    </div>
-  {% endif %}
-
 
   <div class="list-group-item d-inline-block">
     <a href="#checkinh" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
@@ -212,11 +200,6 @@
           {% endblocktrans %}
         </a>
       {% endfor %}
-      {% if pref.enable_divisions %}
-      <a class="list-group-item" href="{% roundurl 'standings-division' current_round %}">
-        <i data-feather="layers"></i>{% trans "Divisions" %}
-      </a>
-      {% endif %}
       <a class="list-group-item" href="{% roundurl 'standings-speaker' current_round %}">
         {% if tournament.speakercategory_set.all.count > 0 %}
           <i data-feather="user"></i>{% trans "All Speakers" %}

@@ -1,6 +1,5 @@
 import logging
 
-from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.utils.text import slugify
@@ -33,14 +32,10 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
             preset_options.append(preset_class)
 
         preset_options.sort(key=lambda x: (x.show_in_list, x.name))
-        if not settings.LEAGUE:
-            return [p for p in preset_options if p.name != "WADL Options"]
-        else:
-            return preset_options
+        return preset_options
 
     def get_context_data(self, **kwargs):
         kwargs["presets"] = self.get_preset_options()
-        kwargs["show_leagues"] = settings.LEAGUE
         t = self.tournament
         if t.pref('teams_in_debate') == 'bp':
             if t.pref('ballots_per_debate_prelim') == 'per-adj' or \

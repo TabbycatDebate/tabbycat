@@ -73,12 +73,6 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team1).metrics['points'], 2)
         self.assertEqual(standings.get_standing(self.team2).metrics['points'], 0)
 
-    def test_points210(self):
-        generator = TeamStandingsGenerator(('points210',), ())
-        standings = generator.generate(self.tournament.team_set.all())
-        self.assertEqual(standings.get_standing(self.team1).metrics['points210'], 4)
-        self.assertEqual(standings.get_standing(self.team2).metrics['points210'], 2)
-
     def test_wins(self):
         generator = TeamStandingsGenerator(('wins',), ())
         standings = generator.generate(self.tournament.team_set.all())

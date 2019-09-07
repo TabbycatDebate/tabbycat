@@ -19,9 +19,6 @@ ENABLE_DEBUG_TOOLBAR = False # Must default to false
 DISABLE_SENTRY = bool(int(os.environ['DISABLE_SENTRY'])) if 'DISABLE_SENTRY' in os.environ else DEBUG
 SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
-# Hide league-related configuration options unless explicitly enabled
-LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
-
 # ==============================================================================
 # Version
 # ==============================================================================
@@ -89,7 +86,7 @@ TABBYCAT_APPS = (
     'availability',
     'breakqual',
     'checkins',
-    'divisions',
+    'divisions', # obsolete
     'draw',
     'motions',
     'options',

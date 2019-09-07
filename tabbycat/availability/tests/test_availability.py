@@ -27,18 +27,7 @@ class TestAvailability(BaseMinimalTournamentTestCase):
 
     def test_activate_all(self):
         Adjudicator.objects.create(institution=Institution.objects.get(code="INS0"), name="Unattached")
-        self.tournament.preferences['league_options__share_adjs'] = False
-        self.tournament.preferences['league_options__share_venues'] = False
         activate_all(self.round)
         self.assertEqual(8, self.round.active_adjudicators.count())
         self.assertEqual(12, self.round.active_teams.count())
         self.assertEqual(8, self.round.active_venues.count())
-
-    def test_activate_relevant(self):
-        Adjudicator.objects.create(institution=Institution.objects.get(code="INS0"), name="Unattached")
-        self.tournament.preferences['league_options__share_adjs'] = True
-        self.tournament.preferences['league_options__share_venues'] = True
-        activate_all(self.round)
-        self.assertEqual(9, self.round.active_adjudicators.count())
-        self.assertEqual(12, self.round.active_teams.count())
-        self.assertEqual(16, self.round.active_venues.count())

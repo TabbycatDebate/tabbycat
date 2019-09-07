@@ -180,10 +180,7 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
         # Show relevant venue constraints; not all venue constraints
         q = Q(adjudicator__isnull=False, adjudicator__tournament=self.tournament)
         q |= Q(team__isnull=False, team__tournament=self.tournament)
-        q |= Q(division__isnull=False, division__tournament=self.tournament)
         q |= Q(institution__isnull=False)
-        if self.tournament.pref('share_adjs'):
-            q |= Q(adjudicator__isnull=False, adjudicator__tournament__isnull=True)
 
         return VenueConstraint.objects.filter(q)
 
@@ -200,9 +197,6 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
 
         institutions = Institution.objects.values('id', 'name')
         options.extend([(i['id'], _('%s (Institution)') % i['name']) for i in institutions])
-
-        divisions = self.tournament.division_set.values('id', 'name')
-        options.extend([(d['id'], _('%s (Division)') % d['name']) for d in divisions])
 
         return sorted(options, key=lambda x: x[1])
 

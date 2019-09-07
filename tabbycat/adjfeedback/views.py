@@ -43,10 +43,7 @@ class BaseFeedbackOverview(TournamentMixin, VueTableTemplateView):
     def get_adjudicators(self):
         if not hasattr(self, '_adjudicators'):
             t = self.tournament
-            if t.pref('share_adjs'):
-                self._adjudicators = Adjudicator.objects.filter(Q(tournament=t) | Q(tournament__isnull=True))
-            else:
-                self._adjudicators = Adjudicator.objects.filter(tournament=t)
+            self._adjudicators = Adjudicator.objects.filter(tournament=t)
             populate_feedback_scores(self._adjudicators)
         return self._adjudicators
 
@@ -137,8 +134,6 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
         table.add_score_variance_columns(adjudicators)
         table.add_feedback_graphs(adjudicators)
         table.add_feedback_link_columns(adjudicators)
-        if self.tournament.pref('enable_adj_notes'):
-            table.add_feedback_note_columns(adjudicators)
         return table
 
 
@@ -379,16 +374,10 @@ class BaseAddFeedbackIndexView(TournamentMixin, VueTableTemplateView):
                 'tooltip': _("Institution"),
             }, [team.institution.code if team.institution else TabbycatTableBuilder.BLANK_TEXT for team in tournament.team_set.all()])
 
-        if tournament.pref('share_adjs'):
-            adjudicators = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True))
-        else:
-            adjudicators = tournament.adjudicator_set.all()
+        adjudicators = tournament.adjudicator_set.all()
 
         adjs_table = TabbycatTableBuilder(view=self, sort_key="adjudicator", title=_("An Adjudicator"))
-        if tournament.pref('share_adjs'):
-            adjudicators = Adjudicator.objects.filter(Q(tournament=tournament) | Q(tournament__isnull=True))
-        else:
-            adjudicators = tournament.adjudicator_set.all()
+        adjudicators = tournament.adjudicator_set.all()
 
         add_link_data = [{
             'text': adj.name,
@@ -676,20 +665,6 @@ class SetAdjudicatorBreakingStatusView(AdministratorMixin, TournamentMixin, LogA
         adjudicator.breaking = posted_info['breaking']
         adjudicator.save()
         return JsonResponse(json.dumps(True), safe=False)
-
-
-class SetAdjudicatorNoteView(BaseAdjudicatorActionView):
-
-    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATOR_NOTE_SET
-
-    def modify_adjudicator(self, request, adjudicator):
-        try:
-            note = str(request.POST["note"])
-        except ValueError as e:
-            raise AdjudicatorActionError(_("Whoops! There was an error interpreting that string: %s") % str(e))
-
-        adjudicator.notes = note
-        adjudicator.save()
 
 
 class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
