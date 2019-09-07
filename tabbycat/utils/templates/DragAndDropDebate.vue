@@ -1,15 +1,13 @@
 <template>
   <div class="d-flex border-bottom bg-white">
     <slot name="bracket">
-      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right">
-        <div class="align-self-center flex-fill text-center"
-             data-toggle="tooltip" title="The debate's bracket">
-          {{ debateOrPanel.bracket }}
-        </div>
+      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right"
+           data-toggle="tooltip" :title="gettext(`The debate's bracket`)">
+        <div class="align-self-center flex-fill text-center" v-text="debateOrPanel.bracket"></div>
       </div>
-      <div v-else class="flex-2 flex-truncate d-flex border-right"><!-- Can be wide; needs flex-2-->
-        <div class="align-self-center flex-fill text-center"
-             data-toggle="tooltip" title="The bracket range of the hypothetical debate">
+      <div v-else class="flex-2 flex-truncate d-flex border-right"
+           data-toggle="tooltip" :title="gettext(`The bracket range of the hypothetical debate`)">
+        <div class="align-self-center flex-fill text-center">
           <span v-if="debateOrPanel.bracket_min !== debateOrPanel.bracket_max">
             {{ debateOrPanel.bracket_min }}<span class="text-muted">-</span>{{ debateOrPanel.bracket_max }}
           </span>
@@ -18,14 +16,21 @@
       </div>
     </slot>
     <slot name="liveness">
-      <div class="flex-1-25 flex-truncate border-right d-flex"
-           data-toggle="tooltip" title="The total number of live break categories across all teams">
-        <div class="align-self-center flex-fill text-center">{{ liveness }}</div>
+      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate border-right d-flex"
+           data-toggle="tooltip" :title="gettext(`The total number of live break categories across
+              all teams`)">
+        <div class="align-self-center flex-fill text-center" v-text="liveness">
+        </div>
+      </div>
+      <div v-else class="flex-1-25 flex-truncate border-right d-flex"
+           data-toggle="tooltip" :title="gettext(`The estimated total number of live break
+              categories across all teams of the hypothetical debate`)">
+        <div class="align-self-center flex-fill text-center" v-text="liveness"></div>
       </div>
     </slot>
     <slot name="importance">
       <div class="flex-1-25 flex-truncate border-right d-flex"
-           data-toggle="tooltip" title="This debate's priority">
+           data-toggle="tooltip" :title="gettext(`This debate's priority`)">
         <div class="align-self-center flex-fill text-center">{{ debateOrPanel.importance }}</div>
       </div>
     </slot>

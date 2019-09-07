@@ -603,3 +603,23 @@ msgstr ""
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
 msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:5
+msgid "The debate's bracket"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:9
+msgid "The bracket range of the hypothetical debate"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:20
+msgid "The total number of live break categories across all teams"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:26
+msgid "The estimated total number of live break categories across all teams of the hypothetical debate"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:33
+msgid "This debate's priority"
+msgstr ""
