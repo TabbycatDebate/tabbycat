@@ -9,8 +9,8 @@ django-formtools==2.1                   # Form wizards
 django-ipware==2.1.0                    # IP Address logging
 django-jet==1.0.8                       # Admin Backend
 django-gfklookupwidget==1.0.7           # Replaces object_id field with a search link
-djangorestframework==3.9.4              # For serialising objects
-django-polymorphic==2.0.3               # Permits model polymorphism
+djangorestframework==3.10.2             # For serialising objects
+django-polymorphic==2.1.2               # Permits model polymorphism
 django-split-settings==0.3.0            # Modularise settings files
 django-statici18n==1.8.3                # Compile translations files as static file
 django-summernote==0.8.11.4             # WYSIWYG editor
@@ -25,7 +25,7 @@ channels==2.2.0                         # Channels; also includes the Daphne ser
 channels_redis==2.4.0                   # Channels Layer
 
 # Misc
-ipython==7.6.*
+ipython==7.8.*
 redis==3.3.8
 qrcode==6.1                             # QR codes for printed private URL sheets
-html2text==2018.1.9                     # Compatibility with plain-text email clients
+html2text==2019.8.11                    # Compatibility with plain-text email clients
