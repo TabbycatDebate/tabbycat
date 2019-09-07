@@ -89,6 +89,10 @@ msgstr ""
 msgid "Click to undo a check-in"
 msgstr ""
 
+#: draw/templates/EditDebateTeamsContainer.vue:
+msgid "Click to undo a check-in"
+msgstr ""
+
 #: checkins/templates/PeopleStatusMixin.vue:
 msgid "%1, a %2 of no institutional affiliation with identifier of %3"
 msgstr ""

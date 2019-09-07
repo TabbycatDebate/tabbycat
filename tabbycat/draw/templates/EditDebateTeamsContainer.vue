@@ -6,12 +6,12 @@
 
     <drag-and-drop-actions slot="actions" :count="debatesOrPanelsCount"></drag-and-drop-actions>
 
-    <template slot="extra-messages">
+   <template slot="extra-messages">
       <div id="alertdiv" class="alert alert-warning show">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">×</span></button>
-        <span v-text="gettext(`This page will only save changes to debate teams if all positions
-        in a debate have a team. Ensure all gaps are filled before leaving this page.`)"></span>
+        <span v-text="gettext(`Note: You should almost certainly not being using this page once results
+                               have been released. Be sure to fill all gaps before leaving.`)"></span>
       </div>
     </template>
 
