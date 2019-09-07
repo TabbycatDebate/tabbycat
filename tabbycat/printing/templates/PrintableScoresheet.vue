@@ -2,17 +2,17 @@
   <div class="db-flex-column db-flex-item-1">
 
     <section class="db-margins-m db-flex-row db-flex-item-7">
-      <printable-team-scores :dt="ballot.debateTeams[0]" :round-info="roundInfo">
+      <printable-team-scores :dt="ballot.debateTeams[0]" :round-info="roundInfo" :ordinals="ordinals">
       </printable-team-scores>
       <div class="db-item-gutter"></div>
-      <printable-team-scores :dt="ballot.debateTeams[1]" :round-info="roundInfo">
+      <printable-team-scores :dt="ballot.debateTeams[1]" :round-info="roundInfo" :ordinals="ordinals">
       </printable-team-scores>
     </section>
     <section class="db-margins-m db-flex-row db-flex-item-7" v-if="roundInfo.isBP">
-      <printable-team-scores :dt="ballot.debateTeams[2]" :round-info="roundInfo">
+      <printable-team-scores :dt="ballot.debateTeams[2]" :round-info="roundInfo" :ordinals="ordinals">
       </printable-team-scores>
       <div class="db-item-gutter"></div>
-      <printable-team-scores :dt="ballot.debateTeams[3]" :round-info="roundInfo">
+      <printable-team-scores :dt="ballot.debateTeams[3]" :round-info="roundInfo" :ordinals="ordinals">
       </printable-team-scores>
     </section>
 
@@ -49,7 +49,7 @@
 import PrintableTeamScores from './PrintableTeamScores.vue'
 
 export default {
-  props: ['ballot', 'roundInfo'],
+  props: ['ballot', 'roundInfo', 'ordinals'],
   components: { PrintableTeamScores },
 }
 </script>

@@ -30,16 +30,7 @@
         <div class="db-flex-item-2 db-padding-horizontal text-secondary"
              v-text="tct('Circle the last digit of the %s\'s score:', [pos])"></div>
         <div class="db-flex-item-3 d-flex">
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('0')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('1')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('2')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('3')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('4')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('5')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('6')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('7')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('8')"></span></div>
-          <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('9')"></span></div>
+          <div class="flex-fill text-center" v-for="(n, i) in 10"><span class="db-circle">{{ i }}</span></div>
         </div>
       </div>
 
@@ -49,17 +40,8 @@
       <template v-if="roundInfo.isBP">
         <div class="db-flex-item-2 align-items-center d-flex small db-padding-horizontal" v-text="gettext('Circle Rank:')"></div>
         <div class="db-flex-item-6 db-flex-row">
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace" v-text="gettext('1st')"></span>
-          </div>
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace" v-text="gettext('2nd')"></span>
-          </div>
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace" v-text="gettext('3rd')"></span>
-          </div>
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace" v-text="gettext('4th')"></span>
+          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center" v-for="ord in ordinals">
+            <span class="db-circle text-monospace" v-html="ord"></span>
           </div>
         </div>
         <div class="db-flex-item-1"><!-- Spacing --></div>
@@ -79,16 +61,7 @@
       <div class="db-flex-item-2 db-padding-horizontal text-secondary"
            v-text="gettext('Circle the last digit of the team\'s total:')"></div>
       <div class="db-flex-item-3 d-flex">
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('0')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('1')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('2')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('3')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('4')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('5')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('6')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('7')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('8')"></span></div>
-        <div class="flex-fill text-center"><span class="db-circle" v-text="gettext('9')"></span></div>
+        <div class="flex-fill text-center" v-for="(n, i) in 10"><span class="db-circle">{{ i }}</span></div>
       </div>
     </div>
 
@@ -102,6 +75,7 @@ export default {
   props: {
     dt: Object,
     roundInfo: Object,
+    ordinals: Array,
   },
   computed: {
     team: function () {
