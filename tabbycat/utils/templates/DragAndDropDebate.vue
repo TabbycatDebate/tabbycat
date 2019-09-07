@@ -40,7 +40,9 @@
              v-for="side in sides" v-if="debateOrPanel.teams">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
                        :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
-          <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
+          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
+            No {{ side }} team
+          </div>
         </div>
       </div>
       <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
@@ -48,7 +50,9 @@
              v-for="side in sides" v-if="debateOrPanel.teams">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
                        :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
-          <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
+          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
+            No {{ side }} team
+          </div>
         </div>
       </div>
     </slot>
@@ -88,7 +92,8 @@ export default {
         let liveness = 0
         for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
           let team = keyAndEntry[1]
-          if (typeof team === 'object' && 'break_categories' in team) { // Team can be a number
+          // Team can be a number (ID) or null (e.g. when editing sides)
+          if (team !== null && typeof team === 'object' && 'break_categories' in team) {
             for (let bc of team.break_categories) {
               let category = this.highlights.break.options[bc]
               if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
