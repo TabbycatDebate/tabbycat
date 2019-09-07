@@ -8,11 +8,17 @@
 
     <template slot="debates">
       <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
-        <div slot="teams" class="flex-36 flex-truncate border-right d-flex flex-nowrap">
+
+        <!-- Hide for space — things get stretched in BP sides editing-->
+        <div slot="liveness"></div>
+        <div slot="importance"></div>
+
+        <div slot="teams" :class="[sides.count > 2 ? 'flex-36' : 'flex-52',
+                                   'flex-truncate border-right d-flex flex-nowrap']">
 
           <droppable-item v-for="side in sides" :handle-drop="moveTeam" :key="side"
                           :drop-context="{ 'assignment': debate.id, 'position': side }"
-                          class="flex-2 flex-truncate">
+                          class="flex-5 flex-truncate">
             <draggable-team v-if="debate.teams[side]" :item="allTeams[debate.teams[side]]" class="flex-fill"
                             :drag-payload="{ 'item': debate.teams[side], 'assignment': debate.id, 'position': side }">
             </draggable-team>
