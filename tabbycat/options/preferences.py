@@ -125,7 +125,7 @@ class AdjHistoryPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class PreformedPanelMismatchPenalty(IntegerPreference):
-    help_text = _("Penality applied by preformed panel auto-allocator for importance mismatch")
+    help_text = _("Penality applied by preformed panel auto-allocator for priority mismatch")
     verbose_name = _("Importance mismatch penalty")
     section = draw_rules
     name = 'preformed_panel_mismatch_penalty'

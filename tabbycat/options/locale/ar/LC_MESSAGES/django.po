@@ -148,7 +148,7 @@ msgstr "تعارض محكم-فريق"
 #, fuzzy
 #| msgid "Penalty applied by auto-allocator for adjudicator-team history"
 msgid ""
-"Penality applied by preformed panel auto-allocator for importance mismatch"
+"Penality applied by preformed panel auto-allocator for priority mismatch"
 msgstr "عقوبة يتم تطبيقها بواسطة المُخصّص التلقائي على سجل الفريق القضائي "
 
 #: options/preferences.py:129

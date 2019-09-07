@@ -146,7 +146,7 @@ msgstr "Pénalité d’histoire de juge"
 
 #: options/preferences.py:128
 msgid ""
-"Penality applied by preformed panel auto-allocator for importance mismatch"
+"Penality applied by preformed panel auto-allocator for priority mismatch"
 msgstr ""
 "Pénalité appliqué par l’allocation automatisée de jurys préformés pour un "
 "intrus d’importance"

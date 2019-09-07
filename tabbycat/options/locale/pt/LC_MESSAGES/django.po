@@ -135,7 +135,7 @@ msgstr ""
 
 #: options/preferences.py:128
 msgid ""
-"Penality applied by preformed panel auto-allocator for importance mismatch"
+"Penality applied by preformed panel auto-allocator for priority mismatch"
 msgstr ""
 
 #: options/preferences.py:129

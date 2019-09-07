@@ -150,7 +150,7 @@ msgstr "Precio de la historia juez-equipo "
 #, fuzzy
 #| msgid "Penalty applied by auto-allocator for adjudicator-team history"
 msgid ""
-"Penality applied by preformed panel auto-allocator for importance mismatch"
+"Penality applied by preformed panel auto-allocator for priority mismatch"
 msgstr "Precio aplicado por la auto-colocación por la historia juez-equipo  "
 
 #: options/preferences.py:129
