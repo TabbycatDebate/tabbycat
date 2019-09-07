@@ -78,7 +78,7 @@ export default {
     finishCheckIn: function (payload) {
       const checkin = payload.checkins[0]
       const substitutions = [checkin.time, checkin.identifier, checkin.owner_name]
-      const msg = this.tct('%s checked in %s: %s', substitutions)
+      const msg = this.tct('<span class="text-monospace">%s checked in %s:</span> %s', substitutions)
       $.fn.showAlert('success', msg, 0)
       this.playSound('finishedScanSound')
     },
