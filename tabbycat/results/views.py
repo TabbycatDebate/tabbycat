@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.db.models import Count, Q
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -597,7 +597,10 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         return debate
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        try:
+            self.object = self.get_object()
+        except self.model.DoesNotExist:
+            raise Http404("Debate does not exist")
 
         error = self.check_permissions()
         if error:
