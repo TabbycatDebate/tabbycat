@@ -240,16 +240,8 @@ msgstr ""
 msgid "Neg Veto"
 msgstr ""
 
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "1"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "2"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "3"
+#: printing/templates/PrintableDebateInfo.vue: printing/templates/PrintableTeamScores.vue:
+msgid "%1:"
 msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
@@ -292,12 +284,12 @@ msgstr ""
 msgid "Did %1 deliver the adjudication?"
 msgstr ""
 
-#: printing/templates/PrintableFeedback.vue:
-msgid "No, I am submitting feedback on:"
+#: printing/templates/PrintableFeedback.vue: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "Yes"
 msgstr ""
 
-#: printing/templates/PrintableFeedbackQuestion.vue: printing/templates/PrintableFeedback.vue:
-msgid "Yes"
+#: printing/templates/PrintableFeedback.vue:
+msgid "No, I am submitting feedback on:"
 msgstr ""
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
@@ -325,10 +317,6 @@ msgid "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:
-msgid "%1:"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
 msgid "Score:"
 msgstr ""
 
@@ -337,63 +325,7 @@ msgid "Circle the last digit of the %1's score:"
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:
-msgid "0"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "1"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "2"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "3"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "4"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "5"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "6"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "7"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "8"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "9"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
 msgid "Circle Rank:"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "1st"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "2nd"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "3rd"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "4th"
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:
@@ -570,4 +502,28 @@ msgstr ""
 
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:5
+msgid "The debate's bracket"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:9
+msgid "The bracket range of the hypothetical debate"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:20
+msgid "The total number of live break categories across all teams"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:26
+msgid "The estimated total number of live break categories across all teams of the hypothetical debate"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:33
+msgid "This debate's priority"
+msgstr ""
+
+#: draw/templates/InlineTeam.vue:41
+msgid "No code name set"
 msgstr ""

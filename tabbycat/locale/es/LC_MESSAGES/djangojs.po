@@ -1,22 +1,20 @@
-# Tabbycat translations, JavaScript strings
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
+"PO-Revision-Date: 2019-09-07 07:07\n"
+"Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
+"Last-Translator: philip_tc\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/djangojs.po\n"
 
 #: checkins/templates/CheckInScanContainer.vue:
 msgid "Scan Using Camera"
@@ -37,7 +35,7 @@ msgstr ""
 
 #: checkins/templates/CheckInStatusContainer.vue:
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #. Translators: %1: Option name
 #: checkins/templates/CheckInStatusContainer.vue:
@@ -132,10 +130,6 @@ msgstr ""
 msgid "Independent"
 msgstr ""
 
-#: checkins/templates/PeopleStatusMixin.vue:
-msgid "Unaffiliated"
-msgstr ""
-
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "%1 (%2) with identifier of %3"
 msgstr ""
@@ -193,14 +187,17 @@ msgid "Chair for Panel of %1"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
+#: printing/templates/PrintableDebateInfo.vue:
 msgid "Solo Chair"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
+#: printing/templates/PrintableDebateInfo.vue:
 msgid "Panellist"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
+#: printing/templates/PrintableDebateInfo.vue:
 msgid "Trainee"
 msgstr ""
 
@@ -244,19 +241,7 @@ msgstr ""
 msgid "Neg Veto"
 msgstr ""
 
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "1"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "2"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "3"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
+#: printing/templates/PrintableDebateInfo.vue: printing/templates/PrintableTeamScores.vue:
 msgid "%1:"
 msgstr ""
 
@@ -269,6 +254,7 @@ msgid "tab check"
 msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
+#: checkins/templates/PeopleStatusMixin.vue:
 msgid "Unaffiliated"
 msgstr ""
 
@@ -289,18 +275,6 @@ msgid "Chair"
 msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
-msgid "Solo Chair"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "Panellist"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "Trainee"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
 msgid "%1 (%2, %3)"
 msgstr ""
 
@@ -317,16 +291,13 @@ msgid "Did %1 deliver the adjudication?"
 msgstr ""
 
 #: printing/templates/PrintableFeedback.vue:
-msgid "Yes"
-msgstr ""
-
-#: printing/templates/PrintableFeedback.vue:
 msgid "No, I am submitting feedback on:"
 msgstr ""
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
+#: printing/templates/PrintableFeedback.vue:
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
 msgid "Unsure"
@@ -353,10 +324,6 @@ msgid "IMPORTANT: Check and explicitly note if a speaker gives multiple speeches
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:
-msgid "%1:"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
 msgid "Score:"
 msgstr ""
 
@@ -365,63 +332,7 @@ msgid "Circle the last digit of the %1's score:"
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:
-msgid "0"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "1"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "2"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "3"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "4"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "5"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "6"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "7"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "8"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "9"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
 msgid "Circle Rank:"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "1st"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "2nd"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "3rd"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "4th"
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:
@@ -441,9 +352,7 @@ msgid "Set All Breaking as Available"
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:36
-msgid ""
-"Set all the availabilities to exactly match what they were in the previous "
-"round."
+msgid "Set all the availabilities to exactly match what they were in the previous round."
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:37
@@ -459,9 +368,7 @@ msgid "Match Check-Ins"
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue
-msgid ""
-"Set people as available only if they have a check-in and are currently "
-"unavailable — i.e. it will not overwrite any existing availabilities."
+msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
 msgstr ""
 
 #: templates/tables/CheckboxTables.vue:47
@@ -566,7 +473,7 @@ msgstr ""
 
 #: results/templates/ResultsStats.vue:36
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmado"
 
 #: results/templates/ResultsStats.vue:40
 msgid "Ballot Statuses"
@@ -603,3 +510,4 @@ msgstr ""
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
 msgstr ""
+

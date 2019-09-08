@@ -1,5 +1,7 @@
 import datetime
 import logging
+import random
+import string
 
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,6 +11,12 @@ from django.utils.translation import gettext as _
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
 logger = logging.getLogger(__name__)
+
+
+def generate_identifier(length=6):
+    """Generates a random identifier and saves it to the database."""
+    chars = string.ascii_uppercase + string.digits
+    return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
 
 
 IDENTIFIER_CLASSES = {

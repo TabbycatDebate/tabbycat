@@ -12,7 +12,8 @@
     {
       "plan": "heroku-redis:hobby-dev",
       "options": {
-        "maxmemory-policy": "allkeys-lru"
+        "maxmemory-policy": "allkeys-lru",
+        "timeout": 1800
       }
     }
   ],

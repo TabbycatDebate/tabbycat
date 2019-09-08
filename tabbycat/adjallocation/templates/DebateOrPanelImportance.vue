@@ -23,15 +23,15 @@ export default {
   computed: {
     importanceDescription: function () {
       if (this.importance === 2) {
-        return 'V.I.P.'
+        return 'V.I.P. Priority'
       } else if (this.importance === 1) {
-        return 'Important'
+        return 'Important Priority'
       } else if (this.importance === 0) {
-        return 'Neutral'
+        return 'Neutral Priority'
       } else if (this.importance === -1) {
-        return 'Unimportant'
+        return 'Unimportant Priority'
       } else if (this.importance === -2) {
-        return '¯\\_(ツ)_/¯'
+        return '¯\\_(ツ)_/¯ Priority'
       }
       return null
     },

@@ -1,15 +1,13 @@
 <template>
   <div class="d-flex border-bottom bg-white">
     <slot name="bracket">
-      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right">
-        <div class="align-self-center flex-fill text-center"
-             data-toggle="tooltip" title="The debate's bracket">
-          {{ debateOrPanel.bracket }}
-        </div>
+      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate d-flex border-right"
+           data-toggle="tooltip" :title="gettext(`The debate's bracket`)">
+        <div class="align-self-center flex-fill text-center" v-text="debateOrPanel.bracket"></div>
       </div>
-      <div v-else class="flex-2 flex-truncate d-flex border-right"><!-- Can be wide; needs flex-2-->
-        <div class="align-self-center flex-fill text-center"
-             data-toggle="tooltip" title="The bracket range of the hypothetical debate">
+      <div v-else class="flex-2 flex-truncate d-flex border-right"
+           data-toggle="tooltip" :title="gettext(`The bracket range of the hypothetical debate`)">
+        <div class="align-self-center flex-fill text-center">
           <span v-if="debateOrPanel.bracket_min !== debateOrPanel.bracket_max">
             {{ debateOrPanel.bracket_min }}<span class="text-muted">-</span>{{ debateOrPanel.bracket_max }}
           </span>
@@ -18,14 +16,21 @@
       </div>
     </slot>
     <slot name="liveness">
-      <div class="flex-1-25 flex-truncate border-right d-flex"
-           data-toggle="tooltip" title="The total number of live break categories across all teams">
-        <div class="align-self-center flex-fill text-center">{{ liveness }}</div>
+      <div v-if="debateOrPanel.bracket >= 0" class="flex-1-25 flex-truncate border-right d-flex"
+           data-toggle="tooltip" :title="gettext(`The total number of live break categories across
+              all teams`)">
+        <div class="align-self-center flex-fill text-center" v-text="liveness">
+        </div>
+      </div>
+      <div v-else class="flex-1-25 flex-truncate border-right d-flex"
+           data-toggle="tooltip" :title="gettext(`The estimated total number of live break
+              categories across all teams of the hypothetical debate`)">
+        <div class="align-self-center flex-fill text-center" v-text="liveness"></div>
       </div>
     </slot>
     <slot name="importance">
       <div class="flex-1-25 flex-truncate border-right d-flex"
-           data-toggle="tooltip" title="This debate's priority">
+           data-toggle="tooltip" :title="gettext(`This debate's priority`)">
         <div class="align-self-center flex-fill text-center">{{ debateOrPanel.importance }}</div>
       </div>
     </slot>
@@ -40,7 +45,9 @@
              v-for="side in sides" v-if="debateOrPanel.teams">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
                        :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
-          <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
+          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
+            No {{ side }} team
+          </div>
         </div>
       </div>
       <div class="d-flex flex-column flex-6 flex-truncate" v-if="sides.length === 2">
@@ -48,7 +55,9 @@
              v-for="side in sides" v-if="debateOrPanel.teams">
           <inline-team v-if="debateOrPanel.teams[side]" :debate-id="debateOrPanel.id"
                        :is-elimination="isElimination" :team="debateOrPanel.teams[side]"></inline-team>
-          <span v-else class="text-danger text-uppercase">no {{ side }} team</span>
+          <div v-else class="bg-danger small text-white text-uppercase px-2 py-1 flex-fill d-flex align-items-center">
+            No {{ side }} team
+          </div>
         </div>
       </div>
     </slot>
@@ -88,7 +97,8 @@ export default {
         let liveness = 0
         for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
           let team = keyAndEntry[1]
-          if (typeof team === 'object' && 'break_categories' in team) { // Team can be a number
+          // Team can be a number (ID) or null (e.g. when editing sides)
+          if (team !== null && typeof team === 'object' && 'break_categories' in team) {
             for (let bc of team.break_categories) {
               let category = this.highlights.break.options[bc]
               if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
