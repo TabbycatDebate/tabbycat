@@ -614,6 +614,7 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
 
 class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
+    template_name = 'privateurl_ballot_set.html'
     slug_url_kwarg = 'url_key'
     slug_field = 'debateadjudicator__adjudicator__url_key'
 
@@ -630,7 +631,11 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         kwargs['motion'] = ballot.motion
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
-        kwargs['url_key'] = self.kwargs.get('url_key')
+
+        url_key = self.kwargs.get('url_key')
+        kwargs['url_key'] = url_key
+        kwargs['adjudicator'] = Adjudicator.objects.get(url_key=url_key)
+
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
