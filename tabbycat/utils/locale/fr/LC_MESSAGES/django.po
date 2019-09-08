@@ -1,22 +1,20 @@
-# Tabbycat translations, utils module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2018-10-30 20:38-0400\n"
-"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
-"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2019-07-30 00:12\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
 
 #: utils/forms.py:25
 msgid "E-mail address"
@@ -40,7 +38,7 @@ msgstr "président"
 
 #: utils/tables.py:160
 msgid "panellist"
-msgstr "panéliste"
+msgstr "panelliste"
 
 #: utils/tables.py:161
 msgid "trainee"
@@ -109,7 +107,7 @@ msgstr "%(team)s avance"
 #: utils/tables.py:336
 #, python-format
 msgid "%(team)s was eliminated"
-msgstr "%(team)s a été eliminé"
+msgstr "%(team)s a été éliminé"
 
 #: utils/tables.py:354
 #, python-format
@@ -220,7 +218,7 @@ msgstr "Juge indépendant"
 
 #: utils/tables.py:526
 msgid "Always Trainee"
-msgstr "Toujours stagière"
+msgstr "Toujours Stagiaire"
 
 #: utils/tables.py:591
 msgid "Debate Adjudicators"
@@ -305,23 +303,19 @@ msgstr "Conflits/signalements"
 
 #: utils/tables.py:860
 msgid "The ballot you submitted"
-msgstr ""
+msgstr "La feuille de jugement que vous avez soumis"
 
 #: utils/tables.py:864
 msgid "View/Edit Ballot"
 msgstr "Afficher/Modifier feuille"
 
 #: utils/tables.py:873
-#, fuzzy
-#| msgid "Ballot"
 msgid "No ballot"
-msgstr "Feuille"
+msgstr "Aucune feuille"
 
 #: utils/tables.py:875
-#, fuzzy
-#| msgid "Eliminated"
 msgid "Elimination"
-msgstr "Éliminé"
+msgstr "Élimination"
 
 #: utils/tables.py:878 utils/tables.py:890
 msgid "View Ballot"
@@ -342,8 +336,7 @@ msgstr "Côté"
 
 #: utils/tables.py:943
 msgid "Team iron-manned this round and the last."
-msgstr ""
-"Équipe avait un orateur-seul pendant les joutes actuelle et précédente."
+msgstr "Équipe avait un orateur-seul pendant les joutes actuelle et précédente."
 
 #: utils/tables.py:946
 msgid "Team iron-manned this round."
@@ -360,46 +353,12 @@ msgstr "Équipe %(num)d"
 
 #: utils/templates/database_limit_warning.html:9
 #, python-format
-msgid ""
-"You're currently using %(nrows)s row in your database. If you haven't "
-"already upgraded your Heroku database to a paid tier, it's limited to a "
-"maximum of 10,000 rows. As you're close to this limit, you should "
-"<strong>not create new tournaments</strong> on this site unless and until "
-"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
-"postgres-databases\">upgraded your database</a> to a paid tier."
-msgid_plural ""
-"You're currently using %(nrows)s rows in your database. If you haven't "
-"already upgraded your Heroku database to a paid tier, it's limited to a "
-"maximum of 10,000 rows. As you're close to this limit, you should "
-"<strong>not create new tournaments</strong> on this site unless and until "
-"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
-"postgres-databases\">upgraded your database</a> to a paid tier."
-msgstr[0] ""
-"Vous utilisez actuellement %(nrows)s rangée dans votre base de données. Si "
-"vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le "
-"nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette "
-"limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur "
-"ce site et jusqu’à temps que vous avez <a href=\"https://devcenter.heroku."
-"com/articles/upgrading-heroku-postgres-databases\">mis à niveau votre base "
-"de données</a> à un tier payant."
-msgstr[1] ""
-"Vous utilisez actuellement %(nrows)s rangées dans votre base de données. Si "
-"vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le "
-"nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette "
-"limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur "
-"ce site et jusqu’à temps que vous avez <a href=« https://devcenter.heroku."
-"com/articles/upgrading-heroku-postgres-databases »>mis à niveau votre base "
-"de données</a> à un tier payant."
+msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgstr[0] "Vous utilisez actuellement %(nrows)s rangée dans votre base de données. Si vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur ce site et jusqu’à temps que vous avez <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">mis à niveau votre base de données</a> à un tier payant."
+msgstr[1] "Vous utilisez actuellement %(nrows)s rangées dans votre base de données. Si vous n’avez pas encore mis à niveau votre compte Heroku à un tier payant, le nombre de rangées est limité à 10 000 rangées. Comme vous approchez cette limite, vous ne devriez <strong>pas créer de nouveaux tournois</strong> sur ce site et jusqu’à temps que vous avez <a href=« https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases »>mis à niveau votre base de données</a> à un tier payant."
 
 #: utils/views.py:45
 msgid "Whoops! You're not meant to type that URL into your browser."
 msgstr "Oups ! Vous n’étiez pas sensé taper cet URL dans votre navigateur."
 
-#~ msgid "View %(adj)s's Adjudication Record"
-#~ msgstr "Voir le dossier de jugement de %(adj)s"
-
-#~ msgid "Speakers in <strong>%(opp)s</strong>: %(speakers)s"
-#~ msgstr "Orateurs dans <strong>%(opp)s</strong> : %(speakers)s"
-
-#~ msgid "Adjs"
-#~ msgstr "Juges"
