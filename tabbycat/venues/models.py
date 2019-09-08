@@ -1,7 +1,6 @@
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
 
 
@@ -43,14 +42,6 @@ class Venue(models.Model):
             suffixes.sort()
             display_name += " " + ", ".join(suffixes)
         return display_name
-
-    def serialize(self):
-        venue = {'id': self.id, 'name': self.name, 'display_name': self.display_name,
-                 'priority': self.priority, 'locked': False}
-        venue['categories'] = [{
-            'id': vc.id, 'name': vc.name, 'description': vc.description
-        } for vc in self.venuecategory_set.all()]
-        return venue
 
     def __str__(self):
         return self.display_name
@@ -140,15 +131,3 @@ class VenueConstraint(models.Model):
 
     def __str__(self):
         return "%s for %s [%s]" % (self.subject, self.category, self.priority)
-
-    def serialize(self):
-        constraint = model_to_dict(self)
-        if hasattr(self, 'subject_content_type'):
-            constraint['subject_type'] = self.subject_content_type.name
-            if self.subject_content_type.name == 'team':
-                constraint['subject_name'] = self.subject.short_name
-            elif self.subject_content_type.name == 'adjudicator':
-                constraint['subject_name'] = self.subject.name
-            elif self.subject_content_type.name == 'institution':
-                constraint['subject_name'] = self.subject.code
-        return constraint

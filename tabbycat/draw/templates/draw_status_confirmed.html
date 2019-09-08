@@ -32,15 +32,6 @@
 
             {% endif %} {# active_adjs < debates_in_round #}
 
-            {% roundurl 'legacy-adjallocation-round-edit' as url %}
-            {% if active_adjs < debates_in_round or no_chair > 0 or pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
-              {% trans "Allocate adjudicators (legacy interface)" as title %}
-              {% include "components/item-action.html" with text=title type="info" %}
-            {% else %}
-              {% trans "Edit adjudicator allocation (legacy interface)" as title %}
-              {% include "components/item-action.html" with text=title type="info" %}
-            {% endif %}
-
             {% roundurl 'edit-debate-adjudicators' as url %}
             {% if active_adjs < debates_in_round or no_chair > 0 or pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
               {% trans "Allocate adjudicators" as title %}
@@ -65,15 +56,6 @@
         <div class="list-group list-group-flush">
 
           {% include "draw_alerts_venues.html" %}
-
-          {% roundurl 'legacy-venues-edit' round as url %}
-          {% if round.num_debates_without_venue > 0 %}
-            {% trans "Allocate venues (legacy interface)" as title %}
-            {% include "components/item-action.html" with text=title type="info" %}
-          {% else %}
-            {% trans "Edit venue allocation (legacy interface)" as title %}
-            {% include "components/item-action.html" with text=title type="info" %}
-          {% endif %}
 
           {% roundurl 'edit-debate-venues' round as url %}
           {% if round.num_debates_without_venue > 0 %}

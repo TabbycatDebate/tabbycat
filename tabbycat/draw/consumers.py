@@ -143,7 +143,7 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
 
         # if len(teams) != len(posted_debateteams):
         #     # TODO: raise error
-        #     # raise BadJsonRequestError("Not all teams specified are associated with the tournament")
+        #     # e.g. "Not all teams specified are associated with the tournament"
         #     pass
 
         # Update other DebateTeam objects
