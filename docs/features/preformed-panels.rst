@@ -23,14 +23,14 @@ Initially, the preformed panels page will have no panels available. The **Create
 
 .. note:: Like the normal adjudicator allocation interface, the preformed panel interfaces will indicate when an adjudicator has not been marked as available. If using preformed panels, you may want to set adjudicator availability earlier than you would otherwise.
 
-Step 2: Assign prioritys to Preformed Panels
-==============================================
+Step 2: Assign Priorities to Preformed Panels
+=============================================
 
-By default the priority slider for all preformed panels is in the neutral position. You can use the "Prioritise" button in the top left to assign each preformed panel an priority value automatically based upon their brackets or liveness. Before or after this step you can alter the prioritys as normal — even after you have allocated adjudicators.
+By default the priority slider for all preformed panels is in the neutral position. You can use the "Prioritise" button in the top left to assign each preformed panel an priority value automatically based upon their brackets or liveness. Before or after this step you can alter the priorities as normal — even after you have allocated adjudicators.
 
-It is, important, to remember to assign a range of prioritys to the panels. Without distinct priority values, the application of your preformed panels to the actual draw will be essentially random. If allocating prioritys manually, it is a good idea to keep a relatively even distribution of preformed panel prioritys — use the range!
+It is, important, to remember to assign a range of priorities to the panels. Without distinct priority values, the application of your preformed panels to the actual draw will be essentially random. If allocating priorities manually, it is a good idea to keep a relatively even distribution of preformed panel priorities — use the range!
 
-.. note:: In Round 1, each debate has a liveness and bracket of 0. If you are using preformed panels in this instance you may need to manually-differentiate their prioritys.
+.. note:: In Round 1, each debate has a liveness and bracket of 0. If you are using preformed panels in this instance you may need to manually-differentiate their priorities.
 
 Step 3: Allocate Adjudicators to Preformed Panels
 =================================================
@@ -46,10 +46,10 @@ Step 4: Create the Draw
 
 Proceed with the creation of the draw as per normal. Open up the normal adjudicator allocation page for that round.
 
-Step 5: Assign prioritys to the Debates
-=========================================
+Step 5: Assign Priorities to the Debates
+========================================
 
-When allocating preformed panels, the system uses priority is the interface between the preformed panels and the actual debates. It is thus crucial that you assign prioritys to the debates in the actual draw using automatic prioritisation or the manual sliders. Because the automatic prioritiser does not employ the highest priority value, it is worth having a look at the draw and seeing if any debates justify this before proceeding.
+When allocating preformed panels, the system uses priority is the interface between the preformed panels and the actual debates. It is thus crucial that you assign priorities to the debates in the actual draw using automatic prioritisation or the manual sliders. Because the automatic prioritiser does not employ the highest priority value, it is worth having a look at the draw and seeing if any debates justify this before proceeding.
 
 Step 6: Allocate Preformed Panels to Debates
 ============================================
