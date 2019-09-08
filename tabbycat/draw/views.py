@@ -356,6 +356,7 @@ class AdminDrawUtiltiesMixin:
         data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
         data['active_adjs'] = self.round.active_adjudicators.count()
         data['debates_in_round'] = self.round.debate_set.count()
+        data['preformed_panels_in_round'] = self.round.preformedpanel_set.count()
         if hasattr(self, 'highlighted_cells_exist'):
             data['highlighted_cells_exist'] = self.highlighted_cells_exist
         return data

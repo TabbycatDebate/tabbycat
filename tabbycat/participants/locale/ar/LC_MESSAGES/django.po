@@ -1,29 +1,24 @@
-# Tabbycat translations, participants module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
-"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
-"Language: ar\n"
+"PO-Revision-Date: 2019-07-21 12:19\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Arabic\n"
+"Language: ar_SA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ar\n"
+"X-Crowdin-File: /develop/tabbycat/participants/locale/en/LC_MESSAGES/django.po\n"
 
 #: participants/admin.py:95
 #, python-format
-msgid ""
-"The team can't be in a break category of a different tournament. Please "
-"remove: %(category)s"
+msgid "The team can't be in a break category of a different tournament. Please remove: %(category)s"
 msgstr ""
 
 #: participants/admin.py:150
@@ -71,12 +66,8 @@ msgstr "المناطق "
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py:43
-msgid ""
-"The institution's full name, e.g., \"University of Cambridge\", \"Victoria "
-"University of Wellington\""
-msgstr ""
-"الاسم الكامل للمؤسسة ، على سبيل المثال ، \"جامعة كامبريدج\" ، \"جامعة "
-"فيكتوريا في ويلينغتون\""
+msgid "The institution's full name, e.g., \"University of Cambridge\", \"Victoria University of Wellington\""
+msgstr "الاسم الكامل للمؤسسة ، على سبيل المثال ، \"جامعة كامبريدج\" ، \"جامعة فيكتوريا في ويلينغتون\""
 
 #: participants/models.py:45
 msgid "code"
@@ -84,9 +75,7 @@ msgstr "الشفرة"
 
 #. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py:47
-msgid ""
-"What the institution is typically called for short, e.g., \"Cambridge\", "
-"\"Vic Wellington\""
+msgid "What the institution is typically called for short, e.g., \"Cambridge\", \"Vic Wellington\""
 msgstr "ما يُطلق عليه اسم المؤسسة عادةً ، على سبيل المثال \"كامبريدج\" "
 
 #: participants/models.py:59 participants/models.py:175
@@ -130,21 +119,15 @@ msgid "limit"
 msgstr "أقصى حد "
 
 #: participants/models.py:87
-msgid ""
-"At most this many speakers will be shown on the public tab for this "
-"category, or use 0 for no limit"
-msgstr ""
-"على الأكثر ، سيتم عرض العديد من المتحدثين في التاب العامة لهذه الفئة ، أو "
-"يستخدمون 0 كقيمة للاشخاص الذي ليس لهم حدود"
+msgid "At most this many speakers will be shown on the public tab for this category, or use 0 for no limit"
+msgstr "على الأكثر ، سيتم عرض العديد من المتحدثين في التاب العامة لهذه الفئة ، أو يستخدمون 0 كقيمة للاشخاص الذي ليس لهم حدود"
 
 #: participants/models.py:89
 msgid "public"
 msgstr "عام"
 
 #: participants/models.py:90
-msgid ""
-"If checked, this category will be included in the speaker category tabs "
-"shown to the public"
+msgid "If checked, this category will be included in the speaker category tabs shown to the public"
 msgstr "اذا تم اختياره، سيتم إظهار هذه الفئة مع نتائج المتحدثين للعموم."
 
 #: participants/models.py:96
@@ -168,9 +151,7 @@ msgid "anonymous"
 msgstr "مستخدم مجهول"
 
 #: participants/models.py:116
-msgid ""
-"Anonymous persons will have their name and team redacted on public tab "
-"releases"
+msgid "Anonymous persons will have their name and team redacted on public tab releases"
 msgstr "سيتم تحديد أسماء وفريق المجهولين في إصدارات علامات التبويب العامة"
 
 #: participants/models.py:119
@@ -198,8 +179,7 @@ msgid "gender"
 msgstr "الجنس"
 
 #: participants/models.py:132
-msgid ""
-"Gender is displayed in the adjudicator allocation interface, and nowhere else"
+msgid "Gender is displayed in the adjudicator allocation interface, and nowhere else"
 msgstr "سيتم عرض الجنس في واجهة تخصيص الحكام"
 
 #: participants/models.py:134
@@ -207,11 +187,8 @@ msgid "pronoun"
 msgstr "ضمير "
 
 #: participants/models.py:135
-msgid ""
-"If printing ballots using Tabbycat, there is the option to pre-print pronouns"
-msgstr ""
-"في حالة طباعة بطاقات الاقتراع باستخدام Tabbycat ، هناك خيار للضمائر قبل "
-"الطباعة"
+msgid "If printing ballots using Tabbycat, there is the option to pre-print pronouns"
+msgstr "في حالة طباعة بطاقات الاقتراع باستخدام Tabbycat ، هناك خيار للضمائر قبل الطباعة"
 
 #: participants/models.py:138
 msgid "person"
@@ -226,23 +203,16 @@ msgid "full name/suffix"
 msgstr "الاسم بالكامل "
 
 #: participants/models.py:159
-msgid ""
-"Do not include institution name (see \"uses institutional prefix\" below)"
-msgstr ""
-"لا تقم بوضع اسم المنتخب (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل "
-"ذلك)"
+msgid "Do not include institution name (see \"uses institutional prefix\" below)"
+msgstr "لا تقم بوضع اسم المنتخب (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل ذلك)"
 
 #: participants/models.py:161
 msgid "short name/suffix"
 msgstr "اسم قصير"
 
 #: participants/models.py:162
-msgid ""
-"The name shown in the draw. Do not include institution name (see \"uses "
-"institutional prefix\" below)"
-msgstr ""
-"لا تقم بوضع اسم المنتخب (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل "
-"ذلك)"
+msgid "The name shown in the draw. Do not include institution name (see \"uses institutional prefix\" below)"
+msgstr "لا تقم بوضع اسم المنتخب (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل ذلك)"
 
 #: participants/models.py:164
 msgid "code name"
@@ -257,24 +227,16 @@ msgid "short name"
 msgstr "اسم قصير"
 
 #: participants/models.py:169
-msgid ""
-"The name shown in the draw, including institution name. (This is "
-"autogenerated.)"
-msgstr ""
-" اسم المنتخب الذي سيظهر في القرعة (قم باختيار \"وضع اسم الفريق مع اسم "
-"المنتخب ؟\" بدل ذلك)"
+msgid "The name shown in the draw, including institution name. (This is autogenerated.)"
+msgstr " اسم المنتخب الذي سيظهر في القرعة (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل ذلك)"
 
 #: participants/models.py:171
 msgid "long name"
 msgstr "الاسم الكامل "
 
 #: participants/models.py:172
-msgid ""
-"The full name of the team, including institution name. (This is "
-"autogenerated.)"
-msgstr ""
-"اسم الفريق الذي سيتظمن اسم المؤسسة (قم باختيار \"وضع اسم الفريق مع اسم "
-"المنتخب ؟\" بدل ذلك)"
+msgid "The full name of the team, including institution name. (This is autogenerated.)"
+msgstr "اسم الفريق الذي سيتظمن اسم المؤسسة (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل ذلك)"
 
 #: participants/models.py:179
 msgid "division"
@@ -285,8 +247,7 @@ msgid "Uses institutional prefix"
 msgstr "يستخدم البادئة المؤسسية"
 
 #: participants/models.py:182
-msgid ""
-"If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
+msgid "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
 msgstr "تنوية يمكنك تسمية فريق \"1\" من فكتوريا ليظهر \" فكتوريا 1 \" "
 
 #: participants/models.py:184
@@ -326,8 +287,7 @@ msgid "teams"
 msgstr "فرق"
 
 #: participants/models.py:323
-msgid ""
-"Teams must have an institution if they are using the institutional prefix."
+msgid "Teams must have an institution if they are using the institutional prefix."
 msgstr "يجب أن يكون لدى الفرق مؤسسة إذا كانت تستخدم البادئة المؤسسية."
 
 #: participants/models.py:325
@@ -335,8 +295,7 @@ msgid "Teams must have a full name if they don't use the institutional prefix."
 msgstr "يجب أن يكون للفرق اسم طويل إذا لم تستخدم البادئة المؤسسية."
 
 #: participants/models.py:327
-msgid ""
-"Teams must have a short name if they don't use the institutional prefix."
+msgid "Teams must have a short name if they don't use the institutional prefix."
 msgstr "يجب أن يكون للفرق اسم قصير إذا لم تستخدم البادئة المؤسسية."
 
 #: participants/models.py:359
@@ -348,10 +307,8 @@ msgid "speakers"
 msgstr "متحدثون "
 
 #: participants/models.py:384
-msgid ""
-"Adjudicators not assigned to any tournament can be shared between tournaments"
-msgstr ""
-"المحكمون الذين لم يتم تعيينهم في أي بطولة يمكن أن تكون مشتركة بين البطولات "
+msgid "Adjudicators not assigned to any tournament can be shared between tournaments"
+msgstr "المحكمون الذين لم يتم تعيينهم في أي بطولة يمكن أن تكون مشتركة بين البطولات "
 
 #: participants/models.py:386
 msgid "test score"
@@ -370,12 +327,8 @@ msgid "always trainee"
 msgstr "المتدربين"
 
 #: participants/models.py:400
-msgid ""
-"If checked, this adjudicator will never be auto-allocated a voting position, "
-"regardless of their score"
-msgstr ""
-"في حالة تحديده ، لن يتم تخصيص حق التصويت التلقائي لموضع التصويت ، بغض النظر "
-"عن درجاته"
+msgid "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
+msgstr "في حالة تحديده ، لن يتم تخصيص حق التصويت التلقائي لموضع التصويت ، بغض النظر عن درجاته"
 
 #: participants/models.py:402
 msgid "breaking"
@@ -420,16 +373,12 @@ msgid "About %(name)s"
 msgstr "عن %(name)s"
 
 #: participants/templates/adjudicator_registration_card.html:15
-#, fuzzy
-#| msgid "%(adj_name)s is an independent adjudicator."
 msgid "Independent adjudicator"
-msgstr "%(adj_name)sمحكم المناظرة"
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:18
-#, fuzzy
-#| msgid "%(adj_name)s is on the adjudication core."
 msgid "Member of the adjudication core"
-msgstr "%(adj_name)sمحكم المناظرة"
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:26
 #: participants/templates/team_registration_card.html:64
@@ -443,10 +392,8 @@ msgstr "منطقة "
 
 #: participants/templates/adjudicator_registration_card.html:39
 #: participants/templates/team_registration_card.html:77
-#, fuzzy
-#| msgid "institution conflicts"
 msgid "Institutional Conflicts:"
-msgstr "تعارضات (منتخب)"
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:41
 #: participants/templates/team_registration_card.html:79
@@ -464,13 +411,11 @@ msgstr ""
 #: participants/templates/team_registration_card.html:88
 #: participants/templates/team_registration_card.html:98
 msgid "None"
-msgstr ""
+msgstr "لا يوجد"
 
 #: participants/templates/adjudicator_registration_card.html:46
-#, fuzzy
-#| msgid "team conflicts"
 msgid "Team Conflicts:"
-msgstr "تعارضات (فريق)"
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:48
 #: participants/templates/adjudicator_registration_card.html:56
@@ -486,10 +431,8 @@ msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:53
 #: participants/templates/team_registration_card.html:84
-#, fuzzy
-#| msgid "Adjudicators"
 msgid "Adjudicator Conflicts:"
-msgstr "المحكمين"
+msgstr ""
 
 #: participants/templates/adjudicator_registration_card.html:67
 #: participants/templates/team_registration_card.html:94
@@ -497,95 +440,41 @@ msgid "Venue Constraints:"
 msgstr ""
 
 #: participants/templates/admin/participants/adjudicator/change_form.html:8
-msgid ""
-"<strong>Don't forget:</strong> If this adjudicator should be conflicted "
-"against their own institution, you should add this conflict <strong>now</"
-"strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, "
-"because the own-institution conflict is <strong>not</strong> automatically "
-"created when using this form."
-msgstr ""
-"<strong> لا تنسى</strong> إذا كان يجب أن يتعارض هذا الحكم ضد المؤسسة الخاصة "
-"به ، يجب عليك إضافة هذا التعارض <strong>الان</strong> في التاب <strong>تعارض-"
-"الحكم-- مؤسسة </strong> ، أعلاه ، لأن تعارض المؤسسة الخاصة مره <strong>أخرى</"
-"strong> يتم إنشاؤه تلقائيًا عند استخدام هذا النموذج."
+msgid "<strong>Don't forget:</strong> If this adjudicator should be conflicted against their own institution, you should add this conflict <strong>now</strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
+msgstr "<strong> لا تنسى</strong> إذا كان يجب أن يتعارض هذا الحكم ضد المؤسسة الخاصة به ، يجب عليك إضافة هذا التعارض <strong>الان</strong> في التاب <strong>تعارض-الحكم-- مؤسسة </strong> ، أعلاه ، لأن تعارض المؤسسة الخاصة مره <strong>أخرى</strong> يتم إنشاؤه تلقائيًا عند استخدام هذا النموذج."
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:7
 #, python-format
-msgid ""
-"<strong>Warning:</strong> If there are “debate team” objects in the above "
-"list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
-msgstr ""
-"<strong>تحذير </strong> اذا كان هناك \"فريق مناظرة\" فوق هذه القائمة<strong> "
-"من المحتمل عليك أن لا تحذف هذه المناظرة %(object_name)s</strong> "
+msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete this %(object_name)s</strong>."
+msgstr "<strong>تحذير </strong> اذا كان هناك \"فريق مناظرة\" فوق هذه القائمة<strong> من المحتمل عليك أن لا تحذف هذه المناظرة %(object_name)s</strong> "
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:13
 #, python-format
-msgid ""
-"<strong>Warning:</strong> If there are “debate team” objects in the above "
-"list, <strong>you probably shouldn't delete these %(objects_name)s</strong>."
-msgstr ""
-"<strong>تحذير </strong> اذا كان هناك \"فريق مناظرة\" فوق هذه القائمة<strong> "
-"من المحتمل عليك أن لا تحذف هذه المناظرة %(objects_name)s</strong> "
+msgid "<strong>Warning:</strong> If there are “debate team” objects in the above list, <strong>you probably shouldn't delete these %(objects_name)s</strong>."
+msgstr "<strong>تحذير </strong> اذا كان هناك \"فريق مناظرة\" فوق هذه القائمة<strong> من المحتمل عليك أن لا تحذف هذه المناظرة %(objects_name)s</strong> "
 
 #. Translators: This follows the above sentence in the same paragraph.
 #: participants/templates/admin/participants/delete_debateteam_warning.html:20
-msgid ""
-"This is especially the case if any team that would be deleted has already "
-"participated in a debate. If a team already has a result entered for it, "
-"deleting the team also deletes those results, <strong>which normally breaks "
-"the tab</strong>, even if you think you don't need those results anymore. If "
-"a team has debated and is withdrawing from the tournament, you should "
-"<strong>not</strong> delete it. Just mark the team inactive under the "
-"“Availability” section of the Tabbycat admin area."
+msgid "This is especially the case if any team that would be deleted has already participated in a debate. If a team already has a result entered for it, deleting the team also deletes those results, <strong>which normally breaks the tab</strong>, even if you think you don't need those results anymore. If a team has debated and is withdrawing from the tournament, you should <strong>not</strong> delete it. Just mark the team inactive under the “Availability” section of the Tabbycat admin area."
 msgstr ""
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:32
-msgid ""
-"Note that deleting an institution also deletes all teams from that "
-"institution."
+msgid "Note that deleting an institution also deletes all teams from that institution."
 msgstr "لاحظ أن حذف مؤسسة ما يحذف أيضًا جميع الفرق من تلك المؤسسة."
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:40
 #, python-format
-msgid ""
-"If you're very sure about deleting this %(object_name)s, please delete the "
-"above objects first, and be sure to heed the warning that you will see on "
-"the “debate team” objects page before proceeding."
-msgstr ""
-"إذا كنت متأكدًا تمامًا من حذف %(object_name)s ، فالرجاء حذف الكائنات الواردة "
-"أعلاه أولاً ، وتأكد من الاستجابة للتحذير الذي ستراه في صفحة كائنات \"فريق "
-"المناظرة \" قبل المتابعة."
+msgid "If you're very sure about deleting this %(object_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
+msgstr "إذا كنت متأكدًا تمامًا من حذف %(object_name)s ، فالرجاء حذف الكائنات الواردة أعلاه أولاً ، وتأكد من الاستجابة للتحذير الذي ستراه في صفحة كائنات \"فريق المناظرة \" قبل المتابعة."
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:46
 #, python-format
-msgid ""
-"If you're very sure about deleting these %(objects_name)s, please delete the "
-"above objects first, and be sure to heed the warning that you will see on "
-"the “debate team” objects page before proceeding."
-msgstr ""
-"إذا كنت متأكدًا تمامًا من حذف %(objects_name)s ، فالرجاء حذف الكائنات الواردة "
-"أعلاه أولاً ، وتأكد من الاستجابة للتحذير الذي ستراه في صفحة كائنات \"فريق "
-"المناظرة \" قبل المتابعة."
+msgid "If you're very sure about deleting these %(objects_name)s, please delete the above objects first, and be sure to heed the warning that you will see on the “debate team” objects page before proceeding."
+msgstr "إذا كنت متأكدًا تمامًا من حذف %(objects_name)s ، فالرجاء حذف الكائنات الواردة أعلاه أولاً ، وتأكد من الاستجابة للتحذير الذي ستراه في صفحة كائنات \"فريق المناظرة \" قبل المتابعة."
 
 #: participants/templates/admin/participants/team/change_form.html:8
-#, fuzzy
-#| msgid ""
-#| "<strong>Don't forget:</strong> If this adjudicator should be conflicted "
-#| "against their own institution, you should add this conflict <strong>now</"
-#| "strong> in the <strong>Adjudicator-institution conflicts</strong> tab "
-#| "above, because the own-institution conflict is <strong>not</strong> "
-#| "automatically created when using this form."
-msgid ""
-"<strong>Don't forget:</strong> If this team should be conflicted against its "
-"own institution, you should add this conflict <strong>now</strong> in the "
-"<strong>Team-institution conflicts</strong> tab above, because the own-"
-"institution conflict is <strong>not</strong> automatically created when "
-"using this form."
+msgid "<strong>Don't forget:</strong> If this team should be conflicted against its own institution, you should add this conflict <strong>now</strong> in the <strong>Team-institution conflicts</strong> tab above, because the own-institution conflict is <strong>not</strong> automatically created when using this form."
 msgstr ""
-"<strong> لا تنسى</strong> إذا كان يجب أن يتعارض هذا الحكم ضد المؤسسة الخاصة "
-"به ، يجب عليك إضافة هذا التعارض <strong>الان</strong> في التاب <strong>تعارض-"
-"الحكم-- مؤسسة </strong> ، أعلاه ، لأن تعارض المؤسسة الخاصة مره <strong>أخرى</"
-"strong> يتم إنشاؤه تلقائيًا عند استخدام هذا النموذج."
 
 #: participants/templates/confirm_shifts.html:5
 #: participants/templates/confirm_shifts.html:6
@@ -620,13 +509,13 @@ msgstr[5] ""
 #: participants/templates/current_round/common.html:41
 msgctxt "chair icon"
 msgid "Ⓒ"
-msgstr "Ⓒ"
+msgstr ""
 
 #: participants/templates/current_round/common.html:39
 #: participants/templates/current_round/common.html:41
 msgctxt "trainee icon"
 msgid "Ⓣ"
-msgstr "Ⓣ"
+msgstr ""
 
 #: participants/templates/current_round/common.html:46
 msgid "There are no panellists or trainees assigned to this debate."
@@ -651,98 +540,53 @@ msgstr "القضية ( القضايا ) لهذه المناظرة لم يتم ا
 
 #: participants/templates/current_round/round_adj.html:13
 #, python-format
-msgid ""
-"%(adj_name)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s "
-"in <strong>%(venue)s</strong>."
-msgstr ""
-"المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في المناظرة بين %(aff)s و"
-"%(neg)s في قاعة <strong>%(venue)s</strong>"
+msgid "%(adj_name)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</strong>."
+msgstr "المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في المناظرة بين %(aff)s و%(neg)s في قاعة <strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_adj.html:17
-#, fuzzy, python-format
-#| msgid ""
-#| "%(adj_name)s is the <strong>chair</strong> adjudicating %(aff)s vs "
-#| "%(neg)s in <strong>%(venue)s</strong>."
-msgid ""
-"You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in "
-"<strong>%(venue)s</strong>."
+#, python-format
+msgid "You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</strong>."
 msgstr ""
-"المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في المناظرة بين %(aff)s و"
-"%(neg)s في قاعة <strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_adj.html:23
 #, python-format
-msgid ""
-"%(adj_name)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s "
-"in <strong>%(venue)s</strong>."
-msgstr ""
-"%(adj_name)s هو <strong>%(type)s</strong> يحكم بين %(aff)s و%(neg)s في "
-"القاعة <strong>%(venue)s</strong>."
+msgid "%(adj_name)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</strong>."
+msgstr "%(adj_name)s هو <strong>%(type)s</strong> يحكم بين %(aff)s و%(neg)s في القاعة <strong>%(venue)s</strong>."
 
 #: participants/templates/current_round/round_adj.html:27
-#, fuzzy, python-format
-#| msgid ""
-#| "%(adj_name)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs "
-#| "%(neg)s in <strong>%(venue)s</strong>."
-msgid ""
-"You are a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in "
-"<strong>%(venue)s</strong>."
+#, python-format
+msgid "You are a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</strong>."
 msgstr ""
-"%(adj_name)s هو <strong>%(type)s</strong> يحكم بين %(aff)s و%(neg)s في "
-"القاعة <strong>%(venue)s</strong>."
 
 #: participants/templates/current_round/round_adj.html:33
 #, python-format
-msgid ""
-"%(adj_name)s is adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</"
-"strong>."
+msgid "%(adj_name)s is adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</strong>."
 msgstr "%(adj_name)s يحكم بين %(aff)s و%(neg)s في <strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_adj.html:37
-#, fuzzy, python-format
-#| msgid ""
-#| "%(adj_name)s is adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</"
-#| "strong>."
+#, python-format
 msgid "You are adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</strong>."
-msgstr "%(adj_name)s يحكم بين %(aff)s و%(neg)s في <strong>%(venue)s</strong>"
+msgstr ""
 
 #: participants/templates/current_round/round_adj.html:48
 #, python-format
-msgid ""
-"%(adj_name)s is the <strong>chair</strong> adjudicating in <strong>"
-"%(venue)s</strong>."
-msgstr ""
-"المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في <strong>%(venue)s</"
-"strong>"
+msgid "%(adj_name)s is the <strong>chair</strong> adjudicating in <strong>%(venue)s</strong>."
+msgstr "المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في <strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_adj.html:52
-#, fuzzy, python-format
-#| msgid ""
-#| "%(adj_name)s is the <strong>chair</strong> adjudicating in <strong>"
-#| "%(venue)s</strong>."
-msgid ""
-"You are the <strong>chair</strong> adjudicating in <strong>%(venue)s</"
-"strong>."
+#, python-format
+msgid "You are the <strong>chair</strong> adjudicating in <strong>%(venue)s</strong>."
 msgstr ""
-"المحكم %(adj_name)s هو <strong>رئيس الجلسة</strong> في <strong>%(venue)s</"
-"strong>"
 
 #: participants/templates/current_round/round_adj.html:58
 #, python-format
-msgid ""
-"%(adj_name)s is a <strong>%(type)s</strong> adjudicating in <strong>"
-"%(venue)s</strong>."
+msgid "%(adj_name)s is a <strong>%(type)s</strong> adjudicating in <strong>%(venue)s</strong>."
 msgstr "%(venue)s<strong>%(adj_name)sفي<strong>%(type)s</strong> تحكيم بـ"
 
 #: participants/templates/current_round/round_adj.html:62
-#, fuzzy, python-format
-#| msgid ""
-#| "%(adj_name)s is a <strong>%(type)s</strong> adjudicating in <strong>"
-#| "%(venue)s</strong>."
-msgid ""
-"You are a <strong>%(type)s</strong> adjudicating in <strong>%(venue)s</"
-"strong>."
-msgstr "%(venue)s<strong>%(adj_name)sفي<strong>%(type)s</strong> تحكيم بـ"
+#, python-format
+msgid "You are a <strong>%(type)s</strong> adjudicating in <strong>%(venue)s</strong>."
+msgstr ""
 
 #: participants/templates/current_round/round_adj.html:68
 #, python-format
@@ -750,73 +594,39 @@ msgid "%(adj_name)s is adjudicating in <strong>%(venue)s</strong>."
 msgstr "%(adj_name)s يحكم في <strong>%(venue)s</strong> "
 
 #: participants/templates/current_round/round_adj.html:72
-#, fuzzy, python-format
-#| msgid "%(adj_name)s is adjudicating in <strong>%(venue)s</strong>."
+#, python-format
 msgid "You are adjudicating in <strong>%(venue)s</strong>."
-msgstr "%(adj_name)s يحكم في <strong>%(venue)s</strong> "
+msgstr ""
 
 #: participants/templates/current_round/round_team.html:12
 #, python-format
-msgid ""
-"%(team_name)s is debating as the <strong>%(side)s</strong> team against "
-"<strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
-msgstr ""
-"%(team_name)s يتناظر كـ <strong>%(side)s</strong> ضد فريق <strong>"
-"%(opponent)s</strong> في <strong>%(venue)s</strong>"
+msgid "%(team_name)s is debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
+msgstr "%(team_name)s يتناظر كـ <strong>%(side)s</strong> ضد فريق <strong>%(opponent)s</strong> في <strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_team.html:16
-#, fuzzy, python-format
-#| msgid ""
-#| "%(team_name)s is debating as the <strong>%(side)s</strong> team against "
-#| "<strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
-msgid ""
-"You are debating as the <strong>%(side)s</strong> team against <strong>"
-"%(opponent)s</strong> in <strong>%(venue)s</strong>."
+#, python-format
+msgid "You are debating as the <strong>%(side)s</strong> team against <strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
 msgstr ""
-"%(team_name)s يتناظر كـ <strong>%(side)s</strong> ضد فريق <strong>"
-"%(opponent)s</strong> في <strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_team.html:22
 #, python-format
-msgid ""
-"%(team_name)s is debating against <strong>%(opponent)s</strong> in <strong>"
-"%(venue)s</strong>."
-msgstr ""
-"%(team_name)s يتناظر ضد<strong>%(opponent)s</strong> في<strong>%(venue)s</"
-"strong> "
+msgid "%(team_name)s is debating against <strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
+msgstr "%(team_name)s يتناظر ضد<strong>%(opponent)s</strong> في<strong>%(venue)s</strong> "
 
 #: participants/templates/current_round/round_team.html:26
-#, fuzzy, python-format
-#| msgid ""
-#| "%(team_name)s is debating against <strong>%(opponent)s</strong> in "
-#| "<strong>%(venue)s</strong>."
-msgid ""
-"You are debating against <strong>%(opponent)s</strong> in <strong>%(venue)s</"
-"strong>."
+#, python-format
+msgid "You are debating against <strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
 msgstr ""
-"%(team_name)s يتناظر ضد<strong>%(opponent)s</strong> في<strong>%(venue)s</"
-"strong> "
 
 #: participants/templates/current_round/round_team.html:37
 #, python-format
-msgid ""
-"%(team_name)s is debating as the <strong>%(side)s</strong> team in <strong>"
-"%(venue)s</strong>."
-msgstr ""
-"%(team_name)sستناظر كـ <strong>%(side)s</strong> في <strong>%(venue)s</"
-"strong>"
+msgid "%(team_name)s is debating as the <strong>%(side)s</strong> team in <strong>%(venue)s</strong>."
+msgstr "%(team_name)sستناظر كـ <strong>%(side)s</strong> في <strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_team.html:41
-#, fuzzy, python-format
-#| msgid ""
-#| "%(team_name)s is debating as the <strong>%(side)s</strong> team in "
-#| "<strong>%(venue)s</strong>."
-msgid ""
-"You are debating as the <strong>%(side)s</strong> team in <strong>%(venue)s</"
-"strong>."
+#, python-format
+msgid "You are debating as the <strong>%(side)s</strong> team in <strong>%(venue)s</strong>."
 msgstr ""
-"%(team_name)sستناظر كـ <strong>%(side)s</strong> في <strong>%(venue)s</"
-"strong>"
 
 #: participants/templates/current_round/round_team.html:47
 #, python-format
@@ -824,23 +634,14 @@ msgid "%(team_name)s is debating in <strong>%(venue)s</strong>."
 msgstr "%(team_name)s يتناظر في<strong>%(venue)s</strong>"
 
 #: participants/templates/current_round/round_team.html:51
-#, fuzzy, python-format
-#| msgid "%(team_name)s is debating in <strong>%(venue)s</strong>."
+#, python-format
 msgid "You are debating in <strong>%(venue)s</strong>."
-msgstr "%(team_name)s يتناظر في<strong>%(venue)s</strong>"
+msgstr ""
 
 #: participants/templates/edit_speaker_eligibility.html:7
 #, python-format
-msgid ""
-"It looks like there aren't any speaker categories are defined. If you'd like "
-"to produce category-specific speaker tabs, such as a novice or ESL tab, use "
-"the <a href=\"%(categories_url)s\" class=\"alert-link\">Speaker Categories</"
-"a> page to define them, then return to this page to set speaker eligibility."
-msgstr ""
-"يبدو أنه لا توجد أي فئات المتحدثين محددة. إذا كنت ترغب في إنتاج علامات تاب "
-"المتحدث الخاصة بالفئة ، مثل علامة تبويب مبتدئ ، فاستخدم صفحة <a href="
-"\"%(categories_url)s\" class=\"alert-link\">فئات المتحدث</a> لتعريفها ، ثم "
-"ارجع إلى هذه الصفحة لتعيين أهلية المتحدث."
+msgid "It looks like there aren't any speaker categories are defined. If you'd like to produce category-specific speaker tabs, such as a novice or ESL tab, use the <a href=\"%(categories_url)s\" class=\"alert-link\">Speaker Categories</a> page to define them, then return to this page to set speaker eligibility."
+msgstr "يبدو أنه لا توجد أي فئات المتحدثين محددة. إذا كنت ترغب في إنتاج علامات تاب المتحدث الخاصة بالفئة ، مثل علامة تبويب مبتدئ ، فاستخدم صفحة <a href=\"%(categories_url)s\" class=\"alert-link\">فئات المتحدث</a> لتعريفها ، ثم ارجع إلى هذه الصفحة لتعيين أهلية المتحدث."
 
 #: participants/templates/feedback_progress_panel.html:10
 msgid "Feedback Returns"
@@ -853,12 +654,8 @@ msgstr "تم اعتماد التغذية الراجعة من <strong>%(adjudicat
 
 #: participants/templates/feedback_progress_panel.html:25
 #, python-format
-msgid ""
-"Has not submitted feedback for one of: <strong>%(adjudicators)s</strong> "
-"(whoever gave the oral adjudication)"
-msgstr ""
-"لم يقدم التغذية الراجعة : <strong>%(adjudicators)s</strong> ( قام بتقديمها "
-"شفهياً ) "
+msgid "Has not submitted feedback for one of: <strong>%(adjudicators)s</strong> (whoever gave the oral adjudication)"
+msgstr "لم يقدم التغذية الراجعة : <strong>%(adjudicators)s</strong> ( قام بتقديمها شفهياً ) "
 
 #: participants/templates/feedback_progress_panel.html:30
 #, python-format
@@ -872,8 +669,7 @@ msgstr "العديد من التغذية الراجعة تم تقديمها له
 #: participants/templates/feedback_progress_panel.html:48
 #, python-format
 msgid "Unexpected feedback submission for <strong>%(adjudicator)s</strong>"
-msgstr ""
-"لا يوجد تغذية راجعة معتمدة من   \n"
+msgstr "لا يوجد تغذية راجعة معتمدة من   \n"
 "<strong>%(adjudicator)s</strong>"
 
 #: participants/templates/feedback_progress_panel.html:55
@@ -900,17 +696,13 @@ msgid "%(adj_name)s is not adjudicating this round."
 msgstr "%(adj_name)s لن يحكم هذه الجولة "
 
 #: participants/templates/in_this_round.html:35
-#, fuzzy
-#| msgid "%(adj_name)s is not adjudicating this round."
 msgid "You are not adjudicating this round."
-msgstr "%(adj_name)s لن يحكم هذه الجولة "
+msgstr ""
 
 #: participants/templates/in_this_round.html:50
 #, python-format
-msgid ""
-"It looks like %(team_name)s is competing in %(ndebates)s debate this round."
-msgid_plural ""
-"It looks like %(team_name)s is competing in %(ndebates)s debates this round."
+msgid "It looks like %(team_name)s is competing in %(ndebates)s debate this round."
+msgid_plural "It looks like %(team_name)s is competing in %(ndebates)s debates this round."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
@@ -928,10 +720,8 @@ msgid "%(team_name)s does not have a debate this round."
 msgstr "%(team_name)s ليس لدية مناظر في هذه الجولة "
 
 #: participants/templates/in_this_round.html:75
-#, fuzzy
-#| msgid "%(team_name)s does not have a debate this round."
 msgid "You do not have a debate this round."
-msgstr "%(team_name)s ليس لدية مناظر في هذه الجولة "
+msgstr ""
 
 #: participants/templates/in_this_round.html:87
 msgid "The draw for this round hasn't yet been released."
@@ -968,35 +758,21 @@ msgid "Speaker Eligibility"
 msgstr "المتأهلون"
 
 #: participants/templates/speaker_categories_edit.html:16
-msgid ""
-"Speaker categories allow category-specific speaker tabs to be produced, <i>e."
-"g.</i>, for novice or ESL categories. On this page, you can define what "
-"speaker categories exist. After you've defined the categories, you can set "
-"speaker eligibility on the Speaker Eligibility page."
-msgstr ""
-"تسمح فئات المتحدث بإنتاج علامات تاب المتحدث الخاصة بالفئة ، <i>على سبيل "
-"المثال  </i>، للفئات المبتدئة أو غير الناطقين . في هذه الصفحة ، يمكنك تحديد "
-"فئات المتحدثين الموجودة. بعد تحديد الفئات ، يمكنك تعيين أهلية المتحدث على "
-"صفحة أهلية المتحدث."
+msgid "Speaker categories allow category-specific speaker tabs to be produced, <i>e.g.</i>, for novice or ESL categories. On this page, you can define what speaker categories exist. After you've defined the categories, you can set speaker eligibility on the Speaker Eligibility page."
+msgstr "تسمح فئات المتحدث بإنتاج علامات تاب المتحدث الخاصة بالفئة ، <i>على سبيل المثال  </i>، للفئات المبتدئة أو غير الناطقين . في هذه الصفحة ، يمكنك تحديد فئات المتحدثين الموجودة. بعد تحديد الفئات ، يمكنك تعيين أهلية المتحدث على صفحة أهلية المتحدث."
 
 #: participants/templates/speaker_categories_edit.html:23
 #, python-format
-msgid ""
-"If you want to delete speaker categories, use the <a href=\"%(edit_db_url)s"
-"\" class=\"alert-link\">Edit Database</a> area."
-msgstr ""
-"اذا كنت تريد حذف المتناظر ، <a href=\"%(edit_db_url)s\" class=\"alert-link"
-"\">تعديد البيانات </a>المنطقة "
+msgid "If you want to delete speaker categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+msgstr "اذا كنت تريد حذف المتناظر ، <a href=\"%(edit_db_url)s\" class=\"alert-link\">تعديد البيانات </a>المنطقة "
 
 #: participants/templates/speaker_categories_edit.html:29
 msgid "Save Speaker Categories"
 msgstr "حفظ نقاط المتحدث "
 
 #: participants/templates/team_registration_card.html:14
-#, fuzzy
-#| msgid "Code name:"
 msgid "Team name:"
-msgstr "اسم الكود "
+msgstr ""
 
 #: participants/templates/team_registration_card.html:14
 msgid "Full name:"
@@ -1019,10 +795,8 @@ msgid "Eligible for break categories:"
 msgstr "تعديل الفواصل         "
 
 #: participants/templates/team_registration_card.html:52
-#, fuzzy
-#| msgid "speaker categories"
 msgid "Speaker categories:"
-msgstr "نقاط المتحدثين"
+msgstr ""
 
 #: participants/templatetags/team_name_for_data_entry.py:18
 #, python-format
@@ -1055,7 +829,7 @@ msgstr ""
 
 #: participants/views.py:104
 msgid "Teams"
-msgstr ""
+msgstr "الفرق"
 
 #: participants/views.py:104
 msgid "Number of teams"
@@ -1124,3 +898,4 @@ msgstr "صفحتك تم التأكد منها و حفظها "
 #: participants/views.py:439
 msgid "Whoops! There was a problem with the form."
 msgstr "هنالك مشاكل في هذا النموذج:"
+

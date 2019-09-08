@@ -1,22 +1,20 @@
-# Tabbycat translations, utils module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: Portuguese (https://www.transifex.com/tabbycat-jp/teams/86216/"
-"pt/)\n"
-"Language: pt\n"
+"PO-Revision-Date: 2019-08-05 03:06\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Portuguese\n"
+"Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: pt-PT\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
 
 #: utils/forms.py:25
 msgid "E-mail address"
@@ -36,15 +34,15 @@ msgstr ""
 
 #: utils/tables.py:159
 msgid "chair"
-msgstr ""
+msgstr "presidente"
 
 #: utils/tables.py:160
 msgid "panellist"
-msgstr ""
+msgstr "juiz auxiliar"
 
 #: utils/tables.py:161
 msgid "trainee"
-msgstr ""
+msgstr "aprendiz"
 
 #: utils/tables.py:228 utils/tables.py:234
 #, python-format
@@ -163,7 +161,7 @@ msgstr ""
 
 #: utils/tables.py:430
 msgid "eliminated"
-msgstr ""
+msgstr "eliminado"
 
 #: utils/tables.py:431
 msgid "Eliminated"
@@ -175,19 +173,19 @@ msgstr ""
 
 #: utils/tables.py:437
 msgid "4th"
-msgstr ""
+msgstr "4º"
 
 #: utils/tables.py:437
 msgid "3rd"
-msgstr ""
+msgstr "3º"
 
 #: utils/tables.py:437
 msgid "2nd"
-msgstr ""
+msgstr "2º"
 
 #: utils/tables.py:437
 msgid "1st"
-msgstr ""
+msgstr "1º"
 
 #: utils/tables.py:441
 #, python-format
@@ -200,7 +198,7 @@ msgstr ""
 
 #: utils/tables.py:481
 msgid "Round"
-msgstr ""
+msgstr "Rodada"
 
 #: utils/tables.py:499 utils/tables.py:679
 msgid "Name"
@@ -208,7 +206,7 @@ msgstr ""
 
 #: utils/tables.py:505 utils/tables.py:654
 msgid "Institution"
-msgstr ""
+msgstr "Instituição"
 
 #: utils/tables.py:511
 msgid "Member of the Adjudication Core"
@@ -236,7 +234,7 @@ msgstr ""
 
 #: utils/tables.py:640
 msgid "Team"
-msgstr ""
+msgstr "Dupla"
 
 #: utils/tables.py:645 utils/tables.py:701
 msgid "Categories"
@@ -317,7 +315,7 @@ msgstr ""
 
 #: utils/tables.py:875
 msgid "Elimination"
-msgstr ""
+msgstr "Eliminação"
 
 #: utils/tables.py:878 utils/tables.py:890
 msgid "View Ballot"
@@ -355,23 +353,12 @@ msgstr ""
 
 #: utils/templates/database_limit_warning.html:9
 #, python-format
-msgid ""
-"You're currently using %(nrows)s row in your database. If you haven't "
-"already upgraded your Heroku database to a paid tier, it's limited to a "
-"maximum of 10,000 rows. As you're close to this limit, you should "
-"<strong>not create new tournaments</strong> on this site unless and until "
-"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
-"postgres-databases\">upgraded your database</a> to a paid tier."
-msgid_plural ""
-"You're currently using %(nrows)s rows in your database. If you haven't "
-"already upgraded your Heroku database to a paid tier, it's limited to a "
-"maximum of 10,000 rows. As you're close to this limit, you should "
-"<strong>not create new tournaments</strong> on this site unless and until "
-"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
-"postgres-databases\">upgraded your database</a> to a paid tier."
+msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
 msgstr[0] ""
 msgstr[1] ""
 
 #: utils/views.py:45
 msgid "Whoops! You're not meant to type that URL into your browser."
 msgstr ""
+

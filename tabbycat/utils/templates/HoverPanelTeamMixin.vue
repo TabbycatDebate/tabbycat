@@ -5,9 +5,15 @@ export default {
   computed: {
     topleftteam: function () {
       let teamDetails = []
-      teamDetails.push(this.makeItem(this.subject.short_name, 'btn-outline-secondary', false))
+      if (this.extra.codeNames !== 'everywhere') {
+        teamDetails.push(this.makeItem(this.subject.short_name, 'btn-outline-secondary', false))
+      }
       if (this.extra.codeNames !== 'off') {
-        teamDetails.push(this.makeItem(this.subject.code_name, 'btn-outline-secondary', false))
+        let codeName = this.subject.code_name
+        if (codeName === '') {
+          codeName = this.gettext('No code name set')
+        }
+        teamDetails.push(this.makeItem(codeName, 'btn-outline-secondary', false))
       }
       let speakerDetails = []
       for (let speaker of this.subject.speakers) {
