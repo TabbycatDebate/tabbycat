@@ -527,3 +527,7 @@ msgstr ""
 #: utils/templates/DragAndDropDebate.vue:33
 msgid "This debate's priority"
 msgstr ""
+
+#: draw/templates/InlineTeam.vue:41
+msgid "No code name set"
+msgstr ""
