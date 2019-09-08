@@ -12,7 +12,7 @@ from participants.prefetch import populate_win_counts
 from tournaments.models import Round
 
 from .models import PreformedPanel
-from .allocators import AdjudicatorAllocationError
+from .allocators.base import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw

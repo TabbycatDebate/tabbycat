@@ -2,36 +2,26 @@ import json
 import logging
 
 from django.contrib import messages
-from django.db.models import Prefetch, Q
+from django.db.models import Prefetch
 from django.forms import ModelChoiceField
-from django.views.generic.base import TemplateView, View
-from django.http import JsonResponse
-from django.utils.functional import cached_property
+from django.views.generic.base import TemplateView
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from availability.utils import annotate_availability
-from breakqual.models import BreakCategory
-from draw.models import Debate
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
-from tournaments.models import Round
-from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, RoundMixin, TournamentMixin
-from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
+from utils.views import ModelFormSetView
 
-from .allocators import legacy_allocate_adjudicators
-from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .conflicts import ConflictsInfo, HistoryInfo
 from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
-                     AdjudicatorTeamConflict, DebateAdjudicator,
+                     AdjudicatorTeamConflict,
                      PreformedPanelAdjudicator, TeamInstitutionConflict)
 from .serializers import EditDebateAdjsDebateSerializer, EditPanelAdjsPanelSerializer, EditPanelOrDebateAdjSerializer
-
-from utils.misc import reverse_round
 
 logger = logging.getLogger(__name__)
 
@@ -135,185 +125,6 @@ class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
 class PanelAdjudicatorsIndexView(TemplateView, AdministratorMixin):
     template_name = "preformed_index.html"
     page_title = gettext_lazy("Preformed Panels")
-
-
-# ==============================================================================
-# Legacy Adjudicator Allocation Views
-# ==============================================================================
-
-class LegacyAdjudicatorAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
-    """@deprecate when legacy drag and drop UIs removed"""
-
-    @cached_property
-    def conflicts_and_history(self):
-        conflicts = ConflictsInfo(teams=self.tournament.team_set.all(),
-            adjudicators=self.tournament.adjudicator_set.all())
-        team_conflicts, adj_conflicts = conflicts.serialized_by_participant()
-        history = HistoryInfo(self.round)
-        team_history, adj_history = history.serialized_by_participant()
-
-        teams_combined = {}
-        for team_id, conflicts in team_conflicts.items():
-            teams_combined[team_id] = {'clashes': conflicts}
-        for team_id, history in team_history.items():
-            teams_combined.setdefault(team_id, {})['histories'] = history
-
-        adjs_combined = {}
-        for adj_id, conflicts in adj_conflicts.items():
-            adjs_combined[adj_id] = {'clashes': conflicts}
-        for adj_id, history in adj_history.items():
-            adjs_combined.setdefault(adj_id, {})['histories'] = history
-
-        return teams_combined, adjs_combined
-
-    def get_unallocated_adjudicators(self):
-        round = self.round
-        unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
-        populate_feedback_scores(unused_adj_instances)
-        unused_adjs = [a.serialize(round) for a in unused_adj_instances]
-
-        _, adj_conflicts = self.conflicts_and_history
-        for adj in unused_adjs:
-            self.annotate_region_classes(adj)
-            adj['conflicts'] = adj_conflicts[adj['id']]
-
-        return json.dumps(unused_adjs)
-
-    def annotate_draw(self, draw, serialised_draw):
-        # Need to unique-ify/reorder break categories/regions for consistent CSS
-
-        team_conflicts, adj_conflicts = self.conflicts_and_history
-
-        for debate in serialised_draw:
-            for da in debate['debateAdjudicators']:
-                da['adjudicator']['conflicts'] = adj_conflicts[da['adjudicator']['id']]
-                self.annotate_region_classes(da['adjudicator'])
-            for dt in debate['debateTeams']:
-                if not dt['team']:
-                    continue
-                dt['team']['conflicts'] = team_conflicts[dt['team']['id']]
-
-        return super().annotate_draw(draw, serialised_draw)
-
-
-class LegacyEditAdjudicatorAllocationView(LegacyAdjudicatorAllocationMixin, TemplateView):
-    """@deprecate when legacy drag and drop UIs removed"""
-
-    template_name = 'legacy_edit_adjudicators.html'
-    auto_url = "legacy-adjallocation-auto-allocate"
-    save_url = "legacy-adjallocation-save-debate-panel"
-
-    def get_regions_info(self):
-        # Need to extract and annotate regions for the allcoation actions key
-        all_regions = [r.serialize for r in Region.objects.order_by('id')]
-        for i, r in enumerate(all_regions):
-            r['class'] = i
-        return all_regions
-
-    def get_categories_info(self):
-        # Need to extract and annotate categories for the allcoation actions key
-        all_bcs = [c.serialize for c in BreakCategory.objects.filter(
-            tournament=self.tournament).order_by('id')]
-        for i, bc in enumerate(all_bcs):
-            bc['class'] = i
-        return all_bcs
-
-    def get_round_info(self):
-        round_info = super().get_round_info()
-        round_info['updateImportanceURL'] = reverse_round('legacy-adjallocation-save-debate-importance', self.round)
-        round_info['scoreMin'] = self.tournament.pref('adj_min_score')
-        round_info['scoreMax'] = self.tournament.pref('adj_max_score')
-        round_info['scoreForVote'] = self.tournament.pref('adj_min_voting_score')
-        round_info['regions'] = self.get_regions_info()
-        round_info['categories'] = self.get_categories_info()
-        return round_info
-
-    def get_context_data(self, **kwargs):
-        kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
-        kwargs['showAllocationIntro'] = self.tournament.pref('show_allocation_intro')
-        # This is meant to be shown once only; so we set false if true
-        if self.tournament.pref('show_allocation_intro'):
-            self.tournament.preferences['ui_options__show_allocation_intro'] = False
-
-        return super().get_context_data(**kwargs)
-
-
-class LegacyCreateAutoAllocation(LogActionMixin, LegacyAdjudicatorAllocationMixin, JsonDataResponsePostView):
-    """@deprecate when legacy drag and drop UIs removed"""
-
-    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
-
-    def post_data(self):
-        round = self.round
-        self.log_action()
-        if round.draw_status == Round.STATUS_RELEASED:
-            info = _("Draw is already released, unrelease draw to redo auto-allocations.")
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-        if round.draw_status != Round.STATUS_CONFIRMED:
-            info = _("Draw is not confirmed, confirm draw to run auto-allocations.")
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-
-        if round.ballots_per_debate == 'per-adj':
-            allocator_class = VotingHungarianAllocator
-        else:
-            allocator_class = ConsensusHungarianAllocator
-
-        legacy_allocate_adjudicators(self.round, allocator_class)
-        return {
-            'debates': self.get_draw(),
-            'unallocatedAdjudicators': self.get_unallocated_adjudicators()
-        }
-
-
-class LegacySaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View):
-    """@deprecate when legacy drag and drop UIs removed"""
-    action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
-
-    def post(self, request, *args, **kwargs):
-        body = self.request.body.decode('utf-8')
-        posted_info = json.loads(body)
-        priorities = posted_info['priorities']
-
-        for debate_id, priority in priorities.items():
-            Debate.objects.filter(pk=debate_id).update(importance=priority)
-
-        self.log_action()
-        return JsonResponse(json.dumps(priorities), safe=False)
-
-
-class LegacySaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
-    """@deprecate when legacy drag and drop UIs removed"""
-    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
-
-    def get_moved_item(self, id):
-        return Adjudicator.objects.get(pk=id)
-
-    def modify_debate(self, debate, posted_debate):
-        posted_debateadjudicators = posted_debate['debateAdjudicators']
-
-        # Delete adjudicators who aren't in the posted information
-        adj_ids = [da['adjudicator']['id'] for da in posted_debateadjudicators]
-        delete_count, deleted = debate.debateadjudicator_set.exclude(adjudicator_id__in=adj_ids).delete()
-        logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
-
-        # Check all the adjudicators are part of the tournament
-        adjs = Adjudicator.objects.filter(Q(tournament=self.tournament) | Q(tournament__isnull=True), id__in=adj_ids)
-        if len(adjs) != len(posted_debateadjudicators):
-            raise BadJsonRequestError(_("Not all adjudicators specified are associated with the tournament."))
-        adj_name_lookup = {adj.id: adj.name for adj in adjs}  # for debugging messages
-
-        # Update or create positions of adjudicators in debate
-        for debateadj in posted_debateadjudicators:
-            adj_id = debateadj['adjudicator']['id']
-            adjtype = debateadj['position']
-            obj, created = DebateAdjudicator.objects.update_or_create(debate=debate,
-                    adjudicator_id=adj_id, defaults={'type': adjtype})
-            logger.debug("%s debate adjudicator: %s is now %s in [%s]", "Created" if created else "Updated",
-                    adj_name_lookup[adj_id], obj.get_type_display(), debate.matchup)
-
-        return debate
 
 
 # ==============================================================================

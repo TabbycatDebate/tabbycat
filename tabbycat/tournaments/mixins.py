@@ -11,7 +11,6 @@ from django.contrib import messages
 from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
-from django.utils.functional import cached_property
 from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
@@ -19,10 +18,10 @@ from django.views.generic.detail import SingleObjectMixin
 from sentry_sdk import configure_scope
 
 from adjallocation.models import DebateAdjudicator
-from breakqual.utils import calculate_live_thresholds, determine_liveness
+from breakqual.utils import calculate_live_thresholds
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
-from participants.models import Institution, Region, Speaker
-from participants.prefetch import populate_feedback_scores, populate_win_counts
+from participants.models import Institution, Speaker
+from participants.prefetch import populate_win_counts
 from participants.serializers import InstitutionSerializer
 from tournaments.serializers import RoundSerializer, TournamentSerializer
 from utils.misc import redirect_tournament, reverse_round, reverse_tournament
@@ -498,107 +497,3 @@ class DebateDragAndDropMixin(DragAndDropMixin):
         if self.prefetch_teams:
             populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
         return draw
-
-
-class LegacyDrawForDragAndDropMixin(RoundMixin):
-    """Provides the base set of constructors used to assemble a the
-    drag and drop table used for editing matchups/adjs/venues with a
-    drag and drop interface. Subclass annotate method to add extra view data """
-
-    @cached_property
-    def break_categories(self):
-        return self.tournament.breakcategory_set.order_by('-is_general', 'name', 'id')
-
-    @cached_property
-    def break_thresholds(self):
-        return {
-            category.id:
-            calculate_live_thresholds(category, self.tournament, self.round)
-            for category in self.break_categories
-        }
-
-    @cached_property
-    def break_category_classes(self):
-        return {category.id: i for i, category in enumerate(self.break_categories)}
-
-    def annotate_break_classes(self, serialised_team, thresholds):
-        for bc in serialised_team.get('break_categories', []):
-            bc['class'] = self.break_category_classes[bc['id']]
-            points = serialised_team['points']
-            bc['will_break'] = determine_liveness(thresholds[bc['id']], points)
-
-    @cached_property
-    def region_classes(self):
-        return {region.id: i for i, region in enumerate(Region.objects.order_by('id'))}
-
-    def annotate_region_classes(self, adj_or_team):
-        """Adds a class to the region dict, if it exists. Operates in-place."""
-        if adj_or_team.get('region', None):
-            adj_or_team['region']['class'] = self.region_classes[adj_or_team['region']['id']]
-
-    def annotate_draw(self, draw, serialised_draw):
-        # Need to unique-ify/reorder break categories/regions for consistent CSS
-        for debate in serialised_draw:
-            break_thresholds = self.break_thresholds
-            nlivecategories = 0
-            nliveteams = 0
-            nsafeteams = 0
-            for dt in debate['debateTeams']:
-                team = dt['team']
-                if not team:
-                    continue
-                self.annotate_break_classes(team, break_thresholds)
-                self.annotate_region_classes(team)
-                if team['break_categories']:
-                    statuses = [c['will_break'] for c in team['break_categories']]
-                    team_live_categories = statuses.count('live') + statuses.count('?')
-                    nlivecategories += team_live_categories
-                    if team_live_categories > 0:
-                        nliveteams += 1
-                    elif statuses.count('safe') > 0:  # only safe if live nowhere
-                        nsafeteams += 1
-
-            for da in debate['debateAdjudicators']:
-                self.annotate_region_classes(da['adjudicator'])
-
-            debate['liveness'] = nlivecategories
-            debate['nliveteams'] = nliveteams
-            debate['nsafeteams'] = nsafeteams
-
-        return serialised_draw
-
-    def get_round_info(self):
-        round_info = self.round.serialize()
-        if hasattr(self, 'auto_url'):
-            round_info['autoUrl'] = reverse_round(self.auto_url, self.round)
-        if hasattr(self, 'save_url'):
-            round_info['saveUrl'] = reverse_round(self.save_url, self.round)
-        round_info['backUrl'] = reverse_round('draw', self.round)
-        return round_info
-
-    def get_draw(self):
-        # The use-case for prefetches here is so intense that we'll just implement
-        # a separate one (as opposed to use Round.debate_set_with_prefetches())
-        draw = self.round.debate_set.select_related('round__tournament', 'venue').prefetch_related(
-            Prefetch('debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution__region')),
-            Prefetch('debateteam_set',
-                queryset=DebateTeam.objects.select_related(
-                    'team__institution__region'
-                ).prefetch_related(
-                    Prefetch('team__speaker_set', queryset=Speaker.objects.order_by('name')),
-                )),
-            'debateteam_set__team__break_categories',
-            'venue__venuecategory_set',
-        )
-        populate_win_counts([dt.team for debate in draw for dt in debate.debateteam_set.all()])
-        populate_feedback_scores([da.adjudicator for debate in draw for da in debate.debateadjudicator_set.all()])
-
-        serialised_draw = [d.serialize(tournament=self.tournament) for d in draw]
-        draw = self.annotate_draw(draw, serialised_draw)
-        return json.dumps(serialised_draw)
-
-    def get_context_data(self, **kwargs):
-        kwargs['vueDebates'] = self.get_draw()
-        kwargs['vueRoundInfo'] = json.dumps(self.get_round_info())
-        return super().get_context_data(**kwargs)

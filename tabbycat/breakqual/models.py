@@ -63,7 +63,7 @@ class BreakCategory(models.Model):
 
     @property
     def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
+        """Used in EditTeamEligibilityView; TODO: replace with serializer"""
         return {
             'id': self.id, 'name': self.name, 'seq': self.seq, 'class': None
         }

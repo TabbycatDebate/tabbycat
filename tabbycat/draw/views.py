@@ -1,9 +1,7 @@
-import json
 import datetime
 import logging
 import unicodedata
 from itertools import product
-from math import floor
 
 from django.conf import settings
 from django.contrib import messages
@@ -29,14 +27,13 @@ from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin,
+from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin,
     OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
     TournamentMixin)
 from tournaments.models import Round
-from tournaments.views import BaseSaveDragAndDropDebateJsonView
 from tournaments.utils import get_side_name
 from utils.mixins import AdministratorMixin
-from utils.views import BadJsonRequestError, PostOnlyRedirectView, VueTableTemplateView
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
@@ -46,7 +43,7 @@ from venues.utils import venue_conflicts_display
 from .dbutils import delete_round_draw
 from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
-from .models import Debate, DebateTeam, TeamSideAllocation
+from .models import Debate, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
@@ -822,82 +819,3 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     def debates_or_panels_factory(self, debates):
         return EditDebateTeamsDebateSerializer(
             debates, many=True, context={'sides': self.tournament.sides})
-
-
-class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):
-    template_name = 'legacy_edit_matchups.html'
-    save_url = "legacy-save-debate-teams"
-
-    def annotate_draw(self, draw, serialised_draw):
-        if self.round.tournament.pref('teams_in_debate') == 'bp':
-            total_possible_rooms = self.round.active_teams.count() / 4
-        else:
-            total_possible_rooms = self.round.active_teams.count() / 2
-
-        # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
-        for i in range(0, floor(total_possible_rooms - len(serialised_draw))):
-            serialised_draw.append({
-                'id': 999999 + i, 'debateTeams': [], 'debateAdjudicators': [],
-                'bracket': 0, 'importance': 0, 'venue': None, 'locked': False
-            })
-
-        return super().annotate_draw(draw, serialised_draw)
-
-    def get_context_data(self, **kwargs):
-        unused = [t for t in self.round.unused_teams()]
-        serialized_unused = [t.serialize() for t in unused]
-        break_thresholds = self.break_thresholds
-        for t, serialt in zip(unused, serialized_unused):
-            self.annotate_break_classes(serialt, break_thresholds)
-            self.annotate_region_classes(serialt)
-
-        kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
-        kwargs['saveSidesStatusUrl'] = reverse_round('legacy-save-debate-sides-status', self.round)
-        return super().get_context_data(**kwargs)
-
-
-class LegacySaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
-    allows_creation = True
-
-    def modify_debate(self, debate, posted_debate):
-        posted_debateteams = posted_debate['debateTeams']
-
-        # Check that all sides are present, and without extras
-        sides = [dt['side'] for dt in posted_debateteams]
-        if set(sides) != set(self.tournament.sides):
-            raise BadJsonRequestError("Sides in JSON object weren't correct")
-
-        # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
-        delete_count, deleted = debate.debateteam_set.exclude(side__in=self.tournament.sides).delete()
-        logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
-
-        # Check that all teams are part of the tournament
-        team_ids = [dt['team']['id'] for dt in posted_debateteams]
-        teams = Team.objects.filter(tournament=self.tournament, id__in=team_ids)
-        if len(teams) != len(posted_debateteams):
-            raise BadJsonRequestError("Not all teams specified are associated with the tournament")
-        team_name_lookup = {team.id: team.short_name for team in teams}  # for debugging messages
-
-        # Update other DebateTeam objects
-        for dt in posted_debateteams:
-            team_id = dt['team']['id']
-            side = dt['side']
-            obj, created = DebateTeam.objects.update_or_create(debate=debate, side=side,
-                defaults={'team_id': team_id})
-            logger.debug("%s debate team: %s in [%s] is now %s", "Created" if created else "Updated",
-                    side, debate.matchup, team_name_lookup[team_id])
-
-        debate._populate_teams()
-
-        return debate
-
-
-class LegacySaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIDES_SAVE
-    allows_creation = False
-
-    def modify_debate(self, debate, posted_debate):
-        debate.sides_confirmed = posted_debate['sidesStatus']
-        debate.save()
-        return debate

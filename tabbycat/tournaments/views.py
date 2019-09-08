@@ -24,7 +24,7 @@ from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin, CacheMixin, TabbycatPageTitlesMixin, WarnAboutDatabaseUseMixin
-from utils.views import BadJsonRequestError, JsonDataResponsePostView, PostOnlyRedirectView
+from utils.views import PostOnlyRedirectView
 
 from .forms import (SetCurrentRoundMultipleBreakCategoriesForm,
                     SetCurrentRoundSingleBreakCategoryForm, TournamentConfigureForm,
@@ -349,49 +349,3 @@ class TournamentDonationsView(TournamentMixin, TemplateView):
 class StyleGuideView(TemplateView, TabbycatPageTitlesMixin):
     template_name = 'admin/style_guide.html'
     page_subtitle = 'Contextual sub title'
-
-
-# ==============================================================================
-# Base classes for other apps
-# ==============================================================================
-
-class BaseSaveDragAndDropDebateJsonView(AdministratorMixin, RoundMixin, LogActionMixin, JsonDataResponsePostView):
-    """@deprecate when legacy drag and drop UIs removed"""
-    """For AJAX issued updates which post a Debate dictionary; which is then
-    modified and return back via a JSON response"""
-    allows_creation = False
-    required_json_fields = []
-
-    def modify_debate(self, debate, posted_debate):
-        """Modifies the Debate object `debate` using the information in the dict
-        `posted_debate`, and returns the modified debate.
-        Must be implemented by subclasses."""
-        raise NotImplementedError
-
-    def get_debate(self, id):
-        """Returns the debate with ID `id`. If the debate doesn't exist and
-        `self.allows_creation` is True, it creates a new debate (and saves it)
-        and returns it. If the debate doesn't exist and `self.allows_creation`
-        is False, it raises a BadJsonRequestError.
-        """
-        r = self.round
-        try:
-            return Debate.objects.get(round=r, pk=id)
-        except Debate.DoesNotExist:
-            if not self.allows_creation:
-                logger.exception("Debate with ID %d in round %s doesn't exist, and allows_creation was False", id, r)
-                raise BadJsonRequestError("Debate ID %d doesn't exist" % (id,))
-            logger.info("Debate with ID %d in round %s doesn't exist, creating new debate", id, r.name)
-            return Debate.objects.create(round=r)
-
-    def post_data(self):
-        try:
-            posted_debate = json.loads(self.body)
-        except ValueError:
-            logger.exception("Bad JSON provided for drag-and-drop edit")
-            raise BadJsonRequestError("Malformed JSON provided")
-
-        debate = self.get_debate(posted_debate['id'])
-        debate = self.modify_debate(debate, posted_debate)
-        self.log_action(content_object=debate)
-        return json.dumps(debate.serialize())

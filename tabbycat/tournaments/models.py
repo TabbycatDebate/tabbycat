@@ -378,25 +378,6 @@ class Round(models.Model):
         if errors:
             raise ValidationError(errors)
 
-    def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
-        adjudicator_positions = ["C"]
-        if not self.tournament.pref('no_panellist_position'):
-            adjudicator_positions += "P"
-        if not self.tournament.pref('no_trainee_position'):
-            adjudicator_positions += "T"
-
-        round_info = {
-            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
-            'teamsInDebate': self.tournament.pref('teams_in_debate'),
-            'teamPositions': self.tournament.sides,
-            'roundName' : self.abbreviation,
-            'roundSeq' : self.seq,
-            'roundIsPrelim' : not self.is_break_round,
-            'tournamentSlug': self.tournament.slug,
-        }
-        return round_info
-
     # --------------------------------------------------------------------------
     # Checks for potential errors
     # --------------------------------------------------------------------------
