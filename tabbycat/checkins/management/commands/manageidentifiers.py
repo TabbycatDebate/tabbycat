@@ -2,9 +2,9 @@ from argparse import ArgumentParser
 
 from django.db.models import Q
 
+from checkins.models import PersonIdentifier, VenueIdentifier
 from participants.models import Person
 from utils.management.base import TournamentCommand
-from venues.models import Venue
 
 from ...utils import create_identifiers, delete_identifiers
 
@@ -14,42 +14,41 @@ class Command(TournamentCommand):
     help = "Generates or deletes check-in identifiers"
 
     def add_arguments(self, parser):
-        subparsers = parser.add_subparsers(dest="subcommand", parser_class=ArgumentParser,
-              metavar="{generate,delete}")
+        parent = ArgumentParser(add_help=False)
+        parent.add_argument('-m', '--model', type=str, choices=['person', 'venue'], default='person',
+            help="Which model to use to create identifiers")
+
+        subparsers = parser.add_subparsers(dest="subcommand", parser_class=ArgumentParser)
         subparsers.required = True
 
-        generate = subparsers.add_parser("generate")
+        generate = subparsers.add_parser("generate", parents=[parent])
         super().add_arguments(generate)
         generate.add_argument('-O', '--overwrite', action="store_true", default=False,
             help="Overwrite existing URL keys")
-        generate.add_argument('-m', '--model', type=str, choices=['person', 'venue'], default='person',
-            help="Which model to use to create identifiers")
 
-        delete = subparsers.add_parser("delete")
+        delete = subparsers.add_parser("delete", parents=[parent])
         super().add_arguments(delete)
-        delete.add_argument('-m', '--model', type=str, choices=['person', 'venue'], default='person',
-            help="Which model to use to create identifiers")
 
     def handle_tournament(self, tournament, **options):
-        model = {
-            'person': Person,
-            'venue': Venue,
-        }[options['model']]
-        related_model = model.checkin_identifier.related.related_model
+        if options['model'] == 'person':
+            queryset = Person.objects.filter(
+                Q(adjudicator__tournament=tournament) | Q(speaker__team__tournament=tournament)
+            )
+            identifier_model = PersonIdentifier
+            plural = 'people'
+        elif options['model'] == 'venue':
+            queryset = tournament.venue_set.all()
+            identifier_model = VenueIdentifier
+            plural = 'venues'
 
-        model_query = model.objects.all()
-        if options['model'] == 'venue':
-            model_query = model_query.filter(tournament=tournament)
-        else:
-            model_query = model_query.filter(Q(adjudicator__tournament=tournament) | Q(speaker__team__tournament=tournament))
-
-        if options['subcommand'] == "generate" and options['overwrite'] or options['subcommand'] == "delete":
-            self.stdout.write("Deleting all check-in identifiers for {0:s}...".format(options['model']))
-            delete_identifiers(model_query)
+        if options['subcommand'] == "delete" or options['subcommand'] == "generate" and options['overwrite']:
+            expected_count = queryset.filter(checkin_identifier__isnull=False).count()
+            _, counts = delete_identifiers(queryset)
+            self.stdout.write("Deleted check-in identifiers for all {0:d} {1:s}".format(expected_count, plural))
+            for model, count in counts.items():
+                self.stdout.write(" - deleted {0:d} {1:s} instances".format(count, model))
 
         if options['subcommand'] == "generate":
-            self.stdout.write("Creating all check-in identifiers for {0:s}...".format(options['model']))
-
-            queryset = model_query.filter(checkin_identifier__isnull=True)
-            self.stdout.write("Generating check-in identifiers for {0:d} {1:s}".format(queryset.count(), options['model']))
-            create_identifiers(related_model, queryset)
+            queryset = queryset.filter(checkin_identifier__isnull=True)
+            self.stdout.write("Generated check-in identifiers for {0:d} {1:s}".format(queryset.count(), plural))
+            create_identifiers(identifier_model, queryset)
