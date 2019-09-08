@@ -109,7 +109,7 @@ export default {
       document.getElementById('resultsForm').submit()
     },
     check: function () {
-      this.$emit('reveal-blind-check')
+      this.$emit('reveal-blind-check', {})
     },
     invalidate: function () {
       this.setStatus(this.totalBallotsubs > 1 ? 'D' : 'N')

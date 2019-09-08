@@ -134,10 +134,6 @@ msgstr ""
 msgid "Independent"
 msgstr ""
 
-#: checkins/templates/PeopleStatusMixin.vue:
-msgid "Unaffiliated"
-msgstr ""
-
 #: checkins/templates/VenuesStatusMixin.vue:
 msgid "%1 (%2) with identifier of %3"
 msgstr ""
@@ -195,14 +191,17 @@ msgid "Chair for Panel of %1"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
+#: printing/templates/PrintableDebateInfo.vue:
 msgid "Solo Chair"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
+#: printing/templates/PrintableDebateInfo.vue:
 msgid "Panellist"
 msgstr ""
 
 #: printing/templates/PrintableBallotHeader.vue:
+#: printing/templates/PrintableDebateInfo.vue:
 msgid "Trainee"
 msgstr ""
 
@@ -247,18 +246,6 @@ msgid "Neg Veto"
 msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
-msgid "1"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "2"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "3"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
 msgid "%1:"
 msgstr ""
 
@@ -271,6 +258,7 @@ msgid "tab check"
 msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
+#: checkins/templates/PeopleStatusMixin.vue:
 msgid "Unaffiliated"
 msgstr ""
 
@@ -291,18 +279,6 @@ msgid "Chair"
 msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
-msgid "Solo Chair"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "Panellist"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "Trainee"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
 msgid "%1 (%2, %3)"
 msgstr ""
 
@@ -319,14 +295,11 @@ msgid "Did %1 deliver the adjudication?"
 msgstr ""
 
 #: printing/templates/PrintableFeedback.vue:
-msgid "Yes"
-msgstr ""
-
-#: printing/templates/PrintableFeedback.vue:
 msgid "No, I am submitting feedback on:"
 msgstr ""
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
+#: printing/templates/PrintableFeedback.vue:
 msgid "Yes"
 msgstr ""
 
@@ -367,63 +340,7 @@ msgid "Circle the last digit of the %1's score:"
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:
-msgid "0"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "1"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "2"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "3"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "4"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "5"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "6"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "7"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "8"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "9"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
 msgid "Circle Rank:"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "1st"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "2nd"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "3rd"
-msgstr ""
-
-#: printing/templates/PrintableTeamScores.vue:
-msgid "4th"
 msgstr ""
 
 #: printing/templates/PrintableTeamScores.vue:

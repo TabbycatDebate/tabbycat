@@ -4,6 +4,7 @@ import qrcode
 from qrcode.image import svg
 
 from django.db.models import Q
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
 
@@ -11,69 +12,14 @@ from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
 from checkins.models import DebateIdentifier
 from checkins.utils import create_identifiers
-from draw.models import Debate, DebateTeam
+from draw.models import DebateTeam
 from options.utils import use_team_code_names
 from participants.models import Person
 from results.utils import side_and_position_names
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 RoundMixin, TournamentMixin)
-from tournaments.models import Tournament
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
-from venues.models import VenueCategory
-
-
-class MasterSheetsListView(AdministratorMixin, RoundMixin, TemplateView):
-    template_name = 'division_sheets_list.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs['standings'] = VenueCategory.objects.all()
-        kwargs['venue_categories'] = VenueCategory.objects.all()
-        return super().get_context_data(**kwargs)
-
-
-class MasterSheetsView(AdministratorMixin, RoundMixin, TemplateView):
-    template_name = 'master_sheets_view.html'
-
-    def get_context_data(self, **kwargs):
-        venue_category_id = self.kwargs['venue_category_id']
-        base_venue_category = VenueCategory.objects.get(id=venue_category_id)
-        active_tournaments = Tournament.objects.filter(active=True)
-        for tournament in list(active_tournaments):
-            tournament.debates = Debate.objects.select_related(
-                'division', 'division__venue_category', 'round',
-                'round__tournament').filter(
-                    # All Debates, with a matching round, at the same venue category name
-                    round__seq=self.round.seq,
-                    round__tournament=tournament,
-                    # Hack - remove when venue category are unified
-                    division__venue_category__name=base_venue_category.name
-            ).order_by('round', 'division__venue_category__name', 'division')
-
-        kwargs['base_venue_category'] = base_venue_category
-        kwargs['active_tournaments'] = active_tournaments
-        return super().get_context_data(**kwargs)
-
-
-class RoomSheetsView(AdministratorMixin, RoundMixin, TemplateView):
-    template_name = 'room_sheets_view.html'
-
-    def get_context_data(self, **kwargs):
-        venue_category_id = self.kwargs['venue_category_id']
-        base_venue_category = VenueCategory.objects.get(id=venue_category_id)
-        venues_list = []
-
-        # Get a unique list of venue names (avoid getting duplicates across tournaments)
-        for venue in set(base_venue_category.venues.order_by('name').values_list('name', flat=True)):
-            venues_list.append({'name': venue, 'debates': []})
-            # All Debates, with a matching round, at the same venue category
-            venues_list[-1]['debates'] = Debate.objects.filter(
-                round__seq=self.round.seq, venue__name=venue).order_by('round__tournament__seq').all()
-            print(venues_list[-1])
-
-        kwargs['base_venue_category'] = base_venue_category
-        kwargs['venues'] = venues_list
-        return super().get_context_data(**kwargs)
 
 
 class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
@@ -267,6 +213,7 @@ class BasePrintScoresheetsView(RoundMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['ballots'] = json.dumps(self.get_ballots_dicts())
+        kwargs['ordinals'] = [ordinal(i) for i in range(1, 5)]
         motions = self.round.motion_set.order_by('seq')
         kwargs['motions'] = json.dumps([{'seq': m.seq, 'text': m.text} for m in motions])
         kwargs['use_team_code_names'] = use_team_code_names(self.tournament, False)
@@ -298,11 +245,8 @@ class PrintableRandomisedURLs(TournamentMixin, AdministratorMixin, TemplateView)
 
     def get_context_data(self, **kwargs):
 
-        if not self.tournament.pref('share_adjs'):
-            participants = self.tournament.participants.filter(url_key__isnull=False)
-        else:
-            participants = Person.objects.filter(
-                Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament__isnull=True) & Q(url_key__isnull=False))
+        participants = Person.objects.filter(
+            Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament__isnull=True) & Q(url_key__isnull=False))
 
         participants_array = list(participants.select_related('speaker', 'speaker__team', 'adjudicator__institution', 'adjudicator')
             .values('name', 'speaker__team__short_name', 'adjudicator__institution__code', 'url_key'))

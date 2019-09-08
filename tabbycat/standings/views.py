@@ -495,13 +495,6 @@ class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
         return True
 
 
-class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
-    """Special team standings view that also shows rankings within divisions."""
-    rankings = ('rank', 'division')
-    page_title = gettext_lazy("Division Standings")
-    page_emoji = '👯'
-
-
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
     """Public view for the team tab.
     The team tab is actually what is presented to an admin as "team standings".

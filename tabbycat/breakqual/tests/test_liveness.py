@@ -1,6 +1,6 @@
-from unittest import TestCase
+from django.test import TestCase
 
-from ..liveness import liveness_bp, liveness_twoteam
+from ..liveness import get_bp_coefficients, liveness_bp, liveness_twoteam
 
 
 class TestLiveness(TestCase):
@@ -108,6 +108,19 @@ class TestLiveness(TestCase):
         safe, dead = liveness_bp(False, 6, 8, 21, 6, [10,9,9,8,7,7,7,6,6])
         self.assertGreaterEqual(safe, 8) # All teams on 8 broke
         self.assertLessEqual(dead, 3) # Some teams on 7 broke
+
+    def test_bp_coefficients(self):
+        data = {
+            0: [1],
+            1: [1, 1, 1, 1],
+            2: [1, 2, 3, 4, 3, 2, 1],
+            10: [1, 10, 55, 220, 705, 1902, 4455, 9240, 17205, 29050, 44803, 63460, 82885, 100110, 112035, 116304, 112035, 100110, 82885, 63460, 44803, 29050, 17205, 9240, 4455, 1902, 705, 220, 55, 10, 1],  # noqa: E501
+        }
+
+        for nrounds, coeffs in data.items():
+            with self.subTest(row=nrounds):
+                calc_coeffs = get_bp_coefficients(nrounds)
+                self.assertListEqual(coeffs, calc_coeffs)
 
     # WUDC
 

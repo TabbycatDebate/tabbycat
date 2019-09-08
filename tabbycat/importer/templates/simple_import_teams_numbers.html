@@ -30,7 +30,7 @@
     {{ wizard.management_form }}
 
     {% if wizard.form.errors %}
-      {% include "components/form-errors.html" with errors=wizard.form.non_form_errors %}
+      {% include "components/form-errors.html" with errors=wizard.form.non_field_errors %}
     {% endif %}
 
     <div class="card pt-3">

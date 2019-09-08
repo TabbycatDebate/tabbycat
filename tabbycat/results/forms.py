@@ -250,7 +250,6 @@ class BaseBallotSetForm(BaseResultForm):
 
         self.using_motions = self.tournament.pref('enable_motions')
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
-        self.using_forfeits = self.tournament.pref('enable_forfeits')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.using_declared_winner = self.tournament.pref('winners_in_ballots') != 'none'
         self.declared_winner_overrides = self.tournament.pref('winners_in_ballots') in ['tied-points', 'low-points']
@@ -287,8 +286,6 @@ class BaseBallotSetForm(BaseResultForm):
          - <side>_motion_veto,   if motion vetoes are being noted, one for each team
          - <side>_speaker_s#,    one for each speaker
          - <side>_ghost_s#,      whether score should be a duplicate
-
-        Most fields are required, unless forfeits are enabled.
         """
 
         # 1. Choose sides field
@@ -312,7 +309,7 @@ class BaseBallotSetForm(BaseResultForm):
         # 2. Motions fields
         if self.using_motions:
             self.fields['motion'] = MotionModelChoiceField(queryset=self.motions,
-                required=not self.using_forfeits)
+                required=True)
 
         if self.using_vetoes:
             for side in self.sides:
@@ -323,11 +320,6 @@ class BaseBallotSetForm(BaseResultForm):
 
         # 3. Speaker fields
         self.create_participant_fields()
-
-        # 4. Forfeit field
-        if self.using_forfeits:
-            choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.sides]
-            self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)
 
     def create_declared_winner_dropdown(self):
         """This method creates a drop-down with a list of the teams in the debate"""
@@ -363,16 +355,13 @@ class BaseBallotSetForm(BaseResultForm):
                 initial['motion'] = self.motions.get()
             else:
                 initial['motion'] = self.ballotsub.motion
+
+        if self.using_vetoes:
             for side in self.sides:
                 dtmp = self.ballotsub.debateteammotionpreference_set.filter(
                         debate_team__side=side, preference=3).first()
                 if dtmp:
                     initial[self._fieldname_motion_veto(side)] = dtmp.motion
-
-        if self.using_forfeits:
-            forfeiter = self.ballotsub.teamscore_set.filter(forfeit=True, win=False).first()
-            if forfeiter:
-                initial['forfeit'] = forfeiter.debate_team.side
 
         result = self.result_class(self.ballotsub)
         initial.update(self.initial_from_result(result))
@@ -396,8 +385,6 @@ class BaseBallotSetForm(BaseResultForm):
 
         if 'password' in self.fields:
             order.append('password')
-        if 'forfeit' in self.fields:
-            order.append('forfeit')
 
         order.extend(['discarded', 'confirmed', 'debate_result_status'])
 
@@ -443,8 +430,7 @@ class BaseBallotSetForm(BaseResultForm):
                         debate_team=debate_team, preference=3).delete()
 
         # 6. Save participant fields
-        if not self.using_forfeits or not self.cleaned_data.get('forfeit'):
-            self.save_participant_fields(result)
+        self.save_participant_fields(result)
 
         result.save()
 
@@ -487,7 +473,7 @@ class ScoresMixin:
             else:
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
-                queryset=queryset, required=not self.using_forfeits)
+                queryset=queryset, required=True)
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
@@ -519,9 +505,8 @@ class ScoresMixin:
     def clean(self):
         cleaned_data = super().clean()
 
-        if not cleaned_data.get('forfeit'):
-            self.clean_speakers(cleaned_data)
-            self.clean_scoresheet(cleaned_data)
+        self.clean_speakers(cleaned_data)
+        self.clean_scoresheet(cleaned_data)
 
         return cleaned_data
 
@@ -668,7 +653,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             self.fields[self._fieldname_score(side, pos)] = scorefield(
                 widget=forms.NumberInput(attrs={'class': 'required number'}),
                 tournament=self.tournament,
-                required=not self.using_forfeits,
+                required=True,
             )
 
     def initial_from_result(self, result):
@@ -787,7 +772,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
                     widget=forms.NumberInput(attrs={'class': 'required number'}),
                     tournament=self.tournament,
-                    required=not self.using_forfeits,
+                    required=True,
                 )
         for adj in self.adjudicators:
             self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()

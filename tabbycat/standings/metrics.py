@@ -100,7 +100,7 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
     def get_annotated_queryset(self, queryset, column_name, round=None):
         """Returns a QuerySet annotated with the metric given."""
         annotation = self.get_annotation(round=round)
-        logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation.as_sql))
+        logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation))
         return queryset.annotate(**{column_name: annotation}).distinct()
 
     def annotate_with_queryset(self, queryset, standings, round=None):

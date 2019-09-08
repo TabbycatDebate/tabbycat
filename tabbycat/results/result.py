@@ -143,7 +143,7 @@ class BaseDebateResult:
     field, which normally means that the field will be left as null.
     """
 
-    teamscore_fields = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible', 'forfeit']
+    teamscore_fields = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible']
 
     is_voting = False
     uses_declared_winners = True

@@ -57,8 +57,7 @@ def fill_scoresheet_randomly(scoresheet, tournament):
             scoresheet.set_score(side, pos, score)
 
 
-def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
-                  min_score=72, max_score=78, reply_random=False):
+def add_result(debate, submitter_type, user, discarded=False, confirmed=False, reply_random=False):
     """Adds a ballot set to a debate.
 
     ``debate`` is the Debate to which the ballot set should be added.
@@ -94,7 +93,7 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
                 result.set_ghost(side, i, False)
 
             if t.reply_position is not None:
-                reply_speaker = random.randint(0, t.last_substantive_position-1) if reply_random else 0
+                reply_speaker = random.randint(0, t.last_substantive_position-2) if reply_random else 0
                 result.set_speaker(side, t.reply_position, speakers[reply_speaker])
                 result.set_ghost(side, t.reply_position, False)
 
@@ -112,8 +111,19 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False,
     # Pick a motion
     motions = debate.round.motion_set.all()
     if motions:
-        motion = random.choice(motions)
+        num_motions = 3 if motions.count() > 3 else motions.count()
+        sample = random.sample(list(motions), k=num_motions)
+        motion = sample[0]
         bsub.motion = motion
+
+        if t.pref('motion_vetoes_enabled') and len(sample) == len(t.sides) + 1:
+            for i, side in enumerate(t.sides, 1):
+                dt = debate.get_dt(side)
+                dt.debateteammotionpreference_set.create(
+                    motion=sample[i],
+                    preference=3,
+                    ballot_submission=bsub,
+                )
 
     bsub.discarded = discarded
     bsub.confirmed = confirmed

@@ -20,7 +20,7 @@ class MotionTwoTeamStatsCalculator:
     def __init__(self, tournament):
         self.tournament = tournament
         self.by_motion = tournament.pref('enable_motions')
-        self.include_vetoes = self.by_motion and tournament.pref('motion_vetoes_enabled')
+        self.include_vetoes = tournament.pref('motion_vetoes_enabled')
 
         self._prefetch_motions()
         self.ndebates_by_round = {r: r.ndebates for r in

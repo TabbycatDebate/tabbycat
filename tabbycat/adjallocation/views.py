@@ -224,7 +224,6 @@ class LegacyEditAdjudicatorAllocationView(LegacyAdjudicatorAllocationMixin, Temp
         round_info['scoreMin'] = self.tournament.pref('adj_min_score')
         round_info['scoreMax'] = self.tournament.pref('adj_max_score')
         round_info['scoreForVote'] = self.tournament.pref('adj_min_voting_score')
-        round_info['allowDuplicateAllocations'] = self.tournament.pref('duplicate_adjs')
         round_info['regions'] = self.get_regions_info()
         round_info['categories'] = self.get_categories_info()
         return round_info

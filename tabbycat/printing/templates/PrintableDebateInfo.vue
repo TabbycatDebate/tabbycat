@@ -95,7 +95,7 @@
           <div class="d-flex"
                v-if="roundInfo.motions.length === 0 || roundInfo.hideMotions">
             <div class="flex-fill db-fill-in strong mr-3 pt-3 mt-2"
-                 v-for="choice_type in [gettext('1'), gettext('2'), gettext('3'), ]"
+                 v-for="choice_type in ['1', '2', '3', ]"
                  v-text="tct('%s:', [choice_type])"></div>
           </div>
         </div>

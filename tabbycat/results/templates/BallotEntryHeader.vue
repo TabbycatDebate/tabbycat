@@ -124,7 +124,7 @@ export default {
     },
     setIron: function () {
       if (this.ironStatus === 'Yes') {
-        this.$emit('set-duplicates')
+        this.$emit('set-duplicates', {})
       }
     },
   },

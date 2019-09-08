@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('adjallocation', '0008_auto_20181019_2059'),
         ('draw', '0003_remove_debate_ballot_in'),
-        ('results', '0002_remove_ballotsubmission_copied_from'),
+        ('results', '0003_remove_league_fields'),
     ]
 
     operations = [

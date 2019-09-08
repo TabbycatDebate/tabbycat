@@ -90,16 +90,4 @@
 
   {% endfor %}
 
-  {% if pref.enable_forfeits %}
-    <div class="card mt-3">
-      <div class="panel-heading">
-        <h4 class="panel-title">{% trans "Forfeits" %}</h4>
-      </div>
-      <div class="card-body">
-        {{ form.forfeit|addcss:"forfeits-group" }}
-        {{ form.forfeit.errors }}
-      </div>
-    </div>
-  {% endif %}
-
 </div>

@@ -1,4 +1,4 @@
-{% load i18n l10n debate_tags %}
+{% load humanize i18n l10n debate_tags %}
 
 <div class="col-sm-12">
 
@@ -85,35 +85,12 @@
                  style="width: {{ percentage|unlocalize }}%" data-toggle="tooltip"
                  title="{{ tooltip_text }}">
               {% if count > 0 %}
-                {% if points == 3 %}
-                  <span class="d-none d-md-inline">
-                    {% trans "1st" %}
-                  </span>
-                  <span class="d-inline d-md-none">
-                    {% trans "1" context "used when there isn't enough space to display '1st'" %}
-                  </span>
-                {% elif points == 2 %}
-                  <span class="d-none d-md-inline">
-                    {% trans "2nd" %}
-                  </span>
-                  <span class="d-inline d-md-none">
-                    {% trans "2" context "used when there isn't enough space to display '2nd'" %}
-                  </span>
-                {% elif points == 1 %}
-                  <span class="d-none d-md-inline">
-                    {% trans "3rd" %}
-                  </span>
-                  <span class="d-inline d-md-none">
-                    {% trans "3" context "used when there isn't enough space to display '3rd'" %}
-                  </span>
-                {% else %}
-                  <span class="d-none d-md-inline">
-                    {% trans "4th" %}
-                  </span>
-                  <span class="d-inline d-md-none">
-                    {% trans "4" context "used when there isn't enough space to display '4th'" %}
-                  </span>
-                {% endif %}
+                <span class="d-none d-md-inline">
+                  {{ 4|subtract:points|ordinal }}
+                </span>
+                <span class="d-inline d-md-none">
+                  {{ 4|subtract:points }}
+                </span>
               {% endif %}
             </div>
 

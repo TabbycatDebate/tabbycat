@@ -61,7 +61,7 @@ class Venue(models.Model):
 
 class VenueCategory(models.Model):
     """Represents a category of venues, typically used for (physical real-world)
-    navigation aid, division allocations and/or venue constraints."""
+    navigation aid and/or venue constraints."""
 
     DISPLAY_NONE = '-'
     DISPLAY_PREFIX = 'P'
@@ -111,8 +111,7 @@ class VenueConstraintManager(models.Manager):
         return VenueConstraint.objects.filter(
             models.Q(team__debateteam__debate__in=debates) |
             models.Q(institution__team__debateteam__debate__in=debates) |
-            models.Q(adjudicator__debateadjudicator__debate__in=debates) |
-            models.Q(division__debate__in=debates)
+            models.Q(adjudicator__debateadjudicator__debate__in=debates)
         ).distinct()
 
 
@@ -120,8 +119,7 @@ class VenueConstraint(models.Model):
 
     SUBJECT_CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
                                    models.Q(app_label='participants', model='adjudicator') | \
-                                   models.Q(app_label='participants', model='institution') | \
-                                   models.Q(app_label='divisions', model='division')
+                                   models.Q(app_label='participants', model='institution')
 
     category = models.ForeignKey(VenueCategory, models.CASCADE,
         verbose_name=_("category"))

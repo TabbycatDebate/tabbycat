@@ -11,8 +11,8 @@
 {% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
 
 {% block sub-title %}
-  {% blocktrans trimmed with round=debate.round.name venue_category=debate.division.venue_category.name venue=debate.venue.display_name %}
-    {{ round }} @ {{ venue_category }} {{ venue }}
+  {% blocktrans trimmed with round=debate.round.name venue=debate.venue.display_name %}
+    {{ round }} @ {{ venue }}
   {% endblocktrans %}
 {% endblock %}
 

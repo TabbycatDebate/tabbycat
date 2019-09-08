@@ -1,21 +1,14 @@
 import datetime
 import logging
-import random
-import string
 
-from django.db import IntegrityError
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from .models import DebateIdentifier, Event, PersonIdentifier, VenueIdentifier
 
 logger = logging.getLogger(__name__)
-
-
-def generate_identifier(length=6):
-    """Generates a random identifier and saves it to the database."""
-    chars = string.ascii_uppercase + string.digits
-    return ''.join(random.SystemRandom().choice(chars) for _ in range(length))
 
 
 IDENTIFIER_CLASSES = {
@@ -25,25 +18,6 @@ IDENTIFIER_CLASSES = {
 }
 
 
-def generate_identifiers(queryset, length=6, num_attempts=10):
-    """Generates identifiers for every instance in the given QuerySet."""
-    klass = IDENTIFIER_CLASSES[queryset.model._meta.label]
-    attr = klass.instance_attr
-
-    for instance in queryset:
-        identifier = generate_identifier(length=length)
-        for i in range(num_attempts):
-            try:
-                klass.objects.create(identifier=identifier, **{attr: instance})
-            except IntegrityError:
-                logger.warning("Identifier was not unique, trying again (%d of %d)", i, num_attempts)
-                continue
-            else:
-                break
-        else:
-            logger.error("Could not generate unique identifier for %r after %d tries", instance, num_attempts)
-
-
 def delete_identifiers(queryset):
     klass = IDENTIFIER_CLASSES[queryset.model._meta.label]
     attr = klass.instance_attr
@@ -51,15 +25,13 @@ def delete_identifiers(queryset):
 
 
 def get_unexpired_checkins(tournament, window_preference_type):
-    if not window_preference_type:
-        time_window = datetime.datetime.fromtimestamp(0)  # Unix start
-    else:
+    filters = Q(tournament=tournament)
+    if window_preference_type:
         start = datetime.timedelta(hours=tournament.pref(window_preference_type))
-        time_window = datetime.datetime.now() - start
+        time_window = timezone.now() - start
+        filters &= Q(time__gte=time_window)
 
-    events = Event.objects.filter(tournament=tournament,
-        time__gte=time_window).select_related('identifier').order_by('time')
-    return events
+    return Event.objects.filter(filters).select_related('identifier').order_by('time')
 
 
 def create_identifiers(model_to_make, items_to_check):

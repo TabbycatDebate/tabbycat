@@ -15,19 +15,17 @@ ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
 ENABLE_DEBUG_TOOLBAR = False # Must default to false
-DISABLE_SENTRY = True # Must default to false
+# Sentry follows DEBUG if local; otherwise uses specific environment variable
+DISABLE_SENTRY = bool(int(os.environ['DISABLE_SENTRY'])) if 'DISABLE_SENTRY' in os.environ else DEBUG
 SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
-
-# Hide league-related configuration options unless explicitly enabled
-LEAGUE = bool(int(os.environ['LEAGUE'])) if 'LEAGUE' in os.environ else False
 
 # ==============================================================================
 # Version
 # ==============================================================================
 
-TABBYCAT_VERSION = '2.3.0a'
-TABBYCAT_CODENAME = 'LaPerm'
-READTHEDOCS_VERSION = 'v2.3.0'
+TABBYCAT_VERSION = '2.4.0a'
+TABBYCAT_CODENAME = 'M'
+READTHEDOCS_VERSION = 'v2.4.0'
 
 # ==============================================================================
 # Internationalization and Localization
@@ -88,7 +86,7 @@ TABBYCAT_APPS = (
     'availability',
     'breakqual',
     'checkins',
-    'divisions',
+    'divisions', # obsolete
     'draw',
     'motions',
     'options',

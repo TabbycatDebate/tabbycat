@@ -230,9 +230,9 @@ def percentage(number_a, number_b):
         return 0
 
 
-@register.simple_tag
-def subtract(number_a, number_b):
-    return number_a - number_b # Used in Feedback Overview
+@register.filter
+def subtract(value, arg):
+    return value - arg # Used in BP Motion Stats
 
 
 @register.filter(name='abbreviatename')

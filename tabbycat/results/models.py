@@ -100,8 +100,6 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
-    forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("forfeit")) # where valid, cascade should be covered by debate
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -133,9 +131,6 @@ class BallotSubmission(Submission):
 
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
-
-        if self.forfeit is not None and self.forfeit.debate != self.debate:
-            raise ValidationError(_("The forfeiter must be a team in the debate."))
 
     @property
     def serialize_like_actionlog(self):
@@ -277,10 +272,6 @@ class TeamScore(models.Model):
         verbose_name=_("votes given"))
     votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("votes possible"))
-
-    forfeit = models.BooleanField(default=False,
-        verbose_name=_("forfeit"),
-        help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]
