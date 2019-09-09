@@ -86,7 +86,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         scoresheet.add_declared_winner(testdata['declared_winner'])
         self.assertEqual(scoresheet.is_complete(), testdata['complete_declared'])
         if scoresheet.is_complete():
-            self.assertEqual(scoresheet.winners()[0], testdata['declared_winner'])
+            self.assertEqual(next(iter(scoresheet.winners()), None), testdata['declared_winner'])
             self.assertEqual(len(scoresheet.winners()), 1)
         else:
             self.assertEqual(len(scoresheet.winners()), 0)
@@ -99,7 +99,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         if testdata['calculated_winner'] is None:
             self.assertEqual(len(scoresheet.winners()), 0)
         else:
-            self.assertEqual(scoresheet.winners()[0], testdata['calculated_winner'])
+            self.assertEqual(next(iter(scoresheet.winners()), None), testdata['calculated_winner'])
         self.assert_scores(scoresheet, testdata)
         self.assertEqual(scoresheet.is_valid(), testdata['calculated_winner'] is not None)
 
@@ -111,7 +111,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'] and testdata['complete_declared'])
         if scoresheet.is_complete():
             self.assertEqual(len(scoresheet.winners()), 1)
-            self.assertEqual(scoresheet.winners()[0], testdata['declared_winner'])
+            self.assertEqual(next(iter(scoresheet.winners()), None), testdata['declared_winner'])
         else:
             self.assertEqual(len(scoresheet.winners()), 0)
         self.assert_scores(scoresheet, testdata)
@@ -125,7 +125,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         self.assertEqual(scoresheet.is_complete(), testdata['complete_scores'] and testdata['complete_declared'])
         if scoresheet.is_complete() and (testdata['calculated_winner'] in [testdata['declared_winner'], None]):
             winner = testdata['declared_winner']
-            self.assertEqual(scoresheet.winners()[0], winner)
+            self.assertEqual(next(iter(scoresheet.winners()), None), winner)
             self.assertEqual(len(scoresheet.winners()), 1)
         else:
             winner = None
@@ -135,7 +135,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
 
     def test_declared_winner_error(self):
         scoresheet = ResultOnlyScoresheet()
-        self.assertRaises(AssertionError, scoresheet.set_declared_winners, 'hello')
+        self.assertRaises(AssertionError, scoresheet.set_declared_winners, set(['hello']))
 
 
 class TestBPScoresheets(unittest.TestCase):

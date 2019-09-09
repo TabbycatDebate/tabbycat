@@ -432,16 +432,13 @@ class DebateResultByAdjudicator(BaseDebateResult):
     # --------------------------------------------------------------------------
 
     def get_winner(self, adjudicator):
-        if len(self.scoresheets[adjudicator].winners()) == 0:
-            return None
-        return self.scoresheets[adjudicator].winners()[0]
+        return next(iter(self.scoresheets[adjudicator].winners()), None)
 
     def add_winner(self, adjudicator, winner):
         self.scoresheets[adjudicator].add_declared_winner(winner)
 
-    def set_winner(self, adjudicator, winner):
-        assert isinstance(winner, list)
-        self.scoresheets[adjudicator].set_declared_winners(winner)
+    def set_winner(self, adjudicator, winners):
+        self.scoresheets[adjudicator].set_declared_winners(winners)
 
     # --------------------------------------------------------------------------
     # Decision calculation
@@ -478,13 +475,12 @@ class DebateResultByAdjudicator(BaseDebateResult):
         if not self.is_valid():
             raise ResultError("Tried to calculate decision on an invalid ballot set.")
 
-        self._adjs_by_side = {side: [] for side in self.sides} # group adjs by vote
+        self._adjs_by_side = {side: set() for side in self.sides} # group adjs by vote
         for adj, sheet in self.scoresheets.items():
-            winner = sheet.winners()
-            if len(winner) == 0:  # should never happen
+            if len(sheet.winners()) == 0:  # should never happen
                 raise ResultError("The scoresheet for %s does not have a winner." % adj.name)
-            winner = winner[0]
-            self._adjs_by_side[winner].append(adj)
+            winner = self.get_winner(adj)
+            self._adjs_by_side[winner].add(adj)
 
         votes_aff = len(self._adjs_by_side['aff'])
         votes_neg = len(self._adjs_by_side['neg'])
@@ -496,7 +492,7 @@ class DebateResultByAdjudicator(BaseDebateResult):
         else:
             logger.warning("Adjudicators split %d-%d in debate %s, awarding by chair casting vote.",
                            votes_aff, votes_neg, self.debate)
-            self._winner = self.scoresheets[self.debate.adjudicators.chair].winners()[0]
+            self._winner = self.get_winner(self.debate.adjudicators.chair)
 
         self._decision_calculated = True
 
@@ -765,14 +761,14 @@ class ConsensusDebateResult(BaseDebateResult):
     def add_winner(self, winner):
         self.scoresheet.add_declared_winner(winner)
 
-    def set_winner(self, winner):
-        self.scoresheet.set_declared_winners([winner])
+    def set_winner(self, winners):
+        self.scoresheet.set_declared_winners(winners)
 
     def winning_side(self):
         if self.get_winner() is None:
             return None
-        assert len(self.get_winner()) == 1
-        return self.get_winner()[0]
+        assert len(self.get_winner()) == 1, "Should not be called with BP"
+        return next(iter(self.get_winner()))
 
     def winning_team(self):
         return self.debateteams[self.winning_side()].team

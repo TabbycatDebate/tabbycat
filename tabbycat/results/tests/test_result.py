@@ -507,7 +507,7 @@ class TestVotingDebateResultWithScores(GeneralSpeakerTestsMixin, BaseTestDebateR
             if winner is None:
                 self.assertEqual(len(result.scoresheets[adj].winners()), 0)
             else:
-                self.assertEqual(result.scoresheets[adj].winners()[0], winner)
+                self.assertEqual(result.get_winner(adj), winner)
 
     # --------------------------------------------------------------------------
     # Speaker scores

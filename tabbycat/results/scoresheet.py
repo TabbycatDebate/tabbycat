@@ -32,7 +32,7 @@ class BaseScoresheet:
         """Returns ['aff'] is the affirmative team won, and ['neg'] if the negative
         team won. `self._get_winners()` must be implemented by subclasses."""
         if not self.is_complete():
-            return []
+            return set()
         return self._get_winners()
 
     # Default methods
@@ -85,18 +85,18 @@ class DeclaredWinnersMixin:
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.declared_winners = []
+        self.declared_winners = set()
 
     def is_complete(self):
-        winners_declared = set(self.declared_winners).issubset(set(self.sides)) and len(self.declared_winners) == self.number_winners
+        winners_declared = self.declared_winners.issubset(set(self.sides)) and len(self.declared_winners) == self.number_winners
         return super().is_complete() and winners_declared
 
     def add_declared_winner(self, winner):
         assert winner in self.sides or winner is None, "Declared winner must be one of: " + ", ".join(map(repr, self.sides))
-        self.declared_winners.append(winner)
+        self.declared_winners.add(winner)
 
     def set_declared_winners(self, winners):
-        assert set(winners).issubset(set(self.sides)) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
+        assert winners.issubset(set(self.sides)) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
         self.declared_winners = winners
 
     def get_declared_winners(self):
@@ -137,11 +137,11 @@ class HighPointWinsRequiredScoresheet(ScoresMixin, BaseTwoTeamScoresheet):
         aff_total = self.get_total('aff')
         neg_total = self.get_total('neg')
         if aff_total > neg_total:
-            return ['aff']
+            return set(['aff'])
         elif neg_total > aff_total:
-            return ['neg']
+            return set(['neg'])
         else:
-            return []
+            return set()
 
 
 class TiedPointWinsAllowedScoresheet(DeclaredWinnersMixin, ScoresMixin, BaseTwoTeamScoresheet):
@@ -153,12 +153,12 @@ class TiedPointWinsAllowedScoresheet(DeclaredWinnersMixin, ScoresMixin, BaseTwoT
     def _get_winners(self):
         aff_total = self.get_total('aff')
         neg_total = self.get_total('neg')
-        if aff_total >= neg_total and self.declared_winners == ['aff']:
-            return ['aff']
-        elif neg_total >= aff_total and self.declared_winners == ['neg']:
-            return ['neg']
+        if aff_total >= neg_total and 'aff' in self.declared_winners:
+            return set(['aff'])
+        elif neg_total >= aff_total and 'neg' in self.declared_winners:
+            return set(['neg'])
         else:
-            return []
+            return set()
 
 
 class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
@@ -198,7 +198,7 @@ class BPScoresheet(ScoresMixin, BaseBPScoresheet):
         return [side for total, side in total_by_side]
 
     def winners(self):
-        return []
+        return set()
 
 
 class BPEliminationScoresheet(DeclaredWinnersMixin, BaseBPScoresheet):

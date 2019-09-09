@@ -324,7 +324,7 @@ class BaseBallotSetForm(BaseResultForm):
     def create_declared_winner_dropdown(self):
         """This method creates a drop-down with a list of the teams in the debate"""
         return forms.TypedChoiceField(
-            label=_("Winner"), required=True, empty_value=None, coerce=lambda i: list(i),
+            label=_("Winner"), required=True, empty_value=None,
             choices=[(None, _("---------"))] + [(s, t.short_name) for s, t in zip(self.sides, self.debate.teams)],
         )
 
@@ -496,7 +496,10 @@ class ScoresMixin:
         """Generates the initial from data that uses the DebateResult for the
         debate. Making this its own function allows subclasses to extend this so
         that it can use the same DebateResult as the super class."""
-        return {}
+        initial = {}
+        for side, pos in product(self.sides, self.positions):
+            initial[self._fieldname_speaker(side, pos)] = result.get_speaker(side, pos)
+        return initial
 
     # --------------------------------------------------------------------------
     # Validation methods
@@ -702,7 +705,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     ))
 
                 # Check that the high-point team is declared the winner
-                has_declared = hasattr(cleaned_data, self._fieldname_declared_winner())
+                has_declared = self._fieldname_declared_winner() in cleaned_data
                 highest_score = max(side_totals, key=lambda key: side_totals[key])
                 if has_declared and highest_score != cleaned_data[self._fieldname_declared_winner()]:
                     self.add_error(None, forms.ValidationError(
@@ -734,9 +737,8 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             score = self.cleaned_data[self._fieldname_score(side, pos)]
             result.set_score(side, pos, score)
 
-        declared_winner = getattr(self.cleaned_data, self._fieldname_declared_winner())
-        if declared_winner is not None:
-            result.set_winner(declared_winner)
+        if self._fieldname_declared_winner() in self.cleaned_data:
+            result.set_winner(set([self.cleaned_data[self._fieldname_declared_winner()]]))
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -817,21 +819,22 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 logger.warning("Field %s not found", str(e))
 
             else:
-                # Check that it was not a draw.
-                if totals[0] == totals[1] and not self.declared_winner_overrides:
-                    self.add_error(None, forms.ValidationError(
-                        _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
-                        params={'adj': adj.name}, code='draw'
-                    ))
+                if len(totals) == 2 and not self.declared_winner_overrides:
+                    # Check that it was not a draw.
+                    if totals[0] == totals[1]:
+                        self.add_error(None, forms.ValidationError(
+                            _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
+                            params={'adj': adj.name}, code='draw'
+                        ))
 
-                # Check that the high-point team is declared the winner
-                has_declared = hasattr(cleaned_data, self._fieldname_declared_winner(adj))
-                highest_score = max(side_totals, key=lambda key: side_totals[key])
-                if has_declared and highest_score != cleaned_data[self._fieldname_declared_winner(adj)]:
-                    self.add_error(None, forms.ValidationError(
-                        _("The declared winner does not correspond to the team with the highest score for adjudicator %(adj)s."),
-                        params={'adj': adj.name}, code='wrong_winner'
-                    ))
+                    # Check that the high-point team is declared the winner
+                    has_declared = self._fieldname_declared_winner(adj) in cleaned_data
+                    highest_score = max(side_totals, key=lambda key: side_totals[key])
+                    if has_declared and highest_score != cleaned_data[self._fieldname_declared_winner(adj)]:
+                        self.add_error(None, forms.ValidationError(
+                            _("The declared winner does not correspond to the team with the highest score for adjudicator %(adj)s."),
+                            params={'adj': adj.name}, code='wrong_winner'
+                        ))
 
                 # Check that the margin did not exceed the maximum permissible.
                 margin = abs(totals[0] - totals[1])
@@ -849,7 +852,7 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
 
             declared_winner = self.cleaned_data.get(self._fieldname_declared_winner(adj))
             if declared_winner is not None:
-                result.set_winner(adj, declared_winner)
+                result.set_winner(adj, set([declared_winner]))
 
     # --------------------------------------------------------------------------
     # Template access methods
@@ -947,7 +950,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
         return cleaned_data
 
     def populate_result_with_wins(self, result):
-        result.set_winner(self.cleaned_data[self._fieldname_advancing()])
+        result.set_winner(set(self.cleaned_data[self._fieldname_advancing()]))
 
     def scoresheets(self):
         return [{'advancing': self[self._fieldname_advancing()]}]
@@ -986,7 +989,7 @@ class PerAdjudicatorEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     def populate_result_with_wins(self, result):
         for adj in self.adjudicators:
-            result.set_winner(adj, self.cleaned_data[self._fieldname_advancing(adj)])
+            result.set_winner(adj, set(self.cleaned_data[self._fieldname_advancing(adj)]))
 
     def scoresheets(self):
         for adj in self.adjudicators:
