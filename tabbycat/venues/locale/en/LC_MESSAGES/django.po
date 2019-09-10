@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-09-10 15:10-0400\n"
 "PO-Revision-Date: 2019-07-11 23:50\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -32,106 +32,100 @@ msgstr ""
 msgid "Succesfully auto-allocated venues to debates."
 msgstr ""
 
-#: venues/models.py:10 venues/models.py:74
+#: venues/models.py:9 venues/models.py:65
 msgid "name"
 msgstr ""
 
-#: venues/models.py:12 venues/models.py:128
+#: venues/models.py:11 venues/models.py:117
 msgid "priority"
 msgstr ""
 
-#: venues/models.py:13
+#: venues/models.py:12
 msgid "Venues with a higher priority number will be preferred when allocating venues to debates"
 msgstr ""
 
-#: venues/models.py:16
+#: venues/models.py:15
 msgid "tournament"
 msgstr ""
 
-#: venues/models.py:17
+#: venues/models.py:16
 msgid "Venues not assigned to any tournament can be shared between tournaments"
 msgstr ""
 
-#: venues/models.py:24
+#: venues/models.py:23
 msgid "venue"
 msgstr ""
 
-#: venues/models.py:25 venues/models.py:84
+#: venues/models.py:24 venues/models.py:75
 msgid "venues"
 msgstr ""
 
-#: venues/models.py:69
+#: venues/models.py:60
 msgid "Don't display in venue name"
 msgstr ""
 
-#: venues/models.py:70
+#: venues/models.py:61
 msgid "Display as prefix"
 msgstr ""
 
-#: venues/models.py:71
+#: venues/models.py:62
 msgid "Display as suffix"
 msgstr ""
 
-#: venues/models.py:75
+#: venues/models.py:66
 msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a venue name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 
-#: venues/models.py:79
+#: venues/models.py:70
 msgid "description"
 msgstr ""
 
-#: venues/models.py:80
+#: venues/models.py:71
 msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This venue\" when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
 msgstr ""
 
-#: venues/models.py:88
+#: venues/models.py:79
 msgid "display in venue name"
 msgstr ""
 
-#: venues/models.py:89
+#: venues/models.py:80
 msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
 msgstr ""
 
-#: venues/models.py:91
+#: venues/models.py:82
 msgid "display in public tooltip"
 msgstr ""
 
-#: venues/models.py:92
+#: venues/models.py:83
 msgid "Displays the description in the tooltip for the venue on public pages. The description, if not blank, will always show on admin pages."
 msgstr ""
 
-#: venues/models.py:96
+#: venues/models.py:87
 msgid "venue category"
 msgstr ""
 
-#: venues/models.py:97
+#: venues/models.py:88
 msgid "venue categories"
 msgstr ""
 
-#: venues/models.py:127
+#: venues/models.py:116
 msgid "category"
 msgstr ""
 
-#: venues/models.py:131
+#: venues/models.py:120
 msgid "subject content type"
 msgstr ""
 
-#: venues/models.py:134
+#: venues/models.py:123
 msgid "subject ID"
 msgstr ""
 
-#: venues/models.py:140
+#: venues/models.py:129
 msgid "venue constraint"
 msgstr ""
 
-#: venues/models.py:141
+#: venues/models.py:130
 msgid "venue constraints"
-msgstr ""
-
-#: venues/templates/legacy_edit_venues.html:5
-#: venues/templates/legacy_edit_venues.html:10
-#, python-format
-msgid "Edit Venues for %(round_abbr)s"
 msgstr ""
 
 #: venues/templates/venue_categories_edit.html:4
@@ -185,45 +179,39 @@ msgstr ""
 msgid "Venue does not meet any constraint of institution %(institution)s (%(team)s)"
 msgstr ""
 
-#: venues/views.py:31
+#: venues/views.py:27
 msgid "Edit Venues"
 msgstr ""
 
-#: venues/views.py:138
+#: venues/views.py:72
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: venues/views.py:144
+#: venues/views.py:78
 msgid "No changes were made to the venue categories."
 msgstr ""
 
-#: venues/views.py:196
+#: venues/views.py:127
 #, python-format
 msgid "%s (Adjudicator)"
 msgstr ""
 
-#: venues/views.py:199
+#: venues/views.py:130
 #, python-format
 msgid "%s (Team)"
 msgstr ""
 
-#: venues/views.py:202
+#: venues/views.py:133
 #, python-format
 msgid "%s (Institution)"
 msgstr ""
 
-#: venues/views.py:205
-#, python-format
-msgid "%s (Division)"
-msgstr ""
-
-#: venues/views.py:213
+#: venues/views.py:141
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."
 msgstr[0] ""
 msgstr[1] ""
-
