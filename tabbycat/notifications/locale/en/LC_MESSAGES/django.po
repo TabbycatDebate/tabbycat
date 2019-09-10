@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-09-10 15:10-0400\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -39,9 +39,7 @@ msgstr ""
 
 #: notifications/forms.py:16
 #, python-format
-msgid ""
-"Congratulations! If you're reading this message, your email backend on "
-"%(host)s looks all good to go!"
+msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
 msgstr ""
 
 #: notifications/forms.py:29
@@ -211,20 +209,12 @@ msgstr ""
 
 #: notifications/templates/email_participants.html:12
 #, python-format
-msgid ""
-"You have not specified a reply-to address. This means that participants may "
-"not reply to the message if they have questions. Please set one in the <a "
-"href=\"%(notifications_options_url)s\">Notifications section of the "
-"preferences</a>."
+msgid "You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href=\"%(notifications_options_url)s\">Notifications section of the preferences</a>."
 msgstr ""
 
 #: notifications/templates/email_participants.html:20
 #, python-format
-msgid ""
-"The webhook URL for use in SendGrid is <a href="
-"\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please "
-"point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/"
-"mail_settings\">SendGrid</a> to that."
+msgid "The webhook URL for use in SendGrid is <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> to that."
 msgstr ""
 
 #: notifications/templates/email_participants.html:50
@@ -232,12 +222,7 @@ msgid "Send Message(s)"
 msgstr ""
 
 #: notifications/templates/email_statuses.html:10
-msgid ""
-"Emails can be sent by Tabbycat for a variety of purposes. Emails are sent "
-"when specific preferences are enabled (i.e. enabling Ballot Receipts) or "
-"through actions available on specific pages (i.e. the Draw Display page for "
-"matchups; or the Participants page for team registration). This page shows "
-"the status of previously-sent emails."
+msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
 msgstr ""
 
 #: notifications/templates/notifications_nav.html:5 notifications/views.py:47
@@ -260,10 +245,7 @@ msgid "Send Test Email"
 msgstr ""
 
 #: notifications/templates/test_email.html:19
-msgid ""
-"You can use this form to send a test email, to check that your email backend "
-"settings are working, before you try to send email notifications to "
-"participants."
+msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
 msgstr ""
 
 #: notifications/templates/test_email.html:25
@@ -323,7 +305,7 @@ msgstr ""
 msgid "<li>%(text)s (%(ref)s)</li>"
 msgstr ""
 
-#: notifications/utils.py:237 notifications/utils.py:238
+#: notifications/utils.py:236 notifications/utils.py:237
 msgid ", "
 msgstr ""
 
@@ -337,80 +319,83 @@ msgstr ""
 msgid "A test email has been sent to %(recipient)s."
 msgstr ""
 
-#: notifications/views.py:56
+#: notifications/views.py:53
+msgid "N/A"
+msgstr ""
+
+#: notifications/views.py:54
+msgid "Not known"
+msgstr ""
+
+#: notifications/views.py:59
 #, python-format
 msgid "%(status)s @ %(time)s"
 msgstr ""
 
-#: notifications/views.py:85
+#: notifications/views.py:102
 #, python-format
 msgid "@ %s"
 msgstr ""
 
-#: notifications/views.py:94
-msgid "N/A"
-msgstr ""
-
-#: notifications/views.py:103
+#: notifications/views.py:119
 msgid "Timeline"
 msgstr ""
 
-#: notifications/views.py:108 notifications/views.py:201
+#: notifications/views.py:129 notifications/views.py:220
 msgid "Participant"
 msgstr ""
 
-#: notifications/views.py:109
+#: notifications/views.py:130
 msgid "Status"
 msgstr ""
 
-#: notifications/views.py:110
+#: notifications/views.py:131
 msgid "Time"
 msgstr ""
 
-#: notifications/views.py:149
+#: notifications/views.py:170
 msgid "Email Participants"
 msgstr ""
 
-#: notifications/views.py:177
+#: notifications/views.py:196
 #, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
 msgstr[0] ""
 msgstr[1] ""
 
-#: notifications/views.py:183
+#: notifications/views.py:202
 msgid "No emails were sent — likely because no recipients were selected."
 msgstr ""
 
-#: notifications/views.py:191
+#: notifications/views.py:210
 msgid "Send Email"
 msgstr ""
 
-#: notifications/views.py:206
+#: notifications/views.py:225
 msgid "Email Address"
 msgstr ""
 
-#: notifications/views.py:207
+#: notifications/views.py:226
 msgid "Not Provided"
 msgstr ""
 
-#: notifications/views.py:220
+#: notifications/views.py:239
 msgid "Role"
 msgstr ""
 
-#: notifications/views.py:221
+#: notifications/views.py:240
 msgid "Adjudicator"
 msgstr ""
 
-#: notifications/views.py:221
+#: notifications/views.py:240
 msgid "Speaker"
 msgstr ""
 
-#: notifications/views.py:229
+#: notifications/views.py:248
 msgid "Speakers"
 msgstr ""
 
-#: notifications/views.py:230
+#: notifications/views.py:249
 msgid "Adjudicators"
 msgstr ""
-
