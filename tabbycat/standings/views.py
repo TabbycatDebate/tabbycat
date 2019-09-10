@@ -12,7 +12,7 @@ from django.views.generic.base import TemplateView
 from adjfeedback.views import BaseFeedbackOverview
 from breakqual.models import BreakCategory
 from motions.models import Motion
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
@@ -318,7 +318,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
 
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
-    template_name = 'speaker_standings.html'  # add an info alert
+    template_name = 'speaker_standings.html'  # add info alerts
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -488,17 +488,11 @@ class BaseTeamStandingsView(BaseStandingsView):
 
 class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
+    template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
 
     def show_ballots(self):
         return True
-
-
-class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
-    """Special team standings view that also shows rankings within divisions."""
-    rankings = ('rank', 'division')
-    page_title = gettext_lazy("Division Standings")
-    page_emoji = '👯'
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
@@ -679,7 +673,7 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
 class EmailTeamStandingsView(RoundTemplateEmailCreateView):
     page_subtitle = _("Team Standings")
 
-    event = SentMessageRecord.EVENT_TYPE_POINTS
+    event = BulkNotification.EVENT_TYPE_POINTS
     subject_template = 'team_points_email_subject'
     message_template = 'team_points_email_message'
 

@@ -25,7 +25,7 @@ class HungarianPreformedPanelAllocator(BasePreformedPanelAllocator):
     def calc_cost(self, debate, panel):
         cost = 0
 
-        mismatch = abs(debate.importance - panel.importance)
+        mismatch = (debate.importance - panel.importance) ** 2
         cost += self.mismatch_penalty * mismatch
 
         for adj in panel.adjudicators.all():

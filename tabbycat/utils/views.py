@@ -2,23 +2,16 @@ import json
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.mixins import AccessMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.urls import reverse_lazy
 from django.forms.models import modelformset_factory
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, View
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
 
 logger = logging.getLogger(__name__)
-
-
-class BadJsonRequestError(Exception):
-    """Used by subclasses of JsonDataResponsePostView to indicate that a
-    malformed JSON request was passed in."""
-    pass
 
 
 class PostOnlyRedirectView(View):
@@ -54,47 +47,6 @@ class PostOnlyRedirectView(View):
 
     def post(self, request, *args, **kwargs):
         return HttpResponseRedirect(self.get_redirect_url(*args, **kwargs))
-
-
-class JsonDataResponseView(AccessMixin, View):
-    """View that returns a JSON response. Assumed to be access-controlled; subclasses must also
-    use some subclass of AccessMixin."""
-
-    raise_exception = True
-
-    def get_data(self):
-        raise NotImplementedError
-
-    def get(self, request, *args, **kwargs):
-        self.request = request
-        return JsonResponse(self.get_data(), safe=False)
-
-
-class JsonDataResponsePostView(AccessMixin, View):
-    """Like JsonDataResponseView, but expects a POST rather than a GET."""
-
-    schema = None
-    raise_exception = True
-
-    def validate(self):
-        # TODO
-        if self.schema is None:
-            return
-
-    def post_data(self):
-        raise NotImplementedError
-
-    def post(self, request, *args, **kwargs):
-        self.request = request
-        self.body = self.request.body.decode('utf-8')
-        try:
-            self.validate()
-            data = self.post_data()
-        except BadJsonRequestError as e:
-            data = {'status': False, 'message': str(e)}
-            return JsonResponse(data, status=400)
-        else:
-            return JsonResponse(data, safe=False)
 
 
 class VueTableTemplateView(TemplateView):

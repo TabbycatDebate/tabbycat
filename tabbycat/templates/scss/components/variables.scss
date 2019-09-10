@@ -47,7 +47,7 @@ $region-cat-8:            #777;
 $conflict-clash:          #e34e42;
 $conflict-institution:    #ef9b08;
 $conflict-history-base:   #3498db;
-$incomplete-panel:        $gray-600;
+$incomplete-panel:        rgba(100, 100, 100, 0.5); // Needs xparency
 
 // Adj Rankings
 $adj-ranking-0:           hsla(175, 90%, 40%, 1); // A+

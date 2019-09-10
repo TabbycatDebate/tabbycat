@@ -15,22 +15,26 @@ export default {
   },
   methods: {
     getToolTipForVenue: function (entity) {
-      let tt = entity.name
+      let categories = []
+      _.forEach(entity.categories, (c) => {
+        categories.push(c.name)
+      })
+      if (entity.categories.length > 0 && entity.identifier !== null) {
+        const substitutions = [entity.name, categories.join(', '), entity.identifier[0]]
+        return this.tct('%s (%s) with identifier of %s', substitutions)
+      }
+      if (entity.categories.length === 0 && entity.identifier !== null) {
+        const substitutions = [entity.name, entity.identifier[0]]
+        return this.tct('%s (no category) with identifier of %s', substitutions)
+      }
       if (entity.categories.length > 0) {
-        tt += ' ('
-        _.forEach(entity.categories, (c) => {
-          tt += `${c.name}; `
-        })
-        tt += ') '
-      } else {
-        tt += ' (no category) '
+        const substitutions = [entity.name, categories.join(', ')]
+        return this.tct('%s (%s) with no assigned identifier', substitutions)
       }
-      if (entity.identifier !== null) {
-        tt += ` with identifier of ${entity.identifier[0]}`
-      } else {
-        tt += ' with no assigned identifier '
+      if (entity.categories.length === 0) {
+        return this.tct('%s (no category) with no assigned identifier', [entity.name])
       }
-      return tt
+      return entity.name
     },
   },
   computed: {
@@ -53,19 +57,19 @@ export default {
     venuesByCategory: function () {
       const sortedByCategory = _.sortBy(this.entitiesSortedByName, (v) => {
         if (v.categories.length === 0) {
-          return 'Uncategorised'
+          return this.gettext('Uncategorised')
         }
         return v.categories[0].name
       })
       return _.groupBy(sortedByCategory, (v) => {
         if (v.categories.length === 0) {
-          return 'Uncategorised'
+          return this.gettext('Uncategorised')
         }
         return v.categories[0].name
       })
     },
     venuesByPriority: function () {
-      return _.groupBy(this.entitiesSortedByName, v => `Priority ${v.priority}`)
+      return _.groupBy(this.entitiesSortedByName, v => this.tct('Priority %1', [v.priority]))
     },
   },
 }

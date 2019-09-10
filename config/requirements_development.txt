@@ -6,18 +6,13 @@
 -r requirements_heroku.txt
 
 # Linting
-flake8==3.6.*
-flake8-import-order==0.18                   # Flake plugin for import order
-flake8-quotes==1.0.*                        # Flake plugin for quotes
-pep8-naming==0.7.*                          # Flake plugin for naming conventions
+flake8==3.7.*
+flake8-import-order==0.18.1                 # Flake plugin for import order
+flake8-quotes==2.1.0                        # Flake plugin for quotes
+pep8-naming==0.8.*                          # Flake plugin for naming conventions
 
 # Tests
-selenium==3.13.*                            # Functional testing (in here for CI tests)
-chromedriver_installer==0.0.6               # Functional testing Chrome interface
-
-# Translation
-transifex-client==0.13.*                    # Translations
+selenium==3.141.*                           # Functional testing (in here for CI tests)
 
 # Debug
-django-debug-toolbar==1.10.*
-django-debug-toolbar-request-history==0.0.9 # Debug POSTs/AJAX
+django-debug-toolbar==2.*

@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, validate_slug
 from django.forms import ValidationError
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
@@ -126,7 +126,7 @@ class AdjHistoryPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class PreformedPanelMismatchPenalty(IntegerPreference):
-    help_text = _("Penality applied by preformed panel auto-allocator for importance mismatch")
+    help_text = _("Penality applied by preformed panel auto-allocator for priority mismatch")
     verbose_name = _("Importance mismatch penalty")
     section = draw_rules
     name = 'preformed_panel_mismatch_penalty'
@@ -243,6 +243,8 @@ class DrawPullupRestriction(ChoicePreference):
     choices = (
         ('none', _("No restriction")),
         ('least_to_date', _("Choose from teams who have been pulled up the fewest times so far")),
+        ('lowest_ds_wins', _("Choose from teams with the lowest draw strength by wins so far")),
+        ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),
     )
     default = 'none'
 
@@ -583,10 +585,6 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
 
-        # Check that who-beat-whom isn't listed first
-        if value[0] in ["wbw", "wbwd"]:
-            raise ValidationError(_("Who-beat-whom can't be listed as the first metric"))
-
 
 @tournament_preferences_registry.register
 class TeamStandingsExtraMetrics(MultiValueChoicePreference):
@@ -825,9 +823,18 @@ class DisableBallotConfirmation(BooleanPreference):
 
 
 @tournament_preferences_registry.register
+class EnableBlindBallotConfirmation(BooleanPreference):
+    help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
+    verbose_name = _("Enforce blind confirmations")
+    section = data_entry
+    name = 'enable_blind_checks'
+    default = False
+
+
+@tournament_preferences_registry.register
 class EnableMotions(BooleanPreference):
-    help_text = _("If checked, ballots require a motion to be entered")
-    verbose_name = _("Enable motions")
+    help_text = _("If checked, ballots require a motion to be selected from a list of options. ")
+    verbose_name = _("Enable motion selection")
     section = data_entry
     name = 'enable_motions'
     default = True
@@ -946,7 +953,9 @@ class PublicDiversity(BooleanPreference):
 
 @tournament_preferences_registry.register
 class PublicCheckinStatuses(BooleanPreference):
-    help_text = _("Enables the public page showing checkin statuses for individuals, institutions, and teams")
+    help_text = _("Enables the public page showing checkin statuses for "
+                  "individuals, institutions, and teams. Note that this page "
+                  "can be slow when used at very large tournaments.")
     verbose_name = _("Enable public view of the checkin statuses")
     section = public_features
     name = 'public_checkins'
@@ -1055,7 +1064,7 @@ class TournamentStaff(LongStringPreference):
     section = public_features
     name = 'tournament_staff'
     default = ""
-    widget = SummernoteWidget(attrs={'height': 150})
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -1066,7 +1075,7 @@ class WelcomeMessage(LongStringPreference):
     section = public_features
     name = 'welcome_message'
     default = ""
-    widget = SummernoteWidget
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
     field_kwargs = {'required': False}
 
 
@@ -1168,172 +1177,6 @@ class ShowIntroductionToAllocationUI(BooleanPreference):
     name = 'show_allocation_intro'
     default = True
 
-# ==============================================================================
-league_options = Section('league_options', verbose_name=_("League Options"))
-# ==============================================================================
-
-
-@tournament_preferences_registry.register
-class PublicDivisions(BooleanPreference):
-    help_text = _("Enables public interface to see divisions")
-    verbose_name = _("Show divisions to public")
-    section = league_options
-    name = 'public_divisions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableDivisions(BooleanPreference):
-    help_text = _("Enables the sorting and display of teams into divisions")
-    verbose_name = _("Enable divisions")
-    section = league_options
-    name = 'enable_divisions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnablePostponements(BooleanPreference):
-    help_text = _("Enables debates to have their status set to postponed")
-    verbose_name = _("Enable postponements")
-    section = league_options
-    name = 'enable_postponements'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableForfeits(BooleanPreference):
-    help_text = _("Allows debates to be marked as wins by forfeit")
-    verbose_name = _("Enable forfeits")
-    section = league_options
-    name = 'enable_forfeits'
-    default = False
-
-
-@tournament_preferences_registry.register
-class HideAdjudicators(BooleanPreference):
-    help_text = _("Hides the adjudicators in public views of the draw")
-    verbose_name = _("Mask adjudicators")
-    section = league_options
-    name = 'hide_adjudicators'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableDivisionMotions(BooleanPreference):
-    help_text = _("Enables assigning motions to a division")
-    verbose_name = _("Enable division motions")
-    section = league_options
-    name = 'enable_division_motions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class MinimumDivisionSize(IntegerPreference):
-    help_text = _("Smallest allowed size for a division")
-    verbose_name = _("Minimum division size")
-    section = league_options
-    name = 'minimum_division_size'
-    default = 5
-
-
-@tournament_preferences_registry.register
-class IdealDivisionSize(IntegerPreference):
-    help_text = _("Ideal size for a division")
-    verbose_name = _("Ideal division size")
-    section = league_options
-    name = 'ideal_division_size'
-    default = 6
-
-
-@tournament_preferences_registry.register
-class MaximumDivisionSize(IntegerPreference):
-    help_text = _("Largest allowed size for a division")
-    verbose_name = _("Maximum division size")
-    section = league_options
-    name = 'maximum_division_size'
-    default = 8
-
-
-@tournament_preferences_registry.register
-class EnableFlaggedMotions(BooleanPreference):
-    help_text = _("Allow particular motions to be flagged as contentious")
-    verbose_name = _("Enable flagged motions")
-    section = league_options
-    name = 'enable_flagged_motions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableAdjNotes(BooleanPreference):
-    help_text = _("Enables a general-purpose notes field for adjudicators")
-    verbose_name = _("Enable adjudicator notes")
-    section = league_options
-    name = 'enable_adj_notes'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableVenueTimes(BooleanPreference):
-    help_text = _("Enables specific dates and times to be set for debates")
-    verbose_name = _("Enable debate scheduling")
-    section = league_options
-    name = 'enable_debate_scheduling'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShareAdjs(BooleanPreference):
-    help_text = 'Use shared adjudicators (those without a set tournament) in this tournament'
-    verbose_name = _("Share adjudicators")
-    section = league_options
-    name = 'share_adjs'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShareVenues(BooleanPreference):
-    help_text = 'Use shared venues (those without a set tournament) in this tournament'
-    verbose_name = _("Share venues")
-    section = league_options
-    name = 'share_venues'
-    default = False
-
-
-@tournament_preferences_registry.register
-class DeriveVenueFromDivison(BooleanPreference):
-    help_text = 'Don\'t show individual venue names in public draws; instead show the division\'s Venue Category'
-    verbose_name = _("Use division venue categories")
-    section = league_options
-    name = 'division_venues'
-    default = False
-
-
-@tournament_preferences_registry.register
-class DuplicateAdjs(BooleanPreference):
-    help_text = _("If unchecked, adjudicators can only be given one room per round")
-    verbose_name = _("Allow adjudicators to be allocated to multiple rooms")
-    section = league_options
-    name = 'duplicate_adjs'
-    default = False
-
-
-@tournament_preferences_registry.register
-class AdjAllocationConfirmations(BooleanPreference):
-    help_text = _("Allow links to be sent to adjudicators that allow them to confirm shifts")
-    verbose_name = _("Adjudicator allocation confirmations")
-    section = league_options
-    name = 'allocation_confirmations'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableCrossTournamentDrawPages(BooleanPreference):
-    help_text = _("Enables pages that show draws across tournaments (ie by institution)")
-    verbose_name = _("Public cross draw pages")
-    section = league_options
-    name = 'enable_mass_draws'
-    default = False
-
 
 # ==============================================================================
 email = Section('email', verbose_name=_("Notifications"))
@@ -1359,8 +1202,19 @@ class ReplyToEmailAddress(StringPreference):
 
 
 @tournament_preferences_registry.register
+class EmailWebhookKey(StringPreference):
+    help_text = _("A secret key to accept email status events")
+    verbose_name = _("Email status secret key")
+    section = email
+    name = 'email_hook_key'
+    default = ""
+    required = False
+    field_kwargs = {'validators': [validate_slug]}
+
+
+@tournament_preferences_registry.register
 class EnableEmailBallotReceipts(BooleanPreference):
-    help_text = _("Enables a copy of judges' ballots to be automatically sent to them (by email) after they are entered in Tabbycat (for confirmation or checking)")
+    help_text = _("Enables a copy of adjudicators' ballots to be automatically sent to them (by email) after they are entered in Tabbycat (for confirmation or checking)")
     verbose_name = _("Ballot receipts")
     section = email
     name = 'enable_ballot_receipts'
@@ -1383,7 +1237,11 @@ class BallotEmailMessageBody(LongStringPreference):
     verbose_name = _("Ballot receipt message")
     section = email
     name = 'ballot_email_message'
-    default = "Hi {{ USER }},\n\nYour ballot for {{ DEBATE }} has been successfully received, with these scores:\n\n{{ SCORES }}\n\nIf there are any problems, please contact the tab team."
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>Your ballot for {{ DEBATE }} has been successfully received, with these scores:</p>"
+        "{{ SCORES }}"
+        "<p>If there are any problems, please contact the tab team.</p>")
+    widget = SummernoteWidget(attrs={'height': 150, 'class': 'form-summernote'})
 
 
 # -----
@@ -1395,7 +1253,7 @@ class PointsEmailSubjectLine(StringPreference):
     help_text = _("The subject line for emails sent to speakers with their team points.")
     verbose_name = _("Team points subject line")
     name = 'team_points_email_subject'
-    default = "Your current number of wins after {{ ROUND }} for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}"
+    default = "{{ TEAM }}'s current wins after {{ ROUND }}: {{ POINTS }}"
 
 
 @tournament_preferences_registry.register
@@ -1403,7 +1261,9 @@ class PointsEmailMessageBody(LongStringPreference):
     help_text = _("The message body for emails sent to speakers with their team points.")
     verbose_name = _("Team points message")
     name = 'team_points_email_message'
-    default = "Hi {{ USER }},\n\nAfter {{ ROUND }}, your team ({{ TEAM }}) currently has {{ POINTS }} wins in the {{ TOURN }}.\n\n{{ URL }}"
+    default = ("<p>Hi {{ USER }},</p>"
+        "After {{ ROUND }}, your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> wins in the {{ TOURN }}.</p>"
+        "<p>Current Standings: <a href='{{ URL }}'>{{ URL }}</a></p>")
 
 
 @tournament_preferences_registry.register
@@ -1419,8 +1279,27 @@ class AdjudicatorDrawNotificationMessage(LongStringPreference):
     help_text = _("The message body for emails sent to adjudicators with their assignments.")
     verbose_name = _("Adjudicator draw message")
     name = 'adj_email_message'
-    default = "Hi {{ USER }},\n\nYou have been assigned as {{ POSITION }} adjudicator for {{ ROUND }} in room {{ VENUE }} with the following panel: {{ PANEL }}\n\n" \
-            + "The debate is between these teams: {{ DRAW }}"
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You have been assigned as <strong>{{ POSITION }}</strong> adjudicator for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
+        "<p>The debate is between these teams: {{ DRAW }}</p>")
+
+
+@tournament_preferences_registry.register
+class TeamDrawNotificationSubject(StringPreference):
+    help_text = _("The subject-line for emails sent to teams with their draw.")
+    verbose_name = _("Team draw subject line")
+    name = 'team_draw_email_subject'
+    default = "Your assigned debate for {{ ROUND }}: {{ VENUE }}"
+
+
+@tournament_preferences_registry.register
+class TeamDrawNotificationMessage(LongStringPreference):
+    help_text = _("The message body for emails sent to participants with their private URLs.")
+    verbose_name = _("Private URL notification message")
+    name = 'team_draw_email_message'
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You have been assigned as <strong>{{ SIDE }}</strong> for {{ ROUND }} in <strong>{{ VENUE }}</strong> with the following panel: {{ PANEL }}</p>"
+        "<p>The debate is between: {{ DRAW }}</p>")
 
 
 @tournament_preferences_registry.register
@@ -1436,13 +1315,13 @@ class PrivateUrlEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants with their private URLs.")
     verbose_name = _("Private URL notification message")
     name = 'url_email_message'
-    default = ("Hi {{ USER }},\n\n"
-        "At {{ TOURN }}, we are using an online tabulation system. You can submit "
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>At {{ TOURN }}, we are using an online tabulation system. You can submit "
         "your ballots and/or feedback at the following URL. This URL is unique to you — do not share it with "
         "anyone, as anyone who knows it can submit forms on your behalf. This URL "
-        "will not change throughout this tournament, so we suggest bookmarking it.\n\n"
-        "Your personal private URL is:\n"
-        "{{ URL }}")
+        "will not change throughout this tournament, so we suggest bookmarking it.</p>"
+        "<p>Your personal private URL is:<br />"
+        "<a href='{{ URL }}'>{{ URL }}</a></p>")
 
 
 @tournament_preferences_registry.register
@@ -1458,7 +1337,8 @@ class MotionReleaseEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants on motion release.")
     verbose_name = _("Motion release notification message")
     name = 'motion_email_message'
-    default = "The motion(s) for {{ ROUND }} are:\n {{ MOTIONS }}"
+    default = ("<p>The motion(s) for {{ ROUND }} are:</p>"
+        "{{ MOTIONS }}")
 
 
 @tournament_preferences_registry.register
@@ -1474,5 +1354,5 @@ class TeamNameEmailMessage(LongStringPreference):
     help_text = _("The message body for emails sent to participants informing them of their team registration.")
     verbose_name = _("Team registration notification message")
     name = 'team_email_message'
-    default = ("Hi {{ USER }},\n\n"
-        "You are registered as {{ LONG }} in {{ TOURN }} with {{ SPEAKERS }}.")
+    default = ("<p>Hi {{ USER }},</p>"
+        "<p>You are registered as <strong>{{ LONG }}</strong> in {{ TOURN }} with {{ SPEAKERS }}.</p>")

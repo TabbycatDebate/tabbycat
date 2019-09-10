@@ -23,13 +23,16 @@
     </drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
+      <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <debate-or-panel-importance slot="importance" :debate-or-panel="debate"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="debate"
                                       :handle-debate-or-panel-drop="moveAdjudicator">
         </debate-or-panel-adjudicators>
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
+      <div class="text-center lead mx-5 p-5" v-if="sortedDebatesOrPanels.length === 0">
+        <p class="mx-5 lead mt-2 px-5" v-text="gettext(noDebatesInline)"></p>
+      </div>
     </template>
 
     <template slot="modals">
@@ -56,6 +59,7 @@ export default {
       allocations in their place.`,
     prioritiseIntro: `Using auto-prioritise will remove all existing debate priorities and assign
       new ones.`,
+    noDebatesInline: `There are no debates created for this round.`,
   }),
 }
 </script>

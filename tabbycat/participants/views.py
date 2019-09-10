@@ -4,7 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy, ngettext
@@ -13,15 +13,11 @@ from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from adjallocation.models import DebateAdjudicator
 from adjfeedback.progress import FeedbackProgressForAdjudicator, FeedbackProgressForTeam
-from draw.prefetch import populate_opponents
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification
 from notifications.views import TournamentTemplateEmailCreateView
 from options.utils import use_team_code_names
-from results.models import SpeakerScore, TeamScore
-from results.prefetch import populate_confirmed_ballots, populate_wins
-from tournaments.mixins import (PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
+from tournaments.mixins import (PublicTournamentPageMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
@@ -30,7 +26,7 @@ from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
-from .tables import TeamResultTableBuilder
+from .tables import AdjudicatorDebateTable, TeamDebateTable
 
 logger = logging.getLogger(__name__)
 
@@ -64,8 +60,8 @@ class BaseParticipantsListView(TournamentMixin, VueTableTemplateView):
 
     def get_context_data(self, **kwargs):
         # These are used to choose the nav display
-        kwargs['email_sent'] = SentMessageRecord.objects.filter(
-            tournament=self.tournament, event=SentMessageRecord.EVENT_TYPE_TEAM).exists()
+        kwargs['email_sent'] = BulkNotification.objects.filter(
+            tournament=self.tournament, event=BulkNotification.EVENT_TYPE_TEAM_REG).exists()
         return super().get_context_data(**kwargs)
 
 
@@ -162,7 +158,7 @@ class AssistantCodeNamesListView(AssistantMixin, BaseCodeNamesListView):
 class EmailTeamRegistrationView(TournamentTemplateEmailCreateView):
     page_subtitle = _("Team Registration")
 
-    event = SentMessageRecord.EVENT_TYPE_TEAM
+    event = BulkNotification.EVENT_TYPE_TEAM_REG
     subject_template = 'team_email_subject'
     message_template = 'team_email_message'
 
@@ -206,6 +202,8 @@ class BaseTeamRecordView(BaseRecordView):
     model = Team
     template_name = 'team_record.html'
 
+    table_title = _("Results")
+
     def get_page_title(self):
         # This has to be in Python so that the emoji can be team-dependent.
         name = self.object.code_name if self.use_team_code_names() else self.object.long_name
@@ -231,49 +229,7 @@ class BaseTeamRecordView(BaseRecordView):
         return super().get_context_data(**kwargs)
 
     def get_table(self):
-        """On team record pages, the table is the results table."""
-        tournament = self.tournament
-        teamscores = TeamScore.objects.filter(
-            debate_team__team=self.object,
-            ballot_submission__confirmed=True,
-        ).select_related(
-            'debate_team__debate__round__tournament'
-        ).prefetch_related(
-            Prefetch('debate_team__debate__debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate_team__debate__debateteam_set__team',
-            'debate_team__debate__round__motion_set',
-            Prefetch('debate_team__speakerscore_set',
-                queryset=SpeakerScore.objects.filter(ballot_submission__confirmed=True).select_related('speaker').order_by('position'),
-                to_attr='speaker_scores'),
-        ).order_by('debate_team__debate__round__seq')
-
-        if not self.admin and not tournament.pref('all_results_released'):
-            teamscores = teamscores.filter(
-                debate_team__debate__round__draw_status=Round.STATUS_RELEASED,
-                debate_team__debate__round__silent=False,
-                debate_team__debate__round__completed=True,
-            )
-
-        debates = [ts.debate_team.debate for ts in teamscores]
-        populate_opponents([ts.debate_team for ts in teamscores])
-        populate_confirmed_ballots(debates, motions=True, results=True)
-
-        table = TeamResultTableBuilder(view=self, title=_("Results"), sort_key="round")
-        table.add_round_column([debate.round for debate in debates])
-        table.add_debate_result_by_team_column(teamscores)
-        table.add_cumulative_team_points_column(teamscores)
-        if self.admin or tournament.pref('all_results_released') and tournament.pref('speaker_tab_released') and tournament.pref('speaker_tab_limit') == 0:
-                table.add_speaker_scores_column(teamscores)
-        table.add_debate_side_by_team_column(teamscores)
-        table.add_debate_adjudicators_column(debates, show_splits=True)
-
-        if self.admin or tournament.pref('public_motions'):
-            table.add_debate_motion_column(debates)
-
-        table.add_debate_ballot_link_column(debates)
-
-        return table
+        return TeamDebateTable.get_table(self, self.object)
 
 
 class BaseAdjudicatorRecordView(BaseRecordView):
@@ -282,8 +238,18 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     template_name = 'adjudicator_record.html'
     page_emoji = '⚖'
 
+    table_title = _("Previous Rounds")
+
     def get_page_title(self):
         return _("Record for %(name)s") % {'name': self.object.name}
+
+    def _get_adj_adj_conflicts(self):
+        adjs = []
+        for ac in self.object.adjudicatoradjudicatorconflict_source_set.all():
+            adjs.append(ac.adjudicator2)
+        for ac in self.object.adjudicatoradjudicatorconflict_target_set.all():
+            adjs.append(ac.adjudicator1)
+        return adjs
 
     def get_context_data(self, **kwargs):
         try:
@@ -298,41 +264,12 @@ class BaseAdjudicatorRecordView(BaseRecordView):
             kwargs['debateadjudications'] = None
 
         kwargs['feedback_progress'] = FeedbackProgressForAdjudicator(self.object, self.tournament)
+        kwargs['adjadj_conflicts'] = self._get_adj_adj_conflicts()
 
         return super().get_context_data(**kwargs)
 
     def get_table(self):
-        """On adjudicator record pages, the table is the previous debates table."""
-        debateadjs = DebateAdjudicator.objects.filter(
-            adjudicator=self.object,
-        ).select_related(
-            'debate__round'
-        ).prefetch_related(
-            Prefetch('debate__debateadjudicator_set',
-                queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
-            'debate__debateteam_set__team__speaker_set',
-            'debate__round__motion_set',
-        )
-        if not self.admin and not self.tournament.pref('all_results_released'):
-            debateadjs = debateadjs.filter(
-                debate__round__draw_status=Round.STATUS_RELEASED,
-                debate__round__silent=False,
-                debate__round__completed=True,
-            )
-        debates = [da.debate for da in debateadjs]
-        populate_wins(debates)
-        populate_confirmed_ballots(debates, motions=True, results=True)
-
-        table = TabbycatTableBuilder(view=self, title=_("Previous Rounds"), sort_key="round")
-        table.add_round_column([debate.round for debate in debates])
-        table.add_debate_results_columns(debates)
-        table.add_debate_adjudicators_column(debates, show_splits=True, highlight_adj=self.object)
-
-        if self.admin or self.tournament.pref('public_motions'):
-            table.add_debate_motion_column(debates)
-
-        table.add_debate_ballot_link_column(debates)
-        return table
+        return AdjudicatorDebateTable.get_table(self, self.object)
 
 
 class TeamRecordView(AdministratorMixin, BaseTeamRecordView):
@@ -464,50 +401,3 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
             return JsonResponse({'status': 'false', 'message': message}, status=500)
 
         return JsonResponse(json.dumps(True), safe=False)
-
-
-# ==============================================================================
-# Shift scheduling
-# ==============================================================================
-
-class PublicConfirmShiftView(SingleObjectByRandomisedUrlMixin, ModelFormSetView):
-    # Django doesn't have a class-based view for formsets, so this implements
-    # the form processing analogously to FormView, with less decomposition.
-    # See also: motions.views.EditMotionsView.
-
-    public_page_preference = 'allocation_confirmations'
-    template_name = 'confirm_shifts.html'
-    formset_factory_kwargs = dict(can_delete=False, extra=0, fields=['timing_confirmed'])
-    model = Adjudicator
-    allow_null_tournament = True
-    formset_model = DebateAdjudicator
-
-    def get_success_url(self):
-        return reverse_tournament('participants-public-confirm-shift',
-                self.tournament, kwargs={'url_key': self.object.url_key})
-
-    def get_formset_queryset(self):
-        return self.object.debateadjudicator_set.all()
-
-    def get_context_data(self, **kwargs):
-        kwargs['adjudicator'] = self.get_object()
-        return super().get_context_data(**kwargs)
-
-    def formset_valid(self, formset):
-        messages.success(self.request, _("Your shift check-ins have been saved"))
-        return super().formset_valid(formset)
-
-    def formset_invalid(self, formset):
-        messages.error(self.request, _("Whoops! There was a problem with the form."))
-        return super().formset_invalid(formset)
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        return super().post(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)

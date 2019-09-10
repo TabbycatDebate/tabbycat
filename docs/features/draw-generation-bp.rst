@@ -1,3 +1,5 @@
+.. _draw-generation-bp:
+
 ====================
 Draw Generation (BP)
 ====================

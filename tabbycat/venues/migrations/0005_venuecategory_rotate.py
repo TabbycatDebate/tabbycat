@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('venues', '0004_auto_20180307_2217'),
+        ('venues', '0005_remove_league_fields'),
     ]
 
     operations = [

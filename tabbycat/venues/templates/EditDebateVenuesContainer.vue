@@ -17,7 +17,7 @@
     </drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="debate in allDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
+      <drag-and-drop-debate v-for="debate in sortedDebatesOrPanels" :key="debate.id" :debateOrPanel="debate">
         <droppable-item slot="venue" :handle-drop="moveVenue" :drop-context="{ 'assignment': debate.id }"
                         class="flex-12 flex-truncate border-right d-flex flex-wrap">
           <draggable-venue v-if="debate.venue" :item="allVenues[debate.venue]" class="flex-fill"
@@ -86,9 +86,9 @@ export default {
       if (fromDebate !== null) { // Not moving FROM Unused
         fromDebate.venue = null
       }
-      if (toDebate !== null) { // Not moving TO Unused
-        if (toDebate.venue !== null) { // Swapping
-          fromDebate.venue = toDebate.venue
+      if (toDebate !== null) { // Moving to an actual debate
+        if (toDebate.venue !== null && fromDebate !== null) {
+          fromDebate.venue = toDebate.venue // Straight swap between two debates
         }
         toDebate.venue = dragData.item
       }

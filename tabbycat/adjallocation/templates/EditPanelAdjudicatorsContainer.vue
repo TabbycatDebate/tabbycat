@@ -27,7 +27,7 @@
     </drag-and-drop-actions>
 
     <template slot="debates">
-      <drag-and-drop-debate v-for="panel in allDebatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
+      <drag-and-drop-debate v-for="panel in sortedDebatesOrPanels" :key="panel.pk" :debateOrPanel="panel">
         <debate-or-panel-importance slot="importance"
                                     :debate-or-panel="panel"></debate-or-panel-importance>
         <debate-or-panel-adjudicators slot="adjudicators" :debate-or-panel="panel"
@@ -37,14 +37,14 @@
         <template slot="venue"><span></span></template><!--Hide Venues-->
       </drag-and-drop-debate>
       <div class="text-center lead mx-5 p-5" v-if="debatesOrPanelsCount === 0">
-        <p class="mx-5 lead px-5" v-text="gettext(createPanelsInline)"></p>
+        <p class="mx-5 lead mt-2 px-5" v-text="gettext(createPanelsInline)"></p>
       </div>
     </template>
 
     <template slot="modals">
       <modal-for-creating-preformed-panels :context-of-action="'create_preformed_panels'">
       </modal-for-creating-preformed-panels>
-      <modal-for-sharding :intro-text="gettext('shardIntro')"></modal-for-sharding>
+      <modal-for-sharding :intro-text="gettext(shardIntro)"></modal-for-sharding>
       <modal-for-allocating :intro-text="gettext(allocateIntro)" :for-panels="true"
                             :context-of-action="'allocate_panel_adjs'"></modal-for-allocating>
       <modal-for-prioritising :intro-text="gettext(prioritiseIntro)"

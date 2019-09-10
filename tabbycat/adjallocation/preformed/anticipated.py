@@ -3,8 +3,7 @@
 import itertools
 
 from breakqual.utils import calculate_live_thresholds, determine_liveness
-from participants.models import Team
-from standings.teams import TeamStandingsGenerator
+from participants.prefetch import populate_win_counts
 
 
 def calculate_anticipated_draw(round):
@@ -16,7 +15,7 @@ def calculate_anticipated_draw(round):
     draw doesn't exist, it will just return an empty list.
 
     Procedure:
-      1. Take the (actual) draw of the last round, with team point standings.
+      1. Take the (actual) draw of the last round, with team points
       2. For each room, compute a (min, max) of outcomes for each team.
       3. Take the min, divide into rooms to make the `bracket_min` for each room.
       4. Take the max, divide into rooms to make the `bracket_max` for each room.
@@ -27,24 +26,31 @@ def calculate_anticipated_draw(round):
 
     nteamsindebate = 4 if round.tournament.pref('teams_in_debate') == 'bp' else 2
 
-    if round.prev is None:
+    if round.prev is None or not round.prev.debate_set.exists():
         # Special case: If this is the first round, everyone will be on zero.
         # Just take all teams, rounded down -- if this is done, it'll typically
-        # be done before availability is locked down.
+        # be done before availability is locked down. Also do this if the last
+        # round hasn't yet been drawn, since that's premature for bracket
+        # predictions.
         npanels = round.tournament.team_set.count() // nteamsindebate
         return [(0, 0, 0) for i in range(npanels)]
 
-    # 1. Take the (actual) draw of the last round, with team point standings.
+    # 1. Take the (actual) draw of the last round, with team points
     debates = round.prev.debate_set_with_prefetches(ordering=('room_rank',),
-        teams=True, adjudicators=False, speakers=False, divisions=False, venues=False)
-    teams = Team.objects.filter(debateteam__debate__round=round.prev)
-    generator = TeamStandingsGenerator(('points',), ())
-    standings = generator.generate(teams, round=round.prev)
+        teams=True, adjudicators=False, speakers=False, venues=False)
+    if round.prev.prev:
+        populate_win_counts([team for debate in debates for team in debate.teams],
+            round=round.prev.prev)
+    else:
+        # just say everyone is on zero (since no rounds have finished yet)
+        for debate in debates:
+            for team in debate.teams:
+                team._points = 0
 
     # 2. Compute a (min, max) of outcomes for each team
     team_points_after = []
     for debate in debates:
-        points_now = [info.metrics['points'] for info in standings.get_standings(debate.teams)]
+        points_now = [team.points_count for team in debate.teams]
         highest = max(points_now)
         lowest = min(points_now)
 

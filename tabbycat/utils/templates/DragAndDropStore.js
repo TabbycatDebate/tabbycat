@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { splitDebates, sortInterleaved } from './DragAndDropShardingMethods.js'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,21 @@ export default new Vuex.Store({
     wsBridge: null,
     wsPseudoComponentID: null,
     lastSaved: null,
+    // For hover panels
+    hoverSubject: null,
+    hoverType: null,
+    // For hover conflicts
+    hoverClashes: null,
+    hoverHistories: null,
+    // For sorting
+    sortType: null,
+    // For sharding
+    sharding: {
+      split: null,
+      mix: null,
+      sort: null,
+      index: null,
+    },
   },
   mutations: {
     setupInitialData (state, initialData) {
@@ -40,8 +56,8 @@ export default new Vuex.Store({
       Object.entries(initialData.extra.highlights).forEach(([key, value]) => {
         Vue.set(state.highlights, key, { active: false, options: {} })
         value.forEach((item, index) => {
-          item.css = key + '-display ' + key + '-' + index
-          state.highlights[key].options[item.id] = item
+          item.css = key + '-' + index
+          state.highlights[key].options[item.pk] = item
         })
       })
     },
@@ -84,6 +100,28 @@ export default new Vuex.Store({
       })
       state.highlights[type].active = !state.highlights[type].active
     },
+    setSorting (state, type) {
+      state.sortType = type
+    },
+    setSharding (state, payload) {
+      state.sharding[payload.option] = payload.value
+    },
+    setHoverPanel (state, payload) {
+      state.hoverSubject = payload.subject
+      state.hoverType = payload.type
+    },
+    unsetHoverPanel (state) {
+      state.hoverSubject = null
+      state.hoverType = null
+    },
+    setHoverConflicts (state, payload) {
+      state.hoverClashes = payload.clashes
+      state.hoverHistories = payload.histories
+    },
+    unsetHoverConflicts (state) {
+      state.hoverClashes = null
+      state.hoverHistories = null
+    },
     updateSaveCounter (state) {
       state.lastSaved = new Date()
     },
@@ -95,11 +133,113 @@ export default new Vuex.Store({
     allDebatesOrPanels: state => {
       return state.debatesOrPanels
     },
+    allInstitutions: state => {
+      return state.institutions
+    },
+    allAdjudicators: state => {
+      return state.allocatableItems
+    },
+    allTeams: state => {
+      let teams = {}
+      for (let debateOrPanelID in state.debatesOrPanels) {
+        let debateOrPanel = state.debatesOrPanels[debateOrPanelID]
+        if ('teams' in debateOrPanel) {
+          for (let position in debateOrPanel.teams) {
+            if (debateOrPanel.teams[position] !== null) {
+              teams[debateOrPanel.teams[position].id] = debateOrPanel.teams[position]
+            }
+          }
+        }
+      }
+      return teams
+    },
+    shardedDebatesOrPanels: state => {
+      let debatesArray = Object.values(state.debatesOrPanels)
+      if (state.sharding.index === null || debatesArray.length === 0) {
+        return debatesArray
+      }
+      // Order debates
+      let sortKey = 'bracket' // Default
+      if (state.sharding.sort === 'Bracket') {
+        sortKey = 'bracket_min' in debatesArray[0] ? 'bracket_min' : 'bracket'
+      } else if (state.sharding.sort === 'Importance') {
+        sortKey = 'importance'
+      }
+      debatesArray.sort((a, b) => a[sortKey] - b[sortKey]).reverse()
+
+      // Re-order them to be evenly distributed single array if interleaved
+      if (state.sharding.mix === 'Interleaved') {
+        debatesArray = sortInterleaved(debatesArray, state.sharding.split)
+      }
+      // Split up into sub arrays based on nominated shard size / index
+      const shardedDebates = splitDebates(debatesArray, state.sharding.split)
+      return shardedDebates[state.sharding.index]
+    },
+    sortedDebatesOrPanels: (state, getters) => {
+      let debatesOrPanels = getters.shardedDebatesOrPanels
+      if (state.sortType === null || state.sortType === 'bracket') {
+        if (debatesOrPanels.length > 0 && 'bracket_min' in debatesOrPanels[0]) {
+          return debatesOrPanels.sort((a, b) => a.bracket_min - b.bracket_min).reverse()
+        } else {
+          return debatesOrPanels.sort((a, b) => a.bracket - b.bracket).reverse()
+        }
+      } else if (state.sortType === 'importance') {
+        return debatesOrPanels.sort((a, b) => a.importance - b.importance).reverse()
+      }
+      return debatesOrPanels
+    },
     allocatableItems: state => {
       return state.allocatableItems
     },
     loadingState: state => {
       return state.loading
+    },
+    teamClashesForItem: (state) => (id) => {
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.clashes.teams[id]
+      }
+      return false
+    },
+    adjudicatorClashesForItem: (state) => (id) => {
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.clashes.adjudicators[id]
+      }
+      return false
+    },
+    teamHistoriesForItem: (state) => (id) => {
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.histories.teams[id]
+      }
+      return false
+    },
+    adjudicatorHistoriesForItem: (state) => (id) => {
+      if ('clashes' in state.extra && 'teams' in state.extra.clashes) {
+        return state.extra.histories.adjudicators[id]
+      }
+      return false
+    },
+    currentHoverClashes: (state) => {
+      return state.hoverClashes
+    },
+    currentHoverHistories: (state) => {
+      return state.hoverHistories
+    },
+    duplicateAdjudicatorAllocations: (state) => {
+      let allocatedIDs = []
+      let doubleAllocatedIDs = []
+      for (let debateOrPanelID in state.debatesOrPanels) {
+        const debate = state.debatesOrPanels[debateOrPanelID]
+        for (let position in debate.adjudicators) {
+          for (let adjudicatorID of debate.adjudicators[position]) {
+            if (allocatedIDs.includes(adjudicatorID)) {
+              doubleAllocatedIDs.push(adjudicatorID)
+            } else {
+              allocatedIDs.push(adjudicatorID)
+            }
+          }
+        }
+      }
+      return doubleAllocatedIDs
     },
   },
   // Note actions are async

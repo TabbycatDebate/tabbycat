@@ -4,12 +4,10 @@ from math import exp
 
 from munkres import Munkres
 
-from django.utils.translation import gettext as _
-
-from utils.views import BadJsonRequestError
+from django.utils.translation import gettext as _, ngettext
 
 from ..allocation import AdjudicatorAllocation
-from .base import BaseAdjudicatorAllocator, register
+from .base import AdjudicatorAllocationError, BaseAdjudicatorAllocator, register
 
 logger = logging.getLogger(__name__)
 
@@ -27,14 +25,14 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         self.history_penalty = t.pref('adj_history_penalty')
         self.no_panellists = t.pref('no_panellist_position')
         self.no_trainees = t.pref('no_trainee_position')
-        self.duplicate_allocations = t.pref('duplicate_adjs')
         self.feedback_weight = self.round.feedback_weight
+        self.extra_messages = "" # Surfaced to users for non-error disclosures
 
         self.munkres = Munkres()
 
     def allocate(self):
         self.populate_adj_scores(self.adjudicators)
-        return self.run_allocation()
+        return self.run_allocation(), self.extra_messages
 
     def populate_adj_scores(self, adjudicators):
         score_min = self.min_score
@@ -42,14 +40,29 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
         for adj in adjudicators:
             adj._weighted_score = adj.weighted_score(self.feedback_weight)  # used in min_voting_score filter
-            adj._normalized_score = (adj._weighted_score - score_min) / score_range * 5  # to 0-5 range
+            try:
+                adj._normalized_score = (adj._weighted_score - score_min) / score_range * 5  # to 0-5 range
+            except ZeroDivisionError:
+                adj._normalized_score = 0.0
 
         ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
         if ntoolarge > 0:
-            logger.warning("%d normalised scores are larger than 5.0", ntoolarge)
+            warning_msg = ngettext(
+                "%(count)s normalised score is larger than 5.0.",
+                "%(count)s normalised scores are larger than 5.0.",
+                ntoolarge
+            ) % {'count': ntoolarge}
+            self.extra_messages += " " + warning_msg
+            logger.warning(warning_msg)
         ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
         if ntoosmall > 0:
-            logger.warning("%d normalised scores are smaller than 0.0", ntoosmall)
+            warning_msg = ngettext(
+                "%(count)s normalised score is smaller than 0.0.",
+                "%(count)s normalised scores are smaller than 0.0.",
+                ntoosmall
+            ) % {'count': ntoosmall}
+            self.extra_messages += " " + warning_msg
+            logger.warning(warning_msg)
 
     def calc_cost(self, debate, adj, adjustment=0, chair=None):
         cost = 0
@@ -97,17 +110,17 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
     def check_matrix_exists(self, n_debates, n_voting):
         if n_voting == 0:
             info = _("There are no adjudicators eligible to be a chair or "
-                     "panellist. This usually means that you need to go to the "
-                     "Draw Rules section of the Configuration area and "
-                     "decrease the \"Minimum adjudicator score to vote\" setting "
-                     "in order to allow some adjudicators to be allocated.")
+                     "panellist. Try changing the \"Minimum feedback score "
+                     "required to be allocated as chair or panellist\" setting "
+                     "to something lower than at least some adjudicators' "
+                     "current scores, and try again.")
             logger.info("No adjudicators able to panel or chair")
-            raise BadJsonRequestError(info)
+            raise AdjudicatorAllocationError(info)
         if n_debates == 0:
             info = _("There are no debates for this round. "
                      "Maybe you haven't created a draw yet?")
             logger.info("No debates available for allocator")
-            raise BadJsonRequestError(info)
+            raise AdjudicatorAllocationError(info)
 
 
 @register
@@ -148,16 +161,23 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
         panel_debates = debates_sorted[len(solos):]
 
         logger.info("There are %d debates (%d solo, %d panel), %d solos, %d panellists "
-                "(including chairs) and %d trainees", len(debates_sorted), len(solo_debates),
+                "(including chairs) and %d trainees.", len(debates_sorted), len(solo_debates),
                 len(panel_debates), len(solos), len(panellists), len(trainees))
         if n_voting < n_debates:
-            logger.warning("There are %d debates but only %d voting adjudicators", n_debates, n_voting)
+            warning_msg = _("There are %(debate_count)s debates but only %(adj_count)s "
+                    "voting adjudicators.") % {'debate_count': n_debates, 'adj_count': n_voting}
+            self.extra_messages += " " + warning_msg
+            logger.warning(warning_msg)
 
-        # For tournaments with duplicate allocations there are typically not
-        # enough adjudicators to form full panels, so don't crash in that case
-        if not self.duplicate_allocations and len(panellists) < len(panel_debates) * 3:
-            logger.warning("There are %d panel debates but only %d available panellists "
-                    "(less than %d)", len(panel_debates), len(panellists), len(panel_debates) * 3)
+        if len(panellists) < len(panel_debates) * 3:
+            warning_msg = _("There are %(panel_debates)s panel debates but only %(panellists)s "
+                    "available panellists (less than %(needed)s).") % {
+                        'panel_debates': len(panel_debates),
+                        'panellists': len(panellists),
+                        'needed': len(panel_debates) * 3
+                    }
+            self.extra_messages += " " + warning_msg
+            logger.warning(warning_msg)
 
         if len(solos) > 0 and len(solo_debates) > 0:
             logger.info("costing solos")
@@ -260,7 +280,13 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
         logger.info("There are %d debates, %d voting adjudicators and %d trainees",
                 len(debates_sorted), len(voting), len(trainees))
         if n_voting < n_debates:
-            logger.warning("There are %d debates but only %d voting adjudicators", n_debates, n_voting)
+            warning_msg = _("There are %(debates_count)s debates but only "
+                    "%(voting_count)s voting adjudicators.") % {
+                        'debates_count': n_debates,
+                        'voting_count': n_voting
+                    }
+            self.extra_messages += " " + warning_msg
+            logger.warning(warning_msg)
 
         # Allocate voting
         logger.info("costing voting adjudicators")

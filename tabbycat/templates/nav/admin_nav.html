@@ -81,6 +81,10 @@
          class="list-group-item" data-parent="#setuph}">
         <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}
       </a>
+      <a href="{% tournamenturl 'notifications-status' %}"
+         class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="mail"></i>{% trans "Emails" %}
+      </a>
       <a href="{% tournamenturl 'panel-adjudicators-index' %}"
          class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="box"></i>{% trans "Preformed Panels" %}
@@ -98,18 +102,6 @@
         class="collapsed">
         <i data-feather="shuffle"></i>
         <span class="d-none d-md-inline">{% trans "Sides" %}</span>
-      </a>
-    </div>
-  {% endif %}
-
-  {% if pref.enable_divisions %}
-    <div class="list-group-item d-inline-block">
-      <a href="{% tournamenturl 'division_allocations' %}" data-parent="#sidebar"
-         class="collapsed">
-        <span class="circle-icon icon-container">
-          <i data-feather="layers"></i>
-        </span>
-        {% trans "Divisions" %}
       </a>
     </div>
   {% endif %}
@@ -138,7 +130,7 @@
       </a>
       <a href="{% tournamenturl 'admin-venues-statuses' %}"
          class="list-group-item {% if checkins_venues_statuses %}active{% endif %}" data-parent="#checkinh">
-        <i data-feather="map"></i>{% trans "Rooms' Status" %}
+        <i data-feather="map"></i>{% trans "Venues' Status" %}
       </a>
     </div>
   </div>
@@ -157,8 +149,11 @@
         <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-latest' %}" data-parent="#feedh">
         <i data-feather="clock"></i>{% trans "Latest" %}
       </a>
-        <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
         <i data-feather="star"></i>{% trans "Important" %}
+      </a>
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-comments' %}" data-parent="#feedh">
+        <i data-feather="message-square"></i>{% trans "Comments" %}
       </a>
       <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-by-source' %}" data-parent="#feedh">
         <i data-feather="phone-outgoing"></i>{% trans "Find by Source" %}
@@ -205,11 +200,6 @@
           {% endblocktrans %}
         </a>
       {% endfor %}
-      {% if pref.enable_divisions %}
-      <a class="list-group-item" href="{% roundurl 'standings-division' current_round %}">
-        <i data-feather="layers"></i>{% trans "Divisions" %}
-      </a>
-      {% endif %}
       <a class="list-group-item" href="{% roundurl 'standings-speaker' current_round %}">
         {% if tournament.speakercategory_set.all.count > 0 %}
           <i data-feather="user"></i>{% trans "All Speakers" %}

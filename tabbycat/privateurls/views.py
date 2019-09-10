@@ -2,8 +2,7 @@ import logging
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.views.generic.base import TemplateView
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Q
 from django.shortcuts import get_object_or_404
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
@@ -11,10 +10,12 @@ from django.utils.translation import ngettext
 
 from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
-from notifications.models import SentMessageRecord
+from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
 from participants.models import Adjudicator, Person, Speaker
-from tournaments.mixins import PersonalizablePublicTournamentPageMixin, TournamentMixin
+from participants.tables import AdjudicatorDebateTable, TeamDebateTable
+from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
+from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
@@ -36,9 +37,9 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
         return super().get_context_data(**kwargs)
 
     def get_participants_to_email(self, already_sent=False):
-        subquery = SentMessageRecord.objects.filter(
-            event=SentMessageRecord.EVENT_TYPE_URL,
-            tournament=self.tournament, email=OuterRef('email')
+        subquery = SentMessage.objects.filter(
+            notification__event=BulkNotification.EVENT_TYPE_URL,
+            notification__tournament=self.tournament, email=OuterRef('email')
         )
         people = self.tournament.participants.filter(
             url_key__isnull=False, email__isnull=False
@@ -91,7 +92,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     def get_adjudicators_table(self):
         tournament = self.tournament
 
-        adjudicators = Adjudicator.objects.all() if tournament.pref('share_adjs') else Adjudicator.objects.filter(tournament=tournament)
+        adjudicators = Adjudicator.objects.filter(tournament=tournament)
         table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         table.add_adjudicator_columns(adjudicators, show_institutions=False, show_metadata=False)
         self.add_url_columns(table, adjudicators, self.request)
@@ -127,7 +128,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
             ) % {'nblank_people': nblank_people}
             non_generated_urls_message = ngettext(
                 "The already-existing private URL for %(nexisting_people)d person was left intact.",
-                "The already-existing private URLs for %(nexisting_people)d people were left intact",
+                "The already-existing private URLs for %(nexisting_people)d people were left intact.",
                 nexisting_people
             ) % {'nexisting_people': nexisting_people}
 
@@ -142,7 +143,7 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
 class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView):
     page_subtitle = _("Private URLs")
 
-    event = SentMessageRecord.EVENT_TYPE_URL
+    event = BulkNotification.EVENT_TYPE_URL
     subject_template = 'url_email_subject'
     message_template = 'url_email_message'
 
@@ -166,26 +167,52 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
         return table
 
 
-class PersonIndexView(PersonalizablePublicTournamentPageMixin, TemplateView):
-    slug_field = 'url_key'
-    slug_url_kwarg = 'url_key'
-
+class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTournamentPageMixin, VueTableTemplateView):
     template_name = 'public_url_landing.html'
+    model = Person
+
+    table_title = _("Debates")
 
     def is_page_enabled(self, tournament):
-        return self.tournament.pref('participant_feedback') == 'private-urls' or self.tournament.pref('participant_ballots') == 'private-urls' or self.tournament.pref('public_checkins_submit')
+        return True
+
+    def get_object(self, url_key):
+        q = self.model.objects.filter(Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
+        return get_object_or_404(q, url_key=url_key)
+
+    def get_table(self):
+        if hasattr(self.object, 'adjudicator'):
+            return AdjudicatorDebateTable.get_table(self, self.object.adjudicator)
+        else:
+            return TeamDebateTable.get_table(self, self.object.speaker.team)
 
     def get_context_data(self, **kwargs):
+        self.private_url_key = kwargs['url_key']
+        self.object = self.get_object(kwargs['url_key'])
         t = self.tournament
-        participant = get_object_or_404(Person, url_key=kwargs['url_key'])
-        kwargs['person'] = participant
-        try:
-            checkin_id = PersonIdentifier.objects.get(person=participant)
-            checkins = get_unexpired_checkins(t, 'checkin_window_people')
-            kwargs['event'] = checkins.filter(identifier=checkin_id).first()
-        except ObjectDoesNotExist:
-            kwargs['event'] = False
 
+        try:
+            checkin_id = PersonIdentifier.objects.get(person=self.object)
+            kwargs['checkins_used'] = True
+
+            checkins = get_unexpired_checkins(t, 'checkin_window_people')
+
+            try:
+                kwargs['event'] = checkins.filter(identifier=checkin_id).first()
+            except ObjectDoesNotExist:
+                kwargs['event'] = False
+        except ObjectDoesNotExist:
+            kwargs['checkins_used'] = False
+
+        if hasattr(self.object, 'adjudicator'):
+            kwargs['debateadjudications'] = self.object.adjudicator.debateadjudicator_set.filter(
+                debate__round=t.current_round).select_related('debate__round').prefetch_related('debate__round__motion_set')
+        else:
+            kwargs['debateteams'] = self.object.speaker.team.debateteam_set.select_related(
+                'debate__round').prefetch_related('debate__round__motion_set').filter(
+                debate__round=t.current_round)
+
+        kwargs['draw_released'] = t.current_round.draw_status == Round.STATUS_RELEASED
         kwargs['feedback_pref'] = t.pref('participant_feedback') == 'private-urls'
         kwargs['ballots_pref'] = t.pref('participant_ballots') == 'private-urls'
 

@@ -5,6 +5,7 @@
 # Tabbycat
 
 [![Release](https://img.shields.io/github/release/tabbycatdebate/tabbycat.svg)](https://github.com/tabbycatdebate/tabbycat/releases)
+[![Crowdin](https://badges.crowdin.net/tabbycat/localized.svg)](https://crowdin.com/project/tabbycat)
 [![Docs](https://readthedocs.org/projects/tabbycat/badge/)](http://tabbycat.readthedocs.io/en/stable/)
 [![Build Status](https://travis-ci.org/TabbycatDebate/tabbycat.svg?branch=develop)](https://travis-ci.org/TabbycatDebate/tabbycat)
 [![Build status](https://ci.appveyor.com/api/projects/status/hcht4g5x2m5urr8y/branch/develop?svg=true)](https://ci.appveyor.com/project/philipbelesky/tabbycat-81705/branch/develop)
@@ -22,7 +23,7 @@ Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debati
 - Deployable to [Heroku](https://www.heroku.com/) for an easy, fast, and free setup
 - Enter data from multiple computers simultaneously and (optionally) display results, draws, and other information online
 - Collect ballots and feedback online, or from printed forms customised for each round ( adjudicator feedback questions and rankings [are configurable](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html))
-- Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts/clashes
+- Automated adjudicator allocations based on adjudicator ranking, debate priority, and conflicts/clashes
 - A drag and drop interface for adjudicator allocation that displays conflicts alongside break liveness and gender/regional/language balance considerations
 - A responsive interface that adapts to suit large screens, laptops, tablets, and phones
 - Support for British Parliamentary (EUDC/WUDC), Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
@@ -48,6 +49,8 @@ Our documentation also provides guides for how to run Tabbycat on your local mac
 If you have any feedback or would like to request support, we'd love to hear from you! There are a number of ways to get in touch, all [outlined in our documentation](http://tabbycat.readthedocs.io/en/latest/about/support.html).
 
 Contributions are welcome, and are greatly appreciated! Details about how to contribute [are also outlined in our documentation](http://tabbycat.readthedocs.io/en/latest/about/contributing.html).
+
+We also invite new translations of the interface through [Crowdin](https://crowdin.com/project/tabbycat)! Get in touch for access to our translation platform.
 
 ## ©️ Licence
 

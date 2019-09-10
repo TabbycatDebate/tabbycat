@@ -37,8 +37,7 @@ class BaseVenueAllocator:
         empty.
 
         The constraints for each debate are just all of the venue constraints
-        relating to the teams, adjudicators, institutions and division of the
-        debate."""
+        relating to the teams, adjudicators, and institutions of the debate."""
 
         all_constraints = {}
         for vc in VenueConstraint.objects.filter_for_debates(self.debates).select_related('category').prefetch_related('subject', 'category__venues'):
@@ -50,8 +49,7 @@ class BaseVenueAllocator:
             subjects = itertools.chain(
                 debate.teams,
                 debate.adjudicators.all(),
-                [team.institution for team in debate.teams],
-                [] if debate.division is None else [debate.division]
+                [team.institution for team in debate.teams]
             )
             constraints = [vc for subject in subjects for vc in all_constraints.get(subject, [])]
 

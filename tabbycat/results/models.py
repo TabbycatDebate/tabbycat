@@ -100,8 +100,6 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
-    forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("forfeit")) # where valid, cascade should be covered by debate
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -134,9 +132,6 @@ class BallotSubmission(Submission):
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
 
-        if self.forfeit is not None and self.forfeit.debate != self.debate:
-            raise ValidationError(_("The forfeiter must be a team in the debate."))
-
     @property
     def serialize_like_actionlog(self):
         result_winner, result = readable_ballotsub_result(self)
@@ -167,9 +162,9 @@ class BallotSubmission(Submission):
             'ballot_id': self.id,
             'debate_id': self.debate.id,
             'submitter': self.submitter.username if self.submitter else self.ip_address,
-            'admin_link': reverse_tournament('results-ballotset-edit',
+            'admin_link': reverse_tournament('old-results-ballotset-edit',
                                              tournament, kwargs={'pk': self.id}),
-            'assistant_link': reverse_tournament('results-assistant-ballotset-edit',
+            'assistant_link': reverse_tournament('old-results-assistant-ballotset-edit',
                                                  tournament, kwargs={'pk': self.id}),
             'short_time': created_short,
             'created_timestamp': created,
@@ -237,10 +232,6 @@ class TeamScore(models.Model):
         verbose_name=_("votes given"))
     votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("votes possible"))
-
-    forfeit = models.BooleanField(default=False,
-        verbose_name=_("forfeit"),
-        help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]

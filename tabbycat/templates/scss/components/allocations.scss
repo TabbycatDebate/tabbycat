@@ -1,4 +1,99 @@
 //------------------------------------------------------------------------------
+// V2 Screens (styled moved from inline vue styles as they don't load)
+//------------------------------------------------------------------------------
+
+// For DragAndDropDebate.vue
+.vc-bp-grid {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+// For DraggableAllocation.vue
+.vc-chair-flex {
+  flex: 0 0 168px; // Don't grow or shrink; remain at fixed width (must match style on chair)
+}
+
+// For InlineTeam.vue
+.inline-team {
+  height: 100%; // Need to fill space
+  position: relative; // Need to allow for the seen marker
+  border: 5px solid $white; // Placeholder; so doesn't resize with highlights
+
+  &:hover { // Need to override conflict hovers
+    background: $purple !important;
+    color: $white;
+    border-color: darken($purple, 7.5%) !important;
+  }
+
+  &.conflictable {
+    border-width: 5px; // For conflicts
+    border-style: solid;
+  }
+
+  .not-live {
+    text-decoration: line-through;
+  }
+
+  .history-tooltip {
+    bottom: 3px;
+    font-size: 12px;
+  }
+}
+
+// AutoSaveCounter.vue
+.vc-auto-save {
+  min-width: 70px; /* Ensure no resize on save */
+}
+
+// DraggableItem.vue
+.vue-draggable {
+  position: relative; /* For the position of the tooltip */
+
+  .history-tooltip {
+    bottom: 1px;
+    font-size: 12px;
+  }
+
+  .vc-title {
+    line-height: 0.9;
+    font-size: 1.1rem;
+  }
+
+  .vc-number {
+    letter-spacing: -3px;
+  }
+
+  .vc-subtitle {
+    font-weight: normal;
+    font-size: 0.65rem;
+  }
+}
+
+// DragAndDropUnallocatedItems.vue
+.vc-resize-handler:hover {
+  cursor: ns-resize;
+}
+
+// DragAndDropLayout.vue
+.vc-header {
+  min-height: 118px; /* Need to accomodate messages without resizing vertically */
+  margin: 0 -7px; /* Stretch to meet full window width */
+  padding-top: 52px; /* Push down notifications below toolbar */
+  padding-bottom: 8px; /* Push down notifications below toolbar */
+
+  .alert {
+    margin-top: 8px; /* Override default to tighten */
+    margin-bottom: 0; /* Use bottom padding as per above */
+  }
+}
+
+.vc-debates-container {
+  padding-bottom: 420px; /* Need to ensure unallocated doesn't overlap; matches its max height */
+  margin: 0 -15px; /* Remove the container padding added from base layout */
+}
+
+//------------------------------------------------------------------------------
 // General Layout
 //------------------------------------------------------------------------------
 
@@ -60,8 +155,7 @@
     padding-right: 0; // Balance the offset from the sorting icons
   }
 
-  .vue-sort-key,
-  .thead.legacy-vue-droppable-container .vue-sort-key {
+  .vue-sort-key {
     margin-bottom: -2px;
   }
 }
@@ -77,23 +171,6 @@
 
 .importance-container {
   width: 100px;
-}
-
-.panel-container {
-
-  .legacy-vue-droppable-container {
-    border-right: 2px solid #fff;
-    height: 100%;
-
-    .legacy-vue-droppable {
-      flex-wrap: wrap; // Ensure content can wrap if needed
-      display: flex;
-    }
-  }
-
-  .legacy-vue-droppable-container:last-child {
-    border-right: 0;
-  }
 }
 
 .position-container-C {
@@ -131,7 +208,7 @@
   right: -3px;
 
   .tooltip-inner {
-    padding: 2px 3px;
+    padding: 4px 4px;
     margin-bottom: -4px;
   }
 }

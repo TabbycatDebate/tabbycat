@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 
 from adjallocation.allocators import legacy_allocate_adjudicators
 from adjallocation.allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
-from availability.utils import activate_all
+from availability.utils import activate_all, set_availability
 from draw.models import Debate
 from draw.manager import DrawManager
 from results.dbutils import add_results_to_round
@@ -30,9 +30,14 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))
         DrawManager(round).create()
-        allocate_venues(round)
         round.draw_status = Round.STATUS_CONFIRMED
         round.save()
+
+        # Limit to 7 adjudicators per debate (just to avoid panel sizes getting too out of hand)
+        max_nadjudicators = round.debate_set.count() * 7
+        if round.active_adjudicators.count() > max_nadjudicators:
+            adjs = round.tournament.relevant_adjudicators.order_by('?')[:max_nadjudicators]
+            set_availability(adjs, round)
 
         self.stdout.write("Auto-allocating adjudicators for round '{}'...".format(round.name))
         if round.ballots_per_debate == 'per-adj':
@@ -40,6 +45,8 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         else:
             allocator_class = ConsensusHungarianAllocator
         legacy_allocate_adjudicators(round, allocator_class)
+
+        allocate_venues(round)
 
         self.stdout.write("Generating results for round '{}'...".format(round.name))
         add_results_to_round(round, **self.result_kwargs(options))

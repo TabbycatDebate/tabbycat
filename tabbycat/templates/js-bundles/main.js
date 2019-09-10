@@ -1,8 +1,8 @@
 // The base template with universal or near-universal functionality (imported on all pages)
 import Vue from 'vue'
 import VueTouch from 'vue-touch'
-import Raven from 'raven-js'
-import RavenVue from 'raven-js/plugins/vue'
+import * as Sentry from '@sentry/browser'
+import * as Integrations from '@sentry/integrations'
 import Popper from 'popper.js'
 import feather from 'feather-icons'
 import 'bootstrap' // Import bootstrap javascript plugins
@@ -11,14 +11,11 @@ import 'bootstrap' // Import bootstrap javascript plugins
 import CheckboxTablesContainer from '../tables/CheckboxTablesContainer.vue'
 import TablesContainer from '../tables/TablesContainer.vue'
 // App Templates
-import LegacyEditAdjudicatorsContainer from '../../adjallocation/templates/LegacyEditAdjudicatorsContainer.vue'
 import CheckInStatusContainer from '../../checkins/templates/CheckInStatusContainer.vue'
-import AllocateDivisionsContainer from '../../divisions/templates/AllocateDivisionsContainer.vue'
-import LegacyEditMatchupsContainer from '../../draw/templates/LegacyEditMatchupsContainer.vue'
 import DiversityContainer from '../../participants/templates/DiversityContainer.vue'
 import PrintableBallot from '../../printing/templates/PrintableBallot.vue'
+import BallotEntryContainer from '../../results/templates/BallotEntryContainer.vue'
 import ResultsTablesContainer from '../../results/templates/ResultsTablesContainer.vue'
-import LegacyEditVenuesContainer from '../../venues/templates/LegacyEditVenuesContainer.vue'
 import TournamentOverviewContainer from '../../tournaments/templates/TournamentOverviewContainer.vue'
 // Allocations
 import EditDebateAdjudicatorsContainer from '../../adjallocation/templates/EditDebateAdjudicatorsContainer.vue'
@@ -35,9 +32,11 @@ var $ = require('jquery')
 
 // Setup error logging (should happen before other imports)
 if (window.buildData.sentry === true) {
-  Raven.config('https://88a028d7eb504d93a1e4c92e077d6ce5@sentry.io/185378', {
+  Sentry.init({
+    dsn: 'https://88a028d7eb504d93a1e4c92e077d6ce5@sentry.io/185378',
+    integrations: [new Integrations.Vue({ Vue, attachProps: true })],
     release: window.buildData.version,
-  }).addPlugin(RavenVue, Vue).install()
+  })
 }
 
 // -----------------------------------------------------------------------------
@@ -185,20 +184,17 @@ vueComponents.ResultsTablesContainer = ResultsTablesContainer
 // Checkin Statuses
 vueComponents.CheckInStatusContainer = CheckInStatusContainer
 // Divisions Containers
-vueComponents.AllocateDivisionsContainer = AllocateDivisionsContainer
 vueComponents.DiversityContainer = DiversityContainer
 vueComponents.TournamentOverviewContainer = TournamentOverviewContainer
 // Printables
 vueComponents.PrintableBallot = PrintableBallot
-// Allocations Legacy
-vueComponents.LegacyEditAdjudicatorsContainer = LegacyEditAdjudicatorsContainer
-vueComponents.LegacyEditMatchupsContainer = LegacyEditMatchupsContainer
-vueComponents.LegacyEditVenuesContainer = LegacyEditVenuesContainer
 // Allocations New
 vueComponents.EditDebateAdjudicatorsContainer = EditDebateAdjudicatorsContainer
 vueComponents.EditPanelAdjudicatorsContainer = EditPanelAdjudicatorsContainer
 vueComponents.EditDebateTeamsContainer = EditDebateTeamsContainer
 vueComponents.EditDebateVenuesContainer = EditDebateVenuesContainer
+// Ballots New
+vueComponents.BallotEntryContainer = BallotEntryContainer
 
 // -----------------------------------------------------------------------------
 // Asynchronously Loaded Components Setup (defer loading to reduce bundle)
@@ -219,6 +215,12 @@ const vueData = window.vueData // We need to mount props from the window itself
 // Mixin that maps methods in Vue to what django's equivalents; passing args
 const vueTranslationMixin = {
   methods: {
+    tct: function (text, variables) {
+      // Convenience function to wrap interpolate and translate at once
+      const fmt = window.gettext(text) // E.g. "Did %s deliver the adj?"
+      // Variables must be an array
+      return window.interpolate(fmt, variables)
+    },
     gettext: function () {
       return window.gettext.apply(this, arguments)
     },

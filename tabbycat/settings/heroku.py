@@ -1,6 +1,15 @@
+import logging
 from os import environ
 
 import dj_database_url
+import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
+from .core import TABBYCAT_VERSION
+
+from .core import TABBYCAT_VERSION
 
 
 # ==============================================================================
@@ -42,10 +51,10 @@ DATABASES = {
 
 # Use a separate Redis addon for channels to reduce number of connections
 # With fallback for Tabbykitten installs (no addons) or pre-2.2 instances
-if os.environ.get('REDISCLOUD_URL'):
-    ALT_REDIS_URL = os.environ.get('REDISCLOUD_URL') # 30 clients on free
+if environ.get('REDISCLOUD_URL'):
+    ALT_REDIS_URL = environ.get('REDISCLOUD_URL') # 30 clients on free
 else:
-    ALT_REDIS_URL = os.environ.get('REDIS_URL') # 20 clients on free
+    ALT_REDIS_URL = environ.get('REDIS_URL') # 20 clients on free
 
 # Connection/Pooling Notes
 # ========================
@@ -82,7 +91,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL')],
+            "hosts": [environ.get('REDIS_URL')],
             # Remove channels from groups after 3 hours
             # This matches websocket_timeout in Daphne
             "group_expiry": 10800,
@@ -108,18 +117,21 @@ if environ.get('SENDGRID_USERNAME', ''):
 # Sentry
 # ==============================================================================
 
-if environ.get('DISABLE_SENTRY'):
-    DISABLE_SENTRY = True
-else:
-    DISABLE_SENTRY = False
+if not environ.get('DISABLE_SENTRY'):
+    sentry_sdk.init(
+        dsn="https://6bf2099f349542f4b9baf73ca9789597@sentry.io/185382",
+        integrations=[
+            DjangoIntegration(),
+            LoggingIntegration(event_level=logging.WARNING),
+            RedisIntegration(),
+        ],
+        send_default_pii=True,
+        release=TABBYCAT_VERSION,
+    )
 
-RAVEN_CONFIG = {
-    'dsn': 'https://6bf2099f349542f4b9baf73ca9789597:57b33798cc2a4d44be67456f2b154067@sentry.io/185382',
-    'release': TABBYCAT_VERSION,
-}
-
-# Custom implementation makes the user ID the e-mail address, rather than the primary key
-SENTRY_CLIENT = 'utils.raven.TabbycatRavenClient'
+    # Override dictionary trimming so that all preferences will be included in Sentry reports
+    # https://forum.sentry.io/t/python-sdk-extra-data-capped-at-400-characters/6909
+    sentry_sdk.serializer.MAX_DATABAG_BREADTH = 200
 
 # ==============================================================================
 # Scout

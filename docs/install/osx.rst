@@ -21,7 +21,7 @@ Every line in the instructions that begins with ``$`` is a command that you need
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we haven't tried it.
+  If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly.
 
 1. Install dependencies
 ================================================================================
@@ -30,14 +30,14 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 --------------------------------------------------------------------------------
-Tabbycat requires Python 3.5 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+Tabbycat requires Python 3.6 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 The executable will probably be called ``python3``, rather than ``python``. Check::
 
     $ python3 --version
-    Python 3.5.2
+    Python 3.6.8
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.5 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.6 or later.
 
 .. admonition:: Advanced users
   :class: tip

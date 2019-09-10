@@ -1,6 +1,6 @@
 {% load add_field_css debate_tags humanize i18n %}
 
-<ul class="list-group">
+<ul class="list-group {% if all_ballotsubs.count > 0 %}mb-3{% endif %}">
 
   {% with nballotsubs=all_ballotsubs.count %}
     {% if new and nballotsubs > 0 %}
@@ -36,7 +36,7 @@
   {% endif %}
 
   {% for other in all_ballotsubs %}
-    <li class="list-group-item small">
+    <li class="list-group-item">
       {% if other != ballotsub %}
         {% if user_role == "admin" %}
           <a href="{% tournamenturl 'results-ballotset-edit' other.id %}">

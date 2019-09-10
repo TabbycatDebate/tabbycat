@@ -24,4 +24,4 @@ class DumbAllocator(BaseAdjudicatorAllocator):
                     alloc.panellists.append(adjs.pop(0))
                     alloc.panellists.append(adjs.pop(0))
 
-        return result
+        return result, ""

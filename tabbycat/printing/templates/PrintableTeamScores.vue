@@ -3,11 +3,10 @@
 
     <div class="db-flex-item-2 db-flex-row db-bottom-border">
       <div class="db-padding-horizontal flex-grow-1 db-align-vertical-center">
-        <strong>{{ titleCasePosition }}, {{ teamName }}</strong>
+        <strong v-text="tct('%s, %s', [titleCasePosition, teamName])"></strong>
       </div>
-      <div class="db-padding-horizontal db-align-vertical-center strong small" v-if="this.team.iron">
-        IMPORTANT: Check and explicitly note if a speaker gives multiple speeches
-      </div>
+      <div class="db-padding-horizontal db-align-vertical-center strong small" v-if="this.team.iron"
+           v-text="gettext('IMPORTANT: Check and explicitly note if a speaker gives multiple speeches')"></div>
       <div class="db-padding-horizontal db-align-vertical-center">
         {{ speakersList }}
       </div>
@@ -17,32 +16,21 @@
     <template v-for="pos in this.dt.positions">
 
       <div class="db-flex-item-3 db-flex-row db-bottom-border">
-        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
-          {{ pos }}:
-        </div>
+        <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal"
+             v-html="tct('%s:', [pos])"></div>
         <div class="db-fill-in db-flex-item-8 d-flex"></div>
         <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
-          <span>Score:</span>
+          <span v-text="gettext('Score:')"></span>
         </div>
         <div class="db-fill-in db-flex-item-3 d-flex"></div>
       </div>
 
       <div v-if="roundInfo.showDigits"
            class="db-flex-item-2 align-items-center d-flex pr-1 small db-bottom-border">
-        <div class="db-flex-item-2 db-padding-horizontal text-secondary">
-          Circle the last digit of the {{ pos }}'s score:
-        </div>
+        <div class="db-flex-item-2 db-padding-horizontal text-secondary"
+             v-html="tct('Circle the last digit of the %s\'s score:', [pos])"></div>
         <div class="db-flex-item-3 d-flex">
-          <div class="flex-fill text-center"><span class="db-circle">0</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">1</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">2</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">3</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">4</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">5</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">6</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">7</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">8</span></div>
-          <div class="flex-fill text-center"><span class="db-circle">9</span></div>
+          <div class="flex-fill text-center" v-for="(n, i) in 10"><span class="db-circle">{{ i }}</span></div>
         </div>
       </div>
 
@@ -50,21 +38,10 @@
 
     <div class="db-flex-item-3 db-flex-row db-bottom-border"><!-- Totals -->
       <template v-if="roundInfo.isBP">
-        <div class="db-flex-item-2 align-items-center d-flex small db-padding-horizontal">
-          Circle Rank:
-        </div>
+        <div class="db-flex-item-2 align-items-center d-flex small db-padding-horizontal" v-text="gettext('Circle Rank:')"></div>
         <div class="db-flex-item-6 db-flex-row">
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace">1st</span>
-          </div>
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace">2nd</span>
-          </div>
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace">3rd</span>
-          </div>
-          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center">
-            <span class="db-circle text-monospace">4th</span>
+          <div class="flex-grow-1 db-align-vertical-center db-align-horizontal-center" v-for="ord in ordinals">
+            <span class="db-circle text-monospace" v-html="ord"></span>
           </div>
         </div>
         <div class="db-flex-item-1"><!-- Spacing --></div>
@@ -73,7 +50,7 @@
         <div class="db-flex-item-9 db-padding-horizontal"><!-- Spacing --></div>
       </template>
       <div class="db-flex-item-1 align-items-center d-flex small db-padding-horizontal">
-        <span>Total:</span>
+        <span v-text="gettext('Total:')"></span>
       </div>
       <div class="db-fill-in db-flex-item-3 d-flex">
 
@@ -81,20 +58,10 @@
     </div>
 
     <div v-if="roundInfo.showDigits" class="db-flex-item-2 align-items-center d-flex pr-1 small">
-      <div class="db-flex-item-2 db-padding-horizontal text-secondary">
-        Circle the last digit of the team's total:
-      </div>
+      <div class="db-flex-item-2 db-padding-horizontal text-secondary"
+           v-text="gettext('Circle the last digit of the team\'s total:')"></div>
       <div class="db-flex-item-3 d-flex">
-        <div class="flex-fill text-center"><span class="db-circle">0</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">1</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">2</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">3</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">4</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">5</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">6</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">7</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">8</span></div>
-        <div class="flex-fill text-center"><span class="db-circle">9</span></div>
+        <div class="flex-fill text-center" v-for="(n, i) in 10"><span class="db-circle">{{ i }}</span></div>
       </div>
     </div>
 
@@ -108,6 +75,7 @@ export default {
   props: {
     dt: Object,
     roundInfo: Object,
+    ordinals: Array,
   },
   computed: {
     team: function () {

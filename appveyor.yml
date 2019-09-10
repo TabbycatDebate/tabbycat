@@ -18,8 +18,8 @@ build: false
 environment:
   nodejs_version: "8" # Match install instructions
   matrix:
-    - PYTHON: "C:\\Python35" # Match install instructions
-      PYTHON_VERSION: "3.5.3"
+    - PYTHON: "C:\\Python36" # Match install instructions
+      PYTHON_VERSION: "3.6.8"
       PYTHON_ARCH: "32"
   global:
     POSTGRES_ENV_POSTGRES_USER: postgres

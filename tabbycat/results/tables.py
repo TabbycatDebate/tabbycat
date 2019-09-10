@@ -1,6 +1,5 @@
 from django.utils.translation import gettext as _
 
-from draw.models import Debate
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
 
@@ -15,7 +14,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
         status_header = {
             'key': key,
-            'tooltip': _("Whether this debate's ballot has been checked-in"),
+            'tooltip': _("Whether this debate's ballot has been checked in"),
             'icon': "compass",
         }
         status_cells = []
@@ -57,9 +56,9 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         # These are prefetched, so sort using Python rather than generating an SQL query
         ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
         if view_role == 'admin':
-            link = 'results-ballotset-new'
+            link = 'old-results-ballotset-new'
         else:
-            link = 'results-assistant-ballotset-new'
+            link = 'old-results-assistant-ballotset-new'
 
         return {
             'component': 'ballots-cell',
@@ -75,14 +74,3 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         entry_header = {'key': 'EB', 'icon': "plus-circle"}
         entry_cells = [self.get_ballot_cells(d, self.tournament, view_role, user) for d in debates]
         self.add_column(entry_header, entry_cells)
-
-        if self.tournament.pref('enable_postponements'):
-            postpones_header = {'title': _("Postpone"), 'key': "postpone"}
-            postpones_cells = []
-            for debate in debates:
-                if debate.result_status == Debate.STATUS_POSTPONED:
-                    text = '<a href="#" class="unpostpone-link" debate-id="{:d}">' + _("Unpostpone") + '</a>'
-                else:
-                    text = '<a href="#" class="postpone-link" debate-id="{:d}">' + _("Postpone") + '</a>'
-                postpones_cells.append(text.format(debate.id))
-            self.add_column(postpones_header, postpones_cells)

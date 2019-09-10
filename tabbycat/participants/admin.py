@@ -44,9 +44,10 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 @admin.register(Speaker)
 class SpeakerAdmin(admin.ModelAdmin):
-    list_filter = ('team__tournament',)
+    list_filter = ('team__tournament', 'team__institution')
     list_display = ('name', 'team', 'gender')
-    search_fields = ('name', )
+    search_fields = ('name', 'team__short_name', 'team__long_name',
+                     'team__institution__name', 'team__institution__code')
     raw_id_fields = ('team', )
 
 
@@ -116,14 +117,13 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
     list_display = ('long_name', 'short_name', 'emoji', 'institution',
-                    'division', 'tournament')
+                    'tournament')
     search_fields = ('reference', 'short_name', 'institution__name',
                      'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'division', 'institution', 'break_categories')
+    list_filter = ('tournament', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
                AdjudicatorTeamConflictInline, TeamInstitutionConflictInline,
                RoundAvailabilityInline)
-    raw_id_fields = ('division', )
     actions = ['delete_url_key']
 
     def get_queryset(self, request):
@@ -190,7 +190,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'institution', 'tournament', 'trainee',
                     'independent', 'adj_core', 'gender', 'test_score')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
-    list_filter = ('tournament', 'name', 'institution')
+    list_filter = ('tournament', 'institution')
     list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
     inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
                AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline,

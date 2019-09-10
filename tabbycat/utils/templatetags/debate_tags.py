@@ -230,12 +230,13 @@ def percentage(number_a, number_b):
         return 0
 
 
-@register.simple_tag
-def subtract(number_a, number_b):
-    return number_a - number_b # Used in Feedback Overview
+@register.filter
+def subtract(value, arg):
+    return value - arg # Used in BP Motion Stats
 
 
 @register.filter(name='abbreviatename')
 def abbreviatename(name):
     """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
-    return "%s.%s" % (name[0], name.split(" ")[-1][:5]) # Used for barcodes
+    parts = name.split(" ")
+    return "%s.%s" % (parts[0][:5], parts[-1][:5]) # Used for barcodes

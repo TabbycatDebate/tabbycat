@@ -13,8 +13,7 @@ from participants.models import Speaker, Team
 from tournaments.utils import get_side_name
 
 from .consumers import BallotResultConsumer, BallotStatusConsumer
-from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult,
-                     ForfeitDebateResult, VotingDebateResult)
+from .result import (BPDebateResult, BPEliminationDebateResult, ConsensusDebateResult, VotingDebateResult)
 from .utils import get_status_meta, side_and_position_names
 
 logger = logging.getLogger(__name__)
@@ -249,7 +248,6 @@ class BaseBallotSetForm(BaseResultForm):
 
         self.using_motions = self.tournament.pref('enable_motions')
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
-        self.using_forfeits = self.tournament.pref('enable_forfeits')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
@@ -292,8 +290,6 @@ class BaseBallotSetForm(BaseResultForm):
          - <side>_motion_veto,   if motion vetoes are being noted, one for each team
          - <side>_speaker_s#,    one for each speaker
          - <side>_ghost_s#,      whether score should be a duplicate
-
-        Most fields are required, unless forfeits are enabled.
         """
 
         # 1. Choose sides field
@@ -317,13 +313,13 @@ class BaseBallotSetForm(BaseResultForm):
         # 2. Motions fields
         if self.using_motions:
             self.fields['motion'] = MotionModelChoiceField(queryset=self.motions,
-                required=not self.using_forfeits)
+                required=True)
 
         if self.using_vetoes:
             for side in self.sides:
                 self.fields[self._fieldname_motion_veto(side)] = MotionModelChoiceField(
                     label=_("%(side_abbr)s's motion veto") % {'side_abbr': get_side_name(self.tournament, side, 'abbr')},
-                    queryset=self.motions, required=False
+                    queryset=self.motions, required=False, help_text=get_side_name(self.tournament, side, 'full'),
                 )
 
         # 3. Speaker fields
@@ -335,18 +331,13 @@ class BaseBallotSetForm(BaseResultForm):
             else:
                 queryset = self.debate.get_team(side).speakers
             self.fields[self._fieldname_speaker(side, pos)] = forms.ModelChoiceField(
-                queryset=queryset, required=not self.using_forfeits)
+                queryset=queryset, required=True)
 
             # 3(b). Ghost fields
             self.fields[self._fieldname_ghost(side, pos)] = forms.BooleanField(required=False,
                 label=_("Mark as a duplicate speech"), label_suffix="")
 
         self.create_score_fields()
-
-        # 4. Forfeit field
-        if self.using_forfeits:
-            choices = [(side, _("Forfeit by the %(side)s") % {'side': self._side_name(side)}) for side in self.sides]
-            self.fields['forfeit'] = forms.ChoiceField(widget=forms.RadioSelect, choices=choices, required=False)
 
     def initial_data(self):
         """Generates dictionary of initial form data."""
@@ -375,16 +366,13 @@ class BaseBallotSetForm(BaseResultForm):
                 initial['motion'] = self.motions.get()
             else:
                 initial['motion'] = self.ballotsub.motion
+
+        if self.using_vetoes:
             for side in self.sides:
                 dtmp = self.ballotsub.debateteammotionpreference_set.filter(
                         debate_team__side=side, preference=3).first()
                 if dtmp:
                     initial[self._fieldname_motion_veto(side)] = dtmp.motion
-
-        if self.using_forfeits:
-            forfeiter = self.ballotsub.teamscore_set.filter(forfeit=True, win=False).first()
-            if forfeiter:
-                initial['forfeit'] = forfeiter.debate_team.side
 
         result_class = self.get_result_class()
         result = result_class(self.ballotsub)
@@ -426,8 +414,6 @@ class BaseBallotSetForm(BaseResultForm):
 
         if 'password' in self.fields:
             order.append('password')
-        if 'forfeit' in self.fields:
-            order.append('forfeit')
 
         order.extend(['discarded', 'confirmed', 'debate_result_status'])
 
@@ -436,7 +422,7 @@ class BaseBallotSetForm(BaseResultForm):
             order.extend(self._fieldname_motion_veto(side) for side in self.sides)
 
         # now, set
-        for i, name in enumerate(order, start=1):
+        for i, name in enumerate(order, start=3): # Start at 3 to account for front-end only fields
             try:
                 self.fields[name].widget.attrs['tabindex'] = i
             except KeyError as e:
@@ -456,9 +442,8 @@ class BaseBallotSetForm(BaseResultForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if not cleaned_data.get('forfeit'):
-            self.clean_speakers(cleaned_data)
-            self.clean_scoresheet(cleaned_data)
+        self.clean_speakers(cleaned_data)
+        self.clean_scoresheet(cleaned_data)
 
         return cleaned_data
 
@@ -538,13 +523,8 @@ class BaseBallotSetForm(BaseResultForm):
 
     def save_ballot(self):
 
-        # 3. Check if there was a forfeit
-        if self.using_forfeits and self.cleaned_data.get('forfeit'):
-            result = ForfeitDebateResult(self.ballotsub, self.cleaned_data['forfeit'])
-            self.ballotsub.forfeit = result.debateteams[self.cleaned_data['forfeit']]
-        else:
-            result_class = self.get_result_class()
-            result = result_class(self.ballotsub)
+        result_class = self.get_result_class()
+        result = result_class(self.ballotsub)
 
         # 4. Save the sides
         if self.choosing_sides:
@@ -567,14 +547,13 @@ class BaseBallotSetForm(BaseResultForm):
                         debate_team=debate_team, preference=3).delete()
 
         # 6. Save speaker fields
-        if not self.using_forfeits or not self.cleaned_data.get('forfeit'):
-            for side, pos in product(self.sides, self.positions):
-                speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
-                result.set_speaker(side, pos, speaker)
-                is_ghost = self.cleaned_data[self._fieldname_ghost(side, pos)]
-                result.set_ghost(side, pos, is_ghost)
+        for side, pos in product(self.sides, self.positions):
+            speaker = self.cleaned_data[self._fieldname_speaker(side, pos)]
+            result.set_speaker(side, pos, speaker)
+            is_ghost = self.cleaned_data[self._fieldname_ghost(side, pos)]
+            result.set_ghost(side, pos, is_ghost)
 
-            self.populate_result_with_scores(result)
+        self.populate_result_with_scores(result)
 
         result.save()
 
@@ -646,7 +625,7 @@ class SingleBallotSetForm(BaseBallotSetForm):
             self.fields[self._fieldname_score(side, pos)] = scorefield(
                 widget=forms.NumberInput(attrs={'class': 'required number'}),
                 tournament=self.tournament,
-                required=not self.using_forfeits,
+                required=True,
             )
 
     def initial_from_result(self, result):
@@ -741,7 +720,7 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
                 self.fields[self._fieldname_score(adj, side, pos)] = scorefield(
                     widget=forms.NumberInput(attrs={'class': 'required number'}),
                     tournament=self.tournament,
-                    required=not self.using_forfeits,
+                    required=True,
                 )
 
     def initial_from_result(self, result):
@@ -792,8 +771,8 @@ class PerAdjudicatorBallotSetForm(BaseBallotSetForm):
 
     def populate_result_with_scores(self, result):
         for adj, side, pos in product(self.adjudicators, self.sides, self.positions):
-                score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
-                result.set_score(adj, side, pos, score)
+            score = self.cleaned_data[self._fieldname_score(adj, side, pos)]
+            result.set_score(adj, side, pos, score)
 
     # --------------------------------------------------------------------------
     # Template access methods

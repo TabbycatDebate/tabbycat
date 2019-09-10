@@ -9,7 +9,7 @@
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
                 @click="setListContext('filterByPresence', optionKey, !optionState)">
-          <span v-if="optionKey === 'All'">All</span>
+          <span v-if="optionKey === 'All'" v-text="gettext('All')"></span>
           <i v-if="optionKey === 'Absent'" data-feather="x"></i>
           <i v-if="optionKey === 'Present'" data-feather="check"></i>
           {{ stats[optionKey] }}
@@ -29,9 +29,8 @@
         <button v-for="(optionState, optionKey) in this.speakerGroupings"
                 :key="optionKey" type="button"
                 :class="['btn btn-outline-primary', optionState ? 'active' : '']"
-                @click="setListContext('speakerGroupings', optionKey, !optionState)">
-          By {{ optionKey }}
-        </button>
+                @click="setListContext('speakerGroupings', optionKey, !optionState)"
+                v-text="gettext('By ' + optionKey)"></button>
       </div>
 
       <div class="btn-group mb-md-0 mb-3">
@@ -46,95 +45,87 @@
 
     </div>
 
-    <div class="alert alert-info" v-if="entitiesByPresence.length === 0">
-      No matching <span v-if="isForVenues">venues</span><span v-else>people</span> found.
+    <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && isForVenues"
+         v-text="gettext('No matching venues found.')"></div>
+    <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && !isForVenues"
+         v-text="gettext('No matching people found.')"></div>
+    <div class="alert alert-info"
+         v-text="gettext('This page will live-update with new check-ins as they occur although the initial list may be up to a minute old.')">
+
+      <template v-if="assistantUrl" v-text="gettext('If you want to view this page without the sidebar (i.e. for displaying to an auditorium) you can use the assistant version.')">
+        <a :href="assistantUrl" target="_blank" v-text="gettext('Open the assistant version.')"></a></template>
     </div>
-    <div class="alert alert-info">
-      This page will live-update with new check-ins as they occur although the initial list may be
-      up to a minute old.
-      <template v-if="assistantUrl">
-        If you want to view this page without the sidebar (i.e. for displaying to an auditorium)
-        you can <a :href="assistantUrl" target="_blank"> open the assistant version.</a></template>
-    </div>
 
-    <transition-group :name="mainTransitions" tag="div">
-      <div v-for="(entities, grouper) in entitiesBySortingSetting" :key="grouper" class="card mt-1">
+    <div v-for="(entities, grouper) in entitiesBySortingSetting" :key="entities[0].id" class="card mt-1">
 
-        <div class="card-body p-0">
-          <div class="row no-gutters">
+      <div class="card-body p-0">
+        <div class="row no-gutters">
 
-            <div class="col-12 col-md-3 col-lg-2 d-flex flex-nowrap align-items-center">
+          <div class="col-12 col-md-3 col-lg-2 d-flex flex-nowrap align-items-center">
 
-              <div class="mr-auto strong my-1 px-2">
-                {{ grouper }}
-              </div>
-              <button v-if="forAdmin && statusForGroup(entities) === false"
-                @click="checkInOrOutGroup(entities, true)"
-                class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
-                <strong>✓</strong> All
-              </button>
-              <button v-if="forAdmin && statusForGroup(entities) === true"
-                @click="checkInOrOutGroup(entities, false)"
-                class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1">
-                <strong>☓</strong> All
-              </button>
-
+            <div class="mr-auto strong my-1 px-2">
+              {{ grouper }}
             </div>
-
-            <div class="col-12 col-md-9 col-lg-10 pt-md-1 pl-md-0 pl-1">
-              <transition-group :name="mainTransitions" tag="div" class="row no-gutters">
-
-                <div v-for="entity in entities" :key="entity.id"
-                     class="col-lg-3 col-md-4 col-6 check-in-person">
-                  <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
-
-                    <div :class="['col p-2 text-truncate ',
-                          entity.status ? 'bg-success' : 'bg-secondary',
-                          entity.type === 'Adjudicator' ? 'text-capitalize' : 'text-uppercase']"
-                         data-toggle="tooltip" :title="getToolTipForEntity(entity)">
-                      {{ entity.name }}
-                    </div>
-                    <template v-if="forAdmin">
-                      <a v-if="!entity.status && entity.identifier[0] && !entity.locked"
-                         class="col-auto p-2 btn-info text-center hoverable"
-                         title="Click to check-in manually"
-                         @click="checkInOrOutIdentifiers(entity.identifier, true)">
-                        ✓
-                      </a>
-                      <div v-if="!entity.status && entity.identifier[0] && entity.locked"
-                           class="col-auto p-2 btn-secondary text-center btn-no-hover">
-                        saving...
-                      </div>
-                      <div v-if="!entity.identifier[0]"
-                           class="col-auto p-2 btn-secondary text-white text-center"
-                           data-toggle="tooltip"
-                           title="`This person does not have a check-in identifier so
-                                   they can't be checked in`">
-                        ?
-                      </div>
-                      <div v-if="entity.status" title="Click to undo a check-in"
-                           class="col-auto p-2 btn-success hoverable text-center"
-                           @click="checkInOrOutIdentifiers(entity.identifier, false)">
-                        {{ lastSeenTime(entity.status.time) }}
-                      </div>
-                    </template>
-                    <template v-if="!forAdmin">
-                      <div v-if="entity.status" class="col-auto p-2 btn-success actext-center">
-                        {{ lastSeenTime(entity.status.time) }}
-                      </div>
-                    </template>
-
-                  </div>
-                </div>
-
-              </transition-group>
-            </div>
+            <button v-if="forAdmin && statusForGroup(entities) === false"
+              @click="checkInOrOutGroup(entities, true)"
+              class="btn btn-info my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
+              v-text="gettext('✓ All')"></button>
+            <button v-if="forAdmin && statusForGroup(entities) === true"
+              @click="checkInOrOutGroup(entities, false)"
+              class="btn btn-secondary my-1 mr-1 px-2 align-self-stretch btn-sm hoverable p-1"
+              v-text="gettext('☓ All')"></button>
 
           </div>
-        </div>
 
+          <div class="col-12 col-md-9 col-lg-10 pt-md-1 pl-md-0 pl-1">
+            <div class="row no-gutters">
+
+              <div v-for="entity in entities" :key="entity.id"
+                   class="col-lg-3 col-md-4 col-6 check-in-person">
+                <div class="row no-gutters h6 mb-0 pb-1 pr-1 p-0 text-white">
+
+                  <div :class="['col p-2 text-truncate ', getEntityStatusClass(entity)]"
+                        data-toggle="tooltip" :title="getToolTipForEntity(entity)">
+                    {{ entity.name }}
+                  </div>
+                  <template v-if="forAdmin">
+                    <a v-if="!entity.status && entity.identifier[0] && !entity.locked"
+                       class="col-auto p-2 btn-info text-center hoverable"
+                       :title="gettext('Click to check-in manually')"
+                       @click="checkInOrOutIdentifiers(entity.identifier, true)">
+                      ✓
+                    </a>
+                    <div v-if="!entity.status && entity.identifier[0] && entity.locked"
+                         class="col-auto p-2 btn-secondary text-center btn-no-hover"
+                         v-text="gettext('saving...')"></div>
+                    <div v-if="!entity.identifier[0]"
+                         class="col-auto p-2 btn-secondary text-white text-center"
+                         data-toggle="tooltip"
+                         :title="gettext('This person does not have a check-in identifier so they can\'t be checked in')">
+                      ?
+                    </div>
+                    <div v-if="entity.status" :title="gettext('Click to undo a check-in')"
+                         class="col-auto p-2 btn-success hoverable text-center"
+                         @click="checkInOrOutIdentifiers(entity.identifier, false)">
+                      {{ lastSeenTime(entity.status.time) }}
+                    </div>
+                  </template>
+                  <template v-if="!forAdmin">
+                    <div v-if="entity.status" class="col-auto p-2 btn-success text-center">
+                      {{ lastSeenTime(entity.status.time) }}
+                    </div>
+                  </template>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
       </div>
-    </transition-group>
+
+    </div>
 
   </div>
 
@@ -154,7 +145,6 @@ export default {
       filterByPresence: {
         All: true, Absent: false, Present: false,
       },
-      enableAnimations: true,
       sockets: ['checkins'],
       // Keep internal copy as events needs to be mutated by the websocket
       // pushed changes and the data is never updated by the parent
@@ -167,6 +157,7 @@ export default {
     teamCodes: Boolean,
     tournamentSlug: String,
     forAdmin: Boolean,
+    teamSize: Number,
   },
   computed: {
     statsAbsent: function () {
@@ -191,13 +182,6 @@ export default {
     sortByGroup: function () {
       return this.isForVenues ? this.venuesSortByGroup : this.peopleSortByGroup
     },
-    mainTransitions: function () {
-      // Don't want the entire list to animate when changing filter effects
-      if (this.enableAnimations) {
-        return 'animated-list'
-      }
-      return ''
-    },
     entitiesByType: function () {
       return this.isForVenues ? this.venuesByType : this.peopleByType
     },
@@ -211,10 +195,10 @@ export default {
       return _.filter(this.entitiesByType, p => p.status !== false)
     },
     entitiesSortedByName: function () {
-      return _.sortBy(this.entitiesByPresence, ['name'])
+      return _.sortBy(this.entitiesByPresence, p => p.name.toLowerCase())
     },
     entitiesByName: function () {
-      return _.groupBy(this.entitiesSortedByName, p => p.name[0])
+      return _.groupBy(this.entitiesSortedByName, p => p.name[0].toUpperCase())
     },
     entitiesByTime: function () {
       const sortedByTime = _.sortBy(this.entitiesSortedByName, (p) => {
@@ -227,7 +211,7 @@ export default {
         const time = new Date(Date.parse(p.status.time))
         const hours = this.clock(time.getHours())
         if (_.isUndefined(p.status) || p.status === false) {
-          return 'Not Checked In'
+          return this.gettext('Not Checked In')
         }
         if (time.getMinutes() < 30) {
           return `${hours}:00 - ${hours}:29`
@@ -257,6 +241,28 @@ export default {
     clock: function (timeRead) {
       const paddedTime = (`0${timeRead}`).slice(-2)
       return paddedTime
+    },
+    getEntityStatusClass: function (entity) {
+      let css = ''
+      if (entity.type === 'Adjudicator') {
+        css += 'text-capitalize '
+      } else {
+        css += 'text-uppercase '
+      }
+      if (entity.type !== 'Team' && entity.status !== false) {
+        css += 'bg-success ' // For venues/adjudicators that are checked in
+      } else if (entity.speakersIn >= this.teamSize && entity.speakersIn !== 0) {
+        css += 'bg-success ' // All speakers checked in
+      } else if (this.teamSize === 2 && entity.speakersIn === 1) {
+        css += 'viable-checkins-team ' // Half present in BP (viable to debate)
+      } else if (this.teamSize === 3 && entity.speakersIn === 2) {
+        css += 'viable-checkins-team ' // 2/3rds present in Australs (viable to debate)
+      } else if (this.teamSize === 3 && entity.speakersIn === 1) {
+        css += 'not-viable-checkins-team ' // 1/3rd present in Australs (not viable to debate)
+      } else {
+        css += 'bg-secondary ' // Nothing checked in
+      }
+      return css
     },
     checkInOrOutGroup: function (entity, setStatus) {
       const identifiersForEntities = _.flatten(_.map(entity, 'identifier'))
@@ -290,19 +296,16 @@ export default {
       return `${this.clock(time.getHours())}:${this.clock(time.getMinutes())}`
     },
     getToolTipForEntity: function (entity) {
+      if (!this.forAdmin) return null
       return this.isForVenues ? this.getToolTipForVenue(entity) : this.getToolTipForPerson(entity)
     },
     setListContext: function (metaKey, selectedKey, selectedValue) {
-      this.enableAnimations = false
       _.forEach(this[metaKey], (value, key) => {
         if (key === selectedKey) {
           this[metaKey][key] = selectedValue
         } else {
           this[metaKey][key] = false
         }
-      })
-      this.$nextTick(() => {
-        this.enableAnimations = true
       })
     },
     handleSocketReceive: function (socketLabel, payload) {

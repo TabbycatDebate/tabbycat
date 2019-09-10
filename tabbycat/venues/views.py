@@ -1,4 +1,3 @@
-import json
 import logging
 
 from django.contrib import messages
@@ -13,14 +12,11 @@ from actionlog.models import ActionLogEntry
 from adjallocation.views import BaseConstraintsView
 from availability.utils import annotate_availability
 from participants.models import Institution
-from tournaments.mixins import DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin, TournamentMixin
-from tournaments.models import Round
-from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
+from utils.views import ModelFormSetView
 
-from .allocator import allocate_venues
 from .forms import venuecategoryform_factory
 from .models import Venue, VenueCategory, VenueConstraint
 from .serializers import EditDebateVenuesDebateSerializer, EditDebateVenuesVenueSerializer
@@ -60,68 +56,6 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
             info['allocationSettings'][key] = self.tournament.preferences[key]
 
         return info
-
-
-class LegacyVenueAllocationMixin(LegacyDrawForDragAndDropMixin, AdministratorMixin):
-    """@deprecate when legacy drag and drop UIs removed"""
-
-    def get_unallocated_venues(self):
-        unused_venues = self.round.unused_venues().prefetch_related('venuecategory_set')
-        return json.dumps([v.serialize() for v in unused_venues])
-
-
-class LegacyEditVenuesView(LegacyVenueAllocationMixin, TemplateView):
-    """@deprecate when legacy drag and drop UIs removed"""
-
-    template_name = "legacy_edit_venues.html"
-    auto_url = "legacy-venues-auto-allocate"
-    save_url = "legacy-save-debate-venues"
-
-    def get_context_data(self, **kwargs):
-        vcs = VenueConstraint.objects.prefetch_related('subject')
-        kwargs['vueVenueConstraints'] = json.dumps([vc.serialize() for vc in vcs])
-        kwargs['vueUnusedVenues'] = self.get_unallocated_venues()
-        return super().get_context_data(**kwargs)
-
-
-class LegacyAutoAllocateVenuesView(LegacyVenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
-    """@deprecate when legacy drag and drop UIs removed"""
-
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
-    round_redirect_pattern_name = 'legacy-venues-edit'
-
-    def post_data(self):
-        self.log_action()
-        if self.round.draw_status == Round.STATUS_RELEASED:
-            info = "Draw is already released, unrelease draw to redo auto-allocations."
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-        if self.round.draw_status != Round.STATUS_CONFIRMED:
-            info = "Draw is not confirmed, confirm draw to run auto-allocations."
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-
-        allocate_venues(self.round)
-        return {
-            'debates': self.get_draw(),
-            'unallocatedVenues': self.get_unallocated_venues()
-        }
-
-
-class LegacySaveVenuesView(BaseSaveDragAndDropDebateJsonView):
-    """@deprecate when legacy drag and drop UIs removed"""
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
-
-    def get_moved_item(self, id):
-        return Venue.objects.get(pk=id)
-
-    def modify_debate(self, debate, posted_debate):
-        if posted_debate['venue']:
-            debate.venue = Venue.objects.get(pk=posted_debate['venue']['id'])
-        else:
-            debate.venue = None
-        debate.save()
-        return debate
 
 
 class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
@@ -302,37 +236,3 @@ class VenueInstitutionConstraintsView(BaseVenueConstraintsView):
             ) % {'count': ndeleted})
         if nsaved == 0 and ndeleted == 0:
             messages.success(self.request, _("No changes were made to venue-institution constraints."))
-
-
-class VenueDivisionConstraintsView(BaseVenueConstraintsView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUE_CONSTRAINTS_DIV_EDIT
-    page_title = gettext_lazy("Venue-Division Constraints")
-    save_text = gettext_lazy("Save Venue-Division Constraints")
-    same_view = 'venues-constraints-division'
-
-    subject = gettext_lazy("Division")
-
-    def get_formset_queryset(self):
-        return self.formset_model.objects.filter(division__tournament=self.tournament)
-
-    def get_subject_queryset(self):
-        return self.tournament.division_set.all().values_list('id', 'name')
-
-    def get_contenttype(self):
-        return ContentType.objects.get(app_label='divisions', model='division')
-
-    def add_message(self, nsaved, ndeleted):
-        if nsaved > 0:
-            messages.success(self.request, ngettext(
-                "Saved %(count)d venue-division constraint.",
-                "Saved %(count)d venue-division constraints.",
-                nsaved,
-            ) % {'count': nsaved})
-        if ndeleted > 0:
-            messages.success(self.request, ngettext(
-                "Deleted %(count)d venue-division constraint.",
-                "Deleted %(count)d venue-division constraints.",
-                ndeleted,
-            ) % {'count': ndeleted})
-        if nsaved == 0 and ndeleted == 0:
-            messages.success(self.request, _("No changes were made to venue-division constraints."))

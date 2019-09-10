@@ -7,7 +7,7 @@
 
           <p class="lead" v-text="gettext(`Auto-Allocate Venues to Debates`)"></p>
           <p v-text="gettext(`The allocator assigns venues to debates while trying to match
-                              all of the venue constrainst that have been specified.`)"></p>
+                              all of the venue constraints that have been specified.`)"></p>
 
           <div class="text-left py-3">
             <div class="form-group row">

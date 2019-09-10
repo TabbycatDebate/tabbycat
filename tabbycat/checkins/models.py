@@ -4,28 +4,29 @@ from string import digits
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
+from polymorphic.models import PolymorphicModel
+
+from utils.misc import generate_identifier_string
 
 
 def generate_identifier():
     # First number should not be 0 so it is easier import into Excel etc
-    numbers = [str(random.choice([1,2,3,4,5,6,7,8,9]))]
-    numbers.extend([str(random.choice(digits)) for n in range(4)])
-    new_id = ''.join(numbers)
+    new_id = str(random.choice([1,2,3,4,5,6,7,8,9])) + generate_identifier_string(digits, 5)
     if Identifier.objects.filter(barcode=new_id).count() == 0:
         return new_id
     else:
         return generate_identifier()
 
 
-class Identifier(models.Model):
+class Identifier(PolymorphicModel):
     """A unique string that will be matched to either a Person, Debate,
     or Venue (of which only Person is supported at present)"""
 
     instance_attr = None
 
-    validate_alphanumeric = RegexValidator(r'^[0-9]{4,20}$',
-        message=_("The barcode must contain between 4 and 20 digits."))
+    validate_alphanumeric = RegexValidator(r'^[0-9]{6}$',
+        message=_("The barcode must contain exactly six digits."))
     barcode = models.CharField(unique=True, max_length=20,
         validators=[validate_alphanumeric], default=generate_identifier,
         verbose_name=_("barcode"))
@@ -33,8 +34,14 @@ class Identifier(models.Model):
     @property
     def owner(self):
         if self.instance_attr is None:
-            return None
+            return gettext("<Not the child instance>")
         return getattr(self, self.instance_attr)
+
+    def __str__(self):
+        return gettext("%(classname)s %(barcode)s") % {
+            'classname': self.__class__.__name__,
+            'barcode': str(self.barcode),
+        }
 
 
 class PersonIdentifier(Identifier):
@@ -89,6 +96,8 @@ class Event(models.Model):
         verbose_name_plural = _("check-in events")
 
     def serialize(self):
-        event = {'id': self.id, 'identifier': self.identifier.barcode,
-                 'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S")}
-        return event
+        return {
+            'id': self.id,
+            'identifier': self.identifier.barcode,
+            'time': timezone.localtime(self.time).strftime("%a, %d %b %Y %H:%M:%S")
+        }

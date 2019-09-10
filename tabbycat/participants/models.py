@@ -26,11 +26,6 @@ class Region(models.Model):
     def __str__(self):
         return '%s' % (self.name)
 
-    @property
-    def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
-        return {'name': self.name, 'id': self.id, 'class': None}
-
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['code', 'name']
@@ -61,11 +56,6 @@ class Institution(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-    @property
-    def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
-        return {'name': self.name, 'id': self.id, 'code': self.code}
 
 
 class SpeakerCategory(models.Model):
@@ -99,10 +89,6 @@ class SpeakerCategory(models.Model):
     def __str__(self):
         return "[{}] {}".format(self.tournament.slug, self.name)
 
-    @property
-    def serialize(self):
-        return {'id': self.id, 'name': self.name, 'seq': self.seq}
-
 
 class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,
@@ -117,9 +103,6 @@ class Person(models.Model):
 
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple people to have no URL key
         verbose_name=_("URL key"))
-
-    notes = models.TextField(blank=True, null=True,
-        verbose_name=_("notes"))
 
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
@@ -175,8 +158,6 @@ class Team(models.Model):
         verbose_name=_("institution"))
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
-    division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("division"))
     use_institution_prefix = models.BooleanField(default=False,
         verbose_name=_("Uses institutional prefix"),
         help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))
@@ -334,20 +315,6 @@ class Team(models.Model):
         self.long_name = self._construct_long_name()
         super().save(*args, **kwargs)
 
-    def serialize(self):
-        team = {'id': self.id, 'short_name': self.short_name,
-                'long_name': self.long_name, 'code_name': self.code_name}
-        team['emoji'] = self.emoji
-        team['institution'] = self.institution.serialize if self.institution else None
-        team['region'] = self.region.serialize if self.region else None
-        team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in self.speakers]
-        break_categories = self.break_categories.all()
-        team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else []
-        team['highlights'] = {'region': False, 'gender': False, 'category': False}
-        team['wins'] = self.wins_count
-        team['points'] = self.points_count
-        return team
-
 
 class Speaker(Person):
     team = models.ForeignKey(Team, models.CASCADE,
@@ -450,7 +417,7 @@ class Adjudicator(Person):
             return self._feedback_score_cache
         except AttributeError:
             from adjallocation.models import DebateAdjudicator
-            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
+            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True, ignored=False).exclude(
                 source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
                     avg=models.Avg('score'))['avg']
             return self._feedback_score_cache
@@ -461,11 +428,3 @@ class Adjudicator(Person):
 
     def get_feedback(self):
         return self.adjudicatorfeedback_set.all()
-
-    def serialize(self, round):
-        adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
-        adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
-        adj['region'] = self.region.serialize if self.region else None
-        adj['institution'] = self.institution.serialize if self.institution else None
-        adj['highlights'] = {'region': False, 'gender': False, 'category': False}
-        return adj

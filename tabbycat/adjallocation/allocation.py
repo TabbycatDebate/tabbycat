@@ -1,7 +1,7 @@
 import logging
 from warnings import warn
 
-from .models import DebateAdjudicator
+from adjallocation.models import DebateAdjudicator
 
 logger = logging.getLogger(__name__)
 

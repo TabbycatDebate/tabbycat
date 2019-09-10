@@ -11,7 +11,8 @@
                                :venues="venues"
                                :assistant-url="assistantUrl"
                                :team-codes="teamCodes"
-                               :for-admin="forAdmin">
+                               :for-admin="forAdmin"
+                               :team-size="teamSize">
     </check-in-status-container>
   </div>
 
@@ -28,6 +29,7 @@
       'assistantUrl': {% if user_role == "admin" %}{% if venues %}'{% tournamenturl "assistant-venues-statuses" %}'{% else %}'{% tournamenturl "assistant-people-statuses" %}'{% endif %}{% else %}''{% endif %},
       'teamCodes': {{ team_codes }},
       'forAdmin': {% if for_admin %}true{% else %}false{% endif %},
+      'teamSize': {{ team_size }},
     }
   </script>
   {{ block.super }}

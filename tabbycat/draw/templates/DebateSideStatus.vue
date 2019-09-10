@@ -1,11 +1,12 @@
 <template>
 
-  <div :class="['flex-1 flex-truncate d-flex', !confirmed ? 'bg-danger text-white' : '']">
+  <div :class="['flex-3 flex-truncate d-flex', !confirmed ? 'bg-danger text-white' : '']">
     <div class="align-self-center flex-fill pl-3 ">
 
       <label class="form-check-label m-0 pl-3 ">
         <input type="checkbox" class="form-check-input" :checked="confirmed" @input="updateStatus">
-        <span v-text="confirmed ? gettext('confirmed') : gettext('unconfirmed')">
+        <span class="hoverable small"
+              v-text="confirmed ? gettext('confirmed') : gettext('unconfirmed')">
         </span>
       </label>
 

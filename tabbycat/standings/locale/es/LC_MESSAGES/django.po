@@ -1,22 +1,20 @@
-# Tabbycat translations, standings module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: David Alejandro Huertas Erazo <dale.huertas@gmail.com>, 2018\n"
-"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-07-21 12:18\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Spanish\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: /develop/tabbycat/standings/locale/en/LC_MESSAGES/django.po\n"
 
 #: standings/base.py:295
 msgid "The same metric would be added twice:"
@@ -127,19 +125,19 @@ msgstr ""
 msgid "Average Finals Score"
 msgstr "Promedio puntajes finales"
 
-#: standings/speakers.py:50 standings/speakers.py:116
+#: standings/speakers.py:50 standings/speakers.py:136
 msgid "total"
-msgstr "total"
+msgstr ""
 
-#: standings/speakers.py:51 standings/speakers.py:117
+#: standings/speakers.py:51 standings/speakers.py:137
 msgid "Total"
-msgstr "Total"
+msgstr ""
 
-#: standings/speakers.py:58 standings/speakers.py:126
+#: standings/speakers.py:58 standings/speakers.py:146
 msgid "average"
 msgstr "promedio"
 
-#: standings/speakers.py:59 standings/speakers.py:127
+#: standings/speakers.py:59 standings/speakers.py:147
 msgid "Avg"
 msgstr "Prom."
 
@@ -151,23 +149,31 @@ msgstr "media recortada"
 msgid "Trim"
 msgstr "Recorte"
 
-#: standings/speakers.py:99 standings/speakers.py:136
+#: standings/speakers.py:99
+msgid "team points"
+msgstr ""
+
+#: standings/speakers.py:100
+msgid "Team"
+msgstr ""
+
+#: standings/speakers.py:119 standings/speakers.py:156
 msgid "standard deviation"
 msgstr "desviación estándar"
 
-#: standings/speakers.py:100 standings/speakers.py:137
+#: standings/speakers.py:120 standings/speakers.py:157
 msgid "Stdev"
 msgstr "Desv. est."
 
-#: standings/speakers.py:108
+#: standings/speakers.py:128
 msgid "number of speeches given"
 msgstr "número de discursos dados"
 
-#: standings/speakers.py:109 standings/speakers.py:148
+#: standings/speakers.py:129 standings/speakers.py:168
 msgid "Num"
 msgstr "Num."
 
-#: standings/speakers.py:147
+#: standings/speakers.py:167
 msgid "replies given"
 msgstr "respuestas dadas"
 
@@ -187,7 +193,7 @@ msgstr "Puntos (2/1/0)"
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:107 standings/views.py:600
+#: standings/teams.py:107 standings/views.py:603
 msgid "Wins"
 msgstr ""
 
@@ -239,86 +245,78 @@ msgstr ""
 msgid "AISS"
 msgstr ""
 
-#: standings/teams.py:187
+#: standings/teams.py:205
 msgid "draw strength"
 msgstr ""
 
-#: standings/teams.py:188
+#: standings/teams.py:206
 msgid "DS"
 msgstr ""
 
-#: standings/teams.py:226
+#: standings/teams.py:244
 msgid "number of adjudicators who voted for this team"
 msgstr ""
 
-#: standings/teams.py:227
+#: standings/teams.py:245
 msgid "Ballots"
 msgstr ""
 
-#: standings/teams.py:228
+#: standings/teams.py:246
 msgid "votes/ballots carried"
 msgstr ""
 
-#: standings/teams.py:253
+#: standings/teams.py:271
 msgid "number of firsts"
 msgstr ""
 
-#: standings/teams.py:254
+#: standings/teams.py:272
 msgid "1sts"
 msgstr ""
 
-#: standings/teams.py:263
+#: standings/teams.py:281
 msgid "number of seconds"
 msgstr ""
 
-#: standings/teams.py:264
+#: standings/teams.py:282
 msgid "2nds"
 msgstr ""
 
-#: standings/teams.py:276
+#: standings/teams.py:294
 msgid "Who-beat-whom"
 msgstr ""
 
-#: standings/teams.py:277
+#: standings/teams.py:295
 msgid "WBW"
 msgstr ""
 
-#: standings/teams.py:278
+#: standings/teams.py:296
 msgid "who-beat-whom"
 msgstr ""
 
-#: standings/teams.py:323
+#: standings/teams.py:341
 msgid "Who-beat-whom (in division)"
 msgstr ""
 
-#: standings/teams.py:324
+#: standings/teams.py:342
 msgid "WBWD"
 msgstr ""
 
-#: standings/teams.py:325
+#: standings/teams.py:343
 msgid "who-beat-whom (in divisions)"
 msgstr ""
 
 #: standings/templates/current_standings.html:6
-msgid ""
-"It also excludes results from silent rounds (if any) and from the current "
-"round."
+msgid "It also excludes results from silent rounds (if any) and from the current round."
 msgstr ""
 
 #: standings/templates/current_standings.html:9
 #, python-format
-msgid ""
-"This list is sorted by team points, then alphabetically by team name. It "
-"does not indicate each team's ranking within each bracket. "
-"%(silent_round_sentence)s"
+msgid "This list is sorted by team points, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
 msgstr ""
 
 #: standings/templates/current_standings.html:15
 #, python-format
-msgid ""
-"This list is sorted by number of wins, then alphabetically by team name. It "
-"does not indicate each team's ranking within each bracket. "
-"%(silent_round_sentence)s"
+msgid "This list is sorted by number of wins, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
 msgstr ""
 
 #: standings/templates/current_standings_no_round.html:6
@@ -326,30 +324,22 @@ msgid "There aren't any rounds for which results are available."
 msgstr ""
 
 #: standings/templates/reply_standings.html:6
-msgid ""
-"Reply speakers are ranked by their <strong>average reply score</strong>."
+msgid "Reply speakers are ranked by their <strong>average reply score</strong>."
 msgstr ""
 
 #: standings/templates/reply_standings.html:9
 #, python-format
-msgid ""
-"Speakers can miss up to %(count)s reply speeches before they are omitted "
-"from the replies tab."
+msgid "Speakers can miss up to %(count)s reply speeches before they are omitted from the replies tab."
 msgstr ""
 
 #: standings/templates/reply_standings.html:14
-msgid ""
-"All reply speakers appear in these standings, no matter how many replies "
-"they've missed."
+msgid "All reply speakers appear in these standings, no matter how many replies they've missed."
 msgstr ""
 
 #: standings/templates/reply_standings.html:18
 #: standings/templates/speaker_standings.html:25
 #, python-format
-msgid ""
-"These settings can be changed in the <a href=\"%(standings_config_url)s\" "
-"class=\"alert-link\">Standings section of this tournament's "
-"configuration</a>."
+msgid "These settings can be changed in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:7
@@ -357,34 +347,21 @@ msgid "Speakers are ranked by their <strong>average score</strong>."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:9
-msgid ""
-"Speakers are ranked by their <strong>total score</strong>. Any speaker who "
-"misses a single debate will be severely punished in these rankings."
+msgid "Speakers are ranked by their <strong>total score</strong>. Any speaker who misses a single debate will be severely punished in these rankings."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:16
 #, python-format
-msgid ""
-"Speakers can miss up to %(count)s debates before they are omitted from the "
-"speaker tab."
+msgid "Speakers can miss up to %(count)s debates before they are omitted from the speaker tab."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:21
-msgid ""
-"All speakers appear in these standings, no matter how many debates they've "
-"missed."
+msgid "All speakers appear in these standings, no matter how many debates they've missed."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:33
 #, python-format
-msgid ""
-"Enforcing the limit on the number of missed debates requires the \"number of"
-" speeches given\" metric to be included in the speaker standings "
-"calculations, so it's been automatically added. To remove this warning "
-"message, add <strong>Number of speeches given</strong> to the "
-"<strong>Speaker standings extra metrics</strong> in the <a "
-"href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of "
-"this tournament's configuration</a>."
+msgid "Enforcing the limit on the number of missed debates requires the \"number of speeches given\" metric to be included in the speaker standings calculations, so it's been automatically added. To remove this warning message, add <strong>Number of speeches given</strong> to the <strong>Speaker standings extra metrics</strong> in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
 msgstr ""
 
 #: standings/templates/standings_diversity.html:4
@@ -393,28 +370,25 @@ msgid "Diversity Overview"
 msgstr ""
 
 #: standings/templates/standings_diversity.html:22
-msgid ""
-"The speaker and adjudicator results data displayed here is presented without"
-" tests for statistical significance. Correlations should not be "
-"automatically considered reliable; particularly at small tournaments."
+msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments. A 'region' is a customisable category assigned to a set of institutions, and counted using the number of participants assigned to those institutions."
 msgstr ""
 
-#: standings/templates/standings_diversity.html:32
+#: standings/templates/standings_diversity.html:37
 msgid "Non-cis male identifying"
 msgstr ""
 
-#: standings/templates/standings_diversity.html:35
-msgid "Male identifying"
+#: standings/templates/standings_diversity.html:40
+msgid "Cis-male identifying"
 msgstr ""
 
-#: standings/templates/standings_diversity.html:38
+#: standings/templates/standings_diversity.html:43
 msgid "Unspecified/unrecorded"
 msgstr ""
 
 #: standings/templates/standings_index.html:5
 #: standings/templates/standings_index.html:6
 msgid "Standings"
-msgstr ""
+msgstr "Clasificación"
 
 #: standings/templates/standings_index.html:18
 msgid "Top Speaks"
@@ -449,7 +423,7 @@ msgstr ""
 #: standings/templates/standings_index.html:60
 #: standings/templates/standings_index.html:81
 #, python-format
-msgid "%(team)s  vs %(opp)s in %(round)s"
+msgid "%(team)s vs %(opp)s in %(round)s"
 msgstr ""
 
 #: standings/templates/standings_index.html:77
@@ -495,16 +469,16 @@ msgstr ""
 #: standings/templates/standings_menu.html:18
 #: standings/templates/standings_menu.html:25
 msgid "Teams"
-msgstr ""
+msgstr "Equipos"
 
 #: standings/templates/standings_menu.html:23
 msgctxt "All [Teams]"
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: standings/templates/standings_menu.html:38
 msgid "Speakers"
-msgstr ""
+msgstr "Oradores"
 
 #: standings/templates/standings_menu.html:43
 msgctxt "Substantive speeches"
@@ -514,7 +488,7 @@ msgstr ""
 #: standings/templates/standings_menu.html:45
 msgctxt "All [Speakers]"
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: standings/templates/standings_menu.html:47
 msgid "Speakers "
@@ -531,104 +505,98 @@ msgstr ""
 
 #: standings/templates/standings_menu.html:70
 msgid "Motions"
-msgstr ""
+msgstr "Mociones"
 
 #: standings/templates/standings_menu.html:74
 msgid "Diversity"
-msgstr ""
+msgstr "Diversidad"
 
-#: standings/views.py:97
+#: standings/views.py:100
 #, python-format
-msgid ""
-"<p>There was an error generating the standings: <em>%(message)s</em></p>"
+msgid "<p>There was an error generating the standings: <em>%(message)s</em></p>"
 msgstr ""
 
-#: standings/views.py:102
+#: standings/views.py:105
 #, python-format
-msgid ""
-"<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
-"class=\"alert-link\">standings configuration under the Setup section</a>. If"
-" this issue persists and you're not sure how to fix it, please contact the "
-"developers.</p>"
+msgid "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" class=\"alert-link\">standings configuration under the Setup section</a>. If this issue persists and you're not sure how to fix it, please contact the developers.</p>"
 msgstr ""
 
-#: standings/views.py:110
+#: standings/views.py:113
 msgid "<p>The tab director will need to resolve this issue.</p>"
 msgstr ""
 
-#: standings/views.py:114
+#: standings/views.py:117
 #, python-format
 msgid "as of %(round)s"
 msgstr ""
 
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:179
+#: standings/views.py:182
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr ""
 
-#: standings/views.py:204 standings/views.py:430
-msgid ""
-"The tab can't be displayed because all rounds so far in this tournament are "
-"silent."
+#: standings/views.py:207 standings/views.py:433
+msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
 msgstr ""
 
-#: standings/views.py:280
+#: standings/views.py:283
 msgid "Speaker Standings"
 msgstr ""
 
-#: standings/views.py:322
+#: standings/views.py:325
 msgid "Speaker Tab"
-msgstr ""
+msgstr "Tabla de oradores"
 
-#: standings/views.py:337
+#: standings/views.py:340
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr ""
 
-#: standings/views.py:355
+#: standings/views.py:358
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr ""
 
-#: standings/views.py:368
+#: standings/views.py:371
 msgid "Reply Speaker Standings"
 msgstr ""
 
-#: standings/views.py:373
+#: standings/views.py:376
 msgid "Reply speeches aren't enabled in this tournament."
 msgstr ""
 
-#: standings/views.py:410
+#: standings/views.py:413
 msgid "Reply Speaker Tab"
 msgstr ""
 
-#: standings/views.py:422
+#: standings/views.py:425 standings/views.py:680
 msgid "Team Standings"
 msgstr ""
 
-#: standings/views.py:497
+#: standings/views.py:500
 msgid "Division Standings"
 msgstr ""
 
-#: standings/views.py:507
+#: standings/views.py:510
 msgid "Team Tab"
-msgstr ""
+msgstr "Tabla de equipos"
 
-#: standings/views.py:526
+#: standings/views.py:529
 #, python-format
 msgid "%(category)s Team Standings"
 msgstr ""
 
-#: standings/views.py:553
+#: standings/views.py:556
 #, python-format
 msgid "%(category)s Team Tab"
 msgstr ""
 
-#: standings/views.py:564
+#: standings/views.py:567
 msgid "Current Team Standings"
 msgstr ""
 
-#: standings/views.py:600
+#: standings/views.py:603
 msgid "Points"
 msgstr "Puntos"
+

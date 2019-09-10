@@ -71,11 +71,14 @@ metrics that will be shown in the team standings, but not used to rank teams.
     - The average margin over all debates the team has had, not counting debates
       where they or their opponents forfeited.
 
-  * - Draw strength
+  * - Draw strength by wins
     - The sum of the number of wins of every team this team has faced so far.
 
-      This is also known in some circuits as *win points*, *opp wins* or *opp
-      strength*.
+      This is also known in some circuits as *win points*, *opponent wins* or
+      *opponent strength*.
+
+  * - Draw strength by speaker score
+    - The sum of speaker scores of every team this team has faced so far.
 
   * - Votes/ballots carried
     - The number of adjudicators that gave this team a win across all of their
@@ -94,6 +97,12 @@ metrics that will be shown in the team standings, but not used to rank teams.
   * - Number of seconds
     - The number of debates in which the team came second. Only makes sense for
       British Parliamentary.
+
+  * - Number of pullups before this round
+    - The number of times the team has been pulled up as part of
+      :ref:`draw generation <draw-generation>`. You probably wouldn't use this
+      as a metric to rank teams, but you may wish to display it as an
+      "extra metric" in the team standings for transparency.
 
   * - Who-beat-whom
     - If there are exactly two teams tied on all metrics earlier in the

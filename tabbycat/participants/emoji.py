@@ -168,7 +168,7 @@ EMOJI_LIST = (
     # Unicode Version 3.2
     ("⤴️",	False, "Right-Curve-Up"),                   # dull
     ("⤵️",	False, "Right-Curve-Down"),                 # dull
-    ("♻️",	True , "Recycling"),                        # doesn't show
+    ("♻️",	True , "Recycling"),
     ("〽️",	False, "Part Alternation Mark"),            # dull
     ("◻️",	False, "White Medium Square"),              # dull
     ("◼️",	False, "Black Medium Square"),              # dull
@@ -177,7 +177,7 @@ EMOJI_LIST = (
 
     # Unicode Version 4.0
     ("☕",	True , "Hot Beverage"),
-    ("⚠️",	True , "Warning Sign"),                     # doesn't show
+    ("⚠️",	True , "Warning Sign"),
     ("☔",	False, "Umbrella With Rain Drops"),         # doesn't show
     ("⏏",	False, "Eject Symbol"),                     # dull
     ("⬆️",	False, "Upwards Black Arrow"),              # dull
@@ -190,9 +190,9 @@ EMOJI_LIST = (
     ("⚓",	True , "Anchor"),
     ("♿",	False, "Wheelchair Symbol"),                # doesn't show
     ("⚒",	False, "Hammer and Pick"),                  # doesn't show
-    ("⚙",	True, "Gear"),
+    ("⚙",	True , "Gear"),
     ("⚗",	False, "Alembic"),                          # doesn't show
-    ("⚖",	True, "Scales"),
+    ("⚖",	True , "Scales"),
     ("⚔",	False, "Crossed Swords"),                   # doesn't show
     ("⚰",	False, "Coffin"),                           # doesn't show
     ("⚱",	False, "Funeral Urn"),                      # doesn't show
@@ -222,7 +222,7 @@ EMOJI_LIST = (
     ("⛱",	True , "Umbrella"),
     ("⛄",	True , "Snowman"),
     ("⚽",	True , "Soccer"),
-    ("⚾",	True, "Baseball"),
+    ("⚾",	True , "Baseball"),
     ("⛳",	True , "Hole in One"),
     ("⛸",	True , "Ice Skate"),
     ("⛷",	False, "Skier"),                            # dull
@@ -233,7 +233,7 @@ EMOJI_LIST = (
     ("⭕",	False, "Heavy Large Circle"),               # dull
     ("❗",	False, "Heavy Exclamation Mark"),           # dull
     ("🅿️",	False, "Squared P"),                        # dull
-    ("🈯",	False, "Squared 指 (Finger)"),              # dull
+    ("🈯",	False, "Squared 指 (Finger)"),               # dull
     ("🈚",	False, "Squared CJK Unified Ideograph-7121"), # dull
 
     # Unicode Version 6.0
@@ -246,7 +246,7 @@ EMOJI_LIST = (
     ("😉",	True , "Winky"),
     ("😊",	True , "Smiling Eyes"),
     ("😋",	False, "Face Savouring Delicious Food"),    # too similar to another
-    ("😎",	True , "Sunglasses"),
+    ("😎",	True , "Shaded Eyes"),
     ("😍",	True , "Heart Eyes"),
     ("😘",	True , "Kissy"),
     ("😚",	False, "Kissing Face With Closed Eyes"),    # too similar to another
@@ -271,7 +271,7 @@ EMOJI_LIST = (
     ("😤",	False, "Face With Look of Triumph"),        # too similar to another
     ("😢",	False, "Crying"),                           # too similar to another
     ("😭",	True , "Sobbing"),
-    ("😨",	True, "Fearful"),
+    ("😨",	True , "Fearful"),
     ("😩",	False, "Weary"),                            # too similar to another
     ("😰",	False, "Open Mouth Cold Sweat"),            # too similar to another
     ("😱",	True , "Screaming"),
@@ -309,7 +309,7 @@ EMOJI_LIST = (
     ("🙋",	True , "Raised Hand"),
     ("🙇",	True , "Deep Bow"),
     ("🙌",	True , "Praise Hands"),
-    ("🙏",	False, "Prayer Hands"),                     # potenmtially offensive
+    ("🙏",	False, "Prayer Hands"),                     # potentially offensive
     ("👤",	False, "Bust in Silhouette"),               # dull
     ("👥",	False, "Busts in Silhouette"),              # dull
     ("🚶",	False, "Pedestrian"),                       # dull
@@ -332,7 +332,7 @@ EMOJI_LIST = (
     ("👌",	True , "OK Hand"),
     ("👍",	True , "Thumbs Up"),
     ("👎",	True , "Thumbs Down"),
-    ("👋",	True,  "Waving Hand Sign"),
+    ("👋",	False, "Waving Hand Sign"),                 # used by UI: for the welcome pages
     ("👏",	True , "Clappy Hands"),
     ("👐",	False, "Open Hands Sign"),                  # dull
     ("💅",	True , "Nail Polish"),
@@ -366,9 +366,9 @@ EMOJI_LIST = (
     ("💨",	True , "Dash"),
     ("💫",	True , "Shooting Star"),
     ("💬",	True , "Speech Bubble"),
-    ("💭",	True , "Thought Bubble"),
+    ("💭",	True , "Thinky Cloud"),
     ("👓",	True , "Eyeglasses"),
-    ("👔",	True , "Necktie"),
+    ("👔",	True , "Business Casual"),
     ("👕",	False, "T-Shirt"),                          # dull
     ("👖",	True , "Jeans"),
     ("👗",	False, "Dress"),                            # dull
@@ -388,7 +388,7 @@ EMOJI_LIST = (
     ("👒",	False, "Lady's Hat"),                       # potentially offensive
     ("🎩",	True , "Top Hat"),
     ("💄",	True , "Lipstick"),
-    ("💍",	True , "Ring"),
+    ("💍",	True , "Proposal"),
     ("💎",	True , "Gem"),
     ("👹",	False, "Japanese Ogre"),                    # dull
     ("👺",	False, "Japanese Goblin"),                  # dull
@@ -453,12 +453,12 @@ EMOJI_LIST = (
     ("🐥",	False, "Front-Facing Baby Chick"),          # too similar to another
     ("🐦",	True , "Bird"),
     ("🐧",	True , "Penguin"),
-    ("🐸",	True , "Frog"),
-    ("🐊",	True , "Crocodile"),
+    ("🐸",	False, "Frog"),                             # potentially offensive
+    ("🐊",	True , "Croc"),
     ("🐢",	True , "Turtle"),
-    ("🐍",	True , "Snake"),
+    ("🐍",	True , "Slithering"),
     ("🐲",	True , "Dragon"),
-    ("🐉",	True , "Dragon"),
+    ("🐉",	False, "Dragon"),                           # too similar to another
     ("🐳",	True , "Whale"),
     ("🐋",	False, "Whale"),                            # too similar to another
     ("🐬",	True , "Dolphin"),
@@ -471,7 +471,7 @@ EMOJI_LIST = (
     ("🐛",	True , "Bug"),
     ("🐜",	True , "Ant"),
     ("🐝",	True , "Honeybee"),
-    ("🐞",	True, "Lady Beetle"),
+    ("🐞",	True , "Lady Beetle"),
     ("💐",	True , "Bouquet"),
     ("🌸",	True , "Sakura"),
     ("💮",	False, "White Flower"),                     # dull
@@ -529,7 +529,7 @@ EMOJI_LIST = (
     ("🍤",	False, "Fried Shrimp"),                     # dull
     ("🍥",	False, "Fish Cake With Swirl Design"),      # dull
     ("🍡",	False, "Dango"),                            # dull
-    ("🍦",	True, "Soft Ice Cream"),
+    ("🍦",	True , "Ice Cream"),
     ("🍧",	False, "Shaved Ice"),                       # dull
     ("🍨",	False, "Ice Cream"),                        # dull
     ("🍩",	True , "Doughnut"),
@@ -585,13 +585,13 @@ EMOJI_LIST = (
     ("🌉",	False, "Bridge at Night"),                  # too similar to another
     ("🌊",	True , "Big Wave"),
     ("🗿",	False, "Moyai"),                            # dull
-    ("🌌",	False , "Milky Way"),                       # dull
+    ("🌌",	True , "Milky Way"),
     ("🎠",	True , "Carousel Horse"),
     ("🎡",	True , "Ferris Wheel"),
     ("🎢",	True , "Roller Coaster"),
     ("💈",	False, "Barber Pole"),                      # dull
     ("🎪",	False, "Circus Tent"),                      # used in UI: venue checkins
-    ("🎭",	True, "Performing Arts"),
+    ("🎭",	True , "Performing Arts"),
     ("🎨",	True , "Palette"),
     ("🎰",	False, "Slot Machine"),                     # dull
     ("🚂",	False, "Steam Locomotive"),                 # dull
@@ -606,7 +606,7 @@ EMOJI_LIST = (
     ("🚝",	True , "Monorail"),
     ("🚞",	False, "Mountain Railway"),                 # too similar to another
     ("🚋",	False, "Tram Car"),                         # too similar to another
-    ("🚌",	True, "Bus"),
+    ("🚌",	True , "Bus"),
     ("🚍",	False, "Bus"),                              # too similar to another
     ("🚎",	False, "Trolleybus"),                       # too similar to another
     ("🚏",	False, "Bus Stop"),                         # too similar to another
@@ -643,7 +643,7 @@ EMOJI_LIST = (
     ("🚧",	True , "Hazard Sign"),
     ("🚫",	True , "Prohibited"),
     ("🚭",	False, "No Smoking"),                       # dull
-    ("🚯",	True, "Do Not Litter"),
+    ("🚯",	True , "Do Not Litter"),
     ("🚰",	True , "Tap Water"),
     ("🚱",	False, "Non-Potable Water"),                # dull
     ("🚷",	False, "No Pedestrians"),                   # dull
@@ -657,7 +657,7 @@ EMOJI_LIST = (
     ("🛃",	False, "Customs"),                          # dull
     ("🛄",	False, "Baggage Claim"),                    # dull
     ("🛅",	False, "Left Luggage"),                     # dull
-    ("🚪",	True, "Door"),
+    ("🚪",	True , "Door"),
     ("🚽",	False, "Toilet"),                           # potentially offensive
     ("🚿",	False, "Shower"),                           # potentially offensive
     ("🛀",	True , "Bath"),
@@ -717,7 +717,7 @@ EMOJI_LIST = (
     ("🎇",	False, "Firework Sparkler"),                # dull
     ("✨",	False, "Sparkles"),                         # dull
     ("🎈",	True , "Balloon"),
-    ("🎉",	True , "Party Popper"),
+    ("🎉",	True , "Party Pop"),
     ("🎊",	False, "Confetti Ball"),                    # dull
     ("🎋",	False, "Tanabata Tree"),                    # dull
     ("🎌",	False, "Crossed Flags"),                    # dull
@@ -726,7 +726,7 @@ EMOJI_LIST = (
     ("🎏",	False, "Carp Streamer"),                    # dull
     ("🎐",	False, "Wind Chime"),                       # dull
     ("🎑",	False, "Moon Viewing Ceremony"),            # dull
-    ("🎓",	True , "Grad Hat"),
+    ("🎓",	True , "Grad Cap"),
     ("🎯",	True , "Bullseye"),
     ("🎴",	False, "Flower Playing Cards"),             # dull
     ("🎀",	True , "Ribbon"),
@@ -749,14 +749,14 @@ EMOJI_LIST = (
     ("🚵",	False, "Mountain Bicyclist"),               # dull
     ("🏆",	False, "Trophy"),                           # dull
     ("🎮",	True , "Video Game"),
-    ("🎲",	True , "Dice"),
+    ("🎲",	True , "Random Cube"),
     ("🃏",	False, "Playing Card Black Joker"),         # dull
     ("🔇",	False, "Speaker With Cancellation Stroke"), # dull
     ("🔈",	True , "Speaker"),
     ("🔉",	False, "Speaker With One Sound Wave"),      # dull
     ("🔊",	False, "Speaker With Three Sound Waves"),   # dull
-    ("📢",	False, "Public Address Loudspeaker"),       # too similar
-    ("📣",	True , "Megaphone"),
+    ("📢",	False, "Public Address Loudspeaker"),       # too similar to another
+    ("📣",	True , "Loud Phone"),
     ("📯",	False, "Horn"),                             # dull
     ("🔔",	True , "Bell"),
     ("🔕",	False, "No Bells"),                         # dull
@@ -802,14 +802,14 @@ EMOJI_LIST = (
     ("📀",	False, "DVD"),                              # dull
     ("🎥",	False, "Movie Camera"),                     # dull
     ("🎦",	False, "Cinema"),                           # dull
-    ("🎬",	True , "Clapperboard"),
+    ("🎬",	True , "Clapper"),
     ("📺",	True , "Television"),
     ("📷",	True , "Camera"),
     ("📹",	False, "Video Camera"),                     # dull
     ("📼",	False, "Videocassette"),                    # dull
     ("🔅",	False, "Low Brightness Symbol"),            # dull
     ("🔆",	False, "High Brightness Symbol"),           # dull
-    ("🔍",	True , "Magnifying Glass"),
+    ("🔍",	True , "Bigger Glass"),
     ("🔎",	False, "Right-Pointing Magnifying Glass"),  # dull
     ("🔬",	True , "Microscope"),
     ("🔭",	True , "Telescope"),
@@ -857,9 +857,9 @@ EMOJI_LIST = (
     ("💼",	True , "Briefcase"),
     ("📁",	False, "File Folder"),                      # dull
     ("📂",	False, "Open File Folder"),                 # dull
-    ("📅",	True , "Calendar"),
+    ("📅",	True , "Dated"),
     ("📆",	False, "Tear-Off Calendar"),                # dull
-    ("📇",	True , "Card Index"),
+    ("📇",	False, "Card Index"),                       # dull
     ("📈",	True , "Up Trend"),
     ("📉",	True , "Down Trend"),
     ("📊",	False, "Bar Chart"),                        # dull
@@ -867,8 +867,8 @@ EMOJI_LIST = (
     ("📌",	True , "Pushpin"),
     ("📍",	True , "Location"),
     ("📎",	True , "Paperclip"),
-    ("📏",	True , "Ruler"),
-    ("📐",	True , "Triangle"),
+    ("📏",	True , "Straight Line"),
+    ("📐",	True , "Three Sides"),
     ("📛",	False, "Name Badge"),                       # dull
     ("🔒",	True , "Lock"),
     ("🔓",	False, "Open Lock"),                        # too similar to another
@@ -877,14 +877,14 @@ EMOJI_LIST = (
     ("🔑",	True , "Key"),
     ("🔨",	True , "Hammer"),
     ("🔧",	True , "Spanner"),
-    ("🔩",	True , "Calipers"),
+    ("🔩",	False, "Calipers"),                         # too similar to another
     ("🔗",	False, "Link Symbol"),                      # dull
-    ("💉",	True , "Syringe"),
+    ("💉",	False, "Syringe"),                          # potentially offensive
     ("💊",	True , "Pill"),
     ("🔪",	True , "Chef Knife"),
     ("🔫",	True , "Pistol"),
     ("🚬",	True , "Durry"),
-    ("🏁",	True , "Start Flag"),
+    ("🏁",	True , "Get Set Go"),
     ("🚩",	False, "Triangular Flag on Post"),          # dull
     ("🇦🇫",	False, "Afghanistan"),                      # national flag
     ("🇦🇽",	False, "Åland Islands"),                    # national flag
@@ -1218,13 +1218,13 @@ EMOJI_LIST = (
     ("😑",	True , "True Neutral"),
     ("😮",	True , "Stunned"),
     ("😯",	False, "Hushed"),                           # too similar to another
-    ("😴",	True , "Sleeping"),
+    ("😴",	True , "Sleepy"),
     ("😛",	False, "Tongue"),                           # too similar to another
     ("😕",	False, "Confused"),                         # too similar to another
-    ("😟",	True,  "Worried"),
+    ("😟",	True , "Worried"),
     ("😦",	False, "Frowning Face With Open Mouth"),    # too similar to another
-    ("😧",	True , "Anguished"),
-    ("😬",	True , "Grimacing"),
+    ("😧",	True , "Anguish Face"),
+    ("😬",	True , "Grimace"),
 
     # Unicode Version 7.0
     ("🙂",	False, "Slightly Smiling"),                 # too similar to another
@@ -1243,8 +1243,8 @@ EMOJI_LIST = (
     ("🐿",	True , "Chipmunk"),
     ("🕊",	True , "Peace Dove"),
     ("🕷",	True , "Spider"),
-    ("🕸",	True , "Web"),
-    ("🏵",	True , "Rosette"),
+    ("🕸",	True , "Spider Web"),
+    ("🏵",	False, "Rosette"),                          # dull
     ("🌶",	True , "Chilli"),
     ("🍽",	False, "Fork and Knife With Plate"),        # dull
     ("🗺",	False, "World Map"),                        # dull
@@ -1261,7 +1261,7 @@ EMOJI_LIST = (
     ("🏙",	False, "Cityscape"),                        # dull
     ("🏚",	False, "Derelict House Building"),          # dull
     ("🖼",	False, "Frame With Picture"),               # dull
-    ("🛢",	True , "Drum"),
+    ("🛢",	True , "Oil Drum"),
     ("🛣",	False, "Motorway"),                         # dull
     ("🛤",	False, "Railway Track"),                    # dull
     ("🛳",	False, "Passenger Ship"),                   # dull
@@ -1305,7 +1305,7 @@ EMOJI_LIST = (
     ("🖥",	True , "Desktop"),
     ("🖨",	True , "Printer"),
     ("🖱",	False, "Three Button Mouse"),               # dull
-    ("🖲",	True , "Trackball"),
+    ("🖲",	False, "Trackball"),                        # dull
     ("📽",	False, "Film Projector"),                   # dull
     ("📸",	False, "Camera With Flash"),                # too similar to another
     ("🕯",	True , "Candle"),
@@ -1324,7 +1324,7 @@ EMOJI_LIST = (
     ("🗑",	True , "Wastebasket"),
     ("🗝",	True , "Old Key"),
     ("🛠",	True , "Tools"),
-    ("🗜",	True , "Compression"),                      # dull
+    ("🗜",	True , "Compression"),
     ("🗡",	True , "Dagger"),
     ("🛡",	True , "Shield"),
     ("🏳",	True , "White Flag"),
@@ -1340,7 +1340,7 @@ EMOJI_LIST = (
     ("🤓",	True , "Nerd"),
     ("🙃",	True , "Upside Down"),
     ("🤒",	True , "Sick"),
-    ("🤕",	True , "Hurt"),
+    ("🤕",	True , "Hurt Head"),
     ("🤑",	False, "Money"),                            # potentially offensive
     ("🏻",	False, "Emoji Modifier 1-2"),               # dull
     ("🏼",	False, "Emoji Modifier 3"),                 # dull
@@ -1348,14 +1348,14 @@ EMOJI_LIST = (
     ("🏾",	False, "Emoji Modifier 5"),                 # dull
     ("🏿",	False, "Emoji Modifier 6"),                 # dull
     ("🤘",	True , "Rock On"),
-    ("📿",	False, "Prayer Beads"),
+    ("📿",	False, "Prayer Beads"),                     # potentially offensive
     ("🤖",	True , "Robot"),
     ("🦁",	True , "Lion"),
     ("🦄",	True , "Unicorn"),
     ("🦃",	True , "Turkey"),
     ("🦀",	True , "Crab"),
     ("🦂",	True , "Scorpion"),
-    ("🧀",	True , "Cheese"),
+    ("🧀",	True , "Mouse Trap"),
     ("🌭",	False, "Hot Dog"),                          # dull
     ("🌮",	True , "Taco"),
     ("🌯",	True , "Burrito"),
@@ -1367,7 +1367,7 @@ EMOJI_LIST = (
     ("🕌",	False, "Mosque"),                           # potentially offensive
     ("🕍",	False, "Synagogue"),                        # potentially offensive
     ("🕎",	False, "Menorah"),                          # potentially offensive
-    ("🏏",	True , "Cricket"),
+    ("🏏",	True , "Bat and Ball"),
     ("🏐",	True , "Volleyball"),
     ("🏑",	False, "Field Hockey"),                     # too similar to another
     ("🏒",	False, "Ice Hockey"),                       # too similar to another
@@ -1402,7 +1402,7 @@ EMOJI_LIST = (
     ("🤛",	False, "Left-Facing Fist"),                 # too similar to another
     ("🤜",	False, "Right-Facing Fist"),                # too similar to another
     ("🤚",	False, "Raised Back of Hand"),              # too similar to another
-    ("🤝",	True , "Handshake"),
+    ("🤝",	True , "Business Hi"),
     ("🖤",	True , "Black Heart"),
     ("🦍",	False, "Gorilla"),                          # too similar to another
     ("🦊",	True , "Fox"),
@@ -1419,93 +1419,157 @@ EMOJI_LIST = (
     ("🦋",	True , "Butterfly"),
     ("🥀",	True , "Wilted"),
     ("🥝",	True , "Kiwifruit"),
-    ("🥑",	True , "Avocado"),
+    ("🥑",	True , "Pricey Fruit"),
     ("🥔",	True , "Potato"),
     ("🥕",	True , "Carrot"),
     ("🥒",	True , "Cucumber"),
     ("🥜",	True , "Peanuts"),
     ("🥐",	True , "Croissant"),
-    ("🥖",	True , "Baguette"),
+    ("🥖",	True , "Bread Sword"),
     ("🥞",	True , "Pancakes"),
     ("🥓",	False, "Bacon"),                            # potentially offensive
     ("🥙",	False, "Stuffed Flatbread"),                # dull
-    ("🥚",	True , "Egg"),
+    ("🥚",	True , "Chicken Rock"),
     ("🥘",	False, "Shallow Pan"),                      # dull
     ("🥗",	False, "Salad"),                            # dull
-    ("🥛",	True , "Milk"),
+    ("🥛",	True , "Cow Juice"),
     ("🥂",	False, "Clinking Glasses"),                 # dull
-    ("🥃",	True , "Tumbler"),
+    ("🥃",	False, "Tumbler"),                          # dull
     ("🥄",	True , "Spoon"),
-    ("🛴",	True , "Scooter"),
+    ("🛴",	True , "Scoot Scoot"),
     ("🛵",	False, "Motor Scooter"),                    # dull
     ("🛑",	False, "Stop Sign"),                        # dull
-    ("🛶",	True , "Canoe"),
+    ("🛶",	False, "Canoe"),                            # dull
     ("🥇",	False, "Gold Medal"),                       # dull
     ("🥈",	False, "Silver Medal"),                     # dull
-    ("🥉",	False, "Bronze Medal"),                     # dull
+    ("🥉",	True , "Participation"),
     ("🥊",	True , "Boxing"),
     ("🥋",	True , "Martial Arts"),
-    ("🥅",	True , "Goal Net"),
-    ("🥁",	True , "Drum"),
-    ("🛒",	True , "Shopping Cart"),
+    ("🥅",	True , "Hashtag Goals"),
+    ("🥁",	True , "Drum Roll"),
+    ("🛒",	True , "Food Ute"),
 
     # Unicode Version 10.0
-    ("🤩",  True , "Star Struck"),
-    ("🤨",  True , "Raised Eyebrow"),
-    ("🤯",  True , "Mind Blown"),
-    ("🤪",  True , "Zany Face"),
-    ("🤬",  True , "Swear Face"),
-    ("🤮",  False, "Vomiting"),                          # potentially offensive
-    ("🤫",  True , "Shushing"),
-    ("🤭",  False, "Hand Over Mouth"),                   # too similar
-    ("🧐",  True , "Monocle"),
-    ("🧒",  True , "Child"),
-    ("🧑",  False, "Adult"),                             # dull
-    ("🧓",  False, "Older Adult"),                       # dull
-    ("🧕",  False, "Headscarf"),                         # potentially offensive
-    ("🧔",  False, "Bearded Person"),                    # potentially offensive
-    ("🤱",  False, "Breast Feeding"),                    # potentially offensive
-    ("🧙",  True , "Mage"),
-    ("🧚",  True , "Fairy"),
-    ("🧛",  True , "Vampire"),
-    ("🧜",  False, "Merperson"),                         # potentially offensive
-    ("🧝",  True , "Elf"),
-    ("🧞",  False, "Genie"),                             # dull
-    ("🧟",  True , "Zombie"),
-    ("🧖",  False, "Steamy Room"),                       # dull
-    ("🧗",  False, "Person Climbing"),                   # dull
-    ("🧘",  False, "Lotus Position"),                    # potentially offensive
-    ("🤟",  False, "Love-You Gesture"),                  # too similar
-    ("🤲",  False, "Palms Up Together"),                 # dull
-    ("🧠",  True , "Brain"),
-    ("🧡",  False, "Orange Heart"),                      # too similar
-    ("🧣",  True , "Scarf"),
-    ("🧤",  True , "Gloves"),
-    ("🧥",  True , "Coat"),
-    ("🧦",  True , "Socks"),
-    ("🧢",  False, "Billed Cap"),                        # dull
-    ("🦓",  False, "Zebra"),                             # too similar
-    ("🦒",  False, "Giraffe"),                           # too similar
-    ("🦔",  True , "Hedgehog"),
-    ("🦕",  True , "Long Neck"),
-    ("🦖",  True , "T-Rex"),
-    ("🦗",  True , "Cricket"),
-    ("🥥",  True , "Coconut"),
-    ("🥦",  True , "Broccoli"),
-    ("🥨",  True , "Pretzel"),
-    ("🥩",  False, "Cut of Meat"),                       # potentially offensive
-    ("🥪",  False, "Sandwich"),                          # dull
-    ("🥣",  False, "Bowl With Spoon"),                   # dull
-    ("🥫",  True , "Canned"),
-    ("🥟",  True , "Dumpling"),
-    ("🥠",  True , "Fortune Cookie"),
-    ("🥡",  False, "Takeout Box"),                      # dull
-    ("🥧",  True , "Pie"),
-    ("🥤",  False, "Cup With Straw"),                   # dull
-    ("🥢",  False, "Chopsticks"),                       # dull
-    ("🛸",  True , "Flying Saucer"),
-    ("🛷",  True , "Sled"),
-    ("🥌",  True , "Curling"),
+    ("🤩",	True , "Star Struck"),
+    ("🤨",	True , "Unexpected Face"),
+    ("🤯",	True , "Mind Blown"),
+    ("🤪",	True , "Zany Face"),
+    ("🤬",	True , "Swear Face"),
+    ("🤮",	False, "Vomiting"),                         # potentially offensive
+    ("🤫",	True , "Shushing"),
+    ("🤭",	False, "Hand Over Mouth"),                  # too similar to another
+    ("🧐",	True , "Monocle"),
+    ("🧒",	True , "Child Face"),
+    ("🧑",	False, "Adult"),                            # dull
+    ("🧓",	False, "Older Adult"),                      # dull
+    ("🧕",	False, "Headscarf"),                        # potentially offensive
+    ("🧔",	False, "Bearded Person"),                   # potentially offensive
+    ("🤱",	False, "Breast Feeding"),                   # potentially offensive
+    ("🧙",	True , "Mage"),
+    ("🧚",	False, "Fairy"),                            # potentially offensive
+    ("🧛",	True , "Vampire"),
+    ("🧜",	False, "Merperson"),                        # potentially offensive
+    ("🧝",	True , "Cosplay"),
+    ("🧞",	False, "Genie"),                            # dull
+    ("🧟",	True , "Unalive"),
+    ("🧖",	False, "Steamy Room"),                      # dull
+    ("🧗",	False, "Person Climbing"),                  # dull
+    ("🧘",	False, "Lotus Position"),                   # potentially offensive
+    ("🤟",	False, "Love-You Gesture"),                 # too similar to another
+    ("🤲",	False, "Palms Up Together"),                # dull
+    ("🧠",	True , "Big Brain"),
+    ("🧡",	False, "Orange Heart"),                     # too similar to another
+    ("🧣",	True , "Neck Hider"),
+    ("🧤",	True , "Hand Socks"),
+    ("🧥",	True , "Coat"),
+    ("🧦",	True , "Feet Gloves"),
+    ("🧢",	False, "Billed Cap"),                       # dull
+    ("🦓",	False, "Zebra"),                            # too similar to another
+    ("🦒",	False, "Giraffe"),                          # too similar to another
+    ("🦔",	True , "Spikehog"),
+    ("🦕",	True , "Long Neck"),
+    ("🦖",	True , "Big Roar"),
+    ("🦗",	True , "Cricket"),
+    ("🥥",	True , "Coconut"),
+    ("🥦",	True , "Tiny Tree"),
+    ("🥨",	True , "Twisty Bread"),
+    ("🥩",	False, "Cut of Meat"),                      # potentially offensive
+    ("🥪",	False, "Sandwich"),                         # dull
+    ("🥣",	False, "Bowl With Spoon"),                  # dull
+    ("🥫",	True , "Canned Good"),
+    ("🥟",	True , "Dumpling"),
+    ("🥠",	True , "Tasty Future"),
+    ("🥡",	False, "Takeout Box"),                      # dull
+    ("🥧",	True , "Pie"),
+    ("🥤",	False, "Cup With Straw"),                   # dull
+    ("🥢",	False, "Chopsticks"),                       # dull
+    ("🛸",	True , "Alien Plane"),
+    ("🛷",	True , "Sled"),
+    ("🥌",	True , "Curling"),
+
+    # Unicode Version 11.0
+    ("🥰",	False, "Smiling Face With 3 Hearts"),       # too similar to another
+    ("🥵",	False, "Overheated"),                       # too similar to another
+    ("🥶",	True , "Freezing Face"),
+    ("🥴",	False, "Woozy Face"),                       # potentially offensive
+    ("🥳",	True , "Party Face"),
+    ("🥺",	True , "Pleading Face"),
+    ("🦵",	False, "Leg"),                              # dull
+    ("🦶",	True , "Foot"),
+    ("🦷",	True , "Tooth"),
+    ("🦴",	True , "Bone"),
+    ("🦸",	False, "Superhero"),                        # too similar to another
+    ("🦹",	True , "Supervillain"),
+    ("🦝",	True , "Trash Bandit"),
+    ("🦙",	True , "Llama"),
+    ("🦛",	False, "Hippopotamus"),                     # too similar to another
+    ("🦘",	True , "Kangaroo"),
+    ("🦡",	True , "Badger"),
+    ("🦢",	True , "Swan"),
+    ("🦚",	True , "Peacock"),
+    ("🦜",	True , "Parrot"),
+    ("🦟",	False, "Mosquito"),                         # potentially offensive
+    ("🦠",	False, "Microbe"),                          # potentially offensive
+    ("🥭",	True , "Mango"),
+    ("🥬",	True , "Leafy Green"),
+    ("🥯",	True , "Bagel"),
+    ("🧂",	True , "Salty"),
+    ("🥮",	False, "Moon Cake"),                        # too similar to another
+    ("🦞",	True , "Lobster"),
+    ("🧁",	True , "Cupcake"),
+    ("🧭",	False, "Compass"),                          # dull
+    ("🧱",	False, "Brick"),                            # dull
+    ("🛹",	True , "Skateboard"),
+    ("🧳",	True , "Baggage"),
+    ("🧨",	True , "Firework"),
+    ("🧧",	False, "Red Envelope"),                     # dull
+    ("🥎",	False, "Softball"),                         # too similar to another
+    ("🥏",	True , "Throwing Disc"),
+    ("🥍",	True , "Lacrosse"),
+    ("🧿",	False, "Nazar Amulet"),                     # dull
+    ("🧩",	True , "Puzzle Piece"),
+    ("🧸",	False, "Teddy Bear"),                       # too similar to another
+    ("🧵",	False, "Thread"),                           # too similar to another
+    ("🧶",	True , "Yarn Ball"),
+    ("🥽",	True , "The Goggles"),
+    ("🥼",	False, "Lab Coat"),                         # dull
+    ("🥾",	False, "Hiking Boot"),                      # dull
+    ("🥿",	True , "Flat Shoe"),
+    ("🧮",	True , "Abacus"),
+    ("🧾",	False, "Receipt"),                          # dull
+    ("🧰",	True , "Toolbox"),
+    ("🧲",	True , "Magnet"),
+    ("🧪",	True , "Test Tube"),
+    ("🧫",	True , "Petri Dish"),
+    ("🧬",	True , "DNA"),
+    ("🧴",	True , "Lotion"),
+    ("🧷",	True , "Safety Pin"),
+    ("🧹",	True , "Broom"),
+    ("🧺",	True , "Basket"),
+    ("🧻",	False, "Roll of Paper"),                    # dull
+    ("🧼",	True , "Soap"),
+    ("🧽",	True , "Fun sponge"),
+    ("🧯",	True , "Anti-fire Can"),
 )
 
 # The field choices are the permissible values

@@ -17,7 +17,6 @@ urlpatterns = [
     # Application URLs for public pages
     path('break/',                  include('breakqual.urls_public')),
     path('checkins/',               include('checkins.urls_public')),
-    path('divisions/',              include('divisions.urls')),
     path('draw/',                   include('draw.urls_public')),
     path('feedback/',               include('adjfeedback.urls_public')),
     path('motions/',                include('motions.urls_public')),

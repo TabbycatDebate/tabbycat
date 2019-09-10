@@ -21,7 +21,7 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE = 'N'
-    STATUS_POSTPONED = 'P'
+    STATUS_POSTPONED = 'P' # obsolete
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = ((STATUS_NONE, _("none")),
@@ -35,18 +35,11 @@ class Debate(models.Model):
         verbose_name=_("round"))
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
         verbose_name=_("venue"))
-    # cascade to keep draws clean in event of division deletion
-    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True,
-        verbose_name=_("division"))
 
     bracket = models.FloatField(default=0,
         verbose_name=_("bracket"))
     room_rank = models.IntegerField(default=0,
         verbose_name=_("room rank"))
-
-    time = models.DateTimeField(blank=True, null=True,
-        verbose_name=_("time"),
-        help_text=_("The time/date of a debate if it is specifically scheduled"))
 
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True)
@@ -249,55 +242,6 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
-
-    @property
-    def division_motion(self):
-        from motions.models import Motion
-        try:
-            # Pretty sure there should never be > 1
-            return Motion.objects.filter(round=self.round, divisions=self.division).first()
-        except ObjectDoesNotExist:
-            # It's easiest to assume a division motion is always present, so
-            # return a fake one if it is not
-            return Motion(text='-', reference='-')
-
-    # For the front end need to ensure that there are no gaps in the debateTeams
-    def serial_debateteams_ordered(self, tournament=None):
-        """`tournament` can be provided to avoid hitting the preference cache
-        for each item if this is called for many different debates in the
-        same tournament."""
-        if tournament is None:
-            tournament = self.round.tournament
-        for side in tournament.sides:
-            sdt = {'side': side, 'team': None,
-                   'position': get_side_name(tournament, side, 'full'),
-                   'abbr': get_side_name(tournament, side, 'abbr')}
-            try:
-                debate_team = self.get_dt(side)
-                sdt['team'] = debate_team.team.serialize()
-            except ObjectDoesNotExist:
-                pass
-
-            yield sdt
-
-    def serialize(self, tournament=None):
-        """@deprecate when legacy drag and drop UIs removed"""
-        """`tournament` can be provided to avoid hitting the preference cache
-        for each item if this is called for many different debates in the
-        same tournament."""
-        if tournament is None:
-            tournament = self.round.tournament
-
-        debate = {'id': self.id, 'bracket': self.bracket,
-                  'importance': self.importance, 'locked': False}
-        debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['debateTeams'] = list(self.serial_debateteams_ordered(tournament=tournament))
-        debate['debateAdjudicators'] = [{
-            'position': position,
-            'adjudicator': adj.serialize(round=self.round),
-        } for adj, position in self.adjudicators.with_debateadj_types()]
-        debate['sidesConfirmed'] = self.sides_confirmed
-        return debate
 
 
 class DebateTeamManager(models.Manager):

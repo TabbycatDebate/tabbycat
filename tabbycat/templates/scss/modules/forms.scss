@@ -7,6 +7,11 @@
   margin-top: -2.5px;
 }
 
+// HoverPanelGroup.vue
+.btn-xs-text {
+  font-size: 12px; // Need to be extra small and can't override the btn style
+}
+
 // Fix bad inheritance
 .list-group-item .btn .feather {
   margin-right: 0;
@@ -91,17 +96,6 @@ label.error {
 //------------------------------------------------------------------------------
 // Custom Widgets
 //------------------------------------------------------------------------------
-
-// Forfeits spacing is (by default) off; needs correcting
-.forfeits-group {
-  list-style-type: none;
-  padding-left: 0;
-
-  li {
-    float: left;
-    width: 46%;
-  }
-}
 
 // Welcome message box
 #id_public_features__welcome_message_iframe { /* stylelint-disable-line */

@@ -23,7 +23,7 @@ In these instructions, we'll use **Windows PowerShell**, a command-line interfac
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we haven't tried it.
+  If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly.
 
 1. Install dependencies
 =======================
@@ -36,19 +36,15 @@ First, you need to install all of the software on which Tabbycat depends, if you
 ------------
   *Python is a popular programming language, and the language in which the core of Tabbycat is coded.*
 
-Download and install the latest version of Python 3.5 from the `Python website <https://www.python.org/downloads/>`_.
+Download and install the latest version of Python 3.6 from the `Python website <https://www.python.org/downloads/>`_.
 In the installer, check the box to add Python to your PATH (see box below).
-
-.. warning:: The 64-bit version of Python 3.6 currently doesn't work with PostgreSQL 9.6, because of a `bug in Python <http://bugs.python.org/issue28680>`_ affecting `win-psycopg <http://www.stickpeople.com/projects/python/win-psycopg/>`_. If you're using 64-bit Python, you should use Python 3.5 until the Python 3.6.1 is released.
 
 .. hint:: Which file should I download?
 
-    - If you have 32-bit Windows, choose the "Windows x86 executable installer".
-    - If you have 64-bit Windows (and not an Itanium processor), it's better to choose the "Windows x86-64 executable installer".
-    - If you're not sure whether you have 32-bit or 64-bit Windows, consult "About your PC" or "System Properties" in your Start Menu.
+    - Regardless of if you have 64-bit or 32-bit Windows, choose the "Windows x86 executable installer".
 
 .. attention:: **Please take note:** Just after you open the installer,
-  **check the "Add Python 3.5 to PATH" box**:
+  **check the "Add Python 3.6 to PATH" box**:
 
   .. image:: images/python-windows-path.png
 
@@ -60,9 +56,9 @@ To check that Python is installed correctly, open Windows PowerShell, type ``pyt
 
 .. note:: **If you already have Python**, great! Some things to double-check:
 
-  - You must have at least Python 3.5. (Python 2 is not supported.)
+  - You must have at least Python 3.6 (Python 2 is not supported.)
   - Your installation path must not have any spaces in it.
-  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python35;C:\Python35\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
+  - If that doesn't work, note that the following must be part of your ``PATH`` environment variable: ``C:\Python36;C:\Python36\Scripts`` (or as appropriate for your installation directory). Follow `the instructions here <https://www.java.com/en/download/help/path.xml>`_ to add this to your path.
 
 .. _install-windows-postgresql:
 
@@ -190,18 +186,11 @@ e. Install Tabbycat's requirements.
   If you installed **32-bit Python**::
 
     > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win32-py3.5.exe
+    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.2/psycopg2-2.6.2.win32-py3.6-pg9.6.1-release.exe
     > pip install -r .\config\requirements_core.txt
     > npm install
 
-  If you installed **64-bit Python**::
-
-    > python -m pip install --upgrade pip
-    > easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.6.1/psycopg2-2.6.1.win-amd64-py3.5.exe
-    > pip install -r .\config\requirements_core.txt
-    > npm install
-
-  If you're using a version of **Python other than 3.5**, replace the URL in the
+  If you're using a version of **Python other than 3.6**, replace the URL in the
   second line with the appropriate link from the
   `win-psycopg page <http://www.stickpeople.com/projects/python/win-psycopg/>`_.
 

@@ -1,4 +1,5 @@
 import logging
+from secrets import SystemRandom
 
 from django.urls import reverse
 from django.utils import formats, timezone, translation
@@ -52,16 +53,24 @@ def badge_datetime_format(timestamp):
     return formats.date_format(localized_time, format=fmt)
 
 
-def ranks_dictionary():
+def ranks_dictionary(tournament):
     """ Used for both adjudicator ranks and venue priorities """
+    score_min = tournament.pref('adj_min_score')
+    score_max = tournament.pref('adj_max_score')
+    score_range = score_max - score_min
     return [
-        {'pk': 'a+', 'fields': {'name': 'A+', 'cutoff': None}},
-        {'pk': 'a',  'fields': {'name': 'A', 'cutoff': None}},
-        {'pk': 'a-', 'fields': {'name': 'A-', 'cutoff': None}},
-        {'pk': 'b+', 'fields': {'name': 'B+', 'cutoff': None}},
-        {'pk': 'b',  'fields': {'name': 'B', 'cutoff': None}},
-        {'pk': 'b-', 'fields': {'name': 'B-', 'cutoff': None}},
-        {'pk': 'c+', 'fields': {'name': 'C+', 'cutoff': None}},
-        {'pk': 'c',  'fields': {'name': 'C', 'cutoff': None}},
-        {'pk': 'f',  'fields': {'name': 'F', 'cutoff': None}},
+        {'pk': 'a+', 'fields': {'name': 'A+', 'cutoff': (score_range * 0.9) + score_min}},
+        {'pk': 'a',  'fields': {'name': 'A', 'cutoff': (score_range * 0.8) + score_min}},
+        {'pk': 'a-', 'fields': {'name': 'A-', 'cutoff': (score_range * 0.7) + score_min}},
+        {'pk': 'b+', 'fields': {'name': 'B+', 'cutoff': (score_range * 0.6) + score_min}},
+        {'pk': 'b',  'fields': {'name': 'B', 'cutoff': (score_range * 0.5) + score_min}},
+        {'pk': 'b-', 'fields': {'name': 'B-', 'cutoff': (score_range * 0.4) + score_min}},
+        {'pk': 'c+', 'fields': {'name': 'C+', 'cutoff': (score_range * 0.3) + score_min}},
+        {'pk': 'c',  'fields': {'name': 'C', 'cutoff': (score_range * 0.2) + score_min}},
+        {'pk': 'f',  'fields': {'name': 'F', 'cutoff': score_min}},
     ]
+
+
+def generate_identifier_string(charset, length):
+    """Used in privateurl/checkin identifier generation"""
+    return ''.join(SystemRandom().choice(charset) for _ in range(length))

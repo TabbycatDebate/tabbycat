@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,17 +112,17 @@ msgstr ""
 msgid "There are more email addresses than speakers."
 msgstr ""
 
-#: importer/forms.py:313
+#: importer/forms.py:316
 msgid ""
 "Every team in a single tournament from the same institution must have a "
 "different name. Please correct the duplicate data."
 msgstr ""
 
-#: importer/forms.py:327
+#: importer/forms.py:330
 msgid "Rating"
 msgstr ""
 
-#: importer/forms.py:335
+#: importer/forms.py:338
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
 msgstr ""
@@ -260,6 +260,10 @@ msgstr ""
 
 #: importer/templates/simple_import_index.html:55
 msgid "Add/Edit Adjudicator-Institution Conflicts"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:59
+msgid "Add/Edit Team-Institution Conflicts"
 msgstr ""
 
 #: importer/templates/simple_import_institutions_details.html:4

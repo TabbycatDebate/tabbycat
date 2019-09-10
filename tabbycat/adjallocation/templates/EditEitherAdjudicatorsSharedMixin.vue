@@ -37,6 +37,13 @@ export default {
       if (debateID === null) {
         return null // Moving to or from Unused
       }
+      if (!this.allDebatesOrPanels.hasOwnProperty(debateID)) {
+        let explanation = `A change to the allocation may have been unable to be fulfilled by the
+                           server as there was no matching debate on this page. Refresh this page
+                           to bring its copy of debates back in-sync with the server.`
+        this.showErrorAlert(explanation, null, 'Unrecognised Debate', 'text-danger', true, true)
+        return null // Socket returned a debateID that doesn't exist locally
+      }
       let newAllocation = this.allDebatesOrPanels[debateID].adjudicators
       newAllocation = JSON.parse(JSON.stringify(newAllocation)) // Clone so non-reactive
       return newAllocation
