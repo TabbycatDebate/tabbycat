@@ -117,17 +117,29 @@ class BaseVenueConstraintsView(BaseConstraintsView):
         return factory_kwargs
 
     def formset_valid(self, formset):
-        contenttype = self.get_contenttype()
-
         self.instances = formset.save(commit=False)
         for c in self.instances:
-            c.subject_content_type = contenttype
+            c.subject_content_type = self.contenttype
             c.save()
 
         for c in formset.deleted_objects:
             c.delete()
 
         return super().formset_valid(formset)
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, self.get_save_message(nsaved))
+        if ndeleted > 0:
+            messages.success(self.request, self.get_delete_message(ndeleted))
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, self.unchanged_message)
+
+    def get_save_message(self, nsaved):
+        raise NotImplementedError
+
+    def get_delete_message(self, ndeleted):
+        raise NotImplementedError
 
 
 class VenueTeamConstraintsView(BaseVenueConstraintsView):
@@ -137,6 +149,9 @@ class VenueTeamConstraintsView(BaseVenueConstraintsView):
     same_view = 'venues-constraints-team'
 
     subject = gettext_lazy("Team")
+    unchanged_message = gettext_lazy("No changes were made to venue-team constraints.")
+
+    contenttype = ContentType.objects.get(app_label='participants', model='team')
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(team__tournament=self.tournament)
@@ -144,24 +159,19 @@ class VenueTeamConstraintsView(BaseVenueConstraintsView):
     def get_subject_queryset(self):
         return self.tournament.team_set.order_by('short_name').values_list('id', 'short_name')
 
-    def get_contenttype(self):
-        return ContentType.objects.get(app_label='participants', model='team')
+    def get_save_message(self, nsaved):
+        return ngettext(
+            "Saved %(count)d venue-team constraint.",
+            "Saved %(count)d venue-team constraints.",
+            nsaved,
+        ) % {'count': nsaved}
 
-    def add_message(self, nsaved, ndeleted):
-        if nsaved > 0:
-            messages.success(self.request, ngettext(
-                "Saved %(count)d venue-team constraint.",
-                "Saved %(count)d venue-team constraints.",
-                nsaved,
-            ) % {'count': nsaved})
-        if ndeleted > 0:
-            messages.success(self.request, ngettext(
-                "Deleted %(count)d venue-team constraint.",
-                "Deleted %(count)d venue-team constraints.",
-                ndeleted,
-            ) % {'count': ndeleted})
-        if nsaved == 0 and ndeleted == 0:
-            messages.success(self.request, _("No changes were made to venue-team constraints."))
+    def get_delete_message(self, ndeleted):
+        return ngettext(
+            "Deleted %(count)d venue-team constraint.",
+            "Deleted %(count)d venue-team constraints.",
+            ndeleted,
+        ) % {'count': ndeleted}
 
 
 class VenueAdjudicatorConstraintsView(BaseVenueConstraintsView):
@@ -171,6 +181,9 @@ class VenueAdjudicatorConstraintsView(BaseVenueConstraintsView):
     same_view = 'venues-constraints-adjudicator'
 
     subject = gettext_lazy("Adjudicator")
+    unchanged_message = gettext_lazy("No changes were made to venue-adjudicator constraints.")
+
+    contenttype = ContentType.objects.get(app_label='participants', model='adjudicator')
 
     def get_formset_queryset(self):
         q = Q(adjudicator__tournament=self.tournament)
@@ -182,24 +195,19 @@ class VenueAdjudicatorConstraintsView(BaseVenueConstraintsView):
     def get_subject_queryset(self):
         return self.tournament.relevant_adjudicators.order_by('name').values_list('id', 'name')
 
-    def get_contenttype(self):
-        return ContentType.objects.get(app_label='participants', model='adjudicator')
+    def get_save_message(self, nsaved):
+        return ngettext(
+            "Saved %(count)d venue-adjudicator constraint.",
+            "Saved %(count)d venue-adjudicator constraints.",
+            nsaved,
+        ) % {'count': nsaved}
 
-    def add_message(self, nsaved, ndeleted):
-        if nsaved > 0:
-            messages.success(self.request, ngettext(
-                "Saved %(count)d venue-adjudicator constraint.",
-                "Saved %(count)d venue-adjudicator constraints.",
-                nsaved,
-            ) % {'count': nsaved})
-        if ndeleted > 0:
-            messages.success(self.request, ngettext(
-                "Deleted %(count)d venue-adjudicator constraint.",
-                "Deleted %(count)d venue-adjudicator constraints.",
-                ndeleted,
-            ) % {'count': ndeleted})
-        if nsaved == 0 and ndeleted == 0:
-            messages.success(self.request, _("No changes were made to venue-adjudicator constraints."))
+    def get_delete_message(self, ndeleted):
+        return ngettext(
+            "Deleted %(count)d venue-adjudicator constraint.",
+            "Deleted %(count)d venue-adjudicator constraints.",
+            ndeleted,
+        ) % {'count': ndeleted}
 
 
 class VenueInstitutionConstraintsView(BaseVenueConstraintsView):
@@ -209,6 +217,9 @@ class VenueInstitutionConstraintsView(BaseVenueConstraintsView):
     same_view = 'venues-constraints-institution'
 
     subject = gettext_lazy("Institution")
+    unchanged_message = gettext_lazy("No changes were made to venue-institution constraints.")
+
+    contenttype = ContentType.objects.get_for_model(Institution)
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(institution__team__tournament=self.tournament).distinct()
@@ -218,21 +229,16 @@ class VenueInstitutionConstraintsView(BaseVenueConstraintsView):
             team__tournament=self.tournament
         ).distinct().order_by('name').values_list('id', 'name')
 
-    def get_contenttype(self):
-        return ContentType.objects.get_for_model(Institution)
+    def get_save_message(self, nsaved):
+        return ngettext(
+            "Saved %(count)d venue-institution constraint.",
+            "Saved %(count)d venue-institution constraints.",
+            nsaved,
+        ) % {'count': nsaved}
 
-    def add_message(self, nsaved, ndeleted):
-        if nsaved > 0:
-            messages.success(self.request, ngettext(
-                "Saved %(count)d venue-institution constraint.",
-                "Saved %(count)d venue-institution constraints.",
-                nsaved,
-            ) % {'count': nsaved})
-        if ndeleted > 0:
-            messages.success(self.request, ngettext(
-                "Deleted %(count)d venue-institution constraint.",
-                "Deleted %(count)d venue-institution constraints.",
-                ndeleted,
-            ) % {'count': ndeleted})
-        if nsaved == 0 and ndeleted == 0:
-            messages.success(self.request, _("No changes were made to venue-institution constraints."))
+    def get_delete_message(self, ndeleted):
+        return ngettext(
+            "Deleted %(count)d venue-institution constraint.",
+            "Deleted %(count)d venue-institution constraints.",
+            ndeleted,
+        ) % {'count': ndeleted}
