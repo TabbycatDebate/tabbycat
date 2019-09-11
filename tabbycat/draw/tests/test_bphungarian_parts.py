@@ -1,4 +1,4 @@
-import unittest
+from django.test import TestCase
 
 from ..generator.bphungarian import BPHungarianDrawGenerator
 from .utils import TestTeam
@@ -9,7 +9,7 @@ DUMMY_TEAMS = [TestTeam(1, 'A', side_history=[0, 0, 0, 0]),
                TestTeam(4, 'D', side_history=[0, 0, 0, 0])]
 
 
-class TestDefineRooms(unittest.TestCase):
+class TestDefineRooms(TestCase):
     """Tests the `_define_rooms_*` functions of BPHungarianDrawGenerator."""
 
     testdata = dict()

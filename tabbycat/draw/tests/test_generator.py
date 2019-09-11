@@ -1,7 +1,7 @@
-import unittest
+from collections import OrderedDict
 import copy
 
-from collections import OrderedDict
+from django.test import TestCase
 
 from .. import DrawFatalError, DrawGenerator, DrawUserError
 from ..generator.pairing import Pairing, ResultPairing
@@ -11,7 +11,7 @@ from .utils import TestTeam
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 
 
-class TestRandomDrawGenerator(unittest.TestCase):
+class TestRandomDrawGenerator(TestCase):
     """Basic unit test for random draws.
     Because it's random, you can't really do much to test it."""
 
@@ -40,7 +40,7 @@ class TestRandomDrawGenerator(unittest.TestCase):
                     self.assertEqual(pairing.flags, [])
 
 
-class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
+class TestPowerPairedDrawGeneratorParts(TestCase):
     """Basic unit test for core functionality of power-paired draws.
     Nowhere near comprehensive."""
 
@@ -337,7 +337,7 @@ class TestPowerPairedDrawGeneratorParts(unittest.TestCase):
         self.one_up_one_down(data, expected)
 
 
-class TestPowerPairedDrawGenerator(unittest.TestCase):
+class TestPowerPairedDrawGenerator(TestCase):
     """Test the entire draw functions as a black box."""
 
     # Yep, I spent a lot of time constructing this realistic hypothetical
@@ -470,7 +470,7 @@ class TestPowerPairedDrawGenerator(unittest.TestCase):
                         self.assertEqual(actual.get_team_flags(actual.teams[0]), exp_neg_flags)
 
 
-class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.TestCase):
+class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(TestCase):
     """Basic unit test for core functionality of power-paired draws with allocated
     sides. Not comprehensive."""
 
@@ -719,7 +719,7 @@ class TestPowerPairedWithAllocatedSidesDrawGeneratorPartOddBrackets(unittest.Tes
             self.assertEqual(b2[0], {"aff": [], "neg": []})
 
 
-class TestPartialBreakRoundSplit(unittest.TestCase):
+class TestPartialBreakRoundSplit(TestCase):
 
     def test_split(self):
         self.assertRaises(AssertionError, partial_break_round_split, -1)
@@ -745,7 +745,7 @@ class TestPartialBreakRoundSplit(unittest.TestCase):
         self.assertEqual(partial_break_round_split(99), (35, 29))
 
 
-class BaseTestEliminationDrawGenerator(unittest.TestCase):
+class BaseTestEliminationDrawGenerator(TestCase):
 
     # (Team Name, Team Institution)
     team_data = [(1, 'A'), (2, 'B'), (3, 'A'), (4, 'B'), (5, 'C'), (6, 'D'),
@@ -827,7 +827,3 @@ class TestEliminationDrawGenerator(BaseTestEliminationDrawGenerator):
         self.ed = DrawGenerator("two", "elimination", teams, results=results)
         pairings = self.ed.generate()
         self.assertPairingsEqual(pairings, expected)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,4 +1,4 @@
-import unittest
+from django.test import TestCase
 
 from ..scoresheet import (BPScoresheet, HighPointWinsRequiredScoresheet,
     LowPointWinsAllowedScoresheet, ResultOnlyScoresheet,
@@ -17,7 +17,7 @@ def on_all_testdata(test_fn):
     return foo
 
 
-class TestTwoTeamScoresheets(unittest.TestCase):
+class TestTwoTeamScoresheets(TestCase):
 
     sides = ['aff', 'neg']
 
@@ -125,7 +125,7 @@ class TestTwoTeamScoresheets(unittest.TestCase):
         self.assertRaises(AssertionError, scoresheet.set_declared_winner, 'hello')
 
 
-class TestBPScoresheets(unittest.TestCase):
+class TestBPScoresheets(TestCase):
 
     sides = ['og', 'oo', 'cg', 'co']
     positions = [1, 2]

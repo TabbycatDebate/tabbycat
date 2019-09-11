@@ -1,10 +1,10 @@
-import unittest
+from django.test import TestCase
 
 from .utils import TestTeam
 from ..generator.one_up_one_down import OneUpOneDownSwapper
 
 
-class TestOneUpOneDown(unittest.TestCase):
+class TestOneUpOneDown(TestCase):
 
     @staticmethod
     def _1u1d_no_change(data):
@@ -144,6 +144,3 @@ class TestOneUpOneDown(unittest.TestCase):
             d.append((TestTeam(*data1), TestTeam(*data2)))
         r = OneUpOneDownSwapper(**options).run(d)
         return [(a.id, b.id) for (a, b) in r]
-
-if __name__ == '__main__':
-    unittest.main()
