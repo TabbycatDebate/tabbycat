@@ -41,8 +41,8 @@ class Command(TournamentCommand):
             identifier_model = VenueIdentifier
             plural = 'venues'
 
+        expected_count = queryset.filter(checkin_identifier__isnull=False).count()
         if options['subcommand'] == "delete" or options['subcommand'] == "generate" and options['overwrite']:
-            expected_count = queryset.filter(checkin_identifier__isnull=False).count()
             _, counts = delete_identifiers(queryset)
             self.stdout.write("Deleted check-in identifiers for all {0:d} {1:s}".format(expected_count, plural))
             for model, count in counts.items():
@@ -50,5 +50,9 @@ class Command(TournamentCommand):
 
         if options['subcommand'] == "generate":
             queryset = queryset.filter(checkin_identifier__isnull=True)
+
+            if not options['overwrite']:
+                self.stdout.write("Skipping {0:d} existing identifiers".format(expected_count))
+
             self.stdout.write("Generated check-in identifiers for {0:d} {1:s}".format(queryset.count(), plural))
             create_identifiers(identifier_model, queryset)
