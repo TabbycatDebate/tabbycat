@@ -569,9 +569,13 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         ).prefetch_related('debateteam_set__team')
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        try:
+            self.object = self.get_object()
+        except self.model.MultipleObjectsReturned:
+            error = (500, _("It looks like you were assigned to two or more debates. Please contact a tab room official."))
+        else:
+            error = self.check_permissions()
 
-        error = self.check_permissions()
         if error:
             status, message = error
             return self.response_class(
@@ -632,9 +636,7 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
 
-        url_key = self.kwargs.get('url_key')
-        kwargs['url_key'] = url_key
-        kwargs['adjudicator'] = Adjudicator.objects.get(url_key=url_key)
+        kwargs['adjudicator'] = Adjudicator.objects.get(url_key=self.kwargs.get('url_key'))
 
         return super().get_context_data(**kwargs)
 
