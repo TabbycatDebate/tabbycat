@@ -194,6 +194,20 @@
     </div>
   {% endif %}
 
+  {% if pref.team_standings_precedence|length == 0 %}
+    {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+    {% blocktrans trimmed asvar message %}
+      The team standings precedence is empty. This means that teams aren't
+      ranked according to any metrics, so all teams will be in a single bracket
+      containing everyone. If this isn't what you intended, set the team
+      standings precedence in the
+      <a href="{{ standings_config_url }}" class="alert-link">Standings section
+      of this tournament's configuration</a> before creating the draw. In most
+      tournaments, the first metric should be points or wins.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
+  {% endif %}
+
 {% endblock %}
 
 {% block content %}

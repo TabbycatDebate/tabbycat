@@ -32,15 +32,6 @@
 
             {% endif %} {# active_adjs < debates_in_round #}
 
-            {% roundurl 'legacy-adjallocation-round-edit' as url %}
-            {% if active_adjs < debates_in_round or no_chair > 0 or pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
-              {% trans "Allocate adjudicators (legacy interface)" as title %}
-              {% include "components/item-action.html" with text=title type="info" %}
-            {% else %}
-              {% trans "Edit adjudicator allocation (legacy interface)" as title %}
-              {% include "components/item-action.html" with text=title type="info" %}
-            {% endif %}
-
             {% roundurl 'edit-debate-adjudicators' as url %}
             {% if active_adjs < debates_in_round or no_chair > 0 or pref.ballots_per_debate == 'per-adj' and even_panel > 0 %}
               {% trans "Allocate adjudicators" as title %}
@@ -66,15 +57,6 @@
 
           {% include "draw_alerts_venues.html" %}
 
-          {% roundurl 'legacy-venues-edit' round as url %}
-          {% if round.num_debates_without_venue > 0 %}
-            {% trans "Allocate venues (legacy interface)" as title %}
-            {% include "components/item-action.html" with text=title type="info" %}
-          {% else %}
-            {% trans "Edit venue allocation (legacy interface)" as title %}
-            {% include "components/item-action.html" with text=title type="info" %}
-          {% endif %}
-
           {% roundurl 'edit-debate-venues' round as url %}
           {% if round.num_debates_without_venue > 0 %}
             {% trans "Allocate venues" as title %}
@@ -85,6 +67,45 @@
           {% endif %}
 
         </div>
+
+      </div>
+    </div>
+
+    <div class="col mt-md-0 mt-3">
+      <div class="card">
+
+        <div class="card-body">
+          <h5 class="card-title mb-0">{% trans "Preformed Panels" %}</h5>
+        </div>
+
+            <div class="list-group list-group-flush">
+
+            {% if preformed_panels_in_round > 0 %}
+              {% blocktrans trimmed asvar message count npanels=preformed_panels_in_round %}
+                There is {{ npanels }} preformed panel available for this round.
+              {% plural %}
+                There are {{ npanels }} preformed panels available for this round.
+              {% endblocktrans %}
+              {% include "components/item-info.html" with nopad=True type="info" text=message %}
+            {% else %}
+              {% trans "There are no preformed panels available for this round" as message %}
+              {% include "components/item-info.html" with nopad=True type="secondary" text=message %}
+            {% endif %}
+
+
+            {% roundurl 'edit-panel-adjudicators' as url %}
+            {% blocktrans trimmed asvar text with r_name=round.abbreviation %}
+              Edit preformed panels for {{ r_name }}
+            {% endblocktrans %}
+            {% include "components/item-action.html" with text=text type="primary" %}
+
+            {% roundurl 'edit-panel-adjudicators' round.next as url %}
+            {% blocktrans trimmed asvar text with r_name=round.next.abbreviation %}
+              Edit preformed panels for {{ r_name }}
+            {% endblocktrans %}
+            {% include "components/item-action.html" with text=text type="primary" %}
+
+          </div>
 
       </div>
     </div>
@@ -105,9 +126,9 @@
               {% plural %}
                 {{ ndebates }} debates do not have their sides confirmed.
               {% endblocktrans %}
-              {% include "components/item-action.html" with type="danger" %}
+              {% include "components/item-info.html" with  nopad=True type="danger" %}
 
-              {% roundurl 'legacy-draw-matchups-edit' as url %}
+              {% roundurl 'edit-debate-teams' as url %}
               {% include "components/item-action.html" with text="Allocate Sides" type="success" to_complete=True %}
 
             </div>

@@ -15,9 +15,10 @@ def ncr(n, r):
 
 
 def get_bp_coefficients(nrounds):
-    # Get row of the number of rounds from the quadrinomial coefficients
-    # triangle (similar to Pascal's triangle).
-    # See: https://oeis.org/A008287
+    """Get row of the number of rounds from the quadrinomial coefficients
+    triangle (similar to Pascal's triangle).
+
+    See: https://oeis.org/A008287"""
 
     def get_coefficient(m, k):
         coeff = 0

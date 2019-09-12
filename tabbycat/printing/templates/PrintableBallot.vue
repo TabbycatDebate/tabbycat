@@ -12,7 +12,8 @@
 
     <printable-scoresheet v-if="kind === 'Scoresheet'"
       :ballot="ballot"
-      :round-info="roundInfo"></printable-scoresheet>
+      :round-info="roundInfo"
+      :ordinals="ordinals"></printable-scoresheet>
 
     <printable-feedback v-if="kind === 'Feedback'"
       :ballot="ballot"
@@ -28,7 +29,7 @@ import PrintableFeedback from './PrintableFeedback.vue'
 import PrintableScoresheet from './PrintableScoresheet.vue'
 
 export default {
-  props: ['ballot', 'kind', 'roundInfo'],
+  props: ['ballot', 'kind', 'roundInfo', 'ordinals'],
   components: {
     PrintableBallotHeader,
     PrintableDebateInfo,

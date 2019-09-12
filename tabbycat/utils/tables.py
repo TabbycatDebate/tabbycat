@@ -1,15 +1,13 @@
 import logging
 import warnings
 
-from django.utils import formats
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.utils.encoding import force_text
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from adjallocation.allocation import AdjudicatorAllocation
-from draw.models import Debate
 from options.utils import use_team_code_names
-from participants.models import Team
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.mixins import SingleObjectByRandomisedUrlMixin
 from tournaments.utils import get_side_name
@@ -406,11 +404,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
         for side in self.tournament.sides:
             if ts.debate_team.debate.sides_confirmed:
                 line = _("%(team)s (%(side)s)") % {
-                    'team': other_teams.get(side, "??"),
+                    'team': other_teams.get(side, _("??")),
                     'side': get_side_name(self.tournament, side, 'abbr')
                 }
             else:
-                line = other_teams.get(side, "??")
+                line = other_teams.get(side, _("??"))
             if side == ts.debate_team.side:
                 line = "<strong>" + line + "</strong>"
             other_team_strs.append(line)
@@ -434,9 +432,9 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 cell['popover']['title'] = _("No result for debate")
         else:
             cell = self._result_cell_class_four(ts.points, cell)
-            places = {0: _("4th"), 1: _("3rd"), 2: _("2nd"), 3: _("1st")}
+            places = [ordinal(n) for n in reversed(range(1, 5))]
             if ts.points is not None:
-                place = places.get(ts.points, "??")
+                place = places[ts.points] if ts.points < 4 else _("??")
                 cell['text'] = place
                 cell['popover']['title'] = _("Placed %(place)s") % {'place': place}
             else:
@@ -556,7 +554,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 if a['adj'].institution is not None:
                     descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
-                    descriptors.append("<span class='text-danger'>in minority</span>")
+                    descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
                 text = a['adj'].name
 
                 descriptors = " (%s)" % (", ".join(descriptors)) if descriptors else ""
@@ -648,13 +646,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 else self.BLANK_TEXT for team in teams
             ])
 
-        if self.tournament.pref('enable_divisions'):
-            self.add_column({
-                'key': "division",
-                'icon': 'layers',
-                'tooltip': _("Division"),
-            }, [team.division.name if team.division else self.BLANK_TEXT for team in teams])
-
     def add_speaker_columns(self, speakers, categories=True):
         speaker_data = []
         for speaker in speakers:
@@ -725,23 +716,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
 
             return cell
 
-        if self.tournament.pref('enable_divisions') and len(debates) > 0:
-            # Add divisions immediately before the venue in in-rounds if enabled
-            if debates[0].round.stage is debates[0].round.STAGE_PRELIMINARY:
-                divisions_header = {
-                    'key': "division",
-                    'icon': 'layers',
-                    'tooltip': _("Division"),
-                }
-                divisions_data = ['D' + d.division.name if d.division else '' for d in debates]
-                self.add_column(divisions_header, divisions_data)
-
-        if self.tournament.pref('division_venues'):
-            # For public displays of the draw fopr leagues we only
-            # show the venue category derive from each debate's division
-            venue_data = [{'text': d.division.venue_category if d.division else ''} for d in debates]
-        else:
-            venue_data = [construct_venue_cell(d.venue) for d in debates]
+        venue_data = [construct_venue_cell(d.venue) for d in debates]
 
         venue_header = {
             'key': 'venue',
@@ -749,25 +724,6 @@ class TabbycatTableBuilder(BaseTableBuilder):
             'tooltip': _("Venue"),
         }
         self.add_column(venue_header, venue_data)
-
-        if with_times and self.tournament.pref('enable_debate_scheduling'):
-            # If scheduling is enabled show date/times immediately after venues
-            times_headers = [_("Date"), _("Time")]
-            times_data = []
-            for debate in debates:
-                if self.tournament.pref('teams_in_debate') != 'bp' and (debate.aff_team.type == Team.TYPE_BYE or debate.neg_team.type == Team.TYPE_BYE):
-                    times_data.append(["", _("Bye")])
-                elif debate.result_status == Debate.STATUS_POSTPONED:
-                    times_data.append(["", _("Postponed")])
-                elif debate.confirmed_ballot and debate.confirmed_ballot.forfeit:
-                    times_data.append(["", _("Forfeit")])
-                elif debate.time:
-                    times_data.append([
-                        formats.date_format(debate.time, "D jS F"),
-                        formats.date_format(debate.time, "h:i A")])
-                else:
-                    times_data.append(["", ""])
-            self.add_columns(times_headers, times_data)
 
     def add_draw_conflicts_columns(self, debates, venue_conflicts, adjudicator_conflicts):
 

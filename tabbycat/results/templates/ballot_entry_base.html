@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load add_field_css debate_tags static i18n team_name_for_data_entry %}
 
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
+
 {% block head-title %}
   {% if new %}
     {% blocktrans trimmed %}
@@ -13,7 +15,7 @@
   {% endif %}
 {% endblock %}
 
-{% block page-title %}{% if debate.division.venue_category %}{{ debate.division.venue_category.name }} {% endif %}{{ debate.venue.display_name }}: {{ debate_name }}{% endblock %}
+{% block page-title %}{{ debate.venue.display_name }}: {{ debate_name }}{% endblock %}
 
 {% block page-subnav-sections %}
   {% if for_admin %}

@@ -197,7 +197,8 @@ class ConditionalTournamentTestsMixin(SingleViewTestMixin):
             with self.subTest(value=value):
                 self.tournament.preferences[self.view_toggle_preference] = value
                 with self.assertLogs('tournaments.mixins', logging.WARNING):
-                    response = self.get_response()
+                    with suppress_logs('django.request', logging.WARNING):
+                        response = self.get_response()
                 self.assertResponsePermissionDenied(response)
 
 

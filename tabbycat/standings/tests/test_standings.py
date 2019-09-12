@@ -46,17 +46,32 @@ class TestTrivialStandings(TestCase):
         DebateTeam.objects.filter(team__tournament=self.tournament).delete()
         self.tournament.delete()
 
-    def test_points(self):
+    def test_nothing(self):
+        # just test that it does not crash
+        generator = TeamStandingsGenerator((), ())
+        generator.generate(self.tournament.team_set.all())
+
+    def test_no_metrics(self):
+        generator = TeamStandingsGenerator((), ('rank', 'subrank'))
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, True))
+
+    def test_only_extra_metrics(self):
+        generator = TeamStandingsGenerator((), ('rank', 'subrank'), extra_metrics=('points',))
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, True))
+        self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, True))
+
+    def test_no_rankings(self):
         generator = TeamStandingsGenerator(('points',), ())
         standings = generator.generate(self.tournament.team_set.all())
         self.assertEqual(standings.get_standing(self.team1).metrics['points'], 2)
         self.assertEqual(standings.get_standing(self.team2).metrics['points'], 0)
-
-    def test_points210(self):
-        generator = TeamStandingsGenerator(('points210',), ())
-        standings = generator.generate(self.tournament.team_set.all())
-        self.assertEqual(standings.get_standing(self.team1).metrics['points210'], 4)
-        self.assertEqual(standings.get_standing(self.team2).metrics['points210'], 2)
 
     def test_wins(self):
         generator = TeamStandingsGenerator(('wins',), ())
@@ -108,6 +123,13 @@ class TestTrivialStandings(TestCase):
         # losing team has faced winning team twice, so draw strength is 2 * 2 = 4
         self.assertEqual(standings.get_standing(self.team2).metrics['draw_strength'], 4)
 
+    def test_draw_strength_speaks(self):
+        generator = TeamStandingsGenerator(('draw_strength_speaks',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        # teams have faced each other twice, so draw strength is twice opponent's score
+        self.assertEqual(standings.get_standing(self.team1).metrics['draw_strength_speaks'], 394)
+        self.assertEqual(standings.get_standing(self.team2).metrics['draw_strength_speaks'], 406)
+
     def test_margin_sum(self):
         generator = TeamStandingsGenerator(('margin_sum',), ())
         standings = generator.generate(self.tournament.team_set.all())
@@ -127,11 +149,32 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team1).metrics['num_adjs'], 6)
         self.assertEqual(standings.get_standing(self.team2).metrics['num_adjs'], 0)
 
-    def test_wbw(self):
+    def test_wbw_not_tied(self):
         generator = TeamStandingsGenerator(('points', 'wbw'), ())
         standings = generator.generate(self.tournament.team_set.all())
         self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 'n/a')
         self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 'n/a')
+
+    def test_wbw_first(self):
+        # tests wbw when it appears as the first metric
+        generator = TeamStandingsGenerator(('wbw',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 2)
+        self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 0)
+
+    def test_wbw_tied(self):
+        # npullups should be 0 for both teams, so is a tied first metric,
+        # allowing wbw to be tested as a second metric (the normal use case)
+        generator = TeamStandingsGenerator(('npullups', 'wbw',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).metrics['wbw1'], 2)
+        self.assertEqual(standings.get_standing(self.team2).metrics['wbw1'], 0)
+
+    def test_npullups(self):
+        generator = TeamStandingsGenerator(('npullups',), ())
+        standings = generator.generate(self.tournament.team_set.all())
+        self.assertEqual(standings.get_standing(self.team1).metrics['npullups'], 0)
+        self.assertEqual(standings.get_standing(self.team2).metrics['npullups'], 0)
 
     def test_points_ranked(self):
         generator = TeamStandingsGenerator(('points',), ('rank',))
@@ -156,11 +199,10 @@ class TestTrivialStandings(TestCase):
         self.assertEqual(standings.get_standing(self.team2).metrics['points'], 0)
         self.assertEqual(standings.get_standing(self.team1).metrics['speaks_sum'], 203)
         self.assertEqual(standings.get_standing(self.team2).metrics['speaks_sum'], 197)
+        self.assertEqual(standings.get_standing(self.team1).rankings['rank'], (1, False))
+        self.assertEqual(standings.get_standing(self.team2).rankings['rank'], (2, False))
         self.assertEqual(standings.get_standing(self.team1).rankings['subrank'], (1, False))
         self.assertEqual(standings.get_standing(self.team2).rankings['subrank'], (1, False))
-
-    def test_wbw_first_error(self):
-        self.assertRaises(ValueError, TeamStandingsGenerator, ('wbw', 'points'), ('rank',))
 
     def test_double_metric_error(self):
         self.assertRaises(StandingsError, TeamStandingsGenerator, ('points', 'wbw', 'points'), ('rank',))

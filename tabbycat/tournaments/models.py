@@ -150,21 +150,13 @@ class Tournament(models.Model):
     def relevant_adjudicators(self):
         """Convenience property for retrieving adjudicators relevant to the tournament.
         Returns a QuerySet."""
-        if self.pref('share_adjs'):
-            from participants.models import Adjudicator
-            return Adjudicator.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
-        else:
-            return self.adjudicator_set.all()
+        return self.adjudicator_set.all()
 
     @property
     def relevant_venues(self):
         """Convenience property for retrieving venues relevant to the tournament.
         Returns a QuerySet."""
-        if self.pref('share_venues'):
-            from venues.models import Venue
-            return Venue.objects.filter(Q(tournament=self) | Q(tournament__isnull=True))
-        else:
-            return self.venue_set.all()
+        return self.venue_set.all()
 
     @property
     def participants(self):
@@ -386,26 +378,6 @@ class Round(models.Model):
         if errors:
             raise ValidationError(errors)
 
-    def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
-        adjudicator_positions = ["C"]
-        if not self.tournament.pref('no_panellist_position'):
-            adjudicator_positions += "P"
-        if not self.tournament.pref('no_trainee_position'):
-            adjudicator_positions += "T"
-
-        round_info = {
-            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
-            'adjudicatorDoubling': self.tournament.pref('duplicate_adjs'),
-            'teamsInDebate': self.tournament.pref('teams_in_debate'),
-            'teamPositions': self.tournament.sides,
-            'roundName' : self.abbreviation,
-            'roundSeq' : self.seq,
-            'roundIsPrelim' : not self.is_break_round,
-            'tournamentSlug': self.tournament.slug,
-        }
-        return round_info
-
     # --------------------------------------------------------------------------
     # Checks for potential errors
     # --------------------------------------------------------------------------
@@ -489,7 +461,7 @@ class Round(models.Model):
         raise RuntimeError("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.")
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
-            teams=True, adjudicators=True, speakers=True, divisions=True, wins=False,
+            teams=True, adjudicators=True, speakers=True, wins=False,
             results=False, venues=True, institutions=False, check_ins=False, iron=False):
         """Returns the debate set, with aff_team and neg_team populated.
         This is basically a prefetch-like operation, except that it also figures
@@ -509,8 +481,6 @@ class Round(models.Model):
                 Prefetch('debateadjudicator_set',
                     queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
             )
-        if divisions and self.tournament.pref('enable_divisions'):
-            debates = debates.select_related('division', 'division__venue_category')
         if venues:
             debates = debates.select_related('venue').prefetch_related('venue__venuecategory_set')
         if check_ins:

@@ -79,12 +79,6 @@
           </a>
         {% endif %}
       {% endfor %}
-      {% if pref.enable_mass_draws %}
-        <div role="separator" class="divider"></div>
-        <a class="dropdown-item" href="{% tournamenturl 'draw-public-all-draws' %}">
-          {% trans "View All" %}
-        </a>
-      {% endif %}
       <div class="dropdown-item">
         {% trans "No Draws Available" %}
       </div>
@@ -156,11 +150,6 @@
 {% endif %}
 
 <!-- MISC -->
-{% if pref.public_divisions %}
-  <li>
-    <a class="nav-link" href="{% tournamenturl 'public_divisions' %}">{% trans "Divisions" %}</a>
-  </li>
-{% endif %}
 {% if pref.public_motions and pref.motion_tab_released == False %}
   <li class="nav-item {% if motions_nav %}active{% endif %}">
     <a class="nav-link" href="{% tournamenturl 'motions-public' %}">{% trans "Motions" %}</a>

@@ -37,7 +37,7 @@ def calculate_anticipated_draw(round):
 
     # 1. Take the (actual) draw of the last round, with team points
     debates = round.prev.debate_set_with_prefetches(ordering=('room_rank',),
-        teams=True, adjudicators=False, speakers=False, divisions=False, venues=False)
+        teams=True, adjudicators=False, speakers=False, venues=False)
     if round.prev.prev:
         populate_win_counts([team for debate in debates for team in debate.teams],
             round=round.prev.prev)

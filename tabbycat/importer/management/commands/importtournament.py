@@ -20,6 +20,8 @@ class Command(BaseCommand):
         parser.add_argument('path', help="Directory to import tournament data from")
         parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
+        parser.add_argument('-e', '--encoding', type=str, default='utf-8',
+                            help="Encoding used in the CSV files (default: utf-8)")
         parser.add_argument('-i', '--importer', type=str, default=None, choices=importer_registry,
                             help="Which importer to use (default: read from .importer file)")
 
@@ -81,7 +83,7 @@ class Command(BaseCommand):
 
         if os.path.exists(importer_spec_filepath):
             try:
-                f = open(importer_spec_filepath, 'r')
+                f = open(importer_spec_filepath, 'r', encoding=self.options['encoding'])
             except OSError as e:
                 raise CommandError("Error opening file %s: %s" % (importer_spec_filepath, e))
             importer_spec = f.read().strip()
@@ -112,7 +114,7 @@ class Command(BaseCommand):
             if errors:
                 for message in errors.itermessages():
                     if self.color:
-                        message = "\033[1;32m" + message + "\032[0m\n"
+                        message = "\033[1;32m" + message + "\033[0m\n"
                     self.stdout.write(message)
             count_strs = ("{1:d} {0}".format(model._meta.verbose_name_plural, count) for model, count in counts.items())
             message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
@@ -141,7 +143,7 @@ class Command(BaseCommand):
         """Requires self.dirpath to be defined."""
         path = self._csv_file_path(filename)
         try:
-            return open(path, 'r')
+            return open(path, 'r', encoding=self.options['encoding'])
         except OSError as e:
             self._warning("Skipping '{0:s}': {1:s}".format(filename, e.strerror))
             return None

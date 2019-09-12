@@ -20,18 +20,23 @@
 
 {% else %}
 
-  {% blocktrans trimmed asvar p1 %}Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings.{% endblocktrans %}
+  {% blocktrans trimmed asvar p1 %}
+    Specify the number of new adjudicators to add per institution.
+    In the next step you can specify their names and ratings.
+  {% endblocktrans %}
+  {% blocktrans trimmed asvar p2 %}
+    You can add up to 198 adjudicators at a time. If you have more than 198
+    adjudicators, split them into chunks. (Please don't try to add more than 198
+    in one go; the system will crash and you will lose data.)
+  {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
   <form method="POST">
     {% csrf_token %}
     {{ wizard.management_form }}
 
-    {% if wizard.form.non_form_errors %}
-    <div class="alert alert-danger">
-      <p>{% trans "There are some problems with the data on this form:" %}</p>
-      {{ wizard.form.non_form_errors }}
-    </div>
+    {% if wizard.form.errors %}
+      {% include "components/form-errors.html" with errors=wizard.form.non_field_errors %}
     {% endif %}
 
     <div class="card pt-3">

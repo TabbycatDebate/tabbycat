@@ -29,11 +29,13 @@ export default {
       let found = false
       Object.keys(debateTeams).forEach(debateTeamPosition => {
         let team = debateTeams[debateTeamPosition]
-        let teamsInstitutionalConflicts = this.teamClashesForItem(team.id).institution
-        for (const institutionalConflict of teamsInstitutionalConflicts) {
-          if (institutionalConflict.id === idToFind) {
-            found = true
-            break
+        if (team !== null) { // Handle when sides editing may be in progress
+          let teamsInstitutionalConflicts = this.teamClashesForItem(team.id).institution
+          for (const institutionalConflict of teamsInstitutionalConflicts) {
+            if (institutionalConflict.id === idToFind) {
+              found = true
+              break
+            }
           }
         }
       })

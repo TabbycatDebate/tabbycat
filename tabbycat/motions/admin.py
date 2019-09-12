@@ -12,7 +12,7 @@ from utils.admin import TabbycatModelAdminFieldsMixin
 @admin.register(Motion)
 class MotionAdmin(TabbycatModelAdminFieldsMixin, admin.ModelAdmin):
     list_display = ('reference', 'text')
-    list_filter = ('rounds', 'divisions')
+    list_filter = ('rounds',)
 
 
 @admin.register(DebateTeamMotionPreference)

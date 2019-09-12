@@ -18,12 +18,6 @@
     <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
   </a>
 
-  {% if pref.enable_division_motions %}
-    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary">
-      {% trans "Assign Motions to Divisions" %}
-    </a>
-  {% endif %}
-
   {% if pref.enable_motion_reuse %}
     <div class="btn-group">
       <form action="{% roundurl 'motions-previous' %}" method="POST">

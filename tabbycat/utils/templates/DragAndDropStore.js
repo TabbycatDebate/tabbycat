@@ -145,7 +145,9 @@ export default new Vuex.Store({
         let debateOrPanel = state.debatesOrPanels[debateOrPanelID]
         if ('teams' in debateOrPanel) {
           for (let position in debateOrPanel.teams) {
-            teams[debateOrPanel.teams[position].id] = debateOrPanel.teams[position]
+            if (debateOrPanel.teams[position] !== null) {
+              teams[debateOrPanel.teams[position].id] = debateOrPanel.teams[position]
+            }
           }
         }
       }

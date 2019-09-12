@@ -318,7 +318,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
 
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
-    template_name = 'speaker_standings.html'  # add an info alert
+    template_name = 'speaker_standings.html'  # add info alerts
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -488,17 +488,11 @@ class BaseTeamStandingsView(BaseStandingsView):
 
 class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
+    template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
 
     def show_ballots(self):
         return True
-
-
-class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
-    """Special team standings view that also shows rankings within divisions."""
-    rankings = ('rank', 'division')
-    page_title = gettext_lazy("Division Standings")
-    page_emoji = '👯'
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):

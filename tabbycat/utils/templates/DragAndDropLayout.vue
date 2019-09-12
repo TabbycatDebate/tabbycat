@@ -4,6 +4,7 @@
     <section class="vc-header">
       <slot name="actions"></slot><!-- Actions -->
       <div class="" id="messages-container"><!-- Messages container--></div>
+      <slot name="extra-messages"></slot>
     </section>
 
     <section class="vc-debates-container border-top">

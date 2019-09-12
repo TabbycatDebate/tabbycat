@@ -7,12 +7,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.db.models import Count, Q
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
-from django.views.generic import FormView, TemplateView, View
+from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -27,7 +27,7 @@ from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamen
                                 RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
                                 TournamentMixin)
 from tournaments.models import Round
-from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
+from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -200,31 +200,6 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
 
 # ==============================================================================
-# Views that update the debate status (only)
-# ==============================================================================
-
-class BaseUpdateDebateStatusView(AdministratorMixin, RoundMixin, View):
-
-    def post(self, request, *args, **kwargs):
-        debate_id = request.POST['debate_id']
-        try:
-            debate = Debate.objects.get(round=self.round, id=debate_id)
-        except Debate.DoesNotExist:
-            return HttpResponseBadRequest("Error: There isn't a debate in %s with id %d." % (self.round.name, debate_id))
-        debate.result_status = self.new_status
-        debate.save()
-        return redirect_round('results-round-list', debate.round)
-
-
-class PostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_POSTPONED
-
-
-class UnpostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_NONE
-
-
-# ==============================================================================
 # Ballot entry form views
 # ==============================================================================
 
@@ -344,7 +319,6 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'ballot_entry.html'
     tabroom = True
-    for_admin = True
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
@@ -589,13 +563,10 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         else:
             return self.object.matchup
 
-    def get_object(self):
-        debate = self.model.objects.select_related(
+    def get_queryset(self):
+        return self.model.objects.select_related(
             'round'
-        ).prefetch_related(
-            'debateteam_set__team'
-        ).get(id=self.kwargs.get('pk'))
-        return debate
+        ).prefetch_related('debateteam_set__team')
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -643,6 +614,10 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
 
 class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
+    template_name = 'privateurl_ballot_set.html'
+    slug_url_kwarg = 'url_key'
+    slug_field = 'debateadjudicator__adjudicator__url_key'
+
     def is_page_enabled(self, tournament):
         return True
 
@@ -656,16 +631,15 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         kwargs['motion'] = ballot.motion
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
-        kwargs['url_key'] = self.kwargs.get('url_key')
+
+        url_key = self.kwargs.get('url_key')
+        kwargs['url_key'] = url_key
+        kwargs['adjudicator'] = Adjudicator.objects.get(url_key=url_key)
+
         return super().get_context_data(**kwargs)
 
-    def get_object(self):
-        d_adj = DebateAdjudicator.objects.select_related(
-            'debate'
-        ).prefetch_related(
-            'debate__debateteam_set__team'
-        ).get(debate__round=self.round, adjudicator__url_key=self.kwargs.get('url_key'))
-        return d_adj.debate
+    def get_queryset(self):
+        return self.model.objects.filter(round=self.round).prefetch_related('debateteam_set__team')
 
 
 class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplateView):

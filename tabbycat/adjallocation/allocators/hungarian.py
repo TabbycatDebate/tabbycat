@@ -4,7 +4,7 @@ from math import exp
 
 from munkres import Munkres
 
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 
 from ..allocation import AdjudicatorAllocation
 from .base import AdjudicatorAllocationError, BaseAdjudicatorAllocator, register
@@ -25,7 +25,6 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         self.history_penalty = t.pref('adj_history_penalty')
         self.no_panellists = t.pref('no_panellist_position')
         self.no_trainees = t.pref('no_trainee_position')
-        self.duplicate_allocations = t.pref('duplicate_adjs')
         self.feedback_weight = self.round.feedback_weight
         self.extra_messages = "" # Surfaced to users for non-error disclosures
 
@@ -48,12 +47,20 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
 
         ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
         if ntoolarge > 0:
-            warning_msg = _("%(count)s normalised scores are larger than 5.0.") % {'counts': ntoolarge}
+            warning_msg = ngettext(
+                "%(count)s normalised score is larger than 5.0.",
+                "%(count)s normalised scores are larger than 5.0.",
+                ntoolarge
+            ) % {'count': ntoolarge}
             self.extra_messages += " " + warning_msg
             logger.warning(warning_msg)
         ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
         if ntoosmall > 0:
-            warning_msg = _("%(count)s normalised scores are smaller than 0.0.") % {'counts': ntoosmall}
+            warning_msg = ngettext(
+                "%(count)s normalised score is smaller than 0.0.",
+                "%(count)s normalised scores are smaller than 0.0.",
+                ntoosmall
+            ) % {'count': ntoosmall}
             self.extra_messages += " " + warning_msg
             logger.warning(warning_msg)
 
@@ -162,9 +169,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
             self.extra_messages += " " + warning_msg
             logger.warning(warning_msg)
 
-        # For tournaments with duplicate allocations there are typically not
-        # enough adjudicators to form full panels, so don't crash in that case
-        if not self.duplicate_allocations and len(panellists) < len(panel_debates) * 3:
+        if len(panellists) < len(panel_debates) * 3:
             warning_msg = _("There are %(panel_debates)s panel debates but only %(panellists)s "
                     "available panellists (less than %(needed)s).") % {
                         'panel_debates': len(panel_debates),

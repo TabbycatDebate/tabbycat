@@ -28,6 +28,15 @@ class TestOneUpOneDown(unittest.TestCase):
         self.assertEqual(result, self.draw(data))
         return self.draw(data)
 
+    def test_swap_inst_none(self):
+        data = (((1, None), (5, None)),
+                ((2, 'C'), (6, 'B')),
+                ((3, 'B'), (7, 'D')),
+                ((4, 'C'), (8, 'A')))
+        result = [(1, 5), (2, 6), (3, 7), (4, 8)]
+        self.assertEqual(result, self.draw(data))
+        return self.draw(data)
+
     def test_no_swap_inst(self):
         data = (((1, 'A'), (5, 'A')),
                 ((2, 'C'), (6, 'B')),

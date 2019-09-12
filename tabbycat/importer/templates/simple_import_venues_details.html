@@ -16,12 +16,6 @@
   {% blocktrans trimmed asvar p1 %}
     Priorities indicate how much you want to use the venue. Larger numbers indicate higher priority. If you have more venues than debates, the venues with the lowest priorities will not be used.
   {% endblocktrans %}
-  {% if pref.share_venues %}
-    {% tournamenturl 'options-tournament-section' section='league_options' as options_league_url %}
-    {% blocktrans trimmed asvar p2 %}
-      Venues marked as 'shared' will not be associated with any particular tournament but will be available to any tournament which has the <a href='{{ options_league_url }}' class='alert-link'>'Share Venues' setting</a> enabled.
-    {% endblocktrans %}
-  {% endif %}
   {% include "components/explainer-card.html" with type="info" %}
 
   {% csrf_token %}
@@ -34,11 +28,7 @@
 
   <div class="card mt-3">
     {% for form in wizard.form.forms %}
-      {% if pref.share_venues %}
-        {% include "components/form-main.html" with triple=True %}
-      {% else %}
-        {% include "components/form-main.html" with double=True %}
-      {% endif %}
+      {% include "components/form-main.html" with double=True %}
     {% endfor %}
     {% trans 'Save All Venues' as title %}
     {% include "components/form-submit.html" %}

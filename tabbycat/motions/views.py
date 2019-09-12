@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Prefetch, Q
-from django.forms.models import modelformset_factory
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
@@ -19,21 +18,14 @@ from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
 from .models import Motion, RoundMotions
-from .forms import ModelAssignForm
 from .statistics import MotionBPStatsCalculator, MotionTwoTeamStatsCalculator, RoundMotionsBPStatsCalculator, RoundMotionsTwoTeamStatsCalculator
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_motions'
 
-    def using_division_motions(self):
-        return self.tournament.pref('enable_divisions') and self.tournament.pref('enable_division_motions')
-
     def get_template_names(self):
-        if self.using_division_motions():
-            return ['public_division_motions.html']
-        else:
-            return ['public_motions.html']
+        return ['public_motions.html']
 
     def get_context_data(self, **kwargs):
         order_by = 'seq' if self.tournament.pref('public_motions_order') == 'forward' else '-seq'
@@ -41,9 +33,7 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         # Include rounds whether *either* motions are released *or* it's this
         # round or a previous round. The template checks motion_released again
         # and displays a "not released" message if motions are not released.
-        filter_q = Q(motions_released=True)
-        if not self.using_division_motions():
-            filter_q |= Q(seq__lte=self.tournament.current_round.seq)
+        filter_q = Q(motions_released=True) | Q(seq__lte=self.tournament.current_round.seq)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
                 order_by).prefetch_related(Prefetch('motion_set', queryset=Motion.objects.order_by('roundmotions__seq')))
@@ -53,20 +43,13 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
 class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
-    # See also: participants.views.PublicConfirmShiftView.
 
     template_name = 'motions_edit.html'
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
     formset_model = Motion
 
     def get_formset_factory_kwargs(self):
-        excludes = ['rounds', 'id']
-
-        if not self.tournament.pref('enable_flagged_motions'):
-            excludes.append('flagged')
-
-        if not self.tournament.pref('enable_divisions'):
-            excludes.append('divisions')
+        excludes = ['round', 'id']
 
         nexisting = self.get_formset_queryset().count()
         if self.tournament.pref('enable_motions'):
@@ -166,24 +149,6 @@ class CopyPreviousMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Po
             "The %(count)d motions were copied from the previous round.",
             len(new_motions)) % {'count': len(new_motions)})
         return super().post(request, *args, **kwargs)
-
-
-class AssignMotionsView(AdministratorMixin, RoundMixin, ModelFormSetView):
-
-    template_name = 'assign.html'
-    formset_factory_kwargs = dict(extra=0, fields=['divisions'])
-    formset_model = Motion
-
-    def get_formset_queryset(self):
-        return self.round.motion_set.all()
-
-    def get_formset_class(self):
-        return modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
-
-    def formset_valid(self, formset):
-        formset.save()  # Should be checking for validity but on a deadline and was buggy
-        messages.success(self.request, 'Those motion assignments have been saved.')
-        return redirect_round('motions-edit', self.round)
 
 
 class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):

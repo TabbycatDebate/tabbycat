@@ -12,7 +12,7 @@ from participants.prefetch import populate_win_counts
 from tournaments.models import Round
 
 from .models import PreformedPanel
-from .allocators import AdjudicatorAllocationError
+from .allocators.base import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw
@@ -62,6 +62,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return
 
+        extra_msgs = "" # Account for HungarianPPA not returning messages
         if event['extra']['settings']['usePreformedPanels']:
             if not round.preformedpanel_set.exists():
                 self.return_error(event['extra']['group_name'],
@@ -72,7 +73,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             debates = round.debate_set.all()
             panels = round.preformedpanel_set.all()
-            allocator, extra_msgs = HungarianPreformedPanelAllocator(debates, panels, round)
+            allocator = HungarianPreformedPanelAllocator(debates, panels, round)
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
 
@@ -168,7 +169,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         # TODO: Debates and panels should really be unified in a single function
         round = Round.objects.get(pk=event['extra']['round_id'])
         debates = round.debate_set_with_prefetches(teams=True, adjudicators=False,
-            speakers=False, divisions=False, venues=False)
+            speakers=False, venues=False)
 
         priority_method = event['extra']['settings']['type']
         if priority_method == 'liveness':

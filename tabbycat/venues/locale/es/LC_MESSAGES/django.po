@@ -1,26 +1,36 @@
-# Tabbycat translations, venues module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Zoe Alejandra Cárdenas Cruz <zoecardenascruz@gmail.com>, 2017\n"
-"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-07-21 12:20\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Spanish\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
 
 #: venues/apps.py:7
 msgid "Venues"
 msgstr "Salas"
+
+#: venues/consumers.py:18
+msgid "Draw is already released, unrelease draw to assign venues."
+msgstr ""
+
+#: venues/consumers.py:21
+msgid "Draw is not confirmed, confirm draw to assign venues."
+msgstr ""
+
+#: venues/consumers.py:28
+msgid "Succesfully auto-allocated venues to debates."
+msgstr ""
 
 #: venues/models.py:10 venues/models.py:74
 msgid "name"
@@ -31,23 +41,16 @@ msgid "priority"
 msgstr "prioridad"
 
 #: venues/models.py:13
-msgid ""
-"Venues with a higher priority number will be preferred when allocating "
-"venues to debates"
-msgstr ""
-"Las salas con un mayor número de prioridad serán priorizadas cuando se "
-"asignen las salas de debate"
+msgid "Venues with a higher priority number will be preferred when allocating venues to debates"
+msgstr "Las salas con un mayor número de prioridad serán priorizadas cuando se asignen las salas de debate"
 
 #: venues/models.py:16
 msgid "tournament"
 msgstr "torneo"
 
 #: venues/models.py:17
-msgid ""
-"Venues not assigned to any tournament can be shared between tournaments"
-msgstr ""
-"Las salas que no estén asignadas a ningún torneo pueden ser compartidas "
-"entre torneos"
+msgid "Venues not assigned to any tournament can be shared between tournaments"
+msgstr "Las salas que no estén asignadas a ningún torneo pueden ser compartidas entre torneos"
 
 #: venues/models.py:24
 msgid "venue"
@@ -70,29 +73,16 @@ msgid "Display as suffix"
 msgstr "Mostrar como sufijo"
 
 #: venues/models.py:75
-msgid ""
-"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab "
-"room\". This name is shown when the category is prefixed or suffixed to a "
-"venue name in the draw, e.g., \"Purple – G05\"."
-msgstr ""
-"Nombre de la categoría, ej: \"Morado\", \"Acceso sin escaleras\", \"Cerca a "
-"tabulación\". Este nombre se muestra cuando la categoría se muestra como "
-"prefijo o sufijo del nombre de la sala en el cuadro, ej: \"Morado – G05\"."
+msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a venue name in the draw, e.g., \"Purple – G05\"."
+msgstr "Nombre de la categoría, ej: \"Morado\", \"Acceso sin escaleras\", \"Cerca a tabulación\". Este nombre se muestra cuando la categoría se muestra como prefijo o sufijo del nombre de la sala en el cuadro, ej: \"Morado – G05\"."
 
 #: venues/models.py:79
 msgid "description"
 msgstr "descripción"
 
 #: venues/models.py:80
-msgid ""
-"Description, as the predicate of a sentence, e.g. \"has step-free access\", "
-"\"is close to the briefing hall\". This description follows \"This venue\" "
-"when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
-msgstr ""
-"Descripción, como el predicado de una oración, ej: \"tiene acceso sin "
-"escaleras\", \"está cerca de la sala de anuncios\". La descripción le sigue "
-"a \"Esta sala\" cuando se muestra en tooltips, ej: \"Esta sala está cerca de"
-" la sala de anuncios\"."
+msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This venue\" when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
+msgstr "Descripción, como el predicado de una oración, ej: \"tiene acceso sin escaleras\", \"está cerca de la sala de anuncios\". La descripción le sigue a \"Esta sala\" cuando se muestra en tooltips, ej: \"Esta sala está cerca de la sala de anuncios\"."
 
 #: venues/models.py:88
 msgid "display in venue name"
@@ -107,13 +97,8 @@ msgid "display in public tooltip"
 msgstr "mostrar en el tooltip público"
 
 #: venues/models.py:92
-msgid ""
-"Displays the description in the tooltip for the venue on public pages. The "
-"description, if not blank, will always show on admin pages."
-msgstr ""
-"Muestra la descripción en el tooltip para la sala en las páginas públicas. "
-"La descripción, si no está en blanco, siempre se mostrará en las paginas de "
-"admin."
+msgid "Displays the description in the tooltip for the venue on public pages. The description, if not blank, will always show on admin pages."
+msgstr "Muestra la descripción en el tooltip para la sala en las páginas públicas. La descripción, si no está en blanco, siempre se mostrará en las paginas de admin."
 
 #: venues/models.py:96
 msgid "venue category"
@@ -143,7 +128,8 @@ msgstr "limitación de sala"
 msgid "venue constraints"
 msgstr "limitaciones de sala"
 
-#: venues/templates/edit_venues.html:5 venues/templates/edit_venues.html:10
+#: venues/templates/legacy_edit_venues.html:5
+#: venues/templates/legacy_edit_venues.html:10
 #, python-format
 msgid "Edit Venues for %(round_abbr)s"
 msgstr ""
@@ -154,26 +140,13 @@ msgid "Venue Categories"
 msgstr "Categorías de sala"
 
 #: venues/templates/venue_categories_edit.html:9
-msgid ""
-"Venue categories allow you to group venues together into \"zones\" to "
-"display in the draw and make navigation easier for participants, and/or "
-"specify constraints on venue allocation that require teams, adjudicators or "
-"institutions to be put in a venue in a particular category."
-msgstr ""
-"Las categorías de sala le permiten agrupar en \"zonas\" las salas para "
-"mostrarlas en el sorteo y facilitar la navegación de los participantes, y/o "
-"especificar restricciones en la asignación de salas que requieren que los "
-"equipos, adjudicadores o instituciones sean asignados en un lugar en una "
-"categoría particular."
+msgid "Venue categories allow you to group venues together into \"zones\" to display in the draw and make navigation easier for participants, and/or specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category."
+msgstr "Las categorías de sala le permiten agrupar en \"zonas\" las salas para mostrarlas en el sorteo y facilitar la navegación de los participantes, y/o especificar restricciones en la asignación de salas que requieren que los equipos, adjudicadores o instituciones sean asignados en un lugar en una categoría particular."
 
 #: venues/templates/venue_categories_edit.html:14
 #, python-format
-msgid ""
-"If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
-"class=\"alert-link\">Edit Database</a> area."
-msgstr ""
-"Si quieres eliminar alguna categoría de sala, utiliza el area de <a "
-"href=\"%(edit_db_url)s\" class=\"alert-link\">Editar Base de Datos</a>."
+msgid "If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+msgstr "Si quieres eliminar alguna categoría de sala, utiliza el area de <a href=\"%(edit_db_url)s\" class=\"alert-link\">Editar Base de Datos</a>."
 
 #: venues/templates/venue_categories_edit.html:20
 msgid "Save Venue Categories"
@@ -185,22 +158,8 @@ msgid "Venue Constraints"
 msgstr "Limitaciones de sala"
 
 #: venues/templates/venue_constraints_edit.html:9
-msgid ""
-"Venue constraints tell the venue allocator to try to keep the specified team"
-" or adjudicator, or all teams (but not adjudicators) from the specified "
-"institution, in a venue in the given category. The \"priority\" field "
-"resolves conflicting constraints: the higher priority takes precedence. You "
-"can also use the priority field to specify \"lower-preference\" constraints,"
-" which are taken if a higher-priority constraint couldn't be met."
-msgstr ""
-"Las limitaciones de sala le dicen al asignador de salas que intente mantener"
-" al equipo o juez en específico, o a todos los equipos (pero no jueces) de "
-"una institución en específico, en una sala dentro de la categoría "
-"determinada. El campo de \"prioridad\" resuelve los conflictos en las "
-"limitaciones al momento de asignar: se prioridad las salas con mayor  "
-"prioridad. También puedes usar el campo de prioridad para especificar "
-"limitaciones de menor preferencia que se tienen en cuenta si una limitación "
-"de mayor preferencia no se pudo cumplir."
+msgid "Venue constraints tell the venue allocator to try to keep the specified team or adjudicator, or all teams (but not adjudicators) from the specified institution, in a venue in the given category. The \"priority\" field resolves conflicting constraints: the higher priority takes precedence. You can also use the priority field to specify \"lower-preference\" constraints, which are taken if a higher-priority constraint couldn't be met."
+msgstr "Las limitaciones de sala le dicen al asignador de salas que intente mantener al equipo o juez en específico, o a todos los equipos (pero no jueces) de una institución en específico, en una sala dentro de la categoría determinada. El campo de \"prioridad\" resuelve los conflictos en las limitaciones al momento de asignar: se prioridad las salas con mayor  prioridad. También puedes usar el campo de prioridad para especificar limitaciones de menor preferencia que se tienen en cuenta si una limitación de mayor preferencia no se pudo cumplir."
 
 #: venues/templates/venue_constraints_edit.html:20
 msgid "Save Venue Constraints"
@@ -218,55 +177,53 @@ msgstr "La sala no cumple con ninguna de las limitaciones de %(name)s"
 
 #: venues/utils.py:44
 #, python-format
-msgid ""
-"Venue constraint of %(team)s met (%(category)s, via institution "
-"%(institution)s)"
-msgstr ""
-"Se cumplen las limitaciones de sala de %(team)s (%(category)s, vía la "
-"institución %(institution)s)"
+msgid "Venue constraint of %(team)s met (%(category)s, via institution %(institution)s)"
+msgstr "Se cumplen las limitaciones de sala de %(team)s (%(category)s, vía la institución %(institution)s)"
 
 #: venues/utils.py:45
 #, python-format
-msgid ""
-"Venue does not meet any constraint of institution %(institution)s (%(team)s)"
-msgstr ""
-"La sala no cumple con ninguna de las limitaciones de la institución "
-"%(institution)s (%(team)s)"
+msgid "Venue does not meet any constraint of institution %(institution)s (%(team)s)"
+msgstr "La sala no cumple con ninguna de las limitaciones de la institución %(institution)s (%(team)s)"
 
-#: venues/views.py:110
+#: venues/views.py:31
+msgid "Edit Venues"
+msgstr ""
+
+#: venues/views.py:138
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] "Categoría de sala guardada: %(list)s"
 msgstr[1] "Categorías de sala guardadas: %(list)s"
 
-#: venues/views.py:116
+#: venues/views.py:144
 msgid "No changes were made to the venue categories."
 msgstr "No se realizaron cambios a las categorías de sala."
 
-#: venues/views.py:168
+#: venues/views.py:196
 #, python-format
 msgid "%s (Adjudicator)"
 msgstr "%s(Juez)"
 
-#: venues/views.py:171
+#: venues/views.py:199
 #, python-format
 msgid "%s (Team)"
 msgstr "%s(Equipo)"
 
-#: venues/views.py:174
+#: venues/views.py:202
 #, python-format
 msgid "%s (Institution)"
 msgstr "%s(Institución)"
 
-#: venues/views.py:177
+#: venues/views.py:205
 #, python-format
 msgid "%s (Division)"
 msgstr "%s(División)"
 
-#: venues/views.py:185
+#: venues/views.py:213
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."
 msgstr[0] "Limitación de sala guardadas %(count)d"
 msgstr[1] "Limitaciones de sala guardadas %(count)d"
+

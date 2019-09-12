@@ -1,22 +1,20 @@
-# Tabbycat translations, importer module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Faisal Muhammad <abc12abc@hotmail.com>, 2018\n"
-"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-07-21 12:19\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Arabic\n"
+"Language: ar_SA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ar\n"
+"X-Crowdin-File: /develop/tabbycat/importer/locale/en/LC_MESSAGES/django.po\n"
 
 #: importer/forms.py:20
 #, python-format
@@ -59,12 +57,8 @@ msgid "Speakers' email addresses"
 msgstr "البريد الالكتروني للمتحدثين"
 
 #: importer/forms.py:212
-msgid ""
-"Optional, useful to include if distributing private URLs, list in same order"
-" as speakers' names"
-msgstr ""
-"اختياري ، مفيد لتضمينها في حالة توزيع عناوين URL خاصة ، وإدراجها بنفس ترتيب "
-"أسماء المتحدثين"
+msgid "Optional, useful to include if distributing private URLs, list in same order as speakers' names"
+msgstr "اختياري ، مفيد لتضمينها في حالة توزيع عناوين URL خاصة ، وإدراجها بنفس ترتيب أسماء المتحدثين"
 
 #: importer/forms.py:219
 msgid "Name (excluding institution name)"
@@ -75,12 +69,8 @@ msgid "Prefix team name with institution name?"
 msgstr "وضع اسم الفريق مع اسم المؤسسة ؟"
 
 #: importer/forms.py:223
-msgid ""
-"Do not include institution name (check the \"Prefix team name with "
-"institution name?\" field instead)"
-msgstr ""
-"لا تقم بوضع اسم المنتخب (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل "
-"ذلك)"
+msgid "Do not include institution name (check the \"Prefix team name with institution name?\" field instead)"
+msgstr "لا تقم بوضع اسم المنتخب (قم باختيار \"وضع اسم الفريق مع اسم المنتخب ؟\" بدل ذلك)"
 
 #: importer/forms.py:232
 msgid "(Not applicable to unaffiliated teams)"
@@ -117,19 +107,15 @@ msgstr "%(email)s بريد الاكتروني غير صحيح"
 msgid "There are more email addresses than speakers."
 msgstr "عدد الايميلات أكثر من عدد المتحدثين."
 
-#: importer/forms.py:313
-msgid ""
-"Every team in a single tournament from the same institution must have a "
-"different name. Please correct the duplicate data."
-msgstr ""
-"لا بد أن تكون أسماء الفرق للمنتخب الواحد مختلفة في البطولة. الرجاء تعديل خطأ"
-" التكرار"
+#: importer/forms.py:316
+msgid "Every team in a single tournament from the same institution must have a different name. Please correct the duplicate data."
+msgstr "لا بد أن تكون أسماء الفرق للمنتخب الواحد مختلفة في البطولة. الرجاء تعديل خطأ التكرار"
 
-#: importer/forms.py:327
+#: importer/forms.py:330
 msgid "Rating"
 msgstr "تصنيف"
 
-#: importer/forms.py:335
+#: importer/forms.py:338
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
 msgstr "لا بد أن تكون هذه القيمة بين %(min)dو%(max)d."
@@ -163,22 +149,12 @@ msgstr "الخطوة السابقة"
 
 #: importer/templates/simple_import_adjudicators_details.html:18
 #, python-format
-msgid ""
-"As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this "
-"tournament's configuration</a>, an adjudicator's rating must be between "
-"<strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email "
-"addresses is optional but can be useful if using <a "
-"href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for "
-"feedback or ballots."
+msgid "As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this tournament's configuration</a>, an adjudicator's rating must be between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email addresses is optional but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback or ballots."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:29
 #, python-format
-msgid ""
-"Adjudicators marked as 'shared' will not be associated with any particular "
-"tournament but will be available to any tournament which has the \"<a "
-"href=\"%(options_league_url)s\" class=\"alert-link\">Share "
-"adjudicators</a>\" setting enabled."
+msgid "Adjudicators marked as 'shared' will not be associated with any particular tournament but will be available to any tournament which has the \"<a href=\"%(options_league_url)s\" class=\"alert-link\">Share adjudicators</a>\" setting enabled."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:58
@@ -196,20 +172,12 @@ msgstr "حفظ كافة المحكمين"
 
 #: importer/templates/simple_import_adjudicators_numbers.html:14
 #, python-format
-msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add"
-" institutions</a> before adding adjudicators."
-msgstr ""
-"لا بد من <a href=\"%(import_institutions_url)s\" class=\"alert-link\">إضافة "
-"منتخبات</a> قبل إضافة محكمين"
+msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding adjudicators."
+msgstr "لا بد من <a href=\"%(import_institutions_url)s\" class=\"alert-link\">إضافة منتخبات</a> قبل إضافة محكمين"
 
 #: importer/templates/simple_import_adjudicators_numbers.html:23
-msgid ""
-"Specify the number of new adjudicators to add per institution. In the next "
-"step you can specify their names and ratings."
-msgstr ""
-"حدد عدد المحكمين الجدد لكل منتخب. في الخطوة القادمة يمكنك تحديد أسمائهم "
-"ودرجاتهم."
+msgid "Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings."
+msgstr "حدد عدد المحكمين الجدد لكل منتخب. في الخطوة القادمة يمكنك تحديد أسمائهم ودرجاتهم."
 
 #: importer/templates/simple_import_adjudicators_numbers.html:32
 #: importer/templates/simple_import_institutions_raw.html:30
@@ -229,18 +197,8 @@ msgid "Simple Importer"
 msgstr "المورد البسيط"
 
 #: importer/templates/simple_import_index.html:9
-msgid ""
-"There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-"
-"data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>."
-" Which one is best depends on the size of your tournament and your technical"
-" background. This <strong>simple importer</strong> is the easiest to use and"
-" works well for small- and medium-sized tournaments."
-msgstr ""
-"هنالك <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-"
-"data.html\" target=\"_blank\">طرق متعددة لتوريد البيانات في Tabbycat</a>. "
-"يعتمد الأنسب لك حسب حجم البطولة وخلفيتك التقنية. هذا <strong>المورد "
-"البسيط</strong> هو الأسهل في الاستخدام ويعمل جيدا مع بطولات ذوي الأحجام "
-"الصغيرة والمتوسطة."
+msgid "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments."
+msgstr "هنالك <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">طرق متعددة لتوريد البيانات في Tabbycat</a>. يعتمد الأنسب لك حسب حجم البطولة وخلفيتك التقنية. هذا <strong>المورد البسيط</strong> هو الأسهل في الاستخدام ويعمل جيدا مع بطولات ذوي الأحجام الصغيرة والمتوسطة."
 
 #: importer/templates/simple_import_index.html:16
 msgid "Add Institutions"
@@ -276,6 +234,10 @@ msgstr ""
 
 #: importer/templates/simple_import_index.html:55
 msgid "Add/Edit Adjudicator-Institution Conflicts"
+msgstr ""
+
+#: importer/templates/simple_import_index.html:59
+msgid "Add/Edit Team-Institution Conflicts"
 msgstr ""
 
 #: importer/templates/simple_import_institutions_details.html:4
@@ -318,20 +280,12 @@ msgstr "حفظ كافة الفرق"
 
 #: importer/templates/simple_import_teams_numbers.html:15
 #, python-format
-msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add"
-" institutions</a> before adding teams."
-msgstr ""
-"لا بد من <a href=\"%(import_institutions_url)s\" class=\"alert-link\">إضافة "
-"منتخب</a> قبل إضافة فرق"
+msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding teams."
+msgstr "لا بد من <a href=\"%(import_institutions_url)s\" class=\"alert-link\">إضافة منتخب</a> قبل إضافة فرق"
 
 #: importer/templates/simple_import_teams_numbers.html:24
-msgid ""
-"Specify the number of new teams to add per institution. In the next step you"
-" can specify team and speaker names."
-msgstr ""
-"حدد عدد الفرق الجديدة لكل منتخب. في الخطوة القادمة ستستطيع تحديد أسماء الفرق"
-" والمتحدثينز"
+msgid "Specify the number of new teams to add per institution. In the next step you can specify team and speaker names."
+msgstr "حدد عدد الفرق الجديدة لكل منتخب. في الخطوة القادمة ستستطيع تحديد أسماء الفرق والمتحدثينز"
 
 #: importer/templates/simple_import_venues_details.html:4
 #: importer/templates/simple_import_venues_details.html:6
@@ -342,32 +296,20 @@ msgid "Add Venues"
 msgstr "إضافة قاعات المناظرة"
 
 #: importer/templates/simple_import_venues_details.html:16
-msgid ""
-"Priorities indicate how much you want to use the venue. Larger numbers "
-"indicate higher priority. If you have more venues than debates, the venues "
-"with the lowest priorities will not be used."
+msgid "Priorities indicate how much you want to use the venue. Larger numbers indicate higher priority. If you have more venues than debates, the venues with the lowest priorities will not be used."
 msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:21
 #, python-format
-msgid ""
-"Venues marked as 'shared' will not be associated with any particular "
-"tournament but will be available to any tournament which has the <a "
-"href='%(options_league_url)s' class='alert-link'>'Share Venues' setting</a> "
-"enabled."
-msgstr ""
-"القاعات التي تم تسجيلها كقاعات'مشتركة' لا ترتبط ببطولة معينة، وستكون موجودة "
-"مع كل بطولة فيها <a href='%(options_league_url)s' class='alert-link'>قاعات "
-"مشتركة</a> مفعل."
+msgid "Venues marked as 'shared' will not be associated with any particular tournament but will be available to any tournament which has the <a href='%(options_league_url)s' class='alert-link'>'Share Venues' setting</a> enabled."
+msgstr "القاعات التي تم تسجيلها كقاعات'مشتركة' لا ترتبط ببطولة معينة، وستكون موجودة مع كل بطولة فيها <a href='%(options_league_url)s' class='alert-link'>قاعات مشتركة</a> مفعل."
 
 #: importer/templates/simple_import_venues_details.html:43
 msgid "Save All Venues"
 msgstr "حفظ جميع القاعات"
 
 #: importer/templates/simple_import_venues_raw.html:15
-msgid ""
-"Paste a list of venues with one venue per line and following the format of: "
-"<code>name,priority</code>. For example:"
+msgid "Paste a list of venues with one venue per line and following the format of: <code>name,priority</code>. For example:"
 msgstr ""
 
 #: importer/views.py:102
@@ -418,3 +360,4 @@ msgstr[2] ""
 msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
+

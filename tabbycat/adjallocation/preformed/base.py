@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from adjallocation.models import PreformedPanelAdjudicator
 from participants.models import Adjudicator, Team
 
-from ..allocators import AdjudicatorAllocationError
+from ..allocators.base import AdjudicatorAllocationError
 from ..conflicts import ConflictsInfo, HistoryInfo
 
 logger = logging.getLogger(__name__)

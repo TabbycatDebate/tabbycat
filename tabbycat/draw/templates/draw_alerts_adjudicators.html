@@ -11,7 +11,7 @@
     {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
-  {% if not pref.duplicate_adjs and duplicates %}
+  {% if duplicates %}
     {% blocktrans trimmed asvar text with adjudicators=duplicates|join:", " count nadjs=duplicates|length %}
       <strong>{{ adjudicators }}</strong> is adjudicating multiple debates.
     {% plural %}

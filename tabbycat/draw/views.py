@@ -1,9 +1,7 @@
-import json
 import datetime
 import logging
 import unicodedata
 from itertools import product
-from math import floor
 
 from django.conf import settings
 from django.contrib import messages
@@ -17,37 +15,35 @@ from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from adjallocation.models import DebateAdjudicator
 from adjallocation.utils import adjudicator_conflicts_display
 from availability.utils import annotate_availability
-from divisions.models import Division
+from draw.generator.powerpair import PowerPairedDrawGenerator
 from notifications.models import BulkNotification
 from notifications.views import RoundTemplateEmailCreateView
 from options.preferences import BPPositionCost
-from participants.models import Adjudicator, Institution, Speaker, Team
+from participants.models import Adjudicator, Speaker, Team
 from participants.prefetch import populate_win_counts
 from participants.utils import get_side_history
 from standings.base import StandingsError
 from standings.teams import TeamStandingsGenerator
 from standings.views import BaseStandingsView
-from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin, LegacyDrawForDragAndDropMixin,
+from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin,
     OptionalAssistantTournamentPageMixin, PublicTournamentPageMixin, RoundMixin,
     TournamentMixin)
-from tournaments.models import Round, Tournament
-from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from tournaments.models import Round
 from tournaments.utils import get_side_name
 from utils.mixins import AdministratorMixin
-from utils.views import BadJsonRequestError, PostOnlyRedirectView, VueTableTemplateView
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
 from utils.tables import TabbycatTableBuilder
 from venues.allocator import allocate_venues
-from venues.models import VenueCategory, VenueConstraint
+from venues.models import VenueConstraint
 from venues.utils import venue_conflicts_display
 
 from .dbutils import delete_round_draw
 from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
-from .models import Debate, DebateTeam, TeamSideAllocation
+from .models import Debate, TeamSideAllocation
 from .prefetch import populate_history
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
@@ -92,10 +88,7 @@ class BaseDisplayDrawTableView(TournamentMixin, VueTableTemplateView):
     def populate_table(self, debates, table, highlight=[]):
         table.add_debate_venue_columns(debates)
         table.add_debate_team_columns(debates, highlight)
-        if self.tournament.pref('enable_division_motions'):
-            table.add_motion_column(d.division_motion for d in debates)
-        if not self.tournament.pref('hide_adjudicators'):
-            table.add_debate_adjudicators_column(debates, show_splits=False)
+        table.add_debate_adjudicators_column(debates, show_splits=False)
 
     @classmethod
     def get_debates_for_round(cls, round):
@@ -360,6 +353,7 @@ class AdminDrawUtiltiesMixin:
         data['debates_with_venue_conflicts'] = _count(self.venue_conflicts)
         data['active_adjs'] = self.round.active_adjudicators.count()
         data['debates_in_round'] = self.round.debate_set.count()
+        data['preformed_panels_in_round'] = self.round.preformedpanel_set.count()
         if hasattr(self, 'highlighted_cells_exist'):
             data['highlighted_cells_exist'] = self.highlighted_cells_exist
         return data
@@ -480,17 +474,22 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
         if (r.draw_status == Round.STATUS_DRAFT or self.detailed) and r.prev:
             teams = Team.objects.filter(debateteam__debate__round=r)
             metrics = self.tournament.pref('team_standings_precedence')
+
+            if self.tournament.pref('teams_in_debate') == 'two':
+                pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.tournament.pref('draw_pullup_restriction')]
+            else:
+                pullup_metric = None
+
             # subrank only makes sense if there's a second metric to rank on
             rankings = ('rank', 'subrank') if len(metrics) > 1 else ('rank',)
-            generator = TeamStandingsGenerator(metrics, rankings)
+            generator = TeamStandingsGenerator(metrics, rankings,
+                extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
             standings = generator.generate(teams, round=r.prev)
             if not r.is_break_round:
                 table.add_debate_ranking_columns(draw, standings)
             else:
                 self._add_break_rank_columns(table, draw, r.break_category)
             table.add_debate_metric_columns(draw, standings)
-            if self.tournament.pref('draw_pullup_restriction') == 'least_to_date':
-                table.add_number_of_pullups_columns(draw, r.prev)
             table.add_debate_side_history_columns(draw, r.prev)
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
             table.add_debate_adjudicators_column(draw, show_splits=False)
@@ -649,7 +648,7 @@ class CreateDrawView(DrawStatusEdit):
             return HttpResponseRedirect(reverse_round('availability-index', self.round))
         except DrawFatalError as e:
             messages.error(request, mark_safe(_(
-                "The draw could not be created, because the following error occurred: "
+                "<p>The draw could not be created, because the following error occurred: "
                 "<em>%(message)s</em></p>\n"
                 "<p>If this issue persists and you're not sure how to resolve it, please "
                 "contact the developers.</p>"
@@ -763,78 +762,6 @@ class SetRoundStartTimeView(DrawStatusEdit):
 
 
 # ==============================================================================
-# Adjudicator Scheduling
-# ==============================================================================
-
-class ScheduleDebatesView(AdministratorMixin, RoundMixin, TemplateView):
-    template_name = "draw_set_debate_times.html"
-
-    def get_context_data(self, **kwargs):
-        vcs = VenueCategory.objects.all()
-        for vc in vcs:
-            for venue in vc.venues.all():
-                debate = Debate.objects.filter(venue=venue, round__tournament=self.tournament, time__isnull=False).first()
-                if debate:
-                    vc.placeholder_date = debate.time
-                    break
-
-        kwargs['venue_categories'] = vcs
-        kwargs['divisions'] = Division.objects.filter(tournament=self.tournament).order_by('id')
-        return super().get_context_data(**kwargs)
-
-
-class ScheduleConfirmationsView(AdministratorMixin, RoundMixin, TemplateView):
-    template_name = "confirmations_view.html"
-
-    def get_context_data(self, **kwargs):
-        adjs = Adjudicator.objects.all().order_by('name')
-        for adj in adjs:
-            shifts = DebateAdjudicator.objects.filter(adjudicator=adj, debate__round__tournament__active=True)
-            if len(shifts) > 0:
-                adj.shifts = shifts
-        kwargs['adjs'] = adjs
-        return super().get_context_data(**kwargs)
-
-
-class ApplyDebateScheduleView(DrawStatusEdit):
-
-    def post(self, request, *args, **kwargs):
-        debates = Debate.objects.filter(round=self.round)
-        for debate in debates:
-            division = debate.teams[0].division
-            if not division:
-                continue
-            if not division.time_slot:
-                continue
-
-            date = request.POST[str(division.venue_category.id)]
-            if not date:
-                continue
-
-            time = "%s %s" % (date, division.time_slot)
-            try:
-                debate.time = datetime.datetime.strptime(time,
-                                "%Y-%m-%d %H:%M:%S")  # Safari default
-            except ValueError:
-                pass
-            try:
-                debate.time = datetime.datetime.strptime(time,
-                                "%d/%m/%Y %H:%M:%S")  # Chrome default
-            except ValueError:
-                pass
-            try:
-                debate.time = datetime.datetime.strptime(time,
-                                "%d/%m/%y %H:%M:%S")  # User typing
-            except ValueError:
-                pass
-
-            debate.save()
-
-        messages.success(self.request, "Applied schedules to debates")
-        return super().post(request, *args, **kwargs)
-
-
-# ==============================================================================
 # Sides Editing and Viewing
 # ==============================================================================
 
@@ -892,185 +819,3 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     def debates_or_panels_factory(self, debates):
         return EditDebateTeamsDebateSerializer(
             debates, many=True, context={'sides': self.tournament.sides})
-
-
-class LegacyEditMatchupsView(LegacyDrawForDragAndDropMixin, AdministratorMixin, TemplateView):
-    template_name = 'legacy_edit_matchups.html'
-    save_url = "legacy-save-debate-teams"
-
-    def annotate_draw(self, draw, serialised_draw):
-        if self.round.tournament.pref('teams_in_debate') == 'bp':
-            total_possible_rooms = self.round.active_teams.count() / 4
-        else:
-            total_possible_rooms = self.round.active_teams.count() / 2
-
-        # Make 'fake' debates as placeholders; need a unique ID (hence 9999)
-        for i in range(0, floor(total_possible_rooms - len(serialised_draw))):
-            serialised_draw.append({
-                'id': 999999 + i, 'debateTeams': [], 'debateAdjudicators': [],
-                'bracket': 0, 'importance': 0, 'venue': None, 'locked': False
-            })
-
-        return super().annotate_draw(draw, serialised_draw)
-
-    def get_context_data(self, **kwargs):
-        unused = [t for t in self.round.unused_teams()]
-        serialized_unused = [t.serialize() for t in unused]
-        break_thresholds = self.break_thresholds
-        for t, serialt in zip(unused, serialized_unused):
-            self.annotate_break_classes(serialt, break_thresholds)
-            self.annotate_region_classes(serialt)
-
-        kwargs['vueUnusedTeams'] = json.dumps(serialized_unused)
-        kwargs['saveSidesStatusUrl'] = reverse_round('legacy-save-debate-sides-status', self.round)
-        return super().get_context_data(**kwargs)
-
-
-class LegacySaveDrawMatchupsView(BaseSaveDragAndDropDebateJsonView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_MATCHUP_SAVE
-    allows_creation = True
-
-    def modify_debate(self, debate, posted_debate):
-        posted_debateteams = posted_debate['debateTeams']
-
-        # Check that all sides are present, and without extras
-        sides = [dt['side'] for dt in posted_debateteams]
-        if set(sides) != set(self.tournament.sides):
-            raise BadJsonRequestError("Sides in JSON object weren't correct")
-
-        # Delete existing entries that won't be wanted (there shouldn't be any, but just in case)
-        delete_count, deleted = debate.debateteam_set.exclude(side__in=self.tournament.sides).delete()
-        logger.debug("Deleted %d debate teams from [%s]", deleted.get('draw.DebateTeam', 0), debate.matchup)
-
-        # Check that all teams are part of the tournament
-        team_ids = [dt['team']['id'] for dt in posted_debateteams]
-        teams = Team.objects.filter(tournament=self.tournament, id__in=team_ids)
-        if len(teams) != len(posted_debateteams):
-            raise BadJsonRequestError("Not all teams specified are associated with the tournament")
-        team_name_lookup = {team.id: team.short_name for team in teams}  # for debugging messages
-
-        # Update other DebateTeam objects
-        for dt in posted_debateteams:
-            team_id = dt['team']['id']
-            side = dt['side']
-            obj, created = DebateTeam.objects.update_or_create(debate=debate, side=side,
-                defaults={'team_id': team_id})
-            logger.debug("%s debate team: %s in [%s] is now %s", "Created" if created else "Updated",
-                    side, debate.matchup, team_name_lookup[team_id])
-
-        debate._populate_teams()
-
-        return debate
-
-
-class LegacySaveDebateSidesStatusView(BaseSaveDragAndDropDebateJsonView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_SIDES_SAVE
-    allows_creation = False
-
-    def modify_debate(self, debate, posted_debate):
-        debate.sides_confirmed = posted_debate['sidesStatus']
-        debate.save()
-        return debate
-
-
-# ==============================================================================
-# Cross-Tournament Draw Views
-# ==============================================================================
-
-class CrossTournamentDrawMixin(PublicTournamentPageMixin):
-    """Mixin for views that show pages with data drawn from multiple tournaments
-    but are optionally viewed. They check the last available tournament object
-    and check its preferences"""
-    cross_tournament = True
-
-    @property
-    def rounds(self):
-        return []  # override
-
-    def get_page_emoji(self):
-        return None
-
-    @property
-    def tournament(self):
-        return Tournament.objects.order_by('id').last()
-
-    def get_context_data(self, **kwargs):
-        kwargs['tournament'] = self.tournament
-        return super().get_context_data(**kwargs)
-
-    def populate_table(self, debates, table, highlight=[]):
-        table.add_tournament_column(d.round.tournament for d in debates)
-        table.add_round_column(d.round for d in debates)
-        super().populate_table(debates, table, highlight=highlight)
-
-
-class AllTournamentsAllInstitutionsView(CrossTournamentDrawMixin, TemplateView):
-    public_page_preference = 'enable_mass_draws'
-    template_name = 'public_all_tournament_institutions.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs['institutions'] = Institution.objects.all()
-        return super().get_context_data(**kwargs)
-
-
-class AllTournamentsAllVenuesView(CrossTournamentDrawMixin, TemplateView):
-    public_page_preference = 'enable_mass_draws'
-    template_name = 'public_all_tournament_venues.html'
-
-    def get_context_data(self, **kwargs):
-        kwargs['venue_categories'] = VenueCategory.objects.all()
-        return super().get_context_data(**kwargs)
-
-
-class AllDrawsForAllTeamsView(CrossTournamentDrawMixin, BaseDisplayDrawTableView):
-    public_page_preference = 'enable_mass_draws'
-
-    def get_page_title(self):
-        return _("All Draws for All Teams")
-
-    def get_debates(self):
-        return Debate.objects.all().select_related('round__tournament', 'division')
-
-
-class AllDrawsForInstitutionView(CrossTournamentDrawMixin, BaseDisplayDrawTableView):
-    public_page_preference = 'enable_mass_draws'
-
-    def get_institution(self):
-        return Institution.objects.get(pk=self.kwargs['institution_id'])
-
-    def get_page_title(self):
-        return _("All Debates for Teams from %(institution)s") % {'institution': self.get_institution().name}
-
-    def get_debates(self):
-        institution = self.get_institution()
-        debate_teams = DebateTeam.objects.filter(
-            team__institution=institution).select_related(
-            'debate', 'debate__division', 'debate__division__venue_category',
-            'debate__round')
-        draw = [dt.debate for dt in debate_teams]
-        return draw
-
-
-class AllDrawsForVenueView(CrossTournamentDrawMixin, BaseDisplayDrawTableView):
-    public_page_preference = 'enable_mass_draws'
-
-    def get_venue_category(self):
-        try:
-            return VenueCategory.objects.get(pk=self.kwargs['venue_id'])
-        except VenueCategory.DoesNotExist:
-            messages.warning(self.request, _("This venue category does not exist "
-                "or the URL for it might have changed. Try finding it again "
-                "from the homepage."))
-            return False
-
-    def get_page_title(self):
-        if self.get_venue_category():
-            return _("All Debates at %(venue_category)s") % {'venue_category': self.get_venue_category().name}
-        else:
-            return _("Unknown Venue Category")
-
-    def get_debates(self):
-        draw = Debate.objects.filter(
-            division__venue_category=self.get_venue_category()).select_related(
-            'round', 'round__tournament', 'division')
-        return draw

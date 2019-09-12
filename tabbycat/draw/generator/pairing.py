@@ -36,7 +36,7 @@ class BasePairing:
     This is a base class for functionality common to both two-team pairings and
     BP pairings."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, division=None):
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
         """'teams' must be a list of two teams, or four teams if it's for BP.
         'bracket' and 'room_rank' are both integers.
         'flags' is a list of strings."""
@@ -45,7 +45,6 @@ class BasePairing:
         self.room_rank = room_rank
         self.flags = list(flags)
         self.team_flags = dict(team_flags)
-        self.division = division
 
     @classmethod
     def from_debate(cls, debate, tournament=None):
@@ -62,9 +61,8 @@ class BasePairing:
             debate.get_team(side): debate.get_dt(side).flags.split(",")
             for side in tournament.sides
         }
-        division = debate.division
         return cls(teams, bracket=bracket, room_rank=room_rank, flags=flags,
-                team_flags=team_flags, division=division)
+                team_flags=team_flags)
 
     def add_flag(self, flag):
         self.flags.append(flag)
@@ -84,7 +82,7 @@ class BasePairing:
     def venue_category(self):
         """Abstracted to allow future extension to more causes of venue groups,
         e.g. accessibility."""
-        return self.division.venue_category if self.division else None
+        return None
 
     def shuffle_sides(self):
         """Randomly allocate sides."""
@@ -96,8 +94,8 @@ class Pairing(BasePairing):
 
     sides = ['aff', 'neg']
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, division=None):
-        super().__init__(teams, bracket, room_rank, flags, team_flags, division)
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
+        super().__init__(teams, bracket, room_rank, flags, team_flags)
         assert len(self.teams) == 2, "There must be two teams in a Pairing"
 
     def __repr__(self):
@@ -148,8 +146,8 @@ class ResultPairing(Pairing):
     This class is the data structure expected by DrawGenerator classes, when
     taking information about the results of the previous round."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, winner=None, division=None):
-        super().__init__(teams, bracket, room_rank, flags, team_flags, division)
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, winner=None):
+        super().__init__(teams, bracket, room_rank, flags, team_flags)
         self.set_winner(winner)
 
     @classmethod
@@ -179,8 +177,8 @@ class BPPairing(BasePairing):
 
     sides = ['og', 'oo', 'cg', 'co']
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, division=None):
-        super().__init__(teams, bracket, room_rank, flags, team_flags, division)
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}):
+        super().__init__(teams, bracket, room_rank, flags, team_flags)
         assert len(self.teams) == 4, "There must be four teams in a BPPairing"
 
     def __repr__(self):
@@ -193,8 +191,8 @@ class BPEliminationResultPairing(BPPairing):
     This class is the data structure expected by DrawGenerator classes, when
     taking information about the results of the previous round."""
 
-    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, advancing=[], division=None):
-        super().__init__(teams, bracket, room_rank, flags, team_flags, division)
+    def __init__(self, teams, bracket, room_rank, flags=[], team_flags={}, advancing=[]):
+        super().__init__(teams, bracket, room_rank, flags, team_flags)
         self.set_advancing(advancing)
 
     @classmethod

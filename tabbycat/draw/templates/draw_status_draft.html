@@ -5,7 +5,7 @@
   <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-danger">
     <i data-feather="chevron-left"></i> {% trans "Delete Draw" %}
   </a>
-  <a href="{% roundurl 'legacy-draw-matchups-edit' round %}" class="btn btn-outline-primary">
+  <a href="{% roundurl 'edit-debate-teams' round %}" class="btn btn-outline-primary">
     {% trans "Edit Sides/Matchups" %}
   </a>
 {% endblock %}
@@ -20,7 +20,23 @@
 {% endblock %}
 
 {% block page-alerts %}
-  {% if pref.teams_in_debate == 'bp' and pref.team_standings_precedence.0 != 'points' %}
+  {% if pref.team_standings_precedence|length == 0 %}
+    {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+    {% blocktrans trimmed asvar message %}
+      The team standings precedence is empty. This means that teams aren't
+      ranked according to any metrics, so all teams are in a single bracket
+      containing everyone. If this isn't what you intended, set the team
+      standings precedence in the
+      <a href="{{ standings_config_url }}" class="alert-link">Standings section
+      of this tournament's configuration</a>,
+      then delete and recreate the draw. In most
+      tournaments, the first metric should be points or wins.
+    {% endblocktrans %}
+    {# Now just 'info' because the user already clicked through the 'warning' when creating the draw. #}
+    {% include "components/alert.html" with type="info" icon="alert-circle" %}
+  {% endif %}
+
+  {% if pref.teams_in_debate == 'bp' and pref.team_standings_precedence|length > 0 and pref.team_standings_precedence.0 != 'points' %}
     {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
     {% blocktrans trimmed asvar message with metric=pref.team_standings_precedence.0|teammetricname %}
       Brackets are formed using the first metric in the team standings precedence, which is currently

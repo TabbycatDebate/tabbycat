@@ -249,27 +249,6 @@ $("#hasIron").change(function() {
 
 {% endif %}
 
-{% if pref.enable_forfeits %}
-
-  function disable_required() {
-    $("#ballot_set").find(".scoresheet select").attr("disabled", true);
-    $("#ballot_set").find(".scoresheet input").attr("disabled", true);
-  }
-
-  $("#id_forfeit_0").click(function() {
-    disable_required();
-  });
-  $("#id_forfeit_1").click(function() {
-    disable_required();
-  });
-
-  if ($("#id_forfeit_0").is(':checked') || $("#id_forfeit_1").is(':checked')) {
-    // For when reloading initial form data
-    disable_required();
-  }
-
-{% endif %}
-
 {% if form.choosing_sides %}
 
   var team_names = {};

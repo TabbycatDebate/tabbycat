@@ -1,6 +1,6 @@
 import logging
 
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
@@ -120,7 +120,11 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'icon': 'eye'
         }
         link_cell = [{
-            'text': _("View %(count)s<br>feedbacks") % {'count': len(adj.feedback_data) - 1}, # -1 to account for test score
+            'text': ngettext(
+                "View %(count)s<br>feedback",
+                "View %(count)s<br>feedbacks",
+                len(adj.feedback_data) - 1
+            ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for test score
             'class': 'view-feedback',
             'sort': adj.debates,
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})

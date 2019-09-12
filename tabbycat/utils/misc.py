@@ -1,4 +1,5 @@
 import logging
+from secrets import SystemRandom
 
 from django.urls import reverse
 from django.utils import formats, timezone, translation
@@ -68,3 +69,8 @@ def ranks_dictionary(tournament):
         {'pk': 'c',  'fields': {'name': 'C', 'cutoff': (score_range * 0.2) + score_min}},
         {'pk': 'f',  'fields': {'name': 'F', 'cutoff': score_min}},
     ]
+
+
+def generate_identifier_string(charset, length):
+    """Used in privateurl/checkin identifier generation"""
+    return ''.join(SystemRandom().choice(charset) for _ in range(length))

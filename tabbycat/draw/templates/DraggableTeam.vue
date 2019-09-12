@@ -3,9 +3,7 @@
                   :enable-hover="true" :hover-item="hoverableData" :hover-type="hoverableType">
 
       <span slot="number" class="d-none"><span></span></span>
-      <span slot="title">
-        {{ item.short_name }}
-      </span>
+      <span slot="title" v-text="teamName"></span>
       <span slot="subtitle">
         <span>{{ institutionCode }}</span>
       </span>
@@ -14,6 +12,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import DraggableItem from '../../utils/templates/DraggableItem.vue'
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
 import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
@@ -23,6 +22,16 @@ export default {
   components: { DraggableItem },
   props: { item: Object, dragPayload: Object, isTrainee: false },
   computed: {
+    teamName: function () {
+      let name = this.item.short_name // Default
+      if (this.extra.codeNames === 'everywhere' || this.extra.codeNames === 'admin-tooltips-real') {
+        name = this.item.code_name
+        if (name === '') {
+          name = this.gettext('No code name set')
+        }
+      }
+      return name
+    },
     highlightData: function () {
       return this.item
     },
@@ -39,6 +48,7 @@ export default {
         return this.gettext('Unaffiliated')
       }
     },
+    ...mapState(['extra']),
   },
 }
 </script>

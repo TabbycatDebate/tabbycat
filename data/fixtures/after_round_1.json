@@ -1366,10 +1366,8 @@
     "fields": {
         "round": 1,
         "venue": 12,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1382,10 +1380,8 @@
     "fields": {
         "round": 1,
         "venue": 22,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1398,10 +1394,8 @@
     "fields": {
         "round": 1,
         "venue": 11,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1414,10 +1408,8 @@
     "fields": {
         "round": 1,
         "venue": 15,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1430,10 +1422,8 @@
     "fields": {
         "round": 1,
         "venue": 18,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1446,10 +1436,8 @@
     "fields": {
         "round": 1,
         "venue": 17,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1462,10 +1450,8 @@
     "fields": {
         "round": 1,
         "venue": 13,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1478,10 +1464,8 @@
     "fields": {
         "round": 1,
         "venue": 20,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1494,10 +1478,8 @@
     "fields": {
         "round": 1,
         "venue": 16,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1510,10 +1492,8 @@
     "fields": {
         "round": 1,
         "venue": 21,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1526,10 +1506,8 @@
     "fields": {
         "round": 1,
         "venue": 14,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1542,10 +1520,8 @@
     "fields": {
         "round": 1,
         "venue": 19,
-        "division": null,
         "bracket": 0.0,
         "room_rank": 0,
-        "time": null,
         "flags": "",
         "importance": 0,
         "result_status": "C",
@@ -1798,9 +1774,7 @@
     "fields": {
         "text": "This House would abolish national days",
         "reference": "National days",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1809,9 +1783,7 @@
     "fields": {
         "text": "This House regrets the existence of Valentine's Day",
         "reference": "Valentine\u2019s Day",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1820,9 +1792,7 @@
     "fields": {
         "text": "This House would rename Christmas with a name that is religiously neutral",
         "reference": "Christmas",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1831,9 +1801,7 @@
     "fields": {
         "text": "This House would not buy Apple",
         "reference": "Apple",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1842,9 +1810,7 @@
     "fields": {
         "text": "This House would end all research and development tax credits for highly profitable technology companies",
         "reference": "R&D tax credit",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1853,9 +1819,7 @@
     "fields": {
         "text": "This House regrets the rise of computer science at the expense of the humanities",
         "reference": "Computer science",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1864,9 +1828,7 @@
     "fields": {
         "text": "This House would favour creativity over intelligence",
         "reference": "Creativity and intelligence",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1875,9 +1837,7 @@
     "fields": {
         "text": "This House believes that field hockey is better than ice hockey",
         "reference": "Hockey",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1886,9 +1846,7 @@
     "fields": {
         "text": "This House would rather play with Lego than Barbie",
         "reference": "Lego and Barbie",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1897,9 +1855,7 @@
     "fields": {
         "text": "This House would stop importing bananas from Latin America",
         "reference": "Bananas",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1908,9 +1864,7 @@
     "fields": {
         "text": "This House believes that tomatoes are a fruit",
         "reference": "Tomatoes",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1919,9 +1873,7 @@
     "fields": {
         "text": "This House would require all fruit to carry labels noting what pesticides are used on them",
         "reference": "Pesticide labelling",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1930,9 +1882,7 @@
     "fields": {
         "text": "This House would make an exception to laws forbidding indecent exposure for days with hot temperatures",
         "reference": "Indecent exposure",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1941,9 +1891,7 @@
     "fields": {
         "text": "This House regrets the development of different fashion lines for men and women",
         "reference": "Gender and fashion",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1952,9 +1900,7 @@
     "fields": {
         "text": "This House believes that it is unprofessional to wear flip-flops (jandals, thongs) to work",
         "reference": "Flip-flops",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1963,9 +1909,7 @@
     "fields": {
         "text": "This House would stop using cash",
         "reference": "Cash",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1974,9 +1918,7 @@
     "fields": {
         "text": "This House supports Bitcoin",
         "reference": "Bitcoin",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -1985,9 +1927,7 @@
     "fields": {
         "text": "This House would allow private organisations to compete in providing currency",
         "reference": "Private currency",
-        "info_slide": "",
-        "flagged": false,
-        "divisions": []
+        "info_slide": ""
     }
 },
 {
@@ -2351,7 +2291,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2365,7 +2304,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2379,7 +2317,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2393,7 +2330,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2407,7 +2343,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": "they"
     }
@@ -2421,7 +2356,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2435,7 +2369,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2449,7 +2382,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -2463,7 +2395,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2477,7 +2408,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2491,7 +2421,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2505,7 +2434,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2519,7 +2447,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2533,7 +2460,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": ""
     }
@@ -2547,7 +2473,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2561,7 +2486,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2575,7 +2499,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": ""
     }
@@ -2589,7 +2512,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2603,7 +2525,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2617,7 +2538,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2631,7 +2551,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2645,7 +2564,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -2659,7 +2577,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2673,7 +2590,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2687,7 +2603,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2701,7 +2616,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -2715,7 +2629,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2729,7 +2642,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2743,7 +2655,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2757,7 +2668,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2771,7 +2681,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2785,7 +2694,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2799,7 +2707,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2813,7 +2720,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2827,7 +2733,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2841,7 +2746,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2855,7 +2759,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2869,7 +2772,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2883,7 +2785,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2897,7 +2798,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2911,7 +2811,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2925,7 +2824,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2939,7 +2837,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2953,7 +2850,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2967,7 +2863,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -2981,7 +2876,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -2995,7 +2889,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3009,7 +2902,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3023,7 +2915,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3037,7 +2928,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3051,7 +2941,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3065,7 +2954,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3079,7 +2967,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3093,7 +2980,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3107,7 +2993,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3121,7 +3006,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3135,7 +3019,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3149,7 +3032,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": ""
     }
@@ -3163,7 +3045,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3177,7 +3058,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3191,7 +3071,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3205,7 +3084,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": "he"
     }
@@ -3219,7 +3097,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3233,7 +3110,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": "he"
     }
@@ -3247,7 +3123,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": ""
     }
@@ -3261,7 +3136,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3275,7 +3149,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": "they"
     }
@@ -3289,7 +3162,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3303,7 +3175,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": "they"
     }
@@ -3317,7 +3188,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3331,7 +3201,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": ""
     }
@@ -3345,7 +3214,6 @@
         "phone": "",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3359,7 +3227,6 @@
         "phone": "(400) 258-4262",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3373,7 +3240,6 @@
         "phone": "(645) 106-7743",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3387,7 +3253,6 @@
         "phone": "(549) 309-9187",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3401,7 +3266,6 @@
         "phone": "(440) 487-5776",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3415,7 +3279,6 @@
         "phone": "(618) 921-9188",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3429,7 +3292,6 @@
         "phone": "(730) 097-8797",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3443,7 +3305,6 @@
         "phone": "(559) 299-0471",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3457,7 +3318,6 @@
         "phone": "(844) 760-9302",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3471,7 +3331,6 @@
         "phone": "(297) 916-1716",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3485,7 +3344,6 @@
         "phone": "(958) 783-2610",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3499,7 +3357,6 @@
         "phone": "(854) 441-0104",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": ""
     }
@@ -3513,7 +3370,6 @@
         "phone": "(644) 607-3297",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3527,7 +3383,6 @@
         "phone": "(398) 759-9537",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3541,7 +3396,6 @@
         "phone": "(455) 177-0459",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3555,7 +3409,6 @@
         "phone": "(875) 519-9891",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "",
         "pronoun": ""
     }
@@ -3569,7 +3422,6 @@
         "phone": "(404) 641-5999",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3583,7 +3435,6 @@
         "phone": "(761) 993-2983",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3597,7 +3448,6 @@
         "phone": "(430) 532-2939",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3611,7 +3461,6 @@
         "phone": "(936) 500-1228",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3625,7 +3474,6 @@
         "phone": "(422) 585-9609",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "they"
     }
@@ -3639,7 +3487,6 @@
         "phone": "(604) 306-2084",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3653,7 +3500,6 @@
         "phone": "(222) 204-5944",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "M",
         "pronoun": "he"
     }
@@ -3667,7 +3513,6 @@
         "phone": "(737) 122-6102",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3681,7 +3526,6 @@
         "phone": "(537) 641-2175",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3695,7 +3539,6 @@
         "phone": "(525) 384-2715",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3709,7 +3552,6 @@
         "phone": "(790) 289-5430",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3723,7 +3565,6 @@
         "phone": "(317) 721-2439",
         "anonymous": false,
         "url_key": null,
-        "notes": null,
         "gender": "F",
         "pronoun": "she"
     }
@@ -3739,7 +3580,6 @@
         "long_name": "Custom Team Name",
         "institution": 1,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": false,
         "type": "N",
         "emoji": "\ud83d\ude4f",
@@ -3757,7 +3597,6 @@
         "long_name": "California Institute of Technology 2",
         "institution": 1,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udc4a",
@@ -3775,7 +3614,6 @@
         "long_name": "California Institute of Technology 3",
         "institution": 1,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83c\udfd0",
@@ -3793,7 +3631,6 @@
         "long_name": "Columbia University 1",
         "institution": 2,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udc69",
@@ -3811,7 +3648,6 @@
         "long_name": "Cornell University 1",
         "institution": 3,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\ude14",
@@ -3829,7 +3665,6 @@
         "long_name": "Harvard University 1",
         "institution": 4,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83e\udd54",
@@ -3847,7 +3682,6 @@
         "long_name": "Harvard University 2",
         "institution": 4,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83c\udff3",
@@ -3865,7 +3699,6 @@
         "long_name": "Johns Hopkins University 1",
         "institution": 5,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83e\udd88",
@@ -3883,7 +3716,6 @@
         "long_name": "Massachusetts Institute of Technology 1",
         "institution": 6,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udcb0",
@@ -3901,7 +3733,6 @@
         "long_name": "Massachusetts Institute of Technology 2",
         "institution": 6,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udc4d",
@@ -3919,7 +3750,6 @@
         "long_name": "Princeton University 1",
         "institution": 7,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\ude1b",
@@ -3937,7 +3767,6 @@
         "long_name": "Princeton University 2",
         "institution": 7,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83e\udd89",
@@ -3955,7 +3784,6 @@
         "long_name": "Stanford University 1",
         "institution": 8,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udc3c",
@@ -3973,7 +3801,6 @@
         "long_name": "Stanford University 2",
         "institution": 8,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83c\udf35",
@@ -3991,7 +3818,6 @@
         "long_name": "Stanford University 3",
         "institution": 8,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udc7d",
@@ -4009,7 +3835,6 @@
         "long_name": "University of California, Berkeley 1",
         "institution": 9,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udc60",
@@ -4027,7 +3852,6 @@
         "long_name": "University of Chicago 1",
         "institution": 10,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udc5f",
@@ -4045,7 +3869,6 @@
         "long_name": "University of Chicago 2",
         "institution": 10,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83c\udf49",
@@ -4063,7 +3886,6 @@
         "long_name": "University of Chicago 3",
         "institution": 10,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\ude46",
@@ -4081,7 +3903,6 @@
         "long_name": "University of Pennsylvania 1",
         "institution": 11,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udecd",
@@ -4099,7 +3920,6 @@
         "long_name": "University of Pennsylvania 2",
         "institution": 11,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\udea8",
@@ -4117,7 +3937,6 @@
         "long_name": "Special Name",
         "institution": 13,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": false,
         "type": "N",
         "emoji": "\ud83d\udc1a",
@@ -4135,7 +3954,6 @@
         "long_name": "Yale University 2",
         "institution": 13,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\ude23",
@@ -4153,7 +3971,6 @@
         "long_name": "Yale University 3",
         "institution": 13,
         "tournament": 1,
-        "division": null,
         "use_institution_prefix": true,
         "type": "N",
         "emoji": "\ud83d\ude98",
@@ -5247,8 +5064,7 @@
         "ip_address": null,
         "debate": 7,
         "motion": 3,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5267,8 +5083,7 @@
         "ip_address": null,
         "debate": 3,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5287,8 +5102,7 @@
         "ip_address": null,
         "debate": 11,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5307,8 +5121,7 @@
         "ip_address": null,
         "debate": 1,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5327,8 +5140,7 @@
         "ip_address": null,
         "debate": 5,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5347,8 +5159,7 @@
         "ip_address": null,
         "debate": 6,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5367,8 +5178,7 @@
         "ip_address": null,
         "debate": 9,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5387,8 +5197,7 @@
         "ip_address": null,
         "debate": 4,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5407,8 +5216,7 @@
         "ip_address": null,
         "debate": 8,
         "motion": 3,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5427,8 +5235,7 @@
         "ip_address": null,
         "debate": 12,
         "motion": 2,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5447,8 +5254,7 @@
         "ip_address": null,
         "debate": 10,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -5467,8 +5273,7 @@
         "ip_address": null,
         "debate": 2,
         "motion": 1,
-        "discarded": false,
-        "forfeit": null
+        "discarded": false
     }
 },
 {
@@ -7066,8 +6871,7 @@
         "margin": 24.0,
         "score": 276.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7081,8 +6885,7 @@
         "margin": -24.0,
         "score": 252.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7096,8 +6899,7 @@
         "margin": -1.5,
         "score": 263.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7111,8 +6913,7 @@
         "margin": 1.5,
         "score": 265.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7126,8 +6927,7 @@
         "margin": 1.0,
         "score": 262.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7141,8 +6941,7 @@
         "margin": -1.0,
         "score": 261.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7156,8 +6955,7 @@
         "margin": -0.5,
         "score": 267.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7171,8 +6969,7 @@
         "margin": 0.5,
         "score": 267.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7186,8 +6983,7 @@
         "margin": 3.0,
         "score": 271.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7201,8 +6997,7 @@
         "margin": -3.0,
         "score": 268.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7216,8 +7011,7 @@
         "margin": 4.0,
         "score": 260.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7231,8 +7025,7 @@
         "margin": -4.0,
         "score": 256.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7246,8 +7039,7 @@
         "margin": -20.0,
         "score": 256.0,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7261,8 +7053,7 @@
         "margin": 20.0,
         "score": 276.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7276,8 +7067,7 @@
         "margin": 9.5,
         "score": 276.0,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7291,8 +7081,7 @@
         "margin": -9.5,
         "score": 266.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7306,8 +7095,7 @@
         "margin": -9.0,
         "score": 267.5,
         "votes_given": 0,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7321,8 +7109,7 @@
         "margin": 9.0,
         "score": 276.5,
         "votes_given": 1,
-        "votes_possible": 1,
-        "forfeit": false
+        "votes_possible": 1
     }
 },
 {
@@ -7336,8 +7123,7 @@
         "margin": -3.75,
         "score": 263.75,
         "votes_given": 1,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7351,8 +7137,7 @@
         "margin": 3.75,
         "score": 267.5,
         "votes_given": 2,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7366,8 +7151,7 @@
         "margin": -4.25,
         "score": 250.25,
         "votes_given": 1,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7381,8 +7165,7 @@
         "margin": 4.25,
         "score": 254.5,
         "votes_given": 2,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7396,8 +7179,7 @@
         "margin": 7.66666666666669,
         "score": 264.166666666667,
         "votes_given": 3,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
@@ -7411,8 +7193,7 @@
         "margin": -7.66666666666669,
         "score": 256.5,
         "votes_given": 0,
-        "votes_possible": 3,
-        "forfeit": false
+        "votes_possible": 3
     }
 },
 {
