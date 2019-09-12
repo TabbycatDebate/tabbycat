@@ -51,9 +51,10 @@ class TeamScoreQuerySetMetricAnnotator(QuerySetMetricAnnotator):
         )
         if round is not None:
             annotation_filter &= Q(debateteam__debate__round__seq__lte=round.seq)
+        if self.exclude_unconfirmed:
+            annotation_filter &= Q(debateteam__teamscore__ballot_submission__confirmed=True)
         if self.where_value is not None:
             annotation_filter &= Q(**{self.get_where_field(): self.where_value})
-
         return self.function(self.get_field(), filter=annotation_filter)
 
 
