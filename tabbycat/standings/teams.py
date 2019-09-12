@@ -248,7 +248,7 @@ class NumberOfAdjudicatorsMetricAnnotator(TeamScoreQuerySetMetricAnnotator):
     function = Sum
 
     def __init__(self, adjs_per_debate=3):
-        self.adjs_per_debate = 3
+        self.adjs_per_debate = adjs_per_debate
 
     def get_field(self):
         return (Cast('debateteam__teamscore__votes_given', FloatField()) /
