@@ -78,34 +78,35 @@
           <h5 class="card-title mb-0">{% trans "Preformed Panels" %}</h5>
         </div>
 
-            <div class="list-group list-group-flush">
+        <div class="list-group list-group-flush">
 
-            {% if preformed_panels_in_round > 0 %}
-              {% blocktrans trimmed asvar message count npanels=preformed_panels_in_round %}
-                There is {{ npanels }} preformed panel available for this round.
-              {% plural %}
-                There are {{ npanels }} preformed panels available for this round.
-              {% endblocktrans %}
-              {% include "components/item-info.html" with nopad=True type="info" text=message %}
-            {% else %}
-              {% trans "There are no preformed panels available for this round" as message %}
-              {% include "components/item-info.html" with nopad=True type="secondary" text=message %}
-            {% endif %}
-
-
-            {% roundurl 'edit-panel-adjudicators' as url %}
-            {% blocktrans trimmed asvar text with r_name=round.abbreviation %}
-              Edit preformed panels for {{ r_name }}
+          {% if preformed_panels_in_round > 0 %}
+            {% blocktrans trimmed asvar message count npanels=preformed_panels_in_round %}
+              There is {{ npanels }} preformed panel available for this round.
+            {% plural %}
+              There are {{ npanels }} preformed panels available for this round.
             {% endblocktrans %}
-            {% include "components/item-action.html" with text=text type="primary" %}
+            {% include "components/item-info.html" with nopad=True type="info" text=message %}
+          {% else %}
+            {% trans "There are no preformed panels available for this round" as message %}
+            {% include "components/item-info.html" with nopad=True type="secondary" text=message %}
+          {% endif %}
 
+          {% roundurl 'edit-panel-adjudicators' as url %}
+          {% blocktrans trimmed asvar text with r_name=round.abbreviation %}
+            Edit preformed panels for {{ r_name }}
+          {% endblocktrans %}
+          {% include "components/item-action.html" with text=text type="primary" %}
+
+          {% if round.next %}
             {% roundurl 'edit-panel-adjudicators' round.next as url %}
             {% blocktrans trimmed asvar text with r_name=round.next.abbreviation %}
               Edit preformed panels for {{ r_name }}
             {% endblocktrans %}
             {% include "components/item-action.html" with text=text type="primary" %}
+          {% endif %}
 
-          </div>
+        </div>
 
       </div>
     </div>
