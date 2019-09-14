@@ -12,6 +12,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
 from participants.models import Person, Speaker
+from participants.serializers import InstitutionSerializer
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
@@ -72,10 +73,11 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
             except ObjectDoesNotExist:
                 code = None
 
+            institution = InstitutionSerializer(adj.institution).data if adj.institution else None
             adjudicators.append({
                 'id': adj.id, 'name': adj.name, 'type': 'Adjudicator',
                 'identifier': [code], 'locked': False, 'independent': adj.independent,
-                'institution': adj.institution.serialize if adj.institution else None,
+                'institution': institution,
             })
         kwargs["adjudicators"] = json.dumps(adjudicators)
 
@@ -86,11 +88,12 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
             except ObjectDoesNotExist:
                 code = None
 
+            institution = InstitutionSerializer(speaker.team.institution).data if speaker.team.institution else None
             speakers.append({
                 'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
-                'institution': speaker.team.institution.serialize if speaker.team.institution else None,
+                'institution': institution
             })
         kwargs["speakers"] = json.dumps(speakers)
 
