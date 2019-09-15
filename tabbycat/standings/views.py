@@ -292,7 +292,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
         # 'count' is necessary to enforce the 'missed debates' limit, so add it if necessary.
         # There's also an alert in the speaker_standings.html template to explain this.
-        if self.tournament.pref('standings_missed_debates') >= 0 and 'count' not in extra_metrics:
+        if self.tournament.pref('standings_missed_debates') >= 0 and 'count' not in metrics and 'count' not in extra_metrics:
             extra_metrics.append('count')
 
         return metrics, extra_metrics
