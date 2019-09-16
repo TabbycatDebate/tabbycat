@@ -190,7 +190,6 @@ class MotionBPStatsCalculator:
         annotations.update({'%s_average' % side: Avg(
             'ballotsubmission__teamscore__points',
             filter=Q(ballotsubmission__teamscore__debate_team__side=side),
-            distinct=True,
         ) for side in self.tournament.sides})
 
         annotations.update({'%s_%d_count' % (side, points): Count(
@@ -308,7 +307,7 @@ class RoundMotionsBPStatsCalculator(MotionBPStatsCalculator):
             filter=Q(
                 motion__ballotsubmission__debate__round=F('round'),
                 motion__ballotsubmission__teamscore__debate_team__side=side
-            ), distinct=True,
+            ),
         ) for side in self.tournament.sides})
 
         annotations.update({'%s_%d_count' % (side, points): Count(
