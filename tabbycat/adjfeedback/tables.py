@@ -131,20 +131,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)
 
-    def add_feedback_note_columns(self, adjudicators):
-        note_head = {
-            'key': 'no',
-            'icon': 'tablet'
-        }
-        note_cell = [{
-            'text': _("Edit<br>Note"),
-            'class': 'edit-note',
-            'modal': str(adj.id) + '===' + str(adj.notes)
-        } for adj in adjudicators]
-        self.add_column(note_head, note_cell)
-
     def add_feedback_progress_columns(self, progress_list, key="P"):
-
         def _owed_cell(progress):
             owed = progress.num_unsubmitted()
             cell = {
