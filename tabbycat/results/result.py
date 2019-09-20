@@ -310,7 +310,13 @@ class BaseDebateResult:
     def winning_side(self):
         raise NotImplementedError
 
+    def winning_dt(self):
+        raise NotImplementedError
+
     def winning_team(self):
+        raise NotImplementedError
+
+    def losing_dt(self):
         raise NotImplementedError
 
     # --------------------------------------------------------------------------
@@ -510,8 +516,16 @@ class DebateResultByAdjudicator(BaseDebateResult):
         return self._winner
 
     @_requires_decision(None)
+    def winning_dt(self):
+        return self.debateteams[self._winner]
+
+    @_requires_decision(None)
     def winning_team(self):
-        return self.debateteams[self._winner].team
+        return self.winning_dt().team
+
+    @_requires_decision(None)
+    def losing_dt(self):
+        return [dt for s, dt in self.debateteams.items() if s != self._winner][0]
 
     # --------------------------------------------------------------------------
     # Model fields
@@ -770,8 +784,30 @@ class ConsensusDebateResult(BaseDebateResult):
         assert len(self.get_winner()) == 1, "Should not be called with BP"
         return next(iter(self.get_winner()))
 
+    def winning_dt(self):
+        return self.debateteams[self.winning_side()]
+
     def winning_team(self):
-        return self.debateteams[self.winning_side()].team
+        return self.winning_dt().team
+
+    def losing_dt(self):
+        return [dt for s, dt in self.debateteams.items() if s != self.winning_side()][0]
+
+    # --------------------------------------------------------------------------
+    # BP Elimination-specific methods
+    # --------------------------------------------------------------------------
+
+    def has_two_advancing(self):
+        return len(self.scoresheet.winners()) == 2
+
+    def advancing_dt(self):
+        return [dt for s, dt in self.debateteams.items() if s in self.get_winner()]
+
+    def eliminated_dt(self):
+        return [dt for s, dt in self.debateteams.items() if s not in self.get_winner()]
+
+    def get_ranked_dt(self):
+        return [self.debateteams[s] for s in self.scoresheet.ranked_sides()]
 
     # --------------------------------------------------------------------------
     # Management methods
