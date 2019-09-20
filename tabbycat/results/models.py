@@ -134,7 +134,9 @@ class BallotSubmission(Submission):
 
     @property
     def serialize_like_actionlog(self):
-        result_winner, result = readable_ballotsub_result(self)
+        from results.result import DebateResult
+        dr = DebateResult(self)
+        result_winner, result = readable_ballotsub_result(dr)
         return {
             'user': result_winner,
             'id': self.id,
