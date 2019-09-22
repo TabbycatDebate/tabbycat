@@ -195,7 +195,7 @@ f. Initialize the database and create a user account for yourself::
 
     > cd tabbycat
     > dj migrate
-    > npm run build-windows
+    > npm run windows-build
     > dj collectstatic
     > dj createsuperuser
 
