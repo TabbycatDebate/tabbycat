@@ -43,6 +43,7 @@
   },
   "scripts": {
     "build": "NODE_ENV='production' npm-run-all -p build-* cp-*",
+    "build-windows": "SET NODE_ENV='production' & npm-run-all -p build-* cp-*",
     "lint": "npm-run-all -p lint-*",
     "serve": "npm-run-all -p serve-*",
     "docs": "sphinx-autobuild docs docs/_build/html --port 7999",
