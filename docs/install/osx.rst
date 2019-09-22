@@ -105,7 +105,7 @@ a. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat/directory
 
-b. Copy **settings/local.example** to **settings/local.py**. Find this part in your new settings_local.py, and fill in the blanks as indicated:
+b. Copy **settings/local.example** to **settings/local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:
 
   .. code:: python
 
