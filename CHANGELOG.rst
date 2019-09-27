@@ -4,7 +4,7 @@ Change Log
 
 2.3.0 (LaPerm)
 --------------
-*Release date: ?*
+*Release date: 27 September 2019*
 
 - Added a preformed panel system which provides a powerful take on a 'shadow draw' workflow
     - Shadow draw systems allow an adjudication core to form panels prior to a round being drawn. For example, the panels for Round 4 could be formed while Round 3 is taking place. Most implementations do so by having the tab system create a copy of the Round 3 draw, form new panels on top of it, and then transpose these panels onto Round 4. In large tournaments this workflow allows an adjudication core much more time to consider panel formation
