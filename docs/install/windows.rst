@@ -148,7 +148,7 @@ a. Open a Windows PowerShell. Navigate to the folder where you cloned/extracted 
 
     > Set-Location C:\Users\myusername\Documents\GitHub\tabbycat
 
-b. Make a copy of **settings\local.example** and rename it to **settings\local.py**. Open your new settings_local.py. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
+b. Make a copy of **settings\\local.example** and rename it to **settings\\local.py**. Open your new **local.py** file. Find this part, and fill in the blanks (the empty quotation marks) as indicated:
 
   .. code:: python
 
@@ -195,7 +195,7 @@ f. Initialize the database and create a user account for yourself::
 
     > cd tabbycat
     > dj migrate
-    > npm run build
+    > npm run windows-build
     > dj collectstatic
     > dj createsuperuser
 

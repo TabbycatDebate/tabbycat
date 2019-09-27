@@ -35,7 +35,7 @@ Change Log
     - Custom emails may be sent out to select participants through the web-interface
     - Participants can be specifically included or excluded from receiving a notification before sending with checks for duplicate messages
     - Teams can be sent emails with their draw details
-    - Emails can be tracked to determine if sent or read (Heroku-specific)
+    - Emails can be tracked to determine if sent or read (SendGrid-specific)
 - Expanded the use of private URLs (Encore Étienne Beaulé):
     - QR codes are now included in addition to the URL when printing private URLs
     - Private landing pages will now display check-in status (if check-ins are used) along with further details regarding break categories, regions, etc.

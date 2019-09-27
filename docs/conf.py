@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Tabbycat'
-copyright = '2018, Philip Belesky, Chuan-Zheng Lee'
+copyright = '2019, Philip Belesky, Chuan-Zheng Lee'
 author = 'Philip Belesky, Chuan-Zheng Lee'
 
 # The version info for the project you're documenting, acts as replacement for
