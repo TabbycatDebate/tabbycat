@@ -1,19 +1,69 @@
-# Globals
 language: python
-dist: trusty
+dist: xenial
 sudo: required
 group: edge
 env:
   global:
     - CC_TEST_REPORTER_ID=c18003eb2d4d191e9ebd68d9c3cf8082ba690eccac12df6660a098a78fc8713b
 addons:
-  postgresql: "9.6"
+  postgresql: "10"
   # chrome: stable # Re-enable for functional tests if/when they work on Travis
 services:
   - postgresql
-# Build Specific
+
+branches:
+  except:
+  - l10n_develop
+
 matrix:
   include:
+
+    # Python 3.7
+    # This job also runs style guide checkers (flake8 and lint).
+    - os: linux
+      python: 3.7
+      before_install:
+        - node --version
+        - npm --version
+      install:
+        - pip install -r ./config/requirements_development.txt
+        - npm install
+      script:
+        - flake8 tabbycat
+        - npm run lint
+        - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
+
+    # Python 3.6
+    # This job also runs the code coverage tool.
+    - os: linux
+      python: 3.6
+      before_install:
+        - node --version
+        - npm --version
+      install:
+        - pip install -r ./config/requirements_development.txt
+        - pip install coverage
+        - npm install
+      before_script:
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        - chmod +x ./cc-test-reporter
+        - ./cc-test-reporter before-build
+      script:
+        - coverage run tabbycat/manage.py test -v 2 --exclude-tag=selenium
+      after_script:
+        - coverage xml
+        - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+
+    # Docker
+    - os: linux
+      language: generic
+      services:
+        - docker
+      script:
+        - docker-compose build
+        # TODO: get working later; currently lacks a database connection
+        # - docker-compose run web python tabbycat/manage.py test -v 2 --exclude-tag=selenium
+
     # - os: osx
     #   osx_image: xcode9.1 # macOS 10.12
     #   language: generic # Override global
@@ -27,50 +77,12 @@ matrix:
     #   before_script:
     #     - brew services start postgresql
     #     # We are testing, in effect, the local install so use local settings:
-    #     - cp tabbycat/local_settings.example tabbycat/local_settings.py
+    #     - cp settings/local.example settings/local.py
     #   script:
     #     - npm run build
     #     - python tabbycat/manage.py collectstatic
     #     # TODO: get working later; currently lacks a database connection
     #     #- python tabbycat/manage.py test -v 2 --exclude-tag=selenium
-    - os: linux
-      python: 3.5
-    - os: linux
-      python: 3.6
-      # Setup/run/report code coverage tool (Only one build needs to do so)
-      before_script:
-        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        - chmod +x ./cc-test-reporter
-        - ./cc-test-reporter before-build
-      script:
-        - pip install coverage
-        - coverage run tabbycat/manage.py test -v 2 --exclude-tag=selenium
-      after_script:
-        - coverage xml
-        - if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
-    - os: linux # Test docker seperately (currently isn't supported on macOS)
-      language: generic
-      install:
-        - echo "Testing Docker" # Override default install steps
-      services:
-        - docker
-      script:
-        - docker-compose build
-        # TODO: get working later; currently lacks a database connection
-        # - docker-compose run web python tabbycat/manage.py test -v 2 --exclude-tag=selenium
-
-install:
-  - python --version
-  - pip --version
-  - pip install --upgrade pip
-  - pip install -r ./config/requirements_development.txt # Needed for flake8
-  - node --version
-  - npm --version
-  - npm install
-script:
-  - python tabbycat/manage.py test -v 2 --exclude-tag=selenium
-  - flake8 .
-  - npm run lint
 
 # The below is used to enable selenium testing as per:
 # https://docs.travis-ci.com/user/gui-and-headless-browsers/

@@ -1,5 +1,7 @@
 import json
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.base import TemplateView
@@ -15,7 +17,8 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 
-from .models import Event, PersonIdentifier, VenueIdentifier
+from .consumers import CheckInEventConsumer
+from .models import PersonIdentifier, VenueIdentifier
 from .utils import create_identifiers, get_unexpired_checkins
 
 
@@ -43,13 +46,12 @@ class BaseCheckInStatusView(TournamentMixin, TemplateView):
     for_admin = True
 
     def get_context_data(self, **kwargs):
-
-        kwargs["for_admin"] = json.dumps(self.for_admin)
-
         events = get_unexpired_checkins(self.tournament, self.window_preference)
         kwargs["events"] = json.dumps([e.serialize() for e in events])
         if self.scan_view:
             kwargs["scan_url"] = self.tournament.slug + '/checkins/'
+        kwargs["for_admin"] = self.for_admin
+        kwargs["team_size"] = self.tournament.pref('substantive_speakers')
         return super().get_context_data(**kwargs)
 
 
@@ -267,7 +269,6 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
         existing_checkin = checkins.filter(identifier=identifier)
         if action == 'revoke':
             if existing_checkin.exists():
-                existing_checkin.delete()
                 messages.success(self.request, _("You have revoked your check-in."))
             else:
                 messages.error(self.request, _("Whoops! Looks like your check-in was already revoked."))
@@ -275,10 +276,24 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
             if existing_checkin.exists():
                 messages.error(self.request, _("Whoops! Looks like you're already checked in."))
             else:
-                Event(identifier=identifier, tournament=t).save()
                 messages.success(self.request, _("You are now checked in."))
         else:
             return TemplateResponse(request=self.request, template='400.html', status=400)
+
+        group_name = CheckInEventConsumer.group_prefix + "_" + t.slug
+
+        # Override permissions check - no user but authenticated through URL
+        async_to_sync(get_channel_layer().group_send)(
+            group_name, {
+                'type': 'broadcast_checkin',
+                'content': {
+                    'barcodes': [identifier.barcode],
+                    'status': action == 'checkin',
+                    'type': 'people',
+                    'component_id': None
+                }
+            }
+        )
 
         return super().post(request, *args, **kwargs)
 

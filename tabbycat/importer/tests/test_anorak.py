@@ -31,12 +31,12 @@ class TestImporterAnorak(TestCase):
 
         # create tournament
         self.maxDiff = None
-        self.t = tm.Tournament(slug="import-test")
-        self.t.save()
+        self.tournament = tm.Tournament(slug="import-test")
+        self.tournament.save()
         self.logger = logging.getLogger(__name__)
         self.logger.propagate = False  # keep logs contained for tests
         self.logger.setLevel(logging.INFO)
-        self.importer = AnorakTournamentDataImporter(self.t, logger=self.logger)
+        self.importer = AnorakTournamentDataImporter(self.tournament, logger=self.logger)
 
     def _open_csv_file(self, dir, filename):
         path = os.path.join(dir, filename + ".csv")
@@ -78,7 +78,11 @@ class TestImporterAnorak(TestCase):
         self.importer.reset_counts()
         f = self._open_csv_file(self.TESTDIR, "speakers")
         self.importer.import_speakers(f)
-        self.assertCountsDictEqual(self.importer.counts, {pm.Team: 24, pm.Speaker: 72})
+        self.assertCountsDictEqual(self.importer.counts, {
+            pm.Team: 24,
+            pm.Speaker: 72,
+            am.TeamInstitutionConflict: 23,
+        })
         self.assertFalse(self.importer.errors)
 
     def test_adjudicators(self):
@@ -91,7 +95,7 @@ class TestImporterAnorak(TestCase):
             fm.AdjudicatorTestScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorConflict: 3,
+            am.AdjudicatorTeamConflict: 3,
         })
         self.assertFalse(self.importer.errors)
 
@@ -155,7 +159,7 @@ class TestImporterAnorak(TestCase):
             fm.AdjudicatorTestScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
-            am.AdjudicatorConflict: 3,
+            am.AdjudicatorTeamConflict: 3,
         })
         self.assertFalse(self.importer.errors)
 

@@ -10,8 +10,13 @@
        href="{% tournamenturl 'printing-urls' %}" target="_blank">
       {% trans "Print URLs" %}
     </a>
-    <a class="btn btn-outline-primary {% if private_urls_nav %}active{% endif %}"
-       href="{% tournamenturl 'privateurls-email' %}">
+  </div>
+  <div class="btn-group">
+    {% if to_email_exists %}
+      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-primary">
+    {% else %}
+      <a href="{% tournamenturl 'privateurls-email' %}" class="btn btn-outline-secondary" data-toggle="tooltip" title="{% trans "All reachable participants have already been sent their private URLs." %}">
+    {% endif %}
       {% trans "Email URLs" %}
     </a>
   </div>

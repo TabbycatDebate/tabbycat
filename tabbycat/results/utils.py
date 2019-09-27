@@ -1,17 +1,11 @@
 import logging
 from itertools import combinations
-from smtplib import SMTPException
 
-from django.core.mail import get_connection
 from django.db.models import Count
-from django.template import Template
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
-from notifications.models import SentMessageRecord
-from notifications.utils import TournamentEmailMessage
 from options.utils import use_team_code_names
 from tournaments.utils import get_side_name
 
@@ -38,7 +32,7 @@ def readable_ballotsub_result(ballotsub):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
         return _("%(team_name)s as %(side_abbr)s") % {
             'team_name': dt.team.code_name if use_codes else dt.team.short_name,
-            'side_abbr': dt.get_side_name(t, 'abbr')
+            'side_abbr': dt.get_side_abbr(t)
         }
 
     t = ballotsub.debate.round.tournament
@@ -58,12 +52,12 @@ def readable_ballotsub_result(ballotsub):
             result_winner = _("%(winner)s (%(winner_side)s) won")
             result_winner = result_winner % {
                 'winner': winner.team.code_name if use_codes else winner.team.short_name,
-                'winner_side': winner.get_side_name(t, 'abbr'),
+                'winner_side': winner.get_side_abbr(t),
             }
             result = _("vs %(loser)s (%(loser_side)s)")
             result = result % {
                 'loser': loser.team.code_name if use_codes else loser.team.short_name,
-                'loser_side': loser.get_side_name(t, 'abbr'),
+                'loser_side': loser.get_side_abbr(t),
             }
 
         elif ballotsub.debate.round.is_break_round:
@@ -216,51 +210,3 @@ def side_and_position_names(tournament):
                 else _ORDINALS[pos]
                 for pos in tournament.positions]
             yield side, positions
-
-
-def send_ballot_receipt_emails_to_adjudicators(ballots, debate):
-
-    messages = []
-
-    round_name = _("%(tournament)s %(round)s @ %(room)s") % {'tournament': str(debate.round.tournament),
-                                                             'round': debate.round.name, 'room': debate.venue.name}
-    subject = Template(debate.round.tournament.pref('ballot_email_subject'))
-    message = Template(debate.round.tournament.pref('ballot_email_message'))
-
-    context = {'DEBATE': round_name}
-    use_codes = use_team_code_names(debate.round.tournament, False)
-
-    for ballot in ballots:
-        if 'adjudicator' in ballot:
-            judge = ballot['adjudicator']
-        else:
-            judge = debate.debateadjudicator_set.get(type=DebateAdjudicator.TYPE_CHAIR).adjudicator
-
-        if judge.email is None:
-            continue
-
-        scores = ""
-        for team in ballot['teams']:
-
-            team_name = team['team'].code_name if use_codes else team['team'].short_name
-            scores += _("(%(side)s) %(team)s\n") % {'side': team['side'], 'team': team_name}
-
-            for speaker in team['speakers']:
-                scores += _("- %(debater)s: %(score)s\n") % {'debater': speaker['speaker'], 'score': speaker['score']}
-
-        context_user = context.copy()
-        context_user['USER'] = judge.name
-        context_user['SCORES'] = scores
-
-        messages.append(TournamentEmailMessage(subject, message, debate.round.tournament, debate.round, SentMessageRecord.EVENT_TYPE_BALLOT_CONFIRMED, judge, context_user))
-
-    try:
-        get_connection().send_messages(messages)
-    except SMTPException:
-        logger.exception("Failed to send ballot receipt e-mails")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending ballot receipt e-mails")
-        raise
-    else:
-        SentMessageRecord.objects.bulk_create([message.as_sent_record() for message in messages])

@@ -1,19 +1,17 @@
 //------------------------------------------------------------------------------
-// Checkins Statis
+// Results Entry
 //------------------------------------------------------------------------------
 
-.animated-list-enter-active {
-  transition: all 0.3s ease;
+// BallotsCell.vue
+.ballot-link {
+  white-space: nowrap;
+  padding: 3px 0;
+  display: block;
 }
 
-.animated-list-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.animated-list-enter,
-.animated-list-leave-to /* .list-leave-active below version 2.1.8 */ {
-  transform: translateX(10px);
-  opacity: 0;
+.ballot-info {
+  margin-top: -4px; /* Tighten spacing to subhead */
+  display: block;
 }
 
 //------------------------------------------------------------------------------
@@ -55,6 +53,18 @@
   position: absolute;
   left: 0;
   top: 0;
+}
+
+//------------------------------------------------------------------------------
+// Check-In Status
+//------------------------------------------------------------------------------
+
+.not-viable-checkins-team {
+  background: repeating-linear-gradient(45deg, $primary, $primary 10px, $secondary 10px, $secondary 20px);
+}
+
+.viable-checkins-team {
+  background: repeating-linear-gradient(45deg, $success, $success 10px, $secondary 10px, $secondary 20px);
 }
 
 //------------------------------------------------------------------------------

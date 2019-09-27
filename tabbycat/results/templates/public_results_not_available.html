@@ -1,11 +1,16 @@
-{% extends "public_results_base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
+
+{% block page-title %}{% trans "Results Not Available" %}{% endblock %}
+{% block head-title %}
+  <h2><span class="emoji">😾</span> {% trans "Results Not Available" %}</h2>
+{% endblock %}
 
 {% block content %}
   <div class="card">
     <div class="card-body">
       <p>{% blocktrans trimmed with round_name=round.name %}
-        The results for {{ round_name }} aren't yet available
+        The results for {{ round_name }} aren't yet available.
       {% endblocktrans %} <span class="emoji">😶</span></p>
     </div>
   </div>

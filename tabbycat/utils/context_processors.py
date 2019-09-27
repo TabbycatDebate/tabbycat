@@ -9,16 +9,13 @@ def debate_context(request):
         'tabbycat_version': settings.TABBYCAT_VERSION or "",
         'tabbycat_codename': settings.TABBYCAT_CODENAME or "no codename",
         'all_tournaments': Tournament.objects.filter(active=True),
-        'disable_sentry': settings.DISABLE_SENTRY or False,
-        'on_local': settings.ON_LOCAL if hasattr(settings, 'ON_LOCAL') else False,
-        'hmr': settings.USE_WEBPACK_SERVER if hasattr(settings, 'USE_WEBPACK_SERVER') else False,
+        'disable_sentry': getattr(settings, 'DISABLE_SENTRY', False),
+        'on_local': getattr(settings, 'ON_LOCAL', False),
+        'hmr': getattr(settings, 'USE_WEBPACK_SERVER', False),
     }
 
     if hasattr(request, 'tournament'):
-        current_round = request.tournament.get_current_round_cached
-        # If cache is unavailable the cached method fails; provide fallback
-        if current_round is None:
-            current_round = request.tournament.current_round
+        current_round = request.tournament.current_round
 
         context.update({
             'tournament': request.tournament,

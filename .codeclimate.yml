@@ -1,4 +1,11 @@
 ---
+checks:
+  file-lines:
+    config:
+      threshold: 600
+  method-complexity:
+    config:
+      threshold: 8
 engines:
   csslint:
     enabled: true
@@ -15,7 +22,7 @@ engines:
       - "tabbycat/*/migrations/*.py"
       - "tabbycat/*/tests/*.py"
       - "tabbycat/*/urls*.py"
-      - "tabbycat/options/dynamic_preferences_registry.py"
+      - "tabbycat/options/preferences.py"
     exclude_fingerprints:
       - 5eb53f480bfbacf8ed37c29d64a9555e
   eslint:
@@ -27,6 +34,8 @@ engines:
     exclude_paths:
       - "tabbycat/draw/generator/*.py"
       - "tabbycat/adjallocation/munkres.py"
+    config:
+      threshold: "C"
 ratings:
   paths:
   - "**.css"

@@ -31,6 +31,9 @@ urlpatterns = [
     path('important',
         views.ImportantFeedbackView.as_view(),
         name='adjfeedback-view-important'),
+    path('comments/',
+        views.CommentsFeedbackView.as_view(),
+        name='adjfeedback-view-comments'),
     path('source/list/',
         views.FeedbackBySourceView.as_view(),
         name='adjfeedback-view-by-source'),
@@ -70,4 +73,12 @@ urlpatterns = [
     path('confirm/<int:feedback_id>/',
         views.ConfirmFeedbackView.as_view(),
         name='adjfeedback-confirm-feedback'),
+
+    # CSV views
+    path('csv/scores.csv',
+        views.AdjudicatorScoresCsvView.as_view(),
+        name='adjfeedback-csv-scores'),
+    path('csv/feedback.csv',
+        views.AdjudicatorFeedbackCsvView.as_view(),
+        name='adjfeedback-csv-feedback'),
 ]

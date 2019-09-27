@@ -110,6 +110,11 @@ def add_feedback(debate, submitter_type, user, probability=1.0, discarded=False,
         fb.save()
 
         for question in debate.round.tournament.adj_feedback_questions:
+            if fb.source_team and not question.from_team:
+                continue
+            if fb.source_adjudicator and not question.from_adj:
+                continue
+
             if question.answer_type_class == fm.AdjudicatorFeedbackBooleanAnswer:
                 answer = random.choice([None, True, False])
                 if answer is None:

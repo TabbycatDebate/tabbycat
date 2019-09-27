@@ -7,13 +7,13 @@
     class="navbar navbar-default fixed-bottom p-0"
     :style="{height: height + 'px'}" ref="resizeableElement">
 
-    <section class="resize-handler" @dragover.prevent @mousedown="resizeStart"
+    <section class="legacy-resize-handler" @dragover.prevent @mousedown="resizeStart"
              data-toggle="tooltip">
       <i data-feather="menu" class="align-self-center mx-auto"></i>
     </section>
 
-    <div class="vue-droppable unallocated-items pt-4 p-2 d-flex flex-wrap"
-         :class="{ 'vue-is-drag-enter': isDroppable }">
+    <div class="legacy-vue-droppable unallocated-items pt-4 p-2 d-flex flex-wrap"
+         :class="{ 'vue-droppable-enter': isDroppable }">
 
       <slot><!-- Container sets unallocated items here --></slot>
 
@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import DroppableMixin from '../draganddrops/DroppableMixin.vue'
+import LegacyDroppableMixin from '../draganddrops/LegacyDroppableMixin.vue'
 
 export default {
-  mixins: [DroppableMixin],
+  mixins: [LegacyDroppableMixin],
   data: function () {
     return {
       height: null,

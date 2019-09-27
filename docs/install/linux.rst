@@ -42,7 +42,7 @@ Short version
   sudo -u postgres createuser myusername --createdb --pwprompt    # skip if not first time
   createdb mydatabasename
 
-Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
+Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::
 
   python3 -m venv venv
   source venv/bin/activate
@@ -69,16 +69,16 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 ------------
-Tabbycat requires Python 3.5 or later.  You probably already have Python 3.5, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
+Tabbycat requires Python 3.6 or later.  You probably already have Python 3.6, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
 
     $ sudo apt install python3-dev python3-venv
 
 Check the version::
 
     $ python3 --version
-    Python 3.5.2
+    Python 3.6.2
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.5 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.6 or later.
 
 1(b). PostgreSQL
 ----------------
@@ -181,7 +181,7 @@ d. Install Tabbycat's requirements into your virtual environment::
     $ pip install -r ./config/requirements_core.txt
     $ npm install
 
-e. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+e. Navigate to the **tabbycat/settings** sub folder and copy **local.example** to **local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:
 
   .. code:: python
 

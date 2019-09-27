@@ -1,12 +1,21 @@
 {% extends "printables_list.html" %}
 {% load i18n l10n %}
 
-{% block head-title %}
-  {% trans "Scoresheets" %}
+{% block header %}
+  <div class="row d-print-none p-3 d-flex justify-content-between">
+    <div class="h3 pt-1">
+      {% trans "Printable Scoresheets" %}
+      {% blocktrans trimmed with round_name=round.name asvar subtitle %}
+        for {{ round_name }}
+      {% endblocktrans %}
+      <small class="text-muted d-md-inline d-none">{{ subtitle }}</small>
+    </div>
+    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#editMotionsModal">
+      {% trans "Edit Motion(s)" %}
+    </button>
+  </div>
+
 {% endblock %}
-{% block page-title %}{% blocktrans trimmed with round_name=round.name %}
-Printable Scoresheets for {{ round_name }}
-{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
@@ -22,6 +31,37 @@ Printable Scoresheets for {{ round_name }}
     <div v-if="ballots.length === 0" class="alert alert-warning">
       {% trans "There are no scoresheets available — perhaps the round has not been drawn?" %}
     </div>
+
+    <div class="modal fade" id="editMotionsModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">{% trans "Edit Ballot Motions" %}</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">{% trans "&times;" %}</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="lead">
+              {% blocktrans %}
+              Editing motions here will not save them permanently — it will only
+              update the text used in the printed ballots below. This can be useful if using
+              placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print
+              ballots with correct motions.
+              {% endblocktrans %}
+            </p>
+            <div v-for="motion in roundInfo.motions">
+              <h5 class="mt-3">{% trans "Motion" %}<span v-if="roundInfo.motions.length > 1"></span></h5>
+              <textarea v-model="motion.text" class="form-control"></textarea>
+            </div>
+            <div class="text-info text-center mt-3">
+              {% trans "Changes to motions will update in the displayed ballots automatically" %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 {% endblock content %}
@@ -52,7 +92,7 @@ Printable Scoresheets for {{ round_name }}
         showDigits: {% if pref.ballots_confirm_digits %}true{% else %}false{% endif %},
         hideMotions: {% if pref.ballots_hide_motions %}true{% else %}false{% endif %},
         // Rules
-        infoText: 'Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication.',
+        infoText: '{% trans "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication." %}',
         hasMotions: {% if pref.enable_motions %}true{% else %}false{% endif %},
         hasVetoes: {% if pref.motion_vetoes_enabled %}true{% else %}false{% endif %},
         // Formatting

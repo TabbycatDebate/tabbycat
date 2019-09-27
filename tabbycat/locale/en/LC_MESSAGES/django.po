@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,80 +17,89 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: checkins/apps.py:7 templates/nav/admin_nav.html:119
-#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:94
+#: checkins/apps.py:7 templates/nav/admin_nav.html:126
+#: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:98
 msgid "Check-Ins"
 msgstr ""
 
-#: checkins/consumers.py:60
+#: checkins/consumers.py:73
 msgid "Sent checkin identifier doesn't exist"
 msgstr ""
 
-#: checkins/consumers.py:61 checkins/consumers.py:66
+#: checkins/consumers.py:74 checkins/consumers.py:79
 msgid "Checkins"
 msgstr ""
 
-#: checkins/consumers.py:65
+#: checkins/consumers.py:78
 msgid "No checkin identifiers exist for sent barcodes"
 msgstr ""
 
-#: checkins/models.py:28
-msgid "The barcode must contain between 4 and 20 digits."
+#: checkins/models.py:29
+msgid "The barcode must contain exactly six digits."
 msgstr ""
 
-#: checkins/models.py:31
+#: checkins/models.py:32
 msgid "barcode"
 msgstr ""
 
-#: checkins/models.py:45
+#: checkins/models.py:37
+msgid "<Not the child instance>"
+msgstr ""
+
+#: checkins/models.py:41
+#, python-format
+msgid "%(classname)s %(barcode)s"
+msgstr ""
+
+#: checkins/models.py:52
 msgid "person"
 msgstr ""
 
-#: checkins/models.py:48
+#: checkins/models.py:55
 msgid "person identifier"
 msgstr ""
 
-#: checkins/models.py:49
+#: checkins/models.py:56
 msgid "person identifiers"
 msgstr ""
 
-#: checkins/models.py:57
+#: checkins/models.py:64
 msgid "debate"
 msgstr ""
 
-#: checkins/models.py:60
+#: checkins/models.py:67
 msgid "debate identifier"
 msgstr ""
 
-#: checkins/models.py:61
+#: checkins/models.py:68
 msgid "debate identifiers"
 msgstr ""
 
-#: checkins/models.py:72
+#: checkins/models.py:79
 msgid "venue identifier"
 msgstr ""
 
-#: checkins/models.py:73
+#: checkins/models.py:80
 msgid "venue identifiers"
 msgstr ""
 
-#: checkins/models.py:80
+#: checkins/models.py:87
 msgid "identifier"
 msgstr ""
 
-#: checkins/models.py:83
+#: checkins/models.py:90
 msgid "check-in time"
 msgstr ""
 
-#: checkins/models.py:85
+#: checkins/models.py:92
 msgid "tournament"
 msgstr ""
 
-#: checkins/models.py:88
+#: checkins/models.py:95
 msgid "check-in event"
 msgstr ""
 
-#: checkins/models.py:89
+#: checkins/models.py:96
 msgid "check-in events"
 msgstr ""
 
@@ -138,27 +147,27 @@ msgstr ""
 #: checkins/templates/checkin_scan.html:18
 msgid ""
 "To scan an identifier type the number below (it will auto-submit). You can "
-"also use a barcode scanner (configured to work as as a keyboard) or scan "
-"from a webcam or phone camera using the button below."
+"also use a barcode scanner (configured to work as a keyboard) or scan from a "
+"webcam or phone camera using the button below."
 msgstr ""
 
-#: checkins/utils.py:82
+#: checkins/utils.py:81
 #, python-format
-msgid "Not checked-in (barcode %(barcode)s)"
+msgid "Not checked in (barcode %(barcode)s)"
 msgstr ""
 
 #: checkins/utils.py:85
-msgid "Not checked-in; no barcode assigned"
+msgid "Not checked in; no barcode assigned"
 msgstr ""
 
 #: checkins/utils.py:92
 #, python-format
-msgid "Checked-in at %(time)s"
+msgid "checked in at %(time)s"
 msgstr ""
 
 #: checkins/utils.py:104
 #, python-format
-msgid "%(speaker)s checked-in at %(time)s."
+msgid "%(speaker)s checked in at %(time)s."
 msgstr ""
 
 #: checkins/utils.py:106
@@ -166,64 +175,64 @@ msgstr ""
 msgid "%(speaker)s is missing."
 msgstr ""
 
-#: checkins/views.py:24 templates/nav/admin_nav.html:130
+#: checkins/views.py:27 templates/nav/admin_nav.html:137
 #: templates/nav/assistant_nav.html:42
 msgid "Scan Identifiers"
 msgstr ""
 
-#: checkins/views.py:54
+#: checkins/views.py:60
 msgid "People's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:112
+#: checkins/views.py:115
 msgid "Venue's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:161 templates/nav/admin_nav.html:126
+#: checkins/views.py:164 templates/nav/admin_nav.html:133
 msgid "Make Identifiers"
 msgstr ""
 
-#: checkins/views.py:168 templates/nav/admin_nav.html:214
+#: checkins/views.py:171 templates/nav/admin_nav.html:224
 msgid "Speakers"
 msgstr ""
 
-#: checkins/views.py:173 templates/nav/admin_nav.html:262
+#: checkins/views.py:176 templates/nav/admin_nav.html:272
 #: templates/nav/public_nav.html:138
 msgid "Adjudicators"
 msgstr ""
 
-#: checkins/views.py:178
+#: checkins/views.py:181
 msgid "Venues"
 msgstr ""
 
-#: checkins/views.py:219
+#: checkins/views.py:222
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr ""
 
-#: checkins/views.py:226
+#: checkins/views.py:229
 msgid "Identifiers"
 msgstr ""
 
-#: checkins/views.py:262
+#: checkins/views.py:265
 msgid ""
 "Could not check you in as you do not have an identifying code — your tab "
 "director may need to make you an identifier."
 msgstr ""
 
-#: checkins/views.py:270
+#: checkins/views.py:272
 msgid "You have revoked your check-in."
 msgstr ""
 
-#: checkins/views.py:272
+#: checkins/views.py:274
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr ""
 
-#: checkins/views.py:275
+#: checkins/views.py:277
 msgid "Whoops! Looks like you're already checked in."
 msgstr ""
 
-#: checkins/views.py:278
+#: checkins/views.py:279
 msgid "You are now checked in."
 msgstr ""
 
@@ -275,27 +284,27 @@ msgstr ""
 msgid "Division %(div)s"
 msgstr ""
 
-#: settings.py:44
+#: settings/core.py:48
 msgid "Arabic"
 msgstr ""
 
-#: settings.py:45
+#: settings/core.py:49
 msgid "English"
 msgstr ""
 
-#: settings.py:46
+#: settings/core.py:50
 msgid "Spanish"
 msgstr ""
 
-#: settings.py:47
+#: settings/core.py:51
 msgid "French"
 msgstr ""
 
-#: settings.py:48
+#: settings/core.py:52
 msgid "Japanese"
 msgstr ""
 
-#: settings.py:49
+#: settings/core.py:53
 msgid "Portuguese"
 msgstr ""
 
@@ -369,11 +378,18 @@ msgid ""
 "\">Back to the assistant home page.</a>"
 msgstr ""
 
-#: templates/errors/public_403.html:13
+#: templates/errors/public_403.html:14
 #, python-format
 msgid ""
 "Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s"
 "\">Back to the tournament home page.</a>"
+msgstr ""
+
+#: templates/errors/public_403.html:20
+#, python-format
+msgid ""
+"Whoops! This page isn't enabled for this tournament. <a href=\"%(url)s"
+"\">Back to the home page.</a>"
 msgstr ""
 
 #: templates/footer.html:14
@@ -481,8 +497,8 @@ msgstr ""
 msgid "Public Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:57 templates/nav/admin_nav.html:152
-#: templates/nav/admin_nav.html:189 templates/nav/admin_nav.html:254
+#: templates/nav/admin_nav.html:57 templates/nav/admin_nav.html:159
+#: templates/nav/admin_nav.html:199 templates/nav/admin_nav.html:264
 msgid "Overview"
 msgstr ""
 
@@ -503,107 +519,123 @@ msgstr ""
 msgid "Participants"
 msgstr ""
 
-#: templates/nav/admin_nav.html:83
+#: templates/nav/admin_nav.html:82
 msgid "Private URLs"
 msgstr ""
 
-#: templates/nav/admin_nav.html:87
+#: templates/nav/admin_nav.html:86
+msgid "Emails"
+msgstr ""
+
+#: templates/nav/admin_nav.html:90
+msgid "Preformed Panels"
+msgstr ""
+
+#: templates/nav/admin_nav.html:94
 msgid "Edit Database"
 msgstr ""
 
-#: templates/nav/admin_nav.html:97 templates/nav/public_nav.html:158
+#: templates/nav/admin_nav.html:104 templates/nav/public_nav.html:158
 msgid "Sides"
 msgstr ""
 
-#: templates/nav/admin_nav.html:109 templates/nav/admin_nav.html:207
+#: templates/nav/admin_nav.html:116 templates/nav/admin_nav.html:217
 #: templates/nav/public_nav.html:148
 msgid "Divisions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:134 templates/nav/assistant_nav.html:48
+#: templates/nav/admin_nav.html:141 templates/nav/assistant_nav.html:48
 msgid "People's Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:138
+#: templates/nav/admin_nav.html:145
 msgid "Rooms' Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:146
+#: templates/nav/admin_nav.html:153
 msgid "Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:155
+#: templates/nav/admin_nav.html:162
 msgid "Latest"
 msgstr ""
 
-#: templates/nav/admin_nav.html:161
+#: templates/nav/admin_nav.html:165
+msgid "Important"
+msgstr ""
+
+#: templates/nav/admin_nav.html:168
+msgid "Comments"
+msgstr ""
+
+#: templates/nav/admin_nav.html:171
 msgid "Find by Source"
 msgstr ""
 
-#: templates/nav/admin_nav.html:164
+#: templates/nav/admin_nav.html:174
 msgid "Find by Target"
 msgstr ""
 
-#: templates/nav/admin_nav.html:167
+#: templates/nav/admin_nav.html:177
 msgid "Unsubmitted"
 msgstr ""
 
-#: templates/nav/admin_nav.html:170
+#: templates/nav/admin_nav.html:180
 msgid "Add Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:173
+#: templates/nav/admin_nav.html:183
 msgid "Bulk Update"
 msgstr ""
 
-#: templates/nav/admin_nav.html:182 templates/nav/public_nav.html:163
+#: templates/nav/admin_nav.html:192 templates/nav/public_nav.html:163
 msgid "Standings"
 msgstr ""
 
-#: templates/nav/admin_nav.html:193
+#: templates/nav/admin_nav.html:203
 msgid "All Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:195
+#: templates/nav/admin_nav.html:205
 msgid "Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:200 templates/nav/public_nav.html:13
+#: templates/nav/admin_nav.html:210 templates/nav/public_nav.html:13
 #, python-format
 msgid "%(category_name)s Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:212
+#: templates/nav/admin_nav.html:222
 msgid "All Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:219 templates/nav/public_nav.html:30
+#: templates/nav/admin_nav.html:229 templates/nav/public_nav.html:30
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:227
+#: templates/nav/admin_nav.html:237
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:231 templates/nav/public_nav.html:153
+#: templates/nav/admin_nav.html:241 templates/nav/public_nav.html:153
 msgid "Motions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:234 templates/nav/public_nav.html:168
+#: templates/nav/admin_nav.html:244 templates/nav/public_nav.html:168
 msgid "Diversity"
 msgstr ""
 
-#: templates/nav/admin_nav.html:247
+#: templates/nav/admin_nav.html:257
 msgid "Breaks"
 msgstr ""
 
-#: templates/nav/admin_nav.html:258
+#: templates/nav/admin_nav.html:268
 #, python-format
 msgid "%(category_name)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:277 templates/nav/top_nav_base.html:101
+#: templates/nav/admin_nav.html:287 templates/nav/top_nav_base.html:101
 msgid "Log Out"
 msgstr ""
 
@@ -671,12 +703,16 @@ msgstr ""
 msgid "No Draws Available"
 msgstr ""
 
-#: templates/nav/public_nav.html:83
+#: templates/nav/public_nav.html:84
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr ""
 
-#: templates/nav/public_nav.html:104 templates/nav/round_panel.html:57
+#: templates/nav/public_nav.html:88
+msgid "Current Draws"
+msgstr ""
+
+#: templates/nav/public_nav.html:108 templates/nav/round_panel.html:57
 msgid "Results"
 msgstr ""
 
@@ -725,6 +761,15 @@ msgstr ""
 
 #: templates/nav/top_nav_base.html:105
 msgid "Login"
+msgstr ""
+
+#: templates/registration/logged_out.html:5
+msgid "Goodbye"
+msgstr ""
+
+#: templates/registration/logged_out.html:12
+#, python-format
+msgid "You have been logged out. <a href=\"%(login_url)s\">Log in again?</a>"
 msgstr ""
 
 #: templates/registration/login.html:4
@@ -896,12 +941,12 @@ msgstr ""
 msgid "Password reset on Tabbycat site at %(domain)s"
 msgstr ""
 
-#: urls.py:94
+#: urls.py:98
 #, python-format
 msgid "Hi, %(username)s — you just logged in!"
 msgstr ""
 
-#: urls.py:97
+#: urls.py:101
 msgid "Welcome! You just logged in!"
 msgstr ""
 

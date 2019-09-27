@@ -3,14 +3,14 @@ from availability.utils import activate_all
 from participants.models import Team
 from draw.models import DebateTeam
 from tournaments.models import Round
-from utils.tests import BaseDebateTestCase
+from utils.tests import BaseMinimalTournamentTestCase
 
 
-class RandomDrawTests(BaseDebateTestCase):
+class RandomDrawTests(BaseMinimalTournamentTestCase):
 
     def setUp(self):
         super(RandomDrawTests, self).setUp()
-        self.round = Round(tournament=self.t, seq=2, draw_type=Round.DRAW_RANDOM)
+        self.round = Round(tournament=self.tournament, seq=2, draw_type=Round.DRAW_RANDOM)
         self.round.save()
         activate_all(self.round)
 

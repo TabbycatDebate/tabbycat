@@ -110,10 +110,7 @@ class VueTableTemplateView(TemplateView):
     def get_context_data(self, **kwargs):
         tables = self.get_tables()
 
-        tables_dicts = []
-        for table in tables:
-            if table:
-                tables_dicts.append(table.jsondict())
+        tables_dicts = [tb.jsondict() for tb in tables if tb is not None]
         kwargs["tables_data"] = json.dumps(tables_dicts)
 
         kwargs["tables_count"] = list(range(len(tables)))

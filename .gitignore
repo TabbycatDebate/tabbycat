@@ -1,5 +1,7 @@
 # Django Related
-tabbycat/local_settings.py
+tabbycat/local_settings.py # Legacy location
+tabbycat/settings/local.py
+tabbycat/settings/development.py
 .gitmodules/
 __pycache__/
 
@@ -22,6 +24,7 @@ dbdata
 
 # Docs
 docs/site/
+docs/.doctrees/
 issues-*.html
 
 # Tags

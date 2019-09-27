@@ -166,6 +166,9 @@ class RandomDrawManager(BaseDrawManager):
 class ManualDrawManager(BaseDrawManager):
     generator_type = "manual"
 
+    def get_relevant_options(self):
+        return []
+
 
 class PowerPairedDrawManager(BaseDrawManager):
     generator_type = "power_paired"

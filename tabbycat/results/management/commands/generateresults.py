@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.core.management.base import CommandError
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
 from results.models import BallotSubmission
-from utils.management.base import CommandError, RoundCommand
+from utils.management.base import RoundCommand
 from results.dbutils import add_result, add_results_to_round, add_results_to_round_partial, delete_all_ballotsubs_for_round, delete_ballotsub
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
@@ -34,12 +35,6 @@ class GenerateResultsCommandMixin:
         status.add_argument("-c", "--confirmed", action="store_true",
                             help="Make added ballot sets confirmed")
 
-        parser.add_argument("-m", "--min-score", type=float,
-                            help="Minimum speaker score (for substantive)",
-                            default=72)
-        parser.add_argument("-M", "--max-score", type=float,
-                            help="Maximum speaker score (for substantive)",
-                            default=78)
         parser.add_argument("--reply-random", action="store_true",
                             help="Choose reply speaker at random (rather than always use first speaker",
                             default=False)
@@ -61,8 +56,6 @@ class GenerateResultsCommandMixin:
             "user"          : cls._get_user(options),
             "discarded"     : options["discarded"],
             "confirmed"     : options["confirmed"],
-            "min_score"     : options["min_score"],
-            "max_score"     : options["max_score"],
             "reply_random"  : options["reply_random"],
         }
 

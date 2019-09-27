@@ -15,11 +15,11 @@
           <button class="btn btn-secondary" v-if="categories.length > 1">
             {{ bc.name }}
           </button>
-          <button @click="massSelect(true, bc.id)" class="btn btn-primary">
-            <i data-feather="check-circle"></i> Set All
+          <button @click="massSelect(true, bc.id)" class="btn btn-primary" type="button">
+            <i data-feather="check-circle"></i> All
           </button>
-          <button @click="massSelect(false, bc.id)" class="btn btn-primary">
-            <i data-feather="x-circle"></i> Set None
+          <button @click="massSelect(false, bc.id)" class="btn btn-primary" type="button">
+            <i data-feather="x-circle"></i> None
           </button>
         </div>
 
@@ -28,7 +28,7 @@
           <form v-if="roundInfo.break === 'True' && roundInfo.model === 'participants.Adjudicator'"
                 :action="urls.breakingAdjs" method="post">
             <button class="btn btn-primary" type="submit">
-              {{ gettext("Set All Breaking as Available") }}
+              <i data-feather="star"></i> {{ gettext("Set Breaking") }}
             </button>
           </form>
           <div class="btn-group">
@@ -38,22 +38,27 @@
                                      what they were in the previous round.`)">
               <i data-feather="repeat"></i> {{ gettext("Match") }} {{ roundInfo.prev }}
             </button>
-            <button @click="setFromCheckIns(true)"
+            <button @click="setFromCheckIns(true, true)"
                     class="btn btn-primary" type="button" data-toggle="tooltip"
                     :title="gettext('Set all availabilities to exactly match check-ins.')">
               <i data-feather="repeat"></i> {{ gettext("Match Check-Ins") }}
             </button>
-            <button @click="setFromCheckIns(false)"
+            <button @click="setFromCheckIns(true, false)"
                     class="btn btn-primary" type="button" data-toggle="tooltip"
-                    :title="gettext(`Set people as available only if they have
-                                     a check-in and are currently unavailable —
-                                     i.e. it will not overwrite any existing availabilities.`)">
-              <i data-feather="corner-up-right"></i> {{ gettext("Copy Check-Ins") }}
+                    :title="gettext(`Set people who are checked in as available
+                                     (leave people not checked in unchanged)`)">
+              <i data-feather="corner-up-right"></i> {{ gettext("Set from Check-Ins") }}
+            </button>
+            <button @click="setFromCheckIns(false, true)"
+                    class="btn btn-primary" type="button" data-toggle="tooltip"
+                    :title="gettext(`Set people who are not checked in as unavailable
+                                     (leave people who are checked in unchanged)`)">
+              <i data-feather="corner-down-left"></i> {{ gettext("Unset from Check-Ins") }}
             </button>
           </div>
         </template>
 
-        <auto-save-counter :css="'btn-md'"></auto-save-counter>
+        <auto-save-counter v-if="!hideAutoSave" :css="'btn-md'"></auto-save-counter>
 
       </div>
     </div>
@@ -69,7 +74,7 @@
 
 <script>
 import _ from 'lodash'
-import AutoSaveCounter from '../draganddrops/AutoSaveCounter.vue'
+import AutoSaveCounter from '../draganddrops/LegacyAutoSaveCounter.vue'
 import TablesContainer from './TablesContainer.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
 
@@ -83,6 +88,7 @@ export default {
     navigation: Array,
     roundInfo: Object,
     translations: Object,
+    hideAutoSave: Boolean,
   },
   created: function () {
     // Watch for events on the global event hub
@@ -118,16 +124,18 @@ export default {
     copyFromPrevious: function () {
       _.forEach(this.tablesData[0].data, (row) => {
         row[0].checked = row[0].prev
+        row[0].sort = row[0].prev
       })
       this.saveChecks(0)
     },
-    setFromCheckIns: function (match) {
+    setFromCheckIns: function (set, unset) {
       _.forEach(this.tablesData[0].data, (row) => {
-        if (match) {
-          row[0].checked = row[0].checked_in
-        } else if (row[0].checked_in) {
-          // Only update for those checked (i.e. don't overrwrite existing)
-          row[0].checked = row[0].checked_in
+        if (set && row[0].checked_in) {
+          row[0].checked = true
+          row[0].sort = true
+        } else if (unset && !row[0].checked_in) {
+          row[0].checked = false
+          row[0].sort = false
         }
       })
       this.saveChecks(0)
@@ -137,10 +145,13 @@ export default {
         _.forEach(row, (column) => {
           if (column.type === type) {
             column.checked = state
+            column.sort = state
           }
         })
       })
-      this.saveChecks(type)
+      if (!this.hideAutoSave) {
+        this.saveChecks(type)
+      }
     },
   },
 }

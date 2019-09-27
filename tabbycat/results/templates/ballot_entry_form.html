@@ -1,0 +1,100 @@
+{% load i18n team_name_for_data_entry %}
+
+{% block content %}
+
+  {% if pref.enable_motions %}
+    <div data-type="motion_selection" hidden>
+      {% with field=form.motion %}{{ field }}{% endwith %}
+    </div>
+  {% endif %}
+
+  {% if pref.motion_vetoes_enabled %}
+    {% for field in form.motion_veto_fields %}
+      <div data-type="motion_veto" hidden>
+        <label>{{ field.help_text|title }}</label>{{ field }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% for sheet in form.scoresheets %}
+
+    {% if sheet.adjudicator %}
+      {% if sheet.adjudicator.institution %}
+        {% blocktrans trimmed with name=sheet.adjudicator.name institution=sheet.adjudicator.institution.code asvar title %}
+          Ballot from {{ name }} ({{ institution }})
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with name=sheet.adjudicator.name asvar title %}
+          Ballot from {{ name }}
+        {% endblocktrans %}
+      {% endif %}
+      {% if sheet.adjudicator == debate.adjudicators.chair %}
+        {% blocktrans trimmed asvar subtitle %}Chair{% endblocktrans %}
+      {% elif sheet.adjudicator != debate.adjudicators.chair %}
+        {% blocktrans trimmed asvar subtitle %}Panellist{% endblocktrans %}
+      {% endif %}
+    {% else %}
+      {% if debate.adjudicators.has_chair %}
+        {% blocktrans trimmed with chair=debate.adjudicators.chair asvar title %}
+          Scoresheet from chair {{ chair }}
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed asvar title %}
+          Scoresheet, no chair set
+        {% endblocktrans %}
+      {% endif %}
+    {% endif %}
+
+    <div data-type="sheet" data-id="" data-title="{{ title }}" data-subtitle="{{ subtitle }}">
+
+      {% for team in sheet.teams %}
+        <div data-type="team" data-id="{{ team.team.id }}" data-side="{{ team.side_code }}"
+              data-name="{% team_name_for_data_entry team.team use_team_code_names %}">
+          {% for position in team.speakers %}
+
+            <div hidden data-type="speaker" data-position="{{ position.name }}" >
+              {{ position.speaker }}
+              {{ position.ghost }}
+              {{ position.ghost.label_tag }}
+              {{ position.score }}
+            </div>
+
+            {% for error in position.speaker.errors %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
+                Error with {{ pos }}'s speaker field: {{ error }}
+              {% endblocktrans %}
+              {% include "components/form-errors.html" %}
+            {% endfor %}
+            {% for error in position.ghost.errors %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
+                Error with {{ pos }}'s duplicate speaker field: {{ error }}
+              {% endblocktrans %}
+              {% include "components/form-errors.html" %}
+            {% endfor %}
+            {% for error in position.score.errors %}
+              {% blocktrans trimmed asvar message with pos=position.name error=error %}
+                Error with {{ pos }}'s score field: {{ error }}
+              {% endblocktrans %}
+              {% include "components/form-errors.html" %}
+            {% endfor %}
+
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+
+  {% endfor %}
+
+  <div hidden>
+    {% if new and not pref.disable_ballot_confirms %}
+      {# After a new ballot, always go into DRAFT, and the new ballot is neither discarded nor confirmed. #}
+      result: <input id="id_debate_result_status" name="debate_result_status" value="{{ debate.STATUS_DRAFT }}" />
+      confirmed: <input id="id_confirmed" name="confirmed" value="False" />
+    {% else %}
+      result: <input id="id_debate_result_status" name="debate_result_status" value="{{ debate.STATUS_CONFIRMED }}" />
+      confirmed: <input id="id_confirmed" name="confirmed" value="True" />
+    {% endif %}
+    discarded: <input id="id_discarded" name="discarded" value="False" />
+  </div>
+
+{% endblock content %}

@@ -24,10 +24,13 @@ $other:                   #dbd302;
 $unknown:                 #868e96;
 
 // Break Category Highlights
-$break-cat-1:             #8347ad;
-$break-cat-2:             #40b5d7;
-$break-cat-3:             #2e39c9;
-$break-cat-4:             #6d6d6d;
+$break-cat-0:             #8347ad;
+$break-cat-1:             #40b5d7;
+$break-cat-2:             #2e39c9;
+$break-cat-3:             #ed6b19;
+$break-cat-4:             #00c79b;
+$break-cat-5:             #ff2983;
+$break-cat-6:             #777;
 
 // Region Category Highlights
 $region-cat-0:            #c70062;
@@ -44,7 +47,7 @@ $region-cat-8:            #777;
 $conflict-clash:          #e34e42;
 $conflict-institution:    #ef9b08;
 $conflict-history-base:   #3498db;
-$incomplete-panel:        $gray-600;
+$incomplete-panel:        rgba(100, 100, 100, 0.5); // Needs xparency
 
 // Adj Rankings
 $adj-ranking-0:           hsla(175, 90%, 40%, 1); // A+

@@ -15,7 +15,7 @@ class ResultsTableBuilder(TabbycatTableBuilder):
 
         status_header = {
             'key': key,
-            'tooltip': _("Whether this debate's ballot has been checked-in"),
+            'tooltip': _("Whether this debate's ballot has been checked in"),
             'icon': "compass",
         }
         status_cells = []
@@ -57,9 +57,9 @@ class ResultsTableBuilder(TabbycatTableBuilder):
         # These are prefetched, so sort using Python rather than generating an SQL query
         ballotsubmissions = sorted(debate.ballotsubmission_set.all(), key=lambda x: x.version)
         if view_role == 'admin':
-            link = 'results-ballotset-new'
+            link = 'old-results-ballotset-new'
         else:
-            link = 'results-assistant-ballotset-new'
+            link = 'old-results-assistant-ballotset-new'
 
         return {
             'component': 'ballots-cell',

@@ -1,6 +1,6 @@
 import logging
 
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 
 from utils.misc import reverse_tournament
 from utils.tables import TabbycatTableBuilder
@@ -16,7 +16,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         breaking_header = {
             'key': 'breaking',
             'icon': 'award',
-            'tooltip': 'Whether the adj is marked as breaking (click to mark)',
+            'tooltip': _("Whether the adj is marked as breaking (click to mark)"),
         }
         breaking_data = [{
             'component': 'check-cell',
@@ -42,12 +42,12 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         overall_header = {
             'key': 'score',
             'icon': 'trending-up',
-            'tooltip': 'Current weighted score',
+            'tooltip': _("Current weighted score"),
         }
         overall_data = [{
             'sort': scores[adj],
             'text': self.get_formatted_adj_score(scores[adj], True),
-            'tooltip': 'This adjudicator\'s current rating.',
+            'tooltip': _("This adjudicator's current rating."),
         } for adj in adjudicators]
         self.add_column(overall_header, overall_data)
 
@@ -55,19 +55,19 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         test_header = {
             'key': 'test-score',
             'icon': 'file',
-            'tooltip': 'Test score result',
+            'tooltip': _("Test score result"),
         }
         if editable:
             test_data = [{
                 'text': self.get_formatted_adj_score(adj.test_score),
                 'modal': adj.id,
                 'class': 'edit-test-score',
-                'tooltip': 'Click to edit test score',
+                'tooltip': _("Click to edit test score"),
             } for adj in adjudicators]
         else:
             test_data = [{
                 'text': self.get_formatted_adj_score(adj.test_score),
-                'tooltip': 'Assigned test score',
+                'tooltip': _("Assigned test score"),
             } for adj in adjudicators]
 
         self.add_column(test_header, test_data)
@@ -76,11 +76,11 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         diff_header = {
             'key': 'score-difference',
             'icon': 'maximize-2',
-            'tooltip': 'The current difference between an adjudicator\'s test score and current score',
+            'tooltip': _("The current difference between an adjudicator's test score and current score"),
         }
         diff_data = [{
             'text': self.get_formatted_adj_score(scores[adj] - adj.test_score),
-            'tooltip': 'The difference between this adjudicator\'s test score and current score',
+            'tooltip': _("The difference between this adjudicator's test score and current score"),
         } for adj in adjudicators]
 
         self.add_column(diff_header, diff_data)
@@ -89,11 +89,11 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         diff_header = {
             'key': 'score-variance',
             'icon': 'bar-chart-2',
-            'tooltip': 'The standard deviation of this adjudicator\'s current scores; with larger numbers meaning less consistent feedback scores.',
+            'tooltip': _("The standard deviation of this adjudicator's current scores; with larger numbers meaning less consistent feedback scores."),
         }
         diff_data = [{
             'text': '%0.1f' % adj.feedback_variance if adj.feedback_variance is not None else '',
-            'tooltip': 'The standard deviation of this adjudicator\'s current scores',
+            'tooltip': _("The standard deviation of this adjudicator's current scores"),
         } for adj in adjudicators]
 
         self.add_column(diff_header, diff_data)
@@ -103,7 +103,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         feedback_head = {
             'key': 'feedback',
             'title': _('Feedback Per Round'),
-            'tooltip': 'Hover over the data points to show the average score received in that round',
+            'tooltip': _("Hover over the data points to show the average score received in that round"),
         }
         feedback_graph_data = [{
             'graphData': adj.feedback_data,
@@ -120,7 +120,11 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'icon': 'eye'
         }
         link_cell = [{
-            'text': 'View %s<br>feedbacks' % (len(adj.feedback_data) - 1), # -1 to account for test score
+            'text': ngettext(
+                "View %(count)s<br>feedback",
+                "View %(count)s<br>feedbacks",
+                len(adj.feedback_data) - 1
+            ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for test score
             'class': 'view-feedback',
             'sort': adj.debates,
             'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})
@@ -133,7 +137,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             'icon': 'tablet'
         }
         note_cell = [{
-            'text': 'Edit<br>Note',
+            'text': _("Edit<br>Note"),
             'class': 'edit-note',
             'modal': str(adj.id) + '===' + str(adj.notes)
         } for adj in adjudicators]
@@ -153,7 +157,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
         owed_header = {
             'key': 'owed',
             'icon': 'slash',
-            'tooltip': 'Unsubmitted feedback ballots',
+            'tooltip': _("Unsubmitted feedback ballots"),
         }
         owed_data = [_owed_cell(progress) for progress in progress_list]
         self.add_column(owed_header, owed_data)
@@ -177,7 +181,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
                 'icon': 'check',
             }
             owed_link_data = [{
-                'text': 'View Missing Feedback',
+                'text': _("View Missing Feedback"),
                 'link': _record_link(progress)
             } for progress in progress_list]
             self.add_column(owed_link_header, owed_link_data)

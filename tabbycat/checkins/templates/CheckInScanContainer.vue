@@ -9,17 +9,11 @@
     <div class="list-group-item pb-3">
       <div class="d-flex">
         <div class="flex-fill pr-2">
-          <button v-if="!liveScanning" class="btn btn-block btn-success" @click="toggleScan">
-            Scan Using Camera
-          </button>
-          <button v-if="liveScanning" class="btn btn-block btn-danger" @click="toggleScan">
-            Stop Camera Scan
-          </button>
+          <button v-if="!liveScanning" v-text="gettext('Scan Using Camera')" class="btn btn-block btn-success" @click="toggleScan"></button>
+          <button v-if="liveScanning" v-text="gettext('Stop Camera Scan')" class="btn btn-block btn-danger" @click="toggleScan"></button>
         </div>
         <div v-if="!sound" class="flex-fill pl-2">
-          <button class="btn btn-block btn-success" @click="unMute">
-            Turn On Sounds
-          </button>
+          <button v-text="gettext('Turn On Sounds')" class="btn btn-block btn-success" @click="unMute"></button>
         </div>
       </div>
       <div id="scanCanvas" v-if="liveScanning"
@@ -53,6 +47,11 @@ export default {
   props: {
     tournamentSlug: String,
   },
+  computed: {
+    tournamentSlugForWSPath: function () {
+      return this.tournamentSlug
+    },
+  },
   methods: {
     checkInIdentifier: function (barcodeIdentifier) {
       const payload = { barcodes: [barcodeIdentifier], status: true, type: 'people' }
@@ -78,7 +77,8 @@ export default {
     },
     finishCheckIn: function (payload) {
       const checkin = payload.checkins[0]
-      const msg = `${checkin.time} checked-in identifier ${checkin.identifier}`
+      const substitutions = [checkin.time, checkin.identifier, checkin.owner_name]
+      const msg = this.tct('%s checked in %s: %s', substitutions)
       $.fn.showAlert('success', msg, 0)
       this.playSound('finishedScanSound')
     },
@@ -178,7 +178,7 @@ export default {
       Quagga.onDetected((result) => {
         const code = result.codeResult.code
         // Check length
-        if (code.length === 5) {
+        if (code.length === 6) {
           // Check numeric
           if (code.match(/^[0-9]+$/) !== null) {
             // Check not already posted
@@ -186,7 +186,7 @@ export default {
               self.checkInIdentifier(code)
               self.scannedResults.push(code)
             } else {
-              // $.fn.showAlert("info", 'Already checked-in identifier ' + code, 0)
+              // $.fn.showAlert("info", 'Already checked in identifier ' + code, 0)
             }
           }
         }
@@ -195,7 +195,7 @@ export default {
   },
   watch: {
     barcode: function (current) {
-      if (current.length >= 5) {
+      if (current.length >= 6) {
         this.processing = true
         this.checkInIdentifier(current)
       }

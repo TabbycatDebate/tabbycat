@@ -30,7 +30,7 @@
 <script>
 import SlideOverSubjectMixin from '../info/SlideOverSubjectMixin.vue'
 import SlideOverTeamMixin from '../info/SlideOverTeamMixin.vue'
-import HighlightableMixin from '../allocations/HighlightableMixin.vue'
+import OldHighlightableMixin from '../allocations/OldHighlightableMixin.vue'
 import ConflictableMixin from '../allocations/ConflictableMixin.vue'
 
 export default {
@@ -43,7 +43,7 @@ export default {
     }
   },
   mixins: [SlideOverSubjectMixin, SlideOverTeamMixin,
-    HighlightableMixin, ConflictableMixin],
+    OldHighlightableMixin, ConflictableMixin],
   props: { team: Object, roundInfo: Object },
   computed: {
     highlightableObject: function () {

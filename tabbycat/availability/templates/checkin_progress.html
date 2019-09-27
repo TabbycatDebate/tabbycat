@@ -44,14 +44,14 @@
 
       {% if round.is_break_round %}
         {% trans "No need to set team availability" as title_text %}
-        {% include "components/item-info.html" with text=title_text type="secondary" %}
+        {% include "components/item-info.html" with text=title_text type="secondary" nopad=True %}
       {% elif pref.teams_in_debate == 'two' and not availability_info.teams.in_now|divisibleby:2  %}
         {% trans "There is an uneven number of teams marked as available for this round." as text %}
-        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-info.html" with type="danger" nopad=True %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
       {% elif pref.teams_in_debate == 'bp' and not availability_info.teams.in_now|divisibleby:4  %}
         {% trans "The number of teams marked as available for this round is not a multiple of 4." as text %}
-        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-info.html" with type="danger" nopad=True %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
       {% elif info.in_now == 0 and not round.is_break_round %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
@@ -63,8 +63,49 @@
     {% elif type == "adjs" %}
 
       {% roundurl 'availability-adjudicators' round as url %}
-      {% trans "Mark adjudicators as available" as title_text %}
 
+      {% if adjs_no_t > 0 %}
+        {% blocktrans trimmed asvar text count count=adjs_no_t %}
+          One adjudicator does not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% plural %}
+          {{ count }} adjudicators do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% endif %}
+
+      {% if new_adjs|length > 10 %}
+        {% blocktrans trimmed asvar text count count=new_adjs|length %}
+          {{ count }} adjudicator who was not available last round, is available this round.
+        {% plural %}
+          {{ count }} adjudicators who were not available last round, are available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% elif new_adjs %}
+        {% blocktrans trimmed asvar text count count=new_adjs|length with adjs_list=new_adjs|join:", " %}
+          The following {{ count }} adjudicator, who was not available last round, is available this round: {{ adjs_list }}
+        {% plural %}
+          The following {{ count }} adjudicators, who were not available last round, are available this round: {{ adjs_list }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% endif %}
+
+      {% if lost_adjs|length > 10 %}
+        {% blocktrans trimmed asvar text count count=lost_adjs|length %}
+          {{ count }} adjudicator who was available last round, is not available this round.
+        {% plural %}
+          {{ count }} adjudicators who were available last round, are not available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% elif lost_adjs %}
+        {% blocktrans trimmed asvar text count count=lost_adjs|length with adjs_list=lost_adjs|join:", " %}
+          The following {{ count }} adjudicator, who was available last round, is not available this round: {{ adjs_list }}
+        {% plural %}
+          The following {{ count }} adjudicators, who were available last round, are not available this round: {{ adjs_list }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% endif %}
+
+      {% trans "Mark adjudicators as available" as title_text %}
       {% if min_adjudicators > availability_info.adjs.in_now %}
         {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
         {% blocktrans trimmed asvar text with required_count=min_adjudicators|apnumber count count=min_adjudicators %}
@@ -72,7 +113,7 @@
         {% plural %}
           There need to be at least {{ required_count }} adjudicators marked as available, given the number of debates.
         {% endblocktrans %}
-        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-info.html" with type="danger" nopad=True %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
       {% elif info.in_now == 0 %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
@@ -80,20 +121,53 @@
         {% trans "Edit adjudicator availability" as title_text %}
         {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
       {% endif %}
-      {% if adjs_no_t > 0 %}
-        {% blocktrans trimmed asvar text count count=adjs_no_t %}
-          One adjudicator does not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
-        {% plural %}
-          {{ count }} adjudicators do not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
-        {% endblocktrans %}
-        {% include "components/item-info.html" with type="info" %}
-      {% endif %}
 
     {% elif type == "venues" %}
 
       {% roundurl 'availability-venues' round as url %}
-      {% trans "Mark venues as available" as title_text %}
 
+      {% if new_venues|length > 10 %}
+        {% blocktrans trimmed asvar text count count=new_venues|length %}
+          {{ count }} venue that was not available last round, is available this round.
+        {% plural %}
+          {{ count }} venues that were not available last round, are available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% elif new_venues %}
+        {% blocktrans trimmed asvar text count count=new_venues|length with venues_list=new_venues|join:", " %}
+          The following {{ count }} venue, which was not available last round, is available this round: {{ venues_list }}
+        {% plural %}
+          The following {{ count }} venues, which were not available last round, are available this round: {{ venues_list }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% endif %}
+
+      {% if lost_venues|length > 10 %}
+        {% blocktrans trimmed asvar text count count=lost_venues|length %}
+          {{ count }} venue that was available last round, is not available this round.
+        {% plural %}
+          {{ count }} venues that were available last round, are not available this round.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% elif lost_venues %}
+        {% blocktrans trimmed asvar text count count=lost_venues|length with venues_list=lost_venues|join:", " %}
+          The following {{ count }} venue, which was available last round, is not available this round: {{ venues_list }}
+        {% plural %}
+          The following {{ count }} venues, which were available last round, are not available this round: {{ venues_list }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% endif %}
+
+      {% if venues_no_t > 0 %}
+        {% blocktrans trimmed asvar text count count=venues_no_t %}
+          One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
+        {% plural %}
+          {{ count }} venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% endif %}
+
+      {% trans "Mark venues as available" as title_text %}
       {% if min_venues > availability_info.venues.in_now %}
         {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
         {% blocktrans trimmed asvar text with required_count=min_venues|apnumber count count=min_venues %}
@@ -103,21 +177,13 @@
           There need to be at least {{ required_count }} venues marked as available, given
           the number of debates.
         {% endblocktrans %}
-        {% include "components/item-info.html" with type="danger" %}
+        {% include "components/item-info.html" with type="danger" nopad=True %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
       {% elif info.in_now == 0 %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
       {% else %}
         {% trans "Edit venue availability" as title_text %}
         {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
-      {% endif %}
-      {% if venues_no_t > 0 %}
-        {% blocktrans trimmed asvar text count count=venues_no_t %}
-          One venue does not have an associated Tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
-        {% plural %}
-          {{ count }} venues do not have an associated Tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
-        {% endblocktrans %}
-        {% include "components/item-info.html" with type="info" %}
       {% endif %}
 
     {% endif %}

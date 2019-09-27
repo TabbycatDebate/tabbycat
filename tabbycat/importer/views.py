@@ -3,7 +3,7 @@ import logging
 from django.contrib import messages
 from django.core import management
 from django.forms import modelformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
@@ -211,9 +211,12 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
     def post(self, request, *args, **kwargs):
         source = request.POST.get("source", "")
 
+        if source not in ['minimal8team', 'australs24team', 'bp88team']:
+            return HttpResponseBadRequest("%s isn't a demo dataset" % source)
+
         try:
             management.call_command(importtournament.Command(), source,
-                                    force=True, strict=False)
+                                    force=True, strict=False, encoding='utf-8')
         except TournamentDataImporterError as e:
             messages.error(self.request, mark_safe(
                 "<p>There were one or more errors creating the demo tournament. "

@@ -6,7 +6,7 @@
       <div class="col">
         <div class="card mt-3">
           <div class="card-body">
-            <h5 class="mb-0 text-center">Ballots Status</h5>
+            <h5 class="mb-0 text-center" v-text="gettext('Ballots Status')"></h5>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item text-secondary px-2">
@@ -25,15 +25,14 @@
       <div class="col mt-3">
         <div class="card">
           <div class="card-body">
-            <h5 class="mb-0">Latest Actions</h5>
+            <h5 class="mb-0" v-text="gettext('Latest Actions')"></h5>
           </div>
           <ul class="list-group list-group-flush">
             <updates-list v-for="action in actionLogs"
                           :key="action.id"
                           :item="action"></updates-list>
-            <li class="list-group-item text-secondary" v-if="actionLogs.length === 0">
-              No Actions Yet
-            </li>
+            <li class="list-group-item text-secondary" v-if="actionLogs.length === 0"
+                v-text="gettext('No Actions Yet')"></li>
           </ul>
         </div>
       </div>
@@ -41,15 +40,14 @@
       <div class="col mt-3">
         <div class="card">
           <div class="card-body">
-            <h5 class="mb-0">Latest Results</h5>
+            <h5 class="mb-0" v-text="gettext('Latest Results')"></h5>
           </div>
           <ul class="list-group list-group-flush">
             <updates-list v-for="ballot in ballotResults"
                           :key="ballot.id"
                           :item="ballot"></updates-list>
-            <li class="list-group-item text-secondary" v-if="ballotResults.length === 0">
-              No Confirmed Results Yet
-            </li>
+            <li class="list-group-item text-secondary" v-if="ballotResults.length === 0"
+                v-text="gettext('No Confirmed Results Yet')"></li>
           </ul>
         </div>
       </div>
@@ -70,8 +68,7 @@ export default {
     UpdatesList,
     BallotsGraph: () => import('../../templates/graphs/BallotsGraph.vue'),
   },
-  props: ['tournamentSlug', 'totalDebates',
-    'initialActions', 'initialBallots', 'initialGraphData'],
+  props: ['tournamentSlug', 'totalDebates', 'initialActions', 'initialBallots', 'initialGraphData'],
   data: function () {
     return {
       actionLogs: this.initialActions,
@@ -79,6 +76,11 @@ export default {
       ballotStatuses: this.initialGraphData,
       sockets: ['action_logs', 'ballot_results', 'ballot_statuses'],
     }
+  },
+  computed: {
+    tournamentSlugForWSPath: function () {
+      return this.tournamentSlug
+    },
   },
   methods: {
     handleSocketReceive: function (socketLabel, payload) {

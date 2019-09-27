@@ -4,8 +4,8 @@
 
 // Primary Typeface
 @font-face {
-  font-family: 'Inter-UI-Regular';
-  src: url('/static/fonts/Inter-UI-Regular.woff2') format('woff2'), url('/static/fonts/Inter-UI-Regular.woff') format('woff');
+  font-family: 'Inter-Regular';
+  src: url('/static/fonts/Inter-Regular.woff2') format('woff2'), url('/static/fonts/Inter-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -47,7 +47,7 @@ h6,
 }
 
 .strong {
-  font-weight: bold;
+  font-weight: bold; // deprecate; use font-weight-bold
 }
 
 .lead .strong,

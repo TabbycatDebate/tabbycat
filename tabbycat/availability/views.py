@@ -41,6 +41,27 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
             kwargs['previous_unconfirmed'] = self.round.prev.debate_set.filter(
                 result_status__in=[Debate.STATUS_NONE, Debate.STATUS_DRAFT]).count()
 
+            kwargs['new_adjs'] = Adjudicator.objects.filter(
+                round_availabilities__round=self.round,
+            ).exclude(
+                round_availabilities__round=self.round.prev,
+            )
+            kwargs['new_venues'] = Venue.objects.filter(
+                round_availabilities__round=self.round,
+            ).exclude(
+                round_availabilities__round=self.round.prev,
+            )
+            kwargs['lost_adjs'] = Adjudicator.objects.filter(
+                round_availabilities__round=self.round.prev,
+            ).exclude(
+                round_availabilities__round=self.round,
+            )
+            kwargs['lost_venues'] = Venue.objects.filter(
+                round_availabilities__round=self.round.prev,
+            ).exclude(
+                round_availabilities__round=self.round,
+            )
+
         if self.round.is_break_round:
             teams = self._get_breaking_teams_dict()
         else:
@@ -178,7 +199,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
 
         if self.round.prev:
             title = _("Active in %(prev_round)s") % {'prev_round': self.round.prev.abbreviation}
-            table.add_column({'key': 'active', 'title': title}, [{
+            table.add_column({'key': 'active-prev', 'title': title}, [{
                 'sort': inst.prev_available,
                 'icon': 'check' if inst.prev_available else ''
             } for inst in queryset])

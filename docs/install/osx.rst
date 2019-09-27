@@ -30,14 +30,14 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 --------------------------------------------------------------------------------
-Tabbycat requires Python 3.5 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+Tabbycat requires Python 3.6 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 The executable will probably be called ``python3``, rather than ``python``. Check::
 
     $ python3 --version
-    Python 3.5.2
+    Python 3.6.8
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.5 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.6 or later.
 
 .. admonition:: Advanced users
   :class: tip
@@ -105,7 +105,7 @@ a. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat/directory
 
-b. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+b. Copy **settings/local.example** to **settings/local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -124,7 +124,7 @@ b. Copy **local_settings.example** to **local_settings.py**. Find this part in y
 
     TIME_ZONE = 'Australia/Melbourne'
 
-c. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+c. Ensure you are in the main Tabbycat directory (not the config folder where **settings_local.py** is and start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
     $ python3 -m venv venv
 

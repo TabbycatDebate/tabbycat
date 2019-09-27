@@ -2,6 +2,8 @@
 Association (AIDA)."""
 
 import logging
+import math
+
 from itertools import groupby
 
 from breakqual.models import BreakingTeam
@@ -117,6 +119,11 @@ class BaseAida2016BreakGenerator(BaseAidaBreakGenerator):
             self.capped_teams.remove(tsi)
 
 
+class BaseAida2016AustralsBreakGenerator(BaseAida2016BreakGenerator):
+    def reinsert_capped_teams(self):
+        self._reinsert_capped_teams(self.capped_teams)
+
+
 @register
 class Aida2016EastersBreakGenerator(BaseAida2016BreakGenerator):
     key = "aida-2016-easters"
@@ -130,8 +137,22 @@ class Aida2016EastersBreakGenerator(BaseAida2016BreakGenerator):
 
 
 @register
-class Aida2016AustralsBreakGenerator(BaseAida2016BreakGenerator):
+class Aida2016AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
     key = "aida-2016-australs"
 
-    def reinsert_capped_teams(self):
-        self._reinsert_capped_teams(self.capped_teams)
+
+@register
+class Aida2019AustralsBreakGenerator(BaseAida2016AustralsBreakGenerator):
+    """Calculates the number of teams by which the break exceeds the base of 16
+    teams. Then expands the institutional cap by 1 team for every 8 additional
+    teams."""
+    key = "aida-2019-australs-open"
+
+    def compute_break(self):
+        self.calculate_cap()
+        super().compute_break()
+
+    def calculate_cap(self):
+        additional_teams = self.break_size - 16 if self.break_size >= 16 else 0
+        self.institution_cap = 3 + math.floor(additional_teams / 8)
+        logger.info("Break size of %d teams exceeds the 16-team base by %d. The institutional cap is set at %d.",self.break_size,additional_teams, self.institution_cap)

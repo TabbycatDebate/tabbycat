@@ -75,16 +75,23 @@
       </a>
       <a href="{% tournamenturl 'participants-list' %}"
          class="list-group-item" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="user"></i>{% trans "Participants" %}
+        <span class="circle-icon small-circle"></span><i data-feather="book"></i>{% trans "Participants" %}
       </a>
       <a href="{% tournamenturl 'privateurls-list' %}"
-         class="list-group-item"
-         data-parent="#rh{{ r.id }}">
+         class="list-group-item" data-parent="#setuph}">
         <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}
+      </a>
+      <a href="{% tournamenturl 'notifications-status' %}"
+         class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="mail"></i>{% trans "Emails" %}
+      </a>
+      <a href="{% tournamenturl 'panel-adjudicators-index' %}"
+         class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="box"></i>{% trans "Preformed Panels" %}
       </a>
       <a href="{% url 'admin:index' %}" target="_blank"
          class="list-group-item" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="edit"></i>{% trans "Edit Database" %}
+        <span class="circle-icon small-circle"></span><i data-feather="database"></i>{% trans "Edit Database" %}
       </a>
     </div>
   </div>
@@ -135,7 +142,7 @@
       </a>
       <a href="{% tournamenturl 'admin-venues-statuses' %}"
          class="list-group-item {% if checkins_venues_statuses %}active{% endif %}" data-parent="#checkinh">
-        <i data-feather="map"></i>{% trans "Rooms' Status" %}
+        <i data-feather="map"></i>{% trans "Venues' Status" %}
       </a>
     </div>
   </div>
@@ -154,8 +161,11 @@
         <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-latest' %}" data-parent="#feedh">
         <i data-feather="clock"></i>{% trans "Latest" %}
       </a>
-        <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
-        <i data-feather="star"></i>Important
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
+        <i data-feather="star"></i>{% trans "Important" %}
+      </a>
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-comments' %}" data-parent="#feedh">
+        <i data-feather="message-square"></i>{% trans "Comments" %}
       </a>
       <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-by-source' %}" data-parent="#feedh">
         <i data-feather="phone-outgoing"></i>{% trans "Find by Source" %}
@@ -216,7 +226,7 @@
       </a>
       {% for category in tournament.speakercategory_set.all %}
         <a class="list-group-item" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
-          <i data-feather="user"></i>{% blocktrans trimmed with category_name=category.name %}
+          <i data-feather="user-plus"></i>{% blocktrans trimmed with category_name=category.name %}
             {{ category_name }} Speakers
           {% endblocktrans %}
         </a>

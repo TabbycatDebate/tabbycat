@@ -1,10 +1,11 @@
 import json
 import logging
 import math
+import csv
 
 from django.contrib import messages
 from django.db.models import Count, F, Q
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.translation import gettext as _, gettext_lazy, ngettext, ngettext_lazy
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import FormView
@@ -26,7 +27,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import AdjudicatorFeedback, AdjudicatorTestScoreHistory
+from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
@@ -147,15 +148,15 @@ class FeedbackByTargetView(AdministratorMixin, TournamentMixin, VueTableTemplate
     page_emoji = '🔍'
 
     def get_table(self):
-        tournament = self.tournament
+        adjudicators = self.tournament.adjudicator_set.annotate(feedback_count=Count('adjudicatorfeedback'))
         table = TabbycatTableBuilder(view=self, sort_key="name")
-        table.add_adjudicator_columns(tournament.adjudicator_set.all())
+        table.add_adjudicator_columns(adjudicators)
         feedback_data = []
-        for adj in tournament.adjudicator_set.all().annotate(feedback_count=Count('adjudicatorfeedback')):
+        for adj in adjudicators:
             count = adj.feedback_count
             feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
-                'link': reverse_tournament('adjfeedback-view-on-adjudicator', tournament, kwargs={'pk': adj.id}),
+                'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.id}),
             })
         table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, feedback_data)
         return table
@@ -185,12 +186,12 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
             })
         team_table.add_column({'key': 'feedbacks', 'title': _("Feedbacks")}, team_feedback_data)
 
-        adjs = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
+        adjudicators = tournament.adjudicator_set.all().annotate(feedback_count=Count('debateadjudicator__adjudicatorfeedback'))
         adj_table = TabbycatTableBuilder(
             view=self, title=_('From Adjudicators'), sort_key='name')
-        adj_table.add_adjudicator_columns(adjs)
+        adj_table.add_adjudicator_columns(adjudicators)
         adj_feedback_data = []
-        for adj in adjs:
+        for adj in adjudicators:
             count = adj.feedback_count
             adj_feedback_data.append({
                 'text': ngettext("%(count)d feedback", "%(count)d feedbacks", count) % {'count': count},
@@ -204,6 +205,7 @@ class FeedbackBySourceView(AdministratorMixin, TournamentMixin, VueTableTemplate
 
 
 class FeedbackMixin(TournamentMixin):
+    only_comments = False
 
     def get_feedbacks(self):
         feedbacks = self.get_feedback_queryset()
@@ -213,6 +215,10 @@ class FeedbackMixin(TournamentMixin):
 
         # Can't prefetch an abstract model effectively; so get all answers...
         questions = list(self.tournament.adj_feedback_questions)
+        if self.only_comments:
+            long_text = AdjudicatorFeedbackQuestion.ANSWER_TYPE_LONGTEXT
+            questions = [q for q in questions if q.answer_type == long_text]
+
         for question in questions:
             question.answers = list(question.answer_set.values())
 
@@ -226,6 +232,8 @@ class FeedbackMixin(TournamentMixin):
                                                'answer': answer['answer']})
                         break # Should only be one match
 
+        if self.only_comments:
+            feedbacks = [f for f in feedbacks if len(f.items) > 0] # Remove null
         return feedbacks
 
     def get_feedback_queryset(self):
@@ -267,11 +275,23 @@ class LatestFeedbackView(FeedbackCardsView):
     """View displaying the latest feedback."""
     page_title = gettext_lazy("Latest Feedback")
     page_subtitle = gettext_lazy("(30 most recent)")
-    page_emoji = '🕗 '
+    page_emoji = '🕗'
 
     def get_feedback_queryset(self):
         queryset = super().get_feedback_queryset()
         return queryset.order_by('-timestamp')[:30]
+
+
+class CommentsFeedbackView(FeedbackCardsView):
+    """View displaying the latest feedback."""
+    page_title = gettext_lazy("Only Comments")
+    page_subtitle = gettext_lazy("(250 most recent)")
+    page_emoji = '💬'
+    only_comments = True
+
+    def get_feedback_queryset(self):
+        queryset = super().get_feedback_queryset()
+        return queryset.order_by('-timestamp')[:250]
 
 
 class ImportantFeedbackView(FeedbackCardsView):
@@ -685,8 +705,20 @@ class BaseFeedbackProgressView(TournamentMixin, VueTableTemplateView):
 
     def get_page_subtitle(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
-        total_missing = sum([progress.num_unsubmitted() for progress in teams_progress + adjs_progress])
-        return ngettext_lazy("%d missing feedback submission", "%d missing feedback submissions", total_missing) % (total_missing,)
+        all_progress = teams_progress + adjs_progress
+        total_missing = sum([progress.num_unsubmitted() for progress in all_progress])
+        total_expected = sum([progress.num_expected() for progress in all_progress])
+
+        try:
+            percentage_fulfilled = (1 - total_missing / total_expected) * 100
+        except ZeroDivisionError:
+            percentage_fulfilled = 100
+
+        return ngettext_lazy(
+            "%(nmissing)d missing feedback submission (%(fulfilled).1f%% returned)",
+            "%(nmissing)d missing feedback submissions (%(fulfilled).1f%% returned)",
+            total_missing
+        ) % {'nmissing': total_missing, 'fulfilled': percentage_fulfilled}
 
     def get_tables(self):
         teams_progress, adjs_progress = self.get_feedback_progress()
@@ -793,3 +825,79 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
             nupdated) % {'count': nupdated})
         self.log_action()
         return super().form_valid(form)
+
+
+# ==============================================================================
+# CSV dumps
+# ==============================================================================
+# These are a stopgap while we develop a proper API for this.
+
+class BaseCsvView(View):
+
+    def get_filename(self):
+        return self.filename
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = "attachment; filename=\"" + self.get_filename() + "\""
+
+        writer = csv.writer(response)
+        self.write_rows(writer)
+
+        return response
+
+
+class AdjudicatorScoresCsvView(TournamentMixin, AdministratorMixin, BaseCsvView):
+    filename = "scores.csv"
+
+    def write_rows(self, writer):
+        writer.writerow(["id", "name", "test_score", "gender", "region", "nrounds"])
+        for adj in self.tournament.adjudicator_set.all():
+            row = [adj.id, adj.name, adj.test_score, adj.gender]
+            row.append(adj.region.name if adj.region else "")
+            row.append(adj.debateadjudicator_set.count())
+            writer.writerow(row)
+
+
+class AdjudicatorFeedbackCsvView(FeedbackMixin, AdministratorMixin, TournamentMixin, BaseCsvView):
+    filename = "feedback.csv"
+
+    def get_feedback_queryset(self):
+        return super().get_feedback_queryset().filter(confirmed=True)
+
+    def write_rows(self, writer):
+        headers = [
+            "round.seq", "round.abbreviation",
+            "adjudicator.id", "adjudicator.name", "adjudicator.type",
+            "source_adjudicator.id","source_adjudicator.name", "source_adjudicator.type",
+            "source_team.id", "source_team.short_name", "source_team.result",
+            "score", "ignored",
+        ]
+        question_references = [q.reference for q in self.tournament.adj_feedback_questions]
+        headers.extend(question_references)
+        writer.writerow(headers)
+
+        feedbacks = self.get_feedbacks()
+        for f in feedbacks:
+            row = [f.round.seq, f.round.abbreviation,
+                f.adjudicator.id, f.adjudicator.name, f.debate_adjudicator.get_type_display()]
+
+            if f.source_adjudicator:
+                adj = f.source_adjudicator.adjudicator
+                row.extend([adj.id, adj.name, f.source_adjudicator.get_type_display()])
+            else:
+                row.extend([""] * 3)
+
+            if f.source_team:
+                team = f.source_team.team
+                row.extend([team.id, team.short_name, f.source_team.get_result_display()])
+            else:
+                row.extend([""] * 3)
+
+            row.append(f.score)
+            row.append(f.ignored)
+
+            answers = {q['question'].reference: q['answer'] for q in f.items}
+            row.extend([answers.get(ref, '') for ref in question_references])
+
+            writer.writerow(row)

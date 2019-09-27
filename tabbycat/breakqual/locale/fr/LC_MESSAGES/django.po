@@ -1,22 +1,20 @@
-# Tabbycat translations, breakqual module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
-"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-07-27 03:54\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/breakqual/locale/en/LC_MESSAGES/django.po\n"
 
 #: breakqual/apps.py:7
 msgid "Break Qualification"
@@ -24,14 +22,8 @@ msgstr "Qualification"
 
 #: breakqual/base.py:94
 #, python-format
-msgid ""
-"The break qualification rule %(rule)s requires the following metric(s) to be "
-"in the team standings precedence in order to work: %(required)s; and the "
-"following are missing: %(missing)s."
-msgstr ""
-"La règle de qualification %(rule)s exige que les mesures suivantes soient "
-"dans la précédence de classement des équipes pour qu'elle puisse se faire "
-"marcher : %(required)s; et elle manque de ce qui suit : %(missing)s."
+msgid "The break qualification rule %(rule)s requires the following metric(s) to be in the team standings precedence in order to work: %(required)s; and the following are missing: %(missing)s."
+msgstr "La règle de qualification %(rule)s exige que les mesures suivantes soient dans la précédence de classement des équipes pour qu'elle puisse se faire marcher : %(required)s; et elle manque de ce qui suit : %(missing)s."
 
 #: breakqual/models.py:8
 msgid "tournament"
@@ -74,35 +66,24 @@ msgid "is general"
 msgstr "est général"
 
 #: breakqual/models.py:23
-msgid ""
-"True if most teams eligible for this category, e.g. Open, False otherwise"
-msgstr ""
-"Vrai si la plupart des équipes sont admissibles pour cette catégorie, par "
-"exemple Open, sinon faux"
+msgid "True if most teams eligible for this category, e.g. Open, False otherwise"
+msgstr "Vrai si la plupart des équipes sont admissibles pour cette catégorie, par exemple Open, sinon faux"
 
 #: breakqual/models.py:25
 msgid "priority"
 msgstr "priorité"
 
 #: breakqual/models.py:26
-msgid ""
-"If a team breaks in multiple categories, higher priority numbers take "
-"precedence; teams can break into multiple categories if and only if they all "
-"have the same priority"
-msgstr ""
-"Si une équipe se qualifie en plusieurs catégories, les nombres plus élevés "
-"ont priorité ; équipes peuvent diviser en plusieurs catégories, si et "
-"seulement s'elles ont toutes la même priorité"
+msgid "If a team breaks in multiple categories, higher priority numbers take precedence; teams can break into multiple categories if and only if they all have the same priority"
+msgstr "Si une équipe se qualifie en plusieurs catégories, les nombres plus élevés ont priorité ; équipes peuvent diviser en plusieurs catégories, si et seulement si elles ont toutes la même priorité"
 
 #: breakqual/models.py:30
 msgid "limit"
-msgstr ""
+msgstr "limite"
 
 #: breakqual/models.py:31
-msgid ""
-"At most this many teams will be shown on the public tab for this category, "
-"or use 0 for no limit"
-msgstr ""
+msgid "At most this many teams will be shown on the public tab for this category, or use 0 for no limit"
+msgstr "Au plus, ce montant d’équipes seront montrées sur le classement public de cette catégorie, ou 0 pour aucune limite"
 
 #: breakqual/models.py:34
 msgid "Standard"
@@ -121,93 +102,89 @@ msgid "AIDA 2016 (Australs)"
 msgstr "AIDA 2016 (Australs)"
 
 #: breakqual/models.py:38
+msgid "AIDA 2019 (Australs, Dynamic Cap)"
+msgstr "AIDA 2019 (Australs, limite dynamique)"
+
+#: breakqual/models.py:39
 msgid "WADL division winners first"
 msgstr "WADL vainqueurs de division d'abord"
 
-#: breakqual/models.py:39
+#: breakqual/models.py:40
 msgid "WADL division winners guaranteed"
 msgstr "WADL vainqueurs de division garantis"
 
-#: breakqual/models.py:43
+#: breakqual/models.py:44
 msgid "rule"
 msgstr "règle"
 
-#: breakqual/models.py:44
-msgid ""
-"Rule for how the break is calculated (most tournaments should use \"Standard"
-"\")"
-msgstr ""
-"Règle pour le calcul de la qualification (la plupart des tournois devraient "
-"utiliser « Standard »)"
+#: breakqual/models.py:45
+msgid "Rule for how the break is calculated (most tournaments should use \"Standard\")"
+msgstr "Règle pour le calcul de la qualification (la plupart des tournois devraient utiliser « Standard »)"
 
-#: breakqual/models.py:47 breakqual/models.py:103
+#: breakqual/models.py:48 breakqual/models.py:105
 msgid "breaking teams"
 msgstr "qualification des équipes"
 
-#: breakqual/models.py:56 breakqual/models.py:74
+#: breakqual/models.py:57 breakqual/models.py:76
 msgid "break category"
 msgstr "catégorie de break"
 
-#: breakqual/models.py:57
+#: breakqual/models.py:58
 msgid "break categories"
 msgstr "catégories de break"
 
-#: breakqual/models.py:76
+#: breakqual/models.py:78
 msgid "team"
 msgstr "équipe"
 
-#: breakqual/models.py:78
+#: breakqual/models.py:80
 msgid "rank"
 msgstr "rang"
 
-#: breakqual/models.py:80
+#: breakqual/models.py:82
 msgid "break rank"
 msgstr "rang dans la qualification"
 
-#: breakqual/models.py:89
+#: breakqual/models.py:91
 msgid "Capped"
 msgstr "Exclue à cause de la limite"
 
-#: breakqual/models.py:90
+#: breakqual/models.py:92
 msgid "Ineligible"
 msgstr "Non admissible"
 
-#: breakqual/models.py:91
+#: breakqual/models.py:93
 msgid "Different break"
 msgstr "Qualification différente"
 
-#: breakqual/models.py:92
+#: breakqual/models.py:94
 msgid "Disqualified"
 msgstr "Disqualifiée"
 
-#: breakqual/models.py:93
+#: breakqual/models.py:95
 msgid "Lost coin toss"
 msgstr "Perdu le tirage au sort"
 
-#: breakqual/models.py:94
+#: breakqual/models.py:96
 msgid "Withdrawn"
 msgstr "Retirée"
 
-#: breakqual/models.py:97
+#: breakqual/models.py:99
 msgid "remark"
 msgstr "remarque"
 
-#: breakqual/models.py:98
+#: breakqual/models.py:100
 msgid "Used to explain why an otherwise-qualified team didn't break"
-msgstr ""
-"Utilisé pour expliquer pourquoi une équipe qui qualifierait autrement n’a "
-"pas qualifié"
+msgstr "Utilisé pour expliquer pourquoi une équipe qui qualifierait autrement n’a pas qualifié"
 
-#: breakqual/models.py:102
+#: breakqual/models.py:104
 msgid "breaking team"
 msgstr "équipe qualifiante"
 
 #: breakqual/templates/breaking_adjs.html:8
 #, python-format
-msgid ""
-"Adjudicators can be marked as breaking in the <a href=\"%(feedback_url)s"
-"\">Feedback Overview</a> section."
-msgstr ""
+msgid "Adjudicators can be marked as breaking in the <a href=\"%(feedback_url)s\">Feedback Overview</a> section."
+msgstr "Les juges peuvent être marqués comme qualifiants dans la section <a href=\"%(feedback_url)s\">Vue d'ensemble des évaluations</a>."
 
 #: breakqual/templates/breaking_index.html:4
 #: breakqual/templates/breaking_index.html:5
@@ -215,16 +192,8 @@ msgid "Breaks"
 msgstr "Qualifications"
 
 #: breakqual/templates/breaking_index.html:10
-msgid ""
-"This tournament does not have any break categories set up. You can read "
-"about how to create breaks <a href=\"http://tabbycat.readthedocs.io/en/"
-"stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\"> at our "
-"documentation. </a>"
-msgstr ""
-"Ce tournoi n’a aucune catégorie de qualification définie. Vous pouvez "
-"découvrir comment créer des qualifications <a href=\"http://tabbycat."
-"readthedocs.io/en/stable/features/breaks.html\" class=\"alert-link\" target="
-"\"_blank\">dans notre documentation.</a>"
+msgid "This tournament does not have any break categories set up. You can read about how to create breaks <a href=\"http://tabbycat.readthedocs.io/en/stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\"> at our documentation. </a>"
+msgstr "Ce tournoi n’a aucune catégorie de qualification définie. Vous pouvez découvrir comment créer des qualifications <a href=\"http://tabbycat.readthedocs.io/en/stable/features/breaks.html\" class=\"alert-link\" target=\"_blank\">dans notre documentation.</a>"
 
 #: breakqual/templates/breaking_index.html:29
 msgid "Edit Teams' Eligibility"
@@ -233,6 +202,7 @@ msgstr "Modifier d’admissibilité des équipes"
 #: breakqual/templates/breaking_index.html:44
 #: breakqual/templates/breaking_teams.html:4
 #: breakqual/templates/breaking_teams.html:14
+#: breakqual/templates/breakqual_subnav.html:9
 #, python-format
 msgid "%(category_name)s Break"
 msgstr "Qualification %(category_name)s"
@@ -256,11 +226,11 @@ msgstr "Exclu"
 
 #: breakqual/templates/breaking_index.html:87
 msgid "Eligible"
-msgstr ""
+msgstr "Éligible"
 
 #: breakqual/templates/breaking_index.html:99
 msgid "Mark teams as eligible"
-msgstr ""
+msgstr "Marquer équipes comme qualifiantes"
 
 #: breakqual/templates/breaking_index.html:104
 msgid "Generate this break"
@@ -288,93 +258,31 @@ msgstr "Générer la qualification pour toutes les catégories"
 
 #: breakqual/templates/breaking_teams.html:48
 #, python-format
-msgid ""
-"There are <strong>0 teams marked as eligible</strong> for this category — "
-"you will need to <a href=\"%(url)s\" class=\"alert-link\"> add some eligible "
-"teams</a> for this break to generate correctly."
-msgstr ""
-"Il y a <strong>0 équipe marquée comme admissible</strong> pour cette "
-"catégorie. Vous devez <a href=\"%(url)s\" class=\"alert-link\">ajouter des "
-"équipes admissibles</a> pour que cette qualification puisse être générée "
-"correctement."
+msgid "There are <strong>0 teams marked as eligible</strong> for this category — you will need to <a href=\"%(url)s\" class=\"alert-link\"> add some eligible teams</a> for this break to generate correctly."
+msgstr "Il y a <strong>0 équipe marquée comme admissible</strong> pour cette catégorie. Vous devez <a href=\"%(url)s\" class=\"alert-link\">ajouter des équipes admissibles</a> pour que cette qualification puisse être générée correctement."
 
 #: breakqual/templates/breaking_teams.html:60
 #, python-format
-msgid ""
-"This break uses the <strong>%(category)s</strong> rule — if you intended to "
-"use a different rule, you should <a href=\"%(url)s\"> edit the rule for this "
-"break category in the Edit Database area</a>, then delete and regenerate all "
-"breaks. Please double-check this before announcing the break or releasing it "
-"to the public. The code that generates the break is not robustly tested for "
-"corner cases."
-msgstr ""
-"Cette qualification utilise la règle <strong>%(category)s</strong> — si vous "
-"avez l’intention d’utiliser une règle différente, vous devriez <a href="
-"\"%(url)s\">modifier la règle pour cette catégorie de qualification dans la "
-"zone pour modifier la base de données</a>, puis supprimez et régénérer tous "
-"les qualifications. Veuillez vérifier la qualification avant de l'annoncer "
-"au public ou de le publier. Le code qui génère la qualification n’est pas "
-"testée robustement pour les cas extrêmes."
+msgid "This break uses the <strong>%(category)s</strong> rule — if you intended to use a different rule, you should <a href=\"%(url)s\"> edit the rule for this break category in the Edit Database area</a>, then delete and regenerate all breaks. Please double-check this before announcing the break or releasing it to the public. The code that generates the break is not robustly tested for corner cases."
+msgstr "Cette qualification utilise la règle <strong>%(category)s</strong> — si vous avez l’intention d’utiliser une règle différente, vous devriez <a href=\"%(url)s\">modifier la règle pour cette catégorie de qualification dans la zone pour modifier la base de données</a>, puis supprimez et régénérer tous les qualifications. Veuillez vérifier la qualification avant de l'annoncer au public ou de le publier. Le code qui génère la qualification n’est pas testée robustement pour les cas extrêmes."
 
 #: breakqual/templates/breaking_teams.html:66
-#, fuzzy, python-format
-#| msgid ""
-#| "To edit the break use the remarks in the right-hand column. Any team with "
-#| "a remark will be excluded from this break (the break generator will "
-#| "insert sometimes insert its own remarks). Then, click the appropriate "
-#| "Save Remarks and Update button below. If you have complicated break rules "
-#| "(for example, if some teams are allowed to choose their preferred "
-#| "category) then you may have to update remarks a few times to get the "
-#| "correct break. As a last resort, you can <a href=\"%(url)s\"> edit the "
-#| "breaking teams list directly in the Edit Database area</a>."
-msgid ""
-"To edit the break use the remarks in the right-hand column. Any team with a "
-"remark will be excluded from this break (the break generator will sometimes "
-"insert its own remarks). Then, click the appropriate Save Remarks and Update "
-"button below. If you have complicated break rules (for example, if some "
-"teams are allowed to choose their preferred category) then you may have to "
-"update remarks a few times to get the correct break. As a last resort, you "
-"can <a href=\"%(url)s\"> edit the breaking teams list directly in the Edit "
-"Database area</a>."
-msgstr ""
-"Pour modifier la qualification, utilisez les remarques dans la colonne à "
-"droite. Chaque équipe qui a une remarque sera exclue de la qualification. "
-"(Le générateur de qualification insérera parfois ses propre remarques.) "
-"Puis, cliquez le bouton « Enregistrer les remarques et mettre à jour » "
-"applicable ci-dessous. Si vous avez des règles complexes (par exemple, si "
-"les équipes peuvent choisir son catégorie préférée), vous devrez peut-être "
-"réviser les remarques plusieurs fois pour obtenir la qualification correcte. "
-"En dernier recours, vous pouvez <a href=\"%(url)s\"> modifier les équipes "
-"qualifiantes directement dans la zone pour modifier la base de données</a>."
+#, python-format
+msgid "To edit the break use the remarks in the right-hand column. Any team with a remark will be excluded from this break (the break generator will sometimes insert its own remarks). Then, click the appropriate Save Remarks and Update button below. If you have complicated break rules (for example, if some teams are allowed to choose their preferred category) then you may have to update remarks a few times to get the correct break. As a last resort, you can <a href=\"%(url)s\"> edit the breaking teams list directly in the Edit Database area</a>."
+msgstr "Pour modifier la qualification, utilisez les remarques dans la colonne à droite. N'importe équipe avec une remarque sera exclu de la qualification (des remarques pourraient être ajoutés automatiquement). Après, cliquer les boutons Sauvegarder Remarques et Mettre à Jour appropriés ci-dessous. Si vous avez des règles de qualification compliqués (par exemple si les équipes peuvent décider eux-mêmes leur catégorie préféré), vous aurez parfois besoin de faire des modifications manuelles pour avoir la bonne qualification. Comme dernier ressort, vous pouvez <a href=\"%(url)s\">modifier la liste des équipes directement dans l'interface de la base de données</a>."
 
 #: breakqual/templates/breaking_teams.html:76
 #, python-format
-msgid ""
-"The <strong>public breaking teams</strong> configuration setting is enabled. "
-"As soon as you click the button, the breaking teams list will be visible on "
-"the public site, before you have a chance to double-check it! It is strongly "
-"recommended that you disable this setting on the <a href=\"%(options_url)s"
-"\"> tournament configuration page</a> before generating the team breaks."
-msgstr ""
+msgid "The <strong>public breaking teams</strong> configuration setting is enabled. As soon as you click the button, the breaking teams list will be visible on the public site, before you have a chance to double-check it! It is strongly recommended that you disable this setting on the <a href=\"%(options_url)s\"> tournament configuration page</a> before generating the team breaks."
+msgstr "Le réglage <strong>équipes qualifiants public</strong> est activé. Aussi tôt que vous cliquer le bouton, la liste des équipes qualifiants sera visible publiquement, avant que vous auriez l'opportunité à le vérifier&nbsp;! C'est fortement conseillé que vous désactivez ce réglage dans la <a href=\"%(options_url)s\">page des réglages de tournoi</a> avant de générer la qualification d'équipe."
 
 #: breakqual/templates/breaking_teams.html:88
-msgid ""
-"The break hasn't yet been generated. Would you like to generate the break "
-"for all categories? It's safe to generate the break before all preliminary "
-"rounds are complete, if you're curious — you can regenerate it later."
-msgstr ""
-"La qualification n'a pas encore été générée. Souhaitez-vous générer la "
-"qualification pour toutes les catégories ? Il est sûr de générer la "
-"qualification avant que tous les tours préliminaires sont terminés, si vous "
-"êtes curieux : vous pouvez toujours le régénérer plus tard."
+msgid "The break hasn't yet been generated. Would you like to generate the break for all categories? It's safe to generate the break before all preliminary rounds are complete, if you're curious — you can regenerate it later."
+msgstr "La qualification n'a pas encore été générée. Souhaitez-vous générer la qualification pour toutes les catégories ? Il est sûr de générer la qualification avant que toutes les joutes préliminaires sont terminés, si vous êtes curieux : vous pouvez toujours le régénérer plus tard."
 
 #: breakqual/templates/breaking_teams.html:107
-msgid ""
-"<strong>Caution!</strong> The \"public breaking teams\" option is turned on, "
-"so the break is publicly visible. If you update the break(s), the changes "
-"will become visible <strong>immediately</strong>, <strong>without a chance "
-"for you to review them</strong>."
-msgstr ""
+msgid "<strong>Caution!</strong> The \"public breaking teams\" option is turned on, so the break is publicly visible. If you update the break(s), the changes will become visible <strong>immediately</strong>, <strong>without a chance for you to review them</strong>."
+msgstr "<strong>Attention&nbsp;!</strong> Le réglage Équipes qualifiants public est activé, donc la qualification est public. Si vous modifiez la(es) qualification(s), les changements seront visibles <strong>immédiatement</strong>, <strong>sans chance pour les réviser</strong>."
 
 #: breakqual/templates/breaking_teams.html:120
 msgid "Save Remarks and Update All Breaks"
@@ -383,108 +291,94 @@ msgstr "Enregistrer les remarques et mettre à jour tous les qualifications"
 #: breakqual/templates/breaking_teams.html:125
 #, python-format
 msgid "Save Remarks and Update the %(category_name)s Break"
-msgstr ""
-"Enregistrer les remarques et mettre à jour la qualification %(category_name)s"
+msgstr "Enregistrer les remarques et mettre à jour la qualification %(category_name)s"
 
 #: breakqual/templates/breaking_teams.html:137
 #, python-format
-msgid ""
-"There are <strong>%(count)s teams marked as eligible</strong> for this "
-"category. Would you like to add more eligible teams?"
-msgstr ""
+msgid "There are <strong>%(count)s teams marked as eligible</strong> for this category. Would you like to add more eligible teams?"
+msgstr "Il y a <strong>%(count)s équipes éligibles</strong> pour cette catégorie. Voulez-vous en ajouter plus&nbsp;?"
 
 #: breakqual/templates/breakqual_subnav.html:5
-msgid "Breaks Overview"
-msgstr "Aperçu des qualifications"
+msgid "Overview"
+msgstr "Vue d’ensemble"
 
-#: breakqual/templates/breakqual_subnav.html:11
+#: breakqual/templates/breakqual_subnav.html:15
 msgid "Adjudicators' Break"
 msgstr "Qualification des juges"
 
 #: breakqual/templates/edit_break_eligibility.html:7
 #, python-format
-msgid ""
-"It looks like there aren't any break categories are defined. If you'd like "
-"to create new break categories you'll need to first <a href="
-"\"%(categories_url)s\" class=\"alert-link\"> add them in the Edit Database "
-"area</a>, then return to this page to set team's eligibility."
-msgstr ""
+msgid "It looks like there aren't any break categories are defined. If you'd like to create new break categories you'll need to first <a href=\"%(categories_url)s\" class=\"alert-link\"> add them in the Edit Database area</a>, then return to this page to set team's eligibility."
+msgstr "Il semble qu'il n'y a aucun catégorie de qualification. Si vous voulez en ajouter, vous devriez d'abord <a href=\"%(categories_url)s\" class=\"alert-link\">les ajouter dans l'interface de la base de données</a>, puis retourner à cette page pour marquer les équipes comme éligible."
 
 #: breakqual/templates/public_break_index.html:4
-#: breakqual/templates/public_break_index.html:5 breakqual/views.py:62
+#: breakqual/templates/public_break_index.html:5 breakqual/views.py:63
 msgid "Break"
-msgstr ""
+msgstr "Qualification"
 
 #: breakqual/templates/public_break_index.html:15
-#, fuzzy, python-format
-#| msgid "%(category_name)s Break"
+#, python-format
 msgid "%(category.name)s Break"
-msgstr "Qualification %(category_name)s"
+msgstr "Qualification %(category.name)s"
 
 #: breakqual/templates/public_break_index.html:23
-#, fuzzy
-#| msgid "Adjudicators' Break"
 msgid "Adjudicators"
-msgstr "Qualification des juges"
+msgstr "Juges"
 
-#: breakqual/views.py:69
+#: breakqual/views.py:70
 #, python-format
 msgid "%(category)s Break"
 msgstr "Qualification %(category)s"
 
-#: breakqual/views.py:93
+#: breakqual/views.py:94
 #, python-format
-msgid ""
-"There was an error generating the break for category %(category)s: "
-"%(message)s"
-msgstr ""
-"Une erreur s'est produite lors de la génération de la qualification pour la "
-"catégorie %(category)s : %(message)s"
+msgid "There was an error generating the break for category %(category)s: %(message)s"
+msgstr "Une erreur s'est produite lors de la génération de la qualification pour la catégorie %(category)s : %(message)s"
 
-#: breakqual/views.py:136
+#: breakqual/views.py:137
 msgid "Eligible for"
-msgstr ""
+msgstr "Éligible pour"
 
-#: breakqual/views.py:140
+#: breakqual/views.py:141
 msgid "Edit Remark"
-msgstr ""
+msgstr "Modifier Remarque"
 
-#: breakqual/views.py:156
+#: breakqual/views.py:157
 #, python-format
-msgid ""
-"Changes to breaking team remarks saved and teams break updated for the "
-"following break categories: %(categories)s."
-msgstr ""
-"Les changements aux remarques pour les équipes qualifiantes ont été "
-"enregistrés, et la qualification des équipes a été mise à jour, pour les "
-"catégories de qualification suivantes : %(categories)s."
+msgid "Changes to breaking team remarks saved and teams break updated for the following break categories: %(categories)s."
+msgstr "Les changements aux remarques pour les équipes qualifiantes ont été enregistrés, et la qualification des équipes a été mise à jour, pour les catégories de qualification suivantes : %(categories)s."
 
-#: breakqual/views.py:163
+#: breakqual/views.py:164
 #, python-format
-msgid ""
-"Changes to breaking team remarks saved and teams break updated for break "
-"category %(category)s."
-msgstr ""
-"Les changements aux remarques pour les équipes qualifiantes ont été "
-"enregistrés, et la qualification des équipes a été mise à jour, pour la "
-"catégorie de qualification %(category)s."
+msgid "Changes to breaking team remarks saved and teams break updated for break category %(category)s."
+msgstr "Les changements aux remarques pour les équipes qualifiantes ont été enregistrés, et la qualification des équipes a été mise à jour, pour la catégorie de qualification %(category)s."
 
-#: breakqual/views.py:168
+#: breakqual/views.py:169
 msgid "Changes to breaking team remarks saved."
-msgstr ""
+msgstr "Modifications aux remarques des équipes qualifiants sauvegardés."
 
-#: breakqual/views.py:192
+#: breakqual/views.py:193
 #, python-format
-msgid ""
-"Teams break generated for the following break categories: %(categories)s."
-msgstr ""
-"La qualification des équipes s'est générée pour les catégories de "
-"qualification suivantes : %(categories)s."
+msgid "Teams break generated for the following break categories: %(categories)s."
+msgstr "La qualification des équipes s'est générée pour les catégories de qualification suivantes : %(categories)s."
 
-#: breakqual/views.py:205
+#: breakqual/views.py:206
 msgid "Breaking Adjudicators"
-msgstr ""
+msgstr "Juges Qualifiants"
 
-#: breakqual/views.py:230
+#: breakqual/views.py:231
 msgid "Break Eligibility"
 msgstr "Admissibilité pour la qualification"
+
+#: breakqual/views.py:260
+#, python-format
+msgid "%s Speakers"
+msgstr "%s Orateurs"
+
+#: breakqual/views.py:263
+#, python-format
+msgid "Team has %(nspeakers)s speaker with the %(category)s speaker category assigned"
+msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker category assigned"
+msgstr[0] "Équipe a %(nspeakers)s orateur avec la catégorie d'orateur %(category)s assigné"
+msgstr[1] "Équipe a %(nspeakers)s orateurs avec la catégorie d'orateur %(category)s assigné"
+

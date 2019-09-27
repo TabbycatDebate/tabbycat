@@ -5,7 +5,7 @@
   <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-danger">
     <i data-feather="chevron-left"></i> {% trans "Delete Draw" %}
   </a>
-  <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary">
+  <a href="{% roundurl 'edit-debate-teams' round %}" class="btn btn-outline-primary">
     {% trans "Edit Sides/Matchups" %}
   </a>
 {% endblock %}
@@ -33,12 +33,20 @@
   {% endif %}
 
   {% if round.draw_type == round.DRAW_MANUAL and round.debate_set.count == 0 %}
-    {% roundurl 'draw-matchups-edit' round as edit_matchups_url %}
+    {% roundurl 'edit-debate-teams' round as edit_matchups_url %}
     {% blocktrans trimmed asvar message %}
       The draw type for this round is set to <strong>manual</strong>, so Tabbycat has just made a
       blank draw. Head on over to
       <a href="{{ edit_matchups_url }}" class="alert-link">Edit Sides/Matchups</a>
       to fill it in.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="info" icon='alert-circle' %}
+  {% endif %}
+
+  {% if pref.adj_min_score == pref.adj_max_score %}
+    {% tournamenturl 'options-tournament-section' section='feedback' as feedback_config_url %}
+    {% blocktrans trimmed asvar message %}
+      The adjudicator score range is 0, and so adjudicator scores will be ignored when allocating. You can <a href="{{ feedback_config_url }}" class="alert-link">change the adjudicator score range in the feedback configuration page</a>.
     {% endblocktrans %}
     {% include "components/alert.html" with type="info" icon='alert-circle' %}
   {% endif %}

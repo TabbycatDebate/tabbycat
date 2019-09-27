@@ -93,6 +93,9 @@
     {% trans "Edit Database Area" as text %}{% url 'admin:index' as url %}
     {% include "components/item-action.html" with icon="edit" %}
 
+    {% trans "Send a Test Email" as text %}{% url 'notifications-test-email' as url %}
+    {% include "components/item-action.html" with icon="send" %}
+
   {% endif %}
 </div>
 

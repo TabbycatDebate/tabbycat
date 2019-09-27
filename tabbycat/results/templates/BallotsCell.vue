@@ -88,18 +88,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-
-.ballot-link {
-  white-space: nowrap;
-  padding: 3px 0;
-  display: block;
-}
-
-.ballot-info {
-  margin-top: -4px; /* Tighten spacing to subhead */
-  display: block;
-}
-
-</style>

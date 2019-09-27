@@ -155,7 +155,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     # We can't insert the CHOICE_SEPARATOR using string formatting because the below must be
     # translated lazily, and string formatting isn't compatible with lazy objects. (It can be
     # done with django.utils.text.format_lazy(), but this uses {}-style formating, not %-style.)
-    choices = models.CharField(max_length=500, blank=True,
+    choices = models.TextField(blank=True,
         verbose_name=_("choices"),
         help_text=_("Permissible choices for select one/multiple fields, separated by '//' "
                     "(ignored for other fields)"))
@@ -279,7 +279,7 @@ class AdjudicatorFeedback(Submission):
             raise ValidationError(
                 gettext("There was both a source adjudicator and a source team."))
         if not self.adjudicator:
-            raise ValidationError(gettext("There is no adjudicator specified as the target for this feedback.Perhaps they were deleted?"))
+            raise ValidationError(gettext("There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"))
         if self.adjudicator not in self.debate.adjudicators:
             raise ValidationError(gettext("Adjudicator did not see this debate."))
         return super(AdjudicatorFeedback, self).clean()

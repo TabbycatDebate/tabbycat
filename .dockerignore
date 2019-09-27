@@ -1,5 +1,5 @@
 # Copying this over will mess up database settings
-*/*/local_settings.py
+*/*/settings_local.py
 
 # Dependencies
 node_modules/

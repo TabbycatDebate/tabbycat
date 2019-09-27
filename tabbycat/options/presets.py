@@ -135,9 +135,11 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
-    # Email Sending
-    email__team_points_email_subject           = 'Your current number of points for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}'
-    email__team_points_email_message           = "Hi {{ USER }},\n\nYour team ({{ TEAM }}) currently has {{ POINTS }} points in the {{ TOURN }}.\n\n{{ URL }}"
+    # Email Sending - replace "wins" by "points"
+    team_points_email_subject                  = "{{ TEAM }}'s current points after {{ ROUND }}: {{ POINTS }}"
+    team_points_email_message                  = ("<p>Hi {{ USER }},</p>",
+        "<p>Your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> points in the {{ TOURN }}.",
+        "<p>Current Standings: {{ URL }}</p>")
 
 
 class CanadianParliamentaryPreferences(PreferencesPreset):
@@ -186,7 +188,7 @@ class AustralianEastersPreferences(AustralsPreferences):
 
 
 class NZEastersPreferences(AustralsPreferences):
-    name         = "New Zealand Easters Rules"
+    name         = "2 vs 2 Impromptu"
     show_in_list = True
     description  = ("2 vs 2 with replies, chosen motions, chosen sides, and "
         "novice statuses.")
@@ -213,9 +215,9 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    name         = "Joynt Scroll Rules"
+    name         = "3 vs 3 Prepared"
     show_in_list = True
-    description  = ("3 vs 3 with replies, set sides, publicly displayed sides "
+    description  = ("3 vs 3 with preallocated sides, publicly displayed sides "
         "and motions, and novice statuses.")
 
     # Scoring

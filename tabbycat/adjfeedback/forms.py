@@ -368,6 +368,8 @@ class UpdateAdjudicatorScoresForm(forms.Form):
         errors = []
         records = []
 
+        logger.info("UpdateAdjudicatorScoresForm: Cleaning started (1 of 5)")
+
         for i, line in enumerate(csv.reader(lines), start=1):
             errors_in_line = []
 
@@ -386,7 +388,11 @@ class UpdateAdjudicatorScoresForm(forms.Form):
             name, score = [x.strip() for x in line[:2]]
 
             try:
-                adj = self.tournament.relevant_adjudicators.get(name=name)
+                try:
+                    name = int(name)
+                    adj = self.tournament.relevant_adjudicators.get(id=name)
+                except ValueError:
+                    adj = self.tournament.relevant_adjudicators.get(name=name)
             except Adjudicator.MultipleObjectsReturned:
                 errors_in_line.append(ImportValidationError(i,
                     _("There are several adjudicators called \"%(adjudicator)s\", so "
@@ -412,6 +418,8 @@ class UpdateAdjudicatorScoresForm(forms.Form):
 
             records.append((adj, score))
 
+        logger.info("UpdateAdjudicatorScoresForm: Cleaning done (2 of 5)")
+
         if errors:
             raise ValidationError(errors)
 
@@ -422,14 +430,24 @@ class UpdateAdjudicatorScoresForm(forms.Form):
 
     def save(self):
         records = self.cleaned_data.get('scores_raw', [])
+        history_instances = []
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving to database started (3 of 5)")
+
         for adj, score in records:
             adj.test_score = score
             adj.save()
 
-            AdjudicatorTestScoreHistory.objects.create(
+            history_instances.append(AdjudicatorTestScoreHistory(
                 adjudicator=adj,
                 round=self.tournament.current_round,
                 score=score
-            )
+            ))
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving scores to database done (4 of 5)")
+
+        AdjudicatorTestScoreHistory.objects.bulk_create(history_instances)
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving test score histories to database done (5 of 5)")
 
         return len(records)

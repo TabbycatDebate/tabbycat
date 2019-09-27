@@ -42,10 +42,15 @@ class TabbycatPageTitlesMixin(ContextMixin):
         return super().get_context_data(**kwargs)
 
 
+# ==============================================================================
+# Mixins regulating access based on user account status
+# ==============================================================================
+
 class AdministratorMixin(UserPassesTestMixin, ContextMixin):
     """Mixin for views that are for administrators.
-    Requires use to be a superuser."""
+    Requires user to be a superuser."""
     view_role = "admin"
+    for_admin = True
 
     def get_context_data(self, **kwargs):
         kwargs["user_role"] = self.view_role
@@ -63,6 +68,33 @@ class AssistantMixin(LoginRequiredMixin, ContextMixin):
         kwargs["user_role"] = self.view_role
         return super().get_context_data(**kwargs)
 
+
+class AccessWebsocketMixin:
+    """Checks the user's permissions before allowing a connection.
+    Classes using this mixin must inherit from WebsocketConsumer."""
+
+    def connect(self):
+        if self.access_permitted():
+            return super().connect()
+        else:
+            return self.close()
+
+
+class LoginRequiredWebsocketMixin(AccessWebsocketMixin):
+
+    def access_permitted(self):
+        return self.scope["user"].is_authenticated
+
+
+class SuperuserRequiredWebsocketMixin(AccessWebsocketMixin):
+
+    def access_permitted(self):
+        return self.scope["user"].is_superuser
+
+
+# ==============================================================================
+# Miscellaneous mixins
+# ==============================================================================
 
 class WarnAboutDatabaseUseMixin(ContextMixin):
     """Mixin for views that should stop people exceeding database counts.

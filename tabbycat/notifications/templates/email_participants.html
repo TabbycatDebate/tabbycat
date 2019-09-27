@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load debate_tags i18n %}
+
+{% block page-subnav-sections %}
+  {% include 'notifications_nav.html' %}
+{% endblock page-subnav-sections %}
+
+{% block page-alerts %}
+
+{% if pref.reply_to_address == "" %}
+  {% tournamenturl 'options-tournament-section' section='email' as notifications_options_url %}
+  {% blocktrans trimmed asvar p1 %}
+    You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href="{{ notifications_options_url }}">Notifications section of the preferences</a>.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="warning" %}
+{% endif %}
+
+{% if pref.email_hook_key != "" and not sg_webhook %}
+  {% tournament_absurl 'notifications-webhook' key=pref.email_hook_key as notifications_webhook_url %}
+  {% blocktrans trimmed asvar p1 %}
+    The webhook URL for use in SendGrid is <a href="{{ notifications_webhook_url }}">{{ notifications_webhook_url }}</a>. Please point the HTTP POST URL in <a href="https://app.sendgrid.com/settings/mail_settings">SendGrid</a> to that.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="info" %}
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <div id="vueMount">
+      <checkbox-tables-container :tables-data=tablesData
+                                 :round-info=roundInfo
+                                 :categories=categories
+                                 :translations=translations
+                                 :urls=urls
+                                 :navigation=navigation
+                                 :hide-auto-save=hideAutoSave
+                                 orientation={{ tables_orientation|safe }} >
+      </checkbox-tables-container>
+    </div>
+
+    {{ form.non_field_errors }}
+    {% for field in form.visible_fields %}
+      {% include "components/form-field.html" %}
+    {% endfor %}
+    <button type="submit" class="btn btn-block btn-success">
+      {% trans "Send Message(s)" %}
+    </button>
+  </form>
+
+{% endblock content %}
+
+{% block js %}
+
+  <script>
+    window.vueData = {
+      tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
+      roundInfo: null,
+      categories: {% if categories %}{{ categories|safe }}{% else %}null{% endif %},
+      hideAutoSave: true,
+      translations: null,
+      urls: null,
+      navigation: null,
+    }
+  </script>
+  {{ block.super }}
+
+{% endblock %}

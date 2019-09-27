@@ -17,6 +17,9 @@
         <div class="card-body pl-3 pr-0 py-2">
           <h4 class="card-title mt-1 mb-2" v-if="table.title">
             {{ table.title }}
+            <small class="text-muted d-md-inline d-none" v-if="table.subtitle">
+              {{ table.subtitle }}
+            </small>
           </h4>
           <smart-table
             :table-headers="table.head" :table-content="table.data"

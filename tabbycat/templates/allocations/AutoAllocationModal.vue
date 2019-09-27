@@ -6,9 +6,7 @@
         <div class="modal-body">
           <p class="lead">Using auto-allocate will <strong>remove all existing adjudicator
           allocations</strong> and create new panels for all debates.</p>
-          <p>The allocator forms stronger panels for debates that have been assigned higher
-          importances. If importances have not been set, or are equivalent, it will give
-          stronger panels to debates in a higher bracket.</p>
+          <p></p>
           <p>Adjudicators must have a feedback score over <strong>{{ roundInfo.scoreForVote }}
           </strong>to panel. You can change this in the <em>Draw Rules</em> section of
           Configuration if needed. Try modifying this value if you are seeing too few or too many
@@ -56,7 +54,7 @@ export default {
         $.fn.showAlert('success', 'Successfully loaded the auto allocation', 10000)
       }).fail((response) => {
         // Handle Failure
-        // Note: this block duplicated in EditVenuesContainer
+        // Note: this block duplicated in LegacyEditVenuesContainer
         console.error(JSON.stringify(response)) // Help identify failures in sentry
         let info = ''
         if (Object.prototype.hasOwnProperty.call(response, 'responseJSON')) {
