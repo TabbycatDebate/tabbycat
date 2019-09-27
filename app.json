@@ -5,16 +5,7 @@
   "keywords": ["debate", "debating"],
   "website": "https://tabbycat.readthedocs.io/",
   "addons": [
-    "papertrail",
-    "sendgrid:starter",
-    "rediscloud:30",
-    "heroku-postgresql:hobby-dev",
-    {
-      "plan": "heroku-redis:hobby-dev",
-      "options": {
-        "maxmemory-policy": "allkeys-lru"
-      }
-    }
+    "heroku-postgresql:hobby-dev"
   ],
   "env": {
     "DJANGO_SECRET_KEY": {

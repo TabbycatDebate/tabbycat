@@ -168,13 +168,15 @@ PUBLIC_SLOW_CACHE_TIMEOUT = int(os.environ.get('PUBLIC_SLOW_CACHE_TIMEOUT', 60 *
 TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120))
 
 # Default non-heroku cache is to use local memory
+# Can't cache without redis; but code assumes caching exists
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# Need to use cookies for sessions; in-memory caching is wonky on Heroku
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 # ==============================================================================
 # Static Files and Compilation
