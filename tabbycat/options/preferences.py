@@ -1127,15 +1127,6 @@ class PublicMotionsOrder(ChoicePreference):
     default = 'reverse'
 
 
-@tournament_preferences_registry.register
-class ShowIntroductionToAllocationUI(BooleanPreference):
-    help_text = _("Show an introduction screen when loading the allocation interface (this will automatically uncheck whenever the screen is shown)")
-    verbose_name = _("Show allocation UI intro")
-    section = ui_options
-    name = 'show_allocation_intro'
-    default = True
-
-
 # ==============================================================================
 email = Section('email', verbose_name=_("Notifications"))
 # ==============================================================================
