@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width=200 src="https://rawgit.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg">
+<img width=200 src="https://raw.githubusercontent.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg?sanitize=true">
 
 # Tabbycat
 
@@ -60,7 +60,7 @@ We haven't released Tabbycat under an open-source licence, so there is no formal
 
 Tabbycat was authored by Qi-Shan Lim for Auckland Australs in 2010. The current active developers are:
 
-- Philip Belesky ([e-mail](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=))
+- Philip Belesky ([e-mail](mailto:contact@philipbelesky.com))
 - Chuan-Zheng Lee ([e-mail](mailto:czlee@stanford.edu))
 
 Please don't hesitate to contact us with any questions, suggestions, or generally anything relating to Tabbycat.
