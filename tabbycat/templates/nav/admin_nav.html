@@ -25,10 +25,13 @@
     </a>
     <div class="collapse" id="tlisth">
       <a href="/" class="list-group-item" data-parent="#titleh">
-        <i data-feather="home"></i>Site Home
+        <i data-feather="home"></i>{% trans "Site Home" %}
       </a>
       <a href="{% url 'tournament-create' %}" class="list-group-item" data-parent="#titleh">
-        <i data-feather="edit-2"></i>New Tournament
+        <i data-feather="edit-2"></i>{% trans "New Tournament" %}
+      </a>
+      <a href="{% url 'admin:index' %}" target="_blank" class="list-group-item" data-parent="#titleh">
+        <i data-feather="database"></i>{% trans "Edit Database" %}
       </a>
       {% for t in all_tournaments %}
         <div class="list-group-item tournament-areas-title" data-parent="#titleh">
@@ -36,11 +39,11 @@
         </div>
         <a href="{% url 'tournament-admin-home' tournament_slug=t.slug %}"
            class="list-group-item" data-parent="#titleh">
-          <i data-feather="settings"></i>{% blocktrans trimmed %}Admin Area{% endblocktrans %}
+          <i data-feather="settings"></i>{% trans "Admin Area" %}
         </a>
         <a href="{% url 'tournament-assistant-home' tournament_slug=t.slug %}"
            class="list-group-item" data-parent="#titleh">
-          <i data-feather="pocket"></i>{% blocktrans trimmed %}Assistant Area{% endblocktrans %}
+          <i data-feather="pocket"></i>{% trans "Assistant Area" %}
         </a>
         <a href="{% url 'tournament-public-index' tournament_slug=t.slug %}"
            class="list-group-item" data-parent="#titleh">
@@ -88,10 +91,6 @@
       <a href="{% tournamenturl 'panel-adjudicators-index' %}"
          class="list-group-item" data-parent="#setuph">
         <span class="circle-icon small-circle"></span><i data-feather="box"></i>{% trans "Preformed Panels" %}
-      </a>
-      <a href="{% url 'admin:index' %}" target="_blank"
-         class="list-group-item" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="database"></i>{% trans "Edit Database" %}
       </a>
     </div>
   </div>
@@ -267,7 +266,7 @@
     <a href="{% url 'logout' %}" data-parent="#sidebar"
      class="collapsed">
       <i data-feather="log-out"></i>
-      <span class="d-none d-md-inline">{% blocktrans trimmed %}Log Out{% endblocktrans %}</span>
+      <span class="d-none d-md-inline">{% trans "Log Out" %}</span>
     </a>
   </div>
 
