@@ -6,6 +6,7 @@ Change Log
 ---------
 *Release date: ?*
 
+- Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation.
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket.
 - The number of pull-ups and draw strength by speaker score are now available as team standing metrics.
 - Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!
