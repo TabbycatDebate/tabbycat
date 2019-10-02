@@ -16,8 +16,7 @@ from participants.emoji import EMOJI_BY_NAME
 from participants.models import Adjudicator, Institution, Region, Speaker, SpeakerCategory, Team
 from results.models import BallotSubmission, Submission
 from results.prefetch import populate_confirmed_ballots, populate_wins
-from results.result import (BaseConsensusDebateResultWithSpeakers, BaseDebateResultWithSpeakers,
-                            BaseEliminationDebateResult, DebateResult, VotingDebateResult)
+from results.result import DebateResult
 from tournaments.models import Round, Tournament
 from venues.models import Venue
 
@@ -121,10 +120,10 @@ class Exporter:
                 if dt.debateteammotionpreference_set.exists():
                     side_tag.set('motion-veto', MOTION_PREFIX + str(dt.debateteammotionpreference_set.first().motion_id))
 
-                if isinstance(result, VotingDebateResult):
+                if result.is_voting:
                     for (adj, scoresheet) in result.scoresheets.items():
                         self.add_team_ballots(side_tag, result, adj, scoresheet, side)
-                elif isinstance(result, BaseEliminationDebateResult):
+                elif not result.uses_speakers:
                     adv = side in result.advancing_sides()
                     ballot_tag = SubElement(side_tag, 'ballot', {
                         'adjudicators': adjs,
@@ -141,13 +140,13 @@ class Exporter:
                         side
                     )
 
-                if isinstance(result, BaseDebateResultWithSpeakers):
+                if result.uses_speakers:
                     self.add_speakers(side_tag, debate, result, side)
 
     def add_team_ballots(self, side_tag, result, adj, scoresheet, side):
         ballot_tag = SubElement(side_tag, 'ballot')
 
-        if isinstance(result, VotingDebateResult):
+        if result.is_voting:
             majority = result.majority_adjudicators()
 
             ballot_tag.set('adjudicators', ADJ_PREFIX + str(adj.id))
@@ -179,17 +178,17 @@ class Exporter:
                     'reply': str(pos > self.t.pref('substantive_speakers'))
                 })
 
-                if isinstance(result, BaseConsensusDebateResultWithSpeakers):
-                    ballot_tag = SubElement(speech_tag, 'ballot', {
-                        'adjudicators': " ".join([ADJ_PREFIX + str(d_adj.adjudicator_id) for d_adj in debate.debateadjudicator_set.all()])
-                    })
-                    ballot_tag.text = str(result.scoresheet.get_score(side, pos))
-                else:
+                if result.is_voting:
                     for (adj, scoresheet) in result.scoresheets.items():
                         ballot_tag = SubElement(speech_tag, 'ballot', {
                             'adjudicators': ADJ_PREFIX + str(adj.id)
                         })
                         ballot_tag.text = str(scoresheet.get_score(side, pos))
+                else:
+                    ballot_tag = SubElement(speech_tag, 'ballot', {
+                        'adjudicators': " ".join([ADJ_PREFIX + str(d_adj.adjudicator_id) for d_adj in debate.debateadjudicator_set.all()])
+                    })
+                    ballot_tag.text = str(result.scoresheet.get_score(side, pos))
 
     def add_participants(self):
         participants_tag = SubElement(self.root, 'participants')
