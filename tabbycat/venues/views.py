@@ -11,7 +11,7 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from adjallocation.views import BaseConstraintsView
 from availability.utils import annotate_availability
-from participants.models import Institution
+from participants.models import Adjudicator, Institution, Team
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
@@ -151,7 +151,7 @@ class VenueTeamConstraintsView(BaseVenueConstraintsView):
     subject = gettext_lazy("Team")
     unchanged_message = gettext_lazy("No changes were made to venue-team constraints.")
 
-    contenttype = ContentType.objects.get(app_label='participants', model='team')
+    contenttype = ContentType.objects.get_for_model(Team)
 
     def get_formset_queryset(self):
         return self.formset_model.objects.filter(team__tournament=self.tournament)
@@ -183,7 +183,7 @@ class VenueAdjudicatorConstraintsView(BaseVenueConstraintsView):
     subject = gettext_lazy("Adjudicator")
     unchanged_message = gettext_lazy("No changes were made to venue-adjudicator constraints.")
 
-    contenttype = ContentType.objects.get(app_label='participants', model='adjudicator')
+    contenttype = ContentType.objects.get_for_model(Adjudicator)
 
     def get_formset_queryset(self):
         q = Q(adjudicator__tournament=self.tournament)
