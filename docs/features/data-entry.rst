@@ -82,7 +82,7 @@ These URLs can then be distributed to each person in a number of ways. There are
   - You can assign email address to participants using the :ref:`importtournament command <importtournament-command>` when importing your registration data, or by going to the *Edit Data* area and looking up each Speaker/Adjudicator.
   - If, after generating the private URLs, you add additional Teams or Adjudicators you can go to the *Edit Database* area , look up each Speaker/Adjudicator, and type in a bunch of random characters as their *Url key* to assign them a private URL.
   - You can delete the current set of URLs by running this command in a shell on your server (replacing TOURNAMENT_SLUG with the appropriate value):
-    ``python manage.py randomisedurls delete --tournament TOURNAMENT_SLUG``
+    ``python manage.py privateurls delete --tournament TOURNAMENT_SLUG``
 
 
 Public URLs
