@@ -47,7 +47,7 @@ When entering the ballots there is a toggle label *'Iron' speeches*. When set to
 
 Speeches marked as duplicates are not included in the speaker tab. This means that they can also be used to exclude swing speakers from the tab as needed; even if they do not actually speak twice. To do so, change the name of the swing speaker to be that of an existing team member and ensure that that speech is marked as a duplicate.
 
-.. tip:: There is also an option under **Standings** in the **Configuration** section that specifies the number of debates a speaker can miss before you will not show on the tab. By default it is set to 1, but if need be this can be increased to hide swing speakers from the final speaker tab.
+.. tip:: There is also an option under **Standings** in the **Configuration** section that specifies the number of debates a speaker can miss before you will not show on the tab. By default there is no limit, but if need be this can be set to hide swing speakers from the final speaker tab.
 
 Feedback entry
 ==============
