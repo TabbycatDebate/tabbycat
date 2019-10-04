@@ -65,17 +65,6 @@ which is the default.
       teams who are in the top three teams from their
       institution are added to make *n* teams.
 
-  * - WADL division winners first (``wadl-div-first``)
-    - The division winners are taken first, then the best
-      teams who did not win their division are added to make
-      *n* teams.
-
-  * - WADL division winners guaranteed (``wadl-div-guaranteed``)
-    - The division winners are guaranteed to break, and the
-      best teams who did not win their division are added
-      to make *n* teams. (Teams are sorted in their original
-      rankings, unlike the "division winners first" rule.)
-
 .. note:: The break generators are somewhat more complex than described in the
   above table: among other things, they also handle cases where there is a tie
   for the last place in the break, and for those break categories marked
