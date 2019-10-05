@@ -90,9 +90,12 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
         institutions = Institution.objects.select_related('region').filter(
             Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
         ).annotate(
-            nteams=Count('team', distinct=True),
-            nadjs=Count('adjudicator', filter=Q(adjudicator__independent=False), distinct=True),
-            nias=Count('adjudicator', filter=Q(adjudicator__independent=True), distinct=True),
+            nteams=Count('team', distinct=True, filter=Q(
+                team__tournament=self.tournament)),
+            nadjs=Count('adjudicator', filter=Q(
+                adjudicator__tournament=self.tournament, adjudicator__independent=False), distinct=True),
+            nias=Count('adjudicator', filter=Q(
+                adjudicator__tournament=self.tournament, adjudicator__independent=True), distinct=True),
         ).distinct()
 
         table = TabbycatTableBuilder(view=self, sort_key='code')
