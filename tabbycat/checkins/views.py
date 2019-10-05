@@ -17,6 +17,7 @@ from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
 from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
+from venues.serializers import VenueSerializer
 
 from .consumers import CheckInEventConsumer
 from .models import PersonIdentifier, VenueIdentifier
@@ -121,7 +122,7 @@ class CheckInVenuesStatusView(BaseCheckInStatusView):
     def get_context_data(self, **kwargs):
         venues = []
         for venue in self.tournament.relevant_venues.select_related('checkin_identifier').prefetch_related('venuecategory_set').all():
-            item = venue.serialize()
+            item = VenueSerializer(venue).data
             item['locked'] = False
             try:
                 item['identifier'] = [venue.checkin_identifier.barcode]
