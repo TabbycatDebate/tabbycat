@@ -5,7 +5,7 @@
              class="db-margins-m db-bordered db-flex-row db-flex-item-1">
       <div class="db-padding-horizontal db-flex-item-1 db-flex-row">
         <div class="db-align-vertical-center db-flex-static db-vertical-center-text"
-             v-text="gettext('Did %1 deliver the adjudication?', ballot.target)"></div>
+             v-text="tct('Did %s deliver the adjudication?', [ballot.target])"></div>
         <div class="db-flex-item db-flex-row">
           <div class="db-align-horizontal-center db-padding-horizontal db-align-vertical-center
                       db-flex-static db-center-text db-vertical-center-text">

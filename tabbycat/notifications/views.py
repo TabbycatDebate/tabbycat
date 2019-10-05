@@ -50,6 +50,9 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 
     tables_orientation = 'rows'
 
+    NA_CELL = {'text': _("N/A"), 'class': 'text-muted'}
+    UNKNOWN_RECIPIENT_CELL = {'text': _("Not known"), 'class': 'text-muted'}
+
     def _create_status_timeline(self, status):
         statuses = []
         for s in status:
@@ -76,36 +79,54 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 
     def get_tables(self):
         tables = []
-        notifications = self.tournament.bulknotification_set.select_related('round').prefetch_related(
-            Prefetch('sentmessage_set', queryset=SentMessage.objects.select_related('recipient').prefetch_related('emailstatus_set')))
 
-        for n in notifications:
-            emails = n.sentmessage_set.all()
+        # notifications.sentmessage_set.first().emailstatus_set.first().latest_statuses will be a list
+        notifications = self.tournament.bulknotification_set.select_related(
+            'round'
+        ).prefetch_related(Prefetch(
+            'sentmessage_set',
+            queryset=SentMessage.objects.select_related(
+                'recipient'
+            ).prefetch_related(Prefetch(
+                'emailstatus_set',
+                queryset=EmailStatus.objects.order_by('-timestamp'),
+                to_attr='statuses',
+            ))
+        ))
 
-            subtitle = n.round.name if n.round is not None else _("@ %s") % timezone.localtime(n.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
-            table = TabbycatTableBuilder(view=self, title=n.get_event_display().title(), subtitle=subtitle)
+        for notification in notifications:
 
-            # Create arrays for columns
+            if notification.round is not None:
+                subtitle = notification.round.name
+            else:
+                subtitle = _("@ %s") % timezone.localtime(notification.timestamp).strftime("%a, %d %b %Y %H:%M:%S")
+
+            table = TabbycatTableBuilder(view=self, title=notification.get_event_display().title(), subtitle=subtitle)
+
+            emails_recipient = []
             emails_status = []
             emails_time = []
-            for e in emails:
-                status = e.emailstatus_set.all()
-                if status.count() == 0:
-                    na_email = {'text': _("N/A"), 'class': 'text-muted'}
-                    emails_status.append(na_email)
-                    emails_time.append(na_email)
-                    continue
 
-                first_status = status.first()
-                status_cell = {
-                    "text": first_status.get_event_display(),
-                    "class": self._get_event_class(first_status.event),
-                    "popover": {"title": _("Timeline"), "content": self._create_status_timeline(status)}
-                }
-                emails_status.append(status_cell)
-                emails_time.append(first_status.timestamp)
+            for sentmessage in notification.sentmessage_set.all():
+                emails_recipient.append(sentmessage.recipient.name if sentmessage.recipient else self.UNKNOWN_RECIPIENT_CELL)
 
-            table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [e.recipient.name for e in emails])
+                if len(sentmessage.statuses) > 0:
+                    latest_status = sentmessage.statuses[0]  # already ordered
+                    status_cell = {
+                        "text": latest_status.get_event_display(),
+                        "class": self._get_event_class(latest_status.event),
+                        "popover": {
+                            "title": _("Timeline"),
+                            "content": self._create_status_timeline(sentmessage.statuses),
+                        }
+                    }
+                    emails_status.append(status_cell)
+                    emails_time.append(latest_status.timestamp)
+                else:
+                    emails_status.append(self.NA_CELL)
+                    emails_time.append(self.NA_CELL)
+
+            table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, emails_recipient)
             table.add_column({'key': 'name', 'title': _("Status")}, emails_status)
             table.add_column({'key': 'name', 'title': _("Time")}, emails_time)
 
@@ -164,8 +185,6 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
     def get_queryset(self):
         """All the people from the tournament who could receive the message"""
         queryset_filter = Q(speaker__team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
-        if self.tournament.pref('share_adjs'):
-            queryset_filter |= Q(adjudicator__tournament__isnull=True)
 
         return Person.objects.filter(queryset_filter).select_related('speaker', 'adjudicator')
 

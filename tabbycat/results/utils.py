@@ -2,6 +2,7 @@ import logging
 from itertools import combinations
 
 from django.db.models import Count
+from django.contrib.humanize.templatetags.humanize import ordinal
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
@@ -19,87 +20,61 @@ def get_status_meta(debate):
         return "circle", "text-info", 2, _("Ballot is Unconfirmed")
     elif debate.result_status == Debate.STATUS_CONFIRMED:
         return "check", "text-success", 3, _("Ballot is Confirmed")
-    elif debate.result_status == Debate.STATUS_POSTPONED:
-        return "pause", "", 4, _("Debate was Postponed")
     else:
         raise ValueError('Debate has no discernable status')
 
 
-def readable_ballotsub_result(ballotsub):
+def readable_ballotsub_result(debateresult):
     """ Make a human-readable representation of a debate result """
 
-    def format_dt(dt, t, use_codes):
-        # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
-        return _("%(team_name)s as %(side_abbr)s") % {
+    def get_display_name(dt, t, use_codes):
+        return {
             'team_name': dt.team.code_name if use_codes else dt.team.short_name,
             'side_abbr': dt.get_side_abbr(t)
         }
 
-    t = ballotsub.debate.round.tournament
-    team_scores = ballotsub.teamscore_set.all()
+    def format_dt(dt, t, use_codes):
+        # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
+        return _("%(team_name)s as %(side_abbr)s") % get_display_name(dt, t, use_codes)
+
+    t = debateresult.tournament
     use_codes = use_team_code_names(t, True)
 
     try:
         if t.pref('teams_in_debate') == 'two':
-            winner = None
-            loser = None
-            for teamscore in team_scores:
-                if teamscore.win:
-                    winner = teamscore.debate_team
-                else:
-                    loser = teamscore.debate_team
-
-            result_winner = _("%(winner)s (%(winner_side)s) won")
-            result_winner = result_winner % {
-                'winner': winner.team.code_name if use_codes else winner.team.short_name,
-                'winner_side': winner.get_side_abbr(t),
-            }
-            result = _("vs %(loser)s (%(loser_side)s)")
-            result = result % {
-                'loser': loser.team.code_name if use_codes else loser.team.short_name,
-                'loser_side': loser.get_side_abbr(t),
-            }
-
-        elif ballotsub.debate.round.is_break_round:
-            advancing = []
-            eliminated = []
-            for teamscore in team_scores:
-                if teamscore.win:
-                    advancing.append(teamscore.debate_team)
-                else:
-                    eliminated.append(teamscore.debate_team)
-
+            result_winner = _("%(team_name)s (%(side_abbr)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
+            # Translators: The team here is the losing team
+            result = _("vs %(team_name)s (%(side_abbr)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
+        elif not debateresult.is_voting and debateresult.has_two_advancing():
             result_winner = _("Advancing: %(advancing_list)s<br>\n")
             result_winner = result_winner % {
-                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in advancing)
+                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt())
             }
             result = _("Eliminated: %(eliminated_list)s")
             result = result % {
-                'eliminated_list': ", ".join(format_dt(dt, t, use_codes) for dt in eliminated),
+                'eliminated_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.eliminated_dt()),
             }
 
         else:  # BP preliminary round
-            ordered = [None] * 4
-            for teamscore in team_scores:
-                ordered[teamscore.points] = teamscore.debate_team
+            ordered = debateresult.get_ranked_dt()
 
             result_winner = _("1st: %(first_team)s<br>\n")
-            result_winner = result_winner % {'first_team':  format_dt(ordered[3], t, use_codes)}
+            result_winner = result_winner % {'first_team':  format_dt(ordered[0], t, use_codes)}
             result = _("2nd: %(second_team)s<br>\n"
                        "3rd: %(third_team)s<br>\n"
                        "4th: %(fourth_team)s")
             result = result % {
-                'second_team': format_dt(ordered[2], t, use_codes),
-                'third_team':  format_dt(ordered[1], t, use_codes),
-                'fourth_team': format_dt(ordered[0], t, use_codes),
+                'second_team': format_dt(ordered[1], t, use_codes),
+                'third_team':  format_dt(ordered[2], t, use_codes),
+                'fourth_team': format_dt(ordered[3], t, use_codes),
             }
 
     except (IndexError, AttributeError):
         logger.warning("Error constructing latest result string", exc_info=True)
         if use_codes:
-            matchup = ballotsub.debate.matchup_codes
+            matchup = debateresult.debate.matchup_codes
         else:
-            matchup = ballotsub.debate.matchup
+            matchup = debateresult.debate.matchup
         result_winner = _("Error with result for %(debate)s") % {'debate': matchup}
         result = ""
 
@@ -158,18 +133,6 @@ def populate_identical_ballotsub_lists(ballotsubs):
         ballotsub.identical_ballotsub_versions.sort()
 
 
-_ORDINALS = {
-    1: gettext_lazy("1st"),
-    2: gettext_lazy("2nd"),
-    3: gettext_lazy("3rd"),
-    4: gettext_lazy("4th"),
-    5: gettext_lazy("5th"),
-    6: gettext_lazy("6th"),
-    7: gettext_lazy("7th"),
-    8: gettext_lazy("8th"),
-}
-
-
 _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Prime Minister
     [gettext_lazy("PM"),
@@ -207,6 +170,6 @@ def side_and_position_names(tournament):
     else:
         for side in sides:
             positions = [_("Reply") if pos == tournament.reply_position
-                else _ORDINALS[pos]
+                else ordinal(pos)
                 for pos in tournament.positions]
             yield side, positions

@@ -142,8 +142,8 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
-    # Email Sending
-    team_points_email_subject                  = 'Your current number of points after {{ ROUND }} for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}'
+    # Email Sending - replace "wins" by "points"
+    team_points_email_subject                  = "{{ TEAM }}'s current points after {{ ROUND }}: {{ POINTS }}"
     team_points_email_message                  = ("<p>Hi {{ USER }},</p>",
         "<p>Your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> points in the {{ TOURN }}.",
         "<p>Current Standings: {{ URL }}</p>")
@@ -320,7 +320,7 @@ class WSDCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     name         = "WADL Options"
     show_in_list = False
-    description  = ("Example high school league setup. Many features not "
+    description  = ("Example high school setup. Many features not "
         "supported in conjunction with other settings.")
 
     # Debate Rules= no replies; singular motions
@@ -330,7 +330,7 @@ class WADLPreferences(PreferencesPreset):
     data_entry__enable_motions                 = False
     # Standings Rules
     standings__standings_missed_debates        = 0
-    standings__team_standings_precedence       = ['points210', 'wbwd', 'margin_avg', 'speaks_avg']
+    standings__team_standings_precedence       = ['points', 'wbw', 'margin_avg', 'speaks_avg']
     standings__speaker_standings_precedence    = ['average']
     standings__speaker_standings_extra_metrics = ['stdev', 'count']
     # Draws
@@ -350,22 +350,6 @@ class WADLPreferences(PreferencesPreset):
     public_features__public_results            = True
     public_features__public_motions            = True
     public_features__public_record             = False
-    # League Options
-    league_options__enable_flagged_motions     = True
-    league_options__enable_adj_notes           = True
-    league_options__enable_debate_scheduling   = True
-    league_options__share_adjs                 = True
-    league_options__share_venues               = True
-    league_options__hide_adjudicators          = True
-    league_options__division_venues            = True
-    league_options__duplicate_adjs             = True
-    league_options__public_divisions           = True
-    league_options__enable_divisions           = True
-    league_options__enable_postponements       = True
-    league_options__enable_forfeits            = True
-    league_options__enable_division_motions    = True
-    league_options__allocation_confirmations   = True
-    league_options__enable_mass_draws          = True
 
 
 class PublicInformation(PreferencesPreset):

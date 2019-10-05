@@ -62,6 +62,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return
 
+        extra_msgs = "" # Account for HungarianPPA not returning messages
         if event['extra']['settings']['usePreformedPanels']:
             if not round.preformedpanel_set.exists():
                 self.return_error(event['extra']['group_name'],
@@ -88,7 +89,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                     allocator = VotingHungarianAllocator(debates, adjs, round)
                 else:
                     allocator = ConsensusHungarianAllocator(debates, adjs, round)
-                allocation = allocator.allocate()
+                allocation, extra_msgs = allocator.allocate()
             except AdjudicatorAllocationError as e:
                 self.return_error(event['extra']['group_name'], str(e))
                 return
@@ -104,7 +105,12 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             msg = _("Succesfully auto-allocated preformed panels to debates.")
         else:
             msg = _("Succesfully auto-allocated adjudicators to debates.")
-        self.return_response(content, event['extra']['group_name'], msg, 'success')
+        if extra_msgs != "":
+            msg += _(" However there was a warning:") + extra_msgs
+            level = 'warning'
+        else:
+            level = 'success'
+        self.return_response(content, event['extra']['group_name'], msg, level)
 
     def allocate_panel_adjs(self, event):
         round = Round.objects.get(pk=event['extra']['round_id'])
@@ -125,7 +131,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             else:
                 allocator = ConsensusHungarianAllocator(panels, adjs, round)
 
-            allocation = allocator.allocate()
+            allocation, extra_msgs = allocator.allocate()
         except AdjudicatorAllocationError as e:
             self.return_error(event['extra']['group_name'], str(e))
             return
@@ -136,7 +142,12 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
         content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
         msg = _("Succesfully auto-allocated adjudicators to preformed panels.")
-        self.return_response(content, event['extra']['group_name'], msg, 'success')
+        if extra_msgs != "":
+            msg += _("However there was a warning:") + extra_msgs
+            level = 'warning'
+        else:
+            level = 'success'
+        self.return_response(content, event['extra']['group_name'], msg, level)
 
     def _prioritise_by_bracket(self, instances, bracket_attrname):
         instances = instances.order_by('-' + bracket_attrname)
@@ -158,7 +169,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         # TODO: Debates and panels should really be unified in a single function
         round = Round.objects.get(pk=event['extra']['round_id'])
         debates = round.debate_set_with_prefetches(teams=True, adjudicators=False,
-            speakers=False, divisions=False, venues=False)
+            speakers=False, venues=False)
 
         priority_method = event['extra']['settings']['type']
         if priority_method == 'liveness':

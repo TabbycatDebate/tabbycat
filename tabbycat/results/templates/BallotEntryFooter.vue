@@ -11,14 +11,14 @@
         <div class="row">
           <div class="col-lg-2 pt-1">
             <div class="form-check form-check-inline">
-              <input type="checkbox" id="shadowConfirmed" tabindex="17" class="form-check-input"
+              <input type="checkbox" id="shadowConfirmed" tabindex="117" class="form-check-input"
                      @change="setConfirmed(confirmed)" v-model="confirmed">
               <label class="form-check-label pt-0" for="shadowConfirmed">Confirmed</label>
             </div>
           </div>
           <div class="col-lg-2 pt-1">
             <div class="form-check form-check-inline">
-              <input type="checkbox" id="shadowDiscarded" tabindex="18" class="form-check-input"
+              <input type="checkbox" id="shadowDiscarded" tabindex="118" class="form-check-input"
                      @change="setDiscarded(discarded)" v-model="discarded">
               <label class="form-check-label pt-0" for="shadowDiscarded">Discarded</label>
             </div>
@@ -32,7 +32,7 @@
         </h4>
       </div>
       <div v-if="isAdmin" class="list-group-item">
-        <select v-model="status" @change="setStatus(status)" tabindex="19" class="form-control">
+        <select v-model="status" @change="setStatus(status)" tabindex="119" class="form-control">
           <option value="N">none</option>
           <option value="D">draft</option>
           <option value="C">confirmed</option>
@@ -109,7 +109,7 @@ export default {
       document.getElementById('resultsForm').submit()
     },
     check: function () {
-      this.$emit('reveal-blind-check')
+      this.$emit('reveal-blind-check', {})
     },
     invalidate: function () {
       this.setStatus(this.totalBallotsubs > 1 ? 'D' : 'N')

@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate
-from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.result import ConsensusDebateResultWithScores, DebateResult, DebateResultByAdjudicatorWithScores
 from results.utils import side_and_position_names
 from options.utils import use_team_code_names
 from participants.models import Person
@@ -44,7 +44,7 @@ def adjudicator_assignment_email_generator(to, url, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
-    draw = round.debate_set_with_prefetches(speakers=False, divisions=False).all()
+    draw = round.debate_set_with_prefetches(speakers=False).all()
     use_codes = use_team_code_names(tournament, False)
 
     for debate in draw:
@@ -136,14 +136,14 @@ def ballots_email_generator(to, debate_id):
 
         return mark_safe(ballot)
 
-    if isinstance(results, VotingDebateResult):
+    if isinstance(results, DebateResultByAdjudicatorWithScores):
         for (adj, ballot) in results.scoresheets.items():
             if adj.email is None:
                 continue
 
             context = {'DEBATE': round_name, 'USER': adj.name, 'SCORES': _create_ballot(results, ballot)}
             emails.append((context, adj))
-    elif isinstance(results, BaseConsensusDebateResultWithSpeakers):
+    elif isinstance(results, ConsensusDebateResultWithScores):
         context = {'DEBATE': round_name, 'SCORES': _create_ballot(results, results.scoresheet)}
 
         for adj in debate.debateadjudicator_set.all():
@@ -227,13 +227,12 @@ def team_speaker_email_generator(to, tournament_id):
     emails = []
     tournament = Tournament.objects.get(id=tournament_id)
 
-    for team in tournament.team_set.all().prefetch_related('speaker_set', 'break_categories').select_related('division', 'institution'):
+    for team in tournament.team_set.all().prefetch_related('speaker_set', 'break_categories').select_related('institution'):
         context = {
             'TOURN': str(tournament),
             'SHORT': team.short_name,
             'LONG': team.long_name,
             'CODE': team.code_name,
-            'DIVISION': team.division.name if team.division is not None else "",
             'BREAK': _(", ").join([breakq.name for breakq in team.break_categories.all()]),
             'SPEAKERS': _(", ").join([p.name for p in team.speaker_set.all()]),
             'INSTITUTION': str(team.institution),
@@ -258,7 +257,7 @@ def team_draw_email_generator(to, url, round_id):
     emails = []
     round = Round.objects.get(id=round_id)
     tournament = round.tournament
-    draw = round.debate_set_with_prefetches(speakers=True, divisions=False).all()
+    draw = round.debate_set_with_prefetches(speakers=True).all()
     use_codes = use_team_code_names(tournament, False)
 
     for debate in draw:

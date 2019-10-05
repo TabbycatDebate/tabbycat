@@ -97,17 +97,6 @@ label.error {
 // Custom Widgets
 //------------------------------------------------------------------------------
 
-// Forfeits spacing is (by default) off; needs correcting
-.forfeits-group {
-  list-style-type: none;
-  padding-left: 0;
-
-  li {
-    float: left;
-    width: 46%;
-  }
-}
-
 // Welcome message box
 #id_public_features__welcome_message_iframe { /* stylelint-disable-line */
   padding: 0;

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
-"PO-Revision-Date: 2018-10-30 20:09-0400\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-01-27 23:53-0500\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: results/apps.py:7 results/templates/public_results_index.html:4
 #: results/templates/public_results_index.html:5 results/views.py:113
@@ -38,7 +38,7 @@ msgstr "Veuillez saisir un multiple de %s."
 
 #: results/forms.py:158
 msgid "The ballot set can't be both discarded and confirmed."
-msgstr "L'ensemble de bulletins ne peut pas être rejeté et confirmé."
+msgstr "L'ensemble de feuilles ne peut pas être rejeté et confirmé."
 
 #: results/forms.py:164
 msgid ""
@@ -46,7 +46,7 @@ msgid ""
 "confirmed."
 msgstr ""
 "Le statut du débat ne peut pas être confirmé sauf qu'une des ensembles de "
-"bulletins est confirmé."
+"feuilles est confirmé."
 
 #: results/forms.py:304
 msgid "---------"
@@ -133,7 +133,7 @@ msgid ""
 "The margin (%(margin).1f) in the ballot of adjudicator %(adj)s exceeds the "
 "maximum allowable margin (%(max_margin).1f)."
 msgstr ""
-"La marge (%(margin).1f) dans le bulletin du/de la juge %(adj)s excède la "
+"La marge (%(margin).1f) dans la feuille du/de la juge %(adj)s excède la "
 "marge maximale admissable (%(max_margin).1f)."
 
 #: results/forms.py:821
@@ -196,7 +196,7 @@ msgstr "adresse IP"
 
 #: results/models.py:90
 msgid "A tab room ballot must have a user associated."
-msgstr "Un bulletin de la salle de tab doit avoir un utilisateur associé."
+msgstr "Une feuille de la salle de tab doit avoir un utilisateur associé."
 
 #: results/models.py:98
 msgid "debate"
@@ -217,11 +217,11 @@ msgstr "forfait"
 #: results/models.py:108 results/models.py:186 results/models.py:224
 #: results/models.py:270
 msgid "ballot submission"
-msgstr "soumission de bulletin"
+msgstr "soumission de feuille"
 
 #: results/models.py:109
 msgid "ballot submissions"
-msgstr "soumissions de bulletin"
+msgstr "soumissions de feuille"
 
 #: results/models.py:128
 #, python-format
@@ -234,7 +234,7 @@ msgstr ""
 
 #: results/models.py:135
 msgid "A ballot can't be both confirmed and discarded!"
-msgstr "Un bulletin ne peut pas être rejeté et confirmé !"
+msgstr "une feuille ne peut pas être rejeté et confirmé !"
 
 #: results/models.py:138
 msgid "The forfeiter must be a team in the debate."
@@ -269,7 +269,7 @@ msgid ""
 "The debate team, debate adjudicator and ballot submission must all relate to "
 "the same debate."
 msgstr ""
-"La débat-équipe, le débat-adjudicateur et la soumission de bulletin doivent "
+"La débat-équipe, le débat-adjudicateur et la soumission de feuille doivent "
 "tous concerner le même débat."
 
 #: results/models.py:229
@@ -335,15 +335,15 @@ msgstr "La débat-équipe et l'orateur doivent être de la même équipe."
 #: results/models.py:301
 msgid "The ballot submission and debate team must relate to the same debate."
 msgstr ""
-"La soumission de bulletin et la débat-équipe doivent concerner le même débat."
+"La soumission de feuille et la débat-équipe doivent concerner le même débat."
 
 #: results/tables.py:18
-msgid "Whether this debate's ballot has been checked-in"
-msgstr "Si le bulletin pour ce débat à été enregistré"
+msgid "Whether this debate's ballot has been checked in"
+msgstr "Si la feuille pour ce débat à été enregistré"
 
 #: results/tables.py:39
 msgid "Status of this debate's ballot"
-msgstr "Statut du bulletin de ce débat"
+msgstr "Statut de la feuille de ce débat"
 
 #: results/tables.py:80 results/tables.py:86
 msgid "Postpone"
@@ -359,7 +359,7 @@ msgstr "Affichage du tirage"
 
 #: results/templates/admin_results.html:9
 msgid "Check-In Ballots"
-msgstr "Enregistrer des Bulletins"
+msgstr "Enregistrer des feuilles"
 
 #: results/templates/admin_results.html:12
 msgid "Recent 'Iron-Persons'"
@@ -403,7 +403,7 @@ msgid ""
 "completed in order to advance the round."
 msgstr ""
 "Cette page se met à jour à fur et à mesure qu’ils arrivent. Vous devriez, "
-"par contre, rafraichir la page lorsque toutes les bulletins soit confirmés "
+"par contre, rafraichir la page lorsque toutes les feuilles soit confirmés "
 "pour achever la joute."
 
 #: results/templates/admin_results.html:81
@@ -417,9 +417,9 @@ msgid ""
 "before you try to enter results."
 msgstr ""
 "La configuration de ce tournoi spécifie <strong>Parlementaire britannique</"
-"strong> avec <strong>un bulletin par juge votant</strong> . Cette "
+"strong> avec <strong>une feuille par juge votant</strong> . Cette "
 "combinaison n'est pas possible: les tournois BP doivent utiliser les "
-"bulletins par consensus. Les résultats ne peuvent pas être saisis tant que "
+"feuilles par consensus. Les résultats ne peuvent pas être saisis tant que "
 "cette configuration est en place. Veuillez <a href=\"%(debate_rules_url)s"
 "\">réviser la configuration de ce tournoi</a> avant d'essayer de saisir les "
 "résultats."
@@ -442,9 +442,9 @@ msgid ""
 "adjudicators. The draw <a href=\"%(display_url)s\" class=\"alert-link\">must "
 "be released</a> before they can do so for this round."
 msgstr ""
-"La configuration du tournoi permet aux bulletins d’être saisis par les "
-"juges. Le tirage <a href=\"%(display_url)s\" class=\"alert-link\">doit être "
-"publié</a> avant qu’ils puissent le faire pour cette joute."
+"La configuration du tournoi permet aux feuilles d’être saisis par les juges. "
+"Le tirage <a href=\"%(display_url)s\" class=\"alert-link\">doit être publié</"
+"a> avant qu’ils puissent le faire pour cette joute."
 
 #: results/templates/admin_results.html:105
 #, python-format
@@ -458,20 +458,21 @@ msgstr ""
 "publié</a> avant qu’ils puissent le faire pour cette joute."
 
 #: results/templates/assistant_enter_results.html:7
-#: results/templates/enter_results.html:27
+#: results/templates/ballot_entry_base.html:24
 msgid "Back to All Results"
 msgstr "Retourner à tous les résultats"
 
 #: results/templates/assistant_enter_results.html:11
-#: results/templates/enter_results.html:31
+#: results/templates/ballot_entry_base.html:29
+#: results/templates/ballot_entry_base.html:33
 msgid "Create a new ballot set for this debate"
-msgstr "Créer un nouveau ensemble de bulletins pour ce débat"
+msgstr "Créer un nouveau ensemble de feuilles pour ce débat"
 
 #: results/templates/assistant_enter_results.html:33
 msgid "You can't confirm this ballot set because you entered it."
 msgstr ""
-"Vous ne pouvez pas confirmer cet ensemble de bulletins, parce que vous "
-"l'avez saisi."
+"Vous ne pouvez pas confirmer cet ensemble de feuilles, parce que vous l'avez "
+"saisi."
 
 #: results/templates/assistant_enter_results.html:41
 msgid "Confirm results"
@@ -482,10 +483,10 @@ msgid "Results are incorrect"
 msgstr "Résultat est incorrect"
 
 #: results/templates/assistant_enter_results.html:49
-#: results/templates/enter_results.html:125
+#: results/templates/enter_results.html:53
 #: results/templates/public_enter_results.html:74
 msgid "Emails will be sent to adjudicators when the ballot is confirmed."
-msgstr "Des courriels seront envoyés quand le bulletin soit confirmé."
+msgstr "Des courriels seront envoyés quand la feuille soit confirmé."
 
 #: results/templates/assistant_results.html:4
 #: results/templates/assistant_results.html:5
@@ -497,7 +498,7 @@ msgid ""
 "This page automatically updates with the new ballot entries and checkins as "
 "they occur."
 msgstr ""
-"Cette page est mis à jour automatiquement avec les nouveaux bulletins et "
+"Cette page est mis à jour automatiquement avec les nouveaux feuilles et "
 "enregistrements au fur et à mesure qu’ils viennent."
 
 #: results/templates/assistant_results.html:16
@@ -509,9 +510,9 @@ msgid ""
 "administrator to change this configuration."
 msgstr ""
 "La configuration de ce tournoi spécifie <strong>Parlementaire britannique</"
-"strong> avec <strong>un bulletin par juge votant</strong> . Cette "
+"strong> avec <strong>une feuille par juge votant</strong> . Cette "
 "combinaison n'est pas possible: les tournois BP doivent utiliser les "
-"bulletins par consensus. Les résultats ne peuvent pas être saisis tant que "
+"feuilles par consensus. Les résultats ne peuvent pas être saisis tant que "
 "cette configuration est en place. Veuillez demander à un administrateur de "
 "changer cette configuration."
 
@@ -564,16 +565,12 @@ msgid "Debate Information"
 msgstr "Informations concernant le débat"
 
 #: results/templates/ballot/ballot_debate_info.html:41
-msgid ""
-"There were no speakers who spoke multiple times (i.e. no 'Iron' person "
-"speeches)"
-msgstr "Il n’y avait aucun orateur qui ont fait plusieurs discours"
+msgid "No speakers spoke twice (no 'iron-person' speeches)"
+msgstr "Aucun orateur n’a fait plusieurs discours"
 
 #: results/templates/ballot/ballot_debate_info.html:44
-msgid ""
-"There were speakers who spoke multiple times (i.e. one or more 'Iron' person "
-"speeches)"
-msgstr "Il y a eu des orateurs qui ont fait plusieurs discours"
+msgid "A speaker spoke twice (an 'iron-person' speech)"
+msgstr "Un orateur a fait plusieurs discours"
 
 #: results/templates/ballot/ballot_scoresheet.html:28
 msgid "Result"
@@ -602,7 +599,7 @@ msgstr ""
 msgid ""
 "There are some problems with this scoresheet. Please review and correct them."
 msgstr ""
-"Cette feuille de débat a des problèmes. Veuillez les examiner et les "
+"Cette feuille de jugement a des problèmes. Veuillez les examiner et les "
 "corriger."
 
 #: results/templates/ballot/bp_elimination_ballot.html:12
@@ -613,21 +610,21 @@ msgstr "Équipes avançantes"
 #, python-format
 msgid "There is %(number)s existing ballot set for this debate."
 msgid_plural "There are %(number)s existing ballot sets for this debate."
-msgstr[0] "Il y a %(number)s ensemble de bulletins existant pour ce débat."
-msgstr[1] "Il y a %(number)s ensembles de bulletins existants pour ce débat."
+msgstr[0] "Il y a %(number)s ensemble de feuilles existant pour ce débat."
+msgstr[1] "Il y a %(number)s ensembles de feuilles existants pour ce débat."
 
 #: results/templates/ballot/other_ballots_list.html:19
 #, python-format
 msgid "There are %(number)s ballot sets for this debate."
-msgstr "Il y a %(number)s ensembles de bulletins pour ce débat."
+msgstr "Il y a %(number)s ensembles de feuilles pour ce débat."
 
 #: results/templates/ballot/other_ballots_list.html:29
 msgid "This ballot set is <strong>confirmed</strong>."
-msgstr "Cet ensemble de bulletins est <strong>confirmé</strong>."
+msgstr "Cet ensemble de feuilles est <strong>confirmé</strong>."
 
 #: results/templates/ballot/other_ballots_list.html:34
 msgid "This ballot set is <strong>discarded</strong>."
-msgstr "Ce bulletin est <strong>rejeté</strong>."
+msgstr "Ce feuille est <strong>rejeté</strong>."
 
 #: results/templates/ballot/other_ballots_list.html:49
 msgid "CURRENTLY VIEWING"
@@ -678,29 +675,33 @@ msgstr[0] "<em>(identique à version %(others)s)</em>"
 msgstr[1] "<em>(identique à versions %(others)s)</em>"
 
 #: results/templates/ballot/standard_ballot_set.html:19
+#: results/templates/ballot_entry_form.html:23
 #, python-format
 msgid "Ballot from %(name)s (%(institution)s)"
-msgstr "Bulletin de %(name)s (%(institution)s)"
+msgstr "Feuille de %(name)s (%(institution)s)"
 
 #: results/templates/ballot/standard_ballot_set.html:23
+#: results/templates/ballot_entry_form.html:27
 #, python-format
 msgid "Ballot from %(name)s"
-msgstr "Bulletin de %(name)s"
+msgstr "Feuille de %(name)s"
 
 #: results/templates/ballot/standard_ballot_set.html:31
-#: results/templates/public_ballot_set.html:66
+#: results/templates/public_ballot_set.html:73
 msgid "Scoresheet"
-msgstr "Feuille de débat"
+msgstr "Feuille de jugement"
 
 #: results/templates/ballot/standard_ballot_set.html:35
 msgid "Solo Chair"
 msgstr "Président Seul"
 
 #: results/templates/ballot/standard_ballot_set.html:35
+#: results/templates/ballot_entry_form.html:32
 msgid "Chair"
 msgstr "Président"
 
 #: results/templates/ballot/standard_ballot_set.html:35
+#: results/templates/ballot_entry_form.html:34
 msgid "Panellist"
 msgstr "Membre"
 
@@ -716,23 +717,25 @@ msgstr "Attribuez les côtés avant de saisir les scores"
 msgid "Forfeits"
 msgstr "Forfaits"
 
-#: results/templates/enter_results.html:6
+#: results/templates/ballot_entry.html:21
+#, python-format
+msgid ""
+"This ballot entry interface is in beta, if you encounter any problems the "
+"older version of the interface is <a href=\"%(old_url)s\" class=\"alert-link"
+"\">available here</a>."
+msgstr ""
+
+#: results/templates/ballot_entry_base.html:6
 #, python-format
 msgid "New Ballot Set for %(debate_name)s"
-msgstr "Nouveau ensemble de bulletins pour %(debate_name)s"
+msgstr "Nouveau ensemble de feuilles pour %(debate_name)s"
 
-#: results/templates/enter_results.html:10
+#: results/templates/ballot_entry_base.html:10
 #, python-format
 msgid "Edit Ballot Set for %(debate_name)s"
-msgstr "Modifier l'ensemble de bulletins pour %(debate_name)s"
+msgstr "Modifier l'ensemble de feuilles pour %(debate_name)s"
 
-#: results/templates/enter_results.html:17
-#: results/templates/public_enter_results.html:14
-#, python-format
-msgid "%(round)s @ %(venue_category)s %(venue)s"
-msgstr "%(round)s @ %(venue_category)s %(venue)s"
-
-#: results/templates/enter_results.html:39
+#: results/templates/ballot_entry_base.html:42
 msgid ""
 "This debate has a panel with an even number of voting adjudicators. If the "
 "adjudicators split evenly, the debate will be awarded to the team for which "
@@ -742,7 +745,7 @@ msgstr ""
 "juges sont divisés de manière égale entre les équipes, la victoire sera "
 "attribuée à l'équipe pour laquelle le/la président(e) a voté."
 
-#: results/templates/enter_results.html:49
+#: results/templates/ballot_entry_base.html:52
 #, python-format
 msgid ""
 "In the grand-final rounds of a British Parliamentary format this form will "
@@ -756,14 +759,14 @@ msgstr ""
 "Dans la joute finale d’un tournoi de format Parlementaire Britannique, cette "
 "formulaire ne vous permettra pas de nominer un seul gagnant. Comme solution "
 "de rechange, vous devez aussi nominer une autre « fausse » équipe gagnante "
-"et sauvegarder le bulletin comme normal. Pour en suite corriger le résultat, "
+"et sauvegarder la feuille comme normal. Pour en suite corriger le résultat, "
 "allez à la <a href=\"%(admin_fix)s\" target=\"_blank\">page de Pointage "
 "d’Équipe de l’aire de modification de la base de données</a>, cliquez le "
 "lien <em>Pointage d’Équipe</em> du « faux » gagnant, modifiez le champ de "
 "<em>Victoire</em> à <strong>Non</strong> et à la suite <em>sauvegarder</em> "
 "la modification."
 
-#: results/templates/enter_results.html:63
+#: results/templates/ballot_entry_base.html:66
 #, python-format
 msgid ""
 "%(i_team)s had speakers who spoke multiple times in the last round — i.e. an "
@@ -772,32 +775,56 @@ msgid ""
 "reflect this."
 msgstr ""
 "%(i_team)s avait des orateurs qui ont fait plusieurs discours lors de la "
-"dernière joute. SVP vérifiez minutieusement le bulletin pour s’assurer que "
-"c’est encore le cas. Si ce l’est encore, assurez-vous que le bulletin le "
+"dernière joute. SVP vérifiez minutieusement la feuille pour s’assurer que "
+"c’est encore le cas. Si ce l’est encore, assurez-vous que la feuille le "
 "reflète."
 
-#: results/templates/enter_results.html:87
-msgid "Ballot Status"
-msgstr "État de bulletin"
+#: results/templates/ballot_entry_form.html:38
+#, python-format
+msgid "Scoresheet from chair %(chair)s"
+msgstr "Feuille par le président %(chair)s"
 
-#: results/templates/enter_results.html:88
+#: results/templates/ballot_entry_form.html:42
+msgid "Scoresheet, no chair set"
+msgstr "Feuille, aucun président"
+
+#: results/templates/ballot_entry_form.html:63
+#, python-format
+msgid "Error with %(pos)s's speaker field: %(error)s"
+msgstr "Faute avec le champ d’orateur du %(pos)s : %(error)s"
+
+#: results/templates/ballot_entry_form.html:69
+#, python-format
+msgid "Error with %(pos)s's duplicate speaker field: %(error)s"
+msgstr "Faute avec le champ d’orateur dupliqué du %(pos)s : %(error)s"
+
+#: results/templates/ballot_entry_form.html:75
+#, python-format
+msgid "Error with %(pos)s's score field: %(error)s"
+msgstr "Faute avec le champ de note du %(pos)s : %(error)s"
+
+#: results/templates/enter_results.html:15
+msgid "Ballot Status"
+msgstr "État de feuille"
+
+#: results/templates/enter_results.html:16
 msgid "only the confirmed ballot set will affect this debate's result"
 msgstr ""
-"seulement l’ensemble de bulletins confirmé affectera le résultat de ce débat"
+"seulement l’ensemble de feuilles confirmé affectera le résultat de ce débat"
 
-#: results/templates/enter_results.html:104
+#: results/templates/enter_results.html:32
 msgid "Debate Status"
 msgstr "Statut de débat"
 
-#: results/templates/enter_results.html:107
+#: results/templates/enter_results.html:35
 msgid "all debates must be confirmed to complete the round"
 msgstr "tout les débats doivent être confirmés pour achever la joute "
 
-#: results/templates/enter_results.html:117
+#: results/templates/enter_results.html:45
 msgid "Save Ballot"
-msgstr "Enregistrer Bulletin"
+msgstr "Enregistrer feuille"
 
-#: results/templates/enter_results.html:120
+#: results/templates/enter_results.html:48
 msgid "Cancel Entry"
 msgstr "Annuler"
 
@@ -819,7 +846,7 @@ msgstr ""
 #: results/templates/public_add_ballot_unreleased.html:4
 #: results/templates/public_add_ballot_unreleased.html:5
 msgid "Enter Ballot"
-msgstr "Saisir bulletin"
+msgstr "Saisir feuille"
 
 #: results/templates/public_add_ballot.html:5
 msgid "Who are you?"
@@ -841,24 +868,28 @@ msgstr ""
 #: results/templates/public_ballot_set.html:21
 #, python-format
 msgid "Ballot for %(matchup)s"
-msgstr "Bulletin de %(matchup)s"
+msgstr "Feuille pour %(matchup)s"
 
-#: results/templates/public_ballot_set.html:38
+#: results/templates/public_ballot_set.html:39
+msgid "Return to landing page"
+msgstr ""
+
+#: results/templates/public_ballot_set.html:44
 #, python-format
 msgid "Return to Results for %(round_name)s"
 msgstr "Retour aux résultats de %(round_name)s"
 
-#: results/templates/public_ballot_set.html:49
+#: results/templates/public_ballot_set.html:56
 msgid "Motion"
 msgstr "Motion"
 
-#: results/templates/public_ballot_set.html:62
+#: results/templates/public_ballot_set.html:69
 #, python-format
 msgid "From %(name)s (%(institution)s)"
 msgstr "De %(name)s (%(institution)s)"
 
-#: results/templates/public_ballot_set.html:86
-#: results/templates/public_ballot_set.html:90
+#: results/templates/public_ballot_set.html:93
+#: results/templates/public_ballot_set.html:97
 #, python-format
 msgid "<em>Total for %(name)s (%(side)s)</em>"
 msgstr "<em>Total pour %(name)s (%(side)s)</em>"
@@ -866,7 +897,7 @@ msgstr "<em>Total pour %(name)s (%(side)s)</em>"
 #: results/templates/public_ballot_set_error.html:4
 #: results/templates/public_ballot_set_error.html:6
 msgid "Ballot Not Available"
-msgstr "Bulletin non-disponible"
+msgstr "feuille non-disponible"
 
 #: results/templates/public_ballot_set_error.html:14
 #, python-format
@@ -879,14 +910,19 @@ msgstr "<a href=\"%(url)s\">Retour à la page d’accueil du tournoi.</a>"
 msgid "Enter Results for %(debate_name)s"
 msgstr "Saisir résultats pour %(debate_name)s"
 
+#: results/templates/public_enter_results.html:14
+#, python-format
+msgid "%(round)s @ %(venue_category)s %(venue)s"
+msgstr "%(round)s @ %(venue_category)s %(venue)s"
+
 #: results/templates/public_enter_results.html:22
 #, python-format
 msgid ""
 "%(adj_name)s, note that you must enter <strong>all of the ballots</strong> "
 "from your panel, not just your own!"
 msgstr ""
-"%(adj_name)s, notez que vous devez saisir <strong>tous les bulletins</"
-"strong> de votre jury, non seulement votre propre bulletin !"
+"%(adj_name)s, notez que vous devez saisir <strong>tous les feuilles</strong> "
+"de votre jury, non seulement votre propre feuille !"
 
 #: results/templates/public_enter_results.html:30
 #, python-format
@@ -902,6 +938,10 @@ msgstr[0] ""
 msgstr[1] ""
 "Cette formulaire a déjà été soumise <strong>%(nsubmissions)s</strong> fois. "
 "Veuillez contacter un officiel de tab après avoir soumis votre formulaire."
+
+#: results/templates/public_enter_results.html:69
+msgid "Submit Ballot(s)"
+msgstr "Soumettre feuille"
 
 #: results/templates/public_enter_results.html:71
 msgid ""
@@ -928,7 +968,7 @@ msgstr "Voir par équipe"
 msgid "View by Debate"
 msgstr "Voir par débat"
 
-#: results/templates/public_results_index.html:14
+#: results/templates/public_results_index.html:12
 #, python-format
 msgid "Results for %(round_name)s"
 msgstr "Résultats de %(round_name)s"
@@ -952,15 +992,15 @@ msgstr "%(round_name)s est une joute silencieuse."
 
 #: results/utils.py:17
 msgid "No Ballot"
-msgstr "Aucun bulletin"
+msgstr "Aucune feuille"
 
 #: results/utils.py:19
 msgid "Ballot is Unconfirmed"
-msgstr "Bulletin n'est pas confirmé"
+msgstr "feuille n'est pas confirmé"
 
 #: results/utils.py:21
 msgid "Ballot is Confirmed"
-msgstr "Bulletin est confirmé"
+msgstr "feuille est confirmé"
 
 #: results/utils.py:23
 msgid "Debate was Postponed"
@@ -1089,20 +1129,20 @@ msgstr "WO"
 msgid "Reply"
 msgstr "Sommaire"
 
-#: results/views.py:248 results/views.py:250
+#: results/views.py:250 results/views.py:252
 msgid " vs "
 msgstr " vs "
 
-#: results/views.py:364
+#: results/views.py:386
 #, python-format
 msgid "Ballot set for %(debate)s added."
-msgstr "Un ensemble de bulletins pour %(debate)s a été ajouté."
+msgstr "Un ensemble de feuilles pour %(debate)s a été ajouté."
 
-#: results/views.py:366 results/views.py:425
+#: results/views.py:388 results/views.py:455
 msgid " Email receipts queued to be sent."
-msgstr "Reçus en courriel de bulletins en file pour être envoyés"
+msgstr "Reçus en courriel de feuilles en file pour être envoyés"
 
-#: results/views.py:380
+#: results/views.py:402
 #, python-format
 msgid ""
 "Whoops! The debate %(debate)s doesn't have a chair, so you can't enter "
@@ -1111,7 +1151,7 @@ msgstr ""
 "Oup ! Le débat %(debate)s n'a pas de président, donc vous ne pouvez pas "
 "saisir un résultat pour cela."
 
-#: results/views.py:386
+#: results/views.py:408
 #, python-format
 msgid ""
 "Whoops! The debate %(debate)s doesn't have its sides confirmed, so you can't "
@@ -1120,41 +1160,40 @@ msgstr ""
 "Oup ! Les côtés dans le débat %(debate)s ne sont pas confirmés, donc vous ne "
 "pouvez pas saisir un résultat pour cela."
 
-#: results/views.py:418
+#: results/views.py:448
 #, python-format
 msgid "Ballot set for %(matchup)s discarded."
-msgstr "L'ensemble de bulletins pour %(matchup)s est rejeté."
+msgstr "L'ensemble de feuilles pour %(matchup)s est rejeté."
 
-#: results/views.py:420
+#: results/views.py:450
 #, python-format
 msgid "Ballot set for %(matchup)s confirmed."
-msgstr "L'ensemble de bulletins pour %(matchup)s est confirmé."
+msgstr "L'ensemble de feuilles pour %(matchup)s est confirmé."
 
-#: results/views.py:422
+#: results/views.py:452
 #, python-format
 msgid "Edits to ballot set for %(matchup)s saved."
 msgstr ""
-"Les modifications à l'ensemble de bulletins de %(matchup)s a été "
-"enregistrées."
+"Les modifications à l'ensemble de feuilles de %(matchup)s a été enregistrées."
 
-#: results/views.py:458
+#: results/views.py:496
 #, python-format
 msgid "Thanks, %(user)s! Your ballot for %(debate)s has been recorded."
-msgstr "Merci, %(user)s! Votre bulletin pour %(debate)s a été enregistré."
+msgstr "Merci, %(user)s! Votre feuille pour %(debate)s a été enregistrée."
 
-#: results/views.py:469
+#: results/views.py:507
 msgid "The draw for this round hasn't been released yet."
 msgstr "Le tirage de cette joute n'est pas encore publié."
 
-#: results/views.py:473
+#: results/views.py:511
 msgid "The motions for this round haven't been released yet."
 msgstr "Les motions de cette joute ne sont pas encore publiées."
 
-#: results/views.py:478
+#: results/views.py:516
 msgid "It looks like you don't have a debate this round."
 msgstr "Il semble que vous n'ayez pas de débat cette joute."
 
-#: results/views.py:480
+#: results/views.py:518
 msgid ""
 "It looks like you're assigned to two or more debates this round. Please "
 "contact a tab room official."
@@ -1162,7 +1201,7 @@ msgstr ""
 "Il semble que vous soyez attribué à plusieurs débats cette joute. Veuillez "
 "contacter un rapporteur."
 
-#: results/views.py:488
+#: results/views.py:526
 msgid ""
 "Your debate doesn't have a chair, so you can't enter results for it. Please "
 "contact a tab room official."
@@ -1170,7 +1209,7 @@ msgstr ""
 "Votre débat n'a pas de président, donc il n'est pas possible de saisir son "
 "résultat. Veuillez contacter un rapporteur."
 
-#: results/views.py:493
+#: results/views.py:531
 msgid ""
 "It looks like the sides for this debate haven't yet been confirmed, so you "
 "can't enter results for it. Please contact a tab room official."
@@ -1179,35 +1218,47 @@ msgstr ""
 "n'est pas encore possible de saisir son résultat. Veuillez contacter un "
 "rapporteur."
 
-#: results/views.py:559
+#: results/views.py:625
 #, python-format
 msgid "This debate is in %s, which is a silent round."
 msgstr "Le débat est dans %s, ce qui est une joute silencieuse."
 
-#: results/views.py:562
+#: results/views.py:628
 #, python-format
 msgid "This debate is in %s, the results for which aren't available yet."
 msgstr ""
 "Le débat est dans %s, les résultats pour lequel n’est pas encore disponible."
 
-#: results/views.py:566
+#: results/views.py:632
 #, python-format
 msgid "The result for debate %s is not confirmed."
 msgstr "Le résultat pour le débat %s n’est pas confirmé."
 
-#: results/views.py:569
+#: results/views.py:635
 #, python-format
 msgid "The debate %s does not have a confirmed ballot."
-msgstr "Le débat %s n’a pas de bulletin confirmé."
+msgstr "Le débat %s n’a pas de feuille confirmé."
 
-#: results/views.py:626
+#: results/views.py:652
+#, fuzzy, python-format
+#| msgid "There is %(number)s existing ballot set for this debate."
+#| msgid_plural "There are %(number)s existing ballot sets for this debate."
+msgid "There is no result yet for debate %s."
+msgstr "Il y a %(number)s ensemble de feuilles existant pour ce débat."
+
+#: results/views.py:703
 #, python-format
 msgid "Add result from %(adjudicator)s"
 msgstr "Ajouter résultat par %(adjudicator)s"
 
-#: results/views.py:630
+#: results/views.py:707
 msgid "Adjudicator"
 msgstr "Juge"
+
+#~ msgid ""
+#~ "There were speakers who spoke multiple times (i.e. one or more 'Iron' "
+#~ "person speeches)"
+#~ msgstr "Il y a eu des orateurs qui ont fait plusieurs discours"
 
 #~ msgid "Bye Debate"
 #~ msgstr "Laissez-passer"
@@ -1246,7 +1297,7 @@ msgstr "Juge"
 #, fuzzy
 #~| msgid "Ballot is In"
 #~ msgid "Ballot Check-Ins"
-#~ msgstr "Bulletin reçu"
+#~ msgstr "feuille reçu"
 
 #~ msgid "Unknown"
 #~ msgstr "Inconnu"
@@ -1261,7 +1312,7 @@ msgstr "Juge"
 #~ msgstr "Reporté"
 
 #~ msgid "Ballot Statuses"
-#~ msgstr "Statuts des bulletins"
+#~ msgstr "Statuts des feuilles"
 
 #~ msgid "Postponing…"
 #~ msgstr "Report…"

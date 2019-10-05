@@ -1,7 +1,7 @@
 """Scoresheet classes.
 
 The scoresheet classes are responsible for storing a buffer of scores, and
-computing basic results like the winner and margin for that scoresheet. They do
+computing basic results like the winners and margin for that scoresheet. They do
 not interact with the database and have no concept of team identity---that is
 the responsiblity of the debate result classes.
 
@@ -9,17 +9,6 @@ the responsiblity of the debate result classes.
 since the scoresheet classes don't know about team identities, the word "team"
 should not appear in any of them.
 """
-
-
-def get_scoresheet_class(tournament):
-    """Returns the correct scoresheet class for the given tournament's options."""
-    teams_in_debate = tournament.pref('teams_in_debate')
-    if teams_in_debate == 'two':
-        return HighPointWinsRequiredScoresheet
-    elif teams_in_debate == 'bp':
-        return BPScoresheet
-    else:
-        raise ValueError("Unrecognised teams_in_debate option: {}".format(teams_in_debate))
 
 
 class BaseScoresheet:
@@ -38,6 +27,25 @@ class BaseScoresheet:
     def identical(self, other):
         """Base implementation. Does nothing."""
         return True
+
+    def winners(self):
+        """Returns ['aff'] is the affirmative team won, and ['neg'] if the negative
+        team won. `self._get_winners()` must be implemented by subclasses."""
+        if not self.is_complete():
+            return set()
+        return self._get_winners()
+
+    # Default methods
+    # Winners may be declared by the form as validation; by default do nothing.
+
+    def set_declared_winners(self, winners):
+        pass
+
+    def add_declared_winner(self, winner):
+        pass
+
+    def get_declared_winners(self):
+        pass
 
 
 class ScoresMixin:
@@ -72,92 +80,101 @@ class ScoresMixin:
         return super().identical(other) and self.scores == other.scores
 
 
-class DeclaredWinnerMixin:
-    """Provides functionality for explicit declaration of winner.  Only makes
-    sense for two-team scoresheets."""
+class DeclaredWinnersMixin:
+    """Provides functionality for explicit declaration of winner(s)."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.declared_winner = None
+        self.declared_winners = set()
 
     def is_complete(self):
-        return super().is_complete() and (self.declared_winner in self.sides)
+        winners_declared = self.declared_winners.issubset(set(self.sides)) and len(self.declared_winners) == self.number_winners
+        return super().is_complete() and winners_declared
 
-    def set_declared_winner(self, winner):
-        assert winner in self.sides or winner is None, "Declared winner must be one of " + ", ".join(map(repr, self.sides))
-        self.declared_winner = winner
+    def add_declared_winner(self, winner):
+        assert winner in self.sides or winner is None, "Declared winner must be one of: " + ", ".join(map(repr, self.sides))
+        self.declared_winners.add(winner)
 
-    def get_declared_winner(self):
-        return self.declared_winner
+    def set_declared_winners(self, winners):
+        assert winners.issubset(set(self.sides)) or len(winners) == 0, "Declared winners must be in: " + ", ".join(map(repr, self.sides))
+        self.declared_winners = winners
+
+    def get_declared_winners(self):
+        return self.declared_winners
 
     def identical(self, other):
-        return super().identical(other) and self.declared_winner == other.declared_winner
+        return super().identical(other) and set(self.declared_winners) == set(other.declared_winners)
+
+    def _get_winners(self):
+        assert len(self.declared_winners) == self.number_winners, "There can only be this number of winners: %d" % self.number_winners
+        return self.declared_winners
 
 
 class BaseTwoTeamScoresheet(BaseScoresheet):
 
     sides = ['aff', 'neg']
-
-    def winner(self):
-        """Returns 'aff' is the affirmative team won, and 'neg' if the negative
-        team won. `self._get_winner()` must be implemented by subclasses."""
-        if not self.is_complete():
-            return None
-        return self._get_winner()
+    number_winners = 1
 
     def is_valid(self):
-        return super().is_valid() and self.winner() is not None
+        return super().is_valid() and len(self.winners()) == 1
+
+    def rank(self, side):
+        rank = 1 if side in self.winners() else 2
+        return rank
 
 
-class ResultOnlyScoresheet(DeclaredWinnerMixin, BaseTwoTeamScoresheet):
-    """Winner only, no scores. In this case the scoresheet is basically just
-    a shell for a single piece of data (the winner)."""
-
-    def _get_winner(self):
-        return self.declared_winner
+class ResultOnlyScoresheet(DeclaredWinnersMixin, BaseTwoTeamScoresheet):
+    """Winners only, no scores. In this case the scoresheet is basically just
+    a shell for a single piece of data (the winners)."""
+    pass
 
 
 class HighPointWinsRequiredScoresheet(ScoresMixin, BaseTwoTeamScoresheet):
     """Draws are not permitted; winning teams must have a higher total.
     This is the standard type of scoresheet in Asia and Oceania."""
 
-    def _get_winner(self):
+    def _get_winners(self):
         aff_total = self.get_total('aff')
         neg_total = self.get_total('neg')
         if aff_total > neg_total:
-            return 'aff'
+            return set(['aff'])
         elif neg_total > aff_total:
-            return 'neg'
+            return set(['neg'])
         else:
-            return None
+            return set()
 
 
-class TiedPointWinsAllowedScoresheet(DeclaredWinnerMixin, ScoresMixin, BaseTwoTeamScoresheet):
+class TiedPointWinsAllowedScoresheet(DeclaredWinnersMixin, ScoresMixin, BaseTwoTeamScoresheet):
     """In this type of scoresheet, teams can win even when their total speaker
     score is equal to the other team. Because this is possible, scoresheets
-    must declare a winner. If the declared winner and calculated winner differ
-    (e.g. aff has higher score but neg declared), the winner is None."""
+    must declare a winners. If the declared winners and calculated winners differ
+    (e.g. aff has higher score but neg declared), the winners is None."""
 
-    def _get_winner(self):
+    def _get_winners(self):
         aff_total = self.get_total('aff')
         neg_total = self.get_total('neg')
-        if aff_total >= neg_total and self.declared_winner == 'aff':
-            return 'aff'
-        elif neg_total >= aff_total and self.declared_winner == 'neg':
-            return 'neg'
+        if aff_total >= neg_total and 'aff' in self.declared_winners:
+            return set(['aff'])
+        elif neg_total >= aff_total and 'neg' in self.declared_winners:
+            return set(['neg'])
         else:
-            return None
+            return set()
 
 
 class LowPointWinsAllowedScoresheet(ScoresMixin, ResultOnlyScoresheet):
-    """This is basically a declared winner scoresheet, with scores that don't
+    """This is basically a declared winners scoresheet, with scores that don't
     matter as far as the result is concerned."""
     pass
 
 
-class BPScoresheet(ScoresMixin, BaseScoresheet):
+class BaseBPScoresheet(BaseScoresheet):
+    """This is a stub scoresheet for BP with only its sides as the scoresheet
+    class changes by stage."""
 
     sides = ['og', 'oo', 'cg', 'co']
+
+
+class BPScoresheet(ScoresMixin, BaseBPScoresheet):
 
     def is_valid(self):
         if not super().is_valid():
@@ -179,3 +196,16 @@ class BPScoresheet(ScoresMixin, BaseScoresheet):
         total_by_side = [(self.get_total(side), side) for side in self.sides]
         total_by_side.sort(reverse=True)
         return [side for total, side in total_by_side]
+
+    def winners(self):
+        return set()
+
+
+class BPEliminationScoresheet(DeclaredWinnersMixin, BaseBPScoresheet):
+
+    def __init__(self, *args, **kwargs):
+        """Initializer for BP elimination scoresheets.
+        Create 'num_winners' argument as final rounds have 1 winner and
+        not two as with other rounds of the stage."""
+        super().__init__(*args, **kwargs)
+        self.number_winners = kwargs.get('num_winners') or 2

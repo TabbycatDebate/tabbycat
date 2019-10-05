@@ -4,7 +4,7 @@ from xml.etree import ElementTree
 from django.contrib import messages
 from django.core import management
 from django.forms import modelformset_factory
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
@@ -27,12 +27,13 @@ from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView
 from venues.models import Venue
 
+from .archive import Exporter, Importer
 from .management.commands import importtournament
 from .importers import TournamentDataImporterError
-from .forms import (AdjudicatorDetailsForm, ArchiveImportForm, ImportInstitutionsRawForm,
-                    ImportVenuesRawForm, NumberForEachInstitutionForm,
-                    TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
-from .archive import Exporter, Importer
+from .forms import (AdjudicatorDetailsForm, ArchiveImportForm, ImportAdjudicatorsNumbersForm,
+                    ImportInstitutionsRawForm, ImportTeamsNumbersForm,
+                    ImportVenuesRawForm, TeamDetailsForm, TeamDetailsFormSet,
+                    VenueDetailsForm)
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +135,9 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
 
     def get_form_kwargs(self, step):
         if step == 'numbers':
-            return {'institutions': Institution.objects.all()}
+            return {
+                'institutions': Institution.objects.all(),
+            }
         elif step == 'details':
             return {'form_kwargs': {'tournament': self.tournament}}
 
@@ -168,7 +171,7 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
 class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     model = Team
     form_list = [
-        ('numbers', NumberForEachInstitutionForm),
+        ('numbers', ImportTeamsNumbersForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_TEAMS
@@ -189,7 +192,7 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
     form_list = [
-        ('numbers', NumberForEachInstitutionForm),
+        ('numbers', ImportAdjudicatorsNumbersForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
@@ -217,9 +220,12 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
     def post(self, request, *args, **kwargs):
         source = request.POST.get("source", "")
 
+        if source not in ['minimal8team', 'australs24team', 'bp88team']:
+            return HttpResponseBadRequest("%s isn't a demo dataset" % source)
+
         try:
             management.call_command(importtournament.Command(), source,
-                                    force=True, strict=False)
+                                    force=True, strict=False, encoding='utf-8')
         except TournamentDataImporterError as e:
             messages.error(self.request, mark_safe(
                 "<p>There were one or more errors creating the demo tournament. "

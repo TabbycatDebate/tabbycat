@@ -19,7 +19,7 @@ def legacy_allocate_adjudicators(round, alloc_class):
     allocator = alloc_class(debates, adjs, round)
 
     try:
-        allocation = allocator.allocate()
+        allocation, _ = allocator.allocate()
     except AdjudicatorAllocationError as e:
         # legacy views expect BadJsonRequestError, not AdjudicatorAllocationError
         raise BadJsonRequestError(e)

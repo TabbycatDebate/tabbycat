@@ -242,6 +242,8 @@ class DrawPullupRestriction(ChoicePreference):
     choices = (
         ('none', _("No restriction")),
         ('least_to_date', _("Choose from teams who have been pulled up the fewest times so far")),
+        ('lowest_ds_wins', _("Choose from teams with the lowest draw strength by wins so far")),
+        ('lowest_ds_speaks', _("Choose from teams with the lowest draw strength by speaks so far")),
     )
     default = 'none'
 
@@ -460,6 +462,35 @@ class BallotsPerDebateElimination(ChoicePreference):
 
 
 @tournament_preferences_registry.register
+class BallotMustConfirmWinner(ChoicePreference):
+    help_text = _("Whether adjudicator(s) must select the winning team in their ballot, and how it should be treated. Note: Not supported in BP.")
+    verbose_name = _("Winner Declaration in ballot(s)")
+    section = debate_rules
+    name = 'winners_in_ballots'
+    choices = (
+        ('none', _("Do not require separate winner selection")),
+        ('high-points', _("Require separate winner selection as a check on correct scores")),
+        ('tied-points', _("Require winner selection to break tied-point debates")),
+        ('low-points', _("Require winner selection, overriding scores")),
+    )
+    default = 'none'
+
+
+@tournament_preferences_registry.register
+class BallotUsesScores(ChoicePreference):
+    help_text = _("When ballots should ask for speaker scores.")
+    verbose_name = _("Require speaker scores")
+    section = debate_rules
+    name = 'speakers_in_ballots'
+    choices = (
+        ('always', _("Always require speaker scores")),
+        ('prelim', _("Only require speaker scores in preliminary rounds")),
+        ('never', _("Never require speaker scores"))
+    )
+    default = 'always'
+
+
+@tournament_preferences_registry.register
 class SubstantiveSpeakers(IntegerPreference):
     help_text = _("How many substantive speakers on a team")
     verbose_name = _("Substantive speakers")
@@ -540,10 +571,6 @@ class TeamStandingsPrecedence(MultiValueChoicePreference):
             duplicates_str = ", ".join(list(set(force_text(c.name) for c in duplicates)))
             raise ValidationError(_("The following metrics can't be listed twice: "
                     "%(duplicates)s") % {'duplicates': duplicates_str})
-
-        # Check that who-beat-whom isn't listed first
-        if value[0] in ["wbw", "wbwd"]:
-            raise ValidationError(_("Who-beat-whom can't be listed as the first metric"))
 
 
 @tournament_preferences_registry.register
@@ -793,8 +820,8 @@ class EnableBlindBallotConfirmation(BooleanPreference):
 
 @tournament_preferences_registry.register
 class EnableMotions(BooleanPreference):
-    help_text = _("If checked, ballots require a motion to be entered")
-    verbose_name = _("Enable motions")
+    help_text = _("If checked, ballots require a motion to be selected from a list of options. ")
+    verbose_name = _("Enable motion selection")
     section = data_entry
     name = 'enable_motions'
     default = True
@@ -1137,173 +1164,6 @@ class ShowIntroductionToAllocationUI(BooleanPreference):
     name = 'show_allocation_intro'
     default = True
 
-# ==============================================================================
-league_options = Section('league_options', verbose_name=_("League Options"))
-# ==============================================================================
-
-
-@tournament_preferences_registry.register
-class PublicDivisions(BooleanPreference):
-    help_text = _("Enables public interface to see divisions")
-    verbose_name = _("Show divisions to public")
-    section = league_options
-    name = 'public_divisions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableDivisions(BooleanPreference):
-    help_text = _("Enables the sorting and display of teams into divisions")
-    verbose_name = _("Enable divisions")
-    section = league_options
-    name = 'enable_divisions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnablePostponements(BooleanPreference):
-    help_text = _("Enables debates to have their status set to postponed")
-    verbose_name = _("Enable postponements")
-    section = league_options
-    name = 'enable_postponements'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableForfeits(BooleanPreference):
-    help_text = _("Allows debates to be marked as wins by forfeit")
-    verbose_name = _("Enable forfeits")
-    section = league_options
-    name = 'enable_forfeits'
-    default = False
-
-
-@tournament_preferences_registry.register
-class HideAdjudicators(BooleanPreference):
-    help_text = _("Hides the adjudicators in public views of the draw")
-    verbose_name = _("Mask adjudicators")
-    section = league_options
-    name = 'hide_adjudicators'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableDivisionMotions(BooleanPreference):
-    help_text = _("Enables assigning motions to a division")
-    verbose_name = _("Enable division motions")
-    section = league_options
-    name = 'enable_division_motions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class MinimumDivisionSize(IntegerPreference):
-    help_text = _("Smallest allowed size for a division")
-    verbose_name = _("Minimum division size")
-    section = league_options
-    name = 'minimum_division_size'
-    default = 5
-
-
-@tournament_preferences_registry.register
-class IdealDivisionSize(IntegerPreference):
-    help_text = _("Ideal size for a division")
-    verbose_name = _("Ideal division size")
-    section = league_options
-    name = 'ideal_division_size'
-    default = 6
-
-
-@tournament_preferences_registry.register
-class MaximumDivisionSize(IntegerPreference):
-    help_text = _("Largest allowed size for a division")
-    verbose_name = _("Maximum division size")
-    section = league_options
-    name = 'maximum_division_size'
-    default = 8
-
-
-@tournament_preferences_registry.register
-class EnableFlaggedMotions(BooleanPreference):
-    help_text = _("Allow particular motions to be flagged as contentious")
-    verbose_name = _("Enable flagged motions")
-    section = league_options
-    name = 'enable_flagged_motions'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableAdjNotes(BooleanPreference):
-    help_text = _("Enables a general-purpose notes field for adjudicators")
-    verbose_name = _("Enable adjudicator notes")
-    section = league_options
-    name = 'enable_adj_notes'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableVenueTimes(BooleanPreference):
-    help_text = _("Enables specific dates and times to be set for debates")
-    verbose_name = _("Enable debate scheduling")
-    section = league_options
-    name = 'enable_debate_scheduling'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShareAdjs(BooleanPreference):
-    help_text = 'Use shared adjudicators (those without a set tournament) in this tournament'
-    verbose_name = _("Share adjudicators")
-    section = league_options
-    name = 'share_adjs'
-    default = False
-
-
-@tournament_preferences_registry.register
-class ShareVenues(BooleanPreference):
-    help_text = 'Use shared venues (those without a set tournament) in this tournament'
-    verbose_name = _("Share venues")
-    section = league_options
-    name = 'share_venues'
-    default = False
-
-
-@tournament_preferences_registry.register
-class DeriveVenueFromDivison(BooleanPreference):
-    help_text = _("Don't show individual venue names in public draws; instead "
-                  "show the division's Venue Category")
-    verbose_name = _("Use division venue categories")
-    section = league_options
-    name = 'division_venues'
-    default = False
-
-
-@tournament_preferences_registry.register
-class DuplicateAdjs(BooleanPreference):
-    help_text = _("If unchecked, adjudicators can only be given one room per round")
-    verbose_name = _("Allow adjudicators to be allocated to multiple rooms")
-    section = league_options
-    name = 'duplicate_adjs'
-    default = False
-
-
-@tournament_preferences_registry.register
-class AdjAllocationConfirmations(BooleanPreference):
-    help_text = _("Allow links to be sent to adjudicators that allow them to confirm shifts")
-    verbose_name = _("Adjudicator allocation confirmations")
-    section = league_options
-    name = 'allocation_confirmations'
-    default = False
-
-
-@tournament_preferences_registry.register
-class EnableCrossTournamentDrawPages(BooleanPreference):
-    help_text = _("Enables pages that show draws across tournaments (ie by institution)")
-    verbose_name = _("Public cross draw pages")
-    section = league_options
-    name = 'enable_mass_draws'
-    default = False
-
 
 # ==============================================================================
 email = Section('email', verbose_name=_("Notifications"))
@@ -1341,7 +1201,7 @@ class EmailWebhookKey(StringPreference):
 
 @tournament_preferences_registry.register
 class EnableEmailBallotReceipts(BooleanPreference):
-    help_text = _("Enables a copy of judges' ballots to be automatically sent to them (by email) after they are entered in Tabbycat (for confirmation or checking)")
+    help_text = _("Enables a copy of adjudicators' ballots to be automatically sent to them (by email) after they are entered in Tabbycat (for confirmation or checking)")
     verbose_name = _("Ballot receipts")
     section = email
     name = 'enable_ballot_receipts'
@@ -1380,7 +1240,7 @@ class PointsEmailSubjectLine(StringPreference):
     help_text = _("The subject line for emails sent to speakers with their team points.")
     verbose_name = _("Team points subject line")
     name = 'team_points_email_subject'
-    default = "Your current number of wins after {{ ROUND }} for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}"
+    default = "{{ TEAM }}'s current wins after {{ ROUND }}: {{ POINTS }}"
 
 
 @tournament_preferences_registry.register

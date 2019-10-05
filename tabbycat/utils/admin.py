@@ -44,6 +44,10 @@ class TabbycatModelAdminFieldsMixin:
         return obj.ballot_submission.confirmed
     get_confirmed.short_description = 'Confirmed'
 
+    def get_adj_name(self, obj):
+        return obj.debate_adjudicator.adjudicator.name
+    get_adj_name.short_description = "Adjudicator"
+
 
 def custom_titled_filter(title):
     class Wrapper(admin.RelatedFieldListFilter):

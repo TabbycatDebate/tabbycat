@@ -12,13 +12,19 @@
           </span>
 
           <span v-if="showScoring"
-                v-text="gettext('Mark speeches %1 to %2; <strong>%3</strong>.', scoreDisplay(roundInfo.substantiveMin), scoreDisplay(roundInfo.substantiveMax), getDisplayStep(roundInfo.substantiveStep))"></span>
+                v-html="tct('Mark speeches %s to %s; <strong>%s</strong>.',
+                        [scoreDisplay(roundInfo.substantiveMin),
+                         scoreDisplay(roundInfo.substantiveMax),
+                         getDisplayStep(roundInfo.substantiveStep)])"></span>
 
           <span v-if="showScoring && roundInfo.hasReplies"
-                v-text="gettext('Mark replies %1 to %2; <strong>%3</strong>.', scoreDisplay(roundInfo.replyMin), scoreDisplay(roundInfo.replyMax), getDisplayStep(roundInfo.replyStep))"></span>
+                v-html="tct('Mark replies %s to %s; <strong>%s</strong>.',
+                        [scoreDisplay(roundInfo.replyMin),
+                         scoreDisplay(roundInfo.replyMax),
+                         getDisplayStep(roundInfo.replyStep)])"></span>
 
           <span v-if="roundInfo.returnLocation !== 'TBA'"
-                v-text="gettext('Return ballots to %1.', roundInfo.returnLocation)"></span>
+                v-text="tct('Return ballots to %s.', [roundInfo.returnLocation])"></span>
 
         </div>
       </div>
@@ -26,7 +32,7 @@
       <!-- No motion selection; but a motion has been entered. I.E. BP/Joynt -->
       <div v-if="!roundInfo.hideMotions && !roundInfo.hasMotions && roundInfo.motions.length > 0"
            class="db-flex-item-1 pt-2"
-           v-text="gettext('The motion is <em>%1</em>', roundInfo.motions[0].text)"></div>
+           v-html="tct('The motion is <em>%s</em>', [roundInfo.motions[0].text])"></div>
 
       <!-- No need to worry about if there is not motion selection and no motions
            have been entered; there's no use recording/providing the motion -->
@@ -37,7 +43,7 @@
         <div v-if="roundInfo.motions.length > 1" class="db-flex-item db-align-vertical-center">
           <template v-for="choice_type in [gettext('Debated')]">
             <div class="d-flex flex-column justify-content-end">
-              <div class="text-center pb-2" v-text="gettext('Circle %1', choice_type)"></div>
+              <div class="text-center pb-2" v-text="tct('Circle %s', [choice_type])"></div>
               <div class="d-flex text-monospace">
                 <div v-for="motion in motionsAccountingForBlanks"
                      class="db-align-horizontal-center db-align-vertical-start
@@ -51,13 +57,13 @@
           <div class="flex-fill" v-if="!roundInfo.hideMotions">
             <div class="db-flex-item db-align-vertical-center"
                  v-for="motion in roundInfo.motions">
-              <div v-text="gettext('<strong>%1</strong>: %2', motion.seq, motion.text)"></div>
+              <div v-text="tct('<strong>%s</strong>: %s', [motion.seq, motion.text])"></div>
             </div>
           </div>
         </div>
         <div v-if="!roundInfo.hideMotions && roundInfo.motions.length === 1"
-             class="db-flex-item db-align-vertical-center"
-             v-text="gettext('The motion is <em>%1</em>', roundInfo.motions[0].text)">
+             class="db-flex-item db-align-vertical-center d-inline"
+             v-html="tct('The motion is <em>%s</em>', [roundInfo.motions[0].text])">
           <!-- There shouldn't only be one motion if selection is on; but useful as fallback? -->
         </div>
         <div v-if="roundInfo.hideMotions || roundInfo.motions.length === 0"
@@ -69,7 +75,7 @@
            class="flex-fill pt-2 d-flex flex-row">
         <template v-for="choice_type in [gettext('Aff Veto'), gettext('Neg Veto'), gettext('Debated'), ]">
           <div class="d-flex flex-column justify-content-end">
-            <div class="text-center pb-2" v-text="gettext('Circle %1', choice_type)"></div>
+            <div class="text-center pb-2" v-text="tct('Circle %s', [choice_type])"></div>
             <div class="d-flex text-monospace">
               <div v-for="motion in motionsAccountingForBlanks"
                    class="db-align-horizontal-center db-align-vertical-start
@@ -84,13 +90,13 @@
           <div class="db-flex-item db-align-vertical-center"
                v-for="motion in roundInfo.motions"
                v-if="!roundInfo.hideMotions">
-            <div v-text="gettext('<strong>%1</strong>: %2', motion.seq, motion.text)"></div>
+            <div v-html="tct('<strong>%s</strong>: %s', [motion.seq, motion.text])"></div>
           </div>
           <div class="d-flex"
                v-if="roundInfo.motions.length === 0 || roundInfo.hideMotions">
             <div class="flex-fill db-fill-in strong mr-3 pt-3 mt-2"
-                 v-for="choice_type in [gettext('1'), gettext('2'), gettext('3'), ]"
-                 v-text="gettext('%1:', choice_type)"></div>
+                 v-for="choice_type in ['1', '2', '3', ]"
+                 v-text="tct('%s:', [choice_type])"></div>
           </div>
         </div>
       </div>
@@ -189,9 +195,12 @@ export default {
           default:
             break
         }
-        adjs.push(this.gettext('%1 (%2, %3)', a.adjudicator.name, position, this.getAdjudicatorInstitution(a)))
+        const substitutions = [a.adjudicator.name, position, this.getAdjudicatorInstitution(a)]
+        const adjInfo = this.tct('%s (%s, %s)', substitutions)
+        adjs.push(adjInfo)
       })
-      return this.gettext('Adjudicating with %1.', adjs.join(this.gettext('; ')))
+      const otherAdjsList = adjs.join(this.gettext('; '))
+      return this.tct('Adjudicating with %s.', [otherAdjsList])
     },
     motionsAccountingForBlanks: function () {
       if (this.roundInfo.motions.length > 0) {

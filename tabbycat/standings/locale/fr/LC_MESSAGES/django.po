@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
-"PO-Revision-Date: 2018-11-01 20:55-0400\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-01-29 16:38-0500\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: standings/base.py:295
 msgid "The same metric would be added twice:"
@@ -261,7 +261,7 @@ msgstr "nombre de juges qui ont voté pour cette équipe"
 
 #: standings/teams.py:245
 msgid "Ballots"
-msgstr "Bulletins"
+msgstr "Feuilles"
 
 #: standings/teams.py:246
 msgid "votes/ballots carried"
@@ -435,23 +435,27 @@ msgstr "Vue d’ensemble de la diversité"
 
 #: standings/templates/standings_diversity.html:22
 msgid ""
-"The speaker and adjudicator results data displayed here is presented without "
-"tests for statistical significance. Correlations should not be automatically "
-"considered reliable; particularly at small tournaments."
+"The results data displayed here is presented without tests for statistical "
+"significance. Correlations should not be automatically considered reliable; "
+"particularly at small tournaments. A 'region' is a customisable category "
+"assigned to a set of institutions, and counted using the number of "
+"participants assigned to those institutions."
 msgstr ""
 "Les données des résultats des orateurs et juges sont présentées sans tests "
 "pour la signification statistique. Les corrélations ne devraient pas être "
-"considérées comme fiables ; surtout lors de petits tournois."
+"considérées comme fiables ; surtout lors de petits tournois. Les « régions » "
+"sont une catégorisation du tournoi assigné aux institutions, compté avec le "
+"nombre de participants de tels institutions."
 
-#: standings/templates/standings_diversity.html:32
+#: standings/templates/standings_diversity.html:37
 msgid "Non-cis male identifying"
 msgstr "Pas identifiant comme un homme cisgenre"
 
-#: standings/templates/standings_diversity.html:35
-msgid "Male identifying"
-msgstr "Identifiant comme un homme"
+#: standings/templates/standings_diversity.html:40
+msgid "Cis-male identifying"
+msgstr "Identifiant comme un homme cisgenre"
 
-#: standings/templates/standings_diversity.html:38
+#: standings/templates/standings_diversity.html:43
 msgid "Unspecified/unrecorded"
 msgstr "Non-spécifié/enregistré"
 

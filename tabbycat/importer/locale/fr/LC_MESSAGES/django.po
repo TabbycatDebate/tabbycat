@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-04-29 10:38-0700\n"
 "Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -240,34 +240,31 @@ msgstr ""
 
 #: importer/templates/simple_import_index.html:16
 msgid "Add Institutions"
-msgstr ""
+msgstr "Ajouter institutions"
 
 #: importer/templates/simple_import_index.html:21
 msgid "Add Teams"
-msgstr ""
+msgstr "Ajouter équipes"
 
 #: importer/templates/simple_import_index.html:25
 msgid "Add Adjudicators"
-msgstr ""
+msgstr "Ajouter juges"
 
 #: importer/templates/simple_import_index.html:29
 msgid "Add Venues"
-msgstr ""
+msgstr "Ajouter salles"
 
 #: importer/templates/simple_import_index.html:36
 msgid "Add/Edit Venue Categories"
-msgstr ""
+msgstr "Ajouter/Modifier catégories de salle"
 
 #: importer/templates/simple_import_index.html:40
 msgid "Add/Edit Venue Constraints"
-msgstr ""
+msgstr "Ajouter/Modifier contraintes de salle"
 
 #: importer/templates/simple_import_index.html:47
-#, fuzzy
-#| msgctxt "page title"
-#| msgid "Add Adjudicators"
 msgid "Add/Edit Adjudicator-Team Conflicts"
-msgstr "Addition de juges"
+msgstr "Ajouter/Modifier conflits juge-équipe"
 
 #: importer/templates/simple_import_index.html:51
 msgid "Add/Edit Adjudicator-Adjudicator Conflicts"

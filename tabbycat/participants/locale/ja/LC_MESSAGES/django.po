@@ -2,64 +2,64 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Subaru Arakane <zettaileido@gmail.com>, 2018\n"
-"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/ja/)\n"
+"Language-Team: Japanese (https://www.transifex.com/tabbycat-jp/teams/86216/"
+"ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: participants/admin.py:92
+#: participants/admin.py:95
 #, python-format
 msgid ""
 "The team can't be in a break category of a different tournament. Please "
 "remove: %(category)s"
 msgstr ""
 
-#: participants/admin.py:128
+#: participants/admin.py:150
 #, python-format
-msgid "%(count)d team had its URL key removed."
-msgid_plural "%(count)d teams had their URL keys removed."
+msgid "%(count)d speaker had their URL key removed."
+msgid_plural "%(count)d speakers had their URL keys removed."
 msgstr[0] ""
 
-#: participants/admin.py:133 participants/admin.py:201
+#: participants/admin.py:154 participants/admin.py:213
 msgid "Delete URL key"
 msgstr ""
 
-#: participants/admin.py:196
+#: participants/admin.py:208
 #, python-format
 msgid "%(count)d adjudicator had their URL key removed."
 msgid_plural "%(count)d adjudicators had their URL keys removed."
 msgstr[0] ""
 
-#: participants/apps.py:7 participants/views.py:42
+#: participants/apps.py:7 participants/views.py:41
 msgid "Participants"
 msgstr ""
 
-#: participants/models.py:21 participants/models.py:41
-#: participants/models.py:74 participants/models.py:108
+#: participants/models.py:20 participants/models.py:41
+#: participants/models.py:75 participants/models.py:109
 msgid "name"
 msgstr ""
 
-#: participants/models.py:24 participants/models.py:49
+#: participants/models.py:23 participants/models.py:49
 msgid "region"
 msgstr ""
 
-#: participants/models.py:25
+#: participants/models.py:24
 msgid "regions"
 msgstr ""
 
-#. Translators: Change the examples to institutions native to your language;
-#. keep consistent between strings
+#. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py:43
 msgid ""
 "The institution's full name, e.g., \"University of Cambridge\", \"Victoria "
@@ -70,16 +70,15 @@ msgstr ""
 msgid "code"
 msgstr ""
 
-#. Translators: Change the examples to institutions native to your language;
-#. keep consistent between strings
+#. Translators: Change the examples to institutions native to your language; keep consistent between strings
 #: participants/models.py:47
 msgid ""
 "What the institution is typically called for short, e.g., \"Cambridge\", "
 "\"Vic Wellington\""
 msgstr ""
 
-#: participants/models.py:59 participants/models.py:174
-#: participants/models.py:393
+#: participants/models.py:59 participants/models.py:175
+#: participants/models.py:380
 msgid "institution"
 msgstr ""
 
@@ -87,460 +86,390 @@ msgstr ""
 msgid "institutions"
 msgstr ""
 
-#: participants/models.py:72 participants/models.py:176
-#: participants/models.py:396
+#: participants/models.py:73 participants/models.py:177
+#: participants/models.py:383
 msgid "tournament"
 msgstr ""
 
-#. Translators: Translate ESL to the acronym for "<target language> as a
-#. second/foreign language", not "English"
-#: participants/models.py:76
+#. Translators: Translate ESL to the acronym for "<target language> as a second/foreign language", not "English"
+#: participants/models.py:77
 msgid "Name to be displayed, e.g., \"Novice\", \"ESL\""
 msgstr ""
 
-#: participants/models.py:78
+#: participants/models.py:79
 msgid "slug"
 msgstr ""
 
-#. Translators: Translate esl to the acronym for "<target language> as a
-#. second/foreign language", not "English"
-#: participants/models.py:80
+#. Translators: Translate esl to the acronym for "<target language> as a second/foreign language", not "English"
+#: participants/models.py:81
 msgid "Slug for URLs, e.g., \"novice\", \"esl\""
 msgstr ""
 
-#: participants/models.py:82
+#: participants/models.py:83
 msgid "sequence number"
 msgstr ""
 
-#: participants/models.py:83
+#: participants/models.py:84
 msgid "The order in which the categories are displayed"
 msgstr ""
 
-#: participants/models.py:85
+#: participants/models.py:86
 msgid "limit"
 msgstr ""
 
-#: participants/models.py:86
+#: participants/models.py:87
 msgid ""
 "At most this many speakers will be shown on the public tab for this "
 "category, or use 0 for no limit"
 msgstr ""
 
-#: participants/models.py:88
+#: participants/models.py:89
 msgid "public"
 msgstr ""
 
-#: participants/models.py:89
+#: participants/models.py:90
 msgid ""
 "If checked, this category will be included in the speaker category tabs "
 "shown to the public"
 msgstr ""
 
-#: participants/models.py:95
+#: participants/models.py:96
 msgid "speaker category"
 msgstr ""
 
-#: participants/models.py:96 participants/models.py:369
+#: participants/models.py:97 participants/models.py:356
 msgid "speaker categories"
 msgstr ""
 
-#: participants/models.py:110
+#: participants/models.py:111
 msgid "e-mail address"
 msgstr ""
 
-#: participants/models.py:112
+#: participants/models.py:113
 msgid "phone"
 msgstr ""
 
-#: participants/models.py:114
+#: participants/models.py:115
 msgid "anonymous"
 msgstr "匿名"
 
-#: participants/models.py:115
+#: participants/models.py:116
 msgid ""
 "Anonymous persons will have their name and team redacted on public tab "
 "releases"
 msgstr ""
 
-#: participants/models.py:118
+#: participants/models.py:119
 msgid "URL key"
 msgstr ""
 
-#: participants/models.py:121
+#: participants/models.py:122
 msgid "notes"
 msgstr ""
 
-#: participants/models.py:126
+#: participants/models.py:127
 msgid "male"
 msgstr "男性"
 
-#: participants/models.py:127
+#: participants/models.py:128
 msgid "female"
 msgstr ""
 
-#: participants/models.py:128
+#: participants/models.py:129
 msgid "other"
 msgstr ""
 
-#: participants/models.py:130
+#: participants/models.py:131
 msgid "gender"
 msgstr ""
 
-#: participants/models.py:131
+#: participants/models.py:132
 msgid ""
-"Gender is displayed in the adjudicator allocation interface, and nowhere "
-"else"
-msgstr ""
-
-#: participants/models.py:133
-msgid "pronoun"
+"Gender is displayed in the adjudicator allocation interface, and nowhere else"
 msgstr ""
 
 #: participants/models.py:134
-msgid ""
-"If printing ballots using Tabbycat, there is the option to pre-print "
-"pronouns"
+msgid "pronoun"
 msgstr ""
 
-#: participants/models.py:137
-msgid "person"
+#: participants/models.py:135
+msgid ""
+"If printing ballots using Tabbycat, there is the option to pre-print pronouns"
 msgstr ""
 
 #: participants/models.py:138
+msgid "person"
+msgstr ""
+
+#: participants/models.py:139
 msgid "persons"
 msgstr ""
 
-#: participants/models.py:157
+#: participants/models.py:158
 msgid "full name/suffix"
 msgstr ""
 
-#: participants/models.py:158
-msgid "Do not include institution name (see \"uses institutional prefix\" below)"
-msgstr ""
-
-#: participants/models.py:160
-msgid "short name/suffix"
+#: participants/models.py:159
+msgid ""
+"Do not include institution name (see \"uses institutional prefix\" below)"
 msgstr ""
 
 #: participants/models.py:161
+msgid "short name/suffix"
+msgstr ""
+
+#: participants/models.py:162
 msgid ""
 "The name shown in the draw. Do not include institution name (see \"uses "
 "institutional prefix\" below)"
 msgstr ""
 
-#: participants/models.py:163
+#: participants/models.py:164
 msgid "code name"
 msgstr ""
 
-#: participants/models.py:164
+#: participants/models.py:165
 msgid "Name used to obscure institutional identity on public-facing pages"
 msgstr ""
 
-#: participants/models.py:167
+#: participants/models.py:168
 msgid "short name"
 msgstr ""
 
-#: participants/models.py:168
+#: participants/models.py:169
 msgid ""
 "The name shown in the draw, including institution name. (This is "
 "autogenerated.)"
 msgstr ""
 
-#: participants/models.py:170
+#: participants/models.py:171
 msgid "long name"
 msgstr ""
 
-#: participants/models.py:171
+#: participants/models.py:172
 msgid ""
 "The full name of the team, including institution name. (This is "
 "autogenerated.)"
 msgstr ""
 
-#: participants/models.py:178
+#: participants/models.py:179
 msgid "division"
 msgstr ""
 
-#: participants/models.py:180
+#: participants/models.py:181
 msgid "Uses institutional prefix"
 msgstr ""
 
-#: participants/models.py:181
-msgid "If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
+#: participants/models.py:182
+msgid ""
+"If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""
 msgstr ""
 
-#: participants/models.py:183
+#: participants/models.py:184
 msgid "break categories"
 msgstr ""
 
-#: participants/models.py:193
+#: participants/models.py:194
 msgid "none"
 msgstr ""
 
-#: participants/models.py:194
+#: participants/models.py:195
 msgid "swing"
 msgstr ""
 
-#: participants/models.py:195
+#: participants/models.py:196
 msgid "composite"
 msgstr ""
 
-#: participants/models.py:196
+#: participants/models.py:197
 msgid "bye"
 msgstr ""
 
-#: participants/models.py:198
+#: participants/models.py:199
 msgid "type"
 msgstr ""
 
-#: participants/models.py:202
+#: participants/models.py:203
 msgid "emoji"
 msgstr "絵文字"
 
-#: participants/models.py:216 participants/models.py:367
+#: participants/models.py:217 participants/models.py:354
 msgid "team"
 msgstr "チーム"
 
-#: participants/models.py:217
+#: participants/models.py:218
 msgid "teams"
 msgstr "チーム"
 
-#: participants/models.py:335
+#: participants/models.py:323
 msgid ""
 "Teams must have an institution if they are using the institutional prefix."
 msgstr ""
 
-#: participants/models.py:337
-msgid ""
-"Teams must have a full name if they don't use the institutional prefix."
+#: participants/models.py:325
+msgid "Teams must have a full name if they don't use the institutional prefix."
 msgstr ""
 
-#: participants/models.py:339
+#: participants/models.py:327
 msgid ""
 "Teams must have a short name if they don't use the institutional prefix."
 msgstr ""
 
-#: participants/models.py:372
+#: participants/models.py:359
 msgid "speaker"
 msgstr ""
 
-#: participants/models.py:373
+#: participants/models.py:360
 msgid "speakers"
 msgstr ""
 
-#: participants/models.py:397
+#: participants/models.py:384
 msgid ""
-"Adjudicators not assigned to any tournament can be shared between "
-"tournaments"
+"Adjudicators not assigned to any tournament can be shared between tournaments"
 msgstr ""
 
-#: participants/models.py:399
+#: participants/models.py:386
 msgid "test score"
 msgstr ""
 
-#: participants/models.py:404
+#: participants/models.py:392
 msgid "institution conflicts"
 msgstr "大学・団体コンフリクト"
 
-#: participants/models.py:408
+#: participants/models.py:396
 msgid "team conflicts"
 msgstr ""
 
-#: participants/models.py:411
+#: participants/models.py:399
 msgid "always trainee"
 msgstr ""
 
-#: participants/models.py:412
+#: participants/models.py:400
 msgid ""
-"If checked, this adjudicator will never be auto-allocated a voting position,"
-" regardless of their score"
+"If checked, this adjudicator will never be auto-allocated a voting position, "
+"regardless of their score"
 msgstr ""
 
-#: participants/models.py:414
+#: participants/models.py:402
 msgid "breaking"
 msgstr ""
 
-#: participants/models.py:416
+#: participants/models.py:404
 msgid "independent"
 msgstr ""
 
-#: participants/models.py:418
+#: participants/models.py:406
 msgid "adjudication core"
 msgstr ""
 
-#: participants/models.py:427
+#: participants/models.py:415
 msgid "adjudicator"
 msgstr ""
 
-#: participants/models.py:428
+#: participants/models.py:416
 msgid "adjudicators"
 msgstr ""
 
-#: participants/tables.py:22
+#: participants/tables.py:28
 msgid "Points after this debate"
 msgstr ""
 
-#: participants/tables.py:24
+#: participants/tables.py:30
 msgid "Wins after this debate"
 msgstr ""
 
-#: participants/tables.py:33
+#: participants/tables.py:39
 msgid "Speaker scores<br>(in speaking order)"
 msgstr ""
 
-#: participants/tables.py:33
+#: participants/tables.py:39
 msgid "Speaks"
 msgstr ""
 
-#: participants/templates/adjudicator_record.html:16
+#: participants/templates/adjudicator_record.html:17
 #: participants/templates/team_record.html:19
-#, python-format
-msgid "In This Round (%(round_name)s)"
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:20
-#: participants/templates/team_record.html:23
-msgid "(Not Released to Public)"
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:38
-#, python-format
-msgid ""
-"%(adj_name)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s "
-"in <strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:42
-#, python-format
-msgid ""
-"%(adj_name)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s "
-"in <strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:46
-#, python-format
-msgid ""
-"%(adj_name)s is adjudicating %(aff)s vs %(neg)s in "
-"<strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:55
-#, python-format
-msgid ""
-"%(adj_name)s is the <strong>chair</strong> adjudicating in "
-"<strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:59
-#, python-format
-msgid ""
-"%(adj_name)s is a <strong>%(type)s</strong> adjudicating in "
-"<strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:63
-#, python-format
-msgid "%(adj_name)s is adjudicating in <strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:74
-#: participants/templates/team_record.html:84
-#, python-format
-msgid "The round begins at %(start_time)s"
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:83
-#: participants/templates/team_record.html:93
-msgid "Teams:"
-msgstr "チーム："
-
-#: participants/templates/adjudicator_record.html:96
-#: participants/templates/team_record.html:109
-msgid "Adjudicator:"
-msgid_plural "Adjudicators:"
-msgstr[0] ""
-
-#: participants/templates/adjudicator_record.html:105
-#: participants/templates/adjudicator_record.html:107
-#: participants/templates/team_record.html:117
-msgctxt "chair icon"
-msgid "Ⓒ"
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:105
-#: participants/templates/adjudicator_record.html:107
-#: participants/templates/team_record.html:117
-msgctxt "trainee icon"
-msgid "Ⓣ"
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:112
-msgid "There are no panellists or trainees assigned to this debate."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:122
-#: participants/templates/team_record.html:127
-msgid "Motions are not released to public."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:125
-#: participants/templates/team_record.html:130
-msgid "Motion:"
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:129
-#: participants/templates/team_record.html:134
-#, python-format
-msgid "Motion %(seq)s:"
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:137
-#: participants/templates/team_record.html:142
-msgid "The motion(s) for this round haven't yet been released."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:148
-#, python-format
-msgid "%(adj_name)s is not adjudicating this round."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:159
-#: participants/templates/team_record.html:161
-msgid "The draw for this round hasn't yet been released."
-msgstr ""
-
-#: participants/templates/adjudicator_record.html:176
-#: participants/templates/team_record.html:176
 #, python-format
 msgid "About %(name)s"
 msgstr ""
 
-#: participants/templates/adjudicator_record.html:184
-#: participants/templates/team_record.html:221
+#: participants/templates/adjudicator_registration_card.html:15
+msgid "Independent adjudicator"
+msgstr ""
+
+#: participants/templates/adjudicator_registration_card.html:18
+msgid "Member of the adjudication core"
+msgstr ""
+
+#: participants/templates/adjudicator_registration_card.html:26
+#: participants/templates/team_registration_card.html:64
 msgid "Institution:"
 msgstr ""
 
-#: participants/templates/adjudicator_record.html:191
-#: participants/templates/team_record.html:228
+#: participants/templates/adjudicator_registration_card.html:30
+#: participants/templates/team_registration_card.html:68
 msgid "Region:"
 msgstr ""
 
-#: participants/templates/adjudicator_record.html:199
-#, python-format
-msgid "%(adj_name)s is an independent adjudicator."
+#: participants/templates/adjudicator_registration_card.html:39
+#: participants/templates/team_registration_card.html:77
+#, fuzzy
+#| msgid "institution conflicts"
+msgid "Institutional Conflicts:"
+msgstr "大学・団体コンフリクト"
+
+#: participants/templates/adjudicator_registration_card.html:41
+#: participants/templates/team_registration_card.html:79
+msgid "; "
 msgstr ""
 
-#: participants/templates/adjudicator_record.html:209
-#, python-format
-msgid "%(adj_name)s is on the adjudication core."
+#: participants/templates/adjudicator_registration_card.html:43
+#: participants/templates/adjudicator_registration_card.html:50
+#: participants/templates/adjudicator_registration_card.html:61
+#: participants/templates/adjudicator_registration_card.html:71
+#: participants/templates/team_registration_card.html:30
+#: participants/templates/team_registration_card.html:48
+#: participants/templates/team_registration_card.html:56
+#: participants/templates/team_registration_card.html:81
+#: participants/templates/team_registration_card.html:88
+#: participants/templates/team_registration_card.html:98
+msgid "None"
+msgstr ""
+
+#: participants/templates/adjudicator_registration_card.html:46
+msgid "Team Conflicts:"
+msgstr ""
+
+#: participants/templates/adjudicator_registration_card.html:48
+#: participants/templates/adjudicator_registration_card.html:56
+#: participants/templates/adjudicator_registration_card.html:58
+#: participants/templates/adjudicator_registration_card.html:69
+#: participants/templates/team_registration_card.html:28
+#: participants/templates/team_registration_card.html:46
+#: participants/templates/team_registration_card.html:54
+#: participants/templates/team_registration_card.html:86
+#: participants/templates/team_registration_card.html:96
+msgid ", "
+msgstr ""
+
+#: participants/templates/adjudicator_registration_card.html:53
+#: participants/templates/team_registration_card.html:84
+#, fuzzy
+#| msgid "Adjudicators"
+msgid "Adjudicator Conflicts:"
+msgstr "ジャッジ"
+
+#: participants/templates/adjudicator_registration_card.html:67
+#: participants/templates/team_registration_card.html:94
+msgid "Venue Constraints:"
 msgstr ""
 
 #: participants/templates/admin/participants/adjudicator/change_form.html:8
 msgid ""
 "<strong>Don't forget:</strong> If this adjudicator should be conflicted "
-"against their own institution, you should add this conflict "
-"<strong>now</strong> in the <strong>Adjudicator-institution "
-"conflicts</strong> tab above, because the own-institution conflict is "
-"<strong>not</strong> automatically created when using this form."
+"against their own institution, you should add this conflict <strong>now</"
+"strong> in the <strong>Adjudicator-institution conflicts</strong> tab above, "
+"because the own-institution conflict is <strong>not</strong> automatically "
+"created when using this form."
 msgstr ""
 
 #: participants/templates/admin/participants/delete_debateteam_warning.html:7
@@ -563,8 +492,8 @@ msgid ""
 "This is especially the case if any team that would be deleted has already "
 "participated in a debate. If a team already has a result entered for it, "
 "deleting the team also deletes those results, <strong>which normally breaks "
-"the tab</strong>, even if you think you don't need those results anymore. If"
-" a team has debated and is withdrawing from the tournament, you should "
+"the tab</strong>, even if you think you don't need those results anymore. If "
+"a team has debated and is withdrawing from the tournament, you should "
 "<strong>not</strong> delete it. Just mark the team inactive under the "
 "“Availability” section of the Tabbycat admin area."
 msgstr ""
@@ -586,9 +515,18 @@ msgstr ""
 #: participants/templates/admin/participants/delete_debateteam_warning.html:46
 #, python-format
 msgid ""
-"If you're very sure about deleting these %(objects_name)s, please delete the"
-" above objects first, and be sure to heed the warning that you will see on "
+"If you're very sure about deleting these %(objects_name)s, please delete the "
+"above objects first, and be sure to heed the warning that you will see on "
 "the “debate team” objects page before proceeding."
+msgstr ""
+
+#: participants/templates/admin/participants/team/change_form.html:8
+msgid ""
+"<strong>Don't forget:</strong> If this team should be conflicted against its "
+"own institution, you should add this conflict <strong>now</strong> in the "
+"<strong>Team-institution conflicts</strong> tab above, because the own-"
+"institution conflict is <strong>not</strong> automatically created when "
+"using this form."
 msgstr ""
 
 #: participants/templates/confirm_shifts.html:5
@@ -601,14 +539,190 @@ msgstr ""
 msgid "Save Availability"
 msgstr ""
 
+#: participants/templates/current_round/common.html:6
+#, python-format
+msgid "The round begins at %(start_time)s"
+msgstr ""
+
+#: participants/templates/current_round/common.html:15
+msgid "Teams:"
+msgstr "チーム："
+
+#: participants/templates/current_round/common.html:30
+msgid "Adjudicator:"
+msgid_plural "Adjudicators:"
+msgstr[0] ""
+
+#: participants/templates/current_round/common.html:39
+#: participants/templates/current_round/common.html:41
+msgctxt "chair icon"
+msgid "Ⓒ"
+msgstr ""
+
+#: participants/templates/current_round/common.html:39
+#: participants/templates/current_round/common.html:41
+msgctxt "trainee icon"
+msgid "Ⓣ"
+msgstr ""
+
+#: participants/templates/current_round/common.html:46
+msgid "There are no panellists or trainees assigned to this debate."
+msgstr ""
+
+#: participants/templates/current_round/common.html:56
+msgid "Motions are not released to public."
+msgstr ""
+
+#: participants/templates/current_round/common.html:59
+msgid "Motion:"
+msgstr ""
+
+#: participants/templates/current_round/common.html:63
+#, python-format
+msgid "Motion %(seq)s:"
+msgstr ""
+
+#: participants/templates/current_round/common.html:71
+msgid "The motion(s) for this round haven't yet been released."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:13
+#, python-format
+msgid ""
+"%(adj_name)s is the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s "
+"in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:17
+#, python-format
+msgid ""
+"You are the <strong>chair</strong> adjudicating %(aff)s vs %(neg)s in "
+"<strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:23
+#, python-format
+msgid ""
+"%(adj_name)s is a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s "
+"in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:27
+#, python-format
+msgid ""
+"You are a <strong>%(type)s</strong> adjudicating %(aff)s vs %(neg)s in "
+"<strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:33
+#, python-format
+msgid ""
+"%(adj_name)s is adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</"
+"strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:37
+#, python-format
+msgid "You are adjudicating %(aff)s vs %(neg)s in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:48
+#, python-format
+msgid ""
+"%(adj_name)s is the <strong>chair</strong> adjudicating in <strong>"
+"%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:52
+#, python-format
+msgid ""
+"You are the <strong>chair</strong> adjudicating in <strong>%(venue)s</"
+"strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:58
+#, python-format
+msgid ""
+"%(adj_name)s is a <strong>%(type)s</strong> adjudicating in <strong>"
+"%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:62
+#, python-format
+msgid ""
+"You are a <strong>%(type)s</strong> adjudicating in <strong>%(venue)s</"
+"strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:68
+#, python-format
+msgid "%(adj_name)s is adjudicating in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_adj.html:72
+#, python-format
+msgid "You are adjudicating in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:12
+#, python-format
+msgid ""
+"%(team_name)s is debating as the <strong>%(side)s</strong> team against "
+"<strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:16
+#, python-format
+msgid ""
+"You are debating as the <strong>%(side)s</strong> team against <strong>"
+"%(opponent)s</strong> in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:22
+#, python-format
+msgid ""
+"%(team_name)s is debating against <strong>%(opponent)s</strong> in <strong>"
+"%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:26
+#, python-format
+msgid ""
+"You are debating against <strong>%(opponent)s</strong> in <strong>%(venue)s</"
+"strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:37
+#, python-format
+msgid ""
+"%(team_name)s is debating as the <strong>%(side)s</strong> team in <strong>"
+"%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:41
+#, python-format
+msgid ""
+"You are debating as the <strong>%(side)s</strong> team in <strong>%(venue)s</"
+"strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:47
+#, python-format
+msgid "%(team_name)s is debating in <strong>%(venue)s</strong>."
+msgstr ""
+
+#: participants/templates/current_round/round_team.html:51
+#, python-format
+msgid "You are debating in <strong>%(venue)s</strong>."
+msgstr ""
+
 #: participants/templates/edit_speaker_eligibility.html:7
 #, python-format
 msgid ""
-"It looks like there aren't any speaker categories are defined. If you'd like"
-" to produce category-specific speaker tabs, such as a novice or ESL tab, use"
-" the <a href=\"%(categories_url)s\" class=\"alert-link\">Speaker "
-"Categories</a> page to define them, then return to this page to set speaker "
-"eligibility."
+"It looks like there aren't any speaker categories are defined. If you'd like "
+"to produce category-specific speaker tabs, such as a novice or ESL tab, use "
+"the <a href=\"%(categories_url)s\" class=\"alert-link\">Speaker Categories</"
+"a> page to define them, then return to this page to set speaker eligibility."
 msgstr ""
 
 #: participants/templates/feedback_progress_panel.html:10
@@ -646,6 +760,53 @@ msgstr ""
 msgid "%(participant_name)s doesn't have any feedback to submit."
 msgstr ""
 
+#: participants/templates/in_this_round.html:8
+#, python-format
+msgid "In This Round (%(round_name)s)"
+msgstr ""
+
+#: participants/templates/in_this_round.html:12
+msgid "(Not Released to Public)"
+msgstr ""
+
+#: participants/templates/in_this_round.html:19
+msgid "Venue TBA"
+msgstr ""
+
+#: participants/templates/in_this_round.html:31
+#, python-format
+msgid "%(adj_name)s is not adjudicating this round."
+msgstr ""
+
+#: participants/templates/in_this_round.html:35
+msgid "You are not adjudicating this round."
+msgstr ""
+
+#: participants/templates/in_this_round.html:50
+#, python-format
+msgid ""
+"It looks like %(team_name)s is competing in %(ndebates)s debate this round."
+msgid_plural ""
+"It looks like %(team_name)s is competing in %(ndebates)s debates this round."
+msgstr[0] ""
+
+#: participants/templates/in_this_round.html:56
+msgid "If this is an error, please contact a tab director immediately."
+msgstr ""
+
+#: participants/templates/in_this_round.html:71
+#, python-format
+msgid "%(team_name)s does not have a debate this round."
+msgstr ""
+
+#: participants/templates/in_this_round.html:75
+msgid "You do not have a debate this round."
+msgstr ""
+
+#: participants/templates/in_this_round.html:87
+msgid "The draw for this round hasn't yet been released."
+msgstr ""
+
 #: participants/templates/participants_subnav.html:6
 msgid "Participants List"
 msgstr ""
@@ -654,105 +815,75 @@ msgstr ""
 msgid "Institutions List"
 msgstr ""
 
-#: participants/templates/participants_subnav.html:17
-#: participants/views.py:127
+#: participants/templates/participants_subnav.html:15
+msgid "Emails have already been sent."
+msgstr ""
+
+#: participants/templates/participants_subnav.html:19
+msgid "Email Team Registrations"
+msgstr ""
+
+#: participants/templates/participants_subnav.html:26 participants/views.py:132
 msgid "Code Names"
 msgstr ""
 
-#: participants/templates/participants_subnav.html:22
+#: participants/templates/participants_subnav.html:31
 #: participants/templates/speaker_categories_edit.html:4
 #: participants/templates/speaker_categories_edit.html:5
 msgid "Speaker Categories"
 msgstr ""
 
-#: participants/templates/participants_subnav.html:26
+#: participants/templates/participants_subnav.html:35
 msgid "Speaker Eligibility"
 msgstr ""
 
 #: participants/templates/speaker_categories_edit.html:16
 msgid ""
-"Speaker categories allow category-specific speaker tabs to be produced, "
-"<i>e.g.</i>, for novice or ESL categories. On this page, you can define what"
-" speaker categories exist. After you've defined the categories, you can set "
+"Speaker categories allow category-specific speaker tabs to be produced, <i>e."
+"g.</i>, for novice or ESL categories. On this page, you can define what "
+"speaker categories exist. After you've defined the categories, you can set "
 "speaker eligibility on the Speaker Eligibility page."
 msgstr ""
 
 #: participants/templates/speaker_categories_edit.html:23
 #, python-format
 msgid ""
-"If you want to delete speaker categories, use the <a "
-"href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+"If you want to delete speaker categories, use the <a href=\"%(edit_db_url)s"
+"\" class=\"alert-link\">Edit Database</a> area."
 msgstr ""
 
 #: participants/templates/speaker_categories_edit.html:29
 msgid "Save Speaker Categories"
 msgstr ""
 
-#: participants/templates/team_record.html:33
-#, python-format
-msgid ""
-"It looks like %(team_name)s is competing in %(ndebates)s debate this round."
-msgid_plural ""
-"It looks like %(team_name)s is competing in %(ndebates)s debates this round."
-msgstr[0] ""
+#: participants/templates/team_registration_card.html:14
+#, fuzzy
+#| msgid "Teams:"
+msgid "Team name:"
+msgstr "チーム："
 
-#: participants/templates/team_record.html:39
-msgid "If this is an error, please contact a tab director immediately."
-msgstr ""
-
-#: participants/templates/team_record.html:50
-msgid "Venue TBA"
-msgstr ""
-
-#: participants/templates/team_record.html:57
-#, python-format
-msgid ""
-"%(team_name)s is debating as the <strong>%(side)s</strong> team against "
-"<strong>%(opponent)s</strong> in <strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/team_record.html:61
-#, python-format
-msgid ""
-"%(team_name)s is debating against <strong>%(opponent)s</strong> in "
-"<strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/team_record.html:70
-#, python-format
-msgid ""
-"%(team_name)s is debating as the <strong>%(side)s</strong> team in "
-"<strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/team_record.html:74
-#, python-format
-msgid "%(team_name)s is debating in <strong>%(venue)s</strong>."
-msgstr ""
-
-#: participants/templates/team_record.html:152
-#, python-format
-msgid "%(team_name)s does not have a debate this round."
-msgstr ""
-
-#: participants/templates/team_record.html:184
+#: participants/templates/team_registration_card.html:14
 msgid "Full name:"
 msgstr ""
 
-#: participants/templates/team_record.html:191
+#: participants/templates/team_registration_card.html:18
 msgid "Code name:"
 msgstr ""
 
-#: participants/templates/team_record.html:197
+#: participants/templates/team_registration_card.html:26
 msgid "Speakers:"
 msgstr ""
 
-#: participants/templates/team_record.html:205
+#: participants/templates/team_registration_card.html:37
 msgid "Division:"
 msgstr ""
 
-#: participants/templates/team_record.html:212
+#: participants/templates/team_registration_card.html:44
 msgid "Eligible for break categories:"
+msgstr ""
+
+#: participants/templates/team_registration_card.html:52
+msgid "Speaker categories:"
 msgstr ""
 
 #: participants/templatetags/team_name_for_data_entry.py:18
@@ -760,89 +891,93 @@ msgstr ""
 msgid "%(code_name)s <em>(%(real_name)s)</em>"
 msgstr ""
 
-#: participants/views.py:47
+#: participants/views.py:46
 msgid "Adjudicators"
 msgstr "ジャッジ"
 
-#: participants/views.py:56
+#: participants/views.py:55
 msgid "Speakers"
 msgstr ""
 
-#: participants/views.py:81
+#: participants/views.py:86
 msgid "Institutions"
 msgstr ""
 
-#: participants/views.py:94
+#: participants/views.py:99
 msgid "Code"
 msgstr ""
 
-#: participants/views.py:95
+#: participants/views.py:100
 msgid "Full name"
 msgstr ""
 
-#: participants/views.py:97
+#: participants/views.py:102
 msgid "Region"
 msgstr ""
 
-#: participants/views.py:99
+#: participants/views.py:104
 msgid "Teams"
 msgstr ""
 
-#: participants/views.py:99
+#: participants/views.py:104
 msgid "Number of teams"
 msgstr ""
 
-#: participants/views.py:101
+#: participants/views.py:106
 msgid "Adjs"
 msgstr ""
 
-#: participants/views.py:102
+#: participants/views.py:107
 msgid "Number of adjudicators, excluding independents"
 msgstr ""
 
-#: participants/views.py:104
+#: participants/views.py:109
 msgid "IAs"
 msgstr ""
 
-#: participants/views.py:105
+#: participants/views.py:110
 msgid "Number of independent adjudicators"
 msgstr ""
 
-#: participants/views.py:134
+#: participants/views.py:140
 msgid "Code name"
 msgstr ""
 
-#: participants/views.py:179 participants/views.py:253
+#: participants/views.py:160
+msgid "Team Registration"
+msgstr ""
+
+#: participants/views.py:206
+msgid "Results"
+msgstr ""
+
+#: participants/views.py:211 participants/views.py:245
 #, python-format
 msgid "Record for %(name)s"
 msgstr ""
 
-#: participants/views.py:229
-msgid "Results"
-msgstr ""
-
-#: participants/views.py:293
+#: participants/views.py:242
 msgid "Previous Rounds"
 msgstr ""
 
-#: participants/views.py:357
+#: participants/views.py:328
 #, python-format
 msgid "Saved speaker category: %(list)s"
 msgid_plural "Saved speaker categories: %(list)s"
 msgstr[0] ""
 
-#: participants/views.py:363
+#: participants/views.py:334
 msgid "No changes were made to the speaker categories."
 msgstr ""
 
-#: participants/views.py:376
+#: participants/views.py:347
 msgid "Speaker Category Eligibility"
 msgstr ""
 
-#: participants/views.py:464
+#: participants/views.py:435
 msgid "Your shift check-ins have been saved"
 msgstr ""
 
-#: participants/views.py:468
+#: participants/views.py:439
 msgid "Whoops! There was a problem with the form."
 msgstr ""

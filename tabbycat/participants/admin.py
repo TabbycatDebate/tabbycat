@@ -117,14 +117,13 @@ class AdjudicatorTeamConflictInline(admin.TabularInline):
 class TeamAdmin(admin.ModelAdmin):
     form = TeamForm
     list_display = ('long_name', 'short_name', 'emoji', 'institution',
-                    'division', 'tournament')
+                    'tournament')
     search_fields = ('reference', 'short_name', 'institution__name',
                      'institution__code', 'tournament__name')
-    list_filter = ('tournament', 'division', 'institution', 'break_categories')
+    list_filter = ('tournament', 'institution', 'break_categories')
     inlines = (SpeakerInline, TeamSideAllocationInline, VenueConstraintInline,
                AdjudicatorTeamConflictInline, TeamInstitutionConflictInline,
                RoundAvailabilityInline)
-    raw_id_fields = ('division', )
     actions = ['delete_url_key']
 
     def get_queryset(self, request):

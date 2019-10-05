@@ -155,21 +155,21 @@ export default {
       if (!this.blindReveal || this.speakerNameShadow === this.speakerName) {
         return true
       }
-      this.$emit('blind-validation-fail')
+      this.$emit('blind-validation-fail', {})
       return false
     },
     blindDuplicateMatches: function () {
       if (!this.blindReveal || this.speakerDuplicate === this.speakerDuplicateShadow) {
         return true
       }
-      this.$emit('blind-validation-fail')
+      this.$emit('blind-validation-fail', {})
       return false
     },
     blindScoreMatches: function () {
       if (!this.blindReveal || this.speakerScoreShadow === this.speakerScore) {
         return true
       }
-      this.$emit('blind-validation-fail')
+      this.$emit('blind-validation-fail', {})
       return false
     },
     speakerError: function () {

@@ -2,21 +2,22 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: motions/apps.py:7 motions/templates/public_division_motions.html:4
 #: motions/templates/public_division_motions.html:5
@@ -101,59 +102,59 @@ msgstr "فريق المناظرة يفضل المواضيع"
 msgid "debate team motion preferences"
 msgstr "المتناظر يفضلون المواضيع "
 
-#: motions/statistics.py:90
+#: motions/statistics.py:88
 msgid "extremely strong evidence"
 msgstr "حجج قوية جداً "
 
-#: motions/statistics.py:91
+#: motions/statistics.py:89
 msgid "strong evidence"
 msgstr "حجج قوية "
 
-#: motions/statistics.py:92
+#: motions/statistics.py:90
 msgid "moderate evidence"
 msgstr "حجج عادية "
 
-#: motions/statistics.py:93
+#: motions/statistics.py:91
 msgid "weak evidence"
 msgstr "حجج ضعيفة "
 
-#: motions/statistics.py:94
+#: motions/statistics.py:92
 msgid "very weak evidence"
 msgstr "حجج ضعيفة جدا "
 
-#: motions/statistics.py:95
+#: motions/statistics.py:93
 msgid "extremely weak evidence"
 msgstr "حجج ضعيفة للغاية"
 
-#: motions/statistics.py:118
+#: motions/statistics.py:116
 msgid "balance inconclusive"
 msgstr "لا يوجد توازن "
 
-#: motions/statistics.py:119
+#: motions/statistics.py:117
 msgid "too few debates to get a meaningful statistic"
 msgstr "عدد قليل من السرد له قيمة "
 
-#: motions/statistics.py:127
+#: motions/statistics.py:125
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr ""
 
-#: motions/statistics.py:128
+#: motions/statistics.py:126
 #, python-format
 msgid ""
 "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this "
 "motion was imbalanced — at a %(level)s level of significance."
 msgstr ""
 
-#: motions/statistics.py:133
+#: motions/statistics.py:131
 msgid "probably balanced"
 msgstr ""
 
-#: motions/statistics.py:134
+#: motions/statistics.py:132
 #, python-format
 msgid ""
-"χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that"
-" this motion was imbalanced at any level of significance."
+"χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that "
+"this motion was imbalanced at any level of significance."
 msgstr ""
 
 #: motions/templates/assign.html:4 motions/templates/assign.html:5
@@ -169,12 +170,19 @@ msgid "Save Motion Assignments"
 msgstr "حفظ القضايا المقترحة "
 
 #: motions/templates/motion_statistics.html:4
-#: motions/templates/motion_statistics.html:5 motions/views.py:182
+#: motions/templates/motion_statistics.html:5 motions/views.py:200
 msgid "Motion Statistics"
 msgstr "إحصائيات القضية"
 
-#: motions/templates/motion_statistics.html:30
-#: motions/templates/public_motions.html:24
+#: motions/templates/motion_statistics.html:12
+msgid ""
+"The results data displayed here is presented without tests for statistical "
+"significance. Correlations should not be automatically considered reliable; "
+"particularly at small tournaments and during elimination rounds."
+msgstr ""
+
+#: motions/templates/motion_statistics.html:39
+#: motions/templates/public_motions.html:31
 msgid "View Info Slide"
 msgstr "عرض المولاة و المعارضة "
 
@@ -236,20 +244,45 @@ msgid "elim."
 msgstr "القضاء "
 
 #: motions/templates/motion_statistics_bp_elim.html:58
-#: motions/templates/motion_statistics_bp_prelim.html:80
 #, python-format
 msgid "%(side)s results distribution"
 msgstr ""
 
 #: motions/templates/motion_statistics_bp_elim.html:72
-#: motions/templates/motion_statistics_bp_prelim.html:94
+#: motions/templates/motion_statistics_bp_prelim.html:138
 msgid "No results for this motion"
 msgstr "لا نتائج لهذه القضية"
 
-#: motions/templates/motion_statistics_bp_prelim.html:20
+#: motions/templates/motion_statistics_bp_prelim.html:13
+msgid "Government"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:17
+#, fuzzy
+#| msgid "motion"
+msgid "Opposition"
+msgstr "نص القضية"
+
+#: motions/templates/motion_statistics_bp_prelim.html:21
+msgid "Average Points per bench"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:29
+msgid "Opening"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:33
+msgid "Closing"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:37
+msgid "Average Points per half"
+msgstr ""
+
+#: motions/templates/motion_statistics_bp_prelim.html:60
 #, python-format
-msgid "average points per position from %(ndebates)s debate"
-msgid_plural "average points per position from %(ndebates)s debates"
+msgid "average points per position (%(ndebates)s debate)"
+msgid_plural "average points per position (%(ndebates)s debates)"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
@@ -257,7 +290,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/templates/motion_statistics_bp_prelim.html:38
+#: motions/templates/motion_statistics_bp_prelim.html:78
 #, python-format
 msgid ""
 "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
@@ -270,41 +303,46 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/templates/motion_statistics_bp_prelim.html:50
+#: motions/templates/motion_statistics_bp_prelim.html:90
 msgid "1st"
 msgstr "المتحدث الأول 1"
 
-#: motions/templates/motion_statistics_bp_prelim.html:52
+#: motions/templates/motion_statistics_bp_prelim.html:93
 msgctxt "used when there isn't enough space to display '1st'"
 msgid "1"
 msgstr "1"
 
-#: motions/templates/motion_statistics_bp_prelim.html:56
+#: motions/templates/motion_statistics_bp_prelim.html:97
 msgid "2nd"
 msgstr "المتحدث الثاني 2"
 
-#: motions/templates/motion_statistics_bp_prelim.html:58
+#: motions/templates/motion_statistics_bp_prelim.html:100
 msgctxt "used when there isn't enough space to display '2nd'"
 msgid "2"
 msgstr "2"
 
-#: motions/templates/motion_statistics_bp_prelim.html:62
+#: motions/templates/motion_statistics_bp_prelim.html:104
 msgid "3rd"
 msgstr "المتحدث  الثالث 3"
 
-#: motions/templates/motion_statistics_bp_prelim.html:64
+#: motions/templates/motion_statistics_bp_prelim.html:107
 msgctxt "used when there isn't enough space to display '3rd'"
 msgid "3"
 msgstr "3"
 
-#: motions/templates/motion_statistics_bp_prelim.html:68
+#: motions/templates/motion_statistics_bp_prelim.html:111
 msgid "4th"
 msgstr "المتحدث الرابع 4"
 
-#: motions/templates/motion_statistics_bp_prelim.html:70
+#: motions/templates/motion_statistics_bp_prelim.html:114
 msgctxt "used when there isn't enough space to display '4th'"
 msgid "4"
 msgstr "4"
+
+#: motions/templates/motion_statistics_bp_prelim.html:124
+#, python-format
+msgid "%(side)s results"
+msgstr ""
 
 #: motions/templates/motion_statistics_twoteam.html:31
 #: motions/templates/motion_statistics_twoteam.html:38
@@ -338,8 +376,7 @@ msgstr[5] ""
 msgid "No teams vetoed this motion"
 msgstr "لا يوجد فرق قامت بالتصويت لهذه القضية "
 
-#: motions/templates/motions_edit.html:4
-#: motions/templates/motions_edit.html:10
+#: motions/templates/motions_edit.html:4 motions/templates/motions_edit.html:10
 msgid "Edit Motion"
 msgid_plural "Edit Motions"
 msgstr[0] ""
@@ -403,19 +440,15 @@ msgstr ""
 msgid "Contentious"
 msgstr ""
 
-#: motions/templates/public_motions.html:31
+#: motions/templates/public_motions.html:39
 msgid "There are no motions available for this round."
 msgstr "لا يوجد قضايا في هذه الجولة "
 
-#. Translators: Used when there are expected to be several motions per round
-#. (e.g. Australs)
-#: motions/templates/public_motions.html:35
+#: motions/templates/public_motions.html:45
 msgid "The motions for this round have not been released."
 msgstr "القضايا التي تم رفضها في هذه الجولة "
 
-#. Translators: Used when there is expected to be one motion per round (e.g.
-#. WUDC)
-#: motions/templates/public_motions.html:38
+#: motions/templates/public_motions.html:50
 msgid "The motion for this round has not been released."
 msgstr "القضايا التي تم رفضها في هذه الجولة "
 
@@ -445,11 +478,11 @@ msgstr[5] ""
 msgid "There are no motions for this round entered into Tabbycat."
 msgstr "لا يوجد قضايا في هذه الجولة "
 
-#: motions/views.py:101
+#: motions/views.py:104
 msgid "The motion has been saved."
 msgstr "القضايا التي لم يتم حفظها "
 
-#: motions/views.py:103
+#: motions/views.py:106
 #, python-format
 msgid "%(count)d motion has been saved."
 msgid_plural "%(count)d motions have been saved."
@@ -460,7 +493,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/views.py:108
+#: motions/views.py:111
 #, python-format
 msgid "%(count)d motion has been deleted."
 msgid_plural "%(count)d motions have been deleted."
@@ -471,10 +504,16 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: motions/views.py:149
+#: motions/views.py:153
 msgid "Released the motion(s)."
 msgstr "قضايا تم رفضها "
 
-#: motions/views.py:156
+#: motions/views.py:160
 msgid "Unreleased the motion(s)."
 msgstr "قضايا لم ترفض"
+
+#: motions/views.py:184
+#, fuzzy
+#| msgid "Motions"
+msgid "Round Motions"
+msgstr "قضايا المناظرة"

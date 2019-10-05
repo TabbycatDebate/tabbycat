@@ -22,29 +22,33 @@ export default {
   methods: {
     getToolTipForPerson: function (entity) {
       if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null && entity.identifier !== null) {
-        return this.gettext('%1, a %2 of no institutional affiliation with identifier of %3', entity.name, entity.type, entity.identifier[0])
+        const subs = [entity.name, entity.type, entity.identifier[0]]
+        return this.tct('%s, a %s of no institutional affiliation with identifier of %s', subs)
       }
       if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null) {
-        return this.gettext('%1, a %2 of no institutional affiliation with no assigned identifier', entity.name, entity.type)
+        const subs = [entity.name, entity.type]
+        return this.tct('%s, a %s of no institutional affiliation with no assigned identifier', subs)
       }
       if (!this.teamCodes && entity.type !== 'Team' && entity.identifier !== null) {
-        return this.gettext('%1, a %2 from %3 with identifier of %4', entity.name, entity.type, entity.institution.name, entity.identifier[0])
+        const subs = [entity.name, entity.type, entity.institution.name, entity.identifier[0]]
+        return this.tct('%s, a %s from %s with identifier of %s', subs)
       }
       if (!this.teamCodes && entity.type !== 'Team') {
-        return this.gettext('%1, a %2 from %3 with no assigned identifier', entity.name, entity.type, entity.institution.name)
+        const subs = [entity.name, entity.type, entity.institution.name]
+        return this.tct('%s, a %s from %s with no assigned identifier', subs)
       }
       if (entity.speakers !== null && entity.type === 'Team') {
         let speakers = []
         _.forEach(entity.speakers, (speaker) => {
           if (speaker.status) {
-            speakers.push(this.gettext('%1 (Present; id=%2)', speaker.name, speaker.identifier[0]))
+            speakers.push(this.tct('%s (Present; id=%s)', [speaker.name, speaker.identifier[0]]))
           } else {
-            speakers.push(this.gettext('%1 (Absent; id=%2)', speaker.name, speaker.identifier[0]))
+            speakers.push(this.tct('%s (Absent; id=%s)', [speaker.name, speaker.identifier[0]]))
           }
         })
-        return this.gettext('%1, a team with speakers %2', entity.name, speakers.join(', '))
+        return this.tct('%s, a team with speakers %s', [entity.name, speakers.join(', ')])
       }
-      return this.gettext('%1, a %2', entity.name, entity.type)
+      return this.tct('%s, a %s', [entity.name, entity.type])
     },
     annotatePeople: function (peopleType) {
       const self = this

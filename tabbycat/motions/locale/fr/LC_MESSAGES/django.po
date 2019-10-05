@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-02 18:20-0400\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: 2018-11-01 22:26-0400\n"
 "Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
 "Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
@@ -93,7 +93,7 @@ msgstr "préférences"
 
 #: motions/models.py:46
 msgid "ballot submission"
-msgstr "soumission de bulletin"
+msgstr "soumission de feuille"
 
 #: motions/models.py:50
 msgid "debate team motion preference"
@@ -103,44 +103,44 @@ msgstr "préférence de motion d'un débat-équipe"
 msgid "debate team motion preferences"
 msgstr "préférences de motion d'un débat-équipe"
 
-#: motions/statistics.py:90
+#: motions/statistics.py:88
 msgid "extremely strong evidence"
 msgstr "évidence très forte"
 
-#: motions/statistics.py:91
+#: motions/statistics.py:89
 msgid "strong evidence"
 msgstr "évidence forte"
 
-#: motions/statistics.py:92
+#: motions/statistics.py:90
 msgid "moderate evidence"
 msgstr "évidence modérément forte"
 
-#: motions/statistics.py:93
+#: motions/statistics.py:91
 msgid "weak evidence"
 msgstr "évidence faible"
 
-#: motions/statistics.py:94
+#: motions/statistics.py:92
 msgid "very weak evidence"
 msgstr "évidence très faible"
 
-#: motions/statistics.py:95
+#: motions/statistics.py:93
 msgid "extremely weak evidence"
 msgstr "évidence extrêmement faible"
 
-#: motions/statistics.py:118
+#: motions/statistics.py:116
 msgid "balance inconclusive"
 msgstr "l’équilibre inconclusif"
 
-#: motions/statistics.py:119
+#: motions/statistics.py:117
 msgid "too few debates to get a meaningful statistic"
 msgstr "trop peu de débats pour obtenir une statistique significative"
 
-#: motions/statistics.py:127
+#: motions/statistics.py:125
 #, python-format
 msgid "imbalanced at %(level)s level"
 msgstr "Non-équilibré avec un risque de %(level)s"
 
-#: motions/statistics.py:128
+#: motions/statistics.py:126
 #, python-format
 msgid ""
 "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this "
@@ -149,11 +149,11 @@ msgstr ""
 "La valeur de χ² est %(chisq).3f, donnant de l’%(evidence)s que cette motion "
 "n’était pas équilibré à un niveau de %(level)s de signification."
 
-#: motions/statistics.py:133
+#: motions/statistics.py:131
 msgid "probably balanced"
 msgstr "probablement équilibré"
 
-#: motions/statistics.py:134
+#: motions/statistics.py:132
 #, python-format
 msgid ""
 "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that "
@@ -180,7 +180,14 @@ msgstr "Sauvegarder"
 msgid "Motion Statistics"
 msgstr "Statistiques des Motions"
 
-#: motions/templates/motion_statistics.html:30
+#: motions/templates/motion_statistics.html:12
+msgid ""
+"The results data displayed here is presented without tests for statistical "
+"significance. Correlations should not be automatically considered reliable; "
+"particularly at small tournaments and during elimination rounds."
+msgstr ""
+
+#: motions/templates/motion_statistics.html:39
 #: motions/templates/public_motions.html:31
 msgid "View Info Slide"
 msgstr "Voir la diapositive d'information"

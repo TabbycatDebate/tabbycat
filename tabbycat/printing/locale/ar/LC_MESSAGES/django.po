@@ -2,21 +2,22 @@
 # Copyright (C) 2018 Tabbycat developers and translators
 # This file is distributed under the same license as the Tabbycat package.
 # Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: printing/templates/division_sheets_list.html:4
 #: printing/templates/division_sheets_list.html:5
@@ -57,10 +58,10 @@ msgstr "لم يتم إضافة أي سؤال للتغذية الراجعة من 
 #: printing/templates/feedback_list.html:20
 #, python-format
 msgid ""
-"%(first_sentence)s Check the <a "
-"href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-"
-"feedback.html\" target=\"_blank\">documentation</a> for information on how "
-"to add these (otherwise these forms will be quite bare)."
+"%(first_sentence)s Check the <a href=\"http://tabbycat.readthedocs.io/en/"
+"stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</"
+"a> for information on how to add these (otherwise these forms will be quite "
+"bare)."
 msgstr ""
 
 #: printing/templates/feedback_list.html:41
@@ -76,7 +77,7 @@ msgstr ""
 
 #: printing/templates/master_sheets_view.html:12
 #, python-format
-msgid "Master Sheet for Debates at %(venue_category.name)s"
+msgid "Master Sheet for Debates at %(venue_category)s"
 msgstr ""
 
 #: printing/templates/master_sheets_view.html:45
@@ -133,9 +134,9 @@ msgstr ""
 #: printing/templates/printables_list.html:9
 msgid ""
 "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate "
-"<strong>page orientation</strong>, to turn off "
-"<strong>headers/footers</strong> and turn on <strong>background "
-"graphics</strong>. Works best in Chrome."
+"<strong>page orientation</strong>, to turn off <strong>headers/footers</"
+"strong> and turn on <strong>background graphics</strong>. Works best in "
+"Chrome."
 msgstr ""
 
 #: printing/templates/randomised_url_sheets.html:4
@@ -145,11 +146,9 @@ msgstr ""
 
 #: printing/templates/randomised_url_sheets.html:13
 msgid ""
-"\n"
-"    This page is designed to be printed as double sided A4 sheets, with the\n"
-"    outside facing side showing the participant name and the inside facing side\n"
-"    showing the URL. Use CTRL-P to print; for best results use Chrome.\n"
-"    "
+"This page is designed to be printed as double sided A4 sheets, with the "
+"outside facing side showing the participant name and the inside facing side "
+"showing the URL. Use CTRL-P to print; for best results use Chrome."
 msgstr ""
 
 #: printing/templates/randomised_url_sheets.html:27
@@ -160,68 +159,111 @@ msgstr ""
 
 #: printing/templates/randomised_url_sheets.html:38
 msgid ""
-"\n"
-"      Please bookmark the following URL, you will use it to submit forms\n"
-"      throughout the tournament:\n"
-"      "
+"Please bookmark the following URL, you will use it to submit forms "
+"throughout the tournament:"
 msgstr ""
 
 #: printing/templates/room_sheets_view.html:6
 #, python-format
-msgid "Room Sheets for Debates at %(venue_category)s in %(round_name)s</div>"
+msgid "Room Sheets for Debates at %(venue_category)s in %(round_name)s"
 msgstr ""
 
-#: printing/templates/room_sheets_view.html:11
+#: printing/templates/room_sheets_view.html:12
 #, python-format
 msgid "Room Sheets for Debates at %(venue_category)s"
 msgstr ""
 
-#: printing/templates/room_sheets_view.html:32
+#: printing/templates/room_sheets_view.html:33
 #, python-format
 msgid "%(tournament)s Division %(division)s"
 msgstr ""
 
-#: printing/templates/room_sheets_view.html:43
+#: printing/templates/room_sheets_view.html:44
 #, python-format
 msgid "<del>%(time)s</del> (Forfeit by %(side)s)"
 msgstr ""
 
-#: printing/templates/room_sheets_view.html:49
+#: printing/templates/room_sheets_view.html:50
 msgid "(No time set)"
 msgstr ""
 
-#: printing/templates/room_sheets_view.html:53
+#: printing/templates/room_sheets_view.html:54
 #, python-format
 msgid "<strong>Affirmative</strong>: %(team)s"
 msgstr ""
 
-#: printing/templates/room_sheets_view.html:58
+#: printing/templates/room_sheets_view.html:59
 #, python-format
 msgid "<strong>Negative</strong>: %(team)s"
 msgstr ""
 
-#: printing/templates/scoresheet_list.html:5
-msgid "Scoresheets"
-msgstr "ورقة النتائج "
-
 #: printing/templates/scoresheet_list.html:7
-#, python-format
-msgid "Printable Scoresheets for %(round_name)s"
+#, fuzzy
+#| msgid "Printable Scoresheets for %(round_name)s"
+msgid "Printable Scoresheets"
 msgstr "ورقة النتائج جاهزة للطباعة  %(round_name)s"
 
-#: printing/templates/scoresheet_list.html:23
+#: printing/templates/scoresheet_list.html:8
+#, fuzzy, python-format
+#| msgid "Printable Scoresheets for %(round_name)s"
+msgid "for %(round_name)s"
+msgstr "ورقة النتائج جاهزة للطباعة  %(round_name)s"
+
+#: printing/templates/scoresheet_list.html:14
+msgid "Edit Motion(s)"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:32
 msgid ""
 "There are no scoresheets available — perhaps the round has not been drawn?"
 msgstr "لم تتوفر نموذج درجات لهذه الجولة — "
 
-#: printing/views.py:91
+#: printing/templates/scoresheet_list.html:39
+msgid "Edit Ballot Motions"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:41
+msgid "&times;"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:46
+msgid ""
+"\n"
+"              Editing motions here will not save them permanently — it will "
+"only\n"
+"              update the text used in the printed ballots below. This can be "
+"useful if using\n"
+"              placeholder motions (to ensure confidentiality) in Tabbycat, "
+"but you still want to print\n"
+"              ballots with correct motions.\n"
+"              "
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:54
+msgid "Motion"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:58
+msgid "Changes to motions will update in the displayed ballots automatically"
+msgstr ""
+
+#: printing/templates/scoresheet_list.html:95
+msgid ""
+"Speeches are x minutes, the speaker score range is from x to x. You have x "
+"minutes to form an adjudication."
+msgstr ""
+
+#: printing/views.py:95
 msgid "Overall Score"
 msgstr "مجموع الدرجات"
 
-#: printing/views.py:118 printing/views.py:227 printing/views.py:247
+#: printing/views.py:122 printing/views.py:232 printing/views.py:252
 msgid "Unaffiliated"
 msgstr "غير منتسبين"
 
-#: printing/views.py:131 printing/views.py:135
+#: printing/views.py:135 printing/views.py:139
 msgid "Team"
 msgstr "فريق"
+
+#~ msgid "Scoresheets"
+#~ msgstr "ورقة النتائج "

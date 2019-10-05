@@ -100,8 +100,6 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
-    forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("forfeit")) # where valid, cascade should be covered by debate
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -134,9 +132,6 @@ class BallotSubmission(Submission):
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
 
-        if self.forfeit is not None and self.forfeit.debate != self.debate:
-            raise ValidationError(_("The forfeiter must be a team in the debate."))
-
     @property
     def serialize_like_actionlog(self):
         result_winner, result = readable_ballotsub_result(self)
@@ -167,9 +162,9 @@ class BallotSubmission(Submission):
             'ballot_id': self.id,
             'debate_id': self.debate.id,
             'submitter': self.submitter.username if self.submitter else self.ip_address,
-            'admin_link': reverse_tournament('results-ballotset-edit',
+            'admin_link': reverse_tournament('old-results-ballotset-edit',
                                              tournament, kwargs={'pk': self.id}),
-            'assistant_link': reverse_tournament('results-assistant-ballotset-edit',
+            'assistant_link': reverse_tournament('old-results-assistant-ballotset-edit',
                                                  tournament, kwargs={'pk': self.id}),
             'short_time': created_short,
             'created_timestamp': created,
@@ -178,6 +173,46 @@ class BallotSubmission(Submission):
             'confirmed': self.confirmed,
             'discarded': self.discarded,
         }
+
+
+class TeamScoreByAdj(models.Model):
+    """Holds team result given by a particular adjudicator in a debate.
+    Mostly redundant; is necessary however for voting elimination ballots."""
+    ballot_submission = models.ForeignKey(BallotSubmission, models.CASCADE,
+        verbose_name=_("ballot submission"))
+    debate_adjudicator = models.ForeignKey('adjallocation.DebateAdjudicator', models.CASCADE,
+        verbose_name=_("debate adjudicator"))
+    debate_team = models.ForeignKey('draw.DebateTeam', models.CASCADE,
+        verbose_name=_("debate team"))
+
+    win = models.NullBooleanField(null=True, blank=True,
+        verbose_name=_("win"))
+    margin = ScoreField(null=True, blank=True,
+        verbose_name=_("margin"))
+    score = ScoreField(null=True, blank=True,
+        verbose_name=_("score"))
+
+    class Meta:
+        unique_together = [('debate_adjudicator', 'debate_team', 'ballot_submission')]
+        index_together = ['ballot_submission', 'debate_adjudicator']
+        verbose_name = _("team score by adjudicator")
+        verbose_name_plural = _("team scores by adjudicator")
+
+    def __str__(self):
+        has_won = "Win" if self.win else "Loss"
+        return ("[{0.ballot_submission_id}/{0.id}] {1} for "
+            "{0.debate_team!s} from {0.debate_adjudicator!s}").format(self, has_won)
+
+    @property
+    def debate(self):
+        return self.debate_team.debate
+
+    def clean(self):
+        super().clean()
+        if (self.debate_team.debate != self.debate_adjudicator.debate or
+                self.debate_team.debate != self.ballot_submission.debate):
+            raise ValidationError(_("The debate team, debate adjudicator and ballot "
+                    "submission must all relate to the same debate."))
 
 
 class SpeakerScoreByAdj(models.Model):
@@ -237,10 +272,6 @@ class TeamScore(models.Model):
         verbose_name=_("votes given"))
     votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("votes possible"))
-
-    forfeit = models.BooleanField(default=False,
-        verbose_name=_("forfeit"),
-        help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]

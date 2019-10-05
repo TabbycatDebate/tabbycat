@@ -71,10 +71,6 @@ urlpatterns = [
     path('<slug:tournament_slug>/',
         include('tournaments.urls')),
 
-    # Draws Cross Tournament
-    path('draw/',
-        include('draw.urls_crosst')),
-
     # Notifications
     path('notifications/',
         include('notifications.urls')),

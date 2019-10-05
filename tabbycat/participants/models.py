@@ -118,9 +118,6 @@ class Person(models.Model):
     url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple people to have no URL key
         verbose_name=_("URL key"))
 
-    notes = models.TextField(blank=True, null=True,
-        verbose_name=_("notes"))
-
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
     GENDER_OTHER = 'O'
@@ -175,8 +172,6 @@ class Team(models.Model):
         verbose_name=_("institution"))
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
-    division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("division"))
     use_institution_prefix = models.BooleanField(default=False,
         verbose_name=_("Uses institutional prefix"),
         help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))

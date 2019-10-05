@@ -280,7 +280,7 @@ class AdjudicatorFeedback(Submission):
             raise ValidationError(
                 gettext("There was both a source adjudicator and a source team."))
         if not self.adjudicator:
-            raise ValidationError(gettext("There is no adjudicator specified as the target for this feedback.Perhaps they were deleted?"))
+            raise ValidationError(gettext("There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"))
         if self.adjudicator not in self.debate.adjudicators:
             raise ValidationError(gettext("Adjudicator did not see this debate."))
         return super(AdjudicatorFeedback, self).clean()

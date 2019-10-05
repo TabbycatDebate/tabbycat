@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-25 22:17+0200\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,18 @@ msgstr ""
 
 #: venues/apps.py:7
 msgid "Venues"
+msgstr ""
+
+#: venues/consumers.py:18
+msgid "Draw is already released, unrelease draw to assign venues."
+msgstr ""
+
+#: venues/consumers.py:21
+msgid "Draw is not confirmed, confirm draw to assign venues."
+msgstr ""
+
+#: venues/consumers.py:28
+msgid "Succesfully auto-allocated venues to debates."
 msgstr ""
 
 #: venues/models.py:10 venues/models.py:74
@@ -128,7 +140,8 @@ msgstr ""
 msgid "venue constraints"
 msgstr ""
 
-#: venues/templates/edit_venues.html:5 venues/templates/edit_venues.html:10
+#: venues/templates/legacy_edit_venues.html:5
+#: venues/templates/legacy_edit_venues.html:10
 #, python-format
 msgid "Edit Venues for %(round_abbr)s"
 msgstr ""
@@ -199,38 +212,42 @@ msgid ""
 "Venue does not meet any constraint of institution %(institution)s (%(team)s)"
 msgstr ""
 
-#: venues/views.py:110
+#: venues/views.py:31
+msgid "Edit Venues"
+msgstr ""
+
+#: venues/views.py:138
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: venues/views.py:116
+#: venues/views.py:144
 msgid "No changes were made to the venue categories."
 msgstr ""
 
-#: venues/views.py:168
+#: venues/views.py:196
 #, python-format
 msgid "%s (Adjudicator)"
 msgstr ""
 
-#: venues/views.py:171
+#: venues/views.py:199
 #, python-format
 msgid "%s (Team)"
 msgstr ""
 
-#: venues/views.py:174
+#: venues/views.py:202
 #, python-format
 msgid "%s (Institution)"
 msgstr ""
 
-#: venues/views.py:177
+#: venues/views.py:205
 #, python-format
 msgid "%s (Division)"
 msgstr ""
 
-#: venues/views.py:185
+#: venues/views.py:213
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."

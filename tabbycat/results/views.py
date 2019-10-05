@@ -7,12 +7,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.db.models import Count, Q
-from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
-from django.views.generic import FormView, TemplateView, View
+from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
@@ -27,15 +27,17 @@ from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamen
                                 RoundMixin, SingleObjectByRandomisedUrlMixin, SingleObjectFromTournamentMixin,
                                 TournamentMixin)
 from tournaments.models import Round
-from utils.misc import get_ip_address, redirect_round, reverse_round, reverse_tournament
+from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
+from .forms import (PerAdjudicatorBallotSetForm, PerAdjudicatorEliminationBallotSetForm, SingleBallotSetForm,
+                    SingleEliminationBallotSetForm)
 from .models import BallotSubmission, TeamScore
 from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
+from .result import get_class_name
 from .utils import populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)
@@ -200,31 +202,6 @@ class PublicResultsForRoundView(RoundMixin, PublicTournamentPageMixin, VueTableT
 
 
 # ==============================================================================
-# Views that update the debate status (only)
-# ==============================================================================
-
-class BaseUpdateDebateStatusView(AdministratorMixin, RoundMixin, View):
-
-    def post(self, request, *args, **kwargs):
-        debate_id = request.POST['debate_id']
-        try:
-            debate = Debate.objects.get(round=self.round, id=debate_id)
-        except Debate.DoesNotExist:
-            return HttpResponseBadRequest("Error: There isn't a debate in %s with id %d." % (self.round.name, debate_id))
-        debate.result_status = self.new_status
-        debate.save()
-        return redirect_round('results-round-list', debate.round)
-
-
-class PostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_POSTPONED
-
-
-class UnpostponeDebateView(BaseUpdateDebateStatusView):
-    new_status = Debate.STATUS_NONE
-
-
-# ==============================================================================
 # Ballot entry form views
 # ==============================================================================
 
@@ -254,7 +231,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         kwargs['iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
             filter=Q(team__debateteam__debate__round=self.debate.round.prev) & Q(team__debateteam__speakerscore__ghost=True),
             distinct=True)).filter(iron__gt=0)
-        kwargs['currentIron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
+        kwargs['current_iron'] = self.debate.debateteam_set.annotate(iron=Count('team__debateteam__speakerscore',
             filter=Q(team__debateteam__debate__round=self.debate.round) & Q(team__debateteam__speakerscore__ghost=True),
             distinct=True)).filter(iron__gt=0)
 
@@ -268,12 +245,12 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
         return all_ballotsubs
 
     def get_form_class(self):
-        if self.tournament.pref('teams_in_debate') == 'bp' and self.debate.round.is_break_round:
-            return BPEliminationResultForm
-        elif self.debate.round.ballots_per_debate == 'per-adj':
-            return PerAdjudicatorBallotSetForm
-        else:
-            return SingleBallotSetForm
+        return {
+            'DebateResultByAdjudicator': PerAdjudicatorEliminationBallotSetForm,
+            'DebateResultByAdjudicatorWithScores': PerAdjudicatorBallotSetForm,
+            'ConsensusDebateResult': SingleEliminationBallotSetForm,
+            'ConsensusDebateResultWithScores': SingleBallotSetForm,
+        }[get_class_name(self.debate.round, self.tournament)]
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -344,7 +321,6 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
 class AdministratorBallotSetMixin(AdministratorMixin):
     template_name = 'ballot_entry.html'
     tabroom = True
-    for_admin = True
 
     def get_success_url(self):
         return reverse_round('results-round-list', self.ballotsub.debate.round)
@@ -598,7 +574,10 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         return debate
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        try:
+            self.object = self.get_object()
+        except self.model.DoesNotExist:
+            raise Http404("Debate does not exist")
 
         error = self.check_permissions()
         if error:

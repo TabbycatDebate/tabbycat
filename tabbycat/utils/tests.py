@@ -1,8 +1,10 @@
 from contextlib import contextmanager
 import json
 import logging
+from unittest import expectedFailure
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user, get_user_model
 from django.core.cache import cache
 from django.urls import reverse
 from django.test import Client, tag, TestCase
@@ -42,6 +44,14 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(returnto)
 
 
+def add_query_string_parameter(url, key, value):
+    scheme, netloc, path, params, query, fragment = urlparse(url)
+    query_parts = parse_qs(query)
+    query_parts[key] = value
+    query = urlencode(query_parts, safe='/')
+    return urlunparse((scheme, netloc, path, params, query, fragment))
+
+
 class CompletedTournamentTestMixin:
     """Mixin providing a few convenience functions for tests:
       - Loads a completed demonstration tournament
@@ -75,17 +85,16 @@ class CompletedTournamentTestMixin:
         return self.client.get(url)
 
     def assertResponseOK(self, response):  # noqa: N802
-        try:
-            self.assertEqual(response.status_code, 200)
-        except:
-            self.fail("%s raised exception unexpectedly" % self.view_name)
+        if response.status_code in [301, 302]:
+            self.fail("View %r gave response with status code %d, redirecting "
+                      "to %s (expected 200)" %
+                      (self.view_name, response.status_code, response.url))
+        elif response.status_code != 200:
+            self.fail("View %r gave response with status code %d (expected 200)" %
+                      (self.view_name, response.status_code))
 
     def assertResponsePermissionDenied(self, response):  # noqa: N802
         self.assertEqual(response.status_code, 403)
-
-    def assertResponseRedirect(self, response, url):  # noqa: N802
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url.split('?', 1)[0], url)
 
 
 class SingleViewTestMixin(CompletedTournamentTestMixin):
@@ -99,7 +108,8 @@ class SingleViewTestMixin(CompletedTournamentTestMixin):
 
     def get_response(self):
         kwargs = self.get_view_reverse_kwargs()
-        return super().get_response(self.view_name, **kwargs)
+        response = super().get_response(self.view_name, **kwargs)
+        return response
 
 
 class TournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
@@ -111,6 +121,10 @@ class TournamentViewSimpleLoadTestMixin(SingleViewTestMixin):
 
 class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
 
+    def authenticate(self):
+        raise NotImplementedError
+
+    @expectedFailure
     def test_authenticated_response(self):
         self.authenticate()
         response = self.get_response()
@@ -119,23 +133,39 @@ class AuthenticatedTournamentViewSimpleLoadTextMixin(SingleViewTestMixin):
     def test_unauthenticated_response(self):
         self.client.logout()
         response = self.get_response()
-        self.assertResponseRedirect(response, reverse('login'))
+        target_url = self.reverse_url(self.view_name, **self.get_view_reverse_kwargs())
+        login_url = reverse('login')
+        expected_url = add_query_string_parameter(login_url, 'next', target_url)
+        self.assertRedirects(response, expected_url)  # in django.test.SimpleTestCase
 
 
 class AssistantTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
-    """ For testing that admin pages resolve """
+    """Mixin for testing that assistant pages resolve when user is logged in,
+    and don't when user is logged out."""
 
     def authenticate(self):
-        get_user_model().objects.create_user('test_assistant', 'test@t.org', 'test')
-        self.client.login(username='test_assistant', password='test')
+        user, _ = get_user_model().objects.get_or_create(username='test_assistant')
+        self.client.force_login(user)
+
+        # Double-check authentication, raise error if it looks wrong
+        if not get_user(self.client).is_authenticated:
+            raise RuntimeError("User authentication failed")
 
 
 class AdminTournamentViewSimpleLoadTestMixin(AuthenticatedTournamentViewSimpleLoadTextMixin):
-    """ For testing that assistant pages resolve """
+    """Mixin for testing that admin pages resolve when user is logged in, and
+    don't when user is logged out."""
 
     def authenticate(self):
-        get_user_model().objects.create_superuser('test_admin', 'test@t.org', 'test')
-        self.client.login(username='test_admin', password='test')
+        user, _ = get_user_model().objects.get_or_create(username='test_admin', is_superuser=True)
+        self.client.force_login(user)
+
+        # Double-check authentication, raise error if it looks wrong
+        user = get_user(self.client)
+        if not user.is_authenticated:
+            raise RuntimeError("User authentication failed")
+        if not user.is_superuser:
+            raise RuntimeError("User is not a superuser")
 
 
 class ConditionalTournamentTestsMixin(SingleViewTestMixin):
@@ -167,7 +197,8 @@ class ConditionalTournamentTestsMixin(SingleViewTestMixin):
             with self.subTest(value=value):
                 self.tournament.preferences[self.view_toggle_preference] = value
                 with self.assertLogs('tournaments.mixins', logging.WARNING):
-                    response = self.get_response()
+                    with suppress_logs('django.request', logging.WARNING):
+                        response = self.get_response()
                 self.assertResponsePermissionDenied(response)
 
 
