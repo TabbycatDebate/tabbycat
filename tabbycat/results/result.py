@@ -539,6 +539,13 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
     def set_score(self, adjudicator, side, position, score):
         scoresheet = self.scoresheets[adjudicator]
         try:
+            scoresheet = self.scoresheets[adjudicator]
+        except KeyError:
+            logger.exception("Adjudicator %s has a scoresheet but is not assigned \
+                to this debate. This debate's panel has probably been changed since \
+                this ballot was loaded for entry. Best to return to the results page \
+                and re-enter this ballot from scratch.", adjudicator.name)
+        try:
             scoresheet.set_score(side, position, score)
         except AttributeError:
             logger.exception("Tried to set score, but scoresheet doesn't do scores. "
