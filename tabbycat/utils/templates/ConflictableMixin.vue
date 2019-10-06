@@ -30,11 +30,13 @@ export default {
       Object.keys(debateTeams).forEach(debateTeamPosition => {
         let team = debateTeams[debateTeamPosition]
         if (team !== null) { // Handle when sides editing may be in progress
-          let teamsInstitutionalConflicts = this.teamClashesForItem(team.id).institution
-          for (const institutionalConflict of teamsInstitutionalConflicts) {
-            if (institutionalConflict.id === idToFind) {
-              found = true
-              break
+          let teamsConflicts = this.teamClashesForItem(team.id)
+          if ('institution' in teamsConflicts) {
+            for (const institutionalConflict of teamsConflicts.institution) {
+              if (institutionalConflict.id === idToFind) {
+                found = true
+                break
+              }
             }
           }
         }

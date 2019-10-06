@@ -95,14 +95,16 @@ export default {
       } else {
         // For allocation screens its a property of the teams that is then summed
         let liveness = 0
-        for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
-          let team = keyAndEntry[1]
-          // Team can be a number (ID) or null (e.g. when editing sides)
-          if (team !== null && typeof team === 'object' && 'break_categories' in team) {
-            for (let bc of team.break_categories) {
-              let category = this.highlights.break.options[bc]
-              if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
-                liveness += 1
+        if ('teams' in this.debateOrPanel && this.debateOrPanel.teams) {
+          for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
+            let team = keyAndEntry[1]
+            // Team can be a number (ID) or null (e.g. when editing sides)
+            if (team !== null && typeof team === 'object' && 'break_categories' in team) {
+              for (let bc of team.break_categories) {
+                let category = this.highlights.break.options[bc]
+                if (category && team.points > category.fields.dead && team.points < category.fields.safe) {
+                  liveness += 1
+                }
               }
             }
           }
