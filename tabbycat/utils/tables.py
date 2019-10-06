@@ -620,11 +620,11 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'tooltip': _("Order as listed"),
             }, [{
                 'text': motion.seq if motion is not None else self.BLANK_TEXT,
-                'sort': motion.round.seq + (motion.seq * 0.1) if motion is not None else motion.round.seq
+                'sort': motion.round.seq + (motion.seq * 0.1) if motion is not None else 0
             } for motion in motions])
 
         motion_data = [{
-            'text': motion.reference if motion.reference else '?',
+            'text': motion.reference if motion.reference else _('?'),
             'popover': {'content' : [{'text': motion.text}]}
         } if motion else self.BLANK_TEXT for motion in motions]
         self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)
