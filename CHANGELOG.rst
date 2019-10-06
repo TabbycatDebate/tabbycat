@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+2.3.1
+-----
+*Release date: 6 October 2019*
+
+- Fixed issue where the institutions list would count teams/adjudicators outside of the tournament
+- Fixed issue where a rejected ballot form would crash rather than providing an error message
+- Fixed issue where the javascript bundle would not build on a local windows install
+- Fixed issue where the adjudicator record pages would show an unreleased motion if that round's draw was released
+
+
 2.3.0 (LaPerm)
 --------------
 *Release date: 27 September 2019*
