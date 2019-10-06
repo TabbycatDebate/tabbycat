@@ -43,7 +43,7 @@
   },
   "scripts": {
     "build": "NODE_ENV='production' npm-run-all -p build-* cp-*",
-    "windows-build": "SET NODE_ENV='production' & npm-run-all -p build-* cp-*",
+    "windows-build": "SET NODE_ENV='production' & npm-run-all -p build-* cp-* && cpx \"tabbycat/static/vue/app.js\" \"tabbycat/static/vue/js/\"",
     "lint": "npm-run-all -p lint-*",
     "serve": "npm-run-all -p serve-*",
     "docs": "sphinx-autobuild docs docs/_build/html --port 7999",

@@ -16,7 +16,7 @@ export default {
       return ''
     },
     breakClass: function () {
-      if (this.highlightData && 'break_categories' in this.highlightData) {
+      if (typeof this.highlightData === 'object' && this.highlightData && 'break_categories' in this.highlightData) {
         var breakClasses = []
         let highlightCategories = Object.keys(this.highlights.break.options)
         for (let breakCategory of this.highlightData.break_categories) {

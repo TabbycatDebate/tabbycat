@@ -782,13 +782,14 @@ class DisableBallotConfirmation(BooleanPreference):
     default = False
 
 
-@tournament_preferences_registry.register
-class EnableBlindBallotConfirmation(BooleanPreference):
-    help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
-    verbose_name = _("Enforce blind confirmations")
-    section = data_entry
-    name = 'enable_blind_checks'
-    default = False
+# Disabled pending rollout of new ballot interface
+# @tournament_preferences_registry.register
+# class EnableBlindBallotConfirmation(BooleanPreference):
+#     help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
+#     verbose_name = _("Enforce blind confirmations")
+#     section = data_entry
+#     name = 'enable_blind_checks'
+#     default = False
 
 
 @tournament_preferences_registry.register
