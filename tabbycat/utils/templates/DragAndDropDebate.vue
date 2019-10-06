@@ -95,7 +95,7 @@ export default {
       } else {
         // For allocation screens its a property of the teams that is then summed
         let liveness = 0
-        if ('teams' in this.debateOrPanel) {
+        if ('teams' in this.debateOrPanel && this.debateOrPanel.teams) {
           for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
             let team = keyAndEntry[1]
             // Team can be a number (ID) or null (e.g. when editing sides)
