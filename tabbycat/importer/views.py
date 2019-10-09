@@ -221,18 +221,18 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
             management.call_command(importtournament.Command(), source,
                                     force=True, strict=False, encoding='utf-8')
         except TournamentDataImporterError as e:
-            messages.error(self.request, mark_safe(
+            messages.error(self.request, mark_safe(_(
                 "<p>There were one or more errors creating the demo tournament. "
                 "Before retrying, please delete the existing demo tournament "
                 "<strong>and</strong> the institutions in the Edit Database Area.</p>"
                 "<p><i>Technical information: The errors are as follows:"
-                "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"
+                "<ul>") + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"
             ))
             logger.error("Error importing demo tournament: " + str(e))
             return redirect('tabbycat-index')
         else:
-            messages.success(self.request, "Created new demo tournament. You "
-                "can now configure it below.")
+            messages.success(self.request, _("Created new demo tournament. You "
+                "can now configure it below."))
 
         new_tournament = Tournament.objects.get(slug=source)
         return redirect_tournament('tournament-configure', tournament=new_tournament)
