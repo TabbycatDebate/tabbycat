@@ -144,20 +144,21 @@ Release checklist
 =================
 
 1. Check that all migrations have been generated and committed into Git
-2. Bump version number in ``docs/conf.py``
-3. Bump version number and (if applicable) codename in ``tabbycat/settings.py``
-4. Update the main ``CHANGELOG.rst`` file (including release date)
-5. Check the major current deployment options, including:
+2. Merge translations from the Crowdin pull request and compile messages
+3. Bump version number in ``docs/conf.py``
+4. Bump version number and (if applicable) codename in ``tabbycat/settings.py``
+5. Update the main ``CHANGELOG.rst`` file (including release date)
+6. Check the major current deployment options, including:
     1. The ``deploy_heroku.py`` script
     2. The Tabbykitten version
     3. Docker (macOS, Windows 10*) and Docker Toolbox (Windows 10 Home) methods
     4. Using Bash and Powershell on Windows
     5. Using Terminal on macOS (at least test out a fresh install of the npm/pip  dependencies)
-6. Check that the last Travis CI build passed and run the full local test suite (this will include the Selenium tests that are not on Travis)
-7. Shift remaining issues from the Github Milestone
-8. Create and finish the release branch as per git-flow
-9. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
-10. Back-merge ``master`` to the ``kitten`` branch
-11. Back-merge ``develop`` to the in-progress feature branches
-12. Issue a formal release with change notes on GitHub
-13. Post change notes on the Facebook page/group
+7. Check that the last Travis CI build passed and run the full local test suite (this will include the Selenium tests that are not on Travis)
+8. Shift remaining issues from the Github Milestone
+9. Create and finish the release branch as per git-flow
+10. Ensure the tag is correct (``vX.Y.Z``) and published to GitHub
+11. Back-merge ``master`` to the ``kitten`` branch
+12. Back-merge ``develop`` to the in-progress feature branches
+13. Issue a formal release with change notes on GitHub
+14. Post change notes on the Facebook page/group
