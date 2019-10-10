@@ -48,8 +48,8 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         ntoolarge = [adj._normalized_score > 5.0 for adj in adjudicators].count(True)
         if ntoolarge > 0:
             warning_msg = ngettext(
-                "%(count)s normalised score is larger than 5.0.",
-                "%(count)s normalised scores are larger than 5.0.",
+                "%(count)s score is larger than the maximum.",
+                "%(count)s scores are larger than the maximum.",
                 ntoolarge
             ) % {'count': ntoolarge}
             self.extra_messages += " " + warning_msg
@@ -57,8 +57,8 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
         ntoosmall = [adj._normalized_score < 0.0 for adj in adjudicators].count(True)
         if ntoosmall > 0:
             warning_msg = ngettext(
-                "%(count)s normalised score is smaller than 0.0.",
-                "%(count)s normalised scores are smaller than 0.0.",
+                "%(count)s score is smaller than the minimum.",
+                "%(count)s scores are smaller than the minimum",
                 ntoosmall
             ) % {'count': ntoosmall}
             self.extra_messages += " " + warning_msg
