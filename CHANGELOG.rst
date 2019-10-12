@@ -6,11 +6,6 @@ Change Log
 ---------
 *Release date: ?*
 
-- Fixed issue where the institutions list would count teams/adjudicators outside of the tournament
-- Fixed issue where a rejected ballot form would crash rather than providing an error message
-- Fixed issue where the javascript bundle would not build on a local windows install
-- Fixed issue where the adjudicator record pages would show an unreleased motion if that round's draw was released
-
 - Divisions-specific features have been deprecated and removed.
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation.
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket.
