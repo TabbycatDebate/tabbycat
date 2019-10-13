@@ -776,8 +776,9 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                     tournament=self.tournament,
                     required=True,
                 )
-        for adj in self.adjudicators:
-            self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()
+        if self.using_declared_winner:
+            for adj in self.adjudicators:
+                self.fields[self._fieldname_declared_winner(adj)] = self.create_declared_winner_dropdown()
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
