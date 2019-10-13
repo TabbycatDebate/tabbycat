@@ -668,7 +668,7 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             initial[self._fieldname_score(side, pos)] = coerce_for_ui(score)
 
         if self.using_declared_winner:
-            initial[self._fieldname_declared_winner()] = result.get_winning_side()
+            initial[self._fieldname_declared_winner()] = result.winning_side()
 
         return initial
 
