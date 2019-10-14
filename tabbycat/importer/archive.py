@@ -124,7 +124,7 @@ class Exporter:
                     for (adj, scoresheet) in result.scoresheets.items():
                         self.add_team_ballots(side_tag, result, adj, scoresheet, side)
                 elif not result.uses_speakers:
-                    adv = side in result.advancing_sides()
+                    adv = side in result.get_winner()
                     ballot_tag = SubElement(side_tag, 'ballot', {
                         'adjudicators': adjs,
                         'rank': str(1 if adv else 2),
@@ -163,10 +163,10 @@ class Exporter:
         else:
             ballot_tag.set('rank', str(scoresheet.rank(side)))
 
-        if hasattr(scoresheet, 'advancing_sides'):
-            ballot_tag.text = str(side in scoresheet.advancing_sides())
-        else:
+        if hasattr(scoresheet, 'get_total'):
             ballot_tag.text = str(scoresheet.get_total(side))
+        else:
+            ballot_tag.text = str(side in scoresheet.get_winner())
 
     def add_speakers(self, side_tag, debate, result, side):
         for pos in self.t.positions:
