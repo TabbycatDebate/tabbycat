@@ -580,7 +580,6 @@ class DebateResultByAdjudicator(BaseDebateResult):
                 "adjudicator": adj,
                 "teams": self.sheet_as_dicts(self.scoresheets[adj])
             }
-            sheet_dict["adjudicator"] = adj
             yield sheet_dict
 
 
@@ -733,7 +732,7 @@ class DebateResultWithScoresMixin:
 
     def side_as_dicts(self, sheet, side, side_name):
         return {
-            **super().side_as_dicts(side, side_name),
+            **super().side_as_dicts(sheet, side, side_name),
             "total": sheet.get_total(side),
             "speakers": [],
         }
@@ -837,6 +836,9 @@ class ConsensusDebateResult(BaseDebateResult):
 
     def teamscore_field_win(self, side):
         return side in self.scoresheet.winners()
+
+    def as_dicts(self):
+        yield {'teams': self.sheet_as_dicts(self.scoresheet)}
 
 
 class ConsensusDebateResultWithScores(DebateResultWithScoresMixin, ConsensusDebateResult):

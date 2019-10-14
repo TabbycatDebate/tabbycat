@@ -614,7 +614,7 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
             return (404, _("The debate %s does not have a confirmed ballot.") % self.matchup_description())
 
     def get_context_data(self, **kwargs):
-        kwargs['motion'] = self.object.confirmed_ballot.motion
+        kwargs['motion'] = self.object.confirmed_ballot.motion or self.object.round.motion_set.first()
         kwargs['result'] = self.object.confirmed_ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
         return super().get_context_data(**kwargs)
