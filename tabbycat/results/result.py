@@ -415,12 +415,12 @@ class DebateResultByAdjudicator(BaseDebateResult):
 
         teamscorebyadjs = self.ballotsub.teamscorebyadj_set.filter(
             debate_adjudicator__in=self.debateadjs_query,
-            debate_team__side__in=self.sides
-        ).select_related('debate_adjudicator__adjudicator', 'debate_adjudicator__adjudicator__institution', 'debate_team')
+            debate_team__side__in=self.sides,
+            win=True
+        ).select_related('debate_adjudicator__adjudicator', 'debate_team')
 
         for tsba in teamscorebyadjs:
-            if tsba.win:
-                self.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
+            self.add_winner(tsba.debate_adjudicator.adjudicator, tsba.debate_team.side)
 
     def save(self):
         super().save()
@@ -766,6 +766,16 @@ class ConsensusDebateResult(BaseDebateResult):
             return super().get_scoresheet_class()
         elif len(self.sides) == 4:
             return BPEliminationScoresheet
+
+    def load_scoresheets(self):
+        super().load_scoresheets()
+
+        winners = set(self.ballotsub.teamscore_set.filter(
+            debate_team__side__in=self.sides,
+            win=True,
+        ).select_related('debate_team').values_list('debate_team__side', flat=True))
+
+        self.set_winner(winners)
 
     def get_winner(self):
         if len(self.scoresheet.winners()) == 0:
