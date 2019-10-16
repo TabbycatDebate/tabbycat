@@ -112,7 +112,7 @@ def ballots_email_generator(to, debate_id):
                 points = 4 - scoresheet.rank(side)
             else:
                 side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)")
-                points = _("Win") if side == scoresheet.winner() else _("Loss")
+                points = _("Win") if side in scoresheet.winners() else _("Loss")
 
             ballot += side_string % {
                 'side': side_name,
