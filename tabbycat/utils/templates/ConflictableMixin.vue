@@ -31,11 +31,13 @@ export default {
         let team = debateTeams[debateTeamPosition]
         if (team !== null) { // Handle when sides editing may be in progress
           let teamsConflicts = this.teamClashesForItem(team.id)
-          if ('institution' in teamsConflicts) {
-            for (const institutionalConflict of teamsConflicts.institution) {
-              if (institutionalConflict.id === idToFind) {
-                found = true
-                break
+          if (typeof teamsConflicts !== 'undefined') {
+            if ('institution' in teamsConflicts) {
+              for (const institutionalConflict of teamsConflicts.institution) {
+                if (institutionalConflict.id === idToFind) {
+                  found = true
+                  break
+                }
               }
             }
           }
