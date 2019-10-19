@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+
+2.3.2
+-----
+*Release date: 19 October 2019*
+
+- Fixed issue where teams would appear to be unavailable in break rounds
+- Other minor fixes
+
+
 2.3.1
 -----
 *Release date: 6 October 2019*
