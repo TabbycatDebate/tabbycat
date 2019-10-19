@@ -1,5 +1,5 @@
 <template>
-  <draggable-item :drag-payload="dragPayload" :class="{ 'bg-dark text-white': !item.available }"
+  <draggable-item :drag-payload="dragPayload" :class="{ 'bg-dark text-white': isUnavailable }"
                   :enable-hover="true" :hover-item="hoverableData" :hover-type="hoverableType">
 
       <span slot="number" class="d-none"><span></span></span>
@@ -31,6 +31,12 @@ export default {
         }
       }
       return name
+    },
+    isUnavailable: function () {
+      if (this.$store.state.round.stage === 'E') {
+        return false // Team availabilities are not set in break rounds so supress the coloring
+      }
+      return !this.item.available
     },
     highlightData: function () {
       return this.item

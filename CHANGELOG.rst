@@ -13,6 +13,14 @@ Change Log
 - Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!
 
 
+2.3.2
+-----
+*Release date: 19 October 2019*
+
+- Fixed issue where teams would appear to be unavailable in break rounds
+- Other minor fixes
+
+
 2.3.1
 -----
 *Release date: 6 October 2019*

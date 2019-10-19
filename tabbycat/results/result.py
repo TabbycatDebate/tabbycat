@@ -537,7 +537,6 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             return None
 
     def set_score(self, adjudicator, side, position, score):
-        scoresheet = self.scoresheets[adjudicator]
         try:
             scoresheet = self.scoresheets[adjudicator]
         except KeyError:

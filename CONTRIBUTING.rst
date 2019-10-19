@@ -146,7 +146,7 @@ Release checklist
 1. Check that all migrations have been generated and committed into Git
 2. Merge translations from the Crowdin pull request and compile messages
 3. Bump version number in ``docs/conf.py``
-4. Bump version number and (if applicable) codename in ``tabbycat/settings.py``
+4. Bump version number and (if applicable) codename in ``tabbycat/settings/core.py``
 5. Update the main ``CHANGELOG.rst`` file (including release date)
 6. Check the major current deployment options, including:
     1. The ``deploy_heroku.py`` script
