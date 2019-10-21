@@ -84,11 +84,9 @@ Check the version::
 ----------------
   *PostgreSQL is a database management system.*
 
-You'll need the *server-dev* package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
+Install PostgreSQL using the  `PostgreSQL installation instructions here <http://www.postgresql.org/download/linux/ubuntu/>`_.
 
-    $ sudo apt install postgresql-9.6 postgresql-server-dev-9.6
-
-If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
+Normally, installing the latest stable version should be best, but if you're having issues, install the same version as the current `default version on Heroku <https://devcenter.heroku.com/articles/heroku-postgresql#version-support>`_, as that will be what is currently most commonly used with Tabbycat.
 
 .. _install-linux-nodejs:
 
