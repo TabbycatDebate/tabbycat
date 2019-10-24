@@ -753,6 +753,8 @@ class ConsensusDebateResult(BaseDebateResult):
     def init_blank_buffer(self):
         super().init_blank_buffer()
         self.scoresheet = self.scoresheet_class(positions=getattr(self, 'positions', None))
+        if len(self.sides) == 4 and self.debate.round.is_last:
+            self.scoresheet.number_winners = 1
 
     def is_complete(self):
         return super().is_complete() and self.scoresheet.is_complete()
