@@ -499,6 +499,7 @@ class ScoresMixin:
         initial = {}
         for side, pos in product(self.sides, self.positions):
             initial[self._fieldname_speaker(side, pos)] = result.get_speaker(side, pos)
+            initial[self._fieldname_ghost(side, pos)] = result.get_ghost(side, pos)
         return initial
 
     # --------------------------------------------------------------------------
