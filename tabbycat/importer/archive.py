@@ -475,11 +475,11 @@ class Importer:
                 team_obj.emoji = emoji
 
             # Find institution from speakers - Get first institution from each speaker to compare
-            p_institutions = set([p.get('institutions').split(" ")[0] for p in team.findall('speaker')])
-            team_institution = list(p_institutions)[0]
+            p_institutions = set([p.get('institutions',"").split(" ")[0] for p in team.findall('speaker')])
+            team_institution = next(iter(p_institutions))
 
-            if len(p_institutions) == 1 and team_institution is not None:
-                team_obj.institution = self.institutions[team_institution]
+            if len(p_institutions) == 1:
+                team_obj.institution = self.institutions.get(team_institution, None)
 
             # Remove institution from team name
             if team_obj.institution is not None and team_obj.long_name.startswith(team_obj.institution.name + " "):
@@ -490,7 +490,7 @@ class Importer:
                 team_obj.reference = team_obj.long_name
                 team_obj.short_name = team_obj.reference[:50]
             team_obj.short_reference = team_obj.reference[:35]
-            team.obj.save()
+            team_obj.save()
 
             # Break eligibilities
             for bc in team.get('break-eligibilities', "").split():
@@ -514,7 +514,7 @@ class Importer:
         for adj in self.root.find('participants').findall('adjudicator'):
             adj_obj = Adjudicator(
                 tournament=self.tournament, test_score=adj.get('score', 0),
-                institution=self.institutions.get(adj.get('institutions', "").split()[0]),
+                institution=self.institutions.get(adj.get('institutions', "").split(" ")[0]),
                 independent=adj.get('independent', False), adj_core=adj.get('core', False),
                 name=adj.get('name'), gender=adj.get('gender', ''))
             adj_obj.save()
@@ -569,6 +569,7 @@ class Importer:
                     if debate.get('chair') == adj:
                         adj_type = DebateAdjudicator.TYPE_CHAIR
                     adj_obj = DebateAdjudicator(debate=debate_obj, adjudicator=self.adjudicators[adj], type=adj_type)
+                    adj_obj.save()
                     self.debateadjudicators[(debate.get('id'), adj)] = adj_obj
 
     def import_motions(self):
@@ -621,21 +622,22 @@ class Importer:
 
                     for speech, pos in zip(side.findall('speech'), self.tournament.positions):
                         if numeric_scores:
+                            dr.set_speaker(side_code, pos, self.speakers.get(speech.get('speaker')))
                             if consensus:
-                                dr.set_score(side_code, pos, float(speech.find('ballot').get('score')))
+                                dr.set_score(side_code, pos, float(speech.find('ballot').text))
                             else:
                                 for ballot in speech.findall('ballot'):
-                                    for adj in [self.adjudicators[a] for a in ballot.get('adjudicators', []).split(" ")]:
-                                        dr.set_score(adj, side_code, pos, ballot.get('score'))
+                                    for adj in [self.adjudicators[a] for a in ballot.get('adjudicators', "").split(" ")]:
+                                        dr.set_score(adj, side_code, pos, float(ballot.text))
                     # Note: Dependent on #1180
                     if consensus:
-                        if side.find('ballot').get('rank') == 1:
+                        if int(side.find('ballot').get('rank')) == 1:
                             dr.add_winner(side_code)
                     else:
                         for ballot in side.findall('ballot'):
-                            for adj in [self.adjudicators[a] for a in ballot.get('adjudicators', []).split(" ")]:
-                                if ballot.get('rank') == 1:
-                                    dr.add_winner(adj, side_code, side_code)
+                            for adj in [self.adjudicators.get(a) for a in ballot.get('adjudicators', "").split(" ")]:
+                                if int(ballot.get('rank')) == 1:
+                                    dr.add_winner(adj, side_code)
                 dr.save()
 
     def import_feedback(self):
