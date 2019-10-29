@@ -1,23 +1,20 @@
-# Tabbycat translations, standings module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
-"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
-"Language: ar\n"
+"PO-Revision-Date: 2019-07-21 12:19\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Arabic\n"
+"Language: ar_SA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ar\n"
+"X-Crowdin-File: /develop/tabbycat/standings/locale/en/LC_MESSAGES/django.po\n"
 
 #: standings/base.py:295
 msgid "The same metric would be added twice:"
@@ -53,7 +50,7 @@ msgstr "جميع المتحدثين"
 
 #: standings/diversity.py:169
 msgid "Indies"
-msgstr "Indies"
+msgstr ""
 
 #: standings/diversity.py:177
 msgid "Chairs"
@@ -153,16 +150,12 @@ msgid "Trim"
 msgstr ""
 
 #: standings/speakers.py:99
-#, fuzzy
-#| msgid "points"
 msgid "team points"
-msgstr "نقاط"
+msgstr ""
 
 #: standings/speakers.py:100
-#, fuzzy
-#| msgid "Teams"
 msgid "Team"
-msgstr "الفرق"
+msgstr "فريق"
 
 #: standings/speakers.py:119 standings/speakers.py:156
 msgid "standard deviation"
@@ -170,7 +163,7 @@ msgstr "الانحراف المعياري"
 
 #: standings/speakers.py:120 standings/speakers.py:157
 msgid "Stdev"
-msgstr "Stdev"
+msgstr ""
 
 #: standings/speakers.py:128
 msgid "number of speeches given"
@@ -190,7 +183,7 @@ msgstr "نقاط"
 
 #: standings/teams.py:65 standings/teams.py:97
 msgid "Pts"
-msgstr "Pts"
+msgstr ""
 
 #: standings/teams.py:67
 msgid "Points (2/1/0)"
@@ -234,7 +227,7 @@ msgstr "جمع فرق الدرجات "
 
 #: standings/teams.py:151
 msgid "Marg"
-msgstr "Marg"
+msgstr ""
 
 #: standings/teams.py:160
 msgid "average margin"
@@ -242,7 +235,7 @@ msgstr "متوسط فرق الدرجات "
 
 #: standings/teams.py:161
 msgid "AWM"
-msgstr "AWM"
+msgstr ""
 
 #: standings/teams.py:171
 msgid "average individual speaker score"
@@ -258,7 +251,7 @@ msgstr "رسم بياني للقوى"
 
 #: standings/teams.py:206
 msgid "DS"
-msgstr "DS"
+msgstr ""
 
 #: standings/teams.py:244
 msgid "number of adjudicators who voted for this team"
@@ -294,7 +287,7 @@ msgstr "من أفضل من "
 
 #: standings/teams.py:295
 msgid "WBW"
-msgstr "WBW"
+msgstr ""
 
 #: standings/teams.py:296
 msgid "who-beat-whom"
@@ -306,104 +299,69 @@ msgstr "من أفضل من ( في الأقسام )"
 
 #: standings/teams.py:342
 msgid "WBWD"
-msgstr "WBWD"
+msgstr ""
 
 #: standings/teams.py:343
 msgid "who-beat-whom (in divisions)"
 msgstr "من أفضل من ( في الأقسام )"
 
 #: standings/templates/current_standings.html:6
-msgid ""
-"It also excludes results from silent rounds (if any) and from the current "
-"round."
+msgid "It also excludes results from silent rounds (if any) and from the current round."
 msgstr ""
 
 #: standings/templates/current_standings.html:9
 #, python-format
-msgid ""
-"This list is sorted by team points, then alphabetically by team name. It "
-"does not indicate each team's ranking within each bracket. "
-"%(silent_round_sentence)s"
-msgstr ""
-"يتم فرز هذه القائمة حسب عدد من نقاط الفريق ، ثم أبجديا حسب اسم الفريق. وهي "
-"لا تشير إلى ترتيب كل فريق داخل كل قوس. %(silent_round_sentence)s"
+msgid "This list is sorted by team points, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
+msgstr "يتم فرز هذه القائمة حسب عدد من نقاط الفريق ، ثم أبجديا حسب اسم الفريق. وهي لا تشير إلى ترتيب كل فريق داخل كل قوس. %(silent_round_sentence)s"
 
 #: standings/templates/current_standings.html:15
 #, python-format
-msgid ""
-"This list is sorted by number of wins, then alphabetically by team name. It "
-"does not indicate each team's ranking within each bracket. "
-"%(silent_round_sentence)s"
-msgstr ""
-"يتم فرز هذه القائمة حسب عدد من الانتصارات، ثم أبجديا حسب اسم الفريق. وهي لا "
-"تشير إلى ترتيب كل فريق داخل كل الصندوق . %(silent_round_sentence)s"
+msgid "This list is sorted by number of wins, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
+msgstr "يتم فرز هذه القائمة حسب عدد من الانتصارات، ثم أبجديا حسب اسم الفريق. وهي لا تشير إلى ترتيب كل فريق داخل كل الصندوق . %(silent_round_sentence)s"
 
 #: standings/templates/current_standings_no_round.html:6
 msgid "There aren't any rounds for which results are available."
 msgstr "لم يتم إدخال النتائج لأية جولات بعد."
 
 #: standings/templates/reply_standings.html:6
-msgid ""
-"Reply speakers are ranked by their <strong>average reply score</strong>."
+msgid "Reply speakers are ranked by their <strong>average reply score</strong>."
 msgstr ""
 
 #: standings/templates/reply_standings.html:9
 #, python-format
-msgid ""
-"Speakers can miss up to %(count)s reply speeches before they are omitted "
-"from the replies tab."
+msgid "Speakers can miss up to %(count)s reply speeches before they are omitted from the replies tab."
 msgstr ""
 
 #: standings/templates/reply_standings.html:14
-msgid ""
-"All reply speakers appear in these standings, no matter how many replies "
-"they've missed."
+msgid "All reply speakers appear in these standings, no matter how many replies they've missed."
 msgstr ""
 
 #: standings/templates/reply_standings.html:18
 #: standings/templates/speaker_standings.html:25
 #, python-format
-msgid ""
-"These settings can be changed in the <a href=\"%(standings_config_url)s\" "
-"class=\"alert-link\">Standings section of this tournament's configuration</"
-"a>."
-msgstr ""
-"يمكنك تغيير الإعدادات <a href=\"%(standings_config_url)s\" class=\"alert-link"
-"\">في خانة إعدادات البطولة </a>"
+msgid "These settings can be changed in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
+msgstr "يمكنك تغيير الإعدادات <a href=\"%(standings_config_url)s\" class=\"alert-link\">في خانة إعدادات البطولة </a>"
 
 #: standings/templates/speaker_standings.html:7
 msgid "Speakers are ranked by their <strong>average score</strong>."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:9
-msgid ""
-"Speakers are ranked by their <strong>total score</strong>. Any speaker who "
-"misses a single debate will be severely punished in these rankings."
+msgid "Speakers are ranked by their <strong>total score</strong>. Any speaker who misses a single debate will be severely punished in these rankings."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:16
 #, python-format
-msgid ""
-"Speakers can miss up to %(count)s debates before they are omitted from the "
-"speaker tab."
+msgid "Speakers can miss up to %(count)s debates before they are omitted from the speaker tab."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:21
-msgid ""
-"All speakers appear in these standings, no matter how many debates they've "
-"missed."
+msgid "All speakers appear in these standings, no matter how many debates they've missed."
 msgstr ""
 
 #: standings/templates/speaker_standings.html:33
 #, python-format
-msgid ""
-"Enforcing the limit on the number of missed debates requires the \"number of "
-"speeches given\" metric to be included in the speaker standings "
-"calculations, so it's been automatically added. To remove this warning "
-"message, add <strong>Number of speeches given</strong> to the "
-"<strong>Speaker standings extra metrics</strong> in the <a href="
-"\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this "
-"tournament's configuration</a>."
+msgid "Enforcing the limit on the number of missed debates requires the \"number of speeches given\" metric to be included in the speaker standings calculations, so it's been automatically added. To remove this warning message, add <strong>Number of speeches given</strong> to the <strong>Speaker standings extra metrics</strong> in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
 msgstr ""
 
 #: standings/templates/standings_diversity.html:4
@@ -412,12 +370,7 @@ msgid "Diversity Overview"
 msgstr ""
 
 #: standings/templates/standings_diversity.html:22
-msgid ""
-"The results data displayed here is presented without tests for statistical "
-"significance. Correlations should not be automatically considered reliable; "
-"particularly at small tournaments. A 'region' is a customisable category "
-"assigned to a set of institutions, and counted using the number of "
-"participants assigned to those institutions."
+msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments. A 'region' is a customisable category assigned to a set of institutions, and counted using the number of participants assigned to those institutions."
 msgstr ""
 
 #: standings/templates/standings_diversity.html:37
@@ -425,10 +378,8 @@ msgid "Non-cis male identifying"
 msgstr "لا يوجد حقل تم تحديده "
 
 #: standings/templates/standings_diversity.html:40
-#, fuzzy
-#| msgid "Male identifying"
 msgid "Cis-male identifying"
-msgstr "تحديد"
+msgstr ""
 
 #: standings/templates/standings_diversity.html:43
 msgid "Unspecified/unrecorded"
@@ -437,7 +388,7 @@ msgstr ""
 #: standings/templates/standings_index.html:5
 #: standings/templates/standings_index.html:6
 msgid "Standings"
-msgstr ""
+msgstr "التقسيمات "
 
 #: standings/templates/standings_index.html:18
 msgid "Top Speaks"
@@ -523,7 +474,7 @@ msgstr "الفرق"
 #: standings/templates/standings_menu.html:23
 msgctxt "All [Teams]"
 msgid "All"
-msgstr ""
+msgstr "الكل"
 
 #: standings/templates/standings_menu.html:38
 msgid "Speakers"
@@ -537,7 +488,7 @@ msgstr ""
 #: standings/templates/standings_menu.html:45
 msgctxt "All [Speakers]"
 msgid "All"
-msgstr ""
+msgstr "الكل"
 
 #: standings/templates/standings_menu.html:47
 msgid "Speakers "
@@ -554,29 +505,21 @@ msgstr "الردود"
 
 #: standings/templates/standings_menu.html:70
 msgid "Motions"
-msgstr ""
+msgstr "قضايا"
 
 #: standings/templates/standings_menu.html:74
 msgid "Diversity"
-msgstr ""
+msgstr "تقسيمات"
 
 #: standings/views.py:100
 #, python-format
-msgid ""
-"<p>There was an error generating the standings: <em>%(message)s</em></p>"
+msgid "<p>There was an error generating the standings: <em>%(message)s</em></p>"
 msgstr "<p>هناك خلل في إعداد الترتيب :   <em>    %(message)s    </em> </p>"
 
 #: standings/views.py:105
 #, python-format
-msgid ""
-"<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
-"class=\"alert-link\">standings configuration under the Setup section</a>. If "
-"this issue persists and you're not sure how to fix it, please contact the "
-"developers.</p>"
-msgstr ""
-"<p> قد تحتاج إلى مراجعة مرة أخرى <a href=\"%(standings_options_url)s\" class="
-"\"alert-link\"> تحت الإعدادات </a> في حالة عدم قدرتك على إصلاح المشكلة يمكنك "
-"الاتصال بالمطور . </p>"
+msgid "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" class=\"alert-link\">standings configuration under the Setup section</a>. If this issue persists and you're not sure how to fix it, please contact the developers.</p>"
+msgstr "<p> قد تحتاج إلى مراجعة مرة أخرى <a href=\"%(standings_options_url)s\" class=\"alert-link\"> تحت الإعدادات </a> في حالة عدم قدرتك على إصلاح المشكلة يمكنك الاتصال بالمطور . </p>"
 
 #: standings/views.py:113
 msgid "<p>The tab director will need to resolve this issue.</p>"
@@ -594,9 +537,7 @@ msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s( أفضل %(limit)d فقط )"
 
 #: standings/views.py:207 standings/views.py:433
-msgid ""
-"The tab can't be displayed because all rounds so far in this tournament are "
-"silent."
+msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
 msgstr "لا يمكن إظهار النتائج لأن كافة جولات البطولة جولات صامتة."
 
 #: standings/views.py:283
@@ -658,3 +599,4 @@ msgstr "ترتيب الفرق الحالي"
 #: standings/views.py:603
 msgid "Points"
 msgstr ""
+

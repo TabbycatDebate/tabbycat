@@ -6,14 +6,46 @@ Change Log
 ---------
 *Release date: ?*
 
+- Divisions-specific features have been deprecated and removed.
+- Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation.
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket.
 - The number of pull-ups and draw strength by speaker score are now available as team standing metrics.
 - Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!
 
+
+2.3.2
+-----
+*Release date: 19 October 2019*
+
+- Fixed issue where teams would appear to be unavailable in break rounds
+- Other minor fixes
+
+
+2.3.1
+-----
+*Release date: 6 October 2019*
+
+- Fixed issue where the institutions list would count teams/adjudicators outside of the tournament
+- Fixed issue where a rejected ballot form would crash rather than providing an error message
+- Fixed issue where the javascript bundle would not build on a local windows install
+- Fixed issue where the adjudicator record pages would show an unreleased motion if that round's draw was released
+
+
 2.3.0 (LaPerm)
 --------------
-*Release date: ?*
+*Release date: 27 September 2019*
 
+- Added a preformed panel system which provides a powerful take on a 'shadow draw' workflow
+    - Shadow draw systems allow an adjudication core to form panels prior to a round being drawn. For example, the panels for Round 4 could be formed while Round 3 is taking place. Most implementations do so by having the tab system create a copy of the Round 3 draw, form new panels on top of it, and then transpose these panels onto Round 4. In large tournaments this workflow allows an adjudication core much more time to consider panel formation
+    - Tabbycat's preformed panels are formed per-round under a section available under the Setup menu. This interface looks like the standard Edit Adjudicators interface, but the 'debates' shown are based on a simulation of that round's results. These fake debates can then be prioritised
+    - Adjudicators can then be allocated to those fake debates in order to create a pre-formed panel. When the real draw is ready to be created, the priority of each preformed panel will be matched to the priority of the real debates
+    - By using the existing per-debate priority system, and by giving pre-formed panels their own priority, this workflow allows for very fine amounts of control over exactly how preformed panels are allocated as compared to a more simple top-down transposition of panels. Adjudication cores can easily target general areas of the draw (e.g. break-threshold brackets); control adjudicator strength within and across panels; and still account for special cases where a debate requires a particularly strong panel. At the same time, our existing options for automatic prioritisation and automatic allocation apply to all steps of this process so that preformed panels can be created and deployed rapidly
+- Rewrote the Edit Adjudication, Venues, and Teams pages to enable a number of enhancements
+    - These pages now live-update changes that were made on other instances of that page. As a result, users on different computers can each open the Edit Adjudicators page and see the changes made by the other users. This feature, along with sharding, should make it easier than ever to distribute the task of adjudicator allocation across an entire adjudication core
+    - A new interface layout should better maximise space, particularly in BP settings, while also increasing the font size of key information
+    - The unused panel is now able to sort adjudicators by name, score, or drag order
+    - Average scores for all adjudicators, and a voting majority, are now shown next to the panel
+    - Various allocation-relevant settings, such as the minimum feedback score needed for a voting position, are now available inline on the allocation page itself. This should enable much faster tweaks/iterations of these values
 - The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
 - Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
     - Copy ``tabbycat/settings/local.example`` to become ``local.py`` (and fill in your original database details)
@@ -24,7 +56,7 @@ Change Log
     - Custom emails may be sent out to select participants through the web-interface
     - Participants can be specifically included or excluded from receiving a notification before sending with checks for duplicate messages
     - Teams can be sent emails with their draw details
-    - Emails can be tracked to determine if sent or read (Heroku-specific)
+    - Emails can be tracked to determine if sent or read (SendGrid-specific)
 - Expanded the use of private URLs (Encore Étienne Beaulé):
     - QR codes are now included in addition to the URL when printing private URLs
     - Private landing pages will now display check-in status (if check-ins are used) along with further details regarding break categories, regions, etc.
@@ -33,8 +65,9 @@ Change Log
     - Added a "team-institution conflict" model
     - Like adjudicator-institution conflicts, team-institution conflicts are automatically created if you use the simple importer or the command-line importer; but if you edit the database, it's your responsibility to add/edit them
     - Institutional affiliations no longer matter for determining conflicts for either teams or adjudicators; only institutions listed in the team's or adjudicator's conflicts matter
-    - A adjudicator/team conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
+    - An adjudicator/team now conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
 - When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions
+- Tabbycat no longer tracks which round is the 'current' round and instead tracks the completion of individual rounds. This change does not alter any existing workflows, but makes it easier to run simultaneous draws in out-rounds
 - Info-slides can now be split into paragraphs
 - Check-in pages now differentiate between teams with 1 and 2 checked-in people in two-team formats
 - Institutional caps in breaks can be based on the number of teams in the break. Thanks to Viran Weerasekera for this feature!

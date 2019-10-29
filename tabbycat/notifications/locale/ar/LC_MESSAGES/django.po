@@ -1,22 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
-"Language: ar\n"
+"PO-Revision-Date: 2019-07-21 12:19\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Arabic\n"
+"Language: ar_SA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ar\n"
+"X-Crowdin-File: /develop/tabbycat/notifications/locale/en/LC_MESSAGES/django.po\n"
 
 #: notifications/apps.py:7
 msgid "Notifications"
@@ -41,9 +39,7 @@ msgstr ""
 
 #: notifications/forms.py:16
 #, python-format
-msgid ""
-"Congratulations! If you're reading this message, your email backend on "
-"%(host)s looks all good to go!"
+msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
 msgstr ""
 
 #: notifications/forms.py:29
@@ -85,7 +81,7 @@ msgstr ""
 #: notifications/models.py:36 notifications/models.py:75
 #: notifications/models.py:126
 msgid "timestamp"
-msgstr ""
+msgstr "الزمن "
 
 #: notifications/models.py:39
 msgid "sent message"
@@ -141,11 +137,11 @@ msgstr ""
 
 #: notifications/models.py:78
 msgid "tournament"
-msgstr ""
+msgstr "بطولة"
 
 #: notifications/models.py:80
 msgid "round"
-msgstr ""
+msgstr "جولة"
 
 #: notifications/models.py:83
 msgid "bulk notification"
@@ -213,20 +209,12 @@ msgstr ""
 
 #: notifications/templates/email_participants.html:12
 #, python-format
-msgid ""
-"You have not specified a reply-to address. This means that participants may "
-"not reply to the message if they have questions. Please set one in the <a "
-"href=\"%(notifications_options_url)s\">Notifications section of the "
-"preferences</a>."
+msgid "You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href=\"%(notifications_options_url)s\">Notifications section of the preferences</a>."
 msgstr ""
 
 #: notifications/templates/email_participants.html:20
 #, python-format
-msgid ""
-"The webhook URL for use in SendGrid is <a href="
-"\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please "
-"point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/"
-"mail_settings\">SendGrid</a> to that."
+msgid "The webhook URL for use in SendGrid is <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> to that."
 msgstr ""
 
 #: notifications/templates/email_participants.html:50
@@ -234,12 +222,7 @@ msgid "Send Message(s)"
 msgstr ""
 
 #: notifications/templates/email_statuses.html:10
-msgid ""
-"Emails can be sent by Tabbycat for a variety of purposes. Emails are sent "
-"when specific preferences are enabled (i.e. enabling Ballot Receipts) or "
-"through actions available on specific pages (i.e. the Draw Display page for "
-"matchups; or the Participants page for team registration). This page shows "
-"the status of previously-sent emails."
+msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
 msgstr ""
 
 #: notifications/templates/notifications_nav.html:5 notifications/views.py:47
@@ -262,10 +245,7 @@ msgid "Send Test Email"
 msgstr ""
 
 #: notifications/templates/test_email.html:19
-msgid ""
-"You can use this form to send a test email, to check that your email backend "
-"settings are working, before you try to send email notifications to "
-"participants."
+msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
 msgstr ""
 
 #: notifications/templates/test_email.html:25
@@ -363,11 +343,11 @@ msgstr ""
 
 #: notifications/views.py:109
 msgid "Status"
-msgstr ""
+msgstr "الحالة"
 
 #: notifications/views.py:110
 msgid "Time"
-msgstr ""
+msgstr "الوقت"
 
 #: notifications/views.py:149
 msgid "Email Participants"
@@ -406,7 +386,7 @@ msgstr ""
 
 #: notifications/views.py:221
 msgid "Adjudicator"
-msgstr ""
+msgstr "محكم "
 
 #: notifications/views.py:221
 msgid "Speaker"
@@ -414,8 +394,9 @@ msgstr ""
 
 #: notifications/views.py:229
 msgid "Speakers"
-msgstr ""
+msgstr "متحدثين"
 
 #: notifications/views.py:230
 msgid "Adjudicators"
-msgstr ""
+msgstr "المحكمين"
+

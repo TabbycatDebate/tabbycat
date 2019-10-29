@@ -143,16 +143,21 @@ class DebateEditConsumer(BaseAdjudicatorContainerConsumer):
 
         # if len(teams) != len(posted_debateteams):
         #     # TODO: raise error
-        #     # raise BadJsonRequestError("Not all teams specified are associated with the tournament")
+        #     # e.g. "Not all teams specified are associated with the tournament"
         #     pass
 
         # Update other DebateTeam objects
         for side, team_id in sent_teams.items():
-            obj, created = DebateTeam.objects.update_or_create(
-                debate=debate, side=side, defaults={'team_id': team_id})
-            logger.debug("%s debate team: %s in [%s] is now %s",
-                         "Created" if created else "Updated",
-                         side, debate.matchup, team_id)
+            if team_id is None:
+                DebateTeam.objects.filter(debate=debate, side=side).delete()
+                logger.debug("position %s in [%s] is now vacant",
+                             side, debate.matchup)
+            else:
+                obj, created = DebateTeam.objects.update_or_create(
+                    debate=debate, side=side, defaults={'team_id': team_id})
+                logger.debug("%s debate team: %s in [%s] is now %s",
+                             "Created" if created else "Updated",
+                             side, debate.matchup, team_id)
 
         debate._populate_teams()
 

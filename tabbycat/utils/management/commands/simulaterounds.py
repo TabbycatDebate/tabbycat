@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 
-from adjallocation.allocators import legacy_allocate_adjudicators
 from adjallocation.allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
 from availability.utils import activate_all, set_availability
 from draw.models import Debate
@@ -40,11 +39,16 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
             set_availability(adjs, round)
 
         self.stdout.write("Auto-allocating adjudicators for round '{}'...".format(round.name))
+        debates = round.debate_set.all()
+        adjs = round.active_adjudicators.all()
         if round.ballots_per_debate == 'per-adj':
-            allocator_class = VotingHungarianAllocator
+            allocator = VotingHungarianAllocator(debates, adjs, round)
         else:
-            allocator_class = ConsensusHungarianAllocator
-        legacy_allocate_adjudicators(round, allocator_class)
+            allocator = ConsensusHungarianAllocator(debates, adjs, round)
+
+        allocation, extra_msgs = allocator.allocate()
+        for alloc in allocation:
+            alloc.save()
 
         allocate_venues(round)
 

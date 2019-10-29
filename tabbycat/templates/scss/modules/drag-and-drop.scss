@@ -53,133 +53,18 @@
   }
 }
 
-.legacy-vue-draggable {
-  // Don't let text selections get in the way of dragging
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none; // Text should be unselectable or highlights go crazy
-  // Required to make elements draggable in old WebKit
-  -khtml-user-drag: element;
-  -webkit-user-drag: element;
-
-  &:active {
-    top: 2px;
-  }
-
-  background: #fff; // Need to override default :hover bg state that gets stuck
-  margin: 3px 3px 0 0; // Need spacing offsets so they don't bunch
-  padding: 4px 6px;
-  position: relative; // Needs this so the "seen ago" hover tooltip will show
-  border: 4px solid $input-border-color;
-  height: 43px;
-  text-align: left;
-  @extend .flex-horizontal;
-
-  // Adj scores; Team/Venue names
-  .draggable-prefix {
-    @extend .flex-vertical-center; // Vertically center score
-
-    padding-right: 6px;
-
-    h4 {
-      margin-bottom: 0;
-      font-family: $font-family-sans-serif;
-      font-weight: normal;
-      letter-spacing: -1px;
-      color: theme-color("secondary");
-
-      small {
-        font-size: 65%;
-      }
-    }
-  }
-
-  .draggable-title {
-    overflow: hidden; // Needed for Windows/IE
-    line-height: 12px; // Compress text/sub-text spacing
-
-    h5 {
-      font-size: 15px;
-    }
-
-    .subtitle {
-      display: block;
-      margin-top: -1px;
-      font-size: 10px; // Extra small subtext
-      color: theme-color("secondary");
-    }
-    // @extend .flex-inline;
-    // @extend .flex-vertical-center;
-  }
-}
-
-.legacy-vue-draggable:hover,
-.legacy-vue-draggable.btn:hover, // Override specfificity from btn styles
-.legacy-vue-draggable:active {
-  cursor: move;
-}
-
 .vue-is-hovering {
   @include hover-highlights(#000);
 }
 
-.vue-is-dragging,
-.legacy-vue-draggable:active { // :active is the 'ghost' drag element
+.vue-is-dragging { // :active is the 'ghost' drag element
   opacity: 0.66 !important;
   @include hover-highlights(#000);
-}
-
-.legacy-vue-draggable.locked {
-  opacity: 0.33;
-  pointer-events: none;
 }
 
 //------------------------------------------------------------------------------
 // Droppables
 //------------------------------------------------------------------------------
-
-.legacy-vue-droppable {
-  background: $droppable-bg;
-  min-height: 50px;
-  padding: 0 0 4px 4px; // Draggable items only have top/left padding
-}
-
-.legacy-vue-droppable.locked {
-  background: #fff;
-  position: relative; // For the spinner
-}
-
-.legacy-vue-droppable-lock-spinner { // Container for a loading spinner
-  position: absolute;
-  z-index: 11;
-  font-size: 25px;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  color: theme-color("success");
-  @extend .flex-vertical-center;
-  @extend .flex-horizontal-center;
-}
-
-.draw-cell .legacy-vue-droppable {
-  width: 100%;
-  height: 100%;
-}
-
-.flex-cell.legacy-vue-droppable-container {
-  padding: 0; // Suppress padding for larger drop area
-}
-
-.thead.legacy-vue-droppable-container span {
-  margin-left: 8px; // Compensate for suppressed padding
-  display: inline-block;
-}
-
-.division-droppable {
-  min-height: 66px;
-}
 
 .vue-droppable-enter {
   background: theme-color("success") !important;
@@ -196,18 +81,6 @@
 
   > div {
     display: inline-flex;
-  }
-}
-
-.legacy-resize-handler {
-  width: 100%;
-  text-align: center;
-  height: 23px;
-  margin-bottom: -28px;
-  z-index: $z_3 + 1;
-
-  &:hover {
-    cursor: ns-resize;
   }
 }
 

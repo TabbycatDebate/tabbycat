@@ -243,44 +243,6 @@ class Debate(models.Model):
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
 
-    # For the front end need to ensure that there are no gaps in the debateTeams
-    def serial_debateteams_ordered(self, tournament=None):
-        """`tournament` can be provided to avoid hitting the preference cache
-        for each item if this is called for many different debates in the
-        same tournament."""
-        if tournament is None:
-            tournament = self.round.tournament
-        for side in tournament.sides:
-            sdt = {'side': side, 'team': None,
-                   'position': get_side_name(tournament, side, 'full'),
-                   'abbr': get_side_name(tournament, side, 'abbr')}
-            try:
-                debate_team = self.get_dt(side)
-                sdt['team'] = debate_team.team.serialize()
-            except ObjectDoesNotExist:
-                pass
-
-            yield sdt
-
-    def serialize(self, tournament=None):
-        """@deprecate when legacy drag and drop UIs removed"""
-        """`tournament` can be provided to avoid hitting the preference cache
-        for each item if this is called for many different debates in the
-        same tournament."""
-        if tournament is None:
-            tournament = self.round.tournament
-
-        debate = {'id': self.id, 'bracket': self.bracket,
-                  'importance': self.importance, 'locked': False}
-        debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['debateTeams'] = list(self.serial_debateteams_ordered(tournament=tournament))
-        debate['debateAdjudicators'] = [{
-            'position': position,
-            'adjudicator': adj.serialize(round=self.round),
-        } for adj, position in self.adjudicators.with_debateadj_types()]
-        debate['sidesConfirmed'] = self.sides_confirmed
-        return debate
-
 
 class DebateTeamManager(models.Manager):
     use_for_related_fields = True

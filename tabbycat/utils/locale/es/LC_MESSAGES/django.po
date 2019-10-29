@@ -1,22 +1,20 @@
-# Tabbycat translations, utils module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Hernando Castro <hernandojcastro@gmail.com>, 2018\n"
-"Language-Team: Spanish (https://www.transifex.com/tabbycat/teams/80723/es/)\n"
-"Language: es\n"
+"PO-Revision-Date: 2019-07-21 12:18\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Spanish\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
 
 #: utils/forms.py:25
 msgid "E-mail address"
@@ -36,11 +34,11 @@ msgstr ""
 
 #: utils/tables.py:159
 msgid "chair"
-msgstr ""
+msgstr "principal"
 
 #: utils/tables.py:160
 msgid "panellist"
-msgstr ""
+msgstr "panelista"
 
 #: utils/tables.py:161
 msgid "trainee"
@@ -151,7 +149,7 @@ msgstr ""
 #: utils/tables.py:408
 #, python-format
 msgid "%(team)s (%(side)s)"
-msgstr ""
+msgstr "%(team)s(%(side)s)"
 
 #: utils/tables.py:427
 msgid "advancing"
@@ -240,7 +238,7 @@ msgstr ""
 
 #: utils/tables.py:645 utils/tables.py:701
 msgid "Categories"
-msgstr ""
+msgstr "Categorías"
 
 #: utils/tables.py:665 utils/tables.py:744
 msgid "Division"
@@ -266,7 +264,7 @@ msgstr ""
 
 #: utils/tables.py:759
 msgid "Venue"
-msgstr ""
+msgstr "Sala"
 
 #: utils/tables.py:765
 msgid "Date"
@@ -317,7 +315,7 @@ msgstr ""
 
 #: utils/tables.py:875
 msgid "Elimination"
-msgstr ""
+msgstr "Eliminación"
 
 #: utils/tables.py:878 utils/tables.py:890
 msgid "View Ballot"
@@ -334,7 +332,7 @@ msgstr ""
 
 #: utils/tables.py:905
 msgid "Side"
-msgstr ""
+msgstr "Lado"
 
 #: utils/tables.py:943
 msgid "Team iron-manned this round and the last."
@@ -351,27 +349,16 @@ msgstr ""
 #: utils/tables.py:966 utils/tables.py:967
 #, python-format
 msgid "Team %(num)d"
-msgstr ""
+msgstr "Equipo %(num)d"
 
 #: utils/templates/database_limit_warning.html:9
 #, python-format
-msgid ""
-"You're currently using %(nrows)s row in your database. If you haven't "
-"already upgraded your Heroku database to a paid tier, it's limited to a "
-"maximum of 10,000 rows. As you're close to this limit, you should "
-"<strong>not create new tournaments</strong> on this site unless and until "
-"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
-"postgres-databases\">upgraded your database</a> to a paid tier."
-msgid_plural ""
-"You're currently using %(nrows)s rows in your database. If you haven't "
-"already upgraded your Heroku database to a paid tier, it's limited to a "
-"maximum of 10,000 rows. As you're close to this limit, you should "
-"<strong>not create new tournaments</strong> on this site unless and until "
-"you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-"
-"postgres-databases\">upgraded your database</a> to a paid tier."
+msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
 msgstr[0] ""
 msgstr[1] ""
 
 #: utils/views.py:45
 msgid "Whoops! You're not meant to type that URL into your browser."
 msgstr ""
+

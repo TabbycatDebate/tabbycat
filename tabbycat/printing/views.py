@@ -20,6 +20,7 @@ from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPa
                                 RoundMixin, TournamentMixin)
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
+from venues.serializers import VenueSerializer
 
 
 class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
@@ -64,7 +65,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             source_n = source.short_name
 
         return {
-            'venue': venue.serialize() if venue else '',
+            'venue': VenueSerializer(venue).data if venue else '',
             'authorInstitution': source.institution.code if source.institution else _("Unaffiliated"),
             'author': source_n, 'authorPosition': source_p,
             'target': target.name, 'targetPosition': target_p,

@@ -26,6 +26,7 @@ from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
+from .serializers import SpeakerSerializer
 from .tables import AdjudicatorDebateTable, TeamDebateTable
 
 logger = logging.getLogger(__name__)
@@ -89,9 +90,12 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
         institutions = Institution.objects.select_related('region').filter(
             Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
         ).annotate(
-            nteams=Count('team', distinct=True),
-            nadjs=Count('adjudicator', filter=Q(adjudicator__independent=False), distinct=True),
-            nias=Count('adjudicator', filter=Q(adjudicator__independent=True), distinct=True),
+            nteams=Count('team', distinct=True, filter=Q(
+                team__tournament=self.tournament)),
+            nadjs=Count('adjudicator', filter=Q(
+                adjudicator__tournament=self.tournament, adjudicator__independent=False), distinct=True),
+            nias=Count('adjudicator', filter=Q(
+                adjudicator__tournament=self.tournament, adjudicator__independent=True), distinct=True),
         ).distinct()
 
         table = TabbycatTableBuilder(view=self, sort_key='code')
@@ -365,7 +369,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
 
     def get_context_data(self, **kwargs):
         speaker_categories = self.tournament.speakercategory_set.all()
-        json_categories = [bc.serialize for bc in speaker_categories]
+        json_categories = SpeakerSerializer(speaker_categories, many=True).data
         kwargs["speaker_categories"] = json.dumps(json_categories)
         kwargs["speaker_categories_length"] = speaker_categories.count()
         kwargs["save"] = reverse_tournament('participants-speaker-update-eligibility', self.tournament)

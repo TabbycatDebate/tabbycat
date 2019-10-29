@@ -1,23 +1,20 @@
-# Tabbycat translations, actionlog module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: turki alsuwaidi <tmsuwaidi@qf.org.qa>, 2018\n"
-"Language-Team: Arabic (https://www.transifex.com/tabbycat/teams/80723/ar/)\n"
-"Language: ar\n"
+"PO-Revision-Date: 2019-07-21 12:17\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Arabic\n"
+"Language: ar_SA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ar\n"
+"X-Crowdin-File: /develop/tabbycat/actionlog/locale/en/LC_MESSAGES/django.po\n"
 
 #: actionlog/apps.py:7
 msgid "Action Log"
@@ -132,10 +129,8 @@ msgid "Unreleased motions"
 msgstr "قضايا غير معلنة بعد"
 
 #: actionlog/models.py:116
-#, fuzzy
-#| msgid "Edited debate importance"
 msgid "Auto-prioritized debate importance"
-msgstr "قام بتعديل أهمية المناظرة"
+msgstr ""
 
 #: actionlog/models.py:117
 msgid "Edited debate importance"
@@ -262,26 +257,20 @@ msgid "Auto-prioritized preformed panels"
 msgstr ""
 
 #: actionlog/models.py:148
-#, fuzzy
-#| msgid "Edited debate importance"
 msgid "Edited preformed panel importance"
-msgstr "قام بتعديل أهمية المناظرة"
+msgstr ""
 
 #: actionlog/models.py:149
-#, fuzzy
-#| msgid "Auto-allocated adjudicators"
 msgid "Auto-allocated adjudicators to preformed panels"
-msgstr "التعيين التلقائي للمحكمين"
+msgstr ""
 
 #: actionlog/models.py:150
 msgid "Edited preformed panel adjudicator"
 msgstr ""
 
 #: actionlog/models.py:151
-#, fuzzy
-#| msgid "Auto-allocated venues"
 msgid "Auto-allocated preformed panels to debates"
-msgstr "قام بالتعيين التلقائي لقاعات المناظرة"
+msgstr ""
 
 #: actionlog/models.py:155
 msgid "type"
@@ -330,3 +319,4 @@ msgstr "كافة مدخلات السجل تحتاج مستخدم و IP واحد 
 #: actionlog/models.py:228
 msgid "anonymous"
 msgstr "مستخدم مجهول"
+

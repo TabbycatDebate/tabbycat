@@ -1,22 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2018-11-01 22:52-0400\n"
-"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
-"Language-Team: \n"
-"Language: fr\n"
+"PO-Revision-Date: 2019-07-26 18:38\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/notifications/locale/en/LC_MESSAGES/django.po\n"
 
 #: notifications/apps.py:7
 msgid "Notifications"
@@ -41,12 +39,8 @@ msgstr "Courriel test par %(host)s"
 
 #: notifications/forms.py:16
 #, python-format
-msgid ""
-"Congratulations! If you're reading this message, your email backend on "
-"%(host)s looks all good to go!"
-msgstr ""
-"Félicitations ! Si vous lisez ce message, le système de courriel sur "
-"%(host)s fonctionne bien !"
+msgid "Congratulations! If you're reading this message, your email backend on %(host)s looks all good to go!"
+msgstr "Félicitations ! Si vous lisez ce message, le système de courriel sur %(host)s fonctionne bien !"
 
 #: notifications/forms.py:29
 msgid "Subject"
@@ -81,10 +75,8 @@ msgid "message"
 msgstr "message"
 
 #: notifications/models.py:34
-#, fuzzy
-#| msgid "Notifications"
 msgid "notification"
-msgstr "Notifications"
+msgstr "notification"
 
 #: notifications/models.py:36 notifications/models.py:75
 #: notifications/models.py:126
@@ -120,30 +112,24 @@ msgid "landing page URL"
 msgstr "URL du page de renvoi"
 
 #: notifications/models.py:65
-#, fuzzy
-#| msgid "draw released"
 msgid "adjudicator draw released"
-msgstr "tirage publié"
+msgstr "attribution des juges publié"
 
 #: notifications/models.py:66
 msgid "team registration"
-msgstr "Enregistrement d’équipe"
+msgstr "enregistrement d’équipe"
 
 #: notifications/models.py:67
-#, fuzzy
-#| msgid "team registration"
 msgid "adjudicator registration"
-msgstr "Enregistrement d’équipe"
+msgstr "enregistrement de juge"
 
 #: notifications/models.py:68
 msgid "motion(s) released"
 msgstr "motion(s) publiée(s)"
 
 #: notifications/models.py:69
-#, fuzzy
-#| msgid "draw released"
 msgid "team draw released"
-msgstr "tirage publié"
+msgstr "tirage d'équipe publié"
 
 #: notifications/models.py:73 notifications/models.py:128
 msgid "event"
@@ -158,117 +144,90 @@ msgid "round"
 msgstr "tour"
 
 #: notifications/models.py:83
-#, fuzzy
-#| msgid "Notifications"
 msgid "bulk notification"
-msgstr "Notifications"
+msgstr "notification en masse"
 
 #: notifications/models.py:84
-#, fuzzy
-#| msgid "Notifications"
 msgid "bulk notifications"
-msgstr "Notifications"
+msgstr "notifications en masse"
 
 #: notifications/models.py:110
 msgid "Processed"
-msgstr ""
+msgstr "Traité"
 
 #: notifications/models.py:111
 msgid "Dropped"
-msgstr ""
+msgstr "Tombé"
 
 #: notifications/models.py:112
 msgid "Deferred"
-msgstr ""
+msgstr "Reporté"
 
 #: notifications/models.py:113
 msgid "Delivered"
-msgstr ""
+msgstr "Livré"
 
 #: notifications/models.py:114
 msgid "Bounced"
-msgstr ""
+msgstr "Non délivré"
 
 #: notifications/models.py:115
 msgid "Opened"
-msgstr ""
+msgstr "Ouvert"
 
 #: notifications/models.py:116
 msgid "Clicked"
-msgstr ""
+msgstr "Cliqué"
 
 #: notifications/models.py:117
 msgid "Unsubscribed"
-msgstr ""
+msgstr "Désabonné"
 
 #: notifications/models.py:118
 msgid "Marked as spam"
-msgstr ""
+msgstr "Signalé comme indésirable"
 
 #: notifications/models.py:119
 msgid "Unsubscribed from group"
-msgstr ""
+msgstr "Désabonné du groupe"
 
 #: notifications/models.py:120
 msgid "Resubscribed to group"
-msgstr ""
+msgstr "Réabonné au groupe"
 
 #: notifications/models.py:124
-#, fuzzy
-#| msgid "sent message"
 msgid "email message"
-msgstr "message envoyé"
+msgstr "message courriel"
 
 #: notifications/models.py:133
-#, fuzzy
-#| msgid "Email Participants"
 msgid "email status"
-msgstr "Envoyer des courriels aux participants"
+msgstr "état du courriel"
 
 #: notifications/models.py:134
 msgid "email statuses"
-msgstr ""
+msgstr "états des courriels"
 
 #: notifications/templates/email_participants.html:12
 #, python-format
-msgid ""
-"You have not specified a reply-to address. This means that participants may "
-"not reply to the message if they have questions. Please set one in the <a "
-"href=\"%(notifications_options_url)s\">Notifications section of the "
-"preferences</a>."
-msgstr ""
-"Vous n’avez pas spécifié d’adresse de réplique. Cela signifie que les "
-"participants ne peuvent pas directement répondre aux messages s’ils ont des "
-"questions. Veuillez en fixer dans la <a href=\"%(notifications_options_url)s"
-"\">section des notifications des options du tournoi</a>."
+msgid "You have not specified a reply-to address. This means that participants may not reply to the message if they have questions. Please set one in the <a href=\"%(notifications_options_url)s\">Notifications section of the preferences</a>."
+msgstr "Vous n’avez pas spécifié d’adresse de réplique. Cela signifie que les participants ne peuvent pas directement répondre aux messages s’ils ont des questions. Veuillez en fixer dans la <a href=\"%(notifications_options_url)s\">section des notifications des options du tournoi</a>."
 
 #: notifications/templates/email_participants.html:20
 #, python-format
-msgid ""
-"The webhook URL for use in SendGrid is <a href="
-"\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please "
-"point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/"
-"mail_settings\">SendGrid</a> to that."
-msgstr ""
+msgid "The webhook URL for use in SendGrid is <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Please point the HTTP POST URL in <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> to that."
+msgstr "Le URL de rappel pour SendGrid est <a href=\"%(notifications_webhook_url)s\">%(notifications_webhook_url)s</a>. Veuillez pointer l'URL de POST HTTP dans <a href=\"https://app.sendgrid.com/settings/mail_settings\">SendGrid</a> à cela."
 
 #: notifications/templates/email_participants.html:50
 msgid "Send Message(s)"
 msgstr "Envoyer le(s) message(s)"
 
 #: notifications/templates/email_statuses.html:10
-msgid ""
-"Emails can be sent by Tabbycat for a variety of purposes. Emails are sent "
-"when specific preferences are enabled (i.e. enabling Ballot Receipts) or "
-"through actions available on specific pages (i.e. the Draw Display page for "
-"matchups; or the Participants page for team registration). This page shows "
-"the status of previously-sent emails."
-msgstr ""
+msgid "Emails can be sent by Tabbycat for a variety of purposes. Emails are sent when specific preferences are enabled (i.e. enabling Ballot Receipts) or through actions available on specific pages (i.e. the Draw Display page for matchups; or the Participants page for team registration). This page shows the status of previously-sent emails."
+msgstr "Les courriels peuvent être envoyés par Tabbycat à divers fins. Les courriels sont envoyés quand certains préférences sont activés (tel les reçus de feuille) ou avec des actions sur des pages spécifiques (tel la page du tirage ou liste des participants). Cette page montre l'état des messages envoyés précédemment."
 
 #: notifications/templates/notifications_nav.html:5 notifications/views.py:47
-#, fuzzy
-#| msgid "Email Participants"
 msgid "Email Statuses"
-msgstr "Envoyer des courriels aux participants"
+msgstr "États des Courriels"
 
 #: notifications/templates/notifications_nav.html:11
 #: notifications/templates/test_email.html:24
@@ -276,10 +235,8 @@ msgid "Send Test Email"
 msgstr "Envoyer courriel test"
 
 #: notifications/templates/notifications_nav.html:14
-#, fuzzy
-#| msgid "Send Test Email"
 msgid "Send Custom Email"
-msgstr "Envoyer courriel test"
+msgstr "Envoyer courriel sur mesure"
 
 #: notifications/templates/test_email.html:5
 #: notifications/templates/test_email.html:18
@@ -288,17 +245,12 @@ msgid "Send Test Email"
 msgstr "Envoyer courriel test"
 
 #: notifications/templates/test_email.html:19
-msgid ""
-"You can use this form to send a test email, to check that your email backend "
-"settings are working, before you try to send email notifications to "
-"participants."
-msgstr ""
-"Vous pouvez utiliser cette formulaire pour envoyer un courriel d’essaie, "
-"vérifier que les réglages sont en ordre, avant d’en envoyer aux participants."
+msgid "You can use this form to send a test email, to check that your email backend settings are working, before you try to send email notifications to participants."
+msgstr "Vous pouvez utiliser cette formulaire pour envoyer un courriel d’essaie, vérifier que les réglages sont en ordre, avant d’en envoyer aux participants."
 
 #: notifications/templates/test_email.html:25
 msgid "Go back to the site home page"
-msgstr "Retour à la page d’acceuil"
+msgstr "Retour à la page d’accueil"
 
 #: notifications/utils.py:28
 msgid "the chair"
@@ -318,7 +270,7 @@ msgstr "un(e) stagiaire"
 
 #: notifications/utils.py:54
 msgid "TBA"
-msgstr ""
+msgstr "ÀA"
 
 #: notifications/utils.py:100
 #, python-format
@@ -326,18 +278,14 @@ msgid "%(tournament)s %(round)s @ %(room)s"
 msgstr "%(tournament)s %(round)s @ %(room)s"
 
 #: notifications/utils.py:111
-#, fuzzy, python-format
-#| msgid ""
-#| "%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)\n"
+#, python-format
 msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)"
-msgstr ""
-"%(side)s: %(team)s (%(points)d points avec une note totale de %(speaks)d)\n"
+msgstr "<li>%(side)s: %(team)s (%(points)d points avec %(speaks)d points d'orateur)"
 
 #: notifications/utils.py:114
-#, fuzzy, python-format
-#| msgid "%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)\n"
+#, python-format
 msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)"
-msgstr "%(side)s: %(team)s (%(points)s - note totale %(speaks)d)\n"
+msgstr "<li>%(side)s: %(team)s (%(points)s - %(speaks)d points d'orateur)"
 
 #: notifications/utils.py:115
 msgid "Win"
@@ -348,16 +296,14 @@ msgid "Loss"
 msgstr "Perte"
 
 #: notifications/utils.py:127
-#, fuzzy, python-format
-#| msgid "- %(pos)s: %(speaker)s (%(score)s)\n"
+#, python-format
 msgid "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
-msgstr "- %(pos)s: %(speaker)s (%(score)s)\n"
+msgstr "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
 
 #: notifications/utils.py:201
-#, fuzzy, python-format
-#| msgid " - %(text)s (%(ref)s)\n"
+#, python-format
 msgid "<li>%(text)s (%(ref)s)</li>"
-msgstr " - %(text)s (%(ref)s)\n"
+msgstr "<li>%(text)s (%(ref)s)</li>"
 
 #: notifications/utils.py:237 notifications/utils.py:238
 msgid ", "
@@ -376,20 +322,20 @@ msgstr "Un courriel test a été envoyé à %(recipient)s."
 #: notifications/views.py:56
 #, python-format
 msgid "%(status)s @ %(time)s"
-msgstr ""
+msgstr "%(status)s @ %(time)s"
 
 #: notifications/views.py:85
 #, python-format
 msgid "@ %s"
-msgstr ""
+msgstr "@ %s"
 
 #: notifications/views.py:94
 msgid "N/A"
-msgstr ""
+msgstr "S/O"
 
 #: notifications/views.py:103
 msgid "Timeline"
-msgstr ""
+msgstr "Ligne de temps"
 
 #: notifications/views.py:108 notifications/views.py:201
 msgid "Participant"
@@ -397,28 +343,26 @@ msgstr "Participant"
 
 #: notifications/views.py:109
 msgid "Status"
-msgstr ""
+msgstr "État"
 
 #: notifications/views.py:110
 msgid "Time"
-msgstr ""
+msgstr "Heure"
 
 #: notifications/views.py:149
 msgid "Email Participants"
 msgstr "Envoyer des courriels aux participants"
 
 #: notifications/views.py:177
-#, fuzzy, python-format
-#| msgid "%(count)s email has been queued for sending."
-#| msgid_plural "%(count)s emails have been queued for sending."
+#, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
-msgstr[0] "%(count)s courriel est en file pour être envoyé."
-msgstr[1] "%(count)s courriels sont en file pour être envoyés."
+msgstr[0] "%(email_count)s courriel a été ajouté au fil d'attente pour l'envoi."
+msgstr[1] "%(email_count)s courriels ont été ajoutés au fil d'attente pour l'envoi."
 
 #: notifications/views.py:183
 msgid "No emails were sent — likely because no recipients were selected."
-msgstr ""
+msgstr "Aucun courriel n'a été envoyé, probablement parce qu'aucun destinateur n'a été sélectionné."
 
 #: notifications/views.py:191
 msgid "Send Email"
@@ -451,3 +395,4 @@ msgstr "Orateurs"
 #: notifications/views.py:230
 msgid "Adjudicators"
 msgstr "Juges"
+

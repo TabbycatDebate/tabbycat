@@ -125,7 +125,7 @@ class AdjHistoryPenalty(IntegerPreference):
 
 @tournament_preferences_registry.register
 class PreformedPanelMismatchPenalty(IntegerPreference):
-    help_text = _("Penality applied by preformed panel auto-allocator for importance mismatch")
+    help_text = _("Penality applied by preformed panel auto-allocator for priority mismatch")
     verbose_name = _("Importance mismatch penalty")
     section = draw_rules
     name = 'preformed_panel_mismatch_penalty'
@@ -809,13 +809,14 @@ class DisableBallotConfirmation(BooleanPreference):
     default = False
 
 
-@tournament_preferences_registry.register
-class EnableBlindBallotConfirmation(BooleanPreference):
-    help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
-    verbose_name = _("Enforce blind confirmations")
-    section = data_entry
-    name = 'enable_blind_checks'
-    default = False
+# Disabled pending rollout of new ballot interface
+# @tournament_preferences_registry.register
+# class EnableBlindBallotConfirmation(BooleanPreference):
+#     help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
+#     verbose_name = _("Enforce blind confirmations")
+#     section = data_entry
+#     name = 'enable_blind_checks'
+#     default = False
 
 
 @tournament_preferences_registry.register
@@ -1154,15 +1155,6 @@ class PublicMotionsOrder(ChoicePreference):
         ('reverse', _("Latest round first")),
     )
     default = 'reverse'
-
-
-@tournament_preferences_registry.register
-class ShowIntroductionToAllocationUI(BooleanPreference):
-    help_text = _("Show an introduction screen when loading the allocation interface (this will automatically uncheck whenever the screen is shown)")
-    verbose_name = _("Show allocation UI intro")
-    section = ui_options
-    name = 'show_allocation_intro'
-    default = True
 
 
 # ==============================================================================

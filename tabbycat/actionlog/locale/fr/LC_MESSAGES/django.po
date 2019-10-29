@@ -1,22 +1,20 @@
-# Tabbycat translations, actionlog module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2018-11-01 23:13-0400\n"
-"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
-"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2019-07-26 00:35\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/actionlog/locale/en/LC_MESSAGES/django.po\n"
 
 #: actionlog/apps.py:7
 msgid "Action Log"
@@ -96,7 +94,7 @@ msgstr "Confirmé un tirage"
 
 #: actionlog/models.py:107
 msgid "Regenerated draw"
-msgstr "Régéneré un tirage"
+msgstr "Régénéré un tirage"
 
 #: actionlog/models.py:108
 msgid "Released draw"
@@ -156,15 +154,11 @@ msgstr "Généré la qualification des équipes pour toutes les catégories"
 
 #: actionlog/models.py:122
 msgid "Edited breaking team remarks and updated all team breaks"
-msgstr ""
-"Modifié les remarques d'une équipe qualifiant et mit à jour toutes les "
-"qualifications des équipes"
+msgstr "Modifié les remarques d'une équipe qualifiant et mit à jour toutes les qualifications des équipes"
 
 #: actionlog/models.py:123
 msgid "Edited breaking team remarks and updated this team break"
-msgstr ""
-"Modifié les remarques d'une équipe qualifiant et mit à jour cette "
-"qualification des équipes"
+msgstr "Modifié les remarques d'une équipe qualifiant et mit à jour cette qualification des équipes"
 
 #: actionlog/models.py:124
 msgid "Edited breaking team remarks"
@@ -260,7 +254,7 @@ msgstr "Créé des jurys préformés"
 
 #: actionlog/models.py:147
 msgid "Auto-prioritized preformed panels"
-msgstr "Prioritisé automatiquement les jurys préformés"
+msgstr "Classé automatiquement les jurys préformés"
 
 #: actionlog/models.py:148
 msgid "Edited preformed panel importance"
@@ -320,10 +314,9 @@ msgstr "entrées du journal des actions"
 
 #: actionlog/models.py:189
 msgid "All log entries require at least one of a user and an IP address."
-msgstr ""
-"Toutes les entrées de journal nécessitent au moins un utilisateur ou une "
-"adresse IP."
+msgstr "Toutes les entrées de journal nécessitent au moins un utilisateur ou une adresse IP."
 
 #: actionlog/models.py:228
 msgid "anonymous"
 msgstr "anonyme"
+

@@ -132,7 +132,7 @@ class BaseFeedbackForm(forms.Form):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
             field = BooleanSelectField()
         elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
-            field = forms.BooleanField()
+            field = forms.BooleanField(required=False)
         elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
             min_value = int(question.min_value) if question.min_value else None
             max_value = int(question.max_value) if question.max_value else None

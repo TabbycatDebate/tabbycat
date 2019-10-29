@@ -50,7 +50,7 @@ Generating the draw
 
 3. **Allocate the adjudicators**. Changes here will auto-save; feel free to return to the **Draw** when needed. See :ref:`adjudicator allocation <adjudicator-allocation>` for more details about the allocation process.
 
-  .. image:: ../features/images/adj-allocation.png
+.. image:: images/allocation.png
 
 .. note:: If you are using venue constraints the **Draw** page may prompt you to Auto Allocate the venues used to satisfy those constraints; see :ref:`venue-constraints <venue-constraints>` for more details. Regardless of whether you are using venue constraints or not you can change the Venues per-debate in the **Edit Venues** area.
 
@@ -67,7 +67,7 @@ Once you're happy with your adjudicator allocation, you're ready to start the ro
 
 2. **Release to public.** If you're using the public draw function (where the draw is posted publicly to your Tabbycat website) use the **Release to Public** button to allow the page to display.
 
-  .. tip:: 
+  .. tip::
 
     - To avoid the site from being overloaded by anxious refreshers, we recommend that large tournaments not release the draw to the public until after it's been seen by general assembly. That said, note that due to caching there can be a delay of up to 1 minute between when a draw is released and when it first shows up on the public site.
     - Tabbycat can be set to send emails once the draw is released to adjudicators informing them of their assignments for convenience.

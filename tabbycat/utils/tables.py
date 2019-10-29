@@ -159,7 +159,7 @@ class TabbycatTableBuilder(BaseTableBuilder):
         AdjudicatorAllocation.POSITION_TRAINEE: _("trainee"),
     }
 
-    BLANK_TEXT = "—"
+    BLANK_TEXT = _("—")
 
     def __init__(self, view=None, **kwargs):
         """Constructor.
@@ -602,7 +602,14 @@ class TabbycatTableBuilder(BaseTableBuilder):
             motions = [debate.confirmed_ballot.motion if debate.confirmed_ballot else None
                        for debate in debates]
         else:
-            motions = [debate.round.motion_set.first() for debate in debates]
+            motions = []
+            for debate in debates:
+                round = debate.round
+                motion = round.motion_set.first()
+                if debate.round.motions_released or round.tournament.pref('all_results_released'):
+                    motions.append(motion)
+                else:
+                    motions.append(None)
         self.add_motion_column(motions)
 
     def add_motion_column(self, motions, show_order=False):
@@ -612,12 +619,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 'icon': 'hash',
                 'tooltip': _("Order as listed"),
             }, [{
-                'text': motion.seq,
-                'sort': motion.round.seq + (motion.seq * 0.1)
+                'text': motion.seq if motion is not None else self.BLANK_TEXT,
+                'sort': motion.round.seq + (motion.seq * 0.1) if motion is not None else 0
             } for motion in motions])
 
         motion_data = [{
-            'text': motion.reference if motion.reference else '?',
+            'text': motion.reference if motion.reference else _('?'),
             'popover': {'content' : [{'text': motion.text}]}
         } if motion else self.BLANK_TEXT for motion in motions]
         self.add_column({'key': "motion", 'title': _("Motion")}, motion_data)

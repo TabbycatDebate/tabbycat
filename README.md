@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width=200 src="https://rawgit.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg">
+<img width=200 src="https://raw.githubusercontent.com/TabbycatDebate/tabbycat/develop/tabbycat/static/logo.svg?sanitize=true">
 
 # Tabbycat
 
@@ -23,7 +23,7 @@ Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debati
 - Deployable to [Heroku](https://www.heroku.com/) for an easy, fast, and free setup
 - Enter data from multiple computers simultaneously and (optionally) display results, draws, and other information online
 - Collect ballots and feedback online, or from printed forms customised for each round ( adjudicator feedback questions and rankings [are configurable](http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html))
-- Automated adjudicator allocations based on adjudicator ranking, room importance, and conflicts/clashes
+- Automated adjudicator allocations based on adjudicator ranking, debate priority, and conflicts/clashes
 - A drag and drop interface for adjudicator allocation that displays conflicts alongside break liveness and gender/regional/language balance considerations
 - A responsive interface that adapts to suit large screens, laptops, tablets, and phones
 - Support for British Parliamentary (EUDC/WUDC), Australs, NZ Easters, Australian Easters, Joynt Scroll, UADC, and WSDC rule sets as well as configurable [draw generation rules](http://tabbycat.readthedocs.io/en/stable/features/draw-generation.html) and [team standings rules](http://tabbycat.readthedocs.io/en/stable/features/standings-rules.html)
@@ -60,7 +60,7 @@ We haven't released Tabbycat under an open-source licence, so there is no formal
 
 Tabbycat was authored by Qi-Shan Lim for Auckland Australs in 2010. The current active developers are:
 
-- Philip Belesky ([e-mail](http://www.google.com/recaptcha/mailhide/d?k=01aItEbHtwnn1PzIPGGM9W8A==&c=XWljk2iGokfhziV2Rt4OiKA5uab1vCrnxwXcPUsWgnM=))
+- Philip Belesky ([e-mail](mailto:contact@philipbelesky.com))
 - Chuan-Zheng Lee ([e-mail](mailto:czlee@stanford.edu))
 
 Please don't hesitate to contact us with any questions, suggestions, or generally anything relating to Tabbycat.
