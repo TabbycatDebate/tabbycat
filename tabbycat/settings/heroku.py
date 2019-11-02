@@ -9,8 +9,6 @@ from sentry_sdk.integrations.redis import RedisIntegration
 
 from .core import TABBYCAT_VERSION
 
-from .core import TABBYCAT_VERSION
-
 
 # ==============================================================================
 # Heroku
