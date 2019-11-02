@@ -1,7 +1,7 @@
 import os
 
-# NOTE: for this file to be imported then a specific environment variable
-# "LOCAL_DEVELOPMENT" needs to be set as per __init__.py in this folder.
+# NOTE: for this file to be imported, a specific environment variable
+# "LOCAL_DEVELOPMENT" needs to be set, as per __init__.py in this folder.
 
 # ==============================================================================
 # Templates
