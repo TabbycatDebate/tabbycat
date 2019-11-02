@@ -6,7 +6,7 @@
 // - a handleSocketReceive() function that will handle the different
 // sockets' messages as appropriate
 
-import { WebSocketBridge } from 'django-channels'
+import WebSocketBridge from 'django-channels'
 import ModalErrorMixin from '../errors/ModalErrorMixin.vue'
 
 export default {
