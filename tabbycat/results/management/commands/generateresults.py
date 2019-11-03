@@ -19,25 +19,26 @@ class GenerateResultsCommandMixin:
 
     def add_arguments(self, parser):
         super(GenerateResultsCommandMixin, self).add_arguments(parser)
-        parser.add_argument("-T", "--submitter-type", type=str,
-                            help="Submitter type, either 'tabroom' or 'public'",
-                            choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom")
-        parser.add_argument("-u", "--user", type=str,
-                            help="Username of submitter", default="random")
 
-        parser.add_argument("--create-user", help="Create user if it doesn't exist", action="store_true")
+        results_group = parser.add_argument_group("results generation")
 
-        status = parser.add_mutually_exclusive_group(required=True)
+        results_group.add_argument("-T", "--submitter-type", type=str,
+            choices=list(SUBMITTER_TYPE_MAP.keys()), default="tabroom",
+            help="Submitter type, either 'tabroom' or 'public'")
+        results_group.add_argument("-u", "--user", type=str, default="random",
+            help="Username of submitter")
+        results_group.add_argument("--create-user", action="store_true",
+            help="Create user if it doesn't exist")
+        results_group.add_argument("--reply-random", action="store_true", default=False,
+            help="Choose reply speaker at random (rather than always use first speaker)")
+
+        status = results_group.add_mutually_exclusive_group(required=True)
         status.add_argument("-D", "--discarded", action="store_true",
                             help="Make added ballot sets discarded")
         status.add_argument("-d", "--draft", action="store_true",
                             help="Make added ballot sets draft (neither discarded nor confirmed")
         status.add_argument("-c", "--confirmed", action="store_true",
                             help="Make added ballot sets confirmed")
-
-        parser.add_argument("--reply-random", action="store_true",
-                            help="Choose reply speaker at random (rather than always use first speaker",
-                            default=False)
 
     @staticmethod
     def _get_user(options):

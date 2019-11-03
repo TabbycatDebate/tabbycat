@@ -106,7 +106,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
         else:
             msg = _("Succesfully auto-allocated adjudicators to debates.")
         if extra_msgs != "":
-            msg += _(" However there was a warning:") + extra_msgs
+            msg += _(" However, there was a warning:") + extra_msgs
             level = 'warning'
         else:
             level = 'success'

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 @register
-class SAAllocator(BaseAdjudicatorAllocator):
+class SimulatedAnnealingAllocator(BaseAdjudicatorAllocator):
 
     key = "simanneal"
 
