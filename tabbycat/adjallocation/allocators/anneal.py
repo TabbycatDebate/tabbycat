@@ -69,7 +69,7 @@ class SimulatedAnnealingAllocator(BaseAdjudicatorAllocator):
             aa.panellists = panel
             result.append(aa)
 
-        return result, ""
+        return result, []
 
     def save_best(self):
         self.best_energy = self.energy

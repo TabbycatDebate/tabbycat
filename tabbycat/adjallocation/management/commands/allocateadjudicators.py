@@ -47,7 +47,7 @@ class Command(RoundCommand):
         allocator_class = registry[allocator_key]
         allocator = allocator_class(debates, adjs, round)
 
-        allocations, extra_msgs = allocator.allocate()
+        allocations, user_warnings = allocator.allocate()
 
         if not options["dry_run"]:
             for alloc in allocations:
@@ -67,6 +67,7 @@ class Command(RoundCommand):
                         score=adj.weighted_score(feedback_weight))
                     )
 
-        if extra_msgs:
+        if user_warnings:
             self.stdout.write(self.style.WARNING("Warnings:"))
-            self.stdout.write(self.style.WARNING(extra_msgs))
+            for msg in user_warnings:
+                self.stdout.write(" - " + self.style.WARNING(msg))
