@@ -225,9 +225,8 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
                 "<p>There were one or more errors creating the demo tournament. "
                 "Before retrying, please delete the existing demo tournament "
                 "<strong>and</strong> the institutions in the Edit Database Area.</p>"
-                "<p><i>Technical information: The errors are as follows:"
-                "<ul>") + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"
-            ))
+                "<p><i>Technical information: The errors are as follows:</i></p>"
+            ) + "<ul><li><i>" + "</i></li><li><i>".join(e.itermessages()) + "</i></li></ul>"))
             logger.error("Error importing demo tournament: " + str(e))
             return redirect('tabbycat-index')
         else:
