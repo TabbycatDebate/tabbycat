@@ -7,17 +7,17 @@ from django.utils.translation import ngettext
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
 
-from .models import (AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer,
-    AdjudicatorFeedbackQuestion, AdjudicatorFeedbackStringAnswer,
-    AdjudicatorTestScoreHistory)
+from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer,
+    AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackQuestion,
+    AdjudicatorFeedbackStringAnswer)
 
 
 # ==============================================================================
-# Adjudicator test score histories
+# Adjudicator base score histories
 # ==============================================================================
 
-@admin.register(AdjudicatorTestScoreHistory)
-class AdjudicatorTestScoreHistoryAdmin(admin.ModelAdmin):
+@admin.register(AdjudicatorBaseScoreHistory)
+class AdjudicatorBaseScoreHistoryAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'round', 'score', 'timestamp')
     list_filter  = ('adjudicator', 'round')
     ordering     = ('timestamp',)

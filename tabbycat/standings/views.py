@@ -654,11 +654,11 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
             table.add_weighted_score_columns(adjudicators, scores)
         if self.tournament.pref('adjudicators_tab_shows') == 'test' or self.tournament.pref('adjudicators_tab_shows') == 'all':
-            table.add_test_score_columns(adjudicators)
+            table.add_base_score_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'all':
             table.add_feedback_graphs(adjudicators)
         messages.info(self.request, ("An adjudicator's score is determined by "
-            "a customisable mix of their test score and their feedback ratings."
+            "a customisable mix of their base score and their feedback ratings."
             " The current mix is specified below as the 'Score Components.' "
             "Feedback ratings are determined by averaging the results of all "
             "individual pieces of feedback across all rounds. "

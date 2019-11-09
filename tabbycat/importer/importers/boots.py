@@ -145,10 +145,10 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             round=None,
             adjudicator=self._adj_lookup,
         )
-        histories = self._import(f, fm.AdjudicatorTestScoreHistory, interpreter)
+        histories = self._import(f, fm.AdjudicatorBaseScoreHistory, interpreter)
 
         for history in histories.values():
-            history.adjudicator.test_score = history.score
+            history.adjudicator.base_score = history.score
             history.adjudicator.save()
 
     def import_teams(self, f):

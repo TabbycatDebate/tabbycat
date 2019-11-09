@@ -250,15 +250,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         )
         adjudicators = self._import(f, pm.Adjudicator, adjudicator_interpreter)
 
-        def test_score_interpreter(lineno, line):
+        def base_score_interpreter(lineno, line):
             adjudicator = adjudicators[lineno]
-            if line['test_score']:
+            if line['base_score']:
                 return {
                     'adjudicator' : adjudicator,
-                    'score'       : line['test_score'],
+                    'score'       : line['base_score'],
                     'round'       : None,
                 }
-        self._import(f, fm.AdjudicatorTestScoreHistory, test_score_interpreter)
+        self._import(f, fm.AdjudicatorBaseScoreHistory, base_score_interpreter)
 
         def own_institution_conflict_interpreter(lineno, line):
             adjudicator = adjudicators[lineno]

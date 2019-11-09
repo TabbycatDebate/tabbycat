@@ -344,8 +344,8 @@ class Adjudicator(Person):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
         verbose_name=_("tournament"),
         help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
-    test_score = models.FloatField(default=0,
-        verbose_name=_("test score"))
+    base_score = models.FloatField(default=0,
+        verbose_name=_("base score"))
 
     # TODO: Are these actually used?= If not, remove?
     institution_conflicts = models.ManyToManyField('Institution',
@@ -396,7 +396,7 @@ class Adjudicator(Person):
         if feedback_score is None:
             feedback_score = 0
             feedback_weight = 0
-        return self.test_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
+        return self.base_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
 
     @cached_property
     def score(self):
