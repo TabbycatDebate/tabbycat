@@ -111,7 +111,7 @@ class BaseTestDebateResult(TestCase):
 
         inst = Institution.objects.create(code="Adjs", name="Adjudicators")
         self.adjs = [Adjudicator.objects.create(tournament=self.tournament, institution=inst,
-                name="Adjudicator {:d}".format(i), test_score=5) for i in range(3)]
+                name="Adjudicator {:d}".format(i), base_score=5) for i in range(3)]
 
     def tearDown(self):
         DebateTeam.objects.all().delete()

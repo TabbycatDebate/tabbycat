@@ -340,7 +340,7 @@ class Round(models.Model):
     feedback_weight = models.FloatField(default=0,
         verbose_name=_("feedback weight"),
         # Translator: xgettext:no-python-format
-        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback."))
+        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."))
     silent = models.BooleanField(default=False,
         # Translators: A silent round is a round for which results are not disclosed once the round is over.
         verbose_name=_("silent"),

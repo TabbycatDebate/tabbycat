@@ -266,7 +266,7 @@ class BaseMinimalTournamentTestCase(TestCase):
                     Speaker.objects.create(team=t, name="Speaker%s%s%s" % (i, j, k))
             for j in range(2):
                 Adjudicator.objects.create(tournament=self.tournament, institution=ins,
-                                           name="Adjudicator%s%s" % (i, j), test_score=0)
+                                           name="Adjudicator%s%s" % (i, j), base_score=0)
 
         for i in range(8):
             Venue.objects.create(name="Venue %s" % i, priority=i, tournament=self.tournament)

@@ -695,9 +695,9 @@ class AdjudicatorsTabShows(ChoicePreference):
     section = tab_release
     name = 'adjudicators_tab_shows'
     choices = (
-        ('test', _("Only shows test score")),
+        ('test', _("Only shows base score")),
         ('final', _("Only shows final score")),
-        ('all', _("Shows test, final, and per-round scores")),
+        ('all', _("Shows base, final, and per-round scores")),
     )
     default = 'final'
 

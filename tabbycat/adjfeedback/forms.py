@@ -16,7 +16,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 from utils.forms import OptionalChoiceField
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
@@ -439,10 +439,10 @@ class UpdateAdjudicatorScoresForm(forms.Form):
         logger.info("UpdateAdjudicatorScoresForm: Saving to database started (3 of 5)")
 
         for adj, score in records:
-            adj.test_score = score
+            adj.base_score = score
             adj.save()
 
-            history_instances.append(AdjudicatorTestScoreHistory(
+            history_instances.append(AdjudicatorBaseScoreHistory(
                 adjudicator=adj,
                 round=self.tournament.current_round,
                 score=score
@@ -450,8 +450,8 @@ class UpdateAdjudicatorScoresForm(forms.Form):
 
         logger.info("UpdateAdjudicatorScoresForm: Saving scores to database done (4 of 5)")
 
-        AdjudicatorTestScoreHistory.objects.bulk_create(history_instances)
+        AdjudicatorBaseScoreHistory.objects.bulk_create(history_instances)
 
-        logger.info("UpdateAdjudicatorScoresForm: Saving test score histories to database done (5 of 5)")
+        logger.info("UpdateAdjudicatorScoresForm: Saving base score histories to database done (5 of 5)")
 
         return len(records)

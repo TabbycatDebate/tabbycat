@@ -191,18 +191,18 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
 
-    def get_default_test_score(self):
+    def get_default_base_score(self):
         """Returns the midpoint of the configured allowable score range."""
-        if not hasattr(self, "_default_test_score"):
+        if not hasattr(self, "_default_base_score"):
             min_score = self.tournament.pref('adj_min_score')
             max_score = self.tournament.pref('adj_max_score')
-            self._default_test_score = (min_score + max_score) / 2
-        return self._default_test_score
+            self._default_base_score = (min_score + max_score) / 2
+        return self._default_base_score
 
     def get_details_instance_initial(self, i):
         return {
             'name': _("Adjudicator %(number)d") % {'number': i},
-            'test_score': self.get_default_test_score()
+            'base_score': self.get_default_base_score()
         }
 
     def get_message(self, count):

@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _, ngettext_lazy
 from draw.models import TeamSideAllocation
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                                   AdjudicatorTeamConflict, TeamInstitutionConflict)
-from adjfeedback.models import AdjudicatorTestScoreHistory
+from adjfeedback.models import AdjudicatorBaseScoreHistory
 from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
 from tournaments.models import Tournament
@@ -169,8 +169,8 @@ class AdjudicatorInstitutionConflictInline(admin.TabularInline):
     extra = 1
 
 
-class AdjudicatorTestScoreHistoryInline(admin.TabularInline):
-    model = AdjudicatorTestScoreHistory
+class AdjudicatorBaseScoreHistoryInline(admin.TabularInline):
+    model = AdjudicatorBaseScoreHistory
     extra = 1
 
 
@@ -188,12 +188,12 @@ class AdjudicatorForm(forms.ModelForm):
 class AdjudicatorAdmin(admin.ModelAdmin):
     form = AdjudicatorForm
     list_display = ('name', 'institution', 'tournament', 'trainee',
-                    'independent', 'adj_core', 'gender', 'test_score')
+                    'independent', 'adj_core', 'gender', 'base_score')
     search_fields = ('name', 'tournament__name', 'institution__name', 'institution__code')
     list_filter = ('tournament', 'institution')
-    list_editable = ('independent', 'adj_core', 'trainee', 'test_score')
+    list_editable = ('independent', 'adj_core', 'trainee', 'base_score')
     inlines = (AdjudicatorTeamConflictInline, AdjudicatorInstitutionConflictInline,
-               AdjudicatorAdjudicatorConflictInline, AdjudicatorTestScoreHistoryInline,
+               AdjudicatorAdjudicatorConflictInline, AdjudicatorBaseScoreHistoryInline,
                RoundAvailabilityInline)
     actions = ['delete_url_key']
 

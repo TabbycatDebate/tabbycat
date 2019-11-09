@@ -94,7 +94,7 @@ class ActionLogEntry(models.Model):
         (ACTION_TYPE_BALLOT_SUBMIT                    , _("Submitted ballot set from the public form")),  # For debaters, not tab assistants
         (ACTION_TYPE_FEEDBACK_SUBMIT                  , _("Submitted feedback from the public form")),  # For debaters, not tab assistants
         (ACTION_TYPE_FEEDBACK_SAVE                    , _("Saved feedback")),  # For tab assistants, not debaters
-        (ACTION_TYPE_TEST_SCORE_EDIT                  , _("Edited adjudicator test score")),
+        (ACTION_TYPE_TEST_SCORE_EDIT                  , _("Edited adjudicator base score")),
         (ACTION_TYPE_ADJUDICATOR_NOTE_SET             , _("Set adjudicator note")),
         (ACTION_TYPE_ADJUDICATORS_SAVE                , _("Saved adjudicator allocation")),
         (ACTION_TYPE_ADJUDICATORS_AUTO                , _("Auto-allocated adjudicators")),
@@ -208,7 +208,7 @@ class ActionLogEntry(models.Model):
                     return obj.debate.matchup
             elif model_name == 'motion':
                 return obj.reference
-            elif model_name == 'adjudicatortestscorehistory':
+            elif model_name == 'adjudicatorbasescorehistory':
                 return obj.adjudicator.name + " (" + str(obj.score) + ")"
             elif model_name == 'adjudicatorfeedback':
                 return obj.adjudicator.name
