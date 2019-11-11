@@ -10,7 +10,7 @@ def venuecategoryform_factory(venues_queryset):
     class VenueCategoryForm(ModelForm):
 
         venues = ModelMultipleChoiceField(queryset=venues_queryset,
-            widget=SelectMultiple(attrs={'size': 10}))
+            widget=SelectMultiple(attrs={'size': 10}), required=False)
         venues.choices = venue_choices  # can't be passed as keyword argument
 
         class Meta:
