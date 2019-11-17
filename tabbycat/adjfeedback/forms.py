@@ -305,7 +305,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             # feedback expected only on orallist
             display = _("%(name)s (%(round)s — chair gave oral)")
         else:
-            display = _("%(name)s (%(round)s — chair rolled, this panellist gave oral)")
+            display = _("%(name)s (%(round)s — panellist gave oral as chair rolled)")
 
         display %= {'name': adj.name, 'round': debate.round.name, 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
         return (value, display)
