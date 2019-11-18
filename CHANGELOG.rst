@@ -6,6 +6,7 @@ Change Log
 ---------
 *Release date: ?*
 
+- Renamed 'test score' to 'base score.'
 - Divisions-specific features have been deprecated and removed.
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation.
 - Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket.
