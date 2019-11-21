@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -274,7 +274,7 @@ msgstr ""
 
 #: tournaments/models.py:343
 #, no-python-format
-msgid "The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback."
+msgid "The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."
 msgstr ""
 
 #. Translators: A silent round is a round for which results are not disclosed once the round is over.
@@ -396,7 +396,7 @@ msgid "Load %(name)s"
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:49
-msgid "You already have a tournament set up using this data set. Reloading the data will delete <strong>all data</strong> from that tourament."
+msgid "You already have a tournament set up using this data set. Reloading the data will delete <strong>all data</strong> from that tournament."
 msgstr ""
 
 #: tournaments/templates/create_tournament.html:69
@@ -1074,6 +1074,15 @@ msgstr ""
 #: tournaments/views.py:179
 #, python-format
 msgid "%(this_round)s has been marked as completed. Moving on to %(next_round)s! Woohoo! Keep it up!"
+msgstr ""
+
+#: tournaments/views.py:208
+msgid "Whoops! It looks like someone's already created the first user account. Please log in."
+msgstr ""
+
+#: tournaments/views.py:216
+#, python-format
+msgid "Welcome! You've created an account for %s."
 msgstr ""
 
 #: tournaments/views.py:231

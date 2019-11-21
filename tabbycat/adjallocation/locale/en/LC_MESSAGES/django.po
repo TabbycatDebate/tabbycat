@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,15 +23,15 @@ msgstr ""
 
 #: adjallocation/allocators/hungarian.py:51
 #, python-format
-msgid "%(count)s normalised score is larger than 5.0."
-msgid_plural "%(count)s normalised scores are larger than 5.0."
+msgid "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f)."
 msgstr[0] ""
 msgstr[1] ""
 
 #: adjallocation/allocators/hungarian.py:60
 #, python-format
-msgid "%(count)s normalised score is smaller than 0.0."
-msgid_plural "%(count)s normalised scores are smaller than 0.0."
+msgid "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f)."
+msgid_plural "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f)."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -62,11 +62,11 @@ msgstr ""
 msgid "Adjudicator Allocation"
 msgstr ""
 
-#: adjallocation/consumers.py:58
+#: adjallocation/consumers.py:59
 msgid "Draw is already released, unrelease draw to redo auto-allocations."
 msgstr ""
 
-#: adjallocation/consumers.py:62
+#: adjallocation/consumers.py:63
 msgid "Draw is not confirmed, confirm draw to run auto-allocations."
 msgstr ""
 
@@ -74,55 +74,61 @@ msgstr ""
 msgid "There are no preformed panels available to allocate."
 msgstr ""
 
-#: adjallocation/consumers.py:105
-msgid "Succesfully auto-allocated preformed panels to debates."
-msgstr ""
-
-#: adjallocation/consumers.py:107
-msgid "Succesfully auto-allocated adjudicators to debates."
+#: adjallocation/consumers.py:83
+msgid "Successfully auto-allocated preformed panels to debates."
 msgstr ""
 
 #: adjallocation/consumers.py:109
-msgid " However there was a warning:"
+#, python-format
+msgid "Successfully auto-allocated adjudicators to debates. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/consumers.py:115
+msgid "Successfully auto-allocated adjudicators to debates."
 msgstr ""
 
-#: adjallocation/consumers.py:123
+#: adjallocation/consumers.py:131
 msgid "There aren't any panels to fill. Create panels first."
 msgstr ""
 
-#: adjallocation/consumers.py:144
-msgid "Succesfully auto-allocated adjudicators to preformed panels."
+#: adjallocation/consumers.py:155
+#, python-format
+msgid "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:"
+msgid_plural "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: adjallocation/consumers.py:161
+msgid "Successfully auto-allocated adjudicators to preformed panels."
 msgstr ""
 
-#: adjallocation/consumers.py:146
-msgid "However there was a warning:"
-msgstr ""
-
-#: adjallocation/consumers.py:193
+#: adjallocation/consumers.py:207
 msgid "You have no break category set as 'is general' so debate importances can't be calculated."
 msgstr ""
 
-#: adjallocation/consumers.py:201
+#: adjallocation/consumers.py:215
 msgid "Succesfully auto-prioritised debates."
 msgstr ""
 
-#: adjallocation/consumers.py:223
+#: adjallocation/consumers.py:237
 msgid "You have no break category set as 'is general' so panel importances can't be calculated."
 msgstr ""
 
-#: adjallocation/consumers.py:232
+#: adjallocation/consumers.py:246
 msgid "Succesfully auto-prioritised preformed panels."
 msgstr ""
 
-#: adjallocation/consumers.py:250
+#: adjallocation/consumers.py:264
 msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
 msgstr ""
 
-#: adjallocation/consumers.py:253
+#: adjallocation/consumers.py:267
 msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
 msgstr ""
 
-#: adjallocation/consumers.py:256
+#: adjallocation/consumers.py:270
 msgid "Succesfully created new preformed panels for this round."
 msgstr ""
 

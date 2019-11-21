@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -370,3 +370,11 @@ msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."
 msgstr[0] ""
 msgstr[1] ""
+
+#: importer/views.py:225
+msgid "<p>There were one or more errors creating the demo tournament. Before retrying, please delete the existing demo tournament <strong>and</strong> the institutions in the Edit Database Area.</p><p><i>Technical information: The errors are as follows:</i></p>"
+msgstr ""
+
+#: importer/views.py:233
+msgid "Created new demo tournament. You can now configure it below."
+msgstr ""

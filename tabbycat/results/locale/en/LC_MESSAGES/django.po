@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -635,6 +635,23 @@ msgstr ""
 msgid "The page is provided to allow you, <strong>%(name)s</strong>, to verify your own scoresheet. <strong>You must not share this URL with anyone.</strong> Sharing the URL will allow others to access <strong>all</strong> actions from your personal landing page. Also, allowing others to see your scoresheet may be a violation of tournament policies."
 msgstr ""
 
+#: results/templates/privateurl_ballot_set_error.html:4
+#: results/templates/privateurl_ballot_set_error.html:6
+#: results/templates/public_ballot_set_error.html:4
+#: results/templates/public_ballot_set_error.html:6
+msgid "Ballot Not Available"
+msgstr ""
+
+#: results/templates/privateurl_ballot_set_error.html:12
+#, python-format
+msgid "The page is provided to allow you, <strong>%(name)s</strong>, to verify your own scoresheet. <strong>You must not share this URL with anyone.</strong> Sharing the URL will allow others to access <strong>all</strong> actions from your personal landing page."
+msgstr ""
+
+#: results/templates/privateurl_ballot_set_error.html:27
+#, python-format
+msgid "<a href=\"%(url)s\">Back to your private landing page.</a>"
+msgstr ""
+
 #: results/templates/public_add_ballot.html:4
 #: results/templates/public_add_ballot_unreleased.html:4
 #: results/templates/public_add_ballot_unreleased.html:5
@@ -684,11 +701,6 @@ msgstr ""
 #: results/templates/public_ballot_set.html:93
 #, python-format
 msgid "<em>Total for %(name)s (%(side)s)</em>"
-msgstr ""
-
-#: results/templates/public_ballot_set_error.html:4
-#: results/templates/public_ballot_set_error.html:6
-msgid "Ballot Not Available"
 msgstr ""
 
 #: results/templates/public_ballot_set_error.html:14
@@ -933,36 +945,40 @@ msgstr ""
 msgid "It looks like the sides for this debate haven't yet been confirmed, so you can't enter results for it. Please contact a tab room official."
 msgstr ""
 
-#: results/views.py:596
+#: results/views.py:586
+msgid "It looks like you were assigned to two or more debates. Please contact a tab room official."
+msgstr ""
+
+#: results/views.py:604
 #, python-format
 msgid "This debate is in %s, which is a silent round."
 msgstr ""
 
-#: results/views.py:599
+#: results/views.py:607
 #, python-format
 msgid "This debate is in %s, the results for which aren't available yet."
 msgstr ""
 
-#: results/views.py:603
+#: results/views.py:611
 #, python-format
 msgid "The result for debate %s is not confirmed."
 msgstr ""
 
-#: results/views.py:606
+#: results/views.py:614
 #, python-format
 msgid "The debate %s does not have a confirmed ballot."
 msgstr ""
 
-#: results/views.py:627
+#: results/views.py:636
 #, python-format
 msgid "There is no result yet for debate %s."
 msgstr ""
 
-#: results/views.py:677
+#: results/views.py:692
 #, python-format
 msgid "Add result from %(adjudicator)s"
 msgstr ""
 
-#: results/views.py:681
+#: results/views.py:696
 msgid "Adjudicator"
 msgstr ""

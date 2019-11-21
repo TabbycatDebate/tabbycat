@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,11 +114,11 @@ msgstr ""
 msgid "Rule for how the break is calculated (most tournaments should use \"Standard\")"
 msgstr ""
 
-#: breakqual/models.py:46 breakqual/models.py:103
+#: breakqual/models.py:46 breakqual/models.py:96
 msgid "breaking teams"
 msgstr ""
 
-#: breakqual/models.py:55 breakqual/models.py:74
+#: breakqual/models.py:55 breakqual/models.py:67
 msgid "break category"
 msgstr ""
 
@@ -126,51 +126,51 @@ msgstr ""
 msgid "break categories"
 msgstr ""
 
-#: breakqual/models.py:76
+#: breakqual/models.py:69
 msgid "team"
 msgstr ""
 
-#: breakqual/models.py:78
+#: breakqual/models.py:71
 msgid "rank"
 msgstr ""
 
-#: breakqual/models.py:80
+#: breakqual/models.py:73
 msgid "break rank"
 msgstr ""
 
-#: breakqual/models.py:89
+#: breakqual/models.py:82
 msgid "Capped"
 msgstr ""
 
-#: breakqual/models.py:90
+#: breakqual/models.py:83
 msgid "Ineligible"
 msgstr ""
 
-#: breakqual/models.py:91
+#: breakqual/models.py:84
 msgid "Different break"
 msgstr ""
 
-#: breakqual/models.py:92
+#: breakqual/models.py:85
 msgid "Disqualified"
 msgstr ""
 
-#: breakqual/models.py:93
+#: breakqual/models.py:86
 msgid "Lost coin toss"
 msgstr ""
 
-#: breakqual/models.py:94
+#: breakqual/models.py:87
 msgid "Withdrawn"
 msgstr ""
 
-#: breakqual/models.py:97
+#: breakqual/models.py:90
 msgid "remark"
 msgstr ""
 
-#: breakqual/models.py:98
+#: breakqual/models.py:91
 msgid "Used to explain why an otherwise-qualified team didn't break"
 msgstr ""
 
-#: breakqual/models.py:102
+#: breakqual/models.py:95
 msgid "breaking team"
 msgstr ""
 
@@ -305,7 +305,7 @@ msgid "It looks like there aren't any break categories are defined. If you'd lik
 msgstr ""
 
 #: breakqual/templates/public_break_index.html:4
-#: breakqual/templates/public_break_index.html:5 breakqual/views.py:63
+#: breakqual/templates/public_break_index.html:5 breakqual/views.py:64
 msgid "Break"
 msgstr ""
 
@@ -318,57 +318,57 @@ msgstr ""
 msgid "Adjudicators"
 msgstr ""
 
-#: breakqual/views.py:70
+#: breakqual/views.py:71
 #, python-format
 msgid "%(category)s Break"
 msgstr ""
 
-#: breakqual/views.py:94
+#: breakqual/views.py:95
 #, python-format
 msgid "There was an error generating the break for category %(category)s: %(message)s"
 msgstr ""
 
-#: breakqual/views.py:137
+#: breakqual/views.py:138
 msgid "Eligible for"
 msgstr ""
 
-#: breakqual/views.py:141
+#: breakqual/views.py:142
 msgid "Edit Remark"
 msgstr ""
 
-#: breakqual/views.py:157
+#: breakqual/views.py:158
 #, python-format
 msgid "Changes to breaking team remarks saved and teams break updated for the following break categories: %(categories)s."
 msgstr ""
 
-#: breakqual/views.py:164
+#: breakqual/views.py:165
 #, python-format
 msgid "Changes to breaking team remarks saved and teams break updated for break category %(category)s."
 msgstr ""
 
-#: breakqual/views.py:169
+#: breakqual/views.py:170
 msgid "Changes to breaking team remarks saved."
 msgstr ""
 
-#: breakqual/views.py:193
+#: breakqual/views.py:194
 #, python-format
 msgid "Teams break generated for the following break categories: %(categories)s."
 msgstr ""
 
-#: breakqual/views.py:206
+#: breakqual/views.py:207
 msgid "Breaking Adjudicators"
 msgstr ""
 
-#: breakqual/views.py:231
+#: breakqual/views.py:232
 msgid "Break Eligibility"
 msgstr ""
 
-#: breakqual/views.py:260
+#: breakqual/views.py:261
 #, python-format
 msgid "%s Speakers"
 msgstr ""
 
-#: breakqual/views.py:263
+#: breakqual/views.py:264
 #, python-format
 msgid "Team has %(nspeakers)s speaker with the %(category)s speaker category assigned"
 msgid_plural "Team has %(nspeakers)s speakers with the %(category)s speaker category assigned"

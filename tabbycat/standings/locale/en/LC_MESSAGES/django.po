@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -177,131 +177,131 @@ msgstr ""
 msgid "replies given"
 msgstr ""
 
-#: standings/teams.py:63
+#: standings/teams.py:64
 msgid "points"
 msgstr ""
 
-#: standings/teams.py:64
+#: standings/teams.py:65
 msgid "Pts"
 msgstr ""
 
-#: standings/teams.py:73
+#: standings/teams.py:74
 msgid "wins"
 msgstr ""
 
-#: standings/teams.py:74 standings/views.py:597
+#: standings/teams.py:75 standings/views.py:597
 msgid "Wins"
 msgstr ""
 
-#: standings/teams.py:84
+#: standings/teams.py:85
 msgid "total speaker score"
 msgstr ""
 
-#: standings/teams.py:85
+#: standings/teams.py:86
 msgid "Spk"
 msgstr ""
 
-#: standings/teams.py:94
+#: standings/teams.py:95
 msgid "average total speaker score"
 msgstr ""
 
-#: standings/teams.py:95
+#: standings/teams.py:96
 msgid "ATSS"
 msgstr ""
 
-#: standings/teams.py:104
+#: standings/teams.py:105
 msgid "speaker score standard deviation"
 msgstr ""
 
-#: standings/teams.py:105
+#: standings/teams.py:106
 msgid "SSD"
 msgstr ""
 
-#: standings/teams.py:115
+#: standings/teams.py:116
 msgid "sum of margins"
 msgstr ""
 
-#: standings/teams.py:116
+#: standings/teams.py:117
 msgid "Marg"
 msgstr ""
 
-#: standings/teams.py:125
+#: standings/teams.py:126
 msgid "average margin"
 msgstr ""
 
-#: standings/teams.py:126
+#: standings/teams.py:127
 msgid "AWM"
 msgstr ""
 
-#: standings/teams.py:135
+#: standings/teams.py:136
 msgid "average individual speaker score"
 msgstr ""
 
-#: standings/teams.py:136
+#: standings/teams.py:137
 msgid "AISS"
 msgstr ""
 
-#: standings/teams.py:202
+#: standings/teams.py:203
 msgid "draw strength by wins"
 msgstr ""
 
-#: standings/teams.py:203
+#: standings/teams.py:204
 msgid "DS"
 msgstr ""
 
-#: standings/teams.py:210
+#: standings/teams.py:211
 msgid "draw strength by total speaker score"
 msgstr ""
 
-#: standings/teams.py:211
+#: standings/teams.py:212
 msgid "DSS"
 msgstr ""
 
-#: standings/teams.py:222
+#: standings/teams.py:223
 msgid "number of pullups before this round"
 msgstr ""
 
-#: standings/teams.py:223
+#: standings/teams.py:224
 msgid "PU"
 msgstr ""
 
-#: standings/teams.py:245
+#: standings/teams.py:246
 msgid "number of adjudicators who voted for this team"
 msgstr ""
 
-#: standings/teams.py:246
+#: standings/teams.py:247
 msgid "Ballots"
 msgstr ""
 
-#: standings/teams.py:247
+#: standings/teams.py:248
 msgid "votes/ballots carried"
 msgstr ""
 
-#: standings/teams.py:272
+#: standings/teams.py:273
 msgid "number of firsts"
 msgstr ""
 
-#: standings/teams.py:273
+#: standings/teams.py:274
 msgid "1sts"
 msgstr ""
 
-#: standings/teams.py:282
+#: standings/teams.py:283
 msgid "number of seconds"
 msgstr ""
 
-#: standings/teams.py:283
+#: standings/teams.py:284
 msgid "2nds"
 msgstr ""
 
-#: standings/teams.py:295
+#: standings/teams.py:296
 msgid "Who-beat-whom"
 msgstr ""
 
-#: standings/teams.py:296
+#: standings/teams.py:297
 msgid "WBW"
 msgstr ""
 
-#: standings/teams.py:297
+#: standings/teams.py:298
 msgid "who-beat-whom"
 msgstr ""
 

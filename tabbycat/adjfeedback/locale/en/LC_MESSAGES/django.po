@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,71 +111,71 @@ msgstr ""
 msgid "This field is required."
 msgstr ""
 
-#: adjfeedback/forms.py:169
+#: adjfeedback/forms.py:173
 #, python-format
 msgid "Overall score (%(min)d=worst; %(max)d=best)"
 msgstr ""
 
-#: adjfeedback/forms.py:181
+#: adjfeedback/forms.py:185
 msgid "Ignored"
 msgstr ""
 
 #. Translators: e.g. "Megan Pearson (Round 2 chair)", with round="Round 2", adjpos="chair"
 #. Translators: e.g. "Megan Pearson (Round 3 panellist)", with round="Round 3", adjpos="panellist"
-#: adjfeedback/forms.py:240 adjfeedback/forms.py:299
+#: adjfeedback/forms.py:244 adjfeedback/forms.py:303
 #, python-format
 msgid "%(name)s (%(round)s %(adjpos)s)"
 msgstr ""
 
-#: adjfeedback/forms.py:258 adjfeedback/forms.py:320
+#: adjfeedback/forms.py:262 adjfeedback/forms.py:324
 msgid "-- Adjudicators --"
 msgstr ""
 
-#: adjfeedback/forms.py:273
+#: adjfeedback/forms.py:277
 msgid "Adjudicator this feedback is about"
 msgstr ""
 
-#: adjfeedback/forms.py:296
+#: adjfeedback/forms.py:300
 #, python-format
 msgid "%(name)s (%(round)s)"
 msgstr ""
 
-#: adjfeedback/forms.py:302
+#: adjfeedback/forms.py:306
 #, python-format
 msgid "%(name)s (%(round)s — chair gave oral)"
 msgstr ""
 
-#: adjfeedback/forms.py:304
+#: adjfeedback/forms.py:308
 #, python-format
 msgid "%(name)s (%(round)s — chair rolled, this panellist gave oral)"
 msgstr ""
 
-#: adjfeedback/forms.py:380
+#: adjfeedback/forms.py:384
 #, python-format
 msgid "This line (for %(adjudicator)s) didn't have a score"
 msgstr ""
 
-#: adjfeedback/forms.py:385
+#: adjfeedback/forms.py:389
 #, python-format
 msgid "This line (for %(adjudicator)s) had too many columns"
 msgstr ""
 
-#: adjfeedback/forms.py:398
+#: adjfeedback/forms.py:402
 #, python-format
 msgid "There are several adjudicators called \"%(adjudicator)s\", so you can't use the bulk importer to update their score. Please do so in the Feedback Overview page instead."
 msgstr ""
 
-#: adjfeedback/forms.py:404
+#: adjfeedback/forms.py:408
 #, python-format
 msgid "There is no adjudicator in this tournament with the name \"%(adjudicator)s\""
 msgstr ""
 
-#: adjfeedback/forms.py:412
+#: adjfeedback/forms.py:416
 #, python-format
 msgid "The score for %(adjudicator)s, \"%(score)s\", isn't a number"
 msgstr ""
 
-#: adjfeedback/forms.py:427
+#: adjfeedback/forms.py:431
 msgid "There were no scores to import."
 msgstr ""
 
@@ -196,11 +196,11 @@ msgid "timestamp"
 msgstr ""
 
 #: adjfeedback/models.py:21
-msgid "adjudicator test score history"
+msgid "adjudicator base score history"
 msgstr ""
 
 #: adjfeedback/models.py:22
-msgid "adjudicator test score histories"
+msgid "adjudicator base score histories"
 msgstr ""
 
 #: adjfeedback/models.py:30
@@ -417,23 +417,23 @@ msgid "This adjudicator's current rating."
 msgstr ""
 
 #: adjfeedback/tables.py:58
-msgid "Test score result"
+msgid "Base score result"
 msgstr ""
 
 #: adjfeedback/tables.py:65
-msgid "Click to edit test score"
+msgid "Click to edit base score"
 msgstr ""
 
 #: adjfeedback/tables.py:70
-msgid "Assigned test score"
+msgid "Assigned base score"
 msgstr ""
 
 #: adjfeedback/tables.py:79
-msgid "The current difference between an adjudicator's test score and current score"
+msgid "The current difference between an adjudicator's base score and current score"
 msgstr ""
 
 #: adjfeedback/tables.py:83
-msgid "The difference between this adjudicator's test score and current score"
+msgid "The difference between this adjudicator's base score and current score"
 msgstr ""
 
 #: adjfeedback/tables.py:92
@@ -459,15 +459,11 @@ msgid_plural "View %(count)s<br>feedbacks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: adjfeedback/tables.py:140
-msgid "Edit<br>Note"
-msgstr ""
-
-#: adjfeedback/tables.py:160
+#: adjfeedback/tables.py:147
 msgid "Unsubmitted feedback ballots"
 msgstr ""
 
-#: adjfeedback/tables.py:184
+#: adjfeedback/tables.py:171
 msgid "View Missing Feedback"
 msgstr ""
 
@@ -758,7 +754,7 @@ msgid "Auto-Allocate Distributions (%(min_voting_score)s+ to vote)"
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html:10
-msgid "Change Test Score"
+msgid "Change Base Score"
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html:17
@@ -772,11 +768,11 @@ msgid "The minimum score require to be allocated as a panellist or chair (when u
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html:34
-msgid "Test score"
+msgid "Base score"
 msgstr ""
 
 #: adjfeedback/templates/overview_modals.html:41
-msgid "Save Test Score"
+msgid "Save Base Score"
 msgstr ""
 
 #: adjfeedback/templates/public_add_feedback.html:4
@@ -911,7 +907,7 @@ msgid "Whoops! I didn't recognise that adjudicator: %(adj)s"
 msgstr ""
 
 #: adjfeedback/views.py:645
-msgid "Whoops! The value isn't a valid test score."
+msgid "Whoops! The value isn't a valid base score."
 msgstr ""
 
 #: adjfeedback/views.py:672
@@ -944,7 +940,7 @@ msgstr ""
 
 #: adjfeedback/views.py:798
 #, python-format
-msgid "Updated test score for %(count)d adjudicator."
-msgid_plural "Updated test scores for %(count)d adjudicators."
+msgid "Updated base score for %(count)d adjudicator."
+msgid_plural "Updated base scores for %(count)d adjudicators."
 msgstr[0] ""
 msgstr[1] ""
