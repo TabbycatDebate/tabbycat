@@ -3,15 +3,14 @@ msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-14 04:50+1100\n"
-"PO-Revision-Date: 2019-09-07 07:07\n"
+"PO-Revision-Date: 2019-12-24 02:24\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese\n"
+"Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: philip_tc\n"
-"X-Generator: crowdin.com\n"
 "X-Crowdin-Project: tabbycat\n"
 "X-Crowdin-Language: pt-PT\n"
 "X-Crowdin-File: /develop/tabbycat/locale/en/LC_MESSAGES/djangojs.po\n"
@@ -151,6 +150,10 @@ msgid "Uncategorised"
 msgstr ""
 
 #: checkins/templates/VenuesStatusMixin.vue:
+msgid "No Category"
+msgstr ""
+
+#: checkins/templates/VenuesStatusMixin.vue:
 msgid "Priority %1"
 msgstr ""
 
@@ -186,18 +189,15 @@ msgstr ""
 msgid "Chair for Panel of %1"
 msgstr ""
 
-#: printing/templates/PrintableBallotHeader.vue:
-#: printing/templates/PrintableDebateInfo.vue:
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Solo Chair"
 msgstr ""
 
-#: printing/templates/PrintableBallotHeader.vue:
-#: printing/templates/PrintableDebateInfo.vue:
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Panellist"
 msgstr ""
 
-#: printing/templates/PrintableBallotHeader.vue:
-#: printing/templates/PrintableDebateInfo.vue:
+#: printing/templates/PrintableBallotHeader.vue: printing/templates/PrintableDebateInfo.vue:
 msgid "Trainee"
 msgstr ""
 
@@ -253,8 +253,7 @@ msgstr ""
 msgid "tab check"
 msgstr ""
 
-#: printing/templates/PrintableDebateInfo.vue:
-#: checkins/templates/PeopleStatusMixin.vue:
+#: printing/templates/PrintableDebateInfo.vue: checkins/templates/PeopleStatusMixin.vue:
 msgid "Unaffiliated"
 msgstr ""
 
@@ -268,10 +267,6 @@ msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
 msgid "decimal marks are allowed"
-msgstr ""
-
-#: printing/templates/PrintableDebateInfo.vue:
-msgid "Chair"
 msgstr ""
 
 #: printing/templates/PrintableDebateInfo.vue:
@@ -290,14 +285,13 @@ msgstr ""
 msgid "Did %1 deliver the adjudication?"
 msgstr ""
 
+#: printing/templates/PrintableFeedback.vue: printing/templates/PrintableFeedbackQuestion.vue:
+msgid "Yes"
+msgstr "Sim"
+
 #: printing/templates/PrintableFeedback.vue:
 msgid "No, I am submitting feedback on:"
 msgstr ""
-
-#: printing/templates/PrintableFeedbackQuestion.vue:
-#: printing/templates/PrintableFeedback.vue:
-msgid "Yes"
-msgstr "Sim"
 
 #: printing/templates/PrintableFeedbackQuestion.vue:
 msgid "Unsure"
@@ -367,7 +361,7 @@ msgstr ""
 msgid "Match Check-Ins"
 msgstr ""
 
-#: templates/tables/CheckboxTables.vue
+#: templates/tables/CheckboxTables.vue:
 msgid "Set people as available only if they have a check-in and are currently unavailable — i.e. it will not overwrite any existing availabilities."
 msgstr ""
 
@@ -509,5 +503,50 @@ msgstr ""
 
 #: utils/templates/DragAndDropActions.vue:17
 msgid "Auto-Allocate"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Break"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Gender"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Rank"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Region"
+msgstr ""
+
+#. Translators: Short for "Venue Category"
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Category"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:5
+msgid "The debate's bracket"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:9
+msgid "The bracket range of the hypothetical debate"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:20
+msgid "The total number of live break categories across all teams"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:26
+msgid "The estimated total number of live break categories across all teams of the hypothetical debate"
+msgstr ""
+
+#: utils/templates/DragAndDropDebate.vue:33
+msgid "This debate's priority"
+msgstr ""
+
+#: draw/templates/InlineTeam.vue:41
+msgid "No code name set"
 msgstr ""
 

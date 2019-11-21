@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2019-08-05 03:05\n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-24 09:25\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: Portuguese\n"
 "Language: pt_PT\n"
@@ -137,11 +137,11 @@ msgstr ""
 
 #: notifications/models.py:78
 msgid "tournament"
-msgstr ""
+msgstr "torneio"
 
 #: notifications/models.py:80
 msgid "round"
-msgstr ""
+msgstr "rodada"
 
 #: notifications/models.py:83
 msgid "bulk notification"
@@ -252,55 +252,55 @@ msgstr ""
 msgid "Go back to the site home page"
 msgstr ""
 
-#: notifications/utils.py:28
+#: notifications/utils.py:29
 msgid "the chair"
 msgstr ""
 
-#: notifications/utils.py:29
+#: notifications/utils.py:30
 msgid "the only"
 msgstr ""
 
-#: notifications/utils.py:30
+#: notifications/utils.py:31
 msgid "a panellist"
 msgstr ""
 
-#: notifications/utils.py:31
+#: notifications/utils.py:32
 msgid "a trainee"
 msgstr ""
 
-#: notifications/utils.py:54
+#: notifications/utils.py:55
 msgid "TBA"
 msgstr ""
 
-#: notifications/utils.py:100
+#: notifications/utils.py:101
 #, python-format
 msgid "%(tournament)s %(round)s @ %(room)s"
 msgstr ""
 
-#: notifications/utils.py:111
+#: notifications/utils.py:112
 #, python-format
-msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)"
-msgstr ""
-
-#: notifications/utils.py:114
-#, python-format
-msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)"
+msgid "<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)"
 msgstr ""
 
 #: notifications/utils.py:115
+#, python-format
+msgid "<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)"
+msgstr ""
+
+#: notifications/utils.py:116
 msgid "Win"
 msgstr ""
 
-#: notifications/utils.py:115
+#: notifications/utils.py:116
 msgid "Loss"
 msgstr ""
 
-#: notifications/utils.py:127
+#: notifications/utils.py:128
 #, python-format
 msgid "<li>%(pos)s: %(speaker)s (%(score)s)</li>"
 msgstr ""
 
-#: notifications/utils.py:201
+#: notifications/utils.py:202
 #, python-format
 msgid "<li>%(text)s (%(ref)s)</li>"
 msgstr ""
@@ -319,80 +319,84 @@ msgstr ""
 msgid "A test email has been sent to %(recipient)s."
 msgstr ""
 
-#: notifications/views.py:56
+#: notifications/views.py:53
+msgid "N/A"
+msgstr ""
+
+#: notifications/views.py:54
+msgid "Not known"
+msgstr ""
+
+#: notifications/views.py:59
 #, python-format
 msgid "%(status)s @ %(time)s"
 msgstr ""
 
-#: notifications/views.py:85
+#: notifications/views.py:102
 #, python-format
 msgid "@ %s"
 msgstr ""
 
-#: notifications/views.py:94
-msgid "N/A"
-msgstr ""
-
-#: notifications/views.py:103
+#: notifications/views.py:119
 msgid "Timeline"
 msgstr ""
 
-#: notifications/views.py:108 notifications/views.py:201
+#: notifications/views.py:129 notifications/views.py:220
 msgid "Participant"
 msgstr ""
 
-#: notifications/views.py:109
+#: notifications/views.py:130
 msgid "Status"
 msgstr ""
 
-#: notifications/views.py:110
+#: notifications/views.py:131
 msgid "Time"
 msgstr ""
 
-#: notifications/views.py:149
+#: notifications/views.py:170
 msgid "Email Participants"
 msgstr ""
 
-#: notifications/views.py:177
+#: notifications/views.py:196
 #, python-format
 msgid "%(email_count)s email has been queued for sending."
 msgid_plural "%(email_count)s emails have been queued for sending."
 msgstr[0] ""
 msgstr[1] ""
 
-#: notifications/views.py:183
+#: notifications/views.py:202
 msgid "No emails were sent — likely because no recipients were selected."
 msgstr ""
 
-#: notifications/views.py:191
+#: notifications/views.py:210
 msgid "Send Email"
 msgstr ""
 
-#: notifications/views.py:206
+#: notifications/views.py:225
 msgid "Email Address"
 msgstr ""
 
-#: notifications/views.py:207
+#: notifications/views.py:226
 msgid "Not Provided"
 msgstr ""
 
-#: notifications/views.py:220
+#: notifications/views.py:239
 msgid "Role"
 msgstr ""
 
-#: notifications/views.py:221
+#: notifications/views.py:240
 msgid "Adjudicator"
 msgstr "Juiz"
 
-#: notifications/views.py:221
+#: notifications/views.py:240
 msgid "Speaker"
 msgstr ""
 
-#: notifications/views.py:229
+#: notifications/views.py:248
 msgid "Speakers"
 msgstr ""
 
-#: notifications/views.py:230
+#: notifications/views.py:249
 msgid "Adjudicators"
 msgstr ""
 
