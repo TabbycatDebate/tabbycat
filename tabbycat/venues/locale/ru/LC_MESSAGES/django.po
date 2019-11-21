@@ -1,0 +1,218 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-25 01:14\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
+
+#: venues/apps.py:7
+msgid "Venues"
+msgstr "Аудитории"
+
+#: venues/consumers.py:18
+msgid "Draw is already released, unrelease draw to assign rooms."
+msgstr "Сетка уже опубликована, отмените публикацию для распределения аудиторий."
+
+#: venues/consumers.py:21
+msgid "Draw is not confirmed, confirm draw to assign rooms."
+msgstr "Сетка не подтверждена, подтвердите сетку для того, чтобы аудитории были распределены."
+
+#: venues/consumers.py:28
+msgid "Successfully auto-allocated rooms to debates."
+msgstr "Аудитории распределены."
+
+#: venues/models.py:9 venues/models.py:64
+msgid "name"
+msgstr "название"
+
+#: venues/models.py:11 venues/models.py:118
+msgid "priority"
+msgstr "приоритет"
+
+#: venues/models.py:12
+msgid "Rooms with a higher priority number will be preferred when allocating rooms to debates"
+msgstr "При распределении аудиторий для дебатов боле предпочтительны будут аудитории с более высоким приоритетом"
+
+#: venues/models.py:15 venues/models.py:76
+msgid "tournament"
+msgstr "турнир"
+
+#: venues/models.py:22
+msgid "room"
+msgstr ""
+
+#: venues/models.py:23 venues/models.py:74
+msgid "rooms"
+msgstr "аудитории"
+
+#: venues/models.py:59
+msgid "Don't display in room name"
+msgstr ""
+
+#: venues/models.py:60
+msgid "Display as prefix"
+msgstr "Отображать как префикс"
+
+#: venues/models.py:61
+msgid "Display as suffix"
+msgstr "Отображать как суффикс"
+
+#: venues/models.py:65
+msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a room name in the draw, e.g., \"Purple – G05\"."
+msgstr "Название категории, например, \"Фиолетовый\", \"Быстрый доступ\", \"Близко к аудитории тэбмастеров\". Это имя отображается, когда категория префиксована или суффиксована к названии аудитории в сетке, например, \"Фиолетовый - G05\"."
+
+#: venues/models.py:69
+msgid "description"
+msgstr "описание"
+
+#: venues/models.py:70
+msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This room\" when shown in tooltips, e.g., \"This room is close to the briefing hall.\"."
+msgstr "Описание, являющееся частью предложения, например, \"имеет доступ для инвалидных колясок\", \"расположена близко к аудитории общего сбора\". Это описание идет за \"Эта аудитория...\" в подсказках, например \"Эта аудитория расположена близко к аудитории общего сбора\"."
+
+#: venues/models.py:80
+msgid "display in room name"
+msgstr ""
+
+#: venues/models.py:81
+msgid "Prefix: \"Purple – G05\", Suffix: \"G05 – Purple\""
+msgstr "Префикс: \"Фиолетовый - G05\", Суффикс: \"G05 - фиолетовый\""
+
+#: venues/models.py:83
+msgid "display in public tooltip"
+msgstr "отображать в общедоступных подсказках"
+
+#: venues/models.py:84
+msgid "Displays the description in the tooltip for the room on public pages. The description, if not blank, will always show on admin pages."
+msgstr ""
+
+#: venues/models.py:88
+msgid "room category"
+msgstr "категории аудиторий"
+
+#: venues/models.py:89
+msgid "room categories"
+msgstr "категории аудиторий"
+
+#: venues/models.py:117
+msgid "category"
+msgstr "категория"
+
+#: venues/models.py:121
+msgid "subject content type"
+msgstr "тип субъективного контента"
+
+#: venues/models.py:124
+msgid "subject ID"
+msgstr "iD субъекта"
+
+#: venues/models.py:130
+msgid "room constraint"
+msgstr "ограничения аудиторий"
+
+#: venues/models.py:131
+msgid "room constraints"
+msgstr "ограничения аудиторий"
+
+#: venues/templates/venue_categories_edit.html:4
+#: venues/templates/venue_categories_edit.html:5
+msgid "Room Categories"
+msgstr "Категории аудиторий"
+
+#: venues/templates/venue_categories_edit.html:9
+msgid "Room categories allow you to group rooms together into \"zones\" to display in the draw and make navigation easier for participants, and/or specify constraints on room allocation that require teams, adjudicators or institutions to be put in a room in a particular category."
+msgstr "Категории аудиторий позволяют вам группировать аудитории в \"зоны\" для того, чтобы отобразить их в сетке и упростить участникам навигацию; и/или указать ограничения на распределения аудиторий, которые потребуют, чтобы команды, судьи или институты были распределены в аудитории определенной категории."
+
+#: venues/templates/venue_categories_edit.html:14
+#, python-format
+msgid "If you want to delete room categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
+msgstr "Если вы хотите удалить категории аудиторий, используйте <a href=\"%(edit_db_url)s\" class=\"alert-link\">область Редактировать базу данных</a>."
+
+#: venues/templates/venue_categories_edit.html:20
+msgid "Save Room Categories"
+msgstr "Сохранить категории аудиторий"
+
+#: venues/templates/venue_constraints_edit.html:4
+#: venues/templates/venue_constraints_edit.html:5
+msgid "Room Constraints"
+msgstr "Ограничения аудиторий"
+
+#: venues/templates/venue_constraints_edit.html:9
+msgid "Room constraints tell the room allocator to try to keep the specified team or adjudicator, or all teams (but not adjudicators) from the specified institution, in a room in the given category. The \"priority\" field resolves conflicting constraints: the higher priority takes precedence. You can also use the priority field to specify \"lower-preference\" constraints, which are taken if a higher-priority constraint couldn't be met."
+msgstr "Ограничения аудиторий указывают распределителю аудиторий на то, что стоит попытаться расположить конкретную команду или судью или все команды (но не судей) из определенного института в аудитории определенной категории. Поле \"приоритет\" позволяет устранить конфликтующие ограничения: первичным будет ограничение с более высоким приоритетом. Вы также можете использовать поле приоритета, чтобы уточнить менее приоритетные ограничения, которые применяются когда более приоритетные ограничения не могут быть применены."
+
+#: venues/templates/venue_constraints_edit.html:20
+msgid "Save Room Constraints"
+msgstr "Сохранить ограничения аудиторий"
+
+#: venues/utils.py:38 venues/utils.py:50
+#, python-format
+msgid "Room constraint of %(name)s met (%(category)s)"
+msgstr "Ограничение аудиторий %(name)s подходит под %(category)s)"
+
+#: venues/utils.py:39 venues/utils.py:51
+#, python-format
+msgid "Room does not meet any constraint of %(name)s"
+msgstr "Аудитория не подходит ни под одно из ограничений из %(name)s"
+
+#: venues/utils.py:44
+#, python-format
+msgid "Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"
+msgstr "Ограничение аудиторий для %(team)s соответсвуте (%(category)s через институт %(institution)s)"
+
+#: venues/utils.py:45
+#, python-format
+msgid "Room does not meet any constraint of institution %(institution)s (%(team)s)"
+msgstr "Место не подходит ни под одно ограничение института %(institution)s (%(team)s)"
+
+#: venues/views.py:27
+msgid "Edit Rooms"
+msgstr ""
+
+#: venues/views.py:82
+#, python-format
+msgid "Saved room category: %(list)s"
+msgid_plural "Saved venue categories: %(list)s"
+msgstr[0] "Сохранена категория аудиторий %(list)s"
+msgstr[1] "Сохранены категории аудиторий %(list)s"
+msgstr[2] "Сохранены категории аудиторий %(list)s"
+msgstr[3] "Сохранены категории аудиторий %(list)s"
+
+#: venues/views.py:88
+msgid "No changes were made to the room categories."
+msgstr "В категории аудиторий не было внесено никаких изменений."
+
+#: venues/views.py:138
+#, python-format
+msgid "%s (Adjudicator)"
+msgstr "%s (Судья)"
+
+#: venues/views.py:141
+#, python-format
+msgid "%s (Team)"
+msgstr "%s (Команда)"
+
+#: venues/views.py:144
+#, python-format
+msgid "%s (Institution)"
+msgstr "%s (Институт)"
+
+#: venues/views.py:152
+#, python-format
+msgid "Saved %(count)d room constraint."
+msgid_plural "Saved %(count)d room constraints."
+msgstr[0] "Сохранено %(count)d ограничение аудиторий."
+msgstr[1] "Сохранены %(count)d ограничения аудиторий."
+msgstr[2] "Сохранены %(count)d ограничения аудиторий."
+msgstr[3] "Сохранены %(count)d ограничения аудиторий."
+

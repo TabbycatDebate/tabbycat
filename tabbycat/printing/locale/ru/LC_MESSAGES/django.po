@@ -1,0 +1,130 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 04:15-0300\n"
+"PO-Revision-Date: 2020-05-25 01:05\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /develop/tabbycat/printing/locale/en/LC_MESSAGES/django.po\n"
+
+#: printing/templates/feedback_list.html:5
+msgid "Feedback Forms"
+msgstr "Формы обратной связи"
+
+#: printing/templates/feedback_list.html:7
+#, python-format
+msgid "Printable Feedback Forms for %(round)s"
+msgstr "Доступные для печати формы обратной связи для %(round)s"
+
+#: printing/templates/feedback_list.html:14
+msgid "No feedback questions have been added for either teams or adjudicators to answer."
+msgstr "Не было добавлено никаких вопросов обратной связи, на которых команды или судьи могли бы ответить."
+
+#: printing/templates/feedback_list.html:16
+msgid "No feedback questions have been added for teams to answer."
+msgstr "Не было добавлено никаких вопросов обратной связи, на которые команды могли бы ответить."
+
+#: printing/templates/feedback_list.html:18
+msgid "No feedback questions have been added for adjudicators to answer."
+msgstr "Не было добавлено никаких вопросов обратной связи, на которые судьи могли бы ответить."
+
+#: printing/templates/feedback_list.html:20
+#, python-format
+msgid "%(first_sentence)s Check the <a href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\">documentation</a> for information on how to add these (otherwise these forms will be quite bare)."
+msgstr "%(first_sentence)s Ознакомьтесь с <a href=\"http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html\" target=\"_blank\"> документацией </a> чтобы получить информацию об их использовании (иначе эти формы будут довольно пустыми)."
+
+#: printing/templates/feedback_list.html:41
+msgid "There are no feedback sheets available — perhaps adjudicators have not been allocated?"
+msgstr "Нет доступных форм обратной связи — возможно, судьи не были распределены?"
+
+#: printing/templates/printables_list.html:9
+msgid "Use Ctrl+P for printing or saving to PDF. Be sure to set the appropriate <strong>page orientation</strong>, to turn off <strong>headers/footers</strong> and turn on <strong>background graphics</strong>. Works best in Chrome."
+msgstr "Используйте Ctrl+P для распечатки или сохранения в PDF. Не забудьте установить нужное <strong> положение страницы</strong>, выключить <strong> верхние и нижние колонтитулы</strong> и включить <strong> фоновую графику</strong>. Лучше всего работает в Chrome."
+
+#: printing/templates/randomised_url_sheets.html:4
+#, python-format
+msgid "Printable %(sheet)s URLs"
+msgstr "Доступные для печати URL-адреса %(sheet)s"
+
+#: printing/templates/randomised_url_sheets.html:13
+msgid "This page is designed to be printed as double sided A4 sheets, with the outside facing side showing the participant name and the inside facing side showing the URL. Use CTRL-P to print; for best results use Chrome."
+msgstr "Эта страница предназначена для печати в виде на двухсторонних листах A4, с указанием имени участника на внешней стороне и отображением URL на внутренней стороне. Используйте CTRL-P для печати; лучше всего использовать Chrome."
+
+#: printing/templates/randomised_url_sheets.html:27
+#: printing/templates/randomised_url_sheets.html:31
+#, python-format
+msgid "Private URL for %(name)s (%(group)s)"
+msgstr "Личный URL для %(name)s %(group)s"
+
+#: printing/templates/randomised_url_sheets.html:38
+msgid "Please bookmark the following URL, you will use it to submit forms throughout the tournament:"
+msgstr "Пожалуйста, запомните этот URL, он будет использован для отправки форм в ходе турнира:"
+
+#: printing/templates/scoresheet_list.html:7
+msgid "Printable Scoresheets"
+msgstr "Доступные для печати бэллоты"
+
+#: printing/templates/scoresheet_list.html:8
+#, python-format
+msgid "for %(round)s"
+msgstr "для %(round)s"
+
+#: printing/templates/scoresheet_list.html:14
+msgid "Edit Motion(s)"
+msgstr "Редактировать тему(ы)"
+
+#: printing/templates/scoresheet_list.html:33
+msgid "There are no scoresheets available — perhaps the round has not been drawn?"
+msgstr "Нет доступных бэллотов - возможно, сетка на раунд не была сгенерирована?"
+
+#: printing/templates/scoresheet_list.html:40
+msgid "Edit Ballot Motions"
+msgstr "Редактировать темы в бэллотах"
+
+#: printing/templates/scoresheet_list.html:42
+msgid "&times;"
+msgstr "&times;"
+
+#: printing/templates/scoresheet_list.html:47
+msgid "\n"
+"              Editing motions here will not save them permanently — it will only\n"
+"              update the text used in the printed ballots below. This can be useful if using\n"
+"              placeholder motions (to ensure confidentiality) in Tabbycat, but you still want to print\n"
+"              ballots with correct motions.\n"
+"              "
+msgstr "\n"
+"Редактирование тем не сохранит их на постоянной основе - они только обновятся в доступных для печати бэллотах. Это может быть полезно в темах, связанных с должностными лицами, когда вы хотите обеспечить конфиденциальность, но все ещё нуждаетесь в том, чтобы распечатать бэллоты с корректными темами.              "
+
+#: printing/templates/scoresheet_list.html:55
+msgid "Motion"
+msgstr "Тема"
+
+#: printing/templates/scoresheet_list.html:59
+msgid "Changes to motions will update in the displayed ballots automatically"
+msgstr "Изменения в темах будут автоматически обновляться в отображаемых бэллотах"
+
+#: printing/templates/scoresheet_list.html:96
+msgid "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication."
+msgstr "Речи по x минут, шкала спикерских от x до x. У вас x минут на принятие решения."
+
+#: printing/views.py:40
+msgid "Overall Score"
+msgstr "Общий балл"
+
+#: printing/views.py:67 printing/views.py:177 printing/views.py:197
+msgid "Unaffiliated"
+msgstr "Неаффилированный"
+
+#: printing/views.py:80 printing/views.py:84
+msgid "Team"
+msgstr "Команда"
+
