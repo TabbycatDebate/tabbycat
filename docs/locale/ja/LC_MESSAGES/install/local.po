@@ -1,0 +1,154 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:52\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/install/local.po\n"
+"Language: ja_JP\n"
+
+#: ../../install/local.rst:5
+msgid "Local Installations"
+msgstr ""
+
+#: ../../install/local.rst:8
+msgid "What is a local installation?"
+msgstr ""
+
+#: ../../install/local.rst:10
+msgid "Tabbycat is a web-based system: it's designed to run as a web site. However, instead of installing it on a web server, you can install it on your computer, serving web pages to yourself. This is called a local installation."
+msgstr ""
+
+#: ../../install/local.rst:12
+msgid "Then, when you open your browser, you can use Tabbycat like any other web site. The only difference is that this one is on **your** computer, not some computer in a data centre in a far-away land. In effect, you are getting your computer to behave like a web server."
+msgstr ""
+
+#: ../../install/local.rst:17
+msgid "Should I use a local installation?"
+msgstr ""
+
+#: ../../install/local.rst:19
+msgid "In most cases, you should make an online Tabbycat installation by :ref:`setting up an instance on Heroku <install-heroku>`. This has a number of major advantages:"
+msgstr ""
+
+#: ../../install/local.rst:21
+msgid "The installation process is easier."
+msgstr ""
+
+#: ../../install/local.rst:22
+msgid "You can enter ballots and manage your tournament from multiple computers."
+msgstr ""
+
+#: ../../install/local.rst:23
+msgid "Participants can access the draw, motions, results and more online."
+msgstr ""
+
+#: ../../install/local.rst:24
+msgid "Heroku's data centers are less likely to fail than your computer is."
+msgstr ""
+
+#: ../../install/local.rst:25
+msgid "Heroku e-mails Tabbycat's developers error reports to help us fix bugs."
+msgstr ""
+
+#: ../../install/local.rst:27
+msgid "In some cases, you might have a good reason to use a local installation. We can think of just one such reason: If you won't have access to the internet at your tournament, or if internet access will be flaky, then you should use a local installation."
+msgstr ""
+
+#: ../../install/local.rst:32
+msgid "You'll need internet access to download dependencies during the local installation process. So if you're not expecting to have reliable internet access at your tournament, be sure to have Tabbycat installed *before* you get there!"
+msgstr ""
+
+#: ../../install/local.rst:37
+msgid "Advanced users"
+msgstr ""
+
+#: ../../install/local.rst:40
+msgid "Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so if you have your own preferred method of running Django projects, you can also do that. Just be aware that we haven't tried it."
+msgstr ""
+
+#: ../../install/local.rst:45
+msgid "Okay, so how do I do it?"
+msgstr ""
+
+#: ../../install/local.rst:47
+msgid "The easiest option is to :ref:`install Tabbycat using Docker <install-docker>`. This method should work across all operating systems and is by far the easiest way to get a local copy running."
+msgstr ""
+
+#: ../../install/local.rst:49
+msgid "If installing using Docker does not work, or if you want to be able to modify Tabbycat's code we also have a number of instructions for manually setting up a copy of Tabbycat. There instructions are here:"
+msgstr ""
+
+#: ../../install/local.rst:51
+msgid ":ref:`install-linux`"
+msgstr ""
+
+#: ../../install/local.rst:52
+msgid ":ref:`install-osx`"
+msgstr ""
+
+#: ../../install/local.rst:53
+msgid ":ref:`install-wsl`"
+msgstr ""
+
+#: ../../install/local.rst:54
+msgid ":ref:`install-windows`"
+msgstr ""
+
+#: ../../install/local.rst:57
+msgid "Advanced uses"
+msgstr ""
+
+#: ../../install/local.rst:60
+msgid "Can others access my local install?"
+msgstr ""
+
+#: ../../install/local.rst:62
+msgid "Local installations can also take advantage of multiple-computer site access, including data entry---it's just takes more work than a Heroku installation to set up."
+msgstr ""
+
+#: ../../install/local.rst:64
+msgid "Since a local installation is just having your computer run a web server, it can serve other computers too. You can make this work even if you don't have internet access: all you need is a router that you can use to connect a few computers together. Then other computers on your local network can access the Tabbycat site hosted on your computer. We did this at Victoria Australs 2012."
+msgstr ""
+
+#: ../../install/local.rst:66
+msgid "We don't provide detailed instructions for this; we leave it for advanced users to set up themselves. As a rough guide:"
+msgstr ""
+
+#: ../../install/local.rst:68
+msgid "You need to pass in your computer's IP address and port to the `runserver` command, for example, if your computer (the one acting as a server) is 196.168.0.2 and you want to run it on port 8000: ``dj runserver 192.168.0.2:8000``"
+msgstr ""
+
+#: ../../install/local.rst:69
+msgid "You need to configure your firewall settings to allow incoming connections on the IP address and port you specified in that command."
+msgstr ""
+
+#: ../../install/local.rst:70
+msgid "Be aware that local installs use the Django development server, whose **security is not tested**. Therefore, it's a good idea to make sure your firewall **only lets in computers on your local network** (or, if you're really paranoid, isolate the network from the internet completely)."
+msgstr ""
+
+#: ../../install/local.rst:73
+msgid "Can I run an internet-accessible website from a local installation?"
+msgstr ""
+
+#: ../../install/local.rst:75
+msgid "Probably not. Even if you disable your firewall, chances are your home router (or university router) will block any connections from the outside world to you. Even if you can though, **you really shouldn't**. The local installation uses the *Django development server*, which is a lightweight server designed for developers. Specifically, Django **does not test the security of its development server** in the way that proper web servers do. That is: It's a security risk to run a local installation as an internet-accessible site. Don't do it. `Install Tabbycat on Heroku <install-heroku>`_ instead."
+msgstr ""
+
+#: ../../install/local.rst:77
+msgid "Alternatively, if you have a background in web development, you might choose to install Tabbycat on your own production server. It's a Django project, so any means of supporting Django projects should work fine."
+msgstr ""
+
+#: ../../install/local.rst:79
+msgid "It's safe to run on a small, isolated network (see above) with your firewall correctly configured because you presumably trust everyone you let on the network!"
+msgstr ""
+

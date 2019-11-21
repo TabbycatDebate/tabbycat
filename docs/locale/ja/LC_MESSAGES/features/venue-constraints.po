@@ -1,0 +1,166 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: 2020-01-02 01:52\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/docs/locale/en/LC_MESSAGES/features/venue-constraints.po\n"
+"Language: ja_JP\n"
+
+#: ../../features/venue-constraints.rst:5
+msgid "Venue Constraints"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:7
+msgid "Tabbycat supports a basic form of venue constraints. A **venue constraint** is a requirement that a particular **team, adjudicator, institution** or **division** be assigned to a venue in a particular **venue category**.  Typical uses would include:"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:12
+msgid "Meeting venue accessibility requirements of particular teams (*e.g.* step-free access)"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:14
+msgid "Placing adjudication core and tab team members close to the tab room"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:15
+msgid "Keeping all debates in a division in one location"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:17
+msgid "Constraints apply to **venue categories**, not individual venues. That is, you specify that (say) a team should be given a venue from a particular *list* of venues. Of course, it's permissible for a venue category to have only one venue in it."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:22
+msgid "The algorithm used to satisfy venue constraints is not guaranteed to be optimal. In some rare cases, it may propose an allocation that fails some constraints, even though some other allocation would have satisfied all (or more) constraints. In almost all practical circumstances, however, it should work, and save human effort (and time) in specially allocating rooms."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:29
+msgid "Adding venue categories"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:31
+msgid "Before you add venue constraints, you first need to add venue categories. Each venue category is a list of venues, typically satisfying a particular need. For example, you might have a category for each of the following:"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:35
+msgid "Venues with step-free access"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:36
+msgid "Venues that are close to general assembly (the briefing room)"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:37
+msgid "Venues that are close to the tab room"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:38
+msgid "Venues that are, or venues that are not, being live-streamed"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:40
+msgid "Each venue can be in as many categories as you like (or none at all)."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:44
+msgid "To add or edit venue categories, go to the **Import Data** area (under Setup) then select **Add/Edit Venue Categories**. Note that this page will show all existing Venue Categories first before showing the blank forms that allow you to create new categories. Give your category a name (like \"Step-free access\"), assign it some venues, then click the \"Save Venue Categories\" button at the bottom of the page."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:47
+msgid "Alternately you can add or edit a venue category by going to the **Edit Database** area (under Setup), scroll down to \"Venues\" and click \"Venue categories\". Then click the **+ Add venue category** button in the top-right of the page or click an existing item."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:50
+msgid "Adding venue constraints"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:52
+msgid "To add or edit venue constraints, go to the **Import Data** area (under Setup) then select **Add/Edit Venue Constraints**. Note that this page will show all existing Venue Constraints first before showing the blank forms that allow you to create new categories. Note that the \"Constrainee ID\" field should let you select from a dropdown or type in the name of an adjudicator, institution, or team (rather than having to lookup the exact ID)."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:57
+msgid "Alternately you can add or edit a venue category by going to the **Edit Database** area (under Setup), scroll down to \"Venues\" and click \"Venue constraints\". Then click the **+ Add venue category** button in the top-right of the page or click an existing item."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:59
+msgid "For each constraint, you need to specify four things:"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:62
+msgid "**Category**"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:62
+msgid "The venue category to which the subject of this constraint should be locked."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:65
+msgid "**Priority**"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:65
+msgid "This is a number used to resolve conflicts between constraints. Constraints with higher priority (greater number) take precedence over those with lower priority. If none of your constraints will ever conflict, then the priority is arbitrary (but it must still be specified)."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:72
+msgid "**Subject content** **type**"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:72
+msgid "The type of subject to which this constraint relates: adjudicator, team, institution or division."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:75
+msgid "**Subject ID**"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:75
+msgid "Which adjudicator, team, institution or division the constraint relates to. The textbox takes a number (the ID of the object in the database), but you can search for the subject by clicking on the search icon next to it. This will bring up a table of objects of the type specified in \"subject content type\" for you to choose from. (You need to select the subject content type first.)"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:86
+msgid "Applying venue constraints"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:88
+msgid "If you don't have any venue constraints for adjudicators, venue constraints are applied automatically when the draw is generated."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:91
+msgid "However, if you have one or more venue constraints for adjudicators, it's not possible to take adjudicator venue constraints into account during draw generation, because the adjudicator allocation isn't known then. You'll need to run the venue allocation yourself after you've allocated adjudicators."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:96
+msgid "To run venue allocation, go to **Edit Venues** (while looking at the draw), then in the screen where you can edit venues, click the **Auto Allocate** button. You can also do this at any other point (say, after adding a new venue constraint) if, for whatever reason, you would like to re-run the venue allocation algorithm."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:102
+msgid "If a venue constraint couldn't be met, a message will show in the \"conflicts/flags\" column of the draw. A constraint might not be met for a number of reasons:"
+msgstr ""
+
+#: ../../features/venue-constraints.rst:106
+msgid "It could be that constraints of different parties (say, one team and one adjudicator) conflicted, so only one could be fulfilled."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:108
+msgid "It could be that all available rooms in the relevant category were already taken by other, higher-priority constraints."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:110
+msgid "It could just be one of those edge cases that's too hard for the naïve algorithm to handle."
+msgstr ""
+
+#: ../../features/venue-constraints.rst:113
+msgid "Currently, Tabbycat doesn't tell you which of these happened, so if the venue allocation fails to meet all your constraints, it's on you to figure out why. In most scenarios, we imagine you'll have few enough constraints that this will be obvious; for example, if the chief adjudicator is judging a team with accessibility requirements, it might be obvious that the latter's constraint took priority. We might in future add support for more useful guidance on conflicting constraints, but we currently consider this to be of low priority."
+msgstr ""
+
