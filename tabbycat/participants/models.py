@@ -124,10 +124,6 @@ class Person(models.Model):
     def __str__(self):
         return str(self.name)
 
-    @property
-    def has_contact(self):
-        return bool(self.email or self.phone)
-
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['short_name', 'long_name']
