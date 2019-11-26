@@ -28,7 +28,7 @@ Short version
 .. parsed-literal::
 
   curl -sL https\:\/\/deb.nodesource.com/setup_8.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs gcc g++ make
+  sudo apt install python3-dev python3-venv postgresql-11 libpq-dev nodejs gcc g++ make
 
   # either
   wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
@@ -63,7 +63,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions are for Ubuntu 14.04 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions are for Ubuntu, and are targeted at Ubuntu 18.04. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
 .. _install-linux-python:
 
@@ -86,7 +86,11 @@ Check the version::
 
 Install PostgreSQL using the  `PostgreSQL installation instructions here <http://www.postgresql.org/download/linux/ubuntu/>`_.
 
-Normally, installing the latest stable version should be best, but if you're having issues, install the same version as the current `default version on Heroku <https://devcenter.heroku.com/articles/heroku-postgresql#version-support>`_, as that will be what is currently most commonly used with Tabbycat.
+Normally, installing the latest stable version should be best, but if you're having issues, install the same version as the current `default version on Heroku <https://devcenter.heroku.com/articles/heroku-postgresql#version-support>`_, as that will be what is currently most commonly used with Tabbycat. If you're planning on pushing data between your local installation and a Heroku site, it's best to match the Heroku's current default version.
+
+You'll also need the ``libpq-dev`` package in order to install Psycopg2 later::
+
+    $ sudo apt install libpq-dev
 
 .. _install-linux-nodejs:
 
