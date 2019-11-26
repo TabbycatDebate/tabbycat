@@ -28,7 +28,7 @@ Short version
 .. parsed-literal::
 
   curl -sL https\:\/\/deb.nodesource.com/setup_8.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs gcc g++ make
+  sudo apt install python3-dev python3-venv postgresql-11 libpq-dev nodejs gcc g++ make
 
   # either
   wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
@@ -63,7 +63,7 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions are for Ubuntu 14.04 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions are for Ubuntu, and are targeted at Ubuntu 18.04. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
 .. _install-linux-python:
 
@@ -84,11 +84,11 @@ Check the version::
 ----------------
   *PostgreSQL is a database management system.*
 
-You'll need the *server-dev* package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
+You'll need the ``libpq-dev`` package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
 
-    $ sudo apt install postgresql-9.6 postgresql-server-dev-9.6
+    $ sudo apt install postgresql-11 libpq-dev
 
-If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
+You might need (or wish) to add the PostgreSQL apt repository first.
 
 .. _install-linux-nodejs:
 
