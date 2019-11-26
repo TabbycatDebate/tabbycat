@@ -18,7 +18,7 @@ munkres==1.1.2                          # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 
 # Database
-psycopg2-binary==2.8.3                  # For Django to talk to postgres
+psycopg2==2.8.3                  # For Django to talk to postgres
 
 # Channels
 channels==2.2.0                         # Channels; also includes the Daphne server
