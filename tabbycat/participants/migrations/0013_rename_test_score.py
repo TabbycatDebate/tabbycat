@@ -15,4 +15,9 @@ class Migration(migrations.Migration):
             old_name='test_score',
             new_name='base_score',
         ),
+        migrations.AlterField(
+            model_name='adjudicator',
+            name='base_score',
+            field=models.FloatField(default=0, verbose_name='base score'),
+        ),
     ]
