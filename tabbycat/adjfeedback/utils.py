@@ -93,7 +93,7 @@ def get_feedback_overview(t, adjudicators):
 
 def feedback_variance(adj, rounds):
     feedback_scores = [fb.score for fb in adj.adjfeedback_for_rounds]
-    feedback_scores.append(adj.test_score)
+    feedback_scores.append(adj.base_score)
     if len(feedback_scores) > 1:
         return stdev(feedback_scores)
     else:
@@ -111,8 +111,8 @@ def feedback_stats(adj, rounds):
         DebateAdjudicator.TYPE_TRAINEE: "trainee",
     }
 
-    # Start with test score
-    feedback_data = [{'x': 0, 'y': adj.test_score, 'position': "Test Score"}]
+    # Start with base score
+    feedback_data = [{'x': 0, 'y': adj.base_score, 'position': "Base Score"}]
 
     # Sort into rounds
     feedback_by_round = {r: [] for r in rounds}

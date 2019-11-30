@@ -16,7 +16,7 @@ from results.forms import TournamentPasswordField
 from tournaments.models import Round
 from utils.forms import OptionalChoiceField
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
@@ -132,7 +132,7 @@ class BaseFeedbackForm(forms.Form):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
             field = BooleanSelectField()
         elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
-            field = forms.BooleanField()
+            field = forms.BooleanField(required=False)
         elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
             min_value = int(question.min_value) if question.min_value else None
             max_value = int(question.max_value) if question.max_value else None
@@ -156,9 +156,13 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
             field = AdjudicatorFeedbackCheckboxSelectMultipleField(choices=question.choices_for_field)
         field.label = question.text
-        if question.required:
-            field.label += "*"
-        field.required = self._enforce_required and question.required
+
+        # Required checkbox fields don't really make sense; so override the behaviour?
+        if question.answer_type != question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
+            if question.required:
+                field.label += "*"
+            field.required = self._enforce_required and question.required
+
         return field
 
     def _create_fields(self):
@@ -301,7 +305,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             # feedback expected only on orallist
             display = _("%(name)s (%(round)s — chair gave oral)")
         else:
-            display = _("%(name)s (%(round)s — chair rolled, this panellist gave oral)")
+            display = _("%(name)s (%(round)s — panellist gave oral as chair rolled)")
 
         display %= {'name': adj.name, 'round': debate.round.name, 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
         return (value, display)
@@ -435,10 +439,10 @@ class UpdateAdjudicatorScoresForm(forms.Form):
         logger.info("UpdateAdjudicatorScoresForm: Saving to database started (3 of 5)")
 
         for adj, score in records:
-            adj.test_score = score
+            adj.base_score = score
             adj.save()
 
-            history_instances.append(AdjudicatorTestScoreHistory(
+            history_instances.append(AdjudicatorBaseScoreHistory(
                 adjudicator=adj,
                 round=self.tournament.current_round,
                 score=score
@@ -446,8 +450,8 @@ class UpdateAdjudicatorScoresForm(forms.Form):
 
         logger.info("UpdateAdjudicatorScoresForm: Saving scores to database done (4 of 5)")
 
-        AdjudicatorTestScoreHistory.objects.bulk_create(history_instances)
+        AdjudicatorBaseScoreHistory.objects.bulk_create(history_instances)
 
-        logger.info("UpdateAdjudicatorScoresForm: Saving test score histories to database done (5 of 5)")
+        logger.info("UpdateAdjudicatorScoresForm: Saving base score histories to database done (5 of 5)")
 
         return len(records)

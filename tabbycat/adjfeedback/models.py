@@ -8,7 +8,7 @@ from adjallocation.models import DebateAdjudicator
 from results.models import Submission
 
 
-class AdjudicatorTestScoreHistory(models.Model):
+class AdjudicatorBaseScoreHistory(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
         verbose_name=_("adjudicator"))
     # cascade to avoid ambiguity, null round indicates beginning of tournament
@@ -18,8 +18,8 @@ class AdjudicatorTestScoreHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("timestamp"))
 
     class Meta:
-        verbose_name = _("adjudicator test score history")
-        verbose_name_plural = _("adjudicator test score histories")
+        verbose_name = _("adjudicator base score history")
+        verbose_name_plural = _("adjudicator base score histories")
 
     def __str__(self):
         return "{.name:s} ({:.1f}) in {!s}".format(self.adjudicator, self.score, self.round)

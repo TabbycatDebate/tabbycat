@@ -1,4 +1,4 @@
-name,email,gender,phone,institution,adj_core,independent,test_score,institution_conflicts,team_conflicts,adj_conflicts
+name,email,gender,phone,institution,adj_core,independent,base_score,institution_conflicts,team_conflicts,adj_conflicts
 Porro Goold,PorroGoold@einrot.com,other,+49 0221 49 63 43,Mauville,T,no,5,,,
 Simone Grunewald,SimoneGrunewald@jourrapide.com,femAle ,+31 06-84985326,Celadon,TRUE , FALSE ,5,,,
 Satoe Murai,SatoeMurai@einrot.com,female,+61 (08) 8295 0262,Goldenrod,true,FALSE,5,,,Itala Ricci

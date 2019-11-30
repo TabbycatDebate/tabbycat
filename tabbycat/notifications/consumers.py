@@ -84,11 +84,12 @@ class NotificationQueueConsumer(SyncConsumer):
         records = []
         for instance, recipient in data:
             hook_id = str(bulk_notification.id) + "-" + str(recipient.id) + "-" + str(random.randint(1000,9999))
+            recipient_to = "%s <%s>" % (recipient.name, recipient.email)
             context = Context(instance)
             body = html_body.render(context)
             email = mail.EmailMultiAlternatives(
                 subject=subject.render(context), body=html2text(body),
-                from_email=from_email, to=[recipient.email], reply_to=reply_to,
+                from_email=from_email, to=[recipient_to], reply_to=reply_to,
                 headers={'X-SMTPAPI': json.dumps({'unique_args': {'hook-id': hook_id}})} # SendGrid-specific 'hook-id'
             )
             email.attach_alternative(body, "text/html")

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db import ProgrammingError
 from django.db.models import Count, Q
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -558,6 +558,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
     public_page_preference = 'ballots_released'
     tournament_field_name = 'round__tournament'
     template_name = 'public_ballot_set.html'
+    error_template_name = 'public_ballot_set_error.html'
 
     def matchup_description(self):
         if use_team_code_names(self.tournament, False):
@@ -565,30 +566,31 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
         else:
             return self.object.matchup
 
-    def get_object(self):
-        debate = self.model.objects.select_related(
+    def get_queryset(self):
+        return self.model.objects.select_related(
             'round'
-        ).prefetch_related(
-            'debateteam_set__team'
-        ).get(id=self.kwargs.get('pk'))
-        return debate
+        ).prefetch_related('debateteam_set__team')
+
+    def response_error(self, error):
+        status, message = error
+        return self.response_class(
+            request=self.request,
+            template=[self.error_template_name],
+            context={'message': message},
+            using=self.template_engine,
+            status=status,
+        )
 
     def get(self, request, *args, **kwargs):
         try:
             self.object = self.get_object()
-        except self.model.DoesNotExist:
-            raise Http404("Debate does not exist")
+        except self.model.MultipleObjectsReturned:
+            error = (500, _("It looks like you were assigned to two or more debates. Please contact a tab room official."))
+        else:
+            error = self.check_permissions()
 
-        error = self.check_permissions()
         if error:
-            status, message = error
-            return self.response_class(
-                request=self.request,
-                template=['public_ballot_set_error.html'],
-                context={'message': message},
-                using=self.template_engine,
-                status=status,
-            )
+            return self.response_error(error)
 
         return super().get(self, request, *args, **kwargs)
 
@@ -622,6 +624,11 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
 
 class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
+    template_name = 'privateurl_ballot_set.html'
+    error_template_name = 'privateurl_ballot_set_error.html'
+    slug_url_kwarg = 'url_key'
+    slug_field = 'debateadjudicator__adjudicator__url_key'
+
     def is_page_enabled(self, tournament):
         return True
 
@@ -635,16 +642,21 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         kwargs['motion'] = ballot.motion
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
-        kwargs['url_key'] = self.kwargs.get('url_key')
+        kwargs['adjudicator'] = Adjudicator.objects.get(url_key=self.kwargs.get('url_key'))
         return super().get_context_data(**kwargs)
 
-    def get_object(self):
-        d_adj = DebateAdjudicator.objects.select_related(
-            'debate'
-        ).prefetch_related(
-            'debate__debateteam_set__team'
-        ).get(debate__round=self.round, adjudicator__url_key=self.kwargs.get('url_key'))
-        return d_adj.debate
+    def response_error(self, error):
+        status, message = error
+        return self.response_class(
+            request=self.request,
+            template=[self.error_template_name],
+            context={'message': message, 'adjudicator': Adjudicator.objects.get(url_key=self.kwargs.get('url_key'))},
+            using=self.template_engine,
+            status=status,
+        )
+
+    def get_queryset(self):
+        return self.model.objects.filter(round=self.round).prefetch_related('debateteam_set__team')
 
 
 class PublicBallotSubmissionIndexView(PublicTournamentPageMixin, VueTableTemplateView):

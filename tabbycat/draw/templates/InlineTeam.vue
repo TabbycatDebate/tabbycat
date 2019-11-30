@@ -2,9 +2,7 @@
   <div class="text-truncate small px-1 inline-team flex-fill d-flex align-items-center hover-target"
        :class="[highlightsCSS, conflictsCSS, hoverConflictsCSS]"
        @mouseenter="showHovers" @mouseleave="hideHovers">
-    <div :class="[this.isLive ? '' : 'not-live']">
-      {{ team.short_name }}
-    </div>
+    <div :class="[this.isLive ? '' : 'not-live']" v-text="teamName"></div>
     <div class="history-tooltip tooltip" v-if="hasHistory">
       <div :class="['tooltip-inner conflictable', 'hover-histories-' + hasHistory + '-ago']">
         {{ hasHistory }} ago
@@ -14,6 +12,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
 import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
 import HoverableConflictMixin from '../../utils/templates/HoverableConflictMixin.vue'
@@ -34,6 +33,16 @@ export default {
     },
   },
   computed: {
+    teamName: function () {
+      let name = this.team.short_name // Default
+      if (this.extra.codeNames === 'everywhere' || this.extra.codeNames === 'admin-tooltips-real') {
+        name = this.team.code_name
+        if (name === '') {
+          name = this.gettext('No code name set')
+        }
+      }
+      return name
+    },
     clashableType: function () {
       return 'team'
     },
@@ -70,6 +79,7 @@ export default {
       }
       return (breakCategoriesCount - letDeadCategoriesCount) > 0
     },
+    ...mapState(['extra']),
   },
 }
 </script>

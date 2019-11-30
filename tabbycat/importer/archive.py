@@ -223,7 +223,7 @@ class Exporter:
                 'name': adj.name,
                 'core': str(adj.adj_core),
                 'independent': str(adj.independent),
-                'score': str(adj.test_score)
+                'score': str(adj.base_score)
             })
 
             if adj.institution is not None:
@@ -513,7 +513,7 @@ class Importer:
 
         for adj in self.root.find('participants').findall('adjudicator'):
             adj_obj = Adjudicator(
-                tournament=self.tournament, test_score=adj.get('score', 0),
+                tournament=self.tournament, base_score=adj.get('score', 0),
                 institution=self.institutions.get(adj.get('institutions', "").split(" ")[0]),
                 independent=adj.get('independent', False), adj_core=adj.get('core', False),
                 name=adj.get('name'), gender=adj.get('gender', ''))

@@ -1,22 +1,20 @@
-# Tabbycat translations, motions module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-21 05:14-0700\n"
-"PO-Revision-Date: 2018-11-01 22:26-0400\n"
-"Last-Translator: Étienne Beaulé <beauleetienne0@gmail.com>\n"
-"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2019-07-26 00:45\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/motions/locale/en/LC_MESSAGES/django.po\n"
 
 #: motions/apps.py:7 motions/templates/public_division_motions.html:4
 #: motions/templates/public_division_motions.html:5
@@ -39,9 +37,7 @@ msgstr "texte"
 
 #: motions/models.py:13
 msgid "The full motion e.g., \"This House would straighten all bananas\""
-msgstr ""
-"La motion au complet, tel « Qu’il soit résolu que cette chambre redressera "
-"tous les bananes »"
+msgstr "La motion au complet, tel « Qu’il soit résolu que cette chambre redressera tous les bananes »"
 
 #: motions/models.py:15
 msgid "reference"
@@ -129,7 +125,7 @@ msgstr "évidence extrêmement faible"
 
 #: motions/statistics.py:116
 msgid "balance inconclusive"
-msgstr "l’équilibre inconclusif"
+msgstr "équilibre non concluant"
 
 #: motions/statistics.py:117
 msgid "too few debates to get a meaningful statistic"
@@ -142,12 +138,8 @@ msgstr "Non-équilibré avec un risque de %(level)s"
 
 #: motions/statistics.py:126
 #, python-format
-msgid ""
-"χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this "
-"motion was imbalanced — at a %(level)s level of significance."
-msgstr ""
-"La valeur de χ² est %(chisq).3f, donnant de l’%(evidence)s que cette motion "
-"n’était pas équilibré à un niveau de %(level)s de signification."
+msgid "χ² statistic is %(chisq).3f, providing %(evidence)s to suggest that this motion was imbalanced — at a %(level)s level of significance."
+msgstr "La valeur de χ² est %(chisq).3f, donnant de l’%(evidence)s que cette motion n’était pas équilibré à un niveau de %(level)s de signification."
 
 #: motions/statistics.py:131
 msgid "probably balanced"
@@ -155,13 +147,8 @@ msgstr "probablement équilibré"
 
 #: motions/statistics.py:132
 #, python-format
-msgid ""
-"χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that "
-"this motion was imbalanced at any level of significance."
-msgstr ""
-"La valeur de χ² est %(chisq).3f, ne donnant pas assez d’évidence pour "
-"suggérer que cette motion n’était équilibré à n’importe niveau de "
-"signification."
+msgid "χ² statistic is %(chisq).3f, providing insufficient evidence to suggest that this motion was imbalanced at any level of significance."
+msgstr "La valeur de χ² est %(chisq).3f, ne donnant pas assez d’évidence pour suggérer que cette motion n’était équilibré à n’importe niveau de signification."
 
 #: motions/templates/assign.html:4 motions/templates/assign.html:5
 msgid "Assign Motions"
@@ -181,11 +168,8 @@ msgid "Motion Statistics"
 msgstr "Statistiques des Motions"
 
 #: motions/templates/motion_statistics.html:12
-msgid ""
-"The results data displayed here is presented without tests for statistical "
-"significance. Correlations should not be automatically considered reliable; "
-"particularly at small tournaments and during elimination rounds."
-msgstr ""
+msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments and during elimination rounds."
+msgstr "Les données des résultats sont présentés sans tests de signification statistique. Les corrélations ne devraient pas être considérés comme fiables sans réservation, surtout aux petits tournois et joutes éliminatoires."
 
 #: motions/templates/motion_statistics.html:39
 #: motions/templates/public_motions.html:31
@@ -201,31 +185,17 @@ msgstr[1] "résultats de %(ndebates)s débats"
 
 #: motions/templates/motion_statistics_bp_elim.html:26
 #, python-format
-msgid ""
-"%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
-msgid_plural ""
-"%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
-msgstr[0] ""
-"%(advancing)s de %(ndebates)s équipe du côté %(side)s (%(percentage)s%%) a "
-"avancé"
-msgstr[1] ""
-"%(advancing)s de %(ndebates)s équipes du côté %(side)s (%(percentage)s%%) "
-"ont avancé"
+msgid "%(advancing)s of %(ndebates)s team on %(side)s (%(percentage)s%%) advanced"
+msgid_plural "%(advancing)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) advanced"
+msgstr[0] "%(advancing)s de %(ndebates)s équipe du côté %(side)s (%(percentage)s%%) a avancé"
+msgstr[1] "%(advancing)s de %(ndebates)s équipes du côté %(side)s (%(percentage)s%%) ont avancé"
 
 #: motions/templates/motion_statistics_bp_elim.html:31
 #, python-format
-msgid ""
-"%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were "
-"eliminated"
-msgid_plural ""
-"%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were "
-"eliminated"
-msgstr[0] ""
-"%(eliminated)s de %(ndebates)s équipe du côté %(side)s (%(percentage)s%%) a "
-"été éliminé"
-msgstr[1] ""
-"%(eliminated)s de %(ndebates)s équipes du côté %(side)s (%(percentage)s%%) "
-"ont été éliminés"
+msgid "%(eliminated)s of %(ndebates)s team on %(side)s (%(percentage)s%%) were eliminated"
+msgid_plural "%(eliminated)s of %(ndebates)s teams on %(side)s (%(percentage)s%%) were eliminated"
+msgstr[0] "%(eliminated)s de %(ndebates)s équipe du côté %(side)s (%(percentage)s%%) a été éliminé"
+msgstr[1] "%(eliminated)s de %(ndebates)s équipes du côté %(side)s (%(percentage)s%%) ont été éliminés"
 
 #: motions/templates/motion_statistics_bp_elim.html:41
 msgid "advanced"
@@ -288,15 +258,10 @@ msgstr[1] "pointage moyenne par position (%(ndebates)s débats)"
 
 #: motions/templates/motion_statistics_bp_prelim.html:78
 #, python-format
-msgid ""
-"%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
-msgid_plural ""
-"%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
-msgstr[0] ""
-"%(count)s résultat pour %(side)s (%(percentage)s%%) avait %(points)s points."
-msgstr[1] ""
-"%(count)s résultats pour %(side)s (%(percentage)s%%) avaient %(points)s "
-"points."
+msgid "%(count)s result for %(side)s (%(percentage)s%%) were for %(points)s points"
+msgid_plural "%(count)s results for %(side)s (%(percentage)s%%) were for %(points)s points"
+msgstr[0] "%(count)s résultat pour %(side)s (%(percentage)s%%) avait %(points)s points"
+msgstr[1] "%(count)s résultats pour %(side)s (%(percentage)s%%) avaient %(points)s points"
 
 #: motions/templates/motion_statistics_bp_prelim.html:90
 msgid "1st"
@@ -349,7 +314,7 @@ msgstr[1] "%(count)s victoires %(side)s"
 
 #: motions/templates/motion_statistics_twoteam.html:53
 msgid "No teams debated this motion"
-msgstr "Aucun équipe n’a débattu cette motion."
+msgstr "Aucun équipe n’a débattu cette motion"
 
 #: motions/templates/motion_statistics_twoteam.html:91
 #: motions/templates/motion_statistics_twoteam.html:98
@@ -389,7 +354,7 @@ msgstr "Diapositive d'information"
 
 #: motions/templates/public_division_motions.html:10
 msgid "No motions have been released yet."
-msgstr "Aucune motion n’a encore été distribuée"
+msgstr "Aucune motion n’a encore été distribuée."
 
 #: motions/templates/public_division_motions.html:24
 msgid "RSeq"
@@ -473,12 +438,9 @@ msgstr "Vous avez publié la ou les motions."
 
 #: motions/views.py:160
 msgid "Unreleased the motion(s)."
-msgstr "Vous avez dépublié la ou les motions."
+msgstr "Vous avez retiré la ou les motion(s)."
 
 #: motions/views.py:184
 msgid "Round Motions"
 msgstr "Motions de Joute"
 
-#, fuzzy
-#~ msgid " Emails queued to be sent."
-#~ msgstr " Courriels en file pour être envoyés."

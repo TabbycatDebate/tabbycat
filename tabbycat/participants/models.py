@@ -26,11 +26,6 @@ class Region(models.Model):
     def __str__(self):
         return '%s' % (self.name)
 
-    @property
-    def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
-        return {'name': self.name, 'id': self.id, 'class': None}
-
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
     name_fields = ['code', 'name']
@@ -61,11 +56,6 @@ class Institution(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-    @property
-    def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
-        return {'name': self.name, 'id': self.id, 'code': self.code}
 
 
 class SpeakerCategory(models.Model):
@@ -98,10 +88,6 @@ class SpeakerCategory(models.Model):
 
     def __str__(self):
         return "[{}] {}".format(self.tournament.slug, self.name)
-
-    @property
-    def serialize(self):
-        return {'id': self.id, 'name': self.name, 'seq': self.seq}
 
 
 class Person(models.Model):
@@ -329,20 +315,6 @@ class Team(models.Model):
         self.long_name = self._construct_long_name()
         super().save(*args, **kwargs)
 
-    def serialize(self):
-        team = {'id': self.id, 'short_name': self.short_name,
-                'long_name': self.long_name, 'code_name': self.code_name}
-        team['emoji'] = self.emoji
-        team['institution'] = self.institution.serialize if self.institution else None
-        team['region'] = self.region.serialize if self.region else None
-        team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in self.speakers]
-        break_categories = self.break_categories.all()
-        team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else []
-        team['highlights'] = {'region': False, 'gender': False, 'category': False}
-        team['wins'] = self.wins_count
-        team['points'] = self.points_count
-        return team
-
 
 class Speaker(Person):
     team = models.ForeignKey(Team, models.CASCADE,
@@ -356,11 +328,6 @@ class Speaker(Person):
 
     def __str__(self):
         return str(self.name)
-
-    def serialize(self):
-        speaker = {'id': self.id, 'name': self.name, 'team': self.team.short_name}
-        speaker['institution'] = self.institution.serialize if self.institution else None
-        return speaker
 
 
 class AdjudicatorManager(models.Manager):
@@ -377,8 +344,8 @@ class Adjudicator(Person):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
         verbose_name=_("tournament"),
         help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
-    test_score = models.FloatField(default=0,
-        verbose_name=_("test score"))
+    base_score = models.FloatField(default=0,
+        verbose_name=_("base score"))
 
     # TODO: Are these actually used?= If not, remove?
     institution_conflicts = models.ManyToManyField('Institution',
@@ -429,7 +396,7 @@ class Adjudicator(Person):
         if feedback_score is None:
             feedback_score = 0
             feedback_weight = 0
-        return self.test_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
+        return self.base_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
 
     @cached_property
     def score(self):
@@ -456,11 +423,3 @@ class Adjudicator(Person):
 
     def get_feedback(self):
         return self.adjudicatorfeedback_set.all()
-
-    def serialize(self, round):
-        adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
-        adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
-        adj['region'] = self.region.serialize if self.region else None
-        adj['institution'] = self.institution.serialize if self.institution else None
-        adj['highlights'] = {'region': False, 'gender': False, 'category': False}
-        return adj

@@ -1,7 +1,7 @@
 import os
 
-# NOTE: for this file to be imported then a specific environment variable
-# "LOCAL_DEVELOPMENT" needs to be set as per __init__.py in this folder.
+# NOTE: for this file to be imported, a specific environment variable
+# "LOCAL_DEVELOPMENT" needs to be set, as per __init__.py in this folder.
 
 # ==============================================================================
 # Templates
@@ -69,7 +69,6 @@ if ENABLE_DEBUG_TOOLBAR:
         'debug_toolbar.panels.signals.SignalsPanel',
         'debug_toolbar.panels.logging.LoggingPanel',
         'debug_toolbar.panels.profiling.ProfilingPanel',
-        'ddt_request_history.panels.request_history.RequestHistoryPanel',
     )
 
 # ==============================================================================

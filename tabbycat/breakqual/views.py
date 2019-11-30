@@ -18,9 +18,10 @@ from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 
 from .base import BreakGeneratorError
-from .utils import breakcategories_with_counts, get_breaking_teams
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
+from .serializers import BreakCategorySerializer
+from .utils import breakcategories_with_counts, get_breaking_teams
 from . import forms
 
 logger = logging.getLogger(__name__)
@@ -270,7 +271,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
 
     def get_context_data(self, **kwargs):
         break_categories = self.tournament.breakcategory_set.all()
-        json_categories = [bc.serialize for bc in break_categories]
+        json_categories = BreakCategorySerializer(break_categories, many=True).data
         kwargs["break_categories"] = json.dumps(json_categories)
         kwargs["break_categories_length"] = break_categories.count()
         return super().get_context_data(**kwargs)

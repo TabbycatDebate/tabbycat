@@ -86,7 +86,7 @@ As discussed earlier in *User identification*; Tabbie2's e-ballots are tied to u
 - Tabbycat allows for a richer range of types of questions than Tabbie2 does.
 - Tabbie2 allows you to specify different questionnaires for team-on-chair, chair-on-panellist and panellist-on-chair. Tabbycat only differentiates between team-on-adjudicator and adjudicator-on-adjudicator.
 - Tabbycat gives you more control over who is expected to submit feedback on whom; e.g. whether teams submit on panellists, and whether panellists submit on each other. In Tabbie2, you can effect this with blank questionnaires, but only for the three options listed above.
-- Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator test score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback.
+- Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator base score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback.
 - Tabbycat produces a "shame list" of unsubmitted feedback, which you can optionally publish on the public-facing site to try to incentivise submission.
 
 (How participants access adjudicator feedback submission is discussed in *User identification* above.)

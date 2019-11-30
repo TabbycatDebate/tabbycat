@@ -70,7 +70,7 @@
         {% plural %}
           {{ count }} adjudicators do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
         {% endblocktrans %}
-        {% include "components/item-info.html" with type="info" %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
       {% endif %}
 
       {% if new_adjs|length > 10 %}
@@ -79,7 +79,7 @@
         {% plural %}
           {{ count }} adjudicators who were not available last round, are available this round.
         {% endblocktrans %}
-        {% include "components/item-info.html" with type="info" %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
       {% elif new_adjs %}
         {% blocktrans trimmed asvar text count count=new_adjs|length with adjs_list=new_adjs|join:", " %}
           The following {{ count }} adjudicator, who was not available last round, is available this round: {{ adjs_list }}
@@ -158,6 +158,15 @@
         {% include "components/item-info.html" with type="info" nopad=True %}
       {% endif %}
 
+      {% if venues_no_t > 0 %}
+        {% blocktrans trimmed asvar text count count=venues_no_t %}
+          One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
+        {% plural %}
+          {{ count }} venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type="info" nopad=True %}
+      {% endif %}
+
       {% trans "Mark venues as available" as title_text %}
       {% if min_venues > availability_info.venues.in_now %}
         {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
@@ -176,15 +185,6 @@
         {% trans "Edit venue availability" as title_text %}
         {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
       {% endif %}
-      {% if venues_no_t > 0 %}
-        {% blocktrans trimmed asvar text count count=venues_no_t %}
-          One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
-        {% plural %}
-          {{ count }} venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
-        {% endblocktrans %}
-        {% include "components/item-info.html" with type="info" nopad=True %}
-      {% endif %}
-
 
     {% endif %}
 

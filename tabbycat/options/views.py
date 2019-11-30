@@ -40,13 +40,13 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
         if t.pref('teams_in_debate') == 'bp':
             if t.pref('ballots_per_debate_prelim') == 'per-adj' or \
                t.pref('ballots_per_debate_elim') == 'per-adj':
-                error = _(("Your draw rules specify four teams per-debate but ",
-                           "your ballot setting specifies that adjudicators ",
-                           "submit independent ballots. These settings ",
-                           "<strong>are not compatible and will cause results ",
-                           "entry to crash</strong>. You need to go back to ",
-                           "the Debate Rules settings and change your ",
-                           "configuration to use consensus ballots."))
+                error = _("Your draw rules specify four teams per-debate but "
+                          "your ballot setting specifies that adjudicators "
+                          "submit independent ballots. These settings "
+                          "<strong>are not compatible and will cause results "
+                          "entry to crash</strong>. You need to go back to "
+                          "the Debate Rules settings and change your "
+                          "configuration to use consensus ballots.")
                 messages.error(self.request, error)
 
         return super().get_context_data(**kwargs)

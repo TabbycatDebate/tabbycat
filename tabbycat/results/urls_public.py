@@ -23,11 +23,11 @@ urlpatterns = [
         name='old-results-public-ballotset-new-pk'),
 
     # Private Ballots
-    path('<slug:url_key>/', include([
+    path('adjudicator/<slug:url_key>/', include([
         path('add/',
             views.OldPublicNewBallotSetByRandomisedUrlView.as_view(),
             name='results-public-ballotset-new-randomised'),
-        path('<int:round_seq>/view/',
+        path('round/<int:round_seq>/view/',
             views.PrivateUrlBallotScoresheetView.as_view(),
             name='results-privateurl-scoresheet-view'),
     ])),

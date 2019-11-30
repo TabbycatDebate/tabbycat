@@ -340,7 +340,7 @@ class Round(models.Model):
     feedback_weight = models.FloatField(default=0,
         verbose_name=_("feedback weight"),
         # Translator: xgettext:no-python-format
-        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback."))
+        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."))
     silent = models.BooleanField(default=False,
         # Translators: A silent round is a round for which results are not disclosed once the round is over.
         verbose_name=_("silent"),
@@ -377,25 +377,6 @@ class Round(models.Model):
 
         if errors:
             raise ValidationError(errors)
-
-    def serialize(self):
-        """@deprecate when legacy drag and drop UIs removed"""
-        adjudicator_positions = ["C"]
-        if not self.tournament.pref('no_panellist_position'):
-            adjudicator_positions += "P"
-        if not self.tournament.pref('no_trainee_position'):
-            adjudicator_positions += "T"
-
-        round_info = {
-            'adjudicatorPositions': adjudicator_positions, # Depends on prefs
-            'teamsInDebate': self.tournament.pref('teams_in_debate'),
-            'teamPositions': self.tournament.sides,
-            'roundName' : self.abbreviation,
-            'roundSeq' : self.seq,
-            'roundIsPrelim' : not self.is_break_round,
-            'tournamentSlug': self.tournament.slug,
-        }
-        return round_info
 
     # --------------------------------------------------------------------------
     # Checks for potential errors
