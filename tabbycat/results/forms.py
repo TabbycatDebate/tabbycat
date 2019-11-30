@@ -660,6 +660,9 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 required=True,
             )
 
+        if self.using_declared_winner:
+            self.fields[self._fieldname_declared_winner()] = self.create_declared_winner_dropdown()
+
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
 
@@ -748,7 +751,11 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
     def scoresheets(self):
         """Generates a sequence of nested dicts that allows for easy iteration
         through the form. Used in the ballot_set.html.html template."""
-        return [{"teams": self.scoresheet(self._fieldname_score)}]
+        sheets = [{"teams": self.scoresheet(self._fieldname_score)}]
+
+        if self.using_declared_winner:
+            sheets[0]['declared_winner'] = self[self._fieldname_declared_winner()]
+        return sheets
 
 
 class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
