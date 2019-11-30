@@ -128,7 +128,7 @@ class Exporter:
                     ballot_tag = SubElement(side_tag, 'ballot', {
                         'adjudicators': adjs,
                         'rank': str(1 if adv else 2),
-                        'ignored': 'False'
+                        'ignored': 'false'
                     })
                     ballot_tag.text = str(adv)
                 else:
@@ -152,11 +152,11 @@ class Exporter:
             ballot_tag.set('adjudicators', ADJ_PREFIX + str(adj.id))
 
             minority = adj not in majority
-            ballot_tag.set('minority', str(minority))
-            ballot_tag.set('ignored', str(minority and not self.t.pref('margin_includes_dissenters')))
+            ballot_tag.set('minority', lower(str(minority)))
+            ballot_tag.set('ignored', lower(str(minority and not self.t.pref('margin_includes_dissenters'))))
         else:
             ballot_tag.set('adjudicators', adj)
-            ballot_tag.set('ignored', 'False')
+            ballot_tag.set('ignored', 'false')
 
         if hasattr(scoresheet, 'winner'):
             ballot_tag.set('rank', str(1 if scoresheet.winner() == side else 2))
@@ -221,8 +221,8 @@ class Exporter:
             adj_tag = SubElement(participants_tag, 'adjudicator', {
                 'id': ADJ_PREFIX + str(adj.id),
                 'name': adj.name,
-                'core': str(adj.adj_core),
-                'independent': str(adj.independent),
+                'core': lower(str(adj.adj_core)),
+                'independent': lower(str(adj.independent)),
                 'score': str(adj.base_score)
             })
 
@@ -314,8 +314,8 @@ class Exporter:
             question_tag = SubElement(self.root, 'question', {
                 'id': QUESTION_PREFIX + str(question.id),
                 'name': question.name,
-                'from-teams': str(question.from_team),
-                'from-adjudicators': str(question.from_adj),
+                'from-teams': lower(str(question.from_team)),
+                'from-adjudicators': lower(str(question.from_adj)),
                 'type': question.answer_type
             })
             question_tag.text = question.text
@@ -388,11 +388,11 @@ class Importer:
             self.elimination_consensus = True
             save_presets(self.tournament, BritishParliamentaryPreferences)
         else:
-            self.preliminary_consensus = self._is_consensus_ballot('False')
-            self.elimination_consensus = self._is_consensus_ballot('True')
-            substantive_speakers = len(self.root.find('round').find('debate').find('side').findall("speech[@reply='False']"))
-            reply_scores_enabled = len(self.root.findall("round/debate/side/speech[@reply='True']")) != 0
-            margin_includes_dissenters = len(self.root.findall("round/debate/side/ballot[@minority='True'][@ignored='True']")) == 0
+            self.preliminary_consensus = self._is_consensus_ballot('false')
+            self.elimination_consensus = self._is_consensus_ballot('true')
+            substantive_speakers = len(self.root.find('round').find('debate').find('side').findall("speech[@reply='false']"))
+            reply_scores_enabled = len(self.root.findall("round/debate/side/speech[@reply='true']")) != 0
+            margin_includes_dissenters = len(self.root.findall("round/debate/side/ballot[@minority='true'][@ignored='true']")) == 0
 
             self.tournament.preferences['debate_rules__substantive_speakers'] = substantive_speakers
             self.tournament.preferences['debate_rules__reply_scores_enabled'] = reply_scores_enabled
@@ -455,7 +455,7 @@ class Importer:
             q = AdjudicatorFeedbackQuestion(
                 tournament=self.tournament, seq=i, text=question.text,
                 name=question.get('name'), reference=slugify(question.get('name')[:50]),
-                from_adj=question.attrib['from-adjudicators'], from_team=question.get('from-teams'),
+                from_adj=question.get('from-adjudicators') == 'true', from_team=question.get('from-teams') == 'true',
                 answer_type=question.get('type'), required=False
             )
             q.save()
@@ -515,7 +515,7 @@ class Importer:
             adj_obj = Adjudicator(
                 tournament=self.tournament, base_score=adj.get('score', 0),
                 institution=self.institutions.get(adj.get('institutions', "").split(" ")[0]),
-                independent=adj.get('independent', False), adj_core=adj.get('core', False),
+                independent=adj.get('independent', False) == 'true', adj_core=adj.get('core', False) == 'true',
                 name=adj.get('name'), gender=adj.get('gender', ''))
             adj_obj.save()
             self.adjudicators[adj.get('id')] = adj_obj
@@ -533,7 +533,7 @@ class Importer:
 
         rounds = []
         for i, round in enumerate(self.root.findall('round'), 1):
-            round_stage = Round.STAGE_ELIMINATION if round.get('elimination', 'False') == 'True' else Round.STAGE_PRELIMINARY
+            round_stage = Round.STAGE_ELIMINATION if round.get('elimination', 'false') == 'true' else Round.STAGE_PRELIMINARY
             draw_type = Round.DRAW_ELIMINATION if round_stage == Round.STAGE_ELIMINATION else Round.DRAW_MANUAL
 
             round_obj = Round(
@@ -596,7 +596,7 @@ class Importer:
 
     def import_results(self):
         for round in self.root.findall('round'):
-            consensus = self.preliminary_consensus if round.get('elimination') == 'False' else self.elimination_consensus
+            consensus = self.preliminary_consensus if round.get('elimination') == 'false' else self.elimination_consensus
 
             for debate in round.findall('debate'):
                 bs_obj = BallotSubmission(
