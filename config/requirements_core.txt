@@ -18,7 +18,7 @@ munkres==1.1.2                          # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 
 # Database
-psycopg2==2.8.3                         # For Django to talk to postgres
+psycopg2==2.8.4                         # For Django to talk to postgres
 # Note: The Heroku instructions seem to advise using psycopg2-binary:
 #     https://devcenter.heroku.com/articles/heroku-postgresql#connecting-with-django
 # but the psycopg2 documentation advises against using the binary distribution
