@@ -31,15 +31,17 @@ export default {
       return ''
     },
     genderClass: function () {
-      if (this.highlightData && 'gender' in this.highlightData) {
-        return ` gender-${this.highlightData.gender}` // Must be an adjudicator
-      }
-      if (this.highlightData && 'speakers' in this.highlightData) {
-        let classString = ''
-        const men = this.highlightData.speakers.filter(s => s.gender === 'M')
-        const notmen = this.highlightData.speakers.filter(s => s.gender === 'F' || s.gender === 'O')
-        classString += `gender-men-${men.length} gender-notmen-${notmen.length}`
-        return classString
+      if (typeof this.highlightData === 'object' && this.highlightData !== null) {
+        if (this.highlightData && 'gender' in this.highlightData) {
+          return ` gender-${this.highlightData.gender}` // Must be an adjudicator
+        }
+        if (this.highlightData && 'speakers' in this.highlightData) {
+          let classString = ''
+          const men = this.highlightData.speakers.filter(s => s.gender === 'M')
+          const notmen = this.highlightData.speakers.filter(s => s.gender === 'F' || s.gender === 'O')
+          classString += `gender-men-${men.length} gender-notmen-${notmen.length}`
+          return classString
+        }
       }
       return '' // Fallback
     },
