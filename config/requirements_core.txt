@@ -27,7 +27,7 @@ psycopg2==2.8.3                         # For Django to talk to postgres
 
 # Channels
 channels==2.2.0                         # Channels; also includes the Daphne server
-channels_redis==2.4.0                   # Channels Layer
+channels_redis==2.4.1                   # Channels Layer
 
 # Misc
 ipython==7.8.*
