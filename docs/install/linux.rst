@@ -29,16 +29,9 @@ Short version
 
   curl -sL https\:\/\/deb.nodesource.com/setup_8.x | sudo -E bash -    # add Node.js source repository
   sudo apt install python3-dev python3-venv postgresql-11 libpq-dev nodejs gcc g++ make
-
-  # either
-  wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
-  tar xf |vrelease|.tar.gz
-  cd tabbycat-|release|
-  # or
   git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
-  git checkout |vrelease|                                         # or master
-
+  git checkout master
   sudo -u postgres createuser myusername --createdb --pwprompt    # skip if not first time
   createdb mydatabasename
 
@@ -118,24 +111,37 @@ Some of the Python packages require GCC, G++ and Make in order to install::
 2. Get the source code
 ======================
 
-Choose either of these two methods:
+Choose either of the following two methods.
 
-**Method 1:** Download and extract:
+Method 1 (Git clone)
+--------------------
+
+If you have Git, life will be easier if you clone `our GitHub repository`_:
+
+.. parsed-literal::
+
+    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+    $ git checkout master
+
+(You can find out if you have Git using ``git --version``. If you don't, you can install it using ``sudo apt install git``.)
+
+.. note:: The default branch is ``develop``, so you need to explicitly change the branch to ``master``, which is what the ``git checkout master`` line does.
+
+.. admonition:: Advanced users
+  :class: tip
+
+  You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
+
+Method 2 (tarball)
+------------------
+
+If you don't want to use Git, simply download and extract:
 
 .. parsed-literal::
 
     $ wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
     $ tar xf |vrelease|.tar.gz
     $ cd tabbycat-|release|
-
-**Method 2 (advanced users):** If you've used Git before, you might prefer to clone `our GitHub repository`_ instead:
-
-.. parsed-literal::
-
-    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
-    $ git checkout |vrelease|                              # or master
-
-.. tip:: You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
 3. Set up a new database
 ========================
