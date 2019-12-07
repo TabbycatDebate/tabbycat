@@ -1,7 +1,7 @@
 # The necessary dependencies to run Tabbycat
 
 # Django
-Django==2.2.8
+Django==3.0
 django-appconf==1.0.3                   # Helper for handling app configs
 django-dynamic-preferences==1.7.1       # Settings management
 django-extensions==2.2.1                # For the generate secret command
