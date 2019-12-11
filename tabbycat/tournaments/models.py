@@ -456,10 +456,6 @@ class Round(models.Model):
     # Draw retrieval methods
     # --------------------------------------------------------------------------
 
-    def get_draw(self, ordering=('venue__name',)):
-        # Deprecated fully 8/3/2018, remove after 8/4/2018
-        raise RuntimeError("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.")
-
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, wins=False,
             results=False, venues=True, institutions=False, check_ins=False, iron=False):
