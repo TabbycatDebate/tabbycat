@@ -72,7 +72,7 @@ def populate_checkins(debates, tournament):
 
 def populate_results(ballotsubs):
     """Populates the `_result` attribute of each BallotSubmission in
-    `ballotsubs` with a populated VotingDebateResult instance.
+    `ballotsubs` with a populated DebateResult instance.
 
     For best performance, the ballot submissions should already have their
     debates prefetched (using select_related).

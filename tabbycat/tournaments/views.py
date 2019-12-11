@@ -20,6 +20,7 @@ from actionlog.models import ActionLogEntry
 from draw.models import Debate
 from notifications.models import BulkNotification
 from results.models import BallotSubmission
+from results.prefetch import populate_confirmed_ballots
 from tournaments.models import Round
 from utils.forms import SuperuserCreationForm
 from utils.misc import redirect_round, redirect_tournament, reverse_round, reverse_tournament
@@ -77,12 +78,11 @@ class BaseTournamentDashboardHomeView(TournamentMixin, WarnAboutDatabaseUseMixin
                     'content_object', 'user').order_by('-timestamp')[:updates]
         kwargs["initialActions"] = json.dumps([a.serialize for a in actions])
 
-        subs = BallotSubmission.objects.filter(
-            debate__round__tournament=t, confirmed=True).prefetch_related(
-            'teamscore_set__debate_team',
-            'teamscore_set__debate_team__team').select_related(
-            'debate__round__tournament').order_by('-timestamp')[:updates]
-        subs = [bs.serialize_like_actionlog for bs in subs]
+        subs = t.current_round.debate_set.filter(
+            ballotsubmission__confirmed=True
+        ).order_by('-ballotsubmission__timestamp')[:updates]
+        populate_confirmed_ballots(subs, results=True)
+        subs = [d._confirmed_ballot.serialize_like_actionlog for d in subs]
         kwargs["initialBallots"] = json.dumps(subs)
 
         status = t.current_round.draw_status
