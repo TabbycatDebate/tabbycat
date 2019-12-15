@@ -20,7 +20,7 @@ from sentry_sdk import configure_scope
 from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
-from participants.models import Institution, Speaker
+from participants.models import Institution, Person, Speaker
 from participants.prefetch import populate_win_counts
 from participants.serializers import InstitutionSerializer
 from tournaments.serializers import RoundSerializer, TournamentSerializer
@@ -398,9 +398,14 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
     """
     slug_field = 'url_key'
     slug_url_kwarg = 'url_key'
+    model = Person
+    private_url = True
+
+    def get_queryset(self):
+        return self.model.objects.all()
 
     def get_context_data(self, **kwargs):
-        kwargs['private_url'] = True
+        kwargs['private_url'] = self.private_url
         return super().get_context_data(**kwargs)
 
 

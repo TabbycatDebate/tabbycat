@@ -2,8 +2,7 @@ import logging
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-from django.db.models import Exists, OuterRef, Q
-from django.shortcuts import get_object_or_404
+from django.db.models import Exists, OuterRef
 from django.utils.text import format_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
@@ -12,7 +11,7 @@ from checkins.models import PersonIdentifier
 from checkins.utils import get_unexpired_checkins
 from notifications.models import BulkNotification, SentMessage
 from notifications.views import RoleColumnMixin, TournamentTemplateEmailCreateView
-from participants.models import Adjudicator, Person, Speaker
+from participants.models import Speaker
 from participants.tables import AdjudicatorDebateTable, TeamDebateTable
 from tournaments.mixins import PersonalizablePublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin, TournamentMixin
 from tournaments.models import Round
@@ -92,7 +91,7 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
     def get_adjudicators_table(self):
         tournament = self.tournament
 
-        adjudicators = Adjudicator.objects.filter(tournament=tournament)
+        adjudicators = tournament.relevant_adjudicators
         table = TabbycatTableBuilder(view=self, title=_("Adjudicators"), sort_key="name")
         table.add_adjudicator_columns(adjudicators, show_institutions=False, show_metadata=False)
         self.add_url_columns(table, adjudicators, self.request)
@@ -169,16 +168,10 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
 
 class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTournamentPageMixin, VueTableTemplateView):
     template_name = 'public_url_landing.html'
-    model = Person
-
     table_title = _("Debates")
 
     def is_page_enabled(self, tournament):
         return True
-
-    def get_object(self, url_key):
-        q = self.model.objects.filter(Q(adjudicator__tournament=self.tournament) | Q(speaker__team__tournament=self.tournament))
-        return get_object_or_404(q, url_key=url_key)
 
     def get_table(self):
         if hasattr(self.object, 'adjudicator'):
@@ -187,8 +180,7 @@ class PersonIndexView(SingleObjectByRandomisedUrlMixin, PersonalizablePublicTour
             return TeamDebateTable.get_table(self, self.object.speaker.team)
 
     def get_context_data(self, **kwargs):
-        self.private_url_key = kwargs['url_key']
-        self.object = self.get_object(kwargs['url_key'])
+        self.object = self.get_object()
         t = self.tournament
 
         try:
