@@ -131,7 +131,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             def venue_category_interpreter(lineno, line):
                 if not line.get('category'):
                     return None
-                return {'name': line['category']}
+                return {'tournament': self.tournament, 'name': line['category']}
             self._import(f, vm.VenueCategory, venue_category_interpreter, expect_unique=False)
 
         def venue_category_venue_interpreter(lineno, line):
@@ -146,6 +146,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
     def import_venue_categories(self, f):
         venue_category_interpreter = make_interpreter(
+            tournament=self.tournament,
             display_in_venue_name=self.lookup_venue_category_display,
         )
 
