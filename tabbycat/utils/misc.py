@@ -53,10 +53,8 @@ def badge_datetime_format(timestamp):
     return formats.date_format(localized_time, format=fmt)
 
 
-def ranks_dictionary(tournament):
+def ranks_dictionary(tournament, score_min, score_max):
     """ Used for both adjudicator ranks and venue priorities """
-    score_min = tournament.pref('adj_min_score')
-    score_max = tournament.pref('adj_max_score')
     score_range = score_max - score_min
     return [
         {'pk': 'a+', 'fields': {'name': 'A+', 'cutoff': (score_range * 0.9) + score_min}},

@@ -2,7 +2,7 @@
   <draggable-item :drag-payload="dragPayload" :class="[{'bg-dark text-white': !item.available}, highlightsCSS]">
 
       <span slot="number">
-        <small class="pl-2 vue-draggable-muted ">{{ item.priority }}</small>
+        <small class="pl-2 vue-draggable-muted ">{{ item.score }}</small>
       </span>
       <span slot="title">
         {{ item.display_name }}

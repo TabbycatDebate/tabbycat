@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Max, Min, Q
 from django.forms import Select
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic import TemplateView
@@ -11,7 +11,7 @@ from actionlog.models import ActionLogEntry
 from availability.utils import annotate_availability
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from utils.forms import SelectPrepopulated
-from utils.misc import redirect_tournament, reverse_tournament
+from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView
 
@@ -39,9 +39,9 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
 
     def get_extra_info(self):
         info = super().get_extra_info()
-        info['highlights']['priority'] = [] # TODO - venue priority range
+        p_range = Venue.objects.filter(tournament=self.tournament).aggregate(min=Min('priority'), max=Max('priority'))
+        info['highlights']['rank'] = ranks_dictionary(self.tournament, p_range['min'], p_range['max'])
         info['highlights']['category'] = [{'pk': vc.id, 'fields': {'name': vc.name}} for vc in VenueCategory.objects.all()]
-        info['highlights']['break'] = [] # TODO
         return info
 
 
