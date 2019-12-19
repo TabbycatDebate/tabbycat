@@ -6,7 +6,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     highlightsCSS: function () {
-      return [this.activeClass, this.breakClass, this.genderClass, this.regionClass, this.rankClass].join(' ')
+      return [this.activeClass, this.breakClass, this.genderClass, this.regionClass, this.categoryClass, this.rankClass].join(' ')
     },
     activeClass: function () {
       let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
@@ -57,6 +57,21 @@ export default {
             }
           }
         }
+      }
+      return ''
+    },
+    categoryClass: function () {
+      if (typeof this.highlightData === 'object' && this.highlightData && 'categories' in this.highlightData) {
+        var catClasses = []
+        let highlightCategories = Object.keys(this.highlights.category.options)
+        for (let category of this.highlightData.categories) {
+          let matchingCategory = highlightCategories.filter(
+            vc => this.highlights.category.options[vc].pk === category.id)
+          if (matchingCategory.length > 0) {
+            catClasses += ' ' + this.highlights.category.options[matchingCategory[0]].css
+          }
+        }
+        return catClasses
       }
       return ''
     },

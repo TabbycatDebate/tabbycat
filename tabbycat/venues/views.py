@@ -40,7 +40,7 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
     def get_extra_info(self):
         info = super().get_extra_info()
         info['highlights']['priority'] = [] # TODO - venue priority range
-        info['highlights']['category'] = [] # TODO - venue category
+        info['highlights']['category'] = [{'pk': vc.id, 'fields': {'name': vc.name}} for vc in VenueCategory.objects.all()]
         info['highlights']['break'] = [] # TODO
         return info
 
