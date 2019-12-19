@@ -803,11 +803,6 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     page_title = gettext_lazy("Edit Matchups")
     prefetch_teams = False # Fetched in full as get_serialised
 
-    def get_extra_info(self):
-        info = super().get_extra_info()
-        info['highlights']['break'] = [] # TODO
-        return info
-
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams
         teams = Team.objects.filter(tournament=self.tournament).prefetch_related('speaker_set')
