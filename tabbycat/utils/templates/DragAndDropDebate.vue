@@ -99,7 +99,7 @@ export default {
           for (const keyAndEntry of Object.entries(this.debateOrPanel.teams)) {
             let team = keyAndEntry[1]
             // Team can be a number (ID) or null (e.g. when editing sides)
-            if (team !== null && typeof team === 'object' && 'break_categories' in team) {
+            if (team !== null && typeof team === 'object' && 'break_categories' in team && this.highlights.break) {
               for (let bc of team.break_categories) {
                 let category = this.highlights.break.options[bc]
                 if (category && team.points > category.fields.dead && team.points < category.fields.safe) {

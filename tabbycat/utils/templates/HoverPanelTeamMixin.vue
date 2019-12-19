@@ -30,7 +30,7 @@ export default {
       if (this.subject.break_categories.length === 0) {
         let item = this.makeItem(`No Break Categories Set`, 'btn-outline-secondary', false)
         pointsDetails.push(item)
-      } else {
+      } else if (this.highlights.break) {
         for (let bc of this.subject.break_categories) {
           let category = this.highlights.break.options[bc]
           if (category) {
