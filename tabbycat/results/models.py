@@ -158,14 +158,19 @@ class BallotSubmission(Submission):
         if self.confirm_timestamp and self.confirmed:
             confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
 
+        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 'bp':
+            admin_url = 'results-ballotset-edit'
+            assistant_url = 'results-assistant-ballotset-edit'
+        else:
+            admin_url = 'old-results-ballotset-edit'
+            assistant_url = 'old-results-assistant-ballotset-edit'
+
         return {
             'ballot_id': self.id,
             'debate_id': self.debate.id,
             'submitter': self.submitter.username if self.submitter else self.ip_address,
-            'admin_link': reverse_tournament('old-results-ballotset-edit',
-                                             tournament, kwargs={'pk': self.id}),
-            'assistant_link': reverse_tournament('old-results-assistant-ballotset-edit',
-                                                 tournament, kwargs={'pk': self.id}),
+            'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
+            'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
             'short_time': created_short,
             'created_timestamp': created,
             'confirmed_timestamp': confirmed,
