@@ -32,7 +32,7 @@
     "lodash": "^4.17.13",
     "node-sass": "^4.13.0",
     "npm-run-all": "^4.1.5",
-    "popper.js": "^1.15.x",
+    "popper.js": "^1.16.x",
     "quagga": "0.12.x",
     "stats-percentile": "^3.1.0",
     "vue": "^2.6.7",
