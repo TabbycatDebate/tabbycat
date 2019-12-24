@@ -10,6 +10,7 @@
 
   &.break-0 {
     @include hover-highlights($break-cat-1);
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
@@ -21,6 +22,7 @@
 
   &.break-1 {
     @include hover-highlights($break-cat-2);
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
@@ -32,6 +34,7 @@
 
   &.break-2 {
     @include hover-highlights($break-cat-3);
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
@@ -43,6 +46,7 @@
 
   &.break-3 {
     @include hover-highlights($break-cat-4);
+
     .vue-draggable-muted {
       color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
     }
