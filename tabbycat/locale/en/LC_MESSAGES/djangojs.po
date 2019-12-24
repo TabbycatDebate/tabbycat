@@ -508,6 +508,27 @@ msgstr ""
 msgid "Auto-Allocate"
 msgstr ""
 
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Break"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Gender"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Rank"
+msgstr ""
+
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Region"
+msgstr ""
+
+#. Translators: Short for "Venue Category"
+#: utils/templates/DragAndDropActions.vue:65
+msgid "Category"
+msgstr ""
+
 #: utils/templates/DragAndDropDebate.vue:5
 msgid "The debate's bracket"
 msgstr ""
