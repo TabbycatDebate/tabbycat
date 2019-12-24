@@ -1,5 +1,6 @@
 <template>
-  <draggable-item :drag-payload="dragPayload" :class="{ 'bg-dark text-white': isUnavailable }"
+  <draggable-item :drag-payload="dragPayload" :class="[{'bg-dark text-white': isUnavailable},
+                                                       highlightsCSS, conflictsCSS, hoverConflictsCSS]"
                   :enable-hover="true" :hover-item="hoverableData" :hover-type="hoverableType">
 
       <span slot="number" class="d-none"><span></span></span>
