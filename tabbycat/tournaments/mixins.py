@@ -15,8 +15,6 @@ from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
 
-from sentry_sdk import configure_scope
-
 from adjallocation.models import DebateAdjudicator
 from breakqual.utils import calculate_live_thresholds
 from draw.models import DebateTeam, MultipleDebateTeamsError, NoDebateTeamFoundError
@@ -29,6 +27,10 @@ from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
 from utils.serializers import django_rest_json_render
 
 from .models import Round, Tournament
+try:
+    from sentry_sdk import configure_scope
+except ModuleNotFoundError:
+    pass # If sentry is enabled but not installed then don't throw
 
 logger = logging.getLogger(__name__)
 
