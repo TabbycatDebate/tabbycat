@@ -74,7 +74,12 @@ export default {
     },
     institutionCode: function () {
       if (this.adjudicator && this.adjudicator.institution) {
-        return this.$store.state.institutions[this.adjudicator.institution].code
+        const code = this.$store.state.institutions[this.item.institution].code
+        var stringDelta = code.length - this.initialledName.length
+        if (stringDelta > 3) { // Trim to prevent UI blow outs
+          return code.substring(0, this.initialledName.length + 3) + '…'
+        }
+        return code
       } else {
         return this.gettext('Unaffiliated')
       }
