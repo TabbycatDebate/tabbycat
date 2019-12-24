@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import DroppableItem from '../../utils/templates/DroppableItem.vue'
+import DroppableItem from '../../templates/allocations/DroppableItem.vue'
 import DraggableAdjudicator from './DraggableAdjudicator.vue'
 
 export default {

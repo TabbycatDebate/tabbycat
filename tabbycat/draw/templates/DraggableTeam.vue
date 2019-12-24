@@ -14,9 +14,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import DraggableItem from '../../utils/templates/DraggableItem.vue'
-import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
+import DraggableItem from '../../templates/allocations/DraggableItem.vue'
+import HighlightableMixin from '../../templates/allocations/HighlightableMixin.vue'
+import HoverablePanelMixin from '../../templates/allocations/HoverablePanelMixin.vue'
 
 export default {
   mixins: [HoverablePanelMixin, HighlightableMixin],

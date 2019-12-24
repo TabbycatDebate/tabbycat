@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import DraggableItem from '../../utils/templates/DraggableItem.vue'
+import DraggableItem from '../../templates/allocations/DraggableItem.vue'
 
 export default {
   components: { DraggableItem },

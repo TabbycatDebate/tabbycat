@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
-import DroppableItem from '../../utils/templates/DroppableItem.vue'
+import DragAndDropContainerMixin from '../../templates/allocations/DragAndDropContainerMixin.vue'
+import DroppableItem from '../../templates/allocations/DroppableItem.vue'
 
 import ModalForAllocatingVenues from './ModalForAllocatingVenues.vue'
 import DraggableVenue from './DraggableVenue.vue'
