@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import ModalForCreatingPreformedPanels from '../../utils/templates/modals/ModalForCreatingPreformedPanels.vue'
+import ModalForCreatingPreformedPanels from '../../templates/modals/ModalForCreatingPreformedPanels.vue'
 
 import EditEitherAdjudicatorsSharedMixin from './EditEitherAdjudicatorsSharedMixin.vue'
 

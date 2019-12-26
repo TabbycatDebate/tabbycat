@@ -1,9 +1,9 @@
 <script>
 // Mixin for shared logic between editing debate adjudicators and editing panel adjudicators
-import DragAndDropContainerMixin from '../../utils/templates/DragAndDropContainerMixin.vue'
-import ModalForSharding from '../../utils/templates/modals/ModalForSharding.vue'
-import ModalForPrioritising from '../../utils/templates/modals/ModalForPrioritising.vue'
-import ModalForAllocating from '../../utils/templates/modals/ModalForAllocating.vue'
+import DragAndDropContainerMixin from '../../templates/allocations/DragAndDropContainerMixin.vue'
+import ModalForSharding from '../../templates/modals/ModalForSharding.vue'
+import ModalForPrioritising from '../../templates/modals/ModalForPrioritising.vue'
+import ModalForAllocating from '../../templates/modals/ModalForAllocating.vue'
 
 import DebateOrPanelImportance from './DebateOrPanelImportance.vue'
 import DraggableAdjudicator from './DraggableAdjudicator.vue'

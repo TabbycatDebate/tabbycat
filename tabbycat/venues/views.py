@@ -66,9 +66,15 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
             form.fields['venues'].queryset = venues
         return formset
 
+    def get_formset_queryset(self):
+        return self.tournament.venuecategory_set.all()
+
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
+        self.instances = formset.save(commit=False)
         if self.instances:
+            for category in self.instances:
+                category.tournament = self.tournament
+
             message = ngettext("Saved venue category: %(list)s",
                 "Saved venue categories: %(list)s",
                 len(self.instances)
@@ -76,9 +82,10 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
             messages.success(self.request, message)
         else:
             messages.success(self.request, _("No changes were made to the venue categories."))
+
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.tournament)
-        return result
+        return super().formset_valid(formset)
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)

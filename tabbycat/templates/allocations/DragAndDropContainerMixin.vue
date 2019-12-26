@@ -3,9 +3,9 @@
 // adjs/teams/venues etc
 import { mapGetters } from 'vuex'
 
-import DragAndDropDebate from '../../utils/templates/DragAndDropDebate.vue'
-import DragAndDropLayout from '../../utils/templates/DragAndDropLayout.vue'
-import DragAndDropActions from '../../utils/templates/DragAndDropActions.vue'
+import DragAndDropDebate from '../../templates/allocations/DragAndDropDebate.vue'
+import DragAndDropLayout from '../../templates/allocations/DragAndDropLayout.vue'
+import DragAndDropActions from '../../templates/allocations/DragAndDropActions.vue'
 import WebsocketMixin from '../../templates/ajax/WebSocketMixin.vue'
 
 export default {

@@ -181,18 +181,6 @@ def roundurl(parser, token):
     return RoundURLNode(*args)
 
 
-@register.tag
-def round_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.")
-
-
-@register.tag
-def tournament_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.")
-
-
 @register.filter
 def next_value(value, arg):
     try:

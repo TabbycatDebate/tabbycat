@@ -19,7 +19,7 @@
 
 <script>
 import CellContent from './CellContent.vue'
-import Popover from '../info/Popover.vue'
+import Popover from './Popover.vue'
 
 export default {
   components: { Popover, CellContent },

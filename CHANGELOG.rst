@@ -6,6 +6,7 @@ Change Log
 ---------
 *Release date: ?*
 
+- Added support for Russian, and shortened the language selector.
 - Renamed 'test score' to 'base score.'
 - Divisions-specific features have been deprecated and removed.
 - Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation.

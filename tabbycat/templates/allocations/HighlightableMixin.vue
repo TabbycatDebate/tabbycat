@@ -34,11 +34,13 @@ export default {
       return ''
     },
     genderClass: function () {
-      if (typeof this.highlightData === 'object' && this.highlightData !== null) {
-        if (this.highlightData && 'gender' in this.highlightData) {
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('gender' in this.highlightData) {
           return ` gender-${this.highlightData.gender}` // Must be an adjudicator
         }
-        if (this.highlightData && 'speakers' in this.highlightData) {
+      }
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('speakers' in this.highlightData) {
           let classString = ''
           const men = this.highlightData.speakers.filter(s => s.gender === 'M')
           const notmen = this.highlightData.speakers.filter(s => s.gender === 'F' || s.gender === 'O')
@@ -49,14 +51,16 @@ export default {
       return '' // Fallback
     },
     regionClass: function () {
-      if (this.highlightData && 'institution' in this.highlightData) {
-        const itemsInstitutionID = this.highlightData.institution
-        if (itemsInstitutionID && 'region' in this.highlights) {
-          if (itemsInstitutionID in this.allInstitutions) {
-            const itemsInstitution = this.allInstitutions[itemsInstitutionID]
-            const itemsRegion = this.highlights.region.options[itemsInstitution.region]
-            if (itemsRegion) {
-              return this.highlights.region.options[itemsInstitution.region].css
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('institution' in this.highlightData) {
+          const itemsInstitutionID = this.highlightData.institution
+          if (itemsInstitutionID && 'region' in this.highlights) {
+            if (itemsInstitutionID in this.allInstitutions) {
+              const itemsInstitution = this.allInstitutions[itemsInstitutionID]
+              const itemsRegion = this.highlights.region.options[itemsInstitution.region]
+              if (itemsRegion) {
+                return this.highlights.region.options[itemsInstitution.region].css
+              }
             }
           }
         }
@@ -79,11 +83,13 @@ export default {
       return ''
     },
     rankClass: function () {
-      if (this.highlightData && 'score' in this.highlightData) {
-        let rankCategories = Object.keys(this.highlights.rank.options)
-        for (let rankCategory of rankCategories) {
-          if (this.highlightData.score >= this.highlights.rank.options[rankCategory].fields.cutoff) {
-            return this.highlights.rank.options[rankCategory].css
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('score' in this.highlightData) {
+          let rankCategories = Object.keys(this.highlights.rank.options)
+          for (let rankCategory of rankCategories) {
+            if (this.highlightData.score >= this.highlights.rank.options[rankCategory].fields.cutoff) {
+              return this.highlights.rank.options[rankCategory].css
+            }
           }
         }
       }

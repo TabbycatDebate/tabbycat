@@ -26,7 +26,7 @@
 <script>
 import DraggableMixin from './DraggableMixin.vue'
 import HoverablePanelMixin from './HoverablePanelMixin.vue'
-import HoverableConflictMixin from '../../utils/templates/HoverableConflictMixin.vue'
+import HoverableConflictMixin from '../../templates/allocations/HoverableConflictMixin.vue'
 
 export default {
   mixins: [DraggableMixin, HoverablePanelMixin, HoverableConflictMixin],

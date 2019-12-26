@@ -6,7 +6,6 @@ from django.db.models import Count, Prefetch, Q
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from adjfeedback.models import AdjudicatorFeedback
-from results.models import SpeakerScoreByAdj
 
 logger = logging.getLogger(__name__)
 
@@ -74,11 +73,6 @@ def get_feedback_overview(t, adjudicators):
         Prefetch('debateadjudicator_set', to_attr='debateadjs_for_rounds',
             queryset=DebateAdjudicator.objects.filter(
                 debate__round__in=rounds).select_related('debate__round')),
-        Prefetch('debateadjs_for_rounds__speakerscorebyadj_set',
-            queryset=SpeakerScoreByAdj.objects.filter(
-                debate_adjudicator__debate__round__in=rounds
-            ).select_related('debate_team')
-        ),
     ).annotate(debates=Count('debateadjudicator'))
     annotated_adjs_by_id = {adj.id: adj for adj in annotated_adjs}
 

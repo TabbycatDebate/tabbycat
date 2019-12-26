@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import DraggableItem from '../../utils/templates/DraggableItem.vue'
-import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
+import DraggableItem from '../../templates/allocations/DraggableItem.vue'
+import HighlightableMixin from '../../templates/allocations/HighlightableMixin.vue'
 
 export default {
   mixins: [HighlightableMixin],
