@@ -27,10 +27,6 @@ from utils.mixins import AssistantMixin, CacheMixin, TabbycatPageTitlesMixin
 from utils.serializers import django_rest_json_render
 
 from .models import Round, Tournament
-try:
-    from sentry_sdk import configure_scope
-except ModuleNotFoundError:
-    pass # If sentry is enabled but not installed then don't throw
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +99,7 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
         t = self.tournament
 
         if not getattr(settings, 'DISABLE_SENTRY', False):
+            from sentry_sdk import configure_scope
             with configure_scope() as scope:
                 scope.set_extra('tab_director_email', getattr(settings, 'TAB_DIRECTOR_EMAIL', "not provided"))
                 scope.set_extra('tournament_prefs', self.tournament.preferences.all())
