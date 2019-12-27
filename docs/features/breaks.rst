@@ -74,7 +74,7 @@ which is the default.
 Setting up break categories and rounds
 ======================================
 
-For each break category in your tournament, you need to do three things:
+For each break category in your tournament, you need to do two things:
 
   1. Create (and name) a break category
   2. Create break rounds for the category
@@ -83,12 +83,15 @@ For each break category in your tournament, you need to do three things:
 If you only have one break category (open) and you create your tournament using
 the "Create New Tournament" page, simply enter the number of teams in the break
 (*e.g.*, 8 if you're breaking to quarterfinals). Tabbycat will create the break
-category and break rounds for you. You'll still need to set the eligibility of
-teams though, as in (3) below. For any further break categories, you'll need to
-do all three steps yourself.
+category and break rounds for you. For any further break categories, you'll need
+to go to the **Breaks** item in the left-hand menu for a particular tournament
+and then click **Break Categories**. Fill out the forms for the number of new
+break categories and save. Rounds will be created automatically. You'll still
+need to set the eligibility of teams though, as in (3) below.
 
 If you create your tournament using the `importtournament` command or in **Edit
-Database**, you'll need to do all three steps above yourself.
+Database**, you'll need to do all three steps above yourself. You may also want
+to edit the break rounds (2) to change their names.
 
 1. Creating break categories
 ----------------------------
@@ -124,13 +127,14 @@ following fields correctly:
 Once a break category has been created it will not have any teams eligible for
 it, even if it was marked as "Is general". To edit the eligibility of teams for
 any break round go to the **Breaks** item in the left-hand menu for a particular
-tournament and then click **Edit Eligiblity**.
+tournament and then click **Team Eligiblity**.
 
 Here you can select "all" or "none" to toggle all team eligiblities or edit them
 using the tick boxes. Once you **save** it should return you to the main break
 page which will display the number of teams marked eligible.
 
-.. note:: Adjudicators can be marked as "breaking" on the **Feedback** page; clicking **Adjudicators** on the breaks page will take you straight there.
+.. note:: Adjudicators can be marked as "breaking" on the **Feedback** page;
+  clicking **Adjudicators** on the breaks page will take you straight there.
 
 Generating the break
 ====================

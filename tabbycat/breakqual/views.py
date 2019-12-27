@@ -4,6 +4,8 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Count, Q
+from django.forms import HiddenInput
+from django.forms.models import BaseModelFormSet
 from django.http import JsonResponse
 from django.utils.translation import gettext as _, ngettext
 from django.views.generic import FormView, TemplateView, View
@@ -11,9 +13,9 @@ from django.views.generic import FormView, TemplateView, View
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.models import Team
-from utils.misc import reverse_tournament
+from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
+from utils.views import ModelFormSetView, PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 
@@ -21,7 +23,7 @@ from .base import BreakGeneratorError
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
 from .serializers import BreakCategorySerializer
-from .utils import breakcategories_with_counts, get_breaking_teams
+from .utils import auto_make_break_rounds, breakcategories_with_counts, get_breaking_teams
 from . import forms
 
 logger = logging.getLogger(__name__)
@@ -225,6 +227,68 @@ class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, BaseBreakingAdju
 # ==============================================================================
 # Eligibility and categories
 # ==============================================================================
+
+
+class BreakCategoryModelFormSet(BaseModelFormSet):
+    """Class to handle the different procedures for creation and modification
+    in BreakCategory objects."""
+
+    def save_new(self, form, commit=True):
+        """Create break rounds for new break categories"""
+        bc = super().save_new(form, commit)
+        auto_make_break_rounds(bc, prefix=True)
+        return bc
+
+    def save_existing(self, form, instance, commit=True):
+        """Stub for deleting/creating break rounds if break size changes"""
+        return super().save_existing(form, instance, commit)
+
+
+class EditBreakCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
+    # The tournament is included in the form as a hidden input so that
+    # uniqueness checks will work. Since this is a superuser form, they can
+    # access all tournaments anyway, so tournament forgery wouldn't be a
+    # security risk.
+
+    template_name = 'break_categories_edit.html'
+    formset_model = BreakCategory
+    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_CATEGORIES_EDIT
+
+    def get_formset_factory_kwargs(self):
+        return {
+            'fields': ('name', 'tournament', 'slug', 'seq', 'break_size', 'is_general', 'priority', 'limit', 'rule'),
+            'extra': 2,
+            'widgets': {
+                'tournament': HiddenInput
+            },
+            'formset': BreakCategoryModelFormSet
+        }
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(tournament=self.tournament)
+
+    def get_formset_kwargs(self):
+        return {
+            'initial': [{'tournament': self.tournament}] * 2,
+        }
+
+    def formset_valid(self, formset):
+        result = super().formset_valid(formset)
+        if self.instances:
+            message = ngettext("Saved break category: %(list)s",
+                "Saved break categories: %(list)s",
+                len(self.instances)
+            ) % {'list': ", ".join(category.name for category in self.instances)}
+            messages.success(self.request, message)
+        else:
+            messages.success(self.request, _("No changes were made to the break categories."))
+        if "add_more" in self.request.POST:
+            return redirect_tournament('break-categories-edit', self.tournament)
+        return result
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_tournament('breakqual-index', self.tournament)
+
 
 class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
