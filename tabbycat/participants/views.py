@@ -308,6 +308,9 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     formset_model = SpeakerCategory
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_CATEGORIES_EDIT
 
+    url_name = 'participants-speaker-categories-edit'
+    success_url = 'participants-list'
+
     def get_formset_factory_kwargs(self):
         return {
             'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
@@ -318,7 +321,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
         }
 
     def get_formset_queryset(self):
-        return SpeakerCategory.objects.filter(tournament=self.tournament)
+        return self.formset_model.objects.filter(tournament=self.tournament)
 
     def get_formset_kwargs(self):
         return {
@@ -328,19 +331,19 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
     def formset_valid(self, formset):
         result = super().formset_valid(formset)
         if self.instances:
-            message = ngettext("Saved speaker category: %(list)s",
-                "Saved speaker categories: %(list)s",
+            message = ngettext("Saved category: %(list)s",
+                "Saved categories: %(list)s",
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
-            messages.success(self.request, _("No changes were made to the speaker categories."))
+            messages.success(self.request, _("No changes were made to the categories."))
         if "add_more" in self.request.POST:
-            return redirect_tournament('participants-speaker-categories-edit', self.tournament)
+            return redirect_tournament(self.url_name, self.tournament)
         return result
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_tournament('participants-list', self.tournament)
+        return reverse_tournament(self.success_url, self.tournament)
 
 
 class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
@@ -378,26 +381,27 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
 
 class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
     action_log_type = ActionLogEntry.ACTION_TYPE_SPEAKER_ELIGIBILITY_EDIT
+    participant_model = Speaker
+    many_to_many_field = 'categories'
 
-    def set_category_eligibility(self, speaker, sent_status):
+    def set_category_eligibility(self, participant, sent_status):
         category_id = sent_status['type']
-        marked_eligible = category_id in [c.id for c in speaker.categories.all()]
+        many_to_many_model = getattr(participant, self.many_to_many_field)
+        marked_eligible = category_id in {c.id for c in many_to_many_model.all()}
         if sent_status['checked'] and not marked_eligible:
-            speaker.categories.add(category_id)
-            speaker.save()
+            many_to_many_model.add(category_id)
         elif not sent_status['checked'] and marked_eligible:
-            speaker.categories.remove(category_id)
-            speaker.save()
+            many_to_many_model.remove(category_id)
 
     def post(self, request, *args, **kwargs):
         body = self.request.body.decode('utf-8')
         posted_info = json.loads(body)
 
         try:
-            speaker_ids = [int(key) for key in posted_info.keys()]
-            speakers = Speaker.objects.prefetch_related('categories').in_bulk(speaker_ids)
-            for speaker_id, speaker in speakers.items():
-                self.set_category_eligibility(speaker, posted_info[str(speaker_id)])
+            participant_ids = [int(key) for key in posted_info.keys()]
+            participants = self.participant_model.objects.prefetch_related(self.many_to_many_field).in_bulk(participant_ids)
+            for participant_id, participant in participants.items():
+                self.set_category_eligibility(participant, posted_info[str(participant_id)])
             self.log_action()
         except:
             message = "Error handling eligiblity updates"
