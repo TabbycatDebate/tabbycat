@@ -1,7 +1,5 @@
-import itertools
 import logging
 
-from django.db.models import Max
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext, pgettext_lazy
@@ -9,21 +7,6 @@ from django.utils.translation import gettext, pgettext_lazy
 from .models import Round
 
 logger = logging.getLogger(__name__)
-
-BREAK_ROUND_NAMES = [
-    # Translators: abbreviation for "grand final"
-    (_("Grand Final"), _("GF")),
-    # Translators: abbreviation for "semifinals"
-    (_("Semifinals"), _("SF")),
-    # Translators: abbreviation for "quarterfinals"
-    (_("Quarterfinals"), _("QF")),
-    # Translators: abbreviation for "octofinals"
-    (_("Octofinals"), _("OF")),
-    # Translators: abbreviation for "double-octofinals"
-    (_("Double-Octofinals"), _("DOF")),
-    # Translators: abbreviation for "triple-octofinals"
-    (_("Triple-Octofinals"), _("TOF")),
-]
 
 SIDE_NAMES = {
     'aff-neg': {
@@ -100,29 +83,6 @@ def auto_make_rounds(tournament, num_rounds):
             draw_type=Round.DRAW_RANDOM if (i == 1) else Round.DRAW_POWERPAIRED,
             feedback_weight=min((i-1)*0.1, 0.5),
             silent=(i == num_rounds),
-        ).save()
-
-
-def auto_make_break_rounds(tournament, num_break, break_category):
-    """Makes the number of break rounds specified. This is intended as a
-    convenience function. For anything more complicated, a more advanced import
-    method should be used."""
-
-    num_prelim = tournament.prelim_rounds().aggregate(Max('seq'))['seq__max']
-    # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
-    break_rounds = itertools.chain(BREAK_ROUND_NAMES, itertools.repeat((_("Unknown break round"), _("UBR"))))
-
-    for i, (name, abbr) in zip(range(num_break), break_rounds):
-        Round(
-            tournament=tournament,
-            break_category=break_category,
-            seq=num_prelim+num_break-i,
-            stage=Round.STAGE_ELIMINATION,
-            name=name,
-            abbreviation=abbr,
-            draw_type=Round.DRAW_ELIMINATION,
-            feedback_weight=0.5,
-            silent=True,
         ).save()
 
 
