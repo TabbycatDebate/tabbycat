@@ -23,8 +23,8 @@
         </div>
       </div>
       <div v-else class="flex-1-25 flex-truncate border-right d-flex"
-           data-toggle="tooltip" :title="gettext(`The estimated total number of live break
-              categories across all teams of the hypothetical debate`)">
+           data-toggle="tooltip" :title="gettext(`The maximum possible number of live teams in
+              the hypothetical debate for the open category`)">
         <div class="align-self-center flex-fill text-center" v-text="liveness"></div>
       </div>
     </slot>
