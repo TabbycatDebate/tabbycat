@@ -32,7 +32,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tournament
-        fields = ('name', 'short_name', 'slug', 'active', 'urls')
+        fields = ('name', 'short_name', 'slug', 'seq', 'active', 'urls')
 
 
 class BreakCategorySerializer(serializers.ModelSerializer):
