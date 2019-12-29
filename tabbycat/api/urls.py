@@ -13,7 +13,15 @@ detail_methods = {'get': 'retrieve', 'post': 'update', 'delete': 'destroy'}
 
 urlpatterns = [
 
+    path('',
+        views.APIRootView.as_view(),
+        name='api-root'),
+
     path('<slug:tournament_slug>/', include([
+        path('',
+            views.TournamentRootView.as_view(),
+            name='api-tournament-detail'),
+
         path('<int:round_seq>/', include([
         ])),
 

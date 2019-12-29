@@ -2,6 +2,37 @@ from rest_framework import serializers
 
 from breakqual.models import BreakCategory
 from participants.models import Speaker, SpeakerCategory
+from tournaments.models import Tournament
+
+
+class TournamentAtRootSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='api-tournament-detail',
+        lookup_field='slug', lookup_url_kwarg='tournament_slug')
+
+    class Meta:
+        model = Tournament
+        fields = ('name', 'short_name', 'slug', 'url', 'active')
+
+
+class TournamentEndpointsSerializer(serializers.Serializer):
+
+    break_categories = serializers.HyperlinkedIdentityField(
+        view_name='api-breakcategory-list',
+        lookup_field='slug', lookup_url_kwarg='tournament_slug')
+    speaker_categories = serializers.HyperlinkedIdentityField(
+        view_name='api-speakercategory-list',
+        lookup_field='slug', lookup_url_kwarg='tournament_slug')
+
+
+class TournamentSerializer(serializers.ModelSerializer):
+
+    urls = TournamentEndpointsSerializer(source='*', read_only=True)
+
+    class Meta:
+        model = Tournament
+        fields = ('name', 'short_name', 'slug', 'active', 'urls')
 
 
 class BreakCategorySerializer(serializers.ModelSerializer):
