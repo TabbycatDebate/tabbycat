@@ -17,9 +17,13 @@ urlpatterns = [
         views.APIRootView.as_view(),
         name='api-root'),
 
+    path('create/',
+        views.TournamentCreateView.as_view(),
+        name='api-tournament-create'),
+
     path('<slug:tournament_slug>/', include([
         path('',
-            views.TournamentRootView.as_view(),
+            views.TournamentDetailView.as_view(),
             name='api-tournament-detail'),
 
         path('<int:round_seq>/', include([
