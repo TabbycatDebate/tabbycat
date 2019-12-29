@@ -1,7 +1,10 @@
-from rest_framework.generics import RetrieveUpdateAPIView
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
+from tournaments.models import Tournament
 from tournaments.mixins import TournamentMixin
 
 from . import serializers
@@ -24,6 +27,27 @@ class TournamentAPIMixin(TournamentMixin):
 
 class AdministratorAPIMixin:
     permission_classes = [IsAdminUser]
+
+
+class APIRootView(AdministratorAPIMixin, GenericAPIView):
+    name = "API Root"
+    queryset = Tournament.objects.all()
+    serializer_class = serializers.TournamentAtRootSerializer
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'tournament_slug'
+
+    def get(self, request, format=None):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"tournaments": serializer.data})
+
+
+class TournamentRootView(RetrieveUpdateAPIView):
+    # Don't use TournamentAPIMixin here, it's not filtering objects by tournament.
+    queryset = Tournament.objects.all()
+    serializer_class = serializers.TournamentSerializer
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'tournament_slug'
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
