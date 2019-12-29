@@ -4,6 +4,8 @@ from breakqual.models import BreakCategory
 from participants.models import Speaker, SpeakerCategory
 from tournaments.models import Tournament
 
+from .fields import TournamentHyperlinkedIdentityField
+
 
 class TournamentAtRootSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -35,18 +37,39 @@ class TournamentSerializer(serializers.ModelSerializer):
         fields = ('name', 'short_name', 'slug', 'seq', 'active', 'urls')
 
 
+class BreakCategoryEndpointsSerializer(serializers.Serializer):
+
+    eligibility = TournamentHyperlinkedIdentityField(
+        view_name='api-breakcategory-eligibility', lookup_field='slug')
+
+
 class BreakCategorySerializer(serializers.ModelSerializer):
+
+    url = TournamentHyperlinkedIdentityField(
+        view_name='api-breakcategory-detail', lookup_field='slug')
+    urls = BreakCategoryEndpointsSerializer(source='*', read_only=True)
 
     class Meta:
         model = BreakCategory
-        fields = ('name', 'slug', 'seq', 'break_size', 'is_general', 'priority', 'limit', 'rule')
+        fields = ('name', 'slug', 'seq', 'break_size', 'is_general', 'priority',
+                  'limit', 'rule', 'url', 'urls')
+
+
+class SpeakerCategoryEndpointsSerializer(serializers.Serializer):
+
+    eligibility = TournamentHyperlinkedIdentityField(
+        view_name='api-speakercategory-eligibility', lookup_field='slug')
 
 
 class SpeakerCategorySerializer(serializers.ModelSerializer):
 
+    url = TournamentHyperlinkedIdentityField(
+        view_name='api-speakercategory-detail', lookup_field='slug')
+    urls = SpeakerCategoryEndpointsSerializer(source='*', read_only=True)
+
     class Meta:
         model = SpeakerCategory
-        fields = ('name', 'slug', 'seq', 'limit', 'public')
+        fields = ('name', 'slug', 'seq', 'limit', 'public', 'url', 'urls')
 
 
 class BreakEligibilitySerializer(serializers.ModelSerializer):
