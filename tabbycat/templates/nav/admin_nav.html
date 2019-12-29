@@ -241,8 +241,7 @@
             <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
           </a>
           <div class="collapse" id="breakh">
-            <a class="list-group-item"
-               href="{% tournamenturl 'breakqual-index' %}">
+            <a class="list-group-item" href="{% tournamenturl 'breakqual-index' %}">
               <i data-feather="maximize"></i>{% trans "Overview" %}
             </a>
             {% for category in tournament.breakcategory_set.all %}
@@ -251,7 +250,13 @@
               </a>
             {% endfor %}
             <a class="list-group-item" href="{% tournamenturl 'breakqual-adjudicators' %}">
-              <i data-feather="shield"></i>{% trans "Adjudicators" %}
+              <i data-feather="shield"></i>{% trans "Adjudicators'" %}
+            </a>
+            <a class="list-group-item" href="{% tournamenturl 'break-categories-edit' %}">
+              <i data-feather="pocket"></i>{% trans "Edit Categories" %}
+            </a>
+            <a class="list-group-item" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
+              <i data-feather="trello"></i>{% trans "Edit Eligibility" %}
             </a>
           </div>
 
