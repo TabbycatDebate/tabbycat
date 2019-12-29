@@ -11,7 +11,7 @@ urlpatterns = [
         path('<int:round_seq>/', include([
         ])),
 
-        path('breakcategory/', include([
+        path('break-categories/', include([
             path('',
                 views.BreakCategoryViewSet.as_view(list_methods),
                 name='api-breakcategory-list'),
@@ -24,7 +24,7 @@ urlpatterns = [
                     name='api-breakcategory-eligibility'),
             ])),
         ])),
-        path('speakercategory/', include([
+        path('speaker-categories/', include([
             path('',
                 views.SpeakerCategoryViewSet.as_view(list_methods),
                 name='api-speakercategory-list'),
