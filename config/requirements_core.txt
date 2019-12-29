@@ -1,7 +1,7 @@
 # The necessary dependencies to run Tabbycat
 
 # Django
-Django==2.2.8
+Django==2.2.9
 django-appconf==1.0.3                   # Helper for handling app configs
 django-dynamic-preferences==1.7.1       # Settings management
 django-extensions==2.2.1                # For the generate secret command
@@ -11,14 +11,14 @@ django-jet==1.0.8                       # Admin Backend
 django-gfklookupwidget==1.0.7           # Replaces object_id field with a search link
 djangorestframework==3.10.2             # For serialising objects
 django-polymorphic==2.1.2               # Permits model polymorphism
-django-split-settings==0.3.0            # Modularise settings files
+django-split-settings==1.0.0            # Modularise settings files
 django-statici18n==1.8.3                # Compile translations files as static file
 django-summernote==0.8.11.4             # WYSIWYG editor
 munkres==1.1.2                          # Algorithm for adjudicator allocation
 dj-cmd==1.0                             # Provides the dj command alias
 
 # Database
-psycopg2==2.8.3                         # For Django to talk to postgres
+psycopg2==2.8.4                         # For Django to talk to postgres
 # Note: The Heroku instructions seem to advise using psycopg2-binary:
 #     https://devcenter.heroku.com/articles/heroku-postgresql#connecting-with-django
 # but the psycopg2 documentation advises against using the binary distribution
@@ -27,10 +27,10 @@ psycopg2==2.8.3                         # For Django to talk to postgres
 
 # Channels
 channels==2.2.0                         # Channels; also includes the Daphne server
-channels_redis==2.4.0                   # Channels Layer
+channels_redis==2.4.1                   # Channels Layer
 
 # Misc
-ipython==7.8.*
+ipython==7.10.*
 redis==3.3.8
 qrcode==6.1                             # QR codes for printed private URL sheets
 html2text==2019.8.11                    # Compatibility with plain-text email clients
