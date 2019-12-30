@@ -11,9 +11,6 @@
   {% if object.speaker %}
     {% blocktrans trimmed with team=object.speaker.team.short_name %}({{ team }}){% endblocktrans %}
   {% endif %}
-  {% if object.speaker %}
-
-  {% endif %}
 {% endblock %}
 
 {% block page-alerts %}
@@ -24,7 +21,7 @@
     feedback for your debates. You may bookmark this page and return here after each
     debate for the available actions.
   {% endblocktrans %}
-  {% include "components/explainer-card.html" with type="info" %}
+  {% include "components/explainer-card.html" with type="warning" %}
 
 {% endblock %}
 
