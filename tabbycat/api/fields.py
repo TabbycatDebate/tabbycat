@@ -1,5 +1,7 @@
-from rest_framework.relations import HyperlinkedIdentityField
+from rest_framework.relations import HyperlinkedIdentityField, PrimaryKeyRelatedField
 from rest_framework.reverse import reverse
+
+from participants.models import Team
 
 
 class TournamentHyperlinkedIdentityField(HyperlinkedIdentityField):
@@ -19,3 +21,8 @@ class TournamentHyperlinkedIdentityField(HyperlinkedIdentityField):
             self.lookup_field: lookup_value,
         }
         return self.get_queryset().get(**lookup_kwargs)
+
+class InstitutionTeamRelationalField(PrimaryKeyRelatedField):
+
+    def get_queryset(self):
+        return Team.objects.filter(tournament=self.context['tournament'])

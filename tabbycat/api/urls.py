@@ -49,6 +49,14 @@ urlpatterns = [
                     name='api-speakercategory-eligibility'),
             ])),
         ])),
+        path('institutions/', include([
+            path('',
+                 views.InstitutionViewSet.as_view(list_methods),
+                 name='api-institution-list'),
+            path('create/',
+                 views.InstitutionViewSetCreateView.as_view(),
+                 name='api-institution-create'),
+        ])),
     ])),
 
 ]

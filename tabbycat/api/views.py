@@ -7,6 +7,8 @@ from rest_framework.reverse import reverse
 from tournaments.models import Tournament
 from tournaments.mixins import TournamentMixin
 
+from participants.models import Institution
+
 from . import serializers
 
 
@@ -79,3 +81,13 @@ class BreakEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUp
 class SpeakerEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.SpeakerEligibilitySerializer
     lookup_field = 'slug'
+
+class InstitutionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.InstitutionSerializer
+    queryset = Institution.objects.all()
+    def get_queryset(self):
+        return Institution.objects.all()
+
+class InstitutionViewSetCreateView(CreateAPIView):
+    serializer_class = serializers.InstitutionSerializer
+

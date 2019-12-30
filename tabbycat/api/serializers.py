@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
 from breakqual.models import BreakCategory
-from participants.models import Speaker, SpeakerCategory
+from participants.models import Speaker, SpeakerCategory, Institution, Team, Adjudicator
 from tournaments.models import Tournament
 
-from .fields import TournamentHyperlinkedIdentityField
+from .fields import TournamentHyperlinkedIdentityField,InstitutionTeamRelationalField
 
 
 class TournamentAtRootSerializer(serializers.HyperlinkedModelSerializer):
@@ -118,3 +118,55 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
         else:
             self.instance.speaker_set.set(speakers)
         return self.instance
+
+
+class SpeakerSerializerImport(serializers.ModelSerializer):
+    class Meta:
+        model = Speaker
+        fields = ('name', 'gender','email')
+
+
+class AdjudicatorSerializerImport(serializers.ModelSerializer):
+    institution = serializers.SlugRelatedField(
+        queryset=Institution.objects.all(),
+        slug_field="code"
+    )
+    tournament = serializers.SlugRelatedField(
+        queryset=Tournament.objects.all(),
+        slug_field='slug'
+    )
+
+    class Meta:
+        model = Adjudicator
+        fields = ('name', 'gender', 'email', 'institution','tournament')
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    institution = serializers.PrimaryKeyRelatedField(
+        queryset=Institution.objects.all(),
+        slug_field='code'
+    )
+    tournament = serializers.SlugRelatedField(
+        queryset=Tournament.objects.all(),
+        slug_field='slug'
+    )
+    speakers = SpeakerSerializerImport(many=True)
+
+    class Meta:
+        model = Team
+        fields = ('reference', 'code_name',
+                  'institution', 'speakers','tournament')
+
+    def create(self,validated_data):
+        speaker_data = validated_data.pop('speakers')
+        team = Team.objects.create(**validated_data)
+        for i in speaker_data:
+            Speaker.objects.create(team=team, **i)
+        return team
+
+
+class InstitutionSerializer(serializers.ModelSerializer):
+    team_set = InstitutionTeamRelationalField(many=True, read_only=True)
+    class Meta:
+        model = Institution
+        fields = ('id','name', 'code','team_set')
