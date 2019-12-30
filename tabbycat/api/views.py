@@ -88,6 +88,20 @@ class InstitutionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet
     def get_queryset(self):
         return Institution.objects.all()
 
+
+class TeamViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.TeamSerializer
+
+
 class InstitutionViewSetCreateView(CreateAPIView):
     serializer_class = serializers.InstitutionSerializer
 
+
+class TeamViewSetCreateView(TournamentAPIMixin,CreateAPIView):
+    serializer_class = serializers.TeamSerializer
+
+class AdjudicatorViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.AdjudicatorSerializer
+
+class AdjudicatorViewSetCreateView(TournamentAPIMixin,CreateAPIView):
+    serializer_class = serializers.AdjudicatorSerializer

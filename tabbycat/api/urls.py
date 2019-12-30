@@ -57,6 +57,22 @@ urlpatterns = [
                  views.InstitutionViewSetCreateView.as_view(),
                  name='api-institution-create'),
         ])),
+        path('teams/', include([
+            path('',
+                 views.TeamViewSet.as_view(list_methods),
+                 name='api-team-list'),
+            path('create/',
+                 views.TeamViewSetCreateView.as_view(),
+                 name='api-team-create'),
+        ])),
+        path('adjudicators/', include([
+            path('',
+                 views.AdjudicatorViewSet.as_view(list_methods),
+                 name='api-adjudicator-list'),
+            path('create/',
+                 views.AdjudicatorViewSetCreateView.as_view(),
+                 name='api-adjudicator-create'),
+        ])),
     ])),
 
 ]

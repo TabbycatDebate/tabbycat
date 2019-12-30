@@ -4,7 +4,7 @@ from breakqual.models import BreakCategory
 from participants.models import Speaker, SpeakerCategory, Institution, Team, Adjudicator
 from tournaments.models import Tournament
 
-from .fields import TournamentHyperlinkedIdentityField,InstitutionTeamRelationalField
+from .fields import TournamentHyperlinkedIdentityField
 
 
 class TournamentAtRootSerializer(serializers.HyperlinkedModelSerializer):
@@ -120,42 +120,32 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
         return self.instance
 
 
-class SpeakerSerializerImport(serializers.ModelSerializer):
+class TeamSpeakerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Speaker
-        fields = ('name', 'gender','email')
+        fields = ('id','name', 'gender','email','phone','anonymous','pronoun',
+                  'categories')
 
 
-class AdjudicatorSerializerImport(serializers.ModelSerializer):
-    institution = serializers.SlugRelatedField(
-        queryset=Institution.objects.all(),
-        slug_field="code"
-    )
-    tournament = serializers.SlugRelatedField(
-        queryset=Tournament.objects.all(),
-        slug_field='slug'
-    )
+class AdjudicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Adjudicator
-        fields = ('name', 'gender', 'email', 'institution','tournament')
+        fields = ('id','name', 'gender','email','phone','anonymous','pronoun',
+                  'institution','base_score')
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    institution = serializers.PrimaryKeyRelatedField(
-        queryset=Institution.objects.all(),
-        slug_field='code'
-    )
-    tournament = serializers.SlugRelatedField(
-        queryset=Tournament.objects.all(),
-        slug_field='slug'
-    )
-    speakers = SpeakerSerializerImport(many=True)
+    # tournament = serializers.SlugRelatedField(
+    #     queryset=Tournament.objects.all(),
+    #     slug_field='slug'
+    # )
+    speakers = TeamSpeakerSerializer(many=True)
 
     class Meta:
         model = Team
-        fields = ('reference', 'code_name',
-                  'institution', 'speakers','tournament')
+        fields = ('id','reference', 'code_name',
+                  'institution', 'speakers','use_institution_prefix','break_categories')
 
     def create(self,validated_data):
         speaker_data = validated_data.pop('speakers')
@@ -166,7 +156,9 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
-    team_set = InstitutionTeamRelationalField(many=True, read_only=True)
+
+    #team = InstitutionTeamRelationalField(many=True, read_only=True,queryset=Team.objects.all())
     class Meta:
         model = Institution
         fields = ('id','name', 'code','team_set')
+        read_only_fields = ('team_set',)
