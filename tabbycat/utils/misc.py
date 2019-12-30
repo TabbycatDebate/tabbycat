@@ -1,5 +1,6 @@
 import logging
 from secrets import SystemRandom
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from django.urls import reverse
 from django.utils import formats, timezone, translation
@@ -74,3 +75,11 @@ def ranks_dictionary(tournament):
 def generate_identifier_string(charset, length):
     """Used in privateurl/checkin identifier generation"""
     return ''.join(SystemRandom().choice(charset) for _ in range(length))
+
+
+def add_query_string_parameter(url, key, value):
+    scheme, netloc, path, params, query, fragment = urlparse(url)
+    query_parts = parse_qs(query)
+    query_parts[key] = value
+    query = urlencode(query_parts, safe='/')
+    return urlunparse((scheme, netloc, path, params, query, fragment))
