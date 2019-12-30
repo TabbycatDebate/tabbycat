@@ -551,7 +551,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 descriptors = []
                 if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
-                if a['adj'].institution is not None:
+                if a['adj'].institution is not None and (
+                        self.admin or self.tournament.pref('show_adjudicator_institutions')):
                     descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
