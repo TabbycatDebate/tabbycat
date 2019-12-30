@@ -39,22 +39,19 @@
           {% endblocktrans %}
         {% else %}
           <input type="hidden" name="action" value="checkin" />
-          {% blocktrans trimmed asvar text %}
-            Check in
-          {% endblocktrans %}
+          {% trans "Check in" as text %}
         {% endif %}
         {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
       </form>
     {% elif checkins_used %}
       {% if event %}
+        {# Translators: Include the full-stop; English doesn't because "a.m." already has a full stop. #}
         {% blocktrans trimmed with check_time=event.time asvar text %}
-          You have been checked-in at {{ check_time }}
+          You have been checked in at {{ check_time }}
         {% endblocktrans %}
-        {% include "components/item-info.html" %}
+        {% include "components/item-info.html" with type='success' %}
       {% else %}
-        {% blocktrans trimmed asvar text %}
-          You are not currently checked-in
-        {% endblocktrans %}
+        {% trans "You are not currently checked in." as text %}
         {% include "components/item-info.html" with type='warning' %}
       {% endif %}
     {% endif %}
