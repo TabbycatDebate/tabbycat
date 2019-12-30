@@ -1,8 +1,6 @@
 from rest_framework.relations import HyperlinkedIdentityField
 from rest_framework.reverse import reverse
 
-from participants.models import Team
-
 
 class TournamentHyperlinkedIdentityField(HyperlinkedIdentityField):
 

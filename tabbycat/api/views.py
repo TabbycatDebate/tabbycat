@@ -82,9 +82,11 @@ class SpeakerEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, Retrieve
     serializer_class = serializers.SpeakerEligibilitySerializer
     lookup_field = 'slug'
 
+
 class InstitutionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
     queryset = Institution.objects.all()
+
     def get_queryset(self):
         return Institution.objects.all()
 
@@ -100,8 +102,10 @@ class InstitutionViewSetCreateView(CreateAPIView):
 class TeamViewSetCreateView(TournamentAPIMixin,CreateAPIView):
     serializer_class = serializers.TeamSerializer
 
+
 class AdjudicatorViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.AdjudicatorSerializer
+
 
 class AdjudicatorViewSetCreateView(TournamentAPIMixin,CreateAPIView):
     serializer_class = serializers.AdjudicatorSerializer

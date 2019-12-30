@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from breakqual.models import BreakCategory
-from participants.models import Speaker, SpeakerCategory, Institution, Team, Adjudicator
+from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from tournaments.models import Tournament
 
 from .fields import TournamentHyperlinkedIdentityField
@@ -158,7 +158,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class InstitutionSerializer(serializers.ModelSerializer):
 
     teams = serializers.SerializerMethodField()
-    #team = InstitutionTeamRelationalField(many=True, read_only=True,queryset=Team.objects.all())
+
     class Meta:
         model = Institution
         fields = ('id','name', 'code','teams')
