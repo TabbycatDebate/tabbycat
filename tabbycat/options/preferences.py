@@ -1098,7 +1098,7 @@ class ShowTeamInstitutions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowAdjudicatorInstitutions(BooleanPreference):
-    help_text = _("In tables listing adjudicators, adds a column showing their institutions")
+    help_text = _("Hide the institutions of adjudicators on public pages and on printed ballots")
     verbose_name = _("Show adjudicator institutions")
     section = ui_options
     name = 'show_adjudicator_institutions'
