@@ -157,12 +157,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class InstitutionSerializer(serializers.ModelSerializer):
 
-    teams = serializers.SerializerMethodField()
-
     class Meta:
         model = Institution
-        fields = ('id','name', 'code','teams')
-        read_only_fields = ('teams',)
-
-    def get_teams(self,obj):
-        return list(map(lambda x:x.id,obj.team_set.filter(tournament=self.context['tournament'])))
+        fields = ('id','name', 'code','team_set')
+        read_only_fields = ('team_set',)

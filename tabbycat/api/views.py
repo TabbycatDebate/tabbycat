@@ -9,6 +9,8 @@ from tournaments.mixins import TournamentMixin
 
 from participants.models import Institution
 
+from django.db.models import Prefetch
+
 from . import serializers
 
 
@@ -85,10 +87,9 @@ class SpeakerEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, Retrieve
 
 class InstitutionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.InstitutionSerializer
-    queryset = Institution.objects.all()
 
     def get_queryset(self):
-        return Institution.objects.all()
+        return Institution.objects.all().prefetch_related(Prefetch('team_set',queryset=self.tournament.team_set.all()))
 
 
 class TeamViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
