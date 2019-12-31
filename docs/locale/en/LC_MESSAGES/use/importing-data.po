@@ -1,0 +1,235 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2019, Philip Belesky, Chuan-Zheng Lee
+# This file is distributed under the same license as the Tabbycat package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Tabbycat 2.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-31 10:38-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ../../use/importing-data.rst:5
+msgid "Importing Initial Data"
+msgstr ""
+
+#: ../../use/importing-data.rst:7
+msgid "Once you've got Tabbycat installed, the next step is to import data for the tournament: that is, import details of teams, speakers, adjudicators and rounds. There are a few ways to do this, each with their advantages and disadvantages."
+msgstr ""
+
+#: ../../use/importing-data.rst:9
+msgid "To help you decide which to choose, here's a summary:"
+msgstr ""
+
+#: ../../use/importing-data.rst:12
+msgid "Method"
+msgstr ""
+
+#: ../../use/importing-data.rst:12
+msgid "Best for"
+msgstr ""
+
+#: ../../use/importing-data.rst:12
+msgid "Drawcard"
+msgstr ""
+
+#: ../../use/importing-data.rst:12
+msgid "Drawback"
+msgstr ""
+
+#: ../../use/importing-data.rst:14
+msgid "**Demonstration data**"
+msgstr ""
+
+#: ../../use/importing-data.rst:14
+msgid "Trying out Tabbycat"
+msgstr ""
+
+#: ../../use/importing-data.rst:14
+msgid "Loads sample data in one click"
+msgstr ""
+
+#: ../../use/importing-data.rst:14
+msgid "Not for use with real tournaments"
+msgstr ""
+
+#: ../../use/importing-data.rst:18
+msgid "**Simple importer**"
+msgstr ""
+
+#: ../../use/importing-data.rst:18
+msgid "Small and medium-sized tournaments"
+msgstr ""
+
+#: ../../use/importing-data.rst:18
+msgid "Easy to use"
+msgstr ""
+
+#: ../../use/importing-data.rst:18
+msgid "Only deals with basic data"
+msgstr ""
+
+#: ../../use/importing-data.rst:22
+msgid "**Edit database**"
+msgstr ""
+
+#: ../../use/importing-data.rst:22
+msgid "Adding data not handled by the simple importer or editing existing data"
+msgstr ""
+
+#: ../../use/importing-data.rst:22
+msgid "Can handle all types of information"
+msgstr ""
+
+#: ../../use/importing-data.rst:22
+msgid "Adding large amounts of data is time consuming"
+msgstr ""
+
+#: ../../use/importing-data.rst:28
+msgid "``importtournament`` **command**"
+msgstr ""
+
+#: ../../use/importing-data.rst:28
+msgid "Large tournaments"
+msgstr ""
+
+#: ../../use/importing-data.rst:28
+msgid "Easier to repeat, can handle most formats of information"
+msgstr ""
+
+#: ../../use/importing-data.rst:28
+msgid "Requires basic knowledge of how to use a command line interface"
+msgstr ""
+
+#: ../../use/importing-data.rst:33
+msgid "**Developing your own importer**"
+msgstr ""
+
+#: ../../use/importing-data.rst:33
+msgid "Large tournaments with custom needs"
+msgstr ""
+
+#: ../../use/importing-data.rst:33
+msgid "Easier to repeat, will take information in whatever format it is already in"
+msgstr ""
+
+#: ../../use/importing-data.rst:33
+msgid "Requires background in Python and and learning about the importer classes"
+msgstr ""
+
+#: ../../use/importing-data.rst:41
+msgid "Demonstration data"
+msgstr ""
+
+#: ../../use/importing-data.rst:42
+msgid "If you're just learning or experimenting with Tabbycat, there are two demonstration datasets available, each with a sample set of teams, adjudicators, *etc.*, so that you can immediately start running rounds. Just be aware that these probably won't relate to anyone at your real-life tournament."
+msgstr ""
+
+#: ../../use/importing-data.rst:44
+msgid "To load a demonstration dataset, click **New Tournament** link on the home page (once logged in as admin). You'll see a page titled \"Create New Tournament\". Scroll to the bottom of this page and click on one of the links at the bottom."
+msgstr ""
+
+#: ../../use/importing-data.rst:47
+msgid "Simple importer"
+msgstr ""
+
+#: ../../use/importing-data.rst:48
+msgid "The simple importer is the easiest way to get a tournament going, and we recommend it for small- and medium-sized tournaments. It allows you to add institutions, teams, adjudicators, venues, venue categories and venue constraints. (If you need to add anything else, use the :ref:`Edit Database area <import-edit-database>` instead.)"
+msgstr ""
+
+#: ../../use/importing-data.rst:50
+msgid "To get started, create a new tournament using the **New Tournament** link on the home page (once logged in as admin). It'll ask you for a few basic pieces of information."
+msgstr ""
+
+#: ../../use/importing-data.rst:54
+msgid "Then, once you're in your tournament, click **Setup** in the left-hand menu, then **Import Data**, to open the simple importer."
+msgstr ""
+
+#: ../../use/importing-data.rst:58
+msgid "You first need to add institutions. Once institutions are added, you can then add teams and adjudicators in the relevant sections. Each of these is a two-step process:"
+msgstr ""
+
+#: ../../use/importing-data.rst:60
+msgid "For **institutions** and **venues**, it will first ask you to copy-paste a list of names and properties in a comma-separated table format.  The second step is to confirm individual fiels."
+msgstr ""
+
+#: ../../use/importing-data.rst:61
+msgid "For **teams** and **adjudicators**, it will first ask you how many teams/adjudicators to add for each institution (or who lack an institutional affiliation). The second step is to fill in their details, for example, names."
+msgstr ""
+
+#: ../../use/importing-data.rst:69
+msgid "Finally, if you would like to use venue categories and/or :ref:`venue constraints <venue-constraints>`, you can do so using the two last sections of the simple importer."
+msgstr ""
+
+#: ../../use/importing-data.rst:71
+msgid "If copying and pasting from a spreadsheet, an easy way to make a comma-separated table is to save a spreadsheet with the relevant information as a \\*.csv file, then open this file in a plain text editor (such as Notepad or TextEdit), and copying it from there."
+msgstr ""
+
+#: ../../use/importing-data.rst:76
+msgid "Editing the database"
+msgstr ""
+
+#: ../../use/importing-data.rst:77
+msgid "Sometimes, the simple importer just isn't enough---whether because you need more customization than the simple importer handles (*e.g.* adjudicator feedback questions), or because some participants changed their details after you imported the inital data. In this case, the easiest thing to do is to edit the database via the Django administrative interface (under Setup > Edit Database)."
+msgstr ""
+
+#: ../../use/importing-data.rst:79
+msgid "The general pattern goes like this: Go to **Setup > Edit Database**, find the type of object you wish to add/change, and click \"Add\" or \"Change\". Then, fill in what you need to and save the object."
+msgstr ""
+
+#: ../../use/importing-data.rst:81
+msgid "The Edit Database area is very powerful, and naturally if you mess things up, you can insert potentially catastrophic inconsistencies into the database. For participant information this is hard to do, but it's worth keeping in mind."
+msgstr ""
+
+#: ../../use/importing-data.rst:86
+msgid "The ``importtournament`` command on local installations"
+msgstr ""
+
+#: ../../use/importing-data.rst:88
+msgid "We've written a management command called ``importtournament`` to help automate the tournament set-up. The script, however, is neither foolproof nor comprehensive, so you might find you need to modify things slightly if your tournament structure is different from ours. Be prepared to try this a few times to get it to work. Nonetheless, this is probably the fastest way to set up a tournament."
+msgstr ""
+
+#: ../../use/importing-data.rst:90
+msgid "Copy and rename the ``data/demo`` folder"
+msgstr ""
+
+#: ../../use/importing-data.rst:91
+msgid "See the CSV files in the new folder, and add/replace the data as per your tournament. Note that the institutions (*i.e.* first column) in the ``speakers.csv`` and ``adjudicators.csv`` files must match the institutions in the second column of the ``institutions.csv`` file. And that all CSV files must end with a blank line."
+msgstr ""
+
+#: ../../use/importing-data.rst:92
+msgid "Use this command, replacing ``YOUR_DATA_DIR`` with your new folder's name. (Square brackets indicate optional arguments; if you use them, omit the square brackets. All of them relate to the name of your tournament.)"
+msgstr ""
+
+#: ../../use/importing-data.rst:98
+msgid "This script has a number of options. They're worth taking a look at before you run the script. For details, see::"
+msgstr ""
+
+#: ../../use/importing-data.rst:102
+msgid "Assuming the command completes successfully without errors, you should double check the data in the Django interface, as described above in :ref:`import-edit-database`. In particular you should check that the *Rounds* have the correct draw types and that silent rounds have been marked correctly."
+msgstr ""
+
+#: ../../use/importing-data.rst:105
+msgid "``importtournament`` on Heroku installs"
+msgstr ""
+
+#: ../../use/importing-data.rst:107
+msgid "Instructions for using the ``importtournament`` command on Heroku installations are in steps 4 and 5 of :ref:`install-heroku`. The recommended procedure is first to import the tournament into a local installation, :ref:`as described above <importtournament-command>`, and then to push the local database to Heroku using the ``heroku pg:push`` command."
+msgstr ""
+
+#: ../../use/importing-data.rst:110
+msgid "Developing your own importer"
+msgstr ""
+
+#: ../../use/importing-data.rst:112
+msgid "If our suggested file formats cause you headaches, it might be easier to write your own importer. We have a generic importer framework that should make this easier, so for some tournaments it might (very conceivably) be faster to write your own importer to conform to your data, than it is to make your data conform to our importer. You need a background in Python in order to do this. For more details, see :ref:`tournament-data-importers`."
+msgstr ""
+
