@@ -1,4 +1,5 @@
 ---
+version: "2"
 checks:
   file-lines:
     config:
@@ -6,42 +7,32 @@ checks:
   method-complexity:
     config:
       threshold: 8
-engines:
+plugins:
   csslint:
     enabled: true
   duplication:
     enabled: true
     config:
       languages:
-      - ruby
       - javascript
       - python:
           mass_threshold: 50
-      - php
-    exclude_paths:
-      - "tabbycat/*/migrations/*.py"
-      - "tabbycat/*/tests/*.py"
-      - "tabbycat/*/urls*.py"
-      - "tabbycat/options/preferences.py"
-    exclude_fingerprints:
-      - 5eb53f480bfbacf8ed37c29d64a9555e
   eslint:
     enabled: true
   fixme:
     enabled: true
   radon:
     enabled: true
-    exclude_paths:
+    exclude_patterns:
       - "tabbycat/draw/generator/*.py"
     config:
       threshold: "C"
-ratings:
-  paths:
-  - "**.css"
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"
-  - "**.php"
-  - "**.py"
-  - "**.rb"
+exclude_patterns:
+  - "tabbycat/*/migrations/*.py"
+  - "tabbycat/*/urls*.py"
+  - "tabbycat/options/preferences.py"
+  - "tabbycat/locale/jsi18n/"
+  - "tabbycat/utils/formats/"
+  - "config/"
+  - "**/node_modules/"
+  - "**/tests/"
