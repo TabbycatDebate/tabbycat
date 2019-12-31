@@ -1,6 +1,12 @@
+from django.conf.urls import url
 from django.urls import include, path
 
+from rest_framework.routers import SimpleRouter
+
 from . import views
+
+pref_router = SimpleRouter()
+pref_router.register('preferences', views.TournamentPreferenceViewSet)
 
 list_methods = {'get': 'list', 'post': 'create'}
 detail_methods = {'get': 'retrieve', 'post': 'update', 'delete': 'destroy'}
@@ -37,6 +43,7 @@ urlpatterns = [
                     name='api-speakercategory-eligibility'),
             ])),
         ])),
+        url('', include(pref_router.urls)),  # Preferences
     ])),
 
 ]

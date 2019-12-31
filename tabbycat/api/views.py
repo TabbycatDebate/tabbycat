@@ -1,7 +1,10 @@
+from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
+from dynamic_preferences.api.serializers import PreferenceSerializer
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 
+from options.models import TournamentPreferenceModel
 from tournaments.mixins import TournamentMixin
 
 from . import serializers
@@ -24,6 +27,14 @@ class TournamentAPIMixin(TournamentMixin):
 
 class AdministratorAPIMixin:
     permission_classes = [IsAdminUser]
+
+
+class TournamentPreferenceViewSet(TournamentMixin, AdministratorAPIMixin, PerInstancePreferenceViewSet):
+    queryset = TournamentPreferenceModel.objects.all()
+    serializer_class = PreferenceSerializer
+
+    def get_related_instance(self):
+        return self.tournament
 
 
 class BreakCategoryViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
