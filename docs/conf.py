@@ -320,3 +320,8 @@ else:
 # -- Options for inline LaTeX (imgmath) ------------------------------------
 
 imgmath_image_format = 'svg'
+
+
+# -- Localisation options --------------------------------------------------
+locale_dirs = ['locale/']
+gettext_compact = False
