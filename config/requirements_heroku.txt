@@ -9,7 +9,7 @@ honcho==1.0.1                           # Allows a Procfile to run multiple proc
 gunicorn==19.9.0                        # Primary server for wsgi
 
 # Cache
-django-redis==4.10.0                    # Use redis for cache (on heroku; local optional)
+django-redis==4.11.0                    # Use redis for cache (on heroku; local optional)
 
 # Misc
 sendgrid==6.0.5                         # Email service of choice on Heroku
