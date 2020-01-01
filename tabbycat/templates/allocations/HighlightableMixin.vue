@@ -1,66 +1,85 @@
 <script>
-// Assumes highlightable objects; must provide a highlightableObject computed
-// property that points to the base team/adj object
-// They should then bind :class to include highlightsClasses
-import _ from 'lodash'
+// Must provide a computer properaty of highlightData pointing to adj/team/etc
+// Then uses highlightsCSS within a :class property
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   computed: {
-    highlightsIdentity: function () {
-      var classString = ''
-      var region = this.highlightableObject.region
-      if (!_.isUndefined(region) && region !== null) {
-        classString += " region-" + region.class
-      }
-      var gender = this.getGender(this.highlightableObject)
-      if (!_.isUndefined(gender) && gender !== null) {
-        classString += gender
-      }
-      _.forEach(this.highlightableObject.break_categories, function (category) {
-        classString += " category-" + category.class
-      });
-      return classString
+    highlightsCSS: function () {
+      return [this.activeClass, this.breakClass, this.genderClass, this.regionClass, this.rankClass].join(' ')
     },
-    highlightsStatus: function () {
-      var highlights = this.highlightableObject.highlights
-      var classString = ''
-      if (highlights.region === true) {
-        classString += " region-display"
+    activeClass: function () {
+      let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
+      if (currentKey.length > 0) {
+        return currentKey + '-display'
       }
-      if (highlights.gender === true) {
-        classString += " gender-display"
-      }
-      if (highlights.category === true) {
-        classString += " category-display"
-      }
-      if (highlights.ranking === true) {
-        classString += " ranking-display"
-      }
-      return classString
+      return ''
     },
-  },
-  methods: {
-    getGender: function (adjorteam) {
-      if (!_.isUndefined(adjorteam.gender) && adjorteam.gender !== null) {
-        return " gender-" + adjorteam.gender
-      }
-      if (!_.isUndefined(adjorteam.speakers)) {
-        var class_string = ''
-        var men = _.filter(adjorteam.speakers, function (s) {
-          return s.gender === "M"
-        })
-        var notmen = _.filter(adjorteam.speakers, function (s) {
-          return s.gender === "F" || s.gender === "O"
-        })
-        if (notmen.length > 0 || men.length > 0) {
-          class_string += ' has-gender '
+    breakClass: function () {
+      if (typeof this.highlightData === 'object' && this.highlightData && 'break_categories' in this.highlightData) {
+        var breakClasses = []
+        let highlightCategories = Object.keys(this.highlights.break.options)
+        for (let breakCategory of this.highlightData.break_categories) {
+          let matchingCategory = highlightCategories.filter(
+            bc => this.highlights.break.options[bc].pk === breakCategory)
+          if (matchingCategory.length > 0) {
+            breakClasses += ' ' + this.highlights.break.options[matchingCategory[0]].css
+          }
         }
-        class_string += ' gender-men-' + men.length + ' gender-notmen-' + notmen.length
-
-        return class_string
+        return breakClasses
+      }
+      return ''
+    },
+    genderClass: function () {
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('gender' in this.highlightData) {
+          return ` gender-${this.highlightData.gender}` // Must be an adjudicator
+        }
+      }
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('speakers' in this.highlightData) {
+          let classString = ''
+          const men = this.highlightData.speakers.filter(s => s.gender === 'M')
+          const notmen = this.highlightData.speakers.filter(s => s.gender === 'F' || s.gender === 'O')
+          classString += `gender-men-${men.length} gender-notmen-${notmen.length}`
+          return classString
+        }
       }
       return '' // Fallback
-    }
-  }
+    },
+    regionClass: function () {
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('institution' in this.highlightData) {
+          const itemsInstitutionID = this.highlightData.institution
+          if (itemsInstitutionID && 'region' in this.highlights) {
+            if (itemsInstitutionID in this.allInstitutions) {
+              const itemsInstitution = this.allInstitutions[itemsInstitutionID]
+              const itemsRegion = this.highlights.region.options[itemsInstitution.region]
+              if (itemsRegion) {
+                return this.highlights.region.options[itemsInstitution.region].css
+              }
+            }
+          }
+        }
+      }
+      return ''
+    },
+    rankClass: function () {
+      if (this.highlightData && typeof this.highlightData === 'object') {
+        if ('score' in this.highlightData) {
+          let rankCategories = Object.keys(this.highlights.rank.options)
+          for (let rankCategory of rankCategories) {
+            if (this.highlightData.score >= this.highlights.rank.options[rankCategory].fields.cutoff) {
+              return this.highlights.rank.options[rankCategory].css
+            }
+          }
+        }
+      }
+      return ''
+    },
+    ...mapState(['highlights']),
+    ...mapGetters(['allInstitutions']),
+  },
+  methods: { },
 }
 </script>

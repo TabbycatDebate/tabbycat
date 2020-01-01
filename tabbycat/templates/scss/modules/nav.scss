@@ -34,8 +34,20 @@
     color: theme-color("primary"); // Keep consistent with top level
   }
   // Override standard dropdown highlights
-  &.active, &:focus {
+  &.active,
+  &:focus {
     color: $navbar-light-active-color;
+  }
+}
+
+.draw-dropdown-menu {
+
+  .dropdown-item:last-child {
+    display: none; // Hide the "no draws element" if other options present
+  }
+
+  .dropdown-item:first-child {
+    display: block; // Show the "no draws element" if no other options present
   }
 }
 
@@ -92,7 +104,6 @@
   }
 }
 
-
 // Sub menu items
 .admin-sidebar .list-group-item > .collapse,
 .admin-sidebar .list-group-item > .collapsing {
@@ -117,7 +128,6 @@
     font-family: $headings-font-family;
     padding-left: 16px;
   }
-
 }
 
 .admin-sidebar .tournament-title {
@@ -189,7 +199,6 @@
       margin-top: 2px;
       margin-right: 0;
     }
-
   }
 
   .admin-sidebar .list-group-item > .collapse .list-group-item,
@@ -209,7 +218,6 @@
   .admin-sidebar .collapsing .list-group-item {
     font-size: 10px;
   }
-
 }
 
 // Applies just to tablets
@@ -287,8 +295,6 @@
 // overlay sub levels on small screens
 @include media-breakpoint-down(sm) {
 
-  .admin-sidebar .list-group-item,
-  .admin-sidebar .list-group-item,
   .admin-sidebar .list-group-item {
     z-index: $z_2;
   }

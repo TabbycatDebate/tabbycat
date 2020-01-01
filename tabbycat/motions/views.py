@@ -1,35 +1,30 @@
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
-from django.forms.models import modelformset_factory
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from notifications.models import BulkNotification
+from notifications.views import RoleColumnMixin, RoundTemplateEmailCreateView
+from participants.models import Speaker
 from tournaments.mixins import (CurrentRoundMixin, OptionalAssistantTournamentPageMixin,
                                 PublicTournamentPageMixin, RoundMixin, TournamentMixin)
-from utils.misc import redirect_round
+from utils.misc import redirect_round, reverse_round
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView, PostOnlyRedirectView
 
 from .models import Motion
-from .forms import ModelAssignForm
 from .statistics import MotionStatistics
 
 
 class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
     public_page_preference = 'public_motions'
 
-    def using_division_motions(self):
-        return self.tournament.pref('enable_divisions') and self.tournament.pref('enable_division_motions')
-
     def get_template_names(self):
-        if self.using_division_motions():
-            return ['public_division_motions.html']
-        else:
-            return ['public_motions.html']
+        return ['public_motions.html']
 
     def get_context_data(self, **kwargs):
         order_by = 'seq' if self.tournament.pref('public_motions_order') == 'forward' else '-seq'
@@ -37,9 +32,7 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
         # Include rounds whether *either* motions are released *or* it's this
         # round or a previous round. The template checks motion_released again
         # and displays a "not released" message if motions are not released.
-        filter_q = Q(motions_released=True)
-        if not self.using_division_motions():
-            filter_q |= Q(seq__lte=self.tournament.current_round.seq)
+        filter_q = Q(motions_released=True) | Q(seq__lte=self.tournament.current_round.seq)
 
         kwargs['rounds'] = self.tournament.round_set.filter(filter_q).order_by(
                 order_by).prefetch_related('motion_set')
@@ -49,7 +42,6 @@ class PublicMotionsView(PublicTournamentPageMixin, TemplateView):
 class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormSetView):
     # Django doesn't have a class-based view for formsets, so this implements
     # the form processing analogously to FormView, with less decomposition.
-    # See also: participants.views.PublicConfirmShiftView.
 
     template_name = 'motions_edit.html'
     action_log_type = ActionLogEntry.ACTION_TYPE_MOTION_EDIT
@@ -57,12 +49,6 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
 
     def get_formset_factory_kwargs(self):
         excludes = ['round', 'id']
-
-        if not self.tournament.pref('enable_flagged_motions'):
-            excludes.append('flagged')
-
-        if not self.tournament.pref('enable_divisions'):
-            excludes.append('divisions')
 
         nexisting = self.get_formset_queryset().count()
         if self.tournament.pref('enable_motions'):
@@ -111,24 +97,6 @@ class EditMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, ModelFormS
         return redirect_round('draw-display', round)
 
 
-class AssignMotionsView(AdministratorMixin, RoundMixin, ModelFormSetView):
-
-    template_name = 'assign.html'
-    formset_factory_kwargs = dict(extra=0, fields=['divisions'])
-    formset_model = Motion
-
-    def get_formset_queryset(self):
-        return self.round.motion_set.all()
-
-    def get_formset_class(self):
-        return modelformset_factory(Motion, ModelAssignForm, extra=0, fields=['divisions'])
-
-    def formset_valid(self, formset):
-        formset.save()  # Should be checking for validity but on a deadline and was buggy
-        messages.success(self.request, 'Those motion assignments have been saved.')
-        return redirect_round('motions-edit', self.round)
-
-
 class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, PostOnlyRedirectView):
 
     round_redirect_pattern_name = 'draw-display'
@@ -138,6 +106,7 @@ class BaseReleaseMotionsView(AdministratorMixin, LogActionMixin, RoundMixin, Pos
         round.motions_released = self.motions_released
         round.save()
         self.log_action()
+
         messages.success(request, self.message_text)
         return super().post(request, *args, **kwargs)
 
@@ -174,6 +143,20 @@ class AdminDisplayMotionsView(AdministratorMixin, BaseDisplayMotionsView):
 
 class AssistantDisplayMotionsView(CurrentRoundMixin, OptionalAssistantTournamentPageMixin, BaseDisplayMotionsView):
     assistant_page_permissions = ['all_areas']
+
+
+class EmailMotionReleaseView(RoleColumnMixin, RoundTemplateEmailCreateView):
+    page_subtitle = _("Round Motions")
+
+    event = BulkNotification.EVENT_TYPE_MOTIONS
+    subject_template = 'motion_email_subject'
+    message_template = 'motion_email_message'
+
+    def get_success_url(self):
+        return reverse_round('draw-display', self.round)
+
+    def get_default_send_queryset(self):
+        return Speaker.objects.filter(team__round_availabilities__round=self.round, email__isnull=False).exclude(email__exact="")
 
 
 class BaseMotionStatisticsView(TournamentMixin, TemplateView):

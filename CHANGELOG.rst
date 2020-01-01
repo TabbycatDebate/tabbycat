@@ -2,16 +2,213 @@
 Change Log
 ==========
 
+2.4.0 (Maine)
+-------------
+*Release date: ?*
+
+- Added support for Russian, and shortened the language selector
+- Renamed 'test score' to 'base score'
+- Divisions-specific features have been deprecated and removed
+- Moved the 'Edit Database' menu item to the dropdown with the logo in the admin navigation
+- Pull-ups can now be restricted to teams with the lowest draw strength (by speaker or team points) of their bracket
+- The number of pull-ups and draw strength by speaker score are now available as team standing metrics
+- Added the new emoji that come along with Unicode 11 — thanks to Viran Weerasekera for this addition!
+- The 'Show adjudicator institutions' preference now covers a wider range of cases; meaning that if it is unchecked then all adjudicator's institutional affiliations should be hidden from the public
+
+
+2.3.2
+-----
+*Release date: 19 October 2019*
+
+- Fixed issue where teams would appear to be unavailable in break rounds
+- Other minor fixes
+
+
+2.3.1
+-----
+*Release date: 6 October 2019*
+
+- Fixed issue where the institutions list would count teams/adjudicators outside of the tournament
+- Fixed issue where a rejected ballot form would crash rather than providing an error message
+- Fixed issue where the javascript bundle would not build on a local windows install
+- Fixed issue where the adjudicator record pages would show an unreleased motion if that round's draw was released
+
+
+2.3.0 (LaPerm)
+--------------
+*Release date: 27 September 2019*
+
+- Added a preformed panel system which provides a powerful take on a 'shadow draw' workflow
+    - Shadow draw systems allow an adjudication core to form panels prior to a round being drawn. For example, the panels for Round 4 could be formed while Round 3 is taking place. Most implementations do so by having the tab system create a copy of the Round 3 draw, form new panels on top of it, and then transpose these panels onto Round 4. In large tournaments this workflow allows an adjudication core much more time to consider panel formation
+    - Tabbycat's preformed panels are formed per-round under a section available under the Setup menu. This interface looks like the standard Edit Adjudicators interface, but the 'debates' shown are based on a simulation of that round's results. These fake debates can then be prioritised
+    - Adjudicators can then be allocated to those fake debates in order to create a pre-formed panel. When the real draw is ready to be created, the priority of each preformed panel will be matched to the priority of the real debates
+    - By using the existing per-debate priority system, and by giving pre-formed panels their own priority, this workflow allows for very fine amounts of control over exactly how preformed panels are allocated as compared to a more simple top-down transposition of panels. Adjudication cores can easily target general areas of the draw (e.g. break-threshold brackets); control adjudicator strength within and across panels; and still account for special cases where a debate requires a particularly strong panel. At the same time, our existing options for automatic prioritisation and automatic allocation apply to all steps of this process so that preformed panels can be created and deployed rapidly
+- Rewrote the Edit Adjudication, Venues, and Teams pages to enable a number of enhancements
+    - These pages now live-update changes that were made on other instances of that page. As a result, users on different computers can each open the Edit Adjudicators page and see the changes made by the other users. This feature, along with sharding, should make it easier than ever to distribute the task of adjudicator allocation across an entire adjudication core
+    - A new interface layout should better maximise space, particularly in BP settings, while also increasing the font size of key information
+    - The unused panel is now able to sort adjudicators by name, score, or drag order
+    - Average scores for all adjudicators, and a voting majority, are now shown next to the panel
+    - Various allocation-relevant settings, such as the minimum feedback score needed for a voting position, are now available inline on the allocation page itself. This should enable much faster tweaks/iterations of these values
+- The ballot entry page will now indicate which teams have currently or recently given 'iron person' speeches so that these can be easily tracked, audited, and confirmed. It does show by showing both a text-highlight/icon in the table and in a dedicated modal window. Thanks to Étienne Beaulé for contributing this feature!
+- Split up the Django settings files. Note that this means if you are upgrading a local install of Tabbycat to this version you will need to:
+    - Copy ``tabbycat/settings/local.example`` to become ``local.py`` (and fill in your original database details)
+    - Optional: repeat the same copying procedure for ``development.example`` and set the ``LOCAL_DEVELOPMENT`` environmental variable to ``True`` if you would like to use the settings designed to aid local development
+- A range of improvements to the email notifications contributed by Étienne Beaulé:
+    - Ballot receipt emails now provide more information about team scores/points
+    - Emails are now in a rich-text format
+    - Custom emails may be sent out to select participants through the web-interface
+    - Participants can be specifically included or excluded from receiving a notification before sending with checks for duplicate messages
+    - Teams can be sent emails with their draw details
+    - Emails can be tracked to determine if sent or read (SendGrid-specific)
+- Expanded the use of private URLs (Encore Étienne Beaulé):
+    - QR codes are now included in addition to the URL when printing private URLs
+    - Private landing pages will now display check-in status (if check-ins are used) along with further details regarding break categories, regions, etc.
+    - Current and former draw assignments will display along with submitted ballots (for adjudicators) on landing pages
+- Reworked how conflicts are determined to support double-past institutional conflicts:
+    - Added a "team-institution conflict" model
+    - Like adjudicator-institution conflicts, team-institution conflicts are automatically created if you use the simple importer or the command-line importer; but if you edit the database, it's your responsibility to add/edit them
+    - Institutional affiliations no longer matter for determining conflicts for either teams or adjudicators; only institutions listed in the team's or adjudicator's conflicts matter
+    - An adjudicator/team now conflicts with an adjudicator if *any* institution appears as an institutional conflict for both parties
+- When printing scoresheets you can now edit the motions display just on that printing page. This allows you to use placeholder motions in Tabbycat (in order to prevent leaks) while still producing ballots with the correct motions
+- Tabbycat no longer tracks which round is the 'current' round and instead tracks the completion of individual rounds. This change does not alter any existing workflows, but makes it easier to run simultaneous draws in out-rounds
+- Info-slides can now be split into paragraphs
+- Check-in pages now differentiate between teams with 1 and 2 checked-in people in two-team formats
+- Institutional caps in breaks can be based on the number of teams in the break. Thanks to Viran Weerasekera for this feature!
+- Several Tabbycat functions, adjudicator/venue allocation and email notifications, have been shifted to worker processes to help make them more reliable. If you are upgrading a Tabbycat instance that you will continue to use for new tournaments you will need to install the Heroku toolbelt and run ``heroku ps:scale worker=1``
+- Upgraded to Python 3.6, dropped support for Python 3.5 and below. Note that this will require you to upgrade your python versions if running locally.
+
+
+2.2.10
+------
+*Release date: 10 February 2019*
+
+- Fixed the display of feedback quantities on the Feedback Overview Page
+- Fixed issue where 'ignored' feedback would hide the result from the feedback graph but not affect an adjudicator's current score. Thanks to Étienne for this fix
+
+
+2.2.9
+-----
+*Release date: 24 January 2019*
+
+- Fixed an issue that could cause errors for tournaments when using an atypical number of rounds and break sizes. Thanks to Étienne for this fix
+- Fixed an issue where the display of adjudicator's record links would display their name twice
+
+
+2.2.8
+-----
+*Release date: 14 December 2018*
+
+- Fix issue where the check-in buttons were always disabled on admin and assistant pages
+- Other minor fixes. Thanks to Étienne for these and for the check-in button fix!
+
+
+2.2.7
+-----
+*Release date: 16 November 2018*
+
+- Lock redis-py version to 2.10.6, as workaround for `compatibility issue between django-redis and redis-py <https://github.com/niwinz/django-redis/issues/342>`_
+- Fix login link on page shown after a user logs out
+
+
+2.2.6
+-----
+*Release date: 14 November 2018*
+
+- Fix issue where check-ins could not be revoked
+- Fix issue where the standings overview 'dashboard' included scores from elimination rounds. Thanks to Étienne for this fix
+- Fix issue where the Average Individual Speaker Score metric would fail to calculate in some circumstances. Thanks to Étienne for this fix
+- Fix issue where draw emails would crash if venues were unspecified. Thanks, again, to Étienne for this fix!
+
+
+2.2.5
+-----
+*Release date: 21 October 2018*
+
+- Remove the buttons from the public check-ins page (as these do nothing unless the user is logged in)
+- Hopefully fixed error that could cause Team- and Adjudicator- Institutional conflicts to not show properly on Allocation pages
+- Thanks to Étienne for pull requests fixing rare bugs in the user creation form and break generation when rounds are not present
+
+
+2.2.4
+-----
+*Release date: 9 October 2018*
+
+- Small fixes for functions related to email sending, conflict highlighting, and certain configurations of standings metrics
+
+
+2.2.3
+-----
+*Release date: 28 September 2018*
+
+- *Literally* fix the issue causing public views of released scoresheets to throw errors (thanks for the pull request Étienne)
+- Fix minor spacing issues in printed ballots (thanks for the pull request Étienne)
+- Fix issue where institution-less adjudicators would cause some draw views to crash (thanks for the pull request Étienne)
+
+
+2.2.2
+-----
+*Release date: 22 September 2018*
+
+- *Actually* fix the issue causing public views of released scoresheets to throw errors
+
+
+2.2.1
+-----
+*Release date: 21 September 2018*
+
+- Fix issue causing public views of released scoresheets to throw errors
+
+
 2.2.0 (Khao Manee)
 ------------------
-*Release date: TBD*
+*Release date: 20 September 2018*
 
-- Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version.
-- Added a number of performance improvements that should help ensure pages load quickly when receiving large amounts of traffic.
-- Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score. Thanks Étienne Beaulé for the pull request!
-- Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6.
+- Implemented a new server architecture on Heroku along with other optimisation that should significantly improve the performance of sites receiving lots of traffic. Note that if you are upgrading an existing Heroku instance this requires a few tweaks before you deploy the update:
+    - Add the `https://github.com/heroku/heroku-buildpack-nginx.git` build pack under the Settings area of the Heroku Dashboard and positioning it first
+    - If your Heroku Stack is not "heroku-16" (noted under that same Settings page) it will need to be set as such using the Heroku CLI and the ``heroku stack:set heroku-16 --app APP_NAME`` command
+- Added a page to the documentation that details how to scale a Tabbycat site that is receiving large amounts of traffic; and another page that documents how to upgrade a Tabbycat site to a new version
+- Added support for Japanese and Portuguese. Let us know if you'd like to help contribute translations for either language (or a new one)!
+- The results-entry page now updates its data live, giving you a more up to date look at data entry progress and reducing the cases of old data leading people to enter new ballots when they meant to confirm them
+- A huge thanks to Étienne Beaulé for contributing a number of major new features and bug fixes. Notably:
+    - Added a means to mark feedback as 'ignored' so that it still is recorded as having been submitted, but does not affect the targeted-adjudicator's feedback score
+    - Added email notification to adjudicators on round release
+    - Implemented participant self-check-in through the use of their private URLs
+    - Gave all participants to a tournament a private URL key rather than being by team, and added a landing page for the participants using this key
+    - Implemented templated email notifications with ballot submission and round advance with the messages in a new settings panel. Private URL emails are now also customizable
+    - Added the "average individual speaker score" metric which averages the scores of all substantive speeches by the team within preliminary rounds. The old "average speaker score" metric has been renamed to to "average total speaker score"
+    - Reworked the ballots status graph to be an area chart
+- Added the ability to hide motions on printed ballots (even if they have been entered). Thanks to Github user 0zlw for the feature request!
+- Added the ability to unconfirm feedback from any of the views that show it
+- BP motion statistics now also show average points split by bench and half
+- Added a warning when users are close to their free-tier database limit on Heroku that makes it clear not to create new tournaments
+- Added ``exportconfig`` and ``importconfig`` management commands to export and import tournament configurations to a JSON file
+- Upgraded `django-dynamic-preferences <https://github.com/EliotBerriot/django-dynamic-preferences>`_ to version 1.6
 
-  This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_.
+  This won't affect most users, but advanced users previously having problems with a stray ``dynamic_preferences_users_userpreferencemodel`` table who are upgrading an existing instance may wish to run the SQL command ``DROP TABLE dynamic_preferences_users_userpreferencemodel;`` to remove this stray table. When this table was present, it caused an inconsistency between migration state and database schema that in turned caused the ``python manage.py flush`` command to fail. More information is available in the `django-dynamic-preferences changelog <https://django-dynamic-preferences.readthedocs.io/en/latest/history.html#migration-cleanup>`_
+
+
+2.1.3
+-----
+*Release date: 21 August 2018*
+
+- Added an alert for British Parliamentary format grand-final ballots that explains the workaround needed to nominate a sole winner
+- Improved display of images shown when sharing Tabbycat links on social media
+- Optimised the performance of several commonly-loaded pages. Thanks to Étienne Beaulé for the pull request!
+- Prevented the entry of integer-scale feedback questions without the required min/max attributes
+- Provided a shortcut link to editing a round's feedback weight
+- Prevented standings from crashing when only a single standings metric is set
+
+
+2.1.2
+-----
+*Release date: 14 July 2018*
+
+- Fixed an error caused when calculating breaks including teams without institutions
+- Improved display of long motions and info slides
+- Fixed bug in feedback progress tracking with UADC-style adjudication
+- Fixed bug where the public checks page would cause large amounts of failing requests
+- Fixed visual issue with adjudicator lists wrapping poorly on mobile devices
+- Limited the time it takes to serve requests to match Heroku's in-built limit; this may help improve the performance of sites under heavy load
 
 
 2.1.1
@@ -166,7 +363,7 @@ Change Log
     - Sidebar menu items now display all sub-items within a section, such as for Feedback, Standings, and Breaks
     - Better tablet and mobile interfaces; including a fully responsive sidebar for the admin area that maximises the content area
     - More explicit and obvious calls-to-action for the key tasks necessary to running a round, with better interface alerts and text to help users understand when and why to perform crucial actions
-    - Redesigned motions tab page that gives a better idea of the sample size and distribution of results in both two- and three- team formats
+    - Redesigned motions tab page that gives a better idea of the sample size and distribution of results in both two- and four- team formats
 - Improved handling of Break Rounds ballots and sides allocation
     - The positions of teams within a break round are now created by the initial draw generation in an 'unset' state in recognition that most tournaments assign these manually (through say a coin toss). This should help clarify when showing break rounds draws when sides are or are not finalised
     - Break rounds ballots for formats where scores are not typically entered (i.e. BP) will only specify that you nominate the teams advancing rather than enter in all of the speakers' scores

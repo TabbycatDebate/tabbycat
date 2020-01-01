@@ -1,28 +1,47 @@
 {% extends "base.html" %}
 {% load debate_tags i18n %}
 
+{% block page-title %}
+  {% if use_code_names %}
+    {% blocktrans trimmed with matchup=debate.matchup_codes %}
+      Ballot for {{ matchup }}
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with matchup=debate.matchup %}
+      Ballot for {{ matchup }}
+    {% endblocktrans %}
+  {% endif %}
+{% endblock %}
+{% block head-title %}
+  {% if use_code_names %}
+    {% blocktrans trimmed with matchup=debate.matchup_codes %}
+      Ballot for {{ matchup }}
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with matchup=debate.matchup %}
+      Ballot for {{ matchup }}
+    {% endblocktrans %}
+  {% endif %}
+{% endblock %}
 
-{% block page-title %}{% blocktrans trimmed with matchup=debate.matchup %}
-  Ballot for {{ matchup }}
-{% endblocktrans %}{% endblock %}
-{% block head-title %}{% blocktrans trimmed with matchup=debate.matchup %}
-  Ballot for {{ matchup }}
-{% endblocktrans %}{% endblock %}
 {% block sub-title %}
-    {{ debate.round.name }} @
-    {% if debate.division.venue_category %}
-      {{ debate.division.venue_category.short_name }}
-    {% endif %}
-    {{ debate.venue.display_name }}
+  {{ debate.round.name }} @ {{ debate.venue.display_name }}
 {% endblock %}
 
 {% block page-subnav-sections %}
-  <a class="btn btn-outline-primary" href="{% roundurl 'results-public-round' debate.round %}">
-    <i data-feather="chevron-left"></i>
-    {% blocktrans trimmed with round_name=debate.round.name %}
-      Return to Results for {{ round_name }}
-    {% endblocktrans %}
-  </a>
+  {% if private_url %}
+    <a class="btn btn-outline-primary" href="{% tournamenturl 'privateurls-person-index' url_key %}">
+      <i data-feather="chevron-left"></i>
+      {% trans "Return to landing page" %}
+    </a>
+  {% else %}
+    <a class="btn btn-outline-primary" href="{% roundurl 'results-public-round' debate.round %}">
+      <i data-feather="chevron-left"></i>
+      {% blocktrans trimmed with round_name=debate.round.name %}
+        Return to Results for {{ round_name }}
+      {% endblocktrans %}
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -30,7 +49,7 @@
   {% if motion.text  %}
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Motion</h4>
+        <h4 class="card-title">{% trans "Motion" %}</h4>
         {{ motion.text }}
       </div>
     </div>
@@ -66,7 +85,15 @@
                 </li>
               {% endfor %}
               <li class="list-group-item list-group-item-{{ team.win_style }}">
-                <em>Total for {{ team.team.short_name }} ({{ team.side }})</em>
+                {% if use_code_names %}
+                  {% blocktrans trimmed with name=team.team.code_name side=team.side %}
+                    <em>Total for {{ name }} ({{ side }})</em>
+                  {% endblocktrans %}
+                {% else %}
+                  {% blocktrans trimmed with name=team.team.short_name side=team.side %}
+                    <em>Total for {{ name }} ({{ side }})</em>
+                  {% endblocktrans %}
+                {% endif %}
                 <span class="badge badge-secondary float-right">
                   {{ team.total }}
                 </span>

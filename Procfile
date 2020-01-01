@@ -1,4 +1,7 @@
-# production
-# Note this assumes a Heroku environment (http timeout of 30s is premature elsewhere)
-# Note websocket timeout is set at 2 hours, this is to try and compensate for connections accidentally being left open (say on an idle machine) indefinitely
-web: sh -c 'cd ./tabbycat/ && daphne asgi:application --http-timeout 29 --websocket_timeout 7200 --port $PORT --bind 0.0.0.0 --verbosity 2'
+# Production
+
+# Note that this runs honcho, which in turn runs a second 'MultiProcfile'
+# This better allows for multiple processes to be run simultaneously
+
+web: honcho -f ProcfileMulti start
+worker: python manage.py runworker notifications adjallocation venues

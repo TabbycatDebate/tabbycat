@@ -4,9 +4,10 @@ from threading import Lock
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from utils.misc import badge_datetime_format
+from utils.misc import badge_datetime_format, reverse_tournament
 
 from .result import DebateResult
 from .utils import readable_ballotsub_result
@@ -99,8 +100,6 @@ class BallotSubmission(Submission):
         verbose_name=_("motion"))
     discarded = models.BooleanField(default=False,
         verbose_name=_("discarded"))
-    forfeit = models.ForeignKey('draw.DebateTeam', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("forfeit")) # where valid, cascade should be covered by debate
 
     class Meta:
         unique_together = [('debate', 'version')]
@@ -133,9 +132,6 @@ class BallotSubmission(Submission):
         if self.confirmed and self.discarded:
             raise ValidationError(_("A ballot can't be both confirmed and discarded!"))
 
-        if self.forfeit is not None and self.forfeit.debate != self.debate:
-            raise ValidationError(_("The forfeiter must be a team in the debate."))
-
     @property
     def serialize_like_actionlog(self):
         result_winner, result = readable_ballotsub_result(self)
@@ -145,7 +141,42 @@ class BallotSubmission(Submission):
             'type': result,
             'param': '',
             'timestamp': badge_datetime_format(self.timestamp),
-            'confirmed': self.confirmed
+            'confirmed': self.confirmed,
+            'debate': self.debate.id,
+            'result_status': self.debate.result_status
+        }
+
+    def serialize(self, tournament=None):
+        if not tournament:
+            tournament = self.debate.round.tournament
+
+        # Shown in the results page on a per-ballot; always measured in tab TZ
+        created_short = timezone.localtime(self.timestamp).strftime("%H:%M")
+        # These are used by the status graph
+        created = timezone.localtime(self.timestamp).isoformat()
+        confirmed = None
+        if self.confirm_timestamp and self.confirmed:
+            confirmed = timezone.localtime(self.confirm_timestamp).isoformat()
+
+        if tournament.pref('enable_blind_checks') and tournament.pref('teams_in_debate') == 'bp':
+            admin_url = 'results-ballotset-edit'
+            assistant_url = 'results-assistant-ballotset-edit'
+        else:
+            admin_url = 'old-results-ballotset-edit'
+            assistant_url = 'old-results-assistant-ballotset-edit'
+
+        return {
+            'ballot_id': self.id,
+            'debate_id': self.debate.id,
+            'submitter': self.submitter.username if self.submitter else self.ip_address,
+            'admin_link': reverse_tournament(admin_url, tournament, kwargs={'pk': self.id}),
+            'assistant_link': reverse_tournament(assistant_url, tournament, kwargs={'pk': self.id}),
+            'short_time': created_short,
+            'created_timestamp': created,
+            'confirmed_timestamp': confirmed,
+            'version': self.version,
+            'confirmed': self.confirmed,
+            'discarded': self.discarded,
         }
 
 
@@ -206,10 +237,6 @@ class TeamScore(models.Model):
         verbose_name=_("votes given"))
     votes_possible = models.PositiveSmallIntegerField(null=True, blank=True,
         verbose_name=_("votes possible"))
-
-    forfeit = models.BooleanField(default=False,
-        verbose_name=_("forfeit"),
-        help_text="Debate was a forfeit (True for both winning and forfeiting teams)")
 
     class Meta:
         unique_together = [('debate_team', 'ballot_submission')]

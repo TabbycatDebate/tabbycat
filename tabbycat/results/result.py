@@ -125,7 +125,7 @@ class BaseDebateResult:
     field, which normally means that the field will be left as null.
     """
 
-    TEAMSCORE_FIELDS = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible', 'forfeit']
+    TEAMSCORE_FIELDS = ['points', 'win', 'margin', 'score', 'votes_given', 'votes_possible']
 
     # These are used by prefetch_results to determine whether to populate
     # certain fields.
@@ -348,7 +348,7 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
         speakerscores = self.ballotsub.speakerscore_set.filter(
             debate_team__side__in=self.sides,
             position__in=self.positions,
-        ).select_related('speaker')
+        ).select_related('speaker', 'debate_team')
 
         for ss in speakerscores:
             self.speakers[ss.debate_team.side][ss.position] = ss.speaker
@@ -428,7 +428,8 @@ class BaseDebateResultWithSpeakers(BaseDebateResult):
                 side_dict["win_style"] = "success" if sheet.winner() == side else "danger"
             elif hasattr(sheet, 'rank'):
                 rank = sheet.rank(side)
-                side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+                if rank:
+                    side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
 
             for pos, pos_name in zip(self.positions, pos_names):
                 side_dict["speakers"].append({
@@ -497,7 +498,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
         self.load_scoresheets()
 
     def load_scoresheets(self):
-        debateadjs = self.debate.debateadjudicator_set.exclude(type=DebateAdjudicator.TYPE_TRAINEE)
+        debateadjs = self.debate.debateadjudicator_set.exclude(type=DebateAdjudicator.TYPE_TRAINEE).select_related('adjudicator')
         self.debateadjs = {da.adjudicator: da for da in debateadjs}
         self.scoresheets = {adj: self.scoresheet_class(self.positions) for adj in self.debateadjs.keys()}
 
@@ -505,7 +506,7 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             debate_adjudicator__in=debateadjs,
             debate_team__side__in=self.sides,
             position__in=self.positions,
-        ).select_related('debate_adjudicator__adjudicator', 'debate_team')
+        ).select_related('debate_adjudicator__adjudicator', 'debate_adjudicator__adjudicator__institution', 'debate_team')
 
         for ssba in speakerscorebyadjs:
             self.set_score(ssba.debate_adjudicator.adjudicator,
@@ -536,7 +537,13 @@ class VotingDebateResult(BaseDebateResultWithSpeakers):
             return None
 
     def set_score(self, adjudicator, side, position, score):
-        scoresheet = self.scoresheets[adjudicator]
+        try:
+            scoresheet = self.scoresheets[adjudicator]
+        except KeyError:
+            logger.exception("Adjudicator %s has a scoresheet but is not assigned \
+                to this debate. This debate's panel has probably been changed since \
+                this ballot was loaded for entry. Best to return to the results page \
+                and re-enter this ballot from scratch.", adjudicator.name)
         try:
             scoresheet.set_score(side, position, score)
         except AttributeError:
@@ -864,6 +871,8 @@ class BPEliminationDebateResult(BaseDebateResult):
         a ValueError."""
         if not all(x in self.sides for x in self.advancing):
             raise ValueError("Found invalid sides: %s" % sides)
+        if len(sides) != len(set(sides)):
+            raise ValueError("Sides advancing must be unique, found: %s" % sides)
         if len(sides) != 2:
             raise ValueError("Exactly two sides should be advancing, found: %s" % sides)
         self.advancing = sides
@@ -884,22 +893,3 @@ class BPEliminationDebateResult(BaseDebateResult):
 
     def teamscorefield_win(self, side):
         return side in self.advancing
-
-
-class ForfeitDebateResult(BaseDebateResult):
-    # This is WADL-specific for now
-
-    def __init__(self, ballotsub, forfeiter, load=True):
-        super().__init__(ballotsub, load=False) # never load from database
-        self.forfeiter = forfeiter
-        if load:
-            self.full_load()
-
-    def teamscorefield_points(self, side):
-        return int(side != self.forfeiter)
-
-    def teamscorefield_win(self, side):
-        return side != self.forfeiter
-
-    def teamscorefield_forfeit(self, side):
-        return True

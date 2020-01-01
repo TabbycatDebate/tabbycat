@@ -1,25 +1,26 @@
 {% extends "base.html" %}
-{% load debate_tags i18n %}
+{% load debate_tags i18n static %}
 {% block subheader %}{% endblock %}<!-- Overwritten to add messages later -->
 
 {% block js %}
   <script>
     window.vueData = {
-      'scanUrl': '{{ scan_url }}'
+      'tournamentSlug': '{{ tournament_slug }}'
     }
   </script>
+  <script src="{% static 'js/vendor/JsBarcode.all.min.js' %}"></script>
   {{ block.super }}
 {% endblock js %}
 
 {% block content %}
 
   <div class="d-none d-md-block">
-    {% trans "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as as a keyboard) or scan from a webcam or phone camera using the button below." as message %}
+    {% trans "To scan an identifier type the number below (it will auto-submit). You can also use a barcode scanner (configured to work as a keyboard) or scan from a webcam or phone camera using the button below." as message %}
     {% include "components/alert.html" with type="info" %}
   </div>
 
   <div id="vueMount">
-    <check-in-scan-container :scan-url="scanUrl"></check-in-scan-container>
+    <check-in-scan-container :tournament-slug="tournamentSlug"></check-in-scan-container>
   </div>
 
   <div class="mt-3" id="messages-container"></div>

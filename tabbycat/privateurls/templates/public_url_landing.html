@@ -1,0 +1,109 @@
+{% extends "tables/base_vue_table.html" %}
+{% load i18n debate_tags %}
+
+{% block page-title %}{% trans "Private URL" %}{% endblock %}
+{% block head-title %}{% trans "Private URL" %}{% endblock %}
+
+{% block extra-head %}<meta name="robots" content="noindex" />{% endblock %}
+
+{% block sub-title %}
+  {% blocktrans trimmed with name=object.name %}for {{ name }}{% endblocktrans %}
+  {% if object.speaker %}
+    {% blocktrans trimmed with team=object.speaker.team.short_name %}({{ team }}){% endblocktrans %}
+  {% endif %}
+{% endblock %}
+
+{% block page-alerts %}
+
+  {% blocktrans trimmed with name=object.name asvar p1 %}
+    The URL of this page is personalised to you, {{ name }}. <strong>Do not
+    share it with anyone;</strong> anyone who knows this URL can submit results and/or
+    feedback for your debates. You may bookmark this page and return here after each
+    debate for the available actions.
+  {% endblocktrans %}
+  {% include "components/explainer-card.html" with type="warning" %}
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="list-group">
+
+    {% if pref.public_checkins_submit %}
+      <form action="{% tournamenturl 'checkins-public-submit' url_key %}" method="POST" id="checkInForm" class="list-group-item">
+        {% csrf_token %}
+        {% if event %}
+          <input type="hidden" name="action" value="revoke" />
+          {% blocktrans trimmed with check_time=event.time asvar text %}
+            Revoke check-in from {{ check_time }}
+          {% endblocktrans %}
+        {% else %}
+          <input type="hidden" name="action" value="checkin" />
+          {% trans "Check in" as text %}
+        {% endif %}
+        {% include "components/item-action.html" with id="triggerCheckInForm" url="" child=True %}
+      </form>
+    {% elif checkins_used %}
+      {% if event %}
+        {# Translators: Include the full-stop; English doesn't because "a.m." already has a full stop. #}
+        {% blocktrans trimmed with check_time=event.time asvar text %}
+          You have been checked in at {{ check_time }}
+        {% endblocktrans %}
+        {% include "components/item-info.html" with type='success' %}
+      {% else %}
+        {% trans "You are not currently checked in." as text %}
+        {% include "components/item-info.html" with type='warning' %}
+      {% endif %}
+    {% endif %}
+
+    {% if object.adjudicator and pref.participant_ballots == 'private-urls' %}
+      {% tournamenturl 'results-public-ballotset-new-randomised' url_key as url %}
+      {% trans  "Submit Ballot" as text %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if object.adjudicator and pref.participant_feedback == 'private-urls' %}
+      {% tournamenturl 'adjfeedback-public-add-from-adjudicator-randomised' url_key as url %}
+      {% trans "Submit Feedback" as text %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+    {% if object.speaker and pref.participant_feedback == 'private-urls' %}
+      {% tournamenturl 'adjfeedback-public-add-from-team-randomised' url_key as url %}
+      {% trans "Submit Feedback" as text %}
+      {% include "components/item-action.html" %}
+    {% endif %}
+
+  </div>
+
+  <div class="card-deck">
+    {% include "in_this_round.html" with grammatical_person="2" %}
+
+    {% blocktrans trimmed with name=object.name asvar card_title %}
+      Registration ({{ name }})
+    {% endblocktrans %}
+    {% if object.adjudicator %}
+      {% include "adjudicator_registration_card.html" with adjudicator=object.adjudicator %}
+    {% else %}
+      {% include "team_registration_card.html" with team=object.speaker.team participant=object.speaker %}
+    {% endif %}
+  </div>
+
+  <div class="mt-md-4">
+    {{ block.super }} {# this is the Vue table, which is populated with previous results #}
+  </div>
+
+{% endblock %}
+
+
+{% block js %}
+  {{ block.super }}
+  <script>
+    $(document).ready( function() { // Use the fake submit buttons as real submissoin
+      $("#triggerCheckInForm").click( function() {
+        $("#checkInForm").submit();
+        return false;
+      });
+    });
+  </script>
+{% endblock js %}

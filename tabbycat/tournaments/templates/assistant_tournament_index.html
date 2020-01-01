@@ -10,13 +10,18 @@
   {% endblocktrans %}
 {% endblock %}
 
+{% block page-alerts %}
+  {% include 'errors/database_limit_warning.html' %}
+{% endblock %}
+
 {% block content %}
 
   <div id="vueMount">
     <tournament-overview-container :tournament-slug="tournamentSlug"
                                    :initial-actions="initialActions"
                                    :initial-ballots="initialBallots"
-                                   :initial-graph-data="initialGraphData">
+                                   :initial-graph-data="initialGraphData"
+                                   :total-debates="totalDebates">
     </tournament-overview-container>
   </div>
 
@@ -26,9 +31,10 @@
   <script>
     window.vueData = {
       tournamentSlug: '{{ tournament_slug }}',
+      totalDebates: {{ total_debates }},
       initialActions: {{ initialActions|safe }},
       initialBallots: {{ initialBallots|safe }},
-      initialGraphData: {{ initialGraphData|safe }},
+      initialGraphData: {{ initial_graph_data|safe }},
     }
   </script>
   {{ block.super }}

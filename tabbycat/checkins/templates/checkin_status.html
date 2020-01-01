@@ -9,9 +9,10 @@
                                :adjudicators="adjudicators"
                                :speakers="speakers"
                                :venues="venues"
-                               :scan-url="scanUrl"
                                :assistant-url="assistantUrl"
-                               :team-codes="teamCodes">
+                               :team-codes="teamCodes"
+                               :for-admin="forAdmin"
+                               :team-size="teamSize">
     </check-in-status-container>
   </div>
 
@@ -25,9 +26,10 @@
       'adjudicators': {% if adjudicators %}{{ adjudicators|safe }}{% else %}null{% endif %},
       'speakers': {% if speakers %}{{ speakers|safe }}{% else %}null{% endif %},
       'venues': {% if venues %}{{ venues|safe }}{% else %}null{% endif %},
-      'scanUrl': '{{ scan_url }}',
       'assistantUrl': {% if user_role == "admin" %}{% if venues %}'{% tournamenturl "assistant-venues-statuses" %}'{% else %}'{% tournamenturl "assistant-people-statuses" %}'{% endif %}{% else %}''{% endif %},
       'teamCodes': {{ team_codes }},
+      'forAdmin': {% if for_admin %}true{% else %}false{% endif %},
+      'teamSize': {{ team_size }},
     }
   </script>
   {{ block.super }}

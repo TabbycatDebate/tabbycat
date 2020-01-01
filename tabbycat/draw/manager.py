@@ -3,6 +3,7 @@ import random
 
 from django.utils.translation import gettext as _
 
+from draw.generator.powerpair import PowerPairedDrawGenerator
 from participants.utils import get_side_history
 from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
@@ -10,7 +11,6 @@ from standings.teams import TeamStandingsGenerator
 from .models import Debate, DebateTeam
 from .generator import BPEliminationResultPairing, DrawGenerator, DrawUserError, ResultPairing
 from .generator.utils import ispow2
-from .utils import annotate_npullups
 
 logger = logging.getLogger(__name__)
 
@@ -108,7 +108,6 @@ class BaseDrawManager:
 
         for pairing in pairings:
             debate = Debate(round=self.round)
-            debate.division = pairing.division
             debate.bracket = pairing.bracket
             debate.room_rank = pairing.room_rank
             debate.flags = ",".join(pairing.flags)  # comma-separated list
@@ -177,6 +176,9 @@ class RandomDrawManager(BaseDrawManager):
 class ManualDrawManager(BaseDrawManager):
     generator_type = "manual"
 
+    def get_relevant_options(self):
+        return []
+
 
 class PowerPairedDrawManager(BaseDrawManager):
     generator_type = "power_paired"
@@ -195,17 +197,20 @@ class PowerPairedDrawManager(BaseDrawManager):
     def get_teams(self):
         """Get teams in ranked order."""
         teams = super().get_teams()
-        if self.round.tournament.pref('draw_pullup_restriction') == 'least_to_date':
-            annotate_npullups(teams, self.round.prev)
 
         metrics = self.round.tournament.pref('team_standings_precedence')
-        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random")
+        pullup_metric = PowerPairedDrawGenerator.PULLUP_RESTRICTION_METRICS[self.round.tournament.pref('draw_pullup_restriction')]
+
+        generator = TeamStandingsGenerator(metrics, ('rank', 'subrank'), tiebreak="random",
+            extra_metrics=(pullup_metric,) if pullup_metric and pullup_metric not in metrics else ())
         standings = generator.generate(teams, round=self.round.prev)
 
         ranked = []
         for standing in standings:
             team = standing.team
-            team.points = next(standing.itermetrics())
+            team.points = next(standing.itermetrics(), 0)
+            if pullup_metric:
+                setattr(team, pullup_metric, standing.metrics[pullup_metric])
             ranked.append(team)
 
         return ranked
@@ -235,7 +240,7 @@ class BaseEliminationDrawManager(BaseDrawManager):
     def get_results(self):
         if self.round.prev is not None and self.round.prev.is_break_round:
             debates = self.round.prev.debate_set_with_prefetches(ordering=('room_rank',), results=True,
-                    adjudicators=False, speakers=False, divisions=False, venues=False)
+                    adjudicators=False, speakers=False, venues=False)
             pairings = [self.result_pairing_class.from_debate(debate, tournament=self.round.tournament)
                         for debate in debates]
             return pairings

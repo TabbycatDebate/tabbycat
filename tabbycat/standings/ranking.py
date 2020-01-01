@@ -4,7 +4,7 @@ Each rank annotator is responsible for computing a particular type of ranking
 for each team and annotating team standings with them. The most obvious example
 is the basic ranking from first to last (taking into account equal rankings),
 but there are other "types" of ranks, for example, ranks within brackets
-("subranks") or divisions ("division ranks").
+("subranks").
 """
 
 import logging
@@ -58,7 +58,7 @@ class BasicRankAnnotator(BaseRankAnnotator):
     icon = "bar-chart"
 
     def __init__(self, metrics):
-        self.rank_key = metricgetter(*metrics)
+        self.rank_key = metricgetter(metrics)
 
     def annotate(self, standings):
         rank = 1
@@ -93,22 +93,8 @@ class SubrankAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "Sub"
 
     def __init__(self, metrics):
-        self.group_key = metricgetter(metrics[0])
-        self.rank_key = metricgetter(*metrics[1:])
-
-
-class DivisionRankAnnotator(BaseRankWithinGroupAnnotator):
-
-    key = "division_rank"
-    name = "division rank"
-    abbr = "Div"
-
-    def __init__(self, metrics):
-        self.rank_key = metricgetter(*metrics)
-
-    @staticmethod
-    def group_key(tsi):
-        return tsi.team.division_id
+        self.group_key = metricgetter(metrics[:1])  # don't crash if there are no metrics
+        self.rank_key = metricgetter(metrics[1:])
 
 
 class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
@@ -118,7 +104,7 @@ class RankFromInstitutionAnnotator(BaseRankWithinGroupAnnotator):
     abbr = "Inst"
 
     def __init__(self, metrics):
-        self.rank_key = metricgetter(*metrics)
+        self.rank_key = metricgetter(metrics)
 
     @staticmethod
     def group_key(tsi):

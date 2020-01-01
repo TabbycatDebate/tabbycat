@@ -1,8 +1,8 @@
 {% extends "tables/base_vue_table.html" %}
 {% load debate_tags i18n %}
 
-{% block head-title %}<span class="emoji">🎲</span> Private URLs{% endblock %}
-{% block page-title %}Private URLs{% endblock %}
+{% block head-title %}<span class="emoji">🎲</span> {% trans "Private URLs" %}{% endblock %}
+{% block page-title %}{% trans "Private URLs" %}{% endblock %}
 
 {% block page-subnav-sections %}
   {% include 'private_urls_nav.html' %}
@@ -31,7 +31,7 @@
         {% blocktrans trimmed %}
           Anyone with the URL can access the relevant data entry page. The idea is
           that it's hard to guess another key (the random-looking string), so you should
-          make each URL accessible only to the team or adjudicator in question.
+          make each URL accessible only to the participant in question.
           <a href="http://tabbycat.readthedocs.io/en/latest/features/data-entry.html#private-urls">
           Read more about private URLs.</a>
         {% endblocktrans %}
@@ -40,14 +40,14 @@
 
   </div>
 
-  {% if pref.participant_ballots != 'private-urls' and pref.participant_feedback != 'private-urls' and not pref.allocation_confirmations %}
+  {% if pref.participant_ballots != 'private-urls' and pref.participant_feedback != 'private-urls' and not pref.public_checkins_submit %}
     <div class="card border-warning text-warning mb-3">
       <div class="card-body">
         {% tournamenturl 'options-tournament-section' section='data_entry' as data_entry_options_url %}
         {% blocktrans trimmed %}
-          Neither <strong>participant ballot submissions</strong> nor
-          <strong>participant feedback submissions</strong> are configured to be
-          from private URLs. Any generated URLs will not work unless you
+          Neither <strong>participant ballot submissions</strong>,
+          <strong>participant feedback submissions</strong>, nor <strong>participant self-checkins</strong>
+          are configured to be from private URLs. Any generated URLs will not be useful unless you
           configure those settings accordingly on the
           <a href="{{ data_entry_options_url }}">tournament configuration page</a>.
         {% endblocktrans %}

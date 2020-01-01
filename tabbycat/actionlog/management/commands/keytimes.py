@@ -46,14 +46,26 @@ class Command(TournamentCommand):
 
             entries = [
                 queryset.filter(type=ActionLogEntry.ACTION_TYPE_DRAW_CREATE).first(),
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT).first(),
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO).first(),
+                queryset.filter(type__in=[
+                    ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT,
+                    ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_AUTO,
+                ]).first(),
+                queryset.filter(type__in=[
+                    ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO,
+                    ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO,
+                ]).first(),
                 last_adj_save,
                 queryset.filter(type=ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE).last(),
                 # "start at" time goes here
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_BALLOT_CREATE).first(),
+                queryset.filter(type__in=[
+                    ActionLogEntry.ACTION_TYPE_BALLOT_CREATE,
+                    ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
+                ]).first(),
                 queryset.filter(type=ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM).first(),
-                queryset.filter(type=ActionLogEntry.ACTION_TYPE_BALLOT_CREATE).last(),
+                queryset.filter(type__in=[
+                    ActionLogEntry.ACTION_TYPE_BALLOT_CREATE,
+                    ActionLogEntry.ACTION_TYPE_BALLOT_SUBMIT,
+                ]).last(),
                 queryset.filter(type=ActionLogEntry.ACTION_TYPE_BALLOT_CONFIRM).last(),
             ]
             times = [entry.timestamp if entry else None for entry in entries]

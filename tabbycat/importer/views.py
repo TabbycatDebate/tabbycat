@@ -3,7 +3,7 @@ import logging
 from django.contrib import messages
 from django.core import management
 from django.forms import modelformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
@@ -24,9 +24,10 @@ from venues.models import Venue
 
 from .management.commands import importtournament
 from .importers import TournamentDataImporterError
-from .forms import (AdjudicatorDetailsForm, ImportInstitutionsRawForm,
-                    ImportVenuesRawForm, NumberForEachInstitutionForm,
-                    TeamDetailsForm, TeamDetailsFormSet, VenueDetailsForm)
+from .forms import (AdjudicatorDetailsForm, ImportAdjudicatorsNumbersForm,
+                    ImportInstitutionsRawForm, ImportTeamsNumbersForm,
+                    ImportVenuesRawForm, TeamDetailsForm, TeamDetailsFormSet,
+                    VenueDetailsForm)
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +129,9 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
 
     def get_form_kwargs(self, step):
         if step == 'numbers':
-            return {'institutions': Institution.objects.all()}
+            return {
+                'institutions': Institution.objects.all(),
+            }
         elif step == 'details':
             return {'form_kwargs': {'tournament': self.tournament}}
 
@@ -162,7 +165,7 @@ class BaseImportByInstitutionWizardView(BaseImportWizardView):
 class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
     model = Team
     form_list = [
-        ('numbers', NumberForEachInstitutionForm),
+        ('numbers', ImportTeamsNumbersForm),
         ('details', modelformset_factory(Team, form=TeamDetailsForm, formset=TeamDetailsFormSet, extra=0)),
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_TEAMS
@@ -183,23 +186,23 @@ class ImportTeamsWizardView(BaseImportByInstitutionWizardView):
 class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     model = Adjudicator
     form_list = [
-        ('numbers', NumberForEachInstitutionForm),
+        ('numbers', ImportAdjudicatorsNumbersForm),
         ('details', modelformset_factory(Adjudicator, form=AdjudicatorDetailsForm, extra=0)),
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_ADJUDICATORS
 
-    def get_default_test_score(self):
+    def get_default_base_score(self):
         """Returns the midpoint of the configured allowable score range."""
-        if not hasattr(self, "_default_test_score"):
+        if not hasattr(self, "_default_base_score"):
             min_score = self.tournament.pref('adj_min_score')
             max_score = self.tournament.pref('adj_max_score')
-            self._default_test_score = (min_score + max_score) / 2
-        return self._default_test_score
+            self._default_base_score = (min_score + max_score) / 2
+        return self._default_base_score
 
     def get_details_instance_initial(self, i):
         return {
             'name': _("Adjudicator %(number)d") % {'number': i},
-            'test_score': self.get_default_test_score()
+            'base_score': self.get_default_base_score()
         }
 
     def get_message(self, count):
@@ -211,22 +214,24 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
     def post(self, request, *args, **kwargs):
         source = request.POST.get("source", "")
 
+        if source not in ['minimal8team', 'australs24team', 'bp88team']:
+            return HttpResponseBadRequest("%s isn't a demo dataset" % source)
+
         try:
             management.call_command(importtournament.Command(), source,
-                                    force=True, strict=False)
+                                    force=True, strict=False, encoding='utf-8')
         except TournamentDataImporterError as e:
-            messages.error(self.request, mark_safe(
+            messages.error(self.request, mark_safe(_(
                 "<p>There were one or more errors creating the demo tournament. "
                 "Before retrying, please delete the existing demo tournament "
                 "<strong>and</strong> the institutions in the Edit Database Area.</p>"
-                "<p><i>Technical information: The errors are as follows:"
-                "<ul>" + "".join("<li>{}</li>".format(message) for message in e.itermessages()) + "</ul></i></p>"
-            ))
+                "<p><i>Technical information: The errors are as follows:</i></p>"
+            ) + "<ul><li><i>" + "</i></li><li><i>".join(e.itermessages()) + "</i></li></ul>"))
             logger.error("Error importing demo tournament: " + str(e))
             return redirect('tabbycat-index')
         else:
-            messages.success(self.request, "Created new demo tournament. You "
-                "can now configure it below.")
+            messages.success(self.request, _("Created new demo tournament. You "
+                "can now configure it below."))
 
         new_tournament = Tournament.objects.get(slug=source)
         return redirect_tournament('tournament-configure', tournament=new_tournament)

@@ -1,0 +1,24 @@
+{% extends "base_fullscreen.html" %}
+
+
+{% block content %}
+  <div id="vueMount">
+    {% block component %}{% endblock %}
+  </div>
+{% endblock content %}
+
+{% block js %}
+  <script>
+    window.vueData = {
+      allData: {
+        debatesOrPanels: {{ vueDebatesOrPanels|safe }},
+        allocatableItems: {{ vueAllocatableItems|safe }},
+        institutions: {{ vueInstitutions|safe }},
+        round: {{ vueMetaInfo.round|safe }},
+        tournament: {{ vueMetaInfo.tournament|safe }},
+        extra: {{ vueMetaInfo.extra|safe }},
+      }
+    }
+  </script>
+  {{ block.super }}
+{% endblock js %}

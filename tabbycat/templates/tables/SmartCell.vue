@@ -19,20 +19,20 @@
 
 <script>
 import CellContent from './CellContent.vue'
-import Popover from '../info/Popover.vue'
+import Popover from './Popover.vue'
 
 export default {
   components: { Popover, CellContent },
   props: { cellData: Object },
   computed: {
     canSupportPopover: function () {
-      if (typeof this.cellData['popover'] !== 'undefined') {
-        if (this.cellData['popover'].hasOwnProperty('content')) {
+      if (typeof this.cellData.popover !== 'undefined') {
+        if (Object.prototype.hasOwnProperty.call(this.cellData.popover, 'content')) {
           return true
         }
       }
       return false
     },
-  }
+  },
 }
 </script>

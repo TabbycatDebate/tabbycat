@@ -42,6 +42,12 @@ def tournament_side_names(tournament, name_type):
     return side_names
 
 
+@register.simple_tag
+def debate_team_side_name(debate_team, tournament):
+    # If returned directly from the object it will have to lookup tournament
+    return debate_team.get_side_name(tournament)
+
+
 class TournamentURLNode(URLNode):
 
     def __init__(self, view_name, args, kwargs, asvar):
@@ -175,18 +181,6 @@ def roundurl(parser, token):
     return RoundURLNode(*args)
 
 
-@register.tag
-def round_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% round_url %} tag is deprecated, use the new {% roundurl %} instead.")
-
-
-@register.tag
-def tournament_url(parser, token):
-    # Deprecated 16/6/2017, remove after 16/7/2017
-    raise RuntimeError("Then {% tournament_url %} tag is deprecated, use the new {% tournamenturl %} instead.")
-
-
 @register.filter
 def next_value(value, arg):
     try:
@@ -224,6 +218,13 @@ def percentage(number_a, number_b):
         return 0
 
 
-@register.simple_tag
-def subtract(number_a, number_b):
-    return number_a - number_b # Used in Feedback Overview
+@register.filter
+def subtract(value, arg):
+    return value - arg # Used in BP Motion Stats
+
+
+@register.filter(name='abbreviatename')
+def abbreviatename(name):
+    """Takes a two-part name and returns an abbreviation like 'E.Lučić'."""
+    parts = name.split(" ")
+    return "%s.%s" % (parts[0][:5], parts[-1][:5]) # Used for barcodes

@@ -20,35 +20,37 @@ class Command(BaseCommand):
         parser.add_argument('path', help="Directory to import tournament data from")
         parser.add_argument('items', help="Items to import (default: import all)", nargs="*", default=[])
 
+        parser.add_argument('-e', '--encoding', type=str, default='utf-8',
+                            help="Encoding used in the CSV files (default: utf-8)")
         parser.add_argument('-i', '--importer', type=str, default=None, choices=importer_registry,
-                            help='Which importer to use (default: read from .importer file)')
+                            help="Which importer to use (default: read from .importer file)")
 
         parser.add_argument('-r', '--auto-rounds', type=int, metavar='N', default=None,
-                            help='Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.')
+                            help="Create N preliminary rounds automatically. Use either this or a rounds.csv file, but not both.")
         parser.add_argument('--force', action='store_true', default=False,
-                            help='Do not prompt before deleting tournament that already exists.')
+                            help="Do not prompt before deleting tournament that already exists.")
         parser.add_argument('--keep-existing', action='store_true', default=False,
-                            help='Keep existing tournament and data, skipping lines if they are duplicates.')
+                            help="Keep existing tournament and data, skipping lines if they are duplicates.")
         parser.add_argument('--relaxed', action='store_false', dest='strict', default=True,
-                            help='Don\'t crash if there is an error, just skip and keep going.')
+                            help="Don't crash if there is an error, just skip and keep going.")
 
         # Cleaning shared objects
         parser.add_argument('--clean-shared', action='store_true', default=False,
-                            help='Delete all shared objects from the database. Overrides --keep-existing.')
+                            help="Delete all shared objects from the database. Overrides --keep-existing.")
         parser.add_argument('--delete-institutions', action='store_true', default=False,
-                            help='Delete all institutions from the database. Overrides --keep-existing.')
+                            help="Delete all institutions from the database. Overrides --keep-existing.")
         parser.add_argument('--delete-venue-categories', action='store_true', default=False,
-                            help='Delete all venue categories from the database. Overrides --keep-existing.')
+                            help="Delete all venue categories from the database. Overrides --keep-existing.")
         parser.add_argument('--delete-regions', action='store_true', default=False,
-                            help='Delete all regions categories from the database. Overrides --keep-existing.')
+                            help="Delete all regions categories from the database. Overrides --keep-existing.")
 
         # Tournament options
         parser.add_argument('-s', '--slug', type=str, action='store', default=None,
-                            help='Override tournament slug. (Default: use name of directory.)'),
+                            help="Override tournament slug. (Default: use name of directory.)")
         parser.add_argument('--name', type=str, action='store', default=None,
-                            help='Override tournament name. (Default: use name of directory.)'),
+                            help="Override tournament name. (Default: use name of directory.)")
         parser.add_argument('--short-name', type=str, action='store', default=None,
-                            help='Override tournament short name. (Default: use name of directory.)'),
+                            help="Override tournament short name. (Default: use name of directory.)")
 
     def handle(self, *args, **options):
         self.options = options
@@ -62,7 +64,7 @@ class Command(BaseCommand):
 
         importer_class = self.get_importer_class()
         self.importer = importer_class(
-            self.t, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
+            self.tournament, loglevel=loglevel, strict=options['strict'], expect_unique=not options['keep_existing'])
 
         # Importer classes specify what they import, and in what order
         for item in self.importer.order:
@@ -81,7 +83,7 @@ class Command(BaseCommand):
 
         if os.path.exists(importer_spec_filepath):
             try:
-                f = open(importer_spec_filepath, 'r')
+                f = open(importer_spec_filepath, 'r', encoding=self.options['encoding'])
             except OSError as e:
                 raise CommandError("Error opening file %s: %s" % (importer_spec_filepath, e))
             importer_spec = f.read().strip()
@@ -112,7 +114,7 @@ class Command(BaseCommand):
             if errors:
                 for message in errors.itermessages():
                     if self.color:
-                        message = "\033[1;32m" + message + "\032[0m\n"
+                        message = "\033[1;32m" + message + "\033[0m\n"
                     self.stdout.write(message)
             count_strs = ("{1:d} {0}".format(model._meta.verbose_name_plural, count) for model, count in counts.items())
             message = "Imported " + ", ".join(count_strs) + ", hit {1:d} errors".format(counts, len(errors))
@@ -141,7 +143,7 @@ class Command(BaseCommand):
         """Requires self.dirpath to be defined."""
         path = self._csv_file_path(filename)
         try:
-            return open(path, 'r')
+            return open(path, 'r', encoding=self.options['encoding'])
         except OSError as e:
             self._warning("Skipping '{0:s}': {1:s}".format(filename, e.strerror))
             return None
@@ -198,11 +200,11 @@ class Command(BaseCommand):
 
     def make_tournament(self):
         """Given the path, does everything necessary to create the tournament,
-        and sets self.t to be the newly-created tournament.
+        and sets self.tournament to be the newly-created tournament.
         """
         slug, name, short_name = self.resolve_tournament_fields()
         self.check_existing_tournament(slug)
-        self.t = self.create_tournament(slug, name, short_name)
+        self.tournament = self.create_tournament(slug, name, short_name)
 
     def make_rounds(self):
         """Makes rounds using an automatic rounds maker if --auto-rounds is
@@ -213,7 +215,7 @@ class Command(BaseCommand):
             if os.path.exists(self._csv_file_path('rounds')):
                 self._warning("Ignoring file 'rounds.csv' because --auto-rounds used")
             num_rounds = self.options['auto_rounds']
-            auto_make_rounds(self.t, num_rounds)
+            auto_make_rounds(self.tournament, num_rounds)
             self._print_stage("Auto-made %d rounds" % num_rounds)
 
     def resolve_tournament_fields(self):

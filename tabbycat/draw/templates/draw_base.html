@@ -3,18 +3,15 @@
 
 {% block page-subnav-sections %}
   <a class="btn btn-outline-primary " href="{% roundurl 'availability-index' %}">
-    <i data-feather="chevron-left"></i> {% trans "Check-Ins" %}
+    <i data-feather="chevron-left"></i> {% trans "Availability" %}
   </a>
 
-  {% if pref.allocation_confirmations %}
-    <a href="{% roundurl 'draw-schedule-confirmations' %}" class="btn btn-outline-primary">
-      {% trans "Confirm Shifts" %}
-    </a>
-  {% endif %}
   <div class="btn-group flex-wrap" role="group">
-    <a href="{% roundurl 'draw-matchups-edit' round %}" class="btn btn-outline-primary">
+    <a href="{% roundurl 'edit-debate-teams' round %}" class="btn btn-outline-primary">
       {% trans "Edit Sides/Matchups" %}
     </a>
+  </div>
+  <div class="btn-group flex-wrap" role="group">
     <a href="{% roundurl 'draw-confirm-regenerate' %}" class="btn btn-outline-primary">
       {% trans "Redo Draw" %}
     </a>

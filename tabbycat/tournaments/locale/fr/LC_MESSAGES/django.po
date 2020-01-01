@@ -1,134 +1,138 @@
-# Tabbycat translations, tournaments module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
-"PO-Revision-Date: 2018-05-05 14:30-0700\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
-"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-07-26 01:06\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/tournaments/locale/en/LC_MESSAGES/django.po\n"
 
 #: tournaments/apps.py:7
 msgid "Tournaments"
 msgstr "Tournois"
 
-#: tournaments/forms.py:25
+#: tournaments/forms.py:28
 msgid "Number of preliminary rounds"
-msgstr "Nombre de tours préliminaires"
+msgstr "Nombre de joutes préliminaires"
 
-#: tournaments/forms.py:30
+#: tournaments/forms.py:33
 msgid "Number of teams in the open break"
-msgstr "Nombre d'équipes dans le break open"
+msgstr "Nombre d'équipes dans la qualification ouverte"
 
-#: tournaments/forms.py:31
+#: tournaments/forms.py:34
 msgid "Leave blank if there are no break rounds."
-msgstr ""
-"C'est-a-dire, qui avancera aux tours à élimination dans la catégorie open. "
-"Laissez vide s'il n'y a pas de tours à élimination."
+msgstr "Laissez vide s'il n'y a pas de joutes éliminatoires."
 
-#: tournaments/forms.py:37
+#: tournaments/forms.py:40
 msgid "Did you agree with their decision?"
-msgstr ""
+msgstr "Êtes-vous d’accord avec cette décision ?"
 
-#: tournaments/forms.py:37
+#: tournaments/forms.py:40
 msgid "Agree?"
-msgstr ""
+msgstr "D’accord ?"
 
-#: tournaments/forms.py:43
+#: tournaments/forms.py:46
 msgid "Comments"
 msgstr "Commentaires"
 
 #. Translators: This is the name given to the 'Open Break'.
-#: tournaments/forms.py:57
+#: tournaments/forms.py:60
 msgid "Open"
-msgstr "Open"
+msgstr "Ouvert"
 
-#: tournaments/forms.py:82
+#: tournaments/forms.py:85
 msgid "Format Configuration"
 msgstr "Configuration de format"
 
-#: tournaments/forms.py:83
+#: tournaments/forms.py:86
 msgid "Apply a standard set of settings to match a common debate format"
-msgstr ""
-"Appliquer un ensemble standard de paramètres correspondant à un format de "
-"débat qui est commun"
+msgstr "Appliquer un ensemble standard de paramètres correspondant à un format de débat qui est commun"
 
-#: tournaments/forms.py:87
+#: tournaments/forms.py:90
 msgid "Public Configuration"
 msgstr "Configuration d'accès du public"
 
-#: tournaments/forms.py:88
-msgid ""
-"Show non-sensitive information on the public-facing side of this site, like "
-"draws (once released) and the motions of previous rounds"
-msgstr ""
-"Afficher des informations non sensibles sur les pages accessibles au public, "
-"par ex., les tirages publiés et les motions des tours antérieurs"
+#: tournaments/forms.py:91
+msgid "Show non-sensitive information on the public-facing side of this site, like draws (once released) and the motions of previous rounds"
+msgstr "Afficher des informations non sensibles sur les pages accessibles au public, par ex., les tirages publiés et les motions des joutes antérieurs"
 
-#: tournaments/forms.py:94
-msgid ""
-"<strong>Tabulation:</strong> [list tabulation staff here]<br /"
-"><strong>Organisation:</strong> [list organising committee members here]<br /"
-"><strong>Adjudication:</strong> [list chief adjudicators here]"
-msgstr ""
+#: tournaments/forms.py:97
+msgid "<strong>Tabulation:</strong> [list tabulation staff here]<br /><strong>Organisation:</strong> [list organising committee members here]<br /><strong>Adjudication:</strong> [list chief adjudicators here]"
+msgstr "<strong>Tabulation :</strong> [équipe de tabulation]<br /><strong>Organisation :</strong> [comité d’organisation]<br /><strong>Juges :</strong> [juges en chef]"
 
-#: tournaments/mixins.py:102
+#: tournaments/forms.py:191
+msgid "Current preliminary round"
+msgstr "Joute préliminaire actuelle"
+
+#: tournaments/forms.py:192
+msgid "All preliminary rounds have been completed"
+msgstr "Toutes les joutes préliminaires ont été achevés"
+
+#: tournaments/forms.py:204
 #, python-format
-msgid ""
-"There's a problem with the data for the tournament %(tournament_name)s. "
-"Please contact a tab director and ask them to set its current round."
-msgstr ""
-"Les données du tournoi %(tournament_name)s ont un problème. Veuillez "
-"contacter un(e) directeur/directrice de tabulation et lui demander de "
-"définir le tour actuel."
+msgid "Current elimination round in <strong>%(category)s</strong> <em>(only if all preliminary rounds have been completed)</em>"
+msgstr "Joute d’élimination actuelle en <strong>%(category)s</strong> <em>(seulement si toutes les joutes préliminaires ont été achevées)</em>"
 
-#: tournaments/mixins.py:114
-msgid ""
-"You've been redirected to this page because of a problem with how teams are "
-"assigned to sides in a debate."
-msgstr ""
-"Vous avez été redirigé(e) vers cette page en raison d’un problème avec "
-"l'attribution des équipes aux côtés dans un débat."
+#: tournaments/forms.py:210
+#, python-format
+msgid "All elimination rounds in %(category)s have been completed"
+msgstr "Toutes les joutes éliminatoires dans %(category)s ont été achevées"
 
-#: tournaments/mixins.py:119
-msgid ""
-"There's a problem with how teams are assigned to sides in a debate. The tab "
-"director will need to resolve this issue."
-msgstr ""
+#: tournaments/forms.py:222
+msgid "If the current round is a preliminary round, this field must be blank."
+msgstr "Si la joute actuelle est préliminaire, cette plage doit être vide."
 
-#: tournaments/mixins.py:142
+#: tournaments/forms.py:228
+msgid "If all preliminary rounds have been completed, this field is required."
+msgstr "Si toutes les joutes préliminaires ont été achevées, cette plage est obligatoire."
+
+#: tournaments/mixins.py:112
+#, python-format
+msgid "You've been redirected to this page because tournament %(tournament_name)s has no rounds.Please create some before returning to the admin site"
+msgstr "Vous avez été redirigé vers cette page car le tournoi %(tournament_name)s n'a aucun joute. Veuillez en créer avant de revenir au site d'administration"
+
+#: tournaments/mixins.py:120
+#, python-format
+msgid "There's a problem with the data for the tournament %(tournament_name)s. Please contact a tab director and ask them to investigate."
+msgstr "Il y a un problème avec les données du tournoi %(tournament_name)s. Veuillez contacter un directeur des tabs pour mener une enquête."
+
+#: tournaments/mixins.py:132
+msgid "You've been redirected to this page because of a problem with how teams are assigned to sides in a debate."
+msgstr "Vous avez été redirigé(e) vers cette page en raison d’un problème avec l'attribution des équipes aux côtés dans un débat."
+
+#: tournaments/mixins.py:139
+msgid "There's a problem with how teams are assigned to sides in a debate. The tab director will need to resolve this issue."
+msgstr "Il y a un problème avec comment les équipes sont assignées les côtés du débat. Les rapporteurs va devoir résoudre ce problème."
+
+#: tournaments/mixins.py:234
 #, python-format
 msgid "for %(round)s"
 msgstr "pour %(round)s"
 
-#: tournaments/models.py:26
-msgid ""
-"You can't use this as a tournament slug, because it's reserved for a "
-"Tabbycat system URL. Please try another one."
-msgstr ""
-"Il est impossible d'utiliser cela comme un slug d'un tournoi, car c'est "
-"réservé pour une URL du système Tabbycat. Veuillez essayer un autre."
+#: tournaments/mixins.py:433
+msgid "Return to Draw"
+msgstr "Retour au Tirage"
 
-#: tournaments/models.py:33 tournaments/models.py:256
+#: tournaments/models.py:26
+msgid "You can't use this as a tournament slug, because it's reserved for a Tabbycat system URL. Please try another one."
+msgstr "Il est impossible d'utiliser cela comme un slug d'un tournoi, car c'est réservé pour une URL du système Tabbycat. Veuillez essayer un autre."
+
+#: tournaments/models.py:33 tournaments/models.py:331
 msgid "name"
 msgstr "nom"
 
 #: tournaments/models.py:34
-msgid ""
-"The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""
-msgstr ""
-"Le nom complet qui est affiché sur la page d'accueil, p. ex. \"Championnat "
-"australasien de débat 2016\""
+msgid "The full name, e.g. \"Australasian Intervarsity Debating Championships 2016\""
+msgstr "Le nom complet qui est affiché sur la page d'accueil, p. ex. \"Championnat Australasien de débat 2016\""
 
 #: tournaments/models.py:36
 msgid "short name"
@@ -138,231 +142,181 @@ msgstr "nom court"
 msgid "The name used in the menu, e.g. \"Australs 2016\""
 msgstr "Le nom qui est utilisé sur le menu, p. ex. \"Australs 2016\""
 
-#: tournaments/models.py:39 tournaments/models.py:254
+#: tournaments/models.py:39 tournaments/models.py:325
 msgid "sequence number"
 msgstr "numéro de séquence"
 
 #: tournaments/models.py:40
-msgid ""
-"A number that determines the relative order in which tournaments are "
-"displayed on the homepage."
-msgstr ""
-"Un numéro qui déterminer l'ordre relatif dont les tournois sont affichés sur "
-"le page d'accueil."
+msgid "A number that determines the relative order in which tournaments are displayed on the homepage."
+msgstr "Un numéro qui déterminer l'ordre relatif dont les tournois sont affichés sur le page d'accueil."
 
 #: tournaments/models.py:42
 msgid "slug"
 msgstr "slug"
 
 #: tournaments/models.py:43
-msgid ""
-"The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""
-msgstr ""
-"Le sous-URL du tournoi, p. ex. \"australs2016\". Un slug ne peut pas "
-"contenir des espaces."
+msgid "The sub-URL of the tournament, cannot have spaces, e.g. \"australs2016\""
+msgstr "Le sous-URL du tournoi, p. ex. \"australs2016\". Un slug ne peut pas contenir des espaces."
 
-#: tournaments/models.py:45
-msgid "current round"
-msgstr "tour actuel"
-
-#: tournaments/models.py:46
-msgid ""
-"Must be set for the tournament to start! (Set after rounds are inputted)"
-msgstr ""
-"Il faut définir ce champ pour que le tournoi puisse commencer ! (Définez-lui "
-"après avoir créé les tours.)"
-
-#: tournaments/models.py:47
+#: tournaments/models.py:44
 msgid "active"
 msgstr "actif"
 
-#: tournaments/models.py:50 tournaments/models.py:253
+#: tournaments/models.py:47 tournaments/models.py:324
 msgid "tournament"
 msgstr "tournoi"
 
-#: tournaments/models.py:51
+#: tournaments/models.py:48
 msgid "tournaments"
 msgstr "tournois"
 
 #. Translators: These are choices for the type of draw a round should have.
-#: tournaments/models.py:230
+#: tournaments/models.py:301
 msgid "Random"
 msgstr "Aléatoire"
 
-#: tournaments/models.py:231
+#: tournaments/models.py:302
 msgid "Manual"
 msgstr "Manuel"
 
-#: tournaments/models.py:232
+#: tournaments/models.py:303
 msgid "Round-robin"
 msgstr "Toutes rondes"
 
-#: tournaments/models.py:233
+#: tournaments/models.py:304
 msgid "Power-paired"
-msgstr ""
+msgstr "Jumelé par rang"
 
-#: tournaments/models.py:234 tournaments/models.py:239
+#: tournaments/models.py:305 tournaments/models.py:310
 msgid "Elimination"
-msgstr "Elimination"
+msgstr "Élimination"
 
-#: tournaments/models.py:238
+#: tournaments/models.py:309
 msgid "Preliminary"
 msgstr "Préliminaire"
 
 #. Translators: These are choices for the status of the draw for a round.
-#: tournaments/models.py:246
+#: tournaments/models.py:317
 msgid "None"
 msgstr "Aucun"
 
-#: tournaments/models.py:247
+#: tournaments/models.py:318
 msgid "Draft"
 msgstr "Brouillon"
 
-#: tournaments/models.py:248
+#: tournaments/models.py:319
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: tournaments/models.py:249
+#: tournaments/models.py:320
 msgid "Released"
 msgstr "Distribué"
 
-#: tournaments/models.py:255
-msgid ""
-"A number that determines the order of the round, should count consecutively "
-"from 1 for the first round"
-msgstr ""
-"Un numéro qui détermine l'ordre du tour, qui devrait dénombrer de façon "
-"consécutif de 1 pour le premier tour"
+#: tournaments/models.py:326
+msgid "A number that determines the order of the round, should count consecutively from 1 for the first round"
+msgstr "Un numéro qui détermine l'ordre de la joute, qui devrait dénombrer de façon consécutif de 1 pour la première joute"
 
-#: tournaments/models.py:256
+#: tournaments/models.py:328
+msgid "completed"
+msgstr "complété"
+
+#: tournaments/models.py:329
+msgid "True if the round is over, which normally means all results have been entered and confirmed"
+msgstr "Vrai si la joute est achevée, ce qui signifie normalement que tout les résultats ont été entrés et confirmés"
+
+#: tournaments/models.py:331
 msgid "e.g. \"Round 1\""
-msgstr "p. ex. \"Tour 1\""
+msgstr "p. ex. « Joute 1 »"
 
-#: tournaments/models.py:257
+#: tournaments/models.py:332
 msgid "abbreviation"
 msgstr "abréviation"
 
-#: tournaments/models.py:257
+#: tournaments/models.py:332
 msgid "e.g. \"R1\""
-msgstr "p. ex. \"T1\""
+msgstr "p. ex. « J1 »"
 
-#: tournaments/models.py:259
+#: tournaments/models.py:334
 msgid "stage"
 msgstr "étape"
 
-#: tournaments/models.py:260
+#: tournaments/models.py:335
 msgid "Preliminary = inrounds, elimination = outrounds"
 msgstr "Préliminaire = « inrounds », élimination = « outrounds »"
 
-#: tournaments/models.py:262
+#: tournaments/models.py:337
 msgid "draw type"
 msgstr "type de tirage"
 
-#: tournaments/models.py:263
+#: tournaments/models.py:338
 msgid "Which draw method to use"
 msgstr "Quelle méthode de faire le tirage à utiliser"
 
-#: tournaments/models.py:266
+#: tournaments/models.py:341
 msgid "break category"
 msgstr "catégorie de break"
 
-#: tournaments/models.py:267
+#: tournaments/models.py:342
 msgid "If elimination round, which break category"
-msgstr "Si ce tour est à elimination, quelle catégorie de break"
+msgstr "Si cette joute est éliminatoire, quelle catégorie de qualification"
 
-#: tournaments/models.py:270
+#: tournaments/models.py:345
 msgid "draw status"
 msgstr "statut de tirage"
 
-#: tournaments/models.py:271
+#: tournaments/models.py:346
 msgid "The status of this round's draw"
-msgstr "Le statut du tirage de ce tour"
+msgstr "Le statut du tirage de cette joute"
 
-#: tournaments/models.py:274
+#: tournaments/models.py:349
 msgid "feedback weight"
 msgstr "importance des remarques"
 
-#: tournaments/models.py:276
+#: tournaments/models.py:351
 #, no-python-format
-msgid ""
-"The extent to which each adjudicator's overall score depends on feedback vs "
-"their test score. At 0, it is 100% drawn from their test score, at 1 it is "
-"100% drawn from feedback."
-msgstr ""
-"L'étendue à laquelle le score de chaque adjudicateur dépend des remarques, "
-"au lieu de sa score de test. Quand l'importance est 0, chaque score dépend "
-"complètement de sa score de test; si c'est 1, la score dépend complètement "
-"des remarques sur l'adjudicateur."
+msgid "The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback."
+msgstr "L'étendue à laquelle le score de chaque adjudicateur dépend des remarques, au lieu de sa score de test. Quand l'importance est 0, chaque score dépend complètement de sa score de test; si c'est 1, la score dépend complètement des remarques sur l'adjudicateur."
 
 #. Translators: A silent round is a round for which results are not disclosed once the round is over.
-#: tournaments/models.py:279
+#: tournaments/models.py:354
 msgid "silent"
 msgstr "silencieux"
 
-#: tournaments/models.py:280
-msgid ""
-"If marked silent, information about this round (such as its results) will "
-"not be shown publicly."
-msgstr ""
-"Si ce tour est marqué comme silencieux, les informations sur le tour (p. ex. "
-"les résultats) ne seront pas affiché au public."
+#: tournaments/models.py:355
+msgid "If marked silent, information about this round (such as its results) will not be shown publicly."
+msgstr "Si cette joute est marquée comme silencieuse, les informations de la joute (p. ex. les résultats) ne seront pas affichés au public."
 
-#: tournaments/models.py:282
+#: tournaments/models.py:357
 msgid "motions released"
 msgstr "motions distribués"
 
-#: tournaments/models.py:283
-msgid ""
-"Whether motions will appear on the public website, assuming that feature is "
-"turned on"
-msgstr ""
-"Si les motions seront affichées sur le site public, en supposant que la "
-"fonctionnalité soit activée"
+#: tournaments/models.py:358
+msgid "Whether motions will appear on the public website, assuming that feature is turned on"
+msgstr "Si les motions seront affichées sur le site public, en supposant que la fonctionnalité soit activée"
 
-#: tournaments/models.py:284
+#: tournaments/models.py:359
 msgid "starts at"
 msgstr "commencera à"
 
-#: tournaments/models.py:287
+#: tournaments/models.py:362
 msgid "round"
-msgstr "tour"
+msgstr "joute"
 
-#: tournaments/models.py:288
+#: tournaments/models.py:363
 msgid "rounds"
-msgstr "tours"
+msgstr "joutes"
 
-#: tournaments/models.py:301
-msgid ""
-"A round in the elimination stage must have its draw type set to \"Elimination"
-"\"."
-msgstr ""
-"Il faut que le type du tirage d'un tour de l'étape éliminatoire soit "
-"« Éliminatoire »."
+#: tournaments/models.py:376
+msgid "A round in the elimination stage must have its draw type set to \"Elimination\"."
+msgstr "Il faut que le type du tirage d'une joute de l'étape éliminatoire soit « Éliminatoire »."
 
-#: tournaments/models.py:304
-msgid ""
-"A round in the preliminary stage cannot have its draw type set to "
-"\"Elimination\"."
-msgstr ""
-"Il ne faut pas que le type du tirage d'un tour de l'étape préliminaire soit "
-"« Éliminatoire »."
+#: tournaments/models.py:379
+msgid "A round in the preliminary stage cannot have its draw type set to \"Elimination\"."
+msgstr "Il ne faut pas que le type du tirage d'une joute de l'étape préliminaire soit « Éliminatoire »."
 
-#: tournaments/models.py:309
+#: tournaments/models.py:384
 msgid "Elimination rounds must have a break category."
-msgstr "Il faut que les tours à élimination aient un catégorie de break."
-
-#: tournaments/templates/admin/tournaments/tournament/change_form.html:11
-#, python-format
-msgid ""
-"Looking for the welcome message? That's been moved to the tournament "
-"configuration, under <a href=\"%(features_url)s\">Public Features</a>."
-msgstr ""
-
-#: tournaments/templates/admin/tournaments/tournament/change_form.html:15
-msgid ""
-"Looking for the welcome message? That's moved to the tournament "
-"configuration, under Public Features."
-msgstr ""
+msgstr "Il faut que les joutes à élimination aient un catégorie de break."
 
 #: tournaments/templates/assistant_tournament_index.html:4
 msgid "Dashboard"
@@ -375,40 +329,27 @@ msgstr "Aperçu"
 #: tournaments/templates/assistant_tournament_index.html:8
 #, python-format
 msgid "current round: %(round_name)s, status: %(round_status)s"
-msgstr "tour actuel: %(round_name)s, statut: %(round_status)s"
+msgstr "joute actuelle: %(round_name)s, statut: %(round_status)s"
+
+#: tournaments/templates/blank_site_start.html:7
+msgid "Welcome to Tabbycat"
+msgstr "Bienvenue à Tabbycat"
 
 #: tournaments/templates/blank_site_start.html:20
 msgid "Welcome to Tabbycat!"
-msgstr "Bienvenue à votre nouvelle installation de Tabbycat !"
+msgstr "Bienvenue à Tabbycat !"
 
 #: tournaments/templates/blank_site_start.html:23
-msgid ""
-"To get started, you'll need to create the first user account. This account "
-"is a \"superuser\" account: it will be able to edit anything on the site. "
-"Therefore, you should use a strong password."
-msgstr ""
-"Pour commencer, vous devrez créer le premier compte d'utilisateur. Ce compte "
-"est un compte « super-utilisateur » : il pourra modifier tout sur le site. "
-"Donc, vous devrez utiliser un mot de passe robuste."
+msgid "To get started, you'll need to create the first user account. This account is a \"superuser\" account: it will be able to edit anything on the site. Therefore, you should use a strong password."
+msgstr "Pour commencer, vous devrez créer le premier compte d'utilisateur. Ce compte est un compte « super-utilisateur » : il pourra modifier tout sur le site. Donc, vous devrez utiliser un mot de passe robuste."
 
 #: tournaments/templates/blank_site_start.html:28
-msgid ""
-"You can only create this account once, but if you like, you can change the "
-"username and password after it's created, or add new superusers afterwards."
-msgstr ""
-"Vous ne pourriez créer ce compte qu'une fois, mais si vous voulez, vous "
-"pourrez changer le nom d'utilisateur et le mot de passe après avoir le "
-"créer, et vous pourrez aussi ajouter des nouveaux super-utilisateurs."
+msgid "You can only create this account once, but if you like, you can change the username and password after it's created, or add new superusers afterwards."
+msgstr "Vous ne pourriez créer ce compte qu'une fois, mais si vous voulez, vous pourrez changer le nom d'utilisateur et le mot de passe après avoir le créer, et vous pourrez aussi ajouter des nouveaux super-utilisateurs."
 
 #: tournaments/templates/blank_site_start.html:32
-msgid ""
-"The e-mail address is used for password resets. You don't have to provide "
-"one, but if you don't, you won't be able to reset your password if you "
-"forget it."
-msgstr ""
-"Cette adresse de courriel est utilisée pour les réinitialisations de mot de "
-"passe. Vous n'êtes pas obligé d'en fournir une, mais sinon, vous ne pourrez "
-"pas réinitialiser votre mot de passe si vous l'oubliez."
+msgid "The e-mail address is used for password resets. You don't have to provide one, but if you don't, you won't be able to reset your password if you forget it."
+msgstr "Cette adresse de courriel est utilisée pour les réinitialisations de mot de passe. Vous n'êtes pas obligé d'en fournir une, mais sinon, vous ne pourrez pas réinitialiser votre mot de passe si vous l'oubliez."
 
 #: tournaments/templates/blank_site_start.html:40
 msgid "Create Account"
@@ -419,15 +360,14 @@ msgstr "Créer compte"
 msgid "Configure Tournament %(tournament_name)s"
 msgstr "Configuration du tournoi %(tournament_name)s"
 
+#: tournaments/templates/configure_tournament.html:9
+#: tournaments/templates/create_tournament.html:5
+msgid "Tabbycat"
+msgstr "Tabbycat"
+
 #: tournaments/templates/configure_tournament.html:20
-msgid ""
-"To finish creating your tournament select a basic configuration options. "
-"Note that these can always be changed later (and with more precise control) "
-"if needed."
-msgstr ""
-"Afin de finir de créer votre tournoi, sélectionnez une configuration de "
-"base. Notez que les paramètres peuvent toujours être changées plus tard (et "
-"à plus de la precision) si vous en avez besoin."
+msgid "To finish creating your tournament select a basic configuration options. Note that these can always be changed later (and with more precise control) if needed."
+msgstr "Afin de finir de créer votre tournoi, sélectionnez une configuration de base. Notez que les paramètres peuvent toujours être changées plus tard (et à plus de la precision) si vous en avez besoin."
 
 #: tournaments/templates/configure_tournament.html:25
 msgid "Configure Tournament"
@@ -437,59 +377,33 @@ msgstr "Configuration du tournoi"
 msgid "Create New Tournament"
 msgstr "Créer nouveau tournoi"
 
-#: tournaments/templates/create_tournament.html:11
+#: tournaments/templates/create_tournament.html:15
 #, python-format
-msgid ""
-"Tabbycat is free to use for non-profit and non-fundraising tournaments "
-"(although donations are encouraged). If your tournament is run for profit or "
-"for fundraising, please note that there is a <a href=\"%(donations_url)s"
-"\">required payment</a>. For more details, see the <a href=\"http://tabbycat."
-"readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</"
-"a>."
-msgstr ""
-"Tabbycat est gratuit à utiliser pour les tournois à but non lucratif et qui "
-"ne sont pas pour la collecte des fonds (toutefois, les dons sont "
-"encouragés). Si votre tournoi est à but lucratif ou pour la collecte des "
-"fonds, veuillez noter qu'il existe un <a href=\"%(donations_url)s\">paiement "
-"obligatoire</a>. Pour plus de détails, lisez <a href=\"http://tabbycat."
-"readthedocs.io/en/stable/about/licence.html\">l'accord de licence de "
-"Tabbycat</a>."
+msgid "Tabbycat is free to use for non-profit and non-fundraising tournaments (although donations are encouraged). If your tournament is run for profit or for fundraising, please note that there is a <a href=\"%(donations_url)s\">required payment</a>. For more details, see the <a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\"> Tabbycat licence agreement</a>."
+msgstr "Tabbycat est gratuit à utiliser pour les tournois à but non lucratif et qui ne sont pas pour la collecte des fonds (toutefois, les dons sont encouragés). Si votre tournoi est à but lucratif ou pour la collecte des fonds, veuillez noter qu'il existe un <a href=\"%(donations_url)s\">paiement obligatoire</a>. Pour plus de détails, lisez <a href=\"http://tabbycat.readthedocs.io/en/stable/about/licence.html\">l'accord de licence de Tabbycat</a>."
 
-#: tournaments/templates/create_tournament.html:23
+#: tournaments/templates/create_tournament.html:27
 msgid "Just trying out Tabbycat?"
 msgstr "Vous essayez simplement Tabbycat ?"
 
-#: tournaments/templates/create_tournament.html:24
-msgid ""
-"If you're learning or playing around with Tabbycat, it's easiest to create a "
-"demo tournament that is prepopulated with a fake (but typical) set of teams, "
-"adjudicators, venues, and the like. You can then delete this demo tournament "
-"later on, or deploy a new instance for your real tournament."
-msgstr ""
-"Si vous apprenez ou jouez avec Tabbycat, il est plus facile de créer un "
-"tournoi démonstratif qui est prérempli d'un ensemble faux (mais typique) "
-"d'équipes, de juges, de salles et autres. Vous pouvez ensuite supprimer ce "
-"tournoi démonstratif, ou vous pouvez déployer une instance nouvelle pour "
-"votre tournoi réel."
+#: tournaments/templates/create_tournament.html:28
+msgid "If you're learning or playing around with Tabbycat, it's easiest to create a demo tournament that is prepopulated with a fake (but typical) set of teams, adjudicators, venues, and the like. You can then delete this demo tournament later on, or deploy a new instance for your real tournament."
+msgstr "Si vous apprenez ou jouez avec Tabbycat, il est plus facile de créer un tournoi démonstratif avec un faux ensemble (mais typique) d'équipes, de juges, de salles et autres. Vous pouvez ensuite supprimer ce tournoi démonstratif, ou vous pouvez déployer une instance nouvelle pour votre tournoi réel."
 
-#: tournaments/templates/create_tournament.html:38
+#: tournaments/templates/create_tournament.html:42
 #, python-format
 msgid "Load %(name)s"
 msgstr "Charger %(name)s"
 
-#: tournaments/templates/create_tournament.html:45
-msgid ""
-"You already have a tournament set up using this data set. Reloading the data "
-"will delete <strong>all data</strong> from that tourament."
-msgstr ""
-"Vous avez déjà un tournoi utilisant cet ensemble de données. Le rechargement "
-"de ces données supprimera <strong>toutes les données</strong> de ce tournoi."
+#: tournaments/templates/create_tournament.html:49
+msgid "You already have a tournament set up using this data set. Reloading the data will delete <strong>all data</strong> from that tourament."
+msgstr "Vous avez déjà un tournoi utilisant cet ensemble de données. Le rechargement de ces données supprimera <strong>toutes les données</strong> de ce tournoi."
 
-#: tournaments/templates/create_tournament.html:65
+#: tournaments/templates/create_tournament.html:69
 msgid "Create Tournament"
 msgstr "Créer tournoi"
 
-#: tournaments/templates/create_tournament.html:66
+#: tournaments/templates/create_tournament.html:70
 msgid "Cancel and go back to the site home page"
 msgstr "Annuler et revenir à la page d’accueil du site"
 
@@ -500,90 +414,52 @@ msgid "Donate to Tabbycat"
 msgstr "Donations à Tabbycat"
 
 #: tournaments/templates/donations.html:11
-msgid ""
-"Tabbycat is a volunteer effort. Since 2012, its maintainers have spent "
-"thousands of hours working on it."
-msgstr ""
+msgid "Tabbycat is a volunteer effort. Since 2012, its maintainers have spent thousands of hours working on it."
+msgstr "Tabbycat est une entreprise de bénévoles. Depuis 2012, ses mainteneurs ont épuisés de milliers d’heures travaillant dessus."
 
 #: tournaments/templates/donations.html:17
-msgid ""
-"Donating to Tabbycat helps the maintainers to meet recurring costs and "
-"justify our ongoing contributions in responding to support enquiries, "
-"keeping the software up to date, fixing bugs, and developing new features."
-msgstr ""
+msgid "Donating to Tabbycat helps the maintainers to meet recurring costs and justify our ongoing contributions in responding to support enquiries, keeping the software up to date, fixing bugs, and developing new features."
+msgstr "Faire des dons à Tabbycat permet aux mainteneurs de récupérer les couts et de justifier les contributions en répondant aux requêtes d’assistance, garder le logiciel à jour, réparant des bogues et d’apporter de nouvelles fonctionnalités."
 
 #: tournaments/templates/donations.html:24
-msgid ""
-"We suggest that tournaments budget for a donation of A$1 (Australian dollar) "
-"per team. For tournaments run for fundraising or for profit, whether partly "
-"or solely, this payment is <strong>required</strong> and your licence to use "
-"Tabbycat is conditional upon it. General donations from individuals or "
-"organisations are of course also much appreciated."
-msgstr ""
+msgid "We suggest that tournaments budget for a donation of A$1 (Australian dollar) per team. For tournaments run for fundraising or for profit, whether partly or solely, this payment is <strong>required</strong> and your licence to use Tabbycat is conditional upon it. General donations from individuals or organisations are of course also much appreciated."
+msgstr "Nous suggérons que les tournois mettent à part un don de A$1 (dollar Australien) par équipe. Pour les tournois utilisés pour les récoltes de fonds ou pour le profit, soit en partie ou totalement, ce payement est <strong>obligatoire</strong> et votre licence est sous cette condition. Des dons généraux qui parviennent des individus ou organisations sont aussi très appréciés."
 
 #: tournaments/templates/donations.html:34
 #, python-format
-msgid ""
-"Our suggested donation from %(tournament)s, based on its size, is <strong>A$"
-"%(nteams)s</strong>. The easiest way to donate is <a href=\"http://PayPal.Me/"
-"tabbycatproject/%(nteams)saud\">via Paypal</a>, but please don’t hesitate to "
-"<a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email"
-"\">email us</a> if other methods would work better for you. Also, feel free "
-"to get in touch if you require an invoice or receipt for the payment."
-msgstr ""
+msgid "Our suggested donation from %(tournament)s, based on its size, is <strong>A$%(nteams)s</strong>. The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">via Paypal</a>, but please don’t hesitate to <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">email us</a> if other methods would work better for you. Also, feel free to get in touch if you require an invoice or receipt for the payment."
+msgstr "Notre don suggéré de %(tournament)s vue sa taille est de <strong>A$%(nteams)s</strong>. Le moyen le plus facile à contribuer un don est <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">par Paypal</a>, mais n’hésitez pas à <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">nous envoyer des courriels</a> si les autres moyens ne vous conviennent pas. D’autant plus, n’hésitez pas à nous contacter si vous requérez une facture ou reçu pour le payement."
 
 #: tournaments/templates/donations.html:46
-msgid ""
-"The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/0aud"
-"\">via Paypal</a>. Please <a href=\"http://tabbycat.readthedocs.io/en/stable/"
-"about/support.html\">contact us</a> if you require other options."
-msgstr ""
+msgid "The easiest way to donate is <a href=\"http://PayPal.Me/tabbycatproject/0aud\">via Paypal</a>. Please <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html\">contact us</a> if you require other options."
+msgstr "Le moyen le plus facile à contribuer un don est <a href=\"http://PayPal.Me/tabbycatproject/%(nteams)saud\">par Paypal</a>, mais n’hésitez pas à <a href=\"http://tabbycat.readthedocs.io/en/stable/about/support.html#email\">nous envoyer des courriels</a> si vous avez besoin d’autres moyens."
+
+#: tournaments/templates/fix_debate_teams.html:6
+msgid "Debate Team Missing"
+msgstr "Équipe de Joute Manquante"
 
 #: tournaments/templates/fix_debate_teams.html:16
-msgid ""
-"Tabbycat always requires that, in every debate, one and only one team is "
-"assigned to each side. When that is not the case, this error occurs. "
-"Usually, this is the result of debates having been manually edited."
-msgstr ""
-"Tabbycat exige toujours que, dans chaque débat, une et une seule équipe soit "
-"attribuée à chaque côté. Quand ce n’est pas le cas, cette erreur se produit. "
-"Typiquement, cela est le résultat de la modification manuelle des débats."
+msgid "Tabbycat always requires that, in every debate, one and only one team is assigned to each side. When that is not the case, this error occurs. Usually, this is the result of debates having been manually edited."
+msgstr "Tabbycat exige toujours que, dans chaque débat, une et une seule équipe soit attribuée à chaque côté. Quand ce n’est pas le cas, cette erreur se produit. Typiquement, cela est le résultat de la modification manuelle des débats."
 
 #: tournaments/templates/fix_debate_teams.html:24
-msgid ""
-"A list of offending debates is presented below. To fix them, you'll need to "
-"do the following:"
-msgstr ""
-"Une liste des débats problématiques est présentée ci-dessous. Pour les "
-"corriger, vous devrez effectuer les opérations suivantes :"
+msgid "A list of offending debates is presented below. To fix them, you'll need to do the following:"
+msgstr "Une liste des débats problématiques est présentée ci-dessous. Pour les corriger, vous devrez effectuer les opérations suivantes :"
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:33
 msgid "Click the <strong>Fix this debate</strong> button for that debate."
-msgstr ""
-"Cliquer sur le bouton <strong>Corriger ce débat</strong> pour ce débat-là."
+msgstr "Cliquer sur le bouton <strong>Corriger ce débat</strong> pour ce débat-là."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:39
-msgid ""
-"Ensure that every <strong>side</strong> that should be present in the debate "
-"is present and has a <strong>team</strong> assigned. If a team is missing, "
-"find an empty row and use the magnifying glass to select a team. Then set "
-"the new team's <strong>side</strong> accordingly."
-msgstr ""
-"Vous assurer que chaque <strong>côté</strong> qui doit être présente dans le "
-"débat soit présente et qu'une <strong>équipe</strong> y soit attribuée. S’il "
-"manque une équipe, trouver une ligne vide et utiliser la loupe pour "
-"sélectionner une équipe. Ensuite préciser en conséquence la côté de cette "
-"nouvelle équipe."
+msgid "Ensure that every <strong>side</strong> that should be present in the debate is present and has a <strong>team</strong> assigned. If a team is missing, find an empty row and use the magnifying glass to select a team. Then set the new team's <strong>side</strong> accordingly."
+msgstr "Vous assurer que chaque <strong>côté</strong> qui doit être présente dans le débat soit présente et qu'une <strong>équipe</strong> y soit attribuée. S’il manque une équipe, trouver une ligne vide et utiliser la loupe pour sélectionner une équipe. Ensuite préciser en conséquence la côté de cette nouvelle équipe."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:48
-msgid ""
-"Ensure that no <strong>side</strong> appears more than once in the debate."
-msgstr ""
-"Vous assurer qu'aucun <strong>côté</strong> apparaisse plus qu'une fois dans "
-"le débat."
+msgid "Ensure that no <strong>side</strong> appears more than once in the debate."
+msgstr "Vous assurer qu'aucun <strong>côté</strong> apparaisse plus qu'une fois dans le débat."
 
 #. Translators: This is in a list of instructions.
 #: tournaments/templates/fix_debate_teams.html:55
@@ -591,22 +467,13 @@ msgid "<strong>Save</strong> the changes."
 msgstr "<strong>Enregistrer</strong> les modifications."
 
 #: tournaments/templates/fix_debate_teams.html:62
-msgid ""
-"Once you've fixed all the debates, you should then be able to return to "
-"whatever page you were originally on without the error reoccurring."
-msgstr ""
-"Après avoir corrigé tous les débat, vous pourrez ensuite retourner la page "
-"auquel vous étiez initialement, sans que l'erreur se reproduise."
+msgid "Once you've fixed all the debates, you should then be able to return to whatever page you were originally on without the error reoccurring."
+msgstr "Après avoir corrigé tous les débat, vous pourrez ensuite retourner la page auquel vous étiez initialement, sans que l'erreur se reproduise."
 
 #: tournaments/templates/fix_debate_teams.html:68
 #, python-format
-msgid ""
-"You can also see all the debates in the <a href=\"%(edit_debates_url)s\" "
-"target=\"_blank\">Debates section of the Edit Database Area</a>."
-msgstr ""
-"Vous pouvez aussi voir tous les débats dans la <a href=\"%(edit_debates_url)s"
-"\" target=\"_blank\">sections des débats de la zone pour modifier le base de "
-"données</a>."
+msgid "You can also see all the debates in the <a href=\"%(edit_debates_url)s\" target=\"_blank\">Debates section of the Edit Database Area</a>."
+msgstr "Vous pouvez aussi voir tous les débats dans la <a href=\"%(edit_debates_url)s\" target=\"_blank\">sections des débats de la zone pour modifier le base de données</a>."
 
 #: tournaments/templates/fix_debate_teams.html:82
 msgid "Debate ID"
@@ -639,12 +506,8 @@ msgid "It looks like all debates are in good shape!"
 msgstr "Il semble que tous les débats soient corrects !"
 
 #: tournaments/templates/fix_debate_teams.html:128
-msgid ""
-"If you keep getting redirected to this page and you're not sure why, please "
-"contact the developers of Tabbycat."
-msgstr ""
-"Si vous continuez d'être redirigé(e) à cette page et vous ne savez pas "
-"pourquoi, veuillez contacter les développeurs de Tabbycat."
+msgid "If you keep getting redirected to this page and you're not sure why, please contact the developers of Tabbycat."
+msgstr "Si vous continuez d'être redirigé(e) à cette page et vous ne savez pas pourquoi, veuillez contacter les développeurs de Tabbycat."
 
 #: tournaments/templates/public_tournament_index.html:5
 #: tournaments/templates/public_tournament_index.html:9
@@ -654,8 +517,7 @@ msgstr "Bienvenue à %(tournament_name)s"
 
 #: tournaments/templates/public_tournament_index.html:18
 msgid "There is currently no public information available for this tournament."
-msgstr ""
-"Il n’y a actuellement aucune information publique disponible sur ce tournoi."
+msgstr "Il n’y a actuellement aucune information publique disponible sur ce tournoi."
 
 #: tournaments/templates/public_tournament_index.html:36
 msgid "Team Tab"
@@ -677,7 +539,7 @@ msgstr "Classement des orateurs %(category_name)s"
 
 #: tournaments/templates/public_tournament_index.html:70
 msgid "Replies Tab"
-msgstr "Classement des discours de résponse"
+msgstr "Classement des discours de réplique"
 
 #: tournaments/templates/public_tournament_index.html:76
 msgid "Adjudicator Tab"
@@ -688,222 +550,273 @@ msgid "Motions Tab"
 msgstr "Classement des motions"
 
 #: tournaments/templates/public_tournament_index.html:88
-#: tournaments/templates/public_tournament_index.html:133
+#: tournaments/templates/public_tournament_index.html:141
 msgid "Sides"
 msgstr "Côtés"
 
-#: tournaments/templates/public_tournament_index.html:96
-#: tournaments/templates/public_tournament_index.html:199
+#: tournaments/templates/public_tournament_index.html:97
+#: tournaments/templates/public_tournament_index.html:207
 #, python-format
 msgid "Draw for %(round_name)s"
 msgstr "Tirage de %(round_name)s"
 
 #: tournaments/templates/public_tournament_index.html:101
+msgid "Draws for Current Rounds"
+msgstr "Tirages pour les joutes actuelles"
+
+#: tournaments/templates/public_tournament_index.html:106
 #, python-format
 msgid "%(round_name)s's draw has yet to be released"
-msgstr ""
+msgstr "Le tirage de %(round_name)s n’est pas encore distribué"
 
-#: tournaments/templates/public_tournament_index.html:109
+#: tournaments/templates/public_tournament_index.html:110
+msgid "The draw for the next round has yet to be released"
+msgstr "Le tirage pour la prochaine joute n’est pas encore distribué"
+
+#: tournaments/templates/public_tournament_index.html:117
 msgid "Check-Ins"
 msgstr "Enregistrements"
 
-#: tournaments/templates/public_tournament_index.html:115
+#: tournaments/templates/public_tournament_index.html:123
 msgid "Results"
 msgstr "Résultats"
 
-#: tournaments/templates/public_tournament_index.html:121
+#: tournaments/templates/public_tournament_index.html:129
 msgid "Divisions"
 msgstr "Divisions"
 
-#: tournaments/templates/public_tournament_index.html:127
+#: tournaments/templates/public_tournament_index.html:135
 msgid "Motions"
 msgstr "Motions"
 
-#: tournaments/templates/public_tournament_index.html:139
+#: tournaments/templates/public_tournament_index.html:147
 msgid "Team Standings"
 msgstr "Classement des équipes"
 
-#: tournaments/templates/public_tournament_index.html:146
+#: tournaments/templates/public_tournament_index.html:154
 #, python-format
 msgid "%(category_name)s Break"
 msgstr "Qualification %(category_name)s"
 
-#: tournaments/templates/public_tournament_index.html:155
+#: tournaments/templates/public_tournament_index.html:163
 msgid "Breaking Adjudicators"
 msgstr "Qualification des juges"
 
-#: tournaments/templates/public_tournament_index.html:161
-msgid "Diversity Overview"
-msgstr "Aperçu de la diversité"
+#: tournaments/templates/public_tournament_index.html:169
+msgid "Diversity"
+msgstr "Diversité"
 
-#: tournaments/templates/public_tournament_index.html:167
+#: tournaments/templates/public_tournament_index.html:175
 msgid "Participants"
 msgstr "Participants"
 
-#: tournaments/templates/public_tournament_index.html:173
+#: tournaments/templates/public_tournament_index.html:181
 msgid "Institutions"
-msgstr ""
+msgstr "Institutions"
 
-#: tournaments/templates/public_tournament_index.html:179
+#: tournaments/templates/public_tournament_index.html:187
 msgid "Feedback Progress"
 msgstr "Progrès des commentaires"
 
-#: tournaments/templates/public_tournament_index.html:185
+#: tournaments/templates/public_tournament_index.html:193
 msgid "Enter Ballot"
-msgstr "Saisie d'un bulletin"
+msgstr "Saisie d'une feuille"
 
-#: tournaments/templates/public_tournament_index.html:191
+#: tournaments/templates/public_tournament_index.html:199
 msgid "Enter Feedback"
 msgstr "Saisie d'une commentaire"
 
-#: tournaments/templates/public_tournament_index.html:207
+#: tournaments/templates/public_tournament_index.html:215
 msgid "View All Draws"
 msgstr "Afficher le tirage"
 
-#: tournaments/templates/public_tournament_index.html:218
+#: tournaments/templates/public_tournament_index.html:226
 msgid "Tournament Staff"
 msgstr "Personnel du tournoi"
 
+#: tournaments/templates/round_complete_check.html:4
+#: tournaments/templates/round_complete_check.html:6
+msgid "Confirm Round Completion"
+msgstr "Confirmer la complétion de la joute"
+
+#: tournaments/templates/round_complete_check.html:8
+#, python-format
+msgid "for %(name)s"
+msgstr "pour %(name)s"
+
+#: tournaments/templates/round_complete_check.html:13
+msgid "Enter Results"
+msgstr "Saisir Résultats"
+
+#: tournaments/templates/round_complete_check.html:18
+msgid "Emails have already been sent."
+msgstr "Les courriels ont déjà été envoyés."
+
+#: tournaments/templates/round_complete_check.html:23
+msgid "Email Team Wins/Losses"
+msgstr "Envoyer les victoires d’équipes par courriel"
+
+#: tournaments/templates/round_complete_check.html:25
+msgid "Email Team Points"
+msgstr "Envoyer la note des équipes par courriel"
+
+#: tournaments/templates/round_complete_check.html:34
+#, python-format
+msgid "Mark %(round_name)s as Completed"
+msgstr "Marquer %(round_name)s comme Achevée"
+
+#: tournaments/templates/round_complete_check.html:41
+#, python-format
+msgid "Mark %(round_name)s as Completed Anyway"
+msgstr "Marquer %(round_name)s comme Achevée toutefois"
+
+#: tournaments/templates/round_complete_check.html:50
+#, python-format
+msgid "Go to %(round_name)s"
+msgstr "Aller à %(round_name)s"
+
+#: tournaments/templates/round_complete_check.html:62
+#, python-format
+msgid "%(round_name)s has already been marked as completed!"
+msgstr "%(round_name)s a déjà été marquée comme achevée !"
+
+#: tournaments/templates/round_complete_check.html:67
+#, python-format
+msgid "The following prior round has not yet been completed: %(prior_rounds_not_completed)s. You should complete it before marking this round as completed."
+msgid_plural "The following prior rounds have not yet been completed: %(prior_rounds_not_completed)s. You should complete those before marking this round as completed."
+msgstr[0] "La joute précédente n’est pas achevée : %(prior_rounds_not_completed)s. Vous devriez l’achever avant de la marquer comme telle."
+msgstr[1] "Les joutes précédentes ne sont pas achevées : %(prior_rounds_not_completed)s. Vous devriez les achever avant de les marquer comme telle."
+
+#: tournaments/templates/round_complete_check.html:77
+#, python-format
+msgid "All ballots from %(round_name)s are confirmed. You should be good to go!"
+msgstr "Tout les feuilles de %(round_name)s sont confirmées. Tout est prêt !"
+
+#: tournaments/templates/round_complete_check.html:83
+#, python-format
+msgid "There is still %(num_unconfirmed)s ballot that is not confirmed. You should <strong>not</strong> proceed to the next round until all ballots are confirmed."
+msgid_plural "There are still %(num_unconfirmed)s ballots that are not confirmed. You should <strong>not</strong> proceed to the next round until all ballots are confirmed."
+msgstr[0] "Il y a encore %(num_unconfirmed)s feuille qui est pas confirmée. Vous ne devriez <strong>pas</strong> avancer à la prochaine joute."
+msgstr[1] "Il y a encore %(num_unconfirmed)s feuilles qui ne sont pas confirmées. Vous ne devriez <strong>pas</strong> avancer à la prochaine joute."
+
+#: tournaments/templates/round_complete_check.html:98
+#, python-format
+msgid "The \"show public results\" setting is on and this round is marked as a <strong>silent</strong> round, so results will <strong>not</strong> show on the public page when you mark it as completed. You can mark or unmark rounds as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>."
+msgstr "L’option « montrer les résultats publics » est activée et cette joute est marquée comme <strong>silencieuse</strong> donc les résultats ne vont <strong>pas</strong> se montrer sur la page publique quand vous avancez de joute. Vous pourrez marquer ou défaire les joutes comme silencieuses dans l’<a href=\"%(round_changelist_url)s\">aire pour la modification de base de données</a>."
+
+#: tournaments/templates/round_complete_check.html:106
+#, python-format
+msgid "The \"show public results\" setting is on and this round is <strong>not</strong> marked as a silent round so the <strong>results <u>will</u> show on the public page</strong> when you mark it as completed. You can mark or unmark rounds as silent in the <a href=\"%(round_changelist_url)s\">Edit Database area</a>."
+msgstr "L’option « montrer les résultats publics » est activée et cette joute n’est <strong>pas</strong> marquée comme silencieuse donc les <strong>résultats <u>vont</u> se montrer sur la page publique</strong> quand vous avancez de joute. Vous pourrez marquer ou défaire les joutes comme silencieuses dans l’<a href=\"%(round_changelist_url)s\">aire pour la modification de base de données</a>."
+
+#: tournaments/templates/set_current_round.html:5
+#: tournaments/templates/set_current_round.html:7
+#: tournaments/templates/set_current_round.html:72
+msgid "Set Current Round"
+msgstr "Modifier la joute actuelle"
+
+#: tournaments/templates/set_current_round.html:14
+msgid "Back to Configuration"
+msgstr "Retour au Configuration"
+
 #: tournaments/templates/set_current_round.html:33
 #, python-format
-msgid ""
-"No round is currently set. In order for Tabbycat to work, please set the "
-"<strong>current round</strong> of the tournament <strong>"
-"%(tournament_name)s</strong>."
-msgstr ""
+msgid "No round is currently set. In order for Tabbycat to work, please set the <strong>current round</strong> of the tournament <strong>%(tournament_name)s</strong>."
+msgstr "Aucune joute n’est mise actuellement. Pour que Tabbycat fonctionne, veuillez mettre la <strong>joute actuelle</strong> du tournoi <strong>%(tournament_name)s</strong>."
 
 #: tournaments/templates/set_current_round.html:42
 #, python-format
-msgid ""
-"On this page, you can set the <strong>current round</strong> of the "
-"tournament <strong>%(tournament_name)s</strong>."
-msgstr ""
+msgid "On this page, you can set the <strong>current round</strong> of the tournament <strong>%(tournament_name)s</strong>."
+msgstr "Sur cette page, vous pouvez mettre la <strong>joute actuelle</strong> du tournoi <strong>%(tournament_name)s</strong>."
 
 #: tournaments/templates/set_current_round.html:53
 #, python-format
-msgid ""
-"The tournament <strong>%(tournament_name)s</strong> has no rounds. You'll "
-"need to <a href=\"%(round_changelist_url)s\">add rounds and associate them "
-"with this tournament</a> before you can set the current round."
-msgstr ""
-
-#: tournaments/templates/set_current_round.html:84
-msgid "Set Current Round"
-msgstr "Modifier le tour actuel"
+msgid "The tournament <strong>%(tournament_name)s</strong> has no rounds. You'll need to <a href=\"%(round_changelist_url)s\">add rounds and associate them with this tournament</a> before you can set the current round."
+msgstr "Le tournoi <strong>%(tournament_name)s</strong> n’a aucune joute. Vous aurez besoin d’en <a href=\"%(round_changelist_url)s\">ajouter et de les associer avec ce tournoi</a> avant que vous puissiez mettre la joute actuelle."
 
 #: tournaments/templates/site_index.html:4
 msgid "Welcome!"
 msgstr "Bienvenue&nbsp;!"
 
-#: tournaments/templates/site_index.html:17
+#: tournaments/templates/site_index.html:21
 #, python-format
 msgid "Administrator area for <strong>%(tn)s</strong>"
 msgstr "Zone d'administrateur de <strong>%(tn)s</strong>"
 
-#: tournaments/templates/site_index.html:24
+#: tournaments/templates/site_index.html:28
 #, python-format
 msgid "Assistant area for <strong>%(tn)s</strong>"
 msgstr "Zone des assistants de <strong>%(tn)s</strong>"
 
-#: tournaments/templates/site_index.html:29
+#: tournaments/templates/site_index.html:33
 #, python-format
 msgid "Public area for <strong>%(tn)s</strong>"
 msgstr "Zone publique de <strong>%(tn)s</strong>"
 
-#: tournaments/templates/site_index.html:47
-msgid ""
-"It looks like there aren't any tournaments on this site. Would you like to "
-"create one?"
-msgstr ""
-"Il semble qu'il n'y ait aucun tournoi sur ce site. Voulez-vous en créer un ?"
+#: tournaments/templates/site_index.html:51
+msgid "It looks like there aren't any tournaments on this site. Would you like to create one?"
+msgstr "Il semble qu'il n'y ait aucun tournoi sur ce site. Voulez-vous en créer un ?"
 
-#: tournaments/templates/site_index.html:55
+#: tournaments/templates/site_index.html:59
 msgid "There are currently no tournaments set up on this site."
 msgstr "Il n'y a pas actuellement de tournois sur ce site."
 
-#: tournaments/templates/site_index.html:68
+#: tournaments/templates/site_index.html:72
 msgid "All Draws by Venue"
 msgstr "Tous les tirages par salle"
 
-#: tournaments/templates/site_index.html:72
-msgid "All Draws by School"
-msgstr "Tous les tirages par salle"
-
 #: tournaments/templates/site_index.html:76
+msgid "All Draws by School"
+msgstr "Tous les tirages par école"
+
+#: tournaments/templates/site_index.html:80
 msgid "All Teams and Divisions"
 msgstr "Tous les tirages et toutes les divisions"
 
-#: tournaments/templates/site_index.html:86
+#: tournaments/templates/site_index.html:90
 msgid "New Tournament"
 msgstr "Créer un nouveau tournoi"
 
-#: tournaments/templates/site_index.html:89
+#: tournaments/templates/site_index.html:93
 msgid "Edit Database Area"
 msgstr "Zone pour modifier la base de données"
 
-#: tournaments/templates/site_index.html:98
+#: tournaments/templates/site_index.html:96
+msgid "Send a Test Email"
+msgstr "Envoyer un Courriel Test"
+
+#: tournaments/templates/site_index.html:105
 #, python-format
 msgid "Change Password (%(user)s)"
 msgstr "Modifier mot de passe (%(user)s)"
 
-#: tournaments/templates/site_index.html:102
+#: tournaments/templates/site_index.html:109
 #, python-format
 msgid "Log Out (%(user)s)"
 msgstr "Déconnexion (%(user)s)"
 
-#: tournaments/templates/site_index.html:108
+#: tournaments/templates/site_index.html:115
 msgid "Log In as Admin"
-msgstr "Se connecter comme admin"
+msgstr "Se connecter comme administrateur"
 
 #: tournaments/templates/tournament_index.html:8
 #, python-format
-msgid ""
-"We hope you've enjoyed using Tabbycat for your tournament. We would "
-"appreciate if you would make a donation to the project in order to support "
-"its ongoing development and maintenance. For a tournament of this size, we "
-"suggest a donation of <strong>$%(amount)s</strong>. Note that if your "
-"tournament is run for profit, or for fundraising, making this payment is a "
-"mandatory condition of Tabbycat's software license. <a href=\"%(url)s"
-"\">Learn more about donating.</a>"
-msgstr ""
-"Nous espérons que vous avez aimé utiliser Tabbycat pour votre tournoi. Nous "
-"apprécierions que vous fassiez une donation au projet afin de soutenir son "
-"développement et entretien continu. D'un tournoi de ce taille, nous "
-"suggérons une donation de <strong>%(amount)s</strong>. Notez que si votre "
-"tournoi est à but lucratif, ou est pour lever des fonds, ce paiement est une "
-"condition obligatoire de la licence de logiciel de Tabbycat. <a href="
-"\"%(url)s\">Savoir plus des donations.</a>"
+msgid "We hope you've enjoyed using Tabbycat for your tournament. We would appreciate if you would make a donation to the project in order to support its ongoing development and maintenance. For a tournament of this size, we suggest a donation of <strong>$%(amount)s</strong>. Note that if your tournament is run for profit, or for fundraising, making this payment is a mandatory condition of Tabbycat's software license. <a href=\"%(url)s\">Learn more about donating.</a>"
+msgstr "Nous espérons que vous avez aimé utiliser Tabbycat pour votre tournoi. Nous apprécierions que vous fassiez une donation au projet afin de soutenir son développement et entretien continu. D'un tournoi de cette taille, nous suggérons une donation de <strong>%(amount)s $</strong>. Notez que si votre tournoi est à but lucratif, ou est pour lever des fonds, ce paiement est une condition obligatoire de la licence de logiciel de Tabbycat. <a href=\"%(url)s\">Savoir plus des donations.</a>"
 
 #: tournaments/templates/tournament_index.html:24
 msgid "Welcome to your new tournament!"
 msgstr "Bienvenue à votre nouveau tournoi !"
 
 #: tournaments/templates/tournament_index.html:26
-msgid ""
-"The next step is to import your initial tournament data: the institutions, "
-"teams, adjudicators and venues that are in your tournament. There are a "
-"number of ways to do this. For small-to-medium tournaments, the simple "
-"importer is your best bet."
-msgstr ""
-"L’étape suivante consiste à importer les données initiales de votre "
-"tournoi : les institutions, les équipes, les juges et les salles qui font "
-"partie de votre tournoi. Il y a quelques façons de le faire. Pour les "
-"tournois de taille petit ou moyen, l’importateur simple est la meilleure "
-"option."
+msgid "The next step is to import your initial tournament data: the institutions, teams, adjudicators and venues that are in your tournament. There are a number of ways to do this. For small-to-medium tournaments, the simple importer is your best bet."
+msgstr "L’étape suivante consiste à importer les données initiales de votre tournoi : les institutions, les équipes, les juges et les salles qui font partie de votre tournoi. Il y a quelques façons de le faire. Pour les tournois de taille petit ou moyen, l’importateur simple est la meilleure option."
 
 #. Translators: The documentation where the link goes to is in English; translations should mention this with "(in English)" after the link.
 #: tournaments/templates/tournament_index.html:33
 #, python-format
-msgid ""
-"For more information, please consult our <a href=\"https://tabbycat."
-"readthedocs.io/en/%(readthedocs_version)s/use/importing-data.html\" class="
-"\"alert-link\" target=\"_blank\"> documentation on importing initial data</"
-"a>."
-msgstr ""
-"Pour trouver plus de renseignements, veuillez consulter notre <a href="
-"\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use/importing-"
-"data.html\" class=\"alert-link\" target=\"_blank\">documentation sur "
-"importer les données initiales</a> (en anglais)."
+msgid "For more information, please consult our <a href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use/importing-data.html\" class=\"alert-link\" target=\"_blank\"> documentation on importing initial data</a>."
+msgstr "Pour trouver plus de renseignements, veuillez consulter notre <a href=\"https://tabbycat.readthedocs.io/en/%(readthedocs_version)s/use/importing-data.html\" class=\"alert-link\" target=\"_blank\">documentation sur importer les données initiales</a> (en anglais)."
 
 #: tournaments/templates/tournament_index.html:43
 msgid "Use the simple importer to add your initial data."
@@ -912,366 +825,286 @@ msgstr "Utiliser l’importateur simple afin d'ajouter vos données initiales."
 #: tournaments/templates/tournament_index.html:49
 #, python-format
 msgid "Go to the checkins area to begin creating a draw for %(round_name)s"
-msgstr ""
-"Allez à la zone d'enregistrements afin de créer un tirage pour %(round_name)s"
+msgstr "Allez à la zone d'enregistrements afin de créer un tirage pour %(round_name)s"
 
 #: tournaments/templates/tournament_index.html:57
 #, python-format
 msgid "Go to the draw area to allocate adjudicators for %(round_name)s"
-msgstr ""
-"Allez à la zone de tirage afin d'attribuer les juges aux débats de "
-"%(round_name)s"
+msgstr "Allez à la zone de tirage afin d'attribuer les juges aux débats de %(round_name)s"
 
 #: tournaments/templates/tournament_index.html:65
 #, python-format
 msgid "Go to the results area to begin entering ballots for %(round_name)s"
-msgstr ""
-"Allez à la zone de résultats afin de saisir les bulletins pour %(round_name)s"
+msgstr "Allez à la zone de résultats afin de saisir les feuilles pour %(round_name)s"
 
 #. Translators: abbreviation for "grand final"
-#: tournaments/utils.py:13
+#: tournaments/utils.py:15
 msgid "Grand Final"
 msgstr "Grande finale"
 
-#: tournaments/utils.py:13
+#: tournaments/utils.py:15
 msgid "GF"
 msgstr "GF"
 
 #. Translators: abbreviation for "semifinals"
-#: tournaments/utils.py:15
+#: tournaments/utils.py:17
 msgid "Semifinals"
 msgstr "Demi-finales"
 
-#: tournaments/utils.py:15
+#: tournaments/utils.py:17
 msgid "SF"
 msgstr "DF"
 
 #. Translators: abbreviation for "quarterfinals"
-#: tournaments/utils.py:17
+#: tournaments/utils.py:19
 msgid "Quarterfinals"
 msgstr "Quarts de finale"
 
-#: tournaments/utils.py:17
+#: tournaments/utils.py:19
 msgid "QF"
 msgstr "QF"
 
 #. Translators: abbreviation for "octofinals"
-#: tournaments/utils.py:19
+#: tournaments/utils.py:21
 msgid "Octofinals"
 msgstr "Huitièmes de finale"
 
-#: tournaments/utils.py:19
+#: tournaments/utils.py:21
 msgid "OF"
 msgstr "HF"
 
 #. Translators: abbreviation for "double-octofinals"
-#: tournaments/utils.py:21
+#: tournaments/utils.py:23
 msgid "Double-Octofinals"
 msgstr "Seizièmes de finale"
 
-#: tournaments/utils.py:21
+#: tournaments/utils.py:23
 msgid "DOF"
 msgstr "16F"
 
 #. Translators: abbreviation for "triple-octofinals"
-#: tournaments/utils.py:23
+#: tournaments/utils.py:25
 msgid "Triple-Octofinals"
 msgstr "Trente-deuxièmes de finale"
 
-#: tournaments/utils.py:23
+#: tournaments/utils.py:25
 msgid "TOF"
 msgstr "32F"
 
-#: tournaments/utils.py:28
+#: tournaments/utils.py:30
 msgid "affirmative"
 msgstr "affirmatif"
 
-#: tournaments/utils.py:29
+#: tournaments/utils.py:31
 msgid "negative"
 msgstr "négatif"
 
-#: tournaments/utils.py:30
+#: tournaments/utils.py:32
 msgid "affirmative team"
 msgstr "équipe affirmatif"
 
-#: tournaments/utils.py:31
+#: tournaments/utils.py:33
 msgid "negative team"
 msgstr "équipe négatif"
 
-#: tournaments/utils.py:32
+#: tournaments/utils.py:34
 msgid "Aff"
 msgstr "Aff"
 
-#: tournaments/utils.py:33
+#: tournaments/utils.py:35
 msgid "Neg"
 msgstr "Nég"
 
-#: tournaments/utils.py:36
+#: tournaments/utils.py:38
 msgid "government"
 msgstr "gouvernement"
 
-#: tournaments/utils.py:37 tournaments/utils.py:45
+#: tournaments/utils.py:39 tournaments/utils.py:47
 msgid "opposition"
 msgstr "opposition"
 
-#: tournaments/utils.py:38
+#: tournaments/utils.py:40
 msgid "government team"
 msgstr "équipe du gouvernement"
 
-#: tournaments/utils.py:39 tournaments/utils.py:47
+#: tournaments/utils.py:41 tournaments/utils.py:49
 msgid "opposition team"
 msgstr "équipe de l'opposition"
 
-#: tournaments/utils.py:40
+#: tournaments/utils.py:42
 msgid "Gov"
 msgstr "Gouv"
 
-#: tournaments/utils.py:41 tournaments/utils.py:49
+#: tournaments/utils.py:43 tournaments/utils.py:51
 msgid "Opp"
 msgstr "Opp"
 
-#: tournaments/utils.py:44
+#: tournaments/utils.py:46
 msgid "proposition"
 msgstr "proposition"
 
-#: tournaments/utils.py:46
+#: tournaments/utils.py:48
 msgid "proposition team"
 msgstr "équipe de la proposition"
 
-#: tournaments/utils.py:48
+#: tournaments/utils.py:50
 msgid "Prop"
 msgstr "Prop"
 
-#: tournaments/utils.py:52
+#: tournaments/utils.py:54
 msgid "pro"
 msgstr "pour"
 
-#: tournaments/utils.py:53
+#: tournaments/utils.py:55
 msgid "con"
 msgstr "contre"
 
-#: tournaments/utils.py:54
+#: tournaments/utils.py:56
 msgid "pro team"
 msgstr "équipe pour"
 
-#: tournaments/utils.py:55
+#: tournaments/utils.py:57
 msgid "con team"
 msgstr "équipe contre"
 
-#: tournaments/utils.py:56
+#: tournaments/utils.py:58
 msgid "Pro"
 msgstr "Pour"
 
-#: tournaments/utils.py:57
+#: tournaments/utils.py:59
 msgid "Con"
 msgstr "Contre"
 
-#: tournaments/utils.py:60
-msgid "appellant"
-msgstr ""
-
-#: tournaments/utils.py:61
-msgid "respondent"
-msgstr ""
-
 #: tournaments/utils.py:62
-msgid "appellant team"
-msgstr ""
+msgid "appellant"
+msgstr "appelant(e)"
 
 #: tournaments/utils.py:63
-msgid "respondent team"
-msgstr ""
+msgid "respondent"
+msgstr "répondeur(se)"
 
 #: tournaments/utils.py:64
-msgid "App"
-msgstr ""
+msgid "appellant team"
+msgstr "équipe appelante"
 
 #: tournaments/utils.py:65
-msgid "Res"
-msgstr ""
+msgid "respondent team"
+msgstr "équipe répondeuse"
 
-#: tournaments/utils.py:70
+#: tournaments/utils.py:66
+msgid "App"
+msgstr "App"
+
+#: tournaments/utils.py:67
+msgid "Res"
+msgstr "Rép"
+
+#: tournaments/utils.py:72
 msgid "opening government"
 msgstr "premier gouvernement"
 
-#: tournaments/utils.py:71
+#: tournaments/utils.py:73
 msgid "opening opposition"
 msgstr "première opposition"
 
-#: tournaments/utils.py:72
+#: tournaments/utils.py:74
 msgid "closing government"
 msgstr "second gouvernement"
 
-#: tournaments/utils.py:73
+#: tournaments/utils.py:75
 msgid "closing opposition"
 msgstr "seconde opposition"
 
-#: tournaments/utils.py:74
+#: tournaments/utils.py:76
 msgid "opening government team"
 msgstr "équipe du premier gouvernement"
 
-#: tournaments/utils.py:75
+#: tournaments/utils.py:77
 msgid "opening opposition team"
 msgstr "équipe de la première opposition"
 
-#: tournaments/utils.py:76
+#: tournaments/utils.py:78
 msgid "closing government team"
 msgstr "équipe du second gouvernement"
 
-#: tournaments/utils.py:77
+#: tournaments/utils.py:79
 msgid "closing opposition team"
 msgstr "équipe de la seconde opposition"
 
-#: tournaments/utils.py:78
+#: tournaments/utils.py:80
 msgctxt "BP position"
 msgid "OG"
 msgstr "1G"
 
-#: tournaments/utils.py:79
+#: tournaments/utils.py:81
 msgctxt "BP position"
 msgid "OO"
 msgstr "1O"
 
-#: tournaments/utils.py:80
+#: tournaments/utils.py:82
 msgctxt "BP position"
 msgid "CG"
 msgstr "2G"
 
-#: tournaments/utils.py:81
+#: tournaments/utils.py:83
 msgctxt "BP position"
 msgid "CO"
 msgstr "2O"
 
-#: tournaments/utils.py:94
-#, python-format
-msgid "Round %(number)d"
-msgstr "Tour %(number)d"
-
-#. Translators: This stands for "Round %(number)d".
 #: tournaments/utils.py:96
 #, python-format
+msgid "Round %(number)d"
+msgstr "Joute %(number)d"
+
+#. Translators: This stands for "Round %(number)d".
+#: tournaments/utils.py:98
+#, python-format
 msgid "R%(number)d"
-msgstr "T%(number)d"
+msgstr "J%(number)d"
 
 #. Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
-#: tournaments/utils.py:111
+#: tournaments/utils.py:113
 msgid "Unknown break round"
-msgstr "Tour éliminatoire inconnu"
+msgstr "Joute éliminatoire inconnue"
 
-#: tournaments/utils.py:111
+#: tournaments/utils.py:113
 msgid "UBR"
-msgstr "TÉI"
+msgstr "JÉI"
 
-#: tournaments/views.py:145
+#: tournaments/views.py:146
 #, python-format
-msgid ""
-"The current round has been advanced to %(round)s. You've made it to the end "
-"of the preliminary rounds! Congratulations! The next step is to generate the "
-"break."
-msgstr ""
-"Le tour actuel a été avancé à %(round)s. Vous êtes arrivé(e) au bout des "
-"tours préliminaires ! Félicitations ! L'étape suivante consiste à générer "
-"les équipes qualifiant au tours éliminatoires."
+msgid "%(round)s has been marked as completed. All rounds are now completed, so you're done with the tournament! Congratulations!"
+msgstr "%(round)s a été marquée comme achevée. Maintenant que toutes les joutes le sont, vous avez terminé le tournoi ! Félicitations !"
 
-#: tournaments/views.py:150
+#: tournaments/views.py:152
 #, python-format
-msgid "The current round has been advanced to %(round)s. Woohoo! Keep it up!"
-msgstr "Le tour actuel a été avancé à %(round)s. Woohoo ! Continuez !"
+msgid "%(round)s has been marked as completed. That's the last round in that sequence! Going back to the first round that hasn't been marked as completed."
+msgstr "%(round)s a été marquée comme achevée. C’est la dernière joute dans sa séquence. Retournant à la première joute qui n’a pas été marquée comme achevée."
 
-#: tournaments/views.py:155
-msgid ""
-"Whoops! Could not advance round, because there's no round after this round!"
-msgstr ""
-"Oups ! Impossible d'avancer le tour, parce qu'il n'y a pas de tour après ce "
-"tour !"
+#: tournaments/views.py:165
+#, python-format
+msgid "%(round)s has been marked as completed. You've made it to the end of the preliminary rounds! Congratulations! The next step is to generate the break."
+msgstr "La joute actuelle a été avancé à %(round)s. Vous êtes arrivé(e) au bout des joutes préliminaires ! Félicitations ! L'étape suivante consiste à générer les équipes qualifiant aux joutes éliminatoires."
 
-#: tournaments/views.py:205
+#: tournaments/views.py:171
+#, python-format
+msgid "%(round)s has been marked as completed. That was the last preliminary round, but one or more preliminary rounds are still not completed. Going back to the first incomplete preliminary round."
+msgstr "%(round)s a été marquée comme achevée. C’était la dernière joute préliminaire, mais une ou plusieurs joutes ne sont pas encore achevée(s). Retournant à la dernière joute préliminaire inachevée."
+
+#: tournaments/views.py:179
+#, python-format
+msgid "%(this_round)s has been marked as completed. Moving on to %(next_round)s! Woohoo! Keep it up!"
+msgstr "%(this_round)s est désormais marqué comme achevé. Continuant à %(next_round)s ! Woohoo ! Continuez !"
+
+#: tournaments/views.py:231
 msgid "8-team generic dataset"
 msgstr "données génériques à 8 équipes"
 
-#: tournaments/views.py:206
+#: tournaments/views.py:232
 msgid "24-team Australs dataset"
 msgstr "données à 24 équipes d'Australs"
 
-#: tournaments/views.py:207
+#: tournaments/views.py:233
 msgid "88-team BP dataset"
 msgstr "données à 88 équipes de PB"
 
-#~ msgid "Load Demo (8-team tournament)"
-#~ msgstr "Charger la démo (tournoi à 8 équipes)"
-
-#~ msgid "Load Demo (24-team tournament)"
-#~ msgstr "Charger la démo (tournoi à 24 équipes)"
-
-#, fuzzy
-#~| msgid "Adjudicator Tab"
-#~ msgid "Adjudication Team"
-#~ msgstr "Tab des juges"
-
-#, fuzzy
-#~| msgid "Team Tab"
-#~ msgid "Tab Team"
-#~ msgstr "Tab des équipes"
-
-#, fuzzy
-#~| msgid "proposition team"
-#~ msgid "Organisation Team"
-#~ msgstr "équipe de la proposition"
-
-#~ msgid "%(count)d round was marked as silent."
-#~ msgid_plural "%(count)d rounds were marked as silent."
-#~ msgstr[0] "%(count)d tour a été marqué comme silencieux."
-#~ msgstr[1] "%(count)d tours ont été marqués comme silencieux."
-
-#~ msgid "Mark as silent"
-#~ msgstr "Marquer comme silencieux"
-
-#~ msgid "%(count)d round was marked as not silent."
-#~ msgid_plural "%(count)d rounds were marked as not silent."
-#~ msgstr[0] "%(count)d tour a été marqué comme non silencieux."
-#~ msgstr[1] "%(count)d tours ont été marqués comme non silencieux."
-
-#~ msgid "Mark as not silent"
-#~ msgstr "Marquer comme non silencieux"
-
-#~ msgid "%(count)d round was marked as motions released."
-#~ msgid_plural "%(count)d rounds were marked as motions released."
-#~ msgstr[0] "%(count)d tour a été marqué comme motions publiées"
-#~ msgstr[1] "%(count)d tours ont été marqués comme motions publiées"
-
-#~ msgid "Release motions"
-#~ msgstr "Publier motions"
-
-#~ msgid "%(count)d round was marked as motions not released."
-#~ msgid_plural "%(count)d rounds were marked as motions not released."
-#~ msgstr[0] "%(count)d tour a été marqué comme motions publiées"
-#~ msgstr[1] "%(count)d tours ont été marqués comme motions non publiées"
-
-#~ msgid "Unrelease motions"
-#~ msgstr "Dépublier motions"
-
-#~ msgid "%(count)d round had its draw status set to %(status)s."
-#~ msgid_plural "%(count)d rounds had their draw status set to %(status)s."
-#~ msgstr[0] ""
-#~ "L'état de tirage de %(count)d tour a été remplacé par %(status)s."
-#~ msgstr[1] ""
-#~ "Les états de tirage de %(count)d tours ont été remplacés par %(status)s."
-
-#~ msgid "Set draw status to %(status)s"
-#~ msgstr "Changer l'état de tirage à %(status)s"
-
-#~ msgid "welcome message"
-#~ msgstr "message d'accueil"
-
-#~ msgid "Text/html entered here shows on the homepage for this tournament"
-#~ msgstr ""
-#~ "Ce texte ou ce html est affiché sur le page d'accueil pour ce tournoi"
-
-#~ msgid "Configure Tournament "
-#~ msgstr "Configuration du tournoi"
-
-#~ msgid "That page isn't enabled for this tournament."
-#~ msgstr "Ce page n'est pas activé pour ce tournoi."
-
-#~ msgid "That tournament no longer exists."
-#~ msgstr "Ce tournoi n'existe plus"

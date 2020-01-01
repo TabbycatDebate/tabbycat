@@ -1,5 +1,7 @@
 import logging
 
+from django.utils.translation import gettext_lazy as _
+
 from .preferences import tournament_preferences_registry
 
 logger = logging.getLogger(__name__)
@@ -27,8 +29,8 @@ def presets_for_form():
 
 
 def public_presets_for_form():
-    return [('Public Information Options', 'Enable Public Information'),
-            (False, 'Disable Public Information')]
+    return [(_('Public Information Options'), _('Enable Public Information')),
+            (False, _('Disable Public Information'))]
 
 
 def get_preferences_data(selected_preset, tournament):
@@ -62,8 +64,8 @@ class PreferencesPreset:
 
 
 class AustralsPreferences(PreferencesPreset):
-    name         = "Australs Rules"
-    description  = ("3 vs 3 with replies, chosen motions, intermediate brackets, "
+    name         = _("Australs Rules")
+    description  = _("3 vs 3 with replies, chosen motions, intermediate brackets, "
         "one-up-one-down. Compliant with AIDA rules.")
     show_in_list = True
 
@@ -102,8 +104,8 @@ class AustralsPreferences(PreferencesPreset):
 
 
 class BritishParliamentaryPreferences(PreferencesPreset):
-    name         = "British Parliamentary Rules"
-    description  = ("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
+    name         = _("British Parliamentary Rules")
+    description  = _("2 vs 2 vs 2 vs 2. Compliant with WUDC rules.")
     show_in_list = True
 
     scoring__score_min                         = 50.0
@@ -131,19 +133,21 @@ class BritishParliamentaryPreferences(PreferencesPreset):
     standings__standings_missed_debates        = -1 # Speakers always show
     standings__team_standings_precedence       = ['points', 'speaks_sum', 'firsts', 'seconds']
     standings__speaker_standings_precedence    = ['total'] # constitutional
-    standings__speaker_standings_extra_metrics = ['stdev']
+    standings__speaker_standings_extra_metrics = ['average', 'stdev']
     # UI Options
     ui_options__show_team_institutions         = False
     ui_options__show_adjudicator_institutions  = True
-    # Email Sending
-    email__team_points_email_subject           = 'Your current number of points for {{ TEAM }} ({{ TOURN }}): {{ POINTS }}'
-    email__team_points_email_message           = "Hi {{ USER }},\n\nYour team ({{ TEAM }}) currently has {{ POINTS }} points in the {{ TOURN }}.\n\n{{ URL }}"
+    # Email Sending - replace "wins" by "points"
+    team_points_email_subject                  = "{{ TEAM }}'s current points after {{ ROUND }}: {{ POINTS }}"
+    team_points_email_message                  = ("<p>Hi {{ USER }},</p>",
+        "<p>Your team ({{ TEAM }}) currently has <strong>{{ POINTS }}</strong> points in the {{ TOURN }}.",
+        "<p>Current Standings: {{ URL }}</p>")
 
 
 class CanadianParliamentaryPreferences(PreferencesPreset):
-    name         = "Canadian Parliamentary Rules"
+    name         = _("Canadian Parliamentary Rules")
     show_in_list = True
-    description  = ("2 vs 2 with replies (unscored) and POIs. May require "
+    description  = _("2 vs 2 with replies (unscored) and POIs. May require "
         "additional configuration depending on regional variations.")
     # Scoring
     scoring__score_min                         = 50.0
@@ -166,9 +170,9 @@ class CanadianParliamentaryPreferences(PreferencesPreset):
 
 
 class AustralianEastersPreferences(AustralsPreferences):
-    name         = "Australian Easters Rules"
+    name         = _("Australian Easters Rules")
     show_in_list = True
-    description  = ("3 vs 3 without replies, set motions, novices, intermediate "
+    description  = _("3 vs 3 without replies, set motions, novices, intermediate "
         "bubbles, one-up-one-down. Compliant with AIDA rules.")
 
     # Scoring
@@ -186,9 +190,9 @@ class AustralianEastersPreferences(AustralsPreferences):
 
 
 class NZEastersPreferences(AustralsPreferences):
-    name         = "New Zealand Easters Rules"
+    name         = _("2 vs 2 Impromptu")
     show_in_list = True
-    description  = ("2 vs 2 with replies, chosen motions, chosen sides, and "
+    description  = _("2 vs 2 with replies, chosen motions, chosen sides, and "
         "novice statuses.")
 
     # Scoring
@@ -213,9 +217,9 @@ class NZEastersPreferences(AustralsPreferences):
 
 
 class JoyntPreferences(AustralsPreferences):
-    name         = "Joynt Scroll Rules"
+    name         = _("3 vs 3 Prepared")
     show_in_list = True
-    description  = ("3 vs 3 with replies, set sides, publicly displayed sides "
+    description  = _("3 vs 3 with preallocated sides, publicly displayed sides "
         "and motions, and novice statuses.")
 
     # Scoring
@@ -242,9 +246,9 @@ class JoyntPreferences(AustralsPreferences):
 
 
 class UADCPreferences(AustralsPreferences):
-    name         = "UADC Rules"
+    name         = _("UADC Rules")
     show_in_list = True
-    description  = ("3 vs 3 with replies, chosen motions, and all adjudicators "
+    description  = _("3 vs 3 with replies, chosen motions, and all adjudicators "
         "can receive feedback from teams.")
 
     # Rules source = http://www.alcheringa.in/pdrules.pdf
@@ -280,9 +284,9 @@ class UADCPreferences(AustralsPreferences):
 
 
 class WSDCPreferences(AustralsPreferences):
-    name         = "WSDC Rules"
+    name         = _("WSDC Rules")
     show_in_list = True
-    description  = ("3 vs 3 with replies, chosen motions, prop/opp side labels, "
+    description  = _("3 vs 3 with replies, chosen motions, prop/opp side labels, "
         "and all adjudicators can receive feedback from teams.")
 
     # Rules source = http://mkf2v40tlr04cjqkt2dtlqbr.wpengine.netdna-cdn.com/wp-content/uploads/2014/05/WSDC-Debate-Rules-U-2015.pdf
@@ -311,7 +315,7 @@ class WSDCPreferences(AustralsPreferences):
 class WADLPreferences(PreferencesPreset):
     name         = "WADL Options"
     show_in_list = False
-    description  = ("Example high school league setup. Many features not "
+    description  = ("Example high school setup. Many features not "
         "supported in conjunction with other settings.")
 
     # Debate Rules= no replies; singular motions
@@ -321,7 +325,7 @@ class WADLPreferences(PreferencesPreset):
     data_entry__enable_motions                 = False
     # Standings Rules
     standings__standings_missed_debates        = 0
-    standings__team_standings_precedence       = ['points210', 'wbwd', 'margin_avg', 'speaks_avg']
+    standings__team_standings_precedence       = ['points', 'wbw', 'margin_avg', 'speaks_avg']
     standings__speaker_standings_precedence    = ['average']
     standings__speaker_standings_extra_metrics = ['stdev', 'count']
     # Draws
@@ -337,37 +341,20 @@ class WADLPreferences(PreferencesPreset):
     ui_options__show_adjudicator_institutions  = False
     ui_options__show_speakers_in_draw          = False
     ui_options__public_motions_order           = 'reverse'
-    ui_options__show_all_draws                 = True
-    public_features__public_draw               = True
+    public_features__public_draw               = 'all-released'
     public_features__public_results            = True
     public_features__public_motions            = True
     public_features__public_record             = False
-    # League Options
-    league_options__enable_flagged_motions     = True
-    league_options__enable_adj_notes           = True
-    league_options__enable_debate_scheduling   = True
-    league_options__share_adjs                 = True
-    league_options__share_venues               = True
-    league_options__hide_adjudicators          = True
-    league_options__division_venues            = True
-    league_options__duplicate_adjs             = True
-    league_options__public_divisions           = True
-    league_options__enable_divisions           = True
-    league_options__enable_postponements       = True
-    league_options__enable_forfeits            = True
-    league_options__enable_division_motions    = True
-    league_options__allocation_confirmations   = True
-    league_options__enable_mass_draws          = True
 
 
 class PublicInformation(PreferencesPreset):
-    name         = "Public Information Options"
+    name         = _("Public Information Options")
     show_in_list = False
-    description  = ("For tournaments hosted online: this sets it up so that "
+    description  = _("For tournaments hosted online: this sets it up so that "
         "people can access the draw and other generally useful information "
         "via the tab site.")
 
-    public_features__public_draw               = True
+    public_features__public_draw               = 'current'
     public_features__public_break_categories   = True
     public_features__public_results            = True
     public_features__public_motions            = True
@@ -375,9 +362,9 @@ class PublicInformation(PreferencesPreset):
 
 
 class TabRelease(PreferencesPreset):
-    name         = "Tab Release Options"
+    name         = _("Tab Release Options")
     show_in_list = False
-    description  = ("For when a tab is ready to be released. This will publicly "
+    description  = _("For when a tab is ready to be released. This will publicly "
         "display the results of all rounds, the team tab, the speaker tab, etc")
 
     tab_release__team_tab_released             = True
@@ -392,5 +379,5 @@ class TabRelease(PreferencesPreset):
     # Disable
     public_features__public_checkins           = False
     public_features__public_team_standings     = False
-    public_features__public_draw               = False
+    public_features__public_draw               = 'off'
     public_features__public_break_categories   = False

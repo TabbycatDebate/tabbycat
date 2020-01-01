@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin, messages
 from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy as _
@@ -6,17 +7,17 @@ from django.utils.translation import ngettext
 from draw.models import DebateTeam
 from utils.admin import custom_titled_filter
 
-from .models import (AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer, AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer,
-    AdjudicatorFeedbackQuestion, AdjudicatorFeedbackStringAnswer,
-    AdjudicatorTestScoreHistory)
+from .models import (AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackBooleanAnswer,
+    AdjudicatorFeedbackFloatAnswer, AdjudicatorFeedbackIntegerAnswer, AdjudicatorFeedbackQuestion,
+    AdjudicatorFeedbackStringAnswer)
 
 
 # ==============================================================================
-# Adjudicator test score histories
+# Adjudicator base score histories
 # ==============================================================================
 
-@admin.register(AdjudicatorTestScoreHistory)
-class AdjudicatorTestScoreHistoryAdmin(admin.ModelAdmin):
+@admin.register(AdjudicatorBaseScoreHistory)
+class AdjudicatorBaseScoreHistoryAdmin(admin.ModelAdmin):
     list_display = ('adjudicator', 'round', 'score', 'timestamp')
     list_filter  = ('adjudicator', 'round')
     ordering     = ('timestamp',)
@@ -30,8 +31,22 @@ class AdjudicatorTestScoreHistoryAdmin(admin.ModelAdmin):
 # Adjudicator feedback questions
 # ==============================================================================
 
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = AdjudicatorFeedbackQuestion
+        fields = '__all__'
+
+    def clean(self):
+        integer_scale = AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE
+        if self.cleaned_data.get('answer_type') == integer_scale:
+            if not self.cleaned_data.get('min_value') or not self.cleaned_data.get('max_value'):
+                raise forms.ValidationError(_("Integer scales must have a minimum and maximum"))
+        return self.cleaned_data
+
+
 @admin.register(AdjudicatorFeedbackQuestion)
 class AdjudicatorFeedbackQuestionAdmin(admin.ModelAdmin):
+    form = QuestionForm
     list_display = ('reference', 'text', 'seq', 'tournament', 'answer_type',
                     'required', 'from_adj', 'from_team')
     list_filter  = ('tournament',)

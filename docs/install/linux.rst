@@ -21,33 +21,26 @@ You need to be familiar with command-line interfaces to get through this comfort
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we haven't tried it.
+  If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly.
 
 Short version
 =============
 .. parsed-literal::
 
   curl -sL https\:\/\/deb.nodesource.com/setup_8.x | sudo -E bash -    # add Node.js source repository
-  sudo apt install python3-dev python3-venv postgresql-9.6 postgresql-server-dev-9.6 nodejs gcc g++ make
-
-  # either
-  wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
-  tar xf |vrelease|.tar.gz
-  cd tabbycat-|release|
-  # or
+  sudo apt install python3-dev python3-venv postgresql-11 libpq-dev nodejs gcc g++ make
   git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
   cd tabbycat
-  git checkout |vrelease|                                         # or master
-
+  git checkout master
   sudo -u postgres createuser myusername --createdb --pwprompt    # skip if not first time
   createdb mydatabasename
 
-Then create local_settings.py as described :ref:`below <local-settings-linux>`, then::
+Then create **settings/local.py** as described :ref:`below <local-settings-linux>`, then::
 
   python3 -m venv venv
   source venv/bin/activate
   pip install --upgrade pip
-  pip install -r requirements_common.txt
+  pip install -r ./config/requirements_core.txt
   npm install
   cd tabbycat
   dj migrate
@@ -63,32 +56,34 @@ First, you need to install all of the software on which Tabbycat depends, if you
 .. admonition:: Advanced users
   :class: tip
 
-  These instructions are for Ubuntu 14.04 and higher. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
+  These instructions are for Ubuntu, and are targeted at Ubuntu 18.04. If you have another distribution of Linux, we trust you'll know how to navigate the package manager for your distribution to install the dependencies.
 
 .. _install-linux-python:
 
 1(a). Python
 ------------
-Tabbycat requires Python 3.5 or later.  You probably already have Python 3.5, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
+Tabbycat requires Python 3.6 or later.  You probably already have Python 3.6, but you'll also need the development package in order to install Psycopg2 later.  The ``venv`` module will come in handy too.  Install::
 
     $ sudo apt install python3-dev python3-venv
 
 Check the version::
 
     $ python3 --version
-    Python 3.5.2
+    Python 3.6.2
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.5 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.6 or later.
 
 1(b). PostgreSQL
 ----------------
   *PostgreSQL is a database management system.*
 
-You'll need the *server-dev* package in order to install Psycopg2 later. As per the `PostgreSQL installation instructions <http://www.postgresql.org/download/linux/ubuntu/>`_::
+Install PostgreSQL using the  `PostgreSQL installation instructions here <http://www.postgresql.org/download/linux/ubuntu/>`_.
 
-    $ sudo apt install postgresql-9.6 postgresql-server-dev-9.6
+Normally, installing the latest stable version should be best, but if you're having issues, install the same version as the current `default version on Heroku <https://devcenter.heroku.com/articles/heroku-postgresql#version-support>`_, as that will be what is currently most commonly used with Tabbycat. If you're planning on pushing data between your local installation and a Heroku site, it's best to match the Heroku's current default version.
 
-If using Ubuntu <14.10 substitute "postgresql-9.3" for "postgresql-9.6" in the above commands.
+You'll also need the ``libpq-dev`` package in order to install Psycopg2 later::
+
+    $ sudo apt install libpq-dev
 
 .. _install-linux-nodejs:
 
@@ -116,24 +111,37 @@ Some of the Python packages require GCC, G++ and Make in order to install::
 2. Get the source code
 ======================
 
-Choose either of these two methods:
+Choose either of the following two methods.
 
-**Method 1:** Download and extract:
+Method 1 (Git clone)
+--------------------
+
+If you have Git, life will be easier if you clone `our GitHub repository`_:
+
+.. parsed-literal::
+
+    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
+    $ git checkout master
+
+(You can find out if you have Git using ``git --version``. If you don't, you can install it using ``sudo apt install git``.)
+
+.. note:: The default branch is ``develop``, so you need to explicitly change the branch to ``master``, which is what the ``git checkout master`` line does.
+
+.. admonition:: Advanced users
+  :class: tip
+
+  You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
+
+Method 2 (tarball)
+------------------
+
+If you don't want to use Git, simply download and extract:
 
 .. parsed-literal::
 
     $ wget https\:\/\/github.com/TabbycatDebate/tabbycat/archive/|vrelease|.tar.gz
     $ tar xf |vrelease|.tar.gz
     $ cd tabbycat-|release|
-
-**Method 2 (advanced users):** If you've used Git before, you might prefer to clone `our GitHub repository`_ instead:
-
-.. parsed-literal::
-
-    $ git clone https\:\/\/github.com/TabbycatDebate/tabbycat.git
-    $ git checkout |vrelease|                              # or master
-
-.. tip:: You might like to fork the repository first, to give yourself a little more freedom to make code changes on the fly (and potentially :ref:`contribute <contributing>` them to the project).
 
 3. Set up a new database
 ========================
@@ -178,10 +186,10 @@ c. Run the ``activate`` script. This puts you "into" the virtual environment::
 d. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
-    $ pip install -r requirements_common.txt
+    $ pip install -r ./config/requirements_core.txt
     $ npm install
 
-e. Navigate to the **tabbycat** sub folder and copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+e. Navigate to the **tabbycat/settings** sub folder and copy **local.example** to **local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:
 
   .. code:: python
 

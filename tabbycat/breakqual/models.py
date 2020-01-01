@@ -1,3 +1,5 @@
+import math
+
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
@@ -35,8 +37,7 @@ class BreakCategory(models.Model):
         ('aida-1996', _("AIDA 1996")),
         ('aida-2016-easters', _("AIDA 2016 (Easters)")),
         ('aida-2016-australs', _("AIDA 2016 (Australs)")),
-        ('wadl-div-first', _("WADL division winners first")),
-        ('wadl-div-guaranteed', _("WADL division winners guaranteed")),
+        ('aida-2019-australs-open', _("AIDA 2019 (Australs, Dynamic Cap)")),
     ]
 
     rule = models.CharField(max_length=25, choices=BREAK_QUALIFICATION_CHOICES, default='standard',
@@ -63,10 +64,11 @@ class BreakCategory(models.Model):
         return self.breakingteam_set.filter(break_rank__isnull=False)
 
     @property
-    def serialize(self):
-        return {
-            'id': self.id, 'name': self.name, 'seq': self.seq, 'class': None
-        }
+    def num_break_rounds(self):
+        if self.tournament.pref('teams_in_debate') == 'bp':
+            return math.ceil(math.log2(self.break_size / 2))
+        else:
+            return math.ceil(math.log2(self.break_size))
 
 
 class BreakingTeam(models.Model):

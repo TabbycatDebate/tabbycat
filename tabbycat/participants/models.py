@@ -2,7 +2,6 @@ import logging
 from warnings import warn
 
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
@@ -26,10 +25,6 @@ class Region(models.Model):
 
     def __str__(self):
         return '%s' % (self.name)
-
-    @property
-    def serialize(self):
-        return {'name': self.name, 'id': self.id, 'class': None}
 
 
 class InstitutionManager(LookupByNameFieldsMixin, models.Manager):
@@ -61,10 +56,6 @@ class Institution(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-    @property
-    def serialize(self):
-        return {'name': self.name, 'id': self.id, 'code': self.code}
 
 
 class SpeakerCategory(models.Model):
@@ -98,10 +89,6 @@ class SpeakerCategory(models.Model):
     def __str__(self):
         return "[{}] {}".format(self.tournament.slug, self.name)
 
-    @property
-    def serialize(self):
-        return {'id': self.id, 'name': self.name, 'seq': self.seq}
-
 
 class Person(models.Model):
     name = models.CharField(max_length=70, db_index=True,
@@ -114,8 +101,8 @@ class Person(models.Model):
         verbose_name=_("anonymous"),
         help_text=_("Anonymous persons will have their name and team redacted on public tab releases"))
 
-    notes = models.TextField(blank=True, null=True,
-        verbose_name=_("notes"))
+    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple people to have no URL key
+        verbose_name=_("URL key"))
 
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
@@ -136,10 +123,6 @@ class Person(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-    @property
-    def has_contact(self):
-        return bool(self.email or self.phone)
 
 
 class TeamManager(LookupByNameFieldsMixin, models.Manager):
@@ -171,13 +154,9 @@ class Team(models.Model):
         verbose_name=_("institution"))
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
         verbose_name=_("tournament"))
-    division = models.ForeignKey('divisions.Division', models.SET_NULL, blank=True, null=True,
-        verbose_name=_("division"))
     use_institution_prefix = models.BooleanField(default=False,
         verbose_name=_("Uses institutional prefix"),
         help_text=_("If ticked, a team called \"1\" from Victoria will be shown as \"Victoria 1\""))
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
-        verbose_name=_("URL key"))
     break_categories = models.ManyToManyField('breakqual.BreakCategory', blank=True,
         verbose_name=_("break categories"))
 
@@ -243,10 +222,7 @@ class Team(models.Model):
 
     @property
     def region(self):
-        institution = self.get_cached_institution()
-        if institution is None:
-            return None
-        return institution.region
+        return self.institution.region if self.institution else None
 
     def break_rank_for_category(self, category):
         from breakqual.models import BreakingTeam
@@ -317,16 +293,6 @@ class Team(models.Model):
         except IndexError:
             return None
 
-    def get_cached_institution(self):
-        cached_key = "%s_%s_%s" % ('teamid', self.id, '_institution__object')
-        cached_value = cache.get(cached_key)
-        if cached_value:
-            return cache.get(cached_key)
-        else:
-            cached_value = self.institution
-            cache.set(cached_key, cached_value, None)
-            return cached_value
-
     def clean(self):
         # Require reference and short_reference if use_institution_prefix is False
         errors = {}
@@ -345,21 +311,6 @@ class Team(models.Model):
         self.long_name = self._construct_long_name()
         super().save(*args, **kwargs)
 
-    def serialize(self):
-        team = {'id': self.id, 'short_name': self.short_name,
-                'long_name': self.long_name, 'code_name': self.code_name}
-        team['emoji'] = self.emoji
-        team['conflicts'] = {'clashes': [], 'histories': []}
-        team['institution'] = self.institution.serialize if self.institution else None
-        team['region'] = self.region.serialize if self.region else None
-        team['speakers'] = [{'name': s.name, 'id': s.id, 'gender': s.gender} for s in self.speakers]
-        break_categories = self.break_categories.all()
-        team['break_categories'] = [bc.serialize for bc in break_categories] if break_categories else None
-        team['highlights'] = {'region': False, 'gender': False, 'category': False}
-        team['wins'] = self.wins_count
-        team['points'] = self.points_count
-        return team
-
 
 class Speaker(Person):
     team = models.ForeignKey(Team, models.CASCADE,
@@ -373,11 +324,6 @@ class Speaker(Person):
 
     def __str__(self):
         return str(self.name)
-
-    def serialize(self):
-        speaker = {'id': self.id, 'name': self.name, 'team': self.team.short_name}
-        speaker['institution'] = self.institution.serialize if self.institution else None
-        return speaker
 
 
 class AdjudicatorManager(models.Manager):
@@ -394,17 +340,16 @@ class Adjudicator(Person):
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE, blank=True, null=True,
         verbose_name=_("tournament"),
         help_text=_("Adjudicators not assigned to any tournament can be shared between tournaments"))
-    test_score = models.FloatField(default=0,
-        verbose_name=_("test score"))
-    url_key = models.SlugField(blank=True, null=True, unique=True, max_length=24, # uses null=True to allow multiple teams to have no URL key
-        verbose_name=_("URL key"))
+    base_score = models.FloatField(default=0,
+        verbose_name=_("base score"))
 
+    # TODO: Are these actually used?= If not, remove?
     institution_conflicts = models.ManyToManyField('Institution',
         through='adjallocation.AdjudicatorInstitutionConflict',
         related_name='adj_inst_conflicts',
         verbose_name=_("institution conflicts"))
     conflicts = models.ManyToManyField('Team',
-        through='adjallocation.AdjudicatorConflict',
+        through='adjallocation.AdjudicatorTeamConflict',
         related_name='adj_adj_conflicts',
         verbose_name=_("team conflicts"))
 
@@ -434,34 +379,6 @@ class Adjudicator(Person):
         else:
             return "%s (%s)" % (self.name, self.institution.code)
 
-    def _populate_conflict_cache(self):
-        if not getattr(self, '_conflicts_populated', False):
-            logger.debug("Populating conflict cache for %s", self)
-            self._team_conflict_cache = [c.team_id
-                    for c in self.adjudicatorconflict_set.all()]
-            self._adjudicator_conflict_cache = [c.conflict_adjudicator_id
-                    for c in self.adjudicatoradjudicatorconflict_source_set.all()]
-            self._institution_conflict_cache = [c.institution_id
-                    for c in self.adjudicatorinstitutionconflict_set.all()]
-            self._conflicts_populated = True
-
-    def conflicts_with_team(self, team):
-        self._populate_conflict_cache()
-        return team.id in self._team_conflict_cache or team.institution_id in self._institution_conflict_cache
-
-    def conflicts_with_adj(self, adj):
-        self._populate_conflict_cache()
-        adj._populate_conflict_cache()
-        if adj.id in self._adjudicator_conflict_cache:
-            return True
-        if adj.institution_id in self._institution_conflict_cache:
-            return True
-        if self.id in adj._adjudicator_conflict_cache:
-            return True
-        if self.institution_id in adj._institution_conflict_cache:
-            return True
-        return False
-
     @property
     def is_unaccredited(self):
         return self.novice
@@ -475,7 +392,7 @@ class Adjudicator(Person):
         if feedback_score is None:
             feedback_score = 0
             feedback_weight = 0
-        return self.test_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
+        return self.base_score * (1 - feedback_weight) + (feedback_weight * feedback_score)
 
     @cached_property
     def score(self):
@@ -491,7 +408,7 @@ class Adjudicator(Person):
             return self._feedback_score_cache
         except AttributeError:
             from adjallocation.models import DebateAdjudicator
-            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True).exclude(
+            self._feedback_score_cache = self.adjudicatorfeedback_set.filter(confirmed=True, ignored=False).exclude(
                 source_adjudicator__type=DebateAdjudicator.TYPE_TRAINEE).aggregate(
                     avg=models.Avg('score'))['avg']
             return self._feedback_score_cache
@@ -502,37 +419,3 @@ class Adjudicator(Person):
 
     def get_feedback(self):
         return self.adjudicatorfeedback_set.all()
-
-    def seen_team(self, team, before_round=None):
-        from draw.models import DebateTeam
-        if not hasattr(self, '_seen_team_cache'):
-            self._seen_team_cache = {}
-        if before_round not in self._seen_team_cache:
-            logger.debug("Populating seen team cache for %s", self)
-            qs = DebateTeam.objects.filter(debate__debateadjudicator__adjudicator=self)
-            if before_round is not None:
-                qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_team_cache[before_round] = [dt.team_id for dt in qs]
-        return self._seen_team_cache[before_round].count(team.id)
-
-    def seen_adjudicator(self, adj, before_round=None):
-        from adjallocation.models import DebateAdjudicator
-        if not hasattr(self, '_seen_adjudicator_cache'):
-            self._seen_adjudicator_cache = {}
-        if before_round not in self._seen_adjudicator_cache:
-            logger.debug("Populating seen adjudicator cache for %s", self)
-            qs = DebateAdjudicator.objects.filter(
-                debate__debateadjudicator__adjudicator=self).exclude(adjudicator=self)
-            if before_round is not None:
-                qs = qs.filter(debate__round__seq__lt=before_round.seq)
-            self._seen_adjudicator_cache[before_round] = [da.adjudicator_id for da in qs]
-        return self._seen_adjudicator_cache[before_round].count(adj.id)
-
-    def serialize(self, round):
-        adj = {'id': self.id, 'name': self.name, 'gender': self.gender, 'locked': False}
-        adj['conflicts'] = {'clashes': [], 'histories': []}
-        adj['score'] = "{0:0.1f}".format(self.weighted_score(round.feedback_weight))
-        adj['region'] = self.region.serialize if self.region else None
-        adj['institution'] = self.institution.serialize if self.institution else None
-        adj['highlights'] = {'region': False, 'gender': False, 'category': False}
-        return adj

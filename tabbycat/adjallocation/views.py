@@ -2,207 +2,129 @@ import json
 import logging
 
 from django.contrib import messages
-from django.db import transaction
-from django.db.models import Q
+from django.db.models import Prefetch
 from django.forms import ModelChoiceField
-from django.views.generic.base import TemplateView, View
-from django.http import JsonResponse
-from django.utils.functional import cached_property
+from django.views.generic.base import TemplateView
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from breakqual.models import BreakCategory
-from draw.models import Debate
+from availability.utils import annotate_availability
 from participants.models import Adjudicator, Region
 from participants.prefetch import populate_feedback_scores
-from tournaments.models import Round
-from tournaments.mixins import DrawForDragAndDropMixin, RoundMixin, TournamentMixin
-from tournaments.views import BaseSaveDragAndDropDebateJsonView
-from utils.misc import redirect_tournament, reverse_tournament
+from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
+from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
+from utils.views import ModelFormSetView
 
-from .allocator import allocate_adjudicators
-from .hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
-from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorConflict,
-                     AdjudicatorInstitutionConflict, DebateAdjudicator)
-from .utils import get_clashes, get_histories
-
-from utils.misc import reverse_round
+from .conflicts import ConflictsInfo, HistoryInfo
+from .models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
+                     AdjudicatorTeamConflict,
+                     PreformedPanelAdjudicator, TeamInstitutionConflict)
+from .serializers import EditDebateAdjsDebateSerializer, EditPanelAdjsPanelSerializer, EditPanelOrDebateAdjSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class AdjudicatorAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
+class BaseEditDebateOrPanelAdjudicatorsView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
 
-    @cached_property
-    def get_clashes(self):
-        return get_clashes(self.tournament, self.round)
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        # TODO: construct adj score ranges from settings
+        info['highlights']['gender'] = [
+            {'pk': 'm', 'fields': {'name': _('Male')}},
+            {'pk': 'f', 'fields': {'name': _('Female')}},
+            {'pk': 'o', 'fields': {'name': _('Other')}},
+            {'pk': 'u', 'fields': {'name': _('Unknown')}},
+        ]
+        info['highlights']['rank'] = ranks_dictionary(self.tournament)
+        regions = [{'pk': r.id, 'fields': {'name': r.name}} for r in Region.objects.all()]
+        info['highlights']['region'] = regions
+        info['adjMinScore'] = self.tournament.pref('adj_min_score')
+        info['adjMaxScore'] = self.tournament.pref('adj_max_score')
+        allocation_preferences = [
+            'draw_rules__adj_min_voting_score',
+            'draw_rules__adj_conflict_penalty',
+            'draw_rules__adj_history_penalty',
+            'draw_rules__preformed_panel_mismatch_penalty',
+            'draw_rules__no_trainee_position',
+            'draw_rules__no_panellist_position'
+        ]
+        info['allocationSettings'] = {}
+        for key in allocation_preferences:
+            info['allocationSettings'][key] = self.tournament.preferences[key]
 
-    @cached_property
-    def get_histories(self):
-        return get_histories(self.tournament, self.round)
+        info['clashes'] = self.get_adjudicator_conflicts()
+        info['histories'] = self.get_history_conflicts()
+        info['hasPreformedPanels'] = self.round.preformedpanel_set.exists()
+        return info
 
-    def get_unallocated_adjudicators(self):
-        round = self.round
-        unused_adj_instances = round.unused_adjudicators().select_related('institution__region')
-        populate_feedback_scores(unused_adj_instances)
-        unused_adjs = [a.serialize(round) for a in unused_adj_instances]
-        unused_adjs = [self.annotate_region_classes(a) for a in unused_adjs]
-        unused_adjs = [self.annotate_conflicts(a, 'for_adjs') for a in unused_adjs]
-        return json.dumps(unused_adjs)
+    def get_serialised_allocatable_items(self):
+        adjs = Adjudicator.objects.filter(tournament=self.tournament)
+        adjs = annotate_availability(adjs, self.round)
+        populate_feedback_scores(adjs)
+        weight = self.tournament.current_round.feedback_weight
+        serialized_adjs = EditPanelOrDebateAdjSerializer(
+            adjs, many=True, context={'feedback_weight': weight})
+        return self.json_render(serialized_adjs.data)
 
-    def annotate_conflicts(self, serialized_adj_or_team, for_type):
-        adj_or_team_id = serialized_adj_or_team['id']
-        try:
-            serialized_adj_or_team['conflicts']['clashes'] = self.get_clashes[for_type][adj_or_team_id]
-        except KeyError:
-            serialized_adj_or_team['conflicts']['clashes'] = {}
-        try:
-            serialized_adj_or_team['conflicts']['histories'] = self.get_histories[for_type][adj_or_team_id]
-        except KeyError:
-            serialized_adj_or_team['conflicts']['histories'] = {}
+    def get_adjudicator_conflicts(self):
+        conflicts = ConflictsInfo(teams=self.tournament.team_set.all(),
+                                  adjudicators=self.tournament.adjudicator_set.all())
+        team_conflicts, adj_conflicts = conflicts.serialized_by_participant()
+        return {'teams': team_conflicts, 'adjudicators': adj_conflicts}
 
-        if for_type == 'for_teams':
-            # Teams don't show in AdjudicatorInstitutionConflict; need to
-            # add own institutional clash manually to reverse things
-            if serialized_adj_or_team['institution']:
-                ic = [{'id': serialized_adj_or_team['institution']['id']}]
-                serialized_adj_or_team['conflicts']['clashes']['institution'] = ic
-
-        return serialized_adj_or_team
-
-    def annotate_draw(self, draw, serialised_draw):
-        # Need to unique-ify/reorder break categories/regions for consistent CSS
-        for debate in serialised_draw:
-            for da in debate['debateAdjudicators']:
-                da['adjudicator'] = self.annotate_conflicts(da['adjudicator'], 'for_adjs')
-                da['adjudicator'] = self.annotate_region_classes(da['adjudicator'])
-            for dt in debate['debateTeams']:
-                if not dt['team']:
-                    continue
-                dt['team'] = self.annotate_conflicts(dt['team'], 'for_teams')
-
-        return super().annotate_draw(draw, serialised_draw)
-
-
-class EditAdjudicatorAllocationView(AdjudicatorAllocationMixin, TemplateView):
-
-    template_name = 'edit_adjudicators.html'
-    auto_url = "adjallocation-auto-allocate"
-    save_url = "adjallocation-save-debate-panel"
-
-    def get_regions_info(self):
-        # Need to extract and annotate regions for the allcoation actions key
-        all_regions = [r.serialize for r in Region.objects.order_by('id')]
-        for i, r in enumerate(all_regions):
-            r['class'] = i
-        return all_regions
-
-    def get_categories_info(self):
-        # Need to extract and annotate categories for the allcoation actions key
-        all_bcs = [c.serialize for c in BreakCategory.objects.filter(
-            tournament=self.tournament).order_by('id')]
-        for i, bc in enumerate(all_bcs):
-            bc['class'] = i
-        return all_bcs
-
-    def get_round_info(self):
-        round_info = super().get_round_info()
-        round_info['updateImportanceURL'] = reverse_round('adjallocation-save-debate-importance', self.round)
-        round_info['scoreMin'] = self.tournament.pref('adj_min_score')
-        round_info['scoreMax'] = self.tournament.pref('adj_max_score')
-        round_info['scoreForVote'] = self.tournament.pref('adj_min_voting_score')
-        round_info['allowDuplicateAllocations'] = self.tournament.pref('duplicate_adjs')
-        round_info['regions'] = self.get_regions_info()
-        round_info['categories'] = self.get_categories_info()
-        return round_info
+    def get_history_conflicts(self):
+        history = HistoryInfo(self.round)
+        team_history, adj_history = history.serialized_by_participant()
+        return {'teams': team_history,  'adjudicators': adj_history}
 
     def get_context_data(self, **kwargs):
-        kwargs['vueUnusedAdjudicators'] = self.get_unallocated_adjudicators()
-        kwargs['showAllocationIntro'] = self.tournament.pref('show_allocation_intro')
-        # This is meant to be shown once only; so we set false if true
-        if self.tournament.pref('show_allocation_intro'):
-            self.tournament.preferences['ui_options__show_allocation_intro'] = False
-
+        kwargs['vueDebatesOrPanelAdjudicators'] = json.dumps(None)
         return super().get_context_data(**kwargs)
 
 
-class CreateAutoAllocation(LogActionMixin, AdjudicatorAllocationMixin, JsonDataResponsePostView):
+class EditDebateAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
+    template_name = "edit_debate_adjudicators.html"
+    page_title = gettext_lazy("Edit Allocation")
+    prefetch_adjs = True # Fetched in full as get_serialised
 
-    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        return info
 
-    def post_data(self):
-        round = self.round
-        self.log_action()
-        if round.draw_status == Round.STATUS_RELEASED:
-            info = _("Draw is already released, unrelease draw to redo auto-allocations.")
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-        if round.draw_status != Round.STATUS_CONFIRMED:
-            info = _("Draw is not confirmed, confirm draw to run auto-allocations.")
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-
-        if round.ballots_per_debate == 'per-adj':
-            allocator_class = VotingHungarianAllocator
-        else:
-            allocator_class = ConsensusHungarianAllocator
-
-        allocate_adjudicators(self.round, allocator_class)
-        return {
-            'debates': self.get_draw(),
-            'unallocatedAdjudicators': self.get_unallocated_adjudicators()
-        }
+    def debates_or_panels_factory(self, debates):
+        return EditDebateAdjsDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides,
+                                         'round': self.round})
 
 
-class SaveDebateImportance(AdministratorMixin, RoundMixin, LogActionMixin, View):
-    action_log_type = ActionLogEntry.ACTION_TYPE_DEBATE_IMPORTANCE_EDIT
+class EditPanelAdjudicatorsView(BaseEditDebateOrPanelAdjudicatorsView):
+    template_name = "edit_panel_adjudicators.html"
+    page_title = gettext_lazy("Edit Panels")
 
-    def post(self, request, *args, **kwargs):
-        body = self.request.body.decode('utf-8')
-        posted_info = json.loads(body)
-        priorities = posted_info['priorities']
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['backUrl'] = reverse_tournament('panel-adjudicators-index',
+                                             self.tournament)  # Override
+        info['backLabel'] = _("Return to Panels Overview")
+        return info
 
-        with transaction.atomic(): # Speed up the saving by using a single query
-            for debate_id, priority in priorities.items():
-                Debate.objects.filter(pk=debate_id).update(importance=priority)
+    def get_draw_or_panels_objects(self):
+        panels = self.round.preformedpanel_set.all().prefetch_related(
+            Prefetch('preformedpaneladjudicator_set',
+                queryset=PreformedPanelAdjudicator.objects.select_related('adjudicator'))
+        )
+        return panels
 
-        self.log_action()
-        return JsonResponse(json.dumps(priorities), safe=False)
+    def debates_or_panels_factory(self, panels):
+        return EditPanelAdjsPanelSerializer(panels, many=True,
+                                            context={'round': self.round})
 
 
-class SaveDebatePanel(BaseSaveDragAndDropDebateJsonView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_ADJUDICATORS_SAVE
-
-    def get_moved_item(self, id):
-        return Adjudicator.objects.get(pk=id)
-
-    def modify_debate(self, debate, posted_debate):
-        posted_debateadjudicators = posted_debate['debateAdjudicators']
-
-        # Delete adjudicators who aren't in the posted information
-        adj_ids = [da['adjudicator']['id'] for da in posted_debateadjudicators]
-        delete_count, deleted = debate.debateadjudicator_set.exclude(adjudicator_id__in=adj_ids).delete()
-        logger.debug("Deleted %d debate adjudicators from [%s]", delete_count, debate.matchup)
-
-        # Check all the adjudicators are part of the tournament
-        adjs = Adjudicator.objects.filter(Q(tournament=self.tournament) | Q(tournament__isnull=True), id__in=adj_ids)
-        if len(adjs) != len(posted_debateadjudicators):
-            raise BadJsonRequestError(_("Not all adjudicators specified are associated with the tournament."))
-        adj_name_lookup = {adj.id: adj.name for adj in adjs}  # for debugging messages
-
-        # Update or create positions of adjudicators in debate
-        for debateadj in posted_debateadjudicators:
-            adj_id = debateadj['adjudicator']['id']
-            adjtype = debateadj['position']
-            obj, created = DebateAdjudicator.objects.update_or_create(debate=debate,
-                    adjudicator_id=adj_id, defaults={'type': adjtype})
-            logger.debug("%s debate adjudicator: %s is now %s in [%s]", "Created" if created else "Updated",
-                    adj_name_lookup[adj_id], obj.get_type_display(), debate.matchup)
-
-        return debate
+class PanelAdjudicatorsIndexView(TemplateView, AdministratorMixin):
+    template_name = "preformed_index.html"
+    page_title = gettext_lazy("Preformed Panels")
 
 
 # ==============================================================================
@@ -229,16 +151,6 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
         kwargs['save_text'] = self.save_text
         return super().get_context_data(**kwargs)
 
-    def get_formset_queryset(self):
-        return self.formset_model.objects.filter(adjudicator__tournament=self.tournament)
-
-    def get_formset(self):
-        formset = super().get_formset()
-        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
-        for form in formset:
-            form.fields['adjudicator'].queryset = all_adjs # Order list by alpha
-        return formset
-
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)
 
@@ -255,7 +167,7 @@ class BaseAdjudicatorConflictsView(LogActionMixin, AdministratorMixin, Tournamen
 class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_ADJ_TEAM_EDIT
-    formset_model = AdjudicatorConflict
+    formset_model = AdjudicatorTeamConflict
     page_title = gettext_lazy("Adjudicator-Team Conflicts")
     save_text = gettext_lazy("Save Adjudicator-Team Conflicts")
     same_view = 'adjallocation-conflicts-adj-team'
@@ -264,6 +176,20 @@ class AdjudicatorTeamConflictsView(BaseAdjudicatorConflictsView):
         'fields': ('adjudicator', 'team'),
         'field_classes': {'team': TeamChoiceField},
     })
+
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        all_teams = self.tournament.team_set.order_by('short_name').all()
+        for form in formset:
+            form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+            form.fields['team'].queryset = all_teams        # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            adjudicator__tournament=self.tournament
+        ).order_by('adjudicator__name')
 
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
@@ -290,14 +216,20 @@ class AdjudicatorAdjudicatorConflictsView(BaseAdjudicatorConflictsView):
     save_text = gettext_lazy("Save Adjudicator-Adjudicator Conflicts")
     same_view = 'adjallocation-conflicts-adj-adj'
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
-    formset_factory_kwargs.update({'fields': ('adjudicator', 'conflict_adjudicator')})
+    formset_factory_kwargs.update({'fields': ('adjudicator1', 'adjudicator2')})
 
     def get_formset(self):
         formset = super().get_formset()
         all_adjs = self.tournament.adjudicator_set.order_by('name').all()
         for form in formset:
-            form.fields['conflict_adjudicator'].queryset = all_adjs # Order list by alpha
+            form.fields['adjudicator1'].queryset = all_adjs  # order alphabetically
+            form.fields['adjudicator2'].queryset = all_adjs  # order alphabetically
         return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            adjudicator1__tournament=self.tournament
+        ).order_by('adjudicator1__name')
 
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
@@ -326,6 +258,18 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
     formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
     formset_factory_kwargs.update({'fields': ('adjudicator', 'institution')})
 
+    def get_formset(self):
+        formset = super().get_formset()
+        all_adjs = self.tournament.adjudicator_set.order_by('name').all()
+        for form in formset:
+            form.fields['adjudicator'].queryset = all_adjs  # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            adjudicator__tournament=self.tournament
+        ).order_by('adjudicator__name')
+
     def add_message(self, nsaved, ndeleted):
         if nsaved > 0:
             messages.success(self.request, ngettext(
@@ -341,3 +285,45 @@ class AdjudicatorInstitutionConflictsView(BaseAdjudicatorConflictsView):
             ) % {'count': ndeleted})
         if nsaved == 0 and ndeleted == 0:
             messages.success(self.request, _("No changes were made to adjudicator-institution conflicts."))
+
+
+class TeamInstitutionConflictsView(BaseAdjudicatorConflictsView):
+
+    action_log_type = ActionLogEntry.ACTION_TYPE_CONFLICTS_TEAM_INST_EDIT
+    formset_model = TeamInstitutionConflict
+    page_title = gettext_lazy("Team-Institution Conflicts")
+    save_text = gettext_lazy("Save Team-Institution Conflicts")
+    same_view = 'adjallocation-conflicts-team-inst'
+    formset_factory_kwargs = BaseAdjudicatorConflictsView.formset_factory_kwargs.copy()
+    formset_factory_kwargs.update({
+        'fields': ('team', 'institution'),
+        'field_classes': {'team': TeamChoiceField},
+    })
+
+    def get_formset(self):
+        formset = super().get_formset()
+        all_teams = self.tournament.team_set.order_by('short_name').all()
+        for form in formset:
+            form.fields['team'].queryset = all_teams  # order alphabetically
+        return formset
+
+    def get_formset_queryset(self):
+        return self.formset_model.objects.filter(
+            team__tournament=self.tournament
+        ).order_by('team__short_name')
+
+    def add_message(self, nsaved, ndeleted):
+        if nsaved > 0:
+            messages.success(self.request, ngettext(
+                "Saved %(count)d team-institution conflict.",
+                "Saved %(count)d team-institution conflicts.",
+                nsaved,
+            ) % {'count': nsaved})
+        if ndeleted > 0:
+            messages.success(self.request, ngettext(
+                "Deleted %(count)d team-institution conflict.",
+                "Deleted %(count)d team-institution conflicts.",
+                ndeleted,
+            ) % {'count': ndeleted})
+        if nsaved == 0 and ndeleted == 0:
+            messages.success(self.request, _("No changes were made to team-institution conflicts."))

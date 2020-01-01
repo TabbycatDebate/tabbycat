@@ -13,9 +13,10 @@ urlpatterns = [
         path('team/<slug:category>/',
             views.BreakCategoryStandingsView.as_view(),
             name='standings-break-category'),
-        path('division/',
-            views.DivisionStandingsView.as_view(),
-            name='standings-division'),
+
+        path('email/',
+            views.EmailTeamStandingsView.as_view(),
+            name='progress-email'),
 
         path('speaker/',
             views.SpeakerStandingsView.as_view(),

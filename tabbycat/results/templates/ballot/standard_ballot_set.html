@@ -32,7 +32,7 @@
           </h4>
             {% for da in debate.adjudicators.voting_with_positions reversed %}
               <div class="badge badge-secondary float-right ml-2 mt-1">
-                <p class="mb-0">{{ da.0.name }} ({% if da.1 == "o" %}Solo Chair{% elif da.1 == "c" %}Chair{% elif da.1 == "p" %}Panellist{% elif da.1 == "t" %}Trainee{% endif %})</p>
+                <p class="mb-0">{{ da.0.name }} ({% if da.1 == "o" %}{% trans "Solo Chair" %}{% elif da.1 == "c" %}{% trans "Chair" %}{% elif da.1 == "p" %}{% trans "Panellist" %}{% elif da.1 == "t" %}{% trans "Trainee" %}{% endif %})</p>
               </div>
             {% endfor %}
 
@@ -61,17 +61,5 @@
   </div>
 
   {% endfor %}
-
-  {% if pref.enable_forfeits %}
-    <div class="card mt-3">
-      <div class="panel-heading">
-        <h4 class="panel-title">{% trans "Forfeits" %}</h4>
-      </div>
-      <div class="card-body">
-        {{ form.forfeit|addcss:"forfeits-group" }}
-        {{ form.forfeit.errors }}
-      </div>
-    </div>
-  {% endif %}
 
 </div>

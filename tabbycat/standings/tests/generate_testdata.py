@@ -69,7 +69,7 @@ for rd in results:
         for a, b in ((0, 1), (1, 0)):
             team, score = teamscores[a]
             opponent, _ = teamscores[b]
-            if standings[team]["against"][opponent] is "n/a":
+            if standings[team]["against"][opponent] == "n/a":
                 standings[team]["against"][opponent] = score["points"]
             else:
                 standings[team]["against"][opponent] += score["points"]

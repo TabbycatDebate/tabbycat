@@ -1,535 +1,602 @@
-# Tabbycat translations, standings module
-# Copyright (C) 2018 Tabbycat developers and translators
-# This file is distributed under the same license as the Tabbycat package.
-# Chuan-Zheng Lee <czlee@stanford.edu>, 2018
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-01 01:45-0700\n"
-"PO-Revision-Date: 2018-02-06 09:43-0800\n"
-"Last-Translator: Chuan-Zheng Lee <czlee@stanford.edu>, 2018\n"
-"Language-Team: French (https://www.transifex.com/tabbycat/teams/80723/fr/)\n"
-"Language: fr\n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-07-26 00:55\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: French\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /develop/tabbycat/standings/locale/en/LC_MESSAGES/django.po\n"
 
 #: standings/base.py:295
 msgid "The same metric would be added twice:"
-msgstr ""
+msgstr "La même métrique aurait été ajoutée une deuxième fois :"
 
 #: standings/base.py:296
 msgid "The same ranking would be added twice:"
-msgstr ""
+msgstr "Le même classement aurait été ajouté un deuxième fois :"
 
 #: standings/base.py:370
 #, python-format
 msgid "Unrecognized metric code: \"%(code)s\""
-msgstr ""
+msgstr "Code de métrique non-reconnu : « %(code)s »"
 
 #: standings/diversity.py:136 standings/diversity.py:166
-#: standings/diversity.py:187 standings/templates/standings_menu.html:20
-#: standings/templates/standings_menu.html:36
+#: standings/diversity.py:187
 msgid "All"
-msgstr ""
+msgstr "Tout"
 
 #: standings/diversity.py:140 standings/diversity.py:155
 #: standings/diversity.py:173 standings/diversity.py:191
 msgid "Breaking"
-msgstr ""
+msgstr "Qualifiant"
 
 #: standings/diversity.py:147
 #, python-format
 msgid "Not %(category)s"
-msgstr ""
+msgstr "Pas %(category)s"
 
 #: standings/diversity.py:151
-#, fuzzy
-#| msgid "Speakers"
 msgid "All Speakers"
-msgstr "Orateurs"
+msgstr "Tout les orateurs"
 
 #: standings/diversity.py:169
 msgid "Indies"
-msgstr ""
+msgstr "Ind."
 
 #: standings/diversity.py:177
 msgid "Chairs"
-msgstr ""
+msgstr "Présidents"
 
 #: standings/diversity.py:177
 msgid "Panellists"
-msgstr ""
+msgstr "Membres"
 
 #: standings/diversity.py:177
 msgid "Trainees"
-msgstr ""
+msgstr "Stagiaires"
 
 #: standings/diversity.py:209
 msgid "Average Rating"
-msgstr ""
+msgstr "Note Moyenne"
 
 #: standings/diversity.py:210
 msgid "Median Rating"
-msgstr ""
+msgstr "Note Médiane"
 
 #: standings/diversity.py:211
 msgid "Upper Quartile Rating"
-msgstr ""
+msgstr "Note de 3e Quartile"
 
 #: standings/diversity.py:212
 msgid "Lower Quartile Rating"
-msgstr ""
+msgstr "Note de 1er Quartile"
 
 #: standings/diversity.py:218
 msgid "Average Rating From Teams"
-msgstr ""
+msgstr "Note Moyenne par les Équipes"
 
 #: standings/diversity.py:219
 msgid "Average Rating From Chairs"
-msgstr ""
+msgstr "Note Moyenne par les Présidents"
 
 #: standings/diversity.py:220
 msgid "Average Rating From Panellists"
-msgstr ""
+msgstr "Note Moyenne par les Membres"
 
 #: standings/diversity.py:221
 msgid "Average Rating From Trainees"
-msgstr ""
+msgstr "Note Moyenne par les Stagiaires"
 
 #: standings/diversity.py:246
 msgid "Average Score"
-msgstr ""
+msgstr "Score Moyenne"
 
 #: standings/diversity.py:247
 msgid "Median Score"
-msgstr ""
+msgstr "Score Médiane"
 
 #: standings/diversity.py:248
 msgid "Upper Quartile Score"
-msgstr ""
+msgstr "Score de 3e Quartile"
 
 #: standings/diversity.py:249
 msgid "Lower Quartile Score"
-msgstr ""
+msgstr "Score de 1er Quartile"
 
 #: standings/diversity.py:256
 msgid "Reply Speaker Average"
-msgstr ""
+msgstr "Moyenne d’orateur de réplique"
 
 #: standings/diversity.py:257
 #, python-format
 msgid "Speaker %(num)d Average"
-msgstr ""
+msgstr "Moyenne de l’orateur %(num)d"
 
 #: standings/diversity.py:265
 msgid "Average Finals Score"
-msgstr ""
+msgstr "Score des Finaux Moyenne"
 
-#: standings/speakers.py:50 standings/speakers.py:116
+#: standings/speakers.py:50 standings/speakers.py:136
 msgid "total"
-msgstr ""
+msgstr "total"
 
-#: standings/speakers.py:51 standings/speakers.py:117
+#: standings/speakers.py:51 standings/speakers.py:137
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
-#: standings/speakers.py:58 standings/speakers.py:126
+#: standings/speakers.py:58 standings/speakers.py:146
 msgid "average"
-msgstr ""
+msgstr "moyenne"
 
-#: standings/speakers.py:59 standings/speakers.py:127
+#: standings/speakers.py:59 standings/speakers.py:147
 msgid "Avg"
-msgstr ""
+msgstr "Moy"
 
 #: standings/speakers.py:66
 msgid "trimmed mean (high-low drop)"
-msgstr ""
+msgstr "moyenne tronquée (haut et bas)"
 
 #: standings/speakers.py:67
 msgid "Trim"
-msgstr ""
+msgstr "Tronq"
 
-#: standings/speakers.py:99 standings/speakers.py:136
+#: standings/speakers.py:99
+msgid "team points"
+msgstr "points d’équipe"
+
+#: standings/speakers.py:100
+msgid "Team"
+msgstr "Équipe"
+
+#: standings/speakers.py:119 standings/speakers.py:156
 msgid "standard deviation"
-msgstr ""
+msgstr "écart-type"
 
-#: standings/speakers.py:100 standings/speakers.py:137
+#: standings/speakers.py:120 standings/speakers.py:157
 msgid "Stdev"
-msgstr ""
+msgstr "Écart"
 
-#: standings/speakers.py:108
+#: standings/speakers.py:128
 msgid "number of speeches given"
-msgstr ""
+msgstr "nombre de discours donnés"
 
-#: standings/speakers.py:109 standings/speakers.py:148
+#: standings/speakers.py:129 standings/speakers.py:168
 msgid "Num"
-msgstr ""
+msgstr "DD"
 
-#: standings/speakers.py:147
+#: standings/speakers.py:167
 msgid "replies given"
-msgstr ""
+msgstr "nombre de discours de réplique donnés"
 
 #: standings/teams.py:64 standings/teams.py:96
 msgid "points"
-msgstr ""
+msgstr "points"
 
 #: standings/teams.py:65 standings/teams.py:97
 msgid "Pts"
-msgstr ""
+msgstr "Pts"
 
 #: standings/teams.py:67
 msgid "Points (2/1/0)"
-msgstr ""
+msgstr "Points (2/1/0)"
 
 #: standings/teams.py:106
 msgid "wins"
-msgstr ""
+msgstr "victoires"
 
-#: standings/teams.py:107 standings/views.py:590
+#: standings/teams.py:107 standings/views.py:603
 msgid "Wins"
-msgstr ""
+msgstr "Victoires"
 
 #: standings/teams.py:117
 msgid "total speaker score"
-msgstr ""
+msgstr "note d’orateur totale"
 
 #: standings/teams.py:118
 msgid "Spk"
-msgstr ""
+msgstr "Ora"
 
 #: standings/teams.py:127
-msgid "average speaker score"
-msgstr ""
+msgid "average total speaker score"
+msgstr "note moyenne totale d’orateur"
 
 #: standings/teams.py:128
-msgid "ASS"
-msgstr ""
+msgid "ATSS"
+msgstr "NMTO"
 
 #: standings/teams.py:138
 msgid "speaker score standard deviation"
-msgstr ""
+msgstr "écart-type des notes d’orateur"
 
 #: standings/teams.py:139
 msgid "SSD"
-msgstr ""
+msgstr "ÉTNO"
 
 #: standings/teams.py:150
 msgid "sum of margins"
-msgstr ""
+msgstr "somme des marges"
 
 #: standings/teams.py:151
 msgid "Marg"
-msgstr ""
+msgstr "Marg"
 
 #: standings/teams.py:160
 msgid "average margin"
-msgstr ""
+msgstr "marge en moyenne"
 
 #: standings/teams.py:161
 msgid "AWM"
-msgstr ""
+msgstr "MM"
 
 #: standings/teams.py:171
-msgid "draw strength"
-msgstr ""
+msgid "average individual speaker score"
+msgstr "note moyenne individuelle d’orateur"
 
 #: standings/teams.py:172
+msgid "AISS"
+msgstr "NMIO"
+
+#: standings/teams.py:205
+msgid "draw strength"
+msgstr "puissance des opposants"
+
+#: standings/teams.py:206
 msgid "DS"
-msgstr ""
+msgstr "PO"
 
-#: standings/teams.py:210
+#: standings/teams.py:244
 msgid "number of adjudicators who voted for this team"
-msgstr ""
+msgstr "nombre de juges qui ont voté pour cette équipe"
 
-#: standings/teams.py:211
+#: standings/teams.py:245
 msgid "Ballots"
-msgstr ""
+msgstr "Feuilles"
 
-#: standings/teams.py:212
+#: standings/teams.py:246
 msgid "votes/ballots carried"
-msgstr ""
+msgstr "nombre de votes"
 
-#: standings/teams.py:237
+#: standings/teams.py:271
 msgid "number of firsts"
-msgstr ""
+msgstr "nombre de premières"
 
-#: standings/teams.py:238
+#: standings/teams.py:272
 msgid "1sts"
-msgstr ""
+msgstr "1ères"
 
-#: standings/teams.py:247
+#: standings/teams.py:281
 msgid "number of seconds"
-msgstr ""
+msgstr "nombre de deuxièmes"
 
-#: standings/teams.py:248
+#: standings/teams.py:282
 msgid "2nds"
-msgstr ""
+msgstr "2èmes"
 
-#: standings/teams.py:260
+#: standings/teams.py:294
 msgid "Who-beat-whom"
-msgstr ""
+msgstr "Qui-a-battu-qui"
 
-#: standings/teams.py:261
+#: standings/teams.py:295
 msgid "WBW"
-msgstr ""
+msgstr "QABQ"
 
-#: standings/teams.py:262
+#: standings/teams.py:296
 msgid "who-beat-whom"
-msgstr ""
+msgstr "qui-a-battu-qui"
 
-#: standings/teams.py:307
+#: standings/teams.py:341
 msgid "Who-beat-whom (in division)"
-msgstr ""
+msgstr "Qui-a-battu-qui (en division)"
 
-#: standings/teams.py:308
+#: standings/teams.py:342
 msgid "WBWD"
-msgstr ""
+msgstr "QABQD"
 
-#: standings/teams.py:309
+#: standings/teams.py:343
 msgid "who-beat-whom (in divisions)"
-msgstr ""
+msgstr "qui-a-battu-qui (en divisions)"
 
 #: standings/templates/current_standings.html:6
-#, fuzzy
-#| msgid "It also excludes silent rounds (if any)."
-msgid ""
-"It also excludes results from silent rounds (if any) and from the current "
-"round."
-msgstr "Elle exclut aussi les tours silencieux (le cas échéant)."
+msgid "It also excludes results from silent rounds (if any) and from the current round."
+msgstr "Elle exclut aussi les joutes silencieuses (le cas échéant) et de la joute actuelle."
 
 #: standings/templates/current_standings.html:9
 #, python-format
-msgid ""
-"This list is sorted by team points, then alphabetically by team name. It "
-"does not indicate each team's ranking within each bracket. "
-"%(silent_round_sentence)s"
-msgstr ""
-"Cette liste est triée par points d'equipe, et ensuite par ordre alphabétique "
-"suivant le nom d'équipe. Elle n'indique pas le rang de chaque équipe parmi "
-"les équipes ayant le même nombre de points d'équipe. "
-"%(silent_round_sentence)s"
+msgid "This list is sorted by team points, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
+msgstr "Cette liste est triée par points d'équipe, et ensuite par ordre alphabétique suivant le nom d'équipe. Elle n'indique pas le rang de chaque équipe parmi les équipes ayant le même nombre de points d'équipe. %(silent_round_sentence)s"
 
 #: standings/templates/current_standings.html:15
 #, python-format
-msgid ""
-"This list is sorted by number of wins, then alphabetically by team name. It "
-"does not indicate each team's ranking within each bracket. "
-"%(silent_round_sentence)s"
-msgstr ""
-"Cette liste est triée par nombre de victoires, et ensuite par ordre "
-"alphabétique suivant le nom d'équipe. Elle n'indique pas le rang de chaque "
-"équipe parmi les équipes ayant le même nombre de victoires. "
-"%(silent_round_sentence)s"
+msgid "This list is sorted by number of wins, then alphabetically by team name. It does not indicate each team's ranking within each bracket. %(silent_round_sentence)s"
+msgstr "Cette liste est triée par nombre de victoires, et ensuite par ordre alphabétique suivant le nom d'équipe. Elle n'indique pas le rang de chaque équipe parmi les équipes ayant le même nombre de victoires. %(silent_round_sentence)s"
 
 #: standings/templates/current_standings_no_round.html:6
 msgid "There aren't any rounds for which results are available."
-msgstr "Il n'y a aucune tour dont les résultats sont disponibles."
+msgstr "Il n'y a aucune joute dont les résultats sont disponibles."
 
-#: standings/templates/speaker_standings.html:6
+#: standings/templates/reply_standings.html:6
+msgid "Reply speakers are ranked by their <strong>average reply score</strong>."
+msgstr "Les orateurs de réplique sont classés par leurs <strong>note de réplique moyenne</strong>."
+
+#: standings/templates/reply_standings.html:9
+#, python-format
+msgid "Speakers can miss up to %(count)s reply speeches before they are omitted from the replies tab."
+msgstr "Les orateurs peuvent manquer jusqu’à %(count)s discours de réplique avant qu’ils soient omis du classement des répliques."
+
+#: standings/templates/reply_standings.html:14
+msgid "All reply speakers appear in these standings, no matter how many replies they've missed."
+msgstr "Tous les orateurs de réplique apparaissent dans ces classements, peu importe le nombre de répliques qu’ils ont manqués."
+
+#: standings/templates/reply_standings.html:18
+#: standings/templates/speaker_standings.html:25
+#, python-format
+msgid "These settings can be changed in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
+msgstr "Ces réglages peuvent être changés dans la <a href=\"%(standings_config_url)s\" class=\"alert-link\">section des classements dans les options du tournoi</a>."
+
+#: standings/templates/speaker_standings.html:7
 msgid "Speakers are ranked by their <strong>average score</strong>."
-msgstr ""
+msgstr "Les orateurs sont classés par leur <strong>note moyenne</strong>."
 
-#: standings/templates/speaker_standings.html:8
-msgid ""
-"Speakers are ranked by their <strong>total score</strong>. Any speaker who "
-"misses a single debate will be severely punished in these rankings."
-msgstr ""
+#: standings/templates/speaker_standings.html:9
+msgid "Speakers are ranked by their <strong>total score</strong>. Any speaker who misses a single debate will be severely punished in these rankings."
+msgstr "Les orateurs sont classés par leur <strong>score total</strong>. Les orateurs qui manquent un débat serait sévèrement désavantagé dans ces classements."
 
-#: standings/templates/speaker_standings.html:15
+#: standings/templates/speaker_standings.html:16
 #, python-format
-msgid ""
-"Speakers can miss up to %(count)s debates before they are omitted from the "
-"speaker tab."
-msgstr ""
+msgid "Speakers can miss up to %(count)s debates before they are omitted from the speaker tab."
+msgstr "Les orateurs peuvent manquer jusqu’à %(count)s débats avant qu’ils soit omis du classement des orateurs."
 
-#: standings/templates/speaker_standings.html:20
-msgid ""
-"All speakers appear in these standings, no matter how many debates they've "
-"missed."
-msgstr ""
+#: standings/templates/speaker_standings.html:21
+msgid "All speakers appear in these standings, no matter how many debates they've missed."
+msgstr "Tous les orateurs apparaissent dans ces classements, peu importe le nombre de débats qu’ils ont manqués."
 
-#: standings/templates/speaker_standings.html:24
+#: standings/templates/speaker_standings.html:33
 #, python-format
-msgid ""
-"These settings can be changed in the <a href=\"%(standings_config_url)s\" "
-"class=\"alert-link\">Standings section of this tournament's configuration</"
-"a>."
-msgstr ""
+msgid "Enforcing the limit on the number of missed debates requires the \"number of speeches given\" metric to be included in the speaker standings calculations, so it's been automatically added. To remove this warning message, add <strong>Number of speeches given</strong> to the <strong>Speaker standings extra metrics</strong> in the <a href=\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this tournament's configuration</a>."
+msgstr "Enforcer la limite des débats manquées requiert la métrique « nombre de discours données » d’être inclus dans les calculs du classement des orateurs, donc elle s’est fait ajoutée automatiquement. Pour enlever ce message d’avertissement, veuillez ajouter la métrique de <strong>nombre de discours données</strong> au <strong>métriques supplémentaires de classement d’orateurs</strong> dans la <a href=\"%(standings_config_url)s\" class=\"alert-link\">section de classement dans la configuration de ce tournoi</a>."
 
-#: standings/templates/speaker_standings.html:32
-#, python-format
-msgid ""
-"Enforcing the limit on the number of missed debates requires the \"number of "
-"speeches given\" metric to be included in the speaker standings "
-"calculations, so it's been automatically added. To remove this warning "
-"message, add <strong>Number of speeches given</strong> to the "
-"<strong>Speaker standings extra metrics</strong> in the <a href="
-"\"%(standings_config_url)s\" class=\"alert-link\">Standings section of this "
-"tournament's configuration</a>."
-msgstr ""
+#: standings/templates/standings_diversity.html:4
+#: standings/templates/standings_diversity.html:5
+msgid "Diversity Overview"
+msgstr "Vue d’ensemble de la diversité"
 
-#: standings/templates/standings_diversity.html:31
-#: standings/templates/standings_diversity.html:42
-msgid "Key"
-msgstr ""
-
-#: standings/templates/standings_diversity.html:34
-msgid "Non-cis male identifying"
-msgstr ""
+#: standings/templates/standings_diversity.html:22
+msgid "The results data displayed here is presented without tests for statistical significance. Correlations should not be automatically considered reliable; particularly at small tournaments. A 'region' is a customisable category assigned to a set of institutions, and counted using the number of participants assigned to those institutions."
+msgstr "Les données des résultats des orateurs et juges sont présentées sans tests pour la signification statistique. Les corrélations ne devraient pas être considérées comme fiables ; surtout lors de petits tournois. Les « régions » sont une catégorisation du tournoi assigné aux institutions, compté avec le nombre de participants de tels institutions."
 
 #: standings/templates/standings_diversity.html:37
-msgid "Male identifying"
-msgstr ""
+msgid "Non-cis male identifying"
+msgstr "Pas identifiant comme un homme cisgenre"
+
+#: standings/templates/standings_diversity.html:40
+msgid "Cis-male identifying"
+msgstr "Identifiant comme un homme cisgenre"
+
+#: standings/templates/standings_diversity.html:43
+msgid "Unspecified/unrecorded"
+msgstr "Non-spécifié/enregistré"
+
+#: standings/templates/standings_index.html:5
+#: standings/templates/standings_index.html:6
+msgid "Standings"
+msgstr "Classements"
+
+#: standings/templates/standings_index.html:18
+msgid "Top Speaks"
+msgstr "Plus hautes notes"
+
+#: standings/templates/standings_index.html:22
+#: standings/templates/standings_index.html:41
+#, python-format
+msgid "%(speaker)s in %(round)s"
+msgstr "%(speaker)s dans %(round)s"
+
+#: standings/templates/standings_index.html:28
+#: standings/templates/standings_index.html:47
+#: standings/templates/standings_index.html:66
+#: standings/templates/standings_index.html:87
+#: standings/templates/standings_index.html:108
+#: standings/templates/standings_index.html:129
+#: standings/templates/standings_index.html:150
+#: standings/templates/standings_index.html:163
+#: standings/templates/standings_index.html:182
+msgid "No data yet"
+msgstr "Aucune donnée"
+
+#: standings/templates/standings_index.html:37
+msgid "Bottom Speaks"
+msgstr "Plus basses notes"
+
+#: standings/templates/standings_index.html:56
+msgid "Largest Margins"
+msgstr "Plus grands marges"
+
+#: standings/templates/standings_index.html:60
+#: standings/templates/standings_index.html:81
+#, python-format
+msgid "%(team)s vs %(opp)s in %(round)s"
+msgstr "%(team)s contre %(opp)s dans %(round)s"
+
+#: standings/templates/standings_index.html:77
+msgid "Closest Margins"
+msgstr "Marges les plus proches"
+
+#: standings/templates/standings_index.html:98
+msgid "Top Team Scores"
+msgstr "Scores d’équipes les plus fortes"
+
+#: standings/templates/standings_index.html:102
+#: standings/templates/standings_index.html:123
+#, python-format
+msgid "%(team)s in %(round)s"
+msgstr "%(team)s dans %(round)s"
+
+#: standings/templates/standings_index.html:119
+msgid "Bottom Team Scores"
+msgstr "Scores des équipes les plus faibles"
+
+#: standings/templates/standings_index.html:140
+msgid "Most/Least Popular Motions"
+msgstr "Motions les Plus/Moins Populaires"
+
+#: standings/templates/standings_index.html:144
+#: standings/templates/standings_index.html:157
+#, python-format
+msgid "%(reference)s in %(abbreviation)s"
+msgstr "%(reference)s dans %(abbreviation)s"
+
+#: standings/templates/standings_index.html:173
+msgid "Average Speaks"
+msgstr "Note moyenne d’orateur"
 
 #: standings/templates/standings_menu.html:6
 msgid "Overview"
-msgstr "Aperçu"
+msgstr "Vue d’ensemble"
 
 #: standings/templates/standings_menu.html:11
 msgid "Divisions"
 msgstr "Divisions"
 
-#: standings/templates/standings_menu.html:17
+#: standings/templates/standings_menu.html:18
+#: standings/templates/standings_menu.html:25
 msgid "Teams"
 msgstr "Équipes"
 
-#: standings/templates/standings_menu.html:25
-#: standings/templates/standings_menu.html:41
-#, fuzzy, python-format
-#| msgid "%(category_name)s Speakers"
-msgid "%(category_name)s"
-msgstr "Orateurs de la catégorie %(category_name)s"
+#: standings/templates/standings_menu.html:23
+msgctxt "All [Teams]"
+msgid "All"
+msgstr "Toutes"
 
-#: standings/templates/standings_menu.html:33
+#: standings/templates/standings_menu.html:38
 msgid "Speakers"
 msgstr "Orateurs"
 
-#: standings/templates/standings_menu.html:49
+#: standings/templates/standings_menu.html:43
+msgctxt "Substantive speeches"
+msgid "Substantives"
+msgstr "Discours principaux"
+
+#: standings/templates/standings_menu.html:45
+msgctxt "All [Speakers]"
+msgid "All"
+msgstr "Tous"
+
+#: standings/templates/standings_menu.html:47
+msgid "Speakers "
+msgstr "Orateurs "
+
+#: standings/templates/standings_menu.html:53
+#, python-format
+msgid "%(category_name)s"
+msgstr "%(category_name)s"
+
+#: standings/templates/standings_menu.html:61
 msgid "Replies"
-msgstr "Résponses"
+msgstr "Répliques"
 
-#: standings/templates/standings_menu.html:58
-#, fuzzy
-#| msgid "Motions Tab"
+#: standings/templates/standings_menu.html:70
 msgid "Motions"
-msgstr "Tab des motions"
+msgstr "Motions"
 
-#: standings/templates/standings_menu.html:62
-#, fuzzy
-#| msgid "Diversity Overview"
+#: standings/templates/standings_menu.html:74
 msgid "Diversity"
-msgstr "Aperçu de la diversité"
+msgstr "Diversité"
 
-#: standings/views.py:97
+#: standings/views.py:100
 #, python-format
-msgid ""
-"<p>There was an error generating the standings: <em>%(message)s</em></p>"
-msgstr ""
+msgid "<p>There was an error generating the standings: <em>%(message)s</em></p>"
+msgstr "<p>Une faute s’est produite en générant les classements : <em>%(message)s</em></p>"
 
-#: standings/views.py:102
+#: standings/views.py:105
 #, python-format
-msgid ""
-"<p>You may need to double-check the <a href=\"%(standings_options_url)s\" "
-"class=\"alert-link\">standings configuration under the Setup section</a>. If "
-"this issue persists and you're not sure how to fix it, please contact the "
-"developers.</p>"
-msgstr ""
+msgid "<p>You may need to double-check the <a href=\"%(standings_options_url)s\" class=\"alert-link\">standings configuration under the Setup section</a>. If this issue persists and you're not sure how to fix it, please contact the developers.</p>"
+msgstr "<p>Vous devriez vérifier les <a href=\"%(standings_options_url)s\" class=\"alert-link\">options de classement dans la section d’installation</a>. Si le problème persiste et vous n’êtes pas sure comment le réparer, veuillez contacter les développeurs.</p>"
 
-#: standings/views.py:110
+#: standings/views.py:113
 msgid "<p>The tab director will need to resolve this issue.</p>"
-msgstr ""
+msgstr "<p>Le rapporteur va devoir résoudre cette problème.</p>"
 
-#: standings/views.py:114
+#: standings/views.py:117
 #, python-format
 msgid "as of %(round)s"
-msgstr ""
+msgstr "à compter de %(round)s"
 
 #. Translators: 'title' is the main title; "(Top 15 Only)" is just a suffix
-#: standings/views.py:179
+#: standings/views.py:182
 #, python-format
 msgid "%(title)s (Top %(limit)d Only)"
 msgstr "%(title)s (seulement les %(limit)d en tête)"
 
-#: standings/views.py:204 standings/views.py:421
-msgid ""
-"The tab can't be displayed because all rounds so far in this tournament are "
-"silent."
-msgstr ""
-"Le tab ne peut pas être affiché parce que tous les tours dans ce tournoi "
-"jusqu'ici sont silencieux."
+#: standings/views.py:207 standings/views.py:433
+msgid "The tab can't be displayed because all rounds so far in this tournament are silent."
+msgstr "Le classement ne peut pas être affiché parce que toutes les joutes dans ce tournoi jusqu'ici sont silencieuses."
 
-#: standings/views.py:280
+#: standings/views.py:283
 msgid "Speaker Standings"
 msgstr "Classement des orateurs"
 
-#: standings/views.py:322
+#: standings/views.py:325
 msgid "Speaker Tab"
 msgstr "Tab des orateurs"
 
-#: standings/views.py:337
+#: standings/views.py:340
 #, python-format
 msgid "%(category)s Speaker Standings"
 msgstr "Classement des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:355
+#: standings/views.py:358
 #, python-format
 msgid "%(category)s Speaker Tab"
 msgstr "Tab des orateurs de la catégorie %(category)s"
 
-#: standings/views.py:368
+#: standings/views.py:371
 msgid "Reply Speaker Standings"
-msgstr "Classement des orateurs de réponse de la catégorie %(category_name)s"
+msgstr "Classement des orateurs aux discours de réplique"
 
-#: standings/views.py:373
+#: standings/views.py:376
 msgid "Reply speeches aren't enabled in this tournament."
-msgstr "Les discours de réponse ne sont pas activés dans ce tournoi."
-
-#: standings/views.py:401
-msgid "Reply Speaker Tab"
-msgstr "Tab des orateurs de réponse de la catégorie %(category_name)s"
+msgstr "Les discours de réplique ne sont pas activés dans ce tournoi."
 
 #: standings/views.py:413
+msgid "Reply Speaker Tab"
+msgstr "Tab des orateurs de réplique de la catégorie %(category_name)s"
+
+#: standings/views.py:425 standings/views.py:680
 msgid "Team Standings"
 msgstr "Classement des équipes"
 
-#: standings/views.py:488
+#: standings/views.py:500
 msgid "Division Standings"
 msgstr "Classement par division"
 
-#: standings/views.py:498
+#: standings/views.py:510
 msgid "Team Tab"
 msgstr "Tab des équipes"
 
-#: standings/views.py:517
-#, fuzzy, python-format
-#| msgid "%(category)s Speaker Standings"
+#: standings/views.py:529
+#, python-format
 msgid "%(category)s Team Standings"
-msgstr "Classement des orateurs de la catégorie %(category)s"
+msgstr "Classement des équipes de la catégorie %(category)s"
 
-#: standings/views.py:544
-#, fuzzy, python-format
-#| msgid "%(category)s Speaker Tab"
+#: standings/views.py:556
+#, python-format
 msgid "%(category)s Team Tab"
-msgstr "Tab des orateurs de la catégorie %(category)s"
+msgstr "Tab des équipes de la catégorie %(category)s"
 
-#: standings/views.py:555
+#: standings/views.py:567
 msgid "Current Team Standings"
 msgstr "Classement actuel des équipes"
 
-#: standings/views.py:590
+#: standings/views.py:603
 msgid "Points"
 msgstr "Points"
 
-#~ msgid "%(category_name)s Speakers"
-#~ msgstr "Orateurs de la catégorie %(category_name)s"
-
-#~ msgid "Motion Statistics"
-#~ msgstr "Statistiques des motions"
-
-#~ msgid "Motions Balance"
-#~ msgstr "Équilibre des motions"

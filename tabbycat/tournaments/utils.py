@@ -1,35 +1,12 @@
-import itertools
 import logging
-from smtplib import SMTPException
 
-from django.core.mail import send_mass_mail
-from django.conf import settings
-from django.db.models import Max
-from django.template import Context, Template
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext, pgettext_lazy
 
-from utils.misc import reverse_tournament
-
 from .models import Round
 
 logger = logging.getLogger(__name__)
-
-BREAK_ROUND_NAMES = [
-    # Translators: abbreviation for "grand final"
-    (_("Grand Final"), _("GF")),
-    # Translators: abbreviation for "semifinals"
-    (_("Semifinals"), _("SF")),
-    # Translators: abbreviation for "quarterfinals"
-    (_("Quarterfinals"), _("QF")),
-    # Translators: abbreviation for "octofinals"
-    (_("Octofinals"), _("OF")),
-    # Translators: abbreviation for "double-octofinals"
-    (_("Double-Octofinals"), _("DOF")),
-    # Translators: abbreviation for "triple-octofinals"
-    (_("Triple-Octofinals"), _("TOF")),
-]
 
 SIDE_NAMES = {
     'aff-neg': {
@@ -109,29 +86,6 @@ def auto_make_rounds(tournament, num_rounds):
         ).save()
 
 
-def auto_make_break_rounds(tournament, num_break, break_category):
-    """Makes the number of break rounds specified. This is intended as a
-    convenience function. For anything more complicated, a more advanced import
-    method should be used."""
-
-    num_prelim = tournament.prelim_rounds().aggregate(Max('seq'))['seq__max']
-    # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
-    break_rounds = itertools.chain(BREAK_ROUND_NAMES, itertools.repeat((_("Unknown break round"), _("UBR"))))
-
-    for i, (name, abbr) in zip(range(num_break), break_rounds):
-        Round(
-            tournament=tournament,
-            break_category=break_category,
-            seq=num_prelim+num_break-i,
-            stage=Round.STAGE_ELIMINATION,
-            name=name,
-            abbreviation=abbr,
-            draw_type=Round.DRAW_ELIMINATION,
-            feedback_weight=0.5,
-            silent=True,
-        ).save()
-
-
 def get_side_name_choices():
     """Returns a list of choices for position names suitable for presentation in
     a form."""
@@ -182,41 +136,3 @@ aff_abbr = _get_side_name('aff_abbr')
 neg_abbr = _get_side_name('neg_abbr')
 aff_team = _get_side_name('aff_team')
 neg_team = _get_side_name('neg_team')
-
-
-def send_standings_emails(tournament, teams, request):
-    messages = []
-
-    subject_temp = Template(tournament.pref('team_points_email_subject'))
-    message_temp = Template(tournament.pref('team_points_email_message'))
-
-    context = {'TOURN': str(tournament)}
-
-    message_link = ''
-    if tournament.pref('public_team_standings'):
-        url = request.build_absolute_uri(reverse_tournament('standings-public-teams-current', tournament))
-        message_link += "\n\n" + tournament.pref('team_points_email_link_text') + "\n" + url
-
-    for team in teams:
-        context['POINTS'] = str(team.points_count)
-        context['TEAM'] = team.short_name
-
-        subject = subject_temp.render(Context(context))
-
-        for speaker in team.speakers:
-            if speaker.email is None:
-                continue
-
-            context['USER'] = speaker.name
-
-            message = message_temp.render(Context(context)) + message_link
-            messages.append((subject, message, settings.DEFAULT_FROM_EMAIL, [speaker.email]))
-
-    try:
-        send_mass_mail(messages, fail_silently=False)
-    except SMTPException:
-        logger.exception("Failed to send team points e-mails")
-        raise
-    except ConnectionError:
-        logger.exception("Connection error sending team points e-mails")
-        raise

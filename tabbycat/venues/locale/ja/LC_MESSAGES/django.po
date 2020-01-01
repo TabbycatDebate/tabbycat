@@ -1,44 +1,52 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-08 12:25+1000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-08-11 12:34\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Japanese\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/tabbycat/venues/locale/en/LC_MESSAGES/django.po\n"
 
 #: venues/apps.py:7
 msgid "Venues"
+msgstr "ラウンド部屋"
+
+#: venues/consumers.py:18
+msgid "Draw is already released, unrelease draw to assign venues."
+msgstr "対戦表が既に公開されています。試合の部屋を変更する場合は一度非公開にしてください。"
+
+#: venues/consumers.py:21
+msgid "Draw is not confirmed, confirm draw to assign venues."
+msgstr ""
+
+#: venues/consumers.py:28
+msgid "Succesfully auto-allocated venues to debates."
 msgstr ""
 
 #: venues/models.py:10 venues/models.py:74
 msgid "name"
-msgstr ""
+msgstr "名前"
 
 #: venues/models.py:12 venues/models.py:128
 msgid "priority"
-msgstr ""
+msgstr "優先度"
 
 #: venues/models.py:13
-msgid ""
-"Venues with a higher priority number will be preferred when allocating "
-"venues to debates"
+msgid "Venues with a higher priority number will be preferred when allocating venues to debates"
 msgstr ""
 
 #: venues/models.py:16
 msgid "tournament"
-msgstr ""
+msgstr "大会"
 
 #: venues/models.py:17
 msgid "Venues not assigned to any tournament can be shared between tournaments"
@@ -46,11 +54,11 @@ msgstr ""
 
 #: venues/models.py:24
 msgid "venue"
-msgstr ""
+msgstr "ラウンド部屋"
 
 #: venues/models.py:25 venues/models.py:84
 msgid "venues"
-msgstr ""
+msgstr "ラウンド部屋"
 
 #: venues/models.py:69
 msgid "Don't display in venue name"
@@ -65,10 +73,7 @@ msgid "Display as suffix"
 msgstr ""
 
 #: venues/models.py:75
-msgid ""
-"Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room"
-"\". This name is shown when the category is prefixed or suffixed to a venue "
-"name in the draw, e.g., \"Purple – G05\"."
+msgid "Name of category, e.g., \"Purple\", \"Step-free access\", \"Close to tab room\". This name is shown when the category is prefixed or suffixed to a venue name in the draw, e.g., \"Purple – G05\"."
 msgstr ""
 
 #: venues/models.py:79
@@ -76,10 +81,7 @@ msgid "description"
 msgstr ""
 
 #: venues/models.py:80
-msgid ""
-"Description, as the predicate of a sentence, e.g. \"has step-free access\", "
-"\"is close to the briefing hall\". This description follows \"This venue\" "
-"when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
+msgid "Description, as the predicate of a sentence, e.g. \"has step-free access\", \"is close to the briefing hall\". This description follows \"This venue\" when shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."
 msgstr ""
 
 #: venues/models.py:88
@@ -95,22 +97,20 @@ msgid "display in public tooltip"
 msgstr ""
 
 #: venues/models.py:92
-msgid ""
-"Displays the description in the tooltip for the venue on public pages. The "
-"description, if not blank, will always show on admin pages."
+msgid "Displays the description in the tooltip for the venue on public pages. The description, if not blank, will always show on admin pages."
 msgstr ""
 
 #: venues/models.py:96
 msgid "venue category"
-msgstr ""
+msgstr "ラウンド部屋カテゴリー"
 
 #: venues/models.py:97
 msgid "venue categories"
-msgstr ""
+msgstr "ラウンド部屋カテゴリー"
 
 #: venues/models.py:127
 msgid "category"
-msgstr ""
+msgstr "カテゴリー"
 
 #: venues/models.py:131
 msgid "subject content type"
@@ -128,24 +128,24 @@ msgstr ""
 msgid "venue constraints"
 msgstr ""
 
+#: venues/templates/legacy_edit_venues.html:5
+#: venues/templates/legacy_edit_venues.html:10
+#, python-format
+msgid "Edit Venues for %(round_abbr)s"
+msgstr ""
+
 #: venues/templates/venue_categories_edit.html:4
 #: venues/templates/venue_categories_edit.html:5
 msgid "Venue Categories"
 msgstr ""
 
 #: venues/templates/venue_categories_edit.html:9
-msgid ""
-"Venue categories allow you to group venues together into \"zones\" to "
-"display in the draw and make navigation easier for participants, and/or "
-"specify constraints on venue allocation that require teams, adjudicators or "
-"institutions to be put in a venue in a particular category."
+msgid "Venue categories allow you to group venues together into \"zones\" to display in the draw and make navigation easier for participants, and/or specify constraints on venue allocation that require teams, adjudicators or institutions to be put in a venue in a particular category."
 msgstr ""
 
 #: venues/templates/venue_categories_edit.html:14
 #, python-format
-msgid ""
-"If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" "
-"class=\"alert-link\">Edit Database</a> area."
+msgid "If you want to delete venue categories, use the <a href=\"%(edit_db_url)s\" class=\"alert-link\">Edit Database</a> area."
 msgstr ""
 
 #: venues/templates/venue_categories_edit.html:20
@@ -158,13 +158,7 @@ msgid "Venue Constraints"
 msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:9
-msgid ""
-"Venue constraints tell the venue allocator to try to keep the specified team "
-"or adjudicator, or all teams (but not adjudicators) from the specified "
-"institution, in a venue in the given category. The \"priority\" field "
-"resolves conflicting constraints: the higher priority takes precedence. You "
-"can also use the priority field to specify \"lower-preference\" constraints, "
-"which are taken if a higher-priority constraint couldn't be met."
+msgid "Venue constraints tell the venue allocator to try to keep the specified team or adjudicator, or all teams (but not adjudicators) from the specified institution, in a venue in the given category. The \"priority\" field resolves conflicting constraints: the higher priority takes precedence. You can also use the priority field to specify \"lower-preference\" constraints, which are taken if a higher-priority constraint couldn't be met."
 msgstr ""
 
 #: venues/templates/venue_constraints_edit.html:20
@@ -183,51 +177,51 @@ msgstr ""
 
 #: venues/utils.py:44
 #, python-format
-msgid ""
-"Venue constraint of %(team)s met (%(category)s, via institution "
-"%(institution)s)"
+msgid "Venue constraint of %(team)s met (%(category)s, via institution %(institution)s)"
 msgstr ""
 
 #: venues/utils.py:45
 #, python-format
-msgid ""
-"Venue does not meet any constraint of institution %(institution)s (%(team)s)"
+msgid "Venue does not meet any constraint of institution %(institution)s (%(team)s)"
 msgstr ""
 
-#: venues/views.py:110
+#: venues/views.py:31
+msgid "Edit Venues"
+msgstr ""
+
+#: venues/views.py:138
 #, python-format
 msgid "Saved venue category: %(list)s"
 msgid_plural "Saved venue categories: %(list)s"
 msgstr[0] ""
-msgstr[1] ""
 
-#: venues/views.py:116
+#: venues/views.py:144
 msgid "No changes were made to the venue categories."
 msgstr ""
 
-#: venues/views.py:168
+#: venues/views.py:196
 #, python-format
 msgid "%s (Adjudicator)"
-msgstr ""
+msgstr "%s（ジャッジ）"
 
-#: venues/views.py:171
+#: venues/views.py:199
 #, python-format
 msgid "%s (Team)"
-msgstr ""
+msgstr "%s（チーム）"
 
-#: venues/views.py:174
+#: venues/views.py:202
 #, python-format
 msgid "%s (Institution)"
-msgstr ""
+msgstr "%s（インスティチューション）"
 
-#: venues/views.py:177
+#: venues/views.py:205
 #, python-format
 msgid "%s (Division)"
 msgstr ""
 
-#: venues/views.py:185
+#: venues/views.py:213
 #, python-format
 msgid "Saved %(count)d venue constraint."
 msgid_plural "Saved %(count)d venue constraints."
 msgstr[0] ""
-msgstr[1] ""
+

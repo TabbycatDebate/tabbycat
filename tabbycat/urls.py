@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin, messages
-from django.contrib.auth.views import logout as auth_logout
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
@@ -61,7 +61,7 @@ urlpatterns = [
 
     # Accounts
     path('accounts/logout/',
-        auth_logout,
+        auth_views.LogoutView.as_view(),
         {'next_page': '/'},  # override to specify next_page
         name='logout'),
     path('accounts/',
@@ -71,9 +71,13 @@ urlpatterns = [
     path('<slug:tournament_slug>/',
         include('tournaments.urls')),
 
-    # Draws Cross Tournament
-    path('draw/',
-        include('draw.urls_crosst')),
+    # Notifications
+    path('notifications/',
+        include('notifications.urls')),
+
+    # API
+    path('api/v1/',
+        include('api.urls')),
 ]
 
 if settings.DEBUG and settings.ENABLE_DEBUG_TOOLBAR:  # Only serve debug toolbar when on DEBUG

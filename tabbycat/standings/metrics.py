@@ -8,20 +8,32 @@ context-specific files, e.g., teams.py or speakers.py.
 
 import logging
 
-from operator import itemgetter
-
 logger = logging.getLogger(__name__)
 
 
-def metricgetter(*items):
-    """Returns a callable object that fetches `item` from its operand's
-    `metrics` attribute. If multiple items are specified, returns a tuple.
+def metricgetter(items, negate=None):
+    """Returns a callable object that fetches each item in `items` from its
+    operand's `metrics` attribute, and returns a tuple containing the results.
+    The tuple will have the same number for elements as `items`.
+
     For example:
-     - After `f = metricgetter("a")`, the call `f(x)` returns `x.metrics["a"]`.
-     - After `g = metricgetter(4, 9)`, the call `g(x)` returns `(x.metrics[4], x.metrics[9])`.
+     - After `f = metricgetter(("a",))`, the call `f(x)` returns `(x.metrics["a"],)`.
+     - After `g = metricgetter((4, 9))`, the call `g(x)` returns `(x.metrics[4], x.metrics[9])`.
     """
-    metricitemgetter = itemgetter(*items)
-    return lambda x: metricitemgetter(x.metrics)
+
+    if negate is None:
+
+        def metricitemgetter(x):
+            return tuple(x.metrics[item] for item in items)
+
+    else:
+        assert len(items) == len(negate), "items had %d items but negate had %d" % (len(items), len(negate))
+        coeffs = [-1 if neg else 1 for neg in negate]
+
+        def metricitemgetter(x):
+            return tuple(coeff * x.metrics[item] for (coeff, item) in zip(coeffs, items))
+
+    return metricitemgetter
 
 
 class BaseMetricAnnotator:
@@ -88,7 +100,7 @@ class QuerySetMetricAnnotator(BaseMetricAnnotator):
     def get_annotated_queryset(self, queryset, column_name, round=None):
         """Returns a QuerySet annotated with the metric given."""
         annotation = self.get_annotation(round=round)
-        logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation.as_sql))
+        logger.info("Annotation in %s: %s", self.__class__.__name__, str(annotation))
         return queryset.annotate(**{column_name: annotation}).distinct()
 
     def annotate_with_queryset(self, queryset, standings, round=None):

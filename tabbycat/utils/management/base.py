@@ -125,21 +125,24 @@ class RoundCommand(TournamentCommand):
 
     def add_arguments(self, parser):
         super(RoundCommand, self).add_arguments(parser)
-        rounds_group = parser.add_argument_group(
-            "round selection",
-            "Options to select rounds on which to run command. "
-            "Every option adds the associated round(s); duplicates are not filtered out. So, for example, "
+
+        group_description = "Options to select rounds on which to run command."
+        if not self.confirm_round_destruction:
+            group_description += (" Every option adds the associated round(s); "
+            "duplicates are not filtered out. So, for example, "
             "'--all-rounds 2' will run on round 2 twice.")
+
+        rounds_group = parser.add_argument_group("round selection", group_description)
         rounds_group.add_argument(
             "round_selection",
             type=str,
             nargs='+' if self.rounds_required else '*',
             metavar="round",
-            help="Seq numbers (if integers) or abbreviations (if not "
-            "integers) of rounds. Multiple rounds can be specified. If a "
-            "round's abbreviation is an integer, only its seq number may be "
-            "used. If multiple tournaments are specified, the rounds must "
-            "exist in every tournament.")
+            help="Seq numbers (if integers) or abbreviations (if not integers) "
+            "of rounds. Multiple rounds can be specified. If a round's "
+            "abbreviation is an integer, only its seq number may be used. If "
+            "multiple tournaments are specified, the rounds must exist in "
+            "every tournament.")
 
         if self.confirm_round_destruction:
             rounds_group.add_argument(
@@ -147,9 +150,9 @@ class RoundCommand(TournamentCommand):
                 type=str,
                 nargs='+',
                 metavar="ROUND",
-                help="If specified with "
-                "the same arguments as the positional arguments and in the same order, the user confirmation "
-                "prompt will be skipped.")
+                help="If specified with the same arguments as the positional "
+                "arguments and in the same order, the user confirmation prompt "
+                "will be skipped.")
         else:
             rounds_group.add_argument(
                 "--all-rounds",

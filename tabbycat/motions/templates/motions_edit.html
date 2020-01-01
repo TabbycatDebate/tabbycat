@@ -17,12 +17,6 @@
   <a class="btn btn-outline-primary " href="{% roundurl 'draw-display' %}">
     <i data-feather="chevron-left"></i> {% trans "Display Draw" %}
   </a>
-
-  {% if pref.enable_division_motions %}
-    <a href="{% roundurl 'motions_assign' %}" class="btn btn-primary">
-      {% trans "Assign Motions to Divisions" %}
-    </a>
-  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -68,19 +62,3 @@
   </form>
 
 {% endblock content %}
-
-{% block js %}
-  {{ block.super }}
-  <script>
-
-    $(document).ready( function() {
-      $(window).keydown( function(e){
-        if(e.keyCode == 13) {
-          e.preventDefault();
-          return false;
-        }
-      } );
-    } );
-
-  </script>
-{% endblock js %}

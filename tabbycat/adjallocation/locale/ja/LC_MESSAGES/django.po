@@ -1,214 +1,450 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-08 12:25+1000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-09-07 09:07\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Japanese\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/tabbycat/adjallocation/locale/en/LC_MESSAGES/django.po\n"
 
-#: adjallocation/allocator.py:31
-msgid ""
-"There are no available adjudicators. Ensure there are adjudicators who have "
-"been marked as available for this round before auto-allocating."
-msgstr ""
+#: adjallocation/allocators/base.py:34
+msgid "There are no available adjudicators. Ensure there are adjudicators who have been marked as available for this round before auto-allocating."
+msgstr "使えるジャッジがいません。このラウンドの自動配置をする前に配配置可能なジャッジがいることを確認してください！"
+
+#: adjallocation/allocators/hungarian.py:52
+#, python-format
+msgid "%(count)s normalised score is larger than 5.0."
+msgid_plural "%(count)s normalised scores are larger than 5.0."
+msgstr[0] "%(count)s のスコアは5.0より高いです。"
+
+#: adjallocation/allocators/hungarian.py:60
+#, python-format
+msgid "%(count)s normalised scores are smaller than 0.0."
+msgstr "%(count)s のスコアが0.0未満です"
+
+#: adjallocation/allocators/hungarian.py:109
+msgid "There are no adjudicators eligible to be a chair or panellist. Try changing the \"Minimum feedback score required to be allocated as chair or panellist\" setting to something lower than at least some adjudicators' current scores, and try again."
+msgstr "チェア又はパネルに割り当てられるジャッジがいません。\n"
+"設定から「チェア又はパネルに配置するのに必要なスコアの最低値」を引き下げ、現在のジャッジのスコアより最低限下回るように変更してから、もう一度お試しください。"
+
+#: adjallocation/allocators/hungarian.py:117
+msgid "There are no debates for this round. Maybe you haven't created a draw yet?"
+msgstr "このラウンドにはディベーターがいません。ひょっとしたら、対戦表をまだ作っていないかもしれません！"
+
+#: adjallocation/allocators/hungarian.py:164
+#, python-format
+msgid "There are %(debate_count)s debates but only %(adj_count)s voting adjudicators."
+msgstr "ディベート部屋が %(debate_count)s つありますが、 %(adj_count)s 人のジャッジしか投票できません。"
+
+#: adjallocation/allocators/hungarian.py:172
+#, python-format
+msgid "There are %(panel_debates)s panel debates but only %(panellists)s available panellists (less than %(needed)s)."
+msgstr "%(panel_debates)s つのパネル部屋がありますが、 %(panellists)s 人のパネル( %(needed)s 以下)しかいません。"
+
+#: adjallocation/allocators/hungarian.py:282
+#, python-format
+msgid "There are %(debates_count)s debates but only %(voting_count)s voting adjudicators."
+msgstr "%(debates_count)s 人のディベーターがいますが、%(voting_count)s 人のジャッジしか投票できません。"
 
 #: adjallocation/apps.py:7
 msgid "Adjudicator Allocation"
-msgstr ""
+msgstr "ジャッジ配置"
 
-#: adjallocation/hungarian.py:98
-msgid ""
-"There are no adjudicators eligible to be a chair or panellist. This usually "
-"means that you need to go to the Draw Rules section of the Configuration "
-"area and decrease the \"Minimum adjudicator score to vote\" setting in order "
-"to allow some adjudicators to be allocated."
-msgstr ""
+#: adjallocation/consumers.py:58 adjallocation/views.py:251
+msgid "Draw is already released, unrelease draw to redo auto-allocations."
+msgstr "対戦表が既に公開されてしまっています。ジャッジの自動配置を再度行う場合は一度対戦表を非公開に戻してください。"
 
-#: adjallocation/hungarian.py:106
-msgid ""
-"There are no debates for this round. Maybe you haven't created a draw yet?"
-msgstr ""
+#: adjallocation/consumers.py:62 adjallocation/views.py:255
+msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+msgstr "対戦表が確定されていません。ジャッジの自動配置を行うために対戦表を確定させてください。"
+
+#: adjallocation/consumers.py:69
+msgid "There are no preformed panels available to allocate."
+msgstr "配置できるジャッジが用意されていません。"
+
+#: adjallocation/consumers.py:105
+msgid "Succesfully auto-allocated preformed panels to debates."
+msgstr "事前に用意されたパネルジャッジをディベートに自動で配置することに成功しました。"
+
+#: adjallocation/consumers.py:107
+msgid "Succesfully auto-allocated adjudicators to debates."
+msgstr "ジャッジを自動で配置することに成功しました。"
+
+#: adjallocation/consumers.py:109
+msgid " However there was a warning:"
+msgstr " ただし警告があります。"
+
+#: adjallocation/consumers.py:123
+msgid "There aren't any panels to fill. Create panels first."
+msgstr "パネルがいません。まずパネルを作成してください。"
+
+#: adjallocation/consumers.py:144
+msgid "Succesfully auto-allocated adjudicators to preformed panels."
+msgstr "ジャッジを自動で事前に用意されたパネルの枠に配置することに成功しました。"
+
+#: adjallocation/consumers.py:146
+msgid "However there was a warning:"
+msgstr "ただし警告があります。"
+
+#: adjallocation/consumers.py:193
+msgid "You have no break category set as 'is general' so debate importances can't be calculated."
+msgstr "「一般」として設定されたブレイクカテゴリーがないため、ディベートの重要度を計算できません。"
+
+#: adjallocation/consumers.py:201
+msgid "Succesfully auto-prioritised debates."
+msgstr "ディベートの優先度の自動設定に成功しました。"
+
+#: adjallocation/consumers.py:223
+msgid "You have no break category set as 'is general' so panel importances can't be calculated."
+msgstr "「一般」として設定されたブレイクカテゴリーがないため、パネルの重要度を計算できません。"
+
+#: adjallocation/consumers.py:232
+msgid "Succesfully auto-prioritised preformed panels."
+msgstr "用意されたパネル枠の優先度の自動設定に成功しました。"
+
+#: adjallocation/consumers.py:250
+msgid "Since this is the first round, the preformed panels aren't annotated with brackets and liveness."
+msgstr "これが初戦のため、用意されたパネル枠には勝ち点や生存度で注釈をつけることができません。"
+
+#: adjallocation/consumers.py:253
+msgid "The previous round's draw doesn't exist, so preformed panels can't be annotated with brackets and liveness."
+msgstr "1つ前の試合は対戦表がまだないため、用意されたパネル枠には勝ち点や生存度で注釈をつけることができません。"
+
+#: adjallocation/consumers.py:256
+msgid "Succesfully created new preformed panels for this round."
+msgstr "このラウンドに新しくパネル枠を作ることに成功しました。"
 
 #: adjallocation/models.py:18
 msgid "chair"
-msgstr ""
+msgstr "チェア"
 
 #: adjallocation/models.py:19
 msgid "panellist"
-msgstr ""
+msgstr "パネル"
 
 #: adjallocation/models.py:20
 msgid "trainee"
-msgstr ""
+msgstr "トレイニー"
 
 #: adjallocation/models.py:26
 msgid "debate"
-msgstr ""
+msgstr "ディベート"
 
-#: adjallocation/models.py:28 adjallocation/models.py:44
-#: adjallocation/models.py:74
+#: adjallocation/models.py:28 adjallocation/models.py:48
+#: adjallocation/models.py:80 adjallocation/models.py:169
 msgid "adjudicator"
-msgstr ""
+msgstr "ジャッジ"
 
-#: adjallocation/models.py:30
+#: adjallocation/models.py:30 adjallocation/models.py:171
 msgid "type"
-msgstr ""
+msgstr "タイプ"
 
 #: adjallocation/models.py:31
 msgid "available?"
-msgstr ""
+msgstr "有効ですか？"
 
 #: adjallocation/models.py:34
 msgid "debate adjudicator"
-msgstr ""
+msgstr "ディベートのジャッジ"
 
 #: adjallocation/models.py:35
 msgid "debate adjudicators"
-msgstr ""
+msgstr "ディベートのジャッジ"
 
-#: adjallocation/models.py:46
+#: adjallocation/models.py:50 adjallocation/models.py:95
 msgid "team"
-msgstr ""
+msgstr "チーム"
 
-#: adjallocation/models.py:49
+#: adjallocation/models.py:53
 msgid "adjudicator-team conflict"
-msgstr ""
+msgstr "ジャッジ・チーム間コンフリクト"
 
-#: adjallocation/models.py:50
+#: adjallocation/models.py:54
 msgid "adjudicator-team conflicts"
-msgstr ""
-
-#: adjallocation/models.py:59
-msgid "adjudicator 1"
-msgstr ""
-
-#: adjallocation/models.py:61
-msgid "adjudicator 2"
-msgstr ""
+msgstr "ジャッジ・チーム間コンフリクト"
 
 #: adjallocation/models.py:64
+msgid "adjudicator 1"
+msgstr "ジャッジ１"
+
+#: adjallocation/models.py:67
+msgid "adjudicator 2"
+msgstr "ジャッジ２"
+
+#: adjallocation/models.py:70
 msgid "adjudicator-adjudicator conflict"
-msgstr ""
+msgstr "ジャッジ間コンフリクト"
 
-#: adjallocation/models.py:65
+#: adjallocation/models.py:71
 msgid "adjudicator-adjudicator conflicts"
-msgstr ""
+msgstr "ジャッジ間コンフリクト"
 
-#: adjallocation/models.py:76
+#: adjallocation/models.py:82 adjallocation/models.py:97
 msgid "institution"
-msgstr ""
+msgstr "インスティチューション"
 
-#: adjallocation/models.py:79
+#: adjallocation/models.py:85
 msgid "adjudicator-institution conflict"
-msgstr ""
+msgstr "ジャッジ・インスティチューション間のコンフリクト"
 
-#: adjallocation/models.py:80
+#: adjallocation/models.py:86
 msgid "adjudicator-institution conflicts"
+msgstr "ジャッジ・インスティチューション間のコンフリクト"
+
+#: adjallocation/models.py:100
+msgid "team-institution conflict"
+msgstr "チーム・大学（または団体）間のコンフリクト"
+
+#: adjallocation/models.py:101
+msgid "team-institution conflicts"
+msgstr "チーム・大学（または団体）間のコンフリクト"
+
+#: adjallocation/models.py:114
+msgid "round"
+msgstr "ラウンド"
+
+#: adjallocation/models.py:116
+msgid "importance"
+msgstr "重要度"
+
+#: adjallocation/models.py:119
+msgid "minimum bracket"
+msgstr "勝ち点が同数のグループの最低数"
+
+#: adjallocation/models.py:120
+msgid "Estimate of the lowest bracket for which this panel might be"
 msgstr ""
 
-#: adjallocation/templates/edit_adjudicators.html:11
+#: adjallocation/models.py:122
+msgid "maximum bracket"
+msgstr "勝ち点が同数のグループの最大数"
+
+#: adjallocation/models.py:123
+msgid "Estimate of the highest bracket for which this panel might be"
+msgstr ""
+
+#: adjallocation/models.py:125
+msgid "room rank"
+msgstr "部屋の順位"
+
+#: adjallocation/models.py:126
+msgid "Sequential number of panel, not used in any algorithms"
+msgstr ""
+
+#: adjallocation/models.py:128
+msgid "liveness"
+msgstr "生存度"
+
+#: adjallocation/models.py:129
+msgid "Number of categories this room is expected to be live for"
+msgstr ""
+
+#: adjallocation/models.py:132
+msgid "preformed panel"
+msgstr ""
+
+#: adjallocation/models.py:133
+msgid "preformed panels"
+msgstr ""
+
+#: adjallocation/models.py:167
+msgid "panel"
+msgstr "パネルジャッジ"
+
+#: adjallocation/models.py:174
+msgid "preformed panel adjudicator"
+msgstr ""
+
+#: adjallocation/models.py:175
+msgid "preformed panel adjudicators"
+msgstr ""
+
+#: adjallocation/preformed/base.py:41
+msgid "There are no preformed panels to use. Have you allocated preformed panels for this round? If not, try just auto-allocating adjudicators instead."
+msgstr ""
+
+#: adjallocation/templates/legacy_edit_adjudicators.html:11
 #, python-format
 msgid "Edit Adjudicators for %(round_abbr)s"
 msgstr ""
 
-#: adjallocation/views.py:140
-msgid "Draw is already released, unrelease draw to redo auto-allocations."
+#: adjallocation/templates/preformed_index.html:5 adjallocation/views.py:137
+msgid "Preformed Panels"
 msgstr ""
 
-#: adjallocation/views.py:144
-msgid "Draw is not confirmed, confirm draw to run auto-allocations."
+#: adjallocation/templates/preformed_index.html:10
+msgid "A preformed panel is a defined group of adjudicators that is specified for a round before its draw has been generated. You can then manually or automatically apply these panels during the normal adjudicator allocation process. This can make allocations faster or allow you to create more considered panels of adjudicators."
 msgstr ""
 
-#: adjallocation/views.py:193
-msgid "Not all adjudicators specified are associated with the tournament."
+#: adjallocation/templates/preformed_index.html:16
+msgid "Note that only adjudicators who have been marked as 'available' for that round will be able to be allocated for that round, so you may need to set their availability in advance."
 msgstr ""
 
-#: adjallocation/views.py:259
-msgid "Adjudicator-Team Conflicts"
-msgstr ""
-
-#: adjallocation/views.py:260
-msgid "Save Adjudicator-Team Conflicts"
-msgstr ""
-
-#: adjallocation/views.py:271
+#: adjallocation/templates/preformed_index.html:37
 #, python-format
-msgid "Saved %(count)d adjudicator-team conflict."
-msgid_plural "Saved %(count)d adjudicator-team conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgid "Edit Preformed Panels for %(round_name)s"
+msgstr ""
 
-#: adjallocation/views.py:277
+#: adjallocation/utils.py:28
 #, python-format
-msgid "Deleted %(count)d adjudicator-team conflict."
-msgid_plural "Deleted %(count)d adjudicator-team conflicts."
-msgstr[0] ""
-msgstr[1] ""
-
-#: adjallocation/views.py:282
-msgid "No changes were made to adjudicator-team conflicts."
+msgid "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> (personal)"
 msgstr ""
 
-#: adjallocation/views.py:289
-msgid "Adjudicator-Adjudicator Conflicts"
+#: adjallocation/utils.py:34
+#, python-format
+msgid "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> via institution <strong>%(inst)s</strong>"
 msgstr ""
 
-#: adjallocation/views.py:290
-msgid "Save Adjudicator-Adjudicator Conflicts"
+#: adjallocation/utils.py:46
+#, python-format
+msgid "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> (personal)"
+msgstr ""
+
+#: adjallocation/utils.py:52
+#, python-format
+msgid "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> via institution <strong>%(inst)s</strong>"
+msgstr ""
+
+#: adjallocation/views.py:45
+msgid "Male"
+msgstr ""
+
+#: adjallocation/views.py:46
+msgid "Female"
+msgstr ""
+
+#: adjallocation/views.py:47
+msgid "Other"
+msgstr ""
+
+#: adjallocation/views.py:48
+msgid "Unknown"
+msgstr ""
+
+#: adjallocation/views.py:99
+msgid "Edit Allocation"
+msgstr ""
+
+#: adjallocation/views.py:114
+msgid "Edit Panels"
+msgstr ""
+
+#: adjallocation/views.py:120
+msgid "Return to Panels Overview"
 msgstr ""
 
 #: adjallocation/views.py:305
+msgid "Not all adjudicators specified are associated with the tournament."
+msgstr ""
+"ジャッジ全員が試合に配置されていません。試合に入っていないジャッジが存在しま"
+"す。"
+
+#: adjallocation/views.py:361
+msgid "Adjudicator-Team Conflicts"
+msgstr "ジャッジ・チーム間コンフリクト"
+
+#: adjallocation/views.py:362
+msgid "Save Adjudicator-Team Conflicts"
+msgstr "ジャッジ・チーム間のコンフリクトを保存する"
+
+#: adjallocation/views.py:387
+#, python-format
+msgid "Saved %(count)d adjudicator-team conflict."
+msgid_plural "Saved %(count)d adjudicator-team conflicts."
+msgstr[0] "%(count)d件のジャッジ・チーム間コンフリクトが保存されました。"
+
+#: adjallocation/views.py:393
+#, python-format
+msgid "Deleted %(count)d adjudicator-team conflict."
+msgid_plural "Deleted %(count)d adjudicator-team conflicts."
+msgstr[0] "%(count)d件のジャッジ・チーム間コンフリクトが削除されました。"
+
+#: adjallocation/views.py:398
+msgid "No changes were made to adjudicator-team conflicts."
+msgstr "ジャッジ・チーム間のコンフリクトに変更された点はありません。"
+
+#: adjallocation/views.py:405
+msgid "Adjudicator-Adjudicator Conflicts"
+msgstr "ジャッジ間コンフリクト"
+
+#: adjallocation/views.py:406
+msgid "Save Adjudicator-Adjudicator Conflicts"
+msgstr "ジャッジ間コンフリクトを保存する"
+
+#: adjallocation/views.py:427
 #, python-format
 msgid "Saved %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Saved %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d件のジャッジ間コンフリクトを保存されました。"
 
-#: adjallocation/views.py:311
+#: adjallocation/views.py:433
 #, python-format
 msgid "Deleted %(count)d adjudicator-adjudicator conflict."
 msgid_plural "Deleted %(count)d adjudicator-adjudicator conflicts."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d件のジャッジ間コンフリクトを削除されました。"
 
-#: adjallocation/views.py:316
+#: adjallocation/views.py:438
 msgid "No changes were made to adjudicator-adjudicator conflicts."
-msgstr ""
+msgstr "ジャッジ間コンフリクトに変更された点はありません。"
 
-#: adjallocation/views.py:323
+#: adjallocation/views.py:445
 msgid "Adjudicator-Institution Conflicts"
-msgstr ""
+msgstr "ジャッジ・インスティチューション間のコンフリクト"
 
-#: adjallocation/views.py:324
+#: adjallocation/views.py:446
 msgid "Save Adjudicator-Institution Conflicts"
-msgstr ""
+msgstr "ジャッジ・インスティチューション間のコンフリクトを保存する"
 
-#: adjallocation/views.py:332
+#: adjallocation/views.py:466
 #, python-format
 msgid "Saved %(count)d adjudicator-institution conflict."
 msgid_plural "Saved %(count)d adjudicator-institution conflicts."
 msgstr[0] ""
-msgstr[1] ""
+"%(count)d件のジャッジ・インスティチューション間のコンフリクトが保存されまし"
+"た。"
 
-#: adjallocation/views.py:338
+#: adjallocation/views.py:472
 #, python-format
 msgid "Deleted %(count)d adjudicator-institution conflict."
 msgid_plural "Deleted %(count)d adjudicator-institution conflicts."
 msgstr[0] ""
-msgstr[1] ""
+"%(count)d件のジャッジ・インスティチューション間のコンフリクトが削除されまし"
+"た。"
 
-#: adjallocation/views.py:343
+#: adjallocation/views.py:477
 msgid "No changes were made to adjudicator-institution conflicts."
+msgstr "ジャッジ・インスティチューション間のコンフリクトに変更された点はありません。"
+
+#: adjallocation/views.py:484
+msgid "Team-Institution Conflicts"
 msgstr ""
+
+#: adjallocation/views.py:485
+msgid "Save Team-Institution Conflicts"
+msgstr ""
+
+#: adjallocation/views.py:508
+#, python-format
+msgid "Saved %(count)d team-institution conflict."
+msgid_plural "Saved %(count)d team-institution conflicts."
+msgstr[0] ""
+
+#: adjallocation/views.py:514
+#, python-format
+msgid "Deleted %(count)d team-institution conflict."
+msgid_plural "Deleted %(count)d team-institution conflicts."
+msgstr[0] ""
+
+#: adjallocation/views.py:519
+msgid "No changes were made to team-institution conflicts."
+msgstr ""
+

@@ -2,16 +2,16 @@
 {% load debate_tags %}
 {% load add_field_css i18n %}
 
-{% block page-title %}Set Current Round{% endblock %}
+{% block page-title %}{% trans "Set Current Round" %}{% endblock %}
 {% block head-title %}
-  <span class="emoji">🙏</span>Set Current Round
+  <span class="emoji">🙏</span>{% trans "Set Current Round" %}
 {% endblock %}
 
 {% block page-subnav-sections %}
   {% if current_round %}
     <a class="btn btn-primary "
        href="{% tournamenturl 'options-tournament-index' %}">
-      <i data-feather="chevron-left"></i> Back to Configuration
+      <i data-feather="chevron-left"></i> {% trans "Back to Configuration" %}
     </a>
   {% endif %}
 {% endblock %}
@@ -46,7 +46,7 @@
   </div>
 {% endif %}
 
-{% if not object.round_set.exists %}
+{% if not tournament.round_set.exists %}
   <div class="alert alert-danger">
     <i data-feather="alert-circle"></i>
     {% url 'admin:tournaments_round_changelist' as round_changelist_url %}
@@ -66,19 +66,7 @@
 
       {% csrf_token %}
 
-      {% if form.errors %}
-        {% include "components/form-errors.html" with errors=form.non_field_errors %}
-      {% endif %}
-
-      <div class="form-group">
-        <label for="{{ form.current_round.id_for_label }}">
-          {{ form.current_round.label }}
-        </label>
-        {{ form.current_round|addcss:"form-control" }}
-        {{ form.current_round.errors }}
-      </div>
-
-      <input type="hidden" name="next" value="{{ next }}" />
+      {% include 'components/form-main.html' %}
 
       <button type="submit" class="btn btn-block btn-success form-control">
         {% trans "Set Current Round" %}
@@ -88,5 +76,27 @@
 
   </div>
 </div>
+
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+
+  <script>
+    $('#id_prelim').change(function () {
+      if ($('#id_prelim').val() == 'all-completed') {
+        $('select[id^=id_elim_]').prop('disabled', false);
+        $('select[id^=id_elim_] option:nth-child(2)').prop('selected', true);
+      } else {
+        $('select[id^=id_elim_]').prop('disabled', true);
+        $('select[id^=id_elim_] option:nth-child(1)').prop('selected', true);
+      }
+    });
+
+    // disable elimination round fields if preliminary rounds are complete
+    $(document).ready(function () {
+      $('select[id^=id_elim_]').prop('disabled', $('#id_prelim').val() != 'all-completed');
+    });
+  </script>
 
 {% endblock %}

@@ -3,4 +3,4 @@ set -eo pipefail
 
 npm run build
 cd ./tabbycat/
-daphne -p 8001 asgi:application
+uvicorn asgi:application --port 8000

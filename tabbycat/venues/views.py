@@ -1,86 +1,48 @@
-import json
 import logging
 
 from django.contrib import messages
 from django.db.models import Q
 from django.forms import Select
-from django.utils.translation import ngettext
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
-from tournaments.mixins import DrawForDragAndDropMixin, TournamentMixin
-from tournaments.models import Round
-from tournaments.views import BaseSaveDragAndDropDebateJsonView
+from availability.utils import annotate_availability
+from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from utils.forms import SelectPrepopulated
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import BadJsonRequestError, JsonDataResponsePostView, ModelFormSetView
+from utils.views import ModelFormSetView
 
-from .allocator import allocate_venues
 from .forms import venuecategoryform_factory
 from .models import Venue, VenueCategory, VenueConstraint
+from .serializers import EditDebateVenuesDebateSerializer, EditDebateVenuesVenueSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class VenueAllocationMixin(DrawForDragAndDropMixin, AdministratorMixin):
+class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
+    template_name = "edit_debate_venues.html"
+    page_title = gettext_lazy("Edit Venues")
+    prefetch_venues = False # Fetched in full as get_serialised
 
-    def get_unallocated_venues(self):
-        unused_venues = self.round.unused_venues().prefetch_related('venuecategory_set')
-        return json.dumps([v.serialize() for v in unused_venues])
+    def debates_or_panels_factory(self, debates):
+        return EditDebateVenuesDebateSerializer(
+            debates, many=True, context={'sides': self.tournament.sides})
 
+    def get_serialised_allocatable_items(self):
+        venues = Venue.objects.filter(tournament=self.tournament).prefetch_related('venuecategory_set')
+        venues = annotate_availability(venues, self.round)
+        serialized_venues = EditDebateVenuesVenueSerializer(venues, many=True)
+        return self.json_render(serialized_venues.data)
 
-class EditVenuesView(VenueAllocationMixin, TemplateView):
-
-    template_name = "edit_venues.html"
-    auto_url = "venues-auto-allocate"
-    save_url = "save-debate-venues"
-
-    def get_context_data(self, **kwargs):
-        vcs = VenueConstraint.objects.prefetch_related('subject')
-        kwargs['vueVenueConstraints'] = json.dumps([vc.serialize() for vc in vcs])
-        kwargs['vueUnusedVenues'] = self.get_unallocated_venues()
-        return super().get_context_data(**kwargs)
-
-
-class AutoAllocateVenuesView(VenueAllocationMixin, LogActionMixin, JsonDataResponsePostView):
-
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_AUTOALLOCATE
-    round_redirect_pattern_name = 'venues-edit'
-
-    def post_data(self):
-        self.log_action()
-        if self.round.draw_status == Round.STATUS_RELEASED:
-            info = "Draw is already released, unrelease draw to redo auto-allocations."
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-        if self.round.draw_status != Round.STATUS_CONFIRMED:
-            info = "Draw is not confirmed, confirm draw to run auto-allocations."
-            logger.warning(info)
-            raise BadJsonRequestError(info)
-
-        allocate_venues(self.round)
-        return {
-            'debates': self.get_draw(),
-            'unallocatedVenues': self.get_unallocated_venues()
-        }
-
-
-class SaveVenuesView(BaseSaveDragAndDropDebateJsonView):
-    action_log_type = ActionLogEntry.ACTION_TYPE_VENUES_SAVE
-
-    def get_moved_item(self, id):
-        return Venue.objects.get(pk=id)
-
-    def modify_debate(self, debate, posted_debate):
-        if posted_debate['venue']:
-            debate.venue = Venue.objects.get(pk=posted_debate['venue']['id'])
-        else:
-            debate.venue = None
-        debate.save()
-        return debate
+    def get_extra_info(self):
+        info = super().get_extra_info()
+        info['highlights']['priority'] = [] # TODO - venue priority range
+        info['highlights']['category'] = [] # TODO - venue category
+        info['highlights']['break'] = [] # TODO
+        return info
 
 
 class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, ModelFormSetView):
@@ -99,14 +61,20 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
     def get_formset(self):
         formset = super().get_formset()
         # Show relevant venues; not all venues
-        venues = self.get_tournament().relevant_venues.all()
+        venues = self.tournament.relevant_venues.all()
         for form in formset:
             form.fields['venues'].queryset = venues
         return formset
 
+    def get_formset_queryset(self):
+        return self.tournament.venuecategory_set.all()
+
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
+        self.instances = formset.save(commit=False)
         if self.instances:
+            for category in self.instances:
+                category.tournament = self.tournament
+
             message = ngettext("Saved venue category: %(list)s",
                 "Saved venue categories: %(list)s",
                 len(self.instances)
@@ -114,9 +82,10 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
             messages.success(self.request, message)
         else:
             messages.success(self.request, _("No changes were made to the venue categories."))
+
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.tournament)
-        return result
+        return super().formset_valid(formset)
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)
@@ -152,10 +121,7 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
         # Show relevant venue constraints; not all venue constraints
         q = Q(adjudicator__isnull=False, adjudicator__tournament=self.tournament)
         q |= Q(team__isnull=False, team__tournament=self.tournament)
-        q |= Q(division__isnull=False, division__tournament=self.tournament)
         q |= Q(institution__isnull=False)
-        if self.tournament.pref('share_adjs'):
-            q |= Q(adjudicator__isnull=False, adjudicator__tournament__isnull=True)
 
         return VenueConstraint.objects.filter(q)
 
@@ -172,9 +138,6 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
 
         institutions = Institution.objects.values('id', 'name')
         options.extend([(i['id'], _('%s (Institution)') % i['name']) for i in institutions])
-
-        divisions = self.tournament.division_set.values('id', 'name')
-        options.extend([(d['id'], _('%s (Division)') % d['name']) for d in divisions])
 
         return sorted(options, key=lambda x: x[1])
 

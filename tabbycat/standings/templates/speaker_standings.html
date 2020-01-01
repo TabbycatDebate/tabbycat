@@ -1,7 +1,23 @@
 {% extends "standings_table.html" %}
 {% load debate_tags i18n %}
 
+{# Note: This template is only used for admins (not public views of the tab). #}
+
 {% block page-alerts %}
+
+  {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
+
+  {% if pref.speaker_standings_precedence|length == 0 %}
+    {% blocktrans trimmed asvar message %}
+      The speaker standings precedence is empty. This means that speakers aren't
+      ranked according to any metrics, so everyone is first equal. If this isn't
+      what you intended, set the speaker standings precedence in the
+      <a href="{{ standings_config_url }}" class="alert-link">Standings section
+      of this tournament's configuration</a>. In most
+      tournaments, the first metric should be total or average.
+    {% endblocktrans %}
+    {% include "components/alert.html" with type="warning" icon="alert-circle" %}
+  {% endif %}
 
   {% if pref.speaker_standings_precedence.0 == 'average' %}
     {% trans "Speakers are ranked by their <strong>average score</strong>." as p1 %}
@@ -12,7 +28,7 @@
     {% endblocktrans %}
   {% endif %}
 
-  {% if pref.standings_missed_debates > 0 %}
+  {% if pref.standings_missed_debates >= 0 %}
     {% blocktrans trimmed with count=pref.standings_missed_debates asvar p2 %}
       Speakers can miss up to {{ count }} debates before they are omitted from
       the speaker tab.
@@ -21,7 +37,6 @@
     {% trans "All speakers appear in these standings, no matter how many debates they've missed." as p2 %}
   {% endif %}
 
-  {% tournamenturl 'options-tournament-section' section='standings' as standings_config_url %}
   {% blocktrans trimmed asvar p3 %}
     These settings can be changed in the
     <a href="{{ standings_config_url }}" class="alert-link">Standings section
@@ -29,7 +44,7 @@
   {% endblocktrans %}
   {% include "components/explainer-card.html" with type="info" %}
 
-  {% if 'count' not in pref.speaker_standings_precedence and 'count' not in pref.speaker_standings_extra_metrics and pref.standings_missed_debates > 0 %}
+  {% if 'count' not in pref.speaker_standings_precedence and 'count' not in pref.speaker_standings_extra_metrics and pref.standings_missed_debates >= 0 %}
     {% blocktrans trimmed asvar message %}
       Enforcing the limit on the number of missed debates requires the "number
       of speeches given" metric to be included in the speaker standings

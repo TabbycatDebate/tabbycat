@@ -7,9 +7,6 @@ urlpatterns = [
         path('edit/',
             views.EditMotionsView.as_view(),
             name='motions-edit'),
-        path('assign/',
-            views.AssignMotionsView.as_view(),
-            name='motions_assign'),
         path('release/',
             views.ReleaseMotionsView.as_view(),
             name='motions-release'),
@@ -19,6 +16,11 @@ urlpatterns = [
         path('display/',
             views.AdminDisplayMotionsView.as_view(),
             name='motions-display'),
+
+        # Email
+        path('email/',
+            views.EmailMotionReleaseView.as_view(),
+            name='motions-email'),
     ])),
 
     path('statistics/',

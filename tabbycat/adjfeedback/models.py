@@ -8,7 +8,7 @@ from adjallocation.models import DebateAdjudicator
 from results.models import Submission
 
 
-class AdjudicatorTestScoreHistory(models.Model):
+class AdjudicatorBaseScoreHistory(models.Model):
     adjudicator = models.ForeignKey('participants.Adjudicator', models.CASCADE,
         verbose_name=_("adjudicator"))
     # cascade to avoid ambiguity, null round indicates beginning of tournament
@@ -18,8 +18,8 @@ class AdjudicatorTestScoreHistory(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("timestamp"))
 
     class Meta:
-        verbose_name = _("adjudicator test score history")
-        verbose_name_plural = _("adjudicator test score histories")
+        verbose_name = _("adjudicator base score history")
+        verbose_name_plural = _("adjudicator base score histories")
 
     def __str__(self):
         return "{.name:s} ({:.1f}) in {!s}".format(self.adjudicator, self.score, self.round)
@@ -155,7 +155,7 @@ class AdjudicatorFeedbackQuestion(models.Model):
     # We can't insert the CHOICE_SEPARATOR using string formatting because the below must be
     # translated lazily, and string formatting isn't compatible with lazy objects. (It can be
     # done with django.utils.text.format_lazy(), but this uses {}-style formating, not %-style.)
-    choices = models.CharField(max_length=500, blank=True,
+    choices = models.TextField(blank=True,
         verbose_name=_("choices"),
         help_text=_("Permissible choices for select one/multiple fields, separated by '//' "
                     "(ignored for other fields)"))
@@ -279,7 +279,7 @@ class AdjudicatorFeedback(Submission):
             raise ValidationError(
                 gettext("There was both a source adjudicator and a source team."))
         if not self.adjudicator:
-            raise ValidationError(gettext("There is no adjudicator specified as the target for this feedback.Perhaps they were deleted?"))
+            raise ValidationError(gettext("There is no adjudicator specified as the target for this feedback. Perhaps they were deleted?"))
         if self.adjudicator not in self.debate.adjudicators:
             raise ValidationError(gettext("Adjudicator did not see this debate."))
         return super(AdjudicatorFeedback, self).clean()

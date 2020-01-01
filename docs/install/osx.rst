@@ -21,7 +21,7 @@ Every line in the instructions that begins with ``$`` is a command that you need
 .. admonition:: Advanced users
   :class: tip
 
-  Tabbycat is a `Django <https://www.djangoproject.com/>`_ project, so can be installed in any manner that Django projects can normally be installed. For example, if you prefer some SQL system other than PostgreSQL, you can use it so long as it's Django-compatible. Just be aware that we haven't tried it.
+  If you wish to use an SQL engine other that PostgreSQL, most of Tabbycat should work, but a few features rely on SQL functions that aren't supported by all engines. To configure Tabbycat to use a different engine, set the ``DATABASES`` `Django setting <https://docs.djangoproject.com/en/2.2/ref/settings/#databases>`_ accordingly.
 
 1. Install dependencies
 ================================================================================
@@ -30,14 +30,14 @@ First, you need to install all of the software on which Tabbycat depends, if you
 
 1(a). Python
 --------------------------------------------------------------------------------
-Tabbycat requires Python 3.5 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
+Tabbycat requires Python 3.6 or later. macOS only comes with Python 2.7, so you'll need to install this. You can download the latest version from the `Python website <https://www.python.org/downloads/>`_.
 
 The executable will probably be called ``python3``, rather than ``python``. Check::
 
     $ python3 --version
-    Python 3.5.2
+    Python 3.6.8
 
-.. warning:: Tabbycat does not support Python 2. You must use Python 3.5 or later.
+.. warning:: Tabbycat does not support Python 2. You must use Python 3.6 or later.
 
 .. admonition:: Advanced users
   :class: tip
@@ -75,7 +75,7 @@ c. Extract all files in it to a folder of your choice.
 3. Set up a new database
 ================================================================================
 
-.. hint:: You can skip steps 1-3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
+.. hint:: You can skip steps 1--3 if this is not your first installation. Every Tabbycat installation requires its own database, but they can use the same login role if you like.
 
 a. Open up a copy of the Terminal app, then copy/paste or type in::
 
@@ -105,7 +105,7 @@ a. Navigate to your Tabbycat directory::
 
     $ cd path/to/my/tabbycat/directory
 
-b. Copy **local_settings.example** to **local_settings.py**. Find this part in your new local_settings.py, and fill in the blanks as indicated:
+b. Copy **settings/local.example** to **settings/local.py**. Find this part in your new **local.py**, and fill in the blanks as indicated:
 
   .. code:: python
 
@@ -124,7 +124,7 @@ b. Copy **local_settings.example** to **local_settings.py**. Find this part in y
 
     TIME_ZONE = 'Australia/Melbourne'
 
-c. Start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
+c. Ensure you are in the main Tabbycat directory (not the config folder where **settings_local.py** is and start a new virtual environment. We suggest the name ``venv``, though it can be any name you like::
 
     $ python3 -m venv venv
 
@@ -135,7 +135,7 @@ d. Run the ``activate`` script. This puts you "into" the virtual environment::
 e. Install Tabbycat's requirements into your virtual environment::
 
     $ pip install --upgrade pip
-    $ pip install -r requirements_common.txt
+    $ pip install -r ./config/requirements_core.txt
     $ npm install
 
 f. Navigate to the **tabbycat** sub folder, initialize the database, compile the assets, and create a user account for yourself::

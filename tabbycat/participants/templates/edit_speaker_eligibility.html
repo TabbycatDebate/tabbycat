@@ -18,6 +18,7 @@
                                :categories=categories
                                :urls=urls
                                :navigation=navigation
+                               :hide-auto-save=hideAutoSave
                                orientation={{ tables_orientation|safe }} >
     </checkbox-tables-container>
   </div>
@@ -31,6 +32,7 @@
       tablesData: {% if tables_data %}{{ tables_data|safe }}{% else %}null{% endif %},
       categories: {{ speaker_categories|safe }},
       urls: { 'save': "{% tournamenturl 'participants-speaker-update-eligibility' %}" },
+      hideAutoSave: false,
       navigation: [
         { title: 'Participants List',
           url: "{% tournamenturl 'participants-list' %}" },

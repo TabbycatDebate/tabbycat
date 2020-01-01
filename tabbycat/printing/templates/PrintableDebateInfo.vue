@@ -8,64 +8,78 @@
         <div>
 
           <span v-if="ballot.debateAdjudicators && ballot.debateAdjudicators.length > 1">
-            Adjudicating with
-            <span v-for="(da, i) in panellistsExcludingSelf">
-              <template v-if="i !== 0">&amp;</template>
-              <strong>{{ da.adjudicator.name }}</strong>
-              <template v-if="da.position === 'c'">(Chair, </template>
-              <template v-if="da.position === 'o'">(Solo Chair, </template>
-              <template v-if="da.position === 'p'">(Panellist, </template>
-              <template v-if="da.position === 't'">(Trainee, </template>
-              {{ getAdjudicatorInstitution(da) }})
-            </span>
+            {{ panellistsAsString }}
           </span>
 
-          <span v-if="showScoring">
-            Mark speeches
-            {{ scoreDisplay(roundInfo.substantiveMin) }}
-            to {{ scoreDisplay(roundInfo.substantiveMax) }};
-            <strong>{{ getDisplayStep(roundInfo.substantiveStep) }}</strong>.
-          </span>
+          <span v-if="showScoring"
+                v-html="tct('Mark speeches %s to %s; <strong>%s</strong>.',
+                        [scoreDisplay(roundInfo.substantiveMin),
+                         scoreDisplay(roundInfo.substantiveMax),
+                         getDisplayStep(roundInfo.substantiveStep)])"></span>
 
-          <span v-if="showScoring && roundInfo.hasReplies">
-            Mark replies {{ scoreDisplay(roundInfo.replyMin) }}
-            to {{ scoreDisplay(roundInfo.replyMax) }};
-            <strong>{{ getDisplayStep(roundInfo.replyStep) }}</strong>.
-          </span>
+          <span v-if="showScoring && roundInfo.hasReplies"
+                v-html="tct('Mark replies %s to %s; <strong>%s</strong>.',
+                        [scoreDisplay(roundInfo.replyMin),
+                         scoreDisplay(roundInfo.replyMax),
+                         getDisplayStep(roundInfo.replyStep)])"></span>
 
-          <span v-if="roundInfo.returnLocation !== 'TBA'">
-            Return ballots to {{ roundInfo.returnLocation }}.
-          </span>
+          <span v-if="roundInfo.returnLocation !== 'TBA'"
+                v-text="tct('Return ballots to %s.', [roundInfo.returnLocation])"></span>
 
         </div>
       </div>
 
       <!-- No motion selection; but a motion has been entered. I.E. BP/Joynt -->
-      <div v-if="!roundInfo.hasMotions && roundInfo.motions.length > 0"
-           class="db-flex-item-1 pt-2">
-        The motion is <em>{{ roundInfo.motions[0].text }}.</em>
-      </div>
+      <div v-if="!roundInfo.hideMotions && !roundInfo.hasMotions && roundInfo.motions.length > 0"
+           class="db-flex-item-1 pt-2"
+           v-html="tct('The motion is <em>%s</em>', [roundInfo.motions[0].text])"></div>
 
-      <!-- Has motion selection; but no motions entered. I.E. Australs -->
+      <!-- No need to worry about if there is not motion selection and no motions
+           have been entered; there's no use recording/providing the motion -->
+
+      <!-- Has motion selection; but not vetoes — no defined format -->
       <div v-if="roundInfo.hasMotions && !roundInfo.hasVetoes"
            class="db-flex-item-1 pt-2">
-        <div class="db-flex-item db-align-vertical-center" v-if="roundInfo.motions.length > 0">
-          The motion is <em>{{ roundInfo.motions[0].text }}</em>
+        <div v-if="roundInfo.motions.length > 1" class="db-flex-item db-align-vertical-center">
+          <template v-for="choice_type in [gettext('Debated')]">
+            <div class="d-flex flex-column justify-content-end">
+              <div class="text-center pb-2" v-text="tct('Circle %s', [choice_type])"></div>
+              <div class="d-flex text-monospace">
+                <div v-for="motion in motionsAccountingForBlanks"
+                     class="db-align-horizontal-center db-align-vertical-start
+                            db-flex-item-1 db-center-text m-1">
+                  <span class="db-circle">{{ motion.seq }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="db-item-gutter"></div>
+          </template>
+          <div class="flex-fill" v-if="!roundInfo.hideMotions">
+            <div class="db-flex-item db-align-vertical-center"
+                 v-for="motion in roundInfo.motions">
+              <div v-text="tct('<strong>%s</strong>: %s', [motion.seq, motion.text])"></div>
+            </div>
+          </div>
         </div>
-        <div v-else class="db-flex-item db-fill-in pt-3">
-          Motion is:
+        <div v-if="!roundInfo.hideMotions && roundInfo.motions.length === 1"
+             class="db-flex-item db-align-vertical-center d-inline"
+             v-html="tct('The motion is <em>%s</em>', [roundInfo.motions[0].text])">
+          <!-- There shouldn't only be one motion if selection is on; but useful as fallback? -->
         </div>
+        <div v-if="roundInfo.hideMotions || roundInfo.motions.length === 0"
+             class="db-flex-item db-fill-in pt-3" v-text="gettext('Motion is:')"></div>
       </div>
 
       <!-- Has motion selection and vetoes. I.E. Australs -->
       <div v-if="roundInfo.hasMotions && roundInfo.hasVetoes"
            class="flex-fill pt-2 d-flex flex-row">
-        <template v-for="choice_type in ['Aff Veto', 'Neg Veto', 'Debated', ]">
+        <template v-for="choice_type in [gettext('Aff Veto'), gettext('Neg Veto'), gettext('Debated'), ]">
           <div class="d-flex flex-column justify-content-end">
-            <div class="text-center pb-2">Circle {{ choice_type }}</div>
+            <div class="text-center pb-2" v-text="tct('Circle %s', [choice_type])"></div>
             <div class="d-flex text-monospace">
               <div v-for="motion in motionsAccountingForBlanks"
-                   class="db-align-horizontal-center db-align-vertical-start db-flex-item-1 db-center-text m-1">
+                   class="db-align-horizontal-center db-align-vertical-start
+                          db-flex-item-1 db-center-text m-1">
                 <span class="db-circle">{{ motion.seq }}</span>
               </div>
             </div>
@@ -74,25 +88,33 @@
         </template>
         <div class="flex-fill">
           <div class="db-flex-item db-align-vertical-center"
-               v-for="(motion, index) in roundInfo.motions">
-            <div><strong>{{ motion.seq }}</strong>: {{ motion.text }}</div>
+               v-for="motion in roundInfo.motions"
+               v-if="!roundInfo.hideMotions">
+            <div v-html="tct('<strong>%s</strong>: %s', [motion.seq, motion.text])"></div>
           </div>
-          <div v-if="roundInfo.motions.length === 0" class="d-flex">
+          <div class="d-flex"
+               v-if="roundInfo.motions.length === 0 || roundInfo.hideMotions">
             <div class="flex-fill db-fill-in strong mr-3 pt-3 mt-2"
-                 v-for="choice_type in ['1', '2', '3', ]">
-              {{ choice_type }}:
-            </div>
+                 v-for="choice_type in ['1', '2', '3', ]"
+                 v-text="tct('%s:', [choice_type])"></div>
           </div>
         </div>
       </div>
-
 
     </div>
 
     <template v-if="ballot.authorPosition === 'c' || ballot.authorPosition === 'o'">
       <div class="db-item-gutter"></div>
       <div class="db-flex-static d-flex align-content-center">
-        <img :id="ballot.barcode" class="barcode-placeholder">
+        <svg :id="ballot.barcode" class="barcode-placeholder"
+             :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
+             jsbarcode-width="2.5" jsbarcode-height="85"
+             v-if="roundInfo.hasMotions && roundInfo.hasVetoes">
+        </svg>
+        <svg :id="ballot.barcode" class="barcode-placeholder"
+             :jsbarcode-value="ballot.barcode" jsbarcode-displayvalue="false"
+             jsbarcode-width="2.5" jsbarcode-height="60" v-else>
+        </svg>
       </div>
     </template>
 
@@ -100,14 +122,13 @@
     <div class="db-bordered d-flex db-flex-item-2 text-center small">
       <div class="d-flex db-flex-item-1 flex-column p-2">
         <div class="flex-fill db-fill-in mb-1 pt-3"></div>
-        <div>tab entry</div>
+        <div v-text="gettext('tab entry')"></div>
       </div>
       <div class="d-flex db-flex-item-1 flex-column p-2">
         <div class="flex-fill db-fill-in mb-1 pt-4"></div>
-        <div>tab check</div>
+        <div v-text="gettext('tab check')"></div>
       </div>
     </div>
-
 
   </section>
 
@@ -115,7 +136,6 @@
 
 <script>
 import _ from 'lodash'
-import JsBarcode from 'jsbarcode'
 
 import PrintableTeamScores from './PrintableTeamScores.vue'
 
@@ -124,39 +144,67 @@ export default {
   components: { PrintableTeamScores },
   methods: {
     getAdjudicatorInstitution: function (debateAdjudicator) {
-      var institution = debateAdjudicator.adjudicator.institution
+      const institution = debateAdjudicator.adjudicator.institution
       if (!_.isUndefined(institution) && institution !== null) {
         return institution.code
       }
-      return 'Unaffiliated'
+      return this.gettext('Unaffiliated')
     },
     scoreDisplay: function (number) {
       if (number % 1 === 0) {
         return Math.round(number)
-      } else {
-        return number
       }
+      return number
     },
     getDisplayStep: function (number) {
       if (number % 1 === 0) {
-        return "no ½ marks"
+        return this.gettext('no ½ marks')
       } else if (number % 0.5 === 0) {
-        return "½ marks are allowed"
-      } else {
-        return "decimal marks are allowed"
+        return this.gettext('½ marks are allowed')
       }
-    }
+      return this.gettext('decimal marks are allowed')
+    },
   },
   computed: {
     panellistsExcludingSelf: function () {
-      var ballotSource = this.ballot.author
-      var authoringPanellist = _.find(this.ballot.debateAdjudicators, function (panellist) {
-        return panellist.adjudicator.name === ballotSource
-      });
+      const ballotSource = this.ballot.author
+      const ballotAdjs = this.ballot.debateAdjudicators
+      const authoringPanellist = _.find(ballotAdjs, p => p.adjudicator.name === ballotSource)
       if (!_.isUndefined(authoringPanellist)) {
         return _.without(this.ballot.debateAdjudicators, authoringPanellist)
       }
       return this.ballot.debateAdjudicators
+    },
+    panellistsAsString: function () {
+      let adjs = []
+      this.panellistsExcludingSelf.forEach((a) => {
+        let position = ''
+        switch (a.position) {
+          case 'c':
+            position = this.gettext('Chair')
+            break
+          case 'o':
+            position = this.gettext('Solo Chair')
+            break
+          case 'p':
+            position = this.gettext('Panellist')
+            break
+          case 't':
+            position = this.gettext('Trainee')
+            break
+          default:
+            break
+        }
+        const substitutions = [a.adjudicator.name, position, this.getAdjudicatorInstitution(a)]
+        // Omitt adj's institutions as per preference
+        if (this.roundInfo.showAdjInstitutions === true) {
+          adjs.push(this.tct('%s (%s, %s)', substitutions))
+        } else {
+          adjs.push(this.tct('%s (%s)', substitutions))
+        }
+      })
+      const otherAdjsList = adjs.join(this.gettext('; '))
+      return this.tct('Adjudicating with %s.', [otherAdjsList])
     },
     motionsAccountingForBlanks: function () {
       if (this.roundInfo.motions.length > 0) {
@@ -164,22 +212,6 @@ export default {
       }
       return [{ seq: 1 }, { seq: 2 }, { seq: 3 }]
     },
-  },
-  mounted: function () {
-    var height = 60
-    if (this.roundInfo.hasMotions && this.roundInfo.hasVetoes) {
-      height = 85 // Blow out the height to the big veto box has space
-    }
-    $(".barcode-placeholder").each(function () {
-      var code = $(this).attr('id')
-      $(this).JsBarcode(code, {
-        width: 2.5,
-        height: height,
-        text: code,
-        displayValue: false,
-        margin: 0,
-      })
-    })
   },
 }
 </script>

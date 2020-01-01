@@ -5,11 +5,17 @@
   <div class="list-group-item d-inline-block main-menu-item">
     <a href="#tlisth" data-toggle="collapse" data-parent="#sidebar" aria-expanded="false"
        class="tournament-title d-flex justify-content-between align-items-center">
-      <div>
-        <img src="{% static 'logo.svg' %}" class="d-md-block d-none logo-large" width="24" height="24">
-        <img src="{% static 'logo.svg' %}" class="d-md-none" width="20" height="20">
+      <div class="mx-auto mx-md-0 text-center">
+        {% blocktrans trimmed asvar logo_alt %}
+          Tabbycat Logo
+        {% endblocktrans %}
+        {% if on_local %}
+          {% include "nav/logo_local.html" with width=18 height=18 alt=logo_alt %}
+        {% else %}
+          {% include "nav/logo.html" with width=18 height=18 alt=logo_alt %}
+        {% endif %}
       </div>
-      <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-1 pr-2">
+      <div class="mb-0 d-none d-md-inline h6 mr-auto pt-1 pl-2 pr-2">
         {{ tournament }}
       </div>
       <div>
@@ -19,10 +25,13 @@
     </a>
     <div class="collapse" id="tlisth">
       <a href="/" class="list-group-item" data-parent="#titleh">
-        <i data-feather="home"></i>Site Home
+        <i data-feather="home"></i>{% trans "Site Home" %}
       </a>
       <a href="{% url 'tournament-create' %}" class="list-group-item" data-parent="#titleh">
-        <i data-feather="edit-2"></i>New Tournament
+        <i data-feather="edit-2"></i>{% trans "New Tournament" %}
+      </a>
+      <a href="{% url 'admin:index' %}" target="_blank" class="list-group-item" data-parent="#titleh">
+        <i data-feather="database"></i>{% trans "Edit Database" %}
       </a>
       {% for t in all_tournaments %}
         <div class="list-group-item tournament-areas-title" data-parent="#titleh">
@@ -30,11 +39,11 @@
         </div>
         <a href="{% url 'tournament-admin-home' tournament_slug=t.slug %}"
            class="list-group-item" data-parent="#titleh">
-          <i data-feather="settings"></i>{% blocktrans trimmed %}Admin Area{% endblocktrans %}
+          <i data-feather="settings"></i>{% trans "Admin Area" %}
         </a>
         <a href="{% url 'tournament-assistant-home' tournament_slug=t.slug %}"
            class="list-group-item" data-parent="#titleh">
-          <i data-feather="pocket"></i>{% blocktrans trimmed %}Assistant Area{% endblocktrans %}
+          <i data-feather="pocket"></i>{% trans "Assistant Area" %}
         </a>
         <a href="{% url 'tournament-public-index' tournament_slug=t.slug %}"
            class="list-group-item" data-parent="#titleh">
@@ -69,16 +78,19 @@
       </a>
       <a href="{% tournamenturl 'participants-list' %}"
          class="list-group-item" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="user"></i>{% trans "Participants" %}
+        <span class="circle-icon small-circle"></span><i data-feather="book"></i>{% trans "Participants" %}
       </a>
       <a href="{% tournamenturl 'privateurls-list' %}"
-         class="list-group-item"
-         data-parent="#rh{{ r.id }}">
+         class="list-group-item" data-parent="#setuph}">
         <span class="circle-icon small-circle"></span><i data-feather="link"></i>{% trans "Private URLs" %}
       </a>
-      <a href="{% url 'admin:index' %}" target="_blank"
+      <a href="{% tournamenturl 'notifications-status' %}"
          class="list-group-item" data-parent="#setuph">
-        <span class="circle-icon small-circle"></span><i data-feather="edit"></i>{% trans "Edit Database" %}
+        <span class="circle-icon small-circle"></span><i data-feather="mail"></i>{% trans "Emails" %}
+      </a>
+      <a href="{% tournamenturl 'panel-adjudicators-index' %}"
+         class="list-group-item" data-parent="#setuph">
+        <span class="circle-icon small-circle"></span><i data-feather="box"></i>{% trans "Preformed Panels" %}
       </a>
     </div>
   </div>
@@ -89,18 +101,6 @@
         class="collapsed">
         <i data-feather="shuffle"></i>
         <span class="d-none d-md-inline">{% trans "Sides" %}</span>
-      </a>
-    </div>
-  {% endif %}
-
-  {% if pref.enable_divisions %}
-    <div class="list-group-item d-inline-block">
-      <a href="{% tournamenturl 'division_allocations' %}" data-parent="#sidebar"
-         class="collapsed">
-        <span class="circle-icon icon-container">
-          <i data-feather="layers"></i>
-        </span>
-        {% trans "Divisions" %}
       </a>
     </div>
   {% endif %}
@@ -129,7 +129,7 @@
       </a>
       <a href="{% tournamenturl 'admin-venues-statuses' %}"
          class="list-group-item {% if checkins_venues_statuses %}active{% endif %}" data-parent="#checkinh">
-        <i data-feather="map"></i>{% trans "Rooms' Status" %}
+        <i data-feather="map"></i>{% trans "Venues' Status" %}
       </a>
     </div>
   </div>
@@ -148,8 +148,11 @@
         <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-latest' %}" data-parent="#feedh">
         <i data-feather="clock"></i>{% trans "Latest" %}
       </a>
-        <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
-        <i data-feather="star"></i>Important
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-important' %}" data-parent="#feedh">
+        <i data-feather="star"></i>{% trans "Important" %}
+      </a>
+      <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-comments' %}" data-parent="#feedh">
+        <i data-feather="message-square"></i>{% trans "Comments" %}
       </a>
       <a class="list-group-item" href="{% tournamenturl 'adjfeedback-view-by-source' %}" data-parent="#feedh">
         <i data-feather="phone-outgoing"></i>{% trans "Find by Source" %}
@@ -183,7 +186,11 @@
         <i data-feather="maximize"></i>{% trans "Overview" %}
       </a>
       <a class="list-group-item" href="{% roundurl 'standings-team' current_round %}">
-        <i data-feather="users"></i>{% trans "Teams" %}
+        {% if tournament.break_categories_nongeneral.count > 0 %}
+          <i data-feather="users"></i>{% trans "All Teams" %}
+        {% else %}
+          <i data-feather="users"></i>{% trans "Teams" %}
+        {% endif %}
       </a>
       {% for category in tournament.break_categories_nongeneral %}
         <a class="list-group-item {% if standings_active %}active{% endif %}" href="{% roundurl 'standings-break-category' round=current_round category=category.slug %}">
@@ -192,17 +199,16 @@
           {% endblocktrans %}
         </a>
       {% endfor %}
-      {% if pref.enable_divisions %}
-      <a class="list-group-item" href="{% roundurl 'standings-division' current_round %}">
-        <i data-feather="layers"></i>{% trans "Divisions" %}
-      </a>
-      {% endif %}
       <a class="list-group-item" href="{% roundurl 'standings-speaker' current_round %}">
-        <i data-feather="user"></i>{% trans "Speakers" %}
+        {% if tournament.speakercategory_set.all.count > 0 %}
+          <i data-feather="user"></i>{% trans "All Speakers" %}
+        {% else %}
+          <i data-feather="user"></i>{% trans "Speakers" %}
+        {% endif %}
       </a>
       {% for category in tournament.speakercategory_set.all %}
         <a class="list-group-item" href="{% roundurl 'standings-speaker-category' round=current_round category=category.slug %}">
-          <i data-feather="user"></i>{% blocktrans trimmed with category_name=category.name %}
+          <i data-feather="user-plus"></i>{% blocktrans trimmed with category_name=category.name %}
             {{ category_name }} Speakers
           {% endblocktrans %}
         </a>
@@ -235,8 +241,7 @@
             <i data-feather="chevron-up" class="sidebar-expand d-none d-md-inline"></i>
           </a>
           <div class="collapse" id="breakh">
-            <a class="list-group-item"
-               href="{% tournamenturl 'breakqual-index' %}">
+            <a class="list-group-item" href="{% tournamenturl 'breakqual-index' %}">
               <i data-feather="maximize"></i>{% trans "Overview" %}
             </a>
             {% for category in tournament.breakcategory_set.all %}
@@ -245,7 +250,13 @@
               </a>
             {% endfor %}
             <a class="list-group-item" href="{% tournamenturl 'breakqual-adjudicators' %}">
-              <i data-feather="shield"></i>{% trans "Adjudicators" %}
+              <i data-feather="shield"></i>{% trans "Adjudicators'" %}
+            </a>
+            <a class="list-group-item" href="{% tournamenturl 'break-categories-edit' %}">
+              <i data-feather="pocket"></i>{% trans "Edit Categories" %}
+            </a>
+            <a class="list-group-item" href="{% tournamenturl 'breakqual-edit-eligibility' %}">
+              <i data-feather="trello"></i>{% trans "Edit Eligibility" %}
             </a>
           </div>
 
@@ -260,7 +271,7 @@
     <a href="{% url 'logout' %}" data-parent="#sidebar"
      class="collapsed">
       <i data-feather="log-out"></i>
-      <span class="d-none d-md-inline">{% blocktrans trimmed %}Log Out{% endblocktrans %}</span>
+      <span class="d-none d-md-inline">{% trans "Log Out" %}</span>
     </a>
   </div>
 

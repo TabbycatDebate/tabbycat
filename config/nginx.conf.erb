@@ -1,0 +1,120 @@
+# This is customised from https://github.com/heroku/heroku-buildpack-nginx.git
+# Done so in order to properly proxy to both and asgi and wasgi server
+# Super useful template:
+# https://github.com/CLClark/fcc-stock-trading-app/blob/9017f001255718c2e0fd24eb8267df02267d6cd8/config/nginx.conf.erb
+
+daemon off;
+# Heroku dynos have at least 4 cores.
+worker_processes <%= ENV['NGINX_WORKERS'] || 4 %>;
+
+events {
+    use epoll;
+    accept_mutex on;
+    worker_connections 1024;
+}
+
+http {
+    gzip on;
+    gzip_comp_level 4;
+    gzip_min_length 1100;
+    gzip_proxied any;
+    gzip_types
+        text/css
+        text/javascript
+        text/xml
+        text/plain
+        application/javascript
+        application/x-javascript
+        application/json;
+
+    server_tokens off;
+
+    log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
+    access_log logs/nginx/access.log l2met;
+    error_log logs/nginx/error.log;
+
+    include mime.types;
+    default_type application/octet-stream;
+    sendfile on;
+
+    # Must read the body in 5 seconds.
+    client_body_timeout 5;
+
+    upstream wsgi_server {
+        server unix:/tmp/wsgi.socket fail_timeout=0;
+    }
+
+    upstream asgi_server {
+        server unix:/tmp/asgi.socket;
+    }
+
+    # As per https://www.nginx.com/blog/websocket-nginx/
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close; # TODO; try delete
+    }
+
+    # As per https://github.com/varspool/Wrench/issues/100
+    # This is needed to maintain the websocket connection; otherwise
+    # it closes in the limit defined by keepalive_timeout
+    # DOCS: Defines a timeout for reading a response from the proxied server. The timeout is set only between two successive read operations, not for the transmission of the whole response. If the proxied server does not transmit anything within this time, the connection is closed.
+    # In practice this seems to be essentially the maximum time a socket will live for
+    # Sending data seems to reset this process. Unclear what the interaction is
+    # with the the keepalive_timeout && # Enabling keep-alive timeouts below
+    proxy_read_timeout 1800s; # 30m
+
+    server {
+        listen <%= ENV["PORT"] %>;
+        server_name _;
+        # Set as-is this stops websocket connection for lasting as long as specified TODO: return to default once other settings compensate?
+        # DOCS: A timeout during which a keep-alive client connection will stay open on the server side
+        keepalive_timeout 6000; # 100m
+
+        # Actual websocket paths to listen on
+        location /ws/ {
+            try_files $uri @proxy_to_ws;
+        }
+
+        location @proxy_to_ws {
+            # Repeating earlier Uvicorn config
+            # Don't set X-Forwarded-Port; sets infinite redirects
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+            proxy_redirect off;
+            proxy_buffering off;
+            proxy_pass http://asgi_server;
+
+            # Websocket specific changes
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+
+            # Enabling keep-alive
+            # As per https://ma.ttias.be/enable-keepalive-connections-in-nginx-upstream-proxy-configurations/
+            # Set at 100minutes — may mean that passive pages which haven't
+            # received any socket data need to be refreshed after that time.
+            proxy_read_timeout     6000; # 100m
+            proxy_connect_timeout  6000; # 100m
+            proxy_set_header Connection "";
+        }
+
+        # Serve static files directly from the directory
+        location /static/ {
+            alias /app/tabbycat/staticfiles/;
+            autoindex on;
+            access_log off;
+            add_header Cache-Control "public";
+            expires 7d;
+            etag on;
+        }
+
+        # Pass to wsgi server
+        location / {
+            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_redirect off;
+            proxy_pass http://wsgi_server;
+        }
+    }
+}

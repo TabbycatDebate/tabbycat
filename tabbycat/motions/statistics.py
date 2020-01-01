@@ -20,7 +20,7 @@ class MotionTwoTeamStatsCalculator:
     def __init__(self, tournament):
         self.tournament = tournament
         self.by_motion = tournament.pref('enable_motions')
-        self.include_vetoes = self.by_motion and tournament.pref('motion_vetoes_enabled')
+        self.include_vetoes = tournament.pref('motion_vetoes_enabled')
 
         self._prefetch_motions()
         self.ndebates_by_round = {r: r.ndebates for r in
@@ -37,12 +37,12 @@ class MotionTwoTeamStatsCalculator:
     def _prefetch_motions(self):
 
         self.motions = Motion.objects.filter(round__tournament=self.tournament).order_by(
-            'round__seq').select_related('round')
+            'round__seq').select_related('round').filter(round__debate__ballotsubmission__confirmed=True)
         annotations = {}  # dict of keyword arguments to pass to .annotate()
 
         # This if-else block could be simplified using **kwargs notation, but it'd be miserable to read
         if self.by_motion:
-            self.motions = self.motions.filter(ballotsubmission__confirmed=True)
+            self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
             annotations['ndebates'] = Count('ballotsubmission', distinct=True)
             annotations.update({'%s_wins' % side: Count(
                 'ballotsubmission__teamscore',
@@ -50,9 +50,7 @@ class MotionTwoTeamStatsCalculator:
                     ballotsubmission__teamscore__debate_team__side=side,
                     ballotsubmission__teamscore__win=True,
                 ), distinct=True) for side in self.tournament.sides})
-
         else:
-            self.motions = self.motions.filter(round__debate__ballotsubmission__confirmed=True)
             annotations['ndebates'] = Count('round__debate__ballotsubmission', distinct=True)
             annotations.update({'%s_wins' % side: Count(
                 'round__debate__ballotsubmission__teamscore',
@@ -171,7 +169,6 @@ class MotionBPStatsCalculator:
         annotations.update({'%s_average' % side: Avg(
             'round__debate__ballotsubmission__teamscore__points',
             filter=Q(round__debate__ballotsubmission__teamscore__debate_team__side=side),
-            distinct=True,
         ) for side in self.tournament.sides})
 
         annotations.update({'%s_%d_count' % (side, points): Count(
@@ -179,7 +176,7 @@ class MotionBPStatsCalculator:
             filter=Q(
                 round__debate__ballotsubmission__teamscore__debate_team__side=side,
                 round__debate__ballotsubmission__teamscore__points=points
-            ), distinct=True
+            ),
         ) for side in self.tournament.sides for points in range(4)})
 
         self.prelim_motions = self.prelim_motions.annotate(**annotations)
@@ -191,9 +188,13 @@ class MotionBPStatsCalculator:
         for motion in self.prelim_motions:
             motion.averages = []
             motion.counts_by_side = []
+            motion.counts_by_half = {'top': 0, 'bottom': 0}
+            motion.counts_by_bench = {'gov': 0, 'opp': 0}
 
             for side in self.tournament.sides:
                 average = getattr(motion, '%s_average' % side)
+                if average is None:
+                    continue
                 motion.averages.append((side, average, average / 6 * 100))
                 counts = []
                 for points in [3, 2, 1, 0]:
@@ -201,6 +202,16 @@ class MotionBPStatsCalculator:
                     percentage = count / motion.ndebates * 100 if motion.ndebates > 0 else 0
                     counts.append((points, count, percentage))
                 motion.counts_by_side.append((side, counts))
+
+                if side == 'og' or side == 'oo':
+                    motion.counts_by_half['top'] += (average / 2)
+                else:
+                    motion.counts_by_half['bottom'] += (average / 2)
+
+                if side == 'og' or side == 'cg':
+                    motion.counts_by_bench['gov'] += (average / 2)
+                else:
+                    motion.counts_by_bench['opp'] += (average / 2)
 
     def _prefetch_elim_motions(self):
         """Constructs the database query for elimination round motions.
@@ -226,7 +237,7 @@ class MotionBPStatsCalculator:
             filter=Q(
                 round__debate__ballotsubmission__teamscore__debate_team__side=side,
                 round__debate__ballotsubmission__teamscore__win=value,
-            ), distinct=True)
+            ))
             for side in self.tournament.sides
             for (status, value) in [("advancing", True), ("eliminated", False)]
         })

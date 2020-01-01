@@ -80,15 +80,13 @@ As discussed earlier in *User identification*; Tabbie2's e-ballots are tied to u
     - Each adjudicator is present as occupying a particular position (chair, panellist, trainee) rather than having those positions calculated automatically.
     - Chairs can be 'swapped' by dragging adjudicators on top of each other, and an 'unallocated' area can be used to view and store adjudicators that have not been allocated.
 
-**Shadow draws**. Tabbie2 allows you to create 'shadow panels' of adjudicators that can be applied to a draft draw prior to the generation of the real draw. For very large tournaments this can be a valuable method of front-loading some of the allocation process and reducing time pressure. Tabbycat does not have an equivalent feature or method, although one is planned.
-
 **Adjudicator feedback customisation**. Both Tabbie2 and Tabbycat have built-in adjudicator feedback forms, and allow you to specify the questions on the feedback form. Notable differences:
 
 - Setting up questions is painless on neither system. Tabbycat requires you to use the Edit Database area; Tabbie2 makes you click through a slightly more opaque maze of pages and forms.
 - Tabbycat allows for a richer range of types of questions than Tabbie2 does.
 - Tabbie2 allows you to specify different questionnaires for team-on-chair, chair-on-panellist and panellist-on-chair. Tabbycat only differentiates between team-on-adjudicator and adjudicator-on-adjudicator.
 - Tabbycat gives you more control over who is expected to submit feedback on whom; e.g. whether teams submit on panellists, and whether panellists submit on each other. In Tabbie2, you can effect this with blank questionnaires, but only for the three options listed above.
-- Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator test score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback.
+- Tabbycat can, optionally, automatically incorporate feedback into adjudicator scores using a naive weighted average with the adjudicator base score. This can be disabled by simply setting feedback weight to zero, as some adjudication cores prefer. Tabbie2 has no ability to automatically incorporate feedback.
 - Tabbycat produces a "shame list" of unsubmitted feedback, which you can optionally publish on the public-facing site to try to incentivise submission.
 
 (How participants access adjudicator feedback submission is discussed in *User identification* above.)
@@ -146,8 +144,6 @@ Running your tournament
 As with the discussion of allocation interfaces vis-à-vis Tabbie2, there are a number of features in the Tabbycat allocation interface that mean it is more easily used in a collaborative setting and can display additional information to inform draws.
 
 **Flexibility in draw rules**. As we've said, all major tab systems are WUDC-compliant. But if you want to deviate from WUDC rules, Tournaman has a few more options. Whereas Tabbycat allows you to use intermediate brackets (rather than pull-ups), Tournaman allows you to sacrifice power-pairing integrity for position balance (though this generally isn't necessary to achieve position balance), fold within brackets and avoid teams hitting their own institution. On the other hand, Tabbycat allows you to tune how position balance trades off between teams (which the WUDC constitution doesn't precisely specify).
-
-**Shadow draws**. Tournaman allows you to create ‘shadow panels' of adjudicators that can be applied to a draft draw prior to the generation of the real draw. For very large tournaments this can be a valuable method of front-loading some of the allocation process and reducing time pressure. Tabbycat does not have an equivalent feature or method, although one is planned.
 
 Other considerations
 ====================

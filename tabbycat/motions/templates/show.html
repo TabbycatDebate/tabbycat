@@ -52,7 +52,7 @@
 
           <div class="modal-body d-flex flex-column">
             {% for m in motions %}
-              <div class="col d-flex align-items-center">
+              <div class="d-flex align-items-center flex-grow-1">
                 <div>
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ forloop.counter }}.</span>
@@ -75,19 +75,19 @@
         {% if infos|length == 1 %}
 
           <div class="modal-body d-flex align-items-center justify-content-center text-center">
-            <small>{{ infos.0.info_slide }}</small>
+            <small>{{ infos.0.info_slide|linebreaks }}</small>
           </div>
 
         {% else %}
 
           <div class="modal-body d-flex flex-column">
             {% for info in infos %}
-              <div class="col d-flex align-items-center">
+              <div class="d-flex align-items-center flex-grow-1">
                 <p>
                   {% if motions|length > 1 %}
                     <span class="text-muted">{{ info.seq }}.</span>
                   {% endif %}
-                  <small>{{ info.info_slide }}</small>
+                  <small>{{ info.info_slide|linebreaks }}</small>
                 </p>
               </div>
             {% endfor %}

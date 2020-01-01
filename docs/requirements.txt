@@ -1,5 +1,3 @@
-# Documentation Dependencies
+# Needs
 
-sphinx==1.7.5
-sphinx-autobuild==0.7.1
-sphinx_rtd_theme==0.4.0
+-r ../config/requirements_docs.txt

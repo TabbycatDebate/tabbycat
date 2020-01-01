@@ -1,6 +1,5 @@
 import logging
 
-from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.utils.text import slugify
@@ -32,15 +31,24 @@ class TournamentConfigIndexView(AdministratorMixin, TournamentMixin, TemplateVie
             preset_class.slugified_name = slugify(preset_class.__name__)
             preset_options.append(preset_class)
 
-        preset_options.sort(key=lambda x: x.name)
-        if not settings.LEAGUE:
-            return [p for p in preset_options if p.name != "WADL Options"]
-        else:
-            return preset_options
+        preset_options.sort(key=lambda x: (x.show_in_list, x.name))
+        return preset_options
 
     def get_context_data(self, **kwargs):
         kwargs["presets"] = self.get_preset_options()
-        kwargs["show_leagues"] = settings.LEAGUE
+        t = self.tournament
+        if t.pref('teams_in_debate') == 'bp':
+            if t.pref('ballots_per_debate_prelim') == 'per-adj' or \
+               t.pref('ballots_per_debate_elim') == 'per-adj':
+                error = _("Your draw rules specify four teams per-debate but "
+                          "your ballot setting specifies that adjudicators "
+                          "submit independent ballots. These settings "
+                          "<strong>are not compatible and will cause results "
+                          "entry to crash</strong>. You need to go back to "
+                          "the Debate Rules settings and change your "
+                          "configuration to use consensus ballots.")
+                messages.error(self.request, error)
+
         return super().get_context_data(**kwargs)
 
 

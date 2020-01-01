@@ -7,11 +7,13 @@
   "addons": [
     "papertrail",
     "sendgrid:starter",
+    "rediscloud:30",
     "heroku-postgresql:hobby-dev",
     {
       "plan": "heroku-redis:hobby-dev",
       "options": {
-        "maxmemory-policy": "allkeys-lru"
+        "maxmemory-policy": "allkeys-lru",
+        "timeout": 1800
       }
     }
   ],
@@ -37,11 +39,17 @@
     "web": {
       "quantity": 1,
       "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
     }
   },
   "buildpacks": [
+    {"url": "https://github.com/heroku/heroku-buildpack-nginx.git"},
     {"url": "heroku/nodejs"},
     {"url": "heroku/python"}
   ],
+  "stack": "heroku-16",
   "success_url": "/start/"
 }

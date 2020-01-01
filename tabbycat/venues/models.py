@@ -1,7 +1,6 @@
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
 
 
@@ -12,9 +11,8 @@ class Venue(models.Model):
         verbose_name=_("priority"),
         help_text=_("Venues with a higher priority number will be preferred when allocating venues to debates"))
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
-        blank=True, null=True, db_index=True,
-        verbose_name=_("tournament"),
-        help_text=_("Venues not assigned to any tournament can be shared between tournaments"))
+        null=True, db_index=True,
+        verbose_name=_("tournament"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
 
@@ -44,14 +42,6 @@ class Venue(models.Model):
             display_name += " " + ", ".join(suffixes)
         return display_name
 
-    def serialize(self):
-        venue = {'id': self.id, 'name': self.name, 'display_name': self.display_name,
-                 'priority': self.priority, 'locked': False}
-        venue['categories'] = [{
-            'id': vc.id, 'name': vc.name, 'description': vc.description
-        } for vc in self.venuecategory_set.all()]
-        return venue
-
     def __str__(self):
         return self.display_name
 
@@ -61,7 +51,7 @@ class Venue(models.Model):
 
 class VenueCategory(models.Model):
     """Represents a category of venues, typically used for (physical real-world)
-    navigation aid, division allocations and/or venue constraints."""
+    navigation aid and/or venue constraints."""
 
     DISPLAY_NONE = '-'
     DISPLAY_PREFIX = 'P'
@@ -82,6 +72,8 @@ class VenueCategory(models.Model):
             "shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."))
 
     venues = models.ManyToManyField(Venue, verbose_name=_("venues"), blank=True)
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        null=True, verbose_name=_("tournament"))
 
     display_in_venue_name = models.CharField(max_length=1, choices=DISPLAY_IN_VENUE_NAME_CHOICES,
         default=DISPLAY_NONE,
@@ -111,8 +103,7 @@ class VenueConstraintManager(models.Manager):
         return VenueConstraint.objects.filter(
             models.Q(team__debateteam__debate__in=debates) |
             models.Q(institution__team__debateteam__debate__in=debates) |
-            models.Q(adjudicator__debateadjudicator__debate__in=debates) |
-            models.Q(division__debate__in=debates)
+            models.Q(adjudicator__debateadjudicator__debate__in=debates)
         ).distinct()
 
 
@@ -120,8 +111,7 @@ class VenueConstraint(models.Model):
 
     SUBJECT_CONTENT_TYPE_CHOICES = models.Q(app_label='participants', model='team') | \
                                    models.Q(app_label='participants', model='adjudicator') | \
-                                   models.Q(app_label='participants', model='institution') | \
-                                   models.Q(app_label='divisions', model='division')
+                                   models.Q(app_label='participants', model='institution')
 
     category = models.ForeignKey(VenueCategory, models.CASCADE,
         verbose_name=_("category"))
@@ -142,15 +132,3 @@ class VenueConstraint(models.Model):
 
     def __str__(self):
         return "%s for %s [%s]" % (self.subject, self.category, self.priority)
-
-    def serialize(self):
-        constraint = model_to_dict(self)
-        if hasattr(self, 'subject_content_type'):
-            constraint['subject_type'] = self.subject_content_type.name
-            if self.subject_content_type.name == 'team':
-                constraint['subject_name'] = self.subject.short_name
-            elif self.subject_content_type.name == 'adjudicator':
-                constraint['subject_name'] = self.subject.name
-            elif self.subject_content_type.name == 'institution':
-                constraint['subject_name'] = self.subject.code
-        return constraint

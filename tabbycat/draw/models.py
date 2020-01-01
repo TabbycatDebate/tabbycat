@@ -21,7 +21,7 @@ class DebateManager(models.Manager):
 
 class Debate(models.Model):
     STATUS_NONE = 'N'
-    STATUS_POSTPONED = 'P'
+    STATUS_POSTPONED = 'P' # obsolete
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_CHOICES = ((STATUS_NONE, _("none")),
@@ -35,18 +35,11 @@ class Debate(models.Model):
         verbose_name=_("round"))
     venue = models.ForeignKey('venues.Venue', models.SET_NULL, blank=True, null=True,
         verbose_name=_("venue"))
-    # cascade to keep draws clean in event of division deletion
-    division = models.ForeignKey('divisions.Division', models.CASCADE, blank=True, null=True,
-        verbose_name=_("division"))
 
     bracket = models.FloatField(default=0,
         verbose_name=_("bracket"))
     room_rank = models.IntegerField(default=0,
         verbose_name=_("room rank"))
-
-    time = models.DateTimeField(blank=True, null=True,
-        verbose_name=_("time"),
-        help_text=_("The time/date of a debate if it is specifically scheduled"))
 
     # comma-separated list of strings
     flags = models.CharField(max_length=100, blank=True)
@@ -100,6 +93,20 @@ class Debate(models.Model):
         return ", ".join(["%s (%s)" % (dt.team.short_name, dt.get_side_display())
                 for dt in self.debateteam_set.all()])
 
+    @property
+    def matchup_codes(self):
+        # Like matchup, but uses team codes. It is not as protected.
+        if not self.sides_confirmed:
+            teams_list = ", ".join([dt.team.code_name for dt in self.debateteam_set.all()])
+            return teams_list + gettext(" (sides not confirmed)")
+
+        try:
+            sides = self.round.tournament.sides
+            return gettext(" vs ").join(self.get_team(side).code_name for side in sides)
+        except (IndexError, ObjectDoesNotExist, MultipleObjectsReturned):
+            return ", ".join(["%s (%s)" % (dt.team.code_name, dt.get_side_display())
+                for dt in self.debateteam_set.all()])
+
     # --------------------------------------------------------------------------
     # Team properties
     # --------------------------------------------------------------------------
@@ -117,13 +124,14 @@ class Debate(models.Model):
     # `self._populate_teams()`.
     #
     # Callers that wish to retrieve the teams of many debates should add
-    #   prefetch_related(Prefetch('debateteam_set', queryset=DebateTeam.objects.select_related('team'))
+    #   prefetch_related(Prefetch('debateteam_set',
+    #       queryset=DebateTeam.objects.select_related('team'))
     # to their query set.
 
     def _populate_teams(self):
         """Populates the team attributes from self.debateteam_set."""
         dts = self.debateteam_set.all()
-        if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet model
+        if not dts._prefetch_done:  # uses internal undocumented flag of Django's QuerySet class
             dts = dts.select_related('team')
 
         self._teams = []
@@ -220,6 +228,11 @@ class Debate(models.Model):
             return self._history
 
     @property
+    def related_adjudicator_set(self):
+        """Used by objects that work with both Debate and PreformedPanel."""
+        return self.debateadjudicator_set
+
+    @property
     def adjudicators(self):
         """Returns an AdjudicatorAllocation containing the adjudicators for this
         debate."""
@@ -229,44 +242,6 @@ class Debate(models.Model):
             from adjallocation.allocation import AdjudicatorAllocation
             self._adjudicators = AdjudicatorAllocation(self, from_db=True)
             return self._adjudicators
-
-    @property
-    def division_motion(self):
-        from motions.models import Motion
-        try:
-            # Pretty sure there should never be > 1
-            return Motion.objects.filter(round=self.round, divisions=self.division).first()
-        except ObjectDoesNotExist:
-            # It's easiest to assume a division motion is always present, so
-            # return a fake one if it is not
-            return Motion(text='-', reference='-')
-
-    # For the front end need to ensure that there are no gaps in the debateTeams
-    def serial_debateteams_ordered(self):
-        t = self.round.tournament
-        for side in t.sides:
-            sdt = {'side': side, 'team': None,
-                   'position': get_side_name(t, side, 'full'),
-                   'abbr': get_side_name(t, side, 'abbr')}
-            try:
-                debate_team = self.get_dt(side)
-                sdt['team'] = debate_team.team.serialize()
-            except ObjectDoesNotExist:
-                pass
-
-            yield sdt
-
-    def serialize(self):
-        debate = {'id': self.id, 'bracket': self.bracket,
-                  'importance': self.importance, 'locked': False}
-        debate['venue'] = self.venue.serialize() if self.venue else None
-        debate['debateTeams'] = list(self.serial_debateteams_ordered())
-        debate['debateAdjudicators'] = [{
-            'position': position,
-            'adjudicator': adj.serialize(round=self.round),
-        } for adj, position in self.adjudicators.with_debateadj_types()]
-        debate['sidesConfirmed'] = self.sides_confirmed
-        return debate
 
 
 class DebateTeamManager(models.Manager):
@@ -389,6 +364,10 @@ class DebateTeam(models.Model):
                                  self.side, name_type)
         except KeyError:
             return self.get_side_display()  # fallback
+
+    def get_side_abbr(self, tournament=None):
+        """Convenience function, mainly for use in templates."""
+        return self.get_side_name(tournament, 'abbr')
 
 
 class MultipleDebateTeamsError(DebateTeam.MultipleObjectsReturned):

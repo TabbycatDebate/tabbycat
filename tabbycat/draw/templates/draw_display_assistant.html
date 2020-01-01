@@ -10,55 +10,68 @@
   <div class="col-md-12">
     <ul class="list-group">
 
-      {% tournamenturl 'draw-assistant-display-by-venue' as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Venue" subtext="(for the briefing room)" emoji="🏫" blank=True %}
+      {% trans "(for the briefing room)" as briefing_room_subtext %}
 
-      {% tournamenturl 'draw-assistant-display-by-team' as url %}
-      {% include "components/item-action.html" with text="Display Draw ordered by Team" subtext="(for the briefing room)" emoji="👭" blank=True %}
+      {% if tournament.current_rounds|length == 1 %}
+
+        {% tournamenturl 'draw-assistant-display-current-rounds-by-venue' as url %}
+        {% trans "Display Draw ordered by Venue" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% tournamenturl 'draw-assistant-display-current-rounds-by-team' as url %}
+        {% trans "Display Draw ordered by Team" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+      {% else %}
+
+        {% tournamenturl 'draw-assistant-display-current-rounds-by-venue' as url %}
+        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Venue" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+        {% tournamenturl 'draw-assistant-display-current-rounds-by-team' as url %}
+        {% trans "Display Draws for <strong>All Current Rounds</strong> ordered by Team" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+        {% for round in tournament.current_rounds %}
+
+          {% roundurl 'draw-assistant-display-specific-round-by-venue' round as url %}
+          {% blocktrans trimmed with round_name=round.name asvar text %}
+            Display Draw for <strong>{{ round_name }}</strong> ordered by Venue
+          {% endblocktrans %}
+          {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="🏫" blank=True %}
+
+          {% roundurl 'draw-assistant-display-specific-round-by-team' round as url %}
+          {% blocktrans trimmed with round_name=round.name asvar text %}
+            Display Draw for <strong>{{ round_name }}</strong> ordered by Team
+          {% endblocktrans %}
+          {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="👭" blank=True %}
+
+        {% endfor %}
+
+      {% endif %}
 
       {% if pref.assistant_access == "all_areas" %}
         {% tournamenturl 'motions-assistant-display' as url %}
-        {% include "components/item-action.html" with text="Display Motions" subtext="(for the briefing room)" emoji="📃" blank=True %}
+        {% trans "Display Motions" as text %}
+        {% include "components/item-action.html" with subtext=briefing_room_subtext emoji="📃" blank=True %}
       {% endif %}
 
     </ul>
     <ul class="list-group mt-3">
 
+      {% trans "(for printing)" as printing_subtext %}
+
       {% if pref.assistant_access == "all_areas" %}
         {% tournamenturl 'printing-assistant-scoresheets' as url %}
-        {% include "components/item-action.html" with text="View Ballot Forms" subtext="(for printing)" emoji="💯" %}
+        {% trans "View Ballot Forms" as text %}
+        {% include "components/item-action.html" with subtext=printing_subtext emoji="💯" %}
       {% endif %}
 
       {% tournamenturl 'printing-assistant-feedback' as url %}
-      {% include "components/item-action.html" with text="View Feedback Forms" subtext="(for printing)" emoji="🙅" %}
+      {% trans "View Feedback Forms" as text %}
+      {% include "components/item-action.html" with subtext=printing_subtext emoji="🙅" %}
 
     </ul>
-  </div>
-</div>
-
-
-<div class="modal fade" id="editStartTime" tabindex="-1" role="dialog" aria-labelledby="editStartTime">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-
-      <form id="startTimeForm" method="POST" action="{% roundurl 'draw-start-time-set' %}">
-        <div class="modal-body list-group list-group-flush">
-
-          {% include "components/form-title.html" with title="Change Start Time" text="" %}
-
-          <div class="list-group-item pb-3">
-            <div class="form-group">
-              <label>Start at</label>
-              <input class="form-control" placeholder="{{ round.starts_at|time:'H:i' }}" name="start_time"></input>
-            </div>
-          </div>
-
-          {% include "components/form-submit.html" with title="Save" %}
-
-        </div>
-      </form>
-
-    </div>
   </div>
 </div>
 

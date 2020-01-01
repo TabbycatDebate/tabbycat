@@ -12,12 +12,14 @@ from django.views.generic.base import TemplateView
 from adjfeedback.views import BaseFeedbackOverview
 from breakqual.models import BreakCategory
 from motions.models import Motion
+from notifications.models import BulkNotification
+from notifications.views import RoundTemplateEmailCreateView
 from options.utils import use_team_code_names
 from participants.models import Speaker, SpeakerCategory, Team
 from results.models import SpeakerScore, TeamScore
 from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from tournaments.models import Round
-from utils.misc import reverse_tournament
+from utils.misc import reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
@@ -67,6 +69,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
             'debate_team__team__institution'
         )
         if self.tournament.pref('teams_in_debate') == 'bp':
+            team_scores.filter(debate_team__debate__round__stage=Round.STAGE_PRELIMINARY)
             kwargs["top_team_scores"] = team_scores.order_by('-score')[:9]
             kwargs["bottom_team_scores"] = team_scores.order_by('score')[:9]
         else:
@@ -289,7 +292,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
         # 'count' is necessary to enforce the 'missed debates' limit, so add it if necessary.
         # There's also an alert in the speaker_standings.html template to explain this.
-        if self.tournament.pref('standings_missed_debates') >= 0 and 'count' not in extra_metrics:
+        if self.tournament.pref('standings_missed_debates') >= 0 and 'count' not in metrics and 'count' not in extra_metrics:
             extra_metrics.append('count')
 
         return metrics, extra_metrics
@@ -315,7 +318,7 @@ class BaseSubstantiveSpeakerStandingsView(BaseSpeakerStandingsView):
 
 
 class SpeakerStandingsView(AdministratorMixin, BaseSubstantiveSpeakerStandingsView):
-    template_name = 'speaker_standings.html'  # add an info alert
+    template_name = 'speaker_standings.html'  # add info alerts
 
 
 class PublicSpeakerTabView(PublicTabMixin, BaseSubstantiveSpeakerStandingsView):
@@ -485,17 +488,11 @@ class BaseTeamStandingsView(BaseStandingsView):
 
 class TeamStandingsView(AdministratorMixin, BaseTeamStandingsView):
     """Superuser team standings view."""
+    template_name = 'team_standings.html'  # add info alerts
     rankings = ('rank',)
 
     def show_ballots(self):
         return True
-
-
-class DivisionStandingsView(AdministratorMixin, BaseTeamStandingsView):
-    """Special team standings view that also shows rankings within divisions."""
-    rankings = ('rank', 'division')
-    page_title = gettext_lazy("Division Standings")
-    page_emoji = '👯'
 
 
 class PublicTeamTabView(PublicTabMixin, BaseTeamStandingsView):
@@ -598,10 +595,11 @@ class PublicCurrentTeamStandingsView(PublicTournamentPageMixin, VueTableTemplate
         # Pre-sort, as Vue tables can't do two sort keys
         teams = sorted(teams, key=lambda t: (-t.points, getattr(t, name_attr)))
         key, title = ('points', _("Points")) if self.tournament.pref('teams_in_debate') == 'bp' else ('wins', _("Wins"))
+        header = {'key': key, 'tooltip': title, 'icon': 'bar-chart'}
 
         table = TabbycatTableBuilder(view=self, sort_order='desc')
         table.add_team_columns(teams)
-        table.add_column({'key': key, 'title': title}, [team.points for team in teams])
+        table.add_column(header, [team.points for team in teams])
         table.add_team_results_columns(teams, rounds)
 
         return table
@@ -656,13 +654,39 @@ class PublicAdjudicatorsTabView(PublicTabMixin, BaseFeedbackOverview):
             scores = {adj: adj.weighted_score(feedback_weight) for adj in adjudicators}
             table.add_weighted_score_columns(adjudicators, scores)
         if self.tournament.pref('adjudicators_tab_shows') == 'test' or self.tournament.pref('adjudicators_tab_shows') == 'all':
-            table.add_test_score_columns(adjudicators)
+            table.add_base_score_columns(adjudicators)
         if self.tournament.pref('adjudicators_tab_shows') == 'all':
             table.add_feedback_graphs(adjudicators)
         messages.info(self.request, ("An adjudicator's score is determined by "
-            "a customisable mix of their test score and their feedback ratings."
+            "a customisable mix of their base score and their feedback ratings."
             " The current mix is specified below as the 'Score Components.' "
             "Feedback ratings are determined by averaging the results of all "
             "individual pieces of feedback across all rounds. "
             "<a href='http://tabbycat.readthedocs.io/en/stable/features/adjudicator-feedback.html#how-is-an-adjudicator-s-score-determined'>Read more</a>."))
         return table
+
+
+# ==============================================================================
+# Send Emails
+# ==============================================================================
+
+class EmailTeamStandingsView(RoundTemplateEmailCreateView):
+    page_subtitle = _("Team Standings")
+
+    event = BulkNotification.EVENT_TYPE_POINTS
+    subject_template = 'team_points_email_subject'
+    message_template = 'team_points_email_message'
+
+    def get_success_url(self):
+        return reverse_round('tournament-complete-round-check', self.round)
+
+    def get_queryset(self):
+        return Speaker.objects.filter(team__tournament=self.tournament)
+
+    def get_default_send_queryset(self):
+        return Speaker.objects.filter(team__round_availabilities__round=self.round, email__isnull=False).exclude(email__exact="")
+
+    def get_extra(self):
+        extra = super().get_extra()
+        extra['url'] = self.request.build_absolute_uri(reverse_tournament('standings-public-teams-current', self.tournament))
+        return extra

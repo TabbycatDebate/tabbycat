@@ -11,12 +11,12 @@ from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from importer.forms import ImportValidationError
-from participants.models import Adjudicator, Team
+from participants.models import Adjudicator, Speaker, Team
 from results.forms import TournamentPasswordField
 from tournaments.models import Round
 from utils.forms import OptionalChoiceField
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .utils import expected_feedback_targets
 
 logger = logging.getLogger(__name__)
@@ -132,7 +132,7 @@ class BaseFeedbackForm(forms.Form):
         if question.answer_type == question.ANSWER_TYPE_BOOLEAN_SELECT:
             field = BooleanSelectField()
         elif question.answer_type == question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
-            field = forms.BooleanField()
+            field = forms.BooleanField(required=False)
         elif question.answer_type == question.ANSWER_TYPE_INTEGER_TEXTBOX:
             min_value = int(question.min_value) if question.min_value else None
             max_value = int(question.max_value) if question.max_value else None
@@ -156,9 +156,13 @@ class BaseFeedbackForm(forms.Form):
         elif question.answer_type == question.ANSWER_TYPE_MULTIPLE_SELECT:
             field = AdjudicatorFeedbackCheckboxSelectMultipleField(choices=question.choices_for_field)
         field.label = question.text
-        if question.required:
-            field.label += "*"
-        field.required = self._enforce_required and question.required
+
+        # Required checkbox fields don't really make sense; so override the behaviour?
+        if question.answer_type != question.ANSWER_TYPE_BOOLEAN_CHECKBOX:
+            if question.required:
+                field.label += "*"
+            field.required = self._enforce_required and question.required
+
         return field
 
     def _create_fields(self):
@@ -166,7 +170,7 @@ class BaseFeedbackForm(forms.Form):
         # Feedback questions defined for the tournament
         adj_min_score = self._tournament.pref('adj_min_score')
         adj_max_score = self._tournament.pref('adj_max_score')
-        score_label = mark_safe(_("Overall score (%(min)d=worst; %(max)d=best)") % {
+        score_label = mark_safe(_("Overall score (%(min)d=worst; %(max)d=best)*") % {
                 'min': int(adj_min_score), 'max': int(adj_max_score)})
         self.fields['score'] = forms.FloatField(min_value=adj_min_score, max_value=adj_max_score, label=score_label)
 
@@ -220,10 +224,12 @@ def make_feedback_form_class(source, tournament, *args, **kwargs):
         as confirmed and all others discarded."""
     if isinstance(source, Adjudicator):
         return make_feedback_form_class_for_adj(source, tournament, *args, **kwargs)
+    elif isinstance(source, Speaker):
+        return make_feedback_form_class_for_team(source.team, tournament, *args, **kwargs)
     elif isinstance(source, Team):
         return make_feedback_form_class_for_team(source, tournament, *args, **kwargs)
     else:
-        raise TypeError('source must be Adjudicator or Team: %r' % source)
+        raise TypeError('source must be Adjudicator, Speaker, or Team: %r' % source)
 
 
 def make_feedback_form_class_for_adj(source, tournament, submission_fields, confirm_on_submit=False,
@@ -244,7 +250,8 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
         debate__round__seq__lte=tournament.current_round.seq,
         debate__round__stage=Round.STAGE_PRELIMINARY
     ).order_by('-debate__round__seq').prefetch_related(
-        'debate__debateadjudicator_set__adjudicator'
+        'debate__debateadjudicator_set__adjudicator',
+        'debate__round'
     )
 
     if include_unreleased_draws:
@@ -298,7 +305,7 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
             # feedback expected only on orallist
             display = _("%(name)s (%(round)s — chair gave oral)")
         else:
-            display = _("%(name)s (%(round)s — chair rolled, this panellist gave oral)")
+            display = _("%(name)s (%(round)s — panellist gave oral as chair rolled)")
 
         display %= {'name': adj.name, 'round': debate.round.name, 'adjpos': ADJUDICATOR_POSITION_NAMES[pos]}
         return (value, display)
@@ -365,6 +372,8 @@ class UpdateAdjudicatorScoresForm(forms.Form):
         errors = []
         records = []
 
+        logger.info("UpdateAdjudicatorScoresForm: Cleaning started (1 of 5)")
+
         for i, line in enumerate(csv.reader(lines), start=1):
             errors_in_line = []
 
@@ -383,7 +392,11 @@ class UpdateAdjudicatorScoresForm(forms.Form):
             name, score = [x.strip() for x in line[:2]]
 
             try:
-                adj = self.tournament.relevant_adjudicators.get(name=name)
+                try:
+                    name = int(name)
+                    adj = self.tournament.relevant_adjudicators.get(id=name)
+                except ValueError:
+                    adj = self.tournament.relevant_adjudicators.get(name=name)
             except Adjudicator.MultipleObjectsReturned:
                 errors_in_line.append(ImportValidationError(i,
                     _("There are several adjudicators called \"%(adjudicator)s\", so "
@@ -409,6 +422,8 @@ class UpdateAdjudicatorScoresForm(forms.Form):
 
             records.append((adj, score))
 
+        logger.info("UpdateAdjudicatorScoresForm: Cleaning done (2 of 5)")
+
         if errors:
             raise ValidationError(errors)
 
@@ -419,14 +434,24 @@ class UpdateAdjudicatorScoresForm(forms.Form):
 
     def save(self):
         records = self.cleaned_data.get('scores_raw', [])
+        history_instances = []
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving to database started (3 of 5)")
+
         for adj, score in records:
-            adj.test_score = score
+            adj.base_score = score
             adj.save()
 
-            AdjudicatorTestScoreHistory.objects.create(
+            history_instances.append(AdjudicatorBaseScoreHistory(
                 adjudicator=adj,
                 round=self.tournament.current_round,
                 score=score
-            )
+            ))
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving scores to database done (4 of 5)")
+
+        AdjudicatorBaseScoreHistory.objects.bulk_create(history_instances)
+
+        logger.info("UpdateAdjudicatorScoresForm: Saving base score histories to database done (5 of 5)")
 
         return len(records)

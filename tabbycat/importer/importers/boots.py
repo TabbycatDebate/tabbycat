@@ -85,10 +85,6 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
 
         self._import(f, tm.Round, interpreter)
 
-        # Set the round with the lowest known seqno to be the current round.
-        self.tournament.current_round = self.tournament.round_set.order_by('seq').first()
-        self.tournament.save()
-
     def import_institutions(self, f, auto_create_regions=True):
         if auto_create_regions:
             def region_interpreter(lineno, line):
@@ -149,10 +145,10 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             round=None,
             adjudicator=self._adj_lookup,
         )
-        histories = self._import(f, fm.AdjudicatorTestScoreHistory, interpreter)
+        histories = self._import(f, fm.AdjudicatorBaseScoreHistory, interpreter)
 
         for history in histories.values():
-            history.adjudicator.test_score = history.score
+            history.adjudicator.base_score = history.score
             history.adjudicator.save()
 
     def import_teams(self, f):
@@ -171,6 +167,15 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             return line
         teams = self._import(f, pm.Team, team_interpreter)
         set_emoji(teams.values(), self.tournament)
+
+        def own_team_institution_conflict_interpreter(lineno, line):
+            team = teams[lineno]
+            if team.institution is not None:
+                return {
+                    'team': team,
+                    'institution': team.institution,
+                }
+        self._import(f, am.TeamInstitutionConflict, own_team_institution_conflict_interpreter)
 
         def break_category_interpreter(lineno, line):
             if line.get('break_category'):
@@ -242,7 +247,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             team=lambda x: pm.Team.objects.lookup(name=x, tournament=self.tournament),
             adjudicator=self._adj_lookup,
         )
-        self._import(f, am.AdjudicatorConflict, interpreter)
+        self._import(f, am.AdjudicatorTeamConflict, interpreter)
 
     def import_institution_conflicts(self, f):
         interpreter = make_interpreter(
@@ -253,26 +258,17 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
 
     def import_adjudicator_conflicts(self, f):
         interpreter = make_interpreter(
-            adjudicator=self._adj_lookup,
-            conflict_adjudicator=self._adj_lookup,
+            adjudicator1=self._adj_lookup,
+            adjudicator2=self._adj_lookup,
         )
         self._import(f, am.AdjudicatorAdjudicatorConflict, interpreter)
 
     def import_team_institution_conflicts(self, f):
-        """Adds team conflicts for all adjudicators for the listed institution.
-        For example: if "institution" is Hobbiton and "team" is Dorwinion AB,
-        this adds conflicts for Dorwinion AB against all adjudicators from
-        Hobbiton."""
-
-        def interpreter(lineno, line):
-            institution = pm.Institution.objects.lookup(line['institution'])
-            team = pm.Team.objects.lookup(line['team'])
-            for adj in institution.adjudicator_set.all():
-                yield {
-                    'team': team,
-                    'adjudicator': adj,
-                }
-        self._import(f, am.AdjudicatorConflict, interpreter)
+        interpreter = make_interpreter(
+            team=lambda x: pm.Team.objects.lookup(name=x, tournament=self.tournament),
+            institution=pm.Institution.objects.lookup,
+        )
+        self._import(f, am.TeamInstitutionConflict, interpreter)
 
     def import_adj_feedback_questions(self, f):
         interpreter = make_interpreter(

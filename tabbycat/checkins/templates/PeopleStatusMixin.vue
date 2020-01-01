@@ -8,10 +8,10 @@ export default {
         All: true, Adjudicators: false, Debaters: false,
       },
       peopleSortByGroup: {
-        'Institution': true, 'Name': false, 'Time': false,
+        Institution: !this.teamCodes, Name: this.teamCodes, Time: false,
       },
       speakerGroupings: {
-        'Speaker': false, 'Team': true,
+        Speaker: false, Team: true,
       },
     }
   },
@@ -21,31 +21,39 @@ export default {
   },
   methods: {
     getToolTipForPerson: function (entity) {
-      var tt = `${entity.name}, a ${entity.type}`
+      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null && entity.identifier !== null) {
+        const subs = [entity.name, entity.type, entity.identifier[0]]
+        return this.tct('%s, a %s of no institutional affiliation with identifier of %s', subs)
+      }
+      if (!this.teamCodes && entity.type !== 'Team' && entity.institution === null) {
+        const subs = [entity.name, entity.type]
+        return this.tct('%s, a %s of no institutional affiliation with no assigned identifier', subs)
+      }
+      if (!this.teamCodes && entity.type !== 'Team' && entity.identifier !== null) {
+        const subs = [entity.name, entity.type, entity.institution.name, entity.identifier[0]]
+        return this.tct('%s, a %s from %s with identifier of %s', subs)
+      }
       if (!this.teamCodes && entity.type !== 'Team') {
-        if (entity.institution === null) {
-          tt += ' of no institutional affiliation'
-        } else {
-          tt += ` from ${entity.institution.name}`
-        }
+        const subs = [entity.name, entity.type, entity.institution.name]
+        return this.tct('%s, a %s from %s with no assigned identifier', subs)
       }
       if (entity.speakers !== null && entity.type === 'Team') {
-        tt += ' with speakers '
+        let speakers = []
         _.forEach(entity.speakers, (speaker) => {
-          var status = speaker.status ? 'Present; id=' : 'Absent; id='
-          tt += `${speaker.name} (${status} ${speaker.identifier[0]}) `
+          if (speaker.status) {
+            speakers.push(this.tct('%s (Present; id=%s)', [speaker.name, speaker.identifier[0]]))
+          } else {
+            speakers.push(this.tct('%s (Absent; id=%s)', [speaker.name, speaker.identifier[0]]))
+          }
         })
+        return this.tct('%s, a team with speakers %s', [entity.name, speakers.join(', ')])
       }
-      if (entity.identifier !== null) {
-        tt += ` with identifier of ${entity.identifier[0]}`
-      } else {
-        tt += ' with no assigned identifier '
-      }
-      return tt
+      return this.tct('%s, a %s', [entity.name, entity.type])
     },
     annotatePeople: function (peopleType) {
-      _.forEach(this[peopleType], (person) => {
-        person.status = _.find(this.events, ['identifier', person.identifier[0]])
+      const self = this
+      this[peopleType].forEach((person) => {
+        person.status = _.find(self.events, ['identifier', person.identifier[0]])
         if (_.isUndefined(person.status)) {
           person.status = false
         }
@@ -55,25 +63,26 @@ export default {
   },
   computed: {
     annotatedSpeakers: function () {
-      var speakers = this.annotatePeople('speakers')
+      const speakers = this.annotatePeople('speakers')
       if (this.teamCodes) {
         _.forEach(speakers, (speaker) => {
-          speaker.institution = { code: 'Anonymous (due to team codes)', name: 'Anon' }
+          speaker.institution = { code: this.gettext('Anonymous (due to team codes)'), name: this.gettext('Anon') }
         })
       }
       return speakers
     },
     annotatedTeams: function () {
-      var teams = []
-      var groupedSpeakers = _.groupBy(this.annotatedSpeakers, 'team')
+      const teams = []
+      const groupedSpeakers = _.groupBy(this.annotatedSpeakers, 'team')
       _.forEach(groupedSpeakers, (teamSpeakers, teamName) => {
         const institution = teamSpeakers[0].institution
-        var team = {
+        const team = {
           name: teamName,
           id: teamName,
           locked: false,
           type: 'Team',
           speakers: teamSpeakers,
+          speakersIn: teamSpeakers.length - _.filter(teamSpeakers, ['status', false]).length,
           institution: institution,
           identifier: _.flatten(_.map(teamSpeakers, 'identifier')),
         }
@@ -83,7 +92,7 @@ export default {
         } else {
           const lastCheckedIn = _.sortBy(team.speakers, [function (speaker) {
             return speaker.status.time
-          }]);
+          }])
           team.status = { time: lastCheckedIn[0].status.time }
         }
         teams.push(team)
@@ -91,7 +100,7 @@ export default {
       return teams
     },
     annotatedDebaters: function () {
-      if (this.speakerGroupings['Speakers']) {
+      if (this.speakerGroupings.Speaker) {
         return this.annotatedSpeakers
       }
       return this.annotatedTeams
@@ -99,13 +108,13 @@ export default {
     annotatedAdjudicators: function () {
       _.forEach(this.adjudicators, (adjudicator) => {
         if (adjudicator.independent) {
-          adjudicator.institution = { code: 'Independent', name: 'Independent' }
+          adjudicator.institution = { code: this.gettext('Independent'), name: this.gettext('Independent') }
         }
       })
       return this.annotatePeople('adjudicators')
     },
     peopleByType: function () {
-      var entities = []
+      const entities = []
       if (this.filterByType.All || this.filterByType.Adjudicators) {
         _.forEach(this.annotatedAdjudicators, (adjudicator) => {
           entities.push(adjudicator)
@@ -119,15 +128,15 @@ export default {
       return entities
     },
     peopleByInstitution: function () {
-      var sortedByInstitution = _.sortBy(this.entitiesSortedByName, (p) => {
+      const sortedByInstitution = _.sortBy(this.entitiesSortedByName, (p) => {
         if (p.institution === null) {
-          return 'Unaffiliated'
+          return this.gettext('Unaffiliated')
         }
         return p.institution.code
       })
       return _.groupBy(sortedByInstitution, (p) => {
         if (p.institution === null) {
-          return 'Unaffiliated'
+          return this.gettext('Unaffiliated')
         }
         return p.institution.code
       })

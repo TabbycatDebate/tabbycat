@@ -74,7 +74,7 @@ if args.unmigrate:
     unmigrations = [tuple(spec.split("/")) for spec in args.unmigrate]
     run_command(["git", "checkout", args.new_commit])
 else:
-    print_yellow("Figuring out the migration difference is...")
+    print_yellow("Figuring out what the migration difference is...")
     run_command(["git", "checkout", args.old_commit])
     run_command(["python", MANAGE_PY, "migrate", "--no-input"])
     run_command(["git", "checkout", args.new_commit])

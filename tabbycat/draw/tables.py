@@ -10,7 +10,6 @@ from tournaments.utils import get_side_name
 from utils.tables import TabbycatTableBuilder
 
 from .generator.bphungarian import BPHungarianDrawGenerator
-from .utils import annotate_npullups
 
 
 class BaseDrawTableBuilder(TabbycatTableBuilder):
@@ -155,23 +154,6 @@ class AdminDrawTableBuilder(PublicDrawTableBuilder):
         return self._add_debate_standing_columns(debates, standings, 'iterrankings',
                 'rankings_info', rankingformat, formatsort)
 
-    def add_number_of_pullups_columns(self, debates, round):
-        # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
-        teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
-        all_teams = [team for d in debates for team in d.teams]
-        annotate_npullups(all_teams, until=round)
-
-        for i, (side, teams) in enumerate(zip(self.tournament.sides, teams_by_side)):
-            name = _("number of pullups before this round")
-            # Translators: Abbreviation for "side history"
-            abbr = _("PU")
-            header = self._prepend_side_header(side, name, abbr)
-            cells = [{'text': str(team.npullups)} for team in teams]
-            if i == 0:
-                for cell in cells:
-                    cell['class'] = 'highlight-col'
-            self.add_column(header, cells)
-
     def add_debate_side_history_columns(self, debates, round):
         # Teams should be prefetched in debates, so don't use a new Team queryset to collate teams
         teams_by_side = [[d.get_team(side) for d in debates] for side in self.tournament.sides]
@@ -266,14 +248,29 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         self.add_team_columns(teams)
 
         # First metric
-        metric_info = next(self.standings.metrics_info())
-        header = {
-            'key': "pts",  # always use 'pts' to make it more predictable
-            'title': force_text(metric_info['abbr']),
-            'tooltip': force_text(metric_info['name']),
-        }
-        infos = self.standings.get_standings(teams)
-        self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])
+        if len(self.standings.metric_keys) == 0:  # special case: no metrics used
+            header = {
+                'key': "pts",
+                'title': "?",
+                'tooltip': _("No metrics in the team standings precedence"),
+            }
+            self.add_column(header, [0] * len(teams))
+        else:
+            metric_info = next(self.standings.metrics_info())
+            header = {
+                'key': "pts",  # always use 'pts' to make it more predictable
+                'title': force_text(metric_info['abbr']),
+                'tooltip': force_text(metric_info['name']),
+            }
+            cells = []
+            infos = self.standings.get_standings(teams)
+            for info in infos:
+                points = info.metrics[metric_info['key']]
+                cells.append({
+                    'text': metricformat(points),
+                    'sort': points,
+                })
+            self.add_column(header, cells)
 
         # Sides
         sides_lookup = {dt.team_id: dt.side for debate in draw
@@ -318,7 +315,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
         self.add_column({'key': 'status', 'title': _("Status")}, cells)
 
         # Sort by points as secondary sort (will be sorted by cost in Vue)
-        self.data.sort(key=lambda x: x[1]['sort'], reverse=True)
+        self.data.sort(key=lambda x: x[1].get('sort', 0), reverse=True)
 
 
 class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilder):
@@ -340,9 +337,13 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
         self.highlight_rows_by_column_value(column=0) # highlight first row of a new bracket
 
     def add_permitted_points_column(self):
-        first_metric = self.standings.metric_keys[0]
-        points = [info.metrics[first_metric] for info in self.standings]
-        points.sort(reverse=True)
+        if len(self.standings.metric_keys) == 0:  # special case: no metrics used
+            points = [0] * len(self.standings)
+        else:
+            first_metric = self.standings.metric_keys[0]
+            points = [info.metrics[first_metric] for info in self.standings]
+            points.sort(reverse=True)
+
         pref = self.tournament.pref('bp_pullup_distribution')
         define_rooms_func = getattr(BPHungarianDrawGenerator, BPHungarianDrawGenerator.DEFINE_ROOM_FUNCTIONS[pref])
         rooms = define_rooms_func(points)
@@ -370,14 +371,22 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             row[-1]['class'] = 'highlight-col'
 
         # Points of team
-        metric_info = next(self.standings.metrics_info())
-        header = {
-            'key': "pts",  # always use 'pts' to make it more predictable
-            'tooltip': _("%(team)s: %(metric)s") % {'team': side_abbr, 'metric': metric_info['name']},
-            'icon': 'star'
-        }
-        infos = self.standings.get_standings(teams)
-        self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])
+        if len(self.standings.metric_keys) == 0:  # special case: no metrics used
+            header = {
+                'key': "pts" + side_abbr,
+                'tooltip': _("No metrics in the team standings precedence"),
+                'icon': 'star'
+            }
+            self.add_column(header, [0] * len(teams))
+        else:
+            metric_info = next(self.standings.metrics_info())
+            header = {
+                'key': "pts" + side_abbr,  # always use 'pts' to make it more predictable
+                'tooltip': _("%(team)s: %(metric)s") % {'team': side_abbr, 'metric': metric_info['name']},
+                'icon': 'star'
+            }
+            infos = self.standings.get_standings(teams)
+            self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])
 
         # Side history after last round
         header = self._prepend_side_header(side, _("side history before this round"), _("Sides"), text_only=True)

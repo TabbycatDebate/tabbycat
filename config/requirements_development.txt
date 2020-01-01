@@ -1,0 +1,18 @@
+# Development Dependencies
+
+# Importing the other requirements (for convenience of installing/updating)
+-r requirements_core.txt
+-r requirements_docs.txt
+-r requirements_heroku.txt
+
+# Linting
+flake8==3.7.*
+flake8-import-order==0.18.1                 # Flake plugin for import order
+flake8-quotes==2.1.*                        # Flake plugin for quotes
+pep8-naming==0.9.*                          # Flake plugin for naming conventions
+
+# Tests
+selenium==3.141.*                           # Functional testing (in here for CI tests)
+
+# Debug
+django-debug-toolbar==2.*

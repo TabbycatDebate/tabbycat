@@ -1,0 +1,364 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tabbycat\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-08-05 03:06\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Portuguese\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: pt-PT\n"
+"X-Crowdin-File: /develop/tabbycat/utils/locale/en/LC_MESSAGES/django.po\n"
+
+#: utils/forms.py:25
+msgid "E-mail address"
+msgstr ""
+
+#: utils/tables.py:45
+msgid "No Data Available"
+msgstr ""
+
+#: utils/tables.py:153 utils/tables.py:154
+msgid "ⓒ"
+msgstr ""
+
+#: utils/tables.py:155
+msgid "ⓣ"
+msgstr ""
+
+#: utils/tables.py:159
+msgid "chair"
+msgstr "presidente"
+
+#: utils/tables.py:160
+msgid "panellist"
+msgstr "juiz auxiliar"
+
+#: utils/tables.py:161
+msgid "trainee"
+msgstr "aprendiz"
+
+#: utils/tables.py:228 utils/tables.py:234
+#, python-format
+msgid "View %(a)s's %(d)s Record"
+msgstr ""
+
+#: utils/tables.py:244 utils/tables.py:249
+#, python-format
+msgid "View %(team)s's Record"
+msgstr ""
+
+#: utils/tables.py:271
+#, python-format
+msgid "Code name: <strong>%(name)s</strong>"
+msgstr ""
+
+#: utils/tables.py:273
+#, python-format
+msgid "Real name: <strong>%(name)s</strong>"
+msgstr ""
+
+#: utils/tables.py:285
+#, python-format
+msgid "%(team)s won"
+msgstr ""
+
+#: utils/tables.py:290
+#, python-format
+msgid "%(team)s lost"
+msgstr ""
+
+#: utils/tables.py:295 utils/tables.py:323 utils/tables.py:341
+#, python-format
+msgid "%(team)s—no result"
+msgstr ""
+
+#: utils/tables.py:303
+#, python-format
+msgid "%(team)s took 1st"
+msgstr ""
+
+#: utils/tables.py:308
+#, python-format
+msgid "%(team)s took 2nd"
+msgstr ""
+
+#: utils/tables.py:313
+#, python-format
+msgid "%(team)s took 3rd"
+msgstr ""
+
+#: utils/tables.py:318
+#, python-format
+msgid "%(team)s took 4th"
+msgstr ""
+
+#: utils/tables.py:331
+#, python-format
+msgid "%(team)s is advancing"
+msgstr ""
+
+#: utils/tables.py:336
+#, python-format
+msgid "%(team)s was eliminated"
+msgstr ""
+
+#: utils/tables.py:354
+#, python-format
+msgid " vs %(opposition)s"
+msgstr ""
+
+#: utils/tables.py:361
+#, python-format
+msgid "Won against %(team)s"
+msgstr ""
+
+#: utils/tables.py:363
+#, python-format
+msgid "Lost to %(team)s"
+msgstr ""
+
+#: utils/tables.py:365
+#, python-format
+msgid "No result for debate against %(team)s"
+msgstr ""
+
+#: utils/tables.py:373 utils/tables.py:452
+#, python-format
+msgid "Total speaker score: <strong>%s</strong>"
+msgstr ""
+
+#: utils/tables.py:378 utils/tables.py:457
+msgid "View/edit debate ballot"
+msgstr ""
+
+#: utils/tables.py:384 utils/tables.py:463
+msgid "View debate ballot"
+msgstr ""
+
+#: utils/tables.py:405
+msgid "Teams in debate:"
+msgstr ""
+
+#: utils/tables.py:408
+#, python-format
+msgid "%(team)s (%(side)s)"
+msgstr ""
+
+#: utils/tables.py:427
+msgid "advancing"
+msgstr ""
+
+#: utils/tables.py:428
+msgid "Advancing"
+msgstr ""
+
+#: utils/tables.py:430
+msgid "eliminated"
+msgstr "eliminado"
+
+#: utils/tables.py:431
+msgid "Eliminated"
+msgstr ""
+
+#: utils/tables.py:434 utils/tables.py:444
+msgid "No result for debate"
+msgstr ""
+
+#: utils/tables.py:437
+msgid "4th"
+msgstr "4º"
+
+#: utils/tables.py:437
+msgid "3rd"
+msgstr "3º"
+
+#: utils/tables.py:437
+msgid "2nd"
+msgstr "2º"
+
+#: utils/tables.py:437
+msgid "1st"
+msgstr "1º"
+
+#: utils/tables.py:441
+#, python-format
+msgid "Placed %(place)s"
+msgstr ""
+
+#: utils/tables.py:472
+msgid "Tournament"
+msgstr ""
+
+#: utils/tables.py:481
+msgid "Round"
+msgstr "Rodada"
+
+#: utils/tables.py:499 utils/tables.py:679
+msgid "Name"
+msgstr ""
+
+#: utils/tables.py:505 utils/tables.py:654
+msgid "Institution"
+msgstr "Instituição"
+
+#: utils/tables.py:511
+msgid "Member of the Adjudication Core"
+msgstr ""
+
+#: utils/tables.py:518
+msgid "Independent Adjudicator"
+msgstr ""
+
+#: utils/tables.py:526
+msgid "Always Trainee"
+msgstr ""
+
+#: utils/tables.py:591
+msgid "Debate Adjudicators"
+msgstr ""
+
+#: utils/tables.py:615
+msgid "Order as listed"
+msgstr ""
+
+#: utils/tables.py:625
+msgid "Motion"
+msgstr ""
+
+#: utils/tables.py:640
+msgid "Team"
+msgstr "Dupla"
+
+#: utils/tables.py:645 utils/tables.py:701
+msgid "Categories"
+msgstr ""
+
+#: utils/tables.py:665 utils/tables.py:744
+msgid "Division"
+msgstr ""
+
+#: utils/tables.py:672
+msgid "Redacted"
+msgstr ""
+
+#: utils/tables.py:699
+msgid "Category"
+msgstr ""
+
+#: utils/tables.py:726
+#, python-format
+msgid "This venue %(predicate)s."
+msgstr ""
+
+#: utils/tables.py:728
+#, python-format
+msgid "This venue %(predicates)s, and %(last_predicate)s."
+msgstr ""
+
+#: utils/tables.py:759
+msgid "Venue"
+msgstr ""
+
+#: utils/tables.py:765
+msgid "Date"
+msgstr ""
+
+#: utils/tables.py:765
+msgid "Time"
+msgstr ""
+
+#: utils/tables.py:769
+msgid "Bye"
+msgstr ""
+
+#: utils/tables.py:771
+msgid "Postponed"
+msgstr ""
+
+#: utils/tables.py:773
+msgid "Forfeit"
+msgstr ""
+
+#: utils/tables.py:794
+#, python-format
+msgid "Teams have met once"
+msgid_plural "Teams have met %(count)d times"
+msgstr[0] ""
+msgstr[1] ""
+
+#: utils/tables.py:800
+msgid "Teams are from the same institution"
+msgstr ""
+
+#: utils/tables.py:806
+msgid "Conflicts/Flags"
+msgstr ""
+
+#: utils/tables.py:860
+msgid "The ballot you submitted"
+msgstr ""
+
+#: utils/tables.py:864
+msgid "View/Edit Ballot"
+msgstr ""
+
+#: utils/tables.py:873
+msgid "No ballot"
+msgstr ""
+
+#: utils/tables.py:875
+msgid "Elimination"
+msgstr "Eliminação"
+
+#: utils/tables.py:878 utils/tables.py:890
+msgid "View Ballot"
+msgstr ""
+
+#: utils/tables.py:898
+msgid "Result"
+msgstr ""
+
+#. Translators: "TBC" stands for "to be confirmed".
+#: utils/tables.py:904
+msgid "TBC"
+msgstr ""
+
+#: utils/tables.py:905
+msgid "Side"
+msgstr ""
+
+#: utils/tables.py:943
+msgid "Team iron-manned this round and the last."
+msgstr ""
+
+#: utils/tables.py:946
+msgid "Team iron-manned this round."
+msgstr ""
+
+#: utils/tables.py:949
+msgid "Team iron-manned last round."
+msgstr ""
+
+#: utils/tables.py:966 utils/tables.py:967
+#, python-format
+msgid "Team %(num)d"
+msgstr ""
+
+#: utils/templates/database_limit_warning.html:9
+#, python-format
+msgid "You're currently using %(nrows)s row in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgid_plural "You're currently using %(nrows)s rows in your database. If you haven't already upgraded your Heroku database to a paid tier, it's limited to a maximum of 10,000 rows. As you're close to this limit, you should <strong>not create new tournaments</strong> on this site unless and until you've <a href=\"https://devcenter.heroku.com/articles/upgrading-heroku-postgres-databases\">upgraded your database</a> to a paid tier."
+msgstr[0] ""
+msgstr[1] ""
+
+#: utils/views.py:45
+msgid "Whoops! You're not meant to type that URL into your browser."
+msgstr ""
+

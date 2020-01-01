@@ -1,8 +1,11 @@
+import itertools
 import logging
 
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, Max, Q, Sum
+from django.utils.translation import gettext_lazy as _
 
 from standings.teams import TeamStandingsGenerator
+from tournaments.models import Round
 
 from .liveness import liveness_bp, liveness_twoteam
 
@@ -59,19 +62,19 @@ def liveness(self, team, teams_count, prelims, current_round):
         import random
         status = random.choice([1,2,3])
         highest_liveness = 3
-        if status is 1:
+        if status == 1:
             live_info['tooltip'] += 'Definitely in for the %s break<br>test' % bc.name
             if highest_liveness != 2:
                 highest_liveness = 1  # Live not ins are the most important highlight
-        elif status is 2:
+        elif status == 2:
             live_info['tooltip'] += 'Still live for the %s break<br>test' % bc.name
             highest_liveness = 2
-        elif status is 3:
+        elif status == 3:
             live_info['tooltip'] += 'Cannot break in %s break<br>test' % bc.name
 
-    if highest_liveness is 1:
+    if highest_liveness == 1:
         live_info['class'] = 'bg-success'
-    elif highest_liveness is 2:
+    elif highest_liveness == 2:
         live_info['class'] = 'bg-warning'
 
     return live_info
@@ -119,3 +122,63 @@ def calculate_live_thresholds(bc, tournament, round):
     logger.info("Liveness in %s R%d/%d with break size %d, %d teams: safe at %d, dead at %d",
         tournament.short_name, round.seq, total_rounds, bc.break_size, total_teams, safe, dead)
     return safe, dead
+
+
+BREAK_ROUND_NAMES = [
+    # Translators: abbreviation for "grand final"
+    (_("Grand Final"), _("GF")),
+    # Translators: abbreviation for "semifinals"
+    (_("Semifinals"), _("SF")),
+    # Translators: abbreviation for "quarterfinals"
+    (_("Quarterfinals"), _("QF")),
+    # Translators: abbreviation for "octofinals"
+    (_("Octofinals"), _("OF")),
+    # Translators: abbreviation for "double-octofinals"
+    (_("Double-Octofinals"), _("DOF")),
+    # Translators: abbreviation for "triple-octofinals"
+    (_("Triple-Octofinals"), _("TOF")),
+]
+
+
+def get_break_category_round_names(bc):
+    return [
+        # Translators: abbreviation for "finals" - first character of category name
+        (_("%s Finals") % (bc.name), _("%sF") % (bc.name[:1])),
+        # Translators: abbreviation for "semifinals" - first character of category name
+        (_("%s Semifinals") % (bc.name), _("%sSF") % (bc.name[:1])),
+        # Translators: abbreviation for "quarterfinals" - first character of category name
+        (_("%s Quarterfinals") % (bc.name), _("%sQF") % (bc.name[:1])),
+        # Translators: abbreviation for "octofinals" - first character of category name
+        (_("%s Octofinals") % (bc.name), _("%sOF") % (bc.name[:1])),
+        # Translators: abbreviation for "double-octofinals" - first character of category name
+        (_("%s Double-Octofinals") % (bc.name), _("%sDOF") % (bc.name[:1])),
+        # Translators: abbreviation for "triple-octofinals" - first character of category name
+        (_("%s Triple-Octofinals") % (bc.name), _("%sTOF") % (bc.name[:1])),
+    ]
+
+
+def auto_make_break_rounds(bc, tournament=None, prefix=False):
+    if tournament is None:
+        tournament = bc.tournament
+
+    num_rounds = tournament.round_set.all().aggregate(Max('seq'))['seq__max']
+    round_names = get_break_category_round_names(bc) if prefix else BREAK_ROUND_NAMES
+
+    # Translators: "UBR" stands for "unknown break round" (used as a fallback when we don't know what it's called)
+    unknown_round = (_("Unknown %s break round") % (bc.name), _("U%sBR") % (bc.name[:1])) if prefix \
+        else (_("Unknown break round"), _("UBR"))
+
+    break_rounds = itertools.chain(round_names, itertools.repeat(unknown_round))
+
+    for i, (name, abbr) in zip(range(bc.num_break_rounds), break_rounds):
+        Round(
+            tournament=tournament,
+            break_category=bc,
+            seq=num_rounds+bc.num_break_rounds-i,
+            stage=Round.STAGE_ELIMINATION,
+            name=name,
+            abbreviation=abbr,
+            draw_type=Round.DRAW_ELIMINATION,
+            feedback_weight=0.5,
+            silent=True,
+        ).save()

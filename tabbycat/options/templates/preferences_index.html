@@ -76,16 +76,9 @@
       {% include "components/item-action.html" with type="primary" emoji="💻" text=title extra=description %}
 
       {% tournamenturl 'options-tournament-section' section='email' as url %}
-      {% trans "Email Sending" as title %}
-      {% trans "Configures when to send email messages" as description %}
+      {% trans "Notifications" as title %}
+      {% trans "Configures sending notifications, such as emails confirming ballot submissions or team points" as description %}
       {% include "components/item-action.html" with type="primary" emoji="📧" text=title extra=description %}
-
-      {% if show_leagues %}
-        {% tournamenturl 'options-tournament-section' section='league_options' as url %}
-        {% trans "League Options" as title %}
-        {% trans "Special options for running large multi-venue multi-level debating competitions. Warning: these features are not fully tested or supported." as description %}
-        {% include "components/item-action.html" with type="primary" emoji="🏫" text=title extra=description %}
-      {% endif %}
 
     </ul>
   </div>

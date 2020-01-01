@@ -1,22 +1,20 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-08 12:25+1000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2019-07-21 05:14-0700\n"
+"PO-Revision-Date: 2019-07-21 12:19\n"
+"Last-Translator: philip_tc\n"
+"Language-Team: Japanese\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: tabbycat\n"
+"X-Crowdin-Language: ja\n"
+"X-Crowdin-File: /develop/tabbycat/importer/locale/en/LC_MESSAGES/django.po\n"
 
 #: importer/forms.py:20
 #, python-format
@@ -25,7 +23,7 @@ msgstr ""
 
 #: importer/forms.py:37
 msgid "Unaffiliated (no institution)"
-msgstr ""
+msgstr "無所属"
 
 #: importer/forms.py:48
 #, python-format
@@ -52,30 +50,26 @@ msgstr ""
 
 #: importer/forms.py:210
 msgid "Speakers' names"
-msgstr ""
+msgstr "スピーカーの名前"
 
 #: importer/forms.py:211
 msgid "Speakers' email addresses"
-msgstr ""
+msgstr "スピーカーのメールアドレス"
 
 #: importer/forms.py:212
-msgid ""
-"Optional, useful to include if distributing private URLs, list in same order "
-"as speakers' names"
+msgid "Optional, useful to include if distributing private URLs, list in same order as speakers' names"
 msgstr ""
 
 #: importer/forms.py:219
 msgid "Name (excluding institution name)"
-msgstr ""
+msgstr "名前（インステチューションなし）"
 
 #: importer/forms.py:220
 msgid "Prefix team name with institution name?"
 msgstr ""
 
 #: importer/forms.py:223
-msgid ""
-"Do not include institution name (check the \"Prefix team name with "
-"institution name?\" field instead)"
+msgid "Do not include institution name (check the \"Prefix team name with institution name?\" field instead)"
 msgstr ""
 
 #: importer/forms.py:232
@@ -84,11 +78,11 @@ msgstr ""
 
 #: importer/forms.py:237
 msgid "One speaker's name per line"
-msgstr ""
+msgstr "選手を1行ごとに表記してください"
 
 #: importer/forms.py:238
 msgid "Can be separated by newlines, tabs or commas"
-msgstr ""
+msgstr "改行、タブ、カンマで分けれます"
 
 #: importer/forms.py:240
 #, python-format
@@ -113,17 +107,15 @@ msgstr ""
 msgid "There are more email addresses than speakers."
 msgstr ""
 
-#: importer/forms.py:313
-msgid ""
-"Every team in a single tournament from the same institution must have a "
-"different name. Please correct the duplicate data."
+#: importer/forms.py:316
+msgid "Every team in a single tournament from the same institution must have a different name. Please correct the duplicate data."
 msgstr ""
 
-#: importer/forms.py:327
+#: importer/forms.py:330
 msgid "Rating"
 msgstr ""
 
-#: importer/forms.py:335
+#: importer/forms.py:338
 #, python-format
 msgid "This value must be between %(min)d and %(max)d."
 msgstr ""
@@ -157,22 +149,12 @@ msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:18
 #, python-format
-msgid ""
-"As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this "
-"tournament's configuration</a>, an adjudicator's rating must be between "
-"<strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email "
-"addresses is optional but can be useful if using <a href="
-"\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback "
-"or ballots."
+msgid "As per <a href=\"%(options_feedback)s\" class=\"alert-link\">this tournament's configuration</a>, an adjudicator's rating must be between <strong>%(min)s</strong> and <strong>%(max)s</strong>. Providing email addresses is optional but can be useful if using <a href=\"%(privateurls_url)s\" class=\"alert-link\">private URLs</a> for feedback or ballots."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:29
 #, python-format
-msgid ""
-"Adjudicators marked as 'shared' will not be associated with any particular "
-"tournament but will be available to any tournament which has the \"<a href="
-"\"%(options_league_url)s\" class=\"alert-link\">Share adjudicators</a>\" "
-"setting enabled."
+msgid "Adjudicators marked as 'shared' will not be associated with any particular tournament but will be available to any tournament which has the \"<a href=\"%(options_league_url)s\" class=\"alert-link\">Share adjudicators</a>\" setting enabled."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:58
@@ -182,23 +164,19 @@ msgstr ""
 
 #: importer/templates/simple_import_adjudicators_details.html:62
 msgid "Unaffiliated Adjudicators"
-msgstr ""
+msgstr "無所属のジャッジ"
 
 #: importer/templates/simple_import_adjudicators_details.html:86
 msgid "Save All Adjudicators"
-msgstr ""
+msgstr "すべてのジャッジを保存する"
 
 #: importer/templates/simple_import_adjudicators_numbers.html:14
 #, python-format
-msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
-"institutions</a> before adding adjudicators."
+msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding adjudicators."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_numbers.html:23
-msgid ""
-"Specify the number of new adjudicators to add per institution. In the next "
-"step you can specify their names and ratings."
+msgid "Specify the number of new adjudicators to add per institution. In the next step you can specify their names and ratings."
 msgstr ""
 
 #: importer/templates/simple_import_adjudicators_numbers.html:32
@@ -216,36 +194,31 @@ msgstr ""
 #: importer/templates/simple_import_index.html:4
 #: importer/templates/simple_import_index.html:5
 msgid "Simple Importer"
-msgstr ""
+msgstr "簡単入力"
 
 #: importer/templates/simple_import_index.html:9
-msgid ""
-"There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-"
-"data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. "
-"Which one is best depends on the size of your tournament and your technical "
-"background. This <strong>simple importer</strong> is the easiest to use and "
-"works well for small- and medium-sized tournaments."
+msgid "There are <a href=\"https://tabbycat.readthedocs.io/en/stable/use/importing-data.html\" target=\"_blank\">several ways to import data into Tabbycat</a>. Which one is best depends on the size of your tournament and your technical background. This <strong>simple importer</strong> is the easiest to use and works well for small- and medium-sized tournaments."
 msgstr ""
 
 #: importer/templates/simple_import_index.html:16
 msgid "Add Institutions"
-msgstr ""
+msgstr "大学・団体を追加する"
 
 #: importer/templates/simple_import_index.html:21
 msgid "Add Teams"
-msgstr ""
+msgstr "チームを追加する"
 
 #: importer/templates/simple_import_index.html:25
 msgid "Add Adjudicators"
-msgstr ""
+msgstr "ジャッジを追加する"
 
 #: importer/templates/simple_import_index.html:29
 msgid "Add Venues"
-msgstr ""
+msgstr "ラウンド部屋を追加する"
 
 #: importer/templates/simple_import_index.html:36
 msgid "Add/Edit Venue Categories"
-msgstr ""
+msgstr "ラウンド部屋の種類を追加・修正する"
 
 #: importer/templates/simple_import_index.html:40
 msgid "Add/Edit Venue Constraints"
@@ -253,14 +226,18 @@ msgstr ""
 
 #: importer/templates/simple_import_index.html:47
 msgid "Add/Edit Adjudicator-Team Conflicts"
-msgstr ""
+msgstr "ジャッジ - チーム間のコンフリクトを追加・修正する"
 
 #: importer/templates/simple_import_index.html:51
 msgid "Add/Edit Adjudicator-Adjudicator Conflicts"
-msgstr ""
+msgstr "ジャッジ間コンフリクトを追加・修正する"
 
 #: importer/templates/simple_import_index.html:55
 msgid "Add/Edit Adjudicator-Institution Conflicts"
+msgstr "ジャッジ - 大学間のコンフリクトを追加・修正する"
+
+#: importer/templates/simple_import_index.html:59
+msgid "Add/Edit Team-Institution Conflicts"
 msgstr ""
 
 #: importer/templates/simple_import_institutions_details.html:4
@@ -269,16 +246,16 @@ msgstr ""
 #: importer/templates/simple_import_institutions_raw.html:6
 msgctxt "page title"
 msgid "Add Institutions"
-msgstr ""
+msgstr "大学・団体を追加する"
 
 #: importer/templates/simple_import_institutions_details.html:38
 msgid "Save All Institutions"
-msgstr ""
+msgstr "すべての大学・団体を保存する"
 
 #: importer/templates/simple_import_institutions_raw.html:41
 #: importer/templates/simple_import_venues_raw.html:41
 msgid "Next Step"
-msgstr ""
+msgstr "次のステップ"
 
 #: importer/templates/simple_import_teams_details.html:4
 #: importer/templates/simple_import_teams_details.html:6
@@ -286,12 +263,12 @@ msgstr ""
 #: importer/templates/simple_import_teams_numbers.html:6
 msgctxt "page title"
 msgid "Add Teams"
-msgstr ""
+msgstr "チームを追加する"
 
 #: importer/templates/simple_import_teams_details.html:33
 #, python-format
 msgid "Teams for %(institution_name)s"
-msgstr ""
+msgstr "%(institution_name)sのチーム"
 
 #: importer/templates/simple_import_teams_details.html:37
 msgid "Unaffiliated Teams"
@@ -303,15 +280,11 @@ msgstr ""
 
 #: importer/templates/simple_import_teams_numbers.html:15
 #, python-format
-msgid ""
-"You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add "
-"institutions</a> before adding teams."
+msgid "You need to <a href=\"%(import_institutions_url)s\" class=\"alert-link\">add institutions</a> before adding teams."
 msgstr ""
 
 #: importer/templates/simple_import_teams_numbers.html:24
-msgid ""
-"Specify the number of new teams to add per institution. In the next step you "
-"can specify team and speaker names."
+msgid "Specify the number of new teams to add per institution. In the next step you can specify team and speaker names."
 msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:4
@@ -320,54 +293,44 @@ msgstr ""
 #: importer/templates/simple_import_venues_raw.html:6
 msgctxt "page title"
 msgid "Add Venues"
-msgstr ""
+msgstr "ラウンド部屋を追加する"
 
 #: importer/templates/simple_import_venues_details.html:16
-msgid ""
-"Priorities indicate how much you want to use the venue. Larger numbers "
-"indicate higher priority. If you have more venues than debates, the venues "
-"with the lowest priorities will not be used."
-msgstr ""
+msgid "Priorities indicate how much you want to use the venue. Larger numbers indicate higher priority. If you have more venues than debates, the venues with the lowest priorities will not be used."
+msgstr "ラウンド部屋の使用優先度を設定できます。\n"
+"大きい数字であるほど、優先度が高いことを示します。\n"
+"ラウンド部屋が試合数より多い場合、優先度が低い部屋が省かれます。"
 
 #: importer/templates/simple_import_venues_details.html:21
 #, python-format
-msgid ""
-"Venues marked as 'shared' will not be associated with any particular "
-"tournament but will be available to any tournament which has the <a "
-"href='%(options_league_url)s' class='alert-link'>'Share Venues' setting</a> "
-"enabled."
+msgid "Venues marked as 'shared' will not be associated with any particular tournament but will be available to any tournament which has the <a href='%(options_league_url)s' class='alert-link'>'Share Venues' setting</a> enabled."
 msgstr ""
 
 #: importer/templates/simple_import_venues_details.html:43
 msgid "Save All Venues"
-msgstr ""
+msgstr "すべてのラウンド部屋を保存する"
 
 #: importer/templates/simple_import_venues_raw.html:15
-msgid ""
-"Paste a list of venues with one venue per line and following the format of: "
-"<code>name,priority</code>. For example:"
+msgid "Paste a list of venues with one venue per line and following the format of: <code>name,priority</code>. For example:"
 msgstr ""
 
 #: importer/views.py:102
 #, python-format
 msgid "Added %(count)d institution."
 msgid_plural "Added %(count)d institutions."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)d大学追加しました。"
 
 #: importer/views.py:123
 #, python-format
 msgid "Added %(count)d venue."
 msgid_plural "Added %(count)d venues."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ラウンド部屋を%(count)d追加しました。"
 
 #: importer/views.py:180
 #, python-format
 msgid "Added %(count)d team."
 msgid_plural "Added %(count)d teams."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)dチーム追加しました。"
 
 #: importer/views.py:201
 #, python-format
@@ -379,4 +342,4 @@ msgstr ""
 msgid "Added %(count)d adjudicator."
 msgid_plural "Added %(count)d adjudicators."
 msgstr[0] ""
-msgstr[1] ""
+

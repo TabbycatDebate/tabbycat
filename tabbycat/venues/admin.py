@@ -3,6 +3,8 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django import forms
 from gfklookupwidget.widgets import GfkLookupWidget
 
+from availability.admin import RoundAvailabilityInline
+
 from .models import Venue, VenueCategory, VenueConstraint
 
 
@@ -11,6 +13,7 @@ class VenueAdmin(admin.ModelAdmin):
     list_display = ('display_name', 'priority', 'tournament', 'categories_list')
     list_filter = ('venuecategory', 'priority', 'tournament')
     search_fields = ('name',)
+    inlines = (RoundAvailabilityInline,)
 
     def categories_list(self, obj):
         return ", ".join([c.name for c in obj.venuecategory_set.all()])
@@ -51,7 +54,7 @@ class VenueConstraintAdmin(admin.ModelAdmin):
     list_display = ('subject', 'category', 'priority')
     search_fields = ('adjudicator__name', 'adjudicator__institution__code',
             'adjudicator__institution__name', 'team__short_name', 'team__long_name',
-            'institution__name', 'institution__code', 'division__name',
+            'institution__name', 'institution__code',
             'category__name', 'priority')
     list_filter = ('subject_content_type', 'category', 'priority')
     ordering = ('subject_content_type', 'category')
@@ -60,6 +63,7 @@ class VenueConstraintAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related('category').prefetch_related('subject')
 
 
+# Used in participants/admin.py
 class VenueConstraintInline(GenericTabularInline):
     model = VenueConstraint
     ct_field = 'subject_content_type'

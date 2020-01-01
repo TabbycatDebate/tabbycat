@@ -1,18 +1,12 @@
-from utils.consumers import TournamentConsumer, WSLoginRequiredMixin
+from channels.generic.websocket import JsonWebsocketConsumer
 
-from results.models import BallotSubmission
-from results.utils import graphable_debate_statuses
+from tournaments.mixins import TournamentWebsocketMixin
+from utils.mixins import LoginRequiredWebsocketMixin
 
 
-class BallotResultConsumer(TournamentConsumer, WSLoginRequiredMixin):
+class BallotResultConsumer(LoginRequiredWebsocketMixin, TournamentWebsocketMixin, JsonWebsocketConsumer):
     group_prefix = 'ballot_results'
 
 
-class BallotStatusConsumer(TournamentConsumer, WSLoginRequiredMixin):
+class BallotStatusConsumer(LoginRequiredWebsocketMixin, TournamentWebsocketMixin, JsonWebsocketConsumer):
     group_prefix = 'ballot_statuses'
-
-    @classmethod
-    def get_data(cls, debate_round):
-        ballots = BallotSubmission.objects.filter(debate__round=debate_round,
-                                                  discarded=False)
-        return graphable_debate_statuses(ballots, debate_round)
