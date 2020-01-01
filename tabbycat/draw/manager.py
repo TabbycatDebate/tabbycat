@@ -107,9 +107,7 @@ class BaseDrawManager:
         debateteams = []
 
         for pairing in pairings:
-            debate = Debate(round=self.round)
-            debate.bracket = pairing.bracket
-            debate.room_rank = pairing.room_rank
+            debate = Debate(round=self.round, bracket=pairing.bracket, room_rank=pairing.room_rank)
             debate.flags = ",".join(pairing.flags)  # comma-separated list
             if (self.round.tournament.pref('draw_side_allocations') == "manual-ballot" or
                     self.round.is_break_round):

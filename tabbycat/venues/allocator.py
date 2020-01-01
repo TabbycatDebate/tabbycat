@@ -2,7 +2,7 @@ import itertools
 import logging
 import random
 
-from django.db import transaction
+from draw.models import Debate
 
 from .models import VenueConstraint
 
@@ -169,7 +169,6 @@ class VenueAllocator:
         return {debate: venue for debate, venue in zip(debates, self._preferred_venues)}
 
     def save_venues(self, debate_venues):
-        with transaction.atomic():
-            for debate, venue in debate_venues.items():
-                debate.venue = venue
-                debate.save()
+        for debate, venue in debate_venues.items():
+            debate.venue = venue
+        Debate.objects.bulk_update(debate_venues.keys(), ['venue'])
