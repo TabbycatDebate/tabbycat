@@ -51,7 +51,13 @@ class BreakEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUp
     serializer_class = serializers.BreakEligibilitySerializer
     lookup_field = 'slug'
 
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('team_set')
+
 
 class SpeakerEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.SpeakerEligibilitySerializer
     lookup_field = 'slug'
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('speaker_set')
