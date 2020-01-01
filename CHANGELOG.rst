@@ -708,4 +708,3 @@ Feedback
 - Computerised break generation (break round draws not supported)
 - Lots of fixes, interface touch-ups and performance enhancements
 - Now requires Django 1.8 (and other package upgrades)
-
