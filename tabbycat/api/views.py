@@ -1,7 +1,6 @@
 from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from dynamic_preferences.api.serializers import PreferenceSerializer
-from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, GenericAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
@@ -9,12 +8,12 @@ from rest_framework.reverse import reverse
 
 from options.models import TournamentPreferenceModel
 from tournaments.models import Tournament
-from tournaments.mixins import TournamentMixin
+from tournaments.mixins import TournamentFromUrlMixin
 
 from . import serializers
 
 
-class TournamentAPIMixin(TournamentMixin):
+class TournamentAPIMixin(TournamentFromUrlMixin):
     tournament_field = 'tournament'
 
     def perform_create(self, serializer):
@@ -35,29 +34,17 @@ class AdministratorAPIMixin:
 
 class APIRootView(AdministratorAPIMixin, GenericAPIView):
     name = "API Root"
-    queryset = Tournament.objects.all()
-    serializer_class = serializers.TournamentAtRootSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'tournament_slug'
 
     def get(self, request, format=None):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        tournaments_create_url = reverse('api-tournament-create', request=request, format=format)
+        tournaments_create_url = reverse('api-tournament-list', request=request, format=format)
         return Response({
-            "tournaments": serializer.data,
-            "urls": {"create_tournament": tournaments_create_url}
+            "_links": {"tournaments": tournaments_create_url}
         })
 
 
-class TournamentCreateView(CreateAPIView):
-    queryset = Tournament.objects.all()
-    serializer_class = serializers.TournamentSerializer
-    lookup_field = 'slug'
-    lookup_url_kwarg = 'tournament_slug'
-
-
-class TournamentDetailView(RetrieveUpdateAPIView):
+class TournamentViewSet(AdministratorAPIMixin, ModelViewSet):
     # Don't use TournamentAPIMixin here, it's not filtering objects by tournament.
     queryset = Tournament.objects.all()
     serializer_class = serializers.TournamentSerializer
@@ -65,7 +52,7 @@ class TournamentDetailView(RetrieveUpdateAPIView):
     lookup_url_kwarg = 'tournament_slug'
 
 
-class TournamentPreferenceViewSet(TournamentMixin, AdministratorAPIMixin, PerInstancePreferenceViewSet):
+class TournamentPreferenceViewSet(TournamentFromUrlMixin, AdministratorAPIMixin, PerInstancePreferenceViewSet):
     queryset = TournamentPreferenceModel.objects.all()
     serializer_class = PreferenceSerializer
 
