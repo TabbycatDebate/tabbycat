@@ -427,6 +427,7 @@ class DragAndDropMixin(RoundMixin):
                 'fields': {'name': bc.name, 'safe': safe, 'dead': dead},
             }
             serialised_bcs.append(serialised_bc)
+
         extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)

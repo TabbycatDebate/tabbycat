@@ -50,7 +50,7 @@
         </template>
         <template v-else>
           <button v-for="option in highlights[currentHighlightKey].options"
-                  :class="['btn btn-primary border-0', currentHighlightKey + '-display',option.css]">
+                  :class="['btn btn-primary border-0', currentHighlightKey + '-display', option.css]">
             {{ option.fields.name }}
           </button>
         </template>
