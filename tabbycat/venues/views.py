@@ -38,10 +38,14 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
         return self.json_render(serialized_venues.data)
 
     def get_extra_info(self):
-        info = super().get_extra_info(breaks=False)
-        p_range = Venue.objects.filter(tournament=self.tournament).aggregate(min=Min('priority'), max=Max('priority'))
-        info['highlights']['rank'] = ranks_dictionary(self.tournament, p_range['min'], p_range['max'])
-        info['highlights']['category'] = [{'pk': vc.id, 'fields': {'name': vc.name}} for vc in VenueCategory.objects.all()]
+        p_range = Venue.objects.filter(tournament=self.tournament).aggregate(
+            min=Min('priority'), max=Max('priority'))
+        info = super().get_extra_info()
+        info['highlights']['priority'] = ranks_dictionary(
+            self.tournament, p_range['min'], p_range['max'])
+        # Most recently created venues take priority in getting the highlight
+        vcs = VenueCategory.objects.order_by('id').reverse()
+        info['highlights']['category'] = [{'pk': vc.id, 'fields': {'name': vc.name}} for vc in vcs]
         return info
 
 

@@ -44,11 +44,10 @@ class VenueSerializer(serializers.ModelSerializer):
     on the DebateSerializerMixin """
 
     categories = VenueCategorySerializer(many=True, source='venuecategory_set')
-    score = serializers.IntegerField(source='priority')
 
     class Meta:
         model = Venue
-        fields = ('id', 'name', 'display_name', 'priority', 'categories', 'score')
+        fields = ('id', 'name', 'display_name', 'priority', 'categories')
 
 
 class DebateSerializerMixin(serializers.ModelSerializer):

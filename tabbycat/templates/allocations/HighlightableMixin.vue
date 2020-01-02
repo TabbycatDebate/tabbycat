@@ -6,7 +6,15 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     highlightsCSS: function () {
-      return [this.activeClass, this.breakClass, this.genderClass, this.regionClass, this.categoryClass, this.rankClass].join(' ')
+      return [
+        this.activeClass,
+        this.breakClass, // Teams
+        this.genderClass, // Teams or Adjs
+        this.regionClass, // Teams or Adjs
+        this.rankClass, // Adjs
+        this.priorityClass, // Venues
+        this.categoryClass, // Venues
+      ].join(' ')
     },
     activeClass: function () {
       let currentKey = Object.keys(this.highlights).filter(key => this.highlights[key].active)
@@ -16,22 +24,10 @@ export default {
       return ''
     },
     breakClass: function () {
-      if (
-        typeof this.highlightData === 'object' && this.highlightData && 'break_categories' in this.highlightData &&
-        this.highlights.break
-      ) {
-        var breakClasses = []
-        let highlightCategories = Object.keys(this.highlights.break.options)
-        for (let breakCategory of this.highlightData.break_categories) {
-          let matchingCategory = highlightCategories.filter(
-            bc => this.highlights.break.options[bc].pk === breakCategory)
-          if (matchingCategory.length > 0) {
-            breakClasses += ' ' + this.highlights.break.options[matchingCategory[0]].css
-          }
-        }
-        return breakClasses
-      }
-      return ''
+      return this.getCSSForOverlapping('break_categories', 'break')
+    },
+    categoryClass: function () {
+      return this.getCSSForOverlapping('categories', 'category')
     },
     genderClass: function () {
       if (this.highlightData && typeof this.highlightData === 'object') {
@@ -67,37 +63,50 @@ export default {
       }
       return ''
     },
-    categoryClass: function () {
-      if (typeof this.highlightData === 'object' && this.highlightData && 'categories' in this.highlightData) {
-        var catClasses = []
-        let highlightCategories = Object.keys(this.highlights.category.options)
-        for (let category of this.highlightData.categories) {
-          let matchingCategory = highlightCategories.filter(
-            vc => this.highlights.category.options[vc].pk === category.id)
+    rankClass: function () {
+      return this.getCSSForOrder('score', 'rank')
+    },
+    priorityClass: function () {
+      return this.getCSSForOrder('priority', 'priority')
+    },
+    ...mapState(['highlights']),
+    ...mapGetters(['allInstitutions']),
+  },
+  methods: {
+    getCSSForOverlapping: function (highlightKey, highlightType) {
+      if (typeof this.highlightData === 'object' && this.highlightData && highlightKey in this.highlightData) {
+        var classes = []
+        let highlightCategories = Object.keys(this.highlights[highlightType].options)
+        for (let category of this.highlightData[highlightKey]) {
+          let matchingCategory = []
+          if (typeof category === 'object') {
+            matchingCategory = highlightCategories.filter(
+              bc => this.highlights[highlightType].options[bc].pk === category.id)
+          } else {
+            matchingCategory = highlightCategories.filter(
+              bc => this.highlights[highlightType].options[bc].pk === category)
+          }
           if (matchingCategory.length > 0) {
-            catClasses += ' ' + this.highlights.category.options[matchingCategory[0]].css
+            classes += ' ' + this.highlights[highlightType].options[matchingCategory[0]].css
           }
         }
-        return catClasses
+        return classes
       }
       return ''
     },
-    rankClass: function () {
+    getCSSForOrder: function (highlightKey, highlightType) {
       if (this.highlightData && typeof this.highlightData === 'object') {
-        if ('score' in this.highlightData) {
-          let rankCategories = Object.keys(this.highlights.rank.options)
-          for (let rankCategory of rankCategories) {
-            if (this.highlightData.score >= this.highlights.rank.options[rankCategory].fields.cutoff) {
-              return this.highlights.rank.options[rankCategory].css
+        if (highlightKey in this.highlightData) {
+          let orderedCategories = Object.keys(this.highlights[highlightType].options)
+          for (let category of orderedCategories) {
+            if (this.highlightData[highlightKey] >= this.highlights[highlightType].options[category].fields.cutoff) {
+              return this.highlights[highlightType].options[category].css
             }
           }
         }
       }
       return ''
     },
-    ...mapState(['highlights']),
-    ...mapGetters(['allInstitutions']),
   },
-  methods: { },
 }
 </script>

@@ -409,24 +409,24 @@ class SingleObjectByRandomisedUrlMixin(SingleObjectFromTournamentMixin):
 
 class DragAndDropMixin(RoundMixin):
 
-    def get_extra_info(self, breaks=True):
+    def get_extra_info(self):
         """ Unlike meta_info everything under extra info is json serialised
         automatically. Designed for simple key/value pairs"""
         extra_info = {} # Set by view for top bar toggles
         extra_info['codeNames'] = self.tournament.pref('team_code_names')
         extra_info['highlights'] = {}
 
-        if breaks:
-            bcs = self.tournament.breakcategory_set.all()
-            serialised_bcs = []
-            for bc in bcs:
-                safe, dead = calculate_live_thresholds(bc, self.tournament, self.round)
-                serialised_bc = {
-                    'pk': bc.id,
-                    'fields': {'name': bc.name, 'safe': safe, 'dead': dead},
-                }
-                serialised_bcs.append(serialised_bc)
-            extra_info['highlights']['break'] = serialised_bcs
+        bcs = self.tournament.breakcategory_set.all()
+        serialised_bcs = []
+        for bc in bcs:
+            safe, dead = calculate_live_thresholds(bc, self.tournament, self.round)
+            serialised_bc = {
+                'pk': bc.id,
+                'fields': {'name': bc.name, 'safe': safe, 'dead': dead},
+            }
+            serialised_bcs.append(serialised_bc)
+
+        extra_info['highlights']['break'] = serialised_bcs
 
         extra_info['backUrl'] = reverse_round('draw', self.round)
         extra_info['backLabel'] = _("Return to Draw")

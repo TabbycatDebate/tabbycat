@@ -23,4 +23,5 @@ class EditDebateVenuesVenueSerializer(VenueSerializer, VueDraggableItemMixin):
     class Meta:
         model = VenueSerializer.Meta.model
         fields = (*VenueSerializer.Meta.fields,
-                  *VueDraggableItemMixin.Meta.fields)
+                  *VueDraggableItemMixin.Meta.fields,
+                  'priority')
