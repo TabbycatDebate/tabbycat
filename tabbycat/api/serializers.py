@@ -4,7 +4,7 @@ from breakqual.models import BreakCategory
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from tournaments.models import Tournament
 
-from .fields import TournamentHyperlinkedIdentityField
+from .fields import TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField
 
 
 class TournamentAtRootSerializer(serializers.HyperlinkedModelSerializer):
@@ -128,10 +128,12 @@ class TeamSpeakerSerializer(serializers.ModelSerializer):
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
+    url = TournamentHyperlinkedIdentityField(
+        view_name='api-adjudicator-detail', lookup_field='id')
 
     class Meta:
         model = Adjudicator
-        fields = ('id','name', 'gender','email','phone','anonymous','pronoun',
+        fields = ('url','id','name', 'gender','email','phone','anonymous','pronoun',
                   'institution','base_score')
 
 
@@ -141,10 +143,12 @@ class TeamSerializer(serializers.ModelSerializer):
     #     slug_field='slug'
     # )
     speakers = TeamSpeakerSerializer(many=True)
+    url = TournamentHyperlinkedIdentityField(
+        view_name='api-team-detail', lookup_field='id')
 
     class Meta:
         model = Team
-        fields = ('id','reference', 'code_name',
+        fields = ('url','id','reference', 'code_name',
                   'institution', 'speakers','use_institution_prefix','break_categories')
 
     def create(self,validated_data):
@@ -156,8 +160,13 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
+    team_set = TournamentHyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='api-team-detail',
+        lookup_field='id'
+    )
 
     class Meta:
         model = Institution
         fields = ('id','name', 'code','team_set')
-        read_only_fields = ('team_set',)
