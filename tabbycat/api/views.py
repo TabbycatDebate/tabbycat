@@ -3,8 +3,6 @@ from dynamic_preferences.api.serializers import PreferenceSerializer
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 
 from options.models import TournamentPreferenceModel
 from tournaments.mixins import TournamentMixin
@@ -64,6 +62,7 @@ class BreakEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUp
 class SpeakerEligibilityView(TournamentAPIMixin, AdministratorAPIMixin, RetrieveUpdateAPIView):
     serializer_class = serializers.SpeakerEligibilitySerializer
     lookup_field = 'slug'
+
     def get_queryset(self):
         return super().get_queryset().prefetch_related('speaker_set')
 
@@ -84,4 +83,3 @@ class TeamViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
 class AdjudicatorViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.AdjudicatorSerializer
     lookup_field = 'id'
-

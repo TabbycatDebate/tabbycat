@@ -20,5 +20,6 @@ class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
         }
         return self.get_queryset().get(**lookup_kwargs)
 
+
 class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):
     pass
