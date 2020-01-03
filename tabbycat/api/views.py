@@ -32,7 +32,7 @@ class TournamentAPIMixin(TournamentMixin):
 class AdministratorAPIMixin:
     permission_classes = [IsAdminUser]
 
-    
+
 class TournamentPreferenceViewSet(TournamentMixin, AdministratorAPIMixin, PerInstancePreferenceViewSet):
     queryset = TournamentPreferenceModel.objects.all()
     serializer_class = PreferenceSerializer
