@@ -34,6 +34,10 @@ Getting started with development
 
     $ pip install -r 'config/requirements_development.txt'
 
+- We use `pre-commit <https://pre-commit.com/>`_ to run code style checks (linters). To have them run as a git hook automatically before every commit::
+
+    $ pre-commit install
+
 - Our ``package.json`` provides a convenience command that runs a standard set of development tools simultaneously, such as the Django server and the automatic recompilation with live injecting of javascript and CSS. Once you have set ``USE_WEBPACK_SERVER=True`` in your ``settings_local.py`` you can then run this with::
 
     $ npm run serve
@@ -67,7 +71,7 @@ For the front end interface design there is a style guide available at "/style/"
 
 For python code, we use `flake8 <http://flake8.readthedocs.io>`_ to check for a non-strict series of style rules. Warnings will trigger a Travis CI build to fail. The entire codebase can be checked by using::
 
-    $ flake8 .
+    $ pre-commit run flake8 --all-files
 
 For stylesheets, we use `stylelint <https://stylelint.io>`_. The relevant code can be checked by using::
 

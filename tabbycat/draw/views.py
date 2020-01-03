@@ -492,7 +492,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
             table.add_debate_metric_columns(draw, standings)
             table.add_debate_side_history_columns(draw, r.prev)
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
-            table.add_debate_adjudicators_column(draw, show_splits=False)
+            table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
 
         table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
 

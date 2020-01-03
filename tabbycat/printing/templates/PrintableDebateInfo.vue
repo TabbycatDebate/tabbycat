@@ -196,8 +196,12 @@ export default {
             break
         }
         const substitutions = [a.adjudicator.name, position, this.getAdjudicatorInstitution(a)]
-        const adjInfo = this.tct('%s (%s, %s)', substitutions)
-        adjs.push(adjInfo)
+        // Omitt adj's institutions as per preference
+        if (this.roundInfo.showAdjInstitutions === true) {
+          adjs.push(this.tct('%s (%s, %s)', substitutions))
+        } else {
+          adjs.push(this.tct('%s (%s)', substitutions))
+        }
       })
       const otherAdjsList = adjs.join(this.gettext('; '))
       return this.tct('Adjudicating with %s.', [otherAdjsList])

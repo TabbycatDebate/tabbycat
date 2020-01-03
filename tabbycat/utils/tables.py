@@ -526,7 +526,8 @@ class TabbycatTableBuilder(BaseTableBuilder):
             }
             self.add_boolean_column(trainee_header, [adj.trainee for adj in adjudicators])
 
-    def add_debate_adjudicators_column(self, debates, title="Adjudicators", show_splits=False, highlight_adj=None):
+    def add_debate_adjudicators_column(self, debates, title="Adjudicators",
+            show_splits=False, highlight_adj=None, for_admin=False):
         da_data = []
 
         def construct_text(adjs_data):
@@ -551,8 +552,12 @@ class TabbycatTableBuilder(BaseTableBuilder):
                 descriptors = []
                 if a['position'] != AdjudicatorAllocation.POSITION_ONLY:
                     descriptors.append(self.ADJ_POSITION_NAMES[a['position']])
-                if a['adj'].institution is not None:
+                if a['adj'].institution is not None and (
+                        self.admin or self.tournament.pref('show_adjudicator_institutions')):
                     descriptors.append(a['adj'].institution.code)
+                if for_admin or self.tournament.pref('show_adjudicator_institutions'):
+                    if a['adj'].institution is not None:
+                        descriptors.append(a['adj'].institution.code)
                 if a.get('split', False):
                     descriptors.append("<span class='text-danger'>" + _("in minority") + "</span>")
                 text = a['adj'].name

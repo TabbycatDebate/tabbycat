@@ -1,3 +1,10 @@
-files:
-  - source: /tabbycat/**/locale/en/LC_MESSAGES/*.po
-    translation: /tabbycat/**/locale/%two_letters_code%/LC_MESSAGES/%original_file_name%
+files: [
+ {
+  "source" : "/tabbycat/**/locale/en/LC_MESSAGES/*.po",
+  "translation" : "/tabbycat/**/locale/%two_letters_code%/LC_MESSAGES/%original_file_name%",
+ },
+ {
+  "source" : "/docs/locale/en/LC_MESSAGES/**/*.po",
+  "translation" : "/docs/locale/%two_letters_code%/LC_MESSAGES/**/%original_file_name%",
+ }
+]

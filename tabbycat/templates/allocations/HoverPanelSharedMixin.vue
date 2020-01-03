@@ -83,7 +83,7 @@ export default {
           let css = 'region-display ' + this.highlights.region.options[institution.region].css
           institutionDetails.push(this.makeItem(name, css, false))
         } else {
-          let name = institution.code + ' (?)'
+          let name = institution.code
           let css = 'btn-outline-secondary'
           institutionDetails.push(this.makeItem(name, css, false))
         }
