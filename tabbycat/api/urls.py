@@ -14,7 +14,7 @@ detail_methods = {'get': 'retrieve', 'post': 'update', 'delete': 'destroy'}
 urlpatterns = [
 
     path('<slug:tournament_slug>/', include([
-        path('<int:round_seq>/', include([
+        path('<int:pk>/', include([
         ])),
 
         path('break-categories/', include([
@@ -47,7 +47,7 @@ urlpatterns = [
             path('',
                  views.InstitutionViewSet.as_view(list_methods),
                  name='api-institution-list'),
-            path('<int:id>/',
+            path('<int:pk>/',
                  views.InstitutionViewSet.as_view(detail_methods),
                  name='api-institution-detail'),
         ])),
@@ -55,7 +55,7 @@ urlpatterns = [
             path('',
                  views.TeamViewSet.as_view(list_methods),
                  name='api-team-list'),
-            path('<int:id>',
+            path('<int:pk>/',
                  views.TeamViewSet.as_view(detail_methods),
                  name='api-team-detail'),
         ])),
@@ -63,11 +63,18 @@ urlpatterns = [
             path('',
                  views.AdjudicatorViewSet.as_view(list_methods),
                  name='api-adjudicator-list'),
-            path('<int:id>',
+            path('<int:pk>/',
                 views.AdjudicatorViewSet.as_view(detail_methods),
                 name='api-adjudicator-detail'),
         ])),
         url('', include(pref_router.urls)),  # Preferences
     ])),
-
+    path('institutions/', include([
+        path('',
+             views.GlobalInstitutionViewSet.as_view(list_methods),
+             name='api-global-institution-list'),
+        path('<int:pk>/',
+             views.GlobalInstitutionViewSet.as_view(detail_methods),
+             name='api-global-institution-detail'),
+    ])),
 ]

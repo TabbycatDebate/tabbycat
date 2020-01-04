@@ -128,8 +128,7 @@ class TeamSpeakerSerializer(serializers.ModelSerializer):
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
-    url = TournamentHyperlinkedIdentityField(
-        view_name='api-adjudicator-detail', lookup_field='id')
+    url = TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
 
     class Meta:
         model = Adjudicator
@@ -143,8 +142,7 @@ class TeamSerializer(serializers.ModelSerializer):
     #     slug_field='slug'
     # )
     speakers = TeamSpeakerSerializer(many=True)
-    url = TournamentHyperlinkedIdentityField(
-        view_name='api-team-detail', lookup_field='id')
+    url = TournamentHyperlinkedIdentityField(view_name='api-team-detail')
 
     class Meta:
         model = Team
@@ -160,13 +158,13 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class InstitutionSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
     team_set = TournamentHyperlinkedRelatedField(
         many=True,
         read_only=True,
         view_name='api-team-detail',
-        lookup_field='id'
     )
 
     class Meta:
         model = Institution
-        fields = ('id','name', 'code','team_set')
+        fields = ('url','id','name', 'code','team_set')
