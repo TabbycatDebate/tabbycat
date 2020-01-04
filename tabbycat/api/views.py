@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAdminUser
 from options.models import TournamentPreferenceModel
 from tournaments.mixins import TournamentMixin
 
-from participants.models import Institution
+from participants.models import Institution,Speaker
 
 from django.db.models import Prefetch
 
@@ -87,3 +87,9 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
 
     def get_queryset(self):
         return Institution.objects.all()
+
+class SpeakerViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
+    serializer_class = serializers.SpeakerSerializer
+
+    def get_queryset(self):
+        return Speaker.objects.all()

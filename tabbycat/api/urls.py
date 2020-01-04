@@ -67,6 +67,14 @@ urlpatterns = [
                 views.AdjudicatorViewSet.as_view(detail_methods),
                 name='api-adjudicator-detail'),
         ])),
+        path('speakers/', include([
+            path('',
+                 views.SpeakerViewSet.as_view(list_methods),
+                 name='api-speaker-list'),
+            path('<int:pk>/',
+                 views.SpeakerViewSet.as_view(detail_methods),
+                 name='api-speaker-detail'),
+        ])),
         url('', include(pref_router.urls)),  # Preferences
     ])),
     path('institutions/', include([

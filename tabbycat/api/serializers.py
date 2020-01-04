@@ -4,7 +4,7 @@ from breakqual.models import BreakCategory
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from tournaments.models import Tournament
 
-from .fields import TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField
+from .fields import TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField, SpeakerHyperlinkedIdentityField
 
 
 class TournamentAtRootSerializer(serializers.HyperlinkedModelSerializer):
@@ -120,15 +120,26 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
         return self.instance
 
 
-class TeamSpeakerSerializer(serializers.ModelSerializer):
+class SpeakerSerializer(serializers.ModelSerializer):
+    url = SpeakerHyperlinkedIdentityField(view_name='api-speaker-detail')
+    categories = TournamentHyperlinkedRelatedField(
+        many=True,
+        view_name='api-speakercategory-detail',
+        lookup_field='slug'
+    )
+
     class Meta:
         model = Speaker
-        fields = ('id','name', 'gender','email','phone','anonymous','pronoun',
+        fields = ('url','id','name', 'gender','email','phone','anonymous','pronoun',
                   'categories')
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
     url = TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
+    institution = serializers.HyperlinkedRelatedField(
+        view_name='api-global-institution-detail',
+        queryset=Institution.objects.all()
+    )
 
     class Meta:
         model = Adjudicator
@@ -137,12 +148,17 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    # tournament = serializers.SlugRelatedField(
-    #     queryset=Tournament.objects.all(),
-    #     slug_field='slug'
-    # )
-    speakers = TeamSpeakerSerializer(many=True)
+    speakers = SpeakerSerializer(many=True)
     url = TournamentHyperlinkedIdentityField(view_name='api-team-detail')
+    institution = serializers.HyperlinkedRelatedField(
+        view_name='api-global-institution-detail',
+        queryset=Institution.objects.all()
+    )
+    break_categories = TournamentHyperlinkedRelatedField(
+        many=True,
+        view_name='api-breakcategory-detail',
+        lookup_field='slug'
+    )
 
     class Meta:
         model = Team
