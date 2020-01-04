@@ -21,7 +21,7 @@ urlpatterns = [
             path('',
                 views.BreakCategoryViewSet.as_view(list_methods),
                 name='api-breakcategory-list'),
-            path('<slug:slug>/', include([
+            path('<int:pk>/', include([
                 path('',
                     views.BreakCategoryViewSet.as_view(detail_methods),
                     name='api-breakcategory-detail'),
@@ -34,7 +34,7 @@ urlpatterns = [
             path('',
                 views.SpeakerCategoryViewSet.as_view(list_methods),
                 name='api-speakercategory-list'),
-            path('<slug:slug>/', include([
+            path('<int:pk>/', include([
                 path('',
                     views.SpeakerCategoryViewSet.as_view(detail_methods),
                     name='api-speakercategory-detail'),
