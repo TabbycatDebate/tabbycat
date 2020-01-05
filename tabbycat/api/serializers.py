@@ -4,7 +4,7 @@ from breakqual.models import BreakCategory
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from tournaments.models import Tournament
 
-from .fields import TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField, SpeakerHyperlinkedIdentityField
+from .fields import SpeakerHyperlinkedIdentityField, TournamentHyperlinkedIdentityField, TournamentHyperlinkedRelatedField
 
 
 class TournamentAtRootSerializer(serializers.HyperlinkedModelSerializer):

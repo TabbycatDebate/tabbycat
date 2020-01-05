@@ -88,6 +88,7 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
     def get_queryset(self):
         return Institution.objects.all()
 
+
 class SpeakerViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerSerializer
 
