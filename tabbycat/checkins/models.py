@@ -76,8 +76,8 @@ class VenueIdentifier(Identifier):
         verbose_name=("venue"), related_name='checkin_identifier')
 
     class Meta:
-        verbose_name = _("venue identifier")
-        verbose_name_plural = _("venue identifiers")
+        verbose_name = _("room identifier")
+        verbose_name_plural = _("room identifiers")
 
 
 class Event(models.Model):

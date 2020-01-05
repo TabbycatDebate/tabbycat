@@ -46,7 +46,7 @@
     </div>
 
     <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && isForVenues"
-         v-text="gettext('No matching venues found.')"></div>
+         v-text="gettext('No matching rooms found.')"></div>
     <div class="alert alert-info" v-if="entitiesByPresence.length === 0 && !isForVenues"
          v-text="gettext('No matching people found.')"></div>
     <div class="alert alert-info"

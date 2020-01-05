@@ -243,7 +243,7 @@ class AvailabilityTypeAdjudicatorView(AvailabilityTypeBase):
 
 
 class AvailabilityTypeVenueView(AvailabilityTypeBase):
-    page_title = gettext_lazy("Venue Availability")
+    page_title = gettext_lazy("Room Availability")
     page_emoji = '🎪'
     model = Venue
     sort_key = 'venue'
@@ -257,7 +257,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         for v in venues:
             v.cats = ", ".join([vc.name for vc in v.venuecategory_set.all()])
 
-        table.add_column({'key': 'venue', 'title': _("Venue")}, [v.name for v in venues])
+        table.add_column({'key': 'venue', 'title': _("Room")}, [v.name for v in venues])
         table.add_column(
             {'key': 'display', 'title': _("Display Name (for the draw)")},
             [v.display_name for v in venues]
@@ -291,7 +291,7 @@ class BaseBulkActivationView(RoundMixin, AdministratorMixin, PostOnlyRedirectVie
 
 
 class CheckInAllInRoundView(BaseBulkActivationView):
-    activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues.")
+    activation_msg = gettext_lazy("Checked in all teams, adjudicators and rooms.")
 
     def activate_function(self):
         utils.activate_all(self.round)
@@ -306,7 +306,7 @@ class CheckInAllBreakingAdjudicatorsView(BaseBulkActivationView):
 
 
 class CheckInAllFromPreviousRoundView(BaseBulkActivationView):
-    activation_msg = gettext_lazy("Checked in all teams, adjudicators and venues from previous round.")
+    activation_msg = gettext_lazy("Checked in all teams, adjudicators and rooms from previous round.")
 
     def activate_function(self):
         t = self.tournament

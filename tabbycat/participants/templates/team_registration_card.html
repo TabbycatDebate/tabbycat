@@ -88,7 +88,7 @@
       </div>
 
       <div class="list-group-item">
-        <strong>{% trans "Venue Constraints:" %}</strong>
+        <strong>{% trans "Room Constraints:" %}</strong>
         {% for vc in team.venue_constraints.all %}
           {{ vc.category }}{% if not forloop.last %}{% trans ", " %}{% endif %}
         {% empty %}

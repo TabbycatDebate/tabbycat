@@ -24,7 +24,7 @@ class Command(GenerateResultsCommandMixin, RoundCommand):
         round.draw_status = Round.STATUS_NONE
         round.save()
 
-        self.stdout.write("Checking in all teams, adjudicators and venues for round '{}'...".format(round.name))
+        self.stdout.write("Checking in all teams, adjudicators and rooms for round '{}'...".format(round.name))
         activate_all(round)
 
         self.stdout.write("Generating a draw for round '{}'...".format(round.name))

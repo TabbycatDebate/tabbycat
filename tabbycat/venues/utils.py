@@ -35,20 +35,20 @@ def venue_conflicts_display(debates):
 
         for team in debate.teams:
             _add_constraint_message(debate, team, venue,
-                _("Venue constraint of %(name)s met (%(category)s)"),
-                _("Venue does not meet any constraint of %(name)s"),
+                _("Room constraint of %(name)s met (%(category)s)"),
+                _("Room does not meet any constraint of %(name)s"),
                 {'name': team.short_name})
 
             if team.institution is not None:
                 _add_constraint_message(debate, team.institution, venue,
-                    _("Venue constraint of %(team)s met (%(category)s, via institution %(institution)s)"),
-                    _("Venue does not meet any constraint of institution %(institution)s (%(team)s)"),
+                    _("Room constraint of %(team)s met (%(category)s, via institution %(institution)s)"),
+                    _("Room does not meet any constraint of institution %(institution)s (%(team)s)"),
                     {'institution': team.institution.code, 'team': team.short_name})
 
         for adjudicator in debate.adjudicators.all():
             _add_constraint_message(debate, adjudicator, venue,
-                _("Venue constraint of %(name)s met (%(category)s)"),
-                _("Venue does not meet any constraint of %(name)s"),
+                _("Room constraint of %(name)s met (%(category)s)"),
+                _("Room does not meet any constraint of %(name)s"),
                 {'name': adjudicator.name})
 
     return conflict_messages

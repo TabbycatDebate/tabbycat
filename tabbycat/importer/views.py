@@ -121,7 +121,7 @@ class ImportVenuesWizardView(BaseImportWizardView):
         return self.get_cleaned_data_for_step('raw')['venues_raw']
 
     def get_message(self, count):
-        return ngettext("Added %(count)d venue.", "Added %(count)d venues.", count)
+        return ngettext("Added %(count)d room.", "Added %(count)d rooms.", count)
 
 
 class BaseImportByInstitutionWizardView(BaseImportWizardView):

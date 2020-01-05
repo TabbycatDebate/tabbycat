@@ -58,12 +58,12 @@
       </button>
     {% elif availability_info.venues.in_now == 0 %}
       <button class="btn btn-danger disabled"
-        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some venues have been marked as available." %}">
+        data-toggle="tooltip" title="{% trans "The draw cannot be generated until some rooms have been marked as available." %}">
         {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
       </button>
     {% elif min_venues > availability_info.venues.in_now %}
       <button class="btn btn-warning" id="createDraw"
-        data-toggle="tooltip" title="{% trans "There aren't enough venues marked as available for the number of debates — the draw may not generate properly." %}">
+        data-toggle="tooltip" title="{% trans "There aren't enough rooms marked as available for the number of debates — the draw may not generate properly." %}">
          {% trans "Generate Draw" %} <i data-feather="chevron-right"></i>
        </button>
     {% elif min_adjudicators > availability_info.adjs.in_now %}

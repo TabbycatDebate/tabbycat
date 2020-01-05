@@ -3,27 +3,27 @@
 
   {% if no_venue > 0 %}
     {% blocktrans trimmed asvar text count ndebates=no_venue %}
-      1 debate does not have a venue.
+      1 debate does not have a room.
     {% plural %}
-      {{ ndebates }} debates do not have a venue.
+      {{ ndebates }} debates do not have a room.
     {% endblocktrans %}
     {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
   {% if duplicates %}
-    {% blocktrans trimmed asvar text with venues=duplicates|join:", " count ndebates=duplicates|length %}
-      There are multiple debates in <strong>{{ venues }}</strong>.
+    {% blocktrans trimmed asvar text with rooms=duplicates|join:", " count ndebates=duplicates|length %}
+      There are multiple debates in <strong>{{ rooms }}</strong>.
     {% plural %}
-      The following <strong>{{ ndebates }}</strong> venues have multiple debates in them: <strong>{{ venues }}</strong>
+      The following <strong>{{ ndebates }}</strong> rooms have multiple debates in them: <strong>{{ rooms }}</strong>
     {% endblocktrans %}
     {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}
 
   {% if debates_with_venue_conflicts > 0 %}
     {% blocktrans trimmed asvar text count ndebates=debates_with_venue_conflicts %}
-      1 debate has a venue constraint violation.
+      1 debate has a room constraint violation.
     {% plural %}
-      {{ ndebates }} debates have venue constraint violations.
+      {{ ndebates }} debates have room constraint violations.
     {% endblocktrans %}
     {% include "components/item-info.html" with nopad=True type="danger" %}
   {% endif %}

@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateView):
     template_name = "edit_debate_venues.html"
-    page_title = gettext_lazy("Edit Venues")
+    page_title = gettext_lazy("Edit Rooms")
     prefetch_venues = False # Fetched in full as get_serialised
 
     def debates_or_panels_factory(self, debates):
@@ -79,13 +79,13 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
             for category in self.instances:
                 category.tournament = self.tournament
 
-            message = ngettext("Saved venue category: %(list)s",
+            message = ngettext("Saved room category: %(list)s",
                 "Saved venue categories: %(list)s",
                 len(self.instances)
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
-            messages.success(self.request, _("No changes were made to the venue categories."))
+            messages.success(self.request, _("No changes were made to the room categories."))
 
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.tournament)
@@ -108,7 +108,7 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
             'labels': {
                 'subject_content_type': 'Constrainee Type',
                 'subject_id': 'Constrainee ID',
-                'category': 'Venue Category'
+                'category': 'Room Category'
             },
             'help_texts': {
                 'subject_id': 'Delete the existing number and start typing the name of the person/team/institution you want to constrain to lookup their ID.'
@@ -149,8 +149,8 @@ class VenueConstraintsView(AdministratorMixin, LogActionMixin, TournamentMixin, 
         result = super().formset_valid(formset)
         if self.instances:
             count = len(self.instances)
-            message = ngettext("Saved %(count)d venue constraint.",
-                "Saved %(count)d venue constraints.", count) % {'count': count}
+            message = ngettext("Saved %(count)d room constraint.",
+                "Saved %(count)d room constraints.", count) % {'count': count}
             messages.success(self.request, message)
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-constraints', self.tournament)

@@ -9,10 +9,10 @@
       <template slot="default-highlights">
         <button class="btn conflictable conflicts-toolbar hover-adjudicator"
                 data-toggle="tooltip" v-text="gettext('Constraint')"
-                :title="gettext('This adjudicator or team has an unmet venue constraint.')"></button>
+                :title="gettext('This adjudicator or team has an unmet room constraint.')"></button>
         <button class="btn panel-incomplete"
                 data-toggle="tooltip" v-text="gettext('Incomplete')"
-                :title="gettext('Debate has no venue.')"></button>
+                :title="gettext('Debate has no room.')"></button>
       </template>
     </drag-and-drop-actions>
 

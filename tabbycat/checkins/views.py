@@ -116,7 +116,7 @@ class PublicCheckInPeopleStatusView(PublicTournamentPageMixin, CheckInPeopleStat
 
 class CheckInVenuesStatusView(BaseCheckInStatusView):
     page_emoji = '👜'
-    page_title = _("Venue's Check-In Statuses")
+    page_title = _("Rooms' Check-In Statuses")
     window_preference = 'checkin_window_venues'
 
     def get_context_data(self, **kwargs):
@@ -182,7 +182,7 @@ class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
                 "in":  self.adjs_with_barcodes().count()
             },
             "venues": {
-                "title": _("Venues"),
+                "title": _("Rooms"),
                 "total": t.venue_set.count(),
                 "in":  VenueIdentifier.objects.filter(venue__tournament=t).count(),
             }

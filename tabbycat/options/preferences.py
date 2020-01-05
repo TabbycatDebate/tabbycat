@@ -834,10 +834,10 @@ class CheckInWindowPeople(FloatPreference):
 
 @tournament_preferences_registry.register
 class CheckInWindowVenues(FloatPreference):
-    help_text = _("The amount of time (in hours) before a venue's check-in event expires")
+    help_text = _("The amount of time (in hours) before a room's check-in event expires")
     section = data_entry
     name = 'checkin_window_venues'
-    verbose_name = _("Check-In Window (Venues)")
+    verbose_name = _("Check-In Window (Rooms)")
     default = 2.0
 
 

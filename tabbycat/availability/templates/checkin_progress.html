@@ -6,7 +6,7 @@
     <h5 class="card-title mb-0">
       {% if type == "teams" %}{% trans "Teams" %}
       {% elif type == "adjs" %}{% trans "Adjudicators" %}
-      {% elif type == "venues" %}{% trans "Venues" %}
+      {% elif type == "venues" %}{% trans "Rooms" %}
       {% endif %}
     </h5>
   </div>
@@ -128,53 +128,53 @@
 
       {% if new_venues|length > 10 %}
         {% blocktrans trimmed asvar text count count=new_venues|length %}
-          {{ count }} venue that was not available last round, is available this round.
+          {{ count }} room that was not available last round, is available this round.
         {% plural %}
-          {{ count }} venues that were not available last round, are available this round.
+          {{ count }} rooms that were not available last round, are available this round.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="info" nopad=True %}
       {% elif new_venues %}
-        {% blocktrans trimmed asvar text count count=new_venues|length with venues_list=new_venues|join:", " %}
-          The following {{ count }} venue, which was not available last round, is available this round: {{ venues_list }}
+        {% blocktrans trimmed asvar text count count=new_venues|length with rooms_list=new_venues|join:", " %}
+          The following {{ count }} room, which was not available last round, is available this round: {{ rooms_list }}
         {% plural %}
-          The following {{ count }} venues, which were not available last round, are available this round: {{ venues_list }}
+          The following {{ count }} rooms, which were not available last round, are available this round: {{ rooms_list }}
         {% endblocktrans %}
         {% include "components/item-info.html" with type="info" nopad=True %}
       {% endif %}
 
       {% if lost_venues|length > 10 %}
         {% blocktrans trimmed asvar text count count=lost_venues|length %}
-          {{ count }} venue that was available last round, is not available this round.
+          {{ count }} room that was available last round, is not available this round.
         {% plural %}
-          {{ count }} venues that were available last round, are not available this round.
+          {{ count }} rooms that were available last round, are not available this round.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="info" nopad=True %}
       {% elif lost_venues %}
-        {% blocktrans trimmed asvar text count count=lost_venues|length with venues_list=lost_venues|join:", " %}
-          The following {{ count }} venue, which was available last round, is not available this round: {{ venues_list }}
+        {% blocktrans trimmed asvar text count count=lost_venues|length with rooms_list=lost_venues|join:", " %}
+          The following {{ count }} room, which was available last round, is not available this round: {{ rooms_list }}
         {% plural %}
-          The following {{ count }} venues, which were available last round, are not available this round: {{ venues_list }}
+          The following {{ count }} rooms, which were available last round, are not available this round: {{ rooms_list }}
         {% endblocktrans %}
         {% include "components/item-info.html" with type="info" nopad=True %}
       {% endif %}
 
       {% if venues_no_t > 0 %}
         {% blocktrans trimmed asvar text count count=venues_no_t %}
-          One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
+          One room does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available.
         {% plural %}
-          {{ count }} venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
+          {{ count }} rooms do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="info" nopad=True %}
       {% endif %}
 
-      {% trans "Mark venues as available" as title_text %}
+      {% trans "Mark rooms as available" as title_text %}
       {% if min_venues > availability_info.venues.in_now %}
         {# Translators: required_count is a word for a number (e.g. "two", "three", etc.) #}
         {% blocktrans trimmed asvar text with required_count=min_venues|apnumber count count=min_venues %}
-          There needs to be at least one venue marked as available, given the number of
+          There needs to be at least one room marked as available, given the number of
           debates.
         {% plural %}
-          There need to be at least {{ required_count }} venues marked as available, given
+          There need to be at least {{ required_count }} rooms marked as available, given
           the number of debates.
         {% endblocktrans %}
         {% include "components/item-info.html" with type="danger" nopad=True %}
@@ -182,7 +182,7 @@
       {% elif info.in_now == 0 %}
         {% include "components/item-action.html" with alone=True text=title_text type="success" to_complete=True %}
       {% else %}
-        {% trans "Edit venue availability" as title_text %}
+        {% trans "Edit room availability" as title_text %}
         {% include "components/item-action.html" with alone=True text=title_text type="primary" %}
       {% endif %}
 

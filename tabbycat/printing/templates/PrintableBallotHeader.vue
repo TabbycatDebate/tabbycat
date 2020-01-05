@@ -24,7 +24,7 @@
     <div v-if="ballot.venue === '' || ballot.venue === null" class="ml-auto" >
       <span v-if="ballot.barcode"
             v-text="tct('ID %s,', [ballot.barcode])"></span>
-      <span v-text="gettext('Venue:')"></span>
+      <span v-text="gettext('Room:')"></span>
       <span class="db-padding-horizontal db-fill-in"
             style="width: 232px; margin: 0 3px 0 5px; display: inline-block">
       </span>
