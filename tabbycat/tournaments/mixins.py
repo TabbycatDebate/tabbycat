@@ -49,7 +49,7 @@ class TournamentFromUrlMixin:
     tournament_redirect_pattern_name = None
 
     def get_url_kwargs(self):
-        raise NotImplementedError
+        return self.kwargs
 
     @property
     def tournament(self):
@@ -80,9 +80,6 @@ class TournamentMixin(TabbycatPageTitlesMixin, TournamentFromUrlMixin):
     regular expression. They should then call `self.tournament` to
     retrieve the tournament.
     """
-    def get_url_kwargs(self):
-        return self.kwargs
-
     def get_redirect_url(self, *args, **kwargs):
         # Override if self.tournament_redirect_pattern_name is specified,
         # otherwise just pass down the chain
