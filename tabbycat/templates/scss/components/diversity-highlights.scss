@@ -57,7 +57,6 @@
   }
 }
 
-
 .category-display {
 
   &.category-0 {
@@ -108,7 +107,6 @@
     @include outline-highlights($break-cat-4);
   }
 }
-
 
 .gender-display {
 
@@ -410,80 +408,5 @@ path.region-8 {
 
   &.priority-8 {
     @include hover-highlights($alpha-ranking-8);
-  }
-}
-
-.category-display {
-
-  &.category-0 {
-    @include hover-highlights($region-cat-0);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-1 {
-    @include hover-highlights($region-cat-1);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-2 {
-    @include hover-highlights($region-cat-2);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-3 {
-    @include hover-highlights($region-cat-3);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-4 {
-    @include hover-highlights($region-cat-4);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-5 {
-    @include hover-highlights($region-cat-5);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-6 {
-    @include hover-highlights($region-cat-6);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-7 {
-    @include hover-highlights($region-cat-7);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
-  }
-
-  &.category-8 {
-    @include hover-highlights($region-cat-8);
-
-    .vue-draggable-muted {
-      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
-    }
   }
 }
