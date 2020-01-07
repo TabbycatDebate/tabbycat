@@ -29,6 +29,9 @@ class TournamentSerializer(serializers.ModelSerializer):
         adjudicators = serializers.HyperlinkedIdentityField(
             view_name='api-adjudicator-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        speakers = serializers.HyperlinkedIdentityField(
+            view_name='api-speaker-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
     _links = TournamentLinksSerializer(source='*', read_only=True)
 
@@ -121,7 +124,6 @@ class SpeakerSerializer(serializers.ModelSerializer):
     categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-speakercategory-detail',
-        lookup_field='slug'
     )
 
     class Meta:
@@ -153,7 +155,6 @@ class TeamSerializer(serializers.ModelSerializer):
     break_categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-breakcategory-detail',
-        lookup_field='slug'
     )
 
     class Meta:
