@@ -20,6 +20,15 @@ class TournamentSerializer(serializers.ModelSerializer):
         speaker_categories = serializers.HyperlinkedIdentityField(
             view_name='api-speakercategory-list',
             lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        institutions = serializers.HyperlinkedIdentityField(
+            view_name='api-institution-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        teams = serializers.HyperlinkedIdentityField(
+            view_name='api-team-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
+        adjudicators = serializers.HyperlinkedIdentityField(
+            view_name='api-adjudicator-list',
+            lookup_field='slug', lookup_url_kwarg='tournament_slug')
 
     _links = TournamentLinksSerializer(source='*', read_only=True)
 

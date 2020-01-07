@@ -43,8 +43,12 @@ class APIRootView(AdministratorAPIMixin, GenericAPIView):
 
     def get(self, request, format=None):
         tournaments_create_url = reverse('api-tournament-list', request=request, format=format)
+        institution_create_url = reverse('api-global-institution-list', request=request, format=format)
         return Response({
-            "_links": {"tournaments": tournaments_create_url}
+            "_links": {
+                "tournaments": tournaments_create_url,
+                "institutions": institution_create_url
+            }
         })
 
 
