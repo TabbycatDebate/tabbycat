@@ -844,7 +844,7 @@ class AdjudicatorFeedbackCsvView(FeedbackMixin, AdministratorMixin, TournamentMi
         headers = [
             "round.seq", "round.abbreviation",
             "adjudicator.id", "adjudicator.name", "adjudicator.type",
-            "source_adjudicator.id","source_adjudicator.name", "source_adjudicator.type",
+            "source_adjudicator.id", "source_adjudicator.name", "source_adjudicator.type",
             "source_team.id", "source_team.short_name", "source_team.result",
             "score", "ignored",
         ]

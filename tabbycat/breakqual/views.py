@@ -70,7 +70,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
         return table
 
     def get_page_title(self):
-        return _("%(category)s Break") % {'category': self.object.name,}
+        return _("%(category)s Break") % {'category': self.object.name}
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
