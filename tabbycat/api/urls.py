@@ -13,35 +13,61 @@ detail_methods = {'get': 'retrieve', 'post': 'update', 'delete': 'destroy'}
 
 urlpatterns = [
 
-    path('<slug:tournament_slug>/', include([
-        path('<int:pk>/', include([
-        ])),
+    path('',
+        views.APIRootView.as_view(),
+        name='api-root'),
 
-        path('break-categories/', include([
+    path('tournaments/', include([
+
+        path('',
+            views.TournamentViewSet.as_view(list_methods),
+            name='api-tournament-list'),
+
+        path('<slug:tournament_slug>/', include([
+
             path('',
-                views.BreakCategoryViewSet.as_view(list_methods),
-                name='api-breakcategory-list'),
-            path('<slug:slug>/', include([
-                path('',
-                    views.BreakCategoryViewSet.as_view(detail_methods),
-                    name='api-breakcategory-detail'),
-                path('eligibility/',
-                    views.BreakEligibilityView.as_view(),
-                    name='api-breakcategory-eligibility'),
+                views.TournamentViewSet.as_view(detail_methods),
+                name='api-tournament-detail'),
+
+            path('rounds/', include([
+                path('<int:round_seq>/', include([
+                ])),
             ])),
-        ])),
-        path('speaker-categories/', include([
-            path('',
-                views.SpeakerCategoryViewSet.as_view(list_methods),
-                name='api-speakercategory-list'),
-            path('<slug:slug>/', include([
+
+            path('break-categories/', include([
+
                 path('',
-                    views.SpeakerCategoryViewSet.as_view(detail_methods),
-                    name='api-speakercategory-detail'),
-                path('eligibility/',
-                    views.SpeakerEligibilityView.as_view(),
-                    name='api-speakercategory-eligibility'),
+                    views.BreakCategoryViewSet.as_view(list_methods),
+                    name='api-breakcategory-list'),
+
+                path('<int:pk>/', include([
+                    path('',
+                        views.BreakCategoryViewSet.as_view(detail_methods),
+                        name='api-breakcategory-detail'),
+                    path('eligibility/',
+                        views.BreakEligibilityView.as_view(),
+                        name='api-breakcategory-eligibility'),
+                ])),
+
             ])),
+
+            path('speaker-categories/', include([
+
+                path('',
+                    views.SpeakerCategoryViewSet.as_view(list_methods),
+                    name='api-speakercategory-list'),
+
+                path('<int:pk>/', include([
+                    path('',
+                        views.SpeakerCategoryViewSet.as_view(detail_methods),
+                        name='api-speakercategory-detail'),
+                    path('eligibility/',
+                        views.SpeakerEligibilityView.as_view(),
+                        name='api-speakercategory-eligibility'),
+                ])),
+            ])),
+
+            url('', include(pref_router.urls)),  # Preferences
         ])),
         path('institutions/', include([
             path('',
@@ -76,6 +102,7 @@ urlpatterns = [
                  name='api-speaker-detail'),
         ])),
         url('', include(pref_router.urls)),  # Preferences
+
     ])),
     path('institutions/', include([
         path('',
