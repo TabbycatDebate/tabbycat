@@ -5,7 +5,7 @@ from rest_framework.reverse import reverse
 class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
     tournament_field = 'tournament'
 
-    def get_tournament(self,obj):
+    def get_tournament(self, obj):
         return obj.tournament
 
     def get_url(self, obj, view_name, request, format):
@@ -35,5 +35,5 @@ class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, Hype
 class SpeakerHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):
     tournament_field = 'team__tournament'
 
-    def get_tournament(self,obj):
+    def get_tournament(self, obj):
         return obj.team.tournament

@@ -128,7 +128,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Speaker
-        fields = ('url','id','name', 'gender','email','phone','anonymous','pronoun',
+        fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'categories')
 
 
@@ -141,8 +141,8 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Adjudicator
-        fields = ('url','id','name', 'gender','email','phone','anonymous','pronoun',
-                  'institution','base_score')
+        fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
+                  'institution', 'base_score')
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -159,8 +159,8 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('url','id','reference', 'code_name',
-                  'institution', 'speakers','use_institution_prefix','break_categories')
+        fields = ('url', 'id', 'reference', 'code_name',
+                  'institution', 'speakers', 'use_institution_prefix', 'break_categories')
 
     def create(self,validated_data):
         speaker_data = validated_data.pop('speakers')
@@ -180,4 +180,4 @@ class InstitutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Institution
-        fields = ('url','id','name', 'code','team_set')
+        fields = ('url', 'id', 'name', 'code', 'team_set')
