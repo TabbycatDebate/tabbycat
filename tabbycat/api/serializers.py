@@ -162,7 +162,7 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = ('url', 'id', 'reference', 'code_name',
                   'institution', 'speakers', 'use_institution_prefix', 'break_categories')
 
-    def create(self,validated_data):
+    def create(self, validated_data):
         speaker_data = validated_data.pop('speakers')
         team = Team.objects.create(**validated_data)
         for i in speaker_data:

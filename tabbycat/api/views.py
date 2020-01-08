@@ -10,7 +10,7 @@ from options.models import TournamentPreferenceModel
 from tournaments.models import Tournament
 from tournaments.mixins import TournamentFromUrlMixin
 
-from participants.models import Institution,Speaker
+from participants.models import Institution, Speaker
 
 from django.db.models import Prefetch
 
@@ -94,7 +94,7 @@ class InstitutionViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet
     serializer_class = serializers.InstitutionSerializer
 
     def get_queryset(self):
-        return Institution.objects.all().prefetch_related(Prefetch('team_set',queryset=self.tournament.team_set.all()))
+        return Institution.objects.all().prefetch_related(Prefetch('team_set', queryset=self.tournament.team_set.all()))
 
 
 class TeamViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
