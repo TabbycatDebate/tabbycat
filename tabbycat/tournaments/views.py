@@ -41,7 +41,7 @@ class PublicSiteIndexView(WarnAboutDatabaseUseMixin, TemplateView):
     template_name = 'site_index.html'
 
     def get(self, request, *args, **kwargs):
-        tournaments = Tournament.objects.all()
+        tournaments = Tournament.objects.filter(active=True)
         if request.GET.get('redirect', '') == 'false':
             return super().get(request, *args, **kwargs)
         if tournaments.count() == 1 and not request.user.is_authenticated:
