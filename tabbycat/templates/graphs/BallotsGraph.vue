@@ -157,26 +157,27 @@ export default {
       // Remove discarded ballots
       allBallots.filter(ballot => ballot.discarded !== true)
 
-      // Only add the ballot to the filtered list if it doesn't already exist
+      // Check for previous ballots; only take most recent
       allBallots.forEach((ballot) => {
         const hasMatch = filteredBallots.findIndex(testBallot =>
           testBallot.debate_id === ballot.debate_id)
+        if (hasMatch !== -1) filteredBallots.splice(hasMatch, 1)
+
         // Need to parse the dates into unix time to get around TZ format issues
-        if (hasMatch === -1) {
-          let created = null
-          if (ballot.created_timestamp !== null) {
-            created = new Date(ballot.created_timestamp).getTime()
-          }
-          let confirmed = null
-          if (ballot.confirmed_timestamp !== null) {
-            confirmed = new Date(ballot.confirmed_timestamp).getTime()
-          }
-          filteredBallots.push({
-            created_timestamp: created,
-            confirmed_timestamp: confirmed,
-            debate_id: ballot.debate_id,
-          })
+        let created = null
+        if (ballot.created_timestamp !== null) {
+          created = new Date(ballot.created_timestamp).getTime()
         }
+        let confirmed = null
+        if (ballot.confirmed_timestamp !== null) {
+          confirmed = new Date(ballot.confirmed_timestamp).getTime()
+        }
+
+        filteredBallots.push({
+          created_timestamp: created,
+          confirmed_timestamp: confirmed,
+          debate_id: ballot.debate_id,
+        })
       })
       return filteredBallots
     },
