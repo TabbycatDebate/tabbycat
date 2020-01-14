@@ -470,9 +470,6 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
         messages.success(self.request, _("Thanks, %(user)s! Your ballot for %(debate)s has "
                 "been recorded.") % {'user': self.object.name, 'debate': self.matchup_description()})
 
-    def get_success_url(self):
-        return reverse_tournament('post-results-public-ballotset-new', self.tournament)
-
     def populate_objects(self):
         self.object = self.get_object() # must be populated before self.error_page() called
 
@@ -524,6 +521,9 @@ class OldPublicNewBallotSetByIdUrlView(SingleObjectFromTournamentMixin, BasePubl
     allow_null_tournament = True
     private_url = False
 
+    def get_success_url(self):
+        return reverse_tournament('post-results-public-ballotset-new', self.tournament)
+
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_ballots') == 'public'
 
@@ -532,6 +532,9 @@ class OldPublicNewBallotSetByRandomisedUrlView(SingleObjectByRandomisedUrlMixin,
     model = Adjudicator
     allow_null_tournament = True
     private_url = True
+
+    def get_success_url(self):
+        return reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': self.kwargs['url_key']})
 
     def is_page_enabled(self, tournament):
         return tournament.pref('participant_ballots') == 'private-urls'
