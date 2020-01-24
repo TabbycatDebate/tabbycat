@@ -10,7 +10,7 @@ from options.models import TournamentPreferenceModel
 from tournaments.models import Tournament
 from tournaments.mixins import TournamentFromUrlMixin
 
-from participants.models import Institution, Speaker
+from participants.models import Institution
 
 from django.db.models import Prefetch
 
