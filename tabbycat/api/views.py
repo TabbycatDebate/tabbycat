@@ -114,6 +114,4 @@ class GlobalInstitutionViewSet(AdministratorAPIMixin, ModelViewSet):
 
 class SpeakerViewSet(TournamentAPIMixin, AdministratorAPIMixin, ModelViewSet):
     serializer_class = serializers.SpeakerSerializer
-
-    def get_queryset(self):
-        return Speaker.objects.all()
+    tournament_field = "team__tournament"
