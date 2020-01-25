@@ -71,13 +71,13 @@
   <script>
     // Actions for the table elements
     $(document).ready(function(){
-      $(".edit-test-score a").each( function() {
+      $(".edit-base-score a").each( function() {
         $(this).click( function() {
           var adj_id = parseInt($(this).attr("data-target"));
           var adj_score = $(this, "span").text();
           $("#id_adj_id").val(adj_id); // Updating form ID reference
-          $("#id_test_score").prop('placeholder', adj_score); // updating the form's table
-          $('#edit-test-score').modal();
+          $("#id_base_score").prop('placeholder', adj_score); // updating the form's table
+          $('#edit-base-score').modal();
         });
       });
       $(".edit-note a").each( function() {

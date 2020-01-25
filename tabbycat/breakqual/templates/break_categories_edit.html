@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load add_field_css debate_tags i18n %}
+
+{% block head-title %}<span class="emoji">👑</span>{% trans "Break Categories" %}{% endblock %}
+{% block page-title %}{% trans "Break Categories" %}{% endblock %}
+
+{% block page-subnav-sections %}
+  {% include "breakqual_subnav.html" %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="card text-info border-info">
+    {# Translators: Translate "ESL" to the acronym "<target language> as a second/foreign language", not the translation of "English as a second language". #}
+    <div class="card-body">
+      {% tournamenturl 'breakqual-edit-eligibility' as eligibility_url %}
+      {% blocktrans trimmed %}
+        Break categories allow category-specific break rounds,
+        <i>e.g.</i>, for novice or ESL categories. On this page, you can define
+        what break categories exist. After you've defined the categories, the
+        break rounds will be automatically generated, and you can set team
+        eligibility on the <a href="{{ eligibility_url }}">Eligibility</a> page.
+      {% endblocktrans %}
+      {% url 'admin:breakqual_breakcategory_changelist' as edit_db_url %}
+      {% blocktrans trimmed %}
+        If you want to delete break categories, use the <a href="{{ edit_db_url }}" class="alert-link">Edit Database</a> area.
+      {% endblocktrans %}
+    </div>
+  </div>
+
+  {% trans "Save Break Categories" as save_text %}
+  {% include "components/formset.html" with double=True %}
+
+{% endblock content %}

@@ -11,9 +11,8 @@ class Venue(models.Model):
         verbose_name=_("priority"),
         help_text=_("Venues with a higher priority number will be preferred when allocating venues to debates"))
     tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
-        blank=True, null=True, db_index=True,
-        verbose_name=_("tournament"),
-        help_text=_("Venues not assigned to any tournament can be shared between tournaments"))
+        null=True, db_index=True,
+        verbose_name=_("tournament"))
 
     round_availabilities = GenericRelation('availability.RoundAvailability')
 
@@ -73,6 +72,8 @@ class VenueCategory(models.Model):
             "shown in tooltips, e.g., \"This venue is close to the briefing hall.\"."))
 
     venues = models.ManyToManyField(Venue, verbose_name=_("venues"), blank=True)
+    tournament = models.ForeignKey('tournaments.Tournament', models.CASCADE,
+        null=True, verbose_name=_("tournament"))
 
     display_in_venue_name = models.CharField(max_length=1, choices=DISPLAY_IN_VENUE_NAME_CHOICES,
         default=DISPLAY_NONE,

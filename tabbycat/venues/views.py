@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Max, Min, Q
 from django.forms import Select
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic import TemplateView
@@ -11,7 +11,7 @@ from actionlog.models import ActionLogEntry
 from availability.utils import annotate_availability
 from tournaments.mixins import DebateDragAndDropMixin, TournamentMixin
 from utils.forms import SelectPrepopulated
-from utils.misc import redirect_tournament, reverse_tournament
+from utils.misc import ranks_dictionary, redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import ModelFormSetView
 
@@ -38,10 +38,14 @@ class EditDebateVenuesView(DebateDragAndDropMixin, AdministratorMixin, TemplateV
         return self.json_render(serialized_venues.data)
 
     def get_extra_info(self):
+        p_range = Venue.objects.filter(tournament=self.tournament).aggregate(
+            min=Min('priority'), max=Max('priority'))
         info = super().get_extra_info()
-        info['highlights']['priority'] = [] # TODO - venue priority range
-        info['highlights']['category'] = [] # TODO - venue category
-        info['highlights']['break'] = [] # TODO
+        info['highlights']['priority'] = ranks_dictionary(
+            self.tournament, p_range['min'], p_range['max'])
+        # Most recently created venues take priority in getting the highlight
+        vcs = VenueCategory.objects.order_by('id').reverse()
+        info['highlights']['category'] = [{'pk': vc.id, 'fields': {'name': vc.name}} for vc in vcs]
         return info
 
 
@@ -66,9 +70,15 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
             form.fields['venues'].queryset = venues
         return formset
 
+    def get_formset_queryset(self):
+        return self.tournament.venuecategory_set.all()
+
     def formset_valid(self, formset):
-        result = super().formset_valid(formset)
+        self.instances = formset.save(commit=False)
         if self.instances:
+            for category in self.instances:
+                category.tournament = self.tournament
+
             message = ngettext("Saved venue category: %(list)s",
                 "Saved venue categories: %(list)s",
                 len(self.instances)
@@ -76,9 +86,10 @@ class VenueCategoriesView(LogActionMixin, AdministratorMixin, TournamentMixin, M
             messages.success(self.request, message)
         else:
             messages.success(self.request, _("No changes were made to the venue categories."))
+
         if "add_more" in self.request.POST:
             return redirect_tournament('venues-categories', self.tournament)
-        return result
+        return super().formset_valid(formset)
 
     def get_success_url(self, *args, **kwargs):
         return reverse_tournament('importer-simple-index', self.tournament)

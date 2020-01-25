@@ -724,9 +724,9 @@ class AdjudicatorsTabShows(ChoicePreference):
     section = tab_release
     name = 'adjudicators_tab_shows'
     choices = (
-        ('test', _("Only shows test score")),
+        ('test', _("Only shows base score")),
         ('final', _("Only shows final score")),
-        ('all', _("Shows test, final, and per-round scores")),
+        ('all', _("Shows base, final, and per-round scores")),
     )
     default = 'final'
 
@@ -809,14 +809,13 @@ class DisableBallotConfirmation(BooleanPreference):
     default = False
 
 
-# Disabled pending rollout of new ballot interface
-# @tournament_preferences_registry.register
-# class EnableBlindBallotConfirmation(BooleanPreference):
-#     help_text = _("Requires scores of draft ballot to be re-entered during confirmation (as a more stringent check)")
-#     verbose_name = _("Enforce blind confirmations")
-#     section = data_entry
-#     name = 'enable_blind_checks'
-#     default = False
+@tournament_preferences_registry.register
+class EnableBlindBallotConfirmation(BooleanPreference):
+    help_text = _("Requires scores of draft ballots to be re-entered as part of the confirmation stage (to create more stringent check). Only applies to BP formats.")
+    verbose_name = _("Enforce blind confirmations")
+    section = data_entry
+    name = 'enable_blind_checks'
+    default = False
 
 
 @tournament_preferences_registry.register
@@ -1128,7 +1127,7 @@ class ShowTeamInstitutions(BooleanPreference):
 
 @tournament_preferences_registry.register
 class ShowAdjudicatorInstitutions(BooleanPreference):
-    help_text = _("In tables listing adjudicators, adds a column showing their institutions")
+    help_text = _("Hide the institutions of adjudicators on public pages and on printed ballots")
     verbose_name = _("Show adjudicator institutions")
     section = ui_options
     name = 'show_adjudicator_institutions'

@@ -5,6 +5,7 @@ This script is compatible with both Python 2.7 and Python 3.4 (and later)."""
 import argparse
 import platform
 import re
+import shutil
 import subprocess
 import sys
 
@@ -141,6 +142,15 @@ def get_git_push_spec():
         return get_output_from_command(["git", "rev-parse", "--short", "--quiet", "HEAD"]).strip() + ":refs/heads/master"
     except subprocess.CalledProcessError:
         print_yellow("Could not determine current git commit or branch. Use --git-branch to specify a git branch to push.")
+    exit(1)
+
+
+# Check that Heroku is installed
+if shutil.which("heroku") is None:
+    print_yellow("Error: heroku not found.")
+    print("You'll need to install the Heroku CLI before you can use this script.")
+    print("Go to https://devcenter.heroku.com/articles/heroku-cli, or search the")
+    print("internet for \"Heroku CLI\".")
     exit(1)
 
 # Create the app with addons

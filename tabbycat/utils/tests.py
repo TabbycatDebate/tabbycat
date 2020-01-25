@@ -2,7 +2,6 @@ from contextlib import contextmanager
 import json
 import logging
 from unittest import expectedFailure
-from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from django.contrib.auth import get_user, get_user_model
 from django.core.cache import cache
@@ -16,7 +15,7 @@ from draw.models import DebateTeam
 from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
 from venues.models import Venue
-from utils.misc import reverse_tournament
+from utils.misc import add_query_string_parameter, reverse_tournament
 
 logger = logging.getLogger(__name__)
 
@@ -42,14 +41,6 @@ def suppress_logs(name, level, returnto=logging.NOTSET):
     suppressed_logger.setLevel(level+1)
     yield
     suppressed_logger.setLevel(returnto)
-
-
-def add_query_string_parameter(url, key, value):
-    scheme, netloc, path, params, query, fragment = urlparse(url)
-    query_parts = parse_qs(query)
-    query_parts[key] = value
-    query = urlencode(query_parts, safe='/')
-    return urlunparse((scheme, netloc, path, params, query, fragment))
 
 
 class CompletedTournamentTestMixin:
@@ -266,7 +257,7 @@ class BaseMinimalTournamentTestCase(TestCase):
                     Speaker.objects.create(team=t, name="Speaker%s%s%s" % (i, j, k))
             for j in range(2):
                 Adjudicator.objects.create(tournament=self.tournament, institution=ins,
-                                           name="Adjudicator%s%s" % (i, j), test_score=0)
+                                           name="Adjudicator%s%s" % (i, j), base_score=0)
 
         for i in range(8):
             Venue.objects.create(name="Venue %s" % i, priority=i, tournament=self.tournament)
@@ -289,7 +280,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         super().setUpClass()
         # Capabilities provide access to JS console
         capabilities = DesiredCapabilities.CHROME
-        capabilities['loggingPrefs'] = {'browser':'ALL'}
+        capabilities['loggingPrefs'] = {'browser': 'ALL'}
         cls.selenium = WebDriver(desired_capabilities=capabilities)
         cls.selenium.implicitly_wait(10)
 

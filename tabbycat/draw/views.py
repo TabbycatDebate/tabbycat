@@ -492,7 +492,7 @@ class AdminDrawView(RoundMixin, AdministratorMixin, AdminDrawUtiltiesMixin, VueT
             table.add_debate_metric_columns(draw, standings)
             table.add_debate_side_history_columns(draw, r.prev)
         elif not (r.draw_status == Round.STATUS_DRAFT or self.detailed):
-            table.add_debate_adjudicators_column(draw, show_splits=False)
+            table.add_debate_adjudicators_column(draw, show_splits=False, for_admin=True)
 
         table.add_draw_conflicts_columns(draw, self.venue_conflicts, self.adjudicator_conflicts)
 
@@ -802,11 +802,6 @@ class EditDebateTeamsView(DebateDragAndDropMixin, AdministratorMixin, TemplateVi
     template_name = "edit_debate_teams.html"
     page_title = gettext_lazy("Edit Matchups")
     prefetch_teams = False # Fetched in full as get_serialised
-
-    def get_extra_info(self):
-        info = super().get_extra_info()
-        info['highlights']['break'] = [] # TODO
-        return info
 
     def get_serialised_allocatable_items(self):
         # TODO: account for shared teams

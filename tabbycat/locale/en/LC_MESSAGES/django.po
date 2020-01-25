@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: checkins/apps.py:7 templates/nav/admin_nav.html:114
+#: checkins/apps.py:7 templates/nav/admin_nav.html:113
 #: templates/nav/assistant_nav.html:38 templates/nav/public_nav.html:92
 msgid "Check-Ins"
 msgstr ""
@@ -159,62 +159,62 @@ msgstr ""
 msgid "%(speaker)s is missing."
 msgstr ""
 
-#: checkins/views.py:27 templates/nav/admin_nav.html:125
+#: checkins/views.py:29 templates/nav/admin_nav.html:124
 #: templates/nav/assistant_nav.html:42
 msgid "Scan Identifiers"
 msgstr ""
 
-#: checkins/views.py:60
+#: checkins/views.py:62
 msgid "People's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:115
+#: checkins/views.py:119
 msgid "Venue's Check-In Statuses"
 msgstr ""
 
-#: checkins/views.py:164 templates/nav/admin_nav.html:121
+#: checkins/views.py:168 templates/nav/admin_nav.html:120
 msgid "Make Identifiers"
 msgstr ""
 
-#: checkins/views.py:171 templates/nav/admin_nav.html:207
+#: checkins/views.py:175 templates/nav/admin_nav.html:206
 msgid "Speakers"
 msgstr ""
 
-#: checkins/views.py:176 templates/nav/admin_nav.html:255
+#: checkins/views.py:180 templates/nav/admin_nav.html:254
 #: templates/nav/public_nav.html:132
 msgid "Adjudicators"
 msgstr ""
 
-#: checkins/views.py:181
+#: checkins/views.py:185
 msgid "Venues"
 msgstr ""
 
-#: checkins/views.py:222
+#: checkins/views.py:226
 #, python-format
 msgid "Generated identifiers for %s"
 msgstr ""
 
-#: checkins/views.py:229
+#: checkins/views.py:233
 msgid "Identifiers"
 msgstr ""
 
-#: checkins/views.py:265
+#: checkins/views.py:269
 msgid "Could not check you in as you do not have an identifying code — your tab director may need to make you an identifier."
 msgstr ""
 
-#: checkins/views.py:272
+#: checkins/views.py:276
 msgid "You have revoked your check-in."
 msgstr ""
 
-#: checkins/views.py:274
+#: checkins/views.py:278
 msgid "Whoops! Looks like your check-in was already revoked."
 msgstr ""
 
-#: checkins/views.py:277
+#: checkins/views.py:281
 msgid "Whoops! Looks like you're already checked in."
 msgstr ""
 
-#: checkins/views.py:279
+#: checkins/views.py:283
 msgid "You are now checked in."
 msgstr ""
 
@@ -240,6 +240,10 @@ msgstr ""
 
 #: settings/core.py:51
 msgid "Portuguese"
+msgstr ""
+
+#: settings/core.py:52
+msgid "Russian"
 msgstr ""
 
 #: templates/admin/delete_protected_message.html:4
@@ -359,27 +363,31 @@ msgstr ""
 msgid "You can <a href=\"https://tabbycatdebate.github.io/debate-ballots/\" rel=\"noreferrer\" target=\"_blank\"> customise and print</a> great ballots from your browser."
 msgstr ""
 
-#: templates/footer.html:72
+#: templates/footer.html:66
+msgid "Language"
+msgstr ""
+
+#: templates/footer.html:73
 msgid "GitHub"
 msgstr ""
 
-#: templates/footer.html:78
+#: templates/footer.html:79
 msgid "Documentation"
 msgstr ""
 
-#: templates/footer.html:84
+#: templates/footer.html:85
 msgid "Support"
 msgstr ""
 
-#: templates/footer.html:90
+#: templates/footer.html:91
 msgid "Facebook"
 msgstr ""
 
-#: templates/footer.html:96
+#: templates/footer.html:97
 msgid "Set Up A Copy"
 msgstr ""
 
-#: templates/footer.html:110
+#: templates/footer.html:111
 msgid "Change Language"
 msgstr ""
 
@@ -391,152 +399,160 @@ msgstr ""
 msgid "Tabbycat Logo"
 msgstr ""
 
-#: templates/nav/admin_nav.html:39
+#: templates/nav/admin_nav.html:28 templates/nav/top_nav_base.html:59
+msgid "Site Home"
+msgstr ""
+
+#: templates/nav/admin_nav.html:31
+msgid "New Tournament"
+msgstr ""
+
+#: templates/nav/admin_nav.html:34
+msgid "Edit Database"
+msgstr ""
+
+#: templates/nav/admin_nav.html:42
 msgid "Admin Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:43
+#: templates/nav/admin_nav.html:46
 msgid "Assistant Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:47
+#: templates/nav/admin_nav.html:50
 msgid "Public Area"
 msgstr ""
 
-#: templates/nav/admin_nav.html:57 templates/nav/admin_nav.html:147
-#: templates/nav/admin_nav.html:187 templates/nav/admin_nav.html:247
+#: templates/nav/admin_nav.html:60 templates/nav/admin_nav.html:146
+#: templates/nav/admin_nav.html:186 templates/nav/admin_nav.html:246
 msgid "Overview"
 msgstr ""
 
-#: templates/nav/admin_nav.html:64
+#: templates/nav/admin_nav.html:67
 msgid "Setup"
 msgstr ""
 
-#: templates/nav/admin_nav.html:71
+#: templates/nav/admin_nav.html:74
 msgid "Configuration"
 msgstr ""
 
-#: templates/nav/admin_nav.html:74
+#: templates/nav/admin_nav.html:77
 msgid "Import Data"
 msgstr ""
 
-#: templates/nav/admin_nav.html:78 templates/nav/assistant_nav.html:18
+#: templates/nav/admin_nav.html:81 templates/nav/assistant_nav.html:18
 #: templates/nav/public_nav.html:162
 msgid "Participants"
 msgstr ""
 
-#: templates/nav/admin_nav.html:82
+#: templates/nav/admin_nav.html:85
 msgid "Private URLs"
 msgstr ""
 
-#: templates/nav/admin_nav.html:86
+#: templates/nav/admin_nav.html:89
 msgid "Emails"
 msgstr ""
 
-#: templates/nav/admin_nav.html:90
+#: templates/nav/admin_nav.html:93
 msgid "Preformed Panels"
 msgstr ""
 
-#: templates/nav/admin_nav.html:94
-msgid "Edit Database"
-msgstr ""
-
-#: templates/nav/admin_nav.html:104 templates/nav/public_nav.html:147
+#: templates/nav/admin_nav.html:103 templates/nav/public_nav.html:147
 msgid "Sides"
 msgstr ""
 
-#: templates/nav/admin_nav.html:129 templates/nav/assistant_nav.html:48
+#: templates/nav/admin_nav.html:128 templates/nav/assistant_nav.html:48
 msgid "People's Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:133
+#: templates/nav/admin_nav.html:132
 msgid "Venues' Status"
 msgstr ""
 
-#: templates/nav/admin_nav.html:141
+#: templates/nav/admin_nav.html:140
 msgid "Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:150
+#: templates/nav/admin_nav.html:149
 msgid "Latest"
 msgstr ""
 
-#: templates/nav/admin_nav.html:153
+#: templates/nav/admin_nav.html:152
 msgid "Important"
 msgstr ""
 
-#: templates/nav/admin_nav.html:156
+#: templates/nav/admin_nav.html:155
 msgid "Comments"
 msgstr ""
 
-#: templates/nav/admin_nav.html:159
+#: templates/nav/admin_nav.html:158
 msgid "Find by Source"
 msgstr ""
 
-#: templates/nav/admin_nav.html:162
+#: templates/nav/admin_nav.html:161
 msgid "Find by Target"
 msgstr ""
 
-#: templates/nav/admin_nav.html:165
+#: templates/nav/admin_nav.html:164
 msgid "Unsubmitted"
 msgstr ""
 
-#: templates/nav/admin_nav.html:168
+#: templates/nav/admin_nav.html:167
 msgid "Add Feedback"
 msgstr ""
 
-#: templates/nav/admin_nav.html:171
+#: templates/nav/admin_nav.html:170
 msgid "Bulk Update"
 msgstr ""
 
-#: templates/nav/admin_nav.html:180 templates/nav/public_nav.html:152
+#: templates/nav/admin_nav.html:179 templates/nav/public_nav.html:152
 msgid "Standings"
 msgstr ""
 
-#: templates/nav/admin_nav.html:191
+#: templates/nav/admin_nav.html:190
 msgid "All Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:193
+#: templates/nav/admin_nav.html:192
 msgid "Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:198 templates/nav/public_nav.html:13
+#: templates/nav/admin_nav.html:197 templates/nav/public_nav.html:13
 #, python-format
 msgid "%(category_name)s Teams"
 msgstr ""
 
-#: templates/nav/admin_nav.html:205
+#: templates/nav/admin_nav.html:204
 msgid "All Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:212 templates/nav/public_nav.html:30
+#: templates/nav/admin_nav.html:211 templates/nav/public_nav.html:30
 #, python-format
 msgid "%(category_name)s Speakers"
 msgstr ""
 
-#: templates/nav/admin_nav.html:220
+#: templates/nav/admin_nav.html:219
 msgid "Replies"
 msgstr ""
 
-#: templates/nav/admin_nav.html:224 templates/nav/public_nav.html:142
+#: templates/nav/admin_nav.html:223 templates/nav/public_nav.html:142
 msgid "Motions"
 msgstr ""
 
-#: templates/nav/admin_nav.html:227 templates/nav/public_nav.html:157
+#: templates/nav/admin_nav.html:226 templates/nav/public_nav.html:157
 msgid "Diversity"
 msgstr ""
 
-#: templates/nav/admin_nav.html:240
+#: templates/nav/admin_nav.html:239
 msgid "Breaks"
 msgstr ""
 
-#: templates/nav/admin_nav.html:251
+#: templates/nav/admin_nav.html:250
 #, python-format
 msgid "%(category_name)s"
 msgstr ""
 
-#: templates/nav/admin_nav.html:270 templates/nav/top_nav_base.html:101
+#: templates/nav/admin_nav.html:269 templates/nav/top_nav_base.html:101
 msgid "Log Out"
 msgstr ""
 
@@ -650,10 +666,6 @@ msgstr ""
 #: templates/nav/top_nav_base.html:47
 #, python-format
 msgid "Public area for <strong>%(tournament)s</strong>"
-msgstr ""
-
-#: templates/nav/top_nav_base.html:59
-msgid "Site Home"
 msgstr ""
 
 #: templates/nav/top_nav_base.html:105

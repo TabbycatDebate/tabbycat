@@ -3,7 +3,8 @@ from operator import attrgetter
 import logging
 
 from django.db.models import F
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
+from django.utils.safestring import mark_safe
 
 from actionlog.models import ActionLogEntry
 from breakqual.utils import calculate_live_thresholds
@@ -62,7 +63,6 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 _("Draw is not confirmed, confirm draw to run auto-allocations."))
             return
 
-        extra_msgs = "" # Account for HungarianPPA not returning messages
         if event['extra']['settings']['usePreformedPanels']:
             if not round.preformedpanel_set.exists():
                 self.return_error(event['extra']['group_name'],
@@ -74,10 +74,15 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             debates = round.debate_set.all()
             panels = round.preformedpanel_set.all()
             allocator = HungarianPreformedPanelAllocator(debates, panels, round)
+
             debates, panels = allocator.allocate()
             copy_panels_to_debates(debates, panels)
 
             self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_DEBATES_AUTO)
+
+            msg = _("Successfully auto-allocated preformed panels to debates.")
+            level = 'success'
+
         else:
             logger.info("Allocating debate adjudicators using traditional allocator")
 
@@ -89,7 +94,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                     allocator = VotingHungarianAllocator(debates, adjs, round)
                 else:
                     allocator = ConsensusHungarianAllocator(debates, adjs, round)
-                allocation, extra_msgs = allocator.allocate()
+                allocation, user_warnings = allocator.allocate()
             except AdjudicatorAllocationError as e:
                 self.return_error(event['extra']['group_name'], str(e))
                 return
@@ -99,17 +104,20 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
             self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_ADJUDICATORS_AUTO)
 
+            if user_warnings:
+                msg = ngettext(
+                    "Successfully auto-allocated adjudicators to debates. However, there was a warning:",
+                    "Successfully auto-allocated adjudicators to debates. However, there were %(count)d warnings:",
+                    len(user_warnings)) % {'count': len(user_warnings)}
+                msg = "<div>" + msg + "</div><ul class=\"mt-1 mb-0\"><li>" + "</li><li>".join(user_warnings) + "</li></ul>"
+                level = 'warning'
+            else:
+                msg = _("Successfully auto-allocated adjudicators to debates.")
+                level = 'success'
+
         # TODO: return debates directly from allocator function?
         content = self.reserialize_debates(SimpleDebateAllocationSerializer, round)
-        if event['extra']['settings']['usePreformedPanels']:
-            msg = _("Succesfully auto-allocated preformed panels to debates.")
-        else:
-            msg = _("Succesfully auto-allocated adjudicators to debates.")
-        if extra_msgs != "":
-            msg += _(" However there was a warning:") + extra_msgs
-            level = 'warning'
-        else:
-            level = 'success'
+
         self.return_response(content, event['extra']['group_name'], msg, level)
 
     def allocate_panel_adjs(self, event):
@@ -131,7 +139,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
             else:
                 allocator = ConsensusHungarianAllocator(panels, adjs, round)
 
-            allocation, extra_msgs = allocator.allocate()
+            allocation, user_warnings = allocator.allocate()
         except AdjudicatorAllocationError as e:
             self.return_error(event['extra']['group_name'], str(e))
             return
@@ -141,13 +149,19 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_ADJUDICATOR_AUTO)
         content = self.reserialize_panels(SimplePanelAllocationSerializer, round)
-        msg = _("Succesfully auto-allocated adjudicators to preformed panels.")
-        if extra_msgs != "":
-            msg += _("However there was a warning:") + extra_msgs
+
+        if user_warnings:
+            msg = ngettext(
+                "Successfully auto-allocated adjudicators to preformed panels. However, there was a warning:",
+                "Successfully auto-allocated adjudicators to preformed panels. However, there were %(count)d warnings:",
+                len(user_warnings)) % {'count': len(user_warnings)}
+            msg = "<div>" + msg + "</div><ul class=\"mt-1 mb-0\"><li>" + "</li><li>".join(user_warnings) + "</li></ul>"
             level = 'warning'
         else:
+            msg = _("Successfully auto-allocated adjudicators to preformed panels.")
             level = 'success'
-        self.return_response(content, event['extra']['group_name'], msg, level)
+
+        self.return_response(content, event['extra']['group_name'], mark_safe(msg), level)
 
     def _prioritise_by_bracket(self, instances, bracket_attrname):
         instances = instances.order_by('-' + bracket_attrname)

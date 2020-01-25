@@ -74,7 +74,7 @@
 
 <script>
 import _ from 'lodash'
-import AutoSaveCounter from '../../utils/templates/AutoSaveCounter.vue'
+import AutoSaveCounter from '../../templates/allocations/AutoSaveCounter.vue'
 import TablesContainer from './TablesContainer.vue'
 import AjaxMixin from '../ajax/AjaxMixin.vue'
 

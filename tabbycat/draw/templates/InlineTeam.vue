@@ -13,11 +13,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import HighlightableMixin from '../../utils/templates/HighlightableMixin.vue'
-import HoverablePanelMixin from '../../utils/templates/HoverablePanelMixin.vue'
-import HoverableConflictMixin from '../../utils/templates/HoverableConflictMixin.vue'
-import HoverableConflictReceiverMixin from '../../utils/templates/HoverableConflictReceiverMixin.vue'
-import ConflictableTeamMixin from '../../utils/templates/ConflictableTeamMixin.vue'
+import HighlightableMixin from '../../templates/allocations/HighlightableMixin.vue'
+import HoverablePanelMixin from '../../templates/allocations/HoverablePanelMixin.vue'
+import HoverableConflictMixin from '../../templates/allocations/HoverableConflictMixin.vue'
+import HoverableConflictReceiverMixin from '../../templates/allocations/HoverableConflictReceiverMixin.vue'
+import ConflictableTeamMixin from '../../templates/allocations/ConflictableTeamMixin.vue'
 
 export default {
   mixins: [HighlightableMixin, HoverablePanelMixin, HoverableConflictMixin, HoverableConflictReceiverMixin, ConflictableTeamMixin],

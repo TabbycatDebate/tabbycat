@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: 2019-07-11 23:49\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -39,7 +39,7 @@ msgid_plural "%(count)d adjudicators had their URL keys removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/apps.py:7 participants/views.py:40
+#: participants/apps.py:7 participants/views.py:41
 msgid "Participants"
 msgstr ""
 
@@ -71,7 +71,7 @@ msgid "What the institution is typically called for short, e.g., \"Cambridge\", 
 msgstr ""
 
 #: participants/models.py:54 participants/models.py:158
-#: participants/models.py:347
+#: participants/models.py:342
 msgid "institution"
 msgstr ""
 
@@ -80,7 +80,7 @@ msgid "institutions"
 msgstr ""
 
 #: participants/models.py:63 participants/models.py:160
-#: participants/models.py:350
+#: participants/models.py:345
 msgid "tournament"
 msgstr ""
 
@@ -290,47 +290,47 @@ msgstr ""
 msgid "speakers"
 msgstr ""
 
-#: participants/models.py:351
+#: participants/models.py:346
 msgid "Adjudicators not assigned to any tournament can be shared between tournaments"
 msgstr ""
 
-#: participants/models.py:353
-msgid "test score"
+#: participants/models.py:348
+msgid "base score"
 msgstr ""
 
-#: participants/models.py:359
+#: participants/models.py:354
 msgid "institution conflicts"
 msgstr ""
 
-#: participants/models.py:363
+#: participants/models.py:358
 msgid "team conflicts"
 msgstr ""
 
-#: participants/models.py:366
+#: participants/models.py:361
 msgid "always trainee"
 msgstr ""
 
-#: participants/models.py:367
+#: participants/models.py:362
 msgid "If checked, this adjudicator will never be auto-allocated a voting position, regardless of their score"
 msgstr ""
 
-#: participants/models.py:369
+#: participants/models.py:364
 msgid "breaking"
 msgstr ""
 
-#: participants/models.py:371
+#: participants/models.py:366
 msgid "independent"
 msgstr ""
 
-#: participants/models.py:373
+#: participants/models.py:368
 msgid "adjudication core"
 msgstr ""
 
-#: participants/models.py:382
+#: participants/models.py:377
 msgid "adjudicator"
 msgstr ""
 
-#: participants/models.py:383
+#: participants/models.py:378
 msgid "adjudicators"
 msgstr ""
 
@@ -713,7 +713,7 @@ msgstr ""
 msgid "Email Team Registrations"
 msgstr ""
 
-#: participants/templates/participants_subnav.html:26 participants/views.py:131
+#: participants/templates/participants_subnav.html:26 participants/views.py:135
 msgid "Code Names"
 msgstr ""
 
@@ -769,86 +769,86 @@ msgstr ""
 msgid "%(code_name)s <em>(%(real_name)s)</em>"
 msgstr ""
 
-#: participants/views.py:45
+#: participants/views.py:46
 msgid "Adjudicators"
 msgstr ""
 
-#: participants/views.py:54
+#: participants/views.py:55
 msgid "Speakers"
 msgstr ""
 
-#: participants/views.py:85
+#: participants/views.py:86
 msgid "Institutions"
 msgstr ""
 
-#: participants/views.py:98
+#: participants/views.py:102
 msgid "Code"
 msgstr ""
 
-#: participants/views.py:99
+#: participants/views.py:103
 msgid "Full name"
 msgstr ""
 
-#: participants/views.py:101
+#: participants/views.py:105
 msgid "Region"
 msgstr ""
 
-#: participants/views.py:103
+#: participants/views.py:107
 msgid "Teams"
 msgstr ""
 
-#: participants/views.py:103
+#: participants/views.py:107
 msgid "Number of teams"
 msgstr ""
 
-#: participants/views.py:105
+#: participants/views.py:109
 msgid "Adjs"
 msgstr ""
 
-#: participants/views.py:106
+#: participants/views.py:110
 msgid "Number of adjudicators, excluding independents"
 msgstr ""
 
-#: participants/views.py:108
+#: participants/views.py:112
 msgid "IAs"
 msgstr ""
 
-#: participants/views.py:109
+#: participants/views.py:113
 msgid "Number of independent adjudicators"
 msgstr ""
 
-#: participants/views.py:139
+#: participants/views.py:143
 msgid "Code name"
 msgstr ""
 
-#: participants/views.py:159
+#: participants/views.py:163
 msgid "Team Registration"
 msgstr ""
 
-#: participants/views.py:205
+#: participants/views.py:209
 msgid "Results"
 msgstr ""
 
-#: participants/views.py:210 participants/views.py:244
+#: participants/views.py:214 participants/views.py:248
 #, python-format
 msgid "Record for %(name)s"
 msgstr ""
 
-#: participants/views.py:241
+#: participants/views.py:245
 msgid "Previous Rounds"
 msgstr ""
 
-#: participants/views.py:327
+#: participants/views.py:331
 #, python-format
 msgid "Saved speaker category: %(list)s"
 msgid_plural "Saved speaker categories: %(list)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: participants/views.py:333
+#: participants/views.py:337
 msgid "No changes were made to the speaker categories."
 msgstr ""
 
-#: participants/views.py:346
+#: participants/views.py:350
 msgid "Speaker Category Eligibility"
 msgstr ""

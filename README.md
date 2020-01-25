@@ -14,7 +14,7 @@
 
 </div>
 
-Tabbycat is a draw tabulation system for British Parliamentary and 3 vs 3 debating tournaments. It was used at Australs in 2010, and 2012-2018 as well as at EUDC 2018 and [many other tournaments of all sizes and formats](http://tabbycat.readthedocs.io/en/stable/about/tournament-history.html). To see an example of a post-tournament website, have a look at the [Australs 2018 tab website](https://australs2018.herokuapp.com).
+Tabbycat is a draw tabulation system for British Parliamentary and a variety of two-team formats. It was used at Australs in 2010, and 2012-2018 as well as at EUDC 2018 and many other tournaments of all sizes and formats. To see an example of a post-tournament website, have a look at the [Australs 2018 tab website](https://australs2018.herokuapp.com).
 
 **Want to try it out?** The best way to trial Tabbycat is just to launch a new site, as described [in our user guide](https://tabbycat.readthedocs.io/en/stable/install/heroku.html) (or [below](#installation-and-user-guide)). It takes just a few clicks, costs nothing, requires no technical background, and you can always deploy a fresh copy when you're ready to run your tournament.
 

@@ -131,7 +131,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
             def venue_category_interpreter(lineno, line):
                 if not line.get('category'):
                     return None
-                return {'name': line['category']}
+                return {'tournament': self.tournament, 'name': line['category']}
             self._import(f, vm.VenueCategory, venue_category_interpreter, expect_unique=False)
 
         def venue_category_venue_interpreter(lineno, line):
@@ -146,6 +146,7 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
 
     def import_venue_categories(self, f):
         venue_category_interpreter = make_interpreter(
+            tournament=self.tournament,
             display_in_venue_name=self.lookup_venue_category_display,
         )
 
@@ -250,15 +251,15 @@ class AnorakTournamentDataImporter(BaseTournamentDataImporter):
         )
         adjudicators = self._import(f, pm.Adjudicator, adjudicator_interpreter)
 
-        def test_score_interpreter(lineno, line):
+        def base_score_interpreter(lineno, line):
             adjudicator = adjudicators[lineno]
-            if line['test_score']:
+            if line['base_score']:
                 return {
                     'adjudicator' : adjudicator,
-                    'score'       : line['test_score'],
+                    'score'       : line['base_score'],
                     'round'       : None,
                 }
-        self._import(f, fm.AdjudicatorTestScoreHistory, test_score_interpreter)
+        self._import(f, fm.AdjudicatorBaseScoreHistory, base_score_interpreter)
 
         def own_institution_conflict_interpreter(lineno, line):
             adjudicator = adjudicators[lineno]

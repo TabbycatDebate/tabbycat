@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -280,28 +280,28 @@ msgid_plural "The following %(count)s venues, which were available last round, a
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/templates/checkin_progress.html:161
+#: availability/templates/checkin_progress.html:162
+#, python-format
+msgid "One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available."
+msgid_plural "%(count)s venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
+msgstr[0] ""
+msgstr[1] ""
+
+#: availability/templates/checkin_progress.html:170
 msgid "Mark venues as available"
 msgstr ""
 
 #. Translators: required_count is a word for a number (e.g. "two", "three", etc.)
-#: availability/templates/checkin_progress.html:164
+#: availability/templates/checkin_progress.html:173
 #, python-format
 msgid "There needs to be at least one venue marked as available, given the number of debates."
 msgid_plural "There need to be at least %(required_count)s venues marked as available, given the number of debates."
 msgstr[0] ""
 msgstr[1] ""
 
-#: availability/templates/checkin_progress.html:176
+#: availability/templates/checkin_progress.html:185
 msgid "Edit venue availability"
 msgstr ""
-
-#: availability/templates/checkin_progress.html:180
-#, python-format
-msgid "One venue does not have an associated tournament. Set its 'Tournament' field in the Edit Database area if you want it to be marked as available."
-msgid_plural "%(count)s venues do not have an associated tournament. Set their 'Tournament' field in the Edit Database area if you want them to be marked as available."
-msgstr[0] ""
-msgstr[1] ""
 
 #: availability/views.py:95
 msgid "no teams are debating"

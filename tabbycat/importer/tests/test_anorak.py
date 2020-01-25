@@ -92,7 +92,7 @@ class TestImporterAnorak(TestCase):
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 29,
-            fm.AdjudicatorTestScoreHistory: 29,
+            fm.AdjudicatorBaseScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
             am.AdjudicatorTeamConflict: 3,
@@ -156,7 +156,7 @@ class TestImporterAnorak(TestCase):
         self.importer.import_adjudicators(f)
         self.assertCountsDictEqual(self.importer.counts, {
             pm.Adjudicator: 29,
-            fm.AdjudicatorTestScoreHistory: 29,
+            fm.AdjudicatorBaseScoreHistory: 29,
             am.AdjudicatorInstitutionConflict: 36,
             am.AdjudicatorAdjudicatorConflict: 6,
             am.AdjudicatorTeamConflict: 3,

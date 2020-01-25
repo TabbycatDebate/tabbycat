@@ -22,7 +22,7 @@ if os.environ.get('DJANGO_SECRET_KEY', ''):
     base_settings.append('heroku.py')
 
 if os.environ.get('LOCAL_DEVELOPMENT', ''):
-    base_settings.append("development.py")
+    base_settings.append('development.py')
 
 
 include(*base_settings)

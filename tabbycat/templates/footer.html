@@ -18,7 +18,7 @@
         </h6>
         <p class="text-muted">
           {% blocktrans trimmed %}
-            Tabbycat is an open-source project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
+            Tabbycat is a source-available project developed by volunteers, and is free to use for tabbing non-profit, non-fundraising tournaments.
           {% endblocktrans %}
           {% if tournament and tournament.billable_teams > 0 %}
             {% blocktrans trimmed with amount=tournament.billable_teams %}
@@ -63,7 +63,8 @@
           <li class="nav-item p-2">
             <i data-feather="globe"></i>
             <a class="nav-link p-0 d-inline-block" href="#" data-toggle="modal" data-target="#setLanguageModal">
-              Language / Idioma / Langue / 言語 / لُغَة
+              {% trans "Language" as local_language_label %}
+              Language {% if LANGUAGE_CODE != 'en' and local_language_label != "Language" %} / {{ local_language_label }}{% endif %}
             </a>
           </li>
           <li class="nav-item p-2">
@@ -116,7 +117,6 @@
         <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
           <input name="next" type="hidden" value="{{ redirect_to }}">
           <select name="language" class="custom-select">
-              {% get_current_language as LANGUAGE_CODE %}
               {% get_available_languages as LANGUAGES %}
               {% get_language_info_list for LANGUAGES as languages %}
               {% for language in languages %}

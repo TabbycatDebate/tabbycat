@@ -10,6 +10,10 @@
 
   &.break-0 {
     @include hover-highlights($break-cat-1);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.break-0-disabled {
@@ -18,6 +22,10 @@
 
   &.break-1 {
     @include hover-highlights($break-cat-2);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.break-1-disabled {
@@ -26,6 +34,10 @@
 
   &.break-2 {
     @include hover-highlights($break-cat-3);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.break-2-disabled {
@@ -34,9 +46,64 @@
 
   &.break-3 {
     @include hover-highlights($break-cat-4);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
   }
 
   &.break-4-disabled {
+    @include outline-highlights($break-cat-4);
+  }
+}
+
+.category-display {
+
+  &.category-0 {
+    @include hover-highlights($break-cat-1);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-0-disabled {
+    @include outline-highlights($break-cat-1);
+  }
+
+  &.category-1 {
+    @include hover-highlights($break-cat-2);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-1-disabled {
+    @include outline-highlights($break-cat-2);
+  }
+
+  &.category-2 {
+    @include hover-highlights($break-cat-3);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-2-disabled {
+    @include outline-highlights($break-cat-3);
+  }
+
+  &.category-3 {
+    @include hover-highlights($break-cat-4);
+
+    .vue-draggable-muted {
+      color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+    }
+  }
+
+  &.category-4-disabled {
     @include outline-highlights($break-cat-4);
   }
 }
@@ -247,7 +314,7 @@ path.region-8 {
   fill: $region-cat-8;
 }
 
-// Ranking Display
+// Ranking Display (Adjs)
 .rank-display {
 
   .vue-draggable-muted {
@@ -255,56 +322,91 @@ path.region-8 {
   }
 
   &.ranking-90,
-  &.rank-0,
-  &.priority-0 {
-    @include hover-highlights($adj-ranking-0);
+  &.rank-0 {
+    @include hover-highlights($alpha-ranking-0);
   }
 
   &.ranking-80,
-  &.rank-1,
-  &.priority-1 {
-    @include hover-highlights($adj-ranking-1);
+  &.rank-1 {
+    @include hover-highlights($alpha-ranking-1);
   }
 
   &.ranking-70,
-  &.rank-2,
-  &.priority-2 {
-    @include hover-highlights($adj-ranking-2);
+  &.rank-2 {
+    @include hover-highlights($alpha-ranking-2);
   }
 
   &.ranking-60,
-  &.rank-3,
-  &.priority-3 {
-    @include hover-highlights($adj-ranking-3);
+  &.rank-3 {
+    @include hover-highlights($alpha-ranking-3);
   }
 
   &.ranking-50,
-  &.rank-4,
-  &.priority-4 {
-    @include hover-highlights($adj-ranking-4);
+  &.rank-4 {
+    @include hover-highlights($alpha-ranking-4);
   }
 
   &.ranking-40,
-  &.rank-5,
-  &.priority-5 {
-    @include hover-highlights($adj-ranking-5);
+  &.rank-5 {
+    @include hover-highlights($alpha-ranking-5);
   }
 
   &.ranking-30,
-  &.rank-6,
-  &.priority-6 {
-    @include hover-highlights($adj-ranking-6);
+  &.rank-6 {
+    @include hover-highlights($alpha-ranking-6);
   }
 
   &.ranking-20,
-  &.rank-7,
-  &.priority-7 {
-    @include hover-highlights($adj-ranking-7);
+  &.rank-7 {
+    @include hover-highlights($alpha-ranking-7);
   }
 
   &.ranking-10,
-  &.rank-8,
+  &.rank-8 {
+    @include hover-highlights($alpha-ranking-8);
+  }
+}
+
+// Priority Display (Venues)
+.priority-display {
+
+  .vue-draggable-muted {
+    color: rgba(255, 255, 255, 0.75); // Override the mute color on the sub items
+  }
+
+  &.priority-0 {
+    @include hover-highlights($alpha-ranking-0);
+  }
+
+  &.priority-1 {
+    @include hover-highlights($alpha-ranking-1);
+  }
+
+  &.priority-2 {
+    @include hover-highlights($alpha-ranking-2);
+  }
+
+  &.priority-3 {
+    @include hover-highlights($alpha-ranking-3);
+  }
+
+  &.priority-4 {
+    @include hover-highlights($alpha-ranking-4);
+  }
+
+  &.priority-5 {
+    @include hover-highlights($alpha-ranking-5);
+  }
+
+  &.priority-6 {
+    @include hover-highlights($alpha-ranking-6);
+  }
+
+  &.priority-7 {
+    @include hover-highlights($alpha-ranking-7);
+  }
+
   &.priority-8 {
-    @include hover-highlights($adj-ranking-8);
+    @include hover-highlights($alpha-ranking-8);
   }
 }

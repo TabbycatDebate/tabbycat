@@ -42,7 +42,7 @@ class Command(TournamentCommand):
         writer = csv.writer(self.stdout)
 
         if options['subcommand'] == "teams":
-            writer.writerow(["institution","short_name","code_name","speakers"])
+            writer.writerow(["institution", "short_name", "code_name", "speakers"])
             for team in tournament.team_set.all():
                 row = [institution_name(team.institution), team.short_name, team.code_name]
                 for speaker in team.speaker_set.all():
@@ -57,7 +57,7 @@ class Command(TournamentCommand):
                 writer.writerow(row)
 
         elif options['subcommand'] == "adjs":
-            writer.writerow(["name","email","institution"])
+            writer.writerow(["name", "email", "institution"])
             for adj in tournament.relevant_adjudicators.all():
                 row = [adj.name, adj.email, institution_name(adj.institution)]
                 writer.writerow(row)

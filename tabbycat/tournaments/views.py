@@ -205,7 +205,7 @@ class BlankSiteStartView(FormView):
         with self.lock:
             if User.objects.exists():
                 logger.warning("Tried to post the blank-site-start view when a user account already exists.")
-                messages.error(request, "Whoops! It looks like someone's already created the first user account. Please log in.")
+                messages.error(request, _("Whoops! It looks like someone's already created the first user account. Please log in."))
                 return redirect('login')
 
             return super().post(request)
@@ -213,7 +213,7 @@ class BlankSiteStartView(FormView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        messages.info(self.request, "Welcome! You've created an account for %s." % user.username)
+        messages.info(self.request, _("Welcome! You've created an account for %s.") % user.username)
 
         return super().form_valid(form)
 

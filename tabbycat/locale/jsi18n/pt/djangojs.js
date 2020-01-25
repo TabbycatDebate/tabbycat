@@ -26,6 +26,7 @@
     ],
     "6 a.m.": "6 a.m.",
     "6 p.m.": "6 p.m.",
+    "All": "Todos",
     "April": "Abril",
     "August": "Agosto",
     "Available %s": "Dispon\u00edvel %s",
@@ -38,6 +39,7 @@
     "Chosen %s": "Escolhido %s",
     "Click to choose all %s at once.": "Clique para escolher todos os %s de uma vez.",
     "Click to remove all chosen %s at once.": "Clique para remover todos os %s escolhidos de uma vez.",
+    "Confirmed": "Confirmado",
     "December": "Dezembro",
     "February": "Fevereiro",
     "Filter": "Filtrar",
@@ -48,6 +50,7 @@
     "March": "Mar\u00e7o",
     "May": "Maio",
     "Midnight": "Meia-noite",
+    "No": "N\u00e3o",
     "Noon": "Meio-dia",
     "Note: You are %s hour ahead of server time.": [
       "Nota: O seu fuso hor\u00e1rio est\u00e1 %s hora adiantado em rela\u00e7\u00e3o ao servidor.",
@@ -62,13 +65,16 @@
     "October": "Outubro",
     "Remove": "Remover",
     "Remove all": "Remover todos",
+    "Return to Draw": "Retornar \u00e0s Posi\u00e7\u00f5es",
     "September": "Setembro",
     "Show": "Mostrar",
+    "Team": "Dupla",
     "This is the list of available %s. You may choose some by selecting them in the box below and then clicking the \"Choose\" arrow between the two boxes.": "Esta \u00e9 a lista de %s dispon\u00edveis. Poder\u00e1 escolher alguns, selecionando-os na caixa abaixo e clicando na seta \"Escolher\" entre as duas caixas.",
     "This is the list of chosen %s. You may remove some by selecting them in the box below and then clicking the \"Remove\" arrow between the two boxes.": "Esta \u00e9 a lista de %s escolhidos. Poder\u00e1 remover alguns, selecionando-os na caixa abaixo e clicando na seta \"Remover\" entre as duas caixas.",
     "Today": "Hoje",
     "Tomorrow": "Amanh\u00e3",
     "Type into this box to filter down the list of available %s.": "Digite nesta caixa para filtrar a lista de %s dispon\u00edveis.",
+    "Yes": "Sim",
     "Yesterday": "Ontem",
     "You have selected an action, and you haven't made any changes on individual fields. You're probably looking for the Go button rather than the Save button.": "Selecionou uma a\u00e7\u00e3o mas ainda n\u00e3o guardou as mudan\u00e7as dos campos individuais. Provavelmente querer\u00e1 o bot\u00e3o Ir ao inv\u00e9s do bot\u00e3o Guardar.",
     "You have selected an action, but you haven't saved your changes to individual fields yet. Please click OK to save. You'll need to re-run the action.": "Selecionou uma a\u00e7\u00e3o mas ainda n\u00e3o guardou as mudan\u00e7as dos campos individuais. Carregue em OK para gravar. Precisar\u00e1 de correr de novo a a\u00e7\u00e3o.",
@@ -101,7 +107,7 @@
       if (typeof(value) == 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
-        return value[django.pluralidx(count)];
+        return value.constructor === Array ? value[django.pluralidx(count)] : value;
       }
     };
 

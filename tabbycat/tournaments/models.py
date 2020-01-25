@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 PROHIBITED_TOURNAMENT_SLUGS = [
     'jet', 'database', 'admin', 'accounts', 'summernote',  # System
     'start', 'create', 'load-demo', # Setup Wizards
-    'draw', 'notifications', 'archive', # Cross-Tournament app's view roots
+    'tournament', 'notifications', 'archive', 'api', # Cross-Tournament app's view roots
     'favicon.ico', 'robots.txt',  # Files that must be at top level
     '__debug__', 'static', 'donations', 'style', 'i18n', 'jsi18n']  # Misc
 
@@ -340,7 +340,7 @@ class Round(models.Model):
     feedback_weight = models.FloatField(default=0,
         verbose_name=_("feedback weight"),
         # Translator: xgettext:no-python-format
-        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their test score. At 0, it is 100% drawn from their test score, at 1 it is 100% drawn from feedback."))
+        help_text=_("The extent to which each adjudicator's overall score depends on feedback vs their base score. At 0, it is 100% drawn from their base score, at 1 it is 100% drawn from feedback."))
     silent = models.BooleanField(default=False,
         # Translators: A silent round is a round for which results are not disclosed once the round is over.
         verbose_name=_("silent"),
@@ -455,10 +455,6 @@ class Round(models.Model):
     # --------------------------------------------------------------------------
     # Draw retrieval methods
     # --------------------------------------------------------------------------
-
-    def get_draw(self, ordering=('venue__name',)):
-        # Deprecated fully 8/3/2018, remove after 8/4/2018
-        raise RuntimeError("Round.get_draw() is deprecated, use Round.debate_set or Round.debate_set_with_prefetches() instead.")
 
     def debate_set_with_prefetches(self, filter_kwargs=None, ordering=('venue__name',),
             teams=True, adjudicators=True, speakers=True, wins=False,

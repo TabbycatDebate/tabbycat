@@ -1,7 +1,7 @@
 import os
 
-# NOTE: for this file to be imported then a specific environment variable
-# "LOCAL_DEVELOPMENT" needs to be set as per __init__.py in this folder.
+# NOTE: for this file to be imported, a specific environment variable
+# "LOCAL_DEVELOPMENT" needs to be set, as per __init__.py in this folder.
 
 # ==============================================================================
 # Templates
@@ -76,3 +76,9 @@ if ENABLE_DEBUG_TOOLBAR:
 # ==============================================================================
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# ==============================================================================
+# REST Framework (Browse through APIs)
+# ==============================================================================
+
+REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ['rest_framework.renderers.BrowsableAPIRenderer',]

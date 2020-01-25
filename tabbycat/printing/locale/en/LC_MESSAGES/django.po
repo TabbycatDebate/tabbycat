@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tabbycat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:10-0400\n"
+"POT-Creation-Date: 2019-11-20 23:12-0500\n"
 "PO-Revision-Date: 2019-07-11 23:48\n"
 "Last-Translator: philip_tc\n"
 "Language-Team: English\n"
@@ -116,14 +116,14 @@ msgstr ""
 msgid "Speeches are x minutes, the speaker score range is from x to x. You have x minutes to form an adjudication."
 msgstr ""
 
-#: printing/views.py:41
+#: printing/views.py:42
 msgid "Overall Score"
 msgstr ""
 
-#: printing/views.py:68 printing/views.py:178 printing/views.py:198
+#: printing/views.py:69 printing/views.py:179 printing/views.py:199
 msgid "Unaffiliated"
 msgstr ""
 
-#: printing/views.py:81 printing/views.py:85
+#: printing/views.py:82 printing/views.py:86
 msgid "Team"
 msgstr ""

@@ -261,7 +261,7 @@ class TestBasicStandings(TestCase):
             teams[team_name] = team
         inst = Institution.objects.create(code="Adjs", name="Adjudicators")
         for i in range(len(testdata["teams"])//2):
-            Adjudicator.objects.create(tournament=tournament, institution=inst, name="Adjudicator {:d}".format(i), test_score=5)
+            Adjudicator.objects.create(tournament=tournament, institution=inst, name="Adjudicator {:d}".format(i), base_score=5)
             Venue.objects.create(name="Venue {:d}".format(i), priority=10)
         adjs = list(Adjudicator.objects.all())
         venues = list(Venue.objects.all())

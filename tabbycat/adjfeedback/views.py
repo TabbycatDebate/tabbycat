@@ -27,7 +27,7 @@ from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
 
-from .models import AdjudicatorFeedback, AdjudicatorFeedbackQuestion, AdjudicatorTestScoreHistory
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
 from .tables import FeedbackTableBuilder
 from .utils import get_feedback_overview
@@ -129,7 +129,7 @@ class FeedbackOverview(AdministratorMixin, BaseFeedbackOverview):
         table.add_adjudicator_columns(adjudicators, show_institutions=False, subtext='institution')
         table.add_breaking_checkbox(adjudicators)
         table.add_weighted_score_columns(adjudicators, scores)
-        table.add_test_score_columns(adjudicators, editable=True)
+        table.add_base_score_columns(adjudicators, editable=True)
         table.add_score_difference_columns(adjudicators, scores)
         table.add_score_variance_columns(adjudicators)
         table.add_feedback_graphs(adjudicators)
@@ -298,7 +298,7 @@ class ImportantFeedbackView(FeedbackCardsView):
     def get_feedback_queryset(self):
         queryset = super().get_feedback_queryset()
         return queryset.annotate(
-            feedback_importance=F('score') - F('adjudicator__test_score')
+            feedback_importance=F('score') - F('adjudicator__base_score')
         ).filter(
             Q(feedback_importance__gt=2) | Q(feedback_importance__lt=-2),
         ).order_by('-timestamp')
@@ -633,21 +633,21 @@ class BaseAdjudicatorActionView(LogActionMixin, AdministratorMixin, TournamentMi
         return super().post(request, *args, **kwargs)
 
 
-class SetAdjudicatorTestScoreView(BaseAdjudicatorActionView):
+class SetAdjudicatorBaseScoreView(BaseAdjudicatorActionView):
 
     action_log_type = ActionLogEntry.ACTION_TYPE_TEST_SCORE_EDIT
     action_log_content_object_attr = 'atsh'
 
     def modify_adjudicator(self, request, adjudicator):
         try:
-            score = float(request.POST["test_score"])
+            score = float(request.POST["base_score"])
         except ValueError:
-            raise AdjudicatorActionError(_("Whoops! The value isn't a valid test score."))
+            raise AdjudicatorActionError(_("Whoops! The value isn't a valid base score."))
 
-        adjudicator.test_score = score
+        adjudicator.base_score = score
         adjudicator.save()
 
-        atsh = AdjudicatorTestScoreHistory(
+        atsh = AdjudicatorBaseScoreHistory(
             adjudicator=adjudicator, round=self.tournament.current_round,
             score=score)
         atsh.save()
@@ -781,7 +781,7 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
             kwargs['no_adjs_in_database'] = True
             kwargs['sample'] = [("Estella Brandybuck", 5.0), ("Pia Hermansson", 4.0), ("Lucas Sousa", 3.5)]
         else:
-            kwargs['sample'] = [(adj.name, adj.test_score) for adj in sample_adjs]
+            kwargs['sample'] = [(adj.name, adj.base_score) for adj in sample_adjs]
         return super().get_context_data(**kwargs)
 
     def get_form_kwargs(self):
@@ -795,8 +795,8 @@ class UpdateAdjudicatorScoresView(AdministratorMixin, LogActionMixin, Tournament
     def form_valid(self, form):
         nupdated = form.save()
         messages.success(self.request, ngettext(
-            "Updated test score for %(count)d adjudicator.",
-            "Updated test scores for %(count)d adjudicators.",
+            "Updated base score for %(count)d adjudicator.",
+            "Updated base scores for %(count)d adjudicators.",
             nupdated) % {'count': nupdated})
         self.log_action()
         return super().form_valid(form)
@@ -826,9 +826,9 @@ class AdjudicatorScoresCsvView(TournamentMixin, AdministratorMixin, BaseCsvView)
     filename = "scores.csv"
 
     def write_rows(self, writer):
-        writer.writerow(["id", "name", "test_score", "gender", "region", "nrounds"])
+        writer.writerow(["id", "name", "base_score", "gender", "region", "nrounds"])
         for adj in self.tournament.adjudicator_set.all():
-            row = [adj.id, adj.name, adj.test_score, adj.gender]
+            row = [adj.id, adj.name, adj.base_score, adj.gender]
             row.append(adj.region.name if adj.region else "")
             row.append(adj.debateadjudicator_set.count())
             writer.writerow(row)
@@ -844,7 +844,7 @@ class AdjudicatorFeedbackCsvView(FeedbackMixin, AdministratorMixin, TournamentMi
         headers = [
             "round.seq", "round.abbreviation",
             "adjudicator.id", "adjudicator.name", "adjudicator.type",
-            "source_adjudicator.id","source_adjudicator.name", "source_adjudicator.type",
+            "source_adjudicator.id", "source_adjudicator.name", "source_adjudicator.type",
             "source_team.id", "source_team.short_name", "source_team.result",
             "score", "ignored",
         ]

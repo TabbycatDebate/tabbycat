@@ -75,7 +75,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
         table.add_ballot_entry_columns(draw, self.view_role, self.request.user)
         table.add_debate_venue_columns(draw, for_admin=True)
         table.add_debate_results_columns(draw, iron=True)
-        table.add_debate_adjudicators_column(draw, show_splits=True)
+        table.add_debate_adjudicators_column(draw, show_splits=True, for_admin=True)
         return table
 
     def get_irons_list(self):
@@ -558,6 +558,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
     public_page_preference = 'ballots_released'
     tournament_field_name = 'round__tournament'
     template_name = 'public_ballot_set.html'
+    error_template_name = 'public_ballot_set_error.html'
 
     def matchup_description(self):
         if use_team_code_names(self.tournament, False):
@@ -570,19 +571,26 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
             'round'
         ).prefetch_related('debateteam_set__team')
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    def response_error(self, error):
+        status, message = error
+        return self.response_class(
+            request=self.request,
+            template=[self.error_template_name],
+            context={'message': message},
+            using=self.template_engine,
+            status=status,
+        )
 
-        error = self.check_permissions()
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except self.model.MultipleObjectsReturned:
+            error = (500, _("It looks like you were assigned to two or more debates. Please contact a tab room official."))
+        else:
+            error = self.check_permissions()
+
         if error:
-            status, message = error
-            return self.response_class(
-                request=self.request,
-                template=['public_ballot_set_error.html'],
-                context={'message': message},
-                using=self.template_engine,
-                status=status,
-            )
+            return self.response_error(error)
 
         return super().get(self, request, *args, **kwargs)
 
@@ -617,6 +625,7 @@ class PublicBallotScoresheetsView(BasePublicBallotScoresheetsView):
 class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixin, BasePublicBallotScoresheetsView):
 
     template_name = 'privateurl_ballot_set.html'
+    error_template_name = 'privateurl_ballot_set_error.html'
     slug_url_kwarg = 'url_key'
     slug_field = 'debateadjudicator__adjudicator__url_key'
 
@@ -633,12 +642,18 @@ class PrivateUrlBallotScoresheetView(RoundMixin, SingleObjectByRandomisedUrlMixi
         kwargs['motion'] = ballot.motion
         kwargs['result'] = ballot.result
         kwargs['use_code_names'] = use_team_code_names(self.tournament, False)
-
-        url_key = self.kwargs.get('url_key')
-        kwargs['url_key'] = url_key
-        kwargs['adjudicator'] = Adjudicator.objects.get(url_key=url_key)
-
+        kwargs['adjudicator'] = Adjudicator.objects.get(url_key=self.kwargs.get('url_key'))
         return super().get_context_data(**kwargs)
+
+    def response_error(self, error):
+        status, message = error
+        return self.response_class(
+            request=self.request,
+            template=[self.error_template_name],
+            context={'message': message, 'adjudicator': Adjudicator.objects.get(url_key=self.kwargs.get('url_key'))},
+            using=self.template_engine,
+            status=status,
+        )
 
     def get_queryset(self):
         return self.model.objects.filter(round=self.round).prefetch_related('debateteam_set__team')

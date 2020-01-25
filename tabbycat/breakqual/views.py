@@ -4,13 +4,15 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Count, Q
-from django.http import JsonResponse
+from django.forms import HiddenInput
+from django.forms.models import BaseModelFormSet
 from django.utils.translation import gettext as _, ngettext
-from django.views.generic import FormView, TemplateView, View
+from django.views.generic import FormView, TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.models import Team
+from participants.views import EditSpeakerCategoriesView, UpdateEligibilityEditView as BaseUpdateEligibilityEditView
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView
@@ -21,7 +23,7 @@ from .base import BreakGeneratorError
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
 from .serializers import BreakCategorySerializer
-from .utils import breakcategories_with_counts, get_breaking_teams
+from .utils import auto_make_break_rounds, breakcategories_with_counts, get_breaking_teams
 from . import forms
 
 logger = logging.getLogger(__name__)
@@ -68,7 +70,7 @@ class BaseBreakingTeamsView(SingleObjectFromTournamentMixin, VueTableTemplateVie
         return table
 
     def get_page_title(self):
-        return _("%(category)s Break") % {'category': self.object.name,}
+        return _("%(category)s Break") % {'category': self.object.name}
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -226,6 +228,46 @@ class PublicBreakingAdjudicatorsView(PublicTournamentPageMixin, BaseBreakingAdju
 # Eligibility and categories
 # ==============================================================================
 
+
+class BreakCategoryModelFormSet(BaseModelFormSet):
+    """Class to handle the different procedures for creation and modification
+    in BreakCategory objects."""
+
+    def save_new(self, form, commit=True):
+        """Create break rounds for new break categories"""
+        bc = super().save_new(form, commit)
+        auto_make_break_rounds(bc, prefix=True)
+        return bc
+
+    def save_existing(self, form, instance, commit=True):
+        """Stub for deleting/creating break rounds if break size changes"""
+        return super().save_existing(form, instance, commit)
+
+
+class EditBreakCategoriesView(EditSpeakerCategoriesView):
+    # The tournament is included in the form as a hidden input so that
+    # uniqueness checks will work. Since this is a superuser form, they can
+    # access all tournaments anyway, so tournament forgery wouldn't be a
+    # security risk.
+
+    template_name = 'break_categories_edit.html'
+    formset_model = BreakCategory
+    action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_CATEGORIES_EDIT
+
+    url_name = 'break-categories-edit'
+    success_url = 'breakqual-index'
+
+    def get_formset_factory_kwargs(self):
+        return {
+            'fields': ('name', 'tournament', 'slug', 'seq', 'break_size', 'is_general', 'priority', 'limit'),
+            'extra': 2,
+            'widgets': {
+                'tournament': HiddenInput
+            },
+            'formset': BreakCategoryModelFormSet
+        }
+
+
 class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTemplateView):
 
     template_name = 'edit_break_eligibility.html'
@@ -277,32 +319,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
         return super().get_context_data(**kwargs)
 
 
-class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMixin, View):
+class UpdateEligibilityEditView(BaseUpdateEligibilityEditView):
     action_log_type = ActionLogEntry.ACTION_TYPE_BREAK_ELIGIBILITY_EDIT
-
-    def set_break_elibility(self, team, sent_status):
-        category_id = sent_status['type']
-        marked_eligible = team.break_categories.filter(pk=category_id).exists()
-        if sent_status['checked'] and not marked_eligible:
-            team.break_categories.add(category_id)
-            team.save()
-        elif not sent_status['checked'] and marked_eligible:
-            team.break_categories.remove(category_id)
-            team.save()
-
-    def post(self, request, *args, **kwargs):
-        body = self.request.body.decode('utf-8')
-        posted_info = json.loads(body)
-
-        try:
-            team_ids = [int(key) for key in posted_info.keys()]
-            teams = Team.objects.prefetch_related('break_categories').in_bulk(team_ids)
-            for team_id, team in teams.items():
-                self.set_break_elibility(team, posted_info[str(team_id)])
-            self.log_action()
-        except:
-            message = "Error handling eligiblity updates"
-            logger.exception(message)
-            return JsonResponse({'status': 'false', 'message': message}, status=500)
-
-        return JsonResponse(json.dumps(True), safe=False)
+    participant_model = Team
+    many_to_many_field = 'break_categories'

@@ -14,9 +14,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 ADMINS = ('Philip and Chuan-Zheng', 'tabbycat@philipbelesky.com'),
 MANAGERS = ADMINS
 DEBUG = bool(int(os.environ['DEBUG'])) if 'DEBUG' in os.environ else False
-ENABLE_DEBUG_TOOLBAR = False # Must default to false
-# Sentry follows DEBUG if local; otherwise uses specific environment variable
-DISABLE_SENTRY = bool(int(os.environ['DISABLE_SENTRY'])) if 'DISABLE_SENTRY' in os.environ else DEBUG
+ENABLE_DEBUG_TOOLBAR = False # Must default to false; overriden in Dev config
+DISABLE_SENTRY = True # Overriden in Heroku config
+
 SECRET_KEY = r'#2q43u&tp4((4&m3i8v%w-6z6pp7m(v0-6@w@i!j5n)n15epwc'
 
 # ==============================================================================
@@ -49,6 +49,7 @@ LANGUAGES = [
     ('fr', _('French')),
     ('ja', _('Japanese')),
     ('pt', _('Portuguese')),
+    ('ru', _('Russian')),
 ]
 
 STATICI18N_ROOT = os.path.join(BASE_DIR, "locale")
@@ -121,6 +122,7 @@ INSTALLED_APPS = (
     'formtools',
     'statici18n', # Compile js translations as static file; saving requests
     'polymorphic',
+    'rest_framework',
 )
 
 ROOT_URLCONF = 'urls'
@@ -283,4 +285,21 @@ CHANNEL_LAYERS = {
 
 DYNAMIC_PREFERENCES = {
     'REGISTRY_MODULE': 'preferences',
+}
+
+# ==============================================================================
+# REST Framework
+# ==============================================================================
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }

@@ -21,13 +21,13 @@ class TestLiveness(TestCase):
 
     def test_case_australs_2017_esl_penultimate(self):
         # Note 2 teams bypassed ESL break; 8 eligible
-        safe, dead = liveness_twoteam(False, 7, 4, 79, 8, [5,4,3,3,1,1])
+        safe, dead = liveness_twoteam(False, 7, 4, 79, 8, [5, 4, 3, 3, 1, 1])
         self.assertGreaterEqual(safe, 4) # All on 4 broke
         self.assertLessEqual(dead, 0) # Some (all?) on 3 broke
 
     def test_case_australs_2017_esl(self):
         # Note 2 teams bypassed ESL break; 8 eligible
-        safe, dead = liveness_twoteam(False, 8, 4, 79, 8, [5,4,3,3,1,1])
+        safe, dead = liveness_twoteam(False, 8, 4, 79, 8, [5, 4, 3, 3, 1, 1])
         self.assertGreaterEqual(safe, 3) # All on 4 broke
         self.assertLessEqual(dead, 1) # Some (all?) on 3 broke
 
@@ -49,7 +49,7 @@ class TestLiveness(TestCase):
     def test_case_australs_2016_esl(self):
         # Note 2 teams bypassed ESL break
         # Worst case (-1 on finishing scores)
-        safe, dead = liveness_twoteam(False, 8, 4, 74, 8, [6,5,3,3,3,1])
+        safe, dead = liveness_twoteam(False, 8, 4, 74, 8, [6, 5, 3, 3, 3, 1])
         self.assertGreaterEqual(safe, 5)
         self.assertLessEqual(dead, 1)
 
@@ -105,7 +105,7 @@ class TestLiveness(TestCase):
         self.assertLessEqual(dead, 5) # Some teams on 9 will break (best case)
 
     def test_case_abp_2017_efl(self):
-        safe, dead = liveness_bp(False, 6, 8, 21, 6, [10,9,9,8,7,7,7,6,6])
+        safe, dead = liveness_bp(False, 6, 8, 21, 6, [10, 9, 9, 8, 7, 7, 7, 6, 6])
         self.assertGreaterEqual(safe, 8) # All teams on 8 broke
         self.assertLessEqual(dead, 3) # Some teams on 7 broke
 
