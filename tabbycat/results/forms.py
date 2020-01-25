@@ -938,7 +938,7 @@ class SingleEliminationBallotSetForm(TeamsMixin, BaseBallotSetForm):
 
     def initial_from_result(self, result):
         initial = super().initial_from_result(result)
-        initial[self._fieldname_advancing()] = result.get_winner()
+        initial[self._fieldname_advancing()] = list(result.get_winner())
         return initial
 
     def clean(self):
