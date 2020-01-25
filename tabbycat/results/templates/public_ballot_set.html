@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load debate_tags i18n %}
+{% load debate_tags i18n humanize %}
 
 {% block page-title %}
   {% if use_code_names %}
@@ -85,18 +85,37 @@
                 </li>
               {% endfor %}
               <li class="list-group-item list-group-item-{{ team.win_style }}">
-                {% if use_code_names %}
-                  {% blocktrans trimmed with name=team.team.code_name side=team.side %}
-                    <em>Total for {{ name }} ({{ side }})</em>
-                  {% endblocktrans %}
+                {% if team.total %}
+                  {% if use_code_names %}
+                    {% blocktrans trimmed with name=team.team.code_name side=team.side %}
+                      <em>Total for {{ name }} ({{ side }})</em>
+                    {% endblocktrans %}
+                  {% else %}
+                    {% blocktrans trimmed with name=team.team.short_name side=team.side %}
+                      <em>Total for {{ name }} ({{ side }})</em>
+                    {% endblocktrans %}
+                  {% endif %}
+                  <span class="badge badge-secondary float-right">
+                    {{ team.total }}
+                  </span>
                 {% else %}
-                  {% blocktrans trimmed with name=team.team.short_name side=team.side %}
-                    <em>Total for {{ name }} ({{ side }})</em>
-                  {% endblocktrans %}
+                  {% if use_code_names %}
+                    {% blocktrans trimmed with name=team.team.code_name side=team.side %}
+                      <em>{{ name }} ({{ side }})</em>
+                    {% endblocktrans %}
+                  {% else %}
+                    {% blocktrans trimmed with name=team.team.short_name side=team.side %}
+                      <em>{{ name }} ({{ side }})</em>
+                    {% endblocktrans %}
+                  {% endif %}
+                  <span class="badge badge-secondary float-right">
+                    {% if team.rank is not None %}
+                      {{ team.rank|ordinal }}
+                    {% else %}
+                      {% if team.win %}{% trans "Won" %}{% else %}{% trans "Lost" %}{% endif %}
+                    {% endif %}
+                  </span>
                 {% endif %}
-                <span class="badge badge-secondary float-right">
-                  {{ team.total }}
-                </span>
               </li>
 
             </div>

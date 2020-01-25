@@ -337,12 +337,13 @@ class BaseDebateResult:
             side_dict = self.side_as_dicts(sheet, side, side_name)
 
             # Colour result according to outcome of debate
-            if hasattr(sheet, 'winners'):
-                side_dict["win_style"] = "success" if side in sheet.winners() else "danger"
-            elif hasattr(sheet, 'rank'):
+            if hasattr(sheet, 'rank') and len(self.sides) == 4:
                 rank = sheet.rank(side)
-                if rank:
-                    side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+                side_dict["rank"] = rank
+                side_dict["win_style"] = ["success", "info", "warning", "danger"][rank-1]
+            elif hasattr(sheet, 'winners'):
+                side_dict["win"] = side in sheet.winners()
+                side_dict["win_style"] = "success" if side in sheet.winners() else "danger"
 
             self.speakers_as_dicts(sheet, side_dict, side, pos_names)
 
