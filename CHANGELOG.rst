@@ -3,6 +3,13 @@ Change Log
 ==========
 
 
+2.3.3
+-----
+*Release date: TBD*
+
+- Fixed issue where the ballot graph would ignore draft ballots getting confirmed
+
+
 2.3.2
 -----
 *Release date: 19 October 2019*
