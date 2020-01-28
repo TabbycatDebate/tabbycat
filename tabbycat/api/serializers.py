@@ -32,10 +32,10 @@ class BreakCategorySerializer(serializers.ModelSerializer):
 
     class BreakCategoryLinksSerializer(serializers.Serializer):
         eligibility = TournamentHyperlinkedIdentityField(
-            view_name='api-breakcategory-eligibility', lookup_field='slug')
+            view_name='api-breakcategory-eligibility', lookup_field='pk')
 
     url = TournamentHyperlinkedIdentityField(
-        view_name='api-breakcategory-detail', lookup_field='slug')
+        view_name='api-breakcategory-detail', lookup_field='pk')
     _links = BreakCategoryLinksSerializer(source='*', read_only=True)
 
     class Meta:
@@ -48,10 +48,10 @@ class SpeakerCategorySerializer(serializers.ModelSerializer):
 
     class SpeakerCategoryLinksSerializer(serializers.Serializer):
         eligibility = TournamentHyperlinkedIdentityField(
-            view_name='api-speakercategory-eligibility', lookup_field='slug')
+            view_name='api-speakercategory-eligibility', lookup_field='pk')
 
     url = TournamentHyperlinkedIdentityField(
-        view_name='api-speakercategory-detail', lookup_field='slug')
+        view_name='api-speakercategory-detail', lookup_field='pk')
     _links = SpeakerCategoryLinksSerializer(source='*', read_only=True)
 
     class Meta:
