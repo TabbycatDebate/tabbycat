@@ -44,10 +44,10 @@ class BreakCategorySerializer(serializers.ModelSerializer):
 
     class BreakCategoryLinksSerializer(serializers.Serializer):
         eligibility = TournamentHyperlinkedIdentityField(
-            view_name='api-breakcategory-eligibility', lookup_field='slug')
+            view_name='api-breakcategory-eligibility')
 
     url = TournamentHyperlinkedIdentityField(
-        view_name='api-breakcategory-detail', lookup_field='slug')
+        view_name='api-breakcategory-detail')
     _links = BreakCategoryLinksSerializer(source='*', read_only=True)
 
     class Meta:
