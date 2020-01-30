@@ -19,13 +19,12 @@ class TournamentHyperlinkedRelatedField(HyperlinkedRelatedField):
     def get_object(self, view_name, view_args, view_kwargs):
         lookup_value = view_kwargs[self.lookup_url_kwarg]
         lookup_kwargs = {
-            'tournament__slug': view_kwargs['tournament_slug'],
             self.lookup_field: lookup_value,
         }
         return self.get_queryset().get(**lookup_kwargs)
 
     def get_queryset(self):
-        return self.Meta.model.objects.filter(**{self.tournament_field: self.context['tournament']})
+        return self.queryset.filter(**{self.tournament_field: self.context['tournament']})
 
 
 class TournamentHyperlinkedIdentityField(TournamentHyperlinkedRelatedField, HyperlinkedIdentityField):

@@ -155,6 +155,7 @@ class TeamSerializer(serializers.ModelSerializer):
     break_categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-breakcategory-detail',
+        queryset=BreakCategory.objects.all()
     )
 
     class Meta:
@@ -164,7 +165,9 @@ class TeamSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         speaker_data = validated_data.pop('speakers')
+        break_categories = validated_data.pop('break_categories')
         team = Team.objects.create(**validated_data)
+        team.break_categories.set(break_categories)
         for i in speaker_data:
             Speaker.objects.create(team=team, **i)
         return team
