@@ -147,7 +147,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    speakers = SpeakerSerializer(many=True)
+    speakers = SpeakerSerializer(many=True,required=False)
     url = TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
         view_name='api-global-institution-detail',
@@ -171,6 +171,7 @@ class TeamSerializer(serializers.ModelSerializer):
         team.break_categories.set(break_categories)
         for i in speaker_data:
             Speaker.objects.create(team=team, **i)
+        return team
         return team
 
 
