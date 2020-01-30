@@ -60,7 +60,7 @@ def adjudicator_conflicts_display(debates):
     return conflict_messages
 
 
-def percentile(n, percent, key=lambda x:x):
+def percentile(n, percent, key=lambda x: x):
     """
     Find the percentile of a list of values.
 

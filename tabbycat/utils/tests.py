@@ -280,7 +280,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         super().setUpClass()
         # Capabilities provide access to JS console
         capabilities = DesiredCapabilities.CHROME
-        capabilities['loggingPrefs'] = {'browser':'ALL'}
+        capabilities['loggingPrefs'] = {'browser': 'ALL'}
         cls.selenium = WebDriver(desired_capabilities=capabilities)
         cls.selenium.implicitly_wait(10)
 
