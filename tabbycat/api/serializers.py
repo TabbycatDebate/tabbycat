@@ -125,12 +125,19 @@ class SpeakerSerializer(serializers.ModelSerializer):
     categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-speakercategory-detail',
+        queryset= SpeakerCategory.objects.all()
     )
 
     class Meta:
         model = Speaker
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
                   'categories')
+
+    def create(self, validated_data):
+        speaker_categories = validated_data.pop("categories")
+        speaker = Speaker.objects.create(**validated_data)
+        speaker.categories.set(speaker_categories)
+        return speaker
 
 
 class AdjudicatorSerializer(serializers.ModelSerializer):
@@ -171,7 +178,6 @@ class TeamSerializer(serializers.ModelSerializer):
         team.break_categories.set(break_categories)
         for i in speaker_data:
             Speaker.objects.create(team=team, **i)
-        return team
         return team
 
 
