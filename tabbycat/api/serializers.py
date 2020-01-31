@@ -125,7 +125,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
     categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-speakercategory-detail',
-        queryset= SpeakerCategory.objects.all()
+        queryset=SpeakerCategory.objects.all()
     )
 
     class Meta:
@@ -154,7 +154,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    speakers = SpeakerSerializer(many=True,required=False)
+    speakers = SpeakerSerializer(many=True, required=False)
     url = TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
         view_name='api-global-institution-detail',
