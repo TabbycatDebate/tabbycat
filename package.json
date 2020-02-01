@@ -8,7 +8,7 @@
     "npm": "6.3.x"
   },
   "dependencies": {
-    "@sentry/browser": "^5.6.1",
+    "@sentry/browser": "^5.11.2",
     "@sentry/integrations": "^5.6.1",
     "@vue/cli-plugin-babel": "^3.5.4",
     "@vue/cli-plugin-eslint": "^3.5.3",
