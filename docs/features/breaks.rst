@@ -77,8 +77,7 @@ Setting up break categories and rounds
 For each break category in your tournament, you need to do two things:
 
   1. Create (and name) a break category
-  2. Create break rounds for the category
-  3. Set the eligibility of teams to compete in the category
+  2. Set the eligibility of teams to compete in the category
 
 If you only have one break category (open) and you create your tournament using
 the "Create New Tournament" page, simply enter the number of teams in the break

@@ -56,7 +56,7 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
       Sent automatically when their ballot's result status becomes confirmed,
       if enabled in the "Notifications" section of the tournament options.
     - * ``{{ DEBATE }}``: The name (with round & venue) of the relevent debate
-      * ``{{ SCORES }}``: The submitted ballot with speaker scores ands team names
+      * ``{{ SCORES }}``: The submitted ballot with speaker scores and team names
 
   * - **Current team standings**
 
@@ -84,7 +84,6 @@ All emails have the ``{{ USER }}`` and ``{{ TOURN }}`` variables to indicate who
       * ``{{ LONG }}``: The team's long name
       * ``{{ CODE }}``: The team's code name
       * ``{{ EMOJI }}``: The team's assigned emoji
-      * ``{{ DIVISION }}``: The team's division if applicable
       * ``{{ BREAK }}``: Break categories which the team is a member
       * ``{{ SPEAKERS }}``: A list of the speakers in the team
       * ``{{ INSTITUTION }}``: The team's affiliation
