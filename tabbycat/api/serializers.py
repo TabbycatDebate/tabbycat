@@ -184,7 +184,8 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class InstitutionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='api-global-institution-detail')
-    team_set = TournamentHyperlinkedRelatedField(
+    teams = TournamentHyperlinkedRelatedField(
+        source='team_set',
         many=True,
         read_only=True,
         view_name='api-team-detail',
@@ -192,4 +193,4 @@ class InstitutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Institution
-        fields = ('url', 'id', 'name', 'code', 'team_set')
+        fields = ('url', 'id', 'name', 'code', 'teams')
