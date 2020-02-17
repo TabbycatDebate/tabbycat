@@ -2,7 +2,7 @@
 Contributing
 ============
 
-Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. While at its core Tabbycat is a software project, you do not need to know how to code or use Git in order to help. We welcome feedback and ideas based on your tabbing experience and appreciate suggestions or proposals for how to improve the wording, translation, and design of our interface and documentation.
+Contributions are welcome, and are greatly appreciated! Every little bit helps, and credit will be given. While at its core Tabbycat is a software project, there is much more you can do than code. We encourage you to help translate the project and to help others on our Facebook group. Of course, we also welcome and appreciate all feedback, suggestions, and ideas for how to improve the wording, translation, and design of our interface and documentation.
 
 Feel free to `join our Facebook group <https://www.facebook.com/groups/tabbycat.debate/>`_ if you have any questions about how to get started.
 
@@ -20,8 +20,13 @@ Please report bugs by opening a new issue in our `GitHub repository <https://git
 - Any details about your tournament and setup that might be helpful in troubleshooting
 - Detailed steps for how to reproduce the bug
 
-Getting started with development
-================================
+Translation
+===========
+
+We use `Crowdin <http://crowdin.com/project/tabbycat>`_ to manage the translations of the application as well as the documentation. We welcome contributions to existing languages and also to start new language translations. The application messages should be prioritized before the documentation. Contact :ref:`the developers <authors>` for access to the platform.
+
+Development
+===========
 
 - To easily test your changes to Tabbycat you probably want a working :ref:`local install <install-local>` (without using Docker)
 - Please submit pull requests for features and bug fixes against `develop` (but not `master`).
@@ -43,7 +48,7 @@ Getting started with development
     $ npm run serve
 
 Generating test data
-====================
+--------------------
 
 There are management commands to help developers quickly generate data for use in testing, including results and feedback. A list of all commands can be found from ``dj help``, but the most useful in this context are:
 
@@ -55,7 +60,7 @@ There are management commands to help developers quickly generate data for use i
 Rounds can be specified by sequence number (``seq``) or abbreviation. You can find more information about each of them by adding ``--help`` after the command name.
 
 Database schema changes
-=======================
+-----------------------
 
 When adding new features, it may be necessary to modify the database schema to support these new additions. After the changes are made, the migration files made by ``python manage.py makemigrations`` must also be committed. The migration files should also contain methods fill the new fields based on existing data if possible.
 
@@ -65,7 +70,7 @@ Fixture files (found under ``data/fixtures/``) may also need to be updated, whic
     $ python data/migrate_fixtures.py develop (your branch)
 
 Style guide
-===========
+-----------
 
 For the front end interface design there is a style guide available at "/style/" once a tournament has been setup.
 
@@ -81,8 +86,11 @@ For javascript, we use `eslint <http://eslint.org/>`_ to enforce the `standardJS
 
     $ npm run lint-vue
 
+Project organization
+====================
+
 Versioning convention
-=====================
+---------------------
 
 Our convention is to increment the minor version whenever we add new functionality, and to increment the major version whenever:
 
@@ -97,7 +105,7 @@ One day, we hope to have a public API in place to facilitate the integration wit
 Starting from version 0.7.0, we use cat breeds as the code names for major versions.
 
 Documentation
-=============
+-------------
 
 Documentation is created using `Sphinx <http://sphinx-doc.org/>`_ and hosted at `Read The Docs <https://readthedocs.org>`_. Pushes to ``develop`` will update the *latest* documentation set, while pushes to ``master`` will update the *stable* documentation set.
 
@@ -108,7 +116,7 @@ To preview the documentation locally, install the development dependencies and t
 You should then be able to preview the docs at `127.0.0.1:7999 <http://127.0.0.1:7999>`_.
 
 Project structure
-=================
+-----------------
 
 - ``bin`` contains a number of convenience scripts for starting/stopping Docker, and the webserver/asset pipeline.
 - ``data`` contains the sample data sets and fixtures used to setup demo tournaments and in automated tests respectively
@@ -121,7 +129,7 @@ Project structure
 - In the root directory there are a number of files defining our python and javascript dependencies, core configuration files, and key documents like the ``README``
 
 Internationalization/Localization
-=================================
+---------------------------------
 
 The `gettext <https://docs.djangoproject.com/en/2.2/topics/i18n/translation/>`_ framework is used to enable the translation of strings in Python files and Django templates. Backend in this context signifies these types of files.
 
@@ -145,7 +153,7 @@ Strings defined in Vue files must similarily be marked with ``gettext`` but must
 These are then also committed to git to save users needing to run `compilejsi18n` during setup. The resulting files are then bundled as part of the npm build task. Updating these translations in development (live-reload) requires the use of the ``cp-i18n`` npm task.
 
 Release checklist
-=================
+-----------------
 
 1. Check that all migrations have been generated and committed into Git
 2. Merge translations from the Crowdin pull request and compile messages
