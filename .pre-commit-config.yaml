@@ -20,4 +20,5 @@ repos:
     - flake8-import-order
     - flake8-quotes
     - pep8-naming
+    - flake8-commas
     exclude: migrations/

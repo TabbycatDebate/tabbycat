@@ -78,7 +78,7 @@ class BreakEligibilitySerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         self.fields['team_set'] = serializers.PrimaryKeyRelatedField(
             many=True,
-            queryset=kwargs['context']['tournament'].team_set.all()
+            queryset=kwargs['context']['tournament'].team_set.all(),
         )
 
     class Meta:
@@ -102,7 +102,7 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         self.fields['speaker_set'] = serializers.PrimaryKeyRelatedField(
             many=True,
-            queryset=Speaker.objects.filter(team__tournament=kwargs['context']['tournament'])
+            queryset=Speaker.objects.filter(team__tournament=kwargs['context']['tournament']),
         )
 
     class Meta:
@@ -125,7 +125,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
     categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-speakercategory-detail',
-        queryset=SpeakerCategory.objects.all()
+        queryset=SpeakerCategory.objects.all(),
     )
 
     class Meta:
@@ -144,7 +144,7 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     url = TournamentHyperlinkedIdentityField(view_name='api-adjudicator-detail')
     institution = serializers.HyperlinkedRelatedField(
         view_name='api-global-institution-detail',
-        queryset=Institution.objects.all()
+        queryset=Institution.objects.all(),
     )
 
     class Meta:
@@ -157,13 +157,14 @@ class TeamSerializer(serializers.ModelSerializer):
     speakers = SpeakerSerializer(many=True, required=False)
     url = TournamentHyperlinkedIdentityField(view_name='api-team-detail')
     institution = serializers.HyperlinkedRelatedField(
+        allow_null=False,
         view_name='api-global-institution-detail',
-        queryset=Institution.objects.all()
+        queryset=Institution.objects.all(),
     )
     break_categories = TournamentHyperlinkedRelatedField(
         many=True,
         view_name='api-breakcategory-detail',
-        queryset=BreakCategory.objects.all()
+        queryset=BreakCategory.objects.all(),
     )
 
     class Meta:
