@@ -67,8 +67,50 @@ urlpatterns = [
                 ])),
             ])),
 
+            path('institutions/', include([
+                path('',
+                     views.InstitutionViewSet.as_view(list_methods),
+                     name='api-institution-list'),
+                path('<int:pk>/',
+                     views.InstitutionViewSet.as_view(detail_methods),
+                     name='api-institution-detail'),
+            ])),
+            path('teams/', include([
+                path('',
+                     views.TeamViewSet.as_view(list_methods),
+                     name='api-team-list'),
+                path('<int:pk>/',
+                     views.TeamViewSet.as_view(detail_methods),
+                     name='api-team-detail'),
+            ])),
+            path('adjudicators/', include([
+                path('',
+                     views.AdjudicatorViewSet.as_view(list_methods),
+                     name='api-adjudicator-list'),
+                path('<int:pk>/',
+                     views.AdjudicatorViewSet.as_view(detail_methods),
+                     name='api-adjudicator-detail'),
+            ])),
+            path('speakers/', include([
+                path('',
+                     views.SpeakerViewSet.as_view(list_methods),
+                     name='api-speaker-list'),
+                path('<int:pk>/',
+                     views.SpeakerViewSet.as_view(detail_methods),
+                     name='api-speaker-detail'),
+            ])),
+
             url('', include(pref_router.urls)),  # Preferences
         ])),
-    ])),
 
+
+    ])),
+    path('institutions/', include([
+        path('',
+             views.GlobalInstitutionViewSet.as_view(list_methods),
+             name='api-global-institution-list'),
+        path('<int:pk>/',
+             views.GlobalInstitutionViewSet.as_view(detail_methods),
+             name='api-global-institution-detail'),
+    ])),
 ]
