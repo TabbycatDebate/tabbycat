@@ -11,6 +11,7 @@ Objects should be fetched from the database here as it is an asyncronous process
 thus the object itself cannot be passed.
 """
 
+from django.utils import formats
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
@@ -108,16 +109,16 @@ def ballots_email_generator(to, debate_id):
         for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
             side_string = ""
             if tournament.pref('teams_in_debate') == 'bp':
-                side_string += _("<li>%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)")
+                side_string += _("<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)")
                 points = 4 - scoresheet.rank(side)
             else:
-                side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)")
+                side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)")
                 points = _("Win") if side == scoresheet.winner() else _("Loss")
 
             ballot += side_string % {
                 'side': side_name,
                 'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
-                'speaks': scoresheet.get_total(side),
+                'speaks': formats.localize(scoresheet.get_total(side)),
                 'points': points
             }
 
@@ -127,7 +128,7 @@ def ballots_email_generator(to, debate_id):
                 ballot += _("<li>%(pos)s: %(speaker)s (%(score)s)</li>") % {
                     'pos': pos_name,
                     'speaker': result.get_speaker(side, pos).name,
-                    'score': scoresheet.get_score(side, pos)
+                    'score': formats.localize(scoresheet.get_score(side, pos))
                 }
 
             ballot += "</ul></li>"
