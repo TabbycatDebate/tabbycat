@@ -85,14 +85,15 @@ function initChart (padding, data, total, setHeight) {
     .attr('transform', `translate(0,${height})`)
     .call(d3.axisBottom(x).tickFormat(d3.timeFormat('%H:%M')))
 
+  const yAxisTicks = y.ticks().filter(tick => Number.isInteger(tick));
   g.append('g')
     .attr('class', 'axis axis--y')
-    .call(d3.axisLeft(y))
+    .call(d3.axisLeft(y).tickValues(yAxisTicks).tickFormat(d3.format('d')))
 
   g.append('g')
     .attr('class', 'axis axis--y')
     .attr('transform', `translate(${width} ,0)`)
-    .call(d3.axisRight(y))
+    .call(d3.axisRight(y).tickValues(yAxisTicks).tickFormat(d3.format('d')))
 }
 
 export default {
