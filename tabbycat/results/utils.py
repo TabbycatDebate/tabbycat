@@ -45,7 +45,7 @@ def readable_ballotsub_result(debateresult):
             result_winner = _("%(team_name)s (%(side_abbr)s) won") % get_display_name(debateresult.winning_dt(), t, use_codes)
             # Translators: The team here is the losing team
             result = _("vs %(team_name)s (%(side_abbr)s)") % get_display_name(debateresult.losing_dt(), t, use_codes)
-        elif not debateresult.is_voting and debateresult.has_two_advancing():
+        elif not debateresult.is_voting and debateresult.is_elimination:
             result_winner = _("Advancing: %(advancing_list)s<br>\n")
             result_winner = result_winner % {
                 'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in debateresult.advancing_dt())

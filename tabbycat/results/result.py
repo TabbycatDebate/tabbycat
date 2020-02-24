@@ -774,8 +774,6 @@ class ConsensusDebateResult(BaseDebateResult):
                 self.add_winner(team.debate_team.side)
 
     def get_winner(self):
-        if len(self.scoresheet.winners()) == 0:
-            return None
         return self.scoresheet.winners()
 
     def add_winner(self, winner):
@@ -785,7 +783,7 @@ class ConsensusDebateResult(BaseDebateResult):
         self.scoresheet.set_declared_winners(winners)
 
     def winning_side(self):
-        if self.get_winner() is None:
+        if len(self.get_winner()) == 0:
             return None
         assert len(self.get_winner()) == 1, "Should not be called with BP"
         return next(iter(self.get_winner()))
@@ -803,8 +801,8 @@ class ConsensusDebateResult(BaseDebateResult):
     # BP Elimination-specific methods
     # --------------------------------------------------------------------------
 
-    def has_two_advancing(self):
-        return len(self.scoresheet.winners()) == 2
+    def is_elimination(self):
+        return not hasattr(self.scoresheet, 'ranked_sides')
 
     def advancing_dt(self):
         return [dt for s, dt in self.debateteams.items() if s in self.get_winner()]
