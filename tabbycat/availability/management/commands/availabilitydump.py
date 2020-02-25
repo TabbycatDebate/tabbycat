@@ -22,7 +22,7 @@ class Command(TournamentCommand):
         for adj in queryset:
             row = [
                 adj.institution.code if adj.institution else "",
-                adj.name
+                adj.name,
             ]
             row.extend([str(len(getattr(adj, 'available_%d' % rd.seq)) > 0) for rd in rounds])
             self.stdout.write(",".join(row))

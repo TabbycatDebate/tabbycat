@@ -10,7 +10,7 @@ from results.dbutils import add_result, add_results_to_round, add_results_to_rou
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
     'tabroom': BallotSubmission.SUBMITTER_TABROOM,
-    'public':  BallotSubmission.SUBMITTER_PUBLIC
+    'public':  BallotSubmission.SUBMITTER_PUBLIC,
 }
 User = get_user_model()
 

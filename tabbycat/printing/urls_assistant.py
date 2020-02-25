@@ -11,5 +11,4 @@ urlpatterns = [
     path('feedback/',
         views.AssistantPrintFeedbackFormsView.as_view(),
         name='printing-assistant-feedback'),
-
 ]

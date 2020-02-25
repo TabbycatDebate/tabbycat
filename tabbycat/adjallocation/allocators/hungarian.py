@@ -50,7 +50,7 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
             warning_msg = ngettext(
                 "%(count)s score is larger than the maximum permitted adjudicator score (%(score).1f).",
                 "%(count)s scores are larger than the maximum permitted adjudicator score (%(score).1f).",
-                ntoolarge
+                ntoolarge,
             ) % {'count': ntoolarge, 'score': self.max_score}
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
@@ -59,7 +59,7 @@ class BaseHungarianAllocator(BaseAdjudicatorAllocator):
             warning_msg = ngettext(
                 "%(count)s score is smaller than the minimum permitted adjudicator score (%(score).1f).",
                 "%(count)s scores are smaller than the minimum permitted adjudicator score (%(score).1f).",
-                ntoosmall
+                ntoosmall,
             ) % {'count': ntoosmall, 'score': self.min_score}
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
@@ -174,7 +174,7 @@ class VotingHungarianAllocator(BaseHungarianAllocator):
                     "available panellists (less than %(needed)s).") % {
                         'panel_debates': len(panel_debates),
                         'panellists': len(panellists),
-                        'needed': len(panel_debates) * 3
+                        'needed': len(panel_debates) * 3,
                     }
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)
@@ -283,7 +283,7 @@ class ConsensusHungarianAllocator(BaseHungarianAllocator):
             warning_msg = _("There are %(debates_count)s debates but only "
                     "%(voting_count)s voting adjudicators.") % {
                         'debates_count': n_debates,
-                        'voting_count': n_voting
+                        'voting_count': n_voting,
                     }
             self.user_warnings.append(warning_msg)
             logger.warning(warning_msg)

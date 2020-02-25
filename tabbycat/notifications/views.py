@@ -58,7 +58,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
         for s in status:
             text = _("%(status)s @ %(time)s") % {'status': s.get_event_display(), 'time': s.timestamp}
             statuses.append({
-                'text': '<span class="%s">%s</span>' % (self._get_event_class(s.event), text)
+                'text': '<span class="%s">%s</span>' % (self._get_event_class(s.event), text),
             })
         return statuses
 
@@ -74,7 +74,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
             EmailStatus.EVENT_TYPE_CLICKED: 'text-success',
             EmailStatus.EVENT_TYPE_UNSUBSCRIBED: None,
             EmailStatus.EVENT_TYPE_ASM_UNSUBSCRIBED: None,
-            EmailStatus.EVENT_TYPE_ASM_RESUBSCRIBED: None
+            EmailStatus.EVENT_TYPE_ASM_RESUBSCRIBED: None,
         }[event]
 
     def get_tables(self):
@@ -82,16 +82,16 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
 
         # notifications.sentmessage_set.first().emailstatus_set.first().latest_statuses will be a list
         notifications = self.tournament.bulknotification_set.select_related(
-            'round'
+            'round',
         ).prefetch_related(Prefetch(
             'sentmessage_set',
             queryset=SentMessage.objects.select_related(
-                'recipient'
+                'recipient',
             ).prefetch_related(Prefetch(
                 'emailstatus_set',
                 queryset=EmailStatus.objects.order_by('-timestamp'),
                 to_attr='statuses',
-            ))
+            )),
         ))
 
         for notification in notifications:
@@ -118,7 +118,7 @@ class EmailStatusView(AdministratorMixin, TournamentMixin, VueTableTemplateView)
                         "popover": {
                             "title": _("Timeline"),
                             "content": self._create_status_timeline(sentmessage.statuses),
-                        }
+                        },
                     }
                     emails_status.append(status_cell)
                     emails_time.append(latest_status.timestamp)
@@ -214,17 +214,17 @@ class BaseSelectPeopleEmailView(AdministratorMixin, TournamentMixin, VueTableTem
             'name': 'recipients',
             'value': p.id,
             'noSave': True,
-            'type': 'adj' if mixed_participants and hasattr(p, 'adjudicator') else 'spk'
+            'type': 'adj' if mixed_participants and hasattr(p, 'adjudicator') else 'spk',
         } for p in queryset])
 
         table.add_column({'key': 'name', 'tooltip': _("Participant"), 'icon': 'user'}, [{
             'text': p.name,
-            'class': 'no-wrap' if len(p.name) < 20 else ''
+            'class': 'no-wrap' if len(p.name) < 20 else '',
         } for p in queryset])
 
         table.add_column({'key': 'email', 'tooltip': _("Email Address"), 'icon': 'mail'}, [{
             'text': p.email if p.email else _("Not Provided"),
-            'class': 'small' if p.email else 'small text-warning'
+            'class': 'small' if p.email else 'small text-warning',
         } for p in queryset])
 
         return table
@@ -237,7 +237,7 @@ class RoleColumnMixin:
         table = super().get_table(mixed_participants)
 
         table.add_column({'key': 'role', 'title': _("Role")}, [{
-            'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker")
+            'text': _("Adjudicator") if hasattr(p, 'adjudicator') else _("Speaker"),
         } for p in self.get_queryset()])
 
         return table
@@ -246,7 +246,7 @@ class RoleColumnMixin:
         context = super().get_context_data(**kwargs)
         context['categories'] = [
             {'id': 'spk', 'name': _("Speakers")},
-            {'id': 'adj', 'name': _("Adjudicators")}
+            {'id': 'adj', 'name': _("Adjudicators")},
         ]
         return context
 
@@ -267,7 +267,7 @@ class CustomEmailCreateView(RoleColumnMixin, BaseSelectPeopleEmailView):
             "subject": request.POST['subject_line'],
             "body": request.POST['message_body'],
             "tournament": self.tournament.id,
-            "send_to": [(p.id, p.email) for p in people]
+            "send_to": [(p.id, p.email) for p in people],
         })
 
         self.add_sent_notification(len(people))
@@ -294,7 +294,7 @@ class TemplateEmailCreateView(BaseSelectPeopleEmailView):
             "extra": self.get_extra(),
             "send_to": email_recipients,
             "subject": request.POST['subject_line'],
-            "body": request.POST['message_body']
+            "body": request.POST['message_body'],
         })
 
         self.add_sent_notification(len(email_recipients))

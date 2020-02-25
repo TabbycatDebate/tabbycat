@@ -59,7 +59,7 @@ for team, teamscores in teamscores_by_team.items():
         "margin_sum": sum(teamscore["margin"] for teamscore in teamscores),
         "points": sum(teamscore["points"] for teamscore in teamscores),
         "draw_strength": 0,  # Initialize
-        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"),  # Initialize
+        "against": dict.fromkeys([t for t in TEAMS if t is not team], "n/a"),  # Initialize,
     }
 
 # Build up standings metrics that require reference to opponents

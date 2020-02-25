@@ -34,7 +34,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             default_scale_info = AdjudicatorFeedbackQuestion(
                 text=self.tournament.pref('feedback_introduction'), seq=0,
                 answer_type='comment', # Custom type just for print display
-                required=True, from_team=True, from_adj=True
+                required=True, from_team=True, from_adj=True,
             )
             default_questions.append(default_scale_info.serialize())
 
@@ -43,7 +43,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
             required=True, from_team=True, from_adj=True,
             min_value=self.tournament.pref('adj_min_score'),
-            max_value=self.tournament.pref('adj_max_score')
+            max_value=self.tournament.pref('adj_max_score'),
         )
         default_questions.append(default_scale_question.serialize())
 

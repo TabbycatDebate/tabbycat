@@ -8,5 +8,5 @@ urlpatterns = [
         name='checkins-public-status'),
     path('submit/<slug:url_key>/',
         views.ParticipantCheckinView.as_view(),
-        name='checkins-public-submit')
+        name='checkins-public-submit'),
 ]

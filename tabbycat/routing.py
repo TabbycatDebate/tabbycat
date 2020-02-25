@@ -32,7 +32,7 @@ application = ProtocolTypeRouter({
             # Draw and Preformed Panel Edits
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/debates/$', DebateEditConsumer),
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/panels/$', PanelEditConsumer),
-        ])
+        ]),
     ),
 
     # Worker handlers (which don't need a URL/protocol)

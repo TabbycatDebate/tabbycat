@@ -177,7 +177,7 @@ class PowerPairedDrawManager(BaseDrawManager):
         if self.teams_in_debate == 'two':
             options.extend([
                 "avoid_conflicts", "odd_bracket", "pairing_method",
-                "pullup_restriction", "side_allocations"
+                "pullup_restriction", "side_allocations",
             ])
         elif self.teams_in_debate == 'bp':
             options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])

@@ -88,7 +88,7 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
 
     def get_table(self):
         institutions = Institution.objects.select_related('region').filter(
-            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
+            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament),
         ).annotate(
             nteams=Count('team', distinct=True, filter=Q(
                 team__tournament=self.tournament)),
@@ -141,7 +141,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'text': t.code_name or "—"} for t in teams]
+            [{'text': t.code_name or "—"} for t in teams],
         )
         table.add_team_columns(teams)
         return table
@@ -258,11 +258,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_context_data(self, **kwargs):
         try:
             kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round=self.tournament.current_round
+                debate__round=self.tournament.current_round,
             ).select_related(
-                'debate__round'
+                'debate__round',
             ).prefetch_related(
-                'debate__round__motion_set'
+                'debate__round__motion_set',
             )
         except ObjectDoesNotExist:
             kwargs['debateadjudications'] = None
@@ -316,8 +316,8 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
             'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
             'extra': 2,
             'widgets': {
-                'tournament': HiddenInput
-            }
+                'tournament': HiddenInput,
+            },
         }
 
     def get_formset_queryset(self):
@@ -333,7 +333,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
         if self.instances:
             message = ngettext("Saved category: %(list)s",
                 "Saved categories: %(list)s",
-                len(self.instances)
+                len(self.instances),
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
@@ -366,7 +366,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,
-                'type': sc.id
+                'type': sc.id,
             } for speaker in speakers])
         return table
 

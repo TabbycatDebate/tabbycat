@@ -117,17 +117,17 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
     def add_feedback_link_columns(self, adjudicators):
         link_head = {
             'key': 'view-feedback',
-            'icon': 'eye'
+            'icon': 'eye',
         }
         link_cell = [{
             'text': ngettext(
                 "View %(count)s<br>feedback",
                 "View %(count)s<br>feedbacks",
-                len(adj.feedback_data) - 1
+                len(adj.feedback_data) - 1,
             ) % {'count': len(adj.feedback_data) - 1}, # -1 to account for base score
             'class': 'view-feedback',
             'sort': adj.debates,
-            'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk})
+            'link': reverse_tournament('adjfeedback-view-on-adjudicator', self.tournament, kwargs={'pk': adj.pk}),
         } for adj in adjudicators]
         self.add_column(link_head, link_cell)
 
@@ -137,7 +137,7 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             cell = {
                 'text': owed,
                 'sort': owed,
-                'class': 'text-danger strong' if owed > 0 else 'text-success'
+                'class': 'text-danger strong' if owed > 0 else 'text-success',
             }
             return cell
 
@@ -169,6 +169,6 @@ class FeedbackTableBuilder(TabbycatTableBuilder):
             }
             owed_link_data = [{
                 'text': _("View Missing Feedback"),
-                'link': _record_link(progress)
+                'link': _record_link(progress),
             } for progress in progress_list]
             self.add_column(owed_link_header, owed_link_data)

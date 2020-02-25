@@ -93,7 +93,7 @@ class TeamForm(forms.ModelForm):
             if bc.tournament != tournament:
                 self.add_error('break_categories', ValidationError(
                     _("The team can't be in a break category of a different tournament. Please remove: %(category)s"),
-                    code='invalid_break_category', params={'category': str(bc)}
+                    code='invalid_break_category', params={'category': str(bc)},
                 ))
         return categories
 
@@ -206,7 +206,7 @@ class AdjudicatorAdmin(admin.ModelAdmin):
         message = ngettext(
             "%(count)d adjudicator had their URL key removed.",
             "%(count)d adjudicators had their URL keys removed.",
-            updated
+            updated,
         ) % {'count': updated}
         self.message_user(request, message)
     delete_url_key.short_description = _("Delete URL key")

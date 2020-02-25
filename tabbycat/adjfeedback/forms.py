@@ -26,7 +26,7 @@ ADJUDICATOR_POSITION_NAMES = {
     AdjudicatorAllocation.POSITION_CHAIR: gettext_lazy("chair"),
     AdjudicatorAllocation.POSITION_ONLY: gettext_lazy("solo"),
     AdjudicatorAllocation.POSITION_PANELLIST: gettext_lazy("panellist"),
-    AdjudicatorAllocation.POSITION_TRAINEE: gettext_lazy("trainee")
+    AdjudicatorAllocation.POSITION_TRAINEE: gettext_lazy("trainee"),
 }
 
 
@@ -56,7 +56,7 @@ class BlankUnknownBooleanSelect(forms.NullBooleanSelect):
             # Translators: Please leave this blank, it should be left for the base Django translations.
             ('2', gettext_lazy('Yes')),
             # Translators: Please leave this blank, it should be left for the base Django translations.
-            ('3', gettext_lazy('No'))
+            ('3', gettext_lazy('No')),
         )
         # skip the NullBooleanSelect constructor
         super(forms.NullBooleanSelect, self).__init__(attrs, choices)
@@ -248,17 +248,17 @@ def make_feedback_form_class_for_adj(source, tournament, submission_fields, conf
 
     adjfeedback_query = AdjudicatorFeedback.objects.filter(
         source_adjudicator__adjudicator=source, source_adjudicator__debate=OuterRef('debate'),
-        adjudicator=OuterRef('adjudicator'), confirmed=True
+        adjudicator=OuterRef('adjudicator'), confirmed=True,
     )
     debateadjs = DebateAdjudicator.objects.filter(
         debate__round__tournament=tournament, adjudicator=source,
         debate__round__seq__lte=tournament.current_round.seq,
-        debate__round__stage=Round.STAGE_PRELIMINARY
+        debate__round__stage=Round.STAGE_PRELIMINARY,
     ).order_by('-debate__round__seq').select_related('debate__round').prefetch_related(
         Prefetch(
             'debate__debateadjudicator_set',
-            queryset=DebateAdjudicator.objects.all().select_related('adjudicator').annotate(submitted=Exists(adjfeedback_query))
-        )
+            queryset=DebateAdjudicator.objects.all().select_related('adjudicator').annotate(submitted=Exists(adjfeedback_query)),
+        ),
     )
 
     if include_unreleased_draws:
@@ -324,15 +324,15 @@ def make_feedback_form_class_for_team(source, tournament, submission_fields, con
     debates = Debate.objects.filter(
         debateteam__team=source, round__silent=False,
         round__seq__lte=tournament.current_round.seq,
-        round__stage=Round.STAGE_PRELIMINARY
+        round__stage=Round.STAGE_PRELIMINARY,
     ).order_by('-round__seq').prefetch_related(Prefetch(
         'debateadjudicator_set',
         queryset=DebateAdjudicator.objects.all().select_related('adjudicator').annotate(submitted=Exists(
             AdjudicatorFeedback.objects.filter(
                 source_team__team=source, source_team__debate=OuterRef('debate'),
-                adjudicator=OuterRef('adjudicator'), confirmed=True
-            )
-        ))
+                adjudicator=OuterRef('adjudicator'), confirmed=True,
+            ),
+        )),
     ))
 
     if include_unreleased_draws:
@@ -470,7 +470,7 @@ class UpdateAdjudicatorScoresForm(forms.Form):
             history_instances.append(AdjudicatorBaseScoreHistory(
                 adjudicator=adj,
                 round=self.tournament.current_round,
-                score=score
+                score=score,
             ))
 
         logger.info("UpdateAdjudicatorScoresForm: Saving scores to database done (4 of 5)")

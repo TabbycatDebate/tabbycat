@@ -168,10 +168,12 @@ class Team(models.Model):
     TYPE_SWING = 'S'
     TYPE_COMPOSITE = 'C'
     TYPE_BYE = 'B'
-    TYPE_CHOICES = ((TYPE_NONE, _("none")),
-                    (TYPE_SWING, _("swing")),
-                    (TYPE_COMPOSITE, _("composite")),
-                    (TYPE_BYE, _("bye")), )
+    TYPE_CHOICES = (
+        (TYPE_NONE, _("none")),
+        (TYPE_SWING, _("swing")),
+        (TYPE_COMPOSITE, _("composite")),
+        (TYPE_BYE, _("bye")),
+    )
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, default=TYPE_NONE,
         verbose_name=_("type"))
 
@@ -289,7 +291,7 @@ class Team(models.Model):
         try:
             return DebateTeam.objects.filter(
                 debate__round__seq__lt=round_seq,
-                team=self, ).order_by('-debate__round__seq')[0].debate
+                team=self).order_by('-debate__round__seq')[0].debate
         except IndexError:
             return None
 

@@ -89,7 +89,7 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
             When(count__gt=2, then=(total - highest - lowest) / (F('count') - 2)),
             When(count__gt=0, then=total / F('count')),
             default=None,
-            output_field=FloatField()
+            output_field=FloatField(),
         )
 
 

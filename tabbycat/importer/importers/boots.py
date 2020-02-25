@@ -74,7 +74,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
             tournament=self.tournament,
             stage=self.lookup_round_stage,
             draw_type=self.lookup_draw_type,
-            break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament)
+            break_category=lambda x: bm.BreakCategory.objects.get(slug=x, tournament=self.tournament),
         )
 
         def interpreter(lineno, line):
@@ -132,7 +132,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                     yield {
                         'content_type': content_type,
                         'object_id': adjudicators[lineno].id,
-                        'round': round
+                        'round': round,
                     }
 
         self._import(f, avm.RoundAvailability, adjudicator_availability_interpreter)
@@ -157,7 +157,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
         team_interpreter_part = make_interpreter(
             tournament=self.tournament,
             institution=pm.Institution.objects.lookup,
-            DELETE=['speaker%d_%s' % (i, field) for i in [1, 2] for field in speaker_fields] + ['break_category']
+            DELETE=['speaker%d_%s' % (i, field) for i in [1, 2] for field in speaker_fields] + ['break_category'],
         )
 
         def team_interpreter(lineno, line):
@@ -182,7 +182,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                 for category in line['break_category'].split('/'):
                     yield {
                         'team': teams[lineno],
-                        'breakcategory': self.tournament.breakcategory_set.get(slug=category)
+                        'breakcategory': self.tournament.breakcategory_set.get(slug=category),
                     }
         self._import(f, pm.Team.break_categories.through, break_category_interpreter)
 
@@ -237,7 +237,7 @@ class BootsTournamentDataImporter(BaseTournamentDataImporter):
                     yield {
                         'content_type': content_type,
                         'object_id': venues[lineno].id,
-                        'round': round
+                        'round': round,
                     }
 
         self._import(f, avm.RoundAvailability, venue_availability_interpreter)

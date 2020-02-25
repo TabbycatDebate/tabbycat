@@ -24,10 +24,12 @@ class Debate(models.Model):
     STATUS_POSTPONED = 'P' # obsolete
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
-    STATUS_CHOICES = ((STATUS_NONE, _("none")),
-                      (STATUS_POSTPONED, _("postponed")),
-                      (STATUS_DRAFT, _("draft")),
-                      (STATUS_CONFIRMED, _("confirmed")), )
+    STATUS_CHOICES = (
+        (STATUS_NONE, _("none")),
+        (STATUS_POSTPONED, _("postponed")),
+        (STATUS_DRAFT, _("draft")),
+        (STATUS_CONFIRMED, _("confirmed")),
+    )
 
     objects = DebateManager()
 

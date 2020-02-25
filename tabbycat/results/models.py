@@ -28,8 +28,10 @@ class Submission(models.Model):
 
     SUBMITTER_TABROOM = 'T'
     SUBMITTER_PUBLIC = 'P'
-    SUBMITTER_TYPE_CHOICES = ((SUBMITTER_TABROOM, _("Tab room")),
-                              (SUBMITTER_PUBLIC, _("Public")), )
+    SUBMITTER_TYPE_CHOICES = (
+        (SUBMITTER_TABROOM, _("Tab room")),
+        (SUBMITTER_PUBLIC, _("Public")),
+    )
 
     timestamp = models.DateTimeField(auto_now_add=True,
         verbose_name=_("timestamp"))
@@ -143,7 +145,7 @@ class BallotSubmission(Submission):
             'timestamp': badge_datetime_format(self.timestamp),
             'confirmed': self.confirmed,
             'debate': self.debate.id,
-            'result_status': self.debate.result_status
+            'result_status': self.debate.result_status,
         }
 
     def serialize(self, tournament=None):

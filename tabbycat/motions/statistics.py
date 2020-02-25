@@ -175,7 +175,7 @@ class MotionBPStatsCalculator:
             'round__debate__ballotsubmission__teamscore',
             filter=Q(
                 round__debate__ballotsubmission__teamscore__debate_team__side=side,
-                round__debate__ballotsubmission__teamscore__points=points
+                round__debate__ballotsubmission__teamscore__points=points,
             ),
         ) for side in self.tournament.sides for points in range(4)})
 

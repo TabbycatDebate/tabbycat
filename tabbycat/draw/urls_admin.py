@@ -74,5 +74,4 @@ urlpatterns = [
     path('sides/',
         views.SideAllocationsView.as_view(),
         name='draw-side-allocations'),
-
 ]

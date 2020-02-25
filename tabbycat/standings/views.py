@@ -42,15 +42,15 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
         speaks = SpeakerScore.objects.filter(
             ballot_submission__confirmed=True,
             ghost=False,
-            speaker__team__tournament=self.tournament
+            speaker__team__tournament=self.tournament,
         ).exclude(
-            position=self.tournament.reply_position
+            position=self.tournament.reply_position,
         ).select_related('debate_team__debate__round')
         kwargs["top_speaks"] = speaks.order_by('-score')[:9]
         kwargs["bottom_speaks"] = speaks.order_by('score')[:9]
 
         overall = speaks.filter(
-            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY
+            debate_team__debate__round__stage=Round.STAGE_PRELIMINARY,
         ).aggregate(Avg('score'))['score__avg']
         kwargs["round_speaks"] = [{'round': 'Overall (for in-rounds)',
                                    'score': overall}]
@@ -62,11 +62,11 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
 
         team_scores = TeamScore.objects.filter(
             ballot_submission__confirmed=True,
-            debate_team__team__tournament=self.tournament
+            debate_team__team__tournament=self.tournament,
         ).select_related(
             'debate_team__team',
             'debate_team__debate__round',
-            'debate_team__team__institution'
+            'debate_team__team__institution',
         )
         if self.tournament.pref('teams_in_debate') == 'bp':
             team_scores.filter(debate_team__debate__round__stage=Round.STAGE_PRELIMINARY)
@@ -80,7 +80,7 @@ class StandingsIndexView(AdministratorMixin, RoundMixin, TemplateView):
         if self.tournament.pref('motion_vetoes_enabled'):
             motions = Motion.objects.filter(
                 round__seq__lte=self.round.seq,
-                round__tournament=self.tournament
+                round__tournament=self.tournament,
             ).annotate(Count('ballotsubmission'))
             kwargs["top_motions"] = motions.order_by('-ballotsubmission__count')[:4]
             kwargs["bottom_motions"] = motions.order_by('ballotsubmission__count')[:4]
@@ -98,7 +98,7 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
 
     standings_error_message = gettext_lazy(
         "<p>There was an error generating the standings: "
-        "<em>%(message)s</em></p>"
+        "<em>%(message)s</em></p>",
     )
 
     admin_standings_error_instructions = gettext_lazy(
@@ -106,11 +106,11 @@ class BaseStandingsView(RoundMixin, VueTableTemplateView):
         "<a href=\"%(standings_options_url)s\" class=\"alert-link\">"
         "standings configuration under the Setup section</a>. "
         "If this issue persists and you're not sure how to fix it, please "
-        "contact the developers.</p>"
+        "contact the developers.</p>",
     )
 
     public_standings_error_instructions = gettext_lazy(
-        "<p>The tab director will need to resolve this issue.</p>"
+        "<p>The tab director will need to resolve this issue.</p>",
     )
 
     def get_page_subtitle(self):
@@ -208,9 +208,9 @@ class BaseSpeakerStandingsView(BaseStandingsView):
 
         speakers = self.get_speakers()
         speakers = speakers.select_related(
-            'team', 'team__institution', 'team__tournament'
+            'team', 'team__institution', 'team__tournament',
         ).prefetch_related(
-            'team__speaker_set', 'categories'
+            'team__speaker_set', 'categories',
         )
 
         metrics, extra_metrics = self.get_metrics()
@@ -376,7 +376,7 @@ class BaseReplyStandingsView(BaseSpeakerStandingsView):
             raise StandingsError(_("Reply speeches aren't enabled in this tournament."))
         return Speaker.objects.filter(
             team__tournament=self.tournament,
-            speakerscore__position=self.tournament.reply_position
+            speakerscore__position=self.tournament.reply_position,
         ).distinct()
 
     def get_metrics(self):

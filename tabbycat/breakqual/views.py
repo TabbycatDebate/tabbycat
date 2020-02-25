@@ -138,11 +138,11 @@ class BreakingTeamsFormView(GenerateBreakMixin, LogActionMixin, AdministratorMix
         table = super().get_table()  # as for public view, but add some more columns
         table.add_column(
             {'key': 'eligible-for', 'title': _("Eligible for")},
-            [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings]
+            [", ".join(bc.name for bc in tsi.team.break_categories.all()) for tsi in self.standings],
         )
         table.add_column(
             {'key': 'edit-remark', 'title': _("Edit Remark")},
-            [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings]
+            [str(self.form.get_remark_field(tsi.team)) for tsi in self.standings],
         )
         return table
 
@@ -262,9 +262,9 @@ class EditBreakCategoriesView(EditSpeakerCategoriesView):
             'fields': ('name', 'tournament', 'slug', 'seq', 'break_size', 'is_general', 'priority', 'limit'),
             'extra': 2,
             'widgets': {
-                'tournament': HiddenInput
+                'tournament': HiddenInput,
             },
-            'formset': BreakCategoryModelFormSet
+            'formset': BreakCategoryModelFormSet,
         }
 
 
@@ -295,7 +295,7 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
                 'component': 'check-cell',
                 'checked': True if bc in team.break_categories.all() else False,
                 'id': team.id,
-                'type': bc.id
+                'type': bc.id,
             } for team in teams])
 
         # Provide list of members within speaker categories for convenient entry
@@ -305,8 +305,8 @@ class EditTeamEligibilityView(AdministratorMixin, TournamentMixin, VueTableTempl
                 'tooltip': ngettext(
                     'Team has %(nspeakers)s speaker with the %(category)s speaker category assigned',
                     'Team has %(nspeakers)s speakers with the %(category)s speaker category assigned',
-                    getattr(team, 'nspeakers_%s' % sc.slug, 0)
-                ) % {'nspeakers': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'), 'category': sc.name}
+                    getattr(team, 'nspeakers_%s' % sc.slug, 0),
+                ) % {'nspeakers': getattr(team, 'nspeakers_%s' % sc.slug, 'N/A'), 'category': sc.name},
             } for team in teams])
 
         return table

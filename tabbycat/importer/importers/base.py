@@ -146,7 +146,7 @@ class BaseTournamentDataImporter(object):
 
     def import_things(self, f):
         interpreter = make_interpreter(
-            institution=lambda x: participants.models.Institution.objects.get(name=x)
+            institution=lambda x: participants.models.Institution.objects.get(name=x),
         )
         self._import(f, participants.models.Speaker, interpreter)
 

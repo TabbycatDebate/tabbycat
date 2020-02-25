@@ -65,7 +65,7 @@ class BreakEligibilitySerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         self.fields['team_set'] = serializers.PrimaryKeyRelatedField(
             many=True,
-            queryset=kwargs['context']['tournament'].team_set.all()
+            queryset=kwargs['context']['tournament'].team_set.all(),
         )
 
     class Meta:
@@ -89,7 +89,7 @@ class SpeakerEligibilitySerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         self.fields['speaker_set'] = serializers.PrimaryKeyRelatedField(
             many=True,
-            queryset=Speaker.objects.filter(team__tournament=kwargs['context']['tournament'])
+            queryset=Speaker.objects.filter(team__tournament=kwargs['context']['tournament']),
         )
 
     class Meta:

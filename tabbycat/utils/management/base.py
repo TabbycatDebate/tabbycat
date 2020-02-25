@@ -40,7 +40,7 @@ class TournamentCommand(BaseCommand):
             "--tournament options are ignored if this is used.")
 
     def _set_log_level(self, **options):
-        loglevel = [logging.WARNING, logging.INFO, logging.DEBUG, logging.DEBUG
+        loglevel = [logging.WARNING, logging.INFO, logging.DEBUG, logging.DEBUG,
                     ][options["verbosity"]]
         _set_log_level(loglevel)
 

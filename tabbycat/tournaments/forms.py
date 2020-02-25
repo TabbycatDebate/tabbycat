@@ -61,7 +61,7 @@ class TournamentStartForm(ModelForm):
                 seq=1,
                 break_size=break_size,
                 is_general=True,
-                priority=100
+                priority=100,
             )
             open_break.full_clean()
             open_break.save()

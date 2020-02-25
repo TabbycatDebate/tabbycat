@@ -68,7 +68,7 @@ class VenueAllocator:
             subjects = itertools.chain(
                 debate.teams,
                 debate.adjudicators.all(),
-                [team.institution for team in debate.teams]
+                [team.institution for team in debate.teams],
             )
             constraints = [vc for subject in subjects for vc in all_constraints.get(subject, [])]
 

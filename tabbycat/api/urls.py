@@ -48,7 +48,6 @@ urlpatterns = [
                         views.BreakEligibilityView.as_view(),
                         name='api-breakcategory-eligibility'),
                 ])),
-
             ])),
 
             path('speaker-categories/', include([
@@ -67,8 +66,7 @@ urlpatterns = [
                 ])),
             ])),
 
-            url('', include(pref_router.urls)),  # Preferences
+            url('', include(pref_router.urls)),  # Preferences,
         ])),
     ])),
-
 ]

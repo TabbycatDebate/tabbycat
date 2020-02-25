@@ -20,5 +20,4 @@ urlpatterns = [
     path('round/<int:round_seq>/display-by-team/',
         views.AssistantDrawDisplayForSpecificRoundByTeamView.as_view(),
         name='draw-assistant-display-specific-round-by-team'),
-
 ]

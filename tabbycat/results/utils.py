@@ -31,7 +31,7 @@ def readable_ballotsub_result(ballotsub):
         # Translators: e.g. "{Melbourne 1} as {OG}", "{Cape Town 1} as {CO}"
         return _("%(team_name)s as %(side_abbr)s") % {
             'team_name': dt.team.code_name if use_codes else dt.team.short_name,
-            'side_abbr': dt.get_side_abbr(t)
+            'side_abbr': dt.get_side_abbr(t),
         }
 
     t = ballotsub.debate.round.tournament
@@ -70,7 +70,7 @@ def readable_ballotsub_result(ballotsub):
 
             result_winner = _("Advancing: %(advancing_list)s<br>\n")
             result_winner = result_winner % {
-                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in advancing)
+                'advancing_list': ", ".join(format_dt(dt, t, use_codes) for dt in advancing),
             }
             result = _("Eliminated: %(eliminated_list)s")
             result = result % {
@@ -173,7 +173,7 @@ _BP_POSITION_NAMES = [
     # Translators: Abbreviation for Member for the Opposition
     [gettext_lazy("MO"),
     # Translators: Abbreviation for Opposition Whip
-     gettext_lazy("OW")]
+     gettext_lazy("OW")],
 ]
 
 

@@ -43,5 +43,5 @@ class Command(RoundCommand):
                     for adj, pos in panel.adjudicators.with_positions():
                         print("   - {pos} {score:.1f} {adj.name}".format(
                             adj=adj, pos=pos,
-                            score=adj.weighted_score(feedback_weight))
+                            score=adj.weighted_score(feedback_weight)),
                         )

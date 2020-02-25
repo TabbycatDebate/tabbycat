@@ -94,7 +94,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
-                'institution': institution
+                'institution': institution,
             })
         kwargs["speakers"] = json.dumps(speakers)
 
@@ -174,18 +174,18 @@ class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
             "speakers": {
                 "title": _("Speakers"),
                 "total": self.t_speakers().count(),
-                "in":  self.speakers_with_barcodes().count()
+                "in":  self.speakers_with_barcodes().count(),
             },
             "adjudicators": {
                 "title": _("Adjudicators"),
                 "total": self.t_adjs().count(),
-                "in":  self.adjs_with_barcodes().count()
+                "in":  self.adjs_with_barcodes().count(),
             },
             "venues": {
                 "title": _("Venues"),
                 "total": t.venue_set.count(),
                 "in":  VenueIdentifier.objects.filter(venue__tournament=t).count(),
-            }
+            },
         }
         return super().get_context_data(**kwargs)
 
@@ -294,9 +294,9 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
                     'barcodes': [identifier.barcode],
                     'status': action == 'checkin',
                     'type': 'people',
-                    'component_id': None
-                }
-            }
+                    'component_id': None,
+                },
+            },
         )
 
         return super().post(request, *args, **kwargs)

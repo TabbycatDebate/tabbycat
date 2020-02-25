@@ -139,7 +139,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
                     # Translators: nadvancing in this string is always at least 2
                     "%(nadvancing)s advancing team is debating this round",  # never used, but needed for i18n
                     "%(nadvancing)s advancing teams are debating this round",
-                    nadvancing) % {'nadvancing': nadvancing}
+                    nadvancing) % {'nadvancing': nadvancing},
             }
 
     def _get_dict(self, queryset_all):
@@ -191,7 +191,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
             title = _("Active in %(prev_round)s") % {'prev_round': self.round.prev.abbreviation}
             table.add_column({'key': 'active-prev', 'title': title}, [{
                 'sort': inst.prev_available,
-                'icon': 'check' if inst.prev_available else ''
+                'icon': 'check' if inst.prev_available else '',
             } for inst in queryset])
 
         checked_in_header = {'key': "tournament", 'title': _('Checked-In')}
@@ -260,7 +260,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         table.add_column({'key': 'venue', 'title': _("Venue")}, [v.name for v in venues])
         table.add_column(
             {'key': 'display', 'title': _("Display Name (for the draw)")},
-            [v.display_name for v in venues]
+            [v.display_name for v in venues],
         )
         table.add_column({'key': 'categories', 'title': _("Categories")}, [v.cats for v in venues])
         table.add_column({'key': 'priority', 'title': _("Priority")}, [v.priority for v in venues])

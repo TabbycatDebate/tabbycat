@@ -53,7 +53,7 @@ class BaseImportWizardView(AdministratorMixin, LogActionMixin, TournamentMixin, 
     def get_template_names(self):
         return ['simple_import_%(model)ss_%(step)s.html' % {
             'model': self.model._meta.model_name,
-            'step': self.steps.current
+            'step': self.steps.current,
         }]
 
     def get_form_initial(self, step):
@@ -107,7 +107,7 @@ class ImportVenuesWizardView(BaseImportWizardView):
     model = Venue
     form_list = [
         ('raw', ImportVenuesRawForm),
-        ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0))
+        ('details', modelformset_factory(Venue, form=VenueDetailsForm, extra=0)),
     ]
     action_log_type = ActionLogEntry.ACTION_TYPE_SIMPLE_IMPORT_VENUES
 
@@ -202,7 +202,7 @@ class ImportAdjudicatorsWizardView(BaseImportByInstitutionWizardView):
     def get_details_instance_initial(self, i):
         return {
             'name': _("Adjudicator %(number)d") % {'number': i},
-            'base_score': self.get_default_base_score()
+            'base_score': self.get_default_base_score(),
         }
 
     def get_message(self, count):
@@ -225,7 +225,7 @@ class LoadDemoView(AdministratorMixin, PostOnlyRedirectView):
                 "<p>There were one or more errors creating the demo tournament. "
                 "Before retrying, please delete the existing demo tournament "
                 "<strong>and</strong> the institutions in the Edit Database Area.</p>"
-                "<p><i>Technical information: The errors are as follows:</i></p>"
+                "<p><i>Technical information: The errors are as follows:</i></p>",
             ) + "<ul><li><i>" + "</i></li><li><i>".join(e.itermessages()) + "</i></li></ul>"))
             logger.error("Error importing demo tournament: " + str(e))
             return redirect('tabbycat-index')

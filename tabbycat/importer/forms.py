@@ -23,7 +23,7 @@ class ImportValidationError(ValidationError):
     def __init__(self, lineno, message, *args, **kwargs):
         message = _("line %(lineno)d: %(message)s") % {
             'lineno': lineno,
-            'message': message
+            'message': message,
         }
         super().__init__(message, *args, **kwargs)
 

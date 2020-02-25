@@ -39,14 +39,14 @@ class RandomisedUrlsMixin(AdministratorMixin, TournamentMixin):
     def get_participants_to_email(self, already_sent=False):
         subquery = SentMessage.objects.filter(
             notification__event=BulkNotification.EVENT_TYPE_URL,
-            notification__tournament=self.tournament, email=OuterRef('email')
+            notification__tournament=self.tournament, email=OuterRef('email'),
         )
         people = self.tournament.participants.filter(
-            url_key__isnull=False, email__isnull=False
+            url_key__isnull=False, email__isnull=False,
         ).exclude(
-            email__exact=""
+            email__exact="",
         ).annotate(
-            already_sent=Exists(subquery)
+            already_sent=Exists(subquery),
         ).filter(already_sent=already_sent)
         return people
 
@@ -73,11 +73,11 @@ class RandomisedUrlsView(RandomisedUrlsMixin, VueTableTemplateView):
 
         table.add_column(
             {'title': _("URL"), 'key': "url"},
-            [build_url(person) for person in people]
+            [build_url(person) for person in people],
         )
         table.add_column(
             {'title': "", 'key': "key"},
-            [build_link(person) for person in people]
+            [build_link(person) for person in people],
         )
         return table
 
@@ -124,12 +124,12 @@ class GenerateRandomisedUrlsView(AdministratorMixin, TournamentMixin, PostOnlyRe
             generated_urls_message = ngettext(
                 "A private URL was generated for %(nblank_people)d person.",
                 "Private URLs were generated for all %(nblank_people)d people.",
-                nblank_people
+                nblank_people,
             ) % {'nblank_people': nblank_people}
             non_generated_urls_message = ngettext(
                 "The already-existing private URL for %(nexisting_people)d person was left intact.",
                 "The already-existing private URLs for %(nexisting_people)d people were left intact.",
-                nexisting_people
+                nexisting_people,
             ) % {'nexisting_people': nexisting_people}
 
             if nexisting_people == 0:
@@ -161,7 +161,7 @@ class EmailRandomisedUrlsView(RoleColumnMixin, TournamentTemplateEmailCreateView
         table.add_column({'key': 'url', 'tooltip': _("URL Key"), 'icon': 'terminal'}, [{
             'text': p.url_key,
             'link': self.request.build_absolute_uri(reverse_tournament('privateurls-person-index', self.tournament, kwargs={'url_key': p.url_key})),
-            'class': 'small'
+            'class': 'small',
         } for p in self.get_queryset()])
 
         return table

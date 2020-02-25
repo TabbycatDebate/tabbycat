@@ -28,7 +28,7 @@ class Command(TournamentCommand):
             if adj.institution is None:
                 continue
             _, created = AdjudicatorInstitutionConflict.objects.get_or_create(
-                adjudicator=adj, institution=adj.institution
+                adjudicator=adj, institution=adj.institution,
             )
             if created:
                 missing += 1
@@ -48,7 +48,7 @@ class Command(TournamentCommand):
             if team.institution is None:
                 continue
             _, created = TeamInstitutionConflict.objects.get_or_create(
-                team=team, institution=team.institution
+                team=team, institution=team.institution,
             )
             if created:
                 missing += 1

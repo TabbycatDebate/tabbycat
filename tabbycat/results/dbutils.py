@@ -141,20 +141,20 @@ def add_result(debate, submitter_type, user, discarded=False, confirmed=False, r
         logger.info("%(debate)s won by %(team)s on %(motion)s", {
             'debate': debate.matchup,
             'team': result.winning_side(),
-            'motion': bsub.motion and bsub.motion.reference or "<No motion>"
+            'motion': bsub.motion and bsub.motion.reference or "<No motion>",
         })
     elif t.pref('teams_in_debate') == 'bp':
         if result.uses_advancing:
             logger.info("%(debate)s: %(advancing)s on %(motion)s", {
                 'debate': debate.matchup,
                 'advancing': ", ".join(result.advancing_sides()),
-                'motion': bsub.motion and bsub.motion.reference or "<No motion>"
+                'motion': bsub.motion and bsub.motion.reference or "<No motion>",
             })
         else:
             logger.info("%(debate)s: %(ranked)s on %(motion)s", {
                 'debate': debate.matchup,
                 'ranked': ", ".join(result.scoresheet.ranked_sides()),
-                'motion': bsub.motion and bsub.motion.reference or "<No motion>"
+                'motion': bsub.motion and bsub.motion.reference or "<No motion>",
             })
 
     return result

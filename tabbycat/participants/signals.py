@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def update_team_names_from_institution(sender, instance, created, **kwargs):
     teams = instance.team_set.all()
     if len(teams) > 0:
-        logger.info("Updating names of all %d teams from institution %s" % (len(teams), instance.name,))
+        logger.info("Updating names of all %d teams from institution %s" % (len(teams), instance.name))
         for team in teams:
             team.save()
 

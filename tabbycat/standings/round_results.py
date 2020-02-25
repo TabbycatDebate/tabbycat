@@ -32,7 +32,7 @@ def add_team_round_results(standings, rounds, opponents=False, lookup=None, id_a
         'debate_team__team', 'debate_team__debate__round').filter(
         ballot_submission__confirmed=True,
         debate_team__debate__round__in=rounds,
-        debate_team__team_id__in=team_ids
+        debate_team__team_id__in=team_ids,
     )
 
     if opponents:

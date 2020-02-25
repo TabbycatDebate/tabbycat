@@ -46,7 +46,7 @@ class Tournament(models.Model):
     class Meta:
         verbose_name = _('tournament')
         verbose_name_plural = _('tournaments')
-        ordering = ['seq', ]
+        ordering = ['seq']
 
     def __init__(self, *args, **kwargs):
         self._prefs = {}
@@ -182,7 +182,7 @@ class Tournament(models.Model):
         colours in the admin nav bar."""
 
         rounds = self.round_set.order_by('-stage', 'seq').annotate(
-            Count('motion'), Count('debate')
+            Count('motion'), Count('debate'),
         ).select_related('break_category')
         categories_where_current_found = []
         prelim_current_found = False
@@ -290,26 +290,32 @@ class Round(models.Model):
     DRAW_POWERPAIRED = 'P'
     DRAW_ELIMINATION = 'E'
     # Translators: These are choices for the type of draw a round should have.
-    DRAW_CHOICES = ((DRAW_RANDOM, _('Random')),
-                    (DRAW_MANUAL, _('Manual')),
-                    (DRAW_ROUNDROBIN, _('Round-robin')),
-                    (DRAW_POWERPAIRED, _('Power-paired')),
-                    (DRAW_ELIMINATION, _('Elimination')), )
+    DRAW_CHOICES = (
+        (DRAW_RANDOM, _('Random')),
+        (DRAW_MANUAL, _('Manual')),
+        (DRAW_ROUNDROBIN, _('Round-robin')),
+        (DRAW_POWERPAIRED, _('Power-paired')),
+        (DRAW_ELIMINATION, _('Elimination')),
+    )
 
     STAGE_PRELIMINARY = 'P'
     STAGE_ELIMINATION = 'E'
-    STAGE_CHOICES = ((STAGE_PRELIMINARY, _('Preliminary')),
-                     (STAGE_ELIMINATION, _('Elimination')), )
+    STAGE_CHOICES = (
+        (STAGE_PRELIMINARY, _('Preliminary')),
+        (STAGE_ELIMINATION, _('Elimination')),
+    )
 
     STATUS_NONE = 'N'
     STATUS_DRAFT = 'D'
     STATUS_CONFIRMED = 'C'
     STATUS_RELEASED = 'R'
     # Translators: These are choices for the status of the draw for a round.
-    STATUS_CHOICES = ((STATUS_NONE, _('None')),
-                      (STATUS_DRAFT, _('Draft')),
-                      (STATUS_CONFIRMED, _('Confirmed')),
-                      (STATUS_RELEASED, _('Released')), )
+    STATUS_CHOICES = (
+        (STATUS_NONE, _('None')),
+        (STATUS_DRAFT, _('Draft')),
+        (STATUS_CONFIRMED, _('Confirmed')),
+        (STATUS_RELEASED, _('Released')),
+    )
 
     objects = RoundManager()
 
@@ -419,10 +425,10 @@ class Round(models.Model):
         positive and even number of voting judges."""
         from adjallocation.models import DebateAdjudicator
         debates_with_even_panel = self.debate_set.exclude(
-            debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE
+            debateadjudicator__type=DebateAdjudicator.TYPE_TRAINEE,
         ).annotate(
             panellists=Count('debateadjudicator'),
-            odd_panellists=Count('debateadjudicator') % 2
+            odd_panellists=Count('debateadjudicator') % 2,
         ).filter(panellists__gt=0, odd_panellists=0).count()
         return debates_with_even_panel
 

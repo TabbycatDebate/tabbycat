@@ -54,7 +54,7 @@ def adjudicator_assignment_email_generator(to, url, round_id):
             'ROUND': round.name,
             'VENUE': debate.venue.display_name if debate.venue is not None else _("TBA"),
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-            'DRAW': matchup
+            'DRAW': matchup,
         }
 
         for adj, pos in debate.adjudicators.with_positions():
@@ -119,7 +119,7 @@ def ballots_email_generator(to, debate_id):
                 'side': side_name,
                 'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
                 'speaks': formats.localize(scoresheet.get_total(side)),
-                'points': points
+                'points': points,
             }
 
             ballot += "<ul>"
@@ -128,7 +128,7 @@ def ballots_email_generator(to, debate_id):
                 ballot += _("<li>%(pos)s: %(speaker)s (%(score)s)</li>") % {
                     'pos': pos_name,
                     'speaker': result.get_speaker(side, pos).name,
-                    'score': formats.localize(scoresheet.get_score(side, pos))
+                    'score': formats.localize(scoresheet.get_score(side, pos)),
                 }
 
             ballot += "</ul></li>"
@@ -170,7 +170,7 @@ def standings_email_generator(to, url, round_id):
     context = {
         'TOURN': str(tournament),
         'ROUND': round.name,
-        'URL': url if tournament.pref('public_team_standings') else ""
+        'URL': url if tournament.pref('public_team_standings') else "",
     }
 
     for team in teams:
@@ -211,7 +211,7 @@ def motion_release_email_generator(to, round_id):
     context = {
         'TOURN': str(round.tournament),
         'ROUND': round.name,
-        'MOTIONS': _create_motion_list()
+        'MOTIONS': _create_motion_list(),
     }
 
     people = Person.objects.filter(id__in=to)
@@ -237,7 +237,7 @@ def team_speaker_email_generator(to, tournament_id):
             'BREAK': _(", ").join([breakq.name for breakq in team.break_categories.all()]),
             'SPEAKERS': _(", ").join([p.name for p in team.speaker_set.all()]),
             'INSTITUTION': str(team.institution),
-            'EMOJI': team.emoji
+            'EMOJI': team.emoji,
         }
 
         for speaker in team.speakers:
@@ -267,7 +267,7 @@ def team_draw_email_generator(to, url, round_id):
             'ROUND': round.name,
             'VENUE': debate.venue.name,
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-            'DRAW': matchup
+            'DRAW': matchup,
         }
 
         for dt in debate.debateteam_set.all():

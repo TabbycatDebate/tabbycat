@@ -87,7 +87,7 @@ class BaseResultsEntryForRoundView(RoundMixin, VueTableTemplateView):
                         'venue': d.venue.display_name if d.venue else None,
                         'team': team_name_for_data_entry(debateteam.team, use_code_names),
                         'current_round': debateteam.iron,
-                        'previous_round': debateteam.iron_prev
+                        'previous_round': debateteam.iron_prev,
                     })
         return iron_speeches
 
@@ -288,7 +288,7 @@ class BaseBallotSetView(LogActionMixin, TournamentMixin, FormView):
                     "extra": {"debate_id": self.debate.id},
                     "subject": self.tournament.pref("ballot_email_subject"),
                     "body": self.tournament.pref("ballot_email_message"),
-                    "send_to": None
+                    "send_to": None,
                 })
 
         self.add_success_message()
@@ -511,7 +511,7 @@ class BasePublicNewBallotSetView(PersonalizablePublicTournamentPageMixin, BaseBa
             request=self.request,
             template=['public_enter_results_error.html'],
             context=context,
-            using=self.template_engine
+            using=self.template_engine,
         )
 
 
@@ -569,7 +569,7 @@ class BasePublicBallotScoresheetsView(PublicTournamentPageMixin, SingleObjectFro
 
     def get_queryset(self):
         return self.model.objects.select_related(
-            'round'
+            'round',
         ).prefetch_related('debateteam_set__team')
 
     def response_error(self, error):

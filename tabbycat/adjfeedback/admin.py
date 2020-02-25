@@ -169,7 +169,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
             "%(count)d feedback submissions were marked as confirmed. Note that "
             "this may have caused other feedback submissions to be marked as "
             "unconfirmed.",
-            final_count
+            final_count,
         ) % {'count': final_count}
         self.message_user(request, message)
 
@@ -182,7 +182,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
                 "%(count)d feedback submissions were not marked as confirmed, "
                 "probably because other feedback submissions that conflict "
                 "with them were also marked as confirmed.",
-                difference
+                difference,
             ) % {'count': difference}
             self.message_user(request, message, level=messages.WARNING)
 
@@ -191,7 +191,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         message = ngettext(
             "1 feedback submission was marked as unconfirmed.",
             "%(count)d feedback submissions were marked as unconfirmed.",
-            count
+            count,
         ) % {'count': count}
         self.message_user(request, message)
 
@@ -201,7 +201,7 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         message = ngettext(
             "1 feedback submission is now ignored.",
             "%(count)d feedback submissions are now ignored.",
-            count
+            count,
         ) % {'count': count}
         self.message_user(request, message)
 
@@ -211,6 +211,6 @@ class AdjudicatorFeedbackAdmin(admin.ModelAdmin):
         message = ngettext(
             "1 feedback submission is now recognized.",
             "%(count)d feedback submissions are now recognized.",
-            count
+            count,
         ) % {'count': count}
         self.message_user(request, message)

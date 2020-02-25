@@ -254,7 +254,7 @@ class AdjudicatorAllocationWorkerConsumer(EditDebateOrPanelWorkerMixin):
                 defaults={
                     'bracket_max': bracket_max,
                     'bracket_min': bracket_min,
-                    'liveness': liveness
+                    'liveness': liveness,
                 })
 
         self.log_action(event['extra'], round, ActionLogEntry.ACTION_TYPE_PREFORMED_PANELS_CREATE)

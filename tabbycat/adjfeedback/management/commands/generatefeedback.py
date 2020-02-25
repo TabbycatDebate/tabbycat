@@ -10,7 +10,7 @@ from ...dbutils import add_feedback, add_feedback_to_round, delete_all_feedback_
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {
     'tabroom': AdjudicatorFeedback.SUBMITTER_TABROOM,
-    'public':  AdjudicatorFeedback.SUBMITTER_PUBLIC
+    'public':  AdjudicatorFeedback.SUBMITTER_PUBLIC,
 }
 User = get_user_model()
 

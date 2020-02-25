@@ -170,14 +170,14 @@ class BaseTestDebateResult(TestCase):
             ballot_submission__debate=self.debate,
             ballot_submission__confirmed=True,
             debate_team__side=side,
-            position=pos
+            position=pos,
         )
 
     def _get_teamscore_in_db(self, side):
         return TeamScore.objects.get(
             ballot_submission__debate=self.debate,
             ballot_submission__confirmed=True,
-            debate_team__side=side
+            debate_team__side=side,
         )
 
     def _unset_sides(self):

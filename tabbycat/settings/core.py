@@ -77,7 +77,7 @@ MIDDLEWARE = [
     # Must be after SessionMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.middleware.DebateMiddleware'
+    'utils.middleware.DebateMiddleware',
 ]
 
 TABBYCAT_APPS = (
@@ -101,7 +101,7 @@ TABBYCAT_APPS = (
     'users',
     'standings',
     'notifications',
-    'importer'
+    'importer',
 )
 
 INSTALLED_APPS = (
@@ -148,16 +148,16 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',  # for Jet
                 'utils.context_processors.debate_context',  # for tournament config vars
-                'django.template.context_processors.i18n'  # for serving static language translations
+                'django.template.context_processors.i18n'  # for serving static language translations,
             ],
             'loaders': [
                 ('django.template.loaders.cached.Loader', [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
                 ]),
-            ]
+            ],
         }
-    }
+    },
 ]
 
 # ==============================================================================
@@ -172,7 +172,7 @@ TAB_PAGES_CACHE_TIMEOUT = int(os.environ.get('TAB_PAGES_CACHE_TIMEOUT', 60 * 120
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
+    },
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
@@ -254,7 +254,7 @@ SUMMERNOTE_CONFIG = {
         ['misc', ['undo', 'redo', 'codeview']],
     ],
     'disable_upload': True,
-    'iframe': True, # Necessary; if just to compartmentalise jQuery dependency
+    'iframe': True, # Necessary; if just to compartmentalise jQuery dependency,
 }
 
 # ==============================================================================
@@ -264,7 +264,7 @@ SUMMERNOTE_CONFIG = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-    }
+    },
 }
 
 # ==============================================================================

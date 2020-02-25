@@ -40,7 +40,7 @@ Server(
     verbosity=2,
     proxy_forwarded_address_header="X-Forwarded-For",
     proxy_forwarded_port_header="X-Forwarded-Port",
-    # proxy_forwarded_proto_header="X-Forwarded-Proto", # Not enabled on currently released daphne
+    # proxy_forwarded_proto_header="X-Forwarded-Proto", # Not enabled on currently released daphne,
 ).run()
 
 
