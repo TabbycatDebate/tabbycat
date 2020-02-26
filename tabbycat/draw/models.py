@@ -62,7 +62,7 @@ class Debate(models.Model):
         description = "[{}/{}/{}] ".format(self.round.tournament.slug, self.round.abbreviation, self.id)
         try:
             description += self.matchup
-        except:
+        except Exception:
             logger.exception("Error rendering Debate.matchup in Debate.__str__")
             description += "<error showing teams>"
         return description

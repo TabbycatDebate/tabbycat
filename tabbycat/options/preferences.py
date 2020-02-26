@@ -91,6 +91,7 @@ class MarginIncludesDissent(BooleanPreference):
     name = 'margin_includes_dissenters'
     default = False
 
+
 # ==============================================================================
 draw_rules = Section('draw_rules', verbose_name=_("Draw Rules"))
 # ==============================================================================
@@ -338,6 +339,7 @@ class HideTraineePosition(BooleanPreference):
     section = draw_rules
     name = 'no_trainee_position'
     default = False
+
 
 # ==============================================================================
 feedback = Section('feedback', verbose_name=_("Feedback"))

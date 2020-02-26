@@ -280,7 +280,7 @@ class BaseTournamentDataImporter(object):
                         errors.add(lineno, model, str(e))
                     continue
                 except FieldError as e:
-                    match = re.match("Cannot resolve keyword '(\w+)' into field.", str(e))
+                    match = re.match(r"Cannot resolve keyword '(\w+)' into field.", str(e))
                     if match:
                         message = "There's an unrecognized column header in this file: {}".format(match.group(1))
                         self.logger.error(message)

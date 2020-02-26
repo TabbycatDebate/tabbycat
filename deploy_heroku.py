@@ -165,7 +165,7 @@ if addons:
 if args.urlname != "-":
     command.append(args.urlname)
 output = get_output_from_command(command)
-match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
+match = re.search(r"https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
 

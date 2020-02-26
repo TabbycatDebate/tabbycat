@@ -7,6 +7,7 @@ from .models import ActionLogEntry
 # ==============================================================================
 
 
+@admin.register(ActionLogEntry)
 class ActionLogEntryAdmin(admin.ModelAdmin):
     list_display = ('type', 'user', 'ip_address', 'timestamp', 'content_object',
                     'tournament', 'round')
@@ -16,6 +17,3 @@ class ActionLogEntryAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super(ActionLogEntryAdmin, self).get_queryset(request).select_related(
             'tournament', 'round', 'round__tournament', 'user').prefetch_related('content_object')
-
-
-admin.site.register(ActionLogEntry, ActionLogEntryAdmin)

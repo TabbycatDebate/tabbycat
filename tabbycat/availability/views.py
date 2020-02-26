@@ -347,7 +347,7 @@ class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin,
                 update — this typically means that the availability for an
                 adjudicator has already been set to be what was saved"""
             return JsonResponse({'status': 'false', 'message': message}, status=500)
-        except:
+        except Exception:
             message = " an error handling availability updates"
             logger.exception(message)
             return JsonResponse({'status': 'false', 'message': message}, status=500)
