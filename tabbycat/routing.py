@@ -1,5 +1,4 @@
 from django.conf.urls import url
-
 from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 

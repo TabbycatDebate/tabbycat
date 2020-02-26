@@ -8,7 +8,6 @@ from django.shortcuts import redirect
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, ngettext
 from django.views.generic import TemplateView
-
 from formtools.wizard.views import SessionWizardView
 
 from actionlog.mixins import LogActionMixin

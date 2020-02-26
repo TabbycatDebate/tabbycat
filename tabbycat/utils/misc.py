@@ -5,7 +5,6 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 from django.urls import reverse
 from django.utils import formats, timezone, translation
 from django.shortcuts import redirect
-
 from ipware.ip import get_real_ip
 
 logger = logging.getLogger(__name__)

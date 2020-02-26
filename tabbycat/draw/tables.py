@@ -4,6 +4,7 @@ from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
+
 from participants.utils import get_side_history
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name

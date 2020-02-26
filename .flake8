@@ -9,14 +9,14 @@
 # E241 = multiple spaces after ','
 # E261 = at least two spaces before inline comment
 # I100 = Imported names are in the wrong order.
-# I202 = Additional newline in a group of imports.
 # Q000 = double quotes
 # W504 = line break after binary operator
 
-ignore = C814,E126,E127,E128,E203,E221,E226,E241,E261,I100,I202,Q000,W504
+ignore = C814,E126,E127,E128,E203,E221,E226,E241,E261,I100,Q000,W504
 
 max-line-length = 200
 
 exclude = docs, data, migrations, node_modules, venv, */__init__.py, tabbycat/settings/*.py, emoji.py
 
-import-order-style = google
+import-order-style = edited
+application-import-names = actionlog,adjallocation,adjfeedback,availability,breakqual,checkins,divisions,draw,importer,motions,notifications,options,participants,printing,privateurls,results,settings,standings,tournaments,users,utils,venues

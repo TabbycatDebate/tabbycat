@@ -1,6 +1,5 @@
-from utils.management.base import TournamentCommand
-
 from adjallocation.models import AdjudicatorInstitutionConflict, TeamInstitutionConflict
+from utils.management.base import TournamentCommand
 
 
 class Command(TournamentCommand):

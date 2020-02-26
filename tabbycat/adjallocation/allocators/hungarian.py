@@ -2,9 +2,8 @@ import logging
 import random
 from math import exp
 
-from munkres import Munkres
-
 from django.utils.translation import gettext as _, ngettext
+from munkres import Munkres
 
 from ..allocation import AdjudicatorAllocation
 from .base import AdjudicatorAllocationError, BaseAdjudicatorAllocator, register

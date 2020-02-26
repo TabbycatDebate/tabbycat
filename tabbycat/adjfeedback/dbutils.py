@@ -8,9 +8,10 @@ import random
 import itertools
 import logging
 
+from django.contrib.auth import get_user_model
+
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
-from django.contrib.auth import get_user_model
 from adjallocation.models import DebateAdjudicator
 
 from . import models as fm

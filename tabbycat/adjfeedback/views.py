@@ -21,7 +21,6 @@ from results.prefetch import populate_wins_for_debateteams
 from tournaments.mixins import (PersonalizablePublicTournamentPageMixin, PublicTournamentPageMixin, SingleObjectByRandomisedUrlMixin,
                                 SingleObjectFromTournamentMixin, TournamentMixin)
 from tournaments.models import Round
-
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView, VueTableTemplateView

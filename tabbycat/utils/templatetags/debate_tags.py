@@ -5,6 +5,7 @@ from django import template
 from django.conf import settings
 from django.template.base import kwarg_re, TemplateSyntaxError, Variable
 from django.template.defaulttags import URLNode
+
 from tournaments.utils import get_side_name
 
 register = template.Library()
