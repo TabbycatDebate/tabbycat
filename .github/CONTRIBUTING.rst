@@ -23,7 +23,7 @@ Please report bugs by opening a new issue in our `GitHub repository <https://git
 Translation
 ===========
 
-We use `Crowdin <http://crowdin.com/project/tabbycat>`_ to manage the translations of the application as well as the documentation. We welcome contributions to existing languages and also to start new language translations. The application messages should be prioritized before the documentation. Contact :ref:`the developers <authors>` for access to the platform.
+We use `Crowdin <https://crowdin.com/project/tabbycat>`_ to manage the translations of the application as well as the documentation. We welcome contributions to existing languages and also to start new language translations. The application messages should be prioritized before the documentation. Contact :ref:`the developers <authors>` for access to the platform.
 
 Development
 ===========
