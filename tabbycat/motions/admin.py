@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from .models import DebateTeamMotionPreference, Motion
-
 from utils.admin import TabbycatModelAdminFieldsMixin
+
+from .models import DebateTeamMotionPreference, Motion
 
 
 # ==============================================================================

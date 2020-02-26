@@ -7,8 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import gettext_lazy, ngettext
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
@@ -22,8 +21,8 @@ from tournaments.mixins import (PublicTournamentPageMixin,
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import ModelFormSetView, VueTableTemplateView
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from .serializers import SpeakerSerializer

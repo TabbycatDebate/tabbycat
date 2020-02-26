@@ -8,11 +8,10 @@
 # E226 = missing whitespace around arithmetic operator
 # E241 = multiple spaces after ','
 # E261 = at least two spaces before inline comment
-# I100 = Imported names are in the wrong order.
 # Q000 = double quotes
 # W504 = line break after binary operator
 
-ignore = C814,E126,E127,E128,E203,E221,E226,E241,E261,I100,Q000,W504
+ignore = C814,E126,E127,E128,E203,E221,E226,E241,E261,Q000,W504
 
 max-line-length = 200
 

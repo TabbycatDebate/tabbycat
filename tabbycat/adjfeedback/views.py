@@ -1,7 +1,7 @@
+import csv
 import json
 import logging
 import math
-import csv
 
 from django.contrib import messages
 from django.db.models import Count, F, Q
@@ -23,15 +23,15 @@ from tournaments.mixins import (PersonalizablePublicTournamentPageMixin, PublicT
 from tournaments.models import Round
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
-from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .forms import make_feedback_form_class, UpdateAdjudicatorScoresForm
-from .tables import FeedbackTableBuilder
-from .utils import get_feedback_overview
+from .models import AdjudicatorBaseScoreHistory, AdjudicatorFeedback, AdjudicatorFeedbackQuestion
 from .prefetch import populate_debate_adjudicators
 from .progress import get_feedback_progress
+from .tables import FeedbackTableBuilder
+from .utils import get_feedback_overview
 
 logger = logging.getLogger(__name__)
 

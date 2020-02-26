@@ -3,9 +3,9 @@ from django.core.management.base import CommandError
 
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate
+from results.dbutils import add_result, add_results_to_round, add_results_to_round_partial, delete_all_ballotsubs_for_round, delete_ballotsub
 from results.models import BallotSubmission
 from utils.management.base import RoundCommand
-from results.dbutils import add_result, add_results_to_round, add_results_to_round_partial, delete_all_ballotsubs_for_round, delete_ballotsub
 
 OBJECT_TYPE_CHOICES = ["round", "debate"]
 SUBMITTER_TYPE_MAP = {

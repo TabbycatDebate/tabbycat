@@ -5,8 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Exists, OuterRef, Prefetch
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy
 
 from adjallocation.allocation import AdjudicatorAllocation
 from adjallocation.models import DebateAdjudicator

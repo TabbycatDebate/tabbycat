@@ -1,6 +1,6 @@
-from django.conf.urls import url
-from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
+from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
+from django.conf.urls import url
 
 from actionlog.consumers import ActionLogEntryConsumer
 from adjallocation.consumers import AdjudicatorAllocationWorkerConsumer, PanelEditConsumer

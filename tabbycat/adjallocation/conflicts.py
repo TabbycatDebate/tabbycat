@@ -1,13 +1,12 @@
 """Utilities for querying and listing conflicts and history between
 participants."""
 import logging
-
 from itertools import combinations, product
 
-from draw.models import Debate
-from participants.models import Adjudicator, Team
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                      AdjudicatorTeamConflict, TeamInstitutionConflict)
+from draw.models import Debate
+from participants.models import Adjudicator, Team
 
 logger = logging.getLogger(__name__)
 

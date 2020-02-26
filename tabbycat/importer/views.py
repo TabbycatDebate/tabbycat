@@ -14,19 +14,19 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.emoji import set_emoji
 from participants.models import Adjudicator, Institution, Team
-from tournaments.models import Tournament
 from tournaments.mixins import TournamentMixin
+from tournaments.models import Tournament
 from utils.misc import redirect_tournament
 from utils.mixins import AdministratorMixin
 from utils.views import PostOnlyRedirectView
 from venues.models import Venue
 
-from .management.commands import importtournament
-from .importers import TournamentDataImporterError
 from .forms import (AdjudicatorDetailsForm, ImportAdjudicatorsNumbersForm,
                     ImportInstitutionsRawForm, ImportTeamsNumbersForm,
                     ImportVenuesRawForm, TeamDetailsForm, TeamDetailsFormSet,
                     VenueDetailsForm)
+from .importers import TournamentDataImporterError
+from .management.commands import importtournament
 
 logger = logging.getLogger(__name__)
 

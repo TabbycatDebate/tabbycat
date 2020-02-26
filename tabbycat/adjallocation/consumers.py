@@ -1,10 +1,10 @@
+import logging
 from itertools import groupby
 from operator import attrgetter
-import logging
 
 from django.db.models import F
-from django.utils.translation import gettext as _, ngettext
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _, ngettext
 
 from actionlog.models import ActionLogEntry
 from breakqual.utils import calculate_live_thresholds
@@ -12,9 +12,9 @@ from draw.consumers import BaseAdjudicatorContainerConsumer, EditDebateOrPanelWo
 from participants.prefetch import populate_win_counts
 from tournaments.models import Round
 
-from .models import PreformedPanel
 from .allocators.base import AdjudicatorAllocationError
 from .allocators.hungarian import ConsensusHungarianAllocator, VotingHungarianAllocator
+from .models import PreformedPanel
 from .preformed import copy_panels_to_debates
 from .preformed.anticipated import calculate_anticipated_draw
 from .preformed.hungarian import HungarianPreformedPanelAllocator

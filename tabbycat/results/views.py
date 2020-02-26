@@ -28,13 +28,13 @@ from tournaments.mixins import (CurrentRoundMixin, PersonalizablePublicTournamen
 from tournaments.models import Round
 from utils.misc import get_ip_address, reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import VueTableTemplateView
 
 from .forms import BPEliminationResultForm, PerAdjudicatorBallotSetForm, SingleBallotSetForm
 from .models import BallotSubmission, TeamScore
-from .tables import ResultsTableBuilder
 from .prefetch import populate_confirmed_ballots
+from .tables import ResultsTableBuilder
 from .utils import populate_identical_ballotsub_lists
 
 logger = logging.getLogger(__name__)

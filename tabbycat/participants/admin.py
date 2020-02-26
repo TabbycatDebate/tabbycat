@@ -1,15 +1,14 @@
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.utils.translation import ngettext
-from django.utils.translation import gettext_lazy as _, ngettext_lazy
+from django.utils.translation import gettext_lazy as _, ngettext, ngettext_lazy
 
-from draw.models import TeamSideAllocation
 from adjallocation.models import (AdjudicatorAdjudicatorConflict, AdjudicatorInstitutionConflict,
                                   AdjudicatorTeamConflict, TeamInstitutionConflict)
 from adjfeedback.models import AdjudicatorBaseScoreHistory
 from availability.admin import RoundAvailabilityInline
 from breakqual.models import BreakCategory
+from draw.models import TeamSideAllocation
 from tournaments.models import Tournament
 from venues.admin import VenueConstraintInline
 

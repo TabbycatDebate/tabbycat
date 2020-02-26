@@ -2,8 +2,8 @@
 # Contributed by Thevesh Theva and his work on the debatebreaker.blogspot.com.au
 # blog and app.
 
-from math import ceil, factorial, floor
 from itertools import accumulate
+from math import ceil, factorial, floor
 
 
 def ncr(n, r):

@@ -1,7 +1,7 @@
-from utils.management.base import TournamentCommand
 from draw.models import Debate
 from results.models import BallotSubmission
 from tournaments.models import Round, Tournament
+from utils.management.base import TournamentCommand
 
 
 class Command(TournamentCommand):

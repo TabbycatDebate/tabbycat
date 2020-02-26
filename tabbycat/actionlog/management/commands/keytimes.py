@@ -1,10 +1,10 @@
-import datetime
 import csv
+import datetime
 
 from django.utils import timezone
 
-from utils.management.base import TournamentCommand
 from actionlog.models import ActionLogEntry
+from utils.management.base import TournamentCommand
 
 
 class Command(TournamentCommand):

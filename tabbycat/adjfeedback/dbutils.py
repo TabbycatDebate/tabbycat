@@ -4,15 +4,15 @@ to adjudicator feedback.
 These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
-import random
 import itertools
 import logging
+import random
 
 from django.contrib.auth import get_user_model
 
+from adjallocation.models import DebateAdjudicator
 from draw.models import DebateTeam
 from participants.models import Adjudicator, Team
-from adjallocation.models import DebateAdjudicator
 
 from . import models as fm
 

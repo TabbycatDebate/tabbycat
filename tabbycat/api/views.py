@@ -1,14 +1,14 @@
-from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from dynamic_preferences.api.serializers import PreferenceSerializer
+from dynamic_preferences.api.viewsets import PerInstancePreferenceViewSet
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.viewsets import ModelViewSet
 
 from options.models import TournamentPreferenceModel
-from tournaments.models import Tournament
 from tournaments.mixins import TournamentFromUrlMixin
+from tournaments.models import Tournament
 
 from . import serializers
 

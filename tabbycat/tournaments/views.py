@@ -6,11 +6,11 @@ from threading import Lock
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.urls import reverse_lazy
 from django.db.models import Count, Q
 from django.shortcuts import redirect, resolve_url
-from django.utils.http import is_safe_url
+from django.urls import reverse_lazy
 from django.utils.html import format_html_join
+from django.utils.http import is_safe_url
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, FormView, UpdateView

@@ -4,8 +4,8 @@ from collections import OrderedDict
 from django.utils.translation import gettext as _
 
 from .common import BasePairDrawGenerator, DrawFatalError, DrawUserError
-from .pairing import Pairing
 from .one_up_one_down import OneUpOneDownSwapper
+from .pairing import Pairing
 
 
 class PowerPairedDrawGenerator(BasePairDrawGenerator):

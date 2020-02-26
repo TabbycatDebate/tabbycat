@@ -3,9 +3,9 @@
 import logging
 import sys
 
-from daphne.server import Server
-from daphne.endpoints import build_endpoint_description_strings
 import asgi
+from daphne.endpoints import build_endpoint_description_strings
+from daphne.server import Server
 
 
 # Setup logging

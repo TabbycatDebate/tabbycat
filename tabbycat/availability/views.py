@@ -8,25 +8,25 @@ from django.db import IntegrityError
 from django.db.models import Min
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
-from django.views.generic.base import TemplateView, View
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
+from django.views.generic.base import TemplateView, View
 
-from . import utils
-
-from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from availability.models import RoundAvailability
 from checkins.utils import get_checkins
 from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
-from utils.tables import TabbycatTableBuilder
-from utils.mixins import AdministratorMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round
+from utils.mixins import AdministratorMixin
+from utils.tables import TabbycatTableBuilder
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from venues.models import Venue
+
+from . import utils
 
 logger = logging.getLogger(__name__)
 

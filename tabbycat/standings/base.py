@@ -1,7 +1,7 @@
 """Base class for standings generators."""
 
-import random
 import logging
+import random
 
 from django.utils.translation import gettext as _
 

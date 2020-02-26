@@ -1,8 +1,8 @@
 import logging
 from itertools import combinations
 
-from django.db.models import Count
 from django.contrib.humanize.templatetags.humanize import ordinal
+from django.db.models import Count
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 

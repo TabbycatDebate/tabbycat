@@ -5,8 +5,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db.models import Avg, Count, Prefetch
 from django.utils.html import mark_safe
-from django.utils.translation import gettext as _
-from django.utils.translation import gettext_lazy
+from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic.base import TemplateView
 
 from adjfeedback.views import BaseFeedbackOverview
@@ -21,14 +20,14 @@ from tournaments.mixins import PublicTournamentPageMixin, RoundMixin, SingleObje
 from tournaments.models import Round
 from utils.misc import reverse_round, reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import VueTableTemplateView
 
 from .base import StandingsError
 from .diversity import get_diversity_data_sets
-from .teams import TeamStandingsGenerator
-from .speakers import SpeakerStandingsGenerator
 from .round_results import add_speaker_round_results, add_team_round_results, add_team_round_results_public
+from .speakers import SpeakerStandingsGenerator
+from .teams import TeamStandingsGenerator
 from .templatetags.standingsformat import metricformat
 
 logger = logging.getLogger(__name__)

@@ -2,8 +2,8 @@
 
 import logging
 
-from django.utils.translation import gettext_lazy as _
 from django.db.models import Avg, Case, Count, F, FloatField, Max, Min, Q, StdDev, Sum, When
+from django.utils.translation import gettext_lazy as _
 
 from tournaments.models import Round
 

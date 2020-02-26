@@ -4,8 +4,8 @@ to results of debates.
 These are mainly used in management commands, but in principle could be used
 by a front-end interface as well."""
 
-import random
 import logging
+import random
 from itertools import product
 
 from django.contrib.auth import get_user_model

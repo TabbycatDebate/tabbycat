@@ -4,8 +4,8 @@ import logging
 from django.contrib import messages
 from django.db.models import Prefetch
 from django.forms import ModelChoiceField
-from django.views.generic.base import TemplateView
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry

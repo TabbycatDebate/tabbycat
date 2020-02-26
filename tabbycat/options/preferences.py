@@ -6,12 +6,12 @@ from django_summernote.widgets import SummernoteWidget
 from dynamic_preferences.preferences import Section
 from dynamic_preferences.types import BooleanPreference, ChoicePreference, FloatPreference, IntegerPreference, LongStringPreference, StringPreference
 
-from standings.teams import TeamStandingsGenerator
 from standings.speakers import SpeakerStandingsGenerator
+from standings.teams import TeamStandingsGenerator
 from tournaments.utils import get_side_name_choices
 
-from .types import MultiValueChoicePreference
 from .models import tournament_preferences_registry
+from .types import MultiValueChoicePreference
 
 
 # ==============================================================================

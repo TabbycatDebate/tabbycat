@@ -1,5 +1,5 @@
-from utils.tests import BaseMinimalTournamentTestCase
 from participants.models import Adjudicator, Institution
+from utils.tests import BaseMinimalTournamentTestCase
 
 
 class TestInstitution(BaseMinimalTournamentTestCase):

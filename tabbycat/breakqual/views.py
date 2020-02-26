@@ -13,18 +13,18 @@ from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from participants.models import Team
 from participants.views import EditSpeakerCategoriesView, UpdateEligibilityEditView as BaseUpdateEligibilityEditView
+from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
-from tournaments.mixins import PublicTournamentPageMixin, SingleObjectFromTournamentMixin, TournamentMixin
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 
+from . import forms
 from .base import BreakGeneratorError
 from .generator import BreakGenerator
 from .models import BreakCategory, BreakingTeam
 from .serializers import BreakCategorySerializer
 from .utils import auto_make_break_rounds, breakcategories_with_counts, get_breaking_teams
-from . import forms
 
 logger = logging.getLogger(__name__)
 

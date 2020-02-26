@@ -1,12 +1,12 @@
-import unittest
 import copy
+import unittest
 
 from collections import OrderedDict
 
+from .utils import TestTeam
 from .. import DrawFatalError, DrawGenerator, DrawUserError
 from ..generator.pairing import Pairing, ResultPairing
 from ..generator.utils import partial_break_round_split
-from .utils import TestTeam
 
 DUMMY_TEAMS = [TestTeam(1, 'A', allocated_side="aff"), TestTeam(2, 'B', allocated_side="neg")]
 

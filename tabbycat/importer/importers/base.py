@@ -1,8 +1,8 @@
 """Base classes for tournament data importers."""
 
 import csv
-import re
 import logging
+import re
 from collections import Counter
 from types import GeneratorType
 

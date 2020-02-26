@@ -32,10 +32,10 @@ from tournaments.mixins import (CurrentRoundMixin, DebateDragAndDropMixin,
     TournamentMixin)
 from tournaments.models import Round
 from tournaments.utils import get_side_name
-from utils.mixins import AdministratorMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round, reverse_tournament
+from utils.mixins import AdministratorMixin
 from utils.tables import TabbycatTableBuilder
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from venues.allocator import allocate_venues
 from venues.models import VenueConstraint
 from venues.utils import venue_conflicts_display
@@ -45,9 +45,9 @@ from .generator import DrawFatalError, DrawUserError
 from .manager import DrawManager
 from .models import Debate, TeamSideAllocation
 from .prefetch import populate_history
+from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 from .tables import (AdminDrawTableBuilder, PositionBalanceReportDrawTableBuilder,
         PositionBalanceReportSummaryTableBuilder, PublicDrawTableBuilder)
-from .serializers import EditDebateTeamsDebateSerializer, EditDebateTeamsTeamSerializer
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 from django.db.models import Prefetch
 
-from utils.management.base import TournamentCommand
 from availability.models import RoundAvailability
+from utils.management.base import TournamentCommand
 
 
 class Command(TournamentCommand):

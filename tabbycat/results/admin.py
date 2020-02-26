@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.db.models import OuterRef, Prefetch, Subquery
 
-from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
-
 from draw.models import DebateTeam
 from utils.admin import TabbycatModelAdminFieldsMixin
+
+from .models import BallotSubmission, SpeakerScore, SpeakerScoreByAdj, TeamScore
 
 
 # ==============================================================================

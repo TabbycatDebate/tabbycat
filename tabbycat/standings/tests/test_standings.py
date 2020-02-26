@@ -1,14 +1,14 @@
 from django.test import TestCase
 
-from ..base import StandingsError
-from ..teams import TeamStandingsGenerator
-
 from adjallocation.models import DebateAdjudicator
 from draw.models import Debate, DebateTeam
 from participants.models import Adjudicator, Institution, Speaker, Team
 from results.models import BallotSubmission, SpeakerScore, TeamScore
 from tournaments.models import Round, Tournament
 from venues.models import Venue
+
+from ..base import StandingsError
+from ..teams import TeamStandingsGenerator
 
 
 # TODO does it ignore unconfirmed ballot submissions?

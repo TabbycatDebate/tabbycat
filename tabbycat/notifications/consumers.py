@@ -1,6 +1,6 @@
 import json
-from smtplib import SMTPException
 import random
+from smtplib import SMTPException
 
 from channels.consumer import SyncConsumer
 from django.conf import settings

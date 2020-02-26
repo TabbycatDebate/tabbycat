@@ -5,12 +5,12 @@ from django.utils.translation import gettext as _
 
 from draw.generator.powerpair import PowerPairedDrawGenerator
 from participants.utils import get_side_history
-from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
+from tournaments.models import Round
 
-from .models import Debate, DebateTeam
 from .generator import BPEliminationResultPairing, DrawGenerator, DrawUserError, ResultPairing
 from .generator.utils import ispow2
+from .models import Debate, DebateTeam
 
 logger = logging.getLogger(__name__)
 

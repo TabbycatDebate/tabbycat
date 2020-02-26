@@ -2,12 +2,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
 import adjallocation.models as am
-import availability.models as avm
 import adjfeedback.models as fm
+import availability.models as avm
 import breakqual.models as bm
 import motions.models as mm
-import tournaments.models as tm
 import participants.models as pm
+import tournaments.models as tm
 import venues.models as vm
 from participants.emoji import set_emoji
 

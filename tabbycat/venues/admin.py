@@ -1,6 +1,6 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
-from django import forms
 from gfklookupwidget.widgets import GfkLookupWidget
 
 from availability.admin import RoundAvailabilityInline

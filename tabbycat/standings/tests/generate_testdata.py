@@ -1,8 +1,8 @@
 """Generates random testdata for test_result.py, and prints the dict for copy
 and paste into test_result.py."""
 
-import random
 import pprint
+import random
 from operator import itemgetter
 
 TEAMS = ['A', 'B', 'C', 'D']

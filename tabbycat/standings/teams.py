@@ -7,8 +7,8 @@ from django.db.models import Avg, Count, F, FloatField, Func, Q, StdDev, Sum
 from django.db.models.functions import Cast
 from django.utils.translation import gettext_lazy as _
 
-from tournaments.models import Round
 from results.models import TeamScore
+from tournaments.models import Round
 
 from .base import BaseStandingsGenerator
 from .metrics import BaseMetricAnnotator, metricgetter, QuerySetMetricAnnotator, RepeatedMetricAnnotator

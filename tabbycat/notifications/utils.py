@@ -17,11 +17,11 @@ from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate
-from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
-from results.utils import side_and_position_names
 from options.utils import use_team_code_names
 from participants.models import Person
 from participants.prefetch import populate_win_counts
+from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.utils import side_and_position_names
 from tournaments.models import Round, Tournament
 
 

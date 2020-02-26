@@ -1,10 +1,10 @@
 import json
 
+import qrcode
 from django.contrib.humanize.templatetags.humanize import ordinal
 from django.db.models import Q
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
-import qrcode
 from qrcode.image import svg
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion

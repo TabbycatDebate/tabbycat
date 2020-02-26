@@ -1,7 +1,9 @@
-from django.db import models
-from django.db.models import Count, Prefetch, Q
+import logging
+
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import Count, Prefetch, Q
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -9,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 from participants.models import Person
 from utils.managers import LookupByNameFieldsMixin
 
-import logging
 logger = logging.getLogger(__name__)
 
 

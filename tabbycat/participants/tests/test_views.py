@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from utils.tests import ConditionalTableViewTestsMixin
 from participants.models import Speaker
+from utils.tests import ConditionalTableViewTestsMixin
 
 
 class PublicParticipantsViewTestCase(ConditionalTableViewTestsMixin, TestCase):
