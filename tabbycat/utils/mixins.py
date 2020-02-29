@@ -107,8 +107,8 @@ class WarnAboutDatabaseUseMixin(ContextMixin):
 
     def get_database_row_count(self):
         cursor = connection.cursor()
-        cursor.execute("SELECT schemaname,relname,n_live_tup FROM pg_stat_user_tables ORDER BY n_live_tup DESC;")
-        return sum([row[2] for row in cursor.fetchall()])
+        cursor.execute("SELECT SUM(n_live_tup) FROM pg_stat_user_tables;")
+        return cursor.fetchone()[0]
 
     def get_context_data(self, **kwargs):
         if 'DATABASE_URL' in os.environ and self.request.user.is_authenticated:
