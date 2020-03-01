@@ -25,7 +25,7 @@
     "django-channels": "1.1.8",
     "eslint-plugin-html": "^5.0.x",
     "feather-icons": "^4.x.x",
-    "inter-ui": "^3.5.0",
+    "inter-ui": "^3.12.1",
     "jquery": "^3.4.1",
     "jquery-validation": "1.19.x",
     "jsbarcode": "^3.11.x",
