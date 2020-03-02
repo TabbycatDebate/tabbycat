@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from breakqual.models import BreakCategory
+from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from tournaments.models import Tournament
 
@@ -135,7 +136,7 @@ class SpeakerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         speaker_categories = validated_data.pop("categories")
-        speaker = Speaker.objects.create(**validated_data)
+        speaker = super().create(validated_data)
         speaker.categories.set(speaker_categories)
         return speaker
 
@@ -151,7 +152,15 @@ class AdjudicatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Adjudicator
         fields = ('url', 'id', 'name', 'gender', 'email', 'phone', 'anonymous', 'pronoun',
-                  'institution', 'base_score')
+                  'institution', 'base_score', 'trainee', 'independent', 'adj_core')
+
+    def create(self, validated_data):
+        adj = super().create(validated_data)
+
+        if adj.institution is not None:
+            adj.adjudicatorinstitutionconflict_set.create(institution=adj.institution)
+
+        return adj
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -170,16 +179,35 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('url', 'id', 'reference', 'code_name',
+        fields = ('url', 'id', 'reference', 'code_name', 'emoji',
                   'institution', 'speakers', 'use_institution_prefix', 'break_categories')
 
     def create(self, validated_data):
-        speaker_data = validated_data.pop('speakers')
+        """Four things must be done, excluding saving the Team object:
+        1. Create the short_reference based on 'reference',
+        2. Create emoji/code name if not stated,
+        3. Create the speakers.
+        4. Add institution conflict"""
+        validated_data['short_reference'] = validated_data['reference'][:34]
+        speakers_data = validated_data.pop('speakers')
         break_categories = validated_data.pop('break_categories')
-        team = Team.objects.create(**validated_data)
-        team.break_categories.set(break_categories)
-        for i in speaker_data:
-            Speaker.objects.create(team=team, **i)
+        emoji, code_name = pick_unused_emoji()
+        if 'emoji' not in validated_data:
+            validated_data['emoji'] = emoji
+        if 'code_name' not in validated_data:
+            validated_data['code_name'] = code_name
+
+        team = super().create(validated_data)
+        team.break_categories.set(BreakCategory.objects.filter(tournament=team.tournament, is_general=True))
+        team.break_categories.add(*break_categories)
+
+        speakers = SpeakerSerializer(many=True, data=speakers_data, context={'tournament': team.tournament})
+        if speakers.is_valid():
+            speakers.save(team=team)
+
+        if team.institution is not None:
+            team.teaminstitutionconflict_set.create(institution=team.institution)
+
         return team
 
 

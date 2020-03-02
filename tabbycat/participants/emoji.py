@@ -29,7 +29,7 @@ def pick_unused_emoji():
     no emoji are left, it returns `None`."""
     from .models import Team
     used_emoji = Team.objects.filter(emoji__isnull=False).values_list('emoji', flat=True)
-    unused_emoji = [e[0] for e in EMOJI_RANDOM_OPTIONS if e[0] not in used_emoji]
+    unused_emoji = [e for e in EMOJI_RANDOM_OPTIONS if e[0] not in used_emoji]
 
     try:
         return random.choice(unused_emoji)
