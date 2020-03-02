@@ -1,7 +1,7 @@
 from django.db.models import Prefetch
 
-from utils.management.base import TournamentCommand
 from availability.models import RoundAvailability
+from utils.management.base import TournamentCommand
 
 
 class Command(TournamentCommand):
@@ -22,7 +22,7 @@ class Command(TournamentCommand):
         for adj in queryset:
             row = [
                 adj.institution.code if adj.institution else "",
-                adj.name
+                adj.name,
             ]
             row.extend([str(len(getattr(adj, 'available_%d' % rd.seq)) > 0) for rd in rounds])
             self.stdout.write(",".join(row))

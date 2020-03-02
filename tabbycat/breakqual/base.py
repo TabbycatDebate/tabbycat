@@ -98,7 +98,7 @@ class BaseBreakGenerator:
                     'rule': self.category.get_rule_display(),
                     'required': ", ".join(_metric_name(metric) for metric in self.required_metrics),
                     'missing': ", ".join(_metric_name(metric) for metric in missing_metrics),
-                }
+                },
             )
 
     def set_team_queryset(self):
@@ -145,9 +145,9 @@ class BaseBreakGenerator:
         ).exclude(breakingteam__remark__exact='')
         different_break_teams = self.team_queryset.exclude(
             breakingteam__remark=BreakingTeam.REMARK_INELIGIBLE,
-            breakingteam__break_category__priority__gt=self.category.priority
+            breakingteam__break_category__priority__gt=self.category.priority,
         ).filter(
-            breakingteam__break_category__priority__gt=self.category.priority
+            breakingteam__break_category__priority__gt=self.category.priority,
         )
         ineligible_teams = self.team_queryset.exclude(break_categories=self.category)
 
@@ -214,7 +214,7 @@ class BaseBreakGenerator:
             for tsi in group:
                 bt, _ = BreakingTeam.objects.update_or_create(
                     break_category=self.category, team=tsi.team,
-                    defaults={'rank': rank, 'break_rank': break_rank, 'remark': None}
+                    defaults={'rank': rank, 'break_rank': break_rank, 'remark': None},
                 )
                 bts_to_keep.append(bt.id)
                 logger.info("Breaking in %s (rank %s): %s", bt.break_rank, rank, bt.team)

@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from django.urls import include, path
-
 from rest_framework.routers import SimpleRouter
 
 from . import views
@@ -48,7 +47,6 @@ urlpatterns = [
                         views.BreakEligibilityView.as_view(),
                         name='api-breakcategory-eligibility'),
                 ])),
-
             ])),
 
             path('speaker-categories/', include([

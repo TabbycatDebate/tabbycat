@@ -10,12 +10,12 @@ from dynamic_preferences.views import PreferenceFormView
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from tournaments.mixins import TournamentMixin
-from utils.mixins import AdministratorMixin
 from utils.misc import reverse_tournament
+from utils.mixins import AdministratorMixin
 
-from .presets import all_presets, get_preferences_data
 from .forms import tournament_preference_form_builder
 from .preferences import tournament_preferences_registry
+from .presets import all_presets, get_preferences_data
 
 logger = logging.getLogger(__name__)
 

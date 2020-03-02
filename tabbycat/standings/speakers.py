@@ -2,8 +2,8 @@
 
 import logging
 
-from django.utils.translation import gettext_lazy as _
 from django.db.models import Avg, Case, Count, F, FloatField, Max, Min, Q, StdDev, Sum, When
+from django.utils.translation import gettext_lazy as _
 
 from tournaments.models import Round
 
@@ -89,7 +89,7 @@ class TrimmedMeanSpeakerScoreMetricAnnotator(SpeakerScoreQuerySetMetricAnnotator
             When(count__gt=2, then=(total - highest - lowest) / (F('count') - 2)),
             When(count__gt=0, then=total / F('count')),
             default=None,
-            output_field=FloatField()
+            output_field=FloatField(),
         )
 
 

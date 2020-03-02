@@ -1,8 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import gettext
+from django.utils.translation import gettext, gettext_lazy as _
 
 from adjallocation.models import DebateAdjudicator
 from results.models import Submission
@@ -86,15 +85,17 @@ class AdjudicatorFeedbackQuestion(models.Model):
     ANSWER_TYPE_LONGTEXT = 'tl'
     ANSWER_TYPE_SINGLE_SELECT = 'ss'
     ANSWER_TYPE_MULTIPLE_SELECT = 'ms'
-    ANSWER_TYPE_CHOICES = ((ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
-                           (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
-                           (ANSWER_TYPE_INTEGER_TEXTBOX, _("integer (textbox)")),
-                           (ANSWER_TYPE_INTEGER_SCALE, _("integer scale")),
-                           (ANSWER_TYPE_FLOAT, _("float")),
-                           (ANSWER_TYPE_TEXT, _("text")),
-                           (ANSWER_TYPE_LONGTEXT, _("long text")),
-                           (ANSWER_TYPE_SINGLE_SELECT, _("select one")),
-                           (ANSWER_TYPE_MULTIPLE_SELECT, _("select multiple")), )
+    ANSWER_TYPE_CHOICES = (
+        (ANSWER_TYPE_BOOLEAN_CHECKBOX, _("checkbox")),
+        (ANSWER_TYPE_BOOLEAN_SELECT, _("yes/no (dropdown)")),
+        (ANSWER_TYPE_INTEGER_TEXTBOX, _("integer (textbox)")),
+        (ANSWER_TYPE_INTEGER_SCALE, _("integer scale")),
+        (ANSWER_TYPE_FLOAT, _("float")),
+        (ANSWER_TYPE_TEXT, _("text")),
+        (ANSWER_TYPE_LONGTEXT, _("long text")),
+        (ANSWER_TYPE_SINGLE_SELECT, _("select one")),
+        (ANSWER_TYPE_MULTIPLE_SELECT, _("select multiple")),
+    )
     ANSWER_TYPE_CLASSES = {
         ANSWER_TYPE_BOOLEAN_CHECKBOX: AdjudicatorFeedbackBooleanAnswer,
         ANSWER_TYPE_BOOLEAN_SELECT: AdjudicatorFeedbackBooleanAnswer,

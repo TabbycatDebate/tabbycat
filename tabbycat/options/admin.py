@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from django_summernote.utils import get_attachment_model
 from dynamic_preferences.admin import PerInstancePreferenceAdmin
 from dynamic_preferences.models import GlobalPreferenceModel

@@ -1,21 +1,21 @@
-from contextlib import contextmanager
 import json
 import logging
+from contextlib import contextmanager
 from unittest import expectedFailure
 
 from django.contrib.auth import get_user, get_user_model
-from django.core.cache import cache
-from django.urls import reverse
-from django.test import Client, tag, TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.core.cache import cache
+from django.test import Client, tag, TestCase
+from django.urls import reverse
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from draw.models import DebateTeam
-from tournaments.models import Tournament
 from participants.models import Adjudicator, Institution, Speaker, Team
-from venues.models import Venue
+from tournaments.models import Tournament
 from utils.misc import add_query_string_parameter, reverse_tournament
+from venues.models import Venue
 
 logger = logging.getLogger(__name__)
 

@@ -14,7 +14,7 @@ def regions_ordered(t):
     data = [{
         'seq': count + 1,
         'name': r.name,
-        'id': r.id
+        'id': r.id,
     } for count, r in enumerate(regions)]
     return data
 
@@ -33,7 +33,7 @@ def annotate_side_count_kwargs(sides, seq):
     return {'%s_count' % side: Count('debateteam', filter=Q(
         debateteam__side=side,
         debateteam__debate__round__stage=Round.STAGE_PRELIMINARY,
-        debateteam__debate__round__seq__lte=seq), distinct=True
+        debateteam__debate__round__seq__lte=seq), distinct=True,
     ) for side in sides}
 
 
@@ -44,7 +44,7 @@ def get_side_history(teams, sides, seq):
     the given `seq` (of a round)."""
     team_ids = [team.id for team in teams]
     queryset = Team.objects.filter(id__in=team_ids).prefetch_related(
-        'debateteam_set__debate__round'
+        'debateteam_set__debate__round',
     ).annotate(
         **annotate_side_count_kwargs(sides, seq))
     return {team.id: [getattr(team, '%s_count' % side) for side in sides] for team in queryset}

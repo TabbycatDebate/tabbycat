@@ -8,25 +8,25 @@ from django.db import IntegrityError
 from django.db.models import Min
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
-from django.views.generic.base import TemplateView, View
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
+from django.views.generic.base import TemplateView, View
 
-from . import utils
-
-from availability.models import RoundAvailability
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
+from availability.models import RoundAvailability
 from checkins.utils import get_checkins
 from draw.generator.utils import partial_break_round_split
 from draw.models import Debate
 from participants.models import Adjudicator, Team
 from tournaments.mixins import RoundMixin
-from utils.tables import TabbycatTableBuilder
-from utils.mixins import AdministratorMixin
-from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from utils.misc import reverse_round
+from utils.mixins import AdministratorMixin
+from utils.tables import TabbycatTableBuilder
+from utils.views import PostOnlyRedirectView, VueTableTemplateView
 from venues.models import Venue
+
+from . import utils
 
 logger = logging.getLogger(__name__)
 
@@ -139,7 +139,7 @@ class AvailabilityIndexView(RoundMixin, AdministratorMixin, TemplateView):
                     # Translators: nadvancing in this string is always at least 2
                     "%(nadvancing)s advancing team is debating this round",  # never used, but needed for i18n
                     "%(nadvancing)s advancing teams are debating this round",
-                    nadvancing) % {'nadvancing': nadvancing}
+                    nadvancing) % {'nadvancing': nadvancing},
             }
 
     def _get_dict(self, queryset_all):
@@ -191,7 +191,7 @@ class AvailabilityTypeBase(RoundMixin, AdministratorMixin, VueTableTemplateView)
             title = _("Active in %(prev_round)s") % {'prev_round': self.round.prev.abbreviation}
             table.add_column({'key': 'active-prev', 'title': title}, [{
                 'sort': inst.prev_available,
-                'icon': 'check' if inst.prev_available else ''
+                'icon': 'check' if inst.prev_available else '',
             } for inst in queryset])
 
         checked_in_header = {'key': "tournament", 'title': _('Checked-In')}
@@ -260,7 +260,7 @@ class AvailabilityTypeVenueView(AvailabilityTypeBase):
         table.add_column({'key': 'venue', 'title': _("Venue")}, [v.name for v in venues])
         table.add_column(
             {'key': 'display', 'title': _("Display Name (for the draw)")},
-            [v.display_name for v in venues]
+            [v.display_name for v in venues],
         )
         table.add_column({'key': 'categories', 'title': _("Categories")}, [v.cats for v in venues])
         table.add_column({'key': 'priority', 'title': _("Priority")}, [v.priority for v in venues])
@@ -347,7 +347,7 @@ class BaseAvailabilityUpdateView(RoundMixin, AdministratorMixin, LogActionMixin,
                 update — this typically means that the availability for an
                 adjudicator has already been set to be what was saved"""
             return JsonResponse({'status': 'false', 'message': message}, status=500)
-        except:
+        except Exception:
             message = " an error handling availability updates"
             logger.exception(message)
             return JsonResponse({'status': 'false', 'message': message}, status=500)

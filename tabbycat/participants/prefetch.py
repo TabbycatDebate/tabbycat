@@ -46,7 +46,7 @@ def populate_feedback_scores(adjudicators):
 
     adjs_annotated = Adjudicator.objects.filter(
         id__in=adjs_by_id.keys(),
-        adjudicatorfeedback__in=adjfeedbacks
+        adjudicatorfeedback__in=adjfeedbacks,
     ).annotate(feedback_score_annotation=Avg('adjudicatorfeedback__score'))
 
     for adj in adjs_annotated:

@@ -24,8 +24,8 @@ class CheckInEventConsumer(TournamentWebsocketMixin, JsonWebsocketConsumer):
         async_to_sync(self.channel_layer.group_send)(
             self.group_name(), {
                 'type': 'broadcast_checkin',
-                'content': content
-            }
+                'content': content,
+            },
         )
 
     # Issue the relevant checkins

@@ -1,6 +1,6 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.contenttypes.admin import GenericTabularInline
-from django import forms
 from gfklookupwidget.widgets import GfkLookupWidget
 
 from availability.admin import RoundAvailabilityInline
@@ -44,7 +44,7 @@ class VenueConstraintModelForm(forms.ModelForm):
             'subject_id': GfkLookupWidget(
                 content_type_field_name='subject_content_type',
                 parent_field=VenueConstraint._meta.get_field('subject_content_type'),
-            )
+            ),
         }
 
 

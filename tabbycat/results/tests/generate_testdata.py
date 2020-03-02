@@ -1,8 +1,8 @@
 """Generates random testdata for test_result.py, and prints the dict for copy
 and paste into test_result.py."""
 
-import random
 import pprint
+import random
 from statistics import mean
 
 SPEAKERS_PER_TEAM = 3
@@ -41,15 +41,15 @@ common_fields['everyone_margins'] = [aff_margin, -aff_margin]
 testdata['high-required'] = {
     'winner_by_adj': ['aff' if (adj[0] > adj[1]) else
                       'neg' if (adj[1] > adj[0]) else None
-                      for adj in totals_by_adj]
+                      for adj in totals_by_adj],
 }
 testdata['low-allowed'] = {
-    'winner_by_adj': declared_winners
+    'winner_by_adj': declared_winners,
 }
 testdata['tied-allowed'] = {
     'winner_by_adj': ['aff' if (adj[0] >= adj[1]) and declared == 'aff' else
                       'neg' if (adj[1] >= adj[0]) and declared == 'neg' else
-                      None for adj, declared in zip(totals_by_adj, declared_winners)]
+                      None for adj, declared in zip(totals_by_adj, declared_winners)],
 }
 
 for scoresheet_type in ['high-required', 'low-allowed', 'tied-allowed']:

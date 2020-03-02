@@ -1,12 +1,11 @@
 import json
 
 import qrcode
-from qrcode.image import svg
-
-from django.db.models import Q
 from django.contrib.humanize.templatetags.humanize import ordinal
+from django.db.models import Q
 from django.utils.translation import gettext as _
 from django.views.generic.base import TemplateView
+from qrcode.image import svg
 
 from adjfeedback.models import AdjudicatorFeedbackQuestion
 from adjfeedback.utils import expected_feedback_targets
@@ -34,7 +33,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             default_scale_info = AdjudicatorFeedbackQuestion(
                 text=self.tournament.pref('feedback_introduction'), seq=0,
                 answer_type='comment', # Custom type just for print display
-                required=True, from_team=True, from_adj=True
+                required=True, from_team=True, from_adj=True,
             )
             default_questions.append(default_scale_info.serialize())
 
@@ -43,7 +42,7 @@ class BasePrintFeedbackFormsView(RoundMixin, TemplateView):
             answer_type=AdjudicatorFeedbackQuestion.ANSWER_TYPE_INTEGER_SCALE,
             required=True, from_team=True, from_adj=True,
             min_value=self.tournament.pref('adj_min_score'),
-            max_value=self.tournament.pref('adj_max_score')
+            max_value=self.tournament.pref('adj_max_score'),
         )
         default_questions.append(default_scale_question.serialize())
 

@@ -4,6 +4,7 @@ from django.utils.encoding import force_text
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
+
 from participants.utils import get_side_history
 from standings.templatetags.standingsformat import metricformat, rankingformat
 from tournaments.utils import get_side_name
@@ -40,7 +41,7 @@ class BaseDrawTableBuilder(TabbycatTableBuilder):
         header = {
             'key': key,  # no need to translate
             'tooltip': tooltip,
-            'text': abbr if text_only else key
+            'text': abbr if text_only else key,
         }
 
         return header
@@ -310,7 +311,7 @@ class PositionBalanceReportSummaryTableBuilder(BasePositionBalanceReportTableBui
             cells.append({
                 'text': self.STATUSES[category],
                 'sort': sort,
-                'class': 'text-' + style
+                'class': 'text-' + style,
             })
         self.add_column({'key': 'status', 'title': _("Status")}, cells)
 
@@ -375,7 +376,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             header = {
                 'key': "pts" + side_abbr,
                 'tooltip': _("No metrics in the team standings precedence"),
-                'icon': 'star'
+                'icon': 'star',
             }
             self.add_column(header, [0] * len(teams))
         else:
@@ -383,7 +384,7 @@ class PositionBalanceReportDrawTableBuilder(BasePositionBalanceReportTableBuilde
             header = {
                 'key': "pts" + side_abbr,  # always use 'pts' to make it more predictable
                 'tooltip': _("%(team)s: %(metric)s") % {'team': side_abbr, 'metric': metric_info['name']},
-                'icon': 'star'
+                'icon': 'star',
             }
             infos = self.standings.get_standings(teams)
             self.add_column(header, [metricformat(info.metrics[metric_info['key']]) for info in infos])

@@ -1,8 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 
-from tournaments.models import Tournament
 from participants.models import Institution, Region, Team
+from tournaments.models import Tournament
 
 
 class TestParticipantLookup(TestCase):

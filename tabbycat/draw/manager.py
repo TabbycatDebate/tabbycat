@@ -5,12 +5,12 @@ from django.utils.translation import gettext as _
 
 from draw.generator.powerpair import PowerPairedDrawGenerator
 from participants.utils import get_side_history
-from tournaments.models import Round
 from standings.teams import TeamStandingsGenerator
+from tournaments.models import Round
 
-from .models import Debate, DebateTeam
 from .generator import BPEliminationResultPairing, DrawGenerator, DrawUserError, ResultPairing
 from .generator.utils import ispow2
+from .models import Debate, DebateTeam
 
 logger = logging.getLogger(__name__)
 
@@ -177,7 +177,7 @@ class PowerPairedDrawManager(BaseDrawManager):
         if self.teams_in_debate == 'two':
             options.extend([
                 "avoid_conflicts", "odd_bracket", "pairing_method",
-                "pullup_restriction", "side_allocations"
+                "pullup_restriction", "side_allocations",
             ])
         elif self.teams_in_debate == 'bp':
             options.extend(["pullup", "position_cost", "assignment_method", "renyi_order", "exponent"])

@@ -32,7 +32,7 @@ class Command(TournamentCommand):
     def handle_tournament(self, tournament, **options):
         if options['model'] == 'person':
             queryset = Person.objects.filter(
-                Q(adjudicator__tournament=tournament) | Q(speaker__team__tournament=tournament)
+                Q(adjudicator__tournament=tournament) | Q(speaker__team__tournament=tournament),
             )
             identifier_model = PersonIdentifier
             plural = 'people'

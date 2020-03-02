@@ -1,9 +1,9 @@
 from django.conf import settings
-from django.urls import include, path
 from django.contrib import admin, messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
+from django.urls import include, path
 from django.utils.translation import gettext as _
 from django.views.i18n import JavaScriptCatalog
 
@@ -46,7 +46,7 @@ urlpatterns = [
 
     # JS Translations Catalogue; includes all djangojs files in locale folders
     path('jsi18n/',
-         JavaScriptCatalog.as_view(domain="djangojs", ),
+         JavaScriptCatalog.as_view(domain="djangojs"),
          name='javascript-catalog'),
 
     # Summernote (WYSYWIG)

@@ -1,8 +1,8 @@
 """Base classes for tournament data importers."""
 
 import csv
-import re
 import logging
+import re
 from collections import Counter
 from types import GeneratorType
 
@@ -146,7 +146,7 @@ class BaseTournamentDataImporter(object):
 
     def import_things(self, f):
         interpreter = make_interpreter(
-            institution=lambda x: participants.models.Institution.objects.get(name=x)
+            institution=lambda x: participants.models.Institution.objects.get(name=x),
         )
         self._import(f, participants.models.Speaker, interpreter)
 
@@ -280,7 +280,7 @@ class BaseTournamentDataImporter(object):
                         errors.add(lineno, model, str(e))
                     continue
                 except FieldError as e:
-                    match = re.match("Cannot resolve keyword '(\w+)' into field.", str(e))
+                    match = re.match(r"Cannot resolve keyword '(\w+)' into field.", str(e))
                     if match:
                         message = "There's an unrecognized column header in this file: {}".format(match.group(1))
                         self.logger.error(message)

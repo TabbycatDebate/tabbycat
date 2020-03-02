@@ -1,7 +1,7 @@
 """Base class for standings generators."""
 
-import random
 import logging
+import random
 
 from django.utils.translation import gettext as _
 
@@ -258,7 +258,7 @@ class BaseStandingsGenerator:
     DEFAULT_OPTIONS = {
         "tiebreak": "random",
         "rank_filter": None,
-        "include_filter": None,  # not currently used by other code
+        "include_filter": None,  # not currently used by other code,
     }
 
     TIEBREAK_FUNCTIONS = {

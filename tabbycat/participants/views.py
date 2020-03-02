@@ -7,8 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Q
 from django.forms import HiddenInput
 from django.http import JsonResponse
-from django.utils.translation import gettext_lazy, ngettext
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 from django.views.generic.base import View
 
 from actionlog.mixins import LogActionMixin
@@ -22,8 +21,8 @@ from tournaments.mixins import (PublicTournamentPageMixin,
 from tournaments.models import Round
 from utils.misc import redirect_tournament, reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
-from utils.views import ModelFormSetView, VueTableTemplateView
 from utils.tables import TabbycatTableBuilder
+from utils.views import ModelFormSetView, VueTableTemplateView
 
 from .models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
 from .serializers import SpeakerSerializer
@@ -88,7 +87,7 @@ class BaseInstitutionsListView(TournamentMixin, VueTableTemplateView):
 
     def get_table(self):
         institutions = Institution.objects.select_related('region').filter(
-            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament)
+            Q(team__tournament=self.tournament) | Q(adjudicator__tournament=self.tournament),
         ).annotate(
             nteams=Count('team', distinct=True, filter=Q(
                 team__tournament=self.tournament)),
@@ -141,7 +140,7 @@ class BaseCodeNamesListView(TournamentMixin, VueTableTemplateView):
         table = TabbycatTableBuilder(view=self, sort_key='code_name')
         table.add_column(
             {'key': 'code_name', 'title': _("Code name")},
-            [{'text': t.code_name or "—"} for t in teams]
+            [{'text': t.code_name or "—"} for t in teams],
         )
         table.add_team_columns(teams)
         return table
@@ -258,11 +257,11 @@ class BaseAdjudicatorRecordView(BaseRecordView):
     def get_context_data(self, **kwargs):
         try:
             kwargs['debateadjudications'] = self.object.debateadjudicator_set.filter(
-                debate__round=self.tournament.current_round
+                debate__round=self.tournament.current_round,
             ).select_related(
-                'debate__round'
+                'debate__round',
             ).prefetch_related(
-                'debate__round__motion_set'
+                'debate__round__motion_set',
             )
         except ObjectDoesNotExist:
             kwargs['debateadjudications'] = None
@@ -316,8 +315,8 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
             'fields': ('name', 'tournament', 'slug', 'seq', 'limit', 'public'),
             'extra': 2,
             'widgets': {
-                'tournament': HiddenInput
-            }
+                'tournament': HiddenInput,
+            },
         }
 
     def get_formset_queryset(self):
@@ -333,7 +332,7 @@ class EditSpeakerCategoriesView(LogActionMixin, AdministratorMixin, TournamentMi
         if self.instances:
             message = ngettext("Saved category: %(list)s",
                 "Saved categories: %(list)s",
-                len(self.instances)
+                len(self.instances),
             ) % {'list': ", ".join(category.name for category in self.instances)}
             messages.success(self.request, message)
         else:
@@ -366,7 +365,7 @@ class EditSpeakerCategoryEligibilityView(AdministratorMixin, TournamentMixin, Vu
                 'component': 'check-cell',
                 'checked': True if sc in speaker.categories.all() else False,
                 'id': speaker.id,
-                'type': sc.id
+                'type': sc.id,
             } for speaker in speakers])
         return table
 
@@ -403,7 +402,7 @@ class UpdateEligibilityEditView(LogActionMixin, AdministratorMixin, TournamentMi
             for participant_id, participant in participants.items():
                 self.set_category_eligibility(participant, posted_info[str(participant_id)])
             self.log_action()
-        except:
+        except Exception:
             message = "Error handling eligiblity updates"
             logger.exception(message)
             return JsonResponse({'status': 'false', 'message': message}, status=500)

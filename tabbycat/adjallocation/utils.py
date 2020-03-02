@@ -26,13 +26,13 @@ def adjudicator_conflicts_display(debates):
             if conflicts.personal_conflict_adj_team(adj, team):
                 conflict_messages[debate].append(("danger", _(
                     "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> "
-                    "(personal)"
+                    "(personal)",
                 ) % {'adj': adj.name, 'team': team.short_name}))
 
             for institution in conflicts.conflicting_institutions_adj_team(adj, team):
                 conflict_messages[debate].append(("danger", _(
                     "Conflict: <strong>%(adj)s</strong> & <strong>%(team)s</strong> "
-                    "via institution <strong>%(inst)s</strong>"
+                    "via institution <strong>%(inst)s</strong>",
                 ) % {
                     'adj': adj.name,
                     'team': team.short_name,
@@ -44,13 +44,13 @@ def adjudicator_conflicts_display(debates):
             if conflicts.personal_conflict_adj_adj(adj1, adj2):
                 conflict_messages[debate].append(("danger", _(
                     "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> "
-                    "(personal)"
+                    "(personal)",
                 ) % {'adj1': adj1.name, 'adj2': adj2.name}))
 
             for institution in conflicts.conflicting_institutions_adj_adj(adj1, adj2):
                 conflict_messages[debate].append(("warning", _(
                     "Conflict: <strong>%(adj1)s</strong> & <strong>%(adj2)s</strong> "
-                    "via institution <strong>%(inst)s</strong>"
+                    "via institution <strong>%(inst)s</strong>",
                 ) % {
                     'adj1': adj1.name,
                     'adj2': adj2.name,

@@ -11,16 +11,17 @@ Objects should be fetched from the database here as it is an asyncronous process
 thus the object itself cannot be passed.
 """
 
+from django.utils import formats
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 
 from adjallocation.allocation import AdjudicatorAllocation
 from draw.models import Debate
-from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
-from results.utils import side_and_position_names
 from options.utils import use_team_code_names
 from participants.models import Person
 from participants.prefetch import populate_win_counts
+from results.result import BaseConsensusDebateResultWithSpeakers, DebateResult, VotingDebateResult
+from results.utils import side_and_position_names
 from tournaments.models import Round, Tournament
 
 
@@ -53,7 +54,7 @@ def adjudicator_assignment_email_generator(to, url, round_id):
             'ROUND': round.name,
             'VENUE': debate.venue.display_name if debate.venue is not None else _("TBA"),
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-            'DRAW': matchup
+            'DRAW': matchup,
         }
 
         for adj, pos in debate.adjudicators.with_positions():
@@ -108,17 +109,17 @@ def ballots_email_generator(to, debate_id):
         for side, (side_name, pos_names) in zip(tournament.sides, side_and_position_names(tournament)):
             side_string = ""
             if tournament.pref('teams_in_debate') == 'bp':
-                side_string += _("<li>%(side)s: %(team)s (%(points)d points with %(speaks)d total speaks)")
+                side_string += _("<li>%(side)s: %(team)s (%(points)d points with %(speaks)s total speaks)")
                 points = 4 - scoresheet.rank(side)
             else:
-                side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)d total speaks)")
+                side_string += _("<li>%(side)s: %(team)s (%(points)s - %(speaks)s total speaks)")
                 points = _("Win") if side == scoresheet.winner() else _("Loss")
 
             ballot += side_string % {
                 'side': side_name,
                 'team': result.debateteams[side].team.code_name if use_codes else result.debateteams[side].team.short_name,
-                'speaks': scoresheet.get_total(side),
-                'points': points
+                'speaks': formats.localize(scoresheet.get_total(side)),
+                'points': points,
             }
 
             ballot += "<ul>"
@@ -127,7 +128,7 @@ def ballots_email_generator(to, debate_id):
                 ballot += _("<li>%(pos)s: %(speaker)s (%(score)s)</li>") % {
                     'pos': pos_name,
                     'speaker': result.get_speaker(side, pos).name,
-                    'score': scoresheet.get_score(side, pos)
+                    'score': formats.localize(scoresheet.get_score(side, pos)),
                 }
 
             ballot += "</ul></li>"
@@ -169,7 +170,7 @@ def standings_email_generator(to, url, round_id):
     context = {
         'TOURN': str(tournament),
         'ROUND': round.name,
-        'URL': url if tournament.pref('public_team_standings') else ""
+        'URL': url if tournament.pref('public_team_standings') else "",
     }
 
     for team in teams:
@@ -210,7 +211,7 @@ def motion_release_email_generator(to, round_id):
     context = {
         'TOURN': str(round.tournament),
         'ROUND': round.name,
-        'MOTIONS': _create_motion_list()
+        'MOTIONS': _create_motion_list(),
     }
 
     people = Person.objects.filter(id__in=to)
@@ -236,7 +237,7 @@ def team_speaker_email_generator(to, tournament_id):
             'BREAK': _(", ").join([breakq.name for breakq in team.break_categories.all()]),
             'SPEAKERS': _(", ").join([p.name for p in team.speaker_set.all()]),
             'INSTITUTION': str(team.institution),
-            'EMOJI': team.emoji
+            'EMOJI': team.emoji,
         }
 
         for speaker in team.speakers:
@@ -266,7 +267,7 @@ def team_draw_email_generator(to, url, round_id):
             'ROUND': round.name,
             'VENUE': debate.venue.name,
             'PANEL': _assemble_panel(debate.adjudicators.with_positions()),
-            'DRAW': matchup
+            'DRAW': matchup,
         }
 
         for dt in debate.debateteam_set.all():

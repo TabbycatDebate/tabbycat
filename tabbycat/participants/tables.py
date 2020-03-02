@@ -50,7 +50,7 @@ class AdjudicatorDebateTable:
         debateadjs = DebateAdjudicator.objects.filter(
             adjudicator=participant,
         ).select_related(
-            'debate__round', 'debate__round__tournament'
+            'debate__round', 'debate__round__tournament',
         ).prefetch_related(
             Prefetch('debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),
@@ -94,7 +94,7 @@ class TeamDebateTable:
             debate_team__team=participant,
             ballot_submission__confirmed=True,
         ).select_related(
-            'debate_team__debate__round__tournament'
+            'debate_team__debate__round__tournament',
         ).prefetch_related(
             Prefetch('debate_team__debate__debateadjudicator_set',
                 queryset=DebateAdjudicator.objects.select_related('adjudicator__institution')),

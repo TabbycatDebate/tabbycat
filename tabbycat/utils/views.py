@@ -3,9 +3,9 @@ import logging
 
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import reverse_lazy
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, View

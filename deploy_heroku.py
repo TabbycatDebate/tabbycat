@@ -72,13 +72,13 @@ import_tournament_group = parser.add_argument_group(
     "importtournament options, run the importtournament command separately instead.")
 import_tournament_group.add_argument(
     '-s', '--slug', type=str, action='store', default=None, dest="tournament_slug",
-    help='Override tournament slug. (Default: use name of directory.)'),
+    help='Override tournament slug. (Default: use name of directory.)')
 import_tournament_group.add_argument(
     '--name', type=str, action='store', default=None, dest="tournament_name",
-    help='Override tournament name. (Default: use name of directory.)'),
+    help='Override tournament name. (Default: use name of directory.)')
 import_tournament_group.add_argument(
     '--short-name', type=str, action='store', default=None, dest="tournament_short_name",
-    help='Override tournament short name. (Default: use name of directory.)'),
+    help='Override tournament short name. (Default: use name of directory.)')
 
 args = parser.parse_args()
 
@@ -165,7 +165,7 @@ if addons:
 if args.urlname != "-":
     command.append(args.urlname)
 output = get_output_from_command(command)
-match = re.search("https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
+match = re.search(r"https://([\w_-]+)\.herokuapp\.com/\s+\|\s+(https://git.heroku.com/[\w_-]+.git)", output)
 urlname = match.group(1)
 heroku_url = match.group(2)
 

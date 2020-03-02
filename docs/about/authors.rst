@@ -1,2 +1,2 @@
 .. _authors:
-.. include:: ../../AUTHORS.rst
+.. include:: ../../.github/AUTHORS.rst

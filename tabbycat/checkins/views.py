@@ -4,19 +4,19 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic.base import TemplateView
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext as _
+from django.views.generic.base import TemplateView
 
 from actionlog.mixins import LogActionMixin
 from actionlog.models import ActionLogEntry
 from options.utils import use_team_code_names
 from participants.models import Person, Speaker
 from participants.serializers import InstitutionSerializer
+from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from utils.misc import reverse_tournament
 from utils.mixins import AdministratorMixin, AssistantMixin
 from utils.views import PostOnlyRedirectView
-from tournaments.mixins import PublicTournamentPageMixin, TournamentMixin
 from venues.serializers import VenueSerializer
 
 from .consumers import CheckInEventConsumer
@@ -94,7 +94,7 @@ class CheckInPeopleStatusView(BaseCheckInStatusView):
                 'id': speaker.id, 'name': speaker.name, 'type': 'Speaker',
                 'identifier': [code], 'locked': False,
                 'team': speaker.team.code_name if team_codes else speaker.team.short_name,
-                'institution': institution
+                'institution': institution,
             })
         kwargs["speakers"] = json.dumps(speakers)
 
@@ -174,18 +174,18 @@ class CheckInIdentifiersView(SegregatedCheckinsMixin, TemplateView):
             "speakers": {
                 "title": _("Speakers"),
                 "total": self.t_speakers().count(),
-                "in":  self.speakers_with_barcodes().count()
+                "in":  self.speakers_with_barcodes().count(),
             },
             "adjudicators": {
                 "title": _("Adjudicators"),
                 "total": self.t_adjs().count(),
-                "in":  self.adjs_with_barcodes().count()
+                "in":  self.adjs_with_barcodes().count(),
             },
             "venues": {
                 "title": _("Venues"),
                 "total": t.venue_set.count(),
                 "in":  VenueIdentifier.objects.filter(venue__tournament=t).count(),
-            }
+            },
         }
         return super().get_context_data(**kwargs)
 
@@ -294,9 +294,9 @@ class ParticipantCheckinView(PublicTournamentPageMixin, PostOnlyRedirectView):
                     'barcodes': [identifier.barcode],
                     'status': action == 'checkin',
                     'type': 'people',
-                    'component_id': None
-                }
-            }
+                    'component_id': None,
+                },
+            },
         )
 
         return super().post(request, *args, **kwargs)

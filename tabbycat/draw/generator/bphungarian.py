@@ -1,12 +1,12 @@
 import logging
-import time
 import random
+import time
 from collections import Counter
 from math import log2
 from statistics import pvariance
 
-from django.utils.translation import gettext as _
 import munkres
+from django.utils.translation import gettext as _
 
 from .common import BaseBPDrawGenerator, DrawUserError
 from .pairing import BPPairing

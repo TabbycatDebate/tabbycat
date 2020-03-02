@@ -1,7 +1,6 @@
-from django.conf.urls import url
-
-from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
+from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
+from django.conf.urls import url
 
 from actionlog.consumers import ActionLogEntryConsumer
 from adjallocation.consumers import AdjudicatorAllocationWorkerConsumer, PanelEditConsumer
@@ -32,7 +31,7 @@ application = ProtocolTypeRouter({
             # Draw and Preformed Panel Edits
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/debates/$', DebateEditConsumer),
             url(r'^ws/(?P<tournament_slug>[-\w_]+)/round/(?P<round_seq>[-\w_]+)/panels/$', PanelEditConsumer),
-        ])
+        ]),
     ),
 
     # Worker handlers (which don't need a URL/protocol)

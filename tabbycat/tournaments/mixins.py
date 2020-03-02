@@ -3,14 +3,14 @@ import logging
 
 from asgiref.sync import async_to_sync
 from django.conf import settings
+from django.contrib import messages
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import NoReverseMatch, reverse
-from django.utils.encoding import force_text
-from django.contrib import messages
 from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
+from django.urls import NoReverseMatch, reverse
+from django.utils.encoding import force_text
 from django.utils.translation import gettext as _
 from django.views.generic.base import ContextMixin
 from django.views.generic.detail import SingleObjectMixin
@@ -163,19 +163,19 @@ class TournamentWebsocketMixin(TournamentFromUrlMixin):
             'error': force_text(error),
             'message': force_text(message),
             'original_content': original_content,
-            'component_id': original_content['component_id']
+            'component_id': original_content['component_id'],
         })
         return super()
 
     def connect(self):
         async_to_sync(self.channel_layer.group_add)(
-            self.group_name(), self.channel_name
+            self.group_name(), self.channel_name,
         )
         super().connect()
 
     def disconnect(self, message):
         async_to_sync(self.channel_layer.group_discard)(
-            self.group_name(), self.channel_name
+            self.group_name(), self.channel_name,
         )
         super().disconnect(message)
 
@@ -290,7 +290,7 @@ class TournamentAccessControlledPageMixin(TournamentMixin):
             request=self.request,
             template=self.template_403_name,
             context={'user_role': self._user_role},
-            status=403
+            status=403,
         )
 
     def dispatch(self, request, *args, **kwargs):
@@ -439,7 +439,7 @@ class DragAndDropMixin(RoundMixin):
         return {
             'round': self.json_render(serialized_round.data),
             'tournament': self.json_render(serialized_tournament.data),
-            'extra': json.dumps(self.get_extra_info())
+            'extra': json.dumps(self.get_extra_info()),
         }
 
     def json_render(self, data):
@@ -487,7 +487,7 @@ class DebateDragAndDropMixin(DragAndDropMixin):
         else:
             prefetches += (Prefetch('debateteam_set',
                 queryset=DebateTeam.objects.select_related('team').prefetch_related(
-                    'team__break_categories'
+                    'team__break_categories',
                 )),
             )
 
