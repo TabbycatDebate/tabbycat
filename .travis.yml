@@ -1,6 +1,6 @@
 language: python
+os: linux
 dist: xenial
-sudo: required
 group: edge
 env:
   global:
@@ -20,7 +20,7 @@ branches:
   except:
   - l10n_develop
 
-matrix:
+jobs:
   include:
 
     # Python 3.7
