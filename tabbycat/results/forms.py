@@ -251,7 +251,7 @@ class BaseBallotSetForm(BaseResultForm):
         self.using_vetoes = self.tournament.pref('motion_vetoes_enabled')
         self.using_replies = self.tournament.pref('reply_scores_enabled')
         self.using_declared_winner = self.tournament.pref('winners_in_ballots') != 'none'
-        self.declared_winner_overrides = self.tournament.pref('winners_in_ballots') in ['tied-points', 'low-points']
+        self.declared_winner = self.tournament.pref('winners_in_ballots')
         self.bypassing_checks = self.tournament.pref('disable_ballot_confirms')
         self.max_margin = self.tournament.pref('maximum_margin')
         self.choosing_sides = (self.tournament.pref('draw_side_allocations') == 'manual-ballot' and
@@ -324,7 +324,7 @@ class BaseBallotSetForm(BaseResultForm):
         """This method creates a drop-down with a list of the teams in the debate"""
         return forms.TypedChoiceField(
             label=_("Winner"), required=True, empty_value=None,
-            choices=[(None, _("---------"))] + [(s, t.short_name) for s, t in zip(self.sides, self.debate.teams)],
+            choices=[(None, _("---------"))] + [(s, self.debate.get_team(s).short_name) for s in self.sides],
         )
 
     def initial_data(self):
@@ -699,18 +699,16 @@ class SingleBallotSetForm(ScoresMixin, BaseBallotSetForm):
             logger.warning("Field %s not found", str(e))
 
         else:
-            if len(totals) == 2 and not self.declared_winner_overrides:
+            if len(totals) == 2:
+                high_point_declared = max(side_totals, key=lambda key: side_totals[key]) == cleaned_data[self._fieldname_declared_winner()]
+
                 # Check that no teams had the same total
-                if totals[0] == totals[1]:
+                if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
                     self.add_error(None, forms.ValidationError(
                         _("The total scores for the teams are the same (i.e. a draw)."),
                         code='draw'
                     ))
-
-                # Check that the high-point team is declared the winner
-                has_declared = self._fieldname_declared_winner() in cleaned_data
-                highest_score = max(side_totals, key=lambda key: side_totals[key])
-                if has_declared and highest_score != cleaned_data[self._fieldname_declared_winner()]:
+                elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
                     self.add_error(None, forms.ValidationError(
                         _("The declared winner does not correspond to the team with the highest score."),
                         code='wrong_winner'
@@ -827,18 +825,16 @@ class PerAdjudicatorBallotSetForm(ScoresMixin, BaseBallotSetForm):
                 logger.warning("Field %s not found", str(e))
 
             else:
-                if len(totals) == 2 and not self.declared_winner_overrides:
+                if len(totals) == 2:
+                    high_point_declared = max(side_totals, key=lambda key: side_totals[key]) == cleaned_data[self._fieldname_declared_winner()]
+
                     # Check that it was not a draw.
-                    if totals[0] == totals[1]:
+                    if totals[0] == totals[1] and self.declared_winner in ['none', 'high-points']:
                         self.add_error(None, forms.ValidationError(
                             _("The total scores for the teams are the same (i.e. a draw) for adjudicator %(adj)s."),
                             params={'adj': adj.name}, code='draw'
                         ))
-
-                    # Check that the high-point team is declared the winner
-                    has_declared = self._fieldname_declared_winner(adj) in cleaned_data
-                    highest_score = max(side_totals, key=lambda key: side_totals[key])
-                    if has_declared and highest_score != cleaned_data[self._fieldname_declared_winner(adj)]:
+                    elif self.declared_winner in ['high-points', 'tied-points'] and not high_point_declared:
                         self.add_error(None, forms.ValidationError(
                             _("The declared winner does not correspond to the team with the highest score for adjudicator %(adj)s."),
                             params={'adj': adj.name}, code='wrong_winner'
