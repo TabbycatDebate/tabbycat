@@ -385,7 +385,7 @@ class BaseBallotSetForm(BaseResultForm):
         if 'password' in self.fields:
             order.append('password')
 
-        order.extend(['discarded', 'confirmed', 'debate_result_status'])
+        order.extend(['confirmed', 'discarded', 'debate_result_status'])
 
         if self.motions.count() <= 1:
             order.append('motion')
