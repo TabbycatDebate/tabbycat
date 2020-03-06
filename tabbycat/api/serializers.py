@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from utils.misc import reverse_tournament
+
 from breakqual.models import BreakCategory
 from participants.emoji import pick_unused_emoji
 from participants.models import Adjudicator, Institution, Speaker, SpeakerCategory, Team
@@ -201,8 +203,15 @@ class TeamSerializer(serializers.ModelSerializer):
         team.break_categories.set(BreakCategory.objects.filter(tournament=team.tournament, is_general=True))
         team.break_categories.add(*break_categories)
 
+        # Replace SpeakerCategory objects with their URLs
+        for speaker in speakers_data:
+            categories = []
+            for cat in speaker['categories']:
+                categories.append(reverse_tournament('api-speakercategory-detail', team.tournament, kwargs={'pk': cat.pk}))
+            speaker['categories'] = categories
+
         speakers = SpeakerSerializer(many=True, data=speakers_data, context={'tournament': team.tournament})
-        if speakers.is_valid():
+        if speakers.is_valid(raise_exception=True):
             speakers.save(team=team)
 
         if team.institution is not None:
